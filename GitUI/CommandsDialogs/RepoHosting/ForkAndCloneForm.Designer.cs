@@ -28,12 +28,12 @@ namespace GitUI.CommandsDialogs.RepoHosting
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ColumnHeader columnHeader1;
-            System.Windows.Forms.ColumnHeader columnHeader3;
-            System.Windows.Forms.ColumnHeader columnHeader4;
-            System.Windows.Forms.ColumnHeader columnHeader5;
-            System.Windows.Forms.ColumnHeader columnHeader8;
-            System.Windows.Forms.ColumnHeader columnHeader7;
+            System.Windows.Forms.ColumnHeader columnHeaderMyReposName;
+            System.Windows.Forms.ColumnHeader columnHeaderMyReposIsFork;
+            System.Windows.Forms.ColumnHeader columnHeaderMyReposForks;
+            System.Windows.Forms.ColumnHeader columnHeaderSearchName;
+            System.Windows.Forms.ColumnHeader columnHeaderSearchOwner;
+            System.Windows.Forms.ColumnHeader columnHeaderSearchForks;
             this.cloneBtn = new System.Windows.Forms.Button();
             this.closeBtn = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -42,7 +42,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.helpTextLbl = new System.Windows.Forms.Label();
             this.myReposLV = new GitUI.UserControls.NativeListView();
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderMyReposIsPrivate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.searchReposPage = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.forkBtn = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.searchResultsLV = new GitUI.UserControls.NativeListView();
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderSearchIsFork = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.openGitupPageBtn = new System.Windows.Forms.Button();
             this.searchResultItemDescription = new System.Windows.Forms.TextBox();
@@ -72,12 +72,12 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.destinationTB = new System.Windows.Forms.TextBox();
             this.depthUpDown = new System.Windows.Forms.NumericUpDown();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            columnHeaderMyReposName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            columnHeaderMyReposIsFork = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            columnHeaderMyReposForks = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            columnHeaderSearchName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            columnHeaderSearchOwner = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            columnHeaderSearchForks = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tableLayoutPanel2.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.myReposPage.SuspendLayout();
@@ -92,35 +92,38 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // columnHeader1
+            // columnHeaderMyReposName
             // 
-            columnHeader1.Text = "Name";
-            columnHeader1.Width = 180;
+            columnHeaderMyReposName.Text = "Name";
+            columnHeaderMyReposName.Width = 180;
             // 
-            // columnHeader3
+            // columnHeaderMyReposIsFork
             // 
-            columnHeader3.Text = "Is fork";
-            columnHeader3.Width = 45;
+            columnHeaderMyReposIsFork.Text = "Is fork";
+            columnHeaderMyReposIsFork.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            columnHeaderMyReposIsFork.Width = 45;
             // 
-            // columnHeader4
+            // columnHeaderMyReposForks
             // 
-            columnHeader4.Text = "# Forks";
-            columnHeader4.Width = 50;
+            columnHeaderMyReposForks.Text = "# Forks";
+            columnHeaderMyReposForks.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            columnHeaderMyReposForks.Width = 50;
             // 
-            // columnHeader5
+            // columnHeaderSearchName
             // 
-            columnHeader5.Text = "Name";
-            columnHeader5.Width = 180;
+            columnHeaderSearchName.Text = "Name";
+            columnHeaderSearchName.Width = 180;
             // 
-            // columnHeader8
+            // columnHeaderSearchOwner
             // 
-            columnHeader8.Text = "Owner";
-            columnHeader8.Width = 110;
+            columnHeaderSearchOwner.Text = "Owner";
+            columnHeaderSearchOwner.Width = 110;
             // 
-            // columnHeader7
+            // columnHeaderSearchForks
             // 
-            columnHeader7.Text = "Forks";
-            columnHeader7.Width = 40;
+            columnHeaderSearchForks.Text = "# Forks";
+            columnHeaderSearchForks.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            columnHeaderSearchForks.Width = 40;
             // 
             // cloneBtn
             // 
@@ -213,10 +216,10 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // myReposLV
             // 
             this.myReposLV.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            columnHeader1,
-            columnHeader3,
-            columnHeader4,
-            this.columnHeader2});
+            columnHeaderMyReposName,
+            columnHeaderMyReposIsFork,
+            columnHeaderMyReposForks,
+            this.columnHeaderMyReposIsPrivate});
             this.myReposLV.Dock = System.Windows.Forms.DockStyle.Fill;
             this.myReposLV.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.myReposLV.HideSelection = false;
@@ -230,10 +233,11 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.myReposLV.View = System.Windows.Forms.View.Details;
             this.myReposLV.SelectedIndexChanged += new System.EventHandler(this._myReposLV_SelectedIndexChanged);
             // 
-            // columnHeader2
+            // columnHeaderMyReposIsPrivate
             // 
-            this.columnHeader2.Text = "Private";
-            this.columnHeader2.Width = 45;
+            this.columnHeaderMyReposIsPrivate.Text = "Private";
+            this.columnHeaderMyReposIsPrivate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.columnHeaderMyReposIsPrivate.Width = 45;
             // 
             // searchReposPage
             // 
@@ -343,10 +347,10 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // searchResultsLV
             // 
             this.searchResultsLV.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            columnHeader5,
-            columnHeader8,
-            columnHeader7,
-            this.columnHeader6});
+            columnHeaderSearchName,
+            columnHeaderSearchOwner,
+            this.columnHeaderSearchIsFork,
+            columnHeaderSearchForks});
             this.searchResultsLV.Dock = System.Windows.Forms.DockStyle.Fill;
             this.searchResultsLV.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.searchResultsLV.HideSelection = false;
@@ -360,10 +364,11 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.searchResultsLV.View = System.Windows.Forms.View.Details;
             this.searchResultsLV.SelectedIndexChanged += new System.EventHandler(this._searchResultsLV_SelectedIndexChanged);
             // 
-            // columnHeader6
+            // columnHeaderSearchIsFork
             // 
-            this.columnHeader6.Text = "Is fork";
-            this.columnHeader6.Width = 41;
+            this.columnHeaderSearchIsFork.Text = "Is fork";
+            this.columnHeaderSearchIsFork.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.columnHeaderSearchIsFork.Width = 41;
             // 
             // tableLayoutPanel4
             // 
@@ -477,7 +482,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // 
             this.addUpstreamRemoteAsCB.Location = new System.Drawing.Point(212, 71);
             this.addUpstreamRemoteAsCB.Name = "addUpstreamRemoteAsCB";
-            this.addUpstreamRemoteAsCB.Size = new System.Drawing.Size(200, 20);
+            this.addUpstreamRemoteAsCB.Size = new System.Drawing.Size(200, 21);
             this.addUpstreamRemoteAsCB.TabIndex = 8;
             this.addUpstreamRemoteAsCB.TextChanged += new System.EventHandler(this._addRemoteAsTB_TextChanged);
             // 
@@ -597,7 +602,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private System.Windows.Forms.TabPage myReposPage;
         private System.Windows.Forms.Label helpTextLbl;
         private UserControls.NativeListView myReposLV;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeaderMyReposIsPrivate;
         private System.Windows.Forms.TabPage searchReposPage;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
@@ -608,7 +613,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private System.Windows.Forms.Button forkBtn;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private UserControls.NativeListView searchResultsLV;
-        private System.Windows.Forms.ColumnHeader columnHeader6;
+        private System.Windows.Forms.ColumnHeader columnHeaderSearchIsFork;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.Button openGitupPageBtn;
         private System.Windows.Forms.TextBox searchResultItemDescription;

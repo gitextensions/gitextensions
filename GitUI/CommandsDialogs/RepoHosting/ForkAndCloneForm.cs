@@ -252,8 +252,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     SubItems =
                     {
                         repo.Owner,
-                        repo.Forks.ToString(),
-                        repo.IsAFork ? _strYes.Text : _strNo.Text
+                        repo.IsAFork ? _strYes.Text : _strNo.Text,
+                        repo.Forks.ToString()
                     }
                 });
             }
