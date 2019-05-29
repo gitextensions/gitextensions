@@ -74,7 +74,7 @@ namespace GitUITests.CommandsDialogs
                 repository.RemoveUntrackedFiles();
             }
 
-            CommitHelper.SetCommitMessage(Module, commitMessageText: null, amendCommit: false);
+            new CommitMessageManager(Module.WorkingDirGitDir, Module.CommitEncoding).ResetCommitMessage();
         }
 
         public void Dispose()

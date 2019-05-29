@@ -52,6 +52,7 @@
     <Compile Include="AppTitleGeneratorTests.cs" />
     <Compile Include="ArgumentBuilderExtensionsTests.cs" />
     <Compile Include="CommitDataManagerTest.cs" />
+    <Compile Include="CommitMessageManagerTests.cs" />
     <Compile Include="CommitTemplateManagerTests.cs" />
     <Compile Include="Config\ConfigFileTest.cs" />
     <Compile Include="EnvironmentPathsProviderTests.cs" />
