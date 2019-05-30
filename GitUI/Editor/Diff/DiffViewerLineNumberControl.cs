@@ -31,7 +31,8 @@ namespace GitUI.Editor.Diff
             {
                 if (_visible && _diffLines.Any())
                 {
-                    return textArea.TextView.WideSpaceWidth * ((int)Math.Log10(MaxLineNumber) + TextHorizontalMargin + 3);
+                    int maxDigits = (int)Math.Log10(MaxLineNumber) + 1;
+                    return TextHorizontalMargin + (textArea.TextView.WideSpaceWidth * ((2 * maxDigits) + /* a space behind each number */ 2));
                 }
 
                 return 0;
@@ -51,8 +52,8 @@ namespace GitUI.Editor.Diff
 
         public override void Paint(Graphics g, Rectangle rect)
         {
-            var totalWidth = Width;
-            var leftWidth = (int)(totalWidth / 2.0);
+            var numbersWidth = Width - TextHorizontalMargin;
+            var leftWidth = TextHorizontalMargin + (numbersWidth / 2);
             var rightWidth = rect.Width - leftWidth;
 
             var fontHeight = textArea.TextView.FontHeight;
@@ -120,7 +121,7 @@ namespace GitUI.Editor.Diff
                     g.DrawString(diffLine.RightLineNumber.ToString(),
                         lineNumberPainterColor.GetFont(TextEditorProperties.FontContainer),
                         drawBrush,
-                        new Point(TextHorizontalMargin + (totalWidth / 2), backgroundRectangle.Top));
+                        new Point(leftWidth, backgroundRectangle.Top));
                 }
             }
         }
