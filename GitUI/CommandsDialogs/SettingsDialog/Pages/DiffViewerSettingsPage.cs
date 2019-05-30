@@ -44,7 +44,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void chkShowLineNumbers_CheckedChanged(object sender, System.EventArgs e)
         {
-            
         }
     }
 }

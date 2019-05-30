@@ -109,6 +109,7 @@ namespace GitUI.Editor
             showEntireFileToolStripMenuItem.Checked = ShowEntireFile;
             SetStateOfContextLinesButtons();
 
+            showLineNumbers.Checked = AppSettings.ShowLineNumbers;
             showNonPrintChars.Checked = AppSettings.ShowNonPrintingChars;
             showNonprintableCharactersToolStripMenuItem.Checked = AppSettings.ShowNonPrintingChars;
             ToggleNonPrintingChars(AppSettings.ShowNonPrintingChars);
@@ -955,6 +956,13 @@ namespace GitUI.Editor
             }
 
             AppSettings.NumberOfContextLines = NumberOfContextLines;
+            OnExtraDiffArgumentsChanged();
+        }
+
+        private void showLineNumbers_Click(object sender, EventArgs e)
+        {
+            AppSettings.ShowLineNumbers = !AppSettings.ShowLineNumbers;
+            showLineNumbers.Checked = AppSettings.ShowLineNumbers;
             OnExtraDiffArgumentsChanged();
         }
 
