@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -155,10 +156,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 progressBar1.Visible = true;
                 btnDownloadNow.Enabled = false;
                 UpdateLabel.Text = _downloadingUpdate.Text;
+                string fileName = Path.GetFileName(UpdateUrl);
 
-                WebClient webClient = new WebClient();
-                string fileName = UpdateUrl.Substring(UpdateUrl.LastIndexOf("/") + 1);
-                await webClient.DownloadFileTaskAsync(new Uri(UpdateUrl), Environment.GetEnvironmentVariable("TEMP") + "\\" + fileName);
+                using (WebClient webClient = new WebClient())
+                {
+                    await webClient.DownloadFileTaskAsync(new Uri(UpdateUrl), Environment.GetEnvironmentVariable("TEMP") + "\\" + fileName);
+                }
 
                 Process process = new Process();
                 process.StartInfo.UseShellExecute = false;
