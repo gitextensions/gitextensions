@@ -37,7 +37,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this.buildServerSettingsPanel.Margin = new System.Windows.Forms.Padding(0, 10, 3, 2);
             this.buildServerSettingsPanel.MinimumSize = new System.Drawing.Size(343, 197);
             this.buildServerSettingsPanel.Name = "buildServerSettingsPanel";
-            this.buildServerSettingsPanel.Size = new System.Drawing.Size(1549, 197);
+            this.buildServerSettingsPanel.Size = new System.Drawing.Size(1340, 197);
             this.buildServerSettingsPanel.TabIndex = 5;
             // 
             // BuildServerType
@@ -49,7 +49,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this.BuildServerType.Location = new System.Drawing.Point(94, 87);
             this.BuildServerType.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.BuildServerType.Name = "BuildServerType";
-            this.BuildServerType.Size = new System.Drawing.Size(1455, 21);
+            this.BuildServerType.Size = new System.Drawing.Size(1246, 21);
             this.BuildServerType.TabIndex = 4;
             this.BuildServerType.SelectedIndexChanged += new System.EventHandler(this.BuildServerType_SelectedIndexChanged);
             // 
@@ -112,7 +112,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1552, 894);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1343, 699);
             this.tableLayoutPanel1.TabIndex = 6;
             // 
             // checkBoxShowBuildResultPage
@@ -136,7 +136,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MinimumSize = new System.Drawing.Size(454, 286);
             this.Name = "BuildServerIntegrationSettingsPage";
-            this.Size = new System.Drawing.Size(1552, 894);
+            this.Size = new System.Drawing.Size(1343, 699);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);

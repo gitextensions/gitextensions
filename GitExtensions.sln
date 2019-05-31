@@ -193,6 +193,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISSUE_TEMPLATE", "ISSUE_TEM
 		.github\ISSUE_TEMPLATE\feature_request.md = .github\ISSUE_TEMPLATE\feature_request.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitlabIntegration", "Plugins\BuildServerIntegration\GitlabIntegration\GitlabIntegration.csproj", "{F98B8C2C-AEC0-4251-8A9A-3214BA4E5B4C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -381,6 +383,10 @@ Global
 		{2828E531-7EB3-4A52-A71E-DCE73B9907FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2828E531-7EB3-4A52-A71E-DCE73B9907FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2828E531-7EB3-4A52-A71E-DCE73B9907FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F98B8C2C-AEC0-4251-8A9A-3214BA4E5B4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F98B8C2C-AEC0-4251-8A9A-3214BA4E5B4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F98B8C2C-AEC0-4251-8A9A-3214BA4E5B4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F98B8C2C-AEC0-4251-8A9A-3214BA4E5B4C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -431,6 +437,7 @@ Global
 		{6E2BE70D-0B5C-45D6-9D42-4497A46C370D} = {BC90FFE0-7770-4979-884E-9F9F294C58C0}
 		{2828E531-7EB3-4A52-A71E-DCE73B9907FC} = {BC90FFE0-7770-4979-884E-9F9F294C58C0}
 		{95A371C3-77B9-437A-892E-17CA0097106B} = {17FD2A6B-4005-41DC-BFAC-59F936DF33AA}
+		{F98B8C2C-AEC0-4251-8A9A-3214BA4E5B4C} = {F1B97F5D-CA42-4280-94A1-CE412BEA20DF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}
