@@ -1411,6 +1411,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
         <source>Jira credentials</source>
+        <target>Jira 登录凭证</target>
         
       </trans-unit>
       <trans-unit id="_enabledSettings.Caption">

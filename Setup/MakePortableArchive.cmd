@@ -625,12 +625,12 @@ REM xcopy /y /i ..\GitUI\Translation\Dutch.xlf GitExtensions\Translation\
 REM IF ERRORLEVEL 1 EXIT /B 1
 REM xcopy /y /i ..\GitUI\Translation\Dutch.Plugins.xlf GitExtensions\Translation\
 REM IF ERRORLEVEL 1 EXIT /B 1
-REM xcopy /y /i ..\GitUI\Translation\French.gif GitExtensions\Translation\
-REM IF ERRORLEVEL 1 EXIT /B 1
-REM xcopy /y /i ..\GitUI\Translation\French.xlf GitExtensions\Translation\
-REM IF ERRORLEVEL 1 EXIT /B 1
-REM xcopy /y /i ..\GitUI\Translation\French.Plugins.xlf GitExtensions\Translation\
-REM IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y /i ..\GitUI\Translation\French.gif GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y /i ..\GitUI\Translation\French.xlf GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y /i ..\GitUI\Translation\French.Plugins.xlf GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\GitUI\Translation\German.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\GitUI\Translation\German.xlf GitExtensions\Translation\

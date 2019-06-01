@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28917.182
 MinimumVisualStudioVersion = 15.0.27130.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}"
 EndProject
@@ -191,6 +191,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISSUE_TEMPLATE", "ISSUE_TEM
 	ProjectSection(SolutionItems) = preProject
 		.github\ISSUE_TEMPLATE\bug_report.md = .github\ISSUE_TEMPLATE\bug_report.md
 		.github\ISSUE_TEMPLATE\feature_request.md = .github\ISSUE_TEMPLATE\feature_request.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "transifex", "transifex", "{3B54384D-4314-45B7-95A8-2652BBB288AA}"
+	ProjectSection(SolutionItems) = preProject
+		Build\transifex\.tx\config = Build\transifex\.tx\config
+		Build\transifex\DownloadTransifexTranslations.ps1 = Build\transifex\DownloadTransifexTranslations.ps1
+		Build\transifex\UpdateLocalEnglishTranslations.ps1 = Build\transifex\UpdateLocalEnglishTranslations.ps1
 	EndProjectSection
 EndProject
 Global
@@ -431,6 +438,7 @@ Global
 		{6E2BE70D-0B5C-45D6-9D42-4497A46C370D} = {BC90FFE0-7770-4979-884E-9F9F294C58C0}
 		{2828E531-7EB3-4A52-A71E-DCE73B9907FC} = {BC90FFE0-7770-4979-884E-9F9F294C58C0}
 		{95A371C3-77B9-437A-892E-17CA0097106B} = {17FD2A6B-4005-41DC-BFAC-59F936DF33AA}
+		{3B54384D-4314-45B7-95A8-2652BBB288AA} = {472B72D9-9336-4C8B-A199-300F0CA7669E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}

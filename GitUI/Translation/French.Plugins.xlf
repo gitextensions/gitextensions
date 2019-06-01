@@ -1413,6 +1413,7 @@ Voulez-vous réinitialiser le chemin configuré?</target>
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
         <source>Jira credentials</source>
+        <target>Identifiants JIRA</target>
         
       </trans-unit>
       <trans-unit id="_enabledSettings.Caption">

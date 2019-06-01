@@ -280,6 +280,7 @@ See http://en.gravatar.com/site/implement/images/ for more details.</source>
     <body>
       <trans-unit id="allCommitInfoToolStripMenuItem.Text">
         <source>All commit info</source>
+        <target>すべてのコミット情報</target>
         
       </trans-unit>
       <trans-unit id="blamePreviousRevisionToolStripMenuItem.Text">
@@ -322,6 +323,7 @@ See http://en.gravatar.com/site/implement/images/ for more details.</source>
     <body>
       <trans-unit id="CheckoutTooltip.Text">
         <source>Checkout this branch</source>
+        <target>このブランチをチェックアウト</target>
         
       </trans-unit>
       <trans-unit id="CreateTooltip.Text">
@@ -338,6 +340,7 @@ See http://en.gravatar.com/site/implement/images/ for more details.</source>
       </trans-unit>
       <trans-unit id="RenameTooltip.Text">
         <source>Rename this branch</source>
+        <target>このブランチ名を変更</target>
         
       </trans-unit>
       <trans-unit id="ResetTooltip.Text">
@@ -642,6 +645,7 @@ Select no if you want to configure a different mergetool yourself.</source>
       </trans-unit>
       <trans-unit id="_registryKeyGitExtensionsCorrect.Text">
         <source>Git Extensions is properly registered.</source>
+        <target>GitExtensionsは正しく登録されています。</target>
         
       </trans-unit>
       <trans-unit id="_registryKeyGitExtensionsFaulty.Text">

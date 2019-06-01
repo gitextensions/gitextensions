@@ -745,6 +745,7 @@
       <Component Id="Dutch.gif" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Dutch.gif" />
       </Component>
+      -->
       <Component Id="French.xlf" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\French.xlf" />
       </Component>
@@ -754,7 +755,6 @@
       <Component Id="French.gif" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\French.gif" />
       </Component>
-      -->
       <Component Id="German.xlf" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\German.xlf" />
       </Component>
@@ -1744,12 +1744,12 @@
           <ComponentRef Id="Dutch.Plugins.xlf" />
           <ComponentRef Id="Dutch.gif" />
         </Feature>
+        -->
         <Feature Id="French" Title="French" Level="1">
           <ComponentRef Id="French.xlf" />
           <ComponentRef Id="French.Plugins.xlf" />
           <ComponentRef Id="French.gif" />
         </Feature>
-        -->
         <Feature Id="German" Title="German" Level="1">
           <ComponentRef Id="German.xlf" />
           <ComponentRef Id="German.Plugins.xlf" />
