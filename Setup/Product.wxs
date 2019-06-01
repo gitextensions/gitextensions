@@ -16,6 +16,7 @@
     <UIRef Id="WixUI_GitExtensions" />
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
     <Property Id="SSHCLIENT" Value="PuTTY" Secure="yes" />
+    <Property Id="LAUNCH" Value="0" />
     <WixVariable Id="WixUIDialogBmp" Value="dialog.bmp" />
     <WixVariable Id="WixUIBannerBmp" Value="banner.bmp" />
     <WixVariable Id="WixUISupportPerUser" Value="1" Overridable="yes" />
@@ -1813,6 +1814,10 @@
         <ComponentRef Id="Protocol.github_mac" />
       </Feature>
     </Feature>
+    <CustomAction Id='LaunchFile' FileKey='GitExtensions.exe' ExeCommand='' Return='asyncNoWait' />
     <UI />
+    <InstallExecuteSequence>
+      <Custom Action='LaunchFile' After='InstallFinalize'>( NOT Installed ) AND ( LAUNCH = "1" )</Custom>
+    </InstallExecuteSequence>
   </Product>
 </Wix>
