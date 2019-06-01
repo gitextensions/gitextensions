@@ -56,7 +56,6 @@ namespace GitUI.CommitInfo
         private static readonly TranslationString _plusCommits = new TranslationString("commits");
         private static readonly TranslationString _repoFailure = new TranslationString("Repository failure");
 
-        private const int MaximumDisplayedRefs = 20;
         private readonly ILinkFactory _linkFactory = new LinkFactory();
         private readonly ICommitDataManager _commitDataManager;
         private readonly ICommitDataBodyRenderer _commitDataBodyRenderer;
@@ -533,26 +532,12 @@ namespace GitUI.CommitInfo
                 if (_tags != null && string.IsNullOrEmpty(_tagInfo))
                 {
                     _tags.Sort(new ItemTpComparer(_refsOrderDict, "refs/tags/"));
-                    if (_tags.Count > MaximumDisplayedRefs)
-                    {
-                        _tags[MaximumDisplayedRefs - 2] = "…";
-                        _tags[MaximumDisplayedRefs - 1] = _tags[_tags.Count - 1];
-                        _tags.RemoveRange(MaximumDisplayedRefs, _tags.Count - MaximumDisplayedRefs);
-                    }
-
                     _tagInfo = GetTagsWhichContainsThisCommit(_tags, ShowBranchesAsLinks);
                 }
 
                 if (_branches != null && string.IsNullOrEmpty(_branchInfo))
                 {
                     _branches.Sort(new ItemTpComparer(_refsOrderDict, "refs/heads/"));
-                    if (_branches.Count > MaximumDisplayedRefs)
-                    {
-                        _branches[MaximumDisplayedRefs - 2] = "…";
-                        _branches[MaximumDisplayedRefs - 1] = _branches[_branches.Count - 1];
-                        _branches.RemoveRange(MaximumDisplayedRefs, _branches.Count - MaximumDisplayedRefs);
-                    }
-
                     _branchInfo = GetBranchesWhichContainsThisCommit(_branches, ShowBranchesAsLinks);
                 }
             }
