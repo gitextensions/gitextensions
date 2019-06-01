@@ -47,10 +47,6 @@ namespace GitUI.CommitInfo
 
         private static readonly TranslationString _brokenRefs = new TranslationString("The repository refs seem to be broken:");
         private static readonly TranslationString _copyLink = new TranslationString("Copy &link ({0})");
-        private static readonly TranslationString _containedInBranches = new TranslationString("Contained in branches:");
-        private static readonly TranslationString _containedInNoBranch = new TranslationString("Contained in no branch");
-        private static readonly TranslationString _containedInTags = new TranslationString("Contained in tags:");
-        private static readonly TranslationString _containedInNoTag = new TranslationString("Contained in no tag");
         private static readonly TranslationString _trsLinksRelatedToRevision = new TranslationString("Related links:");
         private static readonly TranslationString _derivesFromTag = new TranslationString("Derives from tag:");
         private static readonly TranslationString _derivesFromNoTag = new TranslationString("Derives from no tag");
@@ -68,6 +64,7 @@ namespace GitUI.CommitInfo
         private readonly IConfigFileRemoteSettingsManager _remotesManager;
         private readonly GitDescribeProvider _gitDescribeProvider;
         private readonly CancellationTokenSequence _asyncLoadCancellation = new CancellationTokenSequence();
+        private readonly RefsFormatter _refsFormatter;
 
         private readonly IDisposable _revisionInfoResizedSubscription;
         private readonly IDisposable _commitMessageResizedSubscription;
@@ -114,6 +111,7 @@ namespace GitUI.CommitInfo
             _externalLinkRevisionParser = new ExternalLinkRevisionParser(_remotesManager);
             _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(_effectiveLinkDefinitionsProvider, _externalLinkRevisionParser);
             _gitDescribeProvider = new GitDescribeProvider(() => Module);
+            _refsFormatter = new RefsFormatter(_linkFactory);
 
             var color = SystemColors.Window.MakeColorDarker(0.04);
             pnlCommitMessage.BackColor = color;
@@ -546,7 +544,7 @@ namespace GitUI.CommitInfo
                         _tags.RemoveRange(MaximumDisplayedRefs, _tags.Count - MaximumDisplayedRefs);
                     }
 
-                    _tagInfo = GetTagsWhichContainsThisCommit(_tags, ShowBranchesAsLinks);
+                    _tagInfo = _refsFormatter.FormatTags(_tags, ShowBranchesAsLinks);
                 }
 
                 if (_branches != null && string.IsNullOrEmpty(_branchInfo))
@@ -559,7 +557,7 @@ namespace GitUI.CommitInfo
                         _branches.RemoveRange(MaximumDisplayedRefs, _branches.Count - MaximumDisplayedRefs);
                     }
 
-                    _branchInfo = GetBranchesWhichContainsThisCommit(_branches, ShowBranchesAsLinks);
+                    _branchInfo = _refsFormatter.FormatBranches(_branches, ShowBranchesAsLinks);
                 }
             }
 
@@ -585,78 +583,6 @@ namespace GitUI.CommitInfo
                 }
 
                 return result.ToString();
-            }
-
-            string GetBranchesWhichContainsThisCommit(IEnumerable<string> branches, bool showBranchesAsLinks)
-            {
-                const string remotesPrefix = "remotes/";
-
-                // Include local branches if explicitly requested or when needed to decide whether to show remotes
-                bool getLocal = AppSettings.CommitInfoShowContainedInBranchesLocal ||
-                                AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-
-                // Include remote branches if requested
-                bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
-                                 AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-                var links = new List<string>();
-                bool allowLocal = AppSettings.CommitInfoShowContainedInBranchesLocal;
-                bool allowRemote = getRemote;
-
-                foreach (var branch in branches)
-                {
-                    string noPrefixBranch = branch;
-                    bool branchIsLocal;
-                    if (getLocal && getRemote)
-                    {
-                        // "git branch -a" prefixes remote branches with "remotes/"
-                        // It is possible to create a local branch named "remotes/origin/something"
-                        // so this check is not 100% reliable.
-                        // This shouldn't be a big problem if we're only displaying information.
-                        branchIsLocal = !branch.StartsWith(remotesPrefix);
-                        if (!branchIsLocal)
-                        {
-                            noPrefixBranch = branch.Substring(remotesPrefix.Length);
-                        }
-                    }
-                    else
-                    {
-                        branchIsLocal = !getRemote;
-                    }
-
-                    if ((branchIsLocal && allowLocal) || (!branchIsLocal && allowRemote))
-                    {
-                        var branchText = showBranchesAsLinks
-                            ? _linkFactory.CreateBranchLink(noPrefixBranch)
-                            : WebUtility.HtmlEncode(noPrefixBranch);
-
-                        links.Add(branchText);
-                    }
-
-                    if (branchIsLocal && AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal)
-                    {
-                        allowRemote = false;
-                    }
-                }
-
-                if (links.Any())
-                {
-                    return WebUtility.HtmlEncode(_containedInBranches.Text) + " " + links.Join(", ");
-                }
-
-                return WebUtility.HtmlEncode(_containedInNoBranch.Text);
-            }
-
-            string GetTagsWhichContainsThisCommit(IEnumerable<string> tags, bool showBranchesAsLinks)
-            {
-                var tagString = tags
-                    .Select(s => showBranchesAsLinks ? _linkFactory.CreateTagLink(s) : WebUtility.HtmlEncode(s)).Join(", ");
-
-                if (!string.IsNullOrEmpty(tagString))
-                {
-                    return WebUtility.HtmlEncode(_containedInTags.Text) + " " + tagString;
-                }
-
-                return WebUtility.HtmlEncode(_containedInNoTag.Text);
             }
         }
 
