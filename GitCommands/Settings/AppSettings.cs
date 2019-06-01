@@ -78,11 +78,10 @@ namespace GitCommands
                 {
                     return GetGitExtensionsDirectory();
                 }
-                else
-                {
-                    // Make ApplicationDataPath version independent
-                    return Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
-                }
+
+                // Make ApplicationDataPath version independent
+                return Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty)
+                                                  .Replace("Git Extensions", "GitExtensions"); // 'GitExtensions' has been changed to 'Git Extensions' in v3.0
             });
 
             LocalApplicationDataPath = new Lazy<string>(() =>
