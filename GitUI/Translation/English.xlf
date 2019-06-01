@@ -1520,12 +1520,36 @@ You will have push access. {2}</source>
         <source>Close</source>
         <target />
       </trans-unit>
-      <trans-unit id="columnHeader2.Text">
+      <trans-unit id="columnHeaderMyReposForks.Text">
+        <source># Forks</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="columnHeaderMyReposIsFork.Text">
+        <source>Is fork</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="columnHeaderMyReposIsPrivate.Text">
         <source>Private</source>
         <target />
       </trans-unit>
-      <trans-unit id="columnHeader6.Text">
+      <trans-unit id="columnHeaderMyReposName.Text">
+        <source>Name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="columnHeaderSearchForks.Text">
+        <source># Forks</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="columnHeaderSearchIsFork.Text">
         <source>Is fork</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="columnHeaderSearchName.Text">
+        <source>Name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="columnHeaderSearchOwner.Text">
+        <source>Owner</source>
         <target />
       </trans-unit>
       <trans-unit id="createDirectoryLbl.Text">
