@@ -1,6 +1,27 @@
 Changelog
 =========
 
+### Version 3.1.1 (2 June 2019)
+
+#### Fixes:
+* Ctrl+Backspace affects ReadOnly TextBox - Issue [6667]
+* incorrect {sRemotePathFromUrl} parameter evaluation - Issue [6567]
+* [NBug] Remote URLs should appear in pairs. - Issue [6562]
+* Commit Dialog: New submodule without text if unstaged - Issue [6559]
+* Pull dialog stopped "remembering" previous user selection - Issue [6503]
+* Commit message not stored after reverting a commit - Issue [6244]
+* System.Exception opening an existing repository - Issue [6093]
+
+
+[6667]:https://github.com/gitextensions/gitextensions/issues/6667
+[6567]:https://github.com/gitextensions/gitextensions/issues/6567
+[6562]:https://github.com/gitextensions/gitextensions/issues/6562
+[6559]:https://github.com/gitextensions/gitextensions/issues/6559
+[6503]:https://github.com/gitextensions/gitextensions/issues/6503
+[6244]:https://github.com/gitextensions/gitextensions/issues/6244
+[6093]:https://github.com/gitextensions/gitextensions/issues/6093
+
+
 ### Version 3.1.0 (13 May 2019)
 
 #### Features:
