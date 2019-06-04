@@ -99,7 +99,7 @@ namespace GitUI
             this._gridView.ReadOnly = true;
             this._gridView.RowHeadersVisible = false;
             this._gridView.RowsDefaultCellStyle = dataGridViewCellStyle6;
-            this._gridView.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(185)))), ((int)(((byte)(235)))));
+            this._gridView.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             this._gridView.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             this._gridView.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this._gridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;

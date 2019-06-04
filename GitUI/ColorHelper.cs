@@ -20,5 +20,10 @@ namespace GitUI
             var hsl = new HslColor(color);
             return hsl.WithBrightness(hsl.L - amount).ToColor();
         }
+
+        public static bool IsLightTheme()
+        {
+            return IsLightColor(SystemColors.Window);
+        }
     }
 }

@@ -59,7 +59,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.Color.Black;
+            this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label1.Location = new System.Drawing.Point(15, 52);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
@@ -70,7 +70,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.Color.Black;
+            this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label2.Location = new System.Drawing.Point(46, 11);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
@@ -81,7 +81,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.ForeColor = System.Drawing.Color.Black;
+            this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label3.Location = new System.Drawing.Point(15, 86);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
@@ -92,7 +92,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.ForeColor = System.Drawing.Color.Black;
+            this.label4.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label4.Location = new System.Drawing.Point(15, 122);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
@@ -139,7 +139,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.ForeColor = System.Drawing.Color.Black;
+            this.label5.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label5.Location = new System.Drawing.Point(15, 159);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
@@ -163,7 +163,7 @@
             // 
             // btRefresh
             // 
-            this.btRefresh.ForeColor = System.Drawing.Color.Black;
+            this.btRefresh.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btRefresh.Image = global::GitUI.Properties.Images.ReloadRevisions;
             this.btRefresh.Location = new System.Drawing.Point(552, 152);
             this.btRefresh.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -176,7 +176,7 @@
             // lbSubmodule
             // 
             this.lbSubmodule.AutoSize = true;
-            this.lbSubmodule.ForeColor = System.Drawing.Color.Black;
+            this.lbSubmodule.ForeColor = System.Drawing.SystemColors.ControlText;
             this.lbSubmodule.Location = new System.Drawing.Point(308, 11);
             this.lbSubmodule.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbSubmodule.Name = "lbSubmodule";

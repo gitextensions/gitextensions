@@ -397,13 +397,13 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    Info.ForeColor = Color.Black;
+                    Info.ForeColor = SystemColors.ControlText;
                 }
             }
             else
             {
                 Info.Text += " " + _infoDirectoryNew.Text;
-                Info.ForeColor = Color.Black;
+                Info.ForeColor = SystemColors.ControlText;
             }
         }
 

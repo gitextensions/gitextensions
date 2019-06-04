@@ -63,6 +63,7 @@ namespace GitUI
         {
             var oldMode = graphics.SmoothingMode;
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            bool light = ColorHelper.IsLightTheme();
 
             try
             {
@@ -70,8 +71,8 @@ namespace GitUI
                 {
                     if (fill)
                     {
-                        var color1 = Lerp(color, Color.White, 0.92F);
-                        var color2 = Lerp(color1, Color.White, 0.9F);
+                        var color1 = Lerp(color, light ? Color.White : Color.Black, 0.92F);
+                        var color2 = Lerp(color1, light ? Color.White : Color.DarkSlateBlue, light ? 0.9F : 0.3F);
                         using (var brush = new LinearGradientBrush(bounds, color1, color2, angle: 90))
                         {
                             graphics.FillPath(brush, path);
@@ -79,11 +80,11 @@ namespace GitUI
                     }
                     else if (isRowSelected)
                     {
-                        graphics.FillPath(Brushes.White, path);
+                        graphics.FillPath(light ? Brushes.White : Brushes.Black, path);
                     }
 
                     // frame
-                    using (var pen = new Pen(Lerp(color, Color.White, 0.83F)))
+                    using (var pen = new Pen(Lerp(color, light ? Color.White : Color.Black, light ? 0.83F : 0.7F)))
                     {
                         if (dashedLine)
                         {

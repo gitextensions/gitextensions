@@ -130,6 +130,9 @@ namespace GitUI
             InitializeComponent();
             InitializeComplete();
 
+            bool light = ColorHelper.IsLightTheme();
+            openPullRequestPageStripMenuItem.Image = light ? Images.PullRequest : Images.PullRequest_inv;
+
             _loadingControlAsync = new Label
             {
                 Padding = DpiUtil.Scale(new Padding(7, 5, 5, 5)),

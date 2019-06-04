@@ -43,7 +43,7 @@
             // 
             this.Delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Delete.Enabled = false;
-            this.Delete.ForeColor = System.Drawing.Color.Black;
+            this.Delete.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Delete.Image = global::GitUI.Properties.Images.BranchDelete;
             this.Delete.Location = new System.Drawing.Point(553, 80);
             this.Delete.Margin = new System.Windows.Forms.Padding(4);
@@ -59,7 +59,7 @@
             // labelSelectBranches
             // 
             this.labelSelectBranches.AutoSize = true;
-            this.labelSelectBranches.ForeColor = System.Drawing.Color.Black;
+            this.labelSelectBranches.ForeColor = System.Drawing.SystemColors.ControlText;
             this.labelSelectBranches.Location = new System.Drawing.Point(11, 11);
             this.labelSelectBranches.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelSelectBranches.Name = "labelSelectBranches";
@@ -70,7 +70,7 @@
             // labelDeleteBranchWarning
             // 
             this.labelDeleteBranchWarning.AutoSize = true;
-            this.labelDeleteBranchWarning.ForeColor = System.Drawing.Color.Black;
+            this.labelDeleteBranchWarning.ForeColor = System.Drawing.SystemColors.ControlText;
             this.labelDeleteBranchWarning.Location = new System.Drawing.Point(49, 145);
             this.labelDeleteBranchWarning.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelDeleteBranchWarning.MaximumSize = new System.Drawing.Size(625, 0);
