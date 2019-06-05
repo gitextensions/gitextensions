@@ -49,10 +49,16 @@ namespace GitUITests.CommitInfo
             var uiCommandsSource = Substitute.For<IGitUICommandsSource>();
             uiCommandsSource.UICommands.Returns(x => _commands);
 
+            // the following assignment of _commitInfo.UICommandsSource will already call this command
+            _gitExecutable.StageOutput("for-each-ref --sort=-committerdate --sort=-taggerdate --format=\"%(refname)\" refs/", "");
+
             _commitInfo = new GitUI.CommitInfo.CommitInfo
             {
                 UICommandsSource = uiCommandsSource
             };
+
+            // let the async call be executed before the mockup of _gitExecutable will be changed
+            Thread.Sleep(100);
         }
 
         [TearDown]

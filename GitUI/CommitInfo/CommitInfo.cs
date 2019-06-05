@@ -97,8 +97,10 @@ namespace GitUI.CommitInfo
             {
                 this.InvokeAsync(() =>
                 {
-                    UICommandsSource.UICommandsChanged += UICommandsSource_UICommandsChanged;
-                    ReloadCommitInfo();
+                    UICommandsSource.UICommandsChanged += delegate { RefreshSortedRefs(); };
+
+                    // call this event handler also now (necessary for "Contained in branches/tags")
+                    RefreshSortedRefs();
                 }).FileAndForget();
             };
 
@@ -136,18 +138,13 @@ namespace GitUI.CommitInfo
             commitInfoHeader.SetContextMenuStrip(commitInfoContextMenuStrip);
         }
 
-        private void UICommandsSource_UICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
+        private void RefreshSortedRefs()
         {
             if (!Module.IsValidGitWorkingDir())
             {
                 return;
             }
 
-            RefreshSortedRefs();
-        }
-
-        private void RefreshSortedRefs()
-        {
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await LoadSortedRefsAsync();
@@ -284,6 +281,8 @@ namespace GitUI.CommitInfo
                 UpdateRevisionInfo();
                 StartAsyncDataLoad();
             }
+
+            return;
 
             void UpdateCommitMessage()
             {
