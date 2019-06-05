@@ -1,0 +1,9 @@
+# Comment to post when potential duplicates are detected
+referenceComment: |
+  Thank you for the bug report :+1:
+  
+  Sadly, it appears some important information is still missing, which you may have overlooked while submitting the bug.
+  Without this information we may not be able to assist you in resolving the issue.
+  
+  Please review your submission, fill the missing information in and post a new comment to ping us back to re-open the issue.
+  Thanks again
