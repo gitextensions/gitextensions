@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
+using GitExtUtils.GitUI;
 using GitUI.UserControls;
 using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
@@ -40,6 +41,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         #endregion
 
+        private const string UpstreamRemoteName = "upstream";
         private readonly IRepositoryHostPlugin _gitHoster;
         private readonly EventHandler<GitModuleEventArgs> _gitModuleChanged;
 
@@ -49,6 +51,16 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _gitHoster = gitHoster;
             InitializeComponent();
             InitializeComplete();
+
+            foreach (ColumnHeader column in myReposLV.Columns)
+            {
+                column.Width = DpiUtil.Scale(column.Width);
+            }
+
+            foreach (ColumnHeader column in searchResultsLV.Columns)
+            {
+                column.Width = DpiUtil.Scale(column.Width);
+            }
         }
 
         private void ForkAndCloneForm_Load(object sender, EventArgs e)
@@ -102,7 +114,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                         myReposLV.Items.Clear();
 
-                        foreach (var repo in repos)
+                        foreach (var repo in repos.OrderBy(r => r.Name))
                         {
                             myReposLV.Items.Add(new ListViewItem
                             {
@@ -117,7 +129,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                             });
                         }
 
-                        ResizeColumnsToFitContent(myReposLV);
+                        ResizeColumnToFitContent(myReposLV.Columns[0]);
                     }
                     catch (Exception ex) when (!(ex is OperationCanceledException))
                     {
@@ -131,14 +143,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 .FileAndForget();
         }
 
-        private void ResizeColumnsToFitContent(NativeListView list)
-        {
-            var resizeStrategy = list.Items.Count == 0 ? -2 : -1;
+        private const int ResizeOnContent = -1;
+        private const int ResizeOnHeader = -2;
 
-            foreach (ColumnHeader column in list.Columns)
-            {
-                column.Width = resizeStrategy;
-            }
+        private void ResizeColumnToFitContent(ColumnHeader column)
+        {
+            var resizeStrategy = column.ListView.Items.Count == 0 ? ResizeOnHeader : ResizeOnContent;
+            column.Width = resizeStrategy;
         }
 
         #region GUI Handlers
@@ -232,7 +243,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             searchResultsLV.Items.Clear();
 
-            foreach (var repo in repos)
+            foreach (var repo in repos.OrderBy(r => r.Name))
             {
                 searchResultsLV.Items.Add(new ListViewItem
                 {
@@ -241,13 +252,14 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     SubItems =
                     {
                         repo.Owner,
-                        repo.Forks.ToString(),
-                        repo.IsAFork ? _strYes.Text : _strNo.Text
+                        repo.IsAFork ? _strYes.Text : _strNo.Text,
+                        repo.Forks.ToString()
                     }
                 });
             }
 
-            ResizeColumnsToFitContent(searchResultsLV);
+            ResizeColumnToFitContent(searchResultsLV.Columns[0]);
+            ResizeColumnToFitContent(searchResultsLV.Columns[1]);
 
             searchBtn.Enabled = true;
         }
@@ -395,9 +407,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             var module = new GitModule(targetDir);
 
-            if (addRemoteAsTB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentReadOnlyUrl))
+            if (addUpstreamRemoteAsCB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentReadOnlyUrl))
             {
-                var error = module.AddRemote(addRemoteAsTB.Text.Trim(), repo.ParentReadOnlyUrl);
+                var error = module.AddRemote(addUpstreamRemoteAsCB.Text.Trim(), repo.ParentReadOnlyUrl);
                 if (!string.IsNullOrEmpty(error))
                 {
                     MessageBox.Show(this, error, _strCouldNotAddRemote.Text);
@@ -457,8 +469,20 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 if (updateCreateDirTB)
                 {
                     createDirTB.Text = repo.Name;
-                    addRemoteAsTB.Text = repo.ParentOwner ?? "";
-                    addRemoteAsTB.Enabled = repo.ParentOwner != null;
+                    addUpstreamRemoteAsCB.Text = "";
+                    addUpstreamRemoteAsCB.Items.Clear();
+                    if (repo.ParentOwner != null)
+                    {
+                        var upstreamRemoteName = repo.ParentOwner ?? "";
+                        addUpstreamRemoteAsCB.Items.Add(upstreamRemoteName);
+                        addUpstreamRemoteAsCB.Items.Add(UpstreamRemoteName);
+                        if (addUpstreamRemoteAsCB.Text != UpstreamRemoteName)
+                        {
+                            addUpstreamRemoteAsCB.Text = upstreamRemoteName;
+                        }
+                    }
+
+                    addUpstreamRemoteAsCB.Enabled = repo.ParentOwner != null;
                 }
 
                 cloneBtn.Enabled = true;
@@ -475,7 +499,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void SetCloneInfoText(IHostedRepository repo)
         {
-            var moreInfo = !string.IsNullOrEmpty(addRemoteAsTB.Text) ? string.Format(_strWillBeAddedAsARemote.Text, addRemoteAsTB.Text.Trim()) : "";
+            var moreInfo = !string.IsNullOrEmpty(addUpstreamRemoteAsCB.Text) ? string.Format(_strWillBeAddedAsARemote.Text, addUpstreamRemoteAsCB.Text.Trim()) : "";
 
             if (tabControl.SelectedTab == searchReposPage)
             {
