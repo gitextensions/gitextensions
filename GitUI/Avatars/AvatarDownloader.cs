@@ -62,7 +62,7 @@ namespace GitUI.Avatars
                 {
                     var username = match.Groups["username"].Value;
                     var client = new Git.hub.Client();
-                    var user = client.GetUser(username);
+                    var user = await client.GetUserAsync(username);
                     if (!string.IsNullOrEmpty(user?.AvatarUrl))
                     {
                         var builder = new UriBuilder(user.AvatarUrl);
