@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
+using GitExtUtils.GitUI;
 using GitUI.Avatars;
 using ResourceManager;
 
@@ -12,14 +15,24 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private readonly TranslationString _noDictFile = new TranslationString("None");
         private readonly TranslationString _noDictFilesFound = new TranslationString("No dictionary files found in: {0}");
-        private readonly TranslationString _noImageServiceTooltip = new TranslationString("A default image, if an email address has no matching Gravatar image.\r\nSee http://en.gravatar.com/site/implement/images/ for more details.");
+        private readonly TranslationString _noImageServiceTooltip = new TranslationString("A default image, if an email address has no matching Gravatar image.\r\nSee http://en.gravatar.com/site/implement/images#default-image for more details.");
 
         public AppearanceSettingsPage()
         {
             InitializeComponent();
             InitializeComplete();
 
-            _NO_TRANSLATE_NoImageService.Items.AddRange(Enum.GetNames(typeof(DefaultImageType)));
+            FillComboBoxWithEnumValues<AvatarProvider>(AvatarProvider);
+            FillComboBoxWithEnumValues<GravatarFallbackAvatarType>(_NO_TRANSLATE_NoImageService);
+        }
+
+        private void FillComboBoxWithEnumValues<T>(ComboBox comboBox) where T : Enum
+        {
+            comboBox.DisplayMember = nameof(ComboBoxItem<T>.Text);
+            comboBox.ValueMember = nameof(ComboBoxItem<T>.Value);
+            comboBox.DataSource = EnumHelper.GetValues<T>()
+                .Select(e => new ComboBoxItem<T> { Text = e.GetDescription(), Value = e })
+                .ToArray();
         }
 
         protected override void OnRuntimeLoad()
@@ -27,6 +40,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             base.OnRuntimeLoad();
 
             ToolTip.SetToolTip(_NO_TRANSLATE_NoImageService, _noImageServiceTooltip.Text);
+            ToolTip.SetToolTip(pictureAvatarHelp, _noImageServiceTooltip.Text);
+            pictureAvatarHelp.Size = DpiUtil.Scale(pictureAvatarHelp.Size);
 
             // align 1st columns across all tables
             tlpnlGeneral.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
@@ -54,7 +69,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AvatarImageCacheDays;
             ShowAuthorAvatarInCommitInfo.Checked = AppSettings.ShowAuthorAvatarInCommitInfo;
             ShowAuthorAvatarInCommitGraph.Checked = AppSettings.ShowAuthorAvatarColumn;
-            _NO_TRANSLATE_NoImageService.Text = AppSettings.GravatarDefaultImageType.ToString();
+            AvatarProvider.SelectedValue = AppSettings.AvatarProvider;
+            _NO_TRANSLATE_NoImageService.SelectedValue = AppSettings.GravatarFallbackAvatarType;
+            ManageGravatarOptionsDisplay();
 
             Language.Items.Clear();
             Language.Items.Add("English");
@@ -115,9 +132,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.Translation = Language.Text;
             Strings.Reinitialize();
 
-            if (Enum.TryParse<DefaultImageType>(_NO_TRANSLATE_NoImageService.Text, ignoreCase: true, out var type))
+            var shouldClearCache =
+                AppSettings.AvatarProvider != (AvatarProvider)AvatarProvider.SelectedValue
+                || AppSettings.GravatarFallbackAvatarType != (GravatarFallbackAvatarType)_NO_TRANSLATE_NoImageService.SelectedValue;
+
+            AppSettings.AvatarProvider = (AvatarProvider)AvatarProvider.SelectedValue;
+
+            if (_NO_TRANSLATE_NoImageService.SelectedValue is GravatarFallbackAvatarType imageType)
             {
-                AppSettings.GravatarDefaultImageType = type;
+                AppSettings.GravatarFallbackAvatarType = imageType;
+            }
+
+            if (shouldClearCache)
+            {
+                new AvatarControl().ClearCache();
             }
 
             AppSettings.RelativeDate = chkShowRelativeDate.Checked;
@@ -179,6 +207,30 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(@"https://github.com/gitextensions/gitextensions/wiki/Spelling");
+        }
+
+        private void pictureAvatarHelp_Click(object sender, EventArgs e)
+        {
+            Process.Start(@"http://en.gravatar.com/site/implement/images#default-image");
+        }
+
+        private void AvatarProvider_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ManageGravatarOptionsDisplay();
+        }
+
+        private void ManageGravatarOptionsDisplay()
+        {
+            var showAvatarOptions = (AvatarProvider)AvatarProvider.SelectedValue == GitCommands.AvatarProvider.Gravatar;
+            lblNoImageService.Visible = showAvatarOptions;
+            _NO_TRANSLATE_NoImageService.Visible = showAvatarOptions;
+            pictureAvatarHelp.Visible = showAvatarOptions;
+        }
+
+        private class ComboBoxItem<T>
+        {
+            public string Text { get; set; }
+            public T Value { get; set; }
         }
     }
 }

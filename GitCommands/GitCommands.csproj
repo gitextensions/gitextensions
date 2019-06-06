@@ -123,7 +123,8 @@
     <Compile Include="Plink.cs" />
     <Compile Include="Remotes\ConfigFileRemoteSettingsManager.cs" />
     <Compile Include="Remotes\RepoNameExtractor.cs" />
-    <Compile Include="Settings\DefaultImageType.cs" />
+    <Compile Include="Settings\AvatarProvider.cs" />
+    <Compile Include="Settings\GravatarFallbackAvatarType.cs" />
     <Compile Include="Settings\IgnoreWhitespaceKind.cs" />
     <Compile Include="Submodules\DetailedSubmoduleInfo.cs" />
     <Compile Include="Submodules\SubmoduleInfo.cs" />
@@ -167,6 +168,7 @@
     <Compile Include="Settings\SettingsPath.cs" />
     <Compile Include="StreamExtensions.cs" />
     <Compile Include="StringPool.cs" />
+    <Compile Include="Utils\EnumHelper.cs" />
     <Compile Include="Utils\EnvUtils.cs" />
     <Compile Include="ExternalLinks\ExternalLink.cs" />
     <Compile Include="Git\GitBisectOption.cs" />

@@ -481,11 +481,11 @@ namespace GitCommands
         [NotNull]
         public static string AvatarImageCachePath => Path.Combine(ApplicationDataPath.Value, "Images\\");
 
-        public static DefaultImageType GravatarDefaultImageType
+        public static GravatarFallbackAvatarType GravatarFallbackAvatarType
         {
-            get => Enum.TryParse(GetString("GravatarDefaultImageType", "Identicon"), out DefaultImageType type)
+            get => Enum.TryParse(GetString("GravatarDefaultImageType", "Identicon"), out GravatarFallbackAvatarType type)
                 ? type
-                : DefaultImageType.Identicon;
+                : GravatarFallbackAvatarType.Identicon;
             set => SetString("GravatarDefaultImageType", value.ToString());
         }
 
@@ -505,6 +505,12 @@ namespace GitCommands
         {
             get => GetBool("showauthorgravatar", true);
             set => SetBool("showauthorgravatar", value);
+        }
+
+        public static AvatarProvider AvatarProvider
+        {
+            get => GetEnum("Appearance.AvatarProvider", AvatarProvider.Gravatar);
+            set => SetEnum("Appearance.AvatarProvider", value);
         }
 
         #endregion

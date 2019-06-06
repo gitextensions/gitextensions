@@ -46,6 +46,8 @@
             this.helpTranslate = new System.Windows.Forms.LinkLabel();
             this.gbAuthorImages = new System.Windows.Forms.GroupBox();
             this.tlpnlAuthor = new System.Windows.Forms.TableLayoutPanel();
+            this.lblAvatarProvider = new System.Windows.Forms.Label();
+            this.AvatarProvider = new System.Windows.Forms.ComboBox();
             this.ShowAuthorAvatarInCommitGraph = new System.Windows.Forms.CheckBox();
             this.ShowAuthorAvatarInCommitInfo = new System.Windows.Forms.CheckBox();
             this.ClearImageCache = new System.Windows.Forms.Button();
@@ -53,6 +55,7 @@
             this.lblCacheDays = new System.Windows.Forms.Label();
             this.lblNoImageService = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_DaysToCacheImages = new System.Windows.Forms.NumericUpDown();
+            this.pictureAvatarHelp = new System.Windows.Forms.PictureBox();
             this.fixedWidthFontDialog = new System.Windows.Forms.FontDialog();
             this.applicationDialog = new System.Windows.Forms.FontDialog();
             this.commitFontDialog = new System.Windows.Forms.FontDialog();
@@ -65,6 +68,7 @@
             this.gbAuthorImages.SuspendLayout();
             this.tlpnlAuthor.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_DaysToCacheImages)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureAvatarHelp)).BeginInit();
             this.SuspendLayout();
             // 
             // tlpnlMain
@@ -83,7 +87,7 @@
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
-            tlpnlMain.Size = new System.Drawing.Size(1122, 753);
+            tlpnlMain.Size = new System.Drawing.Size(1542, 481);
             tlpnlMain.TabIndex = 0;
             // 
             // gbGeneral
@@ -94,8 +98,8 @@
             this.gbGeneral.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbGeneral.Location = new System.Drawing.Point(3, 3);
             this.gbGeneral.Name = "gbGeneral";
-            this.gbGeneral.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
-            this.gbGeneral.Size = new System.Drawing.Size(1116, 125);
+            this.gbGeneral.Padding = new System.Windows.Forms.Padding(8);
+            this.gbGeneral.Size = new System.Drawing.Size(1536, 125);
             this.gbGeneral.TabIndex = 0;
             this.gbGeneral.TabStop = false;
             this.gbGeneral.Text = "General";
@@ -121,7 +125,7 @@
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlGeneral.Size = new System.Drawing.Size(1100, 96);
+            this.tlpnlGeneral.Size = new System.Drawing.Size(1520, 96);
             this.tlpnlGeneral.TabIndex = 0;
             // 
             // chkShowRelativeDate
@@ -192,10 +196,10 @@
             this.gbLanguages.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbLanguages.Controls.Add(this.tlpnlLanguage);
             this.gbLanguages.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbLanguages.Location = new System.Drawing.Point(3, 297);
+            this.gbLanguages.Location = new System.Drawing.Point(3, 324);
             this.gbLanguages.Name = "gbLanguages";
-            this.gbLanguages.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
-            this.gbLanguages.Size = new System.Drawing.Size(1116, 83);
+            this.gbLanguages.Padding = new System.Windows.Forms.Padding(8);
+            this.gbLanguages.Size = new System.Drawing.Size(1536, 83);
             this.gbLanguages.TabIndex = 2;
             this.gbLanguages.TabStop = false;
             this.gbLanguages.Text = "Language";
@@ -221,7 +225,7 @@
             this.tlpnlLanguage.RowCount = 2;
             this.tlpnlLanguage.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlLanguage.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlLanguage.Size = new System.Drawing.Size(1100, 54);
+            this.tlpnlLanguage.Size = new System.Drawing.Size(1520, 54);
             this.tlpnlLanguage.TabIndex = 0;
             // 
             // Dictionary
@@ -303,8 +307,8 @@
             this.gbAuthorImages.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbAuthorImages.Location = new System.Drawing.Point(3, 134);
             this.gbAuthorImages.Name = "gbAuthorImages";
-            this.gbAuthorImages.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
-            this.gbAuthorImages.Size = new System.Drawing.Size(1116, 157);
+            this.gbAuthorImages.Padding = new System.Windows.Forms.Padding(8);
+            this.gbAuthorImages.Size = new System.Drawing.Size(1536, 184);
             this.gbAuthorImages.TabIndex = 1;
             this.gbAuthorImages.TabStop = false;
             this.gbAuthorImages.Text = "Author images";
@@ -317,24 +321,50 @@
             this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpnlAuthor.Controls.Add(this.lblAvatarProvider, 0, 3);
+            this.tlpnlAuthor.Controls.Add(this.AvatarProvider, 1, 3);
             this.tlpnlAuthor.Controls.Add(this.ShowAuthorAvatarInCommitGraph, 0, 0);
             this.tlpnlAuthor.Controls.Add(this.ShowAuthorAvatarInCommitInfo, 0, 1);
-            this.tlpnlAuthor.Controls.Add(this.ClearImageCache, 1, 4);
-            this.tlpnlAuthor.Controls.Add(this._NO_TRANSLATE_NoImageService, 1, 3);
+            this.tlpnlAuthor.Controls.Add(this.ClearImageCache, 1, 5);
+            this.tlpnlAuthor.Controls.Add(this._NO_TRANSLATE_NoImageService, 1, 4);
             this.tlpnlAuthor.Controls.Add(this.lblCacheDays, 0, 2);
-            this.tlpnlAuthor.Controls.Add(this.lblNoImageService, 0, 3);
+            this.tlpnlAuthor.Controls.Add(this.lblNoImageService, 0, 4);
             this.tlpnlAuthor.Controls.Add(this._NO_TRANSLATE_DaysToCacheImages, 1, 2);
+            this.tlpnlAuthor.Controls.Add(this.pictureAvatarHelp, 2, 4);
             this.tlpnlAuthor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpnlAuthor.Location = new System.Drawing.Point(8, 21);
             this.tlpnlAuthor.Name = "tlpnlAuthor";
-            this.tlpnlAuthor.RowCount = 5;
+            this.tlpnlAuthor.RowCount = 6;
             this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlAuthor.Size = new System.Drawing.Size(1100, 128);
+            this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlAuthor.Size = new System.Drawing.Size(1520, 155);
             this.tlpnlAuthor.TabIndex = 0;
+            // 
+            // lblAvatarProvider
+            // 
+            this.lblAvatarProvider.AutoSize = true;
+            this.lblAvatarProvider.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblAvatarProvider.Location = new System.Drawing.Point(3, 72);
+            this.lblAvatarProvider.Name = "lblAvatarProvider";
+            this.lblAvatarProvider.Size = new System.Drawing.Size(155, 27);
+            this.lblAvatarProvider.TabIndex = 11;
+            this.lblAvatarProvider.Text = "Avatar provider";
+            this.lblAvatarProvider.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // AvatarProvider
+            // 
+            this.AvatarProvider.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AvatarProvider.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.AvatarProvider.FormattingEnabled = true;
+            this.AvatarProvider.Location = new System.Drawing.Point(164, 75);
+            this.AvatarProvider.Name = "AvatarProvider";
+            this.AvatarProvider.Size = new System.Drawing.Size(183, 21);
+            this.AvatarProvider.TabIndex = 10;
+            this.AvatarProvider.SelectedIndexChanged += new System.EventHandler(this.AvatarProvider_SelectedIndexChanged);
             // 
             // ShowAuthorAvatarInCommitGraph
             // 
@@ -343,21 +373,21 @@
             this.ShowAuthorAvatarInCommitGraph.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ShowAuthorAvatarInCommitGraph.Location = new System.Drawing.Point(3, 3);
             this.ShowAuthorAvatarInCommitGraph.Name = "ShowAuthorAvatarInCommitGraph";
-            this.ShowAuthorAvatarInCommitGraph.Size = new System.Drawing.Size(294, 17);
+            this.ShowAuthorAvatarInCommitGraph.Size = new System.Drawing.Size(344, 17);
             this.ShowAuthorAvatarInCommitGraph.TabIndex = 0;
-            this.ShowAuthorAvatarInCommitGraph.Text = "Show author's avatar column in the commit graph";
+            this.ShowAuthorAvatarInCommitGraph.Text = "Show author\'s avatar column in the commit graph";
             this.ShowAuthorAvatarInCommitGraph.UseVisualStyleBackColor = true;
             // 
-            // ShowAuthorAvatar
+            // ShowAuthorAvatarInCommitInfo
             // 
             this.ShowAuthorAvatarInCommitInfo.AutoSize = true;
             this.tlpnlAuthor.SetColumnSpan(this.ShowAuthorAvatarInCommitInfo, 2);
             this.ShowAuthorAvatarInCommitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ShowAuthorAvatarInCommitInfo.Location = new System.Drawing.Point(3, 26);
             this.ShowAuthorAvatarInCommitInfo.Name = "ShowAuthorAvatarInCommitInfo";
-            this.ShowAuthorAvatarInCommitInfo.Size = new System.Drawing.Size(294, 17);
+            this.ShowAuthorAvatarInCommitInfo.Size = new System.Drawing.Size(344, 17);
             this.ShowAuthorAvatarInCommitInfo.TabIndex = 1;
-            this.ShowAuthorAvatarInCommitInfo.Text = "Show author's avatar in the commit info view";
+            this.ShowAuthorAvatarInCommitInfo.Text = "Show author\'s avatar in the commit info view";
             this.ShowAuthorAvatarInCommitInfo.UseVisualStyleBackColor = true;
             // 
             // ClearImageCache
@@ -365,7 +395,7 @@
             this.ClearImageCache.AutoSize = true;
             this.ClearImageCache.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClearImageCache.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ClearImageCache.Location = new System.Drawing.Point(114, 102);
+            this.ClearImageCache.Location = new System.Drawing.Point(164, 129);
             this.ClearImageCache.Name = "ClearImageCache";
             this.ClearImageCache.Size = new System.Drawing.Size(183, 23);
             this.ClearImageCache.TabIndex = 6;
@@ -378,7 +408,7 @@
             this._NO_TRANSLATE_NoImageService.Dock = System.Windows.Forms.DockStyle.Fill;
             this._NO_TRANSLATE_NoImageService.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._NO_TRANSLATE_NoImageService.FormattingEnabled = true;
-            this._NO_TRANSLATE_NoImageService.Location = new System.Drawing.Point(114, 75);
+            this._NO_TRANSLATE_NoImageService.Location = new System.Drawing.Point(164, 102);
             this._NO_TRANSLATE_NoImageService.Name = "_NO_TRANSLATE_NoImageService";
             this._NO_TRANSLATE_NoImageService.Size = new System.Drawing.Size(183, 21);
             this._NO_TRANSLATE_NoImageService.TabIndex = 5;
@@ -389,7 +419,7 @@
             this.lblCacheDays.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblCacheDays.Location = new System.Drawing.Point(3, 46);
             this.lblCacheDays.Name = "lblCacheDays";
-            this.lblCacheDays.Size = new System.Drawing.Size(105, 26);
+            this.lblCacheDays.Size = new System.Drawing.Size(155, 26);
             this.lblCacheDays.TabIndex = 2;
             this.lblCacheDays.Text = "Cache images (days)";
             this.lblCacheDays.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -398,16 +428,16 @@
             // 
             this.lblNoImageService.AutoSize = true;
             this.lblNoImageService.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblNoImageService.Location = new System.Drawing.Point(3, 72);
+            this.lblNoImageService.Location = new System.Drawing.Point(3, 99);
             this.lblNoImageService.Name = "lblNoImageService";
-            this.lblNoImageService.Size = new System.Drawing.Size(105, 27);
+            this.lblNoImageService.Size = new System.Drawing.Size(155, 27);
             this.lblNoImageService.TabIndex = 4;
-            this.lblNoImageService.Text = "No image service";
+            this.lblNoImageService.Text = "Fallback generated avatar style";
             this.lblNoImageService.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // _NO_TRANSLATE_DaysToCacheImages
             // 
-            this._NO_TRANSLATE_DaysToCacheImages.Location = new System.Drawing.Point(114, 49);
+            this._NO_TRANSLATE_DaysToCacheImages.Location = new System.Drawing.Point(164, 49);
             this._NO_TRANSLATE_DaysToCacheImages.Maximum = new decimal(new int[] {
             400,
             0,
@@ -417,6 +447,18 @@
             this._NO_TRANSLATE_DaysToCacheImages.Size = new System.Drawing.Size(38, 20);
             this._NO_TRANSLATE_DaysToCacheImages.TabIndex = 3;
             this._NO_TRANSLATE_DaysToCacheImages.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // pictureAvatarHelp
+            // 
+            this.pictureAvatarHelp.Image = global::GitUI.Properties.Resources.information;
+            this.pictureAvatarHelp.Location = new System.Drawing.Point(353, 104);
+            this.pictureAvatarHelp.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
+            this.pictureAvatarHelp.Name = "pictureAvatarHelp";
+            this.pictureAvatarHelp.Size = new System.Drawing.Size(16, 16);
+            this.pictureAvatarHelp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureAvatarHelp.TabIndex = 8;
+            this.pictureAvatarHelp.TabStop = false;
+            this.pictureAvatarHelp.Click += new System.EventHandler(this.pictureAvatarHelp_Click);
             // 
             // fixedWidthFontDialog
             // 
@@ -441,9 +483,8 @@
             this.Controls.Add(tlpnlMain);
             this.MinimumSize = new System.Drawing.Size(258, 255);
             this.Name = "AppearanceSettingsPage";
-            this.Text = "Appearance";
-            this.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
-            this.Size = new System.Drawing.Size(1138, 769);
+            this.Padding = new System.Windows.Forms.Padding(8);
+            this.Size = new System.Drawing.Size(1558, 497);
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
             this.gbGeneral.ResumeLayout(false);
@@ -459,6 +500,7 @@
             this.tlpnlAuthor.ResumeLayout(false);
             this.tlpnlAuthor.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_DaysToCacheImages)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureAvatarHelp)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -492,5 +534,8 @@
         private System.Windows.Forms.TableLayoutPanel tlpnlGeneral;
         private System.Windows.Forms.TableLayoutPanel tlpnlAuthor;
         private System.Windows.Forms.CheckBox ShowAuthorAvatarInCommitGraph;
+        private System.Windows.Forms.PictureBox pictureAvatarHelp;
+        private System.Windows.Forms.Label lblAvatarProvider;
+        private System.Windows.Forms.ComboBox AvatarProvider;
     }
 }

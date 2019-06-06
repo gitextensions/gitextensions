@@ -6,7 +6,7 @@ namespace GitUI.Avatars
     {
         private static InitialsAvatarGenerator AvatarGenerator = new InitialsAvatarGenerator();
         public static IAvatarProvider Default { get; }
-            = new BackupAvatarProvider(new AvatarMemoryCache(new AvatarPersistentCache(new AvatarDownloader(), AvatarGenerator)),
+            = new BackupAvatarProvider(new AvatarMemoryCache(new AvatarPersistentCache(new AvatarDownloader(AvatarGenerator), AvatarGenerator)),
                 Images.User80);
     }
 }
