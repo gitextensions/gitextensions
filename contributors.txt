@@ -85,3 +85,4 @@ YYYY/MM/DD, github id, Full name, email
 2019/05/24, cryham, Crystal Hammer, cryham(at)gmail.com
 2019/05/29, Johno-ACSLive, Jonathon Aroutsidis, thunder2518(at)hotmail.com
 2019/06/05, AOrlov, Andrei Orlov, gooshift(at)gmail.com
+2019/06/07, veremenko-y, Yaroslav Veremenko, yaroslav(at)veremenko.info

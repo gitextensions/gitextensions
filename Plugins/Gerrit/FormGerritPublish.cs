@@ -21,6 +21,10 @@ namespace Gerrit
 
         private readonly TranslationString _selectRemote = new TranslationString("Please select a remote repository");
         private readonly TranslationString _selectBranch = new TranslationString("Please enter a branch");
+
+        private readonly TranslationString _publishTypeReview = new TranslationString("For Review");
+        private readonly TranslationString _publishTypeWip = new TranslationString("Work-in-Progress");
+        private readonly TranslationString _publishTypePrivate = new TranslationString("Private");
         #endregion
 
         public FormGerritPublish(IGitUICommands uiCommand)
@@ -30,6 +34,13 @@ namespace Gerrit
             InitializeComplete();
 
             Publish.Image = Images.Push;
+            PublishType.Items.AddRange(new object[]
+            {
+                new KeyValuePair<string, string>(_publishTypeReview.Text, ""),
+                new KeyValuePair<string, string>(_publishTypeWip.Text, "%wip"),
+                new KeyValuePair<string, string>(_publishTypePrivate.Text, "%private"),
+            });
+            PublishType.SelectedIndex = 0;
         }
 
         private void PublishClick(object sender, EventArgs e)
@@ -68,17 +79,12 @@ namespace Gerrit
 
             GerritUtil.StartAgent(owner, Module, _NO_TRANSLATE_Remotes.Text);
 
-            string targetRef = PublishDraft.Checked ? "drafts" : "publish";
-
             var pushCommand = UICommands.CreateRemoteCommand();
 
-            string targetBranch = "refs/" + targetRef + "/" + branch;
-            string topic = _NO_TRANSLATE_Topic.Text.Trim();
+            string targetBranch = "refs/for/" + branch;
 
-            if (!string.IsNullOrEmpty(topic))
-            {
-                targetBranch += "/" + topic;
-            }
+            string publishType = ((KeyValuePair<string, string>)PublishType.SelectedItem).Value;
+            targetBranch += publishType;
 
             string reviewers = _NO_TRANSLATE_Reviewers.Text.Trim();
             if (!string.IsNullOrEmpty(reviewers))
@@ -92,9 +98,16 @@ namespace Gerrit
                 }
             }
 
+            string topic = _NO_TRANSLATE_Topic.Text.Trim();
+            if (!string.IsNullOrEmpty(topic))
+            {
+                targetBranch += "%topic=" + topic;
+            }
+
             pushCommand.CommandText = PushCmd(
                 _NO_TRANSLATE_Remotes.Text,
                 targetBranch);
+
             pushCommand.Remote = _NO_TRANSLATE_Remotes.Text;
             pushCommand.Title = _publishCaption.Text;
 

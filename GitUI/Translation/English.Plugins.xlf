@@ -567,8 +567,8 @@ Are you sure you want to continue?</source>
         <source>&amp;Publish</source>
         <target />
       </trans-unit>
-      <trans-unit id="PublishDraft.Text">
-        <source>Submit review as draft</source>
+      <trans-unit id="labelPublishType.Text">
+        <source>Publish Type</source>
         <target />
       </trans-unit>
       <trans-unit id="_publishCaption.Text">
@@ -585,6 +585,18 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_selectRemote.Text">
         <source>Please select a remote repository</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_publishTypeReview.Text">
+        <source>For Review</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_publishTypeWip.Text">
+        <source>Work-in-Progress</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_publishTypePrivate.Text">
+        <source>Private</source>
         <target />
       </trans-unit>
       <trans-unit id="labelBranch.Text">
