@@ -43,7 +43,7 @@ namespace GitHub3
                     _repo = GitHub3Plugin.GitHub.getRepository(Owner, Name);
                 }
 
-                return _repo.Parent?.GitUrl;
+                return CloneProtocol == GitProtocol.Ssh ? _repo.Parent?.GitUrl : _repo.Parent?.CloneUrl;
             }
         }
 
