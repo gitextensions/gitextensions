@@ -6,18 +6,23 @@ namespace GitHub3
     {
         private GitHubRepo _repo;
 
-        public GitHubHostedRemote(string name, string owner, string remoteRepositoryName)
+        public GitHubHostedRemote(string name, string owner, string remoteRepositoryName, string url)
         {
             Name = name;
             Owner = owner;
             RemoteRepositoryName = remoteRepositoryName;
+            RemoteUrl = url;
+            CloneProtocol = url.IsUrlUsingHttp() ? GitProtocol.Https : GitProtocol.Ssh;
         }
 
         public IHostedRepository GetHostedRepository()
         {
             if (_repo == null)
             {
-                _repo = new GitHubRepo(GitHub3Plugin.GitHub.getRepository(Owner, RemoteRepositoryName));
+                _repo = new GitHubRepo(GitHub3Plugin.GitHub.getRepository(Owner, RemoteRepositoryName))
+                {
+                    CloneProtocol = CloneProtocol
+                };
             }
 
             return _repo;
@@ -39,6 +44,10 @@ namespace GitHub3
         /// git@github.com:mabako/Git.hub.git this is 'Git.hub'
         /// </summary>
         public string RemoteRepositoryName { get; }
+
+        public string RemoteUrl { get; }
+
+        public GitProtocol CloneProtocol { get; }
 
         public string Data => Owner + "/" + RemoteRepositoryName;
         public string DisplayData => Data;

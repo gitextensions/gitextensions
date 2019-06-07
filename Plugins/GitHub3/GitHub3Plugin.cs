@@ -180,7 +180,7 @@ namespace GitHub3
 
                     if (m.Success)
                     {
-                        var hostedRemote = new GitHubHostedRemote(remote, m.Groups[1].Value, m.Groups[2].Value.Replace(".git", ""));
+                        var hostedRemote = new GitHubHostedRemote(remote, m.Groups[1].Value, m.Groups[2].Value.Replace(".git", ""), url);
 
                         if (set.Add(hostedRemote))
                         {
