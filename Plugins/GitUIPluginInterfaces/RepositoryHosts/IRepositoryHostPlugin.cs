@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GitUIPluginInterfaces.RepositoryHosts
 {
@@ -14,5 +15,8 @@ namespace GitUIPluginInterfaces.RepositoryHosts
 
         bool GitModuleIsRelevantToMe(IGitModule module);
         IReadOnlyList<IHostedRemote> GetHostedRemotesForModule(IGitModule module);
+        string OwnerLogin { get; }
+
+        Task<string> AddUpstreamRemoteAsync();
     }
 }
