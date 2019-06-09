@@ -838,7 +838,16 @@ namespace GitUI.CommandsDialogs
                 var items = DiffFiles.SelectedItems.Where(item => !item.IsSubmodule);
                 foreach (var item in items)
                 {
-                    File.Delete(_fullPathResolver.Resolve(item.Name));
+                    var path = _fullPathResolver.Resolve(item.Name);
+                    bool isDir = (File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory;
+                    if (isDir)
+                    {
+                        Directory.Delete(path, true);
+                    }
+                    else
+                    {
+                        File.Delete(path);
+                    }
                 }
 
                 RefreshArtificial();
