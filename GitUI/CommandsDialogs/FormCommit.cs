@@ -2635,8 +2635,12 @@ namespace GitUI.CommandsDialogs
             }
 
             var item = list.SelectedItem;
-            var fileName = _fullPathResolver.Resolve(item.Name);
+            if (item == null)
+            {
+                return;
+            }
 
+            var fileName = _fullPathResolver.Resolve(item.Name);
             UICommands.StartFileEditorDialog(fileName);
 
             UnstagedSelectionChanged(null, null);
