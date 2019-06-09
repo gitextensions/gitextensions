@@ -2694,17 +2694,24 @@ namespace GitUI.CommandsDialogs
 
         private void Message_KeyUp(object sender, KeyEventArgs e)
         {
+            // Ctrl + Shift + Enter = Commit and Push
+            if (e.Control && e.Shift && e.KeyCode == Keys.Enter)
+            {
+                ExecuteCommitCommand(push: true);
+                e.Handled = true;
+            }
+
             // Ctrl + Enter = Commit
-            if (e.Control && e.KeyCode == Keys.Enter)
+            else if (e.Control && e.KeyCode == Keys.Enter)
             {
                 ExecuteCommitCommand();
                 e.Handled = true;
             }
         }
 
-        private void ExecuteCommitCommand()
+        private void ExecuteCommitCommand(bool push = false)
         {
-            CheckForStagedAndCommit(Amend.Checked, push: false);
+            CheckForStagedAndCommit(Amend.Checked, push: push);
         }
 
         private void Message_KeyDown(object sender, KeyEventArgs e)
