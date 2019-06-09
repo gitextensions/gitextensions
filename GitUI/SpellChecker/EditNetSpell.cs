@@ -432,20 +432,37 @@ namespace GitUI.SpellChecker
                 return;
             }
 
+            int limit1 = AppSettings.CommitValidationMaxCntCharsFirstLine;
+            int limitX = AppSettings.CommitValidationMaxCntCharsPerLine;
+            bool empty2 = AppSettings.CommitValidationSecondLineMustBeEmpty;
+
             var numLines = TextBox.Lines.Length;
             var chars = 0;
             for (var curLine = 0; curLine < numLines; ++curLine)
             {
                 var curLength = TextBox.Lines[curLine].Length;
-                var curMaxLength = 72;
+                var curMaxLength = limitX;
                 if (curLine == 0)
                 {
-                    curMaxLength = 50;
+                    curMaxLength = limit1;
+                    if (limit1 == 0)
+                    {
+                        // Disable limit checking if setting is set to 0.
+                        curMaxLength = curLength;
+                    }
                 }
-
-                if (curLine == 1)
+                else if (curLine == 1 && empty2)
                 {
                     curMaxLength = 0;
+                }
+                else
+                {
+                    curMaxLength = limitX;
+                    if (limitX == 0)
+                    {
+                        // Disable limit checking if setting is set to 0.
+                        curMaxLength = curLength;
+                    }
                 }
 
                 if (curLength > curMaxLength)
