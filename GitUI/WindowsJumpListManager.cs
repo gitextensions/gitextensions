@@ -95,15 +95,19 @@ namespace GitUI
                 File.WriteAllText(path, workingDir);
                 JumpList.AddToRecent(path);
             }
-            catch (COMException ex)
+            catch (Exception ex)
+                when (
+
+                    // reported in https://github.com/gitextensions/gitextensions/issues/2269
+                    ex is COMException ||
+
+                    // reported in https://github.com/gitextensions/gitextensions/issues/6767
+                    ex is UnauthorizedAccessException ||
+
+                    // reported in https://github.com/gitextensions/gitextensions/issues/4549
+                    // looks like a regression in Windows 10.0.16299 (1709)
+                    ex is IOException)
             {
-                // reported in https://github.com/gitextensions/gitextensions/issues/2269
-                Trace.WriteLine(ex.Message, "UpdateJumplist");
-            }
-            catch (IOException ex)
-            {
-                // reported in https://github.com/gitextensions/gitextensions/issues/4549
-                // looks like a regression in Windows 10.0.16299 (1709)
                 Trace.WriteLine(ex.Message, "UpdateJumplist");
             }
         }
