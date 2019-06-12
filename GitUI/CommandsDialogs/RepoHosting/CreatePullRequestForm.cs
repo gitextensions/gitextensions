@@ -141,9 +141,10 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         comboBox.Items.Clear();
 
                         var selectItem = 0;
+                        var defaultBranch = hostedRepository.GetDefaultBranch();
                         for (var i = 0; i < branches.Count; i++)
                         {
-                            if (branches[i].Name == hostedRepository.GetDefaultBranch())
+                            if (branches[i].Name == defaultBranch)
                             {
                                 selectItem = i;
                             }
