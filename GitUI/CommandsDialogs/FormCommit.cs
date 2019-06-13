@@ -830,7 +830,11 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            Debug.Assert(_currentItem != null, "_currentItem != null");
+            // File no longer selected
+            if (_currentItem == null)
+            {
+                return;
+            }
 
             byte[] patch;
             if (!_currentItemStaged && _currentItem.IsNew)
@@ -890,16 +894,19 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
+            // File no longer selected
+            if (_currentItem == null)
+            {
+                return;
+            }
+
             if (MessageBox.Show(this, _resetSelectedLinesConfirmation.Text, _resetChangesCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
                 return;
             }
 
-            Debug.Assert(_currentItem != null, "_currentItem != null");
-
             byte[] patch;
-
             if (_currentItemStaged)
             {
                 patch = PatchManager.GetSelectedLinesAsPatch(
