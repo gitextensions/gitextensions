@@ -810,35 +810,43 @@ namespace GitUI.CommandsDialogs
                 }
 
                 var selectedItems = DiffFiles.SelectedItems;
-                if (DiffFiles.Revision.ObjectId == ObjectId.IndexId)
-                {
-                    var files = new List<GitItemStatus>();
-                    var stagedItems = selectedItems.Where(item => item.Staged == StagedStatus.Index);
-                    foreach (var item in stagedItems)
-                    {
-                        if (!item.IsNew)
-                        {
-                            Module.UnstageFileToRemove(item.Name);
 
-                            if (item.IsRenamed)
-                            {
-                                Module.UnstageFileToRemove(item.OldName);
-                            }
-                        }
-                        else
+                // If any file is staged, it must be unstaged
+                var files = new List<GitItemStatus>();
+                var stagedItems = selectedItems.Where(item => item.Staged == StagedStatus.Index);
+                foreach (var item in stagedItems)
+                {
+                    if (!item.IsNew)
+                    {
+                        Module.UnstageFileToRemove(item.Name);
+
+                        if (item.IsRenamed)
                         {
-                            files.Add(item);
+                            Module.UnstageFileToRemove(item.OldName);
                         }
                     }
-
-                    Module.UnstageFiles(files);
+                    else
+                    {
+                        files.Add(item);
+                    }
                 }
+
+                Module.UnstageFiles(files);
 
                 DiffFiles.StoreNextIndexToSelect();
                 var items = DiffFiles.SelectedItems.Where(item => !item.IsSubmodule);
                 foreach (var item in items)
                 {
-                    File.Delete(_fullPathResolver.Resolve(item.Name));
+                    var path = _fullPathResolver.Resolve(item.Name);
+                    bool isDir = (File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory;
+                    if (isDir)
+                    {
+                        Directory.Delete(path, true);
+                    }
+                    else
+                    {
+                        File.Delete(path);
+                    }
                 }
 
                 RefreshArtificial();
