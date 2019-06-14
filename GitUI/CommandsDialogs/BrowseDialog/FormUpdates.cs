@@ -44,11 +44,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             progressBar1.Style = ProgressBarStyle.Marquee;
         }
 
-        private void CloseButtonClick(object sender, EventArgs e)
-        {
-            Close();
-        }
-
         public void SearchForUpdatesAndShow(IWin32Window ownerWindow, bool alwaysShow)
         {
             OwnerWindow = ownerWindow;
@@ -57,6 +52,21 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 ShowDialog(ownerWindow);
             }
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            // We need to override ProcessCmdKey as mnemonics on labels do not behave the same as buttons
+            if (keyData == (Keys.Alt | Keys.L))
+            {
+                LaunchUrl(LaunchType.ChangeLog);
+            }
+            else if (keyData == (Keys.Alt | Keys.D))
+            {
+                LaunchUrl(LaunchType.DirectDownload);
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         private void SearchForUpdates()
@@ -128,9 +138,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                 if (UpdateFound)
                 {
-                    btnDownloadNow.Enabled = true;
+                    btnUpdateNow.Visible = true;
                     UpdateLabel.Text = string.Format(_newVersionAvailable.Text, NewVersion);
                     linkChangeLog.Visible = true;
+                    linkDirectDownload.Visible = true;
 
                     if (!Visible)
                     {
@@ -144,17 +155,31 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             });
         }
 
-        private void linkChangeLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LaunchUrl(LaunchType launchType)
         {
-            Process.Start("https://github.com/gitextensions/gitextensions/blob/master/GitUI/Resources/ChangeLog.md");
+            switch (launchType)
+            {
+                case LaunchType.ChangeLog:
+                    Process.Start("https://github.com/gitextensions/gitextensions/blob/master/GitUI/Resources/ChangeLog.md");
+                    break;
+                case LaunchType.DirectDownload:
+                    Process.Start(UpdateUrl);
+                    break;
+            }
         }
 
-        private async void btnDownloadNow_Click(object sender, EventArgs e)
+        private void linkChangeLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            LaunchUrl(LaunchType.ChangeLog);
+        }
+
+        private async void btnUpdateNow_Click(object sender, EventArgs e)
         {
             try
             {
+                linkChangeLog.Visible = false;
                 progressBar1.Visible = true;
-                btnDownloadNow.Enabled = false;
+                btnUpdateNow.Enabled = false;
                 UpdateLabel.Text = _downloadingUpdate.Text;
                 string fileName = Path.GetFileName(UpdateUrl);
 
@@ -177,6 +202,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
             }
         }
+
+        private void linkDirectDownload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            LaunchUrl(LaunchType.DirectDownload);
+        }
+    }
+
+    internal enum LaunchType
+    {
+        ChangeLog,
+        DirectDownload
     }
 
     public enum ReleaseType
