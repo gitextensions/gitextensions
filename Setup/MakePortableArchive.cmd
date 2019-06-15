@@ -232,25 +232,17 @@ xcopy /y /i ..\GitExtensions\bin\%Configuration%\de\Microsoft.VisualStudio.Threa
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\de\Microsoft.VisualStudio.Validation.resources.dll GitExtensions\de\
 IF ERRORLEVEL 1 EXIT /B 1 
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\de\NBug.resources.dll GitExtensions\de\
-IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\es\Microsoft.VisualStudio.Composition.resources.dll GitExtensions\es\
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\es\Microsoft.VisualStudio.Threading.resources.dll GitExtensions\es\
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\es\Microsoft.VisualStudio.Validation.resources.dll GitExtensions\es\
 IF ERRORLEVEL 1 EXIT /B 1 
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\es-MX\NBug.resources.dll GitExtensions\es-MX\
-IF ERRORLEVEL 1 EXIT /B 1 
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\fi-FI\NBug.resources.dll GitExtensions\fi-FI\
-IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\fr\Microsoft.VisualStudio.Composition.resources.dll GitExtensions\fr\
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\fr\Microsoft.VisualStudio.Threading.resources.dll GitExtensions\fr\
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\fr\Microsoft.VisualStudio.Validation.resources.dll GitExtensions\fr\
-IF ERRORLEVEL 1 EXIT /B 1 
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\hr\NBug.resources.dll GitExtensions\hr\
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\it\Microsoft.VisualStudio.Composition.resources.dll GitExtensions\it\
 IF ERRORLEVEL 1 EXIT /B 1 
@@ -264,15 +256,11 @@ xcopy /y /i ..\GitExtensions\bin\%Configuration%\ja\Microsoft.VisualStudio.Threa
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\ja\Microsoft.VisualStudio.Validation.resources.dll GitExtensions\ja\
 IF ERRORLEVEL 1 EXIT /B 1 
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\ja\NBug.resources.dll GitExtensions\ja\
-IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\ko\Microsoft.VisualStudio.Composition.resources.dll GitExtensions\ko\
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\ko\Microsoft.VisualStudio.Threading.resources.dll GitExtensions\ko\
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\ko\Microsoft.VisualStudio.Validation.resources.dll GitExtensions\ko\
-IF ERRORLEVEL 1 EXIT /B 1 
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\ko-KR\NBug.resources.dll GitExtensions\ko-KR\
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\pl\Microsoft.VisualStudio.Composition.resources.dll GitExtensions\pl\
 IF ERRORLEVEL 1 EXIT /B 1 
@@ -410,15 +398,11 @@ xcopy /y /i ..\GitExtensions\bin\%Configuration%\pt-BR\Microsoft.VisualStudio.Th
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\pt-BR\Microsoft.VisualStudio.Validation.resources.dll GitExtensions\pt-BR\
 IF ERRORLEVEL 1 EXIT /B 1 
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\pt-BR\NBug.resources.dll GitExtensions\pt-BR\
-IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\ru\Microsoft.VisualStudio.Composition.resources.dll GitExtensions\ru\
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\ru\Microsoft.VisualStudio.Threading.resources.dll GitExtensions\ru\
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\ru\Microsoft.VisualStudio.Validation.resources.dll GitExtensions\ru\
-IF ERRORLEVEL 1 EXIT /B 1 
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\ru-RU\NBug.resources.dll GitExtensions\ru-RU\
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\tr\Microsoft.VisualStudio.Composition.resources.dll GitExtensions\tr\
 IF ERRORLEVEL 1 EXIT /B 1 
@@ -473,8 +457,6 @@ IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\Microsoft.WindowsAPICodePack.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\Microsoft.WindowsAPICodePack.Shell.dll GitExtensions\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\NBug.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\SmartFormat.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
@@ -746,8 +728,6 @@ IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\GitUI.pdb GitExtensions-pdbs\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\GitUIPluginInterfaces.pdb GitExtensions-pdbs\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\NBug.pdb GitExtensions-pdbs\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\NetSpell.SpellChecker.pdb GitExtensions-pdbs\
 IF ERRORLEVEL 1 EXIT /B 1

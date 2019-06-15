@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitCommands.Utils;
 using GitUI;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
@@ -22,25 +19,6 @@ namespace TranslationApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if (EnvUtils.RunningOnWindows())
-            {
-                NBug.Settings.UIMode = NBug.Enums.UIMode.Full;
-
-                // Uncomment the following after testing to see that NBug is working as configured
-                NBug.Settings.ReleaseMode = true;
-                NBug.Settings.ExitApplicationImmediately = false;
-                NBug.Settings.WriteLogToDisk = true;
-                NBug.Settings.MaxQueuedReports = 10;
-                NBug.Settings.StopReportingAfter = 90;
-                NBug.Settings.SleepBeforeSend = 30;
-                NBug.Settings.StoragePath = NBug.Enums.StoragePath.WindowsTemp;
-
-                if (!Debugger.IsAttached)
-                {
-                    AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
-                    Application.ThreadException += NBug.Handler.ThreadException;
-                }
-            }
 
             // This form created for obtain UI synchronization context only
             using (new Form())
