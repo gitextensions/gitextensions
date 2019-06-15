@@ -453,7 +453,6 @@
     <Compile Include="UserControls\RevisionGrid\Graph\LaneNodeLocator.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\RevisionGraphColumnProvider.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\MultilineIndicator.cs" />
-    <Compile Include="UserControls\HslColor.cs" />
     <Compile Include="UserControls\RevisionGrid\FormQuickStringSelector.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -755,7 +754,6 @@
     <Compile Include="CommandsDialogs\FormBrowse.Designer.cs">
       <DependentUpon>FormBrowse.cs</DependentUpon>
     </Compile>
-    <Compile Include="ColorHelper.cs" />
     <Compile Include="CommandsDialogs\FormCommit.cs">
       <SubType>Form</SubType>
     </Compile>

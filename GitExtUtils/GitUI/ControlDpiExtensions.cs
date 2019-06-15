@@ -82,7 +82,7 @@ namespace GitUI
                             splitContainer.SplitterWidth = DpiUtil.Scale(splitterWidth);
                         }
 
-                        splitContainer.BackColor = SystemColors.Control;
+                        splitContainer.BackColor = ColorHelper.GetSplitterColor();
                         break;
                     }
 
