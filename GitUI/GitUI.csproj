@@ -57,6 +57,7 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft-WindowsAPICodePack-Core">
@@ -328,6 +329,33 @@
     <Compile Include="Editor\GitHighlightingStrategyBase.cs" />
     <Compile Include="Editor\RebaseTodoHighlightingStrategy.cs" />
     <Compile Include="FindFilePredicateProvider.cs" />
+    <Compile Include="NBugReports\BugReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NBugReports\BugReportForm.Designer.cs">
+      <DependentUpon>BugReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NBugReports\ErrorReportMarkDownBodyBuilder.cs" />
+    <Compile Include="NBugReports\ExceptionDetails.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NBugReports\ExceptionDetails.Designer.cs">
+      <DependentUpon>ExceptionDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NBugReports\ExceptionDetailView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NBugReports\ExceptionDetailView.Designer.cs">
+      <DependentUpon>ExceptionDetailView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NBugReports\GitHubUrlBuilder.cs" />
+    <Compile Include="NBugReports\Info\AssemblyInfo.cs" />
+    <Compile Include="NBugReports\Info\ConfigurationInfo.cs" />
+    <Compile Include="NBugReports\Info\GeneralInfo.cs" />
+    <Compile Include="NBugReports\Info\Report.cs" />
+    <Compile Include="NBugReports\Info\SystemInfo.cs" />
+    <Compile Include="NBugReports\Serialization\SerializableDictionary.cs" />
+    <Compile Include="NBugReports\Serialization\SerializableException.cs" />
     <Compile Include="Properties\Images.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1294,6 +1322,9 @@
     <EmbeddedResource Include="CommitInfo\CommitInfoHeader.resx">
       <DependentUpon>CommitInfoHeader.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="NBugReports\BugReportForm.resx">
+      <DependentUpon>BugReportForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="HelperDialogs\FormBuildServerCredentials.resx">
       <DependentUpon>FormBuildServerCredentials.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1309,6 +1340,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.resx">
       <DependentUpon>PluginRootIntroductionPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NBugReports\ExceptionDetails.resx">
+      <DependentUpon>ExceptionDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NBugReports\ExceptionDetailView.resx">
+      <DependentUpon>ExceptionDetailView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -1818,6 +1855,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Icons\branch_inv.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bug.png" />
   </ItemGroup>
   <Target Name="CopyTranslations" AfterTargets="AfterBuild">
     <ItemGroup>
