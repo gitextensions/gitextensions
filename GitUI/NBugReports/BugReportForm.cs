@@ -10,6 +10,7 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
 using GitUI.NBugReports.Info;
@@ -30,6 +31,7 @@ Send report anyway?");
         private readonly TranslationString _toolTipCopy = new TranslationString("Copy the issue details into clipboard");
         private readonly TranslationString _toolTipSendQuit = new TranslationString("Report the issue to GitHub and quit application.\r\nA valid GitHub account is required");
         private readonly TranslationString _toolTipQuit = new TranslationString("Quit application without reporting the issue");
+        private readonly TranslationString _noReproStepsSuppliedErrorMessage = new TranslationString(@"Please provide as much as information as possible to help the developers solve this issue.");
 
         private static readonly IErrorReportMarkDownBodyBuilder ErrorReportBodyBuilder;
         private static readonly GitHubUrlBuilder UrlBuilder;
@@ -101,6 +103,18 @@ Send report anyway?");
             return result;
         }
 
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            descriptionTextBox.Focus();
+        }
+
+        private bool CheckContainsInfo(string input)
+        {
+            var text = Regex.Replace(input, @"\s*|\r|\n", string.Empty);
+            return !string.IsNullOrWhiteSpace(text);
+        }
+
         private void QuitButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Abort;
@@ -109,6 +123,14 @@ Send report anyway?");
 
         private void SendAndQuitButton_Click(object sender, EventArgs e)
         {
+            var hasUserText = CheckContainsInfo(descriptionTextBox.Text);
+            if (!hasUserText)
+            {
+                MessageBox.Show(this, _noReproStepsSuppliedErrorMessage.Text, _title.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                descriptionTextBox.Focus();
+                return;
+            }
+
             if (MessageBox.Show(this, _submitGitHubMessage.Text, _title.Text,
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
             {
@@ -133,6 +155,21 @@ Send report anyway?");
             Clipboard.SetDataObject(report, true, 5, 100);
 
             DialogResult = DialogResult.None;
+        }
+
+        internal TestAccessor GetTestAccessor()
+            => new TestAccessor(this);
+
+        public readonly struct TestAccessor
+        {
+            private readonly BugReportForm _form;
+
+            public TestAccessor(BugReportForm form)
+            {
+                _form = form;
+            }
+
+            public bool CheckContainsInfo(string input) => _form.CheckContainsInfo(input);
         }
     }
 }
