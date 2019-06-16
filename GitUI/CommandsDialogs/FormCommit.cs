@@ -2642,8 +2642,12 @@ namespace GitUI.CommandsDialogs
             }
 
             var item = list.SelectedItem;
-            var fileName = _fullPathResolver.Resolve(item.Name);
+            if (item == null)
+            {
+                return;
+            }
 
+            var fileName = _fullPathResolver.Resolve(item.Name);
             UICommands.StartFileEditorDialog(fileName);
 
             UnstagedSelectionChanged(null, null);
@@ -2676,7 +2680,8 @@ namespace GitUI.CommandsDialogs
             if (list == null /* menu action triggered directly by hotkey */)
             {
                 // The inactive list's selection has been cleared.
-                list = Staged.SelectedItems.Any() ? Staged : Unstaged.SelectedItems.Any() ? list = Unstaged : null;
+                list = Staged.SelectedItems.Any() ? Staged :
+                    Unstaged.SelectedItems.Any() ? Unstaged : null;
             }
 
             return list != null;
@@ -3259,6 +3264,10 @@ namespace GitUI.CommandsDialogs
             {
                 _formCommit = formCommit;
             }
+
+            internal ToolStripMenuItem EditFileToolStripMenuItem => _formCommit.editFileToolStripMenuItem;
+
+            internal FileStatusList UnstagedList => _formCommit.Unstaged;
 
             internal EditNetSpell Message => _formCommit.Message;
 

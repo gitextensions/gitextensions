@@ -224,6 +224,22 @@ namespace GitUITests.CommandsDialogs.CommitDialog
                 expectedResult: true, expectedMessage, expectedSelectionStart);
         }
 
+        [Test]
+        public void editFileToolStripMenuItem_Click_no_selection_should_not_throw()
+        {
+            RunFormTest(async form =>
+            {
+                await ThreadHelper.JoinPendingOperationsAsync();
+
+                form.GetTestAccessor().UnstagedList.ClearSelected();
+
+                var editFileToolStripMenuItem = form.GetTestAccessor().EditFileToolStripMenuItem;
+
+                // asserting by the virtue of not crashing
+                editFileToolStripMenuItem.PerformClick();
+            });
+        }
+
         private void TestAddSelectionToCommitMessage(
             bool focusSelectedDiff,
             string selectedText,
