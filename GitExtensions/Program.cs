@@ -30,28 +30,10 @@ namespace GitExtensions
 
             try
             {
-                NBug.Settings.UIMode = NBug.Enums.UIMode.Full;
-
-                // Uncomment the following after testing to see that NBug is working as configured
-                NBug.Settings.ReleaseMode = true;
-                NBug.Settings.ExitApplicationImmediately = false;
-                NBug.Settings.WriteLogToDisk = false;
-                NBug.Settings.MaxQueuedReports = 10;
-                NBug.Settings.StopReportingAfter = 90;
-                NBug.Settings.SleepBeforeSend = 30;
-                NBug.Settings.StoragePath = NBug.Enums.StoragePath.WindowsTemp;
-                NBug.Settings.GetSystemInfo = () =>
-                {
-                    // if the error happens before we had a chance to init the environment information
-                    // the call to GetInformation() will fail. A double Initialise() call is safe.
-                    UserEnvironmentInformation.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty);
-                    return UserEnvironmentInformation.GetInformation();
-                };
-
                 if (!Debugger.IsAttached)
                 {
-                    AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
-                    Application.ThreadException += NBug.Handler.ThreadException;
+                    AppDomain.CurrentDomain.UnhandledException += (s, e) => ReportBug((Exception)e.ExceptionObject);
+                    Application.ThreadException += (s, e) => ReportBug(e.Exception);
                 }
             }
             catch (TypeInitializationException tie)
@@ -324,6 +306,23 @@ namespace GitExtensions
                     {
                         return false;
                     }
+            }
+        }
+
+        private static void ReportBug(Exception ex)
+        {
+            // if the error happens before we had a chance to init the environment information
+            // the call to GetInformation() will fail. A double Initialise() call is safe.
+            UserEnvironmentInformation.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty);
+            var envInfo = UserEnvironmentInformation.GetInformation();
+
+            using (var form = new GitUI.NBugReports.BugReportForm())
+            {
+                var result = form.ShowDialog(ex, envInfo);
+                if (result == DialogResult.Abort)
+                {
+                    Environment.Exit(-1);
+                }
             }
         }
     }

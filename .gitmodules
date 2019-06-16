@@ -1,9 +1,6 @@
 [submodule "GitExtensionsDoc"]
 	path = GitExtensionsDoc
 	url = ../../gitextensions/GitExtensionsDoc.git
-[submodule "Externals/NBug"]
-	path = Externals/NBug
-	url = ../../gitextensions/NBug.git
 [submodule "Externals/Git.hub"]
 	path = Externals/Git.hub
 	url = ../../gitextensions/Git.hub.git

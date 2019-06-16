@@ -81,10 +81,6 @@
     <None Include="Properties\DataSources\FormTranslate.TranslationItemWithCategory.datasource" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Externals\NBug\NBug\NBug.csproj">
-      <Project>{62CED1D5-F603-40DE-8BF5-3E49D3A392F4}</Project>
-      <Name>NBug</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>

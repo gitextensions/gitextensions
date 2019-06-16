@@ -81,19 +81,29 @@ namespace GitUI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bug {
+            get {
+                object obj = ResourceManager.GetObject("bug", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///### Version 3.1.0 (13 May 2019)
+        ///### Version 3.1.1 (2 June 2019)
         ///
-        ///#### Features:
-        ///* Include source branch in link to BitBucket create pull request - PR [6511]
-        ///* Generate avatars with author initials as fallback of gravatar - PR [6499]
-        ///* Hotkeys for Open with difftool | First/Selected -&gt; Working Directory - Issue [6481]
-        ///* FileStatusList: highlight the new name - Issue [6465]
-        ///* fix: JiraCommitHintPlugin hidpi layout issues - PR [6464]
-        ///* FileStatusList: indicate active filter - Issue [6449]
-        ///* FileStatusList fil [rest of string was truncated]&quot;;.
+        ///#### Fixes:
+        ///* Ctrl+Backspace affects ReadOnly TextBox - Issue [6667]
+        ///* incorrect {sRemotePathFromUrl} parameter evaluation - Issue [6567]
+        ///* [NBug] Remote URLs should appear in pairs. - Issue [6562]
+        ///* Commit Dialog: New submodule without text if unstaged - Issue [6559]
+        ///* Pull dialog stopped &quot;remembering&quot; previous user selection - Issue [6503]
+        ///* Commit message not stored after reverting a commit - Issue [6244]
+        ///* System.Exception opening an exis [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {
@@ -151,6 +161,16 @@ namespace GitUI.Properties {
         internal static string Designers {
             get {
                 return ResourceManager.GetString("Designers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon GitExtensionsLogoIcon {
+            get {
+                object obj = ResourceManager.GetObject("GitExtensionsLogoIcon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         
