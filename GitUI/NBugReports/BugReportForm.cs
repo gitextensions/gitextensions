@@ -2,7 +2,7 @@
 // <copyright file="Full.cs" company="NBug Project">
 //   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
-// <copyright file="Full.cs" company="Git Extensions">
+// <copyright file="BugReportForm.cs" company="Git Extensions">
 //   Copyright (c) 2019 Igor Velikorossov. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ using ResourceManager;
 
 namespace GitUI.NBugReports
 {
-    public partial class BugReportForm : Form
+    public partial class BugReportForm : GitExtensionsForm
     {
         private readonly TranslationString _title = new TranslationString("Error Report");
         private readonly TranslationString _submitGitHubMessage = new TranslationString(@"Give as much as information as possible please to help the developers solve this issue. Otherwise, your issue ticket may be closed without any follow-up from the developers.
@@ -27,6 +27,9 @@ namespace GitUI.NBugReports
 Because of this, make sure to fill in all the fields in the report template please.
 
 Send report anyway?");
+        private readonly TranslationString _toolTipCopy = new TranslationString("Copy the issue details into clipboard");
+        private readonly TranslationString _toolTipSendQuit = new TranslationString("Report the issue to GitHub and quit application.\r\nA valid GitHub account is required");
+        private readonly TranslationString _toolTipQuit = new TranslationString("Quit application without reporting the issue");
 
         private static readonly IErrorReportMarkDownBodyBuilder ErrorReportBodyBuilder;
         private static readonly GitHubUrlBuilder UrlBuilder;
@@ -43,7 +46,20 @@ Send report anyway?");
         public BugReportForm()
         {
             InitializeComponent();
+
             Icon = Resources.GitExtensionsLogoIcon;
+
+            // Scaling
+            exceptionDetails.InformationColumnWidth = DpiUtil.Scale(350);
+            exceptionDetails.PropertyColumnWidth = DpiUtil.Scale(101);
+            DpiUtil.Scale(sendAndQuitButton.MinimumSize);
+            DpiUtil.Scale(btnCopy.MinimumSize);
+
+            InitializeComplete();
+
+            toolTip.SetToolTip(btnCopy, _toolTipCopy.Text);
+            toolTip.SetToolTip(sendAndQuitButton, _toolTipSendQuit.Text);
+            toolTip.SetToolTip(quitButton, _toolTipQuit.Text);
 
             // ToDo: Displaying report contents properly requires some more work.
             mainTabs.TabPages.Remove(mainTabs.TabPages["reportContentsTabPage"]);
@@ -56,13 +72,6 @@ Send report anyway?");
             _environmentInfo = environmentInfo;
 
             Text = $@"{_lastReport.GeneralInfo.HostApplication} {_title.Text}";
-
-            // Scaling
-            sendAndQuitButton.Image = DpiUtil.Scale(Images.GitHub);
-            btnCopy.Image = DpiUtil.Scale(Resources.CopyToClipboard);
-            exceptionTypeLabel.Image = DpiUtil.Scale(Resources.bug);
-            exceptionDetails.InformationColumnWidth = DpiUtil.Scale(350);
-            exceptionDetails.PropertyColumnWidth = DpiUtil.Scale(101);
 
             // Fill in the 'General' tab
             warningPictureBox.Image = SystemIcons.Warning.ToBitmap();
