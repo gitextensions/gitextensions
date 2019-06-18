@@ -6,9 +6,9 @@ param (
 pushd $PSScriptRoot
 
 Write-Host "Copying the latest English translation before the update..."
-$translationsFolder = Resolve-Path .\
+$translationsFolder = Resolve-Path "$PSScriptRoot\..\..\GitUI\Translation";
 $releaseTranslationsFolder = Resolve-Path ..\..\GitExtensions\bin\$Configuration\Translation
-Write-Debug " > $translationsFolder`r`n > $releaseTranslationsFolder"
+Write-Host " > $translationsFolder`r`n > $releaseTranslationsFolder"
 xcopy "$translationsFolder\English*.xlf" "$releaseTranslationsFolder" /Y
 
 $src = Resolve-Path ..\..\GitExtensions\bin\$Configuration
@@ -22,5 +22,5 @@ if ($LASTEXITCODE -ne 0) {
 popd
 
 Write-Host "Copying the updated English translation to commit..."
-Write-Debug " > $releaseTranslationsFolder`r`n > $translationsFolder"
+Write-Host " > $releaseTranslationsFolder`r`n > $translationsFolder"
 xcopy "$releaseTranslationsFolder\English*.xlf" "$translationsFolder"  /Y
