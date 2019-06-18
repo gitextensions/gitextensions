@@ -27,7 +27,8 @@ namespace GitUI.UserControls.RevisionGrid
 
     public sealed class RevisionDataGridView : DataGridView
     {
-        private static readonly SolidBrush _alternatingRowBackgroundBrush = new SolidBrush(SystemColors.ButtonFace);
+        private static readonly SolidBrush _alternatingRowBackgroundBrush = new SolidBrush(
+            ColorHelper.MakeColorDarker(SystemColors.Window, 0.025)); // 0.018
 
         internal RevisionGraph _revisionGraph = new RevisionGraph();
 

@@ -25,5 +25,11 @@ namespace GitUI
         {
             return IsLightColor(SystemColors.Window);
         }
+
+        public static Color GetSplitterColor()
+        {
+            Color c = MakeColorDarker(SystemColors.ControlLight, 0.035);
+            return c;
+        }
     }
 }
