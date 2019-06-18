@@ -266,7 +266,7 @@ namespace GitUI.CommandsDialogs
         private bool PushChanges(IWin32Window owner)
         {
             ErrorOccurred = false;
-            if (PushToUrl.Checked && string.IsNullOrEmpty(PushDestination.Text))
+            if (PushToUrl.Checked && !PathUtil.IsUrl(PushDestination.Text))
             {
                 MessageBox.Show(owner, _selectDestinationDirectory.Text);
                 return false;
