@@ -33,13 +33,14 @@
             this.AddRemote = new System.Windows.Forms.Button();
             this._NO_TRANSLATE_Remotes = new System.Windows.Forms.ComboBox();
             this.labelRemote = new System.Windows.Forms.Label();
-            this.PublishDraft = new System.Windows.Forms.CheckBox();
             this.labelBranch = new System.Windows.Forms.Label();
             this.labelTopic = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_Branch = new System.Windows.Forms.TextBox();
             this._NO_TRANSLATE_Topic = new System.Windows.Forms.TextBox();
             this._NO_TRANSLATE_Reviewers = new System.Windows.Forms.TextBox();
             this.labelReviewers = new System.Windows.Forms.Label();
+            this.PublishType = new System.Windows.Forms.ComboBox();
+            this.labelPublishType = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // Publish
@@ -86,19 +87,9 @@
             this.labelRemote.Size = new System.Drawing.Size(48, 13);
             this.labelRemote.TabIndex = 0;
             this.labelRemote.Text = "Remote:";
-            // 
-            // PublishDraft
-            // 
-            this.PublishDraft.AutoSize = true;
-            this.PublishDraft.Location = new System.Drawing.Point(101, 144);
-            this.PublishDraft.Name = "PublishDraft";
-            this.PublishDraft.Size = new System.Drawing.Size(134, 17);
-            this.PublishDraft.TabIndex = 9;
-            this.PublishDraft.Text = "Submit review as draft";
-            this.PublishDraft.UseVisualStyleBackColor = true;
-            // 
+            //
             // labelBranch
-            // 
+            //
             this.labelBranch.AutoSize = true;
             this.labelBranch.Location = new System.Drawing.Point(13, 52);
             this.labelBranch.Name = "labelBranch";
@@ -150,20 +141,42 @@
             this.labelReviewers.Size = new System.Drawing.Size(69, 13);
             this.labelReviewers.TabIndex = 7;
             this.labelReviewers.Text = "Reviewer(s):";
-            // 
+            //
+            // PublishType
+            //
+            this.PublishType.DisplayMember = "Key";
+            this.PublishType.FormattingEnabled = true;
+            this.PublishType.Location = new System.Drawing.Point(101, 137);
+            this.PublishType.Margin = new System.Windows.Forms.Padding(4);
+            this.PublishType.Name = "PublishType";
+            this.PublishType.Size = new System.Drawing.Size(121, 21);
+            this.PublishType.TabIndex = 11;
+            this.PublishType.ValueMember = "Value";
+            //
+            // labelPublishType
+            //
+            this.labelPublishType.AutoSize = true;
+            this.labelPublishType.Location = new System.Drawing.Point(13, 140);
+            this.labelPublishType.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelPublishType.Name = "labelPublishType";
+            this.labelPublishType.Size = new System.Drawing.Size(68, 13);
+            this.labelPublishType.TabIndex = 12;
+            this.labelPublishType.Text = "Publish Type";
+            //
             // FormGerritPublish
             // 
             this.AcceptButton = this.Publish;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(644, 173);
+            this.Controls.Add(this.labelPublishType);
+            this.Controls.Add(this.PublishType);
             this.Controls.Add(this._NO_TRANSLATE_Reviewers);
             this.Controls.Add(this.labelReviewers);
             this.Controls.Add(this._NO_TRANSLATE_Topic);
             this.Controls.Add(this._NO_TRANSLATE_Branch);
             this.Controls.Add(this.labelTopic);
             this.Controls.Add(this.labelBranch);
-            this.Controls.Add(this.PublishDraft);
             this.Controls.Add(this.labelRemote);
             this.Controls.Add(this.AddRemote);
             this.Controls.Add(this._NO_TRANSLATE_Remotes);
@@ -186,12 +199,13 @@
         private System.Windows.Forms.Button AddRemote;
         private System.Windows.Forms.ComboBox _NO_TRANSLATE_Remotes;
         private System.Windows.Forms.Label labelRemote;
-        private System.Windows.Forms.CheckBox PublishDraft;
         private System.Windows.Forms.Label labelBranch;
         private System.Windows.Forms.Label labelTopic;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_Branch;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_Topic;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_Reviewers;
         private System.Windows.Forms.Label labelReviewers;
+        private System.Windows.Forms.ComboBox PublishType;
+        private System.Windows.Forms.Label labelPublishType;
     }
 }
