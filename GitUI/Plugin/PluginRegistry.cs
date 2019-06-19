@@ -60,7 +60,7 @@ namespace GitUI
                 return null;
             }
 
-            return GitHosters.FirstOrDefault(gitHoster => gitHoster.GitModuleIsRelevantToMe(module));
+            return GitHosters.FirstOrDefault(gitHoster => gitHoster.GitModuleIsRelevantToMe());
         }
 
         public static void Register(IGitUICommands gitUiCommands)

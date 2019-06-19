@@ -156,8 +156,8 @@ namespace GitHub3
 
         public async Task<string> AddUpstreamRemoteAsync()
         {
-            var module = _currentGitUiCommands.GitModule;
-            var hostedRemote = GetHostedRemotesForModule(module).FirstOrDefault(r => r.IsOwnedByMe);
+            var gitModule = _currentGitUiCommands.GitModule;
+            var hostedRemote = GetHostedRemotesForModule().FirstOrDefault(r => r.IsOwnedByMe);
             if (hostedRemote == null)
             {
                 return null;
@@ -169,34 +169,35 @@ namespace GitHub3
                 return null;
             }
 
-            if ((await module.GetRemotesAsync()).Any(r => r.Name == UpstreamConventionName || r.FetchUrl == hostedRepository.ParentReadOnlyUrl))
+            if ((await gitModule.GetRemotesAsync()).Any(r => r.Name == UpstreamConventionName || r.FetchUrl == hostedRepository.ParentReadOnlyUrl))
             {
                 return null;
             }
 
-            module.AddRemote(UpstreamConventionName, hostedRepository.ParentReadOnlyUrl);
+            gitModule.AddRemote(UpstreamConventionName, hostedRepository.ParentReadOnlyUrl);
             return UpstreamConventionName;
         }
 
-        public bool GitModuleIsRelevantToMe(IGitModule module)
+        public bool GitModuleIsRelevantToMe()
         {
-            return GetHostedRemotesForModule(module).Count > 0;
+            return GetHostedRemotesForModule().Count > 0;
         }
 
         /// <summary>
         /// Returns all relevant github-remotes for the current working directory
         /// </summary>
-        public IReadOnlyList<IHostedRemote> GetHostedRemotesForModule(IGitModule module)
+        public IReadOnlyList<IHostedRemote> GetHostedRemotesForModule()
         {
+            var gitModule = _currentGitUiCommands.GitModule;
             return Remotes().ToList();
 
             IEnumerable<IHostedRemote> Remotes()
             {
                 var set = new HashSet<IHostedRemote>();
 
-                foreach (string remote in module.GetRemoteNames())
+                foreach (string remote in gitModule.GetRemoteNames())
                 {
-                    var url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                    var url = gitModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
 
                     if (string.IsNullOrEmpty(url))
                     {

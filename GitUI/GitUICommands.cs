@@ -1352,7 +1352,7 @@ namespace GitUI
         public void StartCreatePullRequest(IWin32Window owner)
         {
             List<IRepositoryHostPlugin> relevantHosts =
-                PluginRegistry.GitHosters.Where(gh => gh.GitModuleIsRelevantToMe(Module)).ToList();
+                PluginRegistry.GitHosters.Where(gh => gh.GitModuleIsRelevantToMe()).ToList();
 
             if (relevantHosts.Count == 0)
             {
