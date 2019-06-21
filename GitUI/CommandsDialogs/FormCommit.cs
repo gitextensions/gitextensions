@@ -1204,17 +1204,14 @@ namespace GitUI.CommandsDialogs
         private async Task SetSelectedDiffAsync(GitItemStatus item, bool staged)
         {
             Action openWithDiffTool = () => (staged ? stagedOpenDifftoolToolStripMenuItem9 : openWithDifftoolToolStripMenuItem).PerformClick();
-            if (item.Name.EndsWith(".png"))
+            if (!item.IsTracked || FileHelper.IsImage(item.Name))
             {
-                await SelectedDiff.ViewFileAsync(item.Name, openWithDiffTool);
-            }
-            else if (item.IsTracked)
-            {
-                SelectedDiff.ViewCurrentChanges(item, staged, openWithDiffTool);
+                var guid = staged ? ObjectId.IndexId : ObjectId.WorkTreeId;
+                await SelectedDiff.ViewGitItemRevisionAsync(item.Name, guid, openWithDiffTool);
             }
             else
             {
-                await SelectedDiff.ViewFileAsync(item.Name);
+                SelectedDiff.ViewCurrentChanges(item, staged, openWithDiffTool);
             }
         }
 

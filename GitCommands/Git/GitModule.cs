@@ -3347,11 +3347,9 @@ namespace GitCommands
         [CanBeNull]
         public ObjectId GetFileBlobHash(string fileName, ObjectId objectId)
         {
-            if (objectId == ObjectId.WorkTreeId)
+            if (objectId == ObjectId.WorkTreeId || objectId == ObjectId.CombinedDiffId)
             {
-                // working directory changes
-                Debug.Assert(false, "Tried to get blob for worktree file");
-                return null;
+                throw new ArgumentException($"Tried to get blob for unsupported revision: {objectId} and file: {fileName}");
             }
 
             // TODO use regex for parsing
