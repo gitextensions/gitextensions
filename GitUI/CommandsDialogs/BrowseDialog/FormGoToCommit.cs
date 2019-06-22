@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
-using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {

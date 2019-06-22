@@ -6,7 +6,7 @@
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TranslationApp</RootNamespace>
     <AssemblyName>TranslationApp</AssemblyName>
@@ -41,8 +41,12 @@
     <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>..\GitExtensions\bin\Release\TranslationApp.xml</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -54,31 +58,9 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="FormTranslate.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormTranslate.Designer.cs">
-      <DependentUpon>FormTranslate.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="TranslationItemWithCategory.cs" />
     <Compile Include="TranslationHelpers.cs" />
-    <EmbeddedResource Include="FormTranslate.resx">
-      <DependentUpon>FormTranslate.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="app.config" />
-    <None Include="app.manifest" />
-    <None Include="Properties\DataSources\FormTranslate.TranslationItemWithCategory.datasource" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
@@ -101,13 +83,6 @@
       <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
       <Name>ResourceManager</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\26.png" />
-    <None Include="Resources\IconClean.png" />
-    <None Include="Resources\53.png" />
-    <None Include="Resources\21.png" />
-    <None Include="Resources\IconSaveAs.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AddPluginBinaries" AfterTargets="ResolveProjectReferences">

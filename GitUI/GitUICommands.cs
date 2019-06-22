@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
@@ -14,7 +13,6 @@ using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
-using ResourceManager;
 
 namespace GitUI
 {
@@ -24,9 +22,6 @@ namespace GitUI
         private readonly ICommitTemplateManager _commitTemplateManager;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
-        private readonly TranslationString _viewPullRequest = new TranslationString("View pull requests");
-        private readonly TranslationString _createPullRequest = new TranslationString("Create pull request");
-        private readonly TranslationString _forkCloneRepo = new TranslationString("Fork or clone a repository");
 
         [NotNull]
         public GitModule Module { get; private set; }
@@ -1330,7 +1325,7 @@ namespace GitUI
 
         public void StartCloneForkFromHoster(IWin32Window owner, IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs> gitModuleChanged)
         {
-            WrapRepoHostingCall(_forkCloneRepo.Text, gitHoster, gh =>
+            WrapRepoHostingCall(Strings.ForkCloneRepo, gitHoster, gh =>
             {
                 using (var frm = new ForkAndCloneForm(gitHoster, gitModuleChanged))
                 {
@@ -1341,7 +1336,7 @@ namespace GitUI
 
         internal void StartPullRequestsDialog(IWin32Window owner, IRepositoryHostPlugin gitHoster)
         {
-            WrapRepoHostingCall(_viewPullRequest.Text, gitHoster,
+            WrapRepoHostingCall(Strings.ViewPullRequest, gitHoster,
                                 gh =>
                                 {
                                     var frm = new ViewPullRequestsForm(this, gitHoster) { ShowInTaskbar = true };
@@ -1371,7 +1366,7 @@ namespace GitUI
         public void StartCreatePullRequest(IWin32Window owner, IRepositoryHostPlugin gitHoster, string chooseRemote = null, string chooseBranch = null)
         {
             WrapRepoHostingCall(
-                _createPullRequest.Text,
+                Strings.CreatePullRequest,
                 gitHoster,
                 gh =>
                 {

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Forms;
-using GitUI.BranchTreePanel;
 using GitUI.BranchTreePanel.ContextMenu;
 using GitUI.BranchTreePanel.Interfaces;
 using NSubstitute;

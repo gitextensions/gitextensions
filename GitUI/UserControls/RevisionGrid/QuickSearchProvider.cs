@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitUI.UserControls.RevisionGrid;
-using ResourceManager;
 
 namespace GitUI
 {

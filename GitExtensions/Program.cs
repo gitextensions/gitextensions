@@ -11,7 +11,6 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
-using ResourceManager;
 
 namespace GitExtensions
 {
@@ -264,12 +263,12 @@ namespace GitExtensions
         private static bool LocateMissingGit()
         {
             int dialogResult = PSTaskDialog.cTaskDialog.ShowCommandBox(Title: "Error",
-                                                                        MainInstruction: Strings.GitExecutableNotFound,
+                                                                        MainInstruction: ResourceManager.Strings.GitExecutableNotFound,
                                                                         Content: null,
                                                                         ExpandedInfo: null,
                                                                         Footer: null,
                                                                         VerificationText: null,
-                                                                        CommandButtons: $"{Strings.FindGitExecutable}|{Strings.InstallGitInstructions}",
+                                                                        CommandButtons: $"{ResourceManager.Strings.FindGitExecutable}|{ResourceManager.Strings.InstallGitInstructions}",
                                                                         ShowCancelButton: true,
                                                                         MainIcon: PSTaskDialog.eSysIcons.Error,
                                                                         FooterIcon: PSTaskDialog.eSysIcons.Warning);

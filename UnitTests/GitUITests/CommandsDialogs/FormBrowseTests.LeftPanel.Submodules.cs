@@ -6,13 +6,10 @@ using System.Windows.Forms;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
-using GitCommands.Remotes;
 using GitCommands.Submodules;
 using GitUI;
 using GitUI.CommandsDialogs;
-using GitUI.Properties;
 using NUnit.Framework;
-using ResourceManager;
 
 namespace GitUITests.CommandsDialogs.CommitDialog
 {
@@ -113,7 +110,7 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         private TreeNode GetSubmoduleNode(FormBrowse form)
         {
             var treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
-            var remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == Strings.Submodules);
+            var remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == GitUI.Strings.Submodules);
             remotesNode.Should().NotBeNull();
             return remotesNode;
         }

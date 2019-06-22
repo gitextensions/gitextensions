@@ -194,7 +194,7 @@ namespace GitUI.CommandsDialogs
             if (objectId == null)
             {
                 // No parent at all, present as working directory
-                return Strings.Workspace;
+                return ResourceManager.Strings.Workspace;
             }
 
             var revision = _revisionGrid.GetRevision(objectId);

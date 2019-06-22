@@ -5,7 +5,6 @@ using GitCommands;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
-using ResourceManager;
 
 namespace GitUI.UserControls
 {

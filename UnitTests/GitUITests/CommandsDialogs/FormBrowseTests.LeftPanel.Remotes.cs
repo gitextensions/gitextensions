@@ -9,7 +9,6 @@ using GitCommands.Remotes;
 using GitUI;
 using GitUI.CommandsDialogs;
 using NUnit.Framework;
-using ResourceManager;
 
 namespace GitUITests.CommandsDialogs.CommitDialog
 {
@@ -179,7 +178,7 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         private TreeNode GetRemoteNode(FormBrowse form)
         {
             var treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
-            var remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == Strings.Remotes);
+            var remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == GitUI.Strings.Remotes);
             remotesNode.Should().NotBeNull();
             return remotesNode;
         }

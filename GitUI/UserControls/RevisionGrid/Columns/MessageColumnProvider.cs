@@ -8,7 +8,6 @@ using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
-using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid.Columns
 {
@@ -184,8 +183,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 RevisionGridRefRenderer.DrawRef(isRowSelected, normalFont, ref offset, revision.Subject, AppSettings.OtherTagColor, RefArrowType.None, messageBounds, e.Graphics, dashedLine: false, fill: true);
 
                 var max = Math.Max(
-                    TextRenderer.MeasureText(Strings.Workspace, normalFont).Width,
-                    TextRenderer.MeasureText(Strings.Index, normalFont).Width);
+                    TextRenderer.MeasureText(ResourceManager.Strings.Workspace, normalFont).Width,
+                    TextRenderer.MeasureText(ResourceManager.Strings.Index, normalFont).Width);
                 offset = baseOffset + max + DpiUtil.Scale(6);
 
                 // Summary of changes
@@ -197,7 +196,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     DrawArtificialCount(changes.Deleted, Images.FileStatusRemoved);
                     DrawArtificialCount(changes.SubmodulesChanged, Images.SubmoduleRevisionDown);
                     DrawArtificialCount(changes.SubmodulesDirty, Images.SubmoduleDirty);
-                 }
+                }
             }
             else
             {

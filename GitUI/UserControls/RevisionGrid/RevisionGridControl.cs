@@ -947,7 +947,7 @@ namespace GitUI
                         Committer = userName,
                         CommitDate = DateTime.MaxValue,
                         CommitterEmail = userEmail,
-                        Subject = Strings.Workspace,
+                        Subject = ResourceManager.Strings.Workspace,
                         ParentIds = new[] { ObjectId.IndexId },
                         HasNotes = true
                     };
@@ -962,7 +962,7 @@ namespace GitUI
                         Committer = userName,
                         CommitDate = DateTime.MaxValue,
                         CommitterEmail = userEmail,
-                        Subject = Strings.Index,
+                        Subject = ResourceManager.Strings.Index,
                         ParentIds = new[] { filteredCurrentCheckout },
                         HasNotes = true
                     };

@@ -130,6 +130,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.AvatarImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
 
             AppSettings.Translation = Language.Text;
+            ResourceManager.Strings.Reinitialize();
             Strings.Reinitialize();
 
             var shouldClearCache =

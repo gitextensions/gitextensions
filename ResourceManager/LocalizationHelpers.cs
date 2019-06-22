@@ -34,40 +34,40 @@ namespace ResourceManager
 
             if (delta < 60)
             {
-                return Strings.GetNSecondsAgoText(ts.Seconds);
+                return ResourceManager.Strings.GetNSecondsAgoText(ts.Seconds);
             }
 
             if (delta < 45 * 60)
             {
-                return Strings.GetNMinutesAgoText(ts.Minutes);
+                return ResourceManager.Strings.GetNMinutesAgoText(ts.Minutes);
             }
 
             if (delta < 24 * 60 * 60)
             {
                 int hours = delta < 60 * 60 ? Math.Sign(ts.Minutes) * 1 : ts.Hours;
-                return Strings.GetNHoursAgoText(hours);
+                return ResourceManager.Strings.GetNHoursAgoText(hours);
             }
 
             // 30.417 = 365 days / 12 months - note that the if statement only bothers with 30 days for "1 month ago" because ts.Days is int
             if (delta < (displayWeeks ? 7 : 30) * 24 * 60 * 60)
             {
-                return Strings.GetNDaysAgoText(ts.Days);
+                return ResourceManager.Strings.GetNDaysAgoText(ts.Days);
             }
 
             if (displayWeeks && delta < 30 * 24 * 60 * 60)
             {
                 int weeks = Convert.ToInt32(ts.Days / 7.0);
-                return Strings.GetNWeeksAgoText(weeks);
+                return ResourceManager.Strings.GetNWeeksAgoText(weeks);
             }
 
             if (delta < 365 * 24 * 60 * 60)
             {
                 int months = Convert.ToInt32(ts.Days / 30.0);
-                return Strings.GetNMonthsAgoText(months);
+                return ResourceManager.Strings.GetNMonthsAgoText(months);
             }
 
             int years = Convert.ToInt32(ts.Days / 365.0);
-            return Strings.GetNYearsAgoText(years);
+            return ResourceManager.Strings.GetNYearsAgoText(years);
         }
 
         public static string GetFullDateString(DateTimeOffset datetime)

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using GitCommands;
+using GitUI;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
-using ResourceManager;
 
 namespace GitUITests.UserControls.RevisionGrid.Graph
 {

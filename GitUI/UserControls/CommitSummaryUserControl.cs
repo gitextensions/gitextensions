@@ -52,8 +52,8 @@ namespace GitUI.UserControls
             {
                 _revision = value;
 
-                labelAuthorCaption.Text = Strings.Author + ":";
-                labelDateCaption.Text = Strings.CommitDate + ":";
+                labelAuthorCaption.Text = ResourceManager.Strings.Author + ":";
+                labelDateCaption.Text = ResourceManager.Strings.CommitDate + ":";
                 labelTagsCaption.Text = _tagsCaption;
                 labelBranchesCaption.Text = _branchesCaption;
 

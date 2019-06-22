@@ -153,18 +153,18 @@ namespace GitUI.UserControls.RevisionGrid
 
             // Add other items
             int count = revisions.Count();
-            AddItem(Strings.GetCommitHash(count), r => r.Guid, Images.CommitId, 'C');
-            AddItem(Strings.GetMessage(count), r => r.Body ?? r.Subject, Images.Message, 'M');
-            AddItem(Strings.GetAuthor(count), r => $"{r.Author} <{r.AuthorEmail}>", Images.Author, 'A');
+            AddItem(ResourceManager.Strings.GetCommitHash(count), r => r.Guid, Images.CommitId, 'C');
+            AddItem(ResourceManager.Strings.GetMessage(count), r => r.Body ?? r.Subject, Images.Message, 'M');
+            AddItem(ResourceManager.Strings.GetAuthor(count), r => $"{r.Author} <{r.AuthorEmail}>", Images.Author, 'A');
 
             if (count == 1 && revisions.First().AuthorDate == revisions.First().CommitDate)
             {
-                AddItem(Strings.Date, r => r.AuthorDate.ToString(), Images.Date, 'D');
+                AddItem(ResourceManager.Strings.Date, r => r.AuthorDate.ToString(), Images.Date, 'D');
             }
             else
             {
-                AddItem(Strings.GetAuthorDate(count), r => r.AuthorDate.ToString(), Images.Date, 'T');
-                AddItem(Strings.GetCommitDate(count), r => r.CommitDate.ToString(), Images.Date, 'D');
+                AddItem(ResourceManager.Strings.GetAuthorDate(count), r => r.AuthorDate.ToString(), Images.Date, 'T');
+                AddItem(ResourceManager.Strings.GetCommitDate(count), r => r.CommitDate.ToString(), Images.Date, 'D');
             }
         }
 
