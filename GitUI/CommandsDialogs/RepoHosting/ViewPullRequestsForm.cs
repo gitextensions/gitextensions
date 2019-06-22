@@ -72,7 +72,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _loader.LoadAsync(
                 () =>
                 {
-                    var t = _gitHoster.GetHostedRemotesForModule(Module).ToList();
+                    var t = _gitHoster.GetHostedRemotesForModule().ToList();
                     foreach (var el in t)
                     {
                         el.GetHostedRepository(); // We do this now because we want to do it in the async part.

@@ -98,6 +98,7 @@
     <Compile Include="ISettingsValueGetter.cs" />
     <Compile Include="ObjectId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Remote.cs" />
     <Compile Include="Settings\BoolSetting.cs" />
     <Compile Include="ISetting.cs" />
     <Compile Include="ISettingsSource.cs" />

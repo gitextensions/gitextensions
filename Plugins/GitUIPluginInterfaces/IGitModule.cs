@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
@@ -107,6 +108,8 @@ namespace GitUIPluginInterfaces
 
         /// <summary>Gets the remote of the current branch; or "" if no remote is configured.</summary>
         string GetCurrentRemote();
+
+        Task<IReadOnlyList<Remote>> GetRemotesAsync();
 
         string GetSetting(string setting);
         string GetEffectiveSetting(string setting);

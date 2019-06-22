@@ -1999,6 +1999,10 @@ compare with first:</source>
         <source>File tree</source>
         <target />
       </trans-unit>
+      <trans-unit id="_addUpstreamRemoteToolStripMenuItem.Text">
+        <source>Add upstream remote</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_buildReportTabCaption.Text">
         <source>Build Report</source>
         <target />

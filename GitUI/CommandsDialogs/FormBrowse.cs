@@ -28,6 +28,7 @@ using GitUI.Properties;
 using GitUI.Script;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
@@ -2090,10 +2091,8 @@ namespace GitUI.CommandsDialogs
 
         private void _viewPullRequestsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var repoHost = PluginRegistry.TryGetGitHosterForModule(Module);
-            if (repoHost == null)
+            if (!TryGetRepositoryHost(out var repoHost))
             {
-                MessageBox.Show(this, _noReposHostFound.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2102,14 +2101,38 @@ namespace GitUI.CommandsDialogs
 
         private void _createPullRequestToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var repoHost = PluginRegistry.TryGetGitHosterForModule(Module);
-            if (repoHost == null)
+            if (!TryGetRepositoryHost(out var repoHost))
             {
-                MessageBox.Show(this, _noReposHostFound.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             UICommands.StartCreatePullRequest(this, repoHost);
+        }
+
+        private async void _addUpstreamRemoteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!TryGetRepositoryHost(out var repoHost))
+            {
+                return;
+            }
+
+            var remoteName = await repoHost.AddUpstreamRemoteAsync();
+            if (!string.IsNullOrEmpty(remoteName))
+            {
+                UICommands.StartPullDialogAndPullImmediately(this, null, remoteName, AppSettings.PullAction.Fetch);
+            }
+        }
+
+        private bool TryGetRepositoryHost(out IRepositoryHostPlugin repoHost)
+        {
+            repoHost = PluginRegistry.TryGetGitHosterForModule(Module);
+            if (repoHost == null)
+            {
+                MessageBox.Show(this, _noReposHostFound.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
         }
 
         #region Hotkey commands

@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Git.hub;
 using GitCommands.Config;
@@ -73,10 +75,12 @@ namespace GitHub3
     [Export(typeof(IGitPlugin))]
     public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin
     {
+        public static string UpstreamConventionName = "upstream";
         public readonly StringSetting OAuthToken = new StringSetting("OAuth Token", "");
 
         internal static GitHub3Plugin Instance;
         internal static Client GitHub;
+        private IGitUICommands _currentGitUiCommands;
 
         public GitHub3Plugin()
         {
@@ -100,6 +104,7 @@ namespace GitHub3
 
         public override void Register(IGitUICommands gitUiCommands)
         {
+            _currentGitUiCommands = gitUiCommands;
             if (!string.IsNullOrEmpty(GitHubLoginInfo.OAuthToken))
             {
                 GitHub.setOAuth2Token(GitHubLoginInfo.OAuthToken);
@@ -147,25 +152,52 @@ namespace GitHub3
 
         public bool ConfigurationOk => !string.IsNullOrEmpty(GitHubLoginInfo.OAuthToken);
 
-        public bool GitModuleIsRelevantToMe(IGitModule module)
+        public string OwnerLogin => GitHub.getCurrentUser()?.Login;
+
+        public async Task<string> AddUpstreamRemoteAsync()
         {
-            return GetHostedRemotesForModule(module).Count > 0;
+            var gitModule = _currentGitUiCommands.GitModule;
+            var hostedRemote = GetHostedRemotesForModule().FirstOrDefault(r => r.IsOwnedByMe);
+            if (hostedRemote == null)
+            {
+                return null;
+            }
+
+            var hostedRepository = hostedRemote.GetHostedRepository();
+            if (!hostedRepository.IsAFork)
+            {
+                return null;
+            }
+
+            if ((await gitModule.GetRemotesAsync()).Any(r => r.Name == UpstreamConventionName || r.FetchUrl == hostedRepository.ParentReadOnlyUrl))
+            {
+                return null;
+            }
+
+            gitModule.AddRemote(UpstreamConventionName, hostedRepository.ParentReadOnlyUrl);
+            return UpstreamConventionName;
+        }
+
+        public bool GitModuleIsRelevantToMe()
+        {
+            return GetHostedRemotesForModule().Count > 0;
         }
 
         /// <summary>
         /// Returns all relevant github-remotes for the current working directory
         /// </summary>
-        public IReadOnlyList<IHostedRemote> GetHostedRemotesForModule(IGitModule module)
+        public IReadOnlyList<IHostedRemote> GetHostedRemotesForModule()
         {
+            var gitModule = _currentGitUiCommands.GitModule;
             return Remotes().ToList();
 
             IEnumerable<IHostedRemote> Remotes()
             {
                 var set = new HashSet<IHostedRemote>();
 
-                foreach (string remote in module.GetRemoteNames())
+                foreach (string remote in gitModule.GetRemoteNames())
                 {
-                    var url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                    var url = gitModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
 
                     if (string.IsNullOrEmpty(url))
                     {
@@ -180,7 +212,7 @@ namespace GitHub3
 
                     if (m.Success)
                     {
-                        var hostedRemote = new GitHubHostedRemote(remote, m.Groups[1].Value, m.Groups[2].Value.Replace(".git", ""));
+                        var hostedRemote = new GitHubHostedRemote(remote, m.Groups[1].Value, m.Groups[2].Value.Replace(".git", ""), url);
 
                         if (set.Add(hostedRemote))
                         {

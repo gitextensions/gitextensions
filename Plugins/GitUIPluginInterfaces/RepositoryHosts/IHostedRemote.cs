@@ -17,5 +17,12 @@ namespace GitUIPluginInterfaces.RepositoryHosts
         string DisplayData { get; }
 
         bool IsOwnedByMe { get; }
+
+        string Owner { get; }
+
+        string RemoteRepositoryName { get; }
+
+        string RemoteUrl { get; }
+        GitProtocol CloneProtocol { get; }
     }
 }
