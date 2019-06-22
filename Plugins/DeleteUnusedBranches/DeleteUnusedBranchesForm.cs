@@ -59,6 +59,11 @@ namespace DeleteUnusedBranches
 
             InitializeComplete();
 
+            if (gitUiCommands == null)
+            {
+                return;
+            }
+
             ThreadHelper.JoinableTaskFactory.RunAsync(() => RefreshObsoleteBranchesAsync());
         }
 

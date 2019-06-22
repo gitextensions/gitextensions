@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -17,9 +16,6 @@ namespace TranslationApp
         [STAThread]
         private static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
             // This form created for obtain UI synchronization context only
             using (new Form())
             {
@@ -30,72 +26,22 @@ namespace TranslationApp
             // required for translation
             PluginRegistry.Initialize();
 
-            string[] args = Environment.GetCommandLineArgs();
-            if (args.Length == 1)
+            // we will be instantiating a number of forms using their default .ctors
+            // this would lead to InvalidOperationException thrown in GitModuleForm()
+            // set the flag that will stop this from happening
+            GitModuleForm.IsUnitTestActive = true;
+
+            var neutralItems = TranslationHelpers.LoadNeutralItems();
+            string filename = Path.Combine(Translator.GetTranslationDir(), "English.xlf");
+            TranslationHelpers.SaveTranslation(null, neutralItems, filename);
+
+            var translationsNames = Translator.GetAllTranslations();
+            foreach (var name in translationsNames)
             {
-                Application.Run(new FormTranslate());
-            }
-            else if (args.Length == 2 && args[1] == "update")
-            {
-                UpdateAllTranslations();
-            }
-            else if (args.Length == 2 && args[1] == "status")
-            {
-                ShowStatus();
-            }
-        }
-
-        private static void UpdateAllTranslations()
-        {
-            using (new WaitCursorScope())
-            {
-                // we will be instantiating a number of forms using their default .ctors
-                // this would lead to InvalidOperationException thrown in GitModuleForm()
-                // set the flag that will stop this from happening
-                GitModuleForm.IsUnitTestActive = true;
-
-                var neutralItems = TranslationHelpers.LoadNeutralItems();
-                string filename = Path.Combine(Translator.GetTranslationDir(), "English.xlf");
-                TranslationHelpers.SaveTranslation(null, neutralItems, filename);
-
-                var translationsNames = Translator.GetAllTranslations();
-                foreach (var name in translationsNames)
-                {
-                    var translation = Translator.GetTranslation(name);
-                    var translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
-                    filename = Path.Combine(Translator.GetTranslationDir(), name + ".xlf");
-                    TranslationHelpers.SaveTranslation(translation.First().Value.TargetLanguage, translateItems, filename);
-                }
-            }
-        }
-
-        private static void ShowStatus()
-        {
-            using (new WaitCursorScope())
-            {
-                var neutralItems = TranslationHelpers.LoadNeutralItems();
-
-                var translationsNames = Translator.GetAllTranslations();
-                var list = new List<KeyValuePair<string, int>>();
-                foreach (var name in translationsNames)
-                {
-                    var translation = Translator.GetTranslation(name);
-                    var translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
-                    int translatedCount = translateItems
-                        .Sum(p => p.Value.Count(translateItem => !string.IsNullOrEmpty(translateItem.TranslatedValue)));
-                    list.Add(new KeyValuePair<string, int>(name, translatedCount));
-                }
-
-                using (var stream = File.CreateText("statistic.csv"))
-                {
-                    stream.WriteLine("{0};{1};{2};{3}", "Language", "Percent", "TranslatedItems", "TotalItems");
-                    foreach (var (language, translatedItems) in list.OrderByDescending(item => item.Value))
-                    {
-                        stream.WriteLine(
-                            "{0};{1:F}%;{2};{3}", language, 100.0f * translatedItems / neutralItems.Count, translatedItems,
-                            neutralItems.Count);
-                    }
-                }
+                var translation = Translator.GetTranslation(name);
+                var translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
+                filename = Path.Combine(Translator.GetTranslationDir(), name + ".xlf");
+                TranslationHelpers.SaveTranslation(translation.First().Value.TargetLanguage, translateItems, filename);
             }
         }
     }
