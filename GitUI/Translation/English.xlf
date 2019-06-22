@@ -111,8 +111,8 @@ This action will be performed without warning while checking out branch.</source
   </file>
   <file datatype="plaintext" original="AppearanceSettingsPage" source-language="en">
     <body>
-      <trans-unit id="$this.Text">
-        <source>Appearance</source>
+      <trans-unit id="AvatarProvider.Text">
+        <source>Gravatar</source>
         <target />
       </trans-unit>
       <trans-unit id="ClearImageCache.Text">
@@ -137,7 +137,7 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="_noImageServiceTooltip.Text">
         <source>A default image, if an email address has no matching Gravatar image.
-See http://en.gravatar.com/site/implement/images/ for more details.</source>
+See http://en.gravatar.com/site/implement/images#default-image for more details.</source>
         <target />
       </trans-unit>
       <trans-unit id="chkEnableAutoScale.Text">
@@ -170,6 +170,10 @@ See http://en.gravatar.com/site/implement/images/ for more details.</source>
       </trans-unit>
       <trans-unit id="helpTranslate.Text">
         <source>Help translate</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblAvatarProvider.Text">
+        <source>Avatar provider</source>
         <target />
       </trans-unit>
       <trans-unit id="lblCacheDays.Text">
@@ -212,11 +216,15 @@ See http://en.gravatar.com/site/implement/images/ for more details.</source>
   </file>
   <file datatype="plaintext" original="AvatarControl" source-language="en">
     <body>
+      <trans-unit id="avatarProviderToolStripMenuItem.Text">
+        <source>Avatar provider</source>
+        <target />
+      </trans-unit>
       <trans-unit id="clearImagecacheToolStripMenuItem.Text">
         <source>Clear image cache</source>
         <target />
       </trans-unit>
-      <trans-unit id="defaultImageToolStripMenuItem.Text">
+      <trans-unit id="fallbackAvatarStyleToolStripMenuItem.Text">
         <source>Fallback generated avatar style</source>
         <target />
       </trans-unit>
@@ -6846,6 +6854,10 @@ Do you want to select a language code first?</source>
         <source>Searching for updates</source>
         <target />
       </trans-unit>
+      <trans-unit id="_downloadingUpdate.Text">
+        <source>Downloading update...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_newVersionAvailable.Text">
         <source>There is a new version {0} of Git Extensions available</source>
         <target />
@@ -6854,16 +6866,16 @@ Do you want to select a language code first?</source>
         <source>No updates found</source>
         <target />
       </trans-unit>
-      <trans-unit id="btnDownloadNow.Text">
-        <source>Download Now</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="closeButton.Text">
-        <source>Close</source>
+      <trans-unit id="btnUpdateNow.Text">
+        <source>&amp;Update Now</source>
         <target />
       </trans-unit>
       <trans-unit id="linkChangeLog.Text">
-        <source>Show ChangeLog</source>
+        <source>Show Change&amp;Log</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="linkDirectDownload.Text">
+        <source>&amp;Direct Download</source>
         <target />
       </trans-unit>
     </body>
