@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using FluentAssertions;
 using GitCommands;
+using GitUI;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
-using ResourceManager;
 
 namespace GitUITests.UserControls.RevisionGrid
 {
@@ -79,7 +78,7 @@ namespace GitUITests.UserControls.RevisionGrid
             _copyContextMenuItem.ShowDropDown();
 
             _copyContextMenuItem.DropDownItems.Count.Should().Be(8);
-            _copyContextMenuItem.DropDownItems[0].Text.Should().Be(ResourceManager.Strings.Branches);
+            _copyContextMenuItem.DropDownItems[0].Text.Should().Be(Strings.Branches);
             _copyContextMenuItem.DropDownItems[1].Text.Should().EndWith("branch1");
             _copyContextMenuItem.DropDownItems[2].Text.Should().EndWith("branch2");
             _copyContextMenuItem.DropDownItems[3].Should().BeOfType<ToolStripSeparator>();
@@ -105,7 +104,7 @@ namespace GitUITests.UserControls.RevisionGrid
             _copyContextMenuItem.ShowDropDown();
 
             _copyContextMenuItem.DropDownItems.Count.Should().Be(8);
-            _copyContextMenuItem.DropDownItems[0].Text.Should().Be(ResourceManager.Strings.Tags);
+            _copyContextMenuItem.DropDownItems[0].Text.Should().Be(Strings.Tags);
             _copyContextMenuItem.DropDownItems[1].Text.Should().EndWith("tag1");
             _copyContextMenuItem.DropDownItems[2].Text.Should().EndWith("tag2");
             _copyContextMenuItem.DropDownItems[3].Should().BeOfType<ToolStripSeparator>();
@@ -133,11 +132,11 @@ namespace GitUITests.UserControls.RevisionGrid
             _copyContextMenuItem.ShowDropDown();
 
             _copyContextMenuItem.DropDownItems.Count.Should().Be(12);
-            _copyContextMenuItem.DropDownItems[0].Text.Should().Be(ResourceManager.Strings.Branches);
+            _copyContextMenuItem.DropDownItems[0].Text.Should().Be(Strings.Branches);
             _copyContextMenuItem.DropDownItems[1].Text.Should().EndWith("branch1");
             _copyContextMenuItem.DropDownItems[2].Text.Should().EndWith("branch2");
             _copyContextMenuItem.DropDownItems[3].Should().BeOfType<ToolStripSeparator>();
-            _copyContextMenuItem.DropDownItems[4].Text.Should().Be(ResourceManager.Strings.Tags);
+            _copyContextMenuItem.DropDownItems[4].Text.Should().Be(Strings.Tags);
             _copyContextMenuItem.DropDownItems[5].Text.Should().EndWith("tag1");
             _copyContextMenuItem.DropDownItems[6].Text.Should().EndWith("tag2");
             _copyContextMenuItem.DropDownItems[7].Should().BeOfType<ToolStripSeparator>();

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using GitCommands;
+using GitUI;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
-using ResourceManager;
 
 namespace GitUITests.UserControls.RevisionGrid.Graph
 {
@@ -169,7 +169,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
                     prefix,
                     node.GitRevision.Guid,
                     Environment.NewLine,
-                    ResourceManager.Strings.Branch,
+                    Strings.Branch,
                     branch,
                     mergedWith == null ? "" : string.Format(LaneInfoProvider.TestAccessor.MergedWithText.Text, mergedWith),
                     node.GitRevision.Body,
@@ -240,7 +240,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             _realCommitNode.GitRevision.HasMultiLineMessage = true;
             _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false));
 
-            GetLaneInfo_should_display(_realCommitNode, suffix: _realCommitNode.GitRevision.Subject + ResourceManager.Strings.BodyNotLoaded);
+            GetLaneInfo_should_display(_realCommitNode, suffix: _realCommitNode.GitRevision.Subject + Strings.BodyNotLoaded);
         }
 
         [Test]

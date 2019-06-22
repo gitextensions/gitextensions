@@ -124,7 +124,7 @@ namespace GitUI.UserControls.RevisionGrid
             // Add items for branches
             if (branchNames.Any())
             {
-                var caption = new ToolStripMenuItem { Text = ResourceManager.Strings.Branches };
+                var caption = new ToolStripMenuItem { Text = Strings.Branches };
                 MenuUtil.SetAsCaptionMenuItem(caption, Owner);
                 DropDownItems.Add(caption);
 
@@ -139,7 +139,7 @@ namespace GitUI.UserControls.RevisionGrid
             // Add items for tags
             if (tagNames.Any())
             {
-                var caption = new ToolStripMenuItem { Text = ResourceManager.Strings.Tags };
+                var caption = new ToolStripMenuItem { Text = Strings.Tags };
                 MenuUtil.SetAsCaptionMenuItem(caption, Owner);
                 DropDownItems.Add(caption);
 

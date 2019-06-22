@@ -238,9 +238,9 @@ namespace GitUI.BranchTreePanel
 
         private void CreateBranches()
         {
-            var rootNode = new TreeNode(ResourceManager.Strings.Branches)
+            var rootNode = new TreeNode(Strings.Branches)
             {
-                Name = ResourceManager.Strings.Branches,
+                Name = Strings.Branches,
                 ImageKey = nameof(Images.BranchLocalRoot),
                 SelectedImageKey = nameof(Images.BranchLocalRoot),
             };
@@ -249,9 +249,9 @@ namespace GitUI.BranchTreePanel
 
         private void CreateRemotes()
         {
-            var rootNode = new TreeNode(ResourceManager.Strings.Remotes)
+            var rootNode = new TreeNode(Strings.Remotes)
             {
-                Name = ResourceManager.Strings.Remotes,
+                Name = Strings.Remotes,
                 ImageKey = nameof(Images.BranchRemoteRoot),
                 SelectedImageKey = nameof(Images.BranchRemoteRoot),
             };
@@ -266,9 +266,9 @@ namespace GitUI.BranchTreePanel
 
         private void CreateTags()
         {
-            var rootNode = new TreeNode(ResourceManager.Strings.Tags)
+            var rootNode = new TreeNode(Strings.Tags)
             {
-                Name = ResourceManager.Strings.Tags,
+                Name = Strings.Tags,
                 ImageKey = nameof(Images.TagHorizontal),
                 SelectedImageKey = nameof(Images.TagHorizontal),
             };
@@ -277,9 +277,9 @@ namespace GitUI.BranchTreePanel
 
         private void CreateSubmodules()
         {
-            var rootNode = new TreeNode(ResourceManager.Strings.Submodules)
+            var rootNode = new TreeNode(Strings.Submodules)
             {
-                Name = ResourceManager.Strings.Submodules,
+                Name = Strings.Submodules,
                 ImageKey = nameof(Images.FolderSubmodule),
                 SelectedImageKey = nameof(Images.FolderSubmodule),
             };

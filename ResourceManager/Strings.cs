@@ -29,15 +29,6 @@ namespace ResourceManager
         private readonly TranslationString _messageText = new TranslationString("{0:Message|Messages}");
         private readonly TranslationString _workspaceText = new TranslationString("Working directory");
         private readonly TranslationString _indexText = new TranslationString("Commit index");
-        private readonly TranslationString _loadingDataText = new TranslationString("Loading data...");
-        private readonly TranslationString _uninterestingDiffOmitted = new TranslationString("Uninteresting diff hunks are omitted.");
-        private readonly TranslationString _branchText = new TranslationString("Branch");
-        private readonly TranslationString _branchesText = new TranslationString("Branches");
-        private readonly TranslationString _remotesText = new TranslationString("Remotes");
-        private readonly TranslationString _tagsText = new TranslationString("Tags");
-        private readonly TranslationString _submodulesText = new TranslationString("Submodules");
-        private readonly TranslationString _bodyNotLoaded = new TranslationString("\n\nFull message text is not present in older commits.\nSelect this commit to populate the full message.");
-        private readonly TranslationString _searchingFor = new TranslationString("Searching for: ");
 
         private readonly TranslationString _parentsText = new TranslationString("{0:Parent|Parents}");
         private readonly TranslationString _childrenText = new TranslationString("{0:Child|Children}");
@@ -61,26 +52,15 @@ namespace ResourceManager
         public static string FindGitExecutable => _instance.Value._findGitExecutable.Text;
         public static string InstallGitInstructions => _instance.Value._installGitInstructions.Text;
         public static string GitExecutableNotFound => _instance.Value._gitExecutableNotFoundText.Text;
+
         public static string Date => _instance.Value._dateText.Text;
         public static string Author => GetAuthor(1);
         public static string AuthorDate => GetAuthorDate(1);
         public static string Committer => _instance.Value._committerText.Text;
         public static string CommitDate => GetCommitDate(1);
         public static string CommitHash => GetCommitHash(1);
-        public static string Message => GetMessage(1);
         public static string Workspace => _instance.Value._workspaceText.Text;
         public static string Index => _instance.Value._indexText.Text;
-        public static string LoadingData => _instance.Value._loadingDataText.Text;
-        public static string UninterestingDiffOmitted => _instance.Value._uninterestingDiffOmitted.Text;
-
-        public static string Branch => _instance.Value._branchText.Text;
-        public static string Branches => _instance.Value._branchesText.Text;
-        public static string Remotes => _instance.Value._remotesText.Text;
-        public static string Tags => _instance.Value._tagsText.Text;
-        public static string Submodules => _instance.Value._submodulesText.Text;
-
-        public static string BodyNotLoaded => _instance.Value._bodyNotLoaded.Text;
-        public static string SearchingFor => _instance.Value._searchingFor.Text;
 
         public static string GetParents(int value)
         {

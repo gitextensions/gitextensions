@@ -346,7 +346,7 @@ namespace GitUI.CommandsDialogs
 
                 if (string.IsNullOrWhiteSpace(diffOfConflict))
                 {
-                    diffOfConflict = ResourceManager.Strings.UninterestingDiffOmitted;
+                    diffOfConflict = Strings.UninterestingDiffOmitted;
                 }
 
                 DiffText.ViewPatch(text: diffOfConflict, openWithDifftool: null /* not implemented */);

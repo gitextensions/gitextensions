@@ -293,7 +293,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             {
                 var s = new StringBuilder();
 
-                s.Append(revision.Body?.TrimEnd() ?? revision.Subject + ResourceManager.Strings.BodyNotLoaded);
+                s.Append(revision.Body?.TrimEnd() ?? revision.Subject + Strings.BodyNotLoaded);
 
                 if (revision.Refs.Count != 0)
                 {

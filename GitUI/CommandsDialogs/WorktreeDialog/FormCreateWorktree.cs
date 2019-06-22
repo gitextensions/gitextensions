@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces;
-using ResourceManager;
 
 namespace GitUI.CommandsDialogs.WorktreeDialog
 {
@@ -48,7 +47,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             {
                 var selectedBranch = UICommands.GitModule.GetSelectedBranch();
                 ExistingBranches = Module.GetRefs(false);
-                comboBoxBranches.Text = ResourceManager.Strings.LoadingData;
+                comboBoxBranches.Text = Strings.LoadingData;
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
                     await _branchesLoader.LoadAsync(

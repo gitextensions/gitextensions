@@ -567,8 +567,8 @@ Are you sure you want to continue?</source>
         <source>&amp;Publish</source>
         <target />
       </trans-unit>
-      <trans-unit id="labelPublishType.Text">
-        <source>Publish Type</source>
+      <trans-unit id="PublishType.Text">
+        <source>For Review</source>
         <target />
       </trans-unit>
       <trans-unit id="_publishCaption.Text">
@@ -579,12 +579,8 @@ Are you sure you want to continue?</source>
         <source>Publish Gerrit Change</source>
         <target />
       </trans-unit>
-      <trans-unit id="_selectBranch.Text">
-        <source>Please enter a branch</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_selectRemote.Text">
-        <source>Please select a remote repository</source>
+      <trans-unit id="_publishTypePrivate.Text">
+        <source>Private</source>
         <target />
       </trans-unit>
       <trans-unit id="_publishTypeReview.Text">
@@ -595,12 +591,20 @@ Are you sure you want to continue?</source>
         <source>Work-in-Progress</source>
         <target />
       </trans-unit>
-      <trans-unit id="_publishTypePrivate.Text">
-        <source>Private</source>
+      <trans-unit id="_selectBranch.Text">
+        <source>Please enter a branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_selectRemote.Text">
+        <source>Please select a remote repository</source>
         <target />
       </trans-unit>
       <trans-unit id="labelBranch.Text">
         <source>Branch:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelPublishType.Text">
+        <source>Publish Type</source>
         <target />
       </trans-unit>
       <trans-unit id="labelRemote.Text">
