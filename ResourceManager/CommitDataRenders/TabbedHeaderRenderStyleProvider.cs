@@ -14,13 +14,13 @@ namespace ResourceManager.CommitDataRenders
         {
             var strings = new[]
             {
-                Strings.Author,
-                Strings.AuthorDate,
-                Strings.Committer,
-                Strings.CommitDate,
-                Strings.CommitHash,
-                Strings.GetChildren(10), // assume text for plural case is longer
-                Strings.GetParents(10)
+                ResourceManager.Strings.Author,
+                ResourceManager.Strings.AuthorDate,
+                ResourceManager.Strings.Committer,
+                ResourceManager.Strings.CommitDate,
+                ResourceManager.Strings.CommitHash,
+                ResourceManager.Strings.GetChildren(10), // assume text for plural case is longer
+                ResourceManager.Strings.GetParents(10)
             };
 
             var tabStop = strings

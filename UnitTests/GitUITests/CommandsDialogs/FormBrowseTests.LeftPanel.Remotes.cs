@@ -179,7 +179,7 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         private TreeNode GetRemoteNode(FormBrowse form)
         {
             var treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
-            var remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == Strings.Remotes);
+            var remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == ResourceManager.Strings.Remotes);
             remotesNode.Should().NotBeNull();
             return remotesNode;
         }

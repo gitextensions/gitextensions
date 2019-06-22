@@ -65,11 +65,11 @@ namespace ResourceManager
             {
                 if (objectId == ObjectId.WorkTreeId)
                 {
-                    linkText = Strings.Workspace;
+                    linkText = ResourceManager.Strings.Workspace;
                 }
                 else if (objectId == ObjectId.IndexId)
                 {
-                    linkText = Strings.Index;
+                    linkText = ResourceManager.Strings.Index;
                 }
                 else if (preserveGuidInLinkText)
                 {

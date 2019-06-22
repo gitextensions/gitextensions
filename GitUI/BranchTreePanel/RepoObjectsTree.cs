@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
@@ -239,9 +238,9 @@ namespace GitUI.BranchTreePanel
 
         private void CreateBranches()
         {
-            var rootNode = new TreeNode(Strings.Branches)
+            var rootNode = new TreeNode(ResourceManager.Strings.Branches)
             {
-                Name = Strings.Branches,
+                Name = ResourceManager.Strings.Branches,
                 ImageKey = nameof(Images.BranchLocalRoot),
                 SelectedImageKey = nameof(Images.BranchLocalRoot),
             };
@@ -250,9 +249,9 @@ namespace GitUI.BranchTreePanel
 
         private void CreateRemotes()
         {
-            var rootNode = new TreeNode(Strings.Remotes)
+            var rootNode = new TreeNode(ResourceManager.Strings.Remotes)
             {
-                Name = Strings.Remotes,
+                Name = ResourceManager.Strings.Remotes,
                 ImageKey = nameof(Images.BranchRemoteRoot),
                 SelectedImageKey = nameof(Images.BranchRemoteRoot),
             };
@@ -267,9 +266,9 @@ namespace GitUI.BranchTreePanel
 
         private void CreateTags()
         {
-            var rootNode = new TreeNode(Strings.Tags)
+            var rootNode = new TreeNode(ResourceManager.Strings.Tags)
             {
-                Name = Strings.Tags,
+                Name = ResourceManager.Strings.Tags,
                 ImageKey = nameof(Images.TagHorizontal),
                 SelectedImageKey = nameof(Images.TagHorizontal),
             };
@@ -278,9 +277,9 @@ namespace GitUI.BranchTreePanel
 
         private void CreateSubmodules()
         {
-            var rootNode = new TreeNode(Strings.Submodules)
+            var rootNode = new TreeNode(ResourceManager.Strings.Submodules)
             {
-                Name = Strings.Submodules,
+                Name = ResourceManager.Strings.Submodules,
                 ImageKey = nameof(Images.FolderSubmodule),
                 SelectedImageKey = nameof(Images.FolderSubmodule),
             };

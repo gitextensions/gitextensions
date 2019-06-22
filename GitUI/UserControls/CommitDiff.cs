@@ -93,7 +93,7 @@ namespace GitUI.UserControls
 
                 if (string.IsNullOrWhiteSpace(diffOfConflict))
                 {
-                    diffOfConflict = Strings.UninterestingDiffOmitted;
+                    diffOfConflict = ResourceManager.Strings.UninterestingDiffOmitted;
                 }
 
                 DiffText.ViewPatch(text: diffOfConflict, openWithDifftool: null /* not implemented */);

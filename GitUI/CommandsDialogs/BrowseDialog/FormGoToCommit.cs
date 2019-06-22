@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
-using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -76,7 +75,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void LoadTagsAsync()
         {
-            comboBoxTags.Text = Strings.LoadingData;
+            comboBoxTags.Text = ResourceManager.Strings.LoadingData;
             ThreadHelper.JoinableTaskFactory.RunAsync(() =>
             {
                 return _tagsLoader.LoadAsync(
@@ -93,7 +92,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void LoadBranchesAsync()
         {
-            comboBoxBranches.Text = Strings.LoadingData;
+            comboBoxBranches.Text = ResourceManager.Strings.LoadingData;
             ThreadHelper.JoinableTaskFactory.RunAsync(() =>
             {
                 return _branchesLoader.LoadAsync(

@@ -46,7 +46,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 var branch = new BranchFinder(node);
                 if (branch.CommittedTo.IsNotNullOrWhitespace())
                 {
-                    laneInfoText.AppendFormat("\n{0}: {1}", Strings.Branch, branch.CommittedTo);
+                    laneInfoText.AppendFormat("\n{0}: {1}", ResourceManager.Strings.Branch, branch.CommittedTo);
                     if (branch.MergedWith.IsNotNullOrWhitespace())
                     {
                         laneInfoText.AppendFormat(MergedWithText.Text, branch.MergedWith);
@@ -65,7 +65,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 laneInfoText.Append(node.GitRevision.Subject);
                 if (node.GitRevision.HasMultiLineMessage)
                 {
-                    laneInfoText.Append(Strings.BodyNotLoaded);
+                    laneInfoText.Append(ResourceManager.Strings.BodyNotLoaded);
                 }
             }
 

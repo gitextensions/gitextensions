@@ -47,14 +47,14 @@ namespace GitUI.CommandsDialogs
                 if (_diffSelectedRevision == null)
                 {
                     const string defaultString = "...";
-                    labelDateCaption.Text = $"{Strings.CommitDate}:";
+                    labelDateCaption.Text = $"{ResourceManager.Strings.CommitDate}:";
                     labelAuthor.Text = defaultString;
                     gbDiffRevision.Text = defaultString;
                     labelMessage.Text = defaultString;
                 }
                 else
                 {
-                    labelDateCaption.Text = $"{Strings.CommitDate}: {_diffSelectedRevision.CommitDate}";
+                    labelDateCaption.Text = $"{ResourceManager.Strings.CommitDate}: {_diffSelectedRevision.CommitDate}";
                     labelAuthor.Text = _diffSelectedRevision.Author;
                     gbDiffRevision.Text = _diffSelectedRevision.ObjectId.ToShortString();
                     labelMessage.Text = _diffSelectedRevision.Subject;

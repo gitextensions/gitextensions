@@ -194,7 +194,7 @@ namespace GitUI.CommandsDialogs
             if (objectId == null)
             {
                 // No parent at all, present as working directory
-                return Strings.Workspace;
+                return ResourceManager.Strings.Workspace;
             }
 
             var revision = _revisionGrid.GetRevision(objectId);
@@ -346,7 +346,7 @@ namespace GitUI.CommandsDialogs
 
                 if (string.IsNullOrWhiteSpace(diffOfConflict))
                 {
-                    diffOfConflict = Strings.UninterestingDiffOmitted;
+                    diffOfConflict = ResourceManager.Strings.UninterestingDiffOmitted;
                 }
 
                 DiffText.ViewPatch(text: diffOfConflict, openWithDifftool: null /* not implemented */);
