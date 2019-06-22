@@ -131,6 +131,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             AppSettings.Translation = Language.Text;
             ResourceManager.Strings.Reinitialize();
+            Strings.Reinitialize();
 
             var shouldClearCache =
                 AppSettings.AvatarProvider != (AvatarProvider)AvatarProvider.SelectedValue
