@@ -21,6 +21,7 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.BlameAuthor = new GitUI.Editor.FileViewer();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.blameRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blamePreviousRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -104,6 +105,7 @@
             // contextMenu
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.blameRevisionToolStripMenuItem,
             this.blamePreviousRevisionToolStripMenuItem,
             this.showChangesToolStripMenuItem,
             this.toolStripSeparator1,
@@ -116,6 +118,11 @@
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(235, 6);
+            this.blameRevisionToolStripMenuItem.Image = global::GitUI.Properties.Resources.Blame;
+            this.blameRevisionToolStripMenuItem.Name = "blameRevisionToolStripMenuItem";
+            this.blameRevisionToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.blameRevisionToolStripMenuItem.Text = "Blame this revision";
+            this.blameRevisionToolStripMenuItem.Click += new System.EventHandler(this.blameRevisionToolStripMenuItem_Click);
             // 
             // blamePreviousRevisionToolStripMenuItem
             // 
@@ -214,5 +221,6 @@
         private System.Windows.Forms.ToolStripMenuItem commitHashToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem commitMessageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem allCommitInfoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem blameRevisionToolStripMenuItem;
     }
 }

@@ -457,18 +457,34 @@ namespace GitUI.Blame
             CopyToClipboard(c => c.ObjectId.ToString());
         }
 
-        private void blamePreviousRevisionToolStripMenuItem_Click(object sender, EventArgs e)
+        private bool TryGetSelectedRevision(out GitRevision selectedRevision)
         {
+            selectedRevision = null;
             int line = (int?)contextMenu.Tag ?? -1;
             if (line < 0)
             {
-                return;
+                return false;
             }
 
             var objectId = _blame.Lines[line].Commit.ObjectId;
 
-            var selectedRevision = _revGrid.GetRevision(objectId);
-            if (selectedRevision == null)
+            selectedRevision = _revGrid.GetRevision(objectId);
+            return selectedRevision != null;
+        }
+
+        private void blameRevisionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!TryGetSelectedRevision(out var selectedRevision))
+            {
+                return;
+            }
+
+            _revGrid.SetSelectedRevision(selectedRevision);
+        }
+
+        private void blamePreviousRevisionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!TryGetSelectedRevision(out var selectedRevision))
             {
                 return;
             }
