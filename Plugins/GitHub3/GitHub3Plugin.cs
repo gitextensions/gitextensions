@@ -145,7 +145,7 @@ namespace GitHub3
             return GitHub.getRepositories().Select(repo => (IHostedRepository)new GitHubRepo(repo)).ToList();
         }
 
-        public bool ConfigurationOk => true;
+        public bool ConfigurationOk => !string.IsNullOrEmpty(GitHubLoginInfo.OAuthToken);
 
         public bool GitModuleIsRelevantToMe(IGitModule module)
         {
