@@ -194,9 +194,8 @@ namespace GitCommands.Submodules
             bool isCurrentTopProject = currentModule.SuperprojectModule == null;
             if (isCurrentTopProject)
             {
-                string path = result.Module.WorkingDir;
-                string name = Path.GetFileName(Path.GetDirectoryName(result.Module.WorkingDir)) + GetBranchNameSuffix(path, noBranchText);
-                result.TopProject = new SubmoduleInfo { Text = name, Path = result.Module.WorkingDir, Bold = true };
+                SetTopProjectSubmoduleInfo(result, noBranchText, result.Module, false, isCurrentTopProject);
+
                 return;
             }
 
@@ -208,7 +207,7 @@ namespace GitCommands.Submodules
             SetSuperProjectSubmoduleInfo(currentModule.SuperprojectModule, result, noBranchText, topProject, isParentTopProject);
 
             // Set result.TopProject
-            SetTopProjectSubmoduleInfo(result, noBranchText, topProject, isParentTopProject);
+            SetTopProjectSubmoduleInfo(result, noBranchText, topProject, isParentTopProject, isCurrentTopProject);
 
             // Set result.CurrentSubmoduleName and populate result.SuperSubmodules
             SetSubmoduleData(currentModule, result, noBranchText, topProject);
@@ -219,31 +218,39 @@ namespace GitCommands.Submodules
             string name;
             if (isParentTopProject)
             {
-                name = Path.GetFileName(Path.GetDirectoryName(topProject.WorkingDir));
+                var localPath = topProject.WorkingDir;
+                name = Directory.Exists(localPath) ?
+                    Path.GetFileName(Path.GetDirectoryName(localPath)) :
+                    localPath;
             }
             else
             {
                 var localPath = superprojectModule.WorkingDir.Substring(topProject.WorkingDir.Length);
-                localPath = PathUtil.GetDirectoryName(localPath.ToPosixPath());
-                name = localPath;
-            }
+                name = PathUtil.GetDirectoryName(localPath.ToPosixPath());
+             }
 
             string path = superprojectModule.WorkingDir;
             name += GetBranchNameSuffix(path, noBranchText);
             result.SuperProject = new SubmoduleInfo { Text = name, Path = superprojectModule.WorkingDir };
         }
 
-        private void SetTopProjectSubmoduleInfo(SubmoduleInfoResult result, string noBranchText, IGitModule topProject, bool isParentTopProject)
+        private void SetTopProjectSubmoduleInfo(SubmoduleInfoResult result,
+            string noBranchText,
+            IGitModule topProject,
+            bool isParentTopProject,
+            bool isCurrentTopProject)
         {
-            if (isParentTopProject)
+            if (isParentTopProject && !isCurrentTopProject)
             {
                 result.TopProject = result.SuperProject;
             }
             else
             {
                 string path = topProject.WorkingDir;
-                string name = Path.GetFileName(Path.GetDirectoryName(topProject.WorkingDir)) + GetBranchNameSuffix(path, noBranchText);
-                result.TopProject = new SubmoduleInfo { Text = name, Path = topProject.WorkingDir };
+                string name = Directory.Exists(path) ?
+                   Path.GetFileName(Path.GetDirectoryName(path)) + GetBranchNameSuffix(path, noBranchText) :
+                   path;
+                result.TopProject = new SubmoduleInfo { Text = name, Path = path, Bold = isCurrentTopProject };
             }
         }
 
