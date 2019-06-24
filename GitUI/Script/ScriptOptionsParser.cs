@@ -5,6 +5,8 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.Git;
+using GitCommands.UserRepositoryHistory;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -20,6 +22,7 @@ namespace GitUI.Script
             "sBranch",
             "sLocalBranch",
             "sRemoteBranch",
+            "sRemoteBranchName",
             "sRemote",
             "sRemoteUrl",
             "sRemotePathFromUrl",
@@ -33,6 +36,7 @@ namespace GitUI.Script
             "cBranch",
             "cLocalBranch",
             "cRemoteBranch",
+            "cRemoteBranchName",
             "cHash",
             "cMessage",
             "cAuthor",
@@ -42,6 +46,7 @@ namespace GitUI.Script
             "cDefaultRemote",
             "cDefaultRemoteUrl",
             "cDefaultRemotePathFromUrl",
+            "RepoName",
             "UserInput",
             "UserFiles",
             "WorkingDir"
@@ -247,108 +252,45 @@ namespace GitUI.Script
                     break;
 
                 case "sTag":
-                    if (selectedTags.Count == 1)
-                    {
-                        newString = selectedTags[0].Name;
-                    }
-                    else if (selectedTags.Count != 0)
-                    {
-                        newString = AskToSpecify(selectedTags, revisionGrid);
-                    }
-                    else
-                    {
-                        newString = "";
-                    }
-
+                    newString = SelectOneRef(selectedTags);
                     break;
 
                 case "sBranch":
-                    if (selectedBranches.Count == 1)
-                    {
-                        newString = selectedBranches[0].Name;
-                    }
-                    else if (selectedBranches.Count != 0)
-                    {
-                        newString = AskToSpecify(selectedBranches, revisionGrid);
-                    }
-                    else
-                    {
-                        newString = "";
-                    }
-
+                    newString = SelectOneRef(selectedBranches);
                     break;
 
                 case "sLocalBranch":
-                    if (selectedLocalBranches.Count == 1)
-                    {
-                        newString = selectedLocalBranches[0].Name;
-                    }
-                    else if (selectedLocalBranches.Count != 0)
-                    {
-                        newString = AskToSpecify(selectedLocalBranches, revisionGrid);
-                    }
-                    else
-                    {
-                        newString = "";
-                    }
-
+                    newString = SelectOneRef(selectedLocalBranches);
                     break;
 
                 case "sRemoteBranch":
-                    if (selectedRemoteBranches.Count == 1)
-                    {
-                        newString = selectedRemoteBranches[0].Name;
-                    }
-                    else if (selectedRemoteBranches.Count != 0)
-                    {
-                        newString = AskToSpecify(selectedRemoteBranches, revisionGrid);
-                    }
-                    else
-                    {
-                        newString = "";
-                    }
+                    newString = SelectOneRef(selectedRemoteBranches);
+                    break;
 
+                case "sRemoteBranchName":
+                    newString = StripRemoteName(SelectOneRef(selectedRemoteBranches));
                     break;
 
                 case "sRemote":
-                    if (selectedRemotes.Count == 0)
-                    {
-                        newString = "";
-                    }
-                    else
-                    {
-                        newString = selectedRemotes.Count == 1
-                            ? selectedRemotes[0]
-                            : AskToSpecify(selectedRemotes, revisionGrid);
-                    }
-
+                    newString = SelectOneString(selectedRemotes);
                     break;
 
                 case "sRemoteUrl":
-                    if (selectedRemotes.Count == 0)
+                    newString = SelectOneString(selectedRemotes);
+                    if (!string.IsNullOrEmpty(newString))
                     {
-                        newString = "";
-                    }
-                    else
-                    {
-                        remote = selectedRemotes.Count == 1
-                            ? selectedRemotes[0]
-                            : AskToSpecify(selectedRemotes, revisionGrid);
+                        remote = newString;
                         newString = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                     }
 
                     break;
 
                 case "sRemotePathFromUrl":
-                    if (selectedRemotes.Count == 0)
+                    newString = SelectOneString(selectedRemotes);
+                    if (!string.IsNullOrEmpty(newString))
                     {
-                        newString = "";
-                    }
-                    else
-                    {
-                        remote = selectedRemotes.Count == 1
-                            ? selectedRemotes[0]
-                            : AskToSpecify(selectedRemotes, revisionGrid);
+                        remote = newString;
+                        newString = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                         url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                         newString = GetRemotePath(url);
                     }
@@ -380,68 +322,25 @@ namespace GitUI.Script
                     break;
 
                 case "cTag":
-                    if (currentTags.Count == 1)
-                    {
-                        newString = currentTags[0].Name;
-                    }
-                    else if (currentTags.Count != 0)
-                    {
-                        newString = AskToSpecify(currentTags, revisionGrid);
-                    }
-                    else
-                    {
-                        newString = "";
-                    }
-
+                    newString = SelectOneRef(currentTags);
                     break;
 
                 case "cBranch":
-                    if (currentBranches.Count == 1)
-                    {
-                        newString = currentBranches[0].Name;
-                    }
-                    else if (currentBranches.Count != 0)
-                    {
-                        newString = AskToSpecify(currentBranches, revisionGrid);
-                    }
-                    else
-                    {
-                        newString = "";
-                    }
-
+                    newString = SelectOneRef(currentBranches);
                     break;
 
                 case "cLocalBranch":
-                    if (currentLocalBranches.Count == 1)
-                    {
-                        newString = currentLocalBranches[0].Name;
-                    }
-                    else if (currentLocalBranches.Count != 0)
-                    {
-                        newString = AskToSpecify(currentLocalBranches, revisionGrid);
-                    }
-                    else
-                    {
-                        newString = "";
-                    }
-
+                    newString = SelectOneRef(currentLocalBranches);
                     break;
 
                 case "cRemoteBranch":
-                    if (currentRemoteBranches.Count == 1)
-                    {
-                        newString = currentRemoteBranches[0].Name;
-                    }
-                    else if (currentRemoteBranches.Count != 0)
-                    {
-                        newString = AskToSpecify(currentRemoteBranches, revisionGrid);
-                    }
-                    else
-                    {
-                        newString = "";
-                    }
-
+                    newString = SelectOneRef(currentRemoteBranches);
                     break;
+
+                case "cRemoteBranchName":
+                    newString = StripRemoteName(SelectOneRef(currentRemoteBranches));
+                    break;
+
                 case "cHash":
                     newString = currentRevision.Guid;
                     break;
@@ -503,6 +402,10 @@ namespace GitUI.Script
 
                     break;
 
+                case "RepoName":
+                    newString = module == null ? string.Empty : new RepositoryDescriptionProvider(new GitDirectoryResolver()).Get(module.WorkingDir);
+                    break;
+
                 case "UserInput":
                     using (var prompt = new SimplePrompt())
                     {
@@ -526,7 +429,7 @@ namespace GitUI.Script
                     }
 
                 case "WorkingDir":
-                    newString = module.WorkingDir;
+                    newString = module == null ? string.Empty : module.WorkingDir;
                     break;
             }
 
@@ -546,6 +449,45 @@ namespace GitUI.Script
             }
 
             return argument;
+
+            string SelectOneRef(IList<IGitRef> refs) => ScriptOptionsParser.SelectOne(refs, revisionGrid);
+            string SelectOneString(IList<string> strings) => ScriptOptionsParser.SelectOne(strings, revisionGrid);
+        }
+
+        private static string SelectOne(IList<IGitRef> refs, RevisionGridControl revisionGrid)
+        {
+            switch (refs.Count)
+            {
+                case 0: return string.Empty;
+                case 1: return refs[0].Name;
+                default: return AskToSpecify(refs, revisionGrid);
+            }
+        }
+
+        private static string SelectOne(IList<string> strings, RevisionGridControl revisionGrid)
+        {
+            switch (strings.Count)
+            {
+                case 0: return string.Empty;
+                case 1: return strings[0];
+                default: return AskToSpecify(strings, revisionGrid);
+            }
+        }
+
+        private static string StripRemoteName(string remoteBranchName)
+        {
+            if (string.IsNullOrEmpty(remoteBranchName))
+            {
+                return string.Empty;
+            }
+
+            int firstSlashIndex = remoteBranchName.IndexOf('/');
+            if (firstSlashIndex >= 0)
+            {
+                return remoteBranchName.Substring(firstSlashIndex + 1);
+            }
+
+            return remoteBranchName;
         }
 
         internal static TestAccessor GetTestAccessor() => new TestAccessor();
