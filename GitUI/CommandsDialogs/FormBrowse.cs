@@ -340,6 +340,7 @@ namespace GitUI.CommandsDialogs
 
                     bool countToolbar = AppSettings.ShowGitStatusInBrowseToolbar;
                     bool countArtificial = AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowWorkingDirChanges;
+                    bool byAuthorDate = AppSettings.SortByAuthorDate;
 
                     var brush = UpdateCommitButtonAndGetBrush(status, countToolbar);
 
