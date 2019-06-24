@@ -51,6 +51,26 @@ build_script:
     & .\Setup\Build.cmd
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
+    # for pull-reqests enforce updated translations
+    # if any strings have changed and the author hasn't updated translations,
+    # we will get changes to either English.xlf and/or English.Plugins.xlf - if so, fail the build
+    if ($env:APPVEYOR_PULL_REQUEST_TITLE) {
+      & .\Build\transifex\UpdateLocalEnglishTranslations.ps1
+
+      # stage all modified files, as some translations yield no content change, but are seeing as file changed until stages
+      git add *.xlf --ignore-errors
+
+      # look for any modified xlf files, and if any - fail the build
+      if ( $( git status --porcelain ) | ?{ $_.EndsWith('.xlf') } ) {
+        & git diff --cached > git-diff-xlf.txt
+        Push-AppveyorArtifact ./git-diff-xlf.txt
+
+        throw "Please update English translations and re-submit the pull-request.`r`nFor more information please refer to https://github.com/gitextensions/gitextensions/wiki/Translations";
+        $host.SetShouldExit(-10);
+      }
+    }
+
+
 # to run your custom scripts instead of automatic tests
 test_script:
 - ps: |
