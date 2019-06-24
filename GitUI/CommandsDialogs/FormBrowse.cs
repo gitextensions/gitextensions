@@ -527,7 +527,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnActivated(EventArgs e)
         {
-            this.InvokeAsyncDoNotUseInNewCode(OnActivate);
+            this.InvokeAsync(OnActivate).FileAndForget();
             base.OnActivated(e);
         }
 
@@ -949,7 +949,6 @@ namespace GitUI.CommandsDialogs
         private void OnActivate()
         {
             CheckForMergeConflicts();
-
             return;
 
             void CheckForMergeConflicts()

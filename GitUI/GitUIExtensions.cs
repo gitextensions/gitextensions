@@ -215,32 +215,6 @@ namespace GitUI
             action(state);
         }
 
-#pragma warning disable VSTHRD100 // Avoid async void methods
-        /// <summary>
-        /// Use <see cref="InvokeAsync(Control, Action, CancellationToken)"/> instead. If the result of
-        /// <see cref="InvokeAsync(Control, Action, CancellationToken)"/> is not awaited, use
-        /// <see cref="ThreadHelper.FileAndForget(Task, Func{Exception, bool})"/> to ignore it.
-        /// </summary>
-        public static async void InvokeAsyncDoNotUseInNewCode(this Control control, Action action)
-#pragma warning restore VSTHRD100 // Avoid async void methods
-        {
-            if (ThreadHelper.JoinableTaskContext.IsOnMainThread)
-            {
-                await Task.Yield();
-            }
-            else
-            {
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            }
-
-            if (control.IsDisposed)
-            {
-                return;
-            }
-
-            action();
-        }
-
         public static void InvokeSync(this Control control, Action action)
         {
             ThreadHelper.JoinableTaskFactory.Run(
