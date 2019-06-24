@@ -274,7 +274,7 @@
         <target />
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
-        <source>Cancel</source>
+        <source>Search branches</source>
         <target />
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -345,10 +345,6 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="lblStatus.Text">
-        <source>Loading...</source>
         <target />
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
