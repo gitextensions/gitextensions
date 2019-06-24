@@ -67,7 +67,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void lvTranslations_ItemActivate(object sender, EventArgs e)
         {
-            AppSettings.Translation = ((ListView)sender).SelectedItems[0].Tag.ToString();
+            // take the selection if any, else see the fallback in FormChooseTranslation_FormClosing
+            var selectedItems = ((ListView)sender).SelectedItems;
+            if (selectedItems.Count > 0)
+            {
+                AppSettings.Translation = selectedItems[0].Tag.ToString();
+            }
+
             Close();
         }
     }
