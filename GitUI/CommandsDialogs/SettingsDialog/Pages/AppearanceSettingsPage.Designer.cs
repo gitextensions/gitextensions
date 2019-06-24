@@ -31,6 +31,7 @@
             System.Windows.Forms.TableLayoutPanel tlpnlMain;
             this.gbGeneral = new System.Windows.Forms.GroupBox();
             this.tlpnlGeneral = new System.Windows.Forms.TableLayoutPanel();
+            this.chkSortByAuthorDate = new System.Windows.Forms.CheckBox();
             this.chkShowRelativeDate = new System.Windows.Forms.CheckBox();
             this.truncatePathMethod = new System.Windows.Forms.ComboBox();
             this.truncateLongFilenames = new System.Windows.Forms.Label();
@@ -79,15 +80,16 @@
             tlpnlMain.Controls.Add(this.gbLanguages, 0, 2);
             tlpnlMain.Controls.Add(this.gbAuthorImages, 0, 1);
             tlpnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            tlpnlMain.Location = new System.Drawing.Point(8, 8);
+            tlpnlMain.Location = new System.Drawing.Point(12, 12);
+            tlpnlMain.Margin = new System.Windows.Forms.Padding(4);
             tlpnlMain.Name = "tlpnlMain";
             tlpnlMain.RowCount = 4;
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
-            tlpnlMain.Size = new System.Drawing.Size(1542, 481);
+            tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
+            tlpnlMain.Size = new System.Drawing.Size(1162, 509);
             tlpnlMain.TabIndex = 0;
             // 
             // gbGeneral
@@ -96,10 +98,11 @@
             this.gbGeneral.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbGeneral.Controls.Add(this.tlpnlGeneral);
             this.gbGeneral.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbGeneral.Location = new System.Drawing.Point(3, 3);
+            this.gbGeneral.Location = new System.Drawing.Point(4, 4);
+            this.gbGeneral.Margin = new System.Windows.Forms.Padding(4);
             this.gbGeneral.Name = "gbGeneral";
-            this.gbGeneral.Padding = new System.Windows.Forms.Padding(8);
-            this.gbGeneral.Size = new System.Drawing.Size(1536, 125);
+            this.gbGeneral.Padding = new System.Windows.Forms.Padding(12);
+            this.gbGeneral.Size = new System.Drawing.Size(1154, 205);
             this.gbGeneral.TabIndex = 0;
             this.gbGeneral.TabStop = false;
             this.gbGeneral.Text = "General";
@@ -112,30 +115,43 @@
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpnlGeneral.Controls.Add(this.chkSortByAuthorDate, 0, 4);
             this.tlpnlGeneral.Controls.Add(this.chkShowRelativeDate, 0, 0);
             this.tlpnlGeneral.Controls.Add(this.truncatePathMethod, 1, 3);
             this.tlpnlGeneral.Controls.Add(this.truncateLongFilenames, 0, 3);
             this.tlpnlGeneral.Controls.Add(this.chkEnableAutoScale, 0, 2);
             this.tlpnlGeneral.Controls.Add(this.chkShowCurrentBranchInVisualStudio, 0, 1);
             this.tlpnlGeneral.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpnlGeneral.Location = new System.Drawing.Point(8, 21);
+            this.tlpnlGeneral.Location = new System.Drawing.Point(12, 31);
+            this.tlpnlGeneral.Margin = new System.Windows.Forms.Padding(4);
             this.tlpnlGeneral.Name = "tlpnlGeneral";
-            this.tlpnlGeneral.RowCount = 4;
+            this.tlpnlGeneral.RowCount = 5;
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlGeneral.Size = new System.Drawing.Size(1520, 96);
+            this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlGeneral.Size = new System.Drawing.Size(1130, 162);
             this.tlpnlGeneral.TabIndex = 0;
+            // 
+            // chkSortByAuthorDate
+            // 
+            this.chkSortByAuthorDate.AutoSize = true;
+            this.chkSortByAuthorDate.Location = new System.Drawing.Point(3, 135);
+            this.chkSortByAuthorDate.Name = "chkSortByAuthorDate";
+            this.chkSortByAuthorDate.Size = new System.Drawing.Size(171, 24);
+            this.chkSortByAuthorDate.TabIndex = 12;
+            this.chkSortByAuthorDate.Text = "Sort by author date";
             // 
             // chkShowRelativeDate
             // 
             this.chkShowRelativeDate.AutoSize = true;
             this.tlpnlGeneral.SetColumnSpan(this.chkShowRelativeDate, 2);
             this.chkShowRelativeDate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkShowRelativeDate.Location = new System.Drawing.Point(3, 3);
+            this.chkShowRelativeDate.Location = new System.Drawing.Point(4, 4);
+            this.chkShowRelativeDate.Margin = new System.Windows.Forms.Padding(4);
             this.chkShowRelativeDate.Name = "chkShowRelativeDate";
-            this.chkShowRelativeDate.Size = new System.Drawing.Size(314, 17);
+            this.chkShowRelativeDate.Size = new System.Drawing.Size(466, 24);
             this.chkShowRelativeDate.TabIndex = 0;
             this.chkShowRelativeDate.Text = "Show relative date instead of full date";
             this.chkShowRelativeDate.UseVisualStyleBackColor = true;
@@ -150,18 +166,20 @@
             "Compact",
             "Trim start",
             "Filename only"});
-            this.truncatePathMethod.Location = new System.Drawing.Point(129, 72);
+            this.truncatePathMethod.Location = new System.Drawing.Point(190, 100);
+            this.truncatePathMethod.Margin = new System.Windows.Forms.Padding(4);
             this.truncatePathMethod.Name = "truncatePathMethod";
-            this.truncatePathMethod.Size = new System.Drawing.Size(188, 21);
+            this.truncatePathMethod.Size = new System.Drawing.Size(280, 28);
             this.truncatePathMethod.TabIndex = 4;
             // 
             // truncateLongFilenames
             // 
             this.truncateLongFilenames.AutoSize = true;
             this.truncateLongFilenames.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.truncateLongFilenames.Location = new System.Drawing.Point(3, 69);
+            this.truncateLongFilenames.Location = new System.Drawing.Point(4, 96);
+            this.truncateLongFilenames.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.truncateLongFilenames.Name = "truncateLongFilenames";
-            this.truncateLongFilenames.Size = new System.Drawing.Size(120, 27);
+            this.truncateLongFilenames.Size = new System.Drawing.Size(178, 36);
             this.truncateLongFilenames.TabIndex = 3;
             this.truncateLongFilenames.Text = "Truncate long filenames";
             this.truncateLongFilenames.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -171,9 +189,10 @@
             this.chkEnableAutoScale.AutoSize = true;
             this.tlpnlGeneral.SetColumnSpan(this.chkEnableAutoScale, 2);
             this.chkEnableAutoScale.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkEnableAutoScale.Location = new System.Drawing.Point(3, 49);
+            this.chkEnableAutoScale.Location = new System.Drawing.Point(4, 68);
+            this.chkEnableAutoScale.Margin = new System.Windows.Forms.Padding(4);
             this.chkEnableAutoScale.Name = "chkEnableAutoScale";
-            this.chkEnableAutoScale.Size = new System.Drawing.Size(314, 17);
+            this.chkEnableAutoScale.Size = new System.Drawing.Size(466, 24);
             this.chkEnableAutoScale.TabIndex = 2;
             this.chkEnableAutoScale.Text = "Auto scale user interface when high DPI is used";
             this.chkEnableAutoScale.UseVisualStyleBackColor = true;
@@ -183,9 +202,10 @@
             this.chkShowCurrentBranchInVisualStudio.AutoSize = true;
             this.tlpnlGeneral.SetColumnSpan(this.chkShowCurrentBranchInVisualStudio, 2);
             this.chkShowCurrentBranchInVisualStudio.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkShowCurrentBranchInVisualStudio.Location = new System.Drawing.Point(3, 26);
+            this.chkShowCurrentBranchInVisualStudio.Location = new System.Drawing.Point(4, 36);
+            this.chkShowCurrentBranchInVisualStudio.Margin = new System.Windows.Forms.Padding(4);
             this.chkShowCurrentBranchInVisualStudio.Name = "chkShowCurrentBranchInVisualStudio";
-            this.chkShowCurrentBranchInVisualStudio.Size = new System.Drawing.Size(314, 17);
+            this.chkShowCurrentBranchInVisualStudio.Size = new System.Drawing.Size(466, 24);
             this.chkShowCurrentBranchInVisualStudio.TabIndex = 1;
             this.chkShowCurrentBranchInVisualStudio.Text = "Show current branch in Visual Studio";
             this.chkShowCurrentBranchInVisualStudio.UseVisualStyleBackColor = true;
@@ -196,10 +216,11 @@
             this.gbLanguages.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbLanguages.Controls.Add(this.tlpnlLanguage);
             this.gbLanguages.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbLanguages.Location = new System.Drawing.Point(3, 324);
+            this.gbLanguages.Location = new System.Drawing.Point(4, 476);
+            this.gbLanguages.Margin = new System.Windows.Forms.Padding(4);
             this.gbLanguages.Name = "gbLanguages";
-            this.gbLanguages.Padding = new System.Windows.Forms.Padding(8);
-            this.gbLanguages.Size = new System.Drawing.Size(1536, 83);
+            this.gbLanguages.Padding = new System.Windows.Forms.Padding(12);
+            this.gbLanguages.Size = new System.Drawing.Size(1154, 115);
             this.gbLanguages.TabIndex = 2;
             this.gbLanguages.TabStop = false;
             this.gbLanguages.Text = "Language";
@@ -220,12 +241,13 @@
             this.tlpnlLanguage.Controls.Add(this.Language, 1, 0);
             this.tlpnlLanguage.Controls.Add(this.helpTranslate, 2, 0);
             this.tlpnlLanguage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpnlLanguage.Location = new System.Drawing.Point(8, 21);
+            this.tlpnlLanguage.Location = new System.Drawing.Point(12, 31);
+            this.tlpnlLanguage.Margin = new System.Windows.Forms.Padding(4);
             this.tlpnlLanguage.Name = "tlpnlLanguage";
             this.tlpnlLanguage.RowCount = 2;
             this.tlpnlLanguage.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlLanguage.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlLanguage.Size = new System.Drawing.Size(1520, 54);
+            this.tlpnlLanguage.Size = new System.Drawing.Size(1130, 72);
             this.tlpnlLanguage.TabIndex = 0;
             // 
             // Dictionary
@@ -233,9 +255,10 @@
             this.Dictionary.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Dictionary.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Dictionary.FormattingEnabled = true;
-            this.Dictionary.Location = new System.Drawing.Point(158, 30);
+            this.Dictionary.Location = new System.Drawing.Point(231, 40);
+            this.Dictionary.Margin = new System.Windows.Forms.Padding(4);
             this.Dictionary.Name = "Dictionary";
-            this.Dictionary.Size = new System.Drawing.Size(86, 21);
+            this.Dictionary.Size = new System.Drawing.Size(127, 28);
             this.Dictionary.TabIndex = 4;
             this.Dictionary.DropDown += new System.EventHandler(this.Dictionary_DropDown);
             // 
@@ -244,9 +267,10 @@
             this.downloadDictionary.AutoSize = true;
             this.downloadDictionary.Dock = System.Windows.Forms.DockStyle.Fill;
             this.downloadDictionary.LinkColor = System.Drawing.SystemColors.HotTrack;
-            this.downloadDictionary.Location = new System.Drawing.Point(250, 27);
+            this.downloadDictionary.Location = new System.Drawing.Point(366, 36);
+            this.downloadDictionary.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.downloadDictionary.Name = "downloadDictionary";
-            this.downloadDictionary.Size = new System.Drawing.Size(103, 27);
+            this.downloadDictionary.Size = new System.Drawing.Size(151, 36);
             this.downloadDictionary.TabIndex = 5;
             this.downloadDictionary.TabStop = true;
             this.downloadDictionary.Text = "Download dictionary";
@@ -257,9 +281,10 @@
             // 
             this.lblSpellingDictionary.AutoSize = true;
             this.lblSpellingDictionary.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblSpellingDictionary.Location = new System.Drawing.Point(3, 27);
+            this.lblSpellingDictionary.Location = new System.Drawing.Point(4, 36);
+            this.lblSpellingDictionary.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblSpellingDictionary.Name = "lblSpellingDictionary";
-            this.lblSpellingDictionary.Size = new System.Drawing.Size(149, 27);
+            this.lblSpellingDictionary.Size = new System.Drawing.Size(219, 36);
             this.lblSpellingDictionary.TabIndex = 3;
             this.lblSpellingDictionary.Text = "Dictionary for spelling checker";
             this.lblSpellingDictionary.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -268,9 +293,10 @@
             // 
             this.lblLanguage.AutoSize = true;
             this.lblLanguage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblLanguage.Location = new System.Drawing.Point(3, 0);
+            this.lblLanguage.Location = new System.Drawing.Point(4, 0);
+            this.lblLanguage.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblLanguage.Name = "lblLanguage";
-            this.lblLanguage.Size = new System.Drawing.Size(149, 27);
+            this.lblLanguage.Size = new System.Drawing.Size(219, 36);
             this.lblLanguage.TabIndex = 0;
             this.lblLanguage.Text = "Language (restart required)";
             this.lblLanguage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -280,9 +306,10 @@
             this.Language.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Language.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Language.FormattingEnabled = true;
-            this.Language.Location = new System.Drawing.Point(158, 3);
+            this.Language.Location = new System.Drawing.Point(231, 4);
+            this.Language.Margin = new System.Windows.Forms.Padding(4);
             this.Language.Name = "Language";
-            this.Language.Size = new System.Drawing.Size(86, 21);
+            this.Language.Size = new System.Drawing.Size(127, 28);
             this.Language.TabIndex = 1;
             // 
             // helpTranslate
@@ -290,9 +317,10 @@
             this.helpTranslate.AutoSize = true;
             this.helpTranslate.Dock = System.Windows.Forms.DockStyle.Fill;
             this.helpTranslate.LinkColor = System.Drawing.SystemColors.HotTrack;
-            this.helpTranslate.Location = new System.Drawing.Point(250, 0);
+            this.helpTranslate.Location = new System.Drawing.Point(366, 0);
+            this.helpTranslate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.helpTranslate.Name = "helpTranslate";
-            this.helpTranslate.Size = new System.Drawing.Size(103, 27);
+            this.helpTranslate.Size = new System.Drawing.Size(151, 36);
             this.helpTranslate.TabIndex = 2;
             this.helpTranslate.TabStop = true;
             this.helpTranslate.Text = "Help translate";
@@ -305,10 +333,11 @@
             this.gbAuthorImages.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbAuthorImages.Controls.Add(this.tlpnlAuthor);
             this.gbAuthorImages.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbAuthorImages.Location = new System.Drawing.Point(3, 134);
+            this.gbAuthorImages.Location = new System.Drawing.Point(4, 217);
+            this.gbAuthorImages.Margin = new System.Windows.Forms.Padding(4);
             this.gbAuthorImages.Name = "gbAuthorImages";
-            this.gbAuthorImages.Padding = new System.Windows.Forms.Padding(8);
-            this.gbAuthorImages.Size = new System.Drawing.Size(1536, 184);
+            this.gbAuthorImages.Padding = new System.Windows.Forms.Padding(12);
+            this.gbAuthorImages.Size = new System.Drawing.Size(1154, 251);
             this.gbAuthorImages.TabIndex = 1;
             this.gbAuthorImages.TabStop = false;
             this.gbAuthorImages.Text = "Author images";
@@ -332,7 +361,8 @@
             this.tlpnlAuthor.Controls.Add(this._NO_TRANSLATE_DaysToCacheImages, 1, 2);
             this.tlpnlAuthor.Controls.Add(this.pictureAvatarHelp, 2, 4);
             this.tlpnlAuthor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpnlAuthor.Location = new System.Drawing.Point(8, 21);
+            this.tlpnlAuthor.Location = new System.Drawing.Point(12, 31);
+            this.tlpnlAuthor.Margin = new System.Windows.Forms.Padding(4);
             this.tlpnlAuthor.Name = "tlpnlAuthor";
             this.tlpnlAuthor.RowCount = 6;
             this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -341,16 +371,17 @@
             this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlAuthor.Size = new System.Drawing.Size(1520, 155);
+            this.tlpnlAuthor.Size = new System.Drawing.Size(1130, 208);
             this.tlpnlAuthor.TabIndex = 0;
             // 
             // lblAvatarProvider
             // 
             this.lblAvatarProvider.AutoSize = true;
             this.lblAvatarProvider.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblAvatarProvider.Location = new System.Drawing.Point(3, 72);
+            this.lblAvatarProvider.Location = new System.Drawing.Point(4, 98);
+            this.lblAvatarProvider.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblAvatarProvider.Name = "lblAvatarProvider";
-            this.lblAvatarProvider.Size = new System.Drawing.Size(155, 27);
+            this.lblAvatarProvider.Size = new System.Drawing.Size(229, 36);
             this.lblAvatarProvider.TabIndex = 11;
             this.lblAvatarProvider.Text = "Avatar provider";
             this.lblAvatarProvider.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -360,9 +391,10 @@
             this.AvatarProvider.Dock = System.Windows.Forms.DockStyle.Fill;
             this.AvatarProvider.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.AvatarProvider.FormattingEnabled = true;
-            this.AvatarProvider.Location = new System.Drawing.Point(164, 75);
+            this.AvatarProvider.Location = new System.Drawing.Point(241, 102);
+            this.AvatarProvider.Margin = new System.Windows.Forms.Padding(4);
             this.AvatarProvider.Name = "AvatarProvider";
-            this.AvatarProvider.Size = new System.Drawing.Size(183, 21);
+            this.AvatarProvider.Size = new System.Drawing.Size(272, 28);
             this.AvatarProvider.TabIndex = 10;
             this.AvatarProvider.SelectedIndexChanged += new System.EventHandler(this.AvatarProvider_SelectedIndexChanged);
             // 
@@ -371,9 +403,10 @@
             this.ShowAuthorAvatarInCommitGraph.AutoSize = true;
             this.tlpnlAuthor.SetColumnSpan(this.ShowAuthorAvatarInCommitGraph, 2);
             this.ShowAuthorAvatarInCommitGraph.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ShowAuthorAvatarInCommitGraph.Location = new System.Drawing.Point(3, 3);
+            this.ShowAuthorAvatarInCommitGraph.Location = new System.Drawing.Point(4, 4);
+            this.ShowAuthorAvatarInCommitGraph.Margin = new System.Windows.Forms.Padding(4);
             this.ShowAuthorAvatarInCommitGraph.Name = "ShowAuthorAvatarInCommitGraph";
-            this.ShowAuthorAvatarInCommitGraph.Size = new System.Drawing.Size(344, 17);
+            this.ShowAuthorAvatarInCommitGraph.Size = new System.Drawing.Size(509, 24);
             this.ShowAuthorAvatarInCommitGraph.TabIndex = 0;
             this.ShowAuthorAvatarInCommitGraph.Text = "Show author\'s avatar column in the commit graph";
             this.ShowAuthorAvatarInCommitGraph.UseVisualStyleBackColor = true;
@@ -383,9 +416,10 @@
             this.ShowAuthorAvatarInCommitInfo.AutoSize = true;
             this.tlpnlAuthor.SetColumnSpan(this.ShowAuthorAvatarInCommitInfo, 2);
             this.ShowAuthorAvatarInCommitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ShowAuthorAvatarInCommitInfo.Location = new System.Drawing.Point(3, 26);
+            this.ShowAuthorAvatarInCommitInfo.Location = new System.Drawing.Point(4, 36);
+            this.ShowAuthorAvatarInCommitInfo.Margin = new System.Windows.Forms.Padding(4);
             this.ShowAuthorAvatarInCommitInfo.Name = "ShowAuthorAvatarInCommitInfo";
-            this.ShowAuthorAvatarInCommitInfo.Size = new System.Drawing.Size(344, 17);
+            this.ShowAuthorAvatarInCommitInfo.Size = new System.Drawing.Size(509, 24);
             this.ShowAuthorAvatarInCommitInfo.TabIndex = 1;
             this.ShowAuthorAvatarInCommitInfo.Text = "Show author\'s avatar in the commit info view";
             this.ShowAuthorAvatarInCommitInfo.UseVisualStyleBackColor = true;
@@ -395,9 +429,10 @@
             this.ClearImageCache.AutoSize = true;
             this.ClearImageCache.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClearImageCache.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ClearImageCache.Location = new System.Drawing.Point(164, 129);
+            this.ClearImageCache.Location = new System.Drawing.Point(241, 174);
+            this.ClearImageCache.Margin = new System.Windows.Forms.Padding(4);
             this.ClearImageCache.Name = "ClearImageCache";
-            this.ClearImageCache.Size = new System.Drawing.Size(183, 23);
+            this.ClearImageCache.Size = new System.Drawing.Size(272, 30);
             this.ClearImageCache.TabIndex = 6;
             this.ClearImageCache.Text = "Clear image cache";
             this.ClearImageCache.UseVisualStyleBackColor = true;
@@ -408,18 +443,20 @@
             this._NO_TRANSLATE_NoImageService.Dock = System.Windows.Forms.DockStyle.Fill;
             this._NO_TRANSLATE_NoImageService.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._NO_TRANSLATE_NoImageService.FormattingEnabled = true;
-            this._NO_TRANSLATE_NoImageService.Location = new System.Drawing.Point(164, 102);
+            this._NO_TRANSLATE_NoImageService.Location = new System.Drawing.Point(241, 138);
+            this._NO_TRANSLATE_NoImageService.Margin = new System.Windows.Forms.Padding(4);
             this._NO_TRANSLATE_NoImageService.Name = "_NO_TRANSLATE_NoImageService";
-            this._NO_TRANSLATE_NoImageService.Size = new System.Drawing.Size(183, 21);
+            this._NO_TRANSLATE_NoImageService.Size = new System.Drawing.Size(272, 28);
             this._NO_TRANSLATE_NoImageService.TabIndex = 5;
             // 
             // lblCacheDays
             // 
             this.lblCacheDays.AutoSize = true;
             this.lblCacheDays.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblCacheDays.Location = new System.Drawing.Point(3, 46);
+            this.lblCacheDays.Location = new System.Drawing.Point(4, 64);
+            this.lblCacheDays.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCacheDays.Name = "lblCacheDays";
-            this.lblCacheDays.Size = new System.Drawing.Size(155, 26);
+            this.lblCacheDays.Size = new System.Drawing.Size(229, 34);
             this.lblCacheDays.TabIndex = 2;
             this.lblCacheDays.Text = "Cache images (days)";
             this.lblCacheDays.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -428,31 +465,33 @@
             // 
             this.lblNoImageService.AutoSize = true;
             this.lblNoImageService.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblNoImageService.Location = new System.Drawing.Point(3, 99);
+            this.lblNoImageService.Location = new System.Drawing.Point(4, 134);
+            this.lblNoImageService.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNoImageService.Name = "lblNoImageService";
-            this.lblNoImageService.Size = new System.Drawing.Size(155, 27);
+            this.lblNoImageService.Size = new System.Drawing.Size(229, 36);
             this.lblNoImageService.TabIndex = 4;
             this.lblNoImageService.Text = "Fallback generated avatar style";
             this.lblNoImageService.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // _NO_TRANSLATE_DaysToCacheImages
             // 
-            this._NO_TRANSLATE_DaysToCacheImages.Location = new System.Drawing.Point(164, 49);
+            this._NO_TRANSLATE_DaysToCacheImages.Location = new System.Drawing.Point(241, 68);
+            this._NO_TRANSLATE_DaysToCacheImages.Margin = new System.Windows.Forms.Padding(4);
             this._NO_TRANSLATE_DaysToCacheImages.Maximum = new decimal(new int[] {
             400,
             0,
             0,
             0});
             this._NO_TRANSLATE_DaysToCacheImages.Name = "_NO_TRANSLATE_DaysToCacheImages";
-            this._NO_TRANSLATE_DaysToCacheImages.Size = new System.Drawing.Size(38, 20);
+            this._NO_TRANSLATE_DaysToCacheImages.Size = new System.Drawing.Size(57, 26);
             this._NO_TRANSLATE_DaysToCacheImages.TabIndex = 3;
             this._NO_TRANSLATE_DaysToCacheImages.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // pictureAvatarHelp
             // 
             this.pictureAvatarHelp.Image = global::GitUI.Properties.Resources.information;
-            this.pictureAvatarHelp.Location = new System.Drawing.Point(353, 104);
-            this.pictureAvatarHelp.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
+            this.pictureAvatarHelp.Location = new System.Drawing.Point(521, 142);
+            this.pictureAvatarHelp.Margin = new System.Windows.Forms.Padding(4, 8, 4, 4);
             this.pictureAvatarHelp.Name = "pictureAvatarHelp";
             this.pictureAvatarHelp.Size = new System.Drawing.Size(16, 16);
             this.pictureAvatarHelp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -478,13 +517,14 @@
             // 
             // AppearanceSettingsPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(tlpnlMain);
-            this.MinimumSize = new System.Drawing.Size(258, 255);
+            this.Margin = new System.Windows.Forms.Padding(4);
+            this.MinimumSize = new System.Drawing.Size(387, 382);
             this.Name = "AppearanceSettingsPage";
-            this.Padding = new System.Windows.Forms.Padding(8);
-            this.Size = new System.Drawing.Size(1558, 497);
+            this.Padding = new System.Windows.Forms.Padding(12);
+            this.Size = new System.Drawing.Size(1186, 533);
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
             this.gbGeneral.ResumeLayout(false);
@@ -537,5 +577,6 @@
         private System.Windows.Forms.PictureBox pictureAvatarHelp;
         private System.Windows.Forms.Label lblAvatarProvider;
         private System.Windows.Forms.ComboBox AvatarProvider;
+        private System.Windows.Forms.CheckBox chkSortByAuthorDate;
     }
 }

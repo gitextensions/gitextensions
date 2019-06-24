@@ -61,7 +61,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowAheadBehindDataInBrowseWindow.Enabled = GitVersion.Current.SupportAheadBehindData;
             chkShowGitStatusInToolbar.Checked = AppSettings.ShowGitStatusInBrowseToolbar;
             chkShowGitStatusForArtificialCommits.Checked = AppSettings.ShowGitStatusForArtificialCommits;
-            chkSortByAuthorDate.Checked = AppSettings.SortByAuthorDate;
             chkShowSubmoduleStatusInBrowse.Checked = AppSettings.ShowSubmoduleStatus;
             SmtpServer.Text = AppSettings.SmtpServer;
             SmtpServerPort.Text = AppSettings.SmtpPort.ToString();
@@ -83,7 +82,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.IncludeUntrackedFilesInAutoStash = chkStashUntrackedFiles.Checked;
             AppSettings.FollowRenamesInFileHistory = chkFollowRenamesInFileHistory.Checked;
             AppSettings.ShowGitStatusInBrowseToolbar = chkShowGitStatusInToolbar.Checked;
-            AppSettings.SortByAuthorDate = chkSortByAuthorDate.Checked;
             AppSettings.ShowGitStatusForArtificialCommits = chkShowGitStatusForArtificialCommits.Checked;
             AppSettings.SmtpServer = SmtpServer.Text;
             if (int.TryParse(SmtpServerPort.Text, out var port))
