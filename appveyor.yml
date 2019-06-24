@@ -12,7 +12,6 @@ environment:
   - IdeVersion: VS2017
   SKIP_PAUSE: TRUE
   ARCHIVE_WITH_PDB: TRUE
-  spciuser: ""
 
 init:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -37,125 +36,38 @@ install:
     C:\\Python35\\python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%
     cd ..
 
+
 # to run your custom scripts instead of automatic MSBuild
 build_script:
 - ps: |
     Write-Output "Platform: $env:IdeVersion"
+
     # for release branches mark the repo as clean
     if (!$env:APPVEYOR_PULL_REQUEST_TITLE -and $env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
-      & Setup\Mark-RepoClean.ps1
+      & .\Build\Mark-RepoClean.ps1
     }
+
     # build
-    & Setup\Build.cmd
+    & .\Setup\Build.cmd
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 # to run your custom scripts instead of automatic tests
 test_script:
 - ps: |
-    $testAssemblies = (Get-ChildItem -Path UnitTests -Filter '*Tests.dll' -Recurse -Exclude 'ApprovalTests.dll').FullName | Where-Object { $_.Contains('\bin\Release') }
-    $packageConfig = [xml](Get-Content .nuget\packages.config)
-    $opencover_version = $packageConfig.SelectSingleNode('/packages/package[@id="OpenCover"]').version
-    $opencover_console = "packages\OpenCover.$opencover_version\tools\OpenCover.Console.exe"
-    &$opencover_console `
-        -register:user `
-        -returntargetcode `
-        -hideskipped:All `
-        -filter:"+[*]* -[FluentAssertions*]* -[SmartFormat*]* -[nunit*]*" `
-        -excludebyattribute:*.ExcludeFromCodeCoverage* `
-        -excludebyfile:*\*Designer.cs `
-        -output:"OpenCover.GitExtensions.xml" `
-        -target:"nunit3-console.exe" `
-        -targetargs:"$testAssemblies"
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-    $codecov_version = $packageConfig.SelectSingleNode('/packages/package[@id="Codecov"]').version
-    $codecov = "packages\Codecov.$codecov_version\tools\codecov.exe"
-    &$codecov -f ".\OpenCover.GitExtensions.xml" --flag production
-    &$codecov -f ".\OpenCover.GitExtensions.xml" --flag tests
+    Write-Host "Tests are running..."
+    Write-Host $pwd
+    & .\Build\Run-Tests.ps1
 
 
-# here we are going to override common configuration
-for:
+# scripts to run after tests
+after_test:
+- ps: |
+    Write-Host "Preparing build artifacts..."
+    & .\Build\Prepare-Artifacts.ps1
 
-# configuration for all branches except release/*
--
-  branches:
-    except:
-      - /release\/.*/
 
-  # scripts to run after tests
-  after_test:
-  - ps: |
-      try {
-          & pwd
-          & Setup\BuildInstallers.cmd
-          if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-          & Setup\Set-Portable.ps1 -IsPortable
-          if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-          & Setup\MakePortableArchive.cmd Release $env:APPVEYOR_BUILD_VERSION
-          if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-      }
-      finally {
-          # -------------------------------
-          # debugging
-          # -------------------------------
-          #Write-Host "[INFO]: GitStatus.txt is to help find dirty status.  File should say repo and submodules are clean."
-          #Write-Host "[INFO]: Update the skip-worktree section in this script to fix CI builds."
-          #& git status > GitStatus.txt
-          #& git submodule foreach --recursive git status >> GitStatus.txt
-          #Push-AppveyorArtifact .\GitStatus.txt
-          #& tree /F /A > tree.txt
-          #Push-AppveyorArtifact .\tree.txt
-      }
-      
-  artifacts:
-    # upload the generated portable archive only
-    - path: 'Setup/GitExtensions-Portable-*.zip'
-    - path: 'Setup/GitExtensions-pdbs-*.zip'
-    - path: 'GitExtensionsVSIX/bin/Release/GitExtensionsVSIX.vsix'
-
-# configuration for release branches ONLY
--
-  branches:
-    only:
-      - /release\/.*/
-
-  environment:
-    spciuser:
-      secure: d/ak/yIuPjpVeWl+gDR0Yl1s8L4AGP+sn46jqGl7EvVZMq0bhzZBFwBCm9JTy0P9
-
-  # scripts to run after tests
-  after_test:
-  - ps: |
-      # -------------------------------
-      # debugging
-      # -------------------------------
-      #Write-Host "[INFO]: GitStatus.txt is to help find dirty status.  File should say repo and submodules are clean."
-      #Write-Host "[INFO]: Update the skip-worktree section in this script to fix CI builds."
-      #& git status > GitStatus.txt
-      #& git submodule foreach --recursive git status >> GitStatus.txt
-      #Push-AppveyorArtifact .\GitStatus.txt
-      # -------------------------------
-      # build artifacts
-      # -------------------------------
-      & Setup\BuildInstallers.cmd
-      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-      & Setup\Set-Portable.ps1 -IsPortable
-      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-      & Setup\MakePortableArchive.cmd Release $env:APPVEYOR_BUILD_VERSION
-      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-      & Setup\Set-Portable.ps1
-      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-      # -------------------------------
-      # sign artifacts
-      # -------------------------------
-      # do sign artifacts for non-release branches
-      if ($env:APPVEYOR_PULL_REQUEST_TITLE -or !$env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
-          Write-Host "[INFO]: Do not sign non-release branches"
-          Get-ChildItem .\Setup\GitExtensions-Portable-*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-          Exit-AppVeyorBuild
-          return
-      }
-      Push-AppveyorArtifact .\GitExtensionsVSIX\bin\Release\GitExtensionsVSIX.vsix
-      # continue on with signing
-      & Setup\Sign-Artifacts.ps1
-      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+artifacts:
+  # upload the generated portable archive only
+  - path: 'Setup/GitExtensions-Portable-*.zip'
+  - path: 'Setup/GitExtensions-pdbs-*.zip'
+  - path: 'GitExtensionsVSIX/bin/Release/GitExtensionsVSIX.vsix'
