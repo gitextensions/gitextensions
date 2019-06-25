@@ -313,6 +313,13 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.Designer.cs">
       <DependentUpon>FormBrowseRepoSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\RevisionLinks\AzureDevopsExternalLinkDefinitionExtractor.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\RevisionLinks\CloudProviderExternalLinkDefinitionExtractorFactory.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\RevisionLinks\CloudProviderKind.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\RevisionLinks\GitHubExternalLinkDefinitionExtractor.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\RevisionLinks\ICloudProviderExternalLinkDefinitionExtractor.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\RevisionLinks\ICloudProviderExternalLinkDefinitionExtractorFactory.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\RevisionLinks\ExternalLinkDefinitionExtractor.cs" />
     <Compile Include="CommandsDialogs\ToolStripPushButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1857,6 +1864,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\bug.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\FileStatusAdded.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\FileStatusRemoved.png" />
   </ItemGroup>
   <Target Name="CopyTranslations" AfterTargets="AfterBuild">
     <ItemGroup>

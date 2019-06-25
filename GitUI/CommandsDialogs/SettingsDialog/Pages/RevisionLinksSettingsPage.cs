@@ -1,23 +1,32 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 using GitCommands.ExternalLinks;
 using GitExtUtils.GitUI;
+using GitUI.CommandsDialogs.SettingsDialog.RevisionLinks;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public sealed partial class RevisionLinksSettingsPage : RepoDistSettingsPage
     {
+        private readonly TranslationString _addTemplate = new TranslationString("Add {0} templates");
         private ExternalLinksManager _externalLinksManager;
 
         public RevisionLinksSettingsPage()
         {
             InitializeComponent();
             CaptionCol.Width = DpiUtil.Scale(150);
+            splitContainer1.Panel1MinSize = toolStripManageCategories.Width;
             Text = "Revision links";
             InitializeComplete();
             LinksGrid.AutoGenerateColumns = false;
             CaptionCol.DataPropertyName = nameof(ExternalLinkFormat.Caption);
             URICol.DataPropertyName = nameof(ExternalLinkFormat.Format);
+            LoadTemplatesInMenu();
         }
 
         protected override void SettingsToPage()
@@ -105,14 +114,61 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 Name = "<new>",
                 Enabled = true,
                 UseRemotesPattern = "upstream|origin",
-                UseOnlyFirstRemote = true
+                UseOnlyFirstRemote = true,
+                SearchInParts = { ExternalLinkDefinition.RevisionPart.Message },
+                RemoteSearchInParts = { ExternalLinkDefinition.RemotePart.URL }
             };
-            definition.SearchInParts.Add(ExternalLinkDefinition.RevisionPart.Message);
-            definition.RemoteSearchInParts.Add(ExternalLinkDefinition.RemotePart.URL);
             _externalLinksManager.Add(definition);
 
             ReloadCategories();
             _NO_TRANSLATE_Categories.SelectedItem = definition;
+            CategoryChanged();
+        }
+
+        private void LoadTemplatesInMenu()
+        {
+            foreach (var externalLinkDefinitionExtractor in new CloudProviderExternalLinkDefinitionExtractorFactory().GetAllExtractor())
+            {
+                Add.DropDownItems.Add(new ToolStripMenuItem(
+                    string.Format(_addTemplate.Text, externalLinkDefinitionExtractor.ServiceName),
+                    externalLinkDefinitionExtractor.Icon,
+                    (o, i) => ExtractExternalLinkDefinitions(externalLinkDefinitionExtractor))
+                {
+                    Tag = externalLinkDefinitionExtractor
+                });
+            }
+        }
+
+        private Remote FindRemoteByPreference(IList<Remote> remotes)
+        {
+            if (remotes == null)
+            {
+                return default;
+            }
+
+            var remoteNames = new[] { "upstream", "fork", "origin" };
+            foreach (var remoteName in remoteNames)
+            {
+                var remoteFound = remotes.FirstOrDefault(r => r.Name == remoteName);
+                if (remoteFound.Name != null)
+                {
+                    return remoteFound;
+                }
+            }
+
+            return remotes.FirstOrDefault();
+        }
+
+        private void ExtractExternalLinkDefinitions(ICloudProviderExternalLinkDefinitionExtractor externalLinkDefinitionExtractor)
+        {
+            var remotes = ThreadHelper.JoinableTaskFactory.Run(async () => await Module.GetRemotesAsync()).ToList();
+            var selectedRemote = FindRemoteByPreference(remotes.Where(r => externalLinkDefinitionExtractor.IsValidRemoteUrl(r.FetchUrl)).ToList());
+
+            var externalLinkDefinitions = externalLinkDefinitionExtractor.GetDefinitions(selectedRemote.FetchUrl);
+            _externalLinksManager.AddRange(externalLinkDefinitions);
+
+            ReloadCategories();
+            _NO_TRANSLATE_Categories.SelectedItem = externalLinkDefinitions.First();
             CategoryChanged();
         }
 

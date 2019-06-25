@@ -8623,6 +8623,10 @@ See the changes in the commit form.</source>
         <source>URI</source>
         <target />
       </trans-unit>
+      <trans-unit id="_addTemplate.Text">
+        <source>Add {0} templates</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkOnlyFirstRemote.Text">
         <source>Only use the first match</source>
         <target />
@@ -8673,6 +8677,10 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="revisionDataGrp.Text">
         <source>Revision data</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="toolStripManageCategories.Text">
+        <source>toolStrip1</source>
         <target />
       </trans-unit>
     </body>

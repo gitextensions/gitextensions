@@ -68,6 +68,8 @@
     <Compile Include="Git\GitDescribeProviderTests.cs" />
     <Compile Include="Git\GitRefNameTests.cs" />
     <Compile Include="PlinkTests.cs" />
+    <Compile Include="Remote\AzureDevOpsRemoteParserTests.cs" />
+    <Compile Include="Remote\GitHubRemoteParserTests.cs" />
     <Compile Include="RevisionReaderTests.cs" />
     <Compile Include="StreamExtensionsTests.cs" />
     <Compile Include="RepoNameExtractorTest.cs" />

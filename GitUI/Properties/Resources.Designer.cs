@@ -207,6 +207,26 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap FileStatusAdded {
+            get {
+                object obj = ResourceManager.GetObject("FileStatusAdded", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap FileStatusRemoved {
+            get {
+                object obj = ResourceManager.GetObject("FileStatusRemoved", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap RepoOpen {
             get {
                 object obj = ResourceManager.GetObject("RepoOpen", resourceCulture);
