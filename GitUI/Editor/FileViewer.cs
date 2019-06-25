@@ -18,7 +18,6 @@ using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
-using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.Editor
@@ -675,22 +674,22 @@ namespace GitUI.Editor
             return str.ToString();
         }
 
-        public Task ViewGitItemRevisionAsync(string fileName, ObjectId objectId)
+        public Task ViewGitItemRevisionAsync(string fileName, ObjectId objectId, [CanBeNull] Action openWithDifftool = null)
         {
             if (objectId == ObjectId.WorkTreeId)
             {
                 // No blob exists for worktree, present contents from file system
-                return ViewFileAsync(fileName);
+                return ViewFileAsync(fileName, openWithDifftool);
             }
             else
             {
                 // Retrieve blob, same as GitItemStatus.TreeGuid
                 var blob = Module.GetFileBlobHash(fileName, objectId);
-                return ViewGitItemAsync(fileName, blob);
+                return ViewGitItemAsync(fileName, blob, openWithDifftool);
             }
         }
 
-        public Task ViewGitItemAsync(string fileName, [CanBeNull] ObjectId objectId)
+        public Task ViewGitItemAsync(string fileName, [CanBeNull] ObjectId objectId, [CanBeNull] Action openWithDifftool = null)
         {
             var sha = objectId?.ToString();
 
@@ -699,9 +698,14 @@ namespace GitUI.Editor
                 getImage: GetImage,
                 getFileText: GetFileTextIfBlobExists,
                 getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), sha),
-                openWithDifftool: () => Module.OpenWithDifftool(fileName, firstRevision: sha));
+                openWithDifftool: openWithDifftool ?? OpenWithDifftool);
 
             string GetFileTextIfBlobExists() => objectId != null ? Module.GetFileText(objectId, Encoding) : "";
+
+            void OpenWithDifftool()
+            {
+                Module.OpenWithDifftool(fileName, firstRevision: sha);
+            }
 
             Image GetImage()
             {

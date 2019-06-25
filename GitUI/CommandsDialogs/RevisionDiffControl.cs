@@ -652,7 +652,7 @@ namespace GitUI.CommandsDialogs
             var gitItemStatus = DiffFiles.SelectedItem;
             var revisionId = DiffFiles.Revision?.ObjectId;
 
-            if (gitItemStatus?.Name == null || revisionId == null)
+            if (gitItemStatus?.Name == null || revisionId == null || revisionId == ObjectId.CombinedDiffId)
             {
                 return;
             }

@@ -98,12 +98,13 @@ namespace GitUI
             [NotNull] string defaultText,
             [CanBeNull] Action openWithDifftool)
         {
-            if (firstRevision == null)
+            if (firstRevision == null || FileHelper.IsImage(file.Name))
             {
                 // The previous commit does not exist, nothing to compare with
-                if (file.TreeGuid == null)
+                if (file.TreeGuid != null)
                 {
-                    return diffViewer.ViewGitItemAsync(file.Name, file.TreeGuid);
+                    // blob guid exists
+                    return diffViewer.ViewGitItemAsync(file.Name, file.TreeGuid, openWithDifftool);
                 }
 
                 if (secondRevision == null)
@@ -111,7 +112,8 @@ namespace GitUI
                     throw new ArgumentNullException(nameof(secondRevision));
                 }
 
-                return diffViewer.ViewGitItemRevisionAsync(file.Name, secondRevision);
+                // Get blob guid from revision
+                return diffViewer.ViewGitItemRevisionAsync(file.Name, secondRevision, openWithDifftool);
             }
 
             return diffViewer.ViewPatchAsync(() =>
