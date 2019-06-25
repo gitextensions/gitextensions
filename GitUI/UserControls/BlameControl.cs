@@ -459,16 +459,14 @@ namespace GitUI.Blame
 
         private bool TryGetSelectedRevision(out GitRevision selectedRevision)
         {
-            selectedRevision = null;
-            int line = (int?)contextMenu.Tag ?? -1;
-            if (line < 0)
+            var blameCommit = GetBlameCommit();
+            if (blameCommit == null)
             {
+                selectedRevision = null;
                 return false;
             }
 
-            var objectId = _blame.Lines[line].Commit.ObjectId;
-
-            selectedRevision = _revGrid.GetRevision(objectId);
+            selectedRevision = _revGrid?.GetRevision(blameCommit.ObjectId);
             return selectedRevision != null;
         }
 
@@ -479,7 +477,7 @@ namespace GitUI.Blame
                 return;
             }
 
-            _revGrid.SetSelectedRevision(selectedRevision);
+            BlameRevision(selectedRevision.ObjectId);
         }
 
         private void blamePreviousRevisionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -489,18 +487,25 @@ namespace GitUI.Blame
                 return;
             }
 
-            if (!selectedRevision.HasParent)
-            {
-                _revGrid.SetSelectedRevision(selectedRevision);
-                using (var frm = new FormCommitDiff(UICommands, selectedRevision.ObjectId))
-                {
-                    frm.ShowDialog(this);
-                }
+            var blameRevision = selectedRevision.HasParent
+                ? selectedRevision.FirstParentGuid
+                : selectedRevision.ObjectId;
 
+            BlameRevision(blameRevision);
+        }
+
+        private void BlameRevision(ObjectId revisionId)
+        {
+            if (_revGrid != null)
+            {
+                _revGrid.SetSelectedRevision(revisionId);
                 return;
             }
 
-            _revGrid.SetSelectedRevision(selectedRevision.FirstParentGuid);
+            using (var frm = new FormCommitDiff(UICommands, revisionId))
+            {
+                frm.ShowDialog(this);
+            }
         }
 
         private void showChangesToolStripMenuItem_Click(object sender, EventArgs e)
