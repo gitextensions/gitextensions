@@ -198,8 +198,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     case GitStatusMonitorState.Running:
                         {
                             _timerRefresh.Start();
-                            _workTreeWatcher.EnableRaisingEvents = true;
-                            _gitDirWatcher.EnableRaisingEvents = !_gitDirWatcher.Path.StartsWith(_workTreeWatcher.Path);
+                            if (Directory.Exists(_workTreeWatcher.Path))
+                            {
+                                _workTreeWatcher.EnableRaisingEvents = true;
+                            }
+
+                            if (Directory.Exists(_gitDirWatcher.Path))
+                            {
+                                _gitDirWatcher.EnableRaisingEvents = !_gitDirWatcher.Path.StartsWith(_workTreeWatcher.Path);
+                            }
+
                             ScheduleNextInteractiveTime();
                         }
 
@@ -321,11 +329,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             _commandIsRunning = true;
             _nextIsInteractive = false;
-            var commandStartTime = Environment.TickCount;
-            _workTreeWatcher.EnableRaisingEvents = true;
 
             // Schedule update every 5 min, even if we don't know that anything changed
             ScheduleNextUpdateTime(PeriodicUpdateInterval);
+
+            if (!Directory.Exists(_workTreeWatcher.Path))
+            {
+                // The directory no longer exists, watcher cannot be enabled
+                return;
+            }
+
+            var commandStartTime = Environment.TickCount;
+            _workTreeWatcher.EnableRaisingEvents = true;
 
             // capture a consistent state in the main thread
             IGitModule module = Module;
