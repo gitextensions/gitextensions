@@ -589,6 +589,14 @@ namespace GitUI.CommandsDialogs
                         }
                     }
                 }
+
+                if (!PathUtil.TryFindFullPath(_mergetoolPath, out string fullPath))
+                {
+                    MessageBox.Show(this, _noMergeTool.Text);
+                    return false;
+                }
+
+                _mergetoolPath = fullPath;
             }
 
             return true;
