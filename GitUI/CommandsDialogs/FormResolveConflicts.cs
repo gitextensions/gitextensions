@@ -17,7 +17,7 @@ namespace GitUI.CommandsDialogs
     public partial class FormResolveConflicts : GitModuleForm
     {
         #region Translation
-        // ReSharper disable InconsistentNaming
+        private readonly TranslationString _errorCaption = new TranslationString("Error");
         private readonly TranslationString _uskUseCustomMergeScript = new TranslationString("There is a custom merge script ({0}) for this file type." + Environment.NewLine + Environment.NewLine + "Do you want to use this custom merge script?");
         private readonly TranslationString _uskUseCustomMergeScriptCaption = new TranslationString("Custom merge script");
         private readonly TranslationString _fileUnchangedAfterMerge = new TranslationString("The file has not been modified by the merge. Usually this means that the file has been saved to the wrong location." + Environment.NewLine + Environment.NewLine + "The merge conflict will not be marked as solved. Please try again.");
@@ -27,21 +27,21 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _askMergeConflictSolvedAfterCustomMergeScript = new TranslationString("The merge conflict need to be solved and the result must be saved as:" + Environment.NewLine + "{0}" + Environment.NewLine + Environment.NewLine + "Is the merge conflict solved?");
         private readonly TranslationString _askMergeConflictSolved = new TranslationString("Is the merge conflict solved?");
         private readonly TranslationString _askMergeConflictSolvedCaption = new TranslationString("Conflict solved?");
-        private readonly TranslationString _noMergeTool = new TranslationString("There is no mergetool configured. Please go to settings and set a mergetool!");
-        private readonly TranslationString _noMergeToolConfigured = new TranslationString("The mergetool is not correctly configured. Please go to settings and configure the mergetool!");
+        private readonly TranslationString _noMergeTool = new TranslationString("There is no mergetool configured." + Environment.NewLine + "Please go to settings and set a mergetool!");
+        private readonly TranslationString _noMergeToolConfigured = new TranslationString("The mergetool is not correctly configured." + Environment.NewLine + "Please go to settings and configure the mergetool!");
         private readonly TranslationString _stageFilename = new TranslationString("Stage {0}");
 
-        private readonly TranslationString _noBaseRevision = new TranslationString("There is no base revision for {0}.\nFall back to 2-way merge?");
+        private readonly TranslationString _noBaseRevision = new TranslationString("There is no base revision for {0}." + Environment.NewLine + "Fall back to 2-way merge?");
         private readonly TranslationString _ours = new TranslationString("ours");
         private readonly TranslationString _theirs = new TranslationString("theirs");
-        private readonly TranslationString _fileBinaryChooseLocalBaseRemote = new TranslationString("File ({0}) appears to be a binary file.\nChoose to keep the local({1}), remote({2}) or base file.");
+        private readonly TranslationString _fileBinaryChooseLocalBaseRemote = new TranslationString("File ({0}) appears to be a binary file." + Environment.NewLine + "Choose to keep the local({1}), remote({2}) or base file.");
         private readonly TranslationString _fileChangeLocallyAndRemotely = new TranslationString("The file has been changed both locally({0}) and remotely({1}). Merge the changes.");
         private readonly TranslationString _fileCreatedLocallyAndRemotely = new TranslationString("A file with the same name has been created locally({0}) and remotely({1}). Choose the file you want to keep or merge the files.");
-        private readonly TranslationString _fileCreatedLocallyAndRemotelyLong = new TranslationString("File {0} does not have a base revision.\nA file with the same name has been created locally({1}) and remotely({2}) causing this conflict.\n\nChoose the file you want to keep, merge the files or delete the file?");
+        private readonly TranslationString _fileCreatedLocallyAndRemotelyLong = new TranslationString("File {0} does not have a base revision." + Environment.NewLine + "A file with the same name has been created locally({1}) and remotely({2}) causing this conflict." + Environment.NewLine + Environment.NewLine + "Choose the file you want to keep, merge the files or delete the file?");
         private readonly TranslationString _fileDeletedLocallyAndModifiedRemotely = new TranslationString("The file has been deleted locally({0}) and modified remotely({1}). Choose to delete the file or keep the modified version.");
-        private readonly TranslationString _fileDeletedLocallyAndModifiedRemotelyLong = new TranslationString("File {0} does not have a local revision.\nThe file has been deleted locally({1}) but modified remotely({2}).\n\nChoose to delete the file or keep the modified version.");
+        private readonly TranslationString _fileDeletedLocallyAndModifiedRemotelyLong = new TranslationString("File {0} does not have a local revision." + Environment.NewLine + "The file has been deleted locally({1}) but modified remotely({2})." + Environment.NewLine + Environment.NewLine + "Choose to delete the file or keep the modified version.");
         private readonly TranslationString _fileModifiedLocallyAndDeletedRemotely = new TranslationString("The file has been modified locally({0}) and deleted remotely({1}). Choose to delete the file or keep the modified version.");
-        private readonly TranslationString _fileModifiedLocallyAndDeletedRemotelyLong = new TranslationString("File {0} does not have a remote revision.\nThe file has been modified locally({1}) but deleted remotely({2}).\n\nChoose to delete the file or keep the modified version.");
+        private readonly TranslationString _fileModifiedLocallyAndDeletedRemotelyLong = new TranslationString("File {0} does not have a remote revision." + Environment.NewLine + "The file has been modified locally({1}) but deleted remotely({2})." + Environment.NewLine + Environment.NewLine + "Choose to delete the file or keep the modified version.");
         private readonly TranslationString _noBase = new TranslationString("no base");
         private readonly TranslationString _deleted = new TranslationString("deleted");
         private readonly TranslationString _chooseLocalButtonText = new TranslationString("Choose local");
@@ -49,8 +49,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _deleteFileButtonText = new TranslationString("Delete file");
         private readonly TranslationString _keepModifiedButtonText = new TranslationString("Keep modified");
         private readonly TranslationString _keepBaseButtonText = new TranslationString("Keep base file");
-
-        // ReSharper restore InconsistentNaming
 
         private readonly TranslationString _conflictedFilesContextMenuText = new TranslationString("Solve");
         private readonly TranslationString _openMergeToolItemText = new TranslationString("Open in");
@@ -551,7 +549,7 @@ namespace GitUI.CommandsDialogs
             _mergetool = Module.GetEffectiveSetting("merge.tool");
             if (string.IsNullOrEmpty(_mergetool))
             {
-                MessageBox.Show(this, _noMergeTool.Text);
+                MessageBox.Show(this, _noMergeTool.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -573,7 +571,7 @@ namespace GitUI.CommandsDialogs
                 {
                     if (string.IsNullOrWhiteSpace(_mergetoolCmd) && string.IsNullOrWhiteSpace(_mergetoolPath))
                     {
-                        MessageBox.Show(this, _noMergeToolConfigured.Text);
+                        MessageBox.Show(this, _noMergeToolConfigured.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return false;
                     }
 
@@ -592,7 +590,7 @@ namespace GitUI.CommandsDialogs
 
                 if (!PathUtil.TryFindFullPath(_mergetoolPath, out string fullPath))
                 {
-                    MessageBox.Show(this, _noMergeTool.Text);
+                    MessageBox.Show(this, _noMergeToolConfigured.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 
