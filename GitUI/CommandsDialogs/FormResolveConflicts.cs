@@ -401,25 +401,7 @@ namespace GitUI.CommandsDialogs
 
         private void ConflictedFiles_DoubleClick(object sender, EventArgs e)
         {
-            using (WaitCursorScope.Enter())
-            {
-                try
-                {
-                    var items = GetConflicts();
-
-                    StartProgressBarWithMaxValue(items.Count);
-                    foreach (var conflictData in items)
-                    {
-                        IncrementProgressBarValue();
-                        ResolveItemConflict(conflictData);
-                    }
-                }
-                finally
-                {
-                    StopAndHideProgressBar();
-                    Initialize();
-                }
-            }
+            OpenMergeTool();
         }
 
         private void StopAndHideProgressBar()
@@ -758,6 +740,7 @@ namespace GitUI.CommandsDialogs
             using (WaitCursorScope.Enter())
             {
                 var conflictItems = GetConflicts();
+
                 StartProgressBarWithMaxValue(conflictItems.Count);
                 foreach (var conflictItem in conflictItems)
                 {
@@ -1012,12 +995,32 @@ namespace GitUI.CommandsDialogs
             return false;
         }
 
-        private void OpenMergetool_Click(object sender, EventArgs e)
+        private void OpenMergeTool()
         {
             using (WaitCursorScope.Enter())
             {
-                ConflictedFiles_DoubleClick(sender, e);
+                try
+                {
+                    var items = GetConflicts();
+
+                    StartProgressBarWithMaxValue(items.Count);
+                    foreach (var conflictData in items)
+                    {
+                        IncrementProgressBarValue();
+                        ResolveItemConflict(conflictData);
+                    }
+                }
+                finally
+                {
+                    StopAndHideProgressBar();
+                    Initialize();
+                }
             }
+        }
+
+        private void OpenMergetool_Click(object sender, EventArgs e)
+        {
+            OpenMergeTool();
         }
 
         private void ContextOpenBaseWith_Click(object sender, EventArgs e)
@@ -1214,14 +1217,14 @@ namespace GitUI.CommandsDialogs
 
         private void merge_Click(object sender, EventArgs e)
         {
-            OpenMergetool_Click(sender, e);
+            OpenMergeTool();
         }
 
         private void ConflictedFiles_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                OpenMergetool_Click(sender, e);
+                OpenMergeTool();
                 e.Handled = true;
             }
         }
