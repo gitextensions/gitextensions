@@ -3703,10 +3703,6 @@ You can unset the template:
         <source>Create branch</source>
         <target />
       </trans-unit>
-      <trans-unit id="CheckoutAfterCreate.Text">
-        <source>Checkout &amp;after create</source>
-        <target />
-      </trans-unit>
       <trans-unit id="ClearOrphan.Text">
         <source>Clear &amp;working directory and index</source>
         <target />
@@ -3729,6 +3725,10 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="_noRevisionSelected.Text">
         <source>Select 1 revision to create the branch on.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkbxCheckoutAfterCreate.Text">
+        <source>Checkout &amp;after create</source>
         <target />
       </trans-unit>
       <trans-unit id="groupBox1.Text">

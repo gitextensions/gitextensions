@@ -41,7 +41,6 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.CheckoutAfterCreate = new System.Windows.Forms.Label();
             this.gotoUserManualControl1 = new GitUI.UserControls.GotoUserManualControl();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -80,6 +79,7 @@
             this.chkbxCheckoutAfterCreate.Name = "chkbxCheckoutAfterCreate";
             this.chkbxCheckoutAfterCreate.Size = new System.Drawing.Size(287, 22);
             this.chkbxCheckoutAfterCreate.TabIndex = 5;
+            this.chkbxCheckoutAfterCreate.Text = "Checkout &after create";
             this.chkbxCheckoutAfterCreate.UseVisualStyleBackColor = true;
             // 
             // label1
@@ -157,7 +157,6 @@
             this.tableLayoutPanel1.Controls.Add(this.BranchNameTextBox, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.CheckoutAfterCreate, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.chkbxCheckoutAfterCreate, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.Ok, 1, 4);
             this.tableLayoutPanel1.Controls.Add(this.gotoUserManualControl1, 0, 4);
@@ -200,18 +199,6 @@
             this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
             this.flowLayoutPanel1.Size = new System.Drawing.Size(426, 23);
             this.flowLayoutPanel1.TabIndex = 1;
-            // 
-            // CheckoutAfterCreate
-            // 
-            this.CheckoutAfterCreate.AutoSize = true;
-            this.CheckoutAfterCreate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CheckoutAfterCreate.Location = new System.Drawing.Point(3, 59);
-            this.CheckoutAfterCreate.Margin = new System.Windows.Forms.Padding(3);
-            this.CheckoutAfterCreate.Name = "CheckoutAfterCreate";
-            this.CheckoutAfterCreate.Size = new System.Drawing.Size(149, 22);
-            this.CheckoutAfterCreate.TabIndex = 4;
-            this.CheckoutAfterCreate.Text = "Checkout &after create";
-            this.CheckoutAfterCreate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // gotoUserManualControl1
             // 
@@ -267,7 +254,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.CheckBox chkbxCheckoutAfterCreate;
-        private System.Windows.Forms.Label CheckoutAfterCreate;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }
