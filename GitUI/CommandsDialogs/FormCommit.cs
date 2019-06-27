@@ -2206,7 +2206,7 @@ namespace GitUI.CommandsDialogs
 
             using (var textWriter = new StreamWriter(path, false, encoding))
             {
-                var addNewlineToCommitMessageWhenMissing = AppSettings.AddNewlineToCommitMessageWhenMissing;
+                var ensureCommitMessageSecondLineEmpty = AppSettings.EnsureCommitMessageSecondLineEmpty;
 
                 var lineNumber = 0;
                 foreach (var line in commitMessageText.Split('\n'))
@@ -2216,7 +2216,7 @@ namespace GitUI.CommandsDialogs
                     if ((!string.IsNullOrEmpty(line) && !line.StartsWith("#")) ||
                         string.IsNullOrEmpty(_commitTemplate))
                     {
-                        if (addNewlineToCommitMessageWhenMissing)
+                        if (ensureCommitMessageSecondLineEmpty)
                         {
                             if (lineNumber == 1)
                             {

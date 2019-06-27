@@ -343,7 +343,7 @@ namespace GitCommands
             set => SetBool("showerrorswhenstagingfiles", value);
         }
 
-        public static bool AddNewlineToCommitMessageWhenMissing
+        public static bool EnsureCommitMessageSecondLineEmpty
         {
             get => GetBool("addnewlinetocommitmessagewhenmissing", true);
             set => SetBool("addnewlinetocommitmessagewhenmissing", value);
