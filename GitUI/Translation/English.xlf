@@ -6244,6 +6244,10 @@ Is the merge conflict solved?</source>
         <source>deleted</source>
         <target />
       </trans-unit>
+      <trans-unit id="_errorCaption.Text">
+        <source>Error</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_failureWhileOpenFile.Text">
         <source>Open temporary file failed.</source>
         <target />
@@ -6327,11 +6331,13 @@ Fall back to 2-way merge?</source>
         <target />
       </trans-unit>
       <trans-unit id="_noMergeTool.Text">
-        <source>There is no mergetool configured. Please go to settings and set a mergetool!</source>
+        <source>There is no mergetool configured.
+Please go to settings and set a mergetool!</source>
         <target />
       </trans-unit>
       <trans-unit id="_noMergeToolConfigured.Text">
-        <source>The mergetool is not correctly configured. Please go to settings and configure the mergetool!</source>
+        <source>The mergetool is not correctly configured.
+Please go to settings and configure the mergetool!</source>
         <target />
       </trans-unit>
       <trans-unit id="_openMergeToolItemText.Text">
