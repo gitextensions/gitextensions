@@ -2206,26 +2206,27 @@ namespace GitUI.CommandsDialogs
 
             using (var textWriter = new StreamWriter(path, false, encoding))
             {
-                var ensureCommitMessageSecondLineEmpty = AppSettings.EnsureCommitMessageSecondLineEmpty;
+                bool ensureCommitMessageSecondLineEmpty = AppSettings.EnsureCommitMessageSecondLineEmpty;
+                bool usingCommitTemplate = !string.IsNullOrEmpty(_commitTemplate);
 
-                var lineNumber = 0;
+                var lineNumber = 1;
                 foreach (var line in commitMessageText.Split('\n'))
                 {
-                    // When a committemplate is used, skip comments
-                    // otherwise: "#" is probably not used for comment but for issue number
-                    if ((!string.IsNullOrEmpty(line) && !line.StartsWith("#")) ||
-                        string.IsNullOrEmpty(_commitTemplate))
-                    {
-                        if (ensureCommitMessageSecondLineEmpty)
-                        {
-                            if (lineNumber == 1)
-                            {
-                                textWriter.WriteLine();
-                            }
-                        }
+                    string nonNullLine = line ?? string.Empty;
 
-                        textWriter.WriteLine(line);
+                    // When a committemplate is used, skip comments and do not count them as line.
+                    // otherwise: "#" is probably not used for comment but for issue number
+                    if (usingCommitTemplate && nonNullLine.StartsWith("#"))
+                    {
+                        continue;
                     }
+
+                    if (ensureCommitMessageSecondLineEmpty && lineNumber == 2 && !string.IsNullOrEmpty(nonNullLine))
+                    {
+                        textWriter.WriteLine();
+                    }
+
+                    textWriter.WriteLine(nonNullLine);
 
                     lineNumber++;
                 }
