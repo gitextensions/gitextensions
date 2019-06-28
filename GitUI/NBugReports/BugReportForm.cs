@@ -2,7 +2,7 @@
 // <copyright file="Full.cs" company="NBug Project">
 //   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
-// <copyright file="Full.cs" company="Git Extensions">
+// <copyright file="BugReportForm.cs" company="Git Extensions">
 //   Copyright (c) 2019 Igor Velikorossov. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -10,6 +10,7 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
 using GitUI.NBugReports.Info;
@@ -19,7 +20,7 @@ using ResourceManager;
 
 namespace GitUI.NBugReports
 {
-    public partial class BugReportForm : Form
+    public partial class BugReportForm : GitExtensionsForm
     {
         private readonly TranslationString _title = new TranslationString("Error Report");
         private readonly TranslationString _submitGitHubMessage = new TranslationString(@"Give as much as information as possible please to help the developers solve this issue. Otherwise, your issue ticket may be closed without any follow-up from the developers.
@@ -27,6 +28,10 @@ namespace GitUI.NBugReports
 Because of this, make sure to fill in all the fields in the report template please.
 
 Send report anyway?");
+        private readonly TranslationString _toolTipCopy = new TranslationString("Copy the issue details into clipboard");
+        private readonly TranslationString _toolTipSendQuit = new TranslationString("Report the issue to GitHub and quit application.\r\nA valid GitHub account is required");
+        private readonly TranslationString _toolTipQuit = new TranslationString("Quit application without reporting the issue");
+        private readonly TranslationString _noReproStepsSuppliedErrorMessage = new TranslationString(@"Please provide as much as information as possible to help the developers solve this issue.");
 
         private static readonly IErrorReportMarkDownBodyBuilder ErrorReportBodyBuilder;
         private static readonly GitHubUrlBuilder UrlBuilder;
@@ -43,7 +48,24 @@ Send report anyway?");
         public BugReportForm()
         {
             InitializeComponent();
+
             Icon = Resources.GitExtensionsLogoIcon;
+
+            // Scaling
+            exceptionTypeLabel.Image = DpiUtil.Scale(exceptionTypeLabel.Image);
+            exceptionDetails.PropertyColumnWidth = DpiUtil.Scale(101);
+            exceptionDetails.PropertyColumnWidth = DpiUtil.Scale(101);
+            DpiUtil.Scale(sendAndQuitButton.MinimumSize);
+            DpiUtil.Scale(btnCopy.MinimumSize);
+
+            warningLabel.MaximumSize = new Size(warningLabel.Width, 0);
+            warningLabel.AutoSize = true;
+
+            InitializeComplete();
+
+            toolTip.SetToolTip(btnCopy, _toolTipCopy.Text);
+            toolTip.SetToolTip(sendAndQuitButton, _toolTipSendQuit.Text);
+            toolTip.SetToolTip(quitButton, _toolTipQuit.Text);
 
             // ToDo: Displaying report contents properly requires some more work.
             mainTabs.TabPages.Remove(mainTabs.TabPages["reportContentsTabPage"]);
@@ -56,13 +78,6 @@ Send report anyway?");
             _environmentInfo = environmentInfo;
 
             Text = $@"{_lastReport.GeneralInfo.HostApplication} {_title.Text}";
-
-            // Scaling
-            sendAndQuitButton.Image = DpiUtil.Scale(Images.GitHub);
-            btnCopy.Image = DpiUtil.Scale(Resources.CopyToClipboard);
-            exceptionTypeLabel.Image = DpiUtil.Scale(Resources.bug);
-            exceptionDetails.InformationColumnWidth = DpiUtil.Scale(350);
-            exceptionDetails.PropertyColumnWidth = DpiUtil.Scale(101);
 
             // Fill in the 'General' tab
             warningPictureBox.Image = SystemIcons.Warning.ToBitmap();
@@ -88,6 +103,18 @@ Send report anyway?");
             return result;
         }
 
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            descriptionTextBox.Focus();
+        }
+
+        private bool CheckContainsInfo(string input)
+        {
+            var text = Regex.Replace(input, @"\s*|\r|\n", string.Empty);
+            return !string.IsNullOrWhiteSpace(text);
+        }
+
         private void QuitButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Abort;
@@ -96,6 +123,14 @@ Send report anyway?");
 
         private void SendAndQuitButton_Click(object sender, EventArgs e)
         {
+            var hasUserText = CheckContainsInfo(descriptionTextBox.Text);
+            if (!hasUserText)
+            {
+                MessageBox.Show(this, _noReproStepsSuppliedErrorMessage.Text, _title.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                descriptionTextBox.Focus();
+                return;
+            }
+
             if (MessageBox.Show(this, _submitGitHubMessage.Text, _title.Text,
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
             {
@@ -120,6 +155,21 @@ Send report anyway?");
             Clipboard.SetDataObject(report, true, 5, 100);
 
             DialogResult = DialogResult.None;
+        }
+
+        internal TestAccessor GetTestAccessor()
+            => new TestAccessor(this);
+
+        public readonly struct TestAccessor
+        {
+            private readonly BugReportForm _form;
+
+            public TestAccessor(BugReportForm form)
+            {
+                _form = form;
+            }
+
+            public bool CheckContainsInfo(string input) => _form.CheckContainsInfo(input);
         }
     }
 }
