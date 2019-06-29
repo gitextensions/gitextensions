@@ -2189,12 +2189,50 @@ namespace GitUI.CommandsDialogs
             Initialize();
         }
 
+        private static string FormatCommitMessageFromTextBox(
+            string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty)
+        {
+            if (commitMessageText == null)
+            {
+                return string.Empty;
+            }
+
+            var formattedCommitMessage = new StringBuilder();
+
+            var lineNumber = 1;
+            foreach (var line in commitMessageText.Split('\n'))
+            {
+                string nonNullLine = line ?? string.Empty;
+
+                // When a committemplate is used, skip comments and do not count them as line.
+                // otherwise: "#" is probably not used for comment but for issue number
+                if (usingCommitTemplate && nonNullLine.StartsWith("#"))
+                {
+                    continue;
+                }
+
+                if (ensureCommitMessageSecondLineEmpty && lineNumber == 2 && !string.IsNullOrEmpty(nonNullLine))
+                {
+                    formattedCommitMessage.AppendLine();
+                }
+
+                formattedCommitMessage.AppendLine(nonNullLine);
+
+                lineNumber++;
+            }
+
+            return formattedCommitMessage.ToString();
+        }
+
         private void SetCommitMessageFromTextBox(string commitMessageText)
         {
             // Save last commit message in settings. This way it can be used in multiple repositories.
             AppSettings.LastCommitMessage = commitMessageText;
 
             var path = _commitMessageManager.CommitMessagePath;
+
+            var formattedCommitMessage = FormatCommitMessageFromTextBox(
+                commitMessageText, usingCommitTemplate: !string.IsNullOrEmpty(_commitTemplate), AppSettings.EnsureCommitMessageSecondLineEmpty);
 
             // Commit messages are UTF-8 by default unless otherwise in the config file.
             // The git manual states:
@@ -2204,32 +2242,7 @@ namespace GitUI.CommandsDialogs
             //  this is to have i18n.commitencoding in .git/config file, like this:...
             Encoding encoding = Module.CommitEncoding;
 
-            using (var textWriter = new StreamWriter(path, false, encoding))
-            {
-                var addNewlineToCommitMessageWhenMissing = AppSettings.AddNewlineToCommitMessageWhenMissing;
-
-                var lineNumber = 0;
-                foreach (var line in commitMessageText.Split('\n'))
-                {
-                    // When a committemplate is used, skip comments
-                    // otherwise: "#" is probably not used for comment but for issue number
-                    if ((!string.IsNullOrEmpty(line) && !line.StartsWith("#")) ||
-                        string.IsNullOrEmpty(_commitTemplate))
-                    {
-                        if (addNewlineToCommitMessageWhenMissing)
-                        {
-                            if (lineNumber == 1)
-                            {
-                                textWriter.WriteLine();
-                            }
-                        }
-
-                        textWriter.WriteLine(line);
-                    }
-
-                    lineNumber++;
-                }
-            }
+            File.WriteAllText(path, formattedCommitMessage, encoding);
         }
 
         private void DeleteAllUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
@@ -3278,10 +3291,11 @@ namespace GitUI.CommandsDialogs
 
             internal ToolStripStatusLabel RemoteNameLabelStatus => _formCommit.remoteNameLabel;
 
-            internal CommandStatus ExecuteCommand(Command command)
-            {
-                return _formCommit.ExecuteCommand((int)command);
-            }
+            internal CommandStatus ExecuteCommand(Command command) => _formCommit.ExecuteCommand((int)command);
+
+            internal static string FormatCommitMessageFromTextBox(
+                string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty)
+                => FormCommit.FormatCommitMessageFromTextBox(commitMessageText, usingCommitTemplate, ensureCommitMessageSecondLineEmpty);
         }
 
         private void stopTrackingThisFileToolStripMenuItem_Click(object sender, EventArgs e)

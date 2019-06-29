@@ -185,6 +185,14 @@ namespace GitUITests.CommandsDialogs.CommitDialog
             });
         }
 
+        [Test, TestCaseSource(typeof(FormatCommitMessageTestData), "TestCases")]
+        public void FormatCommitMessageFromTextBox(
+            string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty, string expectedMessage)
+        {
+            FormCommit.TestAccessor.FormatCommitMessageFromTextBox(commitMessageText, usingCommitTemplate, ensureCommitMessageSecondLineEmpty)
+                .Should().Be(expectedMessage);
+        }
+
         [Test, TestCaseSource(typeof(CommitMessageTestData), "TestCases")]
         public void AddSelectionToCommitMessage_shall_be_ignored_unless_diff_is_focused(
             string message,
@@ -308,6 +316,43 @@ namespace GitUITests.CommandsDialogs.CommitDialog
                     }
                 },
                 testDriverAsync);
+        }
+    }
+
+    public class FormatCommitMessageTestData
+    {
+        private static readonly string NL = Environment.NewLine;
+
+        public static IEnumerable TestCases
+        {
+            get
+            {
+                // string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty, string expectedMessage
+                yield return new TestCaseData(new object[] { null, false, false, "" });
+                yield return new TestCaseData(new object[] { null, true, false, "" });
+                yield return new TestCaseData(new object[] { null, false, true, "" });
+                yield return new TestCaseData(new object[] { null, true, true, "" });
+                yield return new TestCaseData(new object[] { "", false, false, NL });
+                yield return new TestCaseData(new object[] { "", true, false, NL });
+                yield return new TestCaseData(new object[] { "", false, true, NL });
+                yield return new TestCaseData(new object[] { "", true, true, NL });
+                yield return new TestCaseData(new object[] { "\n", false, false, NL + NL });
+                yield return new TestCaseData(new object[] { "\n", true, false, NL + NL });
+                yield return new TestCaseData(new object[] { "\n", false, true, NL + NL });
+                yield return new TestCaseData(new object[] { "\n", true, true, NL + NL });
+                yield return new TestCaseData(new object[] { "1", true, false, "1" + NL });
+                yield return new TestCaseData(new object[] { "#1", false, false, "#1" + NL });
+                yield return new TestCaseData(new object[] { "#1", true, false, "" });
+                yield return new TestCaseData(new object[] { "1\n\n3", false, false, "1" + NL + NL + "3" + NL });
+                yield return new TestCaseData(new object[] { "1\n\n3", false, true, "1" + NL + NL + "3" + NL });
+                yield return new TestCaseData(new object[] { "1\n2\n3", false, false, "1" + NL + "2" + NL + "3" + NL });
+                yield return new TestCaseData(new object[] { "1\n2\n3", false, true, "1" + NL + NL + "2" + NL + "3" + NL });
+                yield return new TestCaseData(new object[] { "#0\n1\n\n3", true, false, "1" + NL + NL + "3" + NL });
+                yield return new TestCaseData(new object[] { "#0\n1\n\n3", true, true, "1" + NL + NL + "3" + NL });
+                yield return new TestCaseData(new object[] { "#0\n1\n2\n3", true, false, "1" + NL + "2" + NL + "3" + NL });
+                yield return new TestCaseData(new object[] { "#0\n1\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL });
+                yield return new TestCaseData(new object[] { "#0\n1\n#0\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL });
+            }
         }
     }
 

@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this.chkShowCommitAndPush = new System.Windows.Forms.CheckBox();
             this.chkShowResetWorkTreeChanges = new System.Windows.Forms.CheckBox();
             this.chkShowResetAllChanges = new System.Windows.Forms.CheckBox();
-            this.chkAddNewlineToCommitMessageWhenMissing = new System.Windows.Forms.CheckBox();
+            this.chkEnsureCommitMessageSecondLineEmpty = new System.Windows.Forms.CheckBox();
             this.groupBoxBehaviour.SuspendLayout();
             this.tableLayoutPanelBehaviour.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages)).BeginInit();
@@ -74,7 +74,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this.tableLayoutPanelBehaviour.Controls.Add(this.chkShowErrorsWhenStagingFiles, 0, 1);
             this.tableLayoutPanelBehaviour.Controls.Add(this.chkWriteCommitMessageInCommitWindow, 0, 3);
             this.tableLayoutPanelBehaviour.Controls.Add(this.grpAdditionalButtons, 0, 7);
-            this.tableLayoutPanelBehaviour.Controls.Add(this.chkAddNewlineToCommitMessageWhenMissing, 0, 2);
+            this.tableLayoutPanelBehaviour.Controls.Add(this.chkEnsureCommitMessageSecondLineEmpty, 0, 2);
             this.tableLayoutPanelBehaviour.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanelBehaviour.Location = new System.Drawing.Point(3, 17);
             this.tableLayoutPanelBehaviour.Name = "tableLayoutPanelBehaviour";
@@ -223,13 +223,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // 
             // chkAddNewlineToCommitMessageWhenMissing
             // 
-            this.chkAddNewlineToCommitMessageWhenMissing.AutoSize = true;
-            this.chkAddNewlineToCommitMessageWhenMissing.Location = new System.Drawing.Point(3, 49);
-            this.chkAddNewlineToCommitMessageWhenMissing.Name = "chkAddNewlineToCommitMessageWhenMissing";
-            this.chkAddNewlineToCommitMessageWhenMissing.Size = new System.Drawing.Size(271, 17);
-            this.chkAddNewlineToCommitMessageWhenMissing.TabIndex = 2;
-            this.chkAddNewlineToCommitMessageWhenMissing.Text = "Ensure the second line of commit message is empty";
-            this.chkAddNewlineToCommitMessageWhenMissing.UseVisualStyleBackColor = true;
+            this.chkEnsureCommitMessageSecondLineEmpty.AutoSize = true;
+            this.chkEnsureCommitMessageSecondLineEmpty.Location = new System.Drawing.Point(3, 49);
+            this.chkEnsureCommitMessageSecondLineEmpty.Name = "chkAddNewlineToCommitMessageWhenMissing";
+            this.chkEnsureCommitMessageSecondLineEmpty.Size = new System.Drawing.Size(271, 17);
+            this.chkEnsureCommitMessageSecondLineEmpty.TabIndex = 2;
+            this.chkEnsureCommitMessageSecondLineEmpty.Text = "Ensure the second line of commit message is empty";
+            this.chkEnsureCommitMessageSecondLineEmpty.UseVisualStyleBackColor = true;
             // 
             // CommitDialogSettingsPage
             // 
@@ -266,7 +266,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private System.Windows.Forms.CheckBox chkShowCommitAndPush;
         private System.Windows.Forms.CheckBox chkShowResetWorkTreeChanges;
         private System.Windows.Forms.CheckBox chkShowResetAllChanges;
-        private System.Windows.Forms.CheckBox chkAddNewlineToCommitMessageWhenMissing;
+        private System.Windows.Forms.CheckBox chkEnsureCommitMessageSecondLineEmpty;
         private System.Windows.Forms.CheckBox chkAutocomplete;
         private System.Windows.Forms.CheckBox cbRememberAmendCommitState;
     }
