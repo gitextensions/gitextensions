@@ -33,7 +33,17 @@ namespace GitCommands.Settings
             _fileWatcher.Changed += _fileWatcher_Changed;
             _fileWatcher.Renamed += _fileWatcher_Renamed;
             _fileWatcher.Created += _fileWatcher_Created;
-            var dir = Path.GetDirectoryName(SettingsFilePath);
+            string dir;
+            try
+            {
+                dir = Path.GetDirectoryName(SettingsFilePath);
+            }
+            catch (ArgumentException)
+            {
+                // Illegal characters in the filename
+                dir = null;
+            }
+
             if (Directory.Exists(dir))
             {
                 _fileWatcher.Path = dir;
@@ -137,13 +147,20 @@ namespace GitCommands.Settings
                     currentProcessId = currentProcess.Id;
                 }
 
-                var tmpFile = SettingsFilePath + currentProcessId + ".tmp";
+                var tmpFile = Path.GetTempFileName();
                 WriteSettings(tmpFile);
 
                 if (File.Exists(SettingsFilePath))
                 {
                     var backupName = SettingsFilePath + ".backup";
-                    File.Copy(SettingsFilePath, backupName, true);
+                    try
+                    {
+                        File.Copy(SettingsFilePath, backupName, true);
+                    }
+                    catch (IOException)
+                    {
+                        // Ignore errors for the backup file
+                    }
                 }
 
                 File.Copy(tmpFile, SettingsFilePath, true);
@@ -220,6 +237,24 @@ namespace GitCommands.Settings
             _saveTimer.AutoReset = false;
 
             _saveTimer.Start();
+        }
+
+        internal TestAccessor GetTestAccessor()
+        => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly FileSettingsCache _fileSettingsCache;
+
+            public TestAccessor(FileSettingsCache fileSettingsCache)
+            {
+                _fileSettingsCache = fileSettingsCache;
+            }
+
+            public FileSystemWatcher FileSystemWatcher => _fileSettingsCache._fileWatcher;
+            public bool CanEnableFileWatcher => _fileSettingsCache._canEnableFileWatcher;
+            public void SaveImpl() => _fileSettingsCache.SaveImpl();
+            public void SetLastModificationDate(DateTime date) => _fileSettingsCache._lastModificationDate = date;
         }
     }
 }
