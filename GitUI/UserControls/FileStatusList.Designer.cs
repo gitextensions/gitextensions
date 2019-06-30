@@ -106,7 +106,7 @@
             // 
             this.FilterWatermarkLabel.AutoSize = true;
             this.FilterWatermarkLabel.BackColor = System.Drawing.SystemColors.Window;
-            this.FilterWatermarkLabel.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.FilterWatermarkLabel.ForeColor = System.Drawing.SystemColors.InactiveCaption;
             this.FilterWatermarkLabel.Location = new System.Drawing.Point(4, 4);
             this.FilterWatermarkLabel.Name = "FilterWatermarkLabel";
             this.FilterWatermarkLabel.Size = new System.Drawing.Size(65, 13);

@@ -58,7 +58,6 @@ namespace GitUI
             _sortByContextMenu = CreateSortByContextMenuItem();
             SetupUnifiedDiffListSorting();
             lblSplitter.Height = DpiUtil.Scale(1);
-            FilterComboBox.Font = new Font(FilterComboBox.Font, FontStyle.Bold);
             InitializeComplete();
             FilterVisible = false;
 
@@ -72,9 +71,13 @@ namespace GitUI
             HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
             Controls.SetChildIndex(NoFiles, 0);
             NoFiles.Font = new Font(NoFiles.Font, FontStyle.Italic);
+            FilterWatermarkLabel.Font = new Font(FilterWatermarkLabel.Font, FontStyle.Italic);
+            FilterComboBox.Font = new Font(FilterComboBox.Font, FontStyle.Bold);
 
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _revisionTester = new GitRevisionTester(_fullPathResolver);
+
+            return;
 
             ImageList CreateImageList()
             {
@@ -210,6 +213,7 @@ namespace GitUI
 
         private bool FilterVisibleInternal
         {
+            get => FilterComboBox.Visible;
             set
             {
                 FilterComboBox.Visible = value;
@@ -817,7 +821,7 @@ namespace GitUI
 
         private void SetFilterWatermarkLabelVisibility()
         {
-            FilterWatermarkLabel.Visible = FilterVisible && !FilterComboBox.Focused && string.IsNullOrEmpty(FilterComboBox.Text);
+            FilterWatermarkLabel.Visible = FilterVisibleInternal && !FilterComboBox.Focused && string.IsNullOrEmpty(FilterComboBox.Text);
         }
 
         private void UpdateFileStatusListView(bool updateCausedByFilter = false)
@@ -1329,7 +1333,7 @@ namespace GitUI
         private string _toolTipText = "";
         private readonly Subject<string> _filterSubject = new Subject<string>();
         [CanBeNull] private Regex _filter;
-        private bool _filterVisible;
+        private bool _filterVisible = true;
 
         public void SetFilter(string value)
         {
