@@ -274,6 +274,18 @@ namespace GitUIPluginInterfaces
         {
             // TODO get rid of this overload? slice the array segment instead
 
+            if (bytes.Array == null)
+            {
+                objectId = default;
+                return false;
+            }
+
+            if (index < 0 || bytes.Offset + index + Sha1CharCount > bytes.Array.Length)
+            {
+                objectId = default;
+                return false;
+            }
+
             return TryParseAsciiHexBytes(
                 new ArraySegment<byte>(bytes.Array, bytes.Offset + index, Sha1CharCount),
                 out objectId);
