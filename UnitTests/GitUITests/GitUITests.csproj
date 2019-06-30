@@ -82,6 +82,8 @@
     <Compile Include="CommandsDialogs\RevisionDiffContextMenuControllerTests.cs" />
     <Compile Include="CommandsDialogs\RevisionFileTreeControllerTests.cs" />
     <Compile Include="CommandsDialogs\RevisionDiffControllerTests.cs" />
+    <Compile Include="CommandsDialogs\Settings\GitHubExternalLinkDefinitionExtractorTests.cs" />
+    <Compile Include="CommandsDialogs\Settings\AzureDevOpsExternalLinkDefinitionExtractorTests.cs" />
     <Compile Include="CommitInfo\CommitInfoTests.cs" />
     <Compile Include="ControlThreadingExtensionsTests.cs" />
     <Compile Include="UserEnvironmentInformationTests.cs" />

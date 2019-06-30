@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Git.hub;
 using GitCommands.Config;
+using GitCommands.Remotes;
 using GitHub3.Properties;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
@@ -204,15 +205,9 @@ namespace GitHub3
                         continue;
                     }
 
-                    var m = Regex.Match(url, @"git(?:@|://)github.com[:/]([^/]+)/([\w_\.\-]+)\.git");
-                    if (!m.Success)
+                    if (new GitHubRemoteParser().TryExtractGitHubDataFromRemoteUrl(url, out var owner, out var repository))
                     {
-                        m = Regex.Match(url, @"https?://(?:[^@:]+)?(?::[^/@:]+)?@?github.com/([^/]+)/([\w_\.\-]+)(?:.git)?");
-                    }
-
-                    if (m.Success)
-                    {
-                        var hostedRemote = new GitHubHostedRemote(remote, m.Groups[1].Value, m.Groups[2].Value.Replace(".git", ""), url);
+                        var hostedRemote = new GitHubHostedRemote(remote, owner, repository, url);
 
                         if (set.Add(hostedRemote))
                         {

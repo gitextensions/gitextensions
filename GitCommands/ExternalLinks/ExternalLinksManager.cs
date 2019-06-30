@@ -52,6 +52,23 @@ namespace GitCommands.ExternalLinks
         }
 
         /// <summary>
+        /// Adds the provided definitions at the lowest available level.
+        /// </summary>
+        /// <param name="definitions">External link definitions.</param>
+        public void AddRange(IEnumerable<ExternalLinkDefinition> definitions)
+        {
+            if (definitions == null)
+            {
+                throw new ArgumentNullException(nameof(definitions));
+            }
+
+            foreach (var externalLinkDefinition in definitions)
+            {
+                Add(externalLinkDefinition);
+            }
+        }
+
+        /// <summary>
         /// Checks if a definition with the supplied name exists in any level of available settings.
         /// </summary>
         /// <param name="definitionName">The name of the definition to find.</param>

@@ -122,6 +122,9 @@
     <Compile Include="IDiffListSortService.cs" />
     <Compile Include="Plink.cs" />
     <Compile Include="Remotes\ConfigFileRemoteSettingsManager.cs" />
+    <Compile Include="Remotes\AzureDevOpsRemoteParser.cs" />
+    <Compile Include="Remotes\GitHubRemoteParser.cs" />
+    <Compile Include="Remotes\RemoteParser.cs" />
     <Compile Include="Remotes\RepoNameExtractor.cs" />
     <Compile Include="Settings\AvatarProvider.cs" />
     <Compile Include="Settings\GravatarFallbackAvatarType.cs" />
