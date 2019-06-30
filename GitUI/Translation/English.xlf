@@ -1179,6 +1179,22 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Get remote branches directly from the remote</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkUseSSL.Text">
+        <source>Use SSL/TLS</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="groupBoxEmailSettings.Text">
+        <source>Email settings for sending patches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblSmtpServerName.Text">
+        <source>SMTP server name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblSmtpServerPort.Text">
+        <source>Port</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
         <source>Merge window</source>
         <target />
@@ -7145,16 +7161,8 @@ Context menu for additional operations</source>
         <source>Use patience diff algorithm</source>
         <target />
       </trans-unit>
-      <trans-unit id="chkUseSSL.Text">
-        <source>Use SSL/TLS</source>
-        <target />
-      </trans-unit>
       <trans-unit id="groupBoxBehaviour.Text">
         <source>Behaviour</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="groupBoxEmailSettings.Text">
-        <source>Email settings for sending patches</source>
         <target />
       </trans-unit>
       <trans-unit id="groupBoxPerformance.Text">
@@ -7171,14 +7179,6 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="lblQuickSearchTimeout.Text">
         <source>Revision grid quick search timeout [ms]</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="lblSmtpServerName.Text">
-        <source>SMTP server name</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="lblSmtpServerPort.Text">
-        <source>Port</source>
         <target />
       </trans-unit>
     </body>
