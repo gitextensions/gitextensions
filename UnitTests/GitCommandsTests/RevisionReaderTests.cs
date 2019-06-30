@@ -1,5 +1,13 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reactive.Subjects;
+using System.Text;
+using System.Threading;
+using CommonTestUtils;
+using FluentAssertions;
 using GitCommands;
+using GitUIPluginInterfaces;
 using NUnit.Framework;
 
 namespace GitCommandsTests
@@ -7,6 +15,8 @@ namespace GitCommandsTests
     [TestFixture]
     public sealed class RevisionReaderTests
     {
+        private GitModule _gitModule;
+        private MockExecutable _executable;
         private bool _showReflogReferences;
         private RevisionReader _revisionReader;
 
@@ -15,6 +25,10 @@ namespace GitCommandsTests
         {
             _showReflogReferences = AppSettings.ShowReflogReferences;
             _revisionReader = new RevisionReader();
+
+            _executable = new MockExecutable();
+
+            _gitModule = _executable.GetGitModule();
         }
 
         [TearDown]
@@ -84,6 +98,26 @@ namespace GitCommandsTests
             if (notExpectedToContain != null)
             {
                 args.ToString().Should().NotContain(notExpectedToContain);
+            }
+        }
+
+        [Test]
+        public void RunAndParseGitLogCommand_should_not_fail_with_ArgumentException()
+        {
+            var command = "-c log.showSignature=false log -z --pretty=format:\"%H%T%P%n%at%n%ct%n%e%n%aN%n%aE%n%cN%n%cE%n%s%n%n%b\" --reflog --all --boundary --not --glob=notes --not --max-count=100000 --full-history  --name-only --parents --find-renames --find-copies -- \"Support\\Build\\Build.ps1\" \"Support/Build/Build.ps1\" \"Support\"";
+            var path = Path.Combine(TestContext.CurrentContext.TestDirectory, @"TestData/xpand.log");
+            var output = File.ReadAllText(path);
+            var grefs = new List<IGitRef>().ToLookup(head => head.ObjectId);
+            var revisions = new Subject<GitRevision>();
+
+            var token = new CancellationToken();
+            using (_executable.StageOutput(command, output))
+            {
+                // throws
+                // System.AggregateException: One or more errors occurred.
+                // ---> System.ArgumentException: Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.
+
+                _revisionReader.GetTestAccessor().RunAndParseGitLogCommand(_gitModule, command, token, Encoding.UTF8, null, grefs, revisions);
             }
         }
     }

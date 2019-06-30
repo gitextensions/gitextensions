@@ -158,6 +158,9 @@
   <ItemGroup>
     <EmbeddedResource Include="UserRepositoryHistory\Legacy\MockData\CategorisedRepositories01.xml" />
     <EmbeddedResource Include="UserRepositoryHistory\Legacy\MockData\CategorisedRepositories02.xml" />
+    <None Include="TestData\xpand.log">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Deserialize_remote_repositories_without_ns.approved.txt" />
     <None Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Deserialize_remote_repositories_with_ns.approved.txt" />
     <None Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Serialize_recent_repositories.approved.xml" />

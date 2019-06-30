@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using GitUI;
 using GitUIPluginInterfaces;
@@ -85,8 +86,6 @@ namespace GitCommands
 
             var token = _cancellationTokenSequence.Next();
 
-            var revisionCount = 0;
-
             await TaskScheduler.Default;
 
             token.ThrowIfCancellationRequested();
@@ -104,13 +103,30 @@ namespace GitCommands
 
             var arguments = BuildArguments(refFilterOptions, branchFilter, revisionFilter, pathFilter);
 
+            // This property is relatively expensive to call for every revision, so
+            // cache it for the duration of the loop.
+            var logOutputEncoding = module.LogOutputEncoding;
+
+            RunAndParseGitLogCommand(module, arguments, token, module.LogOutputEncoding, revisionPredicate, refsByObjectId, subject);
+
+            if (!token.IsCancellationRequested)
+            {
+                subject.OnCompleted();
+            }
+        }
+
+        private void RunAndParseGitLogCommand(IGitModule module, ArgumentString arguments,
+            CancellationToken token,
+            Encoding logOutputEncoding,
+            Func<GitRevision, bool> revisionPredicate,
+            ILookup<ObjectId, IGitRef> refsByObjectId,
+            IObserver<GitRevision> subject)
+        {
 #if TRACE
             var sw = Stopwatch.StartNew();
 #endif
 
-            // This property is relatively expensive to call for every revision, so
-            // cache it for the duration of the loop.
-            var logOutputEncoding = module.LogOutputEncoding;
+            var revisionCount = 0;
 
             using (var process = module.GitCommandRunner.RunDetached(arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding))
             {
@@ -153,11 +169,6 @@ namespace GitCommands
 #if TRACE
                 Trace.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} poolCount={stringPool.Count}");
 #endif
-            }
-
-            if (!token.IsCancellationRequested)
-            {
-                subject.OnCompleted();
             }
         }
 
@@ -226,7 +237,7 @@ namespace GitCommands
 
         [ContractAnnotation("=>false,revision:null")]
         [ContractAnnotation("=>true,revision:notnull")]
-        private static bool TryParseRevision(GitModule module, ArraySegment<byte> chunk, StringPool stringPool, Encoding logOutputEncoding, out GitRevision revision)
+        private static bool TryParseRevision(IGitModule module, ArraySegment<byte> chunk, StringPool stringPool, Encoding logOutputEncoding, out GitRevision revision)
         {
             // The 'chunk' of data contains a complete git log item, encoded.
             // This method decodes that chunk and produces a revision object.
@@ -522,6 +533,10 @@ namespace GitCommands
             public ArgumentBuilder BuildArgumentsBuildArguments(RefFilterOptions refFilterOptions,
                 string branchFilter, string revisionFilter, string pathFilter) =>
                 _revisionReader.BuildArguments(refFilterOptions, branchFilter, revisionFilter, pathFilter);
+
+            public void RunAndParseGitLogCommand(IGitModule module, ArgumentString arguments, CancellationToken token, Encoding logOutputEncoding,
+                Func<GitRevision, bool> revisionPredicate, ILookup<ObjectId, IGitRef> refsByObjectId, IObserver<GitRevision> subject) =>
+                _revisionReader.RunAndParseGitLogCommand(module, arguments, token, logOutputEncoding, revisionPredicate, refsByObjectId, subject);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using CommonTestUtils;
 using FluentAssertions;
@@ -29,7 +28,7 @@ namespace GitCommandsTests
         {
             _executable = new MockExecutable();
 
-            _gitModule = GetGitModuleWithExecutable(executable: _executable);
+            _gitModule = _executable.GetGitModule();
         }
 
         [TearDown]
@@ -704,24 +703,6 @@ namespace GitCommandsTests
 
             _executable.StageOutput(arguments.ToString(), dummyCommandOutput);
             _gitModule.FormatPatch(from, to, outputFile, start).Should().Be(dummyCommandOutput);
-        }
-
-        /// <summary>
-        /// Create a GitModule with mockable GitExecutable
-        /// </summary>
-        /// <param name="path">Path to the module</param>
-        /// <param name="executable">The mock executable</param>
-        /// <returns>The GitModule</returns>
-        private GitModule GetGitModuleWithExecutable(IExecutable executable, string path = "")
-        {
-            var module = new GitModule(path);
-            typeof(GitModule).GetField("_gitExecutable", BindingFlags.Instance | BindingFlags.NonPublic)
-                .SetValue(module, executable);
-            var cmdRunner = new GitCommandRunner(executable, () => GitModule.SystemEncoding);
-            typeof(GitModule).GetField("_gitCommandRunner", BindingFlags.Instance | BindingFlags.NonPublic)
-                .SetValue(module, cmdRunner);
-
-            return module;
         }
     }
 }

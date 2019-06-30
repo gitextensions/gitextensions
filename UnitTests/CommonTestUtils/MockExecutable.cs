@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -116,6 +117,23 @@ namespace CommonTestUtils
             }
 
             throw new Exception("Unexpected arguments: " + arguments);
+        }
+
+        /// <summary>
+        /// Create a GitModule with mockable GitExecutable
+        /// </summary>
+        /// <param name="path">Path to the module</param>
+        /// <returns>The GitModule</returns>
+        public GitModule GetGitModule(string path = "")
+        {
+            var module = new GitModule(path);
+            typeof(GitModule).GetField("_gitExecutable", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(module, this);
+            var cmdRunner = new GitCommandRunner(this, () => GitModule.SystemEncoding);
+            typeof(GitModule).GetField("_gitCommandRunner", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(module, cmdRunner);
+
+            return module;
         }
 
         private sealed class MockProcess : IProcess

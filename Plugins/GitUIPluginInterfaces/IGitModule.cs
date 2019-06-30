@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 
@@ -126,6 +127,8 @@ namespace GitUIPluginInterfaces
 
         [NotNull]
         ISettingsSource GetEffectiveSettings();
+
+        Encoding GetEncodingByGitName(string encodingName);
 
         string ReEncodeStringFromLossless(string s);
 
