@@ -258,6 +258,27 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
+        public void TryParseAsciiHexBytes_returns_false_when_array_null()
+        {
+            Assert.False(ObjectId.TryParseAsciiHexBytes(default, out ObjectId objectId));
+            Assert.Null(objectId);
+            Assert.False(ObjectId.TryParseAsciiHexBytes(default(ArraySegment<byte>), 0, out objectId));
+            Assert.Null(objectId);
+        }
+
+        [Test]
+        public void TryParseAsciiHexBytes_returns_false_when_bounds_check_fails()
+        {
+            var bytes = new byte[ObjectId.Sha1CharCount];
+            var segment = new ArraySegment<byte>(bytes);
+
+            Assert.False(ObjectId.TryParseAsciiHexBytes(segment, -1, out ObjectId objectId));
+            Assert.Null(objectId);
+            Assert.False(ObjectId.TryParseAsciiHexBytes(segment, 1, out objectId));
+            Assert.Null(objectId);
+        }
+
+        [Test]
         [SuppressMessage("ReSharper", "ReturnValueOfPureMethodIsNotUsed")]
         public void ToShortString()
         {
