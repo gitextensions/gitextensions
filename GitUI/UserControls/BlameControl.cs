@@ -415,6 +415,16 @@ namespace GitUI.Blame
         private void contextMenu_Opened(object sender, EventArgs e)
         {
             contextMenu.Tag = GetBlameLine();
+
+            if (_revGrid == null || !TryGetSelectedRevision(out var selectedRevision))
+            {
+                blameRevisionToolStripMenuItem.Enabled = false;
+                blamePreviousRevisionToolStripMenuItem.Enabled = false;
+                return;
+            }
+
+            blameRevisionToolStripMenuItem.Enabled = true;
+            blamePreviousRevisionToolStripMenuItem.Enabled = selectedRevision.HasParent;
         }
 
         [CanBeNull]
@@ -482,16 +492,12 @@ namespace GitUI.Blame
 
         private void blamePreviousRevisionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!TryGetSelectedRevision(out var selectedRevision))
+            if (!TryGetSelectedRevision(out var selectedRevision) || !selectedRevision.HasParent)
             {
                 return;
             }
 
-            var blameRevision = selectedRevision.HasParent
-                ? selectedRevision.FirstParentGuid
-                : selectedRevision.ObjectId;
-
-            BlameRevision(blameRevision);
+            BlameRevision(selectedRevision.FirstParentGuid);
         }
 
         private void BlameRevision(ObjectId revisionId)
