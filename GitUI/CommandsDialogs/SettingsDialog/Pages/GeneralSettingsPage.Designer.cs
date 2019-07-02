@@ -54,6 +54,10 @@
             this.chkStashUntrackedFiles = new System.Windows.Forms.CheckBox();
             this.chkStartWithRecentWorkingDir = new System.Windows.Forms.CheckBox();
             this.chkFollowRenamesInFileHistory = new System.Windows.Forms.CheckBox();
+            this.groupBoxTelemetry = new System.Windows.Forms.GroupBox();
+            this.tlpnlTelemetry = new System.Windows.Forms.TableLayoutPanel();
+            this.chkTelemetry = new System.Windows.Forms.CheckBox();
+            this.llblTelemetryPrivacyLink = new System.Windows.Forms.LinkLabel();
             tlpnlMain = new System.Windows.Forms.TableLayoutPanel();
             tlpnlMain.SuspendLayout();
             this.groupBoxPerformance.SuspendLayout();
@@ -62,6 +66,8 @@
             this.groupBoxBehaviour.SuspendLayout();
             this.tlpnlBehaviour.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RevisionGridQuickSearchTimeout)).BeginInit();
+            this.groupBoxTelemetry.SuspendLayout();
+            this.tlpnlTelemetry.SuspendLayout();
             this.SuspendLayout();
             // 
             // tlpnlMain
@@ -70,7 +76,7 @@
             tlpnlMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             tlpnlMain.ColumnCount = 1;
             tlpnlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            tlpnlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 10F));
+            tlpnlMain.Controls.Add(this.groupBoxTelemetry, 0, 2);
             tlpnlMain.Controls.Add(this.groupBoxPerformance, 0, 0);
             tlpnlMain.Controls.Add(this.groupBoxBehaviour, 0, 1);
             tlpnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -445,6 +451,59 @@
             this.chkFollowRenamesInFileHistory.Text = "Follow renames in file history (experimental)";
             this.chkFollowRenamesInFileHistory.UseVisualStyleBackColor = true;
             // 
+            // groupBoxTelemetry
+            // 
+            this.groupBoxTelemetry.AutoSize = true;
+            this.groupBoxTelemetry.Controls.Add(this.tlpnlTelemetry);
+            this.groupBoxTelemetry.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxTelemetry.Location = new System.Drawing.Point(3, 476);
+            this.groupBoxTelemetry.Name = "groupBoxTelemetry";
+            this.groupBoxTelemetry.Padding = new System.Windows.Forms.Padding(8);
+            this.groupBoxTelemetry.Size = new System.Drawing.Size(1318, 52);
+            this.groupBoxTelemetry.TabIndex = 3;
+            this.groupBoxTelemetry.TabStop = false;
+            this.groupBoxTelemetry.Text = "Telemetry";
+            // 
+            // tlpnlTelemetry
+            // 
+            this.tlpnlTelemetry.AutoSize = true;
+            this.tlpnlTelemetry.ColumnCount = 2;
+            this.tlpnlTelemetry.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpnlTelemetry.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpnlTelemetry.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpnlTelemetry.Controls.Add(this.chkTelemetry, 0, 0);
+            this.tlpnlTelemetry.Controls.Add(this.llblTelemetryPrivacyLink, 1, 0);
+            this.tlpnlTelemetry.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tlpnlTelemetry.Location = new System.Drawing.Point(8, 21);
+            this.tlpnlTelemetry.Name = "tlpnlTelemetry";
+            this.tlpnlTelemetry.RowCount = 1;
+            this.tlpnlTelemetry.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlTelemetry.Size = new System.Drawing.Size(1302, 23);
+            this.tlpnlTelemetry.TabIndex = 0;
+            // 
+            // chkTelemetry
+            // 
+            this.chkTelemetry.AutoSize = true;
+            this.chkTelemetry.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chkTelemetry.Location = new System.Drawing.Point(3, 3);
+            this.chkTelemetry.Name = "chkTelemetry";
+            this.chkTelemetry.Size = new System.Drawing.Size(128, 17);
+            this.chkTelemetry.TabIndex = 0;
+            this.chkTelemetry.Text = "Yes, I allow telemetry!";
+            this.chkTelemetry.UseVisualStyleBackColor = true;
+            // 
+            // llblTelemetryPrivacyLink
+            // 
+            this.llblTelemetryPrivacyLink.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.llblTelemetryPrivacyLink.Location = new System.Drawing.Point(137, 0);
+            this.llblTelemetryPrivacyLink.Name = "llblTelemetryPrivacyLink";
+            this.llblTelemetryPrivacyLink.Size = new System.Drawing.Size(1162, 23);
+            this.llblTelemetryPrivacyLink.TabIndex = 1;
+            this.llblTelemetryPrivacyLink.TabStop = true;
+            this.llblTelemetryPrivacyLink.Text = "Why and what is captured?";
+            this.llblTelemetryPrivacyLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.llblTelemetryPrivacyLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LlblTelemetryPrivacyLink_LinkClicked);
+            // 
             // GeneralSettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -466,6 +525,10 @@
             this.tlpnlBehaviour.ResumeLayout(false);
             this.tlpnlBehaviour.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RevisionGridQuickSearchTimeout)).EndInit();
+            this.groupBoxTelemetry.ResumeLayout(false);
+            this.groupBoxTelemetry.PerformLayout();
+            this.tlpnlTelemetry.ResumeLayout(false);
+            this.tlpnlTelemetry.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -498,5 +561,9 @@
         private System.Windows.Forms.TableLayoutPanel tlpnlBehaviour;
         private System.Windows.Forms.CheckBox chkFollowRenamesInFileHistoryExact;
         private System.Windows.Forms.CheckBox chkShowAheadBehindDataInBrowseWindow;
+        private System.Windows.Forms.GroupBox groupBoxTelemetry;
+        private System.Windows.Forms.TableLayoutPanel tlpnlTelemetry;
+        private System.Windows.Forms.CheckBox chkTelemetry;
+        private System.Windows.Forms.LinkLabel llblTelemetryPrivacyLink;
     }
 }

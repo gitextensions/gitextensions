@@ -148,6 +148,12 @@
       <Component Id="Microsoft.VisualStudio.Validation.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.VisualStudio.Validation.dll" />
       </Component>
+      <Component Id="AppInsights.WindowsDesktop.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\AppInsights.WindowsDesktop.dll" />
+      </Component>
+      <Component Id="Microsoft.ApplicationInsights.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.ApplicationInsights.dll" />
+      </Component>
       <Component Id="Microsoft.WindowsAPICodePack.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.WindowsAPICodePack.dll" />
       </Component>
@@ -1513,6 +1519,8 @@
       <ComponentRef Id="GitUI.dll" />
       <ComponentRef Id="ConEmu.WinForms.dll" />
       <ComponentRef Id="PSTaskDialog.dll" />
+      <ComponentRef Id="AppInsights.WindowsDesktop.dll" />
+      <ComponentRef Id="Microsoft.ApplicationInsights.dll" />
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll" />
       <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll" />
       <ComponentRef Id="System.IO.Abstractions.dll" />
