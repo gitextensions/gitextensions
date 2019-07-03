@@ -3248,6 +3248,10 @@ Git will never check if the file has changed that will improve status check perf
         <source>Commit Message is requested during commit</source>
         <target />
       </trans-unit>
+      <trans-unit id="_commitMessageSettings.Text">
+        <source>Edit commit message templates and settings...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_commitMsgFirstLineInvalid.Text">
         <source>First line of commit message contains too many characters.
 Do you want to continue?</source>
@@ -3269,10 +3273,6 @@ Do you want to continue?</source>
       <trans-unit id="_commitMsgSecondLineNotEmpty.Text">
         <source>Second line of commit message is not empty.
 Do you want to continue?</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_commitTemplateSettings.Text">
-        <source>Settings</source>
         <target />
       </trans-unit>
       <trans-unit id="_commitValidationCaption.Text">
@@ -3753,7 +3753,7 @@ You can unset the template:
   <file datatype="plaintext" original="FormCommitTemplateSettings" source-language="en">
     <body>
       <trans-unit id="$this.Text">
-        <source>Commit template settings</source>
+        <source>Commit message settings</source>
         <target />
       </trans-unit>
       <trans-unit id="_emptyTemplate.Text">
@@ -3766,14 +3766,6 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="buttonOk.Text">
         <source>OK</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="groupBoxCommitTemplates.Text">
-        <source>Commit templates</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="groupBoxCommitValidation.Text">
-        <source>Commit validation</source>
         <target />
       </trans-unit>
       <trans-unit id="labelAutoWrap.Text">
@@ -3806,6 +3798,14 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="labelUseIndent.Text">
         <source>Indent lines after first line:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tabPage1.Text">
+        <source>Commit templates</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tabPage2.Text">
+        <source>Commit validation</source>
         <target />
       </trans-unit>
     </body>

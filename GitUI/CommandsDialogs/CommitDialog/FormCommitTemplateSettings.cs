@@ -12,7 +12,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
         private CommitTemplateItem[] _commitTemplates;
 
         private const int _maxCommitTemplates = 5;
-        private const int _maxShownCharsForName = 15;
+        private const int _maxShownCharsForName = 50;
         private const int _maxUsedCharsForName = 80;
 
         public FormCommitTemplateSettings()
@@ -109,7 +109,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
                 comboBoxText = "<" + _emptyTemplate.Text + ">";
             }
 
-            _NO_TRANSLATE_comboBoxCommitTemplates.Items[line] = string.Format("{0} : {1}", line + 1, comboBoxText);
+            _NO_TRANSLATE_comboBoxCommitTemplates.Items[line] = $"{line + 1} : {comboBoxText}";
         }
     }
 }
