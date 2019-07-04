@@ -88,8 +88,8 @@ namespace GitExtensions
 
             if (!AppSettings.TelemetryEnabled.HasValue)
             {
-                AppSettings.TelemetryEnabled = MessageBox.Show(null, Strings.TelemetryPersmissionMessage,
-                                                               Strings.TelemetryPersmissionCaption, MessageBoxButtons.YesNo,
+                AppSettings.TelemetryEnabled = MessageBox.Show(null, Strings.TelemetryPermissionMessage,
+                                                               Strings.TelemetryPermissionCaption, MessageBoxButtons.YesNo,
                                                                MessageBoxIcon.Question) == DialogResult.Yes;
             }
 

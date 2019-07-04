@@ -9247,11 +9247,11 @@ Select this commit to populate the full message.</source>
         <source>Tags</source>
         <target />
       </trans-unit>
-      <trans-unit id="_telemetryPersmissionCaption.Text">
+      <trans-unit id="_telemetryPermissionCaption.Text">
         <source>Allow Capture Telemetry?</source>
         <target />
       </trans-unit>
-      <trans-unit id="_telemetryPersmissionMessage.Text">
+      <trans-unit id="_telemetryPermissionMessage.Text">
         <source>We collect information so we can make the app better.
 
 We won't collect any personal or identifiable information.

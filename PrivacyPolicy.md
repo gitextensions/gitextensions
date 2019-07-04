@@ -5,7 +5,9 @@ You can opt-out any time.
 
 First, a reminder: Git Extensions is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement.
 
-With that out of the way, here's a breakdown of all the information we may collect via Application Insights.
+For telemetry we employ [Microsoft Application Insights](https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview). The information is collected on rolling basis, and is stored for a limited amount of time.
+Here's a breakdown of all the information we may collect via the Application Insights.
+
 
 ### Application-Level
 Includes:
