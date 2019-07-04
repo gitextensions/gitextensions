@@ -25,10 +25,10 @@ namespace GitUITests.Script
         {
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 argument: "{openUrl} https://gitlab.com{cDefaultRemotePathFromUrl}/tree/{sBranch}", option: "cDefaultRemotePathFromUrl",
-                owner: null, revisionGrid: null, module: null, allSelectedRevisions: null, selectedTags: null,
+                null, module: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
-                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
+                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null, null);
 
             result.Should().Be("{openUrl} https://gitlab.com/tree/{sBranch}");
         }
@@ -41,10 +41,10 @@ namespace GitUITests.Script
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 argument: "{openUrl} https://gitlab.com{cDefaultRemotePathFromUrl}/tree/{sBranch}", option: "cDefaultRemotePathFromUrl",
-                owner: null, revisionGrid: null, _module, allSelectedRevisions: null, selectedTags: null,
+                null, _module, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
-                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote);
+                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote, null);
 
             result.Should().Be("{openUrl} https://gitlab.com/gitlabhq/gitlabhq/tree/{sBranch}");
         }
@@ -56,10 +56,10 @@ namespace GitUITests.Script
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 argument: "{openUrl} https://gitlab.com{sRemotePathFromUrl}/tree/{sBranch}", option: "sRemotePathFromUrl",
-                owner: null, revisionGrid: null, module: null, allSelectedRevisions: null, selectedTags: null,
+                null, module: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, noSelectedRemotes, selectedRevision: null,
                 currentTags: null,
-                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
+                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null, null);
 
             result.Should().Be("{openUrl} https://gitlab.com/tree/{sBranch}");
         }
@@ -73,10 +73,10 @@ namespace GitUITests.Script
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 argument: "{openUrl} https://gitlab.com{sRemotePathFromUrl}/tree/{sBranch}", option: "sRemotePathFromUrl",
-                owner: null, revisionGrid: null, _module, allSelectedRevisions: null, selectedTags: null,
+                null, _module, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes, selectedRevision: null,
                 currentTags: null,
-                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
+                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null, null);
 
             result.Should().Be("{openUrl} https://gitlab.com/gitlabhq/gitlabhq/tree/{sBranch}");
         }
@@ -92,10 +92,10 @@ namespace GitUITests.Script
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 argument: "{" + option + "}", option,
-                owner: null, revisionGrid: null, module: null, allSelectedRevisions: null, selectedTags: null,
+                null, module: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: remoteBranches, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
-                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
+                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null, null);
 
             result.Should().Be(branch);
         }
@@ -111,10 +111,10 @@ namespace GitUITests.Script
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 argument: "{" + option + "}", option,
-                owner: null, revisionGrid: null, module: null, allSelectedRevisions: null, selectedTags: null,
+                null, module: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: remoteBranches, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
-                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
+                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null, null);
 
             result.Should().Be(branchName);
         }
@@ -130,10 +130,10 @@ namespace GitUITests.Script
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 argument: "{" + option + "}", option,
-                owner: null, revisionGrid: null, module: null, allSelectedRevisions: null, selectedTags: null,
+                null, module: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
-                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: remoteBranches, currentRevision: null, currentRemote: null);
+                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: remoteBranches, currentRevision: null, currentRemote: null, null);
 
             result.Should().Be(branch);
         }
@@ -149,10 +149,10 @@ namespace GitUITests.Script
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 argument: "{" + option + "}", option,
-                owner: null, revisionGrid: null, module: null, allSelectedRevisions: null, selectedTags: null,
+                null, module: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
-                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: remoteBranches, currentRevision: null, currentRemote: null);
+                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: remoteBranches, currentRevision: null, currentRemote: null, null);
 
             result.Should().Be(branchName);
         }
@@ -164,10 +164,10 @@ namespace GitUITests.Script
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 argument: "{" + option + "}", option,
-                owner: null, revisionGrid: null, module: null, allSelectedRevisions: null, selectedTags: null,
+                null, module: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
-                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
+                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null, null);
 
             result.Should().Be(string.Empty);
         }
@@ -181,10 +181,10 @@ namespace GitUITests.Script
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 argument: "{" + option + "}", option,
-                owner: null, revisionGrid: null, _module, allSelectedRevisions: null, selectedTags: null,
+                null, _module, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
-                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
+                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null, null);
 
             result.Should().Be(dirName);
         }

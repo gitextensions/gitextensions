@@ -9,6 +9,7 @@ namespace GitUI.Script
         public const string SBranch = "sBranch";
         public const string SLocalBranch = "sLocalBranch";
         public const string SRemoteBranch = "sRemoteBranch";
+        public const string SRemoteBranchName = "sRemoteBranchName";
         public const string SRemote = "sRemote";
         public const string SRemoteUrl = "sRemoteUrl";
         public const string SRemotePathFromUrl = "sRemotePathFromUrl";
@@ -22,6 +23,7 @@ namespace GitUI.Script
         public const string CBranch = "cBranch";
         public const string CLocalBranch = "cLocalBranch";
         public const string CRemoteBranch = "cRemoteBranch";
+        public const string CRemoteBranchName = "cRemoteBranchName";
         public const string CHash = "cHash";
         public const string CMessage = "cMessage";
         public const string CAuthor = "cAuthor";
@@ -31,6 +33,7 @@ namespace GitUI.Script
         public const string CDefaultRemote = "cDefaultRemote";
         public const string CDefaultRemoteUrl = "cDefaultRemoteUrl";
         public const string CDefaultRemotePathFromUrl = "cDefaultRemotePathFromUrl";
+        public const string RepoName = "RepoName";
         public const string UserInput = "UserInput";
         public const string UserFiles = "UserFiles";
         public const string WorkingDir = "WorkingDir";
@@ -42,6 +45,7 @@ namespace GitUI.Script
             SBranch,
             SLocalBranch,
             SRemoteBranch,
+            SRemoteBranchName,
             SRemote,
             SRemoteUrl,
             SRemotePathFromUrl,
@@ -55,6 +59,7 @@ namespace GitUI.Script
             CBranch,
             CLocalBranch,
             CRemoteBranch,
+            CRemoteBranchName,
             CHash,
             CMessage,
             CAuthor,
@@ -64,6 +69,7 @@ namespace GitUI.Script
             CDefaultRemote,
             CDefaultRemoteUrl,
             CDefaultRemotePathFromUrl,
+            RepoName,
             UserInput,
             UserFiles,
             WorkingDir

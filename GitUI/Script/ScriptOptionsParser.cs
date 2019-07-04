@@ -6,9 +6,9 @@ using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitCommands.UserRepositoryHistory;
 using GitUI.Browsing;
 using GitUI.Browsing.Dialogs;
-using GitCommands.UserRepositoryHistory;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -472,27 +472,27 @@ namespace GitUI.Script
 
             return argument;
 
-            string SelectOneRef(IList<IGitRef> refs) => ScriptOptionsParser.SelectOne(refs, revisionGrid);
-            string SelectOneString(IList<string> strings) => ScriptOptionsParser.SelectOne(strings, revisionGrid);
+            string SelectOneRef(IList<IGitRef> refs) => ScriptOptionsParser.SelectOne(refs, canGetQuickItemSelectorLocation);
+            string SelectOneString(IList<string> strings) => ScriptOptionsParser.SelectOne(strings, canGetQuickItemSelectorLocation);
         }
 
-        private static string SelectOne(IList<IGitRef> refs, RevisionGridControl revisionGrid)
+        private static string SelectOne(IList<IGitRef> refs, ICanGetQuickItemSelectorLocation canGetQuickItemSelectorLocation)
         {
             switch (refs.Count)
             {
                 case 0: return string.Empty;
                 case 1: return refs[0].Name;
-                default: return AskToSpecify(refs, revisionGrid);
+                default: return AskToSpecify(refs, canGetQuickItemSelectorLocation);
             }
         }
 
-        private static string SelectOne(IList<string> strings, RevisionGridControl revisionGrid)
+        private static string SelectOne(IList<string> strings, ICanGetQuickItemSelectorLocation canGetQuickItemSelectorLocation)
         {
             switch (strings.Count)
             {
                 case 0: return string.Empty;
                 case 1: return strings[0];
-                default: return AskToSpecify(strings, revisionGrid);
+                default: return AskToSpecify(strings, canGetQuickItemSelectorLocation);
             }
         }
 
