@@ -7996,6 +7996,10 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>&amp;Update</source>
         <target />
       </trans-unit>
+      <trans-unit id="runScriptToolStripMenuItem.Text">
+        <source>Run script</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiShowBranches.Text">
         <source>&amp;Branches</source>
         <target />
