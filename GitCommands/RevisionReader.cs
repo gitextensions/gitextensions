@@ -28,6 +28,7 @@ namespace GitCommands
 
     public sealed class RevisionReader : IDisposable
     {
+        private const string EndOfBody = "1DEA7CC4-FB39-450A-8DDF-762FCEA28B05";
         private const string FullFormat =
 
               // These header entries can all be decoded from the bytes directly.
@@ -47,7 +48,7 @@ namespace GitCommands
               /* Committer name  */ "%cN%n" +
               /* Committer email */ "%cE%n" +
               /* Commit subject  */ "%s%n%n" +
-              /* Commit body     */ "%b";
+              /* Commit body     */ "%b" + EndOfBody;
 
         private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
 
@@ -380,7 +381,7 @@ namespace GitCommands
 
             #endregion
 
-            #region Encoded string values (names, emails, subject, body)
+            #region Encoded string values (names, emails, subject, body, name)
 
             // Finally, decode the names, email, subject and body strings using the required text encoding
             var s = encoding.GetString(array, offset, lastOffset - offset);
@@ -415,6 +416,17 @@ namespace GitCommands
                 return false;
             }
 
+            var indexOfEndOfBody = body.LastIndexOf(EndOfBody, StringComparison.InvariantCulture);
+
+            string additionalData = null;
+            var bodyContainsAdditionalData = body.Length > indexOfEndOfBody + EndOfBody.Length;
+            if (bodyContainsAdditionalData)
+            {
+                additionalData = body.Substring(indexOfEndOfBody + EndOfBody.Length).TrimStart();
+            }
+
+            body = body.Substring(0, indexOfEndOfBody);
+
             #endregion
 
             revision = new GitRevision(objectId)
@@ -430,6 +442,7 @@ namespace GitCommands
                 MessageEncoding = encodingName,
                 Subject = subject,
                 Body = body,
+                Name = additionalData,
                 HasMultiLineMessage = !ReferenceEquals(subject, body),
                 HasNotes = false
             };
