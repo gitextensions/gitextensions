@@ -48,6 +48,7 @@
     -->
     <Compile Include="Product.wxs" />
     <Compile Include="UI\CancelDlg.wxs" />
+    <Compile Include="UI\TelemetryDlg.wxs" />
     <Compile Include="UI\CustomizeDlg.wxs" />
     <Compile Include="UI\ErrorDlg.wxs" />
     <Compile Include="UI\ExitDialog.wxs" />
@@ -83,6 +84,10 @@
       <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
       <Name>WixUIExtension</Name>
     </WixExtension>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
+    </WixExtension>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="UI" />
@@ -95,8 +100,7 @@
     <Error Condition="!Exists('..\packages\WiX.3.11.0\build\wix.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WiX.3.11.0\build\wix.props'))" />
   </Target>
   <Target Name="BeforeBuild">
-    <Exec Command="
-	call BuildGitExtNative.cmd $(Configuration) build">
+    <Exec Command="&#xD;&#xA;	call BuildGitExtNative.cmd $(Configuration) build">
     </Exec>
   </Target>
   <!--

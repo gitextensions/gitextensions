@@ -18,6 +18,15 @@ namespace ResourceManager
         private readonly TranslationString _yearsAgo = new TranslationString("{0} {1:year|years} ago");
         private readonly TranslationString _dateText = new TranslationString("Date");
         private readonly TranslationString _authorText = new TranslationString("{0:Author|Authors}");
+
+        private readonly TranslationString _telemetryPermissionCaption = new TranslationString("Allow Capture Telemetry?");
+        private readonly TranslationString _telemetryPermissionMessage = new TranslationString(@"We collect information so we can make the app better.
+
+We won't collect any personal or identifiable information.
+You can change your mind at any time.
+
+Yes, I allow telemetry!");
+
         private readonly TranslationString _installGitInstructions = new TranslationString("Install git...");
         private readonly TranslationString _findGitExecutable = new TranslationString("Find git...");
         private readonly TranslationString _gitExecutableNotFoundText =
@@ -52,6 +61,9 @@ namespace ResourceManager
         public static string FindGitExecutable => _instance.Value._findGitExecutable.Text;
         public static string InstallGitInstructions => _instance.Value._installGitInstructions.Text;
         public static string GitExecutableNotFound => _instance.Value._gitExecutableNotFoundText.Text;
+
+        public static string TelemetryPermissionCaption => _instance.Value._telemetryPermissionCaption.Text;
+        public static string TelemetryPermissionMessage => _instance.Value._telemetryPermissionMessage.Text;
 
         public static string Date => _instance.Value._dateText.Text;
         public static string Author => GetAuthor(1);

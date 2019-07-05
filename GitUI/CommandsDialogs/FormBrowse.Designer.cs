@@ -23,6 +23,7 @@ namespace GitUI.CommandsDialogs
             System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
             System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
             System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
+            System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
             this.ToolStrip = new GitUI.ToolStripEx();
             this.RefreshButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator0 = new System.Windows.Forms.ToolStripSeparator();
@@ -181,6 +182,7 @@ namespace GitUI.CommandsDialogs
             this.reportAnIssueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiTelemetryEnabled = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitcommandLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
@@ -193,6 +195,7 @@ namespace GitUI.CommandsDialogs
             toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainSplitContainer)).BeginInit();
             this.MainSplitContainer.Panel1.SuspendLayout();
@@ -235,6 +238,11 @@ namespace GitUI.CommandsDialogs
             // 
             toolStripSeparator14.Name = "toolStripSeparator14";
             toolStripSeparator14.Size = new System.Drawing.Size(236, 6);
+            // 
+            // toolStripMenuItem3
+            // 
+            toolStripMenuItem3.Name = "toolStripMenuItem3";
+            toolStripMenuItem3.Size = new System.Drawing.Size(275, 6);
             // 
             // ToolStrip
             // 
@@ -1589,10 +1597,13 @@ namespace GitUI.CommandsDialogs
             this.donateToolStripMenuItem,
             this.reportAnIssueToolStripMenuItem,
             this.checkForUpdatesToolStripMenuItem,
-            this.aboutToolStripMenuItem});
+            this.aboutToolStripMenuItem,
+            toolStripMenuItem3,
+            this.tsmiTelemetryEnabled});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "&Help";
+            this.helpToolStripMenuItem.DropDownOpening += new System.EventHandler(this.HelpToolStripMenuItem_DropDownOpening);
             // 
             // userManualToolStripMenuItem
             // 
@@ -1659,6 +1670,15 @@ namespace GitUI.CommandsDialogs
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemClick);
+            // 
+            // tsmiTelemetryEnabled
+            // 
+            this.tsmiTelemetryEnabled.Checked = true;
+            this.tsmiTelemetryEnabled.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.tsmiTelemetryEnabled.Name = "tsmiTelemetryEnabled";
+            this.tsmiTelemetryEnabled.Size = new System.Drawing.Size(278, 34);
+            this.tsmiTelemetryEnabled.Text = "Yes, I allow telemetry";
+            this.tsmiTelemetryEnabled.Click += new System.EventHandler(this.TsmiTelemetryEnabled_Click);
             // 
             // toolsToolStripMenuItem
             // 
@@ -1785,7 +1805,7 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        private SplitContainer MainSplitContainer;
+        internal SplitContainer MainSplitContainer;
         private SplitContainer RightSplitContainer;
         private SplitContainer RevisionsSplitContainer;
 
@@ -1954,5 +1974,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem commitInfoBelowMenuItem;
         private ToolStripMenuItem commitInfoLeftwardMenuItem;
         private ToolStripMenuItem commitInfoRightwardMenuItem;
+        private ToolStripMenuItem tsmiTelemetryEnabled;
     }
 }
