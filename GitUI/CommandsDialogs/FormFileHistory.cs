@@ -210,9 +210,9 @@ namespace GitUI.CommandsDialogs
                 // we will need this later to look up proper casing for the file
                 var fullFilePath = _fullPathResolver.Resolve(fileName);
 
-                if (_controller.TryGetExactPath(fullFilePath, out fileName))
+                if (_controller.TryGetExactPath(fullFilePath, out var exactFileName))
                 {
-                    fileName = fileName.Substring(Module.WorkingDir.Length);
+                    fileName = exactFileName.Substring(Module.WorkingDir.Length);
                 }
 
                 // Replace windows path separator to Linux path separator.
