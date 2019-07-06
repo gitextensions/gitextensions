@@ -1878,6 +1878,9 @@
     <None Include="Resources\bug.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Icons\Blame.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\Icons\FileStatusAdded.png" />
   </ItemGroup>
   <ItemGroup>

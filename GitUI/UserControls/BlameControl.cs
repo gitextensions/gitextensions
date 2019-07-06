@@ -415,6 +415,16 @@ namespace GitUI.Blame
         private void contextMenu_Opened(object sender, EventArgs e)
         {
             contextMenu.Tag = GetBlameLine();
+
+            if (_revGrid == null || !TryGetSelectedRevision(out var selectedRevision))
+            {
+                blameRevisionToolStripMenuItem.Enabled = false;
+                blamePreviousRevisionToolStripMenuItem.Enabled = false;
+                return;
+            }
+
+            blameRevisionToolStripMenuItem.Enabled = true;
+            blamePreviousRevisionToolStripMenuItem.Enabled = selectedRevision.HasParent;
         }
 
         [CanBeNull]
@@ -457,32 +467,50 @@ namespace GitUI.Blame
             CopyToClipboard(c => c.ObjectId.ToString());
         }
 
-        private void blamePreviousRevisionToolStripMenuItem_Click(object sender, EventArgs e)
+        private bool TryGetSelectedRevision(out GitRevision selectedRevision)
         {
-            int line = (int?)contextMenu.Tag ?? -1;
-            if (line < 0)
+            var blameCommit = GetBlameCommit();
+            if (blameCommit == null)
+            {
+                selectedRevision = null;
+                return false;
+            }
+
+            selectedRevision = _revGrid?.GetRevision(blameCommit.ObjectId);
+            return selectedRevision != null;
+        }
+
+        private void blameRevisionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!TryGetSelectedRevision(out var selectedRevision))
             {
                 return;
             }
 
-            var objectId = _blame.Lines[line].Commit.ObjectId;
-            int originalLine = _blame.Lines[line].OriginLineNumber;
-            GitBlame blame = Module.Blame(_fileName, objectId + "^", _encoding, originalLine + ",+1");
-            if (blame.Lines.Count > 0)
+            BlameRevision(selectedRevision.ObjectId);
+        }
+
+        private void blamePreviousRevisionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!TryGetSelectedRevision(out var selectedRevision) || !selectedRevision.HasParent)
             {
-                var revision = blame.Lines[0].Commit.ObjectId;
-                if (_revGrid != null)
-                {
-                    _clickedBlameLine = blame.Lines[0];
-                    _revGrid.SetSelectedRevision(revision);
-                }
-                else
-                {
-                    using (var frm = new FormCommitDiff(UICommands, revision))
-                    {
-                        frm.ShowDialog(this);
-                    }
-                }
+                return;
+            }
+
+            BlameRevision(selectedRevision.FirstParentGuid);
+        }
+
+        private void BlameRevision(ObjectId revisionId)
+        {
+            if (_revGrid != null)
+            {
+                _revGrid.SetSelectedRevision(revisionId);
+                return;
+            }
+
+            using (var frm = new FormCommitDiff(UICommands, revisionId))
+            {
+                frm.ShowDialog(this);
             }
         }
 

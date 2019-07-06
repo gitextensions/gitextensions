@@ -248,6 +248,10 @@ See http://en.gravatar.com/site/implement/images#default-image for more details.
         <source>Blame previous revision</source>
         <target />
       </trans-unit>
+      <trans-unit id="blameRevisionToolStripMenuItem.Text">
+        <source>Blame this revision</source>
+        <target />
+      </trans-unit>
       <trans-unit id="commitHashToolStripMenuItem.Text">
         <source>Commit hash</source>
         <target />
