@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IO;
 using CommonTestUtils;
+using GitCommands;
 using GitUI.CommandsDialogs;
+using GitUIPluginInterfaces;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace GitUITests.CommandsDialogs
@@ -14,7 +17,7 @@ namespace GitUITests.CommandsDialogs
         [SetUp]
         public void Setup()
         {
-            _controller = new FormFileHistoryController();
+            _controller = new FormFileHistoryController(() => Substitute.For<IGitModule>(), Substitute.For<IFullPathResolver>());
         }
 
         [TestCase(@"Does not exist")]

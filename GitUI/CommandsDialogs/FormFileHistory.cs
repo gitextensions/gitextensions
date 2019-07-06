@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -26,7 +24,7 @@ namespace GitUI.CommandsDialogs
         private readonly FilterBranchHelper _filterBranchHelper;
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFullPathResolver _fullPathResolver;
-        private readonly FormFileHistoryController _controller = new FormFileHistoryController();
+        private readonly FormFileHistoryController _controller;
 
         private BuildReportTabPageExtension _buildReportTabPageExtension;
 
@@ -55,6 +53,7 @@ namespace GitUI.CommandsDialogs
 
             _commitDataManager = new CommitDataManager(() => Module);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+            _controller = new FormFileHistoryController(() => Module, _fullPathResolver);
 
             CommitDiff.EscapePressed += Close;
             View.EscapePressed += Close;
@@ -194,95 +193,22 @@ namespace GitUI.CommandsDialogs
             }
 
             _asyncLoader.LoadAsync(
-                () => BuildFilter(),
-                filter =>
+                () =>
+                {
+                    // we will need this later to look up proper casing for the file
+                    var fullFilePath = _fullPathResolver.Resolve(FileName);
+
+                    // Replace windows path separator to Linux path separator.
+                    // This is needed to keep the file history working when started from file tree in
+                    // browse dialog.
+                    FileName = _controller.SanitiseRelativeFilePath(FileName, fullFilePath);
+
+                    return _controller.BuildFilter(FileName, fullFilePath);
+                }, filter =>
                 {
                     FileChanges.SetFilters(filter);
                     FileChanges.Load();
                 });
-
-            return;
-
-            (string revision, string path) BuildFilter()
-            {
-                var fileName = FileName;
-
-                // we will need this later to look up proper casing for the file
-                var fullFilePath = _fullPathResolver.Resolve(fileName);
-
-                if (_controller.TryGetExactPath(fullFilePath, out var exactFileName))
-                {
-                    fileName = exactFileName.Substring(Module.WorkingDir.Length);
-                }
-
-                // Replace windows path separator to Linux path separator.
-                // This is needed to keep the file history working when started from file tree in
-                // browse dialog.
-                FileName = fileName.ToPosixPath();
-
-                var res = (revision: (string)null, path: $" \"{fileName}\"");
-
-                if (AppSettings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
-                {
-                    // git log --follow is not working as expected (see  http://kerneltrap.org/mailarchive/git/2009/1/30/4856404/thread)
-                    //
-                    // But we can take a more complicated path to get reasonable results:
-                    //  1. use git log --follow to get all previous filenames of the file we are interested in
-                    //  2. use git log "list of files names" to get the history graph
-                    //
-                    // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
-                    //
-
-                    var args = new GitArgumentBuilder("log")
-                    {
-                        "--format=\"%n\"",
-                        "--name-only",
-                        "--follow",
-                        GitCommandHelpers.FindRenamesAndCopiesOpts(),
-                        "--",
-                        fileName.Quote()
-                    };
-
-                    var listOfFileNames = new StringBuilder(fileName.Quote());
-
-                    // keep a set of the file names already seen
-                    var setOfFileNames = new HashSet<string> { fileName };
-
-                    var lines = Module.GitExecutable.GetOutputLines(args, outputEncoding: GitModule.LosslessEncoding);
-
-                    foreach (var line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
-                    {
-                        if (!string.IsNullOrEmpty(line) && setOfFileNames.Add(line))
-                        {
-                            listOfFileNames.Append(" \"");
-                            listOfFileNames.Append(line);
-                            listOfFileNames.Append('\"');
-                        }
-                    }
-
-                    // here we need --name-only to get the previous filenames in the revision graph
-                    res.path = listOfFileNames.ToString();
-                    res.revision += " --name-only --parents" + GitCommandHelpers.FindRenamesAndCopiesOpts();
-                }
-                else if (AppSettings.FollowRenamesInFileHistory)
-                {
-                    // history of a directory
-                    // --parents doesn't work with --follow enabled, but needed to graph a filtered log
-                    res.revision = " " + GitCommandHelpers.FindRenamesOpt() + " --follow --parents";
-                }
-                else
-                {
-                    // rename following disabled
-                    res.revision = " --parents";
-                }
-
-                if (AppSettings.FullHistoryInFileHistory)
-                {
-                    res.revision = string.Concat(" --full-history ", AppSettings.SimplifyMergesInFileHistory ? "--simplify-merges " : string.Empty, res.revision);
-                }
-
-                return res;
-            }
         }
 
         private void FileChangesSelectionChanged(object sender, EventArgs e)
