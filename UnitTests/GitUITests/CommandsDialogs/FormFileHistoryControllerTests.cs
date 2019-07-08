@@ -77,5 +77,26 @@ namespace GitUITests.CommandsDialogs
                 Assert.AreEqual(doesMatch, exactPath == expected);
             }
         }
+
+        [TestCase(@"System32\cmd.exe", @"c:\Windows\System32\cmd.exe")]
+        [TestCase(@"system32\cmd.exe", @"c:\Windows\system32\cmd.exe")]
+        public void SanitiseRelativeFilePath_When_File_Exists_Should_return_relative_path_with_posix_format(string relativeFilePath, string fullFilePath)
+        {
+            var gitModule = Substitute.For<IGitModule>();
+            gitModule.WorkingDir.Returns(@"c:\Windows\");
+
+            var controller = new FormFileHistoryController(() => gitModule, Substitute.For<IFullPathResolver>());
+            var exactPath = controller.SanitiseRelativeFilePath(relativeFilePath, fullFilePath);
+
+            Assert.AreEqual(@"System32/cmd.exe", exactPath);
+        }
+
+        [Test]
+        public void SanitiseRelativeFilePath_When_File_Not_Existing_Should_return_INPUTED_relative_path_with_posix_format()
+        {
+            var exactPath = _controller.SanitiseRelativeFilePath(@"directory\file.txt", @"c:\directory\file.txt");
+
+            Assert.AreEqual(@"directory/file.txt", exactPath);
+        }
     }
 }
