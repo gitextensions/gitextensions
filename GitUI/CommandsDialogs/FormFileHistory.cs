@@ -207,20 +207,13 @@ namespace GitUI.CommandsDialogs
             {
                 var fileName = FileName;
 
-                // we will need this later to look up proper casing for the file
-                var fullFilePath = _fullPathResolver.Resolve(fileName);
-
-                if (_controller.TryGetExactPath(fullFilePath, out fileName))
-                {
-                    fileName = fileName.Substring(Module.WorkingDir.Length);
-                }
-
                 // Replace windows path separator to Linux path separator.
                 // This is needed to keep the file history working when started from file tree in
                 // browse dialog.
                 FileName = fileName.ToPosixPath();
 
                 var res = (revision: (string)null, path: $" \"{fileName}\"");
+                var fullFilePath = _fullPathResolver.Resolve(fileName);
 
                 if (AppSettings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
                 {

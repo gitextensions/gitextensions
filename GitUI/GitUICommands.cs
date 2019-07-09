@@ -1703,6 +1703,11 @@ namespace GitUI
             // long while there is room left when the workingdir was not in the path.
             string fileHistoryFileName = string.IsNullOrEmpty(Module.WorkingDir) ? args[2] :
                 args[2].Replace(Module.WorkingDir, "").ToPosixPath();
+            var fullFilePath = _fullPathResolver.Resolve(fileHistoryFileName);
+            if (new FormFileHistoryController().TryGetExactPath(fullFilePath, out var exactFileName))
+            {
+                fileHistoryFileName = exactFileName.Substring(Module.WorkingDir.Length);
+            }
 
             StartFileHistoryDialog(null, fileHistoryFileName);
         }
