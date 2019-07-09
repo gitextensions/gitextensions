@@ -6774,6 +6774,10 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <source>Stash untracked files</source>
         <target />
       </trans-unit>
+      <trans-unit id="cherryPickFileChangesToolStripMenuItem.Text">
+        <source>Cherry pick file changes</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkIncludeUntrackedFiles.Text">
         <source>Include untracked files</source>
         <target />

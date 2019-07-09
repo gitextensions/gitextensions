@@ -438,5 +438,15 @@ namespace GitUI.CommandsDialogs
                 Close();
             }
         }
+
+        private void CherryPickFileChangesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            View.CherryPickAllChanges();
+        }
+
+        private void ContextMenuStripStashedFiles_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            cherryPickFileChangesToolStripMenuItem.Enabled = Stashed.SelectedItems.Count() == 1;
+        }
     }
 }
