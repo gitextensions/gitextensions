@@ -123,7 +123,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _commitValidationCaption = new TranslationString("Commit validation");
 
-        private readonly TranslationString _commitTemplateSettings = new TranslationString("Settings");
+        private readonly TranslationString _commitMessageSettings = new TranslationString("Edit commit message templates and settings...");
 
         private readonly TranslationString _commitAuthorInfo = new TranslationString("Author");
         private readonly TranslationString _commitCommitterInfo = new TranslationString("Committer");
@@ -3144,7 +3144,7 @@ namespace GitUI.CommandsDialogs
 
                 void AddSettingsItem()
                 {
-                    var settingsItem = new ToolStripMenuItem(_commitTemplateSettings.Text);
+                    var settingsItem = new ToolStripMenuItem(_commitMessageSettings.Text);
                     settingsItem.Click += delegate
                     {
                         using (var frm = new FormCommitTemplateSettings())
