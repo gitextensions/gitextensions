@@ -14,6 +14,7 @@ using GitCommands.ExternalLinks;
 using GitCommands.Git;
 using GitCommands.Remotes;
 using GitExtUtils;
+using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Editor.RichTextBoxExtension;
 using GitUI.Hotkey;
@@ -751,6 +752,17 @@ namespace GitUI.CommitInfo
         private void CommitMessage_ContentsResized(ContentsResizedEventArgs e)
         {
             _commitMessageHeight = e.NewRectangle.Height;
+
+            // at scale factor of 150% there is rendering artifact - the last line is almost lost
+            // at all other scaling factors from 100% to 350% everything is rendered as expected
+            // see https://github.com/gitextensions/gitextensions/issues/6898 for more details
+            //
+            // absent of an obvious way to fix it, hardcode the fix - add an extra space at the bottom
+            if (DpiUtil.ScaleX - 1.5f < float.Epsilon)
+            {
+                _commitMessageHeight += 16;
+            }
+
             PerformLayout();
         }
 
