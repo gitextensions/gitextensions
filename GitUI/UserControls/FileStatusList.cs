@@ -266,6 +266,13 @@ namespace GitUI
             set => _groupByRevision = value;
         }
 
+        [DefaultValue(true)]
+        public bool MultiSelect
+        {
+            get => FileStatusListView.MultiSelect;
+            set => FileStatusListView.MultiSelect = value;
+        }
+
         [Browsable(false)]
         [DefaultValue(true)]
         public bool IsEmpty => GitItemStatuses == null || !GitItemStatuses.Any();

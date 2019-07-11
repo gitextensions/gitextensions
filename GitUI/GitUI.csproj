@@ -1886,6 +1886,9 @@
   <ItemGroup>
     <None Include="Resources\Icons\FileStatusRemoved.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\CherryPick.png" />
+  </ItemGroup>
   <Target Name="CopyTranslations" AfterTargets="AfterBuild">
     <ItemGroup>
       <Translations Include="$(ProjectDir)Translation\*.xlf;$(ProjectDir)Translation\*.gif" />

@@ -48,6 +48,8 @@ namespace GitUI.CommandsDialogs
             this.panel1 = new System.Windows.Forms.Panel();
             this.Loading = new LoadingControl();
             this.Stashed = new GitUI.FileStatusList();
+            this.contextMenuStripStashedFiles = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cherryPickFileChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new GitUI.ToolStripEx();
             this.showToolStripLabel = new System.Windows.Forms.ToolStripLabel();
             this.Stashes = new System.Windows.Forms.ToolStripComboBox();
@@ -65,6 +67,7 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            this.contextMenuStripStashedFiles.SuspendLayout();
             this.SuspendLayout();
             // 
             // gitStashBindingSource
@@ -250,6 +253,7 @@ namespace GitUI.CommandsDialogs
             this.Loading.BackColor = System.Drawing.SystemColors.Control;
             this.Loading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.Loading.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Loading.IsAnimating = true;
             this.Loading.Location = new System.Drawing.Point(0, 0);
             this.Loading.Margin = new System.Windows.Forms.Padding(0);
             this.Loading.Name = "Loading";
@@ -260,14 +264,33 @@ namespace GitUI.CommandsDialogs
             // 
             // Stashed
             // 
+            this.Stashed.ContextMenuStrip = this.contextMenuStripStashedFiles;
             this.Stashed.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Stashed.FilterVisible = false;
+            this.Stashed.GroupByRevision = false;
             this.Stashed.Location = new System.Drawing.Point(0, 0);
             this.Stashed.Margin = new System.Windows.Forms.Padding(0);
+            this.Stashed.MultiSelect = false;
             this.Stashed.Name = "Stashed";
             this.Stashed.Size = new System.Drawing.Size(280, 553);
             this.Stashed.TabIndex = 2;
             this.Stashed.SelectedIndexChanged += new System.EventHandler(this.StashedSelectedIndexChanged);
+            // 
+            // contextMenuStripStashedFiles
+            // 
+            this.contextMenuStripStashedFiles.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cherryPickFileChangesToolStripMenuItem});
+            this.contextMenuStripStashedFiles.Name = "contextMenuStripStashedFiles";
+            this.contextMenuStripStashedFiles.Size = new System.Drawing.Size(209, 76);
+            this.contextMenuStripStashedFiles.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripStashedFiles_Opening);
+            // 
+            // cherryPickFileChangesToolStripMenuItem
+            // 
+            this.cherryPickFileChangesToolStripMenuItem.Image = global::GitUI.Properties.Resources.CherryPick;
+            this.cherryPickFileChangesToolStripMenuItem.Name = "cherryPickFileChangesToolStripMenuItem";
+            this.cherryPickFileChangesToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.cherryPickFileChangesToolStripMenuItem.Text = "Cherry pick file changes";
+            this.cherryPickFileChangesToolStripMenuItem.Click += new System.EventHandler(this.CherryPickFileChangesToolStripMenuItem_Click);
             // 
             // toolStrip1
             // 
@@ -377,6 +400,7 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.panel1.ResumeLayout(false);
+            this.contextMenuStripStashedFiles.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -407,5 +431,7 @@ namespace GitUI.CommandsDialogs
         private Panel panel1;
         private ToolTip toolTip;
         private Button StashSelectedFiles;
+        private ContextMenuStrip contextMenuStripStashedFiles;
+        private ToolStripMenuItem cherryPickFileChangesToolStripMenuItem;
     }
 }
