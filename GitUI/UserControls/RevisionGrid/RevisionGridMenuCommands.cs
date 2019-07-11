@@ -303,6 +303,13 @@ namespace GitUI.UserControls.RevisionGrid
                 },
                 new MenuCommand
                 {
+                    Name = "AuthorDateSort",
+                    Text = "Sort commits by author date",
+                    ExecuteAction = () => _revisionGrid.ToggleAuthorDateSort(),
+                    IsCheckedFunc = () => AppSettings.SortByAuthorDate
+                },
+                new MenuCommand
+                {
                     Name = "showAuthorDateToolStripMenuItem",
                     Text = "Show author date",
                     ExecuteAction = () => _revisionGrid.ToggleShowAuthorDate(),

@@ -178,6 +178,7 @@ namespace GitCommands
                     new ArgumentBuilder
                     {
                         { AppSettings.ShowReflogReferences, "--reflog" },
+                        { AppSettings.SortByAuthorDate, "--author-date-order" },
                         {
                             refFilterOptions.HasFlag(RefFilterOptions.All),
                             "--all",

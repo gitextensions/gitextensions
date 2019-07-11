@@ -69,6 +69,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AvatarImageCacheDays;
             ShowAuthorAvatarInCommitInfo.Checked = AppSettings.ShowAuthorAvatarInCommitInfo;
             ShowAuthorAvatarInCommitGraph.Checked = AppSettings.ShowAuthorAvatarColumn;
+            chkSortByAuthorDate.Checked = AppSettings.SortByAuthorDate;
             AvatarProvider.SelectedValue = AppSettings.AvatarProvider;
             _NO_TRANSLATE_NoImageService.SelectedValue = AppSettings.GravatarFallbackAvatarType;
             ManageGravatarOptionsDisplay();
@@ -128,6 +129,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowAuthorAvatarColumn = ShowAuthorAvatarInCommitGraph.Checked;
             AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatarInCommitInfo.Checked;
             AppSettings.AvatarImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
+            AppSettings.SortByAuthorDate = chkSortByAuthorDate.Checked;
 
             AppSettings.Translation = Language.Text;
             ResourceManager.Strings.Reinitialize();
