@@ -19,6 +19,7 @@ namespace GitCommands
         private static readonly GitVersion v2_11_0 = new GitVersion("2.11.0");
         private static readonly GitVersion v2_15_0 = new GitVersion("2.15.0");
         private static readonly GitVersion v2_15_2 = new GitVersion("2.15.2");
+        private static readonly GitVersion v2_19_0 = new GitVersion("2.19.0");
 
         public static readonly GitVersion LastSupportedVersion = v2_11_0;
         public static readonly GitVersion LastRecommendedVersion = new GitVersion("2.22.0");
@@ -123,6 +124,8 @@ namespace GitCommands
         public bool DepreciatedLfsClone => this >= v2_15_0;
 
         public bool SupportNoOptionalLocks => this >= v2_15_2;
+
+        public bool SupportRebaseMerges => this >= v2_19_0;
 
         public bool IsUnknown => _a == 0 && _b == 0 && _c == 0 && _d == 0;
 
