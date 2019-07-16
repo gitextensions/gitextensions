@@ -18,7 +18,7 @@ namespace GitUI.Script
 
         CommandStatus RunScript(string scriptKey);
 
-        CommandStatus RunScript(ScriptInfo script);
+        CommandStatus RunScripts(ScriptEvent scriptEvent);
     }
 
     internal sealed class ScriptRunner : IScriptRunner
@@ -88,7 +88,28 @@ namespace GitUI.Script
             return RunScript(script);
         }
 
-        public CommandStatus RunScript(ScriptInfo script)
+        public CommandStatus RunScripts(ScriptEvent scriptEvent)
+        {
+            if (scriptEvent == ScriptEvent.ShowInUserMenuBar)
+            {
+                // TODO: handle more gracefully
+                throw new NotSupportedException();
+            }
+
+            bool executed = false;
+            bool refreshRequired = false;
+            foreach (var script in _scriptManager.GetScripts()
+                .Where(x => x.Enabled && x.OnEvent == scriptEvent))
+            {
+                var result = RunScript(script);
+                executed |= result.Executed;
+                refreshRequired |= result.NeedsGridRefresh;
+            }
+
+            return new CommandStatus(executed, refreshRequired);
+        }
+
+        private CommandStatus RunScript(ScriptInfo script)
         {
             if (string.IsNullOrEmpty(script.Command))
             {

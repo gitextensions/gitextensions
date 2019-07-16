@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Browsing.Dialogs;
@@ -93,14 +92,7 @@ namespace GitUI.CommandsDialogs
             Module.EffectiveSettings.NoFastForwardMerge = noFastForward.Checked;
             AppSettings.DontCommitMerge = noCommit.Checked;
 
-            var scripts = _scriptManager.GetScripts()
-                .Where(x => x.Enabled && x.OnEvent == ScriptEvent.BeforeMerge)
-                .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
-
-            foreach (var script in scripts)
-            {
-                _scriptRunner.RunScript(script);
-            }
+            _scriptRunner.RunScripts(ScriptEvent.BeforeMerge);
 
             var successfullyMerged = FormProcess.ShowDialog(this, GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(),
                                                                                                    fastForward.Checked,
@@ -115,14 +107,7 @@ namespace GitUI.CommandsDialogs
 
             if (successfullyMerged || wasConflict)
             {
-                scripts = _scriptManager.GetScripts()
-                    .Where(x => x.Enabled && x.OnEvent == ScriptEvent.AfterMerge)
-                    .Where(x => x.OnEvent == ScriptEvent.AfterMerge);
-
-                foreach (var script in scripts)
-                {
-                    _scriptRunner.RunScript(script);
-                }
+                _scriptRunner.RunScripts(ScriptEvent.AfterMerge);
 
                 UICommands.RepoChangedNotifier.Notify();
                 Close();

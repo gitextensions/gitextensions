@@ -1373,14 +1373,7 @@ namespace GitUI.CommandsDialogs
                         SetCommitMessageFromTextBox(Message.Text);
                     }
 
-                    var scripts = _scriptManager.GetScripts()
-                        .Where(x => x.Enabled && x.OnEvent == ScriptEvent.BeforeCommit)
-                        .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
-
-                    foreach (var script in scripts)
-                    {
-                        _scriptRunner.RunScript(script);
-                    }
+                    _scriptRunner.RunScripts(ScriptEvent.BeforeCommit);
 
                     var commitCmd = Module.CommitCmd(
                         amend,
@@ -1402,14 +1395,7 @@ namespace GitUI.CommandsDialogs
                     Amend.Checked = false;
                     noVerifyToolStripMenuItem.Checked = false;
 
-                    scripts = _scriptManager.GetScripts()
-                        .Where(x => x.Enabled && x.OnEvent == ScriptEvent.AfterCommit)
-                        .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
-
-                    foreach (var script in scripts)
-                    {
-                        _scriptRunner.RunScript(script);
-                    }
+                    _scriptRunner.RunScripts(ScriptEvent.AfterCommit);
 
                     Message.Text = string.Empty; // Message.Text has been used and stored
                     _commitMessageManager.ResetCommitMessage();

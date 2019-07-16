@@ -384,14 +384,7 @@ namespace GitUI.CommandsDialogs
 
             Debug.Assert(originalId != null, "originalId != null");
 
-            var scripts = _scriptManager.GetScripts()
-                .Where(x => x.Enabled && x.OnEvent == ScriptEvent.BeforeCheckout)
-                .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
-
-            foreach (var script in scripts)
-            {
-                _scriptRunner.RunScript(script);
-            }
+            _scriptRunner.RunScripts(ScriptEvent.BeforeCheckout);
 
             if (UICommands.StartCommandLineProcessDialog(owner, new GitCheckoutBranchCmd(branchName, isRemote, localChanges, newBranchMode, newBranchName)))
             {
@@ -431,14 +424,7 @@ namespace GitUI.CommandsDialogs
                     UICommands.UpdateSubmodules(this);
                 }
 
-                scripts = _scriptManager.GetScripts()
-                    .Where(x => x.Enabled && x.OnEvent == ScriptEvent.AfterCheckout)
-                    .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
-
-                foreach (var script in scripts)
-                {
-                    _scriptRunner.RunScript(script);
-                }
+                _scriptRunner.RunScripts(ScriptEvent.AfterCheckout);
 
                 return DialogResult.OK;
             }

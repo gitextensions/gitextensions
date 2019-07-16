@@ -410,14 +410,7 @@ namespace GitUI.CommandsDialogs
                 return DialogResult.No;
             }
 
-            var scripts = _scriptManager.GetScripts()
-                .Where(x => x.Enabled && x.OnEvent == ScriptEvent.BeforePull)
-                .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
-
-            foreach (var script in scripts)
-            {
-                _scriptRunner.RunScript(script);
-            }
+            _scriptRunner.RunScripts(ScriptEvent.BeforePull);
 
             var stashed = CalculateStashedValue(owner);
 
@@ -456,14 +449,7 @@ namespace GitUI.CommandsDialogs
                         PopStash();
                     }
 
-                    scripts = _scriptManager.GetScripts()
-                        .Where(x => x.Enabled && x.OnEvent == ScriptEvent.AfterPull)
-                        .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
-
-                    foreach (var script in scripts)
-                    {
-                        _scriptRunner.RunScript(script);
-                    }
+                    _scriptRunner.RunScripts(ScriptEvent.AfterPull);
                 }
             }
 

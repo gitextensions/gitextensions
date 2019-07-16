@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Browsing.Dialogs;
@@ -60,14 +59,7 @@ namespace GitUI.CommandsDialogs
 
                 Debug.Assert(checkedOutObjectId != null, "checkedOutObjectId != null");
 
-                var scripts = _scriptManager.GetScripts()
-                    .Where(x => x.Enabled && x.OnEvent == ScriptEvent.BeforeCheckout)
-                    .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
-
-                foreach (var script in scripts)
-                {
-                    _scriptRunner.RunScript(script);
-                }
+                _scriptRunner.RunScripts(ScriptEvent.BeforeCheckout);
 
                 string command = GitCommandHelpers.CheckoutCmd(selectedObjectId.ToString(), Force.Checked ? LocalChangesAction.Reset : 0);
                 if (FormProcess.ShowDialog(this, command))
@@ -78,14 +70,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                scripts = _scriptManager.GetScripts()
-                    .Where(x => x.Enabled && x.OnEvent == ScriptEvent.AfterCheckout)
-                    .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
-
-                foreach (var script in scripts)
-                {
-                    _scriptRunner.RunScript(script);
-                }
+                _scriptRunner.RunScripts(ScriptEvent.AfterCheckout);
 
                 DialogResult = DialogResult.OK;
                 Close();

@@ -88,14 +88,7 @@ namespace GitUI.CommandsDialogs
 
                     var cmd = new GitDeleteRemoteBranchesCmd(remote, branches.Select(x => x.LocalName));
 
-                    var scripts = _scriptManager.GetScripts()
-                        .Where(x => x.Enabled && x.OnEvent == ScriptEvent.BeforePush)
-                        .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
-
-                    foreach (var script in scripts)
-                    {
-                        _scriptRunner.RunScript(script);
-                    }
+                    _scriptRunner.RunScripts(ScriptEvent.BeforePush);
 
                     using (var form = new FormRemoteProcess(Module, cmd.Arguments)
                     {
@@ -106,14 +99,7 @@ namespace GitUI.CommandsDialogs
 
                         if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
                         {
-                            scripts = _scriptManager.GetScripts()
-                                .Where(x => x.Enabled && x.OnEvent == ScriptEvent.AfterPush)
-                                .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
-
-                            foreach (var script in scripts)
-                            {
-                                _scriptRunner.RunScript(script);
-                            }
+                            _scriptRunner.RunScripts(ScriptEvent.AfterPush);
                         }
                     }
                 }

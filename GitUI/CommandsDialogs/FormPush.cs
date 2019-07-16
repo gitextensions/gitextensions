@@ -433,14 +433,7 @@ namespace GitUI.CommandsDialogs
                 pushCmd = GitCommandHelpers.PushMultipleCmd(destination, pushActions);
             }
 
-            var scripts = _scriptManager.GetScripts()
-                .Where(x => x.Enabled && x.OnEvent == ScriptEvent.BeforePush)
-                .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
-
-            foreach (var script in scripts)
-            {
-                _scriptRunner.RunScript(script);
-            }
+            _scriptRunner.RunScripts(ScriptEvent.BeforePush);
 
             // controls can be accessed only from UI thread
             _selectedBranch = _NO_TRANSLATE_Branch.Text;
@@ -459,14 +452,7 @@ namespace GitUI.CommandsDialogs
 
                 if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
                 {
-                    scripts = _scriptManager.GetScripts()
-                        .Where(x => x.Enabled && x.OnEvent == ScriptEvent.AfterPush)
-                        .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
-
-                    foreach (var script in scripts)
-                    {
-                        _scriptRunner.RunScript(script);
-                    }
+                    _scriptRunner.RunScripts(ScriptEvent.AfterPush);
 
                     if (_createPullRequestCB.Checked)
                     {
