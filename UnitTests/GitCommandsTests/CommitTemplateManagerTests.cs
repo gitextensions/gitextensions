@@ -77,21 +77,21 @@ namespace GitCommandsTests
         {
             const string templateName = "template1";
             var count = _manager.RegisteredTemplates.Count();
-            _manager.Register(templateName, () => "text1");
-            _manager.Register(templateName, () => "text2");
+            _manager.Register(templateName, () => "text1", null);
+            _manager.Register(templateName, () => "text2", null);
             _manager.RegisteredTemplates.Count().Should().Be(count + 1);
         }
 
         [Test]
         public void RegisteredTemplates_should_be_threadsafe()
         {
-            _manager.Register("template1", () => "text1");
-            _manager.Register("template2", () => "text2");
+            _manager.Register("template1", () => "text1", null);
+            _manager.Register("template2", () => "text2", null);
             var i = _manager.RegisteredTemplates.Count() + 1;
             foreach (var managerRegisteredTemplate in _manager.RegisteredTemplates)
             {
                 _manager.Unregister(managerRegisteredTemplate.Name);
-                _manager.Register($"template{i}", () => "text");
+                _manager.Register($"template{i}", () => "text", null);
                 i++;
             }
         }
@@ -99,7 +99,7 @@ namespace GitCommandsTests
         [Test]
         public void RegisteredTemplates_should_be_immutable()
         {
-            _manager.Register("template1", () => "text1");
+            _manager.Register("template1", () => "text1", null);
             var expectedCount = _manager.RegisteredTemplates.Count();
             expectedCount.Should().BeGreaterThan(0);
             ((IList)_manager.RegisteredTemplates).Clear();

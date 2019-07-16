@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -12,17 +13,20 @@ namespace GitCommands
     {
         public string Name { get; set; }
         public string Text { get; set; }
+        public Image Icon { get; set; }
 
-        public CommitTemplateItem(string name, string text)
+        public CommitTemplateItem(string name, string text, Image icon)
         {
             Name = name;
             Text = text;
+            Icon = icon;
         }
 
         public CommitTemplateItem()
         {
             Name = string.Empty;
             Text = string.Empty;
+            Icon = null;
         }
 
         private CommitTemplateItem(SerializationInfo info, StreamingContext context)

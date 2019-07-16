@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="templateName">The name of the template.</param>
         /// <param name="templateText">The body of the template.</param>
-        void Register(string templateName, Func<string> templateText);
+        void Register(string templateName, Func<string> templateText, Image icon);
 
         /// <summary>
         /// Allows a plugin to unregister a commit template.
@@ -47,11 +48,13 @@ namespace GitCommands
             public readonly string Name;
 
             public readonly Func<string> Text;
+            public readonly Image Icon;
 
-            public RegisteredCommitTemplateItem(string name, Func<string> text)
+            public RegisteredCommitTemplateItem(string name, Func<string> text, Image icon)
             {
                 Name = name;
                 Text = text;
+                Icon = icon;
             }
         }
 
@@ -81,7 +84,7 @@ namespace GitCommands
             {
                 lock (RegisteredTemplatesStorage)
                 {
-                    return RegisteredTemplatesStorage.Select(item => new CommitTemplateItem(item.Name, item.Text())).AsReadOnlyList();
+                    return RegisteredTemplatesStorage.Select(item => new CommitTemplateItem(item.Name, item.Text(), item.Icon)).AsReadOnlyList();
                 }
             }
         }
@@ -119,13 +122,13 @@ namespace GitCommands
         /// </summary>
         /// <param name="templateName">The name of the template.</param>
         /// <param name="templateText">The body of the template.</param>
-        public void Register(string templateName, Func<string> templateText)
+        public void Register(string templateName, Func<string> templateText, Image icon)
         {
             lock (RegisteredTemplatesStorage)
             {
                 if (RegisteredTemplatesStorage.All(item => item.Name != templateName))
                 {
-                    RegisteredTemplatesStorage.Add(new RegisteredCommitTemplateItem(templateName, templateText));
+                    RegisteredTemplatesStorage.Add(new RegisteredCommitTemplateItem(templateName, templateText, icon));
                 }
             }
         }
