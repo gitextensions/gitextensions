@@ -758,7 +758,7 @@ namespace GitUI.CommitInfo
             // see https://github.com/gitextensions/gitextensions/issues/6898 for more details
             //
             // absent of an obvious way to fix it, hardcode the fix - add an extra space at the bottom
-            if (DpiUtil.ScaleX - 1.5f < float.Epsilon)
+            if (Math.Abs(DpiUtil.ScaleX - 1.5f) <= 0.01f)
             {
                 _commitMessageHeight += 16;
             }
