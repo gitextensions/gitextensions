@@ -64,6 +64,7 @@ namespace JiraCommitHintPlugin
         {
             if (!_enabledSettings.ValueOrDefault(Settings))
             {
+                args.GitUICommands.StartSettingsDialog(this);
                 return false;
             }
 
