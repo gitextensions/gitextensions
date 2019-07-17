@@ -403,7 +403,7 @@ namespace GitCommands
                 { interactive, "-i" },
                 { interactive && autosquash, "--autosquash" },
                 { interactive && !autosquash, "--no-autosquash" },
-                { preserveMerges, "--preserve-merges" },
+                { preserveMerges, GitVersion.Current.SupportRebaseMerges ? "--rebase-merges" : "--preserve-merges" },
                 { autoStash, "--autostash" },
                 from.QuoteNE(),
                 branch.Quote(),

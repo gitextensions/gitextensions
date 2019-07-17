@@ -605,7 +605,7 @@ namespace GitCommandsTests.Git
                 "-c rebase.autoSquash=false rebase -i --no-autosquash \"branch\"",
                 GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: false, autoStash: false).Arguments);
             Assert.AreEqual(
-                "-c rebase.autoSquash=false rebase --preserve-merges \"branch\"",
+                GitVersion.Current.SupportRebaseMerges ? "-c rebase.autoSquash=false rebase --rebase-merges \"branch\"" : "-c rebase.autoSquash=false rebase --preserve-merges \"branch\"",
                 GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: true, autosquash: false, autoStash: false).Arguments);
             Assert.AreEqual(
                 "-c rebase.autoSquash=false rebase \"branch\"",
@@ -617,7 +617,7 @@ namespace GitCommandsTests.Git
                 "-c rebase.autoSquash=false rebase -i --autosquash \"branch\"",
                 GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: true, autoStash: false).Arguments);
             Assert.AreEqual(
-                "-c rebase.autoSquash=false rebase -i --autosquash --preserve-merges --autostash \"branch\"",
+                GitVersion.Current.SupportRebaseMerges ? "-c rebase.autoSquash=false rebase -i --autosquash --rebase-merges --autostash \"branch\"" : "-c rebase.autoSquash=false rebase -i --autosquash --preserve-merges --autostash \"branch\"",
                 GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: true, autosquash: true, autoStash: true).Arguments);
 
             // TODO quote 'onto'?
