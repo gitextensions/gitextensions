@@ -90,6 +90,8 @@
     <Compile Include="CommandsDialogs\Settings\AzureDevOpsExternalLinkDefinitionExtractorTests.cs" />
     <Compile Include="CommitInfo\CommitInfoTests.cs" />
     <Compile Include="ControlThreadingExtensionsTests.cs" />
+    <EmbeddedResource Include="Script\MockData\OwnScripts.xml" />
+    <Compile Include="Script\ScriptInfoSerialiserTests.cs" />
     <Compile Include="UserEnvironmentInformationTests.cs" />
     <Compile Include="Editor\FileViewerInternal.CurrentViewPositionCacheTests.cs" />
     <Compile Include="Editor\FileViewerTests.cs" />

@@ -1,0 +1,28 @@
+﻿<ArrayOfScriptInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ScriptInfo>
+    <Enabled>false</Enabled>
+    <Name>Fetch changes after commit</Name>
+    <Command>git</Command>
+    <Arguments>fetch</Arguments>
+    <AddToRevisionGridContextMenu>false</AddToRevisionGridContextMenu>
+    <OnEvent>AfterCommit</OnEvent>
+    <AskConfirmation>true</AskConfirmation>
+    <RunInBackground>false</RunInBackground>
+    <IsPowerShell>false</IsPowerShell>
+    <HotkeyCommandIdentifier>9000</HotkeyCommandIdentifier>
+    <Icon>bug</Icon>
+  </ScriptInfo>
+  <ScriptInfo>
+    <Enabled>false</Enabled>
+    <Name>Update submodules after pull</Name>
+    <Command>git</Command>
+    <Arguments>submodule update --init --recursive</Arguments>
+    <AddToRevisionGridContextMenu>false</AddToRevisionGridContextMenu>
+    <OnEvent>AfterPull</OnEvent>
+    <AskConfirmation>true</AskConfirmation>
+    <RunInBackground>false</RunInBackground>
+    <IsPowerShell>false</IsPowerShell>
+    <HotkeyCommandIdentifier>9001</HotkeyCommandIdentifier>
+    <Icon>bug</Icon>
+  </ScriptInfo>
+</ArrayOfScriptInfo>

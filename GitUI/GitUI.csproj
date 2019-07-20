@@ -456,6 +456,7 @@
     </Compile>
     <Compile Include="Hotkey\KeysExtensions.cs" />
     <Compile Include="Script\PowerShellHelper.cs" />
+    <Compile Include="Script\ScriptInfoSerialiser.cs" />
     <Compile Include="Script\ScriptOptions.cs" />
     <Compile Include="Script\ScriptOptionsParser.cs" />
     <Compile Include="AutoCompletion\AutoCompleteWord.cs" />
