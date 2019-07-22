@@ -117,6 +117,7 @@
     <Compile Include="Settings\ChoiceSetting.cs" />
     <Compile Include="Settings\CredentialsSetting.cs" />
     <Compile Include="Settings\PasswordSetting.cs" />
+    <Compile Include="Settings\PseudoSetting.cs" />
     <Compile Include="Settings\StringSetting.cs" />
     <Compile Include="UserControls\CredentialsControl.cs">
       <SubType>UserControl</SubType>
