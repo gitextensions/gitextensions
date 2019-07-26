@@ -37,9 +37,6 @@
     <DocumentationFile>bin\Release\AppVeyorIntegrationTests.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NSubstitute">
-      <HintPath>..\..\..\..\..\..\..\.nuget\packages\nsubstitute\3.1.0\lib\net46\NSubstitute.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
