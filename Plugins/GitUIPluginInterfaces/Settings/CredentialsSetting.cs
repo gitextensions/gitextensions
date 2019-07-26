@@ -54,7 +54,8 @@ namespace GitUIPluginInterfaces
 
             public override CredentialsControl CreateControl()
             {
-                return new CredentialsControl();
+                Setting.CustomControl = new CredentialsControl();
+                return Setting.CustomControl;
             }
 
             public override void LoadSetting(ISettingsSource settings, CredentialsControl control)

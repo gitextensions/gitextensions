@@ -48,7 +48,8 @@ namespace GitUIPluginInterfaces
 
             public override CheckBox CreateControl()
             {
-                return new CheckBox { ThreeState = true };
+                Setting.CustomControl = new CheckBox { ThreeState = true };
+                return Setting.CustomControl;
             }
 
             public override void LoadSetting(ISettingsSource settings, CheckBox control)
