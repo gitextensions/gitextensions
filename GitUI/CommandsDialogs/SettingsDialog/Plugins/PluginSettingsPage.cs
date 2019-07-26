@@ -58,14 +58,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
                 throw new ApplicationException();
             }
 
-            return _gitPlugin.GetSettings();
+            return _gitPlugin.HasSettings ? _gitPlugin.GetSettings() : Array.Empty<ISetting>();
         }
 
         public override SettingsPageReference PageReference => new SettingsPageReferenceByType(_gitPlugin.GetType());
 
         protected override ISettingsLayout CreateSettingsLayout()
         {
-            labelNoSettings.Visible = !GetSettings().Any();
+            labelNoSettings.Visible = !_gitPlugin.HasSettings;
 
             var layout = base.CreateSettingsLayout();
 

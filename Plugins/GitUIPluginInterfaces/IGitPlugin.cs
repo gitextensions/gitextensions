@@ -15,6 +15,8 @@ namespace GitUIPluginInterfaces
 
         IGitPluginSettingsContainer SettingsContainer { get; set; }
 
+        bool HasSettings { get; }
+
         IEnumerable<ISetting> GetSettings();
 
         void Register(IGitUICommands gitUiCommands);

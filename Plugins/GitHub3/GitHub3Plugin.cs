@@ -82,7 +82,7 @@ namespace GitHub3
 
         private IGitUICommands _currentGitUiCommands;
 
-        public GitHub3Plugin()
+        public GitHub3Plugin() : base(true)
         {
             SetNameAndDescription("GitHub");
             Translate();

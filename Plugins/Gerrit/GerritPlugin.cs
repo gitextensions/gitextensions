@@ -42,7 +42,7 @@ namespace Gerrit
         private ToolStripButton _installCommitMsgMenuItem;
 
         // public only because of FormTranslate
-        public GerritPlugin()
+        public GerritPlugin() : base(false)
         {
             SetNameAndDescription("Gerrit Code Review");
             Translate();

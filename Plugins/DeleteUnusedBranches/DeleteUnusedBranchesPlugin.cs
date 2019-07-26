@@ -8,7 +8,7 @@ namespace DeleteUnusedBranches
     [Export(typeof(IGitPlugin))]
     public class DeleteUnusedBranchesPlugin : GitPluginBase, IGitPluginForRepository
     {
-        public DeleteUnusedBranchesPlugin()
+        public DeleteUnusedBranchesPlugin() : base(true)
         {
             SetNameAndDescription("Delete obsolete branches");
             Translate();

@@ -33,7 +33,7 @@ namespace Gource
             "Please download Gource and set the path in the plugins settings dialog.");
         #endregion
 
-        public GourcePlugin()
+        public GourcePlugin() : base(true)
         {
             SetNameAndDescription("Gource");
             Translate();

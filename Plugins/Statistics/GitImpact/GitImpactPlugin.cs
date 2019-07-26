@@ -8,7 +8,7 @@ namespace GitImpact
     [Export(typeof(IGitPlugin))]
     public class GitImpactPlugin : GitPluginBase, IGitPluginForRepository
     {
-        public GitImpactPlugin()
+        public GitImpactPlugin() : base(false)
         {
             SetNameAndDescription("Impact Graph");
             Translate();

@@ -17,7 +17,7 @@ namespace AutoCompileSubmodules
         private readonly TranslationString _enterCorrectMsBuildPath =
             new TranslationString("Please enter correct MSBuild path in the plugin settings dialog and try again.");
 
-        public AutoCompileSubModulesPlugin()
+        public AutoCompileSubModulesPlugin() : base(true)
         {
             SetNameAndDescription("Auto compile SubModules");
             Translate();

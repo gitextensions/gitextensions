@@ -14,7 +14,7 @@ namespace BackgroundFetch
     [Export(typeof(IGitPlugin))]
     public class BackgroundFetchPlugin : GitPluginBase, IGitPluginForRepository
     {
-        public BackgroundFetchPlugin()
+        public BackgroundFetchPlugin() : base(true)
         {
             SetNameAndDescription("Periodic background fetch");
             Translate();
