@@ -87,3 +87,4 @@ YYYY/MM/DD, github id, Full name, email
 2019/06/05, AOrlov, Andrei Orlov, gooshift(at)gmail.com
 2019/06/07, veremenko-y, Yaroslav Veremenko, yaroslav(at)veremenko.info
 2019/07/28, FisherTsai, Fisher Tsai, fishy0903(at)gmail.com
+2019/07/28, manuelspezzani, Manuel Spezzani, manuel.spezzani(at)gmail.com
