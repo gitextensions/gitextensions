@@ -53,16 +53,16 @@ namespace ReleaseNotesGenerator
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(textBoxRevTo.Text))
+            if (string.IsNullOrWhiteSpace(_NO_TRANSLATE_textBoxRevTo.Text))
             {
                 MessageBox.Show(this, _toCommitNotSpecified.Text, _caption.Text);
-                textBoxRevTo.Focus();
+                _NO_TRANSLATE_textBoxRevTo.Focus();
                 return;
             }
 
             var args = new GitArgumentBuilder("log")
             {
-                string.Format(_NO_TRANSLATE_textBoxGitLogArguments.Text, textBoxRevFrom.Text, textBoxRevTo.Text)
+                string.Format(_NO_TRANSLATE_textBoxGitLogArguments.Text, textBoxRevFrom.Text, _NO_TRANSLATE_textBoxRevTo.Text)
             };
 
             string result = _gitUiCommands.GitModule.GitExecutable.GetOutput(args);
@@ -110,7 +110,7 @@ namespace ReleaseNotesGenerator
 
         private void buttonCopyAsHtml_Click(object sender, EventArgs e)
         {
-            string headerHtml = string.Format("<p>Commit log from '{0}' to '{1}' ({2}):</p>", textBoxRevFrom.Text, textBoxRevTo.Text, MostRecentHint);
+            string headerHtml = string.Format("<p>Commit log from '{0}' to '{1}' ({2}):</p>", textBoxRevFrom.Text, _NO_TRANSLATE_textBoxRevTo.Text, MostRecentHint);
             string tableHtml = CreateHtmlTable(_lastGeneratedLogLines);
             HtmlFragment.CopyToClipboard(headerHtml + tableHtml);
         }
@@ -118,7 +118,7 @@ namespace ReleaseNotesGenerator
         private string CreateTextTable(IEnumerable<LogLine> logLines, bool suppressEmptyLines = true, bool separateColumnWithTabInsteadOfSpaces = true)
         {
             string headerText = string.Format(_commitLogFrom.Text,
-                textBoxRevFrom.Text, textBoxRevTo.Text, MostRecentHint);
+                textBoxRevFrom.Text, _NO_TRANSLATE_textBoxRevTo.Text, MostRecentHint);
 
             string colSeparatorFirstLine = separateColumnWithTabInsteadOfSpaces ? "\t" : " ";
             string colSeparatorRestLines = separateColumnWithTabInsteadOfSpaces ? "\t" : "        ";

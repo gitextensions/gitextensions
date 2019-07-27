@@ -30,7 +30,7 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBoxRevTo = new System.Windows.Forms.TextBox();
+            this._NO_TRANSLATE_textBoxRevTo = new System.Windows.Forms.TextBox();
             this.textBoxRevFrom = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_textBoxGitLogArguments = new System.Windows.Forms.TextBox();
@@ -87,10 +87,11 @@
             // 
             // textBoxRevTo
             // 
-            this.textBoxRevTo.Location = new System.Drawing.Point(214, 38);
-            this.textBoxRevTo.Name = "textBoxRevTo";
-            this.textBoxRevTo.Size = new System.Drawing.Size(162, 21);
-            this.textBoxRevTo.TabIndex = 1;
+            this._NO_TRANSLATE_textBoxRevTo.Location = new System.Drawing.Point(214, 38);
+            this._NO_TRANSLATE_textBoxRevTo.Name = "textBoxRevTo";
+            this._NO_TRANSLATE_textBoxRevTo.Size = new System.Drawing.Size(162, 21);
+            this._NO_TRANSLATE_textBoxRevTo.TabIndex = 1;
+            this._NO_TRANSLATE_textBoxRevTo.Text = "HEAD";
             // 
             // textBoxRevFrom
             // 
@@ -376,7 +377,7 @@
             this.Controls.Add(this._NO_TRANSLATE_textBoxGitLogArguments);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBoxRevFrom);
-            this.Controls.Add(this.textBoxRevTo);
+            this.Controls.Add(this._NO_TRANSLATE_textBoxRevTo);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.MinimizeBox = false;
@@ -407,7 +408,7 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBoxRevTo;
+        private System.Windows.Forms.TextBox _NO_TRANSLATE_textBoxRevTo;
         private System.Windows.Forms.TextBox textBoxRevFrom;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_textBoxGitLogArguments;
