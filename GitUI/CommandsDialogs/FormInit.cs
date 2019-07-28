@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
+using GitExtUtils;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -48,19 +49,21 @@ namespace GitUI.CommandsDialogs
 
         private void InitClick(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(Directory.Text))
+            var directoryPath = Directory.Text;
+
+            if (!IsRootedDirectoryPath(directoryPath))
             {
                 MessageBox.Show(this, _chooseDirectory.Text, _chooseDirectoryCaption.Text);
                 return;
             }
 
-            if (File.Exists(Directory.Text))
+            if (File.Exists(directoryPath))
             {
                 MessageBox.Show(this, _chooseDirectoryNotFile.Text, _chooseDirectoryNotFileCaption.Text);
                 return;
             }
 
-            var module = new GitModule(Directory.Text);
+            var module = new GitModule(directoryPath);
 
             if (!System.IO.Directory.Exists(module.WorkingDir))
             {
@@ -71,9 +74,32 @@ namespace GitUI.CommandsDialogs
 
             _gitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
 
-            var path = Directory.Text;
-            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
+            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(directoryPath));
             Close();
+        }
+
+        private static bool IsRootedDirectoryPath(string path)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(path))
+                {
+                    return false;
+                }
+
+                // this is going to throw if it's an invalid path (e.g. contains special chars)
+                var info = new DirectoryInfo(path);
+
+                return Path.IsPathRooted(path.Trim());
+            }
+            catch (Exception)
+            {
+                // The code in the try block is expected to throw when the input is not a valid directory path
+                // OR when the user does not have the required permission.
+                // In both cases we return "false" since the path is not representing a valid "usable" directory.
+                // This is also the reason why we are catching all kind of exception here and not IO-related ones.
+                return false;
+            }
         }
 
         private void BrowseClick(object sender, EventArgs e)
@@ -98,6 +124,11 @@ namespace GitUI.CommandsDialogs
             }
 
             public ComboBox DirectoryCombo => _form.Directory;
+
+            public bool IsRootedDirectoryPath(string path)
+            {
+                return FormInit.IsRootedDirectoryPath(path);
+            }
         }
     }
 }
