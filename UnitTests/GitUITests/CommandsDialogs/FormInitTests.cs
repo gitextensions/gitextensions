@@ -67,6 +67,38 @@ namespace GitUITests.CommandsDialogs.CommitDialog
                 null);
         }
 
+        [TestCase("")]
+        [TestCase(null)]
+        [TestCase("    ")]
+        [TestCase(@"c:\foo*\bar?\")]
+        [TestCase(@"foo\bar")]
+        public void IsRootedDirectoryPath_should_detect_invalid_paths(string input)
+        {
+            var currentDir = "bla";
+            RunFormTest(
+                form =>
+                {
+                    Assert.IsFalse(form.GetTestAccessor().IsRootedDirectoryPath(input));
+                },
+                currentDir);
+        }
+
+        [TestCase(@"c:\foo\bar")]
+        [TestCase(@"c:\foo\bar\")]
+        [TestCase(@"c:")]
+        [TestCase(@"c:\foo\bar")]
+        [TestCase(@"  c:\foo\bar  ")]
+        public void IsRootedDirectoryPath_returns_true_on_valid_paths(string input)
+        {
+            var currentDir = "bla";
+            RunFormTest(
+                form =>
+                {
+                    Assert.IsTrue(form.GetTestAccessor().IsRootedDirectoryPath(input));
+                },
+                currentDir);
+        }
+
         private void RunFormTest(Action<FormInit> testDriver, string path)
         {
             RunFormTest(
