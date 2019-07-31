@@ -430,6 +430,12 @@ namespace GitCommands
             set => SetBool("showgitstatusforartificialcommits", value);
         }
 
+        public static bool SortByAuthorDate
+        {
+            get => GetBool("sortbyauthordate", false);
+            set => SetBool("sortbyauthordate", value);
+        }
+
         public static bool CommitInfoShowContainedInBranches => CommitInfoShowContainedInBranchesLocal ||
                                                                 CommitInfoShowContainedInBranchesRemote ||
                                                                 CommitInfoShowContainedInBranchesRemoteIfNoLocal;

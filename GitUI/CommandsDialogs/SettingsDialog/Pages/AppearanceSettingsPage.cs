@@ -16,6 +16,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly TranslationString _noDictFile = new TranslationString("None");
         private readonly TranslationString _noDictFilesFound = new TranslationString("No dictionary files found in: {0}");
         private readonly TranslationString _noImageServiceTooltip = new TranslationString("A default image, if an email address has no matching Gravatar image.\r\nSee http://en.gravatar.com/site/implement/images#default-image for more details.");
+        private readonly TranslationString _authorDateSortWarningTooltip = new TranslationString("Sorting by author date may delay rendering of the revision graph.");
 
         public AppearanceSettingsPage()
         {
@@ -41,6 +42,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             ToolTip.SetToolTip(_NO_TRANSLATE_NoImageService, _noImageServiceTooltip.Text);
             ToolTip.SetToolTip(pictureAvatarHelp, _noImageServiceTooltip.Text);
+            ToolTip.SetToolTip(chkSortByAuthorDate, _authorDateSortWarningTooltip.Text);
             pictureAvatarHelp.Size = DpiUtil.Scale(pictureAvatarHelp.Size);
 
             // align 1st columns across all tables
@@ -69,6 +71,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AvatarImageCacheDays;
             ShowAuthorAvatarInCommitInfo.Checked = AppSettings.ShowAuthorAvatarInCommitInfo;
             ShowAuthorAvatarInCommitGraph.Checked = AppSettings.ShowAuthorAvatarColumn;
+            chkSortByAuthorDate.Checked = AppSettings.SortByAuthorDate;
             AvatarProvider.SelectedValue = AppSettings.AvatarProvider;
             _NO_TRANSLATE_NoImageService.SelectedValue = AppSettings.GravatarFallbackAvatarType;
             ManageGravatarOptionsDisplay();
@@ -128,6 +131,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowAuthorAvatarColumn = ShowAuthorAvatarInCommitGraph.Checked;
             AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatarInCommitInfo.Checked;
             AppSettings.AvatarImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
+            AppSettings.SortByAuthorDate = chkSortByAuthorDate.Checked;
 
             AppSettings.Translation = Language.Text;
             ResourceManager.Strings.Reinitialize();

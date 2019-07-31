@@ -31,6 +31,7 @@
             System.Windows.Forms.TableLayoutPanel tlpnlMain;
             this.gbGeneral = new System.Windows.Forms.GroupBox();
             this.tlpnlGeneral = new System.Windows.Forms.TableLayoutPanel();
+            this.chkSortByAuthorDate = new System.Windows.Forms.CheckBox();
             this.chkShowRelativeDate = new System.Windows.Forms.CheckBox();
             this.truncatePathMethod = new System.Windows.Forms.ComboBox();
             this.truncateLongFilenames = new System.Windows.Forms.Label();
@@ -112,6 +113,7 @@
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpnlGeneral.Controls.Add(this.chkSortByAuthorDate, 0, 4);
             this.tlpnlGeneral.Controls.Add(this.chkShowRelativeDate, 0, 0);
             this.tlpnlGeneral.Controls.Add(this.truncatePathMethod, 1, 3);
             this.tlpnlGeneral.Controls.Add(this.truncateLongFilenames, 0, 3);
@@ -120,13 +122,23 @@
             this.tlpnlGeneral.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpnlGeneral.Location = new System.Drawing.Point(8, 21);
             this.tlpnlGeneral.Name = "tlpnlGeneral";
-            this.tlpnlGeneral.RowCount = 4;
+            this.tlpnlGeneral.RowCount = 5;
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlGeneral.Size = new System.Drawing.Size(1520, 96);
+            this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlGeneral.Size = new System.Drawing.Size(1035, 119);
             this.tlpnlGeneral.TabIndex = 0;
+            // 
+            // chkSortByAuthorDate
+            // 
+            this.chkSortByAuthorDate.AutoSize = true;
+            this.chkSortByAuthorDate.Location = new System.Drawing.Point(3, 99);
+            this.chkSortByAuthorDate.Name = "chkSortByAuthorDate";
+            this.chkSortByAuthorDate.Size = new System.Drawing.Size(116, 17);
+            this.chkSortByAuthorDate.TabIndex = 12;
+            this.chkSortByAuthorDate.Text = "Sort by author date";
             // 
             // chkShowRelativeDate
             // 
@@ -538,5 +550,6 @@
         private System.Windows.Forms.PictureBox pictureAvatarHelp;
         private System.Windows.Forms.Label lblAvatarProvider;
         private System.Windows.Forms.ComboBox AvatarProvider;
+        private System.Windows.Forms.CheckBox chkSortByAuthorDate;
     }
 }
