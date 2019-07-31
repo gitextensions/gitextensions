@@ -1836,6 +1836,12 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
+        internal void ToggleAuthorDateSort()
+        {
+            AppSettings.SortByAuthorDate = !AppSettings.SortByAuthorDate;
+            ForceRefreshRevisions();
+        }
+
         internal void ToggleShowReflogReferences()
         {
             AppSettings.ShowReflogReferences = !AppSettings.ShowReflogReferences;

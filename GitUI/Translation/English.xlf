@@ -131,6 +131,10 @@ This action will be performed without warning while checking out branch.</source
         <source>Show author's avatar in the commit info view</source>
         <target />
       </trans-unit>
+      <trans-unit id="_authorDateSortWarningTooltip.Text">
+        <source>Sorting by author date may delay rendering of the revision graph.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_noDictFile.Text">
         <source>None</source>
         <target />
@@ -154,6 +158,10 @@ See http://en.gravatar.com/site/implement/images#default-image for more details.
       </trans-unit>
       <trans-unit id="chkShowRelativeDate.Text">
         <source>Show relative date instead of full date</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkSortByAuthorDate.Text">
+        <source>Sort by author date</source>
         <target />
       </trans-unit>
       <trans-unit id="downloadDictionary.Text">
@@ -8342,6 +8350,10 @@ See the changes in the commit form.</source>
   </file>
   <file datatype="plaintext" original="RevisionGrid" source-language="en">
     <body>
+      <trans-unit id="AuthorDateSort.Text">
+        <source>Sort commits by author date</source>
+        <target />
+      </trans-unit>
       <trans-unit id="GotoChildCommit.Text">
         <source>Go to child commit</source>
         <target />
