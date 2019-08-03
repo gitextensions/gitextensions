@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 using ApprovalTests;
 using CommonTestUtils;
@@ -64,6 +65,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
             ((Action)(() => ((Current.IRepositorySerialiser<RepositoryCategory>)_repositoryXmlSerialiser).Serialize(null))).Should().Throw<NotSupportedException>();
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [Test]
         public void Verify_backwards_compatibility_of_object_graph()
         {

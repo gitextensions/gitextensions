@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using ApprovalTests;
 using AppVeyorIntegration;
 using CommonTestUtils;
@@ -30,12 +31,14 @@ namespace AppVeyorIntegrationTests
             buildInfo.Should().HaveCount(0);
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [Test]
         public void Should_return_a_build_Info_When_Json_content_is_the_one_of_a_pull_request_build()
         {
             Approvals.Verify(BuildBuildInfoForFile("AppVeyorResult_pull_request_build.json"));
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [Test]
         public void Should_return_a_build_Info_When_Json_content_is_the_one_of_a_master_build()
         {
