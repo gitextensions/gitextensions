@@ -1355,6 +1355,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
   </file>
   <file datatype="plaintext" original="FileViewer" source-language="en">
     <body>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_largeFileSizeWarning.Text">
         <source>This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.</source>
         <target />

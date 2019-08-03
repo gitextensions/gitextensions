@@ -30,6 +30,7 @@ namespace GitUI.Editor
         /// </summary>
         public event Action EscapePressed;
 
+        private readonly TranslationString _error = new TranslationString("Error");
         private readonly TranslationString _largeFileSizeWarning = new TranslationString("This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.");
 
         public event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
@@ -51,15 +52,19 @@ namespace GitUI.Editor
         [Description("Sets what kind of whitespace changes shall be ignored in diffs")]
         [DefaultValue(IgnoreWhitespaceKind.None)]
         public IgnoreWhitespaceKind IgnoreWhitespace { get; set; }
+
         [Description("Show diffs with <n> lines of context.")]
         [DefaultValue(3)]
         public int NumberOfContextLines { get; set; }
+
         [Description("Show diffs with entire file.")]
         [DefaultValue(false)]
         public bool ShowEntireFile { get; set; }
+
         [Description("Treat all files as text.")]
         [DefaultValue(false)]
         public bool TreatAllFilesAsText { get; set; }
+
         [Browsable(false)]
         public byte[] FilePreamble { get; private set; }
 
@@ -427,11 +432,18 @@ namespace GitUI.Editor
 
             long GetFileLength()
             {
-                var file = GetFileInfo(fileName);
-
-                if (file.Exists)
+                try
                 {
-                    return file.Length;
+                    var file = GetFileInfo(fileName);
+
+                    if (file.Exists)
+                    {
+                        return file.Length;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, $"{ex.Message}{Environment.NewLine}{fileName}", _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 // If the file does not exist, it doesn't matter what size we
@@ -479,11 +491,9 @@ namespace GitUI.Editor
             ViewCurrentChanges(item.Name, item.OldName, isStaged, item.IsSubmodule, item.GetSubmoduleStatusAsync, openWithDifftool);
         }
 
-        public void ViewCurrentChanges(string fileName, string oldFileName, bool staged,
+        private void ViewCurrentChanges(string fileName, string oldFileName, bool staged,
             bool isSubmodule, Func<Task<GitSubmoduleStatus>> getStatusAsync, [CanBeNull] Action openWithDifftool)
         {
-            // BUG why do we call getStatusAsync() twice
-
             ShowOrDeferAsync(
                 fileName,
                 async () =>
