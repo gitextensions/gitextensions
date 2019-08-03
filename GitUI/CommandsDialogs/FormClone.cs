@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
@@ -252,11 +253,14 @@ namespace GitUI.CommandsDialogs
                     branch = null;
                 }
 
-                var cloneCmd = GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
-                            CentralRepository.Checked, cbIntializeAllSubmodules.Checked, branch, depth, isSingleBranch, cbLfs.Checked);
+                string sourceRepo = _NO_TRANSLATE_From.Text;
+                var cloneCmd = GitCommandHelpers.CloneCmd(sourceRepo, dirTo,
+                                                          CentralRepository.Checked,
+                                                          cbIntializeAllSubmodules.Checked,
+                                                          branch, depth, isSingleBranch, cbLfs.Checked);
                 using (var fromProcess = new FormRemoteProcess(Module, AppSettings.GitCommand, cloneCmd))
                 {
-                    fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
+                    fromProcess.SetUrlTryingToConnect(sourceRepo);
                     fromProcess.ShowDialog(this);
 
                     if (fromProcess.ErrorOccurred() || Module.InTheMiddleOfPatch())
@@ -265,7 +269,13 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(dirTo));
+                ThreadHelper.JoinableTaskFactory.Run(() =>
+                {
+                    RepositoryHistoryManager.Remotes.AddAsMostRecentAsync(sourceRepo);
+                    RepositoryHistoryManager.Locals.AddAsMostRecentAsync(dirTo);
+                    return Task.CompletedTask;
+                });
+
                 if (!string.IsNullOrEmpty(_puttySshKey))
                 {
                     var clonedGitModule = new GitModule(dirTo);
