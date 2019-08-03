@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using ApprovalTests;
 using FluentAssertions;
 using GitCommands.UserRepositoryHistory;
@@ -24,6 +25,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             ((Action)(() => _repositoryXmlSerialiser.Deserialize(null))).Should().Throw<ArgumentException>();
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [Test]
         public void Deserialize_remote_repositories_with_ns()
         {
@@ -60,6 +62,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             Approvals.VerifyAll(repositories, "path");
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [Test]
         public void Deserialize_remote_repositories_without_ns()
         {
@@ -102,6 +105,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             ((Action)(() => _repositoryXmlSerialiser.Serialize(null))).Should().Throw<ArgumentNullException>();
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [Test]
         public void Serialize_recent_repositories()
         {
