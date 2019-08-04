@@ -1459,6 +1459,8 @@ namespace GitUI.CommandsDialogs
             _dashboard?.RefreshContent();
 
             _gitStatusMonitor.Active = NeedsGitStatusMonitor() && Module.IsValidGitWorkingDir();
+
+            RefreshDefaultPullAction();
         }
 
         private void TagToolStripMenuItemClick(object sender, EventArgs e)

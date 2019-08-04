@@ -5,11 +5,19 @@ using System.IO;
 using System.Linq;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class GeneralSettingsPage : SettingsPageWithHeader
     {
+        private readonly TranslationString _openPullDialog = new TranslationString("Open pull dialog");
+        private readonly TranslationString _pullMerge = new TranslationString("Pull - merge");
+        private readonly TranslationString _pullRebase = new TranslationString("Pull - rebase");
+        private readonly TranslationString _fetch = new TranslationString("Fetch");
+        private readonly TranslationString _fetchAll = new TranslationString("Fetch all");
+        private readonly TranslationString _fetchAndPruneAll = new TranslationString("Fetch and prune all");
+
         public GeneralSettingsPage()
         {
             InitializeComponent();
@@ -32,6 +40,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                                                      .ToArray();
                 cbDefaultCloneDestination.Items.AddRange(historicPaths);
             });
+
+            var pullActions = new[]
+            {
+                new { Key = _openPullDialog, Value = AppSettings.PullAction.None },
+                new { Key = _pullMerge, Value = AppSettings.PullAction.Merge },
+                new { Key = _pullRebase, Value = AppSettings.PullAction.Rebase },
+                new { Key = _fetch, Value = AppSettings.PullAction.Fetch },
+                new { Key = _fetchAll, Value = AppSettings.PullAction.FetchAll },
+                new { Key = _fetchAndPruneAll, Value = AppSettings.PullAction.FetchPruneAll },
+            };
+            cboDefaultPullAction.DisplayMember = "Key";
+            cboDefaultPullAction.ValueMember = "Value";
+            cboDefaultPullAction.DataSource = pullActions;
+            cboDefaultPullAction.SelectedIndex = 0;
         }
 
         public static SettingsPageReference GetPageReference()
@@ -73,6 +95,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowGitCommandLine.Checked = AppSettings.ShowGitCommandLine;
             chkUseFastChecks.Checked = AppSettings.UseFastChecks;
             cbDefaultCloneDestination.Text = AppSettings.DefaultCloneDestinationPath;
+            cboDefaultPullAction.SelectedValue
+                = AppSettings.DefaultPullAction != AppSettings.PullAction.Default ?
+                  AppSettings.DefaultPullAction : AppSettings.PullAction.None;
             chkFollowRenamesInFileHistoryExact.Checked = AppSettings.FollowRenamesInFileHistoryExactOnly;
             SetSubmoduleStatus();
 
@@ -98,6 +123,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowSubmoduleStatus = chkShowSubmoduleStatusInBrowse.Checked;
 
             AppSettings.DefaultCloneDestinationPath = cbDefaultCloneDestination.Text;
+            AppSettings.DefaultPullAction = (AppSettings.PullAction)cboDefaultPullAction.SelectedValue;
             AppSettings.FollowRenamesInFileHistoryExactOnly = chkFollowRenamesInFileHistoryExact.Checked;
 
             AppSettings.TelemetryEnabled = chkTelemetry.Checked;

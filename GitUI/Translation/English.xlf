@@ -7125,6 +7125,30 @@ Context menu for additional operations</source>
         <source>General</source>
         <target />
       </trans-unit>
+      <trans-unit id="_fetch.Text">
+        <source>Fetch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_fetchAll.Text">
+        <source>Fetch all</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_fetchAndPruneAll.Text">
+        <source>Fetch and prune all</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_openPullDialog.Text">
+        <source>Open pull dialog</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_pullMerge.Text">
+        <source>Pull - merge</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_pullRebase.Text">
+        <source>Pull - rebase</source>
+        <target />
+      </trans-unit>
       <trans-unit id="btnDefaultDestinationBrowse.Text">
         <source>Browse</source>
         <target />
@@ -7207,6 +7231,10 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="lblDefaultCloneDestination.Text">
         <source>Default clone destination</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblDefaultPullAction.Text">
+        <source>Default pull action</source>
         <target />
       </trans-unit>
       <trans-unit id="lblQuickSearchTimeout.Text">
