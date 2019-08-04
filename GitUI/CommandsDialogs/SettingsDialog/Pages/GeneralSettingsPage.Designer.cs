@@ -58,6 +58,8 @@
             this.tlpnlTelemetry = new System.Windows.Forms.TableLayoutPanel();
             this.chkTelemetry = new System.Windows.Forms.CheckBox();
             this.llblTelemetryPrivacyLink = new System.Windows.Forms.LinkLabel();
+            this.lblDefaultPullAction = new System.Windows.Forms.Label();
+            this.cboDefaultPullAction = new System.Windows.Forms.ComboBox();
             tlpnlMain = new System.Windows.Forms.TableLayoutPanel();
             tlpnlMain.SuspendLayout();
             this.groupBoxPerformance.SuspendLayout();
@@ -260,7 +262,7 @@
             this.groupBoxBehaviour.Location = new System.Drawing.Point(3, 248);
             this.groupBoxBehaviour.Name = "groupBoxBehaviour";
             this.groupBoxBehaviour.Padding = new System.Windows.Forms.Padding(8);
-            this.groupBoxBehaviour.Size = new System.Drawing.Size(1318, 222);
+            this.groupBoxBehaviour.Size = new System.Drawing.Size(1188, 249);
             this.groupBoxBehaviour.TabIndex = 1;
             this.groupBoxBehaviour.TabStop = false;
             this.groupBoxBehaviour.Text = "Behaviour";
@@ -274,9 +276,9 @@
             this.tlpnlBehaviour.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpnlBehaviour.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlBehaviour.Controls.Add(this.chkFollowRenamesInFileHistoryExact, 1, 4);
-            this.tlpnlBehaviour.Controls.Add(this.RevisionGridQuickSearchTimeout, 1, 7);
+            this.tlpnlBehaviour.Controls.Add(this.RevisionGridQuickSearchTimeout, 1, 8);
             this.tlpnlBehaviour.Controls.Add(this.btnDefaultDestinationBrowse, 2, 6);
-            this.tlpnlBehaviour.Controls.Add(this.lblQuickSearchTimeout, 0, 7);
+            this.tlpnlBehaviour.Controls.Add(this.lblQuickSearchTimeout, 0, 8);
             this.tlpnlBehaviour.Controls.Add(this.chkCloseProcessDialog, 0, 0);
             this.tlpnlBehaviour.Controls.Add(this.cbDefaultCloneDestination, 1, 6);
             this.tlpnlBehaviour.Controls.Add(this.chkShowGitCommandLine, 0, 1);
@@ -285,10 +287,12 @@
             this.tlpnlBehaviour.Controls.Add(this.chkStashUntrackedFiles, 0, 3);
             this.tlpnlBehaviour.Controls.Add(this.chkStartWithRecentWorkingDir, 0, 5);
             this.tlpnlBehaviour.Controls.Add(this.chkFollowRenamesInFileHistory, 0, 4);
+            this.tlpnlBehaviour.Controls.Add(this.lblDefaultPullAction, 0, 7);
+            this.tlpnlBehaviour.Controls.Add(this.cboDefaultPullAction, 1, 7);
             this.tlpnlBehaviour.Dock = System.Windows.Forms.DockStyle.Top;
             this.tlpnlBehaviour.Location = new System.Drawing.Point(8, 21);
             this.tlpnlBehaviour.Name = "tlpnlBehaviour";
-            this.tlpnlBehaviour.RowCount = 8;
+            this.tlpnlBehaviour.RowCount = 9;
             this.tlpnlBehaviour.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlBehaviour.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlBehaviour.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -297,7 +301,8 @@
             this.tlpnlBehaviour.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlBehaviour.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlBehaviour.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlBehaviour.Size = new System.Drawing.Size(1302, 193);
+            this.tlpnlBehaviour.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlBehaviour.Size = new System.Drawing.Size(1172, 220);
             this.tlpnlBehaviour.TabIndex = 0;
             // 
             // chkFollowRenamesInFileHistoryExact
@@ -504,6 +509,25 @@
             this.llblTelemetryPrivacyLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.llblTelemetryPrivacyLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LlblTelemetryPrivacyLink_LinkClicked);
             // 
+            // lblDefaultPullAction
+            // 
+            this.lblDefaultPullAction.AutoSize = true;
+            this.lblDefaultPullAction.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblDefaultPullAction.Location = new System.Drawing.Point(3, 167);
+            this.lblDefaultPullAction.Name = "lblDefaultPullAction";
+            this.lblDefaultPullAction.Size = new System.Drawing.Size(264, 27);
+            this.lblDefaultPullAction.TabIndex = 13;
+            this.lblDefaultPullAction.Text = "Default pull action";
+            this.lblDefaultPullAction.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cboDefaultPullAction
+            // 
+            this.cboDefaultPullAction.FormattingEnabled = true;
+            this.cboDefaultPullAction.Location = new System.Drawing.Point(273, 170);
+            this.cboDefaultPullAction.Name = "cboDefaultPullAction";
+            this.cboDefaultPullAction.Size = new System.Drawing.Size(121, 21);
+            this.cboDefaultPullAction.TabIndex = 14;
+            // 
             // GeneralSettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -565,5 +589,7 @@
         private System.Windows.Forms.TableLayoutPanel tlpnlTelemetry;
         private System.Windows.Forms.CheckBox chkTelemetry;
         private System.Windows.Forms.LinkLabel llblTelemetryPrivacyLink;
+        private System.Windows.Forms.Label lblDefaultPullAction;
+        private System.Windows.Forms.ComboBox cboDefaultPullAction;
     }
 }
