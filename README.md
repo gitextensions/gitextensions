@@ -175,4 +175,4 @@ Watch us work on this project.
 
 # Code Quality Monitor
 
-[![Code quality status](https://codescene.io/projects/4180/status.svg) Full analysis results at **codescene.io**.](https://codescene.io/projects/4180/jobs/latest-successful/results)
+[![Code quality status](https://codescene.io/projects/5326/status.svg) Full analysis results at **codescene.io**.](https://codescene.io/projects/5326/jobs/latest-successful/results)
