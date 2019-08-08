@@ -337,8 +337,9 @@ namespace GitCommands
             set => SetBool("applypatchignorewhitespace", value);
         }
 
-        public static bool UsePatienceDiffAlgorithm
+        public static bool UseHistogramDiffAlgorithm
         {
+            // The settings key has patience in the name for historical reasons
             get => GetBool("usepatiencediffalgorithm", false);
             set => SetBool("usepatiencediffalgorithm", value);
         }

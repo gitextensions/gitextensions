@@ -80,7 +80,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             chkCheckForUncommittedChangesInCheckoutBranch.Checked = AppSettings.CheckForUncommittedChangesInCheckoutBranch;
             chkStartWithRecentWorkingDir.Checked = AppSettings.StartWithRecentWorkingDir;
-            chkUsePatienceDiffAlgorithm.Checked = AppSettings.UsePatienceDiffAlgorithm;
+            chkUseHistogramDiffAlgorithm.Checked = AppSettings.UseHistogramDiffAlgorithm;
             RevisionGridQuickSearchTimeout.Value = AppSettings.RevisionGridQuickSearchTimeout;
             chkFollowRenamesInFileHistory.Checked = AppSettings.FollowRenamesInFileHistory;
             chkStashUntrackedFiles.Checked = AppSettings.IncludeUntrackedFilesInAutoStash;
@@ -108,7 +108,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             AppSettings.CheckForUncommittedChangesInCheckoutBranch = chkCheckForUncommittedChangesInCheckoutBranch.Checked;
             AppSettings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
-            AppSettings.UsePatienceDiffAlgorithm = chkUsePatienceDiffAlgorithm.Checked;
+            AppSettings.UseHistogramDiffAlgorithm = chkUseHistogramDiffAlgorithm.Checked;
             AppSettings.IncludeUntrackedFilesInAutoStash = chkStashUntrackedFiles.Checked;
             AppSettings.FollowRenamesInFileHistory = chkFollowRenamesInFileHistory.Checked;
             AppSettings.ShowGitStatusInBrowseToolbar = chkShowGitStatusInToolbar.Checked;

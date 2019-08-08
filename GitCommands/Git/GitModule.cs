@@ -2266,7 +2266,7 @@ namespace GitCommands
             {
                 "--no-color",
                 extraDiffArguments,
-                { AppSettings.UsePatienceDiffAlgorithm, "--patience" },
+                { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
                 "-M -C",
                 diffOptions
             };
@@ -2577,7 +2577,7 @@ namespace GitCommands
                     "--no-color",
                     { staged, "-M -C --cached" },
                     extraDiffArguments,
-                    { AppSettings.UsePatienceDiffAlgorithm, "--patience" },
+                    { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
                     "--",
                     fileName.ToPosixPath().Quote(),
                     { staged, oldFileName?.ToPosixPath().Quote() }
@@ -3914,7 +3914,7 @@ namespace GitCommands
                 "--no-commit-id",
                 extraArgs,
                 revisionOfMergeCommit.Guid,
-                { AppSettings.UsePatienceDiffAlgorithm, "--patience" },
+                { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
                 "--",
                 filePath.ToPosixPath().Quote()
             };
