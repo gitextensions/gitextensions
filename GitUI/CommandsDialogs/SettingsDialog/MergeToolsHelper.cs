@@ -158,7 +158,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "semanticdiff":
                     return "semanticmergetool.exe";
                 case "tmerge":
-                    return "TortoiseMerge.exe";
+                    return "TortoiseGitMerge.exe";
                 case "winmerge":
                     return "winmergeu.exe";
                 case "vsdiffmerge":
@@ -199,10 +199,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     folder = Path.Combine(folder, @"PlasticSCM4\semanticmerge\");
                     return FindFileInFolders(exeName, folder);
                 case "tmerge":
-                    exeName = "TortoiseGitMerge.exe"; // TortoiseGit 1.8 use new names
                     string difftoolPath = FindFileInFolders(exeName, @"TortoiseGit\bin\");
                     if (string.IsNullOrEmpty(difftoolPath))
                     {
+                        // TortoiseGit <1.8 (2013), TortoiseSVN
                         exeName = "TortoiseMerge.exe";
                         difftoolPath = FindFileInFolders(exeName, @"TortoiseGit\bin\", @"TortoiseSVN\bin\");
                     }
@@ -266,19 +266,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             string mergeTool = mergeToolText.ToLowerInvariant();
             var exeName = GetDiffToolExeFile(mergeTool);
-            if (exeName != null)
-            {
-                return exeName;
-            }
 
-            switch (mergeTool)
-            {
-                case "tortoisemerge":
-                    return "TortoiseMerge.exe";
-            }
-
-            return null;
-        }
+            return exeName;
+         }
 
         public static string FindMergeToolFullPath(ConfigFileSettingsSet settings, string mergeToolText, out string exeName)
         {
@@ -319,10 +309,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     folder = Path.Combine(folder, @"PlasticSCM4\semanticmerge\");
                     return FindFileInFolders(exeName, folder);
                 case "tortoisemerge":
-                    exeName = "TortoiseGitMerge.exe"; // TortoiseGit 1.8 use new names
                     string path = FindFileInFolders(exeName, @"TortoiseGit\bin\");
                     if (string.IsNullOrEmpty(path))
                     {
+                        // TortoiseGit <1.8 (2013), TortoiseSVN
                         exeName = "TortoiseMerge.exe";
                         path = FindFileInFolders(exeName, @"TortoiseGit\bin\", @"TortoiseSVN\bin\");
                     }
