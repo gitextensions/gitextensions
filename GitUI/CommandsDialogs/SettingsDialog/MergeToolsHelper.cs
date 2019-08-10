@@ -100,42 +100,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
 
         [CanBeNull]
-        public static string FindPathForKDiff(string pathFromConfig)
-        {
-            if (string.IsNullOrEmpty(pathFromConfig) || !File.Exists(pathFromConfig))
-            {
-                string kdiff3path = pathFromConfig;
-                if (EnvUtils.RunningOnUnix())
-                {
-                    // Maybe command -v is better, but didn't work
-                    kdiff3path = new Executable("which").GetOutput("kdiff3").Replace("\n", "");
-                    if (string.IsNullOrEmpty(kdiff3path))
-                    {
-                        return null;
-                    }
-                }
-                else if (EnvUtils.RunningOnWindows())
-                {
-                    string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "");
-                    if (regkdiff3path != "")
-                    {
-                        regkdiff3path += "\\kdiff3.exe";
-                    }
-
-                    kdiff3path = FindFileInFolders("kdiff3.exe", @"KDiff3\", regkdiff3path);
-                    if (string.IsNullOrEmpty(kdiff3path))
-                    {
-                        return null;
-                    }
-                }
-
-                return kdiff3path;
-            }
-
-            return null;
-        }
-
-        [CanBeNull]
         public static string GetDiffToolExeFile(string difftoolText)
         {
             string diffTool = difftoolText.ToLowerInvariant();
@@ -229,6 +193,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return FindFileInFolders(exeName, paths);
         }
 
+        /// <summary>
+        /// Get the suggested parameters for known difftools
+        /// This should probably be replaced with the built in Git handling instead
+        /// </summary>
+        /// <param name="diffToolText">The difftool</param>
+        /// <param name="exeFile">The executable</param>
+        /// <returns>The suggested parameters</returns>
         public static string DiffToolCmdSuggest(string diffToolText, string exeFile)
         {
             string diffTool = diffToolText.ToLowerInvariant();
@@ -333,11 +304,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public static string MergeToolcmdSuggest(string mergeToolText, string exeFile)
         {
             string mergeTool = mergeToolText.ToLowerInvariant();
-            switch (mergeTool)
-            {
-                case "kdiff3":
-                    return "";
-            }
 
             return AutoConfigMergeToolCmd(mergeToolText, exeFile);
         }

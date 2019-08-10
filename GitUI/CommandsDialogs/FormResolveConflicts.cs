@@ -558,33 +558,21 @@ namespace GitUI.CommandsDialogs
                 _mergetoolCmd = Module.GetEffectiveSetting($"mergetool.{_mergetool}.cmd");
                 _mergetoolPath = Module.GetEffectiveSetting($"mergetool.{_mergetool}.path");
 
-                if (_mergetool == "kdiff3")
+                if (string.IsNullOrWhiteSpace(_mergetoolCmd) && string.IsNullOrWhiteSpace(_mergetoolPath))
                 {
-                    if (string.IsNullOrEmpty(_mergetoolPath))
-                    {
-                        _mergetoolPath = "kdiff3";
-                    }
-
-                    _mergetoolCmd = "\"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
+                    MessageBox.Show(this, _noMergeToolConfigured.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
                 }
-                else
-                {
-                    if (string.IsNullOrWhiteSpace(_mergetoolCmd) && string.IsNullOrWhiteSpace(_mergetoolPath))
-                    {
-                        MessageBox.Show(this, _noMergeToolConfigured.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return false;
-                    }
 
-                    if (EnvUtils.RunningOnWindows())
+                if (EnvUtils.RunningOnWindows())
+                {
+                    // This only works when on Windows....
+                    const string executablePattern = ".exe";
+                    int idx = _mergetoolCmd.IndexOf(executablePattern);
+                    if (idx >= 0)
                     {
-                        // This only works when on Windows....
-                        const string executablePattern = ".exe";
-                        int idx = _mergetoolCmd.IndexOf(executablePattern);
-                        if (idx >= 0)
-                        {
-                            _mergetoolPath = _mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim('\"', ' ');
-                            _mergetoolCmd = _mergetoolCmd.Substring(idx + executablePattern.Length + 1);
-                        }
+                        _mergetoolPath = _mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim('\"', ' ');
+                        _mergetoolCmd = _mergetoolCmd.Substring(idx + executablePattern.Length + 1);
                     }
                 }
 
