@@ -89,4 +89,4 @@ YYYY/MM/DD, github id, Full name, email
 2019/07/28, FisherTsai, Fisher Tsai, fishy0903(at)gmail.com
 2019/07/28, manuelspezzani, Manuel Spezzani, manuel.spezzani(at)gmail.com
 2019/07/31, asfarley, Alexander Farley, alexander.s.farley(at)gmail.com
-2019/08/11, Kackao, Karsten Rathlev, krathlev(at)gmail.com
+2019/08/11, KarstenRa, Karsten Rathlev, krathlev(at)gmail.com
