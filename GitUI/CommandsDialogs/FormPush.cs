@@ -204,7 +204,7 @@ namespace GitUI.CommandsDialogs
 
         private void PushClick(object sender, EventArgs e)
         {
-            DialogResult = PushChanges(this) ? DialogResult.OK : DialogResult.Abort;
+            DialogResult = PushChanges(this) ? DialogResult.OK : DialogResult.None;
         }
 
         private void BindRemotesDropDown(string selectedRemoteName)
