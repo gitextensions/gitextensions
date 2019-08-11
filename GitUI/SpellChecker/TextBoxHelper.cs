@@ -23,7 +23,7 @@ namespace GitUI.SpellChecker
 
             var lineNumber = rtb.GetLineFromCharIndex(index);
             var lineIndex = NativeMethods.SendMessageInt(rtb.Handle, NativeMethods.EM_LINEINDEX, new IntPtr(lineNumber), IntPtr.Zero).ToInt32();
-            var lineLength = NativeMethods.SendMessageInt(rtb.Handle, NativeMethods.EM_LINELENGTH, new IntPtr(lineNumber), IntPtr.Zero).ToInt32();
+            var lineLength = NativeMethods.SendMessageInt(rtb.Handle, NativeMethods.EM_LINELENGTH, new IntPtr(index), IntPtr.Zero).ToInt32();
 
             var charRange = new NativeMethods.CHARRANGE
             {
