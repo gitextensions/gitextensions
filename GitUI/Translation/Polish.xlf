@@ -239,7 +239,7 @@ Zobacz szczegóły pod http://en.gravatar.com/site/implement/images/</target>
       </trans-unit>
       <trans-unit id="truncatePathMethod.Item0">
         <source>None</source>
-        <target>Nie obcinaj</target>
+        <target>Brak</target>
         
       </trans-unit>
       <trans-unit id="truncatePathMethod.Item1">
@@ -383,7 +383,7 @@ Zobacz szczegóły pod http://en.gravatar.com/site/implement/images/</target>
       </trans-unit>
       <trans-unit id="_noneItem.Text">
         <source>None</source>
-        <target>Nie obcinaj</target>
+        <target>Brak</target>
         
       </trans-unit>
       <trans-unit id="checkBoxEnableBuildServerIntegration.Text">
@@ -1100,7 +1100,7 @@ Upewnij się, czy jest zainstalowany git (Git dla Windows lub cygwin) lub ustal 
       </trans-unit>
       <trans-unit id="chkUndoLastCommitConfirmation.Text">
         <source>Undo last commit</source>
-        <target>Cofnij ostatnie zatwierdzenie</target>
+        <target>Cofnij ostatnie zatwierdzenieCofnij ostatnie zatwierdzenie</target>
         
       </trans-unit>
       <trans-unit id="chkUpdateModules.Text">
@@ -1736,7 +1736,7 @@ Upewnij się, czy jest zainstalowany git (Git dla Windows lub cygwin) lub ustal 
       </trans-unit>
       <trans-unit id="lblReplaceWith.Text">
         <source>Re&amp;place with:</source>
-        <target>Zastą&amp;p z:</target>
+        <target>&amp;Zastąp z:</target>
         
       </trans-unit>
     </body>
@@ -2117,7 +2117,7 @@ Będziesz mieć uprawnienia wysyłania. {2}</target>
       </trans-unit>
       <trans-unit id="Apply.Text">
         <source>Apply patch</source>
-        <target>Zastosuj łatkę</target>
+        <target>Stosowanie łatek</target>
         
       </trans-unit>
       <trans-unit id="BrowseDir.Text">
@@ -2137,7 +2137,7 @@ Będziesz mieć uprawnienia wysyłania. {2}</target>
       </trans-unit>
       <trans-unit id="Mergetool.Text">
         <source>Solve conflicts</source>
-        <target>Rozwiąż konflikt</target>
+        <target>Rozwiąż konflikty</target>
         
       </trans-unit>
       <trans-unit id="PatchDirMode.Text">
@@ -2169,12 +2169,12 @@ Będziesz mieć uprawnienia wysyłania. {2}</target>
       </trans-unit>
       <trans-unit id="_applyPatchMsgBox.Text">
         <source>Apply patch</source>
-        <target>Zastosuj łatkę</target>
+        <target>Stosowanie łatek</target>
         
       </trans-unit>
       <trans-unit id="_conflictMergetoolText.Text">
         <source>Solve conflicts</source>
-        <target>Rozwiąż konflikt</target>
+        <target>Rozwiąż konflikty</target>
         
       </trans-unit>
       <trans-unit id="_conflictResolvedText.Text">
@@ -2785,7 +2785,7 @@ Chcesz kontynuować?</target>
       </trans-unit>
       <trans-unit id="fileExplorerToolStripMenuItem.Text">
         <source>File Explorer</source>
-        <target>Otwórz folder</target>
+        <target>Eksplorator plików</target>
         
       </trans-unit>
       <trans-unit id="fileToolStripMenuItem.Text">
@@ -2984,7 +2984,7 @@ Chcesz kontynuować?</target>
       </trans-unit>
       <trans-unit id="stashChangesToolStripMenuItem.Text">
         <source>Stash</source>
-        <target>Odłóż</target>
+        <target>Odłożone</target>
         
       </trans-unit>
       <trans-unit id="stashPopToolStripMenuItem.Text">
@@ -3074,7 +3074,7 @@ Chcesz kontynuować?</target>
       </trans-unit>
       <trans-unit id="translateToolStripMenuItem.Text">
         <source>Translate</source>
-        <target>Tłumaczenie</target>
+        <target>Przetłumacz</target>
         
       </trans-unit>
       <trans-unit id="tsmiFavouriteRepositories.Text">
@@ -3094,7 +3094,7 @@ Chcesz kontynuować?</target>
       </trans-unit>
       <trans-unit id="undoLastCommitToolStripMenuItem.Text">
         <source>Undo last commit</source>
-        <target>Cofnij ostatnie zatwierdzenie</target>
+        <target>Cofnij ostatnie zatwierdzenieCofnij ostatnie zatwierdzenie</target>
         
       </trans-unit>
       <trans-unit id="updateAllSubmodulesToolStripMenuItem.Text">
@@ -3195,7 +3195,7 @@ Chcesz kontynuować?</target>
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>Checkout</source>
-        <target>Przełącz</target>
+        <target>Przełączanie</target>
         
       </trans-unit>
       <trans-unit id="Remotebranch.Text">
@@ -3300,7 +3300,7 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="rbStash.Text">
         <source>Stash</source>
-        <target>Odłóż</target>
+        <target>Odłożone</target>
         
       </trans-unit>
     </body>
@@ -3319,7 +3319,7 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="OkCheckout.Text">
         <source>Checkout</source>
-        <target>Przełącz</target>
+        <target>Przełączanie</target>
         
       </trans-unit>
       <trans-unit id="_noRevisionSelectedMsgBox.Text">
@@ -3329,7 +3329,7 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="_noRevisionSelectedMsgBoxCaption.Text">
         <source>Checkout</source>
-        <target>Przełącz</target>
+        <target>Przełączanie</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -3343,7 +3343,7 @@ Are you sure?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Cherry pick commit</source>
-        <target>Dobieranie zatwierdzenia</target>
+        <target>Dobierz zatwierdzenie</target>
         
       </trans-unit>
       <trans-unit id="AutoCommit.Text">
@@ -3710,7 +3710,7 @@ gitex.cmd / gitex (umieszczone w tym samym folderze, co GitExtensions.exe):</tar
     <body>
       <trans-unit id="$this.Text">
         <source>Commit</source>
-        <target>Zatwierdź</target>
+        <target>Zatwierdzenie</target>
         
       </trans-unit>
       <trans-unit id="Amend.Text">
@@ -3735,7 +3735,7 @@ gitex.cmd / gitex (umieszczone w tym samym folderze, co GitExtensions.exe):</tar
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>Commit</source>
-        <target>Zatwierdź</target>
+        <target>Zatwierdzenie</target>
         
       </trans-unit>
       <trans-unit id="Reset.Text">
@@ -3953,7 +3953,7 @@ Chcesz kontynuować?</target>
       </trans-unit>
       <trans-unit id="_notOnBranchCaption.Text">
         <source>Not on a branch</source>
-        <target>Nie w gałęzi</target>
+        <target>Nie na gałęzi</target>
         
       </trans-unit>
       <trans-unit id="_notOnBranchMainInstruction.Text">
@@ -4130,7 +4130,7 @@ Cofnięcie ustawienia szablonu:
       </trans-unit>
       <trans-unit id="commitSubmoduleChanges.Text">
         <source>Commit submodule changes</source>
-        <target>Zmiany modułów zależnych zatwierdzenia</target>
+        <target>Zatwierdź zmiany modułu zależnego</target>
         
       </trans-unit>
       <trans-unit id="commitTemplatesToolStripMenuItem.Text">
@@ -4274,7 +4274,7 @@ Cofnięcie ustawienia szablonu:
       </trans-unit>
       <trans-unit id="resetSubmoduleChanges.Text">
         <source>Reset submodule changes</source>
-        <target>Zresetuj zmiany modułów zależnych</target>
+        <target>Zresetuj zmiany modułu zależnego</target>
         
       </trans-unit>
       <trans-unit id="resetUnstagedChangesToolStripMenuItem.Text">
@@ -5351,7 +5351,7 @@ To ustawienie powinno być zmieniane tylko, jeżeli doświadczasz problemów.</t
       </trans-unit>
       <trans-unit id="FormatPatch.Text">
         <source>Create patch(es)</source>
-        <target>Stwórz łatki</target>
+        <target>Stwórz łatk(ę/i)</target>
         
       </trans-unit>
       <trans-unit id="SaveToDir.Text">
@@ -5367,6 +5367,10 @@ To ustawienie powinno być zmieniane tylko, jeżeli doświadczasz problemów.</t
       <trans-unit id="_currentBranchText.Text">
         <source>Current branch:</source>
         <target>Bieżąca gałąź:</target>
+        
+      </trans-unit>
+      <trans-unit id="_failCreatePatch.Text">
+        <source>Unable to create patch file(s)</source>
         
       </trans-unit>
       <trans-unit id="_noEmailEnteredText.Text">
@@ -5797,7 +5801,7 @@ Proszę wybrać katalog.</target>
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Repository type</source>
-        <target>Typ repozytorium</target>
+        <target>Rodzaj repozytorium</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -6200,7 +6204,7 @@ poziomie. Dostosowanie jest również wykonywane do zwyczajnego drzewa przodka.<
       </trans-unit>
       <trans-unit id="Mergetool.Text">
         <source>Solve conflicts</source>
-        <target>Rozwiąż konflikt</target>
+        <target>Rozwiąż konflikty</target>
         
       </trans-unit>
       <trans-unit id="NoTags.Text">
@@ -6427,7 +6431,7 @@ Ta akcja zainicjuje i zaktualizuje rekurencyjnie wszystkie moduły zależne.</ta
       </trans-unit>
       <trans-unit id="_selectRemoteRepository.Text">
         <source>Please select a remote repository</source>
-        <target>Proszę wybrać zdalne repozytorium</target>
+        <target>Proszę wybrać katalog zdalny</target>
         
       </trans-unit>
       <trans-unit id="_selectSourceDirectory.Text">
@@ -6551,7 +6555,7 @@ Ta akcja zainicjuje i zaktualizuje rekurencyjnie wszystkie moduły zależne.</ta
       </trans-unit>
       <trans-unit id="RecursiveSubmodules.Item0">
         <source>None</source>
-        <target>Nic nie rób</target>
+        <target>Brak</target>
         
       </trans-unit>
       <trans-unit id="RecursiveSubmodules.Item1">
@@ -6835,7 +6839,7 @@ Chcesz to zrobić teraz?</target>
       </trans-unit>
       <trans-unit id="Mergetool.Text">
         <source>Solve conflicts</source>
-        <target>Rozwiąż konflikt</target>
+        <target>Rozwiąż konflikty</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -7391,7 +7395,7 @@ Przywrócono do pustej wartości.</target>
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>Rename</source>
-        <target>Zmień nazwę</target>
+        <target>Przemianuj</target>
         
       </trans-unit>
       <trans-unit id="_branchRenameFailed.Text">
@@ -7973,7 +7977,7 @@ Chcesz go użyć?</target>
       </trans-unit>
       <trans-unit id="columnHeader1.Text">
         <source>No.</source>
-        <target>Lp.</target>
+        <target>Nr</target>
         
       </trans-unit>
       <trans-unit id="columnHeader2.Text">
@@ -8106,7 +8110,7 @@ Chcesz teraz ustawić prawidłową komendę? Jeżeli nie, ustawienia globalne i 
       </trans-unit>
       <trans-unit id="buttonApply.Text">
         <source>Apply</source>
-        <target>Zastosuj</target>
+        <target>Zatwierdź</target>
         
       </trans-unit>
       <trans-unit id="buttonCancel.Text">
@@ -8353,7 +8357,7 @@ Chcesz zarejestrować OdciskPalca hosta i zresetować proces?</target>
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>Commit</source>
-        <target>Zatwierdź</target>
+        <target>Zatwierdzenie</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
@@ -8377,7 +8381,7 @@ Chcesz zarejestrować OdciskPalca hosta i zresetować proces?</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Translate</source>
-        <target>Tłumaczenie</target>
+        <target>Przetłumacz</target>
         
       </trans-unit>
       <trans-unit id="_allText.Text">
@@ -8683,7 +8687,7 @@ Odzyskaj. Użyj menu kontekstowego dla dodatkowych operacji.</target>
       </trans-unit>
       <trans-unit id="mnuLostObjectView.Text">
         <source>View</source>
-        <target>Pokaż</target>
+        <target>Widok</target>
         
       </trans-unit>
       <trans-unit id="mnuLostObjectsCreateBranch.Text">
@@ -9752,7 +9756,9 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnuBtnManageRemotesFromRootNode.Text">
         <source>&amp;Manage...</source>
+        <target>&amp;Zarządzaj zdalnymi</target>
         <target>Za&amp;rządzaj</target>
+        <target>Za&amp;rządzaj...</target>
         
       </trans-unit>
       <trans-unit id="mnuBtnPruneAllBranchesFromARemote.Text">
@@ -9825,7 +9831,9 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnManageRemotes.Text">
         <source>&amp;Manage...</source>
+        <target>&amp;Zarządzaj zdalnymi</target>
         <target>Za&amp;rządzaj</target>
+        <target>Za&amp;rządzaj...</target>
         
       </trans-unit>
       <trans-unit id="mnubtnManageSubmodules.Text">
@@ -10297,7 +10305,7 @@ Przejrzyj zmiany w formularzu zatwierdzenia.</target>
       </trans-unit>
       <trans-unit id="GotoCommit.Text">
         <source>Go to commit...</source>
-        <target>Przejdź do zatwierdzenia</target>
+        <target>Szukaj...</target>
         
       </trans-unit>
       <trans-unit id="GotoCurrentRevision.Text">

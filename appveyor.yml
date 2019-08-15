@@ -43,8 +43,8 @@ build_script:
     Write-Output "Platform: $env:IdeVersion"
 
     # for release branches mark the repo as clean
-    if (!$env:APPVEYOR_PULL_REQUEST_TITLE -and $env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
-      & .\Build\Mark-RepoClean.ps1
+    if (!$env:APPVEYOR_PULL_REQUEST_TITLE) {
+      & Build\Mark-RepoClean.ps1
     }
 
     # build
@@ -72,6 +72,7 @@ build_script:
 
 
 # to run your custom scripts instead of automatic tests
+#test: off
 test_script:
 - ps: |
     Write-Host "Tests are running..."
@@ -84,10 +85,28 @@ after_test:
 - ps: |
     Write-Host "Preparing build artifacts..."
     & .\Build\Prepare-Artifacts.ps1
-
+    # do not sign artifacts for non-release branches, publish dev builds
+    if ($env:APPVEYOR_PULL_REQUEST_TITLE -eq $true) {
+        Write-Host "[INFO]: Do not sign non-release branches"
+        Get-ChildItem GitExtensions-Portable-*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+        Get-ChildItem GitExtensionsVSIX.vsix | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+        Exit-AppVeyorBuild
+        return
+    }
 
 artifacts:
   # upload the generated portable archive only
-  - path: 'Setup/GitExtensions-Portable-*.zip'
-  - path: 'Setup/GitExtensions-pdbs-*.zip'
-  - path: 'GitExtensionsVSIX/bin/Release/GitExtensionsVSIX.vsix'
+  - path: 'combined.*-unsigned.zip'
+  - path: GitExtensions-pdbs-*.zip
+
+deploy:
+- provider: Webhook
+  on:
+    ARTIFACT_SIGNING_ENABLED: true
+  url: https://app.signpath.io/API/v1/7c19b2cf-90f7-4d15-9b12-1b615f7c18c4/Integrations/AppVeyor?SigningPolicyId=5c9879c7-0dea-4303-8e5b-fc4192a7b0de
+  on_build_success: true
+  on_build_failure: false
+  on_build_status_changed: false
+  method: POST
+  authorization:
+     secure: RdmJQ3LAsGIbtqbxlcn7wF8ESTbPSDiR0Fmyt11mDl+avSDd0HKexHA+sWQA3cN1K8aVnKTzvjGTQS8DSDmLzQ==
