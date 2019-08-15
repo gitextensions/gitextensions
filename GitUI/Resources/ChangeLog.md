@@ -1,6 +1,123 @@
 Changelog
 =========
 
+### Version 3.2.0 (16 Aug 2019)
+
+#### Features:
+* TortoiseGitMerge.exe old default name - PR [7004]
+* Add support for "--rebase-merges" for newest version of git - PR [6920]
+* Apply stash to some files - Issue [6902]
+* refactor: Move email settings from General to Detailed - PR [6881]
+* FormCreateBranch: Improve UX of CheckBox "Checkout after create" - PR [6860]
+* Blame: Fix "blame previous revision" feature - PR [6841]
+* Can I see commits ordered by author-date instead of commit-date? - Issue [6826]
+* Add revision links templates for GitHub and Azure DevOps services - PR [6785]
+* artificial context fixes - PR [6770]
+* Set recommended Git version to 2.22.0 - PR [6769]
+* Refactor "Check for updates" dialog - Issue [6738]
+* New script variables for branch and repository name - Issue [6736]
+* Too much CPU and RAM usage - Issue [6732]
+* ArgumentOutOfRangeException [not] selecting a language on first start - Issue [6726]
+* Feature: Download / Install MSI without redirect to Browser - PR [6682]
+* Dark theme fixes - PR [6651]
+* Move ArtificialCommits from Settings to grid View menu - PR [6638]
+* Request more information via NBug submission form - Issue [6607]
+* fix: Throws on `git remote` call outside git repo - PR [6586]
+* Improve stacktrace readability by using Ben.Demysifier - Issue [6569]
+* fix: Invalid URI when open invalid path - PR [6560]
+* RevisionGrid: Add branch icons in contextual menu - PR [6534]
+* Fix rebase and apply patches displayed patches status - PR [6531]
+* [Accessibility] "Default pull action" configuration - Issue [6443]
+* Add settings to configure blame display - PR [6430]
+* Changed GPG tab setting to show by default - PR [6331]
+* Gerrit plugin using deprecated features - Issue [6127]
+* Browse --> Diff Tab: Added images are not shown visualized - Issue [1391]
+
+#### Fixes:
+* Remote Repositories List Empty - Issue [6983]
+* [NBug] Illegal characters in path. - Issue [6982]
+* Crash on "Create new repository" - Issue [6955]
+* Commit message  incorrect height at 150% scale factor - Issue [6898]
+* Commit message highlight is one line too high for short commit titles - Issue [6895]
+* File history issue in a repository with an enabled sparse checkout - Issue [6892]
+* Unable to blame a file - Issue [6815]
+* [NBug] Erreur lors de la lecture du répertoire I:\gitLabCloud\clara\. - Issue [6812]
+* [NBug] OnActivate must be called on the UI thread. - Issue [6799]
+* [NBug] Could not find a part of the path 'H:\.gitconfig19636.tmp'. - Issue [6783]
+* [NBug] Object reference not set to an instance of an object. - Issue [6771]
+* [NBug] Access to the path 'C:\Users\Michael\AppData\Roaming\GitExt... - Issue [6767]
+* [NBug] Object reference not set to an instance of an object. - Issue [6757]
+* GE freezes when the avatar column is shown - Issue [6751]
+* [NBug] Specified method is not supported. - Issue [6717]
+* Settings path has changed - Issue [6696]
+* [NBug] The system cannot find the file specified - Issue [6687]
+* [NBug] An item with the same key has already been added. - Issue [6616]
+* [NBug] The path is not of a legal form. - Issue [6599]
+* Create branch on "working directory" creates revision 11111 instead of last known commit - Issue [6597]
+* [NBug] Object reference not set to an instance of an object. - Issue [6583]
+* [NBug] Value cannot be null.Parameter name: value - Issue [6549]
+* FormCommit incorrect overlay (scale factor 200%) - Issue [6532]
+* History not shown for a new file in a different branch - Issue [6458]
+* Delete tag not working - Issue [6281]
+* Commit message line endings modified by commit dialog - Issue [5908]
+
+
+[7004]:https://github.com/gitextensions/gitextensions/pull/7004
+[6983]:https://github.com/gitextensions/gitextensions/issues/6983
+[6982]:https://github.com/gitextensions/gitextensions/issues/6982
+[6955]:https://github.com/gitextensions/gitextensions/issues/6955
+[6920]:https://github.com/gitextensions/gitextensions/pull/6920
+[6902]:https://github.com/gitextensions/gitextensions/issues/6902
+[6898]:https://github.com/gitextensions/gitextensions/issues/6898
+[6895]:https://github.com/gitextensions/gitextensions/issues/6895
+[6892]:https://github.com/gitextensions/gitextensions/issues/6892
+[6881]:https://github.com/gitextensions/gitextensions/pull/6881
+[6860]:https://github.com/gitextensions/gitextensions/pull/6860
+[6841]:https://github.com/gitextensions/gitextensions/pull/6841
+[6826]:https://github.com/gitextensions/gitextensions/issues/6826
+[6815]:https://github.com/gitextensions/gitextensions/issues/6815
+[6812]:https://github.com/gitextensions/gitextensions/issues/6812
+[6799]:https://github.com/gitextensions/gitextensions/issues/6799
+[6785]:https://github.com/gitextensions/gitextensions/pull/6785
+[6783]:https://github.com/gitextensions/gitextensions/issues/6783
+[6771]:https://github.com/gitextensions/gitextensions/issues/6771
+[6770]:https://github.com/gitextensions/gitextensions/pull/6770
+[6769]:https://github.com/gitextensions/gitextensions/pull/6769
+[6767]:https://github.com/gitextensions/gitextensions/issues/6767
+[6757]:https://github.com/gitextensions/gitextensions/issues/6757
+[6751]:https://github.com/gitextensions/gitextensions/issues/6751
+[6738]:https://github.com/gitextensions/gitextensions/issues/6738
+[6736]:https://github.com/gitextensions/gitextensions/issues/6736
+[6732]:https://github.com/gitextensions/gitextensions/issues/6732
+[6726]:https://github.com/gitextensions/gitextensions/issues/6726
+[6717]:https://github.com/gitextensions/gitextensions/issues/6717
+[6696]:https://github.com/gitextensions/gitextensions/issues/6696
+[6687]:https://github.com/gitextensions/gitextensions/issues/6687
+[6682]:https://github.com/gitextensions/gitextensions/pull/6682
+[6651]:https://github.com/gitextensions/gitextensions/pull/6651
+[6638]:https://github.com/gitextensions/gitextensions/pull/6638
+[6616]:https://github.com/gitextensions/gitextensions/issues/6616
+[6607]:https://github.com/gitextensions/gitextensions/issues/6607
+[6599]:https://github.com/gitextensions/gitextensions/issues/6599
+[6597]:https://github.com/gitextensions/gitextensions/issues/6597
+[6586]:https://github.com/gitextensions/gitextensions/pull/6586
+[6583]:https://github.com/gitextensions/gitextensions/issues/6583
+[6569]:https://github.com/gitextensions/gitextensions/issues/6569
+[6560]:https://github.com/gitextensions/gitextensions/pull/6560
+[6549]:https://github.com/gitextensions/gitextensions/issues/6549
+[6534]:https://github.com/gitextensions/gitextensions/pull/6534
+[6532]:https://github.com/gitextensions/gitextensions/issues/6532
+[6531]:https://github.com/gitextensions/gitextensions/pull/6531
+[6458]:https://github.com/gitextensions/gitextensions/issues/6458
+[6443]:https://github.com/gitextensions/gitextensions/issues/6443
+[6430]:https://github.com/gitextensions/gitextensions/pull/6430
+[6331]:https://github.com/gitextensions/gitextensions/pull/6331
+[6281]:https://github.com/gitextensions/gitextensions/issues/6281
+[6127]:https://github.com/gitextensions/gitextensions/issues/6127
+[5908]:https://github.com/gitextensions/gitextensions/issues/5908
+[1391]:https://github.com/gitextensions/gitextensions/issues/1391
+
+
 ### Version 3.1.1 (2 June 2019)
 
 #### Fixes:

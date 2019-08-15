@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.1.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="3.2.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="ru">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -26,7 +26,7 @@
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
-        <target>Пожалуйста, введите правильный путь к MSBuild в настройках плагина и попробуйте снова.</target>
+        <target>Пожалуйста введите правильный путь к MSBuild в настройках плагина и попробуйте снова.</target>
         
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
@@ -336,8 +336,8 @@
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
-        <source>Cancel</source>
-        <target>Отмена</target>
+        <source>Search branches</source>
+        <target>Выбрать ветки</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -416,7 +416,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
-        <target>Включить неслитые ветки</target>
+        <target>Включить не слитые ветки</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -427,11 +427,6 @@ Are you sure you want to continue?</source>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
         <target>Удалить ветки полностью слитые в ветку</target>
-        
-      </trans-unit>
-      <trans-unit id="lblStatus.Text">
-        <source>Loading...</source>
-        <target>Загрузка...</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -698,9 +693,9 @@ Are you sure you want to continue?</source>
         <target>&amp;Опубликовать</target>
         
       </trans-unit>
-      <trans-unit id="PublishDraft.Text">
-        <source>Submit review as draft</source>
-        <target>Отправить рецензию как черновик</target>
+      <trans-unit id="PublishType.Text">
+        <source>For Review</source>
+        <target>Для рассмотрения</target>
         
       </trans-unit>
       <trans-unit id="_publishCaption.Text">
@@ -711,6 +706,21 @@ Are you sure you want to continue?</source>
       <trans-unit id="_publishGerritChangeCaption.Text">
         <source>Publish Gerrit Change</source>
         <target>Опубликовать изменения в Gerrit</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypePrivate.Text">
+        <source>Private</source>
+        <target>Частный</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeReview.Text">
+        <source>For Review</source>
+        <target>Для рассмотрения</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeWip.Text">
+        <source>Work-in-Progress</source>
+        <target>Незаконченная работа</target>
         
       </trans-unit>
       <trans-unit id="_selectBranch.Text">
@@ -726,6 +736,11 @@ Are you sure you want to continue?</source>
       <trans-unit id="labelBranch.Text">
         <source>Branch:</source>
         <target>Ветка:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelPublishType.Text">
+        <source>Publish Type</source>
+        <target>Тип публикации</target>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">

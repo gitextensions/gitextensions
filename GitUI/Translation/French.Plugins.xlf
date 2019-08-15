@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.1.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="3.2.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="fr">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -265,8 +265,7 @@
       </trans-unit>
       <trans-unit id="tabCreate.Text">
         <source>Create Pull Request</source>
-        <target>Créer une demande de tirage
-</target>
+        <target>Créer une demande de pull</target>
         
       </trans-unit>
       <trans-unit id="tabView.Text">
@@ -299,7 +298,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Create local tracking branches</source>
-        <target>Créer des branches locales de suivie</target>
+        <target>Créer des branches de suivie locales</target>
         
       </trans-unit>
     </body>
@@ -337,8 +336,8 @@
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
-        <source>Cancel</source>
-        <target>Annuler</target>
+        <source>Search branches</source>
+        <target>Rechercher les branches</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -397,7 +396,7 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
         <source>Search branches</source>
-        <target>Rechercher les branches</target>
+        <target>Rechercher des branches</target>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
@@ -428,11 +427,6 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
         <target>Supprimer les branches totalement fusionnées dans la branche</target>
-        
-      </trans-unit>
-      <trans-unit id="lblStatus.Text">
-        <source>Loading...</source>
-        <target>Chargement...</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -627,7 +621,7 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       </trans-unit>
       <trans-unit id="AddRemote.Text">
         <source>Manage remotes</source>
-        <target>Gérer les dépôts distants</target>
+        <target>Gérer</target>
         
       </trans-unit>
       <trans-unit id="Download.Text">
@@ -691,7 +685,7 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       </trans-unit>
       <trans-unit id="AddRemote.Text">
         <source>Manage remotes</source>
-        <target>Gérer les dépôts distants</target>
+        <target>Gérer</target>
         
       </trans-unit>
       <trans-unit id="Publish.Text">
@@ -699,9 +693,9 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
         <target>&amp;Publier</target>
         
       </trans-unit>
-      <trans-unit id="PublishDraft.Text">
-        <source>Submit review as draft</source>
-        <target>Soumettre une revue comme brouillon</target>
+      <trans-unit id="PublishType.Text">
+        <source>For Review</source>
+        <target>A relire</target>
         
       </trans-unit>
       <trans-unit id="_publishCaption.Text">
@@ -712,6 +706,21 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       <trans-unit id="_publishGerritChangeCaption.Text">
         <source>Publish Gerrit Change</source>
         <target>Publier le changement Gerrit</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypePrivate.Text">
+        <source>Private</source>
+        <target>Privé</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeReview.Text">
+        <source>For Review</source>
+        <target>A relire</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeWip.Text">
+        <source>Work-in-Progress</source>
+        <target>Travail en cours</target>
         
       </trans-unit>
       <trans-unit id="_selectBranch.Text">
@@ -727,6 +736,11 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       <trans-unit id="labelBranch.Text">
         <source>Branch:</source>
         <target>Branche :</target>
+        
+      </trans-unit>
+      <trans-unit id="labelPublishType.Text">
+        <source>Publish Type</source>
+        <target>Type de publication</target>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">
@@ -1130,7 +1144,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="btnPull.Text">
         <source>Pull</source>
-        <target>Récupérer (pull)</target>
+        <target>Récupérer</target>
         
       </trans-unit>
       <trans-unit id="cbBasedOn.Text">

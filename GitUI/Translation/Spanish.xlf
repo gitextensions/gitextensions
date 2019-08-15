@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.1.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="3.2.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AdvancedSettingsPage" source-language="en" target-language="es">
     <body>
       <trans-unit id="$this.Text">
@@ -140,6 +140,10 @@ Esta acción se realizará sin preguntar al hacer checkout de una rama.</target>
         <target>Apariencia</target>
         
       </trans-unit>
+      <trans-unit id="AvatarProvider.Text">
+        <source>Gravatar</source>
+        
+      </trans-unit>
       <trans-unit id="ClearImageCache.Text">
         <source>Clear image cache</source>
         <target>Borrar caché de imágenes</target>
@@ -155,6 +159,10 @@ Esta acción se realizará sin preguntar al hacer checkout de una rama.</target>
         <target>Mostrar avatar del autor en la vista de información del commit</target>
         
       </trans-unit>
+      <trans-unit id="_authorDateSortWarningTooltip.Text">
+        <source>Sorting by author date may delay rendering of the revision graph.</source>
+        
+      </trans-unit>
       <trans-unit id="_noDictFile.Text">
         <source>None</source>
         <target>Ninguno</target>
@@ -167,9 +175,7 @@ Esta acción se realizará sin preguntar al hacer checkout de una rama.</target>
       </trans-unit>
       <trans-unit id="_noImageServiceTooltip.Text">
         <source>A default image, if an email address has no matching Gravatar image.
-See http://en.gravatar.com/site/implement/images/ for more details.</source>
-        <target>Una imagen por defecto, si una dirección de correo no tiene una imagen Gravatar correspondiente.
-Ver http://en.gravatar.com/site/implement/images/ para más detalles.</target>
+See http://en.gravatar.com/site/implement/images#default-image for more details.</source>
         
       </trans-unit>
       <trans-unit id="chkEnableAutoScale.Text">
@@ -185,6 +191,10 @@ Ver http://en.gravatar.com/site/implement/images/ para más detalles.</target>
       <trans-unit id="chkShowRelativeDate.Text">
         <source>Show relative date instead of full date</source>
         <target>Mostrar fecha relativa en lugar de la fecha completa</target>
+        
+      </trans-unit>
+      <trans-unit id="chkSortByAuthorDate.Text">
+        <source>Sort by author date</source>
         
       </trans-unit>
       <trans-unit id="downloadDictionary.Text">
@@ -212,6 +222,10 @@ Ver http://en.gravatar.com/site/implement/images/ para más detalles.</target>
         <target>Ayudar a traducir</target>
         
       </trans-unit>
+      <trans-unit id="lblAvatarProvider.Text">
+        <source>Avatar provider</source>
+        
+      </trans-unit>
       <trans-unit id="lblCacheDays.Text">
         <source>Cache images (days)</source>
         <target>Cache de imágenes (días)</target>
@@ -223,8 +237,7 @@ Ver http://en.gravatar.com/site/implement/images/ para más detalles.</target>
         
       </trans-unit>
       <trans-unit id="lblNoImageService.Text">
-        <source>No image service</source>
-        <target>No hay servicio de imágenes</target>
+        <source>Fallback generated avatar style</source>
         
       </trans-unit>
       <trans-unit id="lblSpellingDictionary.Text">
@@ -261,14 +274,17 @@ Ver http://en.gravatar.com/site/implement/images/ para más detalles.</target>
   </file>
   <file datatype="plaintext" original="AvatarControl" source-language="en" target-language="es">
     <body>
+      <trans-unit id="avatarProviderToolStripMenuItem.Text">
+        <source>Avatar provider</source>
+        
+      </trans-unit>
       <trans-unit id="clearImagecacheToolStripMenuItem.Text">
         <source>Clear image cache</source>
         <target>Borrar caché de imágenes</target>
         
       </trans-unit>
-      <trans-unit id="defaultImageToolStripMenuItem.Text">
-        <source>Default image</source>
-        <target>Imagen por defecto</target>
+      <trans-unit id="fallbackAvatarStyleToolStripMenuItem.Text">
+        <source>Fallback generated avatar style</source>
         
       </trans-unit>
       <trans-unit id="registerGravatarToolStripMenuItem.Text">
@@ -288,6 +304,10 @@ Ver http://en.gravatar.com/site/implement/images/ para más detalles.</target>
       <trans-unit id="blamePreviousRevisionToolStripMenuItem.Text">
         <source>Blame previous revision</source>
         <target>Culpar revisión anterior</target>
+        
+      </trans-unit>
+      <trans-unit id="blameRevisionToolStripMenuItem.Text">
+        <source>Blame this revision</source>
         
       </trans-unit>
       <trans-unit id="commitHashToolStripMenuItem.Text">
@@ -370,6 +390,111 @@ Ver http://en.gravatar.com/site/implement/images/ para más detalles.</target>
       <trans-unit id="label1.Text">
         <source>Select branch</source>
         <target>Seleccione rama</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="BugReportForm" source-language="en" target-language="es">
+    <body>
+      <trans-unit id="_noReproStepsSuppliedErrorMessage.Text">
+        <source>Please provide as much as information as possible to help the developers solve this issue.</source>
+        
+      </trans-unit>
+      <trans-unit id="_submitGitHubMessage.Text">
+        <source>Give as much as information as possible please to help the developers solve this issue. Otherwise, your issue ticket may be closed without any follow-up from the developers.
+
+Because of this, make sure to fill in all the fields in the report template please.
+
+Send report anyway?</source>
+        
+      </trans-unit>
+      <trans-unit id="_title.Text">
+        <source>Error Report</source>
+        
+      </trans-unit>
+      <trans-unit id="_toolTipCopy.Text">
+        <source>Copy the issue details into clipboard</source>
+        
+      </trans-unit>
+      <trans-unit id="_toolTipQuit.Text">
+        <source>Quit application without reporting the issue</source>
+        
+      </trans-unit>
+      <trans-unit id="_toolTipSendQuit.Text">
+        <source>Report the issue to GitHub and quit application.
+A valid GitHub account is required</source>
+        
+      </trans-unit>
+      <trans-unit id="applicationLabel.Text">
+        <source>Application:</source>
+        
+      </trans-unit>
+      <trans-unit id="btnCopy.Text">
+        <source>&amp;Copy</source>
+        
+      </trans-unit>
+      <trans-unit id="contentsLabel.Text">
+        <source>Double-click an item to open it with the associated program.</source>
+        
+      </trans-unit>
+      <trans-unit id="dateTimeLabel.Text">
+        <source>Date/Time:</source>
+        
+      </trans-unit>
+      <trans-unit id="descriptionColumnHeader.Text">
+        <source>Description</source>
+        <target>Descripción</target>
+        
+      </trans-unit>
+      <trans-unit id="errorDescriptionLabel.Text">
+        <source>Please add a brief description (in English) of how we can reproduce the error:</source>
+        
+      </trans-unit>
+      <trans-unit id="exceptionTabPage.Text">
+        <source>Exception</source>
+        
+      </trans-unit>
+      <trans-unit id="exceptionTypeLabel.Text">
+        <source>Exception Type:</source>
+        
+      </trans-unit>
+      <trans-unit id="generalTabPage.Text">
+        <source>General</source>
+        <target>General</target>
+        
+      </trans-unit>
+      <trans-unit id="nameColumnHeader.Text">
+        <source>Name</source>
+        <target>Nombre</target>
+        
+      </trans-unit>
+      <trans-unit id="previewLabel.Text">
+        <source>Preview:</source>
+        
+      </trans-unit>
+      <trans-unit id="quitButton.Text">
+        <source>&amp;Quit</source>
+        
+      </trans-unit>
+      <trans-unit id="reportContentsTabPage.Text">
+        <source>Report Contents</source>
+        
+      </trans-unit>
+      <trans-unit id="sendAndQuitButton.Text">
+        <source>&amp;Send and Quit</source>
+        
+      </trans-unit>
+      <trans-unit id="sizeColumnHeader.Text">
+        <source>Size</source>
+        <target>Tamaño</target>
+        
+      </trans-unit>
+      <trans-unit id="targetSiteLabel.Text">
+        <source>Target Site:</source>
+        
+      </trans-unit>
+      <trans-unit id="warningLabel.Text">
+        <source>The application has crashed and it will now be terminated. If you click Quit, the application will close immediately. If you click Send and Quit, the application will close and a bug report will be sent.</source>
         
       </trans-unit>
     </body>
@@ -828,14 +953,14 @@ Por favor asegúrese que git (Git for Windows o cygwin) está instalado o config
         <target>Recordar casilla 'Arreglar commit' al cerrar la ventana de commit</target>
         
       </trans-unit>
-      <trans-unit id="chkAddNewlineToCommitMessageWhenMissing.Text">
-        <source>Ensure the second line of commit message is empty</source>
-        <target>Asegúrese de que la segunda línea del mensaje de commit esté vacía</target>
-        
-      </trans-unit>
       <trans-unit id="chkAutocomplete.Text">
         <source>Provide auto-completion in commit dialog</source>
         <target>Proporcionar auto completado en la ventana de commit</target>
+        
+      </trans-unit>
+      <trans-unit id="chkEnsureCommitMessageSecondLineEmpty.Text">
+        <source>Ensure the second line of commit message is empty</source>
+        <target>Asegúrese de que la segunda línea del mensaje de commit esté vacía</target>
         
       </trans-unit>
       <trans-unit id="chkShowCommitAndPush.Text">
@@ -1155,7 +1280,7 @@ Por favor asegúrese que git (Git for Windows o cygwin) está instalado o config
       </trans-unit>
       <trans-unit id="txtHotkey.Text">
         <source>None</source>
-        <target>Ninguno</target>
+        <target>Ninguna</target>
         
       </trans-unit>
     </body>
@@ -1313,6 +1438,26 @@ Por favor asegúrese que git (Git for Windows o cygwin) está instalado o config
       <trans-unit id="chkRemotesFromServer.Text">
         <source>Get remote branches directly from the remote</source>
         <target>Obtener las ramas remotas directamente desde el repositorio remoto</target>
+        
+      </trans-unit>
+      <trans-unit id="chkUseSSL.Text">
+        <source>Use SSL/TLS</source>
+        <target>Usar SSL/TLS</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxEmailSettings.Text">
+        <source>Email settings for sending patches</source>
+        <target>Ajustes de e-mail para enviar parches</target>
+        
+      </trans-unit>
+      <trans-unit id="lblSmtpServerName.Text">
+        <source>SMTP server name</source>
+        <target>Nombre del servidor SMTP</target>
+        
+      </trans-unit>
+      <trans-unit id="lblSmtpServerPort.Text">
+        <source>Port</source>
+        <target>Puerto</target>
         
       </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
@@ -1495,6 +1640,11 @@ Por favor asegúrese que git (Git for Windows o cygwin) está instalado o config
   </file>
   <file datatype="plaintext" original="FileViewer" source-language="en" target-language="es">
     <body>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>Error</target>
+        
+      </trans-unit>
       <trans-unit id="_largeFileSizeWarning.Text">
         <source>This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.</source>
         <target>Este archivo es {0: N1} MB. Mostrar archivos grandes puede ser lento. Haga clic para mostrar de todos modos.</target>
@@ -1852,7 +2002,7 @@ Tendrá acceso para hacer Push. {2}</target>
       </trans-unit>
       <trans-unit id="_strYes.Text">
         <source>Yes</source>
-        <target>Si</target>
+        <target>Sí</target>
         
       </trans-unit>
       <trans-unit id="browseForCloneToDirbtn.Text">
@@ -1875,14 +2025,41 @@ Tendrá acceso para hacer Push. {2}</target>
         <target>Cerrar</target>
         
       </trans-unit>
-      <trans-unit id="columnHeader2.Text">
+      <trans-unit id="columnHeaderMyReposForks.Text">
+        <source># Forks</source>
+        
+      </trans-unit>
+      <trans-unit id="columnHeaderMyReposIsFork.Text">
+        <source>Is fork</source>
+        <target>Es bifurcación</target>
+        
+      </trans-unit>
+      <trans-unit id="columnHeaderMyReposIsPrivate.Text">
         <source>Private</source>
         <target>Privado</target>
         
       </trans-unit>
-      <trans-unit id="columnHeader6.Text">
+      <trans-unit id="columnHeaderMyReposName.Text">
+        <source>Name</source>
+        <target>Nombre</target>
+        
+      </trans-unit>
+      <trans-unit id="columnHeaderSearchForks.Text">
+        <source># Forks</source>
+        
+      </trans-unit>
+      <trans-unit id="columnHeaderSearchIsFork.Text">
         <source>Is fork</source>
         <target>Es bifurcación</target>
+        
+      </trans-unit>
+      <trans-unit id="columnHeaderSearchName.Text">
+        <source>Name</source>
+        <target>Nombre</target>
+        
+      </trans-unit>
+      <trans-unit id="columnHeaderSearchOwner.Text">
+        <source>Owner</source>
         
       </trans-unit>
       <trans-unit id="createDirectoryLbl.Text">
@@ -1921,8 +2098,7 @@ Tendrá acceso para hacer Push. {2}</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
-        <source>Add remote as:</source>
-        <target>Agregar remoto como:</target>
+        <source>Add upstream remote as:</source>
         
       </trans-unit>
       <trans-unit id="myReposPage.Text">
@@ -2013,12 +2189,12 @@ Tendrá acceso para hacer Push. {2}</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Add submodule</source>
-        <target>Agregar submódulo</target>
+        <target>Añadir submódulo</target>
         
       </trans-unit>
       <trans-unit id="Add.Text">
         <source>Add</source>
-        <target>Agregar</target>
+        <target>Añadir</target>
         
       </trans-unit>
       <trans-unit id="Browse.Text">
@@ -2141,7 +2317,7 @@ Tendrá acceso para hacer Push. {2}</target>
       </trans-unit>
       <trans-unit id="Mergetool.Text">
         <source>Solve conflicts</source>
-        <target>Resolver conflictos</target>
+        <target>&gt; Solucionar conflictos &lt;</target>
         
       </trans-unit>
       <trans-unit id="PatchDirMode.Text">
@@ -2236,7 +2412,7 @@ Tendrá acceso para hacer Push. {2}</target>
       </trans-unit>
       <trans-unit id="buttonArchiveRevision.Text">
         <source>Save as...</source>
-        <target>Guardar como...</target>
+        <target>Guardar como</target>
         
       </trans-unit>
       <trans-unit id="checkBoxPathFilter.Text">
@@ -2267,7 +2443,7 @@ Tendrá acceso para hacer Push. {2}</target>
       <trans-unit id="label2.Text">
         <source>Choose another
 revision:</source>
-        <target>Elegir otra
+        <target>Elija otra
 revisión:</target>
         
       </trans-unit>
@@ -2421,6 +2597,10 @@ compare with first:</source>
       <trans-unit id="TreeTabPage.Text">
         <source>File tree</source>
         <target>Árbol de archivos</target>
+        
+      </trans-unit>
+      <trans-unit id="_addUpstreamRemoteToolStripMenuItem.Text">
+        <source>Add upstream remote</source>
         
       </trans-unit>
       <trans-unit id="_buildReportTabCaption.Text">
@@ -2789,7 +2969,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="fileExplorerToolStripMenuItem.Text">
         <source>File Explorer</source>
-        <target>Explorador de archivos</target>
+        <target>Explorar archivos</target>
         
       </trans-unit>
       <trans-unit id="fileToolStripMenuItem.Text">
@@ -2989,7 +3169,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="stashChangesToolStripMenuItem.Text">
         <source>Stash</source>
-        <target>Pila</target>
+        <target>Apilar</target>
         
       </trans-unit>
       <trans-unit id="stashPopToolStripMenuItem.Text">
@@ -3095,6 +3275,10 @@ Do you want to continue?</source>
       <trans-unit id="tsmiRecentRepositoriesClear.Text">
         <source>Clear List</source>
         <target>Limpiar lista</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiTelemetryEnabled.Text">
+        <source>Yes, I allow telemetry</source>
         
       </trans-unit>
       <trans-unit id="undoLastCommitToolStripMenuItem.Text">
@@ -3308,7 +3492,7 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="rbStash.Text">
         <source>Stash</source>
-        <target>Pila</target>
+        <target>Apilar</target>
         
       </trans-unit>
     </body>
@@ -3351,12 +3535,12 @@ Are you sure?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Cherry pick commit</source>
-        <target>Selección manual de commit</target>
+        <target>Seleccionar manualmente</target>
         
       </trans-unit>
       <trans-unit id="AutoCommit.Text">
         <source>Automatically create a commit</source>
-        <target>Crear automáticamente un commit</target>
+        <target>Creación automática de un commit cuando no hay conflictos de fusión</target>
         
       </trans-unit>
       <trans-unit id="BranchInfo.Text">
@@ -3495,7 +3679,7 @@ revisión:</target>
       </trans-unit>
       <trans-unit id="Cleanup.Text">
         <source>Cleanup</source>
-        <target>Limpieza</target>
+        <target>Limpiar</target>
         
       </trans-unit>
       <trans-unit id="Preview.Text">
@@ -3815,6 +3999,10 @@ Git nunca verificará si el archivo ha cambiado, lo que mejorará el rendimiento
         <target>Mensaje de commit pedido durante el commit</target>
         
       </trans-unit>
+      <trans-unit id="_commitMessageSettings.Text">
+        <source>Edit commit message templates and settings...</source>
+        
+      </trans-unit>
       <trans-unit id="_commitMsgFirstLineInvalid.Text">
         <source>First line of commit message contains too many characters.
 Do you want to continue?</source>
@@ -3850,11 +4038,6 @@ Do you want to continue?</source>
 </target>
         
       </trans-unit>
-      <trans-unit id="_commitTemplateSettings.Text">
-        <source>Settings</source>
-        <target>Configuración</target>
-        
-      </trans-unit>
       <trans-unit id="_commitValidationCaption.Text">
         <source>Commit validation</source>
         <target>Validación de commit</target>
@@ -3872,7 +4055,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deleteSelectedFilesCaption.Text">
         <source>Delete</source>
-        <target>Borrar</target>
+        <target>Eliminar</target>
         
       </trans-unit>
       <trans-unit id="_deleteUntrackedFiles.Text">
@@ -4185,7 +4368,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="editFileToolStripMenuItem.Text">
         <source>Edit file</source>
-        <target>Editar archivo</target>
+        <target>Editar el archivo</target>
         
       </trans-unit>
       <trans-unit id="editGitIgnoreToolStripMenuItem.Text">
@@ -4200,7 +4383,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="filenameToClipboardToolStripMenuItem.Text">
         <source>Copy full path</source>
-        <target>Copiar ruta completa</target>
+        <target>Nombre del archivo al portapapeles</target>
         
       </trans-unit>
       <trans-unit id="generateListOfChangesInSubmodulesChangesToolStripMenuItem.Text">
@@ -4225,7 +4408,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="openDiffMenuItem.Text">
         <source>Open with difftool</source>
-        <target>Abrir con diftool</target>
+        <target>Abrir con difftool</target>
         
       </trans-unit>
       <trans-unit id="openFolderMenuItem.Text">
@@ -4245,7 +4428,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
         <source>Open with difftool</source>
-        <target>Abrir con diftool</target>
+        <target>Abrir con Difftool</target>
         
       </trans-unit>
       <trans-unit id="openWithToolStripMenuItem.Text">
@@ -4457,8 +4640,7 @@ $ git config --unset commit.template</target>
   <file datatype="plaintext" original="FormCommitTemplateSettings" source-language="en" target-language="es">
     <body>
       <trans-unit id="$this.Text">
-        <source>Commit template settings</source>
-        <target>Ajustes de plantillas de commit</target>
+        <source>Commit message settings</source>
         
       </trans-unit>
       <trans-unit id="_emptyTemplate.Text">
@@ -4474,16 +4656,6 @@ $ git config --unset commit.template</target>
       <trans-unit id="buttonOk.Text">
         <source>OK</source>
         <target>Aceptar</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxCommitTemplates.Text">
-        <source>Commit templates</source>
-        <target>Plantillas de commit</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxCommitValidation.Text">
-        <source>Commit validation</source>
-        <target>Validación de commit</target>
         
       </trans-unit>
       <trans-unit id="labelAutoWrap.Text">
@@ -4526,6 +4698,16 @@ $ git config --unset commit.template</target>
         <target>Sangría a partir de la primera línea:</target>
         
       </trans-unit>
+      <trans-unit id="tabPage1.Text">
+        <source>Commit templates</source>
+        <target>Plantillas de commit</target>
+        
+      </trans-unit>
+      <trans-unit id="tabPage2.Text">
+        <source>Commit validation</source>
+        <target>Validación de commit</target>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="FormCompareToBranch" source-language="en" target-language="es">
@@ -4547,11 +4729,6 @@ $ git config --unset commit.template</target>
       <trans-unit id="$this.Text">
         <source>Create branch</source>
         <target>Crear rama</target>
-        
-      </trans-unit>
-      <trans-unit id="CheckoutAfterCreate.Text">
-        <source>Checkout &amp;after create</source>
-        <target>Checkout después de crear</target>
         
       </trans-unit>
       <trans-unit id="ClearOrphan.Text">
@@ -4582,6 +4759,11 @@ $ git config --unset commit.template</target>
       <trans-unit id="_noRevisionSelected.Text">
         <source>Select 1 revision to create the branch on.</source>
         <target>Seleccione 1 revisión sobre la cual crear la rama.</target>
+        
+      </trans-unit>
+      <trans-unit id="chkbxCheckoutAfterCreate.Text">
+        <source>Checkout &amp;after create</source>
+        <target>Checkout después de crear</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
@@ -4768,7 +4950,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>Borrar</target>
+        <target>Eliminar</target>
         
       </trans-unit>
       <trans-unit id="ForceDelete.Text">
@@ -4811,7 +4993,7 @@ Cuando desee eliminar una rama no mezclada por completo, puede saltear esto usan
       </trans-unit>
       <trans-unit id="labelSelectBranches.Text">
         <source>Select branches</source>
-        <target>Seleccionar ramas</target>
+        <target>Seleccionar rama</target>
         
       </trans-unit>
     </body>
@@ -4869,12 +5051,12 @@ para recuperar los commits perdidos.</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Delete tag</source>
-        <target>Eliminar etiquetas</target>
+        <target>Eliminar etiqueta</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>Delete</source>
-        <target>Borrar</target>
+        <target>Eliminar</target>
         
       </trans-unit>
       <trans-unit id="deleteTag.Text">
@@ -4953,7 +5135,7 @@ para recuperar los commits perdidos.</target>
       </trans-unit>
       <trans-unit id="fileHistoryDiffToolstripMenuItem.Text">
         <source>File history</source>
-        <target>Historial de archivo</target>
+        <target>Historial del archivo</target>
         
       </trans-unit>
       <trans-unit id="findInDiffToolStripMenuItem.Text">
@@ -4988,7 +5170,7 @@ para recuperar los commits perdidos.</target>
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
         <source>Open with difftool</source>
-        <target>Abrir con diftool</target>
+        <target>Abrir con difftool</target>
         
       </trans-unit>
       <trans-unit id="selectedParentToLocalToolStripMenuItem.Text">
@@ -5070,7 +5252,7 @@ Haga clic en el botón de abajo para obtener más información sobre cómo hacer
       </trans-unit>
       <trans-unit id="_saveChangesCaption.Text">
         <source>Save changes</source>
-        <target>Guardar los cambios</target>
+        <target>Guardar cambios</target>
         
       </trans-unit>
       <trans-unit id="labelWarning.Text">
@@ -5131,9 +5313,13 @@ Si no está seguro simplemente cierre esta ventana.</target>
         <target>Informe de construcción</target>
         
       </trans-unit>
+      <trans-unit id="blameSettingsToolStripMenuItem.Text">
+        <source>Blame settings:</source>
+        
+      </trans-unit>
       <trans-unit id="cherryPickThisCommitToolStripMenuItem.Text">
         <source>Cherry pick commit</source>
-        <target>Selección manual de commit</target>
+        <target>Seleccionar manualmente commit</target>
         
       </trans-unit>
       <trans-unit id="copyToClipboardToolStripMenuItem.Text">
@@ -5154,6 +5340,14 @@ Si no está seguro simplemente cierre esta ventana.</target>
       <trans-unit id="diffToolRemoteLocalStripMenuItem.Text">
         <source>Difftool selected &lt; - &gt; local</source>
         <target>Difftool seleccionada &lt; - &gt; local</target>
+        
+      </trans-unit>
+      <trans-unit id="displayAuthorFirstToolStripMenuItem.Text">
+        <source>Display author first</source>
+        
+      </trans-unit>
+      <trans-unit id="displaySettingsToolStripMenuItem.Text">
+        <source>Display result settings:</source>
         
       </trans-unit>
       <trans-unit id="followFileHistoryRenamesToolStripMenuItem.Text">
@@ -5193,7 +5387,7 @@ Si no está seguro simplemente cierre esta ventana.</target>
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
         <source>Open with difftool</source>
-        <target>Abrir con diftool</target>
+        <target>Abrir con difftool</target>
         
       </trans-unit>
       <trans-unit id="revertCommitToolStripMenuItem.Text">
@@ -5206,9 +5400,30 @@ Si no está seguro simplemente cierre esta ventana.</target>
         <target>Guardar como</target>
         
       </trans-unit>
+      <trans-unit id="showAuthorDateToolStripMenuItem.Text">
+        <source>Show author date</source>
+        <target>Mostrar fecha de autor</target>
+        
+      </trans-unit>
+      <trans-unit id="showAuthorTimeToolStripMenuItem.Text">
+        <source>Show author time</source>
+        
+      </trans-unit>
+      <trans-unit id="showAuthorToolStripMenuItem.Text">
+        <source>Show author</source>
+        
+      </trans-unit>
       <trans-unit id="showFullHistoryToolStripMenuItem.Text">
         <source>Show Full History</source>
         <target>Mostrar historial completo</target>
+        
+      </trans-unit>
+      <trans-unit id="showLineNumbersToolStripMenuItem.Text">
+        <source>Show line numbers</source>
+        
+      </trans-unit>
+      <trans-unit id="showOriginalFilePathToolStripMenuItem.Text">
+        <source>Show original file path</source>
         
       </trans-unit>
       <trans-unit id="simplifyMergesContextMenuItem.Text">
@@ -5909,7 +6124,7 @@ Henk Westhuis &lt;chenk_westhuis@hotmail.com&gt;</target>
       </trans-unit>
       <trans-unit id="Delete.HeaderText">
         <source>Delete</source>
-        <target>Borrar</target>
+        <target>Eliminar</target>
         
       </trans-unit>
       <trans-unit id="IsDeleted.HeaderText">
@@ -6208,7 +6423,7 @@ al árbol ancestro común.</target>
       </trans-unit>
       <trans-unit id="AutoStash.Text">
         <source>Auto stash</source>
-        <target>Apilar automáticamente</target>
+        <target>Auto apilar</target>
         
       </trans-unit>
       <trans-unit id="Fetch.Text">
@@ -6484,7 +6699,7 @@ Esto inicializará y actualizará todos los submódulos recurisvamente.</target>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Remote branch</source>
-        <target>Rama remota</target>
+        <target>Ramas remotas</target>
         
       </trans-unit>
     </body>
@@ -6528,7 +6743,7 @@ Esto inicializará y actualizará todos los submódulos recurisvamente.</target>
       </trans-unit>
       <trans-unit id="LoadSSHKey.Text">
         <source>Load SSH key</source>
-        <target>Carga clave SSH</target>
+        <target>Cargar clave SSH</target>
         
       </trans-unit>
       <trans-unit id="LocalColumn.HeaderText">
@@ -6764,7 +6979,7 @@ Would you like to do it now?</source>
       </trans-unit>
       <trans-unit id="LoadSSHKey.Text">
         <source>Load SSH key</source>
-        <target>Carga clave SSH</target>
+        <target>Cargar clave SSH</target>
         
       </trans-unit>
       <trans-unit id="Retry.Text">
@@ -6788,7 +7003,7 @@ Would you like to do it now?</source>
     <body>
       <trans-unit id="_actionDelete.Text">
         <source>Delete</source>
-        <target>Borrar</target>
+        <target>Eliminar</target>
         
       </trans-unit>
       <trans-unit id="_actionRename.Text">
@@ -6857,7 +7072,7 @@ Would you like to do it now?</source>
       </trans-unit>
       <trans-unit id="Mergetool.Text">
         <source>Solve conflicts</source>
-        <target>Resolver conflictos</target>
+        <target>Resolver los conflictos</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -6867,7 +7082,7 @@ Would you like to do it now?</source>
       </trans-unit>
       <trans-unit id="Resolved.Text">
         <source>Continue rebase</source>
-        <target>Continuar rebase</target>
+        <target>Continuar Rebase</target>
         
       </trans-unit>
       <trans-unit id="ShowOptions.Text">
@@ -7194,17 +7409,6 @@ Apilelos antes si no quiere perderlos.</target>
         <target>Fusionar por defecto con</target>
         
       </trans-unit>
-      <trans-unit id="Prune.Text">
-        <source>Prune remote branches</source>
-        <target>Podar las ramas remotas</target>
-        
-      </trans-unit>
-        <target>Fusionar por defecto con</target>
-        
-      </trans-unit>
-        <target>Por defecto fusionar con</target>
-        
-      </trans-unit>
       <trans-unit id="RemoteCombo.HeaderText">
         <source>Remote repository</source>
         <target>Repositorio remoto</target>
@@ -7212,7 +7416,7 @@ Apilelos antes si no quiere perderlos.</target>
       </trans-unit>
       <trans-unit id="Save.Text">
         <source>Save changes</source>
-        <target>Guardar los cambios</target>
+        <target>Guardar</target>
         
       </trans-unit>
       <trans-unit id="SaveDefaultPushPull.Text">
@@ -7316,7 +7520,7 @@ Do you want to automatically configure the default push and pull behavior for th
       </trans-unit>
       <trans-unit id="_questionDeleteRemoteCaption.Text">
         <source>Delete</source>
-        <target>Borrar</target>
+        <target>Eliminar</target>
         
       </trans-unit>
       <trans-unit id="_remoteBranchDataError.Text">
@@ -7742,6 +7946,11 @@ Is the merge conflict solved?</source>
         <target>eliminado</target>
         
       </trans-unit>
+      <trans-unit id="_errorCaption.Text">
+        <source>Error</source>
+        <target>Error</target>
+        
+      </trans-unit>
       <trans-unit id="_failureWhileOpenFile.Text">
         <source>Open temporary file failed.</source>
         <target>Apertura del archivo temporal falló.</target>
@@ -7754,46 +7963,33 @@ Is the merge conflict solved?</source>
       </trans-unit>
       <trans-unit id="_fileBinaryChooseLocalBaseRemote.Text">
         <source>File ({0}) appears to be a binary file.
-Choose to keep the local({1}), remote({2}) or base file.</source>
-        <target>El archivo ({0}) aparenta ser un archivo binario.
-Elija mantener el archivo local ({1}), remoto ({2}) o base.</target>
+Choose to keep the local ({1}), remote ({2}) or base file.</source>
         
       </trans-unit>
       <trans-unit id="_fileChangeLocallyAndRemotely.Text">
-        <source>The file has been changed both locally({0}) and remotely({1}). Merge the changes.</source>
-        <target>El archivo ha sido cambiado tanto localmente ({0}) como remotamente ({1}). Fusione los cambios.</target>
+        <source>The file has been changed both locally ({0}) and remotely ({1}). Merge the changes.</source>
         
       </trans-unit>
       <trans-unit id="_fileCreatedLocallyAndRemotely.Text">
-        <source>A file with the same name has been created locally({0}) and remotely({1}). Choose the file you want to keep or merge the files.</source>
-        <target>Un archivo con el mismo nombre ha sido creado localmente ({0}) y remotamente ({1}). Elija el archivo que desea mantener o fusione los archivos.</target>
+        <source>A file with the same name has been created locally ({0}) and remotely ({1}). Choose the file you want to keep or merge the files.</source>
         
       </trans-unit>
       <trans-unit id="_fileCreatedLocallyAndRemotelyLong.Text">
         <source>File {0} does not have a base revision.
-A file with the same name has been created locally({1}) and remotely({2}) causing this conflict.
+A file with the same name has been created locally ({1}) and remotely ({2}) causing this conflict.
 
 Choose the file you want to keep, merge the files or delete the file?</source>
-        <target>El archivo {0} no tiene una revisión base.
-Un archivo con el mismo nombre ha sido creado localmente ({1}) y remotamente ({2}) causando este conflicto.
-
-Elija el archivo que desea mantener, fusione los archivos o elimine el archivo.</target>
         
       </trans-unit>
       <trans-unit id="_fileDeletedLocallyAndModifiedRemotely.Text">
-        <source>The file has been deleted locally({0}) and modified remotely({1}). Choose to delete the file or keep the modified version.</source>
-        <target>El archivo ha sido eliminado localmente ({0}) y modificado remotamente ({1}). Elija eliminar el archivo o mantener la versión modificada.</target>
+        <source>The file has been deleted locally ({0}) and modified remotely ({1}). Choose to delete the file or keep the modified version.</source>
         
       </trans-unit>
       <trans-unit id="_fileDeletedLocallyAndModifiedRemotelyLong.Text">
         <source>File {0} does not have a local revision.
-The file has been deleted locally({1}) but modified remotely({2}).
+The file has been deleted locally ({1}) but modified remotely ({2}).
 
 Choose to delete the file or keep the modified version.</source>
-        <target>El archivo ({0}) no tiene una revisión local.
-El archivo ha sido eliminado localmente ({1}) pero modificado remotamente ({2}).
-
-Elija eliminar el archivo o mantener la versión modificada.</target>
         
       </trans-unit>
       <trans-unit id="_fileIsBinary.Text">
@@ -7804,19 +8000,14 @@ Are you sure you want to open this file in {0}?</source>
         
       </trans-unit>
       <trans-unit id="_fileModifiedLocallyAndDeletedRemotely.Text">
-        <source>The file has been modified locally({0}) and deleted remotely({1}). Choose to delete the file or keep the modified version.</source>
-        <target>El archivo ha sido modificado localmente ({0}) y eliminado remotamente ({1}). Elija eliminar el archivo o mantener la versión modificada.</target>
+        <source>The file has been modified locally ({0}) and deleted remotely ({1}). Choose to delete the file or keep the modified version.</source>
         
       </trans-unit>
       <trans-unit id="_fileModifiedLocallyAndDeletedRemotelyLong.Text">
         <source>File {0} does not have a remote revision.
-The file has been modified locally({1}) but deleted remotely({2}).
+The file has been modified locally ({1}) but deleted remotely ({2}).
 
 Choose to delete the file or keep the modified version.</source>
-        <target>El archivo {0} no tiene una revisión remota.
-El archivo ha sido modificado localmente ({1}) pero eliminado remotamente ({2}).
-
-Elija eliminar el archivo o mantener la versión modificada.</target>
         
       </trans-unit>
       <trans-unit id="_fileUnchangedAfterMerge.Text">
@@ -7845,7 +8036,7 @@ El conflicto de fusión no se marcará como resuelto. Por favor intente de nuevo
       </trans-unit>
       <trans-unit id="_noBaseFileMergeCaption.Text">
         <source>Merge</source>
-        <target>Fusionar</target>
+        <target>Fusión</target>
         
       </trans-unit>
       <trans-unit id="_noBaseRevision.Text">
@@ -7856,13 +8047,13 @@ Fall back to 2-way merge?</source>
         
       </trans-unit>
       <trans-unit id="_noMergeTool.Text">
-        <source>There is no mergetool configured. Please go to settings and set a mergetool!</source>
-        <target>No hay mergetool configurado. Por favor, vaya a la configuración y elija un mergetool!</target>
+        <source>There is no mergetool configured.
+Please go to settings and set a mergetool!</source>
         
       </trans-unit>
       <trans-unit id="_noMergeToolConfigured.Text">
-        <source>The mergetool is not correctly configured. Please go to settings and configure the mergetool!</source>
-        <target>La herramienta de fusión no está configurada correctamente. Vaya a ajustes y configure la herramienta de fusión.</target>
+        <source>The mergetool is not correctly configured.
+Please go to settings and configure the mergetool!</source>
         
       </trans-unit>
       <trans-unit id="_openMergeToolItemText.Text">
@@ -7916,7 +8107,7 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
         <source>File history</source>
-        <target>Historial de archivo</target>
+        <target>Historial del archivo</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -8064,7 +8255,7 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>Committer</source>
-        <target>Commiter</target>
+        <target>Committer</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
@@ -8108,7 +8299,7 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="selectBranchesLabel.Text">
         <source>Select branches</source>
-        <target>Seleccionar ramas</target>
+        <target>Seleccionar rama</target>
         
       </trans-unit>
     </body>
@@ -8252,6 +8443,10 @@ Por ello el botón Cancelar NO revierte ninguno de los cambios realizados.</targ
         <target>Apilar archivos no seguidos</target>
         
       </trans-unit>
+      <trans-unit id="cherryPickFileChangesToolStripMenuItem.Text">
+        <source>Cherry pick file changes</source>
+        
+      </trans-unit>
       <trans-unit id="chkIncludeUntrackedFiles.Text">
         <source>Include untracked files</source>
         <target>Incluir archivos no seguidos.</target>
@@ -8327,7 +8522,7 @@ Do you want to register the host's fingerprint and restart the process?</source>
       </trans-unit>
       <trans-unit id="RemoveSubmodule.Text">
         <source>Remove</source>
-        <target>Eliminar</target>
+        <target>Quitar</target>
         
       </trans-unit>
       <trans-unit id="Status.HeaderText">
@@ -8352,7 +8547,7 @@ Do you want to register the host's fingerprint and restart the process?</source>
       </trans-unit>
       <trans-unit id="_removeSelectedSubmoduleCaption.Text">
         <source>Remove</source>
-        <target>Eliminar</target>
+        <target>Quitar</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
@@ -8397,117 +8592,6 @@ Do you want to register the host's fingerprint and restart the process?</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormTranslate" source-language="en" target-language="es">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Translate</source>
-        <target>Traducir</target>
-        
-      </trans-unit>
-      <trans-unit id="_allText.Text">
-        <source>All</source>
-        <target>Todos los</target>
-        
-      </trans-unit>
-      <trans-unit id="_editingCellPrefixText.Text">
-        <source>[EDITING]</source>
-        <target>[EDITANDO]</target>
-        
-      </trans-unit>
-      <trans-unit id="_noLanguageCodeSelected.Text">
-        <source>There is no language code selected.
-Do you want to select a language code first?</source>
-        <target>No hay un código de idioma seleccionado.
-¿Desea seleccionar un código de idioma primero?</target>
-        
-      </trans-unit>
-      <trans-unit id="_noLanguageCodeSelectedCaption.Text">
-        <source>Language code</source>
-        <target>Código de idioma</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveAsText.Text">
-        <source>Save as</source>
-        <target>Guardar como</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveAsTextFilter.Text">
-        <source>Translation file (*.xlf)</source>
-        <target>Archivo de traducción (*.xlf)</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveCurrentChangesCaption.Text">
-        <source>Save changes</source>
-        <target>Guardar los cambios</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveCurrentChangesText.Text">
-        <source>Do you want to save the current changes?</source>
-        <target>¿Desea guardar los cambios actuales?</target>
-        
-      </trans-unit>
-      <trans-unit id="_translateProgressText.Text">
-        <source>Translated {0} out of {1}</source>
-        <target>Traducido {0} de {1}</target>
-        
-      </trans-unit>
-      <trans-unit id="categoryDataGridViewTextBoxColumn.HeaderText">
-        <source>Category</source>
-        <target>Categoría</target>
-        
-      </trans-unit>
-      <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
-        <source>Name</source>
-        <target>Nombre</target>
-        
-      </trans-unit>
-      <trans-unit id="neutralValueDataGridViewTextBoxColumn.HeaderText">
-        <source>NeutralValue</source>
-        <target>Valor neutral</target>
-        
-      </trans-unit>
-      <trans-unit id="nextButton.Text">
-        <source>&amp;Next</source>
-        <target>Siguiente</target>
-        
-      </trans-unit>
-      <trans-unit id="previousButton.Text">
-        <source>&amp;Previous</source>
-        <target>Anterior</target>
-        
-      </trans-unit>
-      <trans-unit id="propertyDataGridViewTextBoxColumn.HeaderText">
-        <source>Property</source>
-        <target>Propiedad</target>
-        
-      </trans-unit>
-      <trans-unit id="saveAs.ToolTipText">
-        <source>Save translation</source>
-        <target>Guardar traducción</target>
-        
-      </trans-unit>
-      <trans-unit id="toolStripButtonNew.Text">
-        <source>New</source>
-        <target>Nuevo</target>
-        
-      </trans-unit>
-      <trans-unit id="toolStripTranslationLabel.Text">
-        <source>Current translation:</source>
-        <target>Traducción actual:</target>
-        
-      </trans-unit>
-      <trans-unit id="toolStripTranslationLanguageCode.Text">
-        <source>Language code:</source>
-        <target>Código del lenguaje:</target>
-        
-      </trans-unit>
-      <trans-unit id="translatedValueDataGridViewTextBoxColumn.HeaderText">
-        <source>TranslatedValue</source>
-        <target>Valor traducido</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="FormUpdates" source-language="en" target-language="es">
     <body>
       <trans-unit id="$this.Text">
@@ -8520,6 +8604,10 @@ Do you want to select a language code first?</source>
         <target>Buscando actualizaciones</target>
         
       </trans-unit>
+      <trans-unit id="_downloadingUpdate.Text">
+        <source>Downloading update...</source>
+        
+      </trans-unit>
       <trans-unit id="_newVersionAvailable.Text">
         <source>There is a new version {0} of Git Extensions available</source>
         <target>Está disponible la nueva versión {0} de Git Extensions.</target>
@@ -8530,19 +8618,16 @@ Do you want to select a language code first?</source>
         <target>Actualizaciones no encontradas</target>
         
       </trans-unit>
-      <trans-unit id="btnDownloadNow.Text">
-        <source>Download Now</source>
-        <target>Descargar ahora</target>
-        
-      </trans-unit>
-      <trans-unit id="closeButton.Text">
-        <source>Close</source>
-        <target>Cerrar</target>
+      <trans-unit id="btnUpdateNow.Text">
+        <source>&amp;Update Now</source>
         
       </trans-unit>
       <trans-unit id="linkChangeLog.Text">
-        <source>Show ChangeLog</source>
-        <target>Mostrar cambios</target>
+        <source>Show Change&amp;Log</source>
+        
+      </trans-unit>
+      <trans-unit id="linkDirectDownload.Text">
+        <source>&amp;Direct Download</source>
         
       </trans-unit>
     </body>
@@ -8604,7 +8689,7 @@ nodos de referencia.</target>
       </trans-unit>
       <trans-unit id="_removeDanglingObjectsCaption.Text">
         <source>Remove</source>
-        <target>Eliminar</target>
+        <target>Quitar</target>
         
       </trans-unit>
       <trans-unit id="_removeDanglingObjectsQuestion.Text">
@@ -8703,7 +8788,7 @@ objetos colgados&quot;.</target>
       </trans-unit>
       <trans-unit id="mnuLostObjectView.Text">
         <source>View</source>
-        <target>Ver</target>
+        <target>Ver el objeto seleccionado</target>
         
       </trans-unit>
       <trans-unit id="mnuLostObjectsCreateBranch.Text">
@@ -8774,6 +8859,36 @@ objetos colgados&quot;.</target>
         <target>General</target>
         
       </trans-unit>
+      <trans-unit id="_fetch.Text">
+        <source>Fetch</source>
+        <target>Fetch</target>
+        
+      </trans-unit>
+      <trans-unit id="_fetchAll.Text">
+        <source>Fetch all</source>
+        <target>Fetch todo</target>
+        
+      </trans-unit>
+      <trans-unit id="_fetchAndPruneAll.Text">
+        <source>Fetch and prune all</source>
+        <target>Traer y podar todo</target>
+        
+      </trans-unit>
+      <trans-unit id="_openPullDialog.Text">
+        <source>Open pull dialog</source>
+        <target>Abrir diálogo de pull</target>
+        
+      </trans-unit>
+      <trans-unit id="_pullMerge.Text">
+        <source>Pull - merge</source>
+        <target>Pull - merge</target>
+        
+      </trans-unit>
+      <trans-unit id="_pullRebase.Text">
+        <source>Pull - rebase</source>
+        <target>Pull - rebase</target>
+        
+      </trans-unit>
       <trans-unit id="btnDefaultDestinationBrowse.Text">
         <source>Browse</source>
         <target>Examinar</target>
@@ -8801,11 +8916,6 @@ objetos colgados&quot;.</target>
       </trans-unit>
       <trans-unit id="chkShowAheadBehindDataInBrowseWindow.Text">
         <source>Show ahead and behind information on status bar in browse window</source>
-        
-      </trans-unit>
-      <trans-unit id="chkShowCurrentChangesInRevisionGraph.Text">
-        <source>Show current working directory changes as an artificial commit</source>
-        <target>Mostrar cambios del directorio de trabajo actual como un Commit artificial</target>
         
       </trans-unit>
       <trans-unit id="chkShowGitCommandLine.Text">
@@ -8843,6 +8953,10 @@ objetos colgados&quot;.</target>
         <target>Incluir archivos sin seguimiento en alijo</target>
         
       </trans-unit>
+      <trans-unit id="chkTelemetry.Text">
+        <source>Yes, I allow telemetry!</source>
+        
+      </trans-unit>
       <trans-unit id="chkUseFastChecks.Text">
         <source>Use FileSystemWatcher to check if index is changed</source>
         <target>Utilice FileSystemWatcher para comprobar si el índice cambia</target>
@@ -8853,24 +8967,18 @@ objetos colgados&quot;.</target>
         <target>Utilice algoritmo de diff paciencia</target>
         
       </trans-unit>
-      <trans-unit id="chkUseSSL.Text">
-        <source>Use SSL/TLS</source>
-        <target>Usar SSL/TLS</target>
-        
-      </trans-unit>
       <trans-unit id="groupBoxBehaviour.Text">
         <source>Behaviour</source>
         <target>Comportamiento</target>
         
       </trans-unit>
-      <trans-unit id="groupBoxEmailSettings.Text">
-        <source>Email settings for sending patches</source>
-        <target>Ajustes de e-mail para enviar parches</target>
-        
-      </trans-unit>
       <trans-unit id="groupBoxPerformance.Text">
         <source>Performance</source>
         <target>Rendimiento</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxTelemetry.Text">
+        <source>Telemetry</source>
         
       </trans-unit>
       <trans-unit id="lblCommitsLimit.Text">
@@ -8883,19 +8991,17 @@ objetos colgados&quot;.</target>
         <target>Destino de clonar por defecto</target>
         
       </trans-unit>
+      <trans-unit id="lblDefaultPullAction.Text">
+        <source>Default pull action</source>
+        
+      </trans-unit>
       <trans-unit id="lblQuickSearchTimeout.Text">
         <source>Revision grid quick search timeout [ms]</source>
         <target>Tiempo máx. de búsqueda en la tabla de revisiones [ms]</target>
         
       </trans-unit>
-      <trans-unit id="lblSmtpServerName.Text">
-        <source>SMTP server name</source>
-        <target>Nombre del servidor SMTP</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSmtpServerPort.Text">
-        <source>Port</source>
-        <target>Puerto</target>
+      <trans-unit id="llblTelemetryPrivacyLink.Text">
+        <source>Why and what is captured?</source>
         
       </trans-unit>
     </body>
@@ -9719,7 +9825,6 @@ Do you want to remove it from the recent repositories list?</source>
       <trans-unit id="tsmiCategoryRename.Text">
         <source>Rename category</source>
         <target>Renombrar categoria</target>
-        <target>Renombrar categoría</target>
         
       </trans-unit>
       <trans-unit id="tsmiOpenFolder.Text">
@@ -10011,7 +10116,7 @@ Para mostrar todas las ramas, haga clic con el botón derecho en la tabla de rev
       </trans-unit>
       <trans-unit id="diffStashSubmoduleChangesToolStripMenuItem.Text">
         <source>Stash submodule changes</source>
-        <target>Apilar cambios de submódulos</target>
+        <target>Stash cambios de submódulos</target>
         
       </trans-unit>
       <trans-unit id="diffSubmoduleSummaryMenuItem.Text">
@@ -10313,6 +10418,10 @@ Ver los cambios en el formulario de commit.</target>
   </file>
   <file datatype="plaintext" original="RevisionGrid" source-language="en" target-language="es">
     <body>
+      <trans-unit id="AuthorDateSort.Text">
+        <source>Sort commits by author date</source>
+        
+      </trans-unit>
       <trans-unit id="GotoChildCommit.Text">
         <source>Go to child commit</source>
         <target>Ir al commit hijo</target>
@@ -10366,6 +10475,10 @@ Ver los cambios en el formulario de commit.</target>
       <trans-unit id="ShowAllBranches.Text">
         <source>Show all branches</source>
         <target>Mostrar todas las ramas</target>
+        
+      </trans-unit>
+      <trans-unit id="ShowArtificialCommits.Text">
+        <source>Show artificial commits</source>
         
       </trans-unit>
       <trans-unit id="ShowCurrentBranchOnly.Text">
@@ -10820,6 +10933,10 @@ Ver los cambios en el formulario de commit.</target>
         <target>URI</target>
         
       </trans-unit>
+      <trans-unit id="_addTemplate.Text">
+        <source>Add {0} templates</source>
+        
+      </trans-unit>
       <trans-unit id="chkOnlyFirstRemote.Text">
         <source>Only use the first match</source>
         <target>Solo usar la primera coincidencia.</target>
@@ -10884,6 +11001,10 @@ Ver los cambios en el formulario de commit.</target>
         <target>Datos de revisión</target>
         
       </trans-unit>
+      <trans-unit id="toolStripManageCategories.Text">
+        <source>toolStrip1</source>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="ScriptsSettingsPage" source-language="en" target-language="es">
@@ -10924,6 +11045,9 @@ User Input:
 Working Dir:
 {WorkingDir}
 
+Repository:
+{RepoName}
+
 Selected Commits:
 {sHashes}
 
@@ -10932,6 +11056,7 @@ Selected Branch:
 {sBranch}
 {sLocalBranch}
 {sRemoteBranch}
+{sRemoteBranchName}   (without the remote's name)
 {sRemote}
 {sRemoteUrl}
 {sRemotePathFromUrl}
@@ -10947,6 +11072,7 @@ Current Branch:
 {cBranch}
 {cLocalBranch}
 {cRemoteBranch}
+{cRemoteBranchName}   (without the remote's name)
 {cHash}
 {cMessage}
 {cAuthor}
@@ -11088,7 +11214,7 @@ Current Branch:
       </trans-unit>
       <trans-unit id="chlMenuEntries.Item10">
         <source>File history</source>
-        <target>Historial de archivo</target>
+        <target>Historial del archivo</target>
         
       </trans-unit>
       <trans-unit id="chlMenuEntries.Item11">
@@ -11163,7 +11289,7 @@ Current Branch:
       </trans-unit>
       <trans-unit id="chlMenuEntries.Item9">
         <source>Open with difftool</source>
-        <target>Abrir con diftool</target>
+        <target>Abrir con difftool</target>
         
       </trans-unit>
       <trans-unit id="gbShellExtensions.Text">
@@ -11323,6 +11449,10 @@ Seleccione este commit para llenar el mensaje completo.</target>
         <target>Commiter</target>
         
       </trans-unit>
+      <trans-unit id="_createPullRequest.Text">
+        <source>Create pull request</source>
+        
+      </trans-unit>
       <trans-unit id="_dateText.Text">
         <source>Date</source>
         <target>Fecha</target>
@@ -11336,6 +11466,10 @@ Seleccione este commit para llenar el mensaje completo.</target>
       <trans-unit id="_findGitExecutable.Text">
         <source>Find git...</source>
         <target>Buscar git...</target>
+        
+      </trans-unit>
+      <trans-unit id="_forkCloneRepo.Text">
+        <source>Fork or clone a repository</source>
         
       </trans-unit>
       <trans-unit id="_gitExecutableNotFoundText.Text">
@@ -11408,9 +11542,26 @@ Seleccione este commit para llenar el mensaje completo.</target>
         <target>Etiquetas</target>
         
       </trans-unit>
+      <trans-unit id="_telemetryPermissionCaption.Text">
+        <source>Allow Capture Telemetry?</source>
+        
+      </trans-unit>
+      <trans-unit id="_telemetryPermissionMessage.Text">
+        <source>We collect information so we can make the app better.
+
+We won't collect any personal or identifiable information.
+You can change your mind at any time.
+
+Yes, I allow telemetry!</source>
+        
+      </trans-unit>
       <trans-unit id="_uninterestingDiffOmitted.Text">
         <source>Uninteresting diff hunks are omitted.</source>
         <target>Se omiten fragmentos diff que no interesan</target>
+        
+      </trans-unit>
+      <trans-unit id="_viewPullRequest.Text">
+        <source>View pull requests</source>
         
       </trans-unit>
       <trans-unit id="_weeksAgo.Text">

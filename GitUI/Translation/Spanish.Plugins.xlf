@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.1.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="3.2.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="es">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -322,7 +322,7 @@
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>Borrar</target>
+        <target>Eliminar</target>
         
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
@@ -336,8 +336,8 @@
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
-        <source>Cancel</source>
-        <target>Cancelar</target>
+        <source>Search branches</source>
+        <target>Buscar ramas</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -365,13 +365,12 @@
 Branches will be deleted on the remote '{0}'. This can not be undone.
 Are you sure you want to continue?</source>
         <target>¡ACCIÓN PELIGROSA!
-Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede deshacerse. 
-¿Está seguro de que desea continuar?</target>
+Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede deshacerse. ¿Está seguro de que desea continuar?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>Borrar</target>
+        <target>Eliminar</target>
         
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
@@ -427,11 +426,6 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
         <target>Eliminar ramas completamente fusionadas con la rama</target>
-        
-      </trans-unit>
-      <trans-unit id="lblStatus.Text">
-        <source>Loading...</source>
-        <target>Cargando...</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -533,7 +527,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>Borrar</target>
+        <target>Eliminar</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -543,7 +537,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>Borrar</target>
+        <target>Eliminar</target>
         
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
@@ -553,7 +547,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
         <source>Delete</source>
-        <target>Borrar</target>
+        <target>Eliminar</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -697,9 +691,8 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
         <target>&amp;Publicar</target>
         
       </trans-unit>
-      <trans-unit id="PublishDraft.Text">
-        <source>Submit review as draft</source>
-        <target>Enviar revisión como borrador</target>
+      <trans-unit id="PublishType.Text">
+        <source>For Review</source>
         
       </trans-unit>
       <trans-unit id="_publishCaption.Text">
@@ -710,6 +703,19 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       <trans-unit id="_publishGerritChangeCaption.Text">
         <source>Publish Gerrit Change</source>
         <target>Publicar cambio Gerrit</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypePrivate.Text">
+        <source>Private</source>
+        <target>Privado</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeReview.Text">
+        <source>For Review</source>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeWip.Text">
+        <source>Work-in-Progress</source>
         
       </trans-unit>
       <trans-unit id="_selectBranch.Text">
@@ -725,6 +731,10 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       <trans-unit id="labelBranch.Text">
         <source>Branch:</source>
         <target>Rama:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelPublishType.Text">
+        <source>Publish Type</source>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">
@@ -1269,8 +1279,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>No se ha encontrado Gourge. 
-Por favor, descargue Gourge e incluye la dirección de instalación en el diálogo de configuración de plugins.</target>
+        <target>No se ha encontrado Gourge. Por favor, descargue Gourge e incluye la dirección de instalación en el diálogo de configuración de plugins.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
@@ -1527,7 +1536,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>Log de commit desde '{0}' hasta '{1}' ({2}):</target>
+        <target>Log de commit desde '{0}' a '{1}' ({2}):</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
@@ -1755,7 +1764,7 @@ Por favor, verifique la url del servidor.</target>
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
-        <target>¡La expresión regular &quot;Build Id Filter&quot; no es válida y no será guardada!</target>
+        <target>¡La expresión regular &quot;Build Id Filter no es valido y no será guardada!</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">

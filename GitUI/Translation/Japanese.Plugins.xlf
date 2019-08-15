@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.1.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="3.2.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="ja">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -334,8 +334,8 @@
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
-        <source>Cancel</source>
-        <target>キャンセル</target>
+        <source>Search branches</source>
+        <target>ブランチを検索</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -425,11 +425,6 @@ Are you sure you want to continue?</source>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
         <target>完全に他のブランチにマージされたブランチを削除</target>
-        
-      </trans-unit>
-      <trans-unit id="lblStatus.Text">
-        <source>Loading...</source>
-        <target>読込中...</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -696,9 +691,8 @@ Are you sure you want to continue?</source>
         <target>発行(&amp;P)</target>
         
       </trans-unit>
-      <trans-unit id="PublishDraft.Text">
-        <source>Submit review as draft</source>
-        <target>ドラフトとしてレビューを提出</target>
+      <trans-unit id="PublishType.Text">
+        <source>For Review</source>
         
       </trans-unit>
       <trans-unit id="_publishCaption.Text">
@@ -709,6 +703,19 @@ Are you sure you want to continue?</source>
       <trans-unit id="_publishGerritChangeCaption.Text">
         <source>Publish Gerrit Change</source>
         <target>Gerrit Changeの発行</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypePrivate.Text">
+        <source>Private</source>
+        <target>プライベート</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeReview.Text">
+        <source>For Review</source>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeWip.Text">
+        <source>Work-in-Progress</source>
         
       </trans-unit>
       <trans-unit id="_selectBranch.Text">
@@ -724,6 +731,10 @@ Are you sure you want to continue?</source>
       <trans-unit id="labelBranch.Text">
         <source>Branch:</source>
         <target>ブランチ:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelPublishType.Text">
+        <source>Publish Type</source>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">

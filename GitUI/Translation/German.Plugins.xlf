@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.1.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="3.2.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="de">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -336,8 +336,8 @@
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
-        <source>Cancel</source>
-        <target>Abbrechen</target>
+        <source>Search branches</source>
+        <target>Suche Branches</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -427,11 +427,6 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
         <target>Lösche Branches die vollständig in den Branch gemerged wurden</target>
-        
-      </trans-unit>
-      <trans-unit id="lblStatus.Text">
-        <source>Loading...</source>
-        <target>Lade...</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -698,9 +693,8 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
         <target>&amp;Veröffentlichen</target>
         
       </trans-unit>
-      <trans-unit id="PublishDraft.Text">
-        <source>Submit review as draft</source>
-        <target>Sende Review als Entwurf</target>
+      <trans-unit id="PublishType.Text">
+        <source>For Review</source>
         
       </trans-unit>
       <trans-unit id="_publishCaption.Text">
@@ -711,6 +705,20 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       <trans-unit id="_publishGerritChangeCaption.Text">
         <source>Publish Gerrit Change</source>
         <target>Gerrit Änderung veröffentlichen</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypePrivate.Text">
+        <source>Private</source>
+        <target>Privat</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeReview.Text">
+        <source>For Review</source>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeWip.Text">
+        <source>Work-in-Progress</source>
+        <target>In Arbeit</target>
         
       </trans-unit>
       <trans-unit id="_selectBranch.Text">
@@ -726,6 +734,10 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       <trans-unit id="labelBranch.Text">
         <source>Branch:</source>
         <target>Branch:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelPublishType.Text">
+        <source>Publish Type</source>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">
