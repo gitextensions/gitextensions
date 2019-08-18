@@ -14,6 +14,8 @@ namespace GitUI.Script
         ShowInUserMenuBar,
         BeforeCheckout,
         AfterCheckout,
+        BeforeFetch,
+        AfterFetch,
         BeforeMerge,
         AfterMerge
     }

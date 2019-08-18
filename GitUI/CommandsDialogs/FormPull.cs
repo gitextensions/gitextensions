@@ -398,7 +398,7 @@ namespace GitUI.CommandsDialogs
                 return DialogResult.No;
             }
 
-            ScriptManager.RunEventScripts(this, ScriptEvent.BeforePull);
+            executeBeforeScripts();
 
             var stashed = CalculateStashedValue(owner);
 
@@ -437,7 +437,7 @@ namespace GitUI.CommandsDialogs
                         PopStash();
                     }
 
-                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterPull);
+                    executeAfterScripts();
                 }
             }
 
@@ -555,6 +555,32 @@ namespace GitUI.CommandsDialogs
                 if ((bool)messageBoxResult)
                 {
                     UICommands.StashPop(owner);
+                }
+            }
+
+            void executeBeforeScripts()
+            {
+                if (Fetch.Checked)
+                {
+                    ScriptManager.RunEventScripts(this, ScriptEvent.BeforeFetch);
+                }
+                else
+                {
+                    ScriptManager.RunEventScripts(this, ScriptEvent.BeforePull);
+                    ScriptManager.RunEventScripts(this, ScriptEvent.BeforeFetch);
+                }
+            }
+
+            void executeAfterScripts()
+            {
+                if (Fetch.Checked)
+                {
+                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterFetch);
+                }
+                else
+                {
+                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterFetch);
+                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterPull);
                 }
             }
         }
