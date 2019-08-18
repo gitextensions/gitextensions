@@ -560,26 +560,20 @@ namespace GitUI.CommandsDialogs
 
             void executeBeforeScripts()
             {
-                if (Fetch.Checked)
-                {
-                    ScriptManager.RunEventScripts(this, ScriptEvent.BeforeFetch);
-                }
-                else
+                if (!Fetch.Checked)
                 {
                     ScriptManager.RunEventScripts(this, ScriptEvent.BeforePull);
-                    ScriptManager.RunEventScripts(this, ScriptEvent.BeforeFetch);
                 }
+
+                ScriptManager.RunEventScripts(this, ScriptEvent.BeforeFetch);
             }
 
             void executeAfterScripts()
             {
-                if (Fetch.Checked)
+                ScriptManager.RunEventScripts(this, ScriptEvent.AfterFetch);
+
+                if (!Fetch.Checked)
                 {
-                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterFetch);
-                }
-                else
-                {
-                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterFetch);
                     ScriptManager.RunEventScripts(this, ScriptEvent.AfterPull);
                 }
             }
