@@ -14,10 +14,10 @@ namespace GitUI.Script
         ShowInUserMenuBar,
         BeforeCheckout,
         AfterCheckout,
-        BeforeFetch,
-        AfterFetch,
         BeforeMerge,
-        AfterMerge
+        AfterMerge,
+        BeforeFetch,
+        AfterFetch
     }
 
     public class ScriptInfo
