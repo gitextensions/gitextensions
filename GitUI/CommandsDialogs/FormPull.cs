@@ -560,6 +560,7 @@ namespace GitUI.CommandsDialogs
 
             void executeBeforeScripts()
             {
+                // Request to pull/merge in addition to the fetch
                 if (!Fetch.Checked)
                 {
                     ScriptManager.RunEventScripts(this, ScriptEvent.BeforePull);
@@ -572,6 +573,7 @@ namespace GitUI.CommandsDialogs
             {
                 ScriptManager.RunEventScripts(this, ScriptEvent.AfterFetch);
 
+                // Request to pull/merge in addition to the fetch
                 if (!Fetch.Checked)
                 {
                     ScriptManager.RunEventScripts(this, ScriptEvent.AfterPull);
