@@ -2221,7 +2221,11 @@ namespace GitUI.CommandsDialogs
         private void QuickFetch()
         {
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforeFetch);
-            FormProcess.ShowDialog(this, Module.FetchCmd(string.Empty, string.Empty, string.Empty));
+            var success = FormProcess.ShowDialog(this, Module.FetchCmd(string.Empty, string.Empty, string.Empty));
+            if (!success) 
+            {
+                return;
+            }
             ScriptManager.RunEventScripts(this, ScriptEvent.AfterFetch);
             UICommands.RepoChangedNotifier.Notify();
         }
