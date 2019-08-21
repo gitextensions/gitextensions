@@ -2222,10 +2222,11 @@ namespace GitUI.CommandsDialogs
         {
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforeFetch);
             var success = FormProcess.ShowDialog(this, Module.FetchCmd(string.Empty, string.Empty, string.Empty));
-            if (!success) 
+            if (!success)
             {
                 return;
             }
+
             ScriptManager.RunEventScripts(this, ScriptEvent.AfterFetch);
             UICommands.RepoChangedNotifier.Notify();
         }

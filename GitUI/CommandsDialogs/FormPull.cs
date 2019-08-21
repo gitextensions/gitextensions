@@ -412,9 +412,12 @@ namespace GitUI.CommandsDialogs
                 form.ShowDialog(owner);
                 ErrorOccurred = form.ErrorOccurred();
 
+                bool executeScripts = false;
                 try
                 {
                     bool aborted = form.DialogResult == DialogResult.Abort;
+                    executeScripts = !aborted && !ErrorOccurred;
+
                     if (!aborted && !Fetch.Checked)
                     {
                         if (!ErrorOccurred)
@@ -426,7 +429,7 @@ namespace GitUI.CommandsDialogs
                         }
                         else
                         {
-                            CheckMergeConflictsOnError();
+                            executeScripts |= CheckMergeConflictsOnError();
                         }
                     }
                 }
@@ -437,7 +440,10 @@ namespace GitUI.CommandsDialogs
                         PopStash();
                     }
 
-                    executeAfterScripts();
+                    if (executeScripts)
+                    {
+                        executeAfterScripts();
+                    }
                 }
             }
 
@@ -511,17 +517,19 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            void CheckMergeConflictsOnError()
+            bool CheckMergeConflictsOnError()
             {
                 // Rebase failed -> special 'rebase' merge conflict
                 if (Rebase.Checked && Module.InTheMiddleOfRebase())
                 {
-                    UICommands.StartTheContinueRebaseDialog(owner);
+                    return UICommands.StartTheContinueRebaseDialog(owner);
                 }
                 else if (Module.InTheMiddleOfAction())
                 {
-                    MergeConflictHandler.HandleMergeConflicts(UICommands, owner);
+                    return MergeConflictHandler.HandleMergeConflicts(UICommands, owner);
                 }
+
+                return false;
             }
 
             void PopStash()
