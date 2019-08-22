@@ -52,7 +52,7 @@ See the changes in the commit form.");
         private readonly IRevisionFileTreeController _revisionFileTreeController;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
-        private GitRevision _revision;
+        [CanBeNull] private GitRevision _revision;
 
         public RevisionFileTreeControl()
         {
@@ -138,7 +138,7 @@ See the changes in the commit form.");
             findToolStripMenuItem_Click(null, null);
         }
 
-        public void LoadRevision(GitRevision revision)
+        public void LoadRevision([CanBeNull] GitRevision revision)
         {
             _revision = revision;
             _revisionFileTreeController.ResetCache();
@@ -287,7 +287,7 @@ See the changes in the commit form.");
 
         private IEnumerable<string> FindFileMatches(string name)
         {
-            var candidates = Module.GetFullTree(_revision.TreeGuid.ToString());
+            var candidates = _revision == null ? Enumerable.Empty<string>() : Module.GetFullTree(_revision.TreeGuid.ToString());
             var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
 
             return candidates.Where(predicate);
@@ -652,7 +652,7 @@ See the changes in the commit form.");
 
         private void resetToThisRevisionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (tvGitTree.SelectedNode?.Tag is GitItem gitItem)
+            if (tvGitTree.SelectedNode?.Tag is GitItem gitItem && _revision != null)
             {
                 if (MessageBox.Show(_resetFileText.Text, _resetFileCaption.Text, MessageBoxButtons.OKCancel) == DialogResult.OK)
                 {

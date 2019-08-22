@@ -1501,7 +1501,7 @@ namespace GitUI.CommandsDialogs
         private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
         {
             var revisions = RevisionGrid.GetSelectedRevisions();
-            if (revisions.Count > 2)
+            if (revisions.Count < 1 || revisions.Count > 2)
             {
                 MessageBox.Show(this, @"Select only one or two revisions. Abort.", @"Archive revision");
                 return;
@@ -1546,6 +1546,11 @@ namespace GitUI.CommandsDialogs
         private void RebaseToolStripMenuItemClick(object sender, EventArgs e)
         {
             var revisions = RevisionGrid.GetSelectedRevisions();
+
+            if (revisions.Count == 0)
+            {
+                return;
+            }
 
             if (revisions.Count == 2)
             {
