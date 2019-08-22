@@ -258,7 +258,7 @@ namespace GitUI.CommandsDialogs
                 gpgSignCommitToolStripComboBox.SelectedIndex = 0;
             }
 
-            ((ToolStripDropDownMenu)commitTemplatesToolStripMenuItem.DropDown).ShowImageMargin = false;
+            ((ToolStripDropDownMenu)commitTemplatesToolStripMenuItem.DropDown).ShowImageMargin = true;
             ((ToolStripDropDownMenu)commitTemplatesToolStripMenuItem.DropDown).ShowCheckMargin = false;
 
             ((ToolStripDropDownMenu)commitMessageToolStripMenuItem.DropDown).ShowImageMargin = false;
@@ -3119,7 +3119,7 @@ namespace GitUI.CommandsDialogs
                         return;
                     }
 
-                    var toolStripItem = new ToolStripMenuItem(item.Name);
+                    var toolStripItem = new ToolStripMenuItem(item.Name, item.Icon);
                     toolStripItem.Click += delegate
                     {
                         try
@@ -3144,7 +3144,7 @@ namespace GitUI.CommandsDialogs
 
                 void AddSettingsItem()
                 {
-                    var settingsItem = new ToolStripMenuItem(_commitMessageSettings.Text);
+                    var settingsItem = new ToolStripMenuItem(_commitMessageSettings.Text, Images.Settings);
                     settingsItem.Click += delegate
                     {
                         using (var frm = new FormCommitTemplateSettings())
