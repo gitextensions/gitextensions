@@ -160,12 +160,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            CurrentSettings.SetPathValue(string.Format("mergetool.{0}.path", _NO_TRANSLATE_GlobalMergeTool.Text.Trim()), MergetoolPath.Text?.Trim() ?? "");
+            var mergeToolPath = MergetoolPath.Text.Trim().Trim('"', '\'');
+
+            CurrentSettings.SetPathValue(string.Format("mergetool.{0}.path", _NO_TRANSLATE_GlobalMergeTool.Text.Trim()), mergeToolPath ?? "");
             string exeName;
             string exeFile;
-            if (!string.IsNullOrEmpty(MergetoolPath.Text))
+            if (!string.IsNullOrEmpty(mergeToolPath))
             {
-                exeFile = MergetoolPath.Text;
+                exeFile = mergeToolPath;
                 exeName = Path.GetFileName(exeFile);
             }
             else
@@ -218,12 +220,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            CurrentSettings.SetPathValue(string.Format("difftool.{0}.path", _NO_TRANSLATE_GlobalDiffTool.Text.Trim()), DifftoolPath.Text?.Trim() ?? "");
+            var diffToolPath = DifftoolPath.Text.Trim().Trim('"', '\'');
+
+            CurrentSettings.SetPathValue(string.Format("difftool.{0}.path", _NO_TRANSLATE_GlobalDiffTool.Text.Trim()), diffToolPath ?? "");
             string exeName;
             string exeFile;
-            if (!string.IsNullOrEmpty(DifftoolPath.Text))
+            if (!string.IsNullOrEmpty(diffToolPath))
             {
-                exeFile = DifftoolPath.Text;
+                exeFile = diffToolPath;
                 exeName = Path.GetFileName(exeFile);
             }
             else
