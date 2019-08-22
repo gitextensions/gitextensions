@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
@@ -126,7 +127,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 {
                     Text = controlBinding.Caption(),
                     AutoSize = true,
-                    Anchor = AnchorStyles.Left
+                    Anchor = AnchorStyles.Left | AnchorStyles.Top,
+                    Margin = new Padding(0, DpiUtil.Scale(2), 0, 0)
                 };
 
                 tableLayout.Controls.Add(label, 0, _currentRow);
