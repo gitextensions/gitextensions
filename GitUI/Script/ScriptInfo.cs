@@ -15,7 +15,9 @@ namespace GitUI.Script
         BeforeCheckout,
         AfterCheckout,
         BeforeMerge,
-        AfterMerge
+        AfterMerge,
+        BeforeFetch,
+        AfterFetch
     }
 
     public class ScriptInfo
