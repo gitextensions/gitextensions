@@ -5,9 +5,19 @@ namespace GitUIPluginInterfaces.UserControls
 {
     public partial class CredentialsControl : UserControl
     {
-        public CredentialsControl()
+        public CredentialsControl(string userNameLabelText = null, string passwordLabelText = null)
         {
             InitializeComponent();
+
+            if (!string.IsNullOrWhiteSpace(userNameLabelText))
+            {
+                userNameLabel.Text = userNameLabelText;
+            }
+
+            if (!string.IsNullOrWhiteSpace(passwordLabelText))
+            {
+                passwordLabel.Text = passwordLabelText;
+            }
         }
 
         public string UserName
