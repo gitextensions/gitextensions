@@ -61,8 +61,9 @@ namespace GitUIPluginInterfaces
                     settingVal = Setting.ValueOrDefault(settings);
                 }
 
+                // for multiline control, transform "\n" in "\r\n" but prevent "\r\n" to be transformed in "\r\r\n"
                 control.Text = control.Multiline
-                    ? settingVal?.Replace("\n", Environment.NewLine)
+                    ? settingVal?.Replace(Environment.NewLine, "\n").Replace("\n", Environment.NewLine)
                     : settingVal;
             }
 
