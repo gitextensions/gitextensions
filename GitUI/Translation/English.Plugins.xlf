@@ -1157,10 +1157,6 @@ Do you want to reset the configured path?</source>
         <source>Jira hint plugin enabled</source>
         <target />
       </trans-unit>
-      <trans-unit id="_jiraFields.Caption">
-        <source>Jira fields</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_jqlQuerySettings.Caption">
         <source>JQL Query</source>
         <target />

@@ -45,8 +45,7 @@ namespace JiraCommitHintPlugin
         // For compatibility reason, the setting key is kept to "JDL Query" even if the label is, rightly, "JQL Query" (for "Jira Query Language")
         private readonly StringSetting _jqlQuerySettings = new StringSetting("JDL Query", JiraQueryLabel, "assignee = currentUser() and resolution is EMPTY ORDER BY updatedDate DESC", true);
         private readonly StringSetting _stringTemplateSetting = new StringSetting("Jira Message Template", MessageTemplateLabel, defaultFormat, true);
-        private readonly StringSetting _jiraFields = new StringSetting("Jira fields", JiraFieldsLabel, $"{{{string.Join("} {", typeof(Issue).GetProperties().Where(i => i.CanRead).Select(i => i.Name).OrderBy(i => i).ToArray())}}}");
-        private readonly StringSetting _jiraQueryHelpLink = new StringSetting("    ", "");
+        private readonly string _jiraFields = $"{{{string.Join("} {", typeof(Issue).GetProperties().Where(i => i.CanRead).Select(i => i.Name).OrderBy(i => i).ToArray())}}}";
         private IGitModule _gitModule;
         private JiraTaskDTO[] _currentMessages;
         private Button _btnPreview;
@@ -97,22 +96,11 @@ namespace JiraCommitHintPlugin
             _jqlQuerySettings.CustomControl = new TextBox();
             yield return _jqlQuerySettings;
 
-            var queryHelperLink = new LinkLabel { Text = QueryHelperLinkText, Width = DpiUtil.Scale(300) };
+            var queryHelperLink = new LinkLabel { Text = QueryHelperLinkText };
             queryHelperLink.Click += QueryHelperLink_Click;
-            var txtJiraQueryHelpLink = new TextBox { ReadOnly = true, BorderStyle = BorderStyle.None, Width = DpiUtil.Scale(300) };
-            txtJiraQueryHelpLink.Controls.Add(queryHelperLink);
-            _jiraQueryHelpLink.CustomControl = txtJiraQueryHelpLink;
-            yield return _jiraQueryHelpLink;
+            yield return new PseudoSetting(queryHelperLink);
 
-            _jiraFields.CustomControl = new TextBox
-            {
-                ReadOnly = true,
-                Multiline = true,
-                Height = DpiUtil.Scale(55),
-                BorderStyle = BorderStyle.None,
-                Text = _jiraFields.DefaultValue
-            };
-            yield return _jiraFields;
+            yield return new PseudoSetting(_jiraFields, JiraFieldsLabel, DpiUtil.Scale(55));
 
             var txtTemplate = new TextBox
             {
