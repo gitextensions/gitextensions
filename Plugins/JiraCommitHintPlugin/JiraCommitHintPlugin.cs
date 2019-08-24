@@ -62,8 +62,9 @@ namespace JiraCommitHintPlugin
 
         public override bool Execute(GitUIEventArgs args)
         {
-            if (_enabledSettings.ValueOrDefault(Settings))
+            if (!_enabledSettings.ValueOrDefault(Settings))
             {
+                args.GitUICommands.StartSettingsDialog(this);
                 return false;
             }
 
