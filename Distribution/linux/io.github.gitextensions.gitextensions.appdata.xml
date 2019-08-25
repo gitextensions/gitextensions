@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.gitextensions.gitextensions</id>
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>GNU GPL v3.0</project_license>
+  <name>Git Extensions</name>
+  <summary>Graphical user interface for Git that allows you to control Git without using the commandline</summary>
+
+  <description>
+    <p>Features:</p>
+    <ul>
+		<li>Feature rich user interface for Git</li>
+    </ul>
+  </description>
+
+  <launchable type="desktop-id">io.github.gitextensions.gitextensions.desktop</launchable>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>The main view</caption>
+        <image>http://gitextensions.github.io/images/commitlog205.png</image>
+    </screenshot>
+  </screenshots>
+
+  <url type="homepage">https://gitahead.github.io/gitahead.com/</url>
+
+  <provides>
+    <binary>gitextensions</binary>
+    <id>io.github.gitextensions.gitextensions</id>
+  </provides>
+
+  <releases>
+    <release version="2018.03.23" date="2018-03-23">
+      <description>
+        <p>Initial Flathub release</p>
+      </description>
+    </release>
+  </releases>
+
+ <content_rating type="oars-1.1">
+    <content_attribute id="violence-cartoon">none</content_attribute>
+    <content_attribute id="violence-fantasy">none</content_attribute>
+    <content_attribute id="violence-realistic">none</content_attribute>
+    <content_attribute id="violence-bloodshed">none</content_attribute>
+    <content_attribute id="violence-sexual">none</content_attribute>
+    <content_attribute id="violence-desecration">none</content_attribute>
+    <content_attribute id="violence-slavery">none</content_attribute>
+    <content_attribute id="violence-worship">none</content_attribute>
+    <content_attribute id="drugs-alcohol">none</content_attribute>
+    <content_attribute id="drugs-narcotics">none</content_attribute>
+    <content_attribute id="drugs-tobacco">none</content_attribute>
+    <content_attribute id="sex-nudity">none</content_attribute>
+    <content_attribute id="sex-themes">none</content_attribute>
+    <content_attribute id="sex-homosexuality">none</content_attribute>
+    <content_attribute id="sex-prostitution">none</content_attribute>
+    <content_attribute id="sex-adultery">none</content_attribute>
+    <content_attribute id="sex-appearance">none</content_attribute>
+    <content_attribute id="language-profanity">none</content_attribute>
+    <content_attribute id="language-humor">none</content_attribute>
+    <content_attribute id="language-discrimination">none</content_attribute>
+    <content_attribute id="social-chat">none</content_attribute>
+    <content_attribute id="social-info">none</content_attribute>
+    <content_attribute id="social-audio">none</content_attribute>
+    <content_attribute id="social-location">none</content_attribute>
+    <content_attribute id="social-contacts">none</content_attribute>
+    <content_attribute id="money-purchasing">none</content_attribute>
+    <content_attribute id="money-gambling">none</content_attribute>
+  </content_rating>
+  
+</component>
+

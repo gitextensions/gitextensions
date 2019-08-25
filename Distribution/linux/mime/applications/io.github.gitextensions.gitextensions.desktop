@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Git Extensions
+Comment=Graphical user interface for Git that allows you to control Git without using the commandline
+Exec=gitextensions
+StartupWMClass=gitextensinos
+Icon=gitextensions
+Terminal=false
+Type=Application
+Categories=Development;
+X-Desktop-File-Install-Version=0.1
+Name[de_DE]=Git Extensions
