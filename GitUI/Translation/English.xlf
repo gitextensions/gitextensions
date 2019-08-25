@@ -5532,7 +5532,7 @@ Would you like to do it now?</source>
         <target />
       </trans-unit>
       <trans-unit id="_pullRepositoryButtons.Text">
-        <source>Pull with the default pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel</source>
+        <source>Pull with the default pull action ({0})|Pull with rebase|Pull with merge|Force push with lease|Cancel</source>
         <target />
       </trans-unit>
       <trans-unit id="_pullRepositoryCaption.Text">
