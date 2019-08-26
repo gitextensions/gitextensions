@@ -1,0 +1,80 @@
+{
+  "app-id": "io.github.gitextensions.gitextensions",
+  "runtime": "org.kde.Platform",
+  "runtime-version": "5.12",
+  "sdk": "org.kde.Sdk",
+  "command": "gitextensions",
+  "finish-args": [
+    "--socket=wayland",
+	"--socket=x11",
+    "--filesystem=xdg-run/dconf", "--filesystem=~/.config/dconf:ro",
+    "--talk-name=ca.desrt.dconf", "--env=DCONF_USER_CONFIG_DIR=.config/dconf",
+    "--own-name=io.github.gitextensions.gitextensions",
+    "--filesystem=home"
+	],
+    "rename-icon":"git-extensions-logo", /*Image will renamed to match the app-id konvention*/
+	"sdk-extensions" : [
+        "org.freedesktop.Sdk.Extension.mono5"
+    ],
+    "modules": [
+		{
+			"name": "mono5",
+			"buildsystem": "simple",
+			"build-commands": [
+				"/usr/lib/sdk/mono5/install.sh"
+			]
+		},
+		{
+			"name": "GitExtensions",
+			"buildsystem": "simple",
+			"build-commands": [
+				"cp -r ../GitExtensions /app/opt",
+
+				"desktop-file-install --dir=/app/share/applications Distribution/linux/mime/applications/io.github.gitextensions.gitextensions.desktop",
+				"install -Dm755 Distribution/linux/io.github.gitextensions.gitextensions.appdata.xml /app/share/appdata/io.github.gitahead.gitahead.appdata.xml",
+				"install -d /app/bin",
+				"install gitextensions /app/bin"
+			],
+			"sources": [
+				{
+					"type": "script",
+					"dest-filename": "gitextensions",
+					"commands": [
+						"mono /app/opt/GitExtensions.exe"
+					]
+				},
+				{
+					"type": "archive",
+					"url": "https://github.com/gitextensions/gitextensions/releases/download/v2.51.05/GitExtensions-2.51.05-Mono.zip",
+					"sha256": "7c1a40af62bf78f5c969a33319828a567600b64e643db8021bc5e64717b19958"
+				},
+				{
+					"type": "patch",
+					"path": "desktop_appdata_file.patch"
+				}
+			]
+		},
+		{
+			"name": "GitExtensionsIcons",
+			"buildsystem": "simple",
+			"build-commands": [
+				"install -Dm755 Logo/git-extensions-logo-16px.png /app/share/icons/hicolor/16x16/apps/git-extensions-logo.png",
+				"install -Dm755 Logo/git-extensions-logo-24px.png /app/share/icons/hicolor/24x24/apps/git-extensions-logo.png",
+				"install -Dm755 Logo/git-extensions-logo-32px.png /app/share/icons/hicolor/32x32/apps/git-extensions-logo.png",
+				"install -Dm755 Logo/git-extensions-logo-48px.png /app/share/icons/hicolor/48x48/apps/git-extensions-logo.png",
+				"install -Dm755 Logo/git-extensions-logo-64px.png /app/share/icons/hicolor/64x64/apps/git-extensions-logo.png",
+				"install -Dm755 Logo/git-extensions-logo-128px.png /app/share/icons/hicolor/128x128/apps/git-extensions-logo.png",
+				"install -Dm755 Logo/git-extensions-logo-256px.png /app/share/icons/hicolor/256x256/apps/git-extensions-logo.png",
+				"install -Dm755 Logo/git-extensions-logo-512px.png /app/share/icons/hicolor/512x512/apps/git-extensions-logo.png",
+				"install -Dm755 Logo/git-extensions-logo.svg /app/share/icons/hicolor/scalable/apps/git-extensions-logo.png"
+			],
+			"sources": [
+				{
+					"type": "git",
+					"branch": "master",
+					"url": "https://github.com/gitextensions/gitextensions.git"
+				}
+			]
+		}
+	]
+}
