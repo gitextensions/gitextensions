@@ -7,10 +7,9 @@
   "finish-args": [
     "--socket=wayland",
 	"--socket=x11",
-    "--filesystem=xdg-run/dconf", "--filesystem=~/.config/dconf:ro",
-    "--talk-name=ca.desrt.dconf", "--env=DCONF_USER_CONFIG_DIR=.config/dconf",
+	"--filesystem=home",
     "--own-name=io.github.gitextensions.gitextensions",
-    "--filesystem=home"
+	"--share=network"
 	],
     "rename-icon":"git-extensions-logo", /*Image will renamed to match the app-id konvention*/
 	"sdk-extensions" : [
