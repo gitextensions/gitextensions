@@ -16,12 +16,30 @@
 	"sdk-extensions" : [
         "org.freedesktop.Sdk.Extension.mono5"
     ],
+	"build-options" : {
+        "append-path": "/usr/lib/sdk/mono5/bin",
+        "append-ld-library-path": "/usr/lib/sdk/mono5/lib",
+        "env": {
+            "PKG_CONFIG_PATH": "/app/lib/pkgconfig:/app/share/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig:/usr/lib/sdk/mono5/lib/pkgconfig"
+        }
+    },
+    "cleanup": [ "/lib/monodoc", "/lib/pkgconfig" ],
     "modules": [
 		{
-			"name": "mono5",
-			"buildsystem": "simple",
-			"build-commands": [
-				"/usr/lib/sdk/mono5/install.sh"
+			"name": "libgdiplus0",
+			"sources": [
+				{
+					"type": "archive",
+					"url": "https://download.mono-project.com/sources/libgdiplus/libgdiplus0-5.6.tar.gz",
+					"sha256": "e1f2c0443af8d37b1a2971feb8826c82e932cff36dab814b94fce22f4d3dc53a"
+				}
+			],
+			"cleanup": [
+				"/include",
+				"/lib/*.a",
+				"/lib/*la",
+				"/lib/pkgconfig",
+				"share/man"
 			]
 		},
 		{
@@ -75,6 +93,25 @@
 					"url": "https://github.com/gitextensions/gitextensions.git"
 				}
 			]
+		},
+		{
+			"name": "mono-runtime",
+			"buildsystem": "simple",
+			"build-commands": [
+				"/usr/lib/sdk/mono5/install.sh",
+				"cp -ar /usr/lib/sdk/mono5/lib/mono/gac/System.Windows.Forms /app/lib/mono/gac/",
+				"rm -f /app/lib/mono/gac/System.Windows.Forms/*/*.pdb",
+				"cp -ar /usr/lib/sdk/mono5/lib/mono/gac/System.Drawing /app/lib/mono/gac/",
+      			"rm -f /app/lib/mono/gac/System.Drawing/*/*.pdb",
+				"cp -ar /usr/lib/sdk/mono5/lib/mono/gac/System.DirectoryServices /app/lib/mono/gac/",
+				"rm -f /app/lib/mono/gac/System.DirectoryServices/*/*.pdb",
+
+				"rm /app/opt/Plugins/Bitbucket.dll" /* # Fails to load (issue #5541)*/
+			],
+			"build-options" : {
+                "no-debuginfo": true,
+                "strip": true
+			}
 		}
 	]
 }
