@@ -31,7 +31,7 @@ namespace GitUI.Editor.Diff
             {
                 if (_visible && _diffLines.Any())
                 {
-                    int maxDigits = (int)Math.Log10(MaxLineNumber) + 1;
+                    int maxDigits = MaxLineNumber > 0 ? ((int)Math.Log10(MaxLineNumber) + 1) : 0;
                     return TextHorizontalMargin + (textArea.TextView.WideSpaceWidth * ((2 * maxDigits) + /* a space behind each number */ 2));
                 }
 
