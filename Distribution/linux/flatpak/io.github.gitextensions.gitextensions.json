@@ -111,6 +111,50 @@
                 "no-debuginfo": true,
                 "strip": true
 			}
-		}
+		},
+		{
+            "name": "gtk2",
+            "config-opts": ["--disable-gtk-doc",
+                            "--enable-introspection=no",
+                            "--disable-man",
+                            "--with-xinput=xfree"],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://download.gnome.org/sources/gtk+/2.24/gtk+-2.24.29.tar.xz",
+                    "sha256": "0741c59600d3d810a223866453dc2bbb18ce4723828681ba24aa6519c37631b8"
+                }
+            ]
+        },
+		        {
+            "name": "xamarin-gtk-theme",
+            "config-opts": ["--disable-gtk-doc",
+                            "--enable-introspection=no",
+                            "--disable-man",
+                            "--with-xinput=xfree"],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "git://github.com/mono/xamarin-gtk-theme.git",
+                    "branch": "master"
+                }
+            ]
+        },
+        {
+            "name": "xamtheme-dark",
+            "no-autogen": true,
+            "sources": [
+                {
+                    "type": "file",
+                    "path": "patches/xamtheme-dark/gtkrc",
+                    "dest-filename": "gtkrc"
+                },
+                {
+                    "type": "file",
+                    "path": "patches/xamtheme-dark/Makefile",
+                    "dest-filename": "Makefile"
+                }
+            ]
+        }
 	]
 }
