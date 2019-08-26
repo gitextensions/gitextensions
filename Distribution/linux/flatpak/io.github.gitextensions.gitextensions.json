@@ -1,8 +1,8 @@
 {
   "app-id": "io.github.gitextensions.gitextensions",
-  "runtime": "org.kde.Platform",
-  "runtime-version": "5.12",
-  "sdk": "org.kde.Sdk",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "1.6",
+  "sdk": "org.freedesktop.Sdk",
   "command": "gitextensions",
   "finish-args": [
     "--socket=wayland",
