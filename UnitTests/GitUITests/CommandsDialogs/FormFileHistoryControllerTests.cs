@@ -30,10 +30,9 @@ namespace GitUITests.CommandsDialogs
         }
 
         [TestCase(@"c:\Users\Public\desktop.ini")]
-        [TestCase(@"c:\pagefile.sys")]
         [TestCase(@"c:\Windows\System32\cmd.exe")]
         [TestCase(@"c:\Users\Default\NTUSER.DAT")]
-        [TestCase(@"c:\Program Files (x86)\Microsoft.NET\Primary Interop Assemblies")]
+        [TestCase(@"c:\Program Files (x86)\microsoft.net\primary interop assemblies")]
         [TestCase(@"c:\Program Files (x86)")]
         public void TryGetExactPathName_Should_output_path_with_exact_casing(string path)
         {
