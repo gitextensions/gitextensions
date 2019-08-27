@@ -93,4 +93,5 @@ YYYY/MM/DD, github id, Full name, email
 2019/08/15, phdussud, Patrick Dussud, phdussud[at]hotmail.com
 2019/08/18, manuc66, Emmanuel Counasse, manuc66(at)gmail.com
 2019/08/25, kvanttt, Ivan Kochurkin, kvanttt(at)gmail.com
+2019/08/27, palver123, Levente Koncz, palver123@gmail.com
 
