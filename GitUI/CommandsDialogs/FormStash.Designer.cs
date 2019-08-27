@@ -270,7 +270,6 @@ namespace GitUI.CommandsDialogs
             this.Stashed.GroupByRevision = false;
             this.Stashed.Location = new System.Drawing.Point(0, 0);
             this.Stashed.Margin = new System.Windows.Forms.Padding(0);
-            this.Stashed.MultiSelect = false;
             this.Stashed.Name = "Stashed";
             this.Stashed.Size = new System.Drawing.Size(280, 553);
             this.Stashed.TabIndex = 2;
