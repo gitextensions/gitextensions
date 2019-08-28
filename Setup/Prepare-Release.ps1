@@ -146,7 +146,7 @@ try {
     Write-Host ----------------------------------------------------------------------
     Write-Host Download PluginManager
     Write-Host ----------------------------------------------------------------------
-    .\Download-PluginManager.ps1 -ExtractRootPath '..\Plugins\GitExtensions.PluginManager'
+    ..\Build\Download-PluginManager.ps1 -ExtractRootPath '..\Plugins\GitExtensions.PluginManager'
 
 
 }

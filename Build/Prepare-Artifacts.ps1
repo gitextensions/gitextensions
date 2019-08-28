@@ -25,7 +25,7 @@ if ($env:ARTIFACT_DEBUG_ENABLED -eq $true) {
 # ----------------------------------------------------------------------
 # download PluginManager
 # ----------------------------------------------------------------------
-& Setup\Download-PluginManager.ps1 -ExtractRootPath '..\Plugins\GitExtensions.PluginManager'
+& .\Download-PluginManager.ps1 -ExtractRootPath '..\Plugins\GitExtensions.PluginManager'
 
 # -------------------------------
 # build artifacts
