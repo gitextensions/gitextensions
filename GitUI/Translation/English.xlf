@@ -7198,7 +7198,7 @@ Context menu for additional operations</source>
         <target />
       </trans-unit>
       <trans-unit id="chkStashUntrackedFiles.Text">
-        <source>Include untracked files in stash</source>
+        <source>Include untracked files in autostash</source>
         <target />
       </trans-unit>
       <trans-unit id="chkTelemetry.Text">

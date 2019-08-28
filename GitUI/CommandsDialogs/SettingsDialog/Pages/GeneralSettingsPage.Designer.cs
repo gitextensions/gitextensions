@@ -431,7 +431,7 @@
             this.chkStashUntrackedFiles.Name = "chkStashUntrackedFiles";
             this.chkStashUntrackedFiles.Size = new System.Drawing.Size(264, 17);
             this.chkStashUntrackedFiles.TabIndex = 3;
-            this.chkStashUntrackedFiles.Text = "Include untracked files in stash";
+            this.chkStashUntrackedFiles.Text = "Include untracked files in autostash";
             this.chkStashUntrackedFiles.UseVisualStyleBackColor = true;
             // 
             // chkStartWithRecentWorkingDir
