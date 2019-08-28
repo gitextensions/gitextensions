@@ -265,19 +265,6 @@ namespace GitCommands
             return path;
         }
 
-        [CanBeNull]
-        public static string GetFileExtension(string fileName)
-        {
-            var index = fileName.LastIndexOf('.');
-
-            if (index != -1)
-            {
-                return fileName.Substring(index + 1);
-            }
-
-            return null;
-        }
-
         [NotNull, ItemNotNull]
         public static IEnumerable<string> FindAncestors([NotNull] string path)
         {

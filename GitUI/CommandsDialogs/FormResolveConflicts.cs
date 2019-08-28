@@ -1101,7 +1101,7 @@ namespace GitUI.CommandsDialogs
                     AddExtension = true
                 })
                 {
-                    var ext = PathUtil.GetFileExtension(fileDialog.FileName);
+                    var ext = Path.GetExtension(fileDialog.FileName);
                     fileDialog.DefaultExt = ext;
                     fileDialog.Filter = string.Format(_currentFormatFilter.Text, ext) + "|*." + ext + "|" + _allFilesFilter.Text + "|*.*";
 
