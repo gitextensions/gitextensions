@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -12,13 +13,16 @@ using GitUI.CommitInfo;
 using GitUI.Editor;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
+using ResourceManager;
 
 namespace GitUI.Blame
 {
     public sealed partial class BlameControl : GitModuleControl
     {
         public event EventHandler<CommandEventArgs> CommandClick;
+        private readonly TranslationString _viewInWebSite = new TranslationString("View in {0}");
 
         /// <summary>
         /// Raised when the Escape key is pressed (and only when no selection exists, as the default behaviour of escape is to clear the selection).
@@ -26,6 +30,7 @@ namespace GitUI.Blame
         public event Action EscapePressed;
 
         private readonly AsyncLoader _blameLoader = new AsyncLoader();
+        private int _lineIndex;
 
         [CanBeNull] private GitBlameLine _lastBlameLine;
         [CanBeNull] private GitBlameLine _clickedBlameLine;
@@ -39,6 +44,8 @@ namespace GitUI.Blame
         private int _lastTooltipY = -100;
         private GitBlameCommit _tooltipCommit;
         private bool _changingScrollPosition;
+        private IRepositoryHostPlugin _gitHoster;
+        private IReadOnlyList<IHostedRemote> _hostedRemotesForModule;
 
         public BlameControl()
         {
@@ -64,6 +71,11 @@ namespace GitUI.Blame
             BlameFile.EscapePressed += () => EscapePressed?.Invoke();
 
             CommitInfo.CommandClicked += commitInfo_CommandClicked;
+        }
+
+        public void SetRepositoryHostPlugin(IRepositoryHostPlugin gitHoster)
+        {
+            _gitHoster = gitHoster;
         }
 
         public void UpdateShowLineNumbers()
@@ -119,10 +131,10 @@ namespace GitUI.Blame
                 return;
             }
 
-            var lineIndex = BlameAuthor.GetLineFromVisualPosY(e.Y);
+            _lineIndex = BlameAuthor.GetLineFromVisualPosY(e.Y);
 
-            var blameCommit = lineIndex < _blame.Lines.Count
-                ? _blame.Lines[lineIndex].Commit
+            var blameCommit = _lineIndex < _blame.Lines.Count
+                ? _blame.Lines[_lineIndex].Commit
                 : null;
 
             HighlightLinesForCommit(blameCommit);
@@ -414,6 +426,7 @@ namespace GitUI.Blame
 
         private void contextMenu_Opened(object sender, EventArgs e)
         {
+            ConfigureViewInHostingWebsiteMenu();
             contextMenu.Tag = GetBlameLine();
 
             if (_revGrid == null || !TryGetSelectedRevision(out var selectedRevision))
@@ -425,6 +438,38 @@ namespace GitUI.Blame
 
             blameRevisionToolStripMenuItem.Enabled = true;
             blamePreviousRevisionToolStripMenuItem.Enabled = selectedRevision.HasParent;
+        }
+
+        private void ConfigureViewInHostingWebsiteMenu()
+        {
+            if (_gitHoster == null)
+            {
+                viewInWebSiteToolStripMenuItem.Visible = false;
+                return;
+            }
+
+            viewInWebSiteToolStripMenuItem.Text = string.Format(_viewInWebSite.Text, _gitHoster.Name);
+
+            viewInWebSiteToolStripMenuItem.Visible = true;
+
+            if (_hostedRemotesForModule != null)
+            {
+                return;
+            }
+
+            _hostedRemotesForModule = _gitHoster.GetHostedRemotesForModule();
+            if (_hostedRemotesForModule.Count == 0)
+            {
+                viewInWebSiteToolStripMenuItem.Enabled = false;
+                return;
+            }
+
+            foreach (IHostedRemote hostedRemote in _hostedRemotesForModule.OrderBy(r => r.Data))
+            {
+                ToolStripItem toolStripItem = viewInWebSiteToolStripMenuItem.DropDownItems.Add(hostedRemote.DisplayData);
+
+                toolStripItem.Click += (sender, args) => ViewInGitHosterWebSite(hostedRemote.GetBlameUrl(_blameId.ToString(), _fileName, _lineIndex + 1));
+            }
         }
 
         [CanBeNull]
@@ -498,6 +543,19 @@ namespace GitUI.Blame
             }
 
             BlameRevision(selectedRevision.FirstParentGuid);
+        }
+
+        private void ViewInWebSiteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_hostedRemotesForModule != null && _hostedRemotesForModule.Count == 1)
+            {
+                ViewInGitHosterWebSite(_hostedRemotesForModule.First().Data);
+            }
+        }
+
+        private void ViewInGitHosterWebSite(string url)
+        {
+            Process.Start(url);
         }
 
         private void BlameRevision(ObjectId revisionId)

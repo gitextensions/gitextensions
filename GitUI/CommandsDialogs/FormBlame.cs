@@ -19,6 +19,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             InitializeComplete();
+            blameControl1.SetRepositoryHostPlugin(PluginRegistry.TryGetGitHosterForModule(Module));
         }
 
         public FormBlame(GitUICommands commands, string fileName, [CanBeNull] GitRevision revision, int? initialLine = null)
