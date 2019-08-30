@@ -592,7 +592,7 @@ IF ERRORLEVEL 1 EXIT /B 1
 REM UserPlugins
 echo "UserPlugins"
 
-xcopy /y /e ..\Plugins\GitExtensions.PluginManager\Output GitExtensions\UserPlugins\
+xcopy /y /e ..\Plugins\GitExtensions.PluginManager\Output GitExtensions\UserPlugins\GitExtensions.PluginManager\
 IF ERRORLEVEL 1 EXIT /B 1
 
 REM Translation

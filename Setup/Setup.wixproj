@@ -40,7 +40,6 @@
     <DefineConstants>Version=$(Version);NumericVersion=$(NumericVersion)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="PluginManager.wxs" />
     <Compile Include="Product.wxs" />
     <Compile Include="UI\CancelDlg.wxs" />
     <Compile Include="UI\TelemetryDlg.wxs" />
