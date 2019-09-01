@@ -781,7 +781,7 @@ namespace GitUI.CommandsDialogs
                 {
                     InitialDirectory = Path.GetDirectoryName(fullName),
                     FileName = Path.GetFileName(fullName),
-                    DefaultExt = PathUtil.GetFileExtension(fullName),
+                    DefaultExt = Path.GetExtension(fullName),
                     AddExtension = true
                 })
             {

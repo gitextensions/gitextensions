@@ -240,20 +240,6 @@ namespace GitCommandsTests.Helpers
             Assert.AreEqual("c:\\SomePath", PathUtil.GetDisplayPath("c:\\SomePath"));
         }
 
-        [Test]
-        public void GetFileExtension()
-        {
-            Assert.AreEqual("txt", PathUtil.GetFileExtension("foo.txt"));
-            Assert.AreEqual("txt", PathUtil.GetFileExtension("foo.txt.txt"));
-            Assert.AreEqual("txt", PathUtil.GetFileExtension(".txt"));
-            Assert.AreEqual("", PathUtil.GetFileExtension("foo."));
-            Assert.AreEqual("", PathUtil.GetFileExtension("."));
-            Assert.AreEqual("", PathUtil.GetFileExtension(".."));
-            Assert.AreEqual("", PathUtil.GetFileExtension("..."));
-            Assert.Null(PathUtil.GetFileExtension("foo"));
-            Assert.Null(PathUtil.GetFileExtension(""));
-        }
-
         [TestCase("/foo/bar", new[] { "\\foo\\", "\\" })]
         [TestCase("/foo/bar/", new[] { "\\foo\\", "\\" })]
         [TestCase("/foo", new[] { "\\" })]
