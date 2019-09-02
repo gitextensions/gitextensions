@@ -1344,7 +1344,7 @@ namespace GitUI
             var pt = _gridView.PointToClient(Cursor.Position);
             var hti = _gridView.HitTest(pt.X, pt.Y);
 
-            if (_latestSelectedRowIndex == hti.RowIndex)
+            if (_latestSelectedRowIndex == hti.RowIndex && _gridView.Rows[_latestSelectedRowIndex].Selected)
             {
                 return;
             }
@@ -1806,7 +1806,7 @@ namespace GitUI
                 return;
             }
 
-            GitRevision mainRevision = selectedRevisions.First();
+            GitRevision mainRevision = selectedRevisions.FirstOrDefault();
             GitRevision diffRevision = null;
             if (selectedRevisions.Count == 2)
             {
@@ -2362,7 +2362,12 @@ namespace GitUI
 
         private void CompareToBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var headCommit = GetSelectedRevisions().First();
+            var headCommit = GetSelectedRevisions().FirstOrDefault();
+            if (headCommit == null)
+            {
+                return;
+            }
+
             using (var form = new FormCompareToBranch(UICommands, headCommit.ObjectId))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
@@ -2383,15 +2388,20 @@ namespace GitUI
                 return;
             }
 
-            var baseCommit = GetSelectedRevisions().First();
+            var baseCommit = GetSelectedRevisions().FirstOrDefault();
+            if (baseCommit == null)
+            {
+                return;
+            }
+
             var headBranchName = Module.RevParse(headBranch);
             UICommands.ShowFormDiff(IsFirstParentValid(), baseCommit.ObjectId, headBranchName, baseCommit.Subject, headBranch);
         }
 
         private void selectAsBaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _baseCommitToCompare = GetSelectedRevisions().First();
-            compareToBaseToolStripMenuItem.Enabled = true;
+            _baseCommitToCompare = GetSelectedRevisions().FirstOrDefault();
+            compareToBaseToolStripMenuItem.Enabled = _baseCommitToCompare != null;
         }
 
         private void compareToBaseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2402,13 +2412,23 @@ namespace GitUI
                 return;
             }
 
-            var headCommit = GetSelectedRevisions().First();
+            var headCommit = GetSelectedRevisions().FirstOrDefault();
+            if (headCommit == null)
+            {
+                return;
+            }
+
             UICommands.ShowFormDiff(IsFirstParentValid(), _baseCommitToCompare.ObjectId, headCommit.ObjectId, _baseCommitToCompare.Subject, headCommit.Subject);
         }
 
         private void compareToWorkingDirectoryMenuItem_Click(object sender, EventArgs e)
         {
-            var baseCommit = GetSelectedRevisions().First();
+            var baseCommit = GetSelectedRevisions().FirstOrDefault();
+            if (baseCommit == null)
+            {
+                return;
+            }
+
             if (baseCommit.ObjectId == ObjectId.WorkTreeId)
             {
                 MessageBox.Show(this, "Cannot diff working directory to itself");
@@ -2441,9 +2461,9 @@ namespace GitUI
 
         private void openBuildReportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var revision = GetSelectedRevisions().First();
+            var revision = GetSelectedRevisions().FirstOrDefault();
 
-            if (!string.IsNullOrWhiteSpace(revision.BuildStatus?.Url))
+            if (revision != null && !string.IsNullOrWhiteSpace(revision.BuildStatus?.Url))
             {
                 Process.Start(revision.BuildStatus.Url);
             }
@@ -2451,9 +2471,9 @@ namespace GitUI
 
         private void openPullRequestPageStripMenuItem_Click(object sender, EventArgs e)
         {
-            var revision = GetSelectedRevisions().First();
+            var revision = GetSelectedRevisions().FirstOrDefault();
 
-            if (!string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl))
+            if (revision != null && !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl))
             {
                 Process.Start(revision.BuildStatus.PullRequestUrl);
             }

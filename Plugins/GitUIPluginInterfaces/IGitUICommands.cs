@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using JetBrains.Annotations;
@@ -31,7 +32,7 @@ namespace GitUIPluginInterfaces
 
         bool StartRemotesDialog();
         bool StartSettingsDialog(IGitPlugin gitPlugin);
-        void AddCommitTemplate(string key, Func<string> addingText);
+        void AddCommitTemplate(string key, Func<string> addingText, Image icon);
         void RemoveCommitTemplate(string key);
     }
 }

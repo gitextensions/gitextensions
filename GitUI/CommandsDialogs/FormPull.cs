@@ -398,7 +398,7 @@ namespace GitUI.CommandsDialogs
                 return DialogResult.No;
             }
 
-            ScriptManager.RunEventScripts(this, ScriptEvent.BeforePull);
+            executeBeforeScripts();
 
             var stashed = CalculateStashedValue(owner);
 
@@ -412,9 +412,12 @@ namespace GitUI.CommandsDialogs
                 form.ShowDialog(owner);
                 ErrorOccurred = form.ErrorOccurred();
 
+                bool executeScripts = false;
                 try
                 {
                     bool aborted = form.DialogResult == DialogResult.Abort;
+                    executeScripts = !aborted && !ErrorOccurred;
+
                     if (!aborted && !Fetch.Checked)
                     {
                         if (!ErrorOccurred)
@@ -426,7 +429,7 @@ namespace GitUI.CommandsDialogs
                         }
                         else
                         {
-                            CheckMergeConflictsOnError();
+                            executeScripts |= CheckMergeConflictsOnError();
                         }
                     }
                 }
@@ -437,7 +440,10 @@ namespace GitUI.CommandsDialogs
                         PopStash();
                     }
 
-                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterPull);
+                    if (executeScripts)
+                    {
+                        executeAfterScripts();
+                    }
                 }
             }
 
@@ -511,17 +517,19 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            void CheckMergeConflictsOnError()
+            bool CheckMergeConflictsOnError()
             {
                 // Rebase failed -> special 'rebase' merge conflict
                 if (Rebase.Checked && Module.InTheMiddleOfRebase())
                 {
-                    UICommands.StartTheContinueRebaseDialog(owner);
+                    return UICommands.StartTheContinueRebaseDialog(owner);
                 }
                 else if (Module.InTheMiddleOfAction())
                 {
-                    MergeConflictHandler.HandleMergeConflicts(UICommands, owner);
+                    return MergeConflictHandler.HandleMergeConflicts(UICommands, owner);
                 }
+
+                return false;
             }
 
             void PopStash()
@@ -555,6 +563,28 @@ namespace GitUI.CommandsDialogs
                 if ((bool)messageBoxResult)
                 {
                     UICommands.StashPop(owner);
+                }
+            }
+
+            void executeBeforeScripts()
+            {
+                // Request to pull/merge in addition to the fetch
+                if (!Fetch.Checked)
+                {
+                    ScriptManager.RunEventScripts(this, ScriptEvent.BeforePull);
+                }
+
+                ScriptManager.RunEventScripts(this, ScriptEvent.BeforeFetch);
+            }
+
+            void executeAfterScripts()
+            {
+                ScriptManager.RunEventScripts(this, ScriptEvent.AfterFetch);
+
+                // Request to pull/merge in addition to the fetch
+                if (!Fetch.Checked)
+                {
+                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterPull);
                 }
             }
         }

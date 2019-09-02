@@ -1,9 +1,14 @@
 Changelog
 =========
 
-### Version 3.2.0 (16 Aug 2019)
+### Version 3.2.0 (2 Sep 2019)
 
 #### Features:
+* Fix scrolling for committers label in statistics plugin - PR [7092]
+* Display icons in commit templates menu items - PR [7037]
+* Settings: Display label to the top to make UI more readable on multiline controls - PR [7036]
+* Fix potential bad end of line replacement - PR [7032]
+* Pull form items clipped on HiDPI scaled displays  - Issue [7020]
 * TortoiseGitMerge.exe old default name - PR [7004]
 * Add support for "--rebase-merges" for newest version of git - PR [6920]
 * Apply stash to some files - Issue [6902]
@@ -34,6 +39,13 @@ Changelog
 * Browse --> Diff Tab: Added images are not shown visualized - Issue [1391]
 
 #### Fixes:
+* [NBug] CombinedDiff artificial commit cannot be explicitly compare... - Issue [7087]
+* version 3.2 not installable on Win7 - Issue [7079]
+* Crash on file "save as" - Issue [7059]
+* Open jira settings when not configured - PR [7033]
+* Overflow error in Commit Dialog - Issue [7023]
+* [NBug] Sequence contains no elements - Issue [7011]
+* Crash when clicking "Suggest" button next to merge/diff tool paths, when those paths contain forward slashes - Issue [7000]
 * Remote Repositories List Empty - Issue [6983]
 * [NBug] Illegal characters in path. - Issue [6982]
 * Crash on "Create new repository" - Issue [6955]
@@ -62,7 +74,19 @@ Changelog
 * Commit message line endings modified by commit dialog - Issue [5908]
 
 
+[7092]:https://github.com/gitextensions/gitextensions/pull/7092
+[7087]:https://github.com/gitextensions/gitextensions/issues/7087
+[7079]:https://github.com/gitextensions/gitextensions/issues/7079
+[7059]:https://github.com/gitextensions/gitextensions/issues/7059
+[7037]:https://github.com/gitextensions/gitextensions/pull/7037
+[7036]:https://github.com/gitextensions/gitextensions/pull/7036
+[7033]:https://github.com/gitextensions/gitextensions/pull/7033
+[7032]:https://github.com/gitextensions/gitextensions/pull/7032
+[7023]:https://github.com/gitextensions/gitextensions/issues/7023
+[7020]:https://github.com/gitextensions/gitextensions/issues/7020
+[7011]:https://github.com/gitextensions/gitextensions/issues/7011
 [7004]:https://github.com/gitextensions/gitextensions/pull/7004
+[7000]:https://github.com/gitextensions/gitextensions/issues/7000
 [6983]:https://github.com/gitextensions/gitextensions/issues/6983
 [6982]:https://github.com/gitextensions/gitextensions/issues/6982
 [6955]:https://github.com/gitextensions/gitextensions/issues/6955
@@ -115,7 +139,9 @@ Changelog
 [6281]:https://github.com/gitextensions/gitextensions/issues/6281
 [6127]:https://github.com/gitextensions/gitextensions/issues/6127
 [5908]:https://github.com/gitextensions/gitextensions/issues/5908
+[4909]:https://github.com/gitextensions/gitextensions/issues/4909
 [1391]:https://github.com/gitextensions/gitextensions/issues/1391
+
 
 
 ### Version 3.1.1 (2 June 2019)

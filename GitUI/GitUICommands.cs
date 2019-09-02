@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -623,9 +624,9 @@ namespace GitUI
             return DoActionOnRepo(owner, true, false, null, null, Action);
         }
 
-        public void AddCommitTemplate(string key, Func<string> addingText)
+        public void AddCommitTemplate(string key, Func<string> addingText, Image icon)
         {
-            _commitTemplateManager.Register(key, addingText);
+            _commitTemplateManager.Register(key, addingText, icon);
         }
 
         public void RemoveCommitTemplate(string key)

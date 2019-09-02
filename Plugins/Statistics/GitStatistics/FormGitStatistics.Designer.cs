@@ -152,6 +152,7 @@ namespace GitStatistics
             // 
             // splitContainer4.Panel1
             // 
+            this.splitContainer4.Panel1.AutoScroll = true;
             this.splitContainer4.Panel1.Controls.Add(this.CommitStatistics);
             this.splitContainer4.Panel1MinSize = 250;
             // 
