@@ -61,7 +61,7 @@
       <Publish Dialog="GitEx_TelemetryDlg" Control="Back" Event="NewDialog" Value="GitEx_SSHClientDlg">1</Publish>
       <Publish Dialog="GitEx_TelemetryDlg" Control="Next" Event="NewDialog" Value="GitEx_VerifyReadyDlg">1</Publish>
 
-      <Publish Dialog="GitEx_VerifyReadyDlg" Control="Back" Event="NewDialog" Value="GitEx_SSHClientDlg" Order="1">
+      <Publish Dialog="GitEx_VerifyReadyDlg" Control="Back" Event="NewDialog" Value="GitEx_TelemetryDlg" Order="1">
         NOT Installed
       </Publish>
       <Publish Dialog="GitEx_VerifyReadyDlg" Control="Back" Event="NewDialog" Value="GitEx_MaintenanceTypeDlg" Order="3">
