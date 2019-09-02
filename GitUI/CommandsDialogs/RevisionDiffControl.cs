@@ -609,6 +609,13 @@ namespace GitUI.CommandsDialogs
 
             foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
             {
+                if (itemWithParent.ParentRevision.Guid == GitRevision.CombinedDiffGuid)
+                {
+                    // CombinedDiff cannot be viewed in a difftool
+                    // Disabled in menues but can be activated from shortcuts, just ignore
+                    continue;
+                }
+
                 var revs = new[] { DiffFiles.Revision, itemWithParent.ParentRevision };
                 UICommands.OpenWithDifftool(this, revs, itemWithParent.Item.Name, itemWithParent.Item.OldName, diffKind, itemWithParent.Item.IsTracked);
             }
