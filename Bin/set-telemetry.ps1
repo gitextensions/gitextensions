@@ -3,7 +3,7 @@ Param(
     [string] $Enabled = ''
 )
 
-[bool]$telemetryEnabled = -not [string]::IsNullOrWhiteSpace($Enabled);
+[bool]$telemetryEnabled = -not [string]::IsNullOrEmpty($Enabled);
 
 [string]$userAppDataPath = Join-Path -Path $env:APPDATA -ChildPath 'GitExtensions\GitExtensions\GitExtensions.settings'
 if (-not (Test-Path -Path $userAppDataPath)) {
