@@ -4,7 +4,7 @@ $opencover_version = $packageConfig.SelectSingleNode('/packages/package[@id="Ope
 $opencover_console = "packages\OpenCover.$opencover_version\tools\OpenCover.Console.exe"
 
 &$opencover_console `
-    -register:user `
+    -register:administrator `
     -returntargetcode `
     -hideskipped:All `
     -filter:"+[*]* -[FluentAssertions*]* -[SmartFormat*]* -[nunit*]*" `
