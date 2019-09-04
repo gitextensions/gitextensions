@@ -22,15 +22,26 @@ namespace GitUI.UserControls.RevisionGrid
             Image = Images.CopyToClipboard;
             Text = _copyToClipboardText.Text;
 
-            // Create a dummy menu, so that the shortcut keys work.
-            OnDropDownOpening(null, null);
-
             DropDownOpening += OnDropDownOpening;
+
+            // Don't show the menu as long as no revision function is set
+            HideDropDown();
         }
 
         public void SetRevisionFunc(Func<IReadOnlyList<GitRevision>> revisionFunc)
         {
             _revisionFunc = revisionFunc;
+
+            if (_revisionFunc?.Invoke() != null)
+            {
+                // Add dummy item for the menu entry to appear expandable (triangle on the right)
+                DropDownItems.Add(new ToolStripMenuItem());
+                ShowDropDown();
+            }
+            else
+            {
+                HideDropDown();
+            }
         }
 
         private void AddItem(string displayText, Func<GitRevision, string> extractRevisionText, Image image, char? hotkey)
@@ -96,16 +107,8 @@ namespace GitUI.UserControls.RevisionGrid
             var revisions = _revisionFunc?.Invoke();
             if (revisions == null || revisions.Count == 0)
             {
-                if (sender == null)
-                {
-                    // create the initial dummy menu on a dummy revision
-                    revisions = new List<GitRevision> { new GitRevision(GitUIPluginInterfaces.ObjectId.WorkTreeId) };
-                }
-                else
-                {
-                    HideDropDown();
-                    return;
-                }
+                HideDropDown();
+                return;
             }
 
             DropDownItems.Clear();
