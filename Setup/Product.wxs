@@ -68,6 +68,22 @@
           <Directory Id="ru_RU" Name="ru-RU" />
         </Directory>
       </Directory>
+      <Directory Id="LocalAppDataFolder">
+        <Directory Id="LocalAppDataOrganizationDir" Name="GitExtensions">
+          <Directory Id="UserPluginsDir" Name="UserPlugins">
+            <Directory Id="PluginManagerDir" Name="GitExtensions.PluginManager">
+              <Directory Id="PackageManagerDir" Name="PackageManager">              
+                <Component Id="PackageManager" Guid="{81556E1B-270C-448D-A68D-FD30678D4827}">
+                  <RemoveFolder Id="RemoveLocalAppDataOrganizationDir" Directory="LocalAppDataOrganizationDir" On="uninstall" />
+                  <RemoveFolder Id="RemoveUserPluginsDir" Directory="UserPluginsDir" On="uninstall" />
+                  <RemoveFolder Id="RemovePluginManagerDir" Directory="PluginManagerDir" On="uninstall" />
+                  <RemoveFolder Id="RemovePackageManagerDir" Directory="PackageManagerDir" On="uninstall" />
+                </Component>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
       <Directory Id="ProgramMenuFolder">
         <Directory Id="StartMenuDir" Name="$(var.ProductName)" />
       </Directory>
@@ -672,6 +688,16 @@
       </Component>
       <Component Id="System.Net.Http.Formatting.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\System.Net.Http.Formatting.dll" />
+      </Component>
+    </DirectoryRef>
+    <DirectoryRef Id="PluginManagerDir">
+      <Component Id="GitExtensions.PluginManager.dll" Guid="*">
+        <File Source="$(var.PluginManagerSourceDir)\GitExtensions.PluginManager.dll" />
+      </Component>
+    </DirectoryRef>
+    <DirectoryRef Id="PackageManagerDir">
+      <Component Id="PackageManager.UI.exe" Guid="*">
+        <File Source="$(var.PluginManagerSourceDir)\PackageManager\PackageManager.UI.exe" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="DiffScriptsDir">
@@ -1496,6 +1522,10 @@
       <ComponentRef Id="GithubSharp.Core.dll" />
       <!--Remove unused dll, installed in versions <= 2.31-->
       <ComponentRef Id="Github.dll" />
+      <!-- PluginManager -->
+      <ComponentRef Id="GitExtensions.PluginManager.dll" />
+      <ComponentRef Id="PackageManager" />
+      <ComponentRef Id="PackageManager.UI.exe" />
       <Feature Id="Plugins" Title="Plugins" Level="1">
         <ComponentGroupRef Id="Component.PluginResources" />
         <Feature Id="AutoCompileSubmodules" Title="Auto compile submodules" Level="1">
@@ -1579,9 +1609,6 @@
           <ComponentRef Id="NString.dll" />
           <ComponentRef Id="System.Collections.Immutable.dll" />
         </Feature>
-        <!--
-        <ComponentGroupRef Id="PluginMananger" />
-        -->
       </Feature>
       <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
         <ComponentRef Id="GitExtensions.desktop" />
