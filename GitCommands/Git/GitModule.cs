@@ -477,7 +477,7 @@ namespace GitCommands
                     return dir.EnsureTrailingPathSeparator();
                 }
 
-                dir = PathUtil.GetDirectoryName(dir);
+                dir = Path.GetDirectoryName(dir);
             }
 
             return null;
@@ -1222,8 +1222,8 @@ namespace GitCommands
 
             Debug.Assert(WorkingDir.StartsWith(SuperprojectModule.WorkingDir), "Submodule working dir should start with super-project's working dir");
 
-            return PathUtil.GetDirectoryName(
-                WorkingDir.Substring(SuperprojectModule.WorkingDir.Length).ToPosixPath());
+            return Path.GetDirectoryName(
+                WorkingDir.Substring(SuperprojectModule.WorkingDir.Length)).ToPosixPath();
         }
 
         public string GetSubmoduleFullPath(string localPath)

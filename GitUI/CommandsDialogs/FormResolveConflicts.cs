@@ -1097,7 +1097,7 @@ namespace GitUI.CommandsDialogs
                 using (var fileDialog = new SaveFileDialog
                 {
                     FileName = fileName,
-                    InitialDirectory = _fullPathResolver.Resolve(PathUtil.GetDirectoryName(conflictData.Filename)),
+                    InitialDirectory = _fullPathResolver.Resolve(Path.GetDirectoryName(conflictData.Filename)),
                     AddExtension = true
                 })
                 {

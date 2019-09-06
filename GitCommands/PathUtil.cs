@@ -101,29 +101,6 @@ namespace GitCommands
         }
 
         [NotNull]
-        public static string GetDirectoryName([NotNull] string fileName)
-        {
-            var pathSeparators = new[] { NativeDirectorySeparatorChar, PosixDirectorySeparatorChar };
-            var pos = fileName.LastIndexOfAny(pathSeparators);
-            if (pos != -1)
-            {
-                if (pos == 0 && fileName[0] == PosixDirectorySeparatorChar)
-                {
-                    return fileName.Length == 1 ? "" : PosixDirectorySeparatorChar.ToString();
-                }
-
-                fileName = fileName.Substring(0, pos);
-            }
-
-            if (fileName.Length == 2 && char.IsLetter(fileName[0]) && fileName[1] == Path.VolumeSeparatorChar)
-            {
-                return "";
-            }
-
-            return fileName;
-        }
-
-        [NotNull]
         public static string NormalizePath([NotNull] this string path)
         {
             if (string.IsNullOrWhiteSpace(path))
