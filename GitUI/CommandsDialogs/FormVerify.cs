@@ -27,6 +27,8 @@ namespace GitUI.CommandsDialogs
         private readonly DataGridViewCheckBoxHeaderCell _selectedItemsHeader = new DataGridViewCheckBoxHeaderCell();
         private readonly IGitTagController _gitTagController;
 
+        private LostObject _previewedItem;
+
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormVerify()
         {
@@ -214,6 +216,31 @@ namespace GitUI.CommandsDialogs
             }
 
             ViewCurrentItem();
+        }
+
+        private void Warnings_SelectionChanged(object sender, EventArgs e)
+        {
+            if (CurrentItem == null || _previewedItem == CurrentItem)
+            {
+                return;
+            }
+
+            _previewedItem = CurrentItem;
+
+            var content = Module.ShowObject(_previewedItem.ObjectId);
+            if (_previewedItem.ObjectType == LostObjectType.Commit)
+            {
+                ThreadHelper.JoinableTaskFactory.RunAsync(() =>
+                    fileViewer.ViewPatchAsync("commit.patch", content, null))
+                .FileAndForget();
+            }
+            else
+            {
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await fileViewer.ViewTextAsync("recovery", content ?? string.Empty, null);
+                }).FileAndForget();
+            }
         }
 
         #endregion
