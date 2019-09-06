@@ -7,7 +7,12 @@ Param(
 
 [string]$userAppDataPath = Join-Path -Path $env:APPDATA -ChildPath 'GitExtensions\GitExtensions\GitExtensions.settings'
 if (-not (Test-Path -Path $userAppDataPath)) {
-   '<?xml version="1.0" encoding="utf-8"?><dictionary />' | Out-File $userAppDataPath -Encoding utf8
+    [string]$userAppDataFolder = Split-Path $userAppDataPath -Parent
+    if (-not (Test-Path -Path $userAppDataFolder)) {
+        New-Item -ItemType Directory -Path $userAppDataFolder | Out-Null
+    }
+
+    '<?xml version="1.0" encoding="utf-8"?><dictionary />' | Out-File $userAppDataPath -Encoding utf8
 }
 
 [xml]$doc = Get-Content $userAppDataPath
