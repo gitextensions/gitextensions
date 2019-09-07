@@ -59,7 +59,6 @@ namespace GitCommandsTests
         [TestCase(RefFilterOptions.FirstParent, null, " --all ")]
         [TestCase(RefFilterOptions.FirstParent | RefFilterOptions.All, null, " --all ")]
         [TestCase(RefFilterOptions.All, " --all ", null)]
-        [TestCase(RefFilterOptions.Branches | RefFilterOptions.All, " --all ", null)]
         /* if not 'first parent' and not 'all' - selected branches, if requested */
         [TestCase(RefFilterOptions.FirstParent | RefFilterOptions.Remotes, " --first-parent ", " --branches=")]
         [TestCase(RefFilterOptions.All | RefFilterOptions.Remotes, " --all ", " --branches=")]
