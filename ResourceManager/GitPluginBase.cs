@@ -40,6 +40,12 @@ namespace ResourceManager
             SettingsContainer.SetSettingsSource(null);
         }
 
+        /// <summary>
+        /// Run the plugin Execute method
+        /// </summary>
+        /// <param name="args">arguments from the UI</param>
+        /// <returns>true, if the revision grid need a refresh
+        /// false, otherwise </returns>
         public abstract bool Execute(GitUIEventArgs args);
 
         protected void Translate()

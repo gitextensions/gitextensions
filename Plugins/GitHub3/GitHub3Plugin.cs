@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Git.hub;
@@ -15,12 +14,6 @@ using ResourceManager;
 
 namespace GitHub3
 {
-    internal static class GitHubApiInfo
-    {
-        internal static string client_id = "ebc0e8947c206610d737";
-        internal static string client_secret = "c993907df3f45145bf638842692b69c56d1ace4d";
-    }
-
     internal static class GitHubLoginInfo
     {
         private static string _username;
@@ -76,11 +69,17 @@ namespace GitHub3
     [Export(typeof(IGitPlugin))]
     public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin
     {
+        public static string GitHubAuthorizationRelativeUrl = "authorizations";
         public static string UpstreamConventionName = "upstream";
+        public readonly StringSetting GitHubApiEndpoint = new StringSetting("GitHub (Enterprise) API endpoint", "https://api.github.com");
         public readonly StringSetting OAuthToken = new StringSetting("OAuth Token", "");
 
+        private readonly TranslationString _tokenAlreadyExist = new TranslationString("You already have an OAuth token. To get a new one, delete your old one in Plugins > Settings first.");
+
         internal static GitHub3Plugin Instance;
-        internal static Client GitHub;
+        internal static Client _gitHub;
+        internal static Client GitHub => _gitHub ?? (_gitHub = new Client(Instance.GitHubApiEndpoint.ValueOrDefault(Instance.Settings)));
+
         private IGitUICommands _currentGitUiCommands;
 
         public GitHub3Plugin()
@@ -92,8 +91,6 @@ namespace GitHub3
             {
                 Instance = this;
             }
-
-            GitHub = new Client();
 
             Icon = Resources.IconGitHub;
         }
@@ -116,14 +113,15 @@ namespace GitHub3
         {
             if (string.IsNullOrEmpty(GitHubLoginInfo.OAuthToken))
             {
-                using (var frm = new OAuth())
+                var authorizationApiUrl = new Uri(new Uri(GitHubApiEndpoint.ValueOrDefault(Settings)), GitHubAuthorizationRelativeUrl).ToString();
+                using (var gitHubCredentialsPrompt = new GitHubCredentialsPrompt(authorizationApiUrl))
                 {
-                    frm.ShowDialog(args.OwnerForm);
+                    gitHubCredentialsPrompt.ShowDialog(args.OwnerForm);
                 }
             }
             else
             {
-                MessageBox.Show(args.OwnerForm, "You already have an OAuth token. To get a new one, delete your old one in Plugins > Settings first.");
+                MessageBox.Show(args.OwnerForm, _tokenAlreadyExist.Text);
             }
 
             return false;
