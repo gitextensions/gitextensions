@@ -30,18 +30,18 @@ namespace GitUITests.CommandsDialogs
         }
 
         [TestCase(@"c:\Users\Public\desktop.ini")]
-        [TestCase(@"c:\pagefile.sys")]
         [TestCase(@"c:\Windows\System32\cmd.exe")]
         [TestCase(@"c:\Users\Default\NTUSER.DAT")]
         [TestCase(@"c:\Program Files (x86)\Microsoft.NET\Primary Interop Assemblies")]
         [TestCase(@"c:\Program Files (x86)")]
         public void TryGetExactPathName_Should_output_path_with_exact_casing(string path)
         {
-            var lowercasePath = path.ToLower();
-            var isExistingOnFileSystem = _controller.TryGetExactPath(lowercasePath, out string exactPath);
+            var pathLowered = path.ToLower();
+            var isExistingOnFileSystem = _controller.TryGetExactPath(pathLowered, out string exactPath);
 
             Assert.IsTrue(isExistingOnFileSystem);
-            Assert.AreEqual(path, exactPath);
+            Assert.AreEqual(pathLowered, exactPath.ToLower(), "The path should be still equivalent");
+            Assert.AreNotEqual(pathLowered, exactPath, "The path case has been changed");
         }
 
         [Test]
