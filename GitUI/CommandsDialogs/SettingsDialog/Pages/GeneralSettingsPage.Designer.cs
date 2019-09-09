@@ -50,7 +50,7 @@
             this.cbDefaultCloneDestination = new System.Windows.Forms.ComboBox();
             this.chkShowGitCommandLine = new System.Windows.Forms.CheckBox();
             this.lblDefaultCloneDestination = new System.Windows.Forms.Label();
-            this.chkUsePatienceDiffAlgorithm = new System.Windows.Forms.CheckBox();
+            this.chkUseHistogramDiffAlgorithm = new System.Windows.Forms.CheckBox();
             this.chkStashUntrackedFiles = new System.Windows.Forms.CheckBox();
             this.chkStartWithRecentWorkingDir = new System.Windows.Forms.CheckBox();
             this.chkFollowRenamesInFileHistory = new System.Windows.Forms.CheckBox();
@@ -283,7 +283,7 @@
             this.tlpnlBehaviour.Controls.Add(this.cbDefaultCloneDestination, 1, 6);
             this.tlpnlBehaviour.Controls.Add(this.chkShowGitCommandLine, 0, 1);
             this.tlpnlBehaviour.Controls.Add(this.lblDefaultCloneDestination, 0, 6);
-            this.tlpnlBehaviour.Controls.Add(this.chkUsePatienceDiffAlgorithm, 0, 2);
+            this.tlpnlBehaviour.Controls.Add(this.chkUseHistogramDiffAlgorithm, 0, 2);
             this.tlpnlBehaviour.Controls.Add(this.chkStashUntrackedFiles, 0, 3);
             this.tlpnlBehaviour.Controls.Add(this.chkStartWithRecentWorkingDir, 0, 5);
             this.tlpnlBehaviour.Controls.Add(this.chkFollowRenamesInFileHistory, 0, 4);
@@ -412,16 +412,16 @@
             this.lblDefaultCloneDestination.Text = "Default clone destination";
             this.lblDefaultCloneDestination.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // chkUsePatienceDiffAlgorithm
+            // chkUseHistogramDiffAlgorithm
             // 
-            this.chkUsePatienceDiffAlgorithm.AutoSize = true;
-            this.chkUsePatienceDiffAlgorithm.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkUsePatienceDiffAlgorithm.Location = new System.Drawing.Point(3, 49);
-            this.chkUsePatienceDiffAlgorithm.Name = "chkUsePatienceDiffAlgorithm";
-            this.chkUsePatienceDiffAlgorithm.Size = new System.Drawing.Size(264, 17);
-            this.chkUsePatienceDiffAlgorithm.TabIndex = 2;
-            this.chkUsePatienceDiffAlgorithm.Text = "Use patience diff algorithm";
-            this.chkUsePatienceDiffAlgorithm.UseVisualStyleBackColor = true;
+            this.chkUseHistogramDiffAlgorithm.AutoSize = true;
+            this.chkUseHistogramDiffAlgorithm.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chkUseHistogramDiffAlgorithm.Location = new System.Drawing.Point(3, 49);
+            this.chkUseHistogramDiffAlgorithm.Name = "chkUseHistogramDiffAlgorithm";
+            this.chkUseHistogramDiffAlgorithm.Size = new System.Drawing.Size(264, 17);
+            this.chkUseHistogramDiffAlgorithm.TabIndex = 2;
+            this.chkUseHistogramDiffAlgorithm.Text = "Use histogram diff algorithm";
+            this.chkUseHistogramDiffAlgorithm.UseVisualStyleBackColor = true;
             // 
             // chkStashUntrackedFiles
             // 
@@ -567,7 +567,7 @@
         private System.Windows.Forms.NumericUpDown RevisionGridQuickSearchTimeout;
         private System.Windows.Forms.CheckBox chkStashUntrackedFiles;
         private System.Windows.Forms.Label lblQuickSearchTimeout;
-        private System.Windows.Forms.CheckBox chkUsePatienceDiffAlgorithm;
+        private System.Windows.Forms.CheckBox chkUseHistogramDiffAlgorithm;
         private System.Windows.Forms.CheckBox chkFollowRenamesInFileHistory;
         private System.Windows.Forms.GroupBox groupBoxPerformance;
         private System.Windows.Forms.CheckBox chkCheckForUncommittedChangesInCheckoutBranch;
