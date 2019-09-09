@@ -25,8 +25,8 @@ namespace GitCommandsTests
             new byte[] { 1, 2, 3, 4, 5, 6 },
             new byte[] { 1, 2, 3, 4, 5, 6 })]
         [TestCase(
-            new byte[] { 1, 2, 3, 4, 5, 6, nil },
-            new byte[] { 1, 2, 3, 4, 5, 6 })]
+            new byte[] { 2, 3, 4, 5, 6, nil },
+            new byte[] { 2, 3, 4, 5, 6 })]
         [TestCase(
             new byte[] { nil, 1, 2, 3, 4, 5, 6 },
             new byte[0], new byte[] { 1, 2, 3, 4, 5, 6 })]

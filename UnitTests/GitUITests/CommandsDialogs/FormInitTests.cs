@@ -86,7 +86,6 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         [TestCase(@"c:\foo\bar")]
         [TestCase(@"c:\foo\bar\")]
         [TestCase(@"c:")]
-        [TestCase(@"c:\foo\bar")]
         [TestCase(@"  c:\foo\bar  ")]
         public void IsRootedDirectoryPath_returns_true_on_valid_paths(string input)
         {
