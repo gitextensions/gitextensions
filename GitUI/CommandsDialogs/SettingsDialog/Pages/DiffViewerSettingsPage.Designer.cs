@@ -36,6 +36,7 @@
             this.chkRememberShowNonPrintingCharsPreference = new System.Windows.Forms.CheckBox();
             this.chkRememberShowEntireFilePreference = new System.Windows.Forms.CheckBox();
             this.chkRememberNumberOfContextLines = new System.Windows.Forms.CheckBox();
+            this.chkRememberShowSyntaxHighlightingInDiff = new System.Windows.Forms.CheckBox();
             this.chkOmitUninterestingDiff = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.VerticalRulerPosition = new System.Windows.Forms.NumericUpDown();
@@ -50,19 +51,21 @@
             this.tableLayoutPanelForDiffViewer.ColumnCount = 2;
             this.tableLayoutPanelForDiffViewer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanelForDiffViewer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkShowDiffForAllParents, 0, 6);
-            this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkOpenSubmoduleDiffInSeparateWindow, 0, 5);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberIgnoreWhiteSpacePreference, 0, 0);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberShowNonPrintingCharsPreference, 0, 1);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberShowEntireFilePreference, 0, 2);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberNumberOfContextLines, 0, 3);
-            this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkOmitUninterestingDiff, 0, 4);
-            this.tableLayoutPanelForDiffViewer.Controls.Add(this.label1, 0, 7);
-            this.tableLayoutPanelForDiffViewer.Controls.Add(this.VerticalRulerPosition, 1, 7);
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberShowSyntaxHighlightingInDiff, 0, 4);
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkOmitUninterestingDiff, 0, 5);
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkOpenSubmoduleDiffInSeparateWindow, 0, 6);
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkShowDiffForAllParents, 0, 7);
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.label1, 0, 8);
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.VerticalRulerPosition, 1, 8);
             this.tableLayoutPanelForDiffViewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelForDiffViewer.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanelForDiffViewer.Name = "tableLayoutPanelForDiffViewer";
-            this.tableLayoutPanelForDiffViewer.RowCount = 9;
+            this.tableLayoutPanelForDiffViewer.RowCount = 10;
+            this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -74,26 +77,6 @@
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelForDiffViewer.Size = new System.Drawing.Size(1132, 821);
             this.tableLayoutPanelForDiffViewer.TabIndex = 1;
-            // 
-            // chkShowDiffForAllParents
-            // 
-            this.chkShowDiffForAllParents.AutoSize = true;
-            this.chkShowDiffForAllParents.Location = new System.Drawing.Point(3, 141);
-            this.chkShowDiffForAllParents.Name = "chkShowDiffForAllParents";
-            this.chkShowDiffForAllParents.Size = new System.Drawing.Size(280, 17);
-            this.chkShowDiffForAllParents.TabIndex = 10;
-            this.chkShowDiffForAllParents.Text = "Show file differences for all parents in browse dialog";
-            this.chkShowDiffForAllParents.UseVisualStyleBackColor = true;
-            // 
-            // chkOpenSubmoduleDiffInSeparateWindow
-            // 
-            this.chkOpenSubmoduleDiffInSeparateWindow.AutoSize = true;
-            this.chkOpenSubmoduleDiffInSeparateWindow.Location = new System.Drawing.Point(3, 118);
-            this.chkOpenSubmoduleDiffInSeparateWindow.Name = "chkOpenSubmoduleDiffInSeparateWindow";
-            this.chkOpenSubmoduleDiffInSeparateWindow.Size = new System.Drawing.Size(223, 17);
-            this.chkOpenSubmoduleDiffInSeparateWindow.TabIndex = 9;
-            this.chkOpenSubmoduleDiffInSeparateWindow.Text = "Open Submodule Diff in separate window";
-            this.chkOpenSubmoduleDiffInSeparateWindow.UseVisualStyleBackColor = true;
             // 
             // chkRememberIgnoreWhiteSpacePreference
             // 
@@ -135,29 +118,59 @@
             this.chkRememberNumberOfContextLines.Text = "Remember the \'Number of context lines\' preference";
             this.chkRememberNumberOfContextLines.UseVisualStyleBackColor = true;
             // 
+            // chkRememberShowSyntaxHighlightingInDiff
+            // 
+            this.chkRememberShowSyntaxHighlightingInDiff.AutoSize = true;
+            this.chkRememberShowSyntaxHighlightingInDiff.Location = new System.Drawing.Point(3, 95);
+            this.chkRememberShowSyntaxHighlightingInDiff.Name = "chkRememberShowSyntaxHighlightingInDiff";
+            this.chkRememberShowSyntaxHighlightingInDiff.Size = new System.Drawing.Size(273, 17);
+            this.chkRememberShowSyntaxHighlightingInDiff.TabIndex = 8;
+            this.chkRememberShowSyntaxHighlightingInDiff.Text = "Remember the \'Show syntax highlighting\' preference";
+            this.chkRememberShowSyntaxHighlightingInDiff.UseVisualStyleBackColor = true;
+            // 
             // chkOmitUninterestingDiff
             // 
             this.chkOmitUninterestingDiff.AutoSize = true;
-            this.chkOmitUninterestingDiff.Location = new System.Drawing.Point(3, 95);
+            this.chkOmitUninterestingDiff.Location = new System.Drawing.Point(3, 118);
             this.chkOmitUninterestingDiff.Name = "chkOmitUninterestingDiff";
             this.chkOmitUninterestingDiff.Size = new System.Drawing.Size(249, 17);
-            this.chkOmitUninterestingDiff.TabIndex = 8;
+            this.chkOmitUninterestingDiff.TabIndex = 9;
             this.chkOmitUninterestingDiff.Text = "Omit uninteresting changes from combined diff";
             this.chkOmitUninterestingDiff.UseVisualStyleBackColor = true;
+            // 
+            // chkOpenSubmoduleDiffInSeparateWindow
+            // 
+            this.chkOpenSubmoduleDiffInSeparateWindow.AutoSize = true;
+            this.chkOpenSubmoduleDiffInSeparateWindow.Location = new System.Drawing.Point(3, 141);
+            this.chkOpenSubmoduleDiffInSeparateWindow.Name = "chkOpenSubmoduleDiffInSeparateWindow";
+            this.chkOpenSubmoduleDiffInSeparateWindow.Size = new System.Drawing.Size(223, 17);
+            this.chkOpenSubmoduleDiffInSeparateWindow.TabIndex = 10;
+            this.chkOpenSubmoduleDiffInSeparateWindow.Text = "Open Submodule Diff in separate window";
+            this.chkOpenSubmoduleDiffInSeparateWindow.UseVisualStyleBackColor = true;
+            // 
+            // chkShowDiffForAllParents
+            // 
+            this.chkShowDiffForAllParents.AutoSize = true;
+            this.chkShowDiffForAllParents.Location = new System.Drawing.Point(3, 164);
+            this.chkShowDiffForAllParents.Name = "chkShowDiffForAllParents";
+            this.chkShowDiffForAllParents.Size = new System.Drawing.Size(280, 17);
+            this.chkShowDiffForAllParents.TabIndex = 11;
+            this.chkShowDiffForAllParents.Text = "Show file differences for all parents in browse dialog";
+            this.chkShowDiffForAllParents.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 168);
+            this.label1.Location = new System.Drawing.Point(3, 191);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(144, 13);
-            this.label1.TabIndex = 12;
+            this.label1.TabIndex = 13;
             this.label1.Text = "Vertical ruler position [chars]";
             // 
             // VerticalRulerPosition
             // 
-            this.VerticalRulerPosition.Location = new System.Drawing.Point(305, 164);
+            this.VerticalRulerPosition.Location = new System.Drawing.Point(305, 187);
             this.VerticalRulerPosition.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -165,7 +178,7 @@
             0});
             this.VerticalRulerPosition.Name = "VerticalRulerPosition";
             this.VerticalRulerPosition.Size = new System.Drawing.Size(120, 21);
-            this.VerticalRulerPosition.TabIndex = 11;
+            this.VerticalRulerPosition.TabIndex = 12;
             this.VerticalRulerPosition.Value = new decimal(new int[] {
             80,
             0,
@@ -199,6 +212,7 @@
         private System.Windows.Forms.CheckBox chkRememberShowNonPrintingCharsPreference;
         private System.Windows.Forms.CheckBox chkRememberShowEntireFilePreference;
         private System.Windows.Forms.CheckBox chkRememberNumberOfContextLines;
+        private System.Windows.Forms.CheckBox chkRememberShowSyntaxHighlightingInDiff;
         private System.Windows.Forms.CheckBox chkOmitUninterestingDiff;
         private System.Windows.Forms.ToolTip tooltip;
         private System.Windows.Forms.CheckBox chkOpenSubmoduleDiffInSeparateWindow;

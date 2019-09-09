@@ -1406,6 +1406,24 @@ namespace GitCommands
             set => SetBool("RememberNumberOfContextLines", value);
         }
 
+        public static bool ShowSyntaxHighlightingInDiff
+        {
+            get => RememberShowSyntaxHighlightingInDiff && GetBool("ShowSyntaxHighlightingInDiff", true);
+            set
+            {
+                if (RememberShowSyntaxHighlightingInDiff)
+                {
+                    SetBool("ShowSyntaxHighlightingInDiff", value);
+                }
+            }
+        }
+
+        public static bool RememberShowSyntaxHighlightingInDiff
+        {
+            get => GetBool("RememberShowSyntaxHighlightingInDiff", true);
+            set => SetBool("RememberShowSyntaxHighlightingInDiff", value);
+        }
+
         public static string GetDictionaryDir()
         {
             return Path.Combine(GetResourceDir(), "Dictionaries");

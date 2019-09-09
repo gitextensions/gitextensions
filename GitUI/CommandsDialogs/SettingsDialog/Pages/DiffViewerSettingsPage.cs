@@ -18,6 +18,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkRememberShowEntireFilePreference.Checked = AppSettings.RememberShowEntireFilePreference;
             chkRememberShowNonPrintingCharsPreference.Checked = AppSettings.RememberShowNonPrintingCharsPreference;
             chkRememberNumberOfContextLines.Checked = AppSettings.RememberNumberOfContextLines;
+            chkRememberShowSyntaxHighlightingInDiff.Checked = AppSettings.RememberShowSyntaxHighlightingInDiff;
             chkOpenSubmoduleDiffInSeparateWindow.Checked = AppSettings.OpenSubmoduleDiffInSeparateWindow;
             chkShowDiffForAllParents.Checked = AppSettings.ShowDiffForAllParents;
             VerticalRulerPosition.Value = AppSettings.DiffVerticalRulerPosition;
@@ -30,6 +31,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RememberShowEntireFilePreference = chkRememberShowEntireFilePreference.Checked;
             AppSettings.RememberShowNonPrintingCharsPreference = chkRememberShowNonPrintingCharsPreference.Checked;
             AppSettings.RememberNumberOfContextLines = chkRememberNumberOfContextLines.Checked;
+            AppSettings.RememberShowSyntaxHighlightingInDiff = chkRememberShowSyntaxHighlightingInDiff.Checked;
             AppSettings.OpenSubmoduleDiffInSeparateWindow = chkOpenSubmoduleDiffInSeparateWindow.Checked;
             AppSettings.ShowDiffForAllParents = chkShowDiffForAllParents.Checked;
             AppSettings.DiffVerticalRulerPosition = (int)VerticalRulerPosition.Value;

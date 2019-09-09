@@ -51,22 +51,26 @@ namespace GitUI.Editor
 
         [Description("Sets what kind of whitespace changes shall be ignored in diffs")]
         [DefaultValue(IgnoreWhitespaceKind.None)]
-        public IgnoreWhitespaceKind IgnoreWhitespace { get; set; }
+        private IgnoreWhitespaceKind IgnoreWhitespace { get; set; }
 
         [Description("Show diffs with <n> lines of context.")]
         [DefaultValue(3)]
-        public int NumberOfContextLines { get; set; }
+        private int NumberOfContextLines { get; set; }
 
         [Description("Show diffs with entire file.")]
         [DefaultValue(false)]
-        public bool ShowEntireFile { get; set; }
+        private bool ShowEntireFile { get; set; }
 
         [Description("Treat all files as text.")]
         [DefaultValue(false)]
-        public bool TreatAllFilesAsText { get; set; }
+        private bool TreatAllFilesAsText { get; set; }
 
         [Browsable(false)]
         public byte[] FilePreamble { get; private set; }
+
+        [Description("Show syntax highlighting in diffs.")]
+        [DefaultValue(true)]
+        private bool ShowSyntaxHighlightingInDiff { get; set; }
 
         public FileViewer()
         {
@@ -119,6 +123,9 @@ namespace GitUI.Editor
             showNonPrintChars.Checked = AppSettings.ShowNonPrintingChars;
             showNonprintableCharactersToolStripMenuItem.Checked = AppSettings.ShowNonPrintingChars;
             ToggleNonPrintingChars(AppSettings.ShowNonPrintingChars);
+
+            ShowSyntaxHighlightingInDiff = AppSettings.ShowSyntaxHighlightingInDiff;
+            showSyntaxHighlighting.Checked = ShowSyntaxHighlightingInDiff;
 
             IsReadOnly = true;
 
@@ -502,7 +509,7 @@ namespace GitUI.Editor
                     {
                         var patch = await Module.GetCurrentChangesAsync(
                             fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding);
-                        ViewStagingPatch(patch, openWithDifftool);
+                        ViewStagingPatch(patch, openWithDifftool, fileName);
                     }
                     else
                     {
@@ -530,18 +537,18 @@ namespace GitUI.Editor
                 });
         }
 
-        public void ViewStagingPatch(Patch patch, [CanBeNull] Action openWithDifftool)
+        public void ViewStagingPatch(Patch patch, [CanBeNull] Action openWithDifftool, string filename)
         {
-            ViewPatch(patch, openWithDifftool);
+            ViewPatch(patch, openWithDifftool, filename);
             Reset(true, true, true);
         }
 
-        public void ViewPatch([CanBeNull] Patch patch, [CanBeNull] Action openWithDifftool = null)
+        public void ViewPatch([CanBeNull] Patch patch, [CanBeNull] Action openWithDifftool = null, string filename = null)
         {
-            ViewPatch(patch?.Text ?? "", openWithDifftool);
+            ViewPatch(patch?.Text ?? "", openWithDifftool, filename);
         }
 
-        public void ViewPatch([NotNull] string text, [CanBeNull] Action openWithDifftool)
+        public void ViewPatch([NotNull] string text, [CanBeNull] Action openWithDifftool, string filename = null)
         {
             ThreadHelper.JoinableTaskFactory.Run(
                 () => ShowOrDeferAsync(
@@ -549,17 +556,23 @@ namespace GitUI.Editor
                     () =>
                     {
                         ResetForDiff();
+
+                        if (ShowSyntaxHighlightingInDiff && filename != null)
+                        {
+                            internalFileViewer.SetHighlightingForFile(filename);
+                        }
+
                         internalFileViewer.SetText(text, openWithDifftool, isDiff: true);
                         TextLoaded?.Invoke(this, null);
                         return Task.CompletedTask;
                     }));
         }
 
-        public Task ViewPatchAsync(Func<(string text, Action openWithDifftool)> loadPatchText)
+        public Task ViewPatchAsync(Func<(string text, Action openWithDifftool, string filename)> loadPatchText)
         {
             return _async.LoadAsync(
                 loadPatchText,
-                patchText => ViewPatch(patchText.text, patchText.openWithDifftool));
+                patchText => ViewPatch(patchText.text, patchText.openWithDifftool, patchText.filename));
         }
 
         public async Task ViewTextAsync([NotNull] string fileName, [NotNull] string text, [CanBeNull] Action openWithDifftool = null, bool checkGitAttributes = false)
@@ -975,6 +988,14 @@ namespace GitUI.Editor
             }
 
             AppSettings.NumberOfContextLines = NumberOfContextLines;
+            OnExtraDiffArgumentsChanged();
+        }
+
+        private void ShowSyntaxHighlighting_Click(object sender, System.EventArgs e)
+        {
+            ShowSyntaxHighlightingInDiff = !ShowSyntaxHighlightingInDiff;
+            showSyntaxHighlighting.Checked = ShowSyntaxHighlightingInDiff;
+            AppSettings.ShowSyntaxHighlightingInDiff = ShowSyntaxHighlightingInDiff;
             OnExtraDiffArgumentsChanged();
         }
 
@@ -1524,6 +1545,12 @@ namespace GitUI.Editor
             {
                 get => _fileViewer.IgnoreWhitespace;
                 set => _fileViewer.IgnoreWhitespace = value;
+            }
+
+            public bool ShowSyntaxHighlightingInDiff
+            {
+                get => _fileViewer.ShowSyntaxHighlightingInDiff;
+                set => _fileViewer.ShowSyntaxHighlightingInDiff = value;
             }
 
             internal void IgnoreWhitespaceAtEolToolStripMenuItem_Click(object sender, EventArgs e) => _fileViewer.IgnoreWhitespaceAtEolToolStripMenuItem_Click(sender, e);
