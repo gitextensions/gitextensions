@@ -14,11 +14,9 @@ set projectSshAskPass=..\GitExtSshAskPass\GitExtSshAskPass.sln
 set SkipShellExtRegistration=1
 set msbuildparams=/p:Configuration=%Configuration% /t:%BuildType% /nologo /v:m
 
-%msbuild32% %projectShellEx% /p:Platform=Win32 %msbuildparams%
+call %msbuild32% %projectShellEx% /p:Platform=Win32 %msbuildparams%
 IF ERRORLEVEL 1 EXIT /B 1
-%msbuild32% %projectShellEx% /p:Platform=x64 %msbuildparams%
+call %msbuild32% %projectShellEx% /p:Platform=x64 %msbuildparams%
 IF ERRORLEVEL 1 EXIT /B 1
-%msbuild32% %projectSshAskPass% /p:Platform=Win32 %msbuildparams%
+call %msbuild32% %projectSshAskPass% /p:Platform=Win32 %msbuildparams%
 IF ERRORLEVEL 1 EXIT /B 1
-
-

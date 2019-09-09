@@ -26,7 +26,7 @@ REM HACK: for some reason when we build the full solution the VSIX contains too 
 rmdir ..\GitExtensionsVSIX\bin\Release /s /q
 pushd ..\GitExtensionsVSIX
 set msbuild32=..\Setup\hMSBuild -notamd64
-%msbuild32% /t:%BuildType% /p:Configuration=%Configuration% /nologo /v:m
+call %msbuild32% /t:%BuildType% /p:Configuration=%Configuration% /nologo /v:m
 popd
 
 echo Creating installers for Git Extensions %version%
@@ -37,7 +37,7 @@ del %normal% 2> nul
 
 echo.
 
-%msbuild% Setup.wixproj /t:%BuildType% /p:Version=%version% /p:NumericVersion=%numericVersion% /p:Configuration=%Configuration% /nologo /v:m
+call %msbuild% Setup.wixproj /t:%BuildType% /p:Version=%version% /p:NumericVersion=%numericVersion% /p:Configuration=%Configuration% /nologo /v:m
 IF ERRORLEVEL 1 EXIT /B 1
 copy %output% %normal%
 IF ERRORLEVEL 1 EXIT /B 1
