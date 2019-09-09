@@ -35,7 +35,8 @@ namespace GitUIPluginInterfaces
 
             public override TextBox CreateControl()
             {
-                return new TextBox { PasswordChar = '\u25CF' };
+                Setting.CustomControl = new TextBox { PasswordChar = '\u25CF' };
+                return Setting.CustomControl;
             }
 
             public override void LoadSetting(ISettingsSource settings, TextBox control)

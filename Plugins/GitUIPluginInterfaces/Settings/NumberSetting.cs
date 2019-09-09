@@ -36,7 +36,8 @@ namespace GitUIPluginInterfaces
 
             public override TextBox CreateControl()
             {
-                return new TextBox();
+                Setting.CustomControl = new TextBox();
+                return Setting.CustomControl;
             }
 
             public override void LoadSetting(ISettingsSource settings, TextBox control)
