@@ -69,7 +69,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _pullRepository =
             new TranslationString("The push was rejected because the tip of your current branch is behind its remote counterpart. " +
                 "Merge the remote changes before pushing again.");
-        private readonly TranslationString _pullRepositoryButtons = new TranslationString("Pull with the default pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel");
+        private readonly TranslationString _pullRepositoryButtons = new TranslationString("Pull with the default pull action ({0})|Pull with rebase|Pull with merge|Force push with lease|Cancel");
         private readonly TranslationString _pullActionNone = new TranslationString("none");
         private readonly TranslationString _pullActionFetch = new TranslationString("fetch");
         private readonly TranslationString _pullActionRebase = new TranslationString("rebase");
