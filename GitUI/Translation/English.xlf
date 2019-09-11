@@ -3164,7 +3164,7 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <target />
       </trans-unit>
       <trans-unit id="CommitAndPush.Text">
-        <source>C&amp;ommit &amp;&amp; push</source>
+        <source>Commit &amp;&amp; &amp;push</source>
         <target />
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -3172,11 +3172,11 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <target />
       </trans-unit>
       <trans-unit id="Reset.Text">
-        <source>Reset all changes</source>
+        <source>&amp;Reset all changes</source>
         <target />
       </trans-unit>
       <trans-unit id="ResetUnStaged.Text">
-        <source>Reset unstaged changes</source>
+        <source>Reset u&amp;nstaged changes</source>
         <target />
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
@@ -3185,7 +3185,7 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <target />
       </trans-unit>
       <trans-unit id="StageInSuperproject.Text">
-        <source>Stage in Superproject</source>
+        <source>Stage &amp;in Superproject</source>
         <target />
       </trans-unit>
       <trans-unit id="_addSelectionToCommitMessage.Text">
@@ -3486,7 +3486,7 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="createBranchToolStripButton.Text">
-        <source>Create branch</source>
+        <source>Create &amp;branch</source>
         <target />
       </trans-unit>
       <trans-unit id="deleteAllUntrackedFilesToolStripMenuItem.Text">
@@ -3690,7 +3690,7 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="toolStripMenuItem3.Text">
-        <source>Options</source>
+        <source>&amp;Options</source>
         <target />
       </trans-unit>
       <trans-unit id="toolUnstageAllItem.Text">
@@ -3714,7 +3714,7 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="workingToolStripMenuItem.Text">
-        <source>Working directory changes</source>
+        <source>&amp;Working directory changes</source>
         <target />
       </trans-unit>
     </body>
@@ -6113,11 +6113,11 @@ Value has been reset to empty value.</source>
         <target />
       </trans-unit>
       <trans-unit id="btnCancel.Text">
-        <source>Cancel</source>
+        <source>&amp;Cancel</source>
         <target />
       </trans-unit>
       <trans-unit id="btnReset.Text">
-        <source>Reset</source>
+        <source>&amp;Reset</source>
         <target />
       </trans-unit>
       <trans-unit id="cbDeleteNewFilesAndDirectories.Text">
