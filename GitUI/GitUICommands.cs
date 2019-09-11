@@ -1705,12 +1705,16 @@ namespace GitUI
             string fileHistoryFileName = string.IsNullOrEmpty(Module.WorkingDir) ? args[2] :
                 args[2].Replace(Module.WorkingDir, "").ToPosixPath();
             var fullFilePath = _fullPathResolver.Resolve(fileHistoryFileName);
-            if (new FormFileHistoryController().TryGetExactPath(fullFilePath, out var exactFileName))
+            if (new FormFileHistoryController().TryGetExactPath(fullFilePath, out var exactFileName) &&
+                exactFileName.Length > Module.WorkingDir.Length)
             {
                 fileHistoryFileName = exactFileName.Substring(Module.WorkingDir.Length);
             }
 
-            StartFileHistoryDialog(null, fileHistoryFileName);
+            if (fileHistoryFileName.IsNotNullOrWhitespace())
+            {
+                StartFileHistoryDialog(null, fileHistoryFileName);
+            }
         }
 
         private void RunCloneCommand(IReadOnlyList<string> args)
