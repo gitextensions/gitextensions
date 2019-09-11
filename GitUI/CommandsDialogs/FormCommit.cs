@@ -337,8 +337,6 @@ namespace GitUI.CommandsDialogs
 
             void ConfigureMessageBox()
             {
-                Amend.Enabled = _commitKind == CommitKind.Normal;
-
                 bool messageCanBeChanged = _useFormCommitMessage && _commitKind == CommitKind.Normal;
 
                 Message.Enabled = messageCanBeChanged;
@@ -1086,7 +1084,7 @@ namespace GitUI.CommandsDialogs
             LoadingStaged.Visible = false;
             Commit.Enabled = true;
             CommitAndPush.Enabled = true;
-            Amend.Enabled = _commitKind == CommitKind.Normal;
+            Amend.Enabled = true;
             Reset.Enabled = doChangesExist;
 
             EnableStageButtons(true);
@@ -1981,7 +1979,7 @@ namespace GitUI.CommandsDialogs
                 EnableStageButtons(true);
 
                 Commit.Enabled = true;
-                Amend.Enabled = _commitKind == CommitKind.Normal;
+                Amend.Enabled = true;
             }
 
             if (AppSettings.RevisionGraphShowWorkingDirChanges)
