@@ -129,6 +129,10 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _commitCommitterInfo = new TranslationString("Committer");
         private readonly TranslationString _commitCommitterToolTip = new TranslationString("Click to change committer information.");
 
+        private readonly TranslationString _modifyCommitMessageButtonToolTip
+            = new TranslationString("If you change the first line of the commit message, git will treat this commit as an ordinary commit," + Environment.NewLine
+                                    + "i.e. it may no longer be a fixup or an autosquash commit.");
+
         private readonly TranslationString _templateNotFoundCaption = new TranslationString("Template Error");
         private readonly TranslationString _templateNotFound = new TranslationString($"Template not found: {{0}}.{Environment.NewLine}{Environment.NewLine}You can set your template:{Environment.NewLine}\t$ git config commit.template ./.git_commit_msg.txt{Environment.NewLine}You can unset the template:{Environment.NewLine}\t$ git config --unset commit.template");
         private readonly TranslationString _templateLoadErrorCaption = new TranslationString("Template could not be loaded");
@@ -147,7 +151,6 @@ namespace GitUI.CommandsDialogs
         private event Action OnStageAreaLoaded;
 
         private readonly ICommitTemplateManager _commitTemplateManager;
-        private readonly CommitKind _commitKind;
         [CanBeNull] private readonly GitRevision _editedCommit;
         private readonly ToolStripMenuItem _addSelectionToCommitMessageToolStripMenuItem;
         private readonly ToolStripMenuItem _stageSelectedLinesToolStripMenuItem;
@@ -160,6 +163,7 @@ namespace GitUI.CommandsDialogs
         private readonly IFullPathResolver _fullPathResolver;
         private readonly List<string> _formattedLines = new List<string>();
 
+        private CommitKind _commitKind;
         private FileStatusList _currentFilesList;
         private bool _skipUpdate;
         private GitItemStatus _currentItem;
@@ -177,6 +181,21 @@ namespace GitUI.CommandsDialogs
         private int _alreadyLoadedTemplatesCount = -1;
         private EventHandler _branchNameLabelOnClick;
 
+        private CommitKind CommitKind
+        {
+            get => _commitKind;
+            set
+            {
+                _commitKind = value;
+
+                modifyCommitMessageButton.Visible = _useFormCommitMessage && CommitKind != CommitKind.Normal;
+                bool messageCanBeChanged = _useFormCommitMessage && CommitKind == CommitKind.Normal;
+                Message.Enabled = messageCanBeChanged;
+                commitMessageToolStripMenuItem.Enabled = messageCanBeChanged;
+                commitTemplatesToolStripMenuItem.Enabled = messageCanBeChanged;
+            }
+        }
+
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormCommit()
         {
@@ -188,7 +207,6 @@ namespace GitUI.CommandsDialogs
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            _commitKind = commitKind;
             _editedCommit = editedCommit;
 
             InitializeComponent();
@@ -240,6 +258,7 @@ namespace GitUI.CommandsDialogs
             deleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.DeleteSelectedFiles);
             viewFileHistoryToolStripItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowHistory);
             stagedFileHistoryToolStripMenuItem6.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowHistory);
+            fileTooltip.SetToolTip(modifyCommitMessageButton, _modifyCommitMessageButtonToolTip.Text);
             commitAuthorStatus.ToolTipText = _commitCommitterToolTip.Text;
             skipWorktreeToolStripMenuItem.ToolTipText = _skipWorktreeToolTip.Text;
             assumeUnchangedToolStripMenuItem.ToolTipText = _assumeUnchangedToolTip.Text;
@@ -337,12 +356,7 @@ namespace GitUI.CommandsDialogs
 
             void ConfigureMessageBox()
             {
-                bool messageCanBeChanged = _useFormCommitMessage && _commitKind == CommitKind.Normal;
-
-                Message.Enabled = messageCanBeChanged;
-
-                commitMessageToolStripMenuItem.Enabled = messageCanBeChanged;
-                commitTemplatesToolStripMenuItem.Enabled = messageCanBeChanged;
+                CommitKind = commitKind;
 
                 Message.WatermarkText = _useFormCommitMessage
                     ? _enterCommitMessageHint.Text
@@ -400,7 +414,7 @@ namespace GitUI.CommandsDialogs
 
             // Do not remember commit message of fixup or squash commits, since they have
             // a special meaning, and can be dangerous if used inappropriately.
-            if (_commitKind == CommitKind.Normal)
+            if (CommitKind == CommitKind.Normal)
             {
                 _commitMessageManager.MergeOrCommitMessage = Message.Text;
                 _commitMessageManager.AmendState = Amend.Checked;
@@ -429,7 +443,7 @@ namespace GitUI.CommandsDialogs
 
             string message;
 
-            switch (_commitKind)
+            switch (CommitKind)
             {
                 case CommitKind.Fixup:
                     message = TryAddPrefix("fixup!", _editedCommit.Subject);
@@ -1386,6 +1400,7 @@ namespace GitUI.CommandsDialogs
 
                     Message.Text = string.Empty; // Message.Text has been used and stored
                     _commitMessageManager.ResetCommitMessage();
+                    CommitKind = CommitKind.Normal;
 
                     bool pushCompleted = true;
                     if (push)
@@ -3261,6 +3276,31 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void modifyCommitMessageButton_Click(object sender, EventArgs e)
+        {
+            CommitKind = CommitKind.Normal;
+            Message.Focus();
+        }
+
+        private void stopTrackingThisFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Unstaged.SelectedItem == null || !Unstaged.SelectedItem.IsTracked)
+            {
+                return;
+            }
+
+            var filename = Unstaged.SelectedItem.Name;
+
+            if (Module.StopTrackingFile(filename))
+            {
+                RescanChanges();
+            }
+            else
+            {
+                MessageBox.Show(string.Format(_stopTrackingFail.Text, filename), _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         internal TestAccessor GetTestAccessor()
             => new TestAccessor(this);
 
@@ -3293,26 +3333,7 @@ namespace GitUI.CommandsDialogs
 
             internal static string FormatCommitMessageFromTextBox(
                 string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty)
-                => FormCommit.FormatCommitMessageFromTextBox(commitMessageText, usingCommitTemplate, ensureCommitMessageSecondLineEmpty);
-        }
-
-        private void stopTrackingThisFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (Unstaged.SelectedItem == null || !Unstaged.SelectedItem.IsTracked)
-            {
-                return;
-            }
-
-            var filename = Unstaged.SelectedItem.Name;
-
-            if (Module.StopTrackingFile(filename))
-            {
-                RescanChanges();
-            }
-            else
-            {
-                MessageBox.Show(string.Format(_stopTrackingFail.Text, filename), _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+                    => FormCommit.FormatCommitMessageFromTextBox(commitMessageText, usingCommitTemplate, ensureCommitMessageSecondLineEmpty);
         }
     }
 
