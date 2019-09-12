@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -24,14 +25,24 @@ namespace GitUI.CommandsDialogs
         private WebBrowserControl _buildReportWebBrowser;
         private GitRevision _selectedGitRevision;
         private string _url;
+        private readonly LinkLabel _openReportLink = new LinkLabel { AutoSize = false, Text = Strings.OpenReport, TextAlign = ContentAlignment.MiddleCenter, Dock = DockStyle.Fill };
 
-        public Control Control { get => _buildReportWebBrowser; } // for focusing
+        public Control Control { get; private set; } // for focusing
 
         public BuildReportTabPageExtension(Func<IGitModule> getModule, TabControl tabControl, string caption)
         {
             _getModule = getModule;
             _tabControl = tabControl;
             _caption = caption;
+
+            _openReportLink.Click += (o, args) =>
+            {
+                if (!string.IsNullOrWhiteSpace(_url))
+                {
+                    Process.Start(_url);
+                }
+            };
+            _openReportLink.Font = new Font(_openReportLink.Font.Name, 16F);
         }
 
         public void FillBuildReport([CanBeNull] GitRevision revision)
@@ -62,6 +73,20 @@ namespace GitUI.CommandsDialogs
                         CreateBuildReportTabPage(_tabControl);
                     }
 
+                    _buildReportTabPage.Controls.Clear();
+
+                    if (revision.BuildStatus.ShowInBuildReportTab)
+                    {
+                        Control = _buildReportWebBrowser;
+                        _buildReportTabPage.Controls.Add(_buildReportWebBrowser);
+                    }
+                    else
+                    {
+                        _buildReportTabPage.Cursor = Cursors.Hand;
+                        Control = _openReportLink;
+                        _buildReportTabPage.Controls.Add(_openReportLink);
+                    }
+
                     var isFavIconMissing = _buildReportTabPage.ImageIndex < 0;
 
                     if (isFavIconMissing || _tabControl.SelectedTab == _buildReportTabPage)
@@ -76,7 +101,6 @@ namespace GitUI.CommandsDialogs
                             else
                             {
                                 _url = revision.BuildStatus.Url;
-                                _buildReportWebBrowser.Navigate("about:blank");
                             }
 
                             if (isFavIconMissing)
@@ -97,7 +121,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    if (_buildReportTabPage != null && _tabControl.Controls.Contains(_buildReportTabPage))
+                    if (_buildReportTabPage != null && _buildReportWebBrowser != null && _tabControl.Controls.Contains(_buildReportTabPage))
                     {
                         _buildReportWebBrowser.Stop();
                         _buildReportWebBrowser.Document.Write(string.Empty);
@@ -129,11 +153,11 @@ namespace GitUI.CommandsDialogs
                 Text = _caption,
                 UseVisualStyleBackColor = true
             };
+
             _buildReportWebBrowser = new WebBrowserControl
             {
                 Dock = DockStyle.Fill
             };
-            _buildReportTabPage.Controls.Add(_buildReportWebBrowser);
         }
 
         private void BuildReportWebBrowserOnNavigated(object sender,
@@ -174,11 +198,6 @@ namespace GitUI.CommandsDialogs
                         }
                     });
             }
-
-            if (_url != null)
-            {
-                _buildReportWebBrowser.Document.Write("<HTML><a href=\"" + _url + "\" target=\"_blank\">Open report</a></HTML>");
-            }
         }
 
         private bool IsBuildResultPageEnabled()
@@ -216,12 +235,12 @@ namespace GitUI.CommandsDialogs
 
             if (htmlDocument.Url.PathAndQuery == "/")
             {
-                // Szenario: http://test.test/teamcity/....
+                // Scenario: http://test.test/teamcity/....
                 return htmlDocument.Url.AbsoluteUri.Replace(htmlDocument.Url.PathAndQuery, href);
             }
             else
             {
-                // Szenario: http://teamcity.domain.test/
+                // Scenario: http://teamcity.domain.test/
                 return new Uri(new Uri(htmlDocument.Url.AbsoluteUri), href).ToString();
             }
         }

@@ -9285,6 +9285,10 @@ Select this commit to populate the full message.</source>
         <source>&lt;No results found&gt;</source>
         <target />
       </trans-unit>
+      <trans-unit id="_openReport.Text">
+        <source>Open report</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_parentsText.Text">
         <source>{0:Parent|Parents}</source>
         <target />
