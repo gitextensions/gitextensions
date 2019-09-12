@@ -352,6 +352,9 @@ namespace GitUITests.CommandsDialogs.CommitDialog
                 yield return new TestCaseData(new object[] { "#0\n1\n2\n3", true, false, "1" + NL + "2" + NL + "3" + NL });
                 yield return new TestCaseData(new object[] { "#0\n1\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL });
                 yield return new TestCaseData(new object[] { "#0\n1\n#0\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL });
+                yield return new TestCaseData(new object[] { "1\n2\n3\n4\n5\n\n7\n\n\n10", true, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL });
+                yield return new TestCaseData(new object[] { "1\n2\n3\n4\n5\n\n7\n\n\n10", false, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL });
+                yield return new TestCaseData(new object[] { "1\n2\n3\n4\n5\n\n7\n\n\n10\n", false, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL + NL });
             }
         }
     }
