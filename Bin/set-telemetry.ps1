@@ -37,6 +37,3 @@ $node = $doc.CreateElement('item');
 $node.InnerXml = "<key><string>TelemetryEnabled</string></key><value><string>$telemetryEnabled</string></value>";
 $_ = $topNode.AppendChild($node);
 $doc.Save($userAppDataPath)
-
-# this script now deletes itself
-Remove-Item $MyINvocation.InvocationName
