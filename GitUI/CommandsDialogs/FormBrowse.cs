@@ -42,11 +42,11 @@ namespace GitUI.CommandsDialogs
     {
         #region Translation
 
-        private readonly TranslationString _warningMiddleOfBisect = new TranslationString("You are in the middle of a bisect");
-        private readonly TranslationString _warningMiddleOfRebase = new TranslationString("You are in the middle of a rebase");
-        private readonly TranslationString _warningMiddleOfPatchApply = new TranslationString("You are in the middle of a patch apply");
+        private readonly TranslationString _warningMiddleOfBisect = new TranslationString("You are in the middle of a bisect. C&ontinue...");
+        private readonly TranslationString _warningMiddleOfRebase = new TranslationString("You are in the middle of a rebase. C&ontinue...");
+        private readonly TranslationString _warningMiddleOfPatchApply = new TranslationString("You are in the middle of a patch apply. C&ontinue...");
 
-        private readonly TranslationString _hintUnresolvedMergeConflicts = new TranslationString("There are unresolved merge conflicts!");
+        private readonly TranslationString _hintUnresolvedMergeConflicts = new TranslationString("There are unresolved merge conflicts. Res&olve...");
 
         private readonly TranslationString _noBranchTitle = new TranslationString("no branch");
         private readonly TranslationString _noSubmodulesPresent = new TranslationString("No submodules");
