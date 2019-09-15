@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Text;
+using FluentAssertions;
 using GitCommands;
 using NUnit.Framework;
 
@@ -84,6 +85,70 @@ namespace GitCommandsTests
             {
                 args.ToString().Should().NotContain(notExpectedToContain);
             }
+        }
+
+        [TestCase("subject", null, null)]
+        [TestCase("subject", null, "filename")]
+        [TestCase("subject", "line2\nline3", null)]
+        [TestCase("subject", "line2\nline3", "filename")]
+        [TestCase("", "l2", "f")]
+        [TestCase("s", "l2", "f")]
+        [TestCase("s", "l2", "f.ext")]
+        [TestCase("s", "l2\n", "f.ext")]
+        [TestCase("s", "l2\n\nl4", "f.ext")]
+        [TestCase("s", "l2\n\nl4\n", "f.ext")]
+        [TestCase("s", "l2\n\nl4 \n", "f.ext")]
+        [TestCase("s", "l2\n\nl4 \n", "f.ext ")]
+        public void ParseCommitBody_should_work(string subject, string lines, string expectedAdditionalData)
+        {
+            var encodedBody = new StringBuilder();
+            encodedBody.Append(subject);
+            if (!string.IsNullOrEmpty(lines))
+            {
+                encodedBody.Append('\n').Append(lines);
+            }
+
+            var expectedBody = encodedBody.ToString().TrimEnd();
+
+            encodedBody.Append(RevisionReader.TestAccessor.EndOfBody);
+            if (!string.IsNullOrEmpty(expectedAdditionalData))
+            {
+                encodedBody.Append(expectedAdditionalData);
+            }
+
+            var reader = RevisionReader.TestAccessor.MakeReader(encodedBody.ToString());
+
+            var (body, additionalData) = RevisionReader.TestAccessor.ParseCommitBody(reader, subject);
+
+            body.Should().Be(expectedBody);
+            additionalData.Should().Be(expectedAdditionalData);
+        }
+
+        [TestCase("subject", "subject\n\n1DEA7CC4-FB39-450A-8DDF-762FCEA28B05", "filename")]
+        [TestCase("subject", "SUBJECT\n\n1DEA7CC4-FB39-450A-8DDF-762FCEA28B05", "filename")]
+        [TestCase("subject", "subject\n\n1DEA7CC4-FB39-450A-8DDF-762FCEA28B05")]
+        [TestCase("subject", "subject\0\01DEA7CC4-FB39-450A-8DDF-762FCEA28B05")]
+        [TestCase("subject", "SUBJECT\n\n1DEA7CC4-FB39-450A-8DDF-762FCEA28B05")]
+        [TestCase("subject", "SUBJECT\n\n____________________________________")]
+        [TestCase("subject", "_____________________________________________")]
+        [TestCase("subject", "sub\n1DEA7CC4-FB39-450A-8DDF-762FCEA28B05\nject")]
+        public void ParseCommitBody_should_return_subject_ignoring_contents(string subject, string encodedMessage, string expectedAdditionalData = null)
+        {
+            var reader = RevisionReader.TestAccessor.MakeReader(encodedMessage + expectedAdditionalData ?? "");
+
+            var (body, additionalData) = RevisionReader.TestAccessor.ParseCommitBody(reader, subject);
+
+            body.Should().BeSameAs(subject);
+            additionalData.Should().Be(expectedAdditionalData);
+        }
+
+        [TestCase("subject", "")]
+        [TestCase("subject", "subject")]
+        [TestCase("subject", "subject\nl2")]
+        public void ParseCommitBody_should_return_null_if_no_EndOfBody(string subject, string encodedBody)
+        {
+            var reader = RevisionReader.TestAccessor.MakeReader(encodedBody);
+            RevisionReader.TestAccessor.ParseCommitBody(reader, subject).Should().Be((null, null));
         }
     }
 }
