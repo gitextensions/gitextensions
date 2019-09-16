@@ -191,7 +191,7 @@ namespace GitExtensions
                 }
             }
 
-            if (workingDir == null)
+            if (args.Length > 1 && workingDir == null)
             {
                 // If no working dir is yet found, try to find one relative to the current working directory.
                 // This allows the `fileeditor` command to discover repository configuration which is
