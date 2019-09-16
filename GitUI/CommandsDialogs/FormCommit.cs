@@ -3330,6 +3330,42 @@ namespace GitUI.CommandsDialogs
                 string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty)
                     => FormCommit.FormatCommitMessageFromTextBox(commitMessageText, usingCommitTemplate, ensureCommitMessageSecondLineEmpty);
         }
+
+        private void toWindowsCRLFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ConvertEndOfLines(Environment.NewLine);
+        }
+
+        private void ConvertEndOfLines(string eol)
+        {
+            if (Unstaged.SelectedItem == null || !Unstaged.SelectedItem.IsTracked)
+            {
+                return;
+            }
+
+            var filePath = Path.Combine(Module.WorkingDir, Unstaged.SelectedItem.Name);
+
+            if (!File.Exists(filePath))
+            {
+                return;
+            }
+
+            try
+            {
+                var allLines = File.ReadAllLines(filePath);
+
+                File.WriteAllText(filePath, string.Join(eol, allLines));
+                ShowChanges(Unstaged.SelectedItem, false);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void toUnixLFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ConvertEndOfLines("\n");
+        }
     }
 
     /// <summary>

@@ -3490,6 +3490,10 @@ You can unset the template:
         <source>Commit &amp;templates</source>
         <target />
       </trans-unit>
+      <trans-unit id="convertEndOfLinesToolStripMenuItem.Text">
+        <source>Convert End of lines</source>
+        <target />
+      </trans-unit>
       <trans-unit id="copyFolderNameMenuItem.Text">
         <source>Copy folder name</source>
         <target />
@@ -3680,6 +3684,14 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="submoduleSummaryMenuItem.Text">
         <source>View summary</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="toUnixLFToolStripMenuItem.Text">
+        <source>To Unix (LF)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="toWindowsCRLFToolStripMenuItem.Text">
+        <source>To Windows (CRLF)</source>
         <target />
       </trans-unit>
       <trans-unit id="toolAuthorLabelItem.Text">

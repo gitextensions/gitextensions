@@ -157,6 +157,9 @@ namespace GitUI.CommandsDialogs
             this.commitCursorColumn = new System.Windows.Forms.ToolStripStatusLabel();
             this.commitEndPadding = new System.Windows.Forms.ToolStripStatusLabel();
             this.stopTrackingThisFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.convertEndOfLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toWindowsCRLFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toUnixLFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UnstagedFileContext.SuspendLayout();
             this.StagedFileContext.SuspendLayout();
             this.UnstagedSubmoduleContext.SuspendLayout();
@@ -201,6 +204,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator8,
             this.viewFileHistoryToolStripItem,
             this.toolStripSeparator7,
+            this.convertEndOfLinesToolStripMenuItem,
             this.editFileToolStripMenuItem,
             this.deleteFileToolStripMenuItem,
             this.toolStripSeparator5,
@@ -1497,7 +1501,30 @@ namespace GitUI.CommandsDialogs
             this.stopTrackingThisFileToolStripMenuItem.Size = new System.Drawing.Size(428, 38);
             this.stopTrackingThisFileToolStripMenuItem.Text = "Stop tracking this file";
             this.stopTrackingThisFileToolStripMenuItem.Click += new System.EventHandler(this.stopTrackingThisFileToolStripMenuItem_Click);
-            //
+            // 
+            // convertEndOfLinesToolStripMenuItem
+            // 
+            this.convertEndOfLinesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toWindowsCRLFToolStripMenuItem,
+            this.toUnixLFToolStripMenuItem});
+            this.convertEndOfLinesToolStripMenuItem.Name = "convertEndOfLinesToolStripMenuItem";
+            this.convertEndOfLinesToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.convertEndOfLinesToolStripMenuItem.Text = "Convert End of lines";
+            // 
+            // toWindowsCRLFToolStripMenuItem
+            // 
+            this.toWindowsCRLFToolStripMenuItem.Name = "toWindowsCRLFToolStripMenuItem";
+            this.toWindowsCRLFToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.toWindowsCRLFToolStripMenuItem.Text = "To Windows (CRLF)";
+            this.toWindowsCRLFToolStripMenuItem.Click += new System.EventHandler(this.toWindowsCRLFToolStripMenuItem_Click);
+            // 
+            // toUnixLFToolStripMenuItem
+            // 
+            this.toUnixLFToolStripMenuItem.Name = "toUnixLFToolStripMenuItem";
+            this.toUnixLFToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.toUnixLFToolStripMenuItem.Text = "To Unix (LF)";
+            this.toUnixLFToolStripMenuItem.Click += new System.EventHandler(this.toUnixLFToolStripMenuItem_Click);
+            // 
             // FormCommit
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1689,6 +1716,9 @@ namespace GitUI.CommandsDialogs
         private ToolStripTextBox toolStripGpgKeyTextBox;
         private ToolStripComboBox gpgSignCommitToolStripComboBox;
         private ToolStripMenuItem stopTrackingThisFileToolStripMenuItem;
+        private ToolStripMenuItem convertEndOfLinesToolStripMenuItem;
+        private ToolStripMenuItem toWindowsCRLFToolStripMenuItem;
+        private ToolStripMenuItem toUnixLFToolStripMenuItem;
         private Button modifyCommitMessageButton;
         private ToolStripMenuItem ShowOnlyMyMessagesToolStripMenuItem;
     }
