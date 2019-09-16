@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -317,7 +318,7 @@ namespace GitUI.BranchTreePanel
                 foreach (var submoduleInfo in submodules)
                 {
                     string superPath = GetSubmoduleSuperPath(submoduleInfo.Path);
-                    string localPath = PathUtil.GetDirectoryName(submoduleInfo.Path.Substring(superPath.Length).ToPosixPath());
+                    string localPath = Path.GetDirectoryName(submoduleInfo.Path.Substring(superPath.Length)).ToPosixPath();
 
                     var isCurrent = submoduleInfo.Bold;
                     nodes.Add(new SubmoduleNode(this, submoduleInfo, isCurrent, localPath, superPath));

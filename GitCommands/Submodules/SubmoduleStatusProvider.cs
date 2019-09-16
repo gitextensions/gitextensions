@@ -226,7 +226,7 @@ namespace GitCommands.Submodules
             else
             {
                 var localPath = superprojectModule.WorkingDir.Substring(topProject.WorkingDir.Length);
-                name = PathUtil.GetDirectoryName(localPath.ToPosixPath());
+                name = Path.GetDirectoryName(localPath).ToPosixPath();
              }
 
             string path = superprojectModule.WorkingDir;
@@ -260,7 +260,7 @@ namespace GitCommands.Submodules
             if (submodules.Any())
             {
                 string localPath = result.Module.WorkingDir.Substring(topProject.WorkingDir.Length);
-                localPath = PathUtil.GetDirectoryName(localPath.ToPosixPath());
+                localPath = Path.GetDirectoryName(localPath).ToPosixPath();
 
                 foreach (var submodule in submodules)
                 {

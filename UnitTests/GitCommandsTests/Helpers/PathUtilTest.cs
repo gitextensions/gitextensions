@@ -131,29 +131,6 @@ namespace GitCommandsTests.Helpers
         }
 
         [Test]
-        public void GetDirectoryNameTest()
-        {
-            if (Path.DirectorySeparatorChar == '\\')
-            {
-                Assert.AreEqual(PathUtil.GetDirectoryName("\\\\my-pc\\Work\\GitExtensions\\"), "\\\\my-pc\\Work\\GitExtensions");
-                Assert.AreEqual(PathUtil.GetDirectoryName("C:\\Work\\GitExtensions\\"), "C:\\Work\\GitExtensions");
-                Assert.AreEqual(PathUtil.GetDirectoryName("C:\\Work\\GitExtensions"), "C:\\Work");
-                Assert.AreEqual(PathUtil.GetDirectoryName("C:\\Work\\"), "C:\\Work");
-                Assert.AreEqual(PathUtil.GetDirectoryName("C:\\Work"), "");
-                Assert.AreEqual(PathUtil.GetDirectoryName("C:\\"), "");
-                Assert.AreEqual(PathUtil.GetDirectoryName("C:"), "");
-                Assert.AreEqual(PathUtil.GetDirectoryName(""), "");
-            }
-
-            Assert.AreEqual(PathUtil.GetDirectoryName("//my-pc/Work/GitExtensions/"), "//my-pc/Work/GitExtensions");
-            Assert.AreEqual(PathUtil.GetDirectoryName("/Work/GitExtensions/"), "/Work/GitExtensions");
-            Assert.AreEqual(PathUtil.GetDirectoryName("/Work/GitExtensions"), "/Work");
-            Assert.AreEqual(PathUtil.GetDirectoryName("/Work/"), "/Work");
-            Assert.AreEqual(PathUtil.GetDirectoryName("/"), "");
-            Assert.AreEqual("/", PathUtil.GetDirectoryName("/Work"), "/Work");
-        }
-
-        [Test]
         public void GetRepositoryNameTest()
         {
             Assert.AreEqual(PathUtil.GetRepositoryName("https://github.com/gitextensions/gitextensions.git"), "gitextensions");
