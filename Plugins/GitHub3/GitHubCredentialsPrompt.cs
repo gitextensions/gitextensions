@@ -79,7 +79,7 @@ namespace GitHub3
             {
                 var base64Authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{login}:{password}"));
                 request.Headers.Authorization = new AuthenticationHeaderValue("Basic", base64Authorization);
-                request.Headers.Add("User-Agent", login);
+                request.Headers.Add("User-Agent", "GitExtensions");
 
                 if (!string.IsNullOrWhiteSpace(secondFactorOtp))
                 {
