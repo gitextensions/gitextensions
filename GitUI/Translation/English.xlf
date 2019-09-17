@@ -510,7 +510,7 @@ A valid GitHub account is required</source>
         <target />
       </trans-unit>
       <trans-unit id="_adviceDiffToolConfiguration.Text">
-        <source>You should configure a diff tool to show file diff in external program (kdiff3 for example).</source>
+        <source>You should configure a diff tool to show file diff in external program.</source>
         <target />
       </trans-unit>
       <trans-unit id="_cantRegisterShellExtension.Text">
@@ -518,7 +518,7 @@ A valid GitHub account is required</source>
         <target />
       </trans-unit>
       <trans-unit id="_configureMergeTool.Text">
-        <source>You need to configure merge tool in order to solve merge conflicts (kdiff3 for example).</source>
+        <source>You need to configure merge tool in order to solve merge conflicts.</source>
         <target />
       </trans-unit>
       <trans-unit id="_customMergeToolXConfigured.Text">
@@ -553,27 +553,6 @@ A valid GitHub account is required</source>
         <source>Git {0} is found on your computer.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_kdiff3NotFoundAuto.Text">
-        <source>Path to kdiff3 could not be found automatically.
-Please make sure KDiff3 is installed or set path manually.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_kdiffAsDiffConfigured.Text">
-        <source>KDiff3 is configured as difftool.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_kdiffAsDiffConfiguredButNotFound.Text">
-        <source>KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_kdiffAsMergeConfigured.Text">
-        <source>KDiff3 is configured as mergetool.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_kdiffAsMergeConfiguredButNotFound.Text">
-        <source>KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_languageConfigured.Text">
         <source>The configured language is {0}.</source>
         <target />
@@ -603,11 +582,6 @@ Please make sure there are linux tools installed (through Git for Windows or cyg
         <source>{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_noDiffToolConfigured.Text">
-        <source>There is no difftool configured. Do you want to configure kdiff3 as your difftool?
-Select no if you want to configure a different difftool yourself.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_noDiffToolConfiguredCaption.Text">
         <source>Difftool</source>
         <target />
@@ -618,15 +592,6 @@ Select no if you want to configure a different difftool yourself.</source>
       </trans-unit>
       <trans-unit id="_noLanguageConfigured.Text">
         <source>There is no language configured for Git Extensions.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_noMergeToolConfigured.Text">
-        <source>There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?
-Select no if you want to configure a different mergetool yourself.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_noMergeToolConfiguredCaption.Text">
-        <source>Mergetool</source>
         <target />
       </trans-unit>
       <trans-unit id="_notRecommendedGitVersion.Text">
@@ -7297,7 +7262,7 @@ Context menu for additional operations</source>
         <source>Suggest</source>
         <target />
       </trans-unit>
-      <trans-unit id="PathToKDiff3.Text">
+      <trans-unit id="MergeToolPathLabel.Text">
         <source>Path to mergetool</source>
         <target />
       </trans-unit>

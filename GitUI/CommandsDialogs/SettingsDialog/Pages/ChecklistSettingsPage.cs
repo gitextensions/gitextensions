@@ -72,13 +72,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly TranslationString _opensshUsed =
             new TranslationString("Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)");
 
-        private readonly TranslationString _noMergeToolConfigured =
-            new TranslationString("There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?" +
-                Environment.NewLine + "Select no if you want to configure a different mergetool yourself.");
-
-        private readonly TranslationString _noMergeToolConfiguredCaption =
-            new TranslationString("Mergetool");
-
         private readonly TranslationString _languageConfigured =
             new TranslationString("The configured language is {0}.");
 
@@ -107,36 +100,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             new TranslationString("Git not found. To solve this problem you can set the correct path in settings.");
 
         private readonly TranslationString _adviceDiffToolConfiguration =
-            new TranslationString("You should configure a diff tool to show file diff in external program (kdiff3 for example).");
-
-        private readonly TranslationString _kdiffAsDiffConfiguredButNotFound =
-            new TranslationString("KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.");
-
-        private readonly TranslationString _kdiffAsDiffConfigured =
-            new TranslationString("KDiff3 is configured as difftool.");
+            new TranslationString("You should configure a diff tool to show file diff in external program.");
 
         private readonly TranslationString _diffToolXConfigured =
             new TranslationString("There is a difftool configured: {0}");
 
         private readonly TranslationString _configureMergeTool =
-            new TranslationString("You need to configure merge tool in order to solve merge conflicts (kdiff3 for example).");
-
-        private readonly TranslationString _kdiffAsMergeConfiguredButNotFound =
-            new TranslationString("KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.");
-
-        private readonly TranslationString _kdiffAsMergeConfigured =
-            new TranslationString("KDiff3 is configured as mergetool.");
-
-        private readonly TranslationString _kdiff3NotFoundAuto =
-            new TranslationString("Path to kdiff3 could not be found automatically." + Environment.NewLine +
-                "Please make sure KDiff3 is installed or set path manually.");
+            new TranslationString("You need to configure merge tool in order to solve merge conflicts.");
 
         private readonly TranslationString _cantRegisterShellExtension =
             new TranslationString("Could not register the shell extension because '{0}' could not be found.");
-
-        private readonly TranslationString _noDiffToolConfigured =
-            new TranslationString("There is no difftool configured. Do you want to configure kdiff3 as your difftool?" +
-                Environment.NewLine + "Select no if you want to configure a different difftool yourself.");
 
         private readonly TranslationString _noDiffToolConfiguredCaption =
             new TranslationString("Difftool");
@@ -314,28 +287,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             if (string.IsNullOrEmpty(CheckSettingsLogic.GetDiffToolFromConfig(CheckSettingsLogic.CommonLogic.ConfigFileSettingsSet.GlobalSettings)))
             {
-                if (MessageBox.Show(this, _noDiffToolConfigured.Text, _noDiffToolConfiguredCaption.Text,
-                        MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    CheckSettingsLogic.SolveDiffToolForKDiff();
-                    PageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
-                }
-                else
-                {
-                    GotoPageGlobalSettings();
-                    return;
-                }
-            }
-
-            if (CheckSettingsLogic.GetDiffToolFromConfig(CheckSettingsLogic.CommonLogic.ConfigFileSettingsSet.GlobalSettings).Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
-            {
-                CheckSettingsLogic.SolveDiffToolPathForKDiff();
-            }
-
-            if (CheckSettingsLogic.GetDiffToolFromConfig(CheckSettingsLogic.CommonLogic.ConfigFileSettingsSet.GlobalSettings).Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
-                string.IsNullOrEmpty(GetGlobalSetting("difftool.kdiff3.path")))
-            {
-                MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
                 GotoPageGlobalSettings();
                 return;
             }
@@ -361,48 +312,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             if (string.IsNullOrEmpty(CommonLogic.GetGlobalMergeTool()))
             {
-                if (
-                    MessageBox.Show(this, _noMergeToolConfigured.Text,
-                        _noMergeToolConfiguredCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    CommonLogic.SetGlobalMergeTool("kdiff3");
-                    PageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
-                }
-                else
-                {
-                    GotoPageGlobalSettings();
-                    return;
-                }
-            }
-
-            if (CommonLogic.IsMergeTool("kdiff3"))
-            {
-                CheckSettingsLogic.SolveMergeToolPathForKDiff();
-            }
-            else if (_autoConfigMergeTools.Any(tool => CommonLogic.IsMergeTool(tool)))
-            {
-                CheckSettingsLogic.AutoConfigMergeToolCmd();
-
-                SetGlobalPathSetting(
-                    string.Format("mergetool.{0}.cmd", CommonLogic.GetGlobalMergeTool()), CheckSettingsLogic.GetMergeToolCmdText());
-            }
-
-            if (CommonLogic.IsMergeTool("kdiff3") &&
-                string.IsNullOrEmpty(GetGlobalSetting("mergetool.kdiff3.path")))
-            {
-                MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
                 GotoPageGlobalSettings();
                 return;
             }
 
             SaveAndRescan_Click(null, null);
         }
-
-        // TODO: needed somewhere?
-        ////private void SetGlobalMergeToolText(string text)
-        ////{
-        ////    throw new NotImplementedException("GlobalMergeTool.Text = ...");
-        ////}
 
         private void GotoPageGlobalSettings()
         {
@@ -587,29 +502,24 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private bool CheckDiffToolConfiguration()
         {
             DiffTool.Visible = true;
-            if (string.IsNullOrEmpty(CommonLogic.GetGlobalDiffTool()))
+            string difftool = CommonLogic.GetGlobalDiffTool();
+            if (string.IsNullOrEmpty(difftool))
             {
                 RenderSettingUnset(DiffTool, DiffTool_Fix, _adviceDiffToolConfiguration.Text);
                 return false;
             }
 
-            if (EnvUtils.RunningOnWindows())
+            string cmd = GetGlobalSetting($"difftool.{difftool}.cmd");
+            if (cmd.IsNullOrWhiteSpace())
             {
-                if (CommonLogic.IsDiffTool("kdiff3"))
+                cmd = MergeToolsHelper.DiffToolCmdSuggest(difftool, "");
+                if (cmd.IsNullOrWhiteSpace())
                 {
-                    string p = GetGlobalSetting("difftool.kdiff3.path");
-                    if (string.IsNullOrEmpty(p) || !File.Exists(p))
-                    {
-                        RenderSettingUnset(DiffTool, DiffTool_Fix, _kdiffAsDiffConfiguredButNotFound.Text);
-                        return false;
-                    }
-
-                    RenderSettingSet(DiffTool, DiffTool_Fix, _kdiffAsDiffConfigured.Text);
-                    return true;
+                    RenderSettingUnset(DiffTool, DiffTool_Fix, _adviceDiffToolConfiguration.Text);
+                    return false;
                 }
             }
 
-            string difftool = CommonLogic.GetGlobalDiffTool().ToLowerInvariant();
             RenderSettingSet(DiffTool, DiffTool_Fix, string.Format(_diffToolXConfigured.Text, difftool));
             return true;
         }
@@ -617,29 +527,30 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private bool CheckMergeTool()
         {
             MergeTool.Visible = true;
-            if (string.IsNullOrEmpty(CommonLogic.GetGlobalMergeTool()))
+            string mergetool = CommonLogic.GetGlobalMergeTool();
+            if (string.IsNullOrEmpty(mergetool))
             {
                 RenderSettingUnset(MergeTool, MergeTool_Fix, _configureMergeTool.Text);
                 return false;
             }
 
-            string mergetool = CommonLogic.GetGlobalMergeTool().ToLowerInvariant();
+            // Hardcode parameters to some mergetools
             if (EnvUtils.RunningOnWindows())
             {
-                if (CommonLogic.IsMergeTool("kdiff3"))
+                if (mergetool.ToLowerInvariant() == "kdiff3")
                 {
-                    string p = GetGlobalSetting("mergetool.kdiff3.path");
+                    string p = GetGlobalSetting($"mergetool.{mergetool}.path");
                     if (string.IsNullOrEmpty(p) || !File.Exists(p))
                     {
-                        RenderSettingUnset(MergeTool, MergeTool_Fix, _kdiffAsMergeConfiguredButNotFound.Text);
+                        RenderSettingUnset(MergeTool, MergeTool_Fix, string.Format(_mergeToolXConfiguredNeedsCmd.Text, mergetool));
                         return false;
                     }
 
-                    RenderSettingSet(MergeTool, MergeTool_Fix, _kdiffAsMergeConfigured.Text);
+                    RenderSettingSet(MergeTool, MergeTool_Fix, string.Format(_customMergeToolXConfigured.Text, mergetool));
                     return true;
                 }
 
-                if (mergetool == "p4merge" || mergetool == "tmerge" || mergetool == "meld")
+                if (mergetool.ToLowerInvariant() == "tmerge")
                 {
                     string p = GetGlobalSetting($"mergetool.{mergetool}.cmd");
                     if (string.IsNullOrEmpty(p))
@@ -650,6 +561,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
                     RenderSettingSet(MergeTool, MergeTool_Fix, string.Format(_customMergeToolXConfigured.Text, mergetool));
                     return true;
+                }
+            }
+
+            // This will check parameters for some tools only, the user may have to set the tool cmd
+            string cmd = GetGlobalSetting($"mergetool.{mergetool}.cmd");
+            if (cmd.IsNullOrWhiteSpace())
+            {
+                cmd = MergeToolsHelper.AutoConfigMergeToolCmd(mergetool, "");
+                if (cmd.IsNullOrWhiteSpace())
+                {
+                    RenderSettingUnset(MergeTool, MergeTool_Fix, string.Format(_mergeToolXConfiguredNeedsCmd.Text, mergetool));
+                    return false;
                 }
             }
 

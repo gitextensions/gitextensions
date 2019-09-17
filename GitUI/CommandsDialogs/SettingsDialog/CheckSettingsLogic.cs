@@ -29,8 +29,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             bool valid = SolveGitCommand();
             valid = SolveLinuxToolsDir() && valid;
-            valid = SolveMergeToolForKDiff() && valid;
-            valid = SolveDiffToolForKDiff() && valid;
             valid = SolveGitExtensionsDir() && valid;
             valid = SolveEditor() && valid;
 
@@ -234,40 +232,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return PathUtil.TryFindFullPath(fileName, out _);
         }
 
-        public bool SolveMergeToolForKDiff()
-        {
-            string mergeTool = CommonLogic.GetGlobalMergeTool();
-            if (string.IsNullOrEmpty(mergeTool))
-            {
-                mergeTool = "kdiff3";
-                GlobalConfigFileSettings.SetValue("merge.tool", mergeTool);
-            }
-
-            if (mergeTool.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
-            {
-                return SolveMergeToolPathForKDiff();
-            }
-
-            return true;
-        }
-
-        public bool SolveDiffToolForKDiff()
-        {
-            string diffTool = GetDiffToolFromConfig(GlobalConfigFileSettings);
-            if (string.IsNullOrEmpty(diffTool))
-            {
-                diffTool = "kdiff3";
-                SetDiffToolToConfig(GlobalConfigFileSettings, diffTool);
-            }
-
-            if (diffTool.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
-            {
-                return SolveDiffToolPathForKDiff();
-            }
-
-            return true;
-        }
-
         public static string GetDiffToolFromConfig(ConfigFileSettings settings)
         {
             return settings.GetValue("diff.guitool");
@@ -276,30 +240,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public static void SetDiffToolToConfig(ConfigFileSettings settings, string diffTool)
         {
             settings.SetValue("diff.guitool", diffTool);
-        }
-
-        public bool SolveDiffToolPathForKDiff()
-        {
-            string kdiff3path = MergeToolsHelper.FindPathForKDiff(GlobalConfigFileSettings.GetValue("difftool.kdiff3.path"));
-            if (string.IsNullOrEmpty(kdiff3path))
-            {
-                return false;
-            }
-
-            GlobalConfigFileSettings.SetPathValue("difftool.kdiff3.path", kdiff3path);
-            return true;
-        }
-
-        public bool SolveMergeToolPathForKDiff()
-        {
-            string kdiff3path = MergeToolsHelper.FindPathForKDiff(GlobalConfigFileSettings.GetValue("mergetool.kdiff3.path"));
-            if (string.IsNullOrEmpty(kdiff3path))
-            {
-                return false;
-            }
-
-            GlobalConfigFileSettings.SetPathValue("mergetool.kdiff3.path", kdiff3path);
-            return true;
         }
 
         public bool CanFindGitCmd()
