@@ -122,6 +122,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "semanticdiff":
                     return "semanticmergetool.exe";
                 case "tmerge":
+                case "tortoisemerge":
                     return "TortoiseGitMerge.exe";
                 case "winmerge":
                     return "winmergeu.exe";
