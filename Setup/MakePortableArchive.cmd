@@ -25,6 +25,8 @@ xcopy /y /i ..\GitExtensions\bin\%Configuration%\System.Collections.Concurrent.d
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\System.Collections.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1 
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\System.Collections.Immutable.dll GitExtensions\
+IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\System.Collections.NonGeneric.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\System.Collections.Specialized.dll GitExtensions\
@@ -529,8 +531,6 @@ IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\JiraCommitHintPlugin.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\NString.dll GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\System.Collections.Immutable.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\Plugins\ProxySwitcher\bin\%Configuration%\ProxySwitcher.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
