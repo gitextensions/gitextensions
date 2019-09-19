@@ -2154,7 +2154,7 @@ compare with first:</source>
         <target />
       </trans-unit>
       <trans-unit id="_hintUnresolvedMergeConflicts.Text">
-        <source>There are unresolved merge conflicts!</source>
+        <source>There are unresolved merge conflicts. Res&amp;olve...</source>
         <target />
       </trans-unit>
       <trans-unit id="_indexLockCantDelete.Text">
@@ -2240,15 +2240,15 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="_warningMiddleOfBisect.Text">
-        <source>You are in the middle of a bisect</source>
+        <source>You are in the middle of a bisect. C&amp;ontinue...</source>
         <target />
       </trans-unit>
       <trans-unit id="_warningMiddleOfPatchApply.Text">
-        <source>You are in the middle of a patch apply</source>
+        <source>You are in the middle of a patch apply. C&amp;ontinue...</source>
         <target />
       </trans-unit>
       <trans-unit id="_warningMiddleOfRebase.Text">
-        <source>You are in the middle of a rebase</source>
+        <source>You are in the middle of a rebase. C&amp;ontinue...</source>
         <target />
       </trans-unit>
       <trans-unit id="aboutToolStripMenuItem.Text">

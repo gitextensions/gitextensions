@@ -14,6 +14,7 @@ namespace GitUI
             _counter = 0;
             Width = 200;
             Height = 20;
+            RightToLeft = RightToLeft.No;
             _blinkTimer = new Timer { Interval = 150, Enabled = true };
             _blinkTimer.Tick += _blinkTimer_Tick;
             _blinkTimer.Start();
