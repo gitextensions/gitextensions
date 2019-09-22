@@ -11,7 +11,7 @@ namespace GitUI.Script
     public static class ScriptRunner
     {
         /// <summary>Tries to run scripts identified by a <paramref name="command"/></summary>
-        public static CommandStatus ExecuteScriptCommand(IWin32Window owner, GitModule module, int command, IGitUICommands uiCommands, RevisionGridControl revisionGrid = null)
+        public static CommandStatus ExecuteScriptCommand(IWin32Window owner, GitModule module, int command, IGitUICommands uiCommands, RevisionGridControl revisionGrid)
         {
             var anyScriptExecuted = false;
             var needsGridRefresh = false;

@@ -153,7 +153,13 @@ namespace GitUI
 
             CommandStatus ExecuteScriptCommand()
             {
-                return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command, UICommands, this as RevisionGridControl);
+                var revisionGridControl = this as RevisionGridControl;
+                if (revisionGridControl == null)
+                {
+                    revisionGridControl = (FindForm() as GitModuleForm)?.RevisionGridControl;
+                }
+
+                return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command, UICommands, revisionGridControl);
             }
         }
 
