@@ -50,27 +50,18 @@ namespace GitUI.Script
             }
 
             string argument = script.Arguments;
-            foreach (string option in ScriptOptionsParser.Options)
+            if (!string.IsNullOrEmpty(argument) && revisionGrid == null)
             {
-                if (string.IsNullOrEmpty(argument) || !argument.Contains(option))
+                foreach (string option in ScriptOptionsParser.Options)
                 {
-                    continue;
+                    if (argument.Contains(option) && option.StartsWith("{s"))
+                    {
+                        MessageBox.Show(owner,
+                            $"Option {option} is only supported when started from revision grid.",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
                 }
-
-                if (!option.StartsWith("s"))
-                {
-                    continue;
-                }
-
-                if (revisionGrid != null)
-                {
-                    continue;
-                }
-
-                MessageBox.Show(owner,
-                    $"Option {option} is only supported when started from revision grid.",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
             }
 
             return RunScript(owner, module, script, uiCommands, revisionGrid);

@@ -98,7 +98,7 @@ namespace GitUI.Script
 
                 if (option.StartsWith("c") && currentRevision == null)
                 {
-                    currentRevision = GetCurrentRevision(module, revisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, currentRevision);
+                    currentRevision = GetCurrentRevision(module, revisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches);
 
                     if (currentLocalBranches.Count == 1)
                     {
@@ -187,41 +187,38 @@ namespace GitUI.Script
         [CanBeNull]
         private static GitRevision GetCurrentRevision(
             IGitModule module, [CanBeNull] RevisionGridControl revisionGrid, List<IGitRef> currentTags, List<IGitRef> currentLocalBranches,
-            List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches, [CanBeNull] GitRevision currentRevision)
+            List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches)
         {
-            if (currentRevision == null)
+            GitRevision currentRevision;
+            IEnumerable<IGitRef> refs;
+            if (revisionGrid == null)
             {
-                IEnumerable<IGitRef> refs;
+                var currentRevisionGuid = module.GetCurrentCheckout();
+                currentRevision = new GitRevision(currentRevisionGuid);
+                refs = module.GetRefs(true, true).Where(gitRef => gitRef.ObjectId == currentRevisionGuid).ToList();
+            }
+            else
+            {
+                currentRevision = revisionGrid.GetCurrentRevision();
+                refs = currentRevision.Refs;
+            }
 
-                if (revisionGrid == null)
+            foreach (var gitRef in refs)
+            {
+                if (gitRef.IsTag)
                 {
-                    var currentRevisionGuid = module.GetCurrentCheckout();
-                    currentRevision = new GitRevision(currentRevisionGuid);
-                    refs = module.GetRefs(true, true).Where(gitRef => gitRef.ObjectId == currentRevisionGuid).ToList();
+                    currentTags.Add(gitRef);
                 }
-                else
+                else if (gitRef.IsHead || gitRef.IsRemote)
                 {
-                    currentRevision = revisionGrid.GetCurrentRevision();
-                    refs = currentRevision.Refs;
-                }
-
-                foreach (var gitRef in refs)
-                {
-                    if (gitRef.IsTag)
+                    currentBranches.Add(gitRef);
+                    if (gitRef.IsRemote)
                     {
-                        currentTags.Add(gitRef);
+                        currentRemoteBranches.Add(gitRef);
                     }
-                    else if (gitRef.IsHead || gitRef.IsRemote)
+                    else
                     {
-                        currentBranches.Add(gitRef);
-                        if (gitRef.IsRemote)
-                        {
-                            currentRemoteBranches.Add(gitRef);
-                        }
-                        else
-                        {
-                            currentLocalBranches.Add(gitRef);
-                        }
+                        currentLocalBranches.Add(gitRef);
                     }
                 }
             }
