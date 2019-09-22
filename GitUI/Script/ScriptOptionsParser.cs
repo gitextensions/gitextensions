@@ -107,6 +107,10 @@ namespace GitUI.Script
                 if (currentRevision == null && option.StartsWith("c"))
                 {
                     currentRevision = GetCurrentRevision(module, revisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches);
+                    if (currentRevision == null)
+                    {
+                        return (arguments: null, abort: true);
+                    }
 
                     if (currentLocalBranches.Count == 1)
                     {
@@ -126,6 +130,10 @@ namespace GitUI.Script
                 {
                     allSelectedRevisions = revisionGrid.GetSelectedRevisions();
                     selectedRevision = CalculateSelectedRevision(revisionGrid, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
+                    if (selectedRevision == null)
+                    {
+                        return (arguments: null, abort: true);
+                    }
                 }
 
                 arguments = ParseScriptArguments(arguments, option, owner, revisionGrid, module, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision, currentRemote);
@@ -165,6 +173,11 @@ namespace GitUI.Script
             List<IGitRef> selectedBranches, List<IGitRef> selectedTags)
         {
             GitRevision selectedRevision = revisionGrid.LatestSelectedRevision;
+            if (selectedRevision == null)
+            {
+                return null;
+            }
+
             foreach (var head in selectedRevision.Refs)
             {
                 if (head.IsTag)
@@ -202,7 +215,7 @@ namespace GitUI.Script
             if (revisionGrid == null)
             {
                 var currentRevisionGuid = module.GetCurrentCheckout();
-                currentRevision = new GitRevision(currentRevisionGuid);
+                currentRevision = currentRevisionGuid == null ? null : new GitRevision(currentRevisionGuid);
                 refs = module.GetRefs(true, true).Where(gitRef => gitRef.ObjectId == currentRevisionGuid).ToList();
             }
             else

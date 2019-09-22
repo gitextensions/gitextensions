@@ -29,7 +29,14 @@ namespace GitUI.Script
             return new CommandStatus(anyScriptExecuted, needsGridRefresh);
         }
 
-        public static CommandStatus RunScript(IWin32Window owner, GitModule module, string scriptKey, IGitUICommands uiCommands, RevisionGridControl revisionGrid)
+        public static CommandStatus RunScript(IWin32Window owner, IGitModule module, string scriptKey, IGitUICommands uiCommands, RevisionGridControl revisionGrid)
+        {
+            return RunScript(owner, module, scriptKey, uiCommands, revisionGrid,
+                msg => MessageBox.Show(owner, msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error));
+        }
+
+        public static CommandStatus RunScript(IWin32Window owner, IGitModule module, string scriptKey, IGitUICommands uiCommands,
+            RevisionGridControl revisionGrid, Action<string> showError)
         {
             if (string.IsNullOrEmpty(scriptKey))
             {
@@ -40,7 +47,7 @@ namespace GitUI.Script
 
             if (script == null)
             {
-                MessageBox.Show(owner, "Cannot find script: " + scriptKey, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                showError("Cannot find script: " + scriptKey);
                 return false;
             }
 
@@ -57,17 +64,16 @@ namespace GitUI.Script
                         && ScriptOptionsParser.Contains(arguments, option));
                 if (optionDependingOnSelectedRevision != null)
                 {
-                    MessageBox.Show(owner,
-                        $"Option {optionDependingOnSelectedRevision} is only supported when started from revision grid.",
-                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    showError($"Option {optionDependingOnSelectedRevision} is only supported when started with revision grid available.");
                     return false;
                 }
             }
 
-            return RunScript(owner, module, script, uiCommands, revisionGrid);
+            return RunScript(owner, module, script, uiCommands, revisionGrid, showError);
         }
 
-        private static CommandStatus RunScript(IWin32Window owner, GitModule module, ScriptInfo scriptInfo, IGitUICommands uiCommands, RevisionGridControl revisionGrid)
+        private static CommandStatus RunScript(IWin32Window owner, IGitModule module, ScriptInfo scriptInfo, IGitUICommands uiCommands,
+            RevisionGridControl revisionGrid, Action<string> showError)
         {
             if (scriptInfo.AskConfirmation && MessageBox.Show(owner, $"Do you want to execute '{scriptInfo.Name}'?", "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
@@ -78,6 +84,7 @@ namespace GitUI.Script
             (string argument, bool abort) = ScriptOptionsParser.Parse(scriptInfo.Arguments, module, owner, revisionGrid);
             if (abort)
             {
+                showError($"There must be a revision in order to substitute the argument option(s) for the script to run.");
                 return false;
             }
 
@@ -145,7 +152,7 @@ namespace GitUI.Script
             return new CommandStatus(true, !scriptInfo.RunInBackground);
         }
 
-        private static string ExpandCommandVariables(string originalCommand, GitModule module)
+        private static string ExpandCommandVariables(string originalCommand, IGitModule module)
         {
             return originalCommand.Replace("{WorkingDir}", module.WorkingDir);
         }
