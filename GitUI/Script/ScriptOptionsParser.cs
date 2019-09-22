@@ -52,7 +52,8 @@ namespace GitUI.Script
             "WorkingDir"
         };
 
-        private static string CreateOption(string option, bool quoted)
+        [NotNull]
+        private static string CreateOption([NotNull] string option, bool quoted)
         {
             var result = "{" + option + "}";
 
@@ -64,7 +65,17 @@ namespace GitUI.Script
             return result;
         }
 
-        public static (string argument, bool abort) Parse(string argument, IGitModule module, IWin32Window owner, RevisionGridControl revisionGrid)
+        public static bool Contains([NotNull] string arguments, [NotNull] string option)
+        {
+            return arguments.Contains(CreateOption(option, quoted: false));
+        }
+
+        public static bool DependsOnSelectedRevision([NotNull] string option)
+        {
+            return option.StartsWith("s");
+        }
+
+        public static (string arguments, bool abort) Parse(string arguments, IGitModule module, IWin32Window owner, RevisionGridControl revisionGrid)
         {
             GitRevision selectedRevision = null;
             GitRevision currentRevision = null;
@@ -83,20 +94,17 @@ namespace GitUI.Script
 
             foreach (string option in Options)
             {
-                if (string.IsNullOrEmpty(argument))
+                if (string.IsNullOrEmpty(arguments))
                 {
                     continue;
                 }
 
-                string regularOption = CreateOption(option, false);
-                string quotedOption = CreateOption(option, true);
-
-                if (!argument.Contains(regularOption) && (!argument.Contains(quotedOption)))
+                if (!Contains(arguments, option))
                 {
                     continue;
                 }
 
-                if (option.StartsWith("c") && currentRevision == null)
+                if (currentRevision == null && option.StartsWith("c"))
                 {
                     currentRevision = GetCurrentRevision(module, revisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches);
 
@@ -114,20 +122,20 @@ namespace GitUI.Script
                         }
                     }
                 }
-                else if (option.StartsWith("s") && selectedRevision == null && revisionGrid != null)
+                else if (selectedRevision == null && revisionGrid != null && DependsOnSelectedRevision(option))
                 {
                     allSelectedRevisions = revisionGrid.GetSelectedRevisions();
                     selectedRevision = CalculateSelectedRevision(revisionGrid, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
                 }
 
-                argument = ParseScriptArguments(argument, option, owner, revisionGrid, module, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision, currentRemote);
-                if (argument == null)
+                arguments = ParseScriptArguments(arguments, option, owner, revisionGrid, module, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision, currentRemote);
+                if (arguments == null)
                 {
-                    return (argument: null, abort: true);
+                    return (arguments: null, abort: true);
                 }
             }
 
-            return (argument, abort: false);
+            return (arguments, abort: false);
         }
 
         private static string AskToSpecify(IEnumerable<IGitRef> options, RevisionGridControl revisionGrid)
@@ -237,7 +245,7 @@ namespace GitUI.Script
             return "";
         }
 
-        private static string ParseScriptArguments(string argument, string option, IWin32Window owner, RevisionGridControl revisionGrid, IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions, in IList<IGitRef> selectedTags, in IList<IGitRef> selectedBranches, in IList<IGitRef> selectedLocalBranches, in IList<IGitRef> selectedRemoteBranches, in IList<string> selectedRemotes, GitRevision selectedRevision, in IList<IGitRef> currentTags, in IList<IGitRef> currentBranches, in IList<IGitRef> currentLocalBranches, in IList<IGitRef> currentRemoteBranches, GitRevision currentRevision, string currentRemote)
+        private static string ParseScriptArguments(string arguments, string option, IWin32Window owner, RevisionGridControl revisionGrid, IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions, in IList<IGitRef> selectedTags, in IList<IGitRef> selectedBranches, in IList<IGitRef> selectedLocalBranches, in IList<IGitRef> selectedRemoteBranches, in IList<string> selectedRemotes, GitRevision selectedRevision, in IList<IGitRef> currentTags, in IList<IGitRef> currentBranches, in IList<IGitRef> currentLocalBranches, in IList<IGitRef> currentRemoteBranches, GitRevision currentRevision, string currentRemote)
         {
             string newString = null;
             string remote;
@@ -441,11 +449,11 @@ namespace GitUI.Script
 
                 newStringQuoted = newStringQuoted + "\"";
 
-                argument = argument.Replace(CreateOption(option, true), newStringQuoted);
-                argument = argument.Replace(CreateOption(option, false), newString);
+                arguments = arguments.Replace(CreateOption(option, quoted: true), newStringQuoted);
+                arguments = arguments.Replace(CreateOption(option, quoted: false), newString);
             }
 
-            return argument;
+            return arguments;
 
             string SelectOneRef(IList<IGitRef> refs) => ScriptOptionsParser.SelectOne(refs, revisionGrid);
             string SelectOneString(IList<string> strings) => ScriptOptionsParser.SelectOne(strings, revisionGrid);
@@ -491,8 +499,8 @@ namespace GitUI.Script
 
         public readonly struct TestAccessor
         {
-            public string ParseScriptArguments(string argument, string option, IWin32Window owner, RevisionGridControl revisionGrid, IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions, List<IGitRef> selectedTags, List<IGitRef> selectedBranches, List<IGitRef> selectedLocalBranches, List<IGitRef> selectedRemoteBranches, List<string> selectedRemotes, GitRevision selectedRevision, List<IGitRef> currentTags, List<IGitRef> currentBranches, List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches, GitRevision currentRevision, string currentRemote) =>
-                ScriptOptionsParser.ParseScriptArguments(argument, option, owner, revisionGrid, module, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision, currentRemote);
+            public string ParseScriptArguments(string arguments, string option, IWin32Window owner, RevisionGridControl revisionGrid, IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions, List<IGitRef> selectedTags, List<IGitRef> selectedBranches, List<IGitRef> selectedLocalBranches, List<IGitRef> selectedRemoteBranches, List<string> selectedRemotes, GitRevision selectedRevision, List<IGitRef> currentTags, List<IGitRef> currentBranches, List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches, GitRevision currentRevision, string currentRemote) =>
+                ScriptOptionsParser.ParseScriptArguments(arguments, option, owner, revisionGrid, module, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision, currentRemote);
         }
     }
 }

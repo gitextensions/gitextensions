@@ -49,18 +49,18 @@ namespace GitUI.Script
                 return false;
             }
 
-            string argument = script.Arguments;
-            if (!string.IsNullOrEmpty(argument) && revisionGrid == null)
+            string arguments = script.Arguments;
+            if (!string.IsNullOrEmpty(arguments) && revisionGrid == null)
             {
-                foreach (string option in ScriptOptionsParser.Options)
+                string optionDependingOnSelectedRevision
+                    = ScriptOptionsParser.Options.FirstOrDefault(option => ScriptOptionsParser.DependsOnSelectedRevision(option)
+                        && ScriptOptionsParser.Contains(arguments, option));
+                if (optionDependingOnSelectedRevision != null)
                 {
-                    if (argument.Contains(option) && option.StartsWith("{s"))
-                    {
-                        MessageBox.Show(owner,
-                            $"Option {option} is only supported when started from revision grid.",
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return false;
-                    }
+                    MessageBox.Show(owner,
+                        $"Option {optionDependingOnSelectedRevision} is only supported when started from revision grid.",
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
                 }
             }
 
