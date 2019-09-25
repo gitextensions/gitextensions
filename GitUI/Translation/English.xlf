@@ -3304,6 +3304,11 @@ Do you want to continue?</source>
         <source>Merge conflicts</source>
         <target />
       </trans-unit>
+      <trans-unit id="_modifyCommitMessageButtonToolTip.Text">
+        <source>If you change the first line of the commit message, git will treat this commit as an ordinary commit,
+i.e. it may no longer be a fixup or an autosquash commit.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_noFilesStagedAndConfirmAnEmptyMergeCommit.Text">
         <source>There are no files staged for this commit.
 Are you sure you want to commit?</source>
@@ -3531,6 +3536,10 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="interactiveAddToolStripMenuItem.Text">
         <source>Interactive Add</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="modifyCommitMessageButton.Text">
+        <source>Modify the commit m&amp;essage</source>
         <target />
       </trans-unit>
       <trans-unit id="noVerifyToolStripMenuItem.Text">
