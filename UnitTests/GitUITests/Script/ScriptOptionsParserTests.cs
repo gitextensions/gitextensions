@@ -24,7 +24,7 @@ namespace GitUITests.Script
         public void ScriptOptionsParser_resolve_cDefaultRemotePathFromUrl_currentRemote_unset()
         {
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
-                argument: "{openUrl} https://gitlab.com{cDefaultRemotePathFromUrl}/tree/{sBranch}", option: "cDefaultRemotePathFromUrl",
+                arguments: "{openUrl} https://gitlab.com{cDefaultRemotePathFromUrl}/tree/{sBranch}", option: "cDefaultRemotePathFromUrl",
                 owner: null, revisionGrid: null, module: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
@@ -40,7 +40,7 @@ namespace GitUITests.Script
             _module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote)).Returns("https://gitlab.com/gitlabhq/gitlabhq.git");
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
-                argument: "{openUrl} https://gitlab.com{cDefaultRemotePathFromUrl}/tree/{sBranch}", option: "cDefaultRemotePathFromUrl",
+                arguments: "{openUrl} https://gitlab.com{cDefaultRemotePathFromUrl}/tree/{sBranch}", option: "cDefaultRemotePathFromUrl",
                 owner: null, revisionGrid: null, _module, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
@@ -55,7 +55,7 @@ namespace GitUITests.Script
             var noSelectedRemotes = new List<string>();
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
-                argument: "{openUrl} https://gitlab.com{sRemotePathFromUrl}/tree/{sBranch}", option: "sRemotePathFromUrl",
+                arguments: "{openUrl} https://gitlab.com{sRemotePathFromUrl}/tree/{sBranch}", option: "sRemotePathFromUrl",
                 owner: null, revisionGrid: null, module: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, noSelectedRemotes, selectedRevision: null,
                 currentTags: null,
@@ -72,7 +72,7 @@ namespace GitUITests.Script
             _module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote)).Returns("https://gitlab.com/gitlabhq/gitlabhq.git");
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
-                argument: "{openUrl} https://gitlab.com{sRemotePathFromUrl}/tree/{sBranch}", option: "sRemotePathFromUrl",
+                arguments: "{openUrl} https://gitlab.com{sRemotePathFromUrl}/tree/{sBranch}", option: "sRemotePathFromUrl",
                 owner: null, revisionGrid: null, _module, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes, selectedRevision: null,
                 currentTags: null,
@@ -91,7 +91,7 @@ namespace GitUITests.Script
             var remoteBranches = new List<IGitRef>() { new GitRef(null, null, branch) };
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
-                argument: "{" + option + "}", option,
+                arguments: "{" + option + "}", option,
                 owner: null, revisionGrid: null, module: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: remoteBranches, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
@@ -110,7 +110,7 @@ namespace GitUITests.Script
             var remoteBranches = new List<IGitRef>() { new GitRef(null, null, branch) };
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
-                argument: "{" + option + "}", option,
+                arguments: "{" + option + "}", option,
                 owner: null, revisionGrid: null, module: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: remoteBranches, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
@@ -129,7 +129,7 @@ namespace GitUITests.Script
             var remoteBranches = new List<IGitRef>() { new GitRef(null, null, branch) };
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
-                argument: "{" + option + "}", option,
+                arguments: "{" + option + "}", option,
                 owner: null, revisionGrid: null, module: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
@@ -148,7 +148,7 @@ namespace GitUITests.Script
             var remoteBranches = new List<IGitRef>() { new GitRef(null, null, branch) };
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
-                argument: "{" + option + "}", option,
+                arguments: "{" + option + "}", option,
                 owner: null, revisionGrid: null, module: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
@@ -163,7 +163,7 @@ namespace GitUITests.Script
             var option = "RepoName";
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
-                argument: "{" + option + "}", option,
+                arguments: "{" + option + "}", option,
                 owner: null, revisionGrid: null, module: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
@@ -180,7 +180,7 @@ namespace GitUITests.Script
             _module.WorkingDir.Returns("C:\\" + dirName);
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
-                argument: "{" + option + "}", option,
+                arguments: "{" + option + "}", option,
                 owner: null, revisionGrid: null, _module, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,

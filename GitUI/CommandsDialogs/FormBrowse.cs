@@ -122,6 +122,8 @@ namespace GitUI.CommandsDialogs
 
         private UpdateTargets _selectedRevisionUpdatedTargets = UpdateTargets.None;
 
+        public override RevisionGridControl RevisionGridControl { get => RevisionGrid; }
+
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormBrowse()
         {

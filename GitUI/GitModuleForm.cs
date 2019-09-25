@@ -21,6 +21,8 @@ namespace GitUI
         /// </summary>
         internal static bool IsUnitTestActive { get; set; }
 
+        public virtual RevisionGridControl RevisionGridControl { get => null; }
+
         [CanBeNull] private GitUICommands _uiCommands;
 
         /// <inheritdoc />
@@ -68,7 +70,7 @@ namespace GitUI
 
         protected override CommandStatus ExecuteCommand(int command)
         {
-            var result = ScriptRunner.ExecuteScriptCommand(this, Module, command, UICommands);
+            var result = ScriptRunner.ExecuteScriptCommand(this, Module, command, UICommands, RevisionGridControl);
 
             if (!result.Executed)
             {
