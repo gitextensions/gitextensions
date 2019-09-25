@@ -599,8 +599,16 @@ Are you sure you want to continue?</source>
         <source>Branch:</source>
         <target />
       </trans-unit>
+      <trans-unit id="labelCc.Text">
+        <source>CC:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelHashtag.Text">
+        <source>Hashtag:</source>
+        <target />
+      </trans-unit>
       <trans-unit id="labelPublishType.Text">
-        <source>Publish Type</source>
+        <source>Publish Type:</source>
         <target />
       </trans-unit>
       <trans-unit id="labelRemote.Text">

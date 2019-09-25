@@ -37,8 +37,8 @@ namespace Gerrit
             PublishType.Items.AddRange(new object[]
             {
                 new KeyValuePair<string, string>(_publishTypeReview.Text, ""),
-                new KeyValuePair<string, string>(_publishTypeWip.Text, "%wip"),
-                new KeyValuePair<string, string>(_publishTypePrivate.Text, "%private"),
+                new KeyValuePair<string, string>(_publishTypeWip.Text, "wip"),
+                new KeyValuePair<string, string>(_publishTypePrivate.Text, "private"),
             });
             PublishType.SelectedIndex = 0;
         }
@@ -79,31 +79,46 @@ namespace Gerrit
 
             GerritUtil.StartAgent(owner, Module, _NO_TRANSLATE_Remotes.Text);
 
-            var pushCommand = UICommands.CreateRemoteCommand();
-
-            string targetBranch = "refs/for/" + branch;
-
-            string publishType = ((KeyValuePair<string, string>)PublishType.SelectedItem).Value;
-            targetBranch += publishType;
+            List<string> additionalOptions = new List<string>();
+            additionalOptions.Add(((KeyValuePair<string, string>)PublishType.SelectedItem).Value);
 
             string reviewers = _NO_TRANSLATE_Reviewers.Text.Trim();
             if (!string.IsNullOrEmpty(reviewers))
             {
-                string formattedReviewers = string.Join(",", reviewers.Split(' ')
-                                                                      .Where(r => !string.IsNullOrEmpty(r))
-                                                                      .Select(r => "r=" + r));
-                if (!formattedReviewers.IsNullOrEmpty())
-                {
-                    targetBranch += "%" + formattedReviewers;
-                }
+                additionalOptions.AddRange(reviewers.Split(new[] { ' ', ',', ';', '|' })
+                                                    .Where(r => !string.IsNullOrEmpty(r))
+                                                    .Select(r => "r=" + r));
+            }
+
+            string cc = _NO_TRANSLATE_Cc.Text.Trim();
+            if (!string.IsNullOrEmpty(cc))
+            {
+                additionalOptions.AddRange(cc.Split(new[] { ' ', ',', ';', '|' })
+                                             .Where(r => !string.IsNullOrEmpty(r))
+                                             .Select(r => "cc=" + r));
             }
 
             string topic = _NO_TRANSLATE_Topic.Text.Trim();
             if (!string.IsNullOrEmpty(topic))
             {
-                targetBranch += "%topic=" + topic;
+                additionalOptions.Add("topic=" + topic);
             }
 
+            string hashtag = _NO_TRANSLATE_Hashtag.Text.Trim();
+            if (!string.IsNullOrEmpty(hashtag))
+            {
+                additionalOptions.Add("hashtag=" + hashtag);
+            }
+
+            additionalOptions = additionalOptions.Where(r => !string.IsNullOrEmpty(r)).ToList();
+
+            string targetBranch = "refs/for/" + branch;
+            if (additionalOptions.Count > 0)
+            {
+                targetBranch += "%" + string.Join(",", additionalOptions);
+            }
+
+            var pushCommand = UICommands.CreateRemoteCommand();
             pushCommand.CommandText = PushCmd(
                 _NO_TRANSLATE_Remotes.Text,
                 targetBranch);
