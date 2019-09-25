@@ -384,7 +384,7 @@ namespace GitUI.CommandsDialogs
             this.StageInSuperproject.Name = "StageInSuperproject";
             this.StageInSuperproject.Size = new System.Drawing.Size(130, 17);
             this.StageInSuperproject.TabIndex = 13;
-            this.StageInSuperproject.Text = "Stage in Superproject";
+            this.StageInSuperproject.Text = "Stage &in Superproject";
             this.fileTooltip.SetToolTip(this.StageInSuperproject, "Stage current submodule in superproject after commit");
             this.StageInSuperproject.UseVisualStyleBackColor = true;
             this.StageInSuperproject.CheckedChanged += new System.EventHandler(this.StageInSuperproject_CheckedChanged);
@@ -763,7 +763,7 @@ namespace GitUI.CommandsDialogs
             this.workingToolStripMenuItem.Image = global::GitUI.Properties.Images.WorkingDirChanges;
             this.workingToolStripMenuItem.Name = "workingToolStripMenuItem";
             this.workingToolStripMenuItem.Size = new System.Drawing.Size(178, 20);
-            this.workingToolStripMenuItem.Text = "Working directory changes";
+            this.workingToolStripMenuItem.Text = "&Working directory changes";
             //
             // showIgnoredFilesToolStripMenuItem
             //
@@ -1140,7 +1140,7 @@ namespace GitUI.CommandsDialogs
             this.CommitAndPush.Size = new System.Drawing.Size(171, 26);
             this.CommitAndPush.TabIndex = 9;
             this.CommitAndPush.TabStop = false;
-            this.CommitAndPush.Text = "C&ommit && push";
+            this.CommitAndPush.Text = "Commit && &push";
             this.CommitAndPush.UseVisualStyleBackColor = true;
             this.CommitAndPush.Click += new System.EventHandler(this.CommitAndPush_Click);
             //
@@ -1166,7 +1166,7 @@ namespace GitUI.CommandsDialogs
             this.Reset.Size = new System.Drawing.Size(171, 26);
             this.Reset.TabIndex = 11;
             this.Reset.TabStop = false;
-            this.Reset.Text = "Reset all changes";
+            this.Reset.Text = "&Reset all changes";
             this.Reset.UseVisualStyleBackColor = true;
             this.Reset.Click += new System.EventHandler(this.ResetClick);
             //
@@ -1180,7 +1180,7 @@ namespace GitUI.CommandsDialogs
             this.ResetUnStaged.Size = new System.Drawing.Size(171, 26);
             this.ResetUnStaged.TabIndex = 14;
             this.ResetUnStaged.TabStop = false;
-            this.ResetUnStaged.Text = "Reset unstaged changes";
+            this.ResetUnStaged.Text = "Reset u&nstaged changes";
             this.ResetUnStaged.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.ResetUnStaged.UseVisualStyleBackColor = true;
             this.ResetUnStaged.Click += new System.EventHandler(this.ResetUnStagedClick);
@@ -1249,7 +1249,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
             this.toolStripMenuItem3.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.toolStripMenuItem3.Size = new System.Drawing.Size(62, 23);
-            this.toolStripMenuItem3.Text = "Options";
+            this.toolStripMenuItem3.Text = "&Options";
             //
             // closeDialogAfterEachCommitToolStripMenuItem
             //
@@ -1348,7 +1348,7 @@ namespace GitUI.CommandsDialogs
             this.createBranchToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.createBranchToolStripButton.Name = "createBranchToolStripButton";
             this.createBranchToolStripButton.Size = new System.Drawing.Size(101, 20);
-            this.createBranchToolStripButton.Text = "Create branch";
+            this.createBranchToolStripButton.Text = "Create &branch";
             this.createBranchToolStripButton.Click += new System.EventHandler(this.createBranchToolStripButton_Click);
             //
             // commitStatusStrip
