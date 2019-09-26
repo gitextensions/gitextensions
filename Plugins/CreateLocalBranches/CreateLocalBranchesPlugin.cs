@@ -8,7 +8,7 @@ namespace CreateLocalBranches
     [Export(typeof(IGitPlugin))]
     public class CreateLocalBranchesPlugin : GitPluginBase, IGitPluginForRepository
     {
-        public CreateLocalBranchesPlugin()
+        public CreateLocalBranchesPlugin() : base(false)
         {
             SetNameAndDescription("Create local tracking branches");
             Translate();

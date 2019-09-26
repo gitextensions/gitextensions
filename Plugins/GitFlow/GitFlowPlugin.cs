@@ -8,7 +8,7 @@ namespace GitFlow
     [Export(typeof(IGitPlugin))]
     public class GitFlowPlugin : GitPluginBase, IGitPluginForRepository
     {
-        public GitFlowPlugin()
+        public GitFlowPlugin() : base(false)
         {
             SetNameAndDescription("GitFlow");
             Translate();

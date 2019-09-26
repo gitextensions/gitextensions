@@ -14,11 +14,18 @@ namespace ResourceManager
         public string Name { get; protected set; }
         public Image Icon { get; protected set; }
 
+        public GitPluginBase(bool hasSettings)
+        {
+            HasSettings = hasSettings;
+        }
+
         protected void SetNameAndDescription(string name)
         {
             Name = name;
             Description = name;
         }
+
+        public bool HasSettings { get; }
 
         // Store settings to use later
         public ISettingsSource Settings => SettingsContainer.GetSettingsSource();

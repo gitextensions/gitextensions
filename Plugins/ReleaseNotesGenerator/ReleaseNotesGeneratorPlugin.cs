@@ -9,7 +9,7 @@ namespace ReleaseNotesGenerator
     [Export(typeof(IGitPlugin))]
     public class ReleaseNotesGeneratorPlugin : GitPluginBase
     {
-        public ReleaseNotesGeneratorPlugin()
+        public ReleaseNotesGeneratorPlugin() : base(false)
         {
             SetNameAndDescription("Release Notes Generator");
             Translate();

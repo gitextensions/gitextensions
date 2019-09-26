@@ -13,7 +13,7 @@ namespace ProxySwitcher
         public readonly StringSetting HttpProxy = new StringSetting("HTTP proxy", string.Empty);
         public readonly StringSetting HttpProxyPort = new StringSetting("HTTP proxy port", "8080");
 
-        public ProxySwitcherPlugin()
+        public ProxySwitcherPlugin() : base(true)
         {
             SetNameAndDescription("Proxy Switcher");
             Translate();
