@@ -155,9 +155,10 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private sealed class RemoteBranchNode : BaseBranchNode, IGitRefActions, ICanDelete, ICanRename
+        private sealed class RemoteBranchNode : BaseBranchLeafNode, IGitRefActions, ICanDelete, ICanRename
         {
-            public RemoteBranchNode(Tree tree, string fullPath) : base(tree, fullPath)
+            public RemoteBranchNode(Tree tree, string fullPath)
+                : base(tree, fullPath, nameof(Images.BranchRemote), nameof(Images.BranchRemoteMerged))
             {
             }
 
@@ -252,12 +253,6 @@ namespace GitUI.BranchTreePanel
             public bool FetchAndRebase()
             {
                 return Fetch() && Rebase();
-            }
-
-            protected override void ApplyStyle()
-            {
-                base.ApplyStyle();
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.BranchRemote);
             }
         }
 
