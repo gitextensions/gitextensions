@@ -286,14 +286,17 @@
   <data name="Branch" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Branch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="BranchDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\BranchDocument.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="BranchLocal" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\BranchLocal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="BranchLocalMerged" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\BranchLocalMerged.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="BranchRemote" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\BranchRemote.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BranchRemoteMerged" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\BranchRemoteMerged.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="BranchLocalRoot" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\LocalBranchRoot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
