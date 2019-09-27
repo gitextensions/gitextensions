@@ -316,6 +316,48 @@ namespace GitCommandsTests
             Assert.AreSame(_gitModule, refs[3].Module);
         }
 
+        [TestCase("branch -a --contains",
+            true,
+            true,
+            "  aaa\n* current\n+ feature/worktree\n  feature/zzz_another\n  remotes/origin/master\n  remotes/origin/current\n  remotes/upstream/master\n",
+            new string[] { "aaa", "current", "feature/worktree", "feature/zzz_another", "remotes/origin/master", "remotes/origin/current", "remotes/upstream/master" })]
+        [TestCase("branch --contains",
+            true,
+            false,
+            "  aaa\n* current\n+ feature/worktree\n  feature/zzz_another\n",
+            new string[] { "aaa", "current", "feature/worktree", "feature/zzz_another" })]
+        [TestCase("branch -r --contains",
+            false,
+            true,
+            "remotes/origin/master\n  remotes/origin/current\n  remotes/upstream/master\n",
+            new string[] { "remotes/origin/master", "remotes/origin/current", "remotes/upstream/master" })]
+        public void GetAllBranchesWhichContainGivenCommit_wellformed(
+            string cmd,
+            bool getLocal,
+            bool getRemote,
+            string output,
+            string[] expected)
+        {
+            using (_executable.StageOutput(cmd + " " + Sha1.ToString(), output))
+            {
+                var result = _gitModule.GetAllBranchesWhichContainGivenCommit(Sha1, getLocal, getRemote);
+                Assert.AreEqual(result, expected);
+            }
+        }
+
+        [TestCase(
+            false,
+            false,
+            new string[] { })]
+        public void GetAllBranchesWhichContainGivenCommit_empty(
+            bool getLocal,
+            bool getRemote,
+            string[] expected)
+        {
+            var result = _gitModule.GetAllBranchesWhichContainGivenCommit(Sha1, getLocal, getRemote);
+            Assert.AreEqual(result, expected);
+        }
+
         [TestCase(null)]
         [TestCase("")]
         [TestCase("\t")]

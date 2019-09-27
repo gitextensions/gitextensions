@@ -2961,7 +2961,7 @@ namespace GitCommands
                 return Array.Empty<string>();
             }
 
-            var result = output.Split(new[] { '\r', '\n', '*' }, StringSplitOptions.RemoveEmptyEntries);
+            var result = output.Split(new[] { '\r', '\n', '*', '+' }, StringSplitOptions.RemoveEmptyEntries);
 
             // Remove symlink targets as in "origin/HEAD -> origin/master"
             for (var i = 0; i < result.Length; i++)
