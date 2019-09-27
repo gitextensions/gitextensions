@@ -187,6 +187,11 @@ namespace GitHub3
         /// </summary>
         public IReadOnlyList<IHostedRemote> GetHostedRemotesForModule()
         {
+            if (_currentGitUiCommands?.GitModule == null)
+            {
+                return Array.Empty<IHostedRemote>();
+            }
+
             var gitModule = _currentGitUiCommands.GitModule;
             return Remotes().ToList();
 
