@@ -95,4 +95,5 @@ YYYY/MM/DD, github id, Full name, email
 2019/08/25, kvanttt, Ivan Kochurkin, kvanttt(at)gmail.com
 2019/08/27, palver123, Levente Koncz, palver123@gmail.com
 2019/09/02, MelnikovIG, Igor Melnikov, zero_88@bk.ru
+2019/09/24, lekhmanrus, Ruslan Lekhman, lekhman112@gmail.com
 
