@@ -6359,6 +6359,10 @@ Is the merge conflict solved?</source>
         <source>Error</source>
         <target />
       </trans-unit>
+      <trans-unit id="_errorStartingMergetool.Text">
+        <source>Error starting mergetool: {0}</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_failureWhileOpenFile.Text">
         <source>Open temporary file failed.</source>
         <target />
