@@ -147,6 +147,10 @@ namespace GitUI
                     Close();
                 }
             }
+            catch (ConEmu.WinForms.GuiMacroExecutor.GuiMacroException)
+            {
+                // Do nothing
+            }
             finally
             {
                 _modalController?.EndModal(isSuccess);
