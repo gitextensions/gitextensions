@@ -29,6 +29,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _askMergeConflictSolvedCaption = new TranslationString("Conflict solved?");
         private readonly TranslationString _noMergeTool = new TranslationString("There is no mergetool configured." + Environment.NewLine + "Please go to settings and set a mergetool!");
         private readonly TranslationString _noMergeToolConfigured = new TranslationString("The mergetool is not correctly configured." + Environment.NewLine + "Please go to settings and configure the mergetool!");
+        private readonly TranslationString _errorStartingMergetool = new TranslationString("Error starting mergetool: {0}");
         private readonly TranslationString _stageFilename = new TranslationString("Stage {0}");
 
         private readonly TranslationString _noBaseRevision = new TranslationString("There is no base revision for {0}." + Environment.NewLine + "Fall back to 2-way merge?");
@@ -498,7 +499,18 @@ namespace GitUI.CommandsDialogs
                         lastWriteTimeBeforeMerge = File.GetLastWriteTime(_fullPathResolver.Resolve(item.Filename));
                     }
 
-                    var res = new Executable(_mergetoolPath, Module.WorkingDir).Execute(arguments);
+                    GitUIPluginInterfaces.ExecutionResult res;
+                    try
+                    {
+                        res = new Executable(_mergetoolPath, Module.WorkingDir).Execute(arguments);
+                    }
+                    catch (Exception)
+                    {
+                        var text = string.Format(_errorStartingMergetool.Text, _mergetoolPath);
+                        MessageBox.Show(this, text, _noBaseFileMergeCaption.Text,
+                            MessageBoxButtons.OK);
+                        return;
+                    }
 
                     DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
                     if (File.Exists(_fullPathResolver.Resolve(item.Filename)))
