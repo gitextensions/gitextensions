@@ -313,20 +313,20 @@ namespace GitUI.BranchTreePanel
             {
                 base.ApplyStyle();
 
-                TreeViewNode.ToolTipText = _remote.FetchUrl != _remote.PushUrl
-                    ? $"Push: {_remote.PushUrl}\nFetch: {_remote.FetchUrl}"
+                TreeViewNode.ToolTipText = _remote.FetchUrl != _remote.PushUrls[0]
+                    ? $"Push: {_remote.PushUrls[0]}\nFetch: {_remote.FetchUrl}"
                     : _remote.FetchUrl;
 
                 string imageKey;
-                if (_remote.PushUrl.Contains("github.com") || _remote.FetchUrl.Contains("github.com"))
+                if (_remote.FetchUrl.Contains("github.com"))
                 {
                     imageKey = nameof(Images.GitHub);
                 }
-                else if (_remote.PushUrl.Contains("bitbucket.") || _remote.FetchUrl.Contains("bitbucket."))
+                else if (_remote.FetchUrl.Contains("bitbucket."))
                 {
                     imageKey = nameof(Images.BitBucket);
                 }
-                else if (_remote.PushUrl.Contains("visualstudio.com") || _remote.FetchUrl.Contains("visualstudio.com"))
+                else if (_remote.FetchUrl.Contains("visualstudio.com") || _remote.FetchUrl.Contains("dev.azure.com"))
                 {
                     imageKey = nameof(Images.VisualStudioTeamServices);
                 }

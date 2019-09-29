@@ -2136,53 +2136,61 @@ namespace GitCommands
             {
                 var remotes = new List<Remote>();
 
-                /*
-                 * $ git remote -v
-                 * origin  git@github.com:drewnoakes/gitextensions.git (fetch)
-                 * origin  git@github.com:drewnoakes/gitextensions.git (push)
-                 * upstream        git@github.com:gitextensions/gitextensions.git (fetch)
-                 * upstream        git@github.com:gitextensions/gitextensions.git (push)
-                 *
-                 * That's a tab character between the first two records. There's a space before (fetch/push).
-                 */
+                // See tests for explanation of the format
 
                 using (var enumerator = lines.GetEnumerator())
                 {
                     while (enumerator.MoveNext())
                     {
-                        var fetchLine = enumerator.Current;
-
-                        // An invalid module is not an error; we simply return an empty list of remotes
-                        if (fetchLine.IndexOf("not a git repository", StringComparison.OrdinalIgnoreCase) >= 0)
+                        var remoteLine = enumerator.Current;
+                        if (remoteLine.IndexOf("not a git repository", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
+                            // An invalid module is not an error; we simply return an empty list of remotes
                             return remotes;
+                        }
+
+                        var remoteMatch = _remoteVerboseLineRegex.Match(remoteLine);
+                        if (!remoteMatch.Success
+                            || (remoteMatch.Groups["direction"].Value != "fetch"
+                               && remoteMatch.Groups["direction"].Value != "push"))
+                        {
+                            // Ignore malformed and unknown entries
+                            continue;
+                        }
+
+                        var name = remoteMatch.Groups["name"].Value;
+                        var remoteUrl = remoteMatch.Groups["url"].Value;
+                        if (remoteMatch.Groups["direction"].Value == "push")
+                        {
+                            if (remotes.Count <= 0 || name != remotes[remotes.Count - 1].Name)
+                            {
+                                throw new Exception("Unable to update remote pushurl for command output: " + remoteLine);
+                            }
+
+                            remotes[remotes.Count - 1].PushUrls.Add(remoteUrl);
+                            continue;
                         }
 
                         if (!enumerator.MoveNext())
                         {
-                            throw new Exception("Remote URLs should appear in pairs.");
+                            throw new Exception("Remote URLs should appear in pairs, no pushurl for fetch: " + remoteLine);
                         }
 
                         var pushLine = enumerator.Current;
-
-                        var fetchMatch = _remoteVerboseLineRegex.Match(fetchLine);
                         var pushMatch = _remoteVerboseLineRegex.Match(pushLine);
-
-                        if (!fetchMatch.Success || !pushMatch.Success || fetchMatch.Groups["direction"].Value != "fetch" || pushMatch.Groups["direction"].Value != "push")
+                        if (!pushMatch.Success || pushMatch.Groups["direction"].Value != "push")
                         {
-                            throw new Exception("Unable to parse git command output.");
+                            throw new Exception("Unable to parse git remote push URL line: " + pushLine);
                         }
 
-                        var name = fetchMatch.Groups["name"].Value;
-                        var fetchUrl = fetchMatch.Groups["url"].Value;
                         var pushUrl = pushMatch.Groups["url"].Value;
-
                         if (name != pushMatch.Groups["name"].Value)
                         {
-                            throw new Exception("Fetch and push remote names must match.");
+                            throw new Exception("Fetch and push remote names must match: " +
+                                remoteLine + ", " + pushLine);
                         }
 
-                        remotes.Add(new Remote(name, pushUrl, fetchUrl));
+                        remotes.Add(new Remote(name, remoteUrl, pushUrl));
                     }
                 }
 
