@@ -93,7 +93,7 @@ YYYY/MM/DD, github id, Full name, email
 2019/08/15, phdussud, Patrick Dussud, phdussud[at]hotmail.com
 2019/08/18, manuc66, Emmanuel Counasse, manuc66(at)gmail.com
 2019/08/25, kvanttt, Ivan Kochurkin, kvanttt(at)gmail.com
-2019/08/27, palver123, Levente Koncz, palver123@gmail.com
-2019/09/02, MelnikovIG, Igor Melnikov, zero_88@bk.ru
-2019/09/24, lekhmanrus, Ruslan Lekhman, lekhman112@gmail.com
-2019/09/27, kbilsted, Kasper B. Graversen, redbeard1945redbeard@gmail.com
+2019/08/27, palver123, Levente Koncz, palver123(at)gmail.com
+2019/09/02, MelnikovIG, Igor Melnikov, zero_88(at)bk.ru
+2019/09/24, lekhmanrus, Ruslan Lekhman, lekhman112(at)gmail.com
+2019/09/27, kbilsted, Kasper B. Graversen, redbeard1945redbeard(at)gmail.com
