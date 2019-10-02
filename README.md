@@ -207,7 +207,10 @@ For more information see our [code of conduct](CODE_OF_CONDUCT.md).
   <a href="https://github.com/gitextensions/gitextensions/contributors"><img src="https://opencollective.com/gitextensions/contributors.svg?width=890&button=false" /></a>
 * We thank JetBRAINS for [ReSharper](https://www.jetbrains.com/resharper/) licenses<br />
   <a href="https://www.jetbrains.com/?from=gitextensions" target="_blank"><img src="./GitUI/Resources/Icons/originals/jetbrains-variant-4.png"></a>
-* We thank [SignPath.io](https://signpath.io/) for the free code signing
+* We thank [SemanticMerge](https://www.semanticmerge.com) for licenses<br />
+  <a href="https://www.semanticmerge.com" target="_blank"><img src="./GitUI/Resources/Icons/originals/semanticmerge-logo.svg"></a>
+* We thank [SignPath.io](https://signpath.io/) for the free code signing<br />
+  <a href="https://signpath.io/" target="_blank"><img src="./GitUI/Resources/Icons/originals/signpath_logo.png"></a>
 * We thank [SignPath Foundation](https://signpath.org/) for the signing certificate
 * We thank [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/) for the icons ([CCA/3.0](http://creativecommons.org/licenses/by/3.0/))
 
