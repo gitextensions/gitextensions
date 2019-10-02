@@ -6,11 +6,17 @@ using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.WorktreeDialog
 {
     public partial class FormManageWorktree : GitModuleForm
     {
+        private readonly TranslationString _switchWorktreeText = new TranslationString("Are you sure you want to switch to this worktree?");
+        private readonly TranslationString _switchWorktreeTitle = new TranslationString("Open a worktree");
+        private readonly TranslationString _deleteWorktreeText = new TranslationString("Are you sure you want to delete this worktree?");
+        private readonly TranslationString _deleteWorktreeTitle = new TranslationString("Delete a worktree");
+
         private List<WorkTree> _worktrees;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
@@ -207,8 +213,8 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
             if (e.ColumnIndex == 5)
             {
-                if (MessageBox.Show(this, "Are you sure you want to switch to this worktree?", "Open a worktree",
-                    MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (AppSettings.DontConfirmSwitchWorktree || MessageBox.Show(this,
+                        _switchWorktreeText.Text, _switchWorktreeTitle.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     if (Directory.Exists(workTree.Path))
                     {
@@ -227,7 +233,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                     return;
                 }
 
-                if (MessageBox.Show(this, "Are you sure you want to delete this worktree?", "Delete a worktree",
+                if (MessageBox.Show(this, _deleteWorktreeText.Text, _deleteWorktreeTitle.Text,
                         MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     if (Directory.Exists(workTree.Path))

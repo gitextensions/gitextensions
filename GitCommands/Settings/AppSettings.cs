@@ -884,6 +884,12 @@ namespace GitCommands
             set => SetBool("DontConfirmFetchAndPruneAll", value);
         }
 
+        public static bool DontConfirmSwitchWorktree
+        {
+            get => GetBool("DontConfirmSwitchWorktree", false);
+            set => SetBool("DontConfirmSwitchWorktree", value);
+        }
+
         public static bool IncludeUntrackedFilesInAutoStash
         {
             get => GetBool("includeUntrackedFilesInAutoStash", false);

@@ -28,6 +28,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkRebaseOnTopOfSelectedCommit.Checked = AppSettings.DontConfirmRebase;
             chkUndoLastCommitConfirmation.Checked = AppSettings.DontConfirmUndoLastCommit;
             chkFetchAndPruneAllConfirmation.Checked = AppSettings.DontConfirmFetchAndPruneAll;
+            chkSwitchWorktree.Checked = AppSettings.DontConfirmSwitchWorktree;
         }
 
         protected override void PageToSettings()
@@ -46,6 +47,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.DontConfirmRebase = chkRebaseOnTopOfSelectedCommit.Checked;
             AppSettings.DontConfirmUndoLastCommit = chkUndoLastCommitConfirmation.Checked;
             AppSettings.DontConfirmFetchAndPruneAll = chkFetchAndPruneAllConfirmation.Checked;
+            AppSettings.DontConfirmSwitchWorktree = chkSwitchWorktree.Checked;
         }
 
         public static SettingsPageReference GetPageReference()

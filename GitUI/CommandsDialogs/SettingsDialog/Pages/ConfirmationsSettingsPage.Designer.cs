@@ -32,6 +32,7 @@
             this.gbConfirmations = new System.Windows.Forms.GroupBox();
             this.tlpnlConfirmations = new System.Windows.Forms.TableLayoutPanel();
             this.chkFetchAndPruneAllConfirmation = new System.Windows.Forms.CheckBox();
+            this.chkSwitchWorktree = new System.Windows.Forms.CheckBox();
             this.chkUndoLastCommitConfirmation = new System.Windows.Forms.CheckBox();
             this.chkRebaseOnTopOfSelectedCommit = new System.Windows.Forms.CheckBox();
             this.chkSecondAbortConfirmation = new System.Windows.Forms.CheckBox();
@@ -99,6 +100,7 @@
             this.tlpnlConfirmations.Controls.Add(this.chkRebaseOnTopOfSelectedCommit, 0, 11);
             this.tlpnlConfirmations.Controls.Add(this.chkUndoLastCommitConfirmation, 0, 12);
             this.tlpnlConfirmations.Controls.Add(this.chkFetchAndPruneAllConfirmation, 0, 13);
+            this.tlpnlConfirmations.Controls.Add(this.chkSwitchWorktree, 0, 14);
             this.tlpnlConfirmations.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpnlConfirmations.Location = new System.Drawing.Point(5, 19);
             this.tlpnlConfirmations.Name = "tlpnlConfirmations";
@@ -119,6 +121,16 @@
             this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlConfirmations.Size = new System.Drawing.Size(483, 325);
             this.tlpnlConfirmations.TabIndex = 1;
+            // 
+            // chkSwitchWorktree
+            // 
+            this.chkSwitchWorktree.AutoSize = true;
+            this.chkSwitchWorktree.Location = new System.Drawing.Point(3, 278);
+            this.chkSwitchWorktree.Name = "chkSwitchWorktree";
+            this.chkSwitchWorktree.Size = new System.Drawing.Size(121, 19);
+            this.chkSwitchWorktree.TabIndex = 15;
+            this.chkSwitchWorktree.Text = "Switch Worktree";
+            this.chkSwitchWorktree.UseVisualStyleBackColor = true;
             // 
             // chkFetchAndPruneAllConfirmation
             // 
@@ -307,5 +319,6 @@
         private System.Windows.Forms.CheckBox chkRebaseOnTopOfSelectedCommit;
         private System.Windows.Forms.CheckBox chkUndoLastCommitConfirmation;
         private System.Windows.Forms.CheckBox chkFetchAndPruneAllConfirmation;
+        private System.Windows.Forms.CheckBox chkSwitchWorktree;
     }
 }
