@@ -205,7 +205,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
         }
 
-        public FormCommit([NotNull] GitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision editedCommit = null)
+        public FormCommit([NotNull] GitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision editedCommit = null, string commitMessage = null)
             : base(commands)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
@@ -216,7 +216,7 @@ namespace GitUI.CommandsDialogs
 
             splitRight.Panel2MinSize = DpiUtil.Scale(100);
 
-            _commitMessageManager = new CommitMessageManager(Module.WorkingDirGitDir, Module.CommitEncoding);
+            _commitMessageManager = new CommitMessageManager(Module.WorkingDirGitDir, Module.CommitEncoding, commitMessage);
 
             Message.TextChanged += Message_TextChanged;
             Message.TextAssigned += Message_TextAssigned;
