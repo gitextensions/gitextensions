@@ -37,10 +37,12 @@ namespace GitCommands
         private readonly string _amendSaveStatePath;
         private readonly string _commitMessagePath;
         private readonly string _mergeMessagePath;
-        [CanBeNull]
-        private string _overriddenCommitMessage;
+
         private Encoding _commitEncoding;
         private IFileSystem _fileSystem;
+
+        [CanBeNull]
+        private string _overriddenCommitMessage;
 
         public CommitMessageManager(string workingDirGitDir, Encoding commitEncoding, string overriddenCommitMessage = null)
             : this(workingDirGitDir, commitEncoding, new FileSystem(), overriddenCommitMessage)
