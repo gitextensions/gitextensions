@@ -3352,9 +3352,38 @@ namespace GitUI.CommandsDialogs
 
             try
             {
-                var allLines = File.ReadAllLines(filePath);
+                var allLines = new List<string>();
 
-                File.WriteAllText(filePath, string.Join(eol, allLines));
+                using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var reader = new StreamReader(stream, Module.FilesEncoding))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        allLines.Add(line);
+                    }
+
+                    var filePreamble = reader.CurrentEncoding.GetPreamble();
+
+                    if (filePreamble is null || Module.FilesEncoding.GetPreamble().SequenceEqual(filePreamble))
+                    {
+                        File.WriteAllText(filePath, string.Join(eol, allLines), Module.FilesEncoding);
+                    }
+                    else
+                    {
+                        using (var bytes = new MemoryStream())
+                        {
+                            bytes.Write(filePreamble, 0, filePreamble.Length);
+                            using (var writer = new StreamWriter(bytes, Module.FilesEncoding))
+                            {
+                                writer.Write(string.Join(eol, allLines));
+                            }
+
+                            File.WriteAllBytes(filePath, bytes.ToArray());
+                        }
+                    }
+                }
+
                 ShowChanges(Unstaged.SelectedItem, false);
             }
             catch (Exception)
