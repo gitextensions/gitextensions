@@ -36,6 +36,9 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormCommit : GitModuleForm
     {
+        private const string fixupPrefix = "fixup!";
+        private const string squashPrefix = "squash!";
+
         #region Translation
 
         private readonly TranslationString _error = new TranslationString("Error");
@@ -446,10 +449,10 @@ namespace GitUI.CommandsDialogs
             switch (CommitKind)
             {
                 case CommitKind.Fixup:
-                    message = TryAddPrefix("fixup!", _editedCommit.Subject);
+                    message = TryAddPrefix(fixupPrefix, _editedCommit.Subject);
                     break;
                 case CommitKind.Squash:
-                    message = TryAddPrefix("squash!", _editedCommit.Subject);
+                    message = TryAddPrefix(squashPrefix, _editedCommit.Subject);
                     break;
                 default:
                     message = _commitMessageManager.MergeOrCommitMessage;
@@ -1482,7 +1485,9 @@ namespace GitUI.CommandsDialogs
                     {
                         try
                         {
-                            if (!Regex.IsMatch(Message.Text, AppSettings.CommitValidationRegEx) &&
+                            if (!Message.Text.StartsWith(fixupPrefix) &&
+                                !Message.Text.StartsWith(squashPrefix) &&
+                                !Regex.IsMatch(Message.Text, AppSettings.CommitValidationRegEx) &&
                                 MessageBox.Show(this, _commitMsgRegExNotMatched.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                             {
                                 return false;
