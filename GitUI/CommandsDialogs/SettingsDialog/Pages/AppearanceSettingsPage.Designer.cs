@@ -33,6 +33,7 @@
             this.tlpnlGeneral = new System.Windows.Forms.TableLayoutPanel();
             this.chkSortByAuthorDate = new System.Windows.Forms.CheckBox();
             this.chkShowRelativeDate = new System.Windows.Forms.CheckBox();
+            this.chkShowCompletePathInTitle = new System.Windows.Forms.CheckBox();
             this.truncatePathMethod = new System.Windows.Forms.ComboBox();
             this.truncateLongFilenames = new System.Windows.Forms.Label();
             this.chkEnableAutoScale = new System.Windows.Forms.CheckBox();
@@ -113,16 +114,17 @@
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpnlGeneral.Controls.Add(this.chkShowCompletePathInTitle, 0, 0);
+            this.tlpnlGeneral.Controls.Add(this.chkShowRelativeDate, 0, 1);
+            this.tlpnlGeneral.Controls.Add(this.chkShowCurrentBranchInVisualStudio, 0, 2);
+            this.tlpnlGeneral.Controls.Add(this.chkEnableAutoScale, 0, 3);
             this.tlpnlGeneral.Controls.Add(this.chkSortByAuthorDate, 0, 4);
-            this.tlpnlGeneral.Controls.Add(this.chkShowRelativeDate, 0, 0);
-            this.tlpnlGeneral.Controls.Add(this.truncatePathMethod, 1, 3);
-            this.tlpnlGeneral.Controls.Add(this.truncateLongFilenames, 0, 3);
-            this.tlpnlGeneral.Controls.Add(this.chkEnableAutoScale, 0, 2);
-            this.tlpnlGeneral.Controls.Add(this.chkShowCurrentBranchInVisualStudio, 0, 1);
+            this.tlpnlGeneral.Controls.Add(this.truncateLongFilenames, 0, 5);
+            this.tlpnlGeneral.Controls.Add(this.truncatePathMethod, 1, 5);
             this.tlpnlGeneral.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpnlGeneral.Location = new System.Drawing.Point(8, 21);
             this.tlpnlGeneral.Name = "tlpnlGeneral";
-            this.tlpnlGeneral.RowCount = 5;
+            this.tlpnlGeneral.RowCount = 6;
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -131,26 +133,73 @@
             this.tlpnlGeneral.Size = new System.Drawing.Size(1035, 119);
             this.tlpnlGeneral.TabIndex = 0;
             // 
-            // chkSortByAuthorDate
+            // chkShowCompletePathInTitle
             // 
-            this.chkSortByAuthorDate.AutoSize = true;
-            this.chkSortByAuthorDate.Location = new System.Drawing.Point(3, 99);
-            this.chkSortByAuthorDate.Name = "chkSortByAuthorDate";
-            this.chkSortByAuthorDate.Size = new System.Drawing.Size(116, 17);
-            this.chkSortByAuthorDate.TabIndex = 12;
-            this.chkSortByAuthorDate.Text = "Sort by author date";
+            this.chkShowCompletePathInTitle.AutoSize = true;
+            this.tlpnlGeneral.SetColumnSpan(this.chkShowCompletePathInTitle, 2);
+            this.chkShowCompletePathInTitle.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chkShowCompletePathInTitle.Location = new System.Drawing.Point(3, 3);
+            this.chkShowCompletePathInTitle.Name = "chkShowCompletePathInTitle";
+            this.chkShowCompletePathInTitle.Size = new System.Drawing.Size(314, 17);
+            this.chkShowCompletePathInTitle.TabIndex = 0;
+            this.chkShowCompletePathInTitle.Text = "Show complete path in the titlebar";
+            this.chkShowCompletePathInTitle.UseVisualStyleBackColor = true;
             // 
             // chkShowRelativeDate
             // 
             this.chkShowRelativeDate.AutoSize = true;
             this.tlpnlGeneral.SetColumnSpan(this.chkShowRelativeDate, 2);
             this.chkShowRelativeDate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkShowRelativeDate.Location = new System.Drawing.Point(3, 3);
+            this.chkShowRelativeDate.Location = new System.Drawing.Point(3, 26);
             this.chkShowRelativeDate.Name = "chkShowRelativeDate";
             this.chkShowRelativeDate.Size = new System.Drawing.Size(314, 17);
-            this.chkShowRelativeDate.TabIndex = 0;
+            this.chkShowRelativeDate.TabIndex = 1;
             this.chkShowRelativeDate.Text = "Show relative date instead of full date";
             this.chkShowRelativeDate.UseVisualStyleBackColor = true;
+            // 
+            // chkShowCurrentBranchInVisualStudio
+            // 
+            this.chkShowCurrentBranchInVisualStudio.AutoSize = true;
+            this.tlpnlGeneral.SetColumnSpan(this.chkShowCurrentBranchInVisualStudio, 2);
+            this.chkShowCurrentBranchInVisualStudio.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chkShowCurrentBranchInVisualStudio.Location = new System.Drawing.Point(3, 49);
+            this.chkShowCurrentBranchInVisualStudio.Name = "chkShowCurrentBranchInVisualStudio";
+            this.chkShowCurrentBranchInVisualStudio.Size = new System.Drawing.Size(314, 17);
+            this.chkShowCurrentBranchInVisualStudio.TabIndex = 2;
+            this.chkShowCurrentBranchInVisualStudio.Text = "Show current branch in Visual Studio";
+            this.chkShowCurrentBranchInVisualStudio.UseVisualStyleBackColor = true;
+            // 
+            // chkEnableAutoScale
+            // 
+            this.chkEnableAutoScale.AutoSize = true;
+            this.tlpnlGeneral.SetColumnSpan(this.chkEnableAutoScale, 2);
+            this.chkEnableAutoScale.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chkEnableAutoScale.Location = new System.Drawing.Point(3, 69);
+            this.chkEnableAutoScale.Name = "chkEnableAutoScale";
+            this.chkEnableAutoScale.Size = new System.Drawing.Size(314, 17);
+            this.chkEnableAutoScale.TabIndex = 3;
+            this.chkEnableAutoScale.Text = "Auto scale user interface when high DPI is used";
+            this.chkEnableAutoScale.UseVisualStyleBackColor = true;
+            // 
+            // chkSortByAuthorDate
+            // 
+            this.chkSortByAuthorDate.AutoSize = true;
+            this.chkSortByAuthorDate.Location = new System.Drawing.Point(3, 89);
+            this.chkSortByAuthorDate.Name = "chkSortByAuthorDate";
+            this.chkSortByAuthorDate.Size = new System.Drawing.Size(116, 17);
+            this.chkSortByAuthorDate.TabIndex = 4;
+            this.chkSortByAuthorDate.Text = "Sort by author date";
+            // 
+            // truncateLongFilenames
+            // 
+            this.truncateLongFilenames.AutoSize = true;
+            this.truncateLongFilenames.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.truncateLongFilenames.Location = new System.Drawing.Point(3, 109);
+            this.truncateLongFilenames.Name = "truncateLongFilenames";
+            this.truncateLongFilenames.Size = new System.Drawing.Size(120, 27);
+            this.truncateLongFilenames.TabIndex = 5;
+            this.truncateLongFilenames.Text = "Truncate long filenames";
+            this.truncateLongFilenames.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // truncatePathMethod
             // 
@@ -166,41 +215,6 @@
             this.truncatePathMethod.Name = "truncatePathMethod";
             this.truncatePathMethod.Size = new System.Drawing.Size(188, 21);
             this.truncatePathMethod.TabIndex = 4;
-            // 
-            // truncateLongFilenames
-            // 
-            this.truncateLongFilenames.AutoSize = true;
-            this.truncateLongFilenames.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.truncateLongFilenames.Location = new System.Drawing.Point(3, 69);
-            this.truncateLongFilenames.Name = "truncateLongFilenames";
-            this.truncateLongFilenames.Size = new System.Drawing.Size(120, 27);
-            this.truncateLongFilenames.TabIndex = 3;
-            this.truncateLongFilenames.Text = "Truncate long filenames";
-            this.truncateLongFilenames.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // chkEnableAutoScale
-            // 
-            this.chkEnableAutoScale.AutoSize = true;
-            this.tlpnlGeneral.SetColumnSpan(this.chkEnableAutoScale, 2);
-            this.chkEnableAutoScale.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkEnableAutoScale.Location = new System.Drawing.Point(3, 49);
-            this.chkEnableAutoScale.Name = "chkEnableAutoScale";
-            this.chkEnableAutoScale.Size = new System.Drawing.Size(314, 17);
-            this.chkEnableAutoScale.TabIndex = 2;
-            this.chkEnableAutoScale.Text = "Auto scale user interface when high DPI is used";
-            this.chkEnableAutoScale.UseVisualStyleBackColor = true;
-            // 
-            // chkShowCurrentBranchInVisualStudio
-            // 
-            this.chkShowCurrentBranchInVisualStudio.AutoSize = true;
-            this.tlpnlGeneral.SetColumnSpan(this.chkShowCurrentBranchInVisualStudio, 2);
-            this.chkShowCurrentBranchInVisualStudio.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkShowCurrentBranchInVisualStudio.Location = new System.Drawing.Point(3, 26);
-            this.chkShowCurrentBranchInVisualStudio.Name = "chkShowCurrentBranchInVisualStudio";
-            this.chkShowCurrentBranchInVisualStudio.Size = new System.Drawing.Size(314, 17);
-            this.chkShowCurrentBranchInVisualStudio.TabIndex = 1;
-            this.chkShowCurrentBranchInVisualStudio.Text = "Show current branch in Visual Studio";
-            this.chkShowCurrentBranchInVisualStudio.UseVisualStyleBackColor = true;
             // 
             // gbLanguages
             // 
@@ -528,6 +542,7 @@
         private System.Windows.Forms.ComboBox Language;
         private System.Windows.Forms.LinkLabel helpTranslate;
         private System.Windows.Forms.GroupBox gbGeneral;
+        private System.Windows.Forms.CheckBox chkShowCompletePathInTitle;
         private System.Windows.Forms.CheckBox chkShowRelativeDate;
         private System.Windows.Forms.CheckBox chkShowCurrentBranchInVisualStudio;
         private System.Windows.Forms.CheckBox chkEnableAutoScale;

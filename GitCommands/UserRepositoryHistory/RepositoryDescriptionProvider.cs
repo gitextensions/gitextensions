@@ -50,6 +50,11 @@ namespace GitCommands.UserRepositoryHistory
                 return desc;
             }
 
+            if (AppSettings.ShowCompletePathInTitle)
+            {
+                return dirInfo.FullName;
+            }
+
             return dirInfo.Name;
         }
 

@@ -152,6 +152,10 @@ See http://en.gravatar.com/site/implement/images#default-image for more details.
         <source>Auto scale user interface when high DPI is used</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkShowCompletePathInTitle.Text">
+        <source>Show complete path in the titlebar</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkShowCurrentBranchInVisualStudio.Text">
         <source>Show current branch in Visual Studio</source>
         <target />

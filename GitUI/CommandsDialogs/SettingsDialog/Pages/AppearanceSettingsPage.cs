@@ -68,6 +68,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkEnableAutoScale.Checked = AppSettings.EnableAutoScale;
 
             chkShowCurrentBranchInVisualStudio.Checked = AppSettings.ShowCurrentBranchInVisualStudio;
+            chkShowCompletePathInTitle.Checked = AppSettings.ShowCompletePathInTitle;
             _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AvatarImageCacheDays;
             ShowAuthorAvatarInCommitInfo.Checked = AppSettings.ShowAuthorAvatarInCommitInfo;
             ShowAuthorAvatarInCommitGraph.Checked = AppSettings.ShowAuthorAvatarColumn;
@@ -126,6 +127,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void PageToSettings()
         {
             AppSettings.EnableAutoScale = chkEnableAutoScale.Checked;
+            AppSettings.ShowCompletePathInTitle = chkShowCompletePathInTitle.Checked;
             AppSettings.TruncatePathMethod = GetTruncatePathMethodString(truncatePathMethod.SelectedIndex);
             AppSettings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
             AppSettings.ShowAuthorAvatarColumn = ShowAuthorAvatarInCommitGraph.Checked;

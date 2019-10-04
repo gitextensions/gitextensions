@@ -278,6 +278,12 @@ namespace GitCommands
             set => WriteBoolRegKey("ShowCurrentBranchInVS", value);
         }
 
+        public static bool ShowCompletePathInTitle
+        {
+            get => ReadBoolRegKey("ShowCompletePathInTitle", false);
+            set => WriteBoolRegKey("ShowCompletePathInTitle", value);
+        }
+
         [NotNull]
         public static string GitCommandValue
         {
