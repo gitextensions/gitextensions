@@ -44,7 +44,7 @@ namespace GitUIPluginInterfaces
         {
             get
             {
-                if (_control == null)
+                if (_control == null || _control.IsDisposed)
                 {
                     _control = CreateControl();
                 }
