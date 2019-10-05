@@ -132,7 +132,7 @@ checkoutrevision
 cherry
 cleanup
 clone [path]
-commit [--quiet]
+commit [--quiet] [--message commitmessage]
 difftool filename
 filehistory filename
 fileeditor filename

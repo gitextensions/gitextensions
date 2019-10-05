@@ -464,7 +464,7 @@ namespace GitUI
             return DoActionOnRepo(Action);
         }
 
-        public bool StartCommitDialog(IWin32Window owner, bool showOnlyWhenChanges = false)
+        public bool StartCommitDialog(IWin32Window owner, string commitMessage = null, bool showOnlyWhenChanges = false)
         {
             if (Module.IsBareRepository())
             {
@@ -493,7 +493,7 @@ namespace GitUI
                         });
                     }
 
-                    using (var form = new FormCommit(this))
+                    using (var form = new FormCommit(this, commitMessage: commitMessage))
                     {
                         if (showOnlyWhenChanges)
                         {
@@ -1791,7 +1791,9 @@ namespace GitUI
 
         private void Commit(IReadOnlyDictionary<string, string> arguments)
         {
-            StartCommitDialog(null, arguments.ContainsKey("quiet"));
+            arguments.TryGetValue("message", out string overridingMessage);
+            var showOnlyWhenChanges = arguments.ContainsKey("quiet");
+            StartCommitDialog(null, overridingMessage, showOnlyWhenChanges);
         }
 
         private void Push(IReadOnlyDictionary<string, string> arguments)
