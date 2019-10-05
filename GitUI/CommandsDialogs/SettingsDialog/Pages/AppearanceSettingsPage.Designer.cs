@@ -113,12 +113,12 @@
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpnlGeneral.Controls.Add(this.chkSortByAuthorDate, 0, 4);
             this.tlpnlGeneral.Controls.Add(this.chkShowRelativeDate, 0, 0);
-            this.tlpnlGeneral.Controls.Add(this.truncatePathMethod, 1, 3);
-            this.tlpnlGeneral.Controls.Add(this.truncateLongFilenames, 0, 3);
-            this.tlpnlGeneral.Controls.Add(this.chkEnableAutoScale, 0, 2);
             this.tlpnlGeneral.Controls.Add(this.chkShowCurrentBranchInVisualStudio, 0, 1);
+            this.tlpnlGeneral.Controls.Add(this.chkEnableAutoScale, 0, 2);
+            this.tlpnlGeneral.Controls.Add(this.chkSortByAuthorDate, 0, 3);
+            this.tlpnlGeneral.Controls.Add(this.truncateLongFilenames, 0, 4);
+            this.tlpnlGeneral.Controls.Add(this.truncatePathMethod, 1, 4);
             this.tlpnlGeneral.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpnlGeneral.Location = new System.Drawing.Point(8, 21);
             this.tlpnlGeneral.Name = "tlpnlGeneral";
@@ -131,15 +131,6 @@
             this.tlpnlGeneral.Size = new System.Drawing.Size(1035, 119);
             this.tlpnlGeneral.TabIndex = 0;
             // 
-            // chkSortByAuthorDate
-            // 
-            this.chkSortByAuthorDate.AutoSize = true;
-            this.chkSortByAuthorDate.Location = new System.Drawing.Point(3, 99);
-            this.chkSortByAuthorDate.Name = "chkSortByAuthorDate";
-            this.chkSortByAuthorDate.Size = new System.Drawing.Size(116, 17);
-            this.chkSortByAuthorDate.TabIndex = 12;
-            this.chkSortByAuthorDate.Text = "Sort by author date";
-            // 
             // chkShowRelativeDate
             // 
             this.chkShowRelativeDate.AutoSize = true;
@@ -151,6 +142,50 @@
             this.chkShowRelativeDate.TabIndex = 0;
             this.chkShowRelativeDate.Text = "Show relative date instead of full date";
             this.chkShowRelativeDate.UseVisualStyleBackColor = true;
+            // 
+            // chkShowCurrentBranchInVisualStudio
+            // 
+            this.chkShowCurrentBranchInVisualStudio.AutoSize = true;
+            this.tlpnlGeneral.SetColumnSpan(this.chkShowCurrentBranchInVisualStudio, 2);
+            this.chkShowCurrentBranchInVisualStudio.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chkShowCurrentBranchInVisualStudio.Location = new System.Drawing.Point(3, 49);
+            this.chkShowCurrentBranchInVisualStudio.Name = "chkShowCurrentBranchInVisualStudio";
+            this.chkShowCurrentBranchInVisualStudio.Size = new System.Drawing.Size(314, 17);
+            this.chkShowCurrentBranchInVisualStudio.TabIndex = 1;
+            this.chkShowCurrentBranchInVisualStudio.Text = "Show current branch in Visual Studio";
+            this.chkShowCurrentBranchInVisualStudio.UseVisualStyleBackColor = true;
+            // 
+            // chkEnableAutoScale
+            // 
+            this.chkEnableAutoScale.AutoSize = true;
+            this.tlpnlGeneral.SetColumnSpan(this.chkEnableAutoScale, 2);
+            this.chkEnableAutoScale.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chkEnableAutoScale.Location = new System.Drawing.Point(3, 69);
+            this.chkEnableAutoScale.Name = "chkEnableAutoScale";
+            this.chkEnableAutoScale.Size = new System.Drawing.Size(314, 17);
+            this.chkEnableAutoScale.TabIndex = 2;
+            this.chkEnableAutoScale.Text = "Auto scale user interface when high DPI is used";
+            this.chkEnableAutoScale.UseVisualStyleBackColor = true;
+            // 
+            // chkSortByAuthorDate
+            // 
+            this.chkSortByAuthorDate.AutoSize = true;
+            this.chkSortByAuthorDate.Location = new System.Drawing.Point(3, 89);
+            this.chkSortByAuthorDate.Name = "chkSortByAuthorDate";
+            this.chkSortByAuthorDate.Size = new System.Drawing.Size(116, 17);
+            this.chkSortByAuthorDate.TabIndex = 3;
+            this.chkSortByAuthorDate.Text = "Sort by author date";
+            // 
+            // truncateLongFilenames
+            // 
+            this.truncateLongFilenames.AutoSize = true;
+            this.truncateLongFilenames.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.truncateLongFilenames.Location = new System.Drawing.Point(3, 109);
+            this.truncateLongFilenames.Name = "truncateLongFilenames";
+            this.truncateLongFilenames.Size = new System.Drawing.Size(120, 27);
+            this.truncateLongFilenames.TabIndex = 4;
+            this.truncateLongFilenames.Text = "Truncate long filenames";
+            this.truncateLongFilenames.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // truncatePathMethod
             // 
@@ -167,40 +202,109 @@
             this.truncatePathMethod.Size = new System.Drawing.Size(188, 21);
             this.truncatePathMethod.TabIndex = 4;
             // 
-            // truncateLongFilenames
+            // gbAuthorImages
             // 
-            this.truncateLongFilenames.AutoSize = true;
-            this.truncateLongFilenames.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.truncateLongFilenames.Location = new System.Drawing.Point(3, 69);
-            this.truncateLongFilenames.Name = "truncateLongFilenames";
-            this.truncateLongFilenames.Size = new System.Drawing.Size(120, 27);
-            this.truncateLongFilenames.TabIndex = 3;
-            this.truncateLongFilenames.Text = "Truncate long filenames";
-            this.truncateLongFilenames.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.gbAuthorImages.AutoSize = true;
+            this.gbAuthorImages.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gbAuthorImages.Controls.Add(this.tlpnlAuthor);
+            this.gbAuthorImages.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gbAuthorImages.Location = new System.Drawing.Point(3, 134);
+            this.gbAuthorImages.Name = "gbAuthorImages";
+            this.gbAuthorImages.Padding = new System.Windows.Forms.Padding(8);
+            this.gbAuthorImages.Size = new System.Drawing.Size(1536, 184);
+            this.gbAuthorImages.TabIndex = 1;
+            this.gbAuthorImages.TabStop = false;
+            this.gbAuthorImages.Text = "Author images";
             // 
-            // chkEnableAutoScale
+            // tlpnlAuthor
             // 
-            this.chkEnableAutoScale.AutoSize = true;
-            this.tlpnlGeneral.SetColumnSpan(this.chkEnableAutoScale, 2);
-            this.chkEnableAutoScale.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkEnableAutoScale.Location = new System.Drawing.Point(3, 49);
-            this.chkEnableAutoScale.Name = "chkEnableAutoScale";
-            this.chkEnableAutoScale.Size = new System.Drawing.Size(314, 17);
-            this.chkEnableAutoScale.TabIndex = 2;
-            this.chkEnableAutoScale.Text = "Auto scale user interface when high DPI is used";
-            this.chkEnableAutoScale.UseVisualStyleBackColor = true;
+            this.tlpnlAuthor.AutoSize = true;
+            this.tlpnlAuthor.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tlpnlAuthor.ColumnCount = 3;
+            this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpnlAuthor.Controls.Add(this.lblAvatarProvider, 0, 3);
+            this.tlpnlAuthor.Controls.Add(this.AvatarProvider, 1, 3);
+            this.tlpnlAuthor.Controls.Add(this.ShowAuthorAvatarInCommitGraph, 0, 0);
+            this.tlpnlAuthor.Controls.Add(this.ShowAuthorAvatarInCommitInfo, 0, 1);
+            this.tlpnlAuthor.Controls.Add(this.ClearImageCache, 1, 5);
+            this.tlpnlAuthor.Controls.Add(this._NO_TRANSLATE_NoImageService, 1, 4);
+            this.tlpnlAuthor.Controls.Add(this.lblCacheDays, 0, 2);
+            this.tlpnlAuthor.Controls.Add(this.lblNoImageService, 0, 4);
+            this.tlpnlAuthor.Controls.Add(this._NO_TRANSLATE_DaysToCacheImages, 1, 2);
+            this.tlpnlAuthor.Controls.Add(this.pictureAvatarHelp, 2, 4);
+            this.tlpnlAuthor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpnlAuthor.Location = new System.Drawing.Point(8, 21);
+            this.tlpnlAuthor.Name = "tlpnlAuthor";
+            this.tlpnlAuthor.RowCount = 6;
+            this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlAuthor.Size = new System.Drawing.Size(1520, 155);
+            this.tlpnlAuthor.TabIndex = 0;
             // 
-            // chkShowCurrentBranchInVisualStudio
+            // lblAvatarProvider
             // 
-            this.chkShowCurrentBranchInVisualStudio.AutoSize = true;
-            this.tlpnlGeneral.SetColumnSpan(this.chkShowCurrentBranchInVisualStudio, 2);
-            this.chkShowCurrentBranchInVisualStudio.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkShowCurrentBranchInVisualStudio.Location = new System.Drawing.Point(3, 26);
-            this.chkShowCurrentBranchInVisualStudio.Name = "chkShowCurrentBranchInVisualStudio";
-            this.chkShowCurrentBranchInVisualStudio.Size = new System.Drawing.Size(314, 17);
-            this.chkShowCurrentBranchInVisualStudio.TabIndex = 1;
-            this.chkShowCurrentBranchInVisualStudio.Text = "Show current branch in Visual Studio";
-            this.chkShowCurrentBranchInVisualStudio.UseVisualStyleBackColor = true;
+            this.lblAvatarProvider.AutoSize = true;
+            this.lblAvatarProvider.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblAvatarProvider.Location = new System.Drawing.Point(3, 72);
+            this.lblAvatarProvider.Name = "lblAvatarProvider";
+            this.lblAvatarProvider.Size = new System.Drawing.Size(155, 27);
+            this.lblAvatarProvider.TabIndex = 11;
+            this.lblAvatarProvider.Text = "Avatar provider";
+            this.lblAvatarProvider.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // AvatarProvider
+            // 
+            this.AvatarProvider.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AvatarProvider.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.AvatarProvider.FormattingEnabled = true;
+            this.AvatarProvider.Location = new System.Drawing.Point(164, 75);
+            this.AvatarProvider.Name = "AvatarProvider";
+            this.AvatarProvider.Size = new System.Drawing.Size(183, 21);
+            this.AvatarProvider.TabIndex = 10;
+            this.AvatarProvider.SelectedIndexChanged += new System.EventHandler(this.AvatarProvider_SelectedIndexChanged);
+            // 
+            // ShowAuthorAvatarInCommitGraph
+            // 
+            this.ShowAuthorAvatarInCommitGraph.AutoSize = true;
+            this.tlpnlAuthor.SetColumnSpan(this.ShowAuthorAvatarInCommitGraph, 2);
+            this.ShowAuthorAvatarInCommitGraph.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ShowAuthorAvatarInCommitGraph.Location = new System.Drawing.Point(3, 3);
+            this.ShowAuthorAvatarInCommitGraph.Name = "ShowAuthorAvatarInCommitGraph";
+            this.ShowAuthorAvatarInCommitGraph.Size = new System.Drawing.Size(344, 17);
+            this.ShowAuthorAvatarInCommitGraph.TabIndex = 0;
+            this.ShowAuthorAvatarInCommitGraph.Text = "Show author\'s avatar column in the commit graph";
+            this.ShowAuthorAvatarInCommitGraph.UseVisualStyleBackColor = true;
+            // 
+            // ShowAuthorAvatarInCommitInfo
+            // 
+            this.ShowAuthorAvatarInCommitInfo.AutoSize = true;
+            this.tlpnlAuthor.SetColumnSpan(this.ShowAuthorAvatarInCommitInfo, 2);
+            this.ShowAuthorAvatarInCommitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ShowAuthorAvatarInCommitInfo.Location = new System.Drawing.Point(3, 26);
+            this.ShowAuthorAvatarInCommitInfo.Name = "ShowAuthorAvatarInCommitInfo";
+            this.ShowAuthorAvatarInCommitInfo.Size = new System.Drawing.Size(344, 17);
+            this.ShowAuthorAvatarInCommitInfo.TabIndex = 1;
+            this.ShowAuthorAvatarInCommitInfo.Text = "Show author\'s avatar in the commit info view";
+            this.ShowAuthorAvatarInCommitInfo.UseVisualStyleBackColor = true;
+            // 
+            // ClearImageCache
+            // 
+            this.ClearImageCache.AutoSize = true;
+            this.ClearImageCache.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ClearImageCache.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ClearImageCache.Location = new System.Drawing.Point(164, 129);
+            this.ClearImageCache.Name = "ClearImageCache";
+            this.ClearImageCache.Size = new System.Drawing.Size(183, 23);
+            this.ClearImageCache.TabIndex = 6;
+            this.ClearImageCache.Text = "Clear image cache";
+            this.ClearImageCache.UseVisualStyleBackColor = true;
+            this.ClearImageCache.Click += new System.EventHandler(this.ClearImageCache_Click);
             // 
             // gbLanguages
             // 
@@ -310,110 +414,6 @@
             this.helpTranslate.Text = "Help translate";
             this.helpTranslate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.helpTranslate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.helpTranslate_LinkClicked);
-            // 
-            // gbAuthorImages
-            // 
-            this.gbAuthorImages.AutoSize = true;
-            this.gbAuthorImages.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.gbAuthorImages.Controls.Add(this.tlpnlAuthor);
-            this.gbAuthorImages.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbAuthorImages.Location = new System.Drawing.Point(3, 134);
-            this.gbAuthorImages.Name = "gbAuthorImages";
-            this.gbAuthorImages.Padding = new System.Windows.Forms.Padding(8);
-            this.gbAuthorImages.Size = new System.Drawing.Size(1536, 184);
-            this.gbAuthorImages.TabIndex = 1;
-            this.gbAuthorImages.TabStop = false;
-            this.gbAuthorImages.Text = "Author images";
-            // 
-            // tlpnlAuthor
-            // 
-            this.tlpnlAuthor.AutoSize = true;
-            this.tlpnlAuthor.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpnlAuthor.ColumnCount = 3;
-            this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpnlAuthor.Controls.Add(this.lblAvatarProvider, 0, 3);
-            this.tlpnlAuthor.Controls.Add(this.AvatarProvider, 1, 3);
-            this.tlpnlAuthor.Controls.Add(this.ShowAuthorAvatarInCommitGraph, 0, 0);
-            this.tlpnlAuthor.Controls.Add(this.ShowAuthorAvatarInCommitInfo, 0, 1);
-            this.tlpnlAuthor.Controls.Add(this.ClearImageCache, 1, 5);
-            this.tlpnlAuthor.Controls.Add(this._NO_TRANSLATE_NoImageService, 1, 4);
-            this.tlpnlAuthor.Controls.Add(this.lblCacheDays, 0, 2);
-            this.tlpnlAuthor.Controls.Add(this.lblNoImageService, 0, 4);
-            this.tlpnlAuthor.Controls.Add(this._NO_TRANSLATE_DaysToCacheImages, 1, 2);
-            this.tlpnlAuthor.Controls.Add(this.pictureAvatarHelp, 2, 4);
-            this.tlpnlAuthor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpnlAuthor.Location = new System.Drawing.Point(8, 21);
-            this.tlpnlAuthor.Name = "tlpnlAuthor";
-            this.tlpnlAuthor.RowCount = 6;
-            this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlAuthor.Size = new System.Drawing.Size(1520, 155);
-            this.tlpnlAuthor.TabIndex = 0;
-            // 
-            // lblAvatarProvider
-            // 
-            this.lblAvatarProvider.AutoSize = true;
-            this.lblAvatarProvider.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblAvatarProvider.Location = new System.Drawing.Point(3, 72);
-            this.lblAvatarProvider.Name = "lblAvatarProvider";
-            this.lblAvatarProvider.Size = new System.Drawing.Size(155, 27);
-            this.lblAvatarProvider.TabIndex = 11;
-            this.lblAvatarProvider.Text = "Avatar provider";
-            this.lblAvatarProvider.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // AvatarProvider
-            // 
-            this.AvatarProvider.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.AvatarProvider.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.AvatarProvider.FormattingEnabled = true;
-            this.AvatarProvider.Location = new System.Drawing.Point(164, 75);
-            this.AvatarProvider.Name = "AvatarProvider";
-            this.AvatarProvider.Size = new System.Drawing.Size(183, 21);
-            this.AvatarProvider.TabIndex = 10;
-            this.AvatarProvider.SelectedIndexChanged += new System.EventHandler(this.AvatarProvider_SelectedIndexChanged);
-            // 
-            // ShowAuthorAvatarInCommitGraph
-            // 
-            this.ShowAuthorAvatarInCommitGraph.AutoSize = true;
-            this.tlpnlAuthor.SetColumnSpan(this.ShowAuthorAvatarInCommitGraph, 2);
-            this.ShowAuthorAvatarInCommitGraph.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ShowAuthorAvatarInCommitGraph.Location = new System.Drawing.Point(3, 3);
-            this.ShowAuthorAvatarInCommitGraph.Name = "ShowAuthorAvatarInCommitGraph";
-            this.ShowAuthorAvatarInCommitGraph.Size = new System.Drawing.Size(344, 17);
-            this.ShowAuthorAvatarInCommitGraph.TabIndex = 0;
-            this.ShowAuthorAvatarInCommitGraph.Text = "Show author\'s avatar column in the commit graph";
-            this.ShowAuthorAvatarInCommitGraph.UseVisualStyleBackColor = true;
-            // 
-            // ShowAuthorAvatarInCommitInfo
-            // 
-            this.ShowAuthorAvatarInCommitInfo.AutoSize = true;
-            this.tlpnlAuthor.SetColumnSpan(this.ShowAuthorAvatarInCommitInfo, 2);
-            this.ShowAuthorAvatarInCommitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ShowAuthorAvatarInCommitInfo.Location = new System.Drawing.Point(3, 26);
-            this.ShowAuthorAvatarInCommitInfo.Name = "ShowAuthorAvatarInCommitInfo";
-            this.ShowAuthorAvatarInCommitInfo.Size = new System.Drawing.Size(344, 17);
-            this.ShowAuthorAvatarInCommitInfo.TabIndex = 1;
-            this.ShowAuthorAvatarInCommitInfo.Text = "Show author\'s avatar in the commit info view";
-            this.ShowAuthorAvatarInCommitInfo.UseVisualStyleBackColor = true;
-            // 
-            // ClearImageCache
-            // 
-            this.ClearImageCache.AutoSize = true;
-            this.ClearImageCache.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClearImageCache.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ClearImageCache.Location = new System.Drawing.Point(164, 129);
-            this.ClearImageCache.Name = "ClearImageCache";
-            this.ClearImageCache.Size = new System.Drawing.Size(183, 23);
-            this.ClearImageCache.TabIndex = 6;
-            this.ClearImageCache.Text = "Clear image cache";
-            this.ClearImageCache.UseVisualStyleBackColor = true;
-            this.ClearImageCache.Click += new System.EventHandler(this.ClearImageCache_Click);
             // 
             // _NO_TRANSLATE_NoImageService
             // 
