@@ -13,6 +13,7 @@ using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUIPluginInterfaces;
@@ -976,8 +977,8 @@ namespace GitUI.CommandsDialogs
 
             localBranch.Enabled = false;
             localBranch.Text = _branch;
-            helpImageDisplayUserControl1.Image1 = DpiUtil.Scale(Images.HelpPullMerge);
-            helpImageDisplayUserControl1.Image2 = DpiUtil.Scale(Images.HelpPullMergeFastForward);
+            helpImageDisplayUserControl1.Image1 = DpiUtil.Scale(Images.HelpPullMerge.AdaptLightness());
+            helpImageDisplayUserControl1.Image2 = DpiUtil.Scale(Images.HelpPullMergeFastForward.AdaptLightness());
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
             AllTags.Enabled = false;
             Prune.Enabled = true;
@@ -997,7 +998,7 @@ namespace GitUI.CommandsDialogs
 
             localBranch.Enabled = false;
             localBranch.Text = _branch;
-            helpImageDisplayUserControl1.Image1 = DpiUtil.Scale(Images.HelpPullRebase);
+            helpImageDisplayUserControl1.Image1 = DpiUtil.Scale(Images.HelpPullRebase.AdaptLightness());
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = false;
             Prune.Enabled = false;
@@ -1017,7 +1018,8 @@ namespace GitUI.CommandsDialogs
 
             localBranch.Enabled = true;
             localBranch.Text = string.Empty;
-            helpImageDisplayUserControl1.Image1 = DpiUtil.Scale(Images.HelpPullFetch);
+
+            helpImageDisplayUserControl1.Image1 = DpiUtil.Scale(Images.HelpPullFetch.AdaptLightness());
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = true;
             Prune.Enabled = true;

@@ -11,6 +11,7 @@ using GitCommands.Patches;
 using GitCommands.Settings;
 using GitExtUtils;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Editor.Diff;
@@ -102,15 +103,14 @@ namespace GitUI.Editor
 
             IgnoreWhitespace = AppSettings.IgnoreWhitespaceKind;
             OnIgnoreWhitespaceChanged();
-            bool light = ColorHelper.IsLightTheme();
 
-            ignoreWhitespaceAtEol.Image = light ? Images.WhitespaceIgnoreEol : Images.WhitespaceIgnoreEol_inv;
+            ignoreWhitespaceAtEol.Image = Images.WhitespaceIgnoreEol.AdaptLightness();
             ignoreWhitespaceAtEolToolStripMenuItem.Image = ignoreWhitespaceAtEol.Image;
 
-            ignoreWhiteSpaces.Image = light ? Images.WhitespaceIgnore : Images.WhitespaceIgnore_inv;
+            ignoreWhiteSpaces.Image = Images.WhitespaceIgnore.AdaptLightness();
             ignoreWhitespaceChangesToolStripMenuItem.Image = ignoreWhiteSpaces.Image;
 
-            ignoreAllWhitespaces.Image = light ? Images.WhitespaceIgnoreAll : Images.WhitespaceIgnoreAll_inv;
+            ignoreAllWhitespaces.Image = Images.WhitespaceIgnoreAll.AdaptLightness();
             ignoreAllWhitespaceChangesToolStripMenuItem.Image = ignoreAllWhitespaces.Image;
 
             ShowEntireFile = AppSettings.ShowEntireFile;
@@ -118,13 +118,14 @@ namespace GitUI.Editor
             showEntireFileToolStripMenuItem.Checked = ShowEntireFile;
             SetStateOfContextLinesButtons();
 
-            showNonPrintChars.Image = light ? Images.ShowWhitespace : Images.ShowWhitespace_inv;
+            showNonPrintChars.Image = Images.ShowWhitespace.AdaptLightness();
             showNonprintableCharactersToolStripMenuItem.Image = showNonPrintChars.Image;
             showNonPrintChars.Checked = AppSettings.ShowNonPrintingChars;
             showNonprintableCharactersToolStripMenuItem.Checked = AppSettings.ShowNonPrintingChars;
             ToggleNonPrintingChars(AppSettings.ShowNonPrintingChars);
 
             ShowSyntaxHighlightingInDiff = AppSettings.ShowSyntaxHighlightingInDiff;
+            showSyntaxHighlighting.Image = Resources.SyntaxHighlighting.AdaptLightness();
             showSyntaxHighlighting.Checked = ShowSyntaxHighlightingInDiff;
 
             IsReadOnly = true;

@@ -52,7 +52,9 @@
   <ItemGroup>
     <Compile Include="ArgumentBuilderTests.cs" />
     <Compile Include="ArrayExtensionsTests.cs" />
+    <Compile Include="ColorTransformationTests.cs" />
     <Compile Include="ComboBoxExtensionsTests.cs" />
+    <Compile Include="ControlTagExtensionTests.cs" />
     <Compile Include="GitArgumentBuilderTests.cs" />
     <Compile Include="MruCacheTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

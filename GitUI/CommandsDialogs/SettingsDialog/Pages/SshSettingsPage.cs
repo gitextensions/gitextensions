@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using GitCommands;
 using GitCommands.Utils;
+using GitExtUtils.GitUI.Theming;
 using Microsoft.Win32;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -18,7 +19,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Text = "SSH";
             InitializeComplete();
 
-            label18.ForeColor = ColorHelper.GetForeColorForBackColor(label18.BackColor);
+            label18.SetForeColorForBackColor();
         }
 
         public static SettingsPageReference GetPageReference()

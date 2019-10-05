@@ -39,17 +39,17 @@ namespace GitUI.CommandsDialogs
                 var repositoryHistory = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
 
                 await this.SwitchToMainThreadAsync();
-                Directory.DataSource = repositoryHistory;
-                Directory.DisplayMember = nameof(Repository.Path);
+                _NO_TRANSLATE_Directory.DataSource = repositoryHistory;
+                _NO_TRANSLATE_Directory.DisplayMember = nameof(Repository.Path);
             });
 
-            Directory.SelectedIndex = -1;
-            Directory.Text = string.IsNullOrEmpty(dir) ? AppSettings.DefaultCloneDestinationPath : dir;
+            _NO_TRANSLATE_Directory.SelectedIndex = -1;
+            _NO_TRANSLATE_Directory.Text = string.IsNullOrEmpty(dir) ? AppSettings.DefaultCloneDestinationPath : dir;
         }
 
         private void InitClick(object sender, EventArgs e)
         {
-            var directoryPath = Directory.Text;
+            var directoryPath = _NO_TRANSLATE_Directory.Text;
 
             if (!IsRootedDirectoryPath(directoryPath))
             {
@@ -108,7 +108,7 @@ namespace GitUI.CommandsDialogs
 
             if (userSelectedPath != null)
             {
-                Directory.Text = userSelectedPath;
+                _NO_TRANSLATE_Directory.Text = userSelectedPath;
             }
         }
 
@@ -123,7 +123,7 @@ namespace GitUI.CommandsDialogs
                 _form = form;
             }
 
-            public ComboBox DirectoryCombo => _form.Directory;
+            public ComboBox DirectoryCombo => _form._NO_TRANSLATE_Directory;
 
             public bool IsRootedDirectoryPath(string path)
             {

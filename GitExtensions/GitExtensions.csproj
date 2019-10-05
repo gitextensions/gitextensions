@@ -30,7 +30,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
     <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\Debug\GitExtensions.xml</DocumentationFile>
   </PropertyGroup>
@@ -41,7 +41,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
     <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\Release\GitExtensions.xml</DocumentationFile>
   </PropertyGroup>
@@ -131,5 +131,13 @@
       <Translations Include="$(ProjectDir)\..\GitUI\Translation\*.xlf;$(ProjectDir)\..\GitUI\Translation\*.gif" />
     </ItemGroup>
     <Copy SourceFiles="@(Translations)" DestinationFolder="$(TargetDir)Translation" ContinueOnError="false" />
+  </Target>
+  <Target Condition="Exists('$(VCTargetsPath)\Microsoft.Cpp.Default.props')" Name="BuildEasyHookDll" AfterTargets="AfterBuild">
+    <MSBuild Projects="$(SolutionDir)\Externals\EasyHook\EasyHookDll\EasyHookDll.vcxproj" Properties="Configuration=Release;Platform=x64" />
+    <MSBuild Projects="$(SolutionDir)\Externals\EasyHook\EasyHookDll\EasyHookDll.vcxproj" Properties="Configuration=Release;Platform=Win32" />
+  </Target>
+  <Target Condition="Exists('$(VCTargetsPath)\Microsoft.Cpp.Default.props')" Name="CopyEasyHookDll" AfterTargets="BuildEasyHookDll">
+    <Copy SourceFiles="$(SolutionDir)\Externals\EasyHook\EasyHookDll\Build\Release\x64\EasyHook64.dll" DestinationFolder="$(TargetDir)" />
+    <Copy SourceFiles="$(SolutionDir)\Externals\EasyHook\EasyHookDll\Build\Release\x86\EasyHook32.dll" DestinationFolder="$(TargetDir)" />
   </Target>
 </Project>

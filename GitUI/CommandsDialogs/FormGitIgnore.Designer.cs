@@ -70,7 +70,6 @@
             // 
             this.lnkGitIgnoreGenerate.AutoSize = true;
             this.lnkGitIgnoreGenerate.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lnkGitIgnoreGenerate.LinkColor = System.Drawing.SystemColors.HotTrack;
             this.lnkGitIgnoreGenerate.Location = new System.Drawing.Point(79, 2);
             this.lnkGitIgnoreGenerate.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lnkGitIgnoreGenerate.Name = "lnkGitIgnoreGenerate";
@@ -85,7 +84,6 @@
             // 
             this.lnkGitIgnorePatterns.AutoSize = true;
             this.lnkGitIgnorePatterns.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lnkGitIgnorePatterns.LinkColor = System.Drawing.SystemColors.HotTrack;
             this.lnkGitIgnorePatterns.Location = new System.Drawing.Point(135, 19);
             this.lnkGitIgnorePatterns.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lnkGitIgnorePatterns.Name = "lnkGitIgnorePatterns";
@@ -183,8 +181,10 @@
             // 
             // label1
             // 
+            this.label1.BackColor = System.Drawing.SystemColors.Control;
             this.label1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
             this.label1.Multiline = true;

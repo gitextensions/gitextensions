@@ -16,6 +16,7 @@ using GitCommands.Git;
 using GitCommands.Remotes;
 using GitExtUtils;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.Editor.RichTextBoxExtension;
 using GitUI.Hotkey;
@@ -115,9 +116,10 @@ namespace GitUI.CommitInfo
             _gitDescribeProvider = new GitDescribeProvider(() => Module);
             _refsFormatter = new RefsFormatter(_linkFactory);
 
-            var color = SystemColors.Window.MakeColorDarker(0.04);
-            pnlCommitMessage.BackColor = color;
-            rtbxCommitMessage.BackColor = color;
+            var messageBackground = KnownColor.Window.MakeBackgroundDarkerBy(0.04);
+            pnlCommitMessage.BackColor = messageBackground;
+            rtbxCommitMessage.BackColor = messageBackground;
+
             rtbxCommitMessage.Font = AppSettings.CommitFont;
             RevisionInfo.Font = AppSettings.Font;
 

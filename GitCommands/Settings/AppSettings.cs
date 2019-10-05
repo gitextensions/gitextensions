@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands.Settings;
+using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.Win32;
@@ -69,6 +70,8 @@ namespace GitCommands
 
         public static readonly int BranchDropDownMinWidth = 300;
         public static readonly int BranchDropDownMaxWidth = 600;
+
+        public static event Action Saved;
 
         static AppSettings()
         {
@@ -1214,78 +1217,90 @@ namespace GitCommands
             set => SetBool("markillformedlinesincommitmsg", value);
         }
 
+        public static bool UseSystemVisualStyle
+        {
+            get => GetBool("systemvisualstyle", true);
+            set => SetBool("systemvisualstyle", value);
+        }
+
+        public static string UIThemeName
+        {
+            get => GetString("uitheme", string.Empty);
+            set => SetString("uitheme", value ?? string.Empty);
+        }
+
         #region Colors
 
         public static Color OtherTagColor
         {
-            get => GetColor("othertagcolor", Color.Gray);
-            set => SetColor("othertagcolor", value);
+            get => GetColor(AppColor.OtherTag);
+            set => SetColor(AppColor.OtherTag, value);
         }
 
         public static Color AuthoredRevisionsHighlightColor
         {
-            get => GetColor("authoredhighlightcolor", Color.LightYellow);
-            set => SetColor("authoredhighlightcolor", value);
+            get => GetColor(AppColor.AuthoredHighlight);
+            set => SetColor(AppColor.AuthoredHighlight, value);
         }
 
         public static Color TagColor
         {
-            get => GetColor("tagcolor", Color.DarkBlue);
-            set => SetColor("tagcolor", value);
+            get => GetColor(AppColor.Tag);
+            set => SetColor(AppColor.Tag, value);
         }
 
         public static Color GraphColor
         {
-            get => GetColor("graphcolor", Color.DarkRed);
-            set => SetColor("graphcolor", value);
+            get => GetColor(AppColor.Graph);
+            set => SetColor(AppColor.Graph, value);
         }
 
         public static Color BranchColor
         {
-            get => GetColor("branchcolor", Color.DarkRed);
-            set => SetColor("branchcolor", value);
+            get => GetColor(AppColor.Branch);
+            set => SetColor(AppColor.Branch, value);
         }
 
         public static Color RemoteBranchColor
         {
-            get => GetColor("remotebranchcolor", Color.Green);
-            set => SetColor("remotebranchcolor", value);
+            get => GetColor(AppColor.RemoteBranch);
+            set => SetColor(AppColor.RemoteBranch, value);
         }
 
         public static Color DiffSectionColor
         {
-            get => GetColor("diffsectioncolor", Color.FromArgb(230, 230, 230));
-            set => SetColor("diffsectioncolor", value);
+            get => GetColor(AppColor.DiffSection);
+            set => SetColor(AppColor.DiffSection, value);
         }
 
         public static Color DiffRemovedColor
         {
-            get => GetColor("diffremovedcolor", Color.FromArgb(255, 200, 200));
-            set => SetColor("diffremovedcolor", value);
+            get => GetColor(AppColor.DiffRemoved);
+            set => SetColor(AppColor.DiffRemoved, value);
         }
 
         public static Color DiffRemovedExtraColor
         {
-            get => GetColor("diffremovedextracolor", Color.FromArgb(255, 150, 150));
-            set => SetColor("diffremovedextracolor", value);
+            get => GetColor(AppColor.DiffRemovedExtra);
+            set => SetColor(AppColor.DiffRemovedExtra, value);
         }
 
         public static Color DiffAddedColor
         {
-            get => GetColor("diffaddedcolor", Color.FromArgb(200, 255, 200));
-            set => SetColor("diffaddedcolor", value);
+            get => GetColor(AppColor.DiffAdded);
+            set => SetColor(AppColor.DiffAdded, value);
         }
 
         public static Color DiffAddedExtraColor
         {
-            get => GetColor("diffaddedextracolor", Color.FromArgb(135, 255, 135));
-            set => SetColor("diffaddedextracolor", value);
+            get => GetColor(AppColor.DiffAddedExtra);
+            set => SetColor(AppColor.DiffAddedExtra, value);
         }
 
         public static Color HighlightAllOccurencesColor
         {
-            get { return GetColor("highlightalloccurencesncolor", Color.LightYellow); }
-            set { SetColor("highlightalloccurencesncolor", value); }
+            get => GetColor(AppColor.HighlightAllOccurences);
+            set => SetColor(AppColor.HighlightAllOccurences, value);
         }
 
         #endregion
@@ -1439,6 +1454,8 @@ namespace GitCommands
                     SshPath = SshPathLocatorInstance.Find(GitBinDir);
                     SettingsContainer.Save();
                 });
+
+                Saved?.Invoke();
             }
             catch
             {
@@ -1827,6 +1844,11 @@ namespace GitCommands
             SettingsContainer.SetColor(name, value);
         }
 
+        public static void SetColor(AppColor name, Color? value)
+        {
+            SettingsContainer.SetColor(name.ToString().ToLowerInvariant() + "color", value);
+        }
+
         public static Color? GetColor(string name)
         {
             return SettingsContainer.GetColor(name);
@@ -1835,6 +1857,11 @@ namespace GitCommands
         public static Color GetColor(string name, Color defaultValue)
         {
             return SettingsContainer.GetColor(name, defaultValue);
+        }
+
+        public static Color GetColor(AppColor name)
+        {
+            return SettingsContainer.GetColor(name.ToString().ToLowerInvariant() + "color", AppColorDefaults.GetBy(name));
         }
 
         public static void SetEnum<T>(string name, T value)

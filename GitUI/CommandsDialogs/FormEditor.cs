@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Editor;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -31,6 +33,8 @@ namespace GitUI.CommandsDialogs
         {
             _fileName = fileName;
             InitializeComponent();
+            panelMessage.BackColor = AppSettings.BranchColor;
+            panelMessage.SetForeColorForBackColor();
             InitializeComplete();
 
             // for translation form

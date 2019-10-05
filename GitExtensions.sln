@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28917.182
 MinimumVisualStudioVersion = 15.0.27130.0
@@ -209,6 +209,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".tx", ".tx", "{EFBCA0B9-9E0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeleteUnusedBranchesTests", "UnitTests\Plugins\DeleteUnusedBranchesTests\DeleteUnusedBranchesTests.csproj", "{3FD5B353-17C0-4122-A693-27B707D06EFF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyHook", "Externals\EasyHook\EasyHook\EasyHook.csproj", "{26B8A7CB-F911-4ADE-85F6-FF3FE95BE0AC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -397,6 +399,10 @@ Global
 		{3FD5B353-17C0-4122-A693-27B707D06EFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FD5B353-17C0-4122-A693-27B707D06EFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FD5B353-17C0-4122-A693-27B707D06EFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26B8A7CB-F911-4ADE-85F6-FF3FE95BE0AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26B8A7CB-F911-4ADE-85F6-FF3FE95BE0AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26B8A7CB-F911-4ADE-85F6-FF3FE95BE0AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26B8A7CB-F911-4ADE-85F6-FF3FE95BE0AC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -449,6 +455,7 @@ Global
 		{D017F26A-694F-4127-B917-9B1BD3F01E2F} = {472B72D9-9336-4C8B-A199-300F0CA7669E}
 		{EFBCA0B9-9E08-4464-BEAA-DAF2FF85C6AB} = {D017F26A-694F-4127-B917-9B1BD3F01E2F}
 		{3FD5B353-17C0-4122-A693-27B707D06EFF} = {C2276A26-13DF-485A-8B2C-414CF507798F}
+		{26B8A7CB-F911-4ADE-85F6-FF3FE95BE0AC} = {0E859634-B3DF-46AC-A73C-D49734F19D6A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}

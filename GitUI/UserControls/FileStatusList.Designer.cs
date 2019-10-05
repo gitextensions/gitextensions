@@ -78,7 +78,7 @@
             // 
             this.NoFiles.AutoSize = true;
             this.NoFiles.BackColor = System.Drawing.SystemColors.Window;
-            this.NoFiles.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.NoFiles.ForeColor = System.Drawing.SystemColors.GrayText;
             this.NoFiles.Location = new System.Drawing.Point(4, 4);
             this.NoFiles.Margin = new System.Windows.Forms.Padding(0);
             this.NoFiles.Name = "NoFiles";
@@ -107,7 +107,7 @@
             // 
             this.FilterWatermarkLabel.AutoSize = true;
             this.FilterWatermarkLabel.BackColor = System.Drawing.SystemColors.Window;
-            this.FilterWatermarkLabel.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.FilterWatermarkLabel.ForeColor = System.Drawing.SystemColors.GrayText;
             this.FilterWatermarkLabel.Location = new System.Drawing.Point(4, 4);
             this.FilterWatermarkLabel.Name = "FilterWatermarkLabel";
             this.FilterWatermarkLabel.Size = new System.Drawing.Size(184, 13);

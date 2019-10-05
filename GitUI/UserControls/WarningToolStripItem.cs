@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
+using GitCommands;
+using GitExtUtils.GitUI.Theming;
 
 namespace GitUI
 {
@@ -22,13 +23,14 @@ namespace GitUI
 
         private void _blinkTimer_Tick(object sender, EventArgs e)
         {
-            if (BackColor == Color.Salmon && Parent != null)
+            var warningColor = AppSettings.BranchColor;
+            if (BackColor == warningColor && Parent != null)
             {
                 BackColor = Parent.BackColor;
             }
             else
             {
-                BackColor = Color.Salmon;
+                BackColor = warningColor;
             }
 
             _counter++;
@@ -36,8 +38,10 @@ namespace GitUI
             if (_counter > 20)
             {
                 _blinkTimer.Stop();
-                BackColor = Color.Salmon;
+                BackColor = warningColor;
             }
+
+            this.SetForeColorForBackColor();
         }
     }
 }

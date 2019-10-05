@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using GitExtUtils.GitUI.Theming;
 using GitUI.BranchTreePanel.Interfaces;
 using ResourceManager;
 
@@ -81,7 +82,7 @@ namespace GitUI.BranchTreePanel.ContextMenu
                 .WithKey(MenuItemKey.GitRefRebase);
 
             yield return _menuItemFactory.CreateMenuItem<ToolStripMenuItem, TNode>(
-                node => (node as IGitRefActions).CreateBranch(), Strings.CreateBranch, GetTooltip(MenuItemKey.GitRefCreateBranch), Properties.Images.Branch)
+                node => (node as IGitRefActions).CreateBranch(), Strings.CreateBranch, GetTooltip(MenuItemKey.GitRefCreateBranch), Properties.Images.Branch.AdaptLightness())
                 .WithKey(MenuItemKey.GitRefCreateBranch);
 
             yield return _menuItemFactory.CreateMenuItem<ToolStripMenuItem, TNode>(
@@ -96,7 +97,7 @@ namespace GitUI.BranchTreePanel.ContextMenu
             if (Implements<ICanRename>())
             {
                 yield return _menuItemFactory.CreateMenuItem<ToolStripMenuItem, TNode>(
-                    node => (node as ICanRename).Rename(), Strings.Rename, GetTooltip(MenuItemKey.Rename), Properties.Images.Renamed)
+                    node => (node as ICanRename).Rename(), Strings.Rename, GetTooltip(MenuItemKey.Rename), Properties.Images.Renamed.AdaptLightness())
                     .WithKey(MenuItemKey.Rename);
             }
         }

@@ -89,7 +89,7 @@
             // 
             this.lblContribute.AutoSize = true;
             this.lblContribute.Font = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.lblContribute.ForeColor = System.Drawing.Color.Gray;
+            this.lblContribute.ForeColor = System.Drawing.SystemColors.GrayText;
             this.lblContribute.Location = new System.Drawing.Point(22, 20);
             this.lblContribute.Margin = new System.Windows.Forms.Padding(2, 0, 2, 8);
             this.lblContribute.Name = "lblContribute";
