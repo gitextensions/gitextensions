@@ -29,21 +29,6 @@ namespace GitUITests.CommandsDialogs
             Assert.IsNull(exactPath);
         }
 
-        [TestCase(@"c:\Users\Public\desktop.ini")]
-        [TestCase(@"c:\pagefile.sys")]
-        [TestCase(@"c:\Windows\System32\cmd.exe")]
-        [TestCase(@"c:\Users\Default\NTUSER.DAT")]
-        [TestCase(@"c:\Program Files (x86)\Microsoft.NET\Primary Interop Assemblies")]
-        [TestCase(@"c:\Program Files (x86)")]
-        public void TryGetExactPathName_Should_output_path_with_exact_casing(string path)
-        {
-            var lowercasePath = path.ToLower();
-            var isExistingOnFileSystem = _controller.TryGetExactPath(lowercasePath, out string exactPath);
-
-            Assert.IsTrue(isExistingOnFileSystem);
-            Assert.AreEqual(path, exactPath);
-        }
-
         [Test]
         public void TryGetExactPathName_Should_handle_network_path()
         {
