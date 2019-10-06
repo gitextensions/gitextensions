@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GitCommands.Config;
+using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
@@ -190,7 +191,9 @@ namespace GitCommands.Remotes
         /// </summary>
         public IReadOnlyList<string> GetEnabledRemoteNames()
         {
-            return GetModule().GetRemoteNames();
+            return ThreadHelper.JoinableTaskFactory.Run(async () => (await GetModule().GetRemotesAsync()))
+                .Select(r => r.Name)
+                .ToList();
         }
 
         /// <summary>
@@ -214,17 +217,16 @@ namespace GitCommands.Remotes
         // TODO: candidate for Async implementations
         public IEnumerable<ConfigFileRemote> LoadRemotes(bool loadDisabled)
         {
-            var remotes = new List<ConfigFileRemote>();
             var module = _getModule();
             if (module == null)
             {
-                return remotes;
+                return Array.Empty<ConfigFileRemote>();
             }
 
-            PopulateRemotes(remotes, true);
+            List<ConfigFileRemote> remotes = PopulateEnabledRemotes();
             if (loadDisabled)
             {
-                PopulateRemotes(remotes, false);
+                PopulateDisabledRemotes(remotes);
             }
 
             return remotes.OrderBy(x => x.Name);
@@ -403,22 +405,38 @@ namespace GitCommands.Remotes
             module.LocalConfigFile.Save();
         }
 
-        // pass the list in to minimise allocations
-        private void PopulateRemotes(List<ConfigFileRemote> allRemotes, bool enabled)
+        private List<ConfigFileRemote> PopulateEnabledRemotes()
         {
             var module = GetModule();
+            List<ConfigFileRemote> allRemotes = new List<ConfigFileRemote>();
+            const bool enabled = true;
 
-            Func<IReadOnlyList<string>> func;
-            if (enabled)
+            var remotes = ThreadHelper.JoinableTaskFactory.Run(async () => await module.GetRemotesAsync());
+            foreach (var remote in remotes)
             {
-                func = () => module.GetRemoteNames();
-            }
-            else
-            {
-                func = GetDisabledRemoteNames;
+                allRemotes.Add(new ConfigFileRemote
+                {
+                    Disabled = !enabled,
+                    Name = remote.Name,
+                    Url = remote.FetchUrl,
+                    Push = module.GetSettings(GetSettingKey(SettingKeyString.RemotePush, remote.Name, enabled)).ToList(),
+
+                    // Note: Use the last pushurl, same as git-config retrieves
+                    PushUrl = remote.PushUrls[remote.PushUrls.Count - 1],
+                    PuttySshKey = module.GetSetting(GetSettingKey(SettingKeyString.RemotePuttySshKey, remote.Name, enabled)),
+                });
             }
 
-            var gitRemotes = func().Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+            return allRemotes;
+        }
+
+        // pass the list in to minimise allocations
+        private void PopulateDisabledRemotes(List<ConfigFileRemote> allRemotes)
+        {
+            var module = GetModule();
+            const bool enabled = false;
+
+            var gitRemotes = GetDisabledRemoteNames().Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
             if (gitRemotes.Any())
             {
                 allRemotes.AddRange(gitRemotes.Select(remote => new ConfigFileRemote

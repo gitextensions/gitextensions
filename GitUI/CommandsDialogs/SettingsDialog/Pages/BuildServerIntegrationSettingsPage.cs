@@ -121,7 +121,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             if (selectedExport != null)
             {
                 var buildServerSettingsUserControl = selectedExport.Value;
-                var remoteUrls = _remotesManager.LoadRemotes(false).Select(r => string.IsNullOrEmpty(r.PushUrl) ? r.Url : r.PushUrl);
+                var remoteUrls = _remotesManager.LoadRemotes(false).Select(r => r.Url);
 
                 buildServerSettingsUserControl.Initialize(defaultProjectName, remoteUrls);
                 return buildServerSettingsUserControl;
