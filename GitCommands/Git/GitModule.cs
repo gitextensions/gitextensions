@@ -3234,19 +3234,45 @@ namespace GitCommands
                     GitBlameCommit commit;
                     if (hasCommitHeader)
                     {
-                        commit = new GitBlameCommit(
-                            objectId,
-                            author,
-                            authorMail,
-                            authorTime,
-                            authorTimeZone,
-                            committer,
-                            committerMail,
-                            committerTime,
-                            committerTimeZone,
-                            summary,
-                            filename);
-                        commitByObjectId[objectId] = commit;
+                        if (!commitByObjectId.ContainsKey(objectId))
+                        {
+                            commit = new GitBlameCommit(
+                                objectId,
+                                author,
+                                authorMail,
+                                authorTime,
+                                authorTimeZone,
+                                committer,
+                                committerMail,
+                                committerTime,
+                                committerTimeZone,
+                                summary,
+                                filename);
+                            commitByObjectId[objectId] = commit;
+                        }
+                        else
+                        {
+                            var commitData = commitByObjectId[objectId];
+                            if (filename == commitData.FileName)
+                            {
+                                commit = commitData;
+                            }
+                            else
+                            {
+                                commit = new GitBlameCommit(
+                                    commitData.ObjectId,
+                                    commitData.Author,
+                                    commitData.AuthorMail,
+                                    commitData.AuthorTime,
+                                    commitData.AuthorTimeZone,
+                                    commitData.Committer,
+                                    commitData.CommitterMail,
+                                    commitData.CommitterTime,
+                                    commitData.CommitterTimeZone,
+                                    commitData.Summary,
+                                    filename);
+                            }
+                        }
                     }
                     else
                     {
