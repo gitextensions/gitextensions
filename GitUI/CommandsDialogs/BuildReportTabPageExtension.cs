@@ -47,17 +47,7 @@ namespace GitUI.CommandsDialogs
 
         public void FillBuildReport([CanBeNull] GitRevision revision)
         {
-            if (_selectedGitRevision != null)
-            {
-                _selectedGitRevision.PropertyChanged -= RevisionPropertyChanged;
-            }
-
-            _selectedGitRevision = revision;
-
-            if (_selectedGitRevision != null)
-            {
-                _selectedGitRevision.PropertyChanged += RevisionPropertyChanged;
-            }
+            SetSelectedRevision(revision);
 
             _tabControl.SuspendLayout();
 
@@ -75,43 +65,13 @@ namespace GitUI.CommandsDialogs
 
                     _buildReportTabPage.Controls.Clear();
 
-                    if (revision.BuildStatus.ShowInBuildReportTab)
-                    {
-                        Control = _buildReportWebBrowser;
-                        _buildReportTabPage.Controls.Add(_buildReportWebBrowser);
-                    }
-                    else
-                    {
-                        _buildReportTabPage.Cursor = Cursors.Hand;
-                        Control = _openReportLink;
-                        _buildReportTabPage.Controls.Add(_openReportLink);
-                    }
+                    SetTabPageContent(revision);
 
                     var isFavIconMissing = _buildReportTabPage.ImageIndex < 0;
 
                     if (isFavIconMissing || _tabControl.SelectedTab == _buildReportTabPage)
                     {
-                        try
-                        {
-                            if (revision.BuildStatus.ShowInBuildReportTab)
-                            {
-                                _url = null;
-                                _buildReportWebBrowser.Navigate(revision.BuildStatus.Url);
-                            }
-                            else
-                            {
-                                _url = revision.BuildStatus.Url;
-                            }
-
-                            if (isFavIconMissing)
-                            {
-                                _buildReportWebBrowser.Navigated += BuildReportWebBrowserOnNavigated;
-                            }
-                        }
-                        catch
-                        {
-                            // No propagation to the user if the report fails
-                        }
+                        LoadReportContent(revision, isFavIconMissing);
                     }
 
                     if (!_tabControl.Controls.Contains(_buildReportTabPage))
@@ -132,6 +92,58 @@ namespace GitUI.CommandsDialogs
             finally
             {
                 _tabControl.ResumeLayout();
+            }
+        }
+
+        private void LoadReportContent(GitRevision revision, bool isFavIconMissing)
+        {
+            try
+            {
+                if (revision.BuildStatus.ShowInBuildReportTab)
+                {
+                    _buildReportWebBrowser.Navigate(revision.BuildStatus.Url);
+                }
+
+                if (isFavIconMissing)
+                {
+                    _buildReportWebBrowser.Navigated += BuildReportWebBrowserOnNavigated;
+                }
+            }
+            catch
+            {
+                // No propagation to the user if the report fails
+            }
+        }
+
+        private void SetTabPageContent(GitRevision revision)
+        {
+            if (revision.BuildStatus.ShowInBuildReportTab)
+            {
+                _url = null;
+                Control = _buildReportWebBrowser;
+                _buildReportTabPage.Controls.Add(_buildReportWebBrowser);
+            }
+            else
+            {
+                _url = revision.BuildStatus.Url;
+                _buildReportTabPage.Cursor = Cursors.Hand;
+                Control = _openReportLink;
+                _buildReportTabPage.Controls.Add(_openReportLink);
+            }
+        }
+
+        private void SetSelectedRevision(GitRevision revision)
+        {
+            if (_selectedGitRevision != null)
+            {
+                _selectedGitRevision.PropertyChanged -= RevisionPropertyChanged;
+            }
+
+            _selectedGitRevision = revision;
+
+            if (_selectedGitRevision != null)
+            {
+                _selectedGitRevision.PropertyChanged += RevisionPropertyChanged;
             }
         }
 
