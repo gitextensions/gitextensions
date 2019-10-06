@@ -38,7 +38,7 @@ namespace GitCommands
     /// </example>
     public sealed class GitArgumentBuilder : ArgumentBuilder
     {
-        private static readonly Regex _commandRegex = new Regex("^[a-z0-9_.-]+$", RegexOptions.Compiled);
+        private static readonly Regex CommandRegex = new Regex("^[a-z0-9_.-]+$", RegexOptions.Compiled);
 
         private readonly List<GitConfigItem> _configItems;
         private readonly ArgumentString _gitArgs;
@@ -59,7 +59,7 @@ namespace GitCommands
                 throw new ArgumentNullException(nameof(command));
             }
 
-            if (!_commandRegex.IsMatch(command))
+            if (!CommandRegex.IsMatch(command))
             {
                 throw new ArgumentException($"Git command \"{command}\" contains invalid characters.", nameof(command));
             }
