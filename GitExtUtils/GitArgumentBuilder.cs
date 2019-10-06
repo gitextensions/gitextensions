@@ -1,86 +1,13 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
+
 namespace GitCommands
 {
-    /// <summary>
-    /// A configuration key/value pair for use in git command lines.
-    /// </summary>
-    public readonly struct GitConfigItem
-    {
-        public string Key { get; }
-        public string Value { get; }
-
-        public GitConfigItem(string key, string value)
-        {
-            Key = key;
-            Value = value;
-        }
-
-        public void Deconstruct(out string key, out string value)
-        {
-            key = Key;
-            value = Value;
-        }
-    }
-
-    public sealed class GitCommandConfiguration
-    {
-        private readonly ConcurrentDictionary<string, GitConfigItem[]> _configByCommand
-            = new ConcurrentDictionary<string, GitConfigItem[]>(StringComparer.Ordinal);
-
-        /// <summary>
-        /// Gets the default configuration for git commands used by Git Extensions.
-        /// </summary>
-        public static GitCommandConfiguration Default { get; }
-
-        static GitCommandConfiguration()
-        {
-            // The set of default configuration items for Git Extensions
-            Default = new GitCommandConfiguration();
-
-            Default.Add(new GitConfigItem("rebase.autoSquash", "false"), "rebase");
-
-            Default.Add(new GitConfigItem("log.showSignature", "false"), "log", "show", "whatchanged");
-
-            Default.Add(new GitConfigItem("diff.submodule", "short"), "diff");
-            Default.Add(new GitConfigItem("diff.noprefix", "false"), "diff");
-        }
-
-        /// <summary>
-        /// Registers <paramref name="configItem"/> against one or more command names.
-        /// </summary>
-        /// <param name="configItem">The config item to register.</param>
-        /// <param name="commands">One or more command names to register this config item against.</param>
-        public void Add(GitConfigItem configItem, params string[] commands)
-        {
-            foreach (var command in commands)
-            {
-                _configByCommand.AddOrUpdate(
-                    command,
-                    addValueFactory: _ => new[] { configItem },
-                    updateValueFactory: (_, items) => items.Append(configItem));
-            }
-        }
-
-        /// <summary>
-        /// Retrieves the set of default config items for the given <paramref name="command"/>.
-        /// </summary>
-        /// <param name="command">The command to retrieve default config items for.</param>
-        /// <returns>The default config items for <paramref name="command"/>.</returns>
-        public IReadOnlyList<GitConfigItem> Get(string command)
-        {
-            return _configByCommand.TryGetValue(command, out var items)
-                ? items
-                : Array.Empty<GitConfigItem>();
-        }
-    }
-
     /// <summary>
     /// Builds a git command line string from config items, a command name and that command's arguments.
     /// </summary>
