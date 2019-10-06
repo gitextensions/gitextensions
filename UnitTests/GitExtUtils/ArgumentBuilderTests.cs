@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using FluentAssertions;
+using GitCommands;
 using NUnit.Framework;
 
 namespace GitCommandsTests
@@ -36,6 +37,51 @@ namespace GitCommandsTests
             {
                 Assert.AreEqual(expected, command.ToString());
             }
+        }
+
+        [Test]
+        public void IsEmpty()
+        {
+            var builder = new ArgumentBuilder();
+            builder.IsEmpty.Should().BeTrue();
+
+            builder.Add("test");
+            builder.IsEmpty.Should().BeFalse();
+        }
+
+        [Test]
+        public void Length()
+        {
+            var builder = new ArgumentBuilder();
+            builder.Length.Should().Be(0);
+
+            builder.Add("test");
+            builder.Length.Should().Be(4);
+
+            var args = "Lorem ipsum dolor sit amet, solet soleat option mel no.";
+            var expectedLength = args.Length;
+            builder.AddRange(args.Split(' '));
+            builder.Length.Should().Be(expectedLength + /* 'test ' */5);
+        }
+
+        [TestCase(new[] { (string)null }, 0, "")]
+        [TestCase(new[] { "" }, 0, "")]
+        [TestCase(new[] { "", null }, 0, "")]
+        [TestCase(new[] { "test" }, 4, "test")]
+        [TestCase(new[] { "test", "test" }, 9, "test test")]
+        [TestCase(new[] { "", "test" }, 4, "test")]
+        [TestCase(new[] { "test", null, "test" }, 9, "test test")]
+        public void Add(string[] args, int expectedLength, string expected)
+        {
+            var builder = new ArgumentBuilder();
+
+            foreach (string arg in args)
+            {
+                builder.Add(arg);
+            }
+
+            builder.Length.Should().Be(expectedLength);
+            builder.ToString().Should().Be(expected);
         }
     }
 }
