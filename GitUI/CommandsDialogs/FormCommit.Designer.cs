@@ -705,7 +705,7 @@ namespace GitUI.CommandsDialogs
             this.Unstaged.SelectedIndexChanged += new System.EventHandler(this.UnstagedSelectionChanged);
             this.Unstaged.DataSourceChanged += new System.EventHandler(this.Staged_DataSourceChanged);
             this.Unstaged.DoubleClick += new System.EventHandler(this.Unstaged_DoubleClick);
-            this.Unstaged.Enter += new System.EventHandler(this.Unstaged_Enter);
+            this.Unstaged.Enter += new FileStatusList.EnterEventHandler(this.Unstaged_Enter);
             //
             // toolbarUnstaged
             //
@@ -933,7 +933,7 @@ namespace GitUI.CommandsDialogs
             this.Staged.SelectedIndexChanged += new System.EventHandler(this.StagedSelectionChanged);
             this.Staged.DataSourceChanged += new System.EventHandler(this.Staged_DataSourceChanged);
             this.Staged.DoubleClick += new System.EventHandler(this.Staged_DoubleClick);
-            this.Staged.Enter += new System.EventHandler(this.Staged_Enter);
+            this.Staged.Enter += new FileStatusList.EnterEventHandler(this.Staged_Enter);
             //
             // toolbarStaged
             //
@@ -1080,7 +1080,7 @@ namespace GitUI.CommandsDialogs
             this.SelectedDiff.TabIndex = 0;
             this.SelectedDiff.TabStop = false;
             this.SelectedDiff.ContextMenuOpening += new System.ComponentModel.CancelEventHandler(this.SelectedDiff_ContextMenuOpening);
-            this.SelectedDiff.TextLoaded += new System.EventHandler(this.SelectedDiff_TextLoaded); 
+            this.SelectedDiff.TextLoaded += new System.EventHandler(this.SelectedDiff_TextLoaded);
             //
             // tableLayoutPanel1
             //
@@ -1099,9 +1099,9 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(517, 192);
             this.tableLayoutPanel1.TabIndex = 8;
-            // 
+            //
             // Message
-            // 
+            //
             this.Message.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Message.Location = new System.Drawing.Point(177, 28);
             this.Message.Margin = new System.Windows.Forms.Padding(0);
@@ -1161,7 +1161,7 @@ namespace GitUI.CommandsDialogs
             this.CommitAndPush.Click += new System.EventHandler(this.CommitAndPush_Click);
             //
             // Amend
-            // 
+            //
             this.Amend.AutoSize = true;
             this.Amend.Location = new System.Drawing.Point(0, 93);
             this.Amend.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
@@ -1171,9 +1171,9 @@ namespace GitUI.CommandsDialogs
             this.Amend.Text = "&Amend Commit";
             this.Amend.UseVisualStyleBackColor = true;
             this.Amend.CheckedChanged += new System.EventHandler(this.Amend_CheckedChanged);
-            // 
+            //
             // Reset
-            // 
+            //
             this.Reset.Image = global::GitUI.Properties.Images.ResetWorkingDirChanges;
             this.Reset.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Reset.Location = new System.Drawing.Point(0, 122);
@@ -1324,12 +1324,12 @@ namespace GitUI.CommandsDialogs
             this.noVerifyToolStripMenuItem.Text = "No verify";
             //
             // toolStripSeparator14
-            // 
+            //
             this.toolStripSeparator14.Name = "toolStripSeparator14";
             this.toolStripSeparator14.Size = new System.Drawing.Size(311, 6);
-            // 
+            //
             // gpgSignCommitToolStripComboBox
-            // 
+            //
             this.gpgSignCommitToolStripComboBox.BackColor = System.Drawing.SystemColors.Control;
             this.gpgSignCommitToolStripComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.gpgSignCommitToolStripComboBox.Items.AddRange(new object[] {
@@ -1340,15 +1340,15 @@ namespace GitUI.CommandsDialogs
             this.gpgSignCommitToolStripComboBox.Name = "gpgSignCommitToolStripComboBox";
             this.gpgSignCommitToolStripComboBox.Size = new System.Drawing.Size(230, 23);
             this.gpgSignCommitToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.gpgSignCommitChanged);
-            // 
+            //
             // toolStripGpgKeyTextBox
-            // 
+            //
             this.toolStripGpgKeyTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.toolStripGpgKeyTextBox.MaxLength = 8;
             this.toolStripGpgKeyTextBox.Name = "toolStripGpgKeyTextBox";
             this.toolStripGpgKeyTextBox.Size = new System.Drawing.Size(230, 23);
             this.toolStripGpgKeyTextBox.Visible = false;
-            // 
+            //
             // commitTemplatesToolStripMenuItem
             //
             this.commitTemplatesToolStripMenuItem.Image = global::GitUI.Properties.Images.CommitTemplates;
@@ -1400,27 +1400,27 @@ namespace GitUI.CommandsDialogs
             this.commitAuthorStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.commitAuthorStatus.ToolTipText = "Click to change author information.";
             this.commitAuthorStatus.Click += new System.EventHandler(this.commitCommitter_Click);
-            // 
+            //
             // toolStripStatusBranchIcon
-            // 
+            //
             this.toolStripStatusBranchIcon.AutoSize = false;
             this.toolStripStatusBranchIcon.Image = global::GitUI.Properties.Images.Branch;
             this.toolStripStatusBranchIcon.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolStripStatusBranchIcon.Name = "toolStripStatusBranchIcon";
             this.toolStripStatusBranchIcon.Size = new System.Drawing.Size(17, 17);
             this.toolStripStatusBranchIcon.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
+            //
             // branchNameLabel
-            // 
+            //
             this.branchNameLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.branchNameLabel.Margin = new System.Windows.Forms.Padding(0, 3, 0, 2);
             this.branchNameLabel.Name = "branchNameLabel";
             this.branchNameLabel.Size = new System.Drawing.Size(85, 17);
             this.branchNameLabel.Text = "(Branch name)";
             this.branchNameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
+            //
             // remoteNameLabel
-            // 
+            //
             this.remoteNameLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.remoteNameLabel.IsLink = true;
             this.remoteNameLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
@@ -1429,7 +1429,7 @@ namespace GitUI.CommandsDialogs
             this.remoteNameLabel.Size = new System.Drawing.Size(85, 17);
             this.remoteNameLabel.Text = "(Remote name)";
             this.remoteNameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
+            //
             // commitStagedCountLabel
             //
             this.commitStagedCountLabel.Name = "commitStagedCountLabel";
