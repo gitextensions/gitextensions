@@ -98,9 +98,9 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             if (revision.Refs.Count != 0)
             {
-                var gitRefs = SortRefs(revision.Refs);
+                var gitRefs = SortRefs(revision.Refs.Where(FilterRef));
 
-                foreach (var gitRef in gitRefs.Where(FilterRef))
+                foreach (var gitRef in gitRefs)
                 {
                     if (offset > indicator.RemainingCellBounds.Width)
                     {
