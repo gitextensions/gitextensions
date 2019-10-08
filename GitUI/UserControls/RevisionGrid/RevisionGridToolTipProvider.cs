@@ -12,6 +12,8 @@ namespace GitUI
         private readonly ToolTip _toolTip = new ToolTip();
         private readonly Dictionary<Point, bool> _isTruncatedByCellPos = new Dictionary<Point, bool>();
         private readonly RevisionDataGridView _gridView;
+        private int _previousRowIndex = -1;
+        private int _previousColumnIndex = -1;
 
         public RevisionGridToolTipProvider(RevisionDataGridView gridView)
         {
@@ -34,6 +36,16 @@ namespace GitUI
             }
 
             var oldText = _toolTip.GetToolTip(_gridView);
+
+            // Always generated tooltip text of first column (graph) because it **really** depends of the pixel hovered
+            if (e.ColumnIndex != 0 && _previousRowIndex == e.RowIndex && _previousColumnIndex == e.ColumnIndex)
+            {
+                return;
+            }
+
+            _previousRowIndex = e.RowIndex;
+            _previousColumnIndex = e.ColumnIndex;
+
             var newText = GetToolTipText();
 
             if (newText != oldText)
