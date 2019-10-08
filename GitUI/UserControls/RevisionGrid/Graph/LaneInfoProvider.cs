@@ -57,7 +57,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             if (node.GitRevision.Body != null)
             {
-                laneInfoText.Append(node.GitRevision.Body.TrimEnd());
+                laneInfoText.Append(node.GitRevision.BodySummary);
             }
             else
             {

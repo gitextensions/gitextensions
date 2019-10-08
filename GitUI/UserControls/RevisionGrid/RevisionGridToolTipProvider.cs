@@ -56,15 +56,6 @@ namespace GitUI
                         provider.TryGetToolTip(e, revision, out var toolTip) &&
                         !string.IsNullOrWhiteSpace(toolTip))
                     {
-                        int lineCount = 0;
-                        for (int pos = 0; pos < toolTip.Length; ++pos)
-                        {
-                            if (toolTip[pos] == '\n' && ++lineCount == 30)
-                            {
-                                return toolTip.Substring(0, pos + 1) + "...";
-                            }
-                        }
-
                         return toolTip;
                     }
 
