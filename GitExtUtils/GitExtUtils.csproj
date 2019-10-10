@@ -52,6 +52,15 @@
     <Compile Include="ArrayExtensions.cs" />
     <Compile Include="BinarySearch.cs" />
     <Compile Include="ClipboardUtil.cs" />
+    <Compile Include="FileLogging\ILogger.cs" />
+    <Compile Include="FileLogging\LogEntryCreator.cs" />
+    <Compile Include="FileLogging\LogSeverity.cs" />
+    <Compile Include="FileLogging\LogWriter.cs" />
+    <Compile Include="FileLogging\GitCommandLogFormatter.cs" />
+    <Compile Include="FileLogging\LogEntry.cs" />
+    <Compile Include="FileLogging\LogFileCleaner.cs" />
+    <Compile Include="FileLogging\LogPathGenerator.cs" />
+    <Compile Include="FileLogging\Logger.cs" />
     <Compile Include="GitArgumentBuilder.cs" />
     <Compile Include="GitCommandConfiguration.cs" />
     <Compile Include="GitConfigItem.cs" />
@@ -95,5 +104,6 @@
       <Version>4.5.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
