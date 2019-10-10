@@ -54,7 +54,7 @@ namespace GitExtUtils.FileLogging
 
         public const string MetaTypeKeyName = "_MetaType";
 
-        private static ILogger _instance;
+        private static ILogger _instance = new LoggerStub();
 
         public Logger(
             string gitExtensionsPath,
