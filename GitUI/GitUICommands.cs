@@ -8,6 +8,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Settings;
 using GitExtUtils;
+using GitExtUtils.FileLogging;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
@@ -1143,6 +1144,8 @@ namespace GitUI
         public bool StartBrowseDialog(IWin32Window owner = null, string filter = "", ObjectId selectedCommit = null)
         {
             var form = new FormBrowse(this, filter, selectedCommit);
+
+            Logger.LogInfo("Application displaying window");
 
             if (Application.MessageLoop)
             {

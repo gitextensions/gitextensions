@@ -6,6 +6,7 @@ using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using GitCommands.Logging;
+using GitExtUtils.FileLogging;
 using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -15,8 +16,8 @@ namespace GitCommands
     /// <inheritdoc />
     public sealed class Executable : IExecutable
     {
-        private readonly string _workingDir;
-        private readonly Func<string> _fileNameProvider;
+        public string WorkingDir { get; private set; }
+        public Func<string> FileNameProvider { get; private set; }
 
         public Executable([NotNull] string fileName, [NotNull] string workingDir = "")
             : this(() => fileName, workingDir)
@@ -25,8 +26,8 @@ namespace GitCommands
 
         public Executable([NotNull] Func<string> fileNameProvider, [NotNull] string workingDir = "")
         {
-            _workingDir = workingDir;
-            _fileNameProvider = fileNameProvider;
+            WorkingDir = workingDir;
+            FileNameProvider = fileNameProvider;
         }
 
         /// <inheritdoc />
@@ -38,9 +39,9 @@ namespace GitCommands
 
             var args = (arguments.Arguments ?? "").Replace("$QUOTE$", "\\\"");
 
-            var fileName = _fileNameProvider();
+            var fileName = FileNameProvider();
 
-            return new ProcessWrapper(fileName, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding);
+            return new ProcessWrapper(fileName, args, WorkingDir, createWindow, redirectInput, redirectOutput, outputEncoding);
         }
 
         public string GetOutput(ArgumentString arguments)
@@ -101,6 +102,8 @@ namespace GitCommands
                 _process.Start();
 
                 _logOperation.SetProcessId(_process.Id);
+
+                LogToFile("Starting git", _logOperation);
             }
 
             private void OnProcessExit(object sender, EventArgs eventArgs)
@@ -113,6 +116,9 @@ namespace GitCommands
                     {
                         var exitCode = _process.ExitCode;
                         _logOperation.LogProcessEnd(exitCode);
+
+                        LogToFile("Ended    git", _logOperation);
+
                         _exitTaskCompletionSource.TrySetResult(exitCode);
                     }
                 }
@@ -192,6 +198,14 @@ namespace GitCommands
                 _process.Dispose();
 
                 _logOperation.NotifyDisposed();
+
+                LogToFile("Disposed git", _logOperation);
+            }
+
+            private void LogToFile(string message, ProcessOperation logOperation)
+            {
+                var entry = logOperation.Entry;
+                Logger.LogAGitCommandExecution(message, entry.FileName, entry.Arguments, entry.WorkingDir, entry.ProcessId, entry.IsOnMainThread, entry.Duration, entry.ExitCode, entry.CallStack);
             }
         }
 

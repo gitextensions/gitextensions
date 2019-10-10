@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using GitCommands;
 using JetBrains.Annotations;
@@ -35,5 +36,9 @@ namespace GitUIPluginInterfaces
         [NotNull]
         [MustUseReturnValue]
         string GetOutput(ArgumentString arguments);
+
+        string WorkingDir { get; }
+
+        Func<string> FileNameProvider { get; }
     }
 }

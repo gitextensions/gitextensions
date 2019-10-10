@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands.Settings;
+using GitExtUtils.FileLogging;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.Win32;
@@ -1404,8 +1405,9 @@ namespace GitCommands
                     SettingsContainer.Save();
                 });
             }
-            catch
+            catch (Exception e)
             {
+                Logger.LogError("Error while saving settings", e);
             }
         }
 
@@ -1417,8 +1419,9 @@ namespace GitCommands
             {
                 GitCommandHelpers.SetSsh(SshPath);
             }
-            catch
+            catch (Exception e)
             {
+                Logger.LogError("Error while loading settings", e);
             }
         }
 

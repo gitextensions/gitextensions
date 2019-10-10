@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.FileLogging;
 using GitUI.Infrastructure.Telemetry;
 using GitUI.Script;
 using JetBrains.Annotations;
@@ -65,7 +66,10 @@ namespace GitUI
             : base(enablePositionRestore: true)
         {
             _uiCommands = commands;
-            DiagnosticsClient.TrackPageView(GetType().FullName);
+
+            var name = GetType().FullName;
+            DiagnosticsClient.TrackPageView(name);
+            Logger.LogInfo($"Opening {name}");
         }
 
         protected override CommandStatus ExecuteCommand(int command)
@@ -78,6 +82,13 @@ namespace GitUI
             }
 
             return result;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            Logger.LogInfo($"Disposing {GetType().FullName}");
+
+            base.Dispose(disposing);
         }
     }
 }

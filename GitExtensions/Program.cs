@@ -1,10 +1,14 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
+using GitExtUtils.FileLogging;
 using GitExtUtils.GitUI;
 using GitUI;
 using GitUI.CommandsDialogs.SettingsDialog;
@@ -18,6 +22,9 @@ namespace GitExtensions
 {
     internal static class Program
     {
+        private static ILogger logger;
+        private static CancellationTokenSource source = new CancellationTokenSource();
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -26,12 +33,22 @@ namespace GitExtensions
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Application.ApplicationExit += OnApplicationExit;
 
             HighDpiMouseCursors.Enable();
 
             try
             {
                 DiagnosticsClient.Initialize(ThisAssembly.Git.IsDirty);
+
+                var logLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                logger = new Logger(logLocation,
+                    new GitCommandLogFormatter(),
+                    TimeSpan.FromSeconds(1.01),
+                    TimeSpan.FromDays(7),
+                    source.Token);
+
+                logger.Info($"Application starting - version {AppSettings.ProductVersion} - {AppSettings.AppVersion}");
 
                 if (!Debugger.IsAttached)
                 {
@@ -57,6 +74,13 @@ namespace GitExtensions
             // the JIT processing more types than required to configure NBug.
             // In this way, there's more chance we can handle startup exceptions correctly.
             RunApplication();
+        }
+
+        private static void OnApplicationExit(object sender, EventArgs e)
+        {
+            logger?.Info("Application stopped");
+            source.Cancel();
+            logger?.WaitShutdown();
         }
 
         private static void RunApplication()
@@ -104,6 +128,7 @@ namespace GitExtensions
                     {
                         if (!LocateMissingGit())
                         {
+                            Application.Exit();
                             Environment.Exit(-1);
                             return;
                         }
@@ -128,9 +153,10 @@ namespace GitExtensions
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
                 // TODO: remove catch-all
+                Logger.LogError("Error during startup", e);
             }
 
             if (EnvUtils.RunningOnWindows())
@@ -268,6 +294,7 @@ namespace GitExtensions
                     MessageBox.Show(ce.ToString(), "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
+                Application.Exit();
                 Environment.Exit(1);
             }
         }
@@ -332,6 +359,7 @@ namespace GitExtensions
                 var result = form.ShowDialog(ex, envInfo);
                 if (result == DialogResult.Abort)
                 {
+                    Application.Exit();
                     Environment.Exit(-1);
                 }
             }

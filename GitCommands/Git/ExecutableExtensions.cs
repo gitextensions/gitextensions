@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -97,6 +98,7 @@ namespace GitCommands
                 var errorTask = process.StandardError.BaseStream.CopyToAsync(errorBuffer);
                 var exitTask = process.WaitForExitAsync();
 
+                var sw = Stopwatch.StartNew();
                 await Task.WhenAll(outputTask, errorTask, exitTask);
 
                 output = outputBuffer.ToArray();
@@ -106,6 +108,16 @@ namespace GitCommands
                 {
                     cache.Add(arguments, output, error);
                 }
+
+                Logger.LogAGitCommandExecution("Command executed",
+                    executable.FileNameProvider?.Invoke(),
+                    arguments.ToString(),
+                    executable.WorkingDir,
+                    null,
+                    false,
+                    sw.Elapsed,
+                    exitTask?.Status == TaskStatus.Faulted ? 1 : 0,
+                    null);
 
                 return ComposeOutput();
             }
@@ -188,7 +200,21 @@ namespace GitCommands
                     process.StandardInput.Close();
                 }
 
-                return await process.WaitForExitAsync() == 0;
+                var sw = Stopwatch.StartNew();
+
+                var exitCode = await process.WaitForExitAsync();
+
+                Logger.LogAGitCommandExecution("Command executed",
+                    executable.FileNameProvider?.Invoke(),
+                    arguments.ToString(),
+                    executable.WorkingDir,
+                    null,
+                    false,
+                    sw.Elapsed,
+                    exitCode,
+                    null);
+
+                return exitCode == 0;
             }
         }
 
@@ -325,6 +351,8 @@ namespace GitCommands
                 var outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);
                 var errorTask = process.StandardError.BaseStream.CopyToAsync(errorBuffer);
 
+                var sw = Stopwatch.StartNew();
+
                 if (writeInput != null)
                 {
                     // TODO do we want to make this async?
@@ -340,6 +368,16 @@ namespace GitCommands
                 var error = outputEncoding.GetString(errorBuffer.GetBuffer(), 0, (int)errorBuffer.Length);
 
                 var exitCode = await process.WaitForExitAsync();
+
+                Logger.LogAGitCommandExecution("Command executed",
+                    executable.FileNameProvider?.Invoke(),
+                    arguments.ToString(),
+                    executable.WorkingDir,
+                    null,
+                    false,
+                    sw.Elapsed,
+                    exitTask.Status == TaskStatus.Faulted ? 1 : 0,
+                    null);
 
                 return new ExecutionResult(
                     CleanString(stripAnsiEscapeCodes, output),

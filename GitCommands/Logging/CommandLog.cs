@@ -14,35 +14,35 @@ namespace GitCommands.Logging
 
     public sealed class ProcessOperation
     {
-        private readonly CommandLogEntry _entry;
+        internal readonly CommandLogEntry Entry;
         private readonly Stopwatch _stopwatch;
         private readonly Action _raiseCommandsChanged;
 
         internal ProcessOperation(CommandLogEntry entry, Stopwatch stopwatch, Action raiseCommandsChanged)
         {
-            _entry = entry;
+            Entry = entry;
             _stopwatch = stopwatch;
             _raiseCommandsChanged = raiseCommandsChanged;
         }
 
         public void LogProcessEnd(int? exitCode = null)
         {
-            _entry.Duration = _stopwatch.Elapsed;
-            _entry.ExitCode = exitCode;
+            Entry.Duration = _stopwatch.Elapsed;
+            Entry.ExitCode = exitCode;
             _raiseCommandsChanged();
         }
 
         public void SetProcessId(int processId)
         {
-            _entry.ProcessId = processId;
+            Entry.ProcessId = processId;
             _raiseCommandsChanged();
         }
 
         public void NotifyDisposed()
         {
-            if (_entry.Duration == null)
+            if (Entry.Duration == null)
             {
-                _entry.Duration = _stopwatch.Elapsed;
+                Entry.Duration = _stopwatch.Elapsed;
                 _raiseCommandsChanged();
             }
         }

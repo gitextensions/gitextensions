@@ -118,6 +118,9 @@ namespace CommonTestUtils
             throw new Exception("Unexpected arguments: " + arguments);
         }
 
+        public string WorkingDir { get; }
+        public Func<string> FileNameProvider { get; }
+
         private sealed class MockProcess : IProcess
         {
             public MockProcess([CanBeNull] string output, int? exitCode = 0)
