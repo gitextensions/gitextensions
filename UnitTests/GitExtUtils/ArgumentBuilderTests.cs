@@ -4,6 +4,7 @@ using NUnit.Framework;
 
 namespace GitCommandsTests
 {
+    [TestFixture]
     public sealed class ArgumentBuilderTests
     {
         [Test]
