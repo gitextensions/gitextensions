@@ -32,14 +32,14 @@ namespace GitUI
             _localToolStripMenuItem.Checked = true;
             _localToolStripMenuItem.CheckOnClick = true;
             _localToolStripMenuItem.Name = "localToolStripMenuItem";
-            _localToolStripMenuItem.Text = "Local";
+            _localToolStripMenuItem.Text = Strings.Local;
 
             //
             // tagsToolStripMenuItem
             //
             _tagsToolStripMenuItem.CheckOnClick = true;
             _tagsToolStripMenuItem.Name = "tagToolStripMenuItem";
-            _tagsToolStripMenuItem.Text = "Tag";
+            _tagsToolStripMenuItem.Text = Strings.Tag;
 
             //
             // remoteToolStripMenuItem
@@ -47,7 +47,7 @@ namespace GitUI
             _remoteToolStripMenuItem.CheckOnClick = true;
             _remoteToolStripMenuItem.Name = "remoteToolStripMenuItem";
             _remoteToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-            _remoteToolStripMenuItem.Text = "Remote";
+            _remoteToolStripMenuItem.Text = Strings.Remote;
         }
 
         public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGridControl revisionGrid)

@@ -9261,6 +9261,10 @@ Select this commit to populate the full message.</source>
         <source>Loading data...</source>
         <target />
       </trans-unit>
+      <trans-unit id="_local.Text">
+        <source>Local</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_messageText.Text">
         <source>{0:Message|Messages}</source>
         <target />
@@ -9281,6 +9285,10 @@ Select this commit to populate the full message.</source>
         <source>{0:Parent|Parents}</source>
         <target />
       </trans-unit>
+      <trans-unit id="_remote.Text">
+        <source>Remote</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_remotesText.Text">
         <source>Remotes</source>
         <target />
@@ -9295,6 +9303,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_submodulesText.Text">
         <source>Submodules</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_tag.Text">
+        <source>Tag</source>
         <target />
       </trans-unit>
       <trans-unit id="_tagsText.Text">
