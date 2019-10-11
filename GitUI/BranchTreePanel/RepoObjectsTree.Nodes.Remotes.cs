@@ -313,8 +313,8 @@ namespace GitUI.BranchTreePanel
             {
                 base.ApplyStyle();
 
-                TreeViewNode.ToolTipText = _remote.FetchUrl != _remote.PushUrls[0]
-                    ? $"Push: {_remote.PushUrls[0]}\nFetch: {_remote.FetchUrl}"
+                TreeViewNode.ToolTipText = _remote.PushUrls.Count != 1 && _remote.FetchUrl != _remote.PushUrls[0]
+                    ? $"Fetch: {_remote.FetchUrl}\nPush: {string.Join("\n", _remote.PushUrls.ToArray())}"
                     : _remote.FetchUrl;
 
                 string imageKey;
