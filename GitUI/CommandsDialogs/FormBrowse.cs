@@ -2976,7 +2976,18 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory);
+                try
+                {
+                    _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory);
+                }
+                catch (InvalidOperationException)
+                {
+#if DEBUG
+                    MessageBox.Show(@"ConEmu appears to be missing. Please perform a full rebuild and try again.", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#else
+                    throw;
+#endif
+                }
             };
         }
 
