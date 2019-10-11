@@ -1781,7 +1781,7 @@ namespace GitCommands
                     {
                         foreach (var file in nonNewFiles)
                         {
-                            inputWriter.WriteLine($"0 0000000000000000000000000000000000000000\t\"{file.Name.ToPosixPath()}\"");
+                            inputWriter.WriteLine($"0 0000000000000000000000000000000000000000\t\"{EscapeOctalCodePoints(file.Name.ToPosixPath())}\"");
                         }
                     },
                     SystemEncoding);
@@ -3741,6 +3741,46 @@ namespace GitCommands
                         return match.Value;
                     }
                 });
+        }
+
+        /// <summary>
+        /// Escapes a UTF8 string <paramref name="s"/> into octal code points.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="s"/> is <c>null</c> then an empty string is returned.
+        /// </remarks>
+        /// <example>
+        /// <code>EscapeOctalCodePoints("두다") == @"\353\221\220\353\213\244"</code>
+        /// </example>
+        /// <param name="s">The string to escape.</param>
+        /// <returns>The escaped string, or <c>""</c> if <paramref name="s"/> is <c>null</c>.</returns>
+        public static string EscapeOctalCodePoints([CanBeNull] string s)
+        {
+            if (s == null)
+            {
+                return null;
+            }
+
+            var resultBuilder = new StringBuilder(s.Length);
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                var charSubstring = s.Substring(i, 1);
+                var charBytes = Encoding.UTF8.GetBytes(charSubstring);
+                if (charBytes.Length == 1)
+                {
+                    resultBuilder.Append(charSubstring);
+                }
+                else
+                {
+                    foreach (var charByte in charBytes)
+                    {
+                        resultBuilder.AppendFormat(@"\{0}", Convert.ToString(charByte, toBase: 8));
+                    }
+                }
+            }
+
+            return resultBuilder.ToString();
         }
 
         [ContractAnnotation("fileName:null=>null")]
