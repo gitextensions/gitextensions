@@ -451,6 +451,16 @@ namespace GitCommandsTests
             }
         }
 
+        [TestCase("ignorenopush\tgit@github.com:drewnoakes/gitextensions.git (fetch)")]
+        [TestCase("ignorenopull\tgit@github.com:drewnoakes/gitextensions.git (push)")]
+        public void GetRemotes_should_throw_if_not_pairs(string line)
+        {
+            using (_executable.StageOutput("remote -v", line))
+            {
+                Assert.ThrowsAsync<System.Exception>(async () => await _gitModule.GetRemotesAsync());
+            }
+        }
+
         [Test]
         public void GetRemotes_should_parse_correctly_configured_remotes()
         {
@@ -467,34 +477,55 @@ namespace GitCommandsTests
                     "asymmetrical\thttps://github.com/gitextensions/fetch.git (fetch)",
                     "asymmetrical\thttps://github.com/gitextensions/push.git (push)",
                     "with-space\tc:\\Bare Repo (fetch)",
-                    "with-space\tc:\\Bare Repo (push)"
+                    "with-space\tc:\\Bare Repo (push)",
+
+                    // A remote may have multiple push URLs, but only a single fetch URL
+                    "multi\tgit@github.com:drewnoakes/gitextensions.git (fetch)",
+                    "multi\tgit@github.com:drewnoakes/gitextensions.git (push)",
+                    "multi\tgit@gitlab.com:drewnoakes/gitextensions.git (push)",
+
+                    "ignoreunknown\tgit@github.com:drewnoakes/gitextensions.git (unknownType)",
+                    "ignorenotab git@github.com:drewnoakes/gitextensions.git (fetch)",
+                    "ignoremissingtype\tgit@gitlab.com:drewnoakes/gitextensions.git",
+                    "git@gitlab.com:drewnoakes/gitextensions.git"
                 };
 
                 using (_executable.StageOutput("remote -v", string.Join("\n", lines)))
                 {
                     var remotes = await _gitModule.GetRemotesAsync();
 
-                    Assert.AreEqual(5, remotes.Count);
+                    Assert.AreEqual(6, remotes.Count);
 
                     Assert.AreEqual("RussKie", remotes[0].Name);
                     Assert.AreEqual("git://github.com/RussKie/gitextensions.git", remotes[0].FetchUrl);
-                    Assert.AreEqual("git://github.com/RussKie/gitextensions.git", remotes[0].PushUrl);
+                    Assert.AreEqual(1, remotes[0].PushUrls.Count);
+                    Assert.AreEqual("git://github.com/RussKie/gitextensions.git", remotes[0].PushUrls[0]);
 
                     Assert.AreEqual("origin", remotes[1].Name);
                     Assert.AreEqual("git@github.com:drewnoakes/gitextensions.git", remotes[1].FetchUrl);
-                    Assert.AreEqual("git@github.com:drewnoakes/gitextensions.git", remotes[1].PushUrl);
+                    Assert.AreEqual(1, remotes[1].PushUrls.Count);
+                    Assert.AreEqual("git@github.com:drewnoakes/gitextensions.git", remotes[1].PushUrls[0]);
 
                     Assert.AreEqual("upstream", remotes[2].Name);
                     Assert.AreEqual("git@github.com:gitextensions/gitextensions.git", remotes[2].FetchUrl);
-                    Assert.AreEqual("git@github.com:gitextensions/gitextensions.git", remotes[2].PushUrl);
+                    Assert.AreEqual(1, remotes[2].PushUrls.Count);
+                    Assert.AreEqual("git@github.com:gitextensions/gitextensions.git", remotes[2].PushUrls[0]);
 
                     Assert.AreEqual("asymmetrical", remotes[3].Name);
                     Assert.AreEqual("https://github.com/gitextensions/fetch.git", remotes[3].FetchUrl);
-                    Assert.AreEqual("https://github.com/gitextensions/push.git", remotes[3].PushUrl);
+                    Assert.AreEqual(1, remotes[3].PushUrls.Count);
+                    Assert.AreEqual("https://github.com/gitextensions/push.git", remotes[3].PushUrls[0]);
 
                     Assert.AreEqual("with-space", remotes[4].Name);
                     Assert.AreEqual("c:\\Bare Repo", remotes[4].FetchUrl);
-                    Assert.AreEqual("c:\\Bare Repo", remotes[4].PushUrl);
+                    Assert.AreEqual(1, remotes[4].PushUrls.Count);
+                    Assert.AreEqual("c:\\Bare Repo", remotes[4].PushUrls[0]);
+
+                    Assert.AreEqual("multi", remotes[5].Name);
+                    Assert.AreEqual("git@github.com:drewnoakes/gitextensions.git", remotes[5].FetchUrl);
+                    Assert.AreEqual(2, remotes[5].PushUrls.Count);
+                    Assert.AreEqual("git@github.com:drewnoakes/gitextensions.git", remotes[5].PushUrls[0]);
+                    Assert.AreEqual("git@gitlab.com:drewnoakes/gitextensions.git", remotes[5].PushUrls[1]);
                 }
             });
         }

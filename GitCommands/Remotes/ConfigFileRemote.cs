@@ -22,7 +22,7 @@ namespace GitCommands.Remotes
         public IReadOnlyList<string> Push { get; set; }
 
         /// <summary>
-        /// Gets or sets value stored in .git/config via <see cref="SettingKeyString.RemotePushUrl"/> key.
+        /// Gets or sets the last pushurl stored in .git/config via <see cref="SettingKeyString.RemotePushUrl"/> key.
         /// </summary>
         public string PushUrl { get; set; }
 

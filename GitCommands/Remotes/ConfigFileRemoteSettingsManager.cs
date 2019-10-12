@@ -167,7 +167,7 @@ namespace GitCommands.Remotes
         {
             var disabledRemotes = GetModule().LocalConfigFile.GetConfigSections()
                 .Where(s => s.SectionName == $"{DisabledSectionPrefix}remote")
-                .Select(s => new Remote(s.SubSection, s.GetValue("pushurl", s.GetValue("url")), s.GetValue("url")))
+                .Select(s => new Remote(s.SubSection, s.GetValue("url"), s.GetValue("pushurl", s.GetValue("url"))))
                 .ToList();
 
             return disabledRemotes;
@@ -427,6 +427,8 @@ namespace GitCommands.Remotes
                     Name = remote,
                     Url = module.GetSetting(GetSettingKey(SettingKeyString.RemoteUrl, remote, enabled)),
                     Push = module.GetSettings(GetSettingKey(SettingKeyString.RemotePush, remote, enabled)).ToList(),
+
+                    // Note: This only gets the last pushurl
                     PushUrl = module.GetSetting(GetSettingKey(SettingKeyString.RemotePushUrl, remote, enabled)),
                     PuttySshKey = module.GetSetting(GetSettingKey(SettingKeyString.RemotePuttySshKey, remote, enabled)),
                 }));

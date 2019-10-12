@@ -1,18 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace GitUIPluginInterfaces
 {
     public readonly struct Remote
     {
         public string Name { get; }
-        public string PushUrl { get; }
         public string FetchUrl { get; }
+        public List<string> PushUrls { get; }
 
-        public Remote(string name, string pushUrl, string fetchUrl)
+        public Remote(string name, string fetchUrl, string firstPushUrl)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            PushUrl = pushUrl ?? throw new ArgumentNullException(nameof(pushUrl));
             FetchUrl = fetchUrl ?? throw new ArgumentNullException(nameof(fetchUrl));
+
+            // At least one push URL must be added
+            PushUrls = firstPushUrl != null ? new List<string>() { firstPushUrl } : throw new ArgumentNullException(nameof(firstPushUrl));
         }
     }
 }
