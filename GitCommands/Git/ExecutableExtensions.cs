@@ -142,6 +142,30 @@ namespace GitCommands
         }
 
         /// <summary>
+        /// Launches a process for the executable per batch item, and returns <c>true</c> if all process exit codes were zero.
+        /// </summary>
+        /// <remarks>
+        /// This method uses <see cref="RunCommand"/> to execute multiple commands in batch, used in accordance with
+        /// <see cref="ArgumentBuilderExtensions.BuildBatchArguments(ArgumentBuilder, IEnumerable{string}, int, int)"/>
+        /// to work around Windows command line length 32767 character limitation
+        /// <see href="https://docs.microsoft.com/en-us/windows/desktop/api/processthreadsapi/nf-processthreadsapi-createprocessa"/>.
+        /// </remarks>
+        /// <param name="executable">The executable from which to launch processes.</param>
+        /// <param name="batchArguments">The array of batch arguments to pass to the executable</param>
+        /// <param name="input">Bytes to be written to each process's standard input stream, or <c>null</c> if no input is required.</param>
+        /// <param name="createWindow">A flag indicating whether a console window should be created and bound to each process.</param>
+        /// <returns><c>true</c> if all process exit codes were zero, otherwise <c>false</c>.</returns>
+        [MustUseReturnValue("Callers should verify that " + nameof(RunBatchCommand) + " returned true")]
+        public static bool RunBatchCommand(
+            this IExecutable executable,
+            ArgumentString[] batchArguments,
+            byte[] input = null,
+            bool createWindow = false)
+        {
+            return batchArguments.Aggregate(true, (result, arguments) => executable.RunCommand(arguments, input, createWindow) && result);
+        }
+
+        /// <summary>
         /// Launches a process for the executable and returns <c>true</c> if its exit code is zero.
         /// </summary>
         /// <param name="executable">The executable from which to launch a process.</param>

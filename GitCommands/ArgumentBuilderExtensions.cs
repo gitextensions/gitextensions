@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -299,6 +300,69 @@ namespace GitCommands
             {
                 builder.Add(objectId);
             }
+        }
+
+        /// <summary>
+        /// Split arguments exceeding max length into multiple batches.
+        /// Windows by default limit arguments length less than 32767 <see cref="short.MaxValue"/>.
+        /// Implementation by <see cref="System.Diagnostics.Process"/> will have file path included in command line arguments,
+        /// as well as added quotation and space characters, so we need base length to account for all these added characters
+        /// <see href="https://referencesource.microsoft.com/#system/services/monitoring/system/diagnosticts/Process.cs,1944"/>
+        /// </summary>
+        /// <param name="builder">Argument builder instance.</param>
+        /// <param name="arguments">Arguments.</param>
+        /// <param name="baseLength">Base executable file and command line length.</param>
+        /// <param name="maxLength">Command line max length. Default is 32767 - 1 on Windows.</param>
+        /// <returns>Array of batch arguments split by max length.</returns>
+        public static ArgumentString[] BuildBatchArguments(this ArgumentBuilder builder, IEnumerable<string> arguments, int baseLength, int maxLength = short.MaxValue)
+        {
+            var baseArgument = builder.ToString();
+            if (baseLength + baseArgument.Length >= maxLength)
+            {
+                throw new ArgumentException($"Git base command \"{baseArgument}\" always reached max length of {maxLength} characters.", nameof(baseArgument));
+            }
+
+            // Clone command as argument builder
+            var batches = new List<ArgumentString>();
+            var currentArgumentLength = baseArgument.Length;
+            var lastBatchBuilder = arguments.Aggregate(builder, (currentBatchBuilder, argument) =>
+            {
+                // 1: ' ' space character length will be added
+                // When enumeration is finished, no need to add ' ' to length calculcation
+                if (baseLength + currentArgumentLength + 1 + argument.Length >= maxLength)
+                {
+                    // Handle abnormal case when base command and a single argument exceed max length
+                    if (currentArgumentLength == baseArgument.Length)
+                    {
+                        throw new ArgumentException($"Git command \"{currentBatchBuilder}\" always exceeded max length of {maxLength} characters.", nameof(arguments));
+                    }
+
+                    // Finish current command line
+                    batches.Add(currentBatchBuilder);
+
+                    // Return new argument builder
+                    currentArgumentLength = baseArgument.Length + 1 + argument.Length;
+                    return new ArgumentBuilder() { baseArgument, argument };
+                }
+
+                currentBatchBuilder.Add(argument);
+                currentArgumentLength += argument.Length + 1;
+                return currentBatchBuilder;
+            });
+
+            // Handle rare case when last argument length exceed max length
+            if (baseLength + currentArgumentLength >= maxLength)
+            {
+                throw new ArgumentException($"Git command \"{lastBatchBuilder}\" always exceeded max length of {maxLength} characters.", nameof(arguments));
+            }
+
+            // Add last commandline batch
+            if (!lastBatchBuilder.IsEmpty)
+            {
+                batches.Add(lastBatchBuilder.ToString());
+            }
+
+            return batches.ToArray();
         }
     }
 }

@@ -1392,14 +1392,16 @@ namespace GitCommands
                 revision = null;
             }
 
-            _gitExecutable.RunCommand(
-                new GitArgumentBuilder("checkout")
+            // Run batch arguments to work around max command line length on Windows. Fix #6593
+            // 3: double quotes + ' '
+            // See https://referencesource.microsoft.com/#system/services/monitoring/system/diagnosticts/Process.cs,1952
+            _gitExecutable.RunBatchCommand(new GitArgumentBuilder("checkout")
                 {
                     { force, "--force" },
                     revision,
-                    "--",
-                    files.Select(f => f.ToPosixPath().Quote())
-                });
+                    "--"
+                }
+                .BuildBatchArguments(files.Select(f => f.ToPosixPath().Quote()), AppSettings.GitCommand.Length + 3));
         }
 
         public string RemoveFiles(IReadOnlyList<string> files, bool force)
