@@ -18,6 +18,10 @@ namespace GitUI
         private readonly TranslationString _searchingFor = new TranslationString("Searching for: ");
         private readonly TranslationString _loadingDataText = new TranslationString("Loading data...");
         private readonly TranslationString _uninterestingDiffOmitted = new TranslationString("Uninteresting diff hunks are omitted.");
+        private readonly TranslationString _noResultsFound = new TranslationString("<No results found>");
+        private readonly TranslationString _local = new TranslationString("Local");
+        private readonly TranslationString _tag = new TranslationString("Tag");
+        private readonly TranslationString _remote = new TranslationString("Remote");
 
         // public only because of FormTranslate
         public Strings()
@@ -50,5 +54,9 @@ namespace GitUI
 
         public static string LoadingData => _instance.Value._loadingDataText.Text;
         public static string UninterestingDiffOmitted => _instance.Value._uninterestingDiffOmitted.Text;
+        public static string NoResultsFound => _instance.Value._noResultsFound.Text;
+        public static string Local => _instance.Value._local.Text;
+        public static string Tag => _instance.Value._tag.Text;
+        public static string Remote => _instance.Value._remote.Text;
     }
 }

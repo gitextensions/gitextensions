@@ -18,6 +18,8 @@ namespace GitUI
         private readonly ToolStripMenuItem _remoteToolStripMenuItem;
         private GitModule Module => _NO_TRANSLATE_RevisionGrid.Module;
 
+        private static readonly string[] _noResultsFound = { Strings.NoResultsFound };
+
         public FilterBranchHelper()
         {
             _localToolStripMenuItem = new ToolStripMenuItem();
@@ -30,14 +32,14 @@ namespace GitUI
             _localToolStripMenuItem.Checked = true;
             _localToolStripMenuItem.CheckOnClick = true;
             _localToolStripMenuItem.Name = "localToolStripMenuItem";
-            _localToolStripMenuItem.Text = "Local";
+            _localToolStripMenuItem.Text = Strings.Local;
 
             //
             // tagsToolStripMenuItem
             //
             _tagsToolStripMenuItem.CheckOnClick = true;
             _tagsToolStripMenuItem.Name = "tagToolStripMenuItem";
-            _tagsToolStripMenuItem.Text = "Tag";
+            _tagsToolStripMenuItem.Text = Strings.Tag;
 
             //
             // remoteToolStripMenuItem
@@ -45,7 +47,7 @@ namespace GitUI
             _remoteToolStripMenuItem.CheckOnClick = true;
             _remoteToolStripMenuItem.Name = "remoteToolStripMenuItem";
             _remoteToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-            _remoteToolStripMenuItem.Text = "Remote";
+            _remoteToolStripMenuItem.Text = Strings.Remote;
         }
 
         public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGridControl revisionGrid)
@@ -171,6 +173,12 @@ namespace GitUI
             try
             {
                 string filter = _NO_TRANSLATE_toolStripBranches.Items.Count > 0 ? _NO_TRANSLATE_toolStripBranches.Text : string.Empty;
+
+                if (filter == Strings.NoResultsFound)
+                {
+                    filter = string.Empty;
+                }
+
                 bool success = _NO_TRANSLATE_RevisionGrid.SetAndApplyBranchFilter(filter);
                 if (success && refresh)
                 {
@@ -188,6 +196,11 @@ namespace GitUI
             string filter = _NO_TRANSLATE_toolStripBranches.Items.Count > 0 ? _NO_TRANSLATE_toolStripBranches.Text : string.Empty;
             var branches = GetBranchAndTagRefs(_localToolStripMenuItem.Checked, _tagsToolStripMenuItem.Checked, _remoteToolStripMenuItem.Checked);
             var matches = branches.Where(branch => branch.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0).ToArray();
+
+            if (matches.Length == 0)
+            {
+                matches = _noResultsFound;
+            }
 
             var index = _NO_TRANSLATE_toolStripBranches.SelectionStart;
             _NO_TRANSLATE_toolStripBranches.Items.Clear();
