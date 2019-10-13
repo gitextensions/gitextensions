@@ -3,11 +3,10 @@ using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using CommonTestUtils;
 using GitCommands;
 using GitCommands.Settings;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
 

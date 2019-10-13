@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;

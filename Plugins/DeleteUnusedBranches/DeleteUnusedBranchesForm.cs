@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DeleteUnusedBranches.Properties;
 using GitCommands;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI;
 using GitUIPluginInterfaces;

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;

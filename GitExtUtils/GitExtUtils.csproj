@@ -53,6 +53,8 @@
     <Compile Include="BinarySearch.cs" />
     <Compile Include="ClipboardUtil.cs" />
     <Compile Include="GitArgumentBuilder.cs" />
+    <Compile Include="GitCommandConfiguration.cs" />
+    <Compile Include="GitConfigItem.cs" />
     <Compile Include="GitUI\CancellationTokenSequence.cs" />
     <Compile Include="GitUI\ColorHelper.cs" />
     <Compile Include="GitUI\ComboBoxExtensions.cs" />

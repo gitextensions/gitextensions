@@ -6,6 +6,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using BackgroundFetch.Properties;
 using GitCommands;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 using ResourceManager;
 

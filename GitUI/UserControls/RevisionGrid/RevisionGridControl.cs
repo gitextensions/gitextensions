@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.Avatars;
 using GitUI.BuildServerIntegration;

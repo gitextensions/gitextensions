@@ -14,6 +14,7 @@ using GitCommands.Git.Extensions;
 using GitCommands.Patches;
 using GitCommands.Settings;
 using GitCommands.Utils;
+using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;

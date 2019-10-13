@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
 
-namespace GitCommands
+namespace GitExtUtils
 {
     /// <summary>
     /// Builds a command line argument string from zero or more arguments.
@@ -39,7 +39,6 @@ namespace GitCommands
         private readonly StringBuilder _arguments = new StringBuilder(capacity: 16);
 
         public bool IsEmpty => _arguments.Length == 0;
-        public int Length => _arguments.Length;
 
         /// <summary>
         /// Adds <paramref name="s"/> to the argument list.
@@ -94,6 +93,21 @@ namespace GitCommands
         IEnumerator IEnumerable.GetEnumerator()
         {
             throw new InvalidOperationException($"{nameof(IEnumerable)} only implemented to support collection initialiser syntax.");
+        }
+
+        internal TestAccessor GetTestAccessor()
+            => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly ArgumentBuilder _builder;
+
+            public TestAccessor(ArgumentBuilder builder)
+            {
+                _builder = builder;
+            }
+
+            public StringBuilder Arguments => _builder._arguments;
         }
     }
 }

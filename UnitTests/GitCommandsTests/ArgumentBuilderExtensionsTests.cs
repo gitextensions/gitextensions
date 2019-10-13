@@ -5,6 +5,7 @@ using System.Linq;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
 

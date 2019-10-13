@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
-using GitCommands;
+using GitExtUtils;
 using NUnit.Framework;
 
-namespace GitCommandsTests
+namespace GitExtUtilsTests
 {
     [TestFixture]
     public sealed class ArgumentBuilderTests
@@ -54,15 +54,15 @@ namespace GitCommandsTests
         public void Length()
         {
             var builder = new ArgumentBuilder();
-            builder.Length.Should().Be(0);
+            builder.GetTestAccessor().Arguments.Length.Should().Be(0);
 
             builder.Add("test");
-            builder.Length.Should().Be(4);
+            builder.GetTestAccessor().Arguments.Length.Should().Be(4);
 
             var args = "Lorem ipsum dolor sit amet, solet soleat option mel no.";
             var expectedLength = args.Length;
             builder.AddRange(args.Split(' '));
-            builder.Length.Should().Be(expectedLength + /* 'test ' */5);
+            builder.GetTestAccessor().Arguments.Length.Should().Be(expectedLength + /* 'test ' */5);
         }
 
         [TestCase(new[] { (string)null }, 0, "")]
@@ -81,7 +81,7 @@ namespace GitCommandsTests
                 builder.Add(arg);
             }
 
-            builder.Length.Should().Be(expectedLength);
+            builder.GetTestAccessor().Arguments.Length.Should().Be(expectedLength);
             builder.ToString().Should().Be(expected);
         }
     }
