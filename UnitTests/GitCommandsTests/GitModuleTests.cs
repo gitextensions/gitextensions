@@ -113,24 +113,6 @@ namespace GitCommandsTests
             Assert.AreSame(s, GitModule.UnescapeOctalCodePoints(s));
         }
 
-        [TestCase(null, null)]
-        [TestCase("", "")]
-        [TestCase(" ", " ")]
-        [TestCase("Hello, World!", "Hello, World!")]
-        [TestCase("두다.txt", @"\353\221\220\353\213\244.txt")] // escaped octal code points (Korean Hangul in this case)
-        [TestCase(@"Привет, World!", @"\320\237\321\200\320\270\320\262\320\265\321\202, World!")] // escaped and not escaped in the same string
-        public void EscapeOctalCodePoints_handles_text(string input, string expected)
-        {
-            Assert.AreEqual(expected, GitModule.EscapeOctalCodePoints(input));
-        }
-
-        [TestCase("Hello, World!")]
-        [TestCase("두다.txt")]
-        public void UnescapeOctalCodePoints_reverses_EscapeOctalCodePoints(string input)
-        {
-            Assert.AreEqual(input, GitModule.UnescapeOctalCodePoints(GitModule.EscapeOctalCodePoints(input)));
-        }
-
         [Test]
         public void FetchCmd()
         {
