@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Utils;
+using GitExtUtils;
 using GitUI.CommandsDialogs.ResolveConflictsDialog;
 using GitUI.Hotkey;
 using ResourceManager;

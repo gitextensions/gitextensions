@@ -7,6 +7,7 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
+using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;

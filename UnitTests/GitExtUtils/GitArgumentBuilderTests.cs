@@ -1,5 +1,6 @@
 ﻿using System;
 using GitCommands;
+using GitExtUtils;
 using NUnit.Framework;
 
 namespace GitExtUtilsTests

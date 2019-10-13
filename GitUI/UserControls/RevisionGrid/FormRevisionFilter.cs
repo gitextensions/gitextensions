@@ -1,6 +1,6 @@
 ﻿using System;
 using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtUtils;
 
 namespace GitUI.UserControls.RevisionGrid
 {

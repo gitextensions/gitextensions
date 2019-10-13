@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI;
 using GitUIPluginInterfaces;

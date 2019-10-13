@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
 using JetBrains.Annotations;

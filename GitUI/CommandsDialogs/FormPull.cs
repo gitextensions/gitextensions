@@ -11,6 +11,7 @@ using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
 using GitUI.Script;

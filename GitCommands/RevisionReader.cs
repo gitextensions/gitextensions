@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;

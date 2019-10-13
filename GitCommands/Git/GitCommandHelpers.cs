@@ -10,6 +10,7 @@ using GitCommands.Git;
 using GitCommands.Git.Extensions;
 using GitCommands.Patches;
 using GitCommands.Utils;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
