@@ -354,7 +354,8 @@ namespace GitUI
         public IEnumerable<GitRevision> SelectedItemParents
             => FileStatusListView.SelectedItems()
                 .Select(i => i.Group?.Tag<GitRevision>())
-                .Where(r => r != null);
+                .Where(r => r != null)
+                .Distinct(); // Parents should be distinct to avoid iterating same items
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]

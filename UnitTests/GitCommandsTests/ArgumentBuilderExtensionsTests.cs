@@ -320,5 +320,48 @@ namespace GitCommandsTests
                 };
             }
         }
+
+        // 14: 'checkout name1'
+        // 20: 'checkout name1 name2'
+        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 15, new string[] { "checkout name1", "checkout name2", "checkout name3" })]
+        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 16, new string[] { "checkout name1", "checkout name2", "checkout name3" })]
+        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 20, new string[] { "checkout name1", "checkout name2", "checkout name3" })]
+        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 21, new string[] { "checkout name1 name2", "checkout name3" })]
+
+        // With base length
+        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 31, new string[] { "checkout name1 name2", "checkout name3" }, 10)]
+        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 26, new string[] { "checkout name1", "checkout name2", "checkout name3" }, 10)]
+        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 30, new string[] { "checkout name1", "checkout name2", "checkout name3" }, 10)]
+        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 31, new string[] { "checkout name1 name2", "checkout name3" }, 10)]
+        public void BuildBatchArguments_builder_work_as_expected(string command, string[] arguments, int maxLength, string[] expected,
+            int baseLength = 0)
+        {
+            var batch = new GitArgumentBuilder(command)
+                .BuildBatchArguments(arguments, baseLength, maxLength)
+                .Select(item => item.ToString())
+                .ToArray();
+
+            Assert.AreEqual(expected, batch);
+        }
+
+        // 8: 'checkout'
+        // 14: 'checkout name1'
+        [TestCase("checkout", new string[] { "a", "b", "c" }, 7)]
+        [TestCase("checkout", new string[] { "a", "b", "c" }, 8)]
+        [TestCase("checkout", new string[] { "a", "b", "c" }, 9)]
+        [TestCase("checkout", new string[] { "a", "b", "name1" }, 14)]
+        [TestCase("checkout", new string[] { "name1", "b", "a" }, 14)]
+
+        // With base length
+        [TestCase("checkout", new string[] { "a", "b", "c" }, 17, 10)]
+        [TestCase("checkout", new string[] { "a", "b", "c" }, 18, 10)]
+        [TestCase("checkout", new string[] { "a", "b", "c" }, 19, 10)]
+        [TestCase("checkout", new string[] { "a", "b", "name1" }, 24, 10)]
+        [TestCase("checkout", new string[] { "name1", "b", "a" }, 24, 10)]
+        public void BuildBatchArguments_builder_throw_invalid_argument_exception(string command, string[] arguments, int maxLength,
+            int baseLength = 0)
+        {
+            Assert.Throws(typeof(ArgumentException), () => new GitArgumentBuilder(command).BuildBatchArguments(arguments, baseLength, maxLength));
+        }
     }
 }
