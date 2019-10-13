@@ -36,6 +36,7 @@ namespace GitUI
         private int _nextIndexToSelect = -1;
         private bool _groupByRevision;
         private bool _enableSelectedIndexChangeEvent = true;
+        private bool _mouseEntered;
         private ToolStripItem _openSubmoduleMenuItem;
         private Rectangle _dragBoxFromMouseDown;
         private IReadOnlyList<(GitRevision revision, IReadOnlyList<GitItemStatus> statuses)> _itemsWithParent = Array.Empty<(GitRevision, IReadOnlyList<GitItemStatus>)>();
@@ -44,11 +45,14 @@ namespace GitUI
 
         private bool _updatingColumnWidth;
 
+        public delegate void EnterEventHandler(object sender, EnterEventArgs e);
+
         public event EventHandler SelectedIndexChanged;
         public event EventHandler DataSourceChanged;
 
         public new event EventHandler DoubleClick;
         public new event KeyEventHandler KeyDown;
+        public new event EnterEventHandler Enter;
 
         public FileStatusList()
         {
@@ -76,6 +80,8 @@ namespace GitUI
 
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _revisionTester = new GitRevisionTester(_fullPathResolver);
+
+            base.Enter += FileStatusList_Enter;
 
             return;
 
@@ -710,6 +716,16 @@ namespace GitUI
             _diffListSortSubscription?.Dispose();
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == NativeConstants.WM_MOUSEACTIVATE)
+            {
+                _mouseEntered = !Focused;
+            }
+
+            base.WndProc(ref m);
+        }
+
         // Private methods
 
         private void CreateOpenSubmoduleMenuItem()
@@ -1278,6 +1294,12 @@ namespace GitUI
             }
 
             UpdateColumnWidth();
+        }
+
+        private void FileStatusList_Enter(object sender, EventArgs e)
+        {
+            Enter?.Invoke(this, new EnterEventArgs(_mouseEntered));
+            _mouseEntered = false;
         }
 
         #region Filtering

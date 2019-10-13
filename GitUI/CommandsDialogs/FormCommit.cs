@@ -1638,13 +1638,13 @@ namespace GitUI.CommandsDialogs
             stagedOpenDifftoolToolStripMenuItem9.Enabled = !isNewSelected;
         }
 
-        private void Unstaged_Enter(object sender, EventArgs e)
+        private void Unstaged_Enter(object sender, EnterEventArgs e)
         {
             if (_currentFilesList != Unstaged)
             {
                 _currentFilesList = Unstaged;
                 _skipUpdate = false;
-                if (Unstaged.AllItems.Count() != 0 && Unstaged.SelectedIndex == -1)
+                if (!e.ByMouse && Unstaged.AllItems.Count() != 0 && Unstaged.SelectedIndex == -1)
                 {
                     Unstaged.SelectedIndex = 0;
                 }
@@ -1874,13 +1874,13 @@ namespace GitUI.CommandsDialogs
             commitStagedCount.Text = stagedCount + "/" + totalFilesCount;
         }
 
-        private void Staged_Enter(object sender, EventArgs e)
+        private void Staged_Enter(object sender, EnterEventArgs e)
         {
             if (_currentFilesList != Staged)
             {
                 _currentFilesList = Staged;
                 _skipUpdate = false;
-                if (Staged.AllItems.Count() != 0 && Staged.SelectedIndex == -1)
+                if (!e.ByMouse && Staged.AllItems.Count() != 0 && Staged.SelectedIndex == -1)
                 {
                     Staged.SelectedIndex = 0;
                 }
