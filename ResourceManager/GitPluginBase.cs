@@ -14,9 +14,15 @@ namespace ResourceManager
         public string Name { get; protected set; }
         public Image Icon { get; protected set; }
 
-        public GitPluginBase(bool hasSettings)
+        protected GitPluginBase(bool hasSettings)
         {
             HasSettings = hasSettings;
+        }
+
+        // requried for the TranslationApp to work
+        private GitPluginBase()
+            : this(false)
+        {
         }
 
         protected void SetNameAndDescription(string name)
