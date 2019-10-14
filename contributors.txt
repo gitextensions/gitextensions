@@ -99,3 +99,4 @@ YYYY/MM/DD, github id, Full name, email
 2019/09/27, kbilsted, Kasper B. Graversen, redbeard1945redbeard(at)gmail.com
 2019/09/30, hieuxlu, Hieu Do, xlu.untitled(at)gmail.com
 2019/10/13, R0nd, Roland Gneev, rgneev(at)gmail.com
+2019/10/13, bansan85, Le Garrec Vincent, legarrec.vincent{at]gmail.com
