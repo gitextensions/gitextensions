@@ -25,13 +25,20 @@ namespace TranslationApp
                     {
                         foreach (Type type in types)
                         {
-                            if (TranslationUtil.CreateInstanceOfClass(type) is ITranslate obj)
+                            try
                             {
-                                obj.AddTranslationItems(translation);
-                                if (obj is IDisposable disposable)
+                                if (TranslationUtil.CreateInstanceOfClass(type) is ITranslate obj)
                                 {
-                                    disposable.Dispose();
+                                    obj.AddTranslationItems(translation);
+                                    if (obj is IDisposable disposable)
+                                    {
+                                        disposable.Dispose();
+                                    }
                                 }
+                            }
+                            catch
+                            {
+                                // no-op
                             }
                         }
                     }
