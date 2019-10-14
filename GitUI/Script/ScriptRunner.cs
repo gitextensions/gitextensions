@@ -94,7 +94,10 @@ namespace GitUI.Script
             if (scriptInfo.IsPowerShell)
             {
                 PowerShellHelper.RunPowerShell(command, argument, module.WorkingDir, scriptInfo.RunInBackground);
-                return new CommandStatus(true, false);
+
+                // 'RunPowerShell' always runs the script detached (yet).
+                // Hence currently, it does not make sense to set 'needsGridRefresh' to '!scriptInfo.RunInBackground'.
+                return new CommandStatus(executed: true, needsGridRefresh: false);
             }
 
             if (command.StartsWith(PluginPrefix))
@@ -105,7 +108,7 @@ namespace GitUI.Script
                     if (plugin.Description.ToLower().Equals(command, StringComparison.CurrentCultureIgnoreCase))
                     {
                         var eventArgs = new GitUIEventArgs(owner, uiCommands);
-                        return new CommandStatus(true, plugin.Execute(eventArgs));
+                        return new CommandStatus(executed: true, needsGridRefresh: plugin.Execute(eventArgs));
                     }
                 }
 
@@ -130,7 +133,7 @@ namespace GitUI.Script
                     }
                 }
 
-                return new CommandStatus(true, false);
+                return new CommandStatus(executed: true, needsGridRefresh: false);
             }
 
             if (!scriptInfo.RunInBackground)
@@ -149,7 +152,7 @@ namespace GitUI.Script
                 }
             }
 
-            return new CommandStatus(true, !scriptInfo.RunInBackground);
+            return new CommandStatus(executed: true, needsGridRefresh: !scriptInfo.RunInBackground);
         }
 
         private static string ExpandCommandVariables(string originalCommand, IGitModule module)
