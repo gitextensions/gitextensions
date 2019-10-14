@@ -260,7 +260,7 @@ namespace GitUI.CommandsDialogs
             this.cherryPickSelectedDiffFileToolStripMenuItem.Image = global::GitUI.Properties.Images.CherryPick;
             this.cherryPickSelectedDiffFileToolStripMenuItem.Name = "cherryPickSelectedDiffFileToolStripMenuItem";
             this.cherryPickSelectedDiffFileToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
-            this.cherryPickSelectedDiffFileToolStripMenuItem.Text = "Cherry pick file\'s changes";
+            this.cherryPickSelectedDiffFileToolStripMenuItem.Text = "Cherry pick changes";
             this.cherryPickSelectedDiffFileToolStripMenuItem.Click += new System.EventHandler(this.cherryPickSelectedDiffFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator32
