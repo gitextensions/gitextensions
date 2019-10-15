@@ -27,7 +27,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
         }
 
-        public FormCreateBranch(GitUICommands commands, ObjectId objectId)
+        public FormCreateBranch(GitUICommands commands, ObjectId objectId, string newBranchNamePrefix = null)
             : base(commands)
         {
             InitializeComponent();
@@ -44,6 +44,11 @@ namespace GitUI.CommandsDialogs
             if (objectId != null)
             {
                 commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
+            }
+
+            if (newBranchNamePrefix.IsNotNullOrWhitespace())
+            {
+                BranchNameTextBox.Text = newBranchNamePrefix;
             }
         }
 
