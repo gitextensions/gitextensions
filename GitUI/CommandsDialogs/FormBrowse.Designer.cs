@@ -23,7 +23,6 @@ namespace GitUI.CommandsDialogs
             System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
             System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
             System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
-            System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
             this.ToolStrip = new GitUI.ToolStripEx();
             this.RefreshButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator0 = new System.Windows.Forms.ToolStripSeparator();
@@ -195,7 +194,6 @@ namespace GitUI.CommandsDialogs
             toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
-            toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainSplitContainer)).BeginInit();
             this.MainSplitContainer.Panel1.SuspendLayout();
@@ -238,11 +236,6 @@ namespace GitUI.CommandsDialogs
             // 
             toolStripSeparator14.Name = "toolStripSeparator14";
             toolStripSeparator14.Size = new System.Drawing.Size(236, 6);
-            // 
-            // toolStripMenuItem3
-            // 
-            toolStripMenuItem3.Name = "toolStripMenuItem3";
-            toolStripMenuItem3.Size = new System.Drawing.Size(275, 6);
             // 
             // ToolStrip
             // 
@@ -1595,11 +1588,10 @@ namespace GitUI.CommandsDialogs
             this.translateToolStripMenuItem,
             this.toolStripSeparator16,
             this.donateToolStripMenuItem,
+            this.tsmiTelemetryEnabled,
             this.reportAnIssueToolStripMenuItem,
             this.checkForUpdatesToolStripMenuItem,
-            this.aboutToolStripMenuItem,
-            toolStripMenuItem3,
-            this.tsmiTelemetryEnabled});
+            this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "&Help";
