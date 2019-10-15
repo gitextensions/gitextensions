@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Diagnostics.SymbolStore;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -10,6 +9,7 @@ namespace GitExtUtils.FileLogging
     public interface ILogWriter
     {
         void Enqueue(LogEntry entry);
+        void Run(CancellationToken cancellationToken);
     }
 
     public class LogWriter : ILogWriter

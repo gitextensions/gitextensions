@@ -7,9 +7,6 @@ using System.Threading.Tasks;
 
 namespace GitExtUtils.FileLogging
 {
-    /// <summary>
-    /// For unit testing
-    /// </summary>
     public class LoggerStub : ILogger
     {
         public List<LogEntry> LogEntries = new List<LogEntry>();
@@ -48,7 +45,7 @@ namespace GitExtUtils.FileLogging
 
     public class Logger : ILogger
     {
-        private readonly LogWriter _writer;
+        private readonly ILogWriter _writer;
 
         private readonly Task _writerTask;
 
@@ -99,22 +96,22 @@ namespace GitExtUtils.FileLogging
 
         public void Log(LogSeverity severity, string message, Dictionary<string, string> extra = null)
         {
-            _writer?.Enqueue(LogEntryCreator.Create(severity, message, extra));
+            _writer.Enqueue(LogEntryCreator.Create(severity, message, extra));
         }
 
         public void Info(string message, Dictionary<string, string> extra = null)
         {
-            _writer?.Enqueue(LogEntryCreator.Create(LogSeverity.Info, message, extra));
+            _writer.Enqueue(LogEntryCreator.Create(LogSeverity.Info, message, extra));
         }
 
         public void Error(string message, Dictionary<string, string> extra = null)
         {
-            _writer?.Enqueue(LogEntryCreator.Create(LogSeverity.Error, message, extra));
+            _writer.Enqueue(LogEntryCreator.Create(LogSeverity.Error, message, extra));
         }
 
         public void Error(string message, Exception e, Dictionary<string, string> extra = null)
         {
-            _writer?.Enqueue(LogEntryCreator.Create(LogSeverity.Error, message, e, extra));
+            _writer.Enqueue(LogEntryCreator.Create(LogSeverity.Error, message, e, extra));
         }
 
         /// <summary>
@@ -131,7 +128,7 @@ namespace GitExtUtils.FileLogging
             int? exitCode,
             StackTrace callStack)
         {
-            _writer?.Enqueue(LogEntryCreator.Create(message, fileName, arguments, workingDir, processId, isOnMainThread, duration, exitCode, callStack));
+            _writer.Enqueue(LogEntryCreator.Create(message, fileName, arguments, workingDir, processId, isOnMainThread, duration, exitCode, callStack));
         }
 
         public static void LogEntry(LogSeverity severity, string message, Dictionary<string, string> extra = null)
