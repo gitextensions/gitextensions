@@ -54,7 +54,13 @@ namespace GitExtUtils.FileLogging
 
         public const string MetaTypeKeyName = "_MetaType";
 
+        /// <summary>
+        /// We hold a static logger for as long as the static interface of the logger exist.
+        /// When all the code has an <see cref="ILogger"/> injected, this field is no longer needed.
+        /// </summary>
         private static ILogger _instance = new LoggerStub();
+
+        private static readonly object LockObject = new object();
 
         public Logger(
             string gitExtensionsPath,
@@ -77,7 +83,13 @@ namespace GitExtUtils.FileLogging
 
             _writerTask = Task.Run(() => _writer.Run(cancellationToken));
 
-            _instance = this;
+            lock (LockObject)
+            {
+                if (_instance.GetType() == typeof(LoggerStub))
+                {
+                    _instance = this;
+                }
+            }
         }
 
         public void WaitShutdown()
