@@ -12,11 +12,13 @@ namespace GitExtUtils.FileLogging
 
         private Tuple<DateTime, string> _fileNameCache = new Tuple<DateTime, string>(DateTime.MinValue, null);
         private readonly string _logName;
+        private readonly int _processId;
 
-        public LogPathGenerator(string logPath, string logName)
+        public LogPathGenerator(string logPath, string logName, int processId)
         {
             LogPath = logPath;
             _logName = logName;
+            _processId = processId;
         }
 
         public string GenerateFullPath(DateTime now)
@@ -31,13 +33,13 @@ namespace GitExtUtils.FileLogging
 
         public string GetFilenamePattern()
         {
-            return $"{_logName}-*.log";
+            return $"{_logName}-*-*.log";
         }
 
         private Tuple<DateTime, string> Renew(DateTime now)
         {
             var today = now.Date;
-            var fullPath = Path.Combine(LogPath, $"{_logName}-{today:yyyy-MM-dd}.log");
+            var fullPath = Path.Combine(LogPath, $"{_logName}-{today:yyyyMMdd}-{_processId}.log");
             return Tuple.Create(today, fullPath);
         }
     }

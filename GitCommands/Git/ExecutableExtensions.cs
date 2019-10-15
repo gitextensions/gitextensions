@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitExtUtils;
+using GitExtUtils.FileLogging;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 

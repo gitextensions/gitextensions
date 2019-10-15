@@ -61,6 +61,7 @@ namespace GitExtUtils.FileLogging
             ILogFormatter formatter,
             TimeSpan flushInterval,
             TimeSpan maxLogAge,
+            int processId,
             CancellationToken cancellationToken)
         {
             if (!Directory.Exists(gitExtensionsPath))
@@ -69,7 +70,7 @@ namespace GitExtUtils.FileLogging
             }
 
             var logPath = Path.Combine(gitExtensionsPath, "logs");
-            var creator = new LogPathGenerator(logPath, "gitextensions");
+            var creator = new LogPathGenerator(logPath, "gitextensions", processId);
             _writer = new LogWriter(creator, formatter, flushInterval);
 
             Task.Run(new LogFileCleaner(this, creator, maxLogAge).Run);

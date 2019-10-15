@@ -21,7 +21,7 @@ namespace FileLoggingTests
         public void GetFilenamePattern_returns_pattern_to_delete_logfiles()
         {
             var generator = CreateGenerator();
-            generator.GetFilenamePattern().Should().Be("mylogname-*.log");
+            generator.GetFilenamePattern().Should().Be("mylogname-*-*.log");
         }
 
         [Test]
@@ -31,13 +31,13 @@ namespace FileLoggingTests
             var t1 = new DateTime(2019, 10, 9, 8, 7, 6);
             var t2 = t1.AddDays(1);
 
-            generator.GenerateFullPath(t1).Should().Be(@"c:\temp\logs\mylogname-2019-10-09.log");
-            generator.GenerateFullPath(t2).Should().Be(@"c:\temp\logs\mylogname-2019-10-10.log");
+            generator.GenerateFullPath(t1).Should().Be(@"c:\temp\logs\mylogname-20191009-666.log");
+            generator.GenerateFullPath(t2).Should().Be(@"c:\temp\logs\mylogname-20191010-666.log");
         }
 
         private static LogPathGenerator CreateGenerator()
         {
-            return new LogPathGenerator(LogPath, "mylogname");
+            return new LogPathGenerator(LogPath, "mylogname", 666);
         }
     }
 }

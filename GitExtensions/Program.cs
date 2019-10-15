@@ -46,6 +46,7 @@ namespace GitExtensions
                     new GitCommandLogFormatter(),
                     TimeSpan.FromSeconds(1.01),
                     TimeSpan.FromDays(7),
+                    Process.GetCurrentProcess().Id,
                     source.Token);
 
                 logger.Info($"Application starting - version {AppSettings.ProductVersion} - {AppSettings.AppVersion}");
