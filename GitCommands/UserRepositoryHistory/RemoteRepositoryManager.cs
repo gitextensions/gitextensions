@@ -32,19 +32,12 @@ namespace GitCommands.UserRepositoryHistory
         /// <param name="repositoryPathUrl">A repository URL to be save as "most recent".</param>
         /// <returns>The current version of the list of recently used git repositories after the update.</returns>
         /// <exception cref="ArgumentException"><paramref name="repositoryPathUrl"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
-        /// <exception cref="NotSupportedException"><paramref name="repositoryPathUrl"/> is not a URL.</exception>
         [ContractAnnotation("repositoryPathUrl:null=>halt")]
         public async Task<IList<Repository>> AddAsMostRecentAsync(string repositoryPathUrl)
         {
             if (string.IsNullOrWhiteSpace(repositoryPathUrl))
             {
                 throw new ArgumentException(nameof(repositoryPathUrl));
-            }
-
-            if (!PathUtil.IsUrl(repositoryPathUrl))
-            {
-                // TODO: throw a specific exception
-                throw new NotSupportedException();
             }
 
             return await AddAsMostRecentRepositoryAsync(repositoryPathUrl);
