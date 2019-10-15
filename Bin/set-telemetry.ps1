@@ -5,6 +5,11 @@ Param(
 
 [bool]$telemetryEnabled = -not [string]::IsNullOrEmpty($Enabled);
 
+if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage")
+{
+    exit 0
+}
+
 [string]$userAppDataPath = Join-Path -Path $env:APPDATA -ChildPath 'GitExtensions\GitExtensions\GitExtensions.settings'
 if (-not (Test-Path -Path $userAppDataPath)) {
     [string]$userAppDataFolder = Split-Path $userAppDataPath -Parent
