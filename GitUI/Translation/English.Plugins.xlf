@@ -941,6 +941,10 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <source>Push after finish</source>
         <target />
       </trans-unit>
+      <trans-unit id="cbSquashFeature.Text">
+        <source>Squash feature</source>
+        <target />
+      </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
         <target />
