@@ -41,7 +41,7 @@ namespace GitExtensions
             {
                 DiagnosticsClient.Initialize(ThisAssembly.Git.IsDirty);
 
-                var logLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                var logLocation = Path.GetTempPath();
                 logger = new Logger(logLocation,
                     new GitCommandLogFormatter(),
                     TimeSpan.FromSeconds(1.01),

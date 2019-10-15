@@ -8,7 +8,7 @@ namespace FileLoggingTests
     [TestFixture]
     public sealed class LogPathGeneratorTests
     {
-        private const string LogPath = "c:\\temp\\logs";
+        private const string LogPath = "c:\\temp\\gitextensions";
 
         [Test]
         public void Logpath_is_unmodified()
@@ -31,8 +31,8 @@ namespace FileLoggingTests
             var t1 = new DateTime(2019, 10, 9, 8, 7, 6);
             var t2 = t1.AddDays(1);
 
-            generator.GenerateFullPath(t1).Should().Be(@"c:\temp\logs\mylogname-20191009-666.log");
-            generator.GenerateFullPath(t2).Should().Be(@"c:\temp\logs\mylogname-20191010-666.log");
+            generator.GenerateFullPath(t1).Should().Be(@"c:\temp\gitextensions\mylogname-20191009-666.log");
+            generator.GenerateFullPath(t2).Should().Be(@"c:\temp\gitextensions\mylogname-20191010-666.log");
         }
 
         private static LogPathGenerator CreateGenerator()

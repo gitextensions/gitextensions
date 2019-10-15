@@ -69,7 +69,7 @@ namespace GitExtUtils.FileLogging
                 throw new ArgumentException($"Non-existing folder '{gitExtensionsPath}'", nameof(gitExtensionsPath));
             }
 
-            var logPath = Path.Combine(gitExtensionsPath, "logs");
+            var logPath = Path.Combine(gitExtensionsPath, "gitextensions");
             var creator = new LogPathGenerator(logPath, "gitextensions", processId);
             _writer = new LogWriter(creator, formatter, flushInterval);
 
