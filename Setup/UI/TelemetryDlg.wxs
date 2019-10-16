@@ -14,11 +14,10 @@
       <![CDATA[Installed OR POWERSHELLEXE]]>
     </Condition>
 
-    <!-- Windows 7SP1 supports only PowerShell 2.0 -->
     <SetProperty Id="ConfigureTelemetry"
         Before ="ConfigureTelemetry"
         Sequence="execute"
-        Value="&quot;[POWERSHELLEXE]&quot; -Version 2.0 -NoProfile -NonInteractive -InputFormat None -ExecutionPolicy Bypass -Command &quot;&amp; '[INSTALLDIR]set-telemetry.ps1' [TELEMETRY_ENABLED] ; exit $$($Error.Count)&quot;" />
+        Value="&quot;[POWERSHELLEXE]&quot; -NoProfile -NonInteractive -InputFormat None -ExecutionPolicy Bypass -Command &quot;&amp; '[INSTALLDIR]set-telemetry.ps1' [TELEMETRY_ENABLED]; exit $$($Error.Count)&quot;" />
 
     <CustomAction Id="ConfigureTelemetry" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="check" Impersonate="yes" />
 
