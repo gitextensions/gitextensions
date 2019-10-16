@@ -155,8 +155,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void SelectHostedRepositoryForCurrentRemote()
         {
             var currentRemote = Module.GetCurrentRemote();
+
+            // Local branches have no current remote, return value is empty string.
+            // In this case we fallback to the first remote in the list.
+            // Currently, local git repo with no remote will show error message and can not open this dialog.
+            // So there will always be at least 1 remote when this dialog is open
             _cloneGitProtocol = ThreadHelper.JoinableTaskFactory.Run(async () => (await Module.GetRemotesAsync())
-                .First(r => r.Name == currentRemote).FetchUrl.IsUrlUsingHttp() ? GitProtocol.Https : GitProtocol.Ssh);
+                .First(r => string.IsNullOrEmpty(currentRemote) || r.Name == currentRemote).FetchUrl.IsUrlUsingHttp() ? GitProtocol.Https : GitProtocol.Ssh);
             var hostedRemote = _selectHostedRepoCB.Items.
                 Cast<IHostedRemote>().
                 FirstOrDefault(remote => remote.Name.Equals(currentRemote, StringComparison.OrdinalIgnoreCase));
