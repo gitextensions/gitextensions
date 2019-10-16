@@ -393,11 +393,11 @@ namespace GitUI
             return StartCreateBranchDialog(owner, objectId);
         }
 
-        public bool StartCreateBranchDialog(IWin32Window owner = null, ObjectId objectId = null)
+        public bool StartCreateBranchDialog(IWin32Window owner = null, ObjectId objectId = null, string newBranchNamePrefix = null)
         {
             bool Action()
             {
-                using (var form = new FormCreateBranch(this, objectId))
+                using (var form = new FormCreateBranch(this, objectId, newBranchNamePrefix))
                 {
                     return form.ShowDialog(owner) == DialogResult.OK;
                 }

@@ -78,6 +78,7 @@ namespace GitUI.BranchTreePanel
             this.menuTag = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuBranchPath = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnubtnDeleteAllBranches = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnCreateBranch = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRemoteRepoNode = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnubtnManageRemotes = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiSpacer3 = new System.Windows.Forms.ToolStripSeparator();
@@ -298,19 +299,28 @@ namespace GitUI.BranchTreePanel
             // menuBranchPath
             // 
             this.menuBranchPath.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnubtnCreateBranch,
             this.mnubtnDeleteAllBranches});
             this.menuBranchPath.Name = "contextmenuBranch";
-            this.menuBranchPath.Size = new System.Drawing.Size(125, 26);
+            this.menuBranchPath.Size = new System.Drawing.Size(181, 70);
             this.menuBranchPath.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // mnubtnDeleteAllBranches
             // 
             this.mnubtnDeleteAllBranches.Image = global::GitUI.Properties.Images.BranchDelete;
             this.mnubtnDeleteAllBranches.Name = "mnubtnDeleteAllBranches";
-            this.mnubtnDeleteAllBranches.Size = new System.Drawing.Size(124, 22);
+            this.mnubtnDeleteAllBranches.Size = new System.Drawing.Size(180, 22);
             this.mnubtnDeleteAllBranches.Text = "Delete All";
             this.mnubtnDeleteAllBranches.ToolTipText = "Delete all child branchs, which must all be fully merged in its upstream branch o" +
     "r in HEAD";
+            // 
+            // mnubtnCreateBranch
+            // 
+            this.mnubtnCreateBranch.Image = global::GitUI.Properties.Images.BranchCreate;
+            this.mnubtnCreateBranch.Name = "mnubtnCreateBranch";
+            this.mnubtnCreateBranch.Size = new System.Drawing.Size(180, 22);
+            this.mnubtnCreateBranch.Text = "Create Branch...";
+            this.mnubtnCreateBranch.ToolTipText = "Create a local branch";
             // 
             // menuRemoteRepoNode
             // 
@@ -625,6 +635,7 @@ namespace GitUI.BranchTreePanel
         private ContextMenuStrip menuTag;
         private ContextMenuStrip menuBranchPath;
         private ToolStripMenuItem mnubtnDeleteAllBranches;
+        private ToolStripMenuItem mnubtnCreateBranch;
         private ContextMenuStrip menuMain;
         private ToolStripMenuItem mnubtnCollapseAll;
         private ToolStripMenuItem mnubtnExpandAll;

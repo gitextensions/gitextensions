@@ -211,6 +211,12 @@ namespace GitUI.BranchTreePanel
                 var branches = Nodes.DepthEnumerator<LocalBranchNode>().Select(branch => branch.FullPath);
                 UICommands.StartDeleteBranchDialog(ParentWindow(), branches);
             }
+
+            public void CreateBranch()
+            {
+                var newBranchNamePrefix = FullPath + PathSeparator;
+                UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, null, newBranchNamePrefix);
+            }
         }
 
         private sealed class BranchTree : Tree

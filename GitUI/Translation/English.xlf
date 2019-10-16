@@ -7962,6 +7962,10 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Collapse All</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnubtnCreateBranch.Text">
+        <source>Create Branch...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnubtnDeleteAllBranches.Text">
         <source>Delete All</source>
         <target />
