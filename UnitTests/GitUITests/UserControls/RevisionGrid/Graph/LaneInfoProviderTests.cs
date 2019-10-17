@@ -262,8 +262,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
         [Test]
         public void GetLaneInfo_should_display_only_the_branch_from_next_merge_node()
         {
-            int maxScoreIsIgnored;
-            _mergeCommitNode.AddParent(_realCommitNode, out maxScoreIsIgnored);
+            _mergeCommitNode.AddParent(_realCommitNode, out int maxScoreIsIgnored);
             _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false));
 
             for (int index = 0; index < MergeSubjectsWithDecoding.Count; index += 3)
@@ -289,8 +288,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             // undetected merge
             // |               \
             // real             (omitted)
-            int maxScoreIsIgnored;
-            _mergeCommitNode.AddParent(_innerCommitNode, out maxScoreIsIgnored);
+            _mergeCommitNode.AddParent(_innerCommitNode, out int maxScoreIsIgnored);
             _innerCommitNode.AddParent(_undetectedMergeCommitNode, out maxScoreIsIgnored);
             _undetectedMergeCommitNode.AddParent(_realCommitNode, out maxScoreIsIgnored);
             _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false));
@@ -313,8 +311,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             // inner (omitted)
             // |
             // real
-            int maxScoreIsIgnored;
-            _mergeCommitNode.AddParent(_innerCommitNode, out maxScoreIsIgnored);
+            _mergeCommitNode.AddParent(_innerCommitNode, out int maxScoreIsIgnored);
             _innerCommitNode.AddParent(_realCommitNode, out maxScoreIsIgnored);
             _realCommitNode.GitRevision.Refs = new GitRef[] { new GitRef(null, null, GitRefName.RefsTagsPrefix + "tag_shall_be_ignored") };
             _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false));
@@ -341,8 +338,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             // merge
             // |    \
             // real  (omitted)
-            int maxScoreIsIgnored;
-            _mergeCommitNode.AddParent(_realCommitNode, out maxScoreIsIgnored);
+            _mergeCommitNode.AddParent(_realCommitNode, out int _);
 
             GetLaneInfo_should_prefer_the_branch_from_merge_to_a_GitRef();
         }
@@ -357,9 +353,8 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             // merge
             // |    \
             // real  (omitted or maybe even missing)
-            int maxScoreIsIgnored;
-            _artificialCommitNode.AddParent(_mergeCommitNode, out maxScoreIsIgnored);
-            _mergeCommitNode.AddParent(_realCommitNode, out maxScoreIsIgnored);
+            _artificialCommitNode.AddParent(_mergeCommitNode, out int _);
+            _mergeCommitNode.AddParent(_realCommitNode, out _);
 
             GetLaneInfo_should_prefer_the_branch_from_merge_to_a_GitRef();
         }
@@ -387,8 +382,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             // merge
             // |    \
             // inner real
-            int maxScoreIsIgnored;
-            _mergeCommitNode.AddParent(_innerCommitNode, out maxScoreIsIgnored);
+            _mergeCommitNode.AddParent(_innerCommitNode, out int maxScoreIsIgnored);
             _mergeCommitNode.AddParent(_realCommitNode, out maxScoreIsIgnored);
             _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false));
 
@@ -412,8 +406,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             // |    inner
             // |   /
             // real
-            int maxScoreIsIgnored;
-            _artificialCommitNode.AddParent(_undetectedMergeCommitNode, out maxScoreIsIgnored);
+            _artificialCommitNode.AddParent(_undetectedMergeCommitNode, out int maxScoreIsIgnored);
             _undetectedMergeCommitNode.AddParent(_realCommitNode, out maxScoreIsIgnored);
             _undetectedMergeCommitNode.AddParent(_innerCommitNode, out maxScoreIsIgnored);
             _innerCommitNode.AddParent(_realCommitNode, out maxScoreIsIgnored);
@@ -435,8 +428,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             // undetected merge
             // |               \
             // real             (omitted)
-            int maxScoreIsIgnored;
-            _artificialCommitNode.AddParent(_undetectedMergeCommitNode, out maxScoreIsIgnored);
+            _artificialCommitNode.AddParent(_undetectedMergeCommitNode, out int maxScoreIsIgnored);
             _undetectedMergeCommitNode.AddParent(_realCommitNode, out maxScoreIsIgnored);
             _mergeCommitNode.AddParent(_innerCommitNode, out maxScoreIsIgnored);
             _innerCommitNode.AddParent(_undetectedMergeCommitNode, out maxScoreIsIgnored);

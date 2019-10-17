@@ -45,8 +45,7 @@ namespace GitUI.Editor.Diff
         /// <param name="caretLine">0-based (in contrast to the displayed line numbers which are 1-based)</param>
         public DiffLineInfo GetLineInfo(int caretLine)
         {
-            DiffLineInfo diffLine;
-            _diffLines.TryGetValue(caretLine + 1, out diffLine);
+            _diffLines.TryGetValue(caretLine + 1, out DiffLineInfo diffLine);
             return diffLine;
         }
 
