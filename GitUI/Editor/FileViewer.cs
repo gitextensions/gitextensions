@@ -1239,7 +1239,9 @@ namespace GitUI.Editor
             ShowEntireFile = 4,
             TreatFileAsText = 5,
             NextChange = 6,
-            PreviousChange = 7
+            PreviousChange = 7,
+            NextOccurrence = 10,
+            PreviousOccurrence = 11
         }
 
         protected override CommandStatus ExecuteCommand(int cmd)
@@ -1258,6 +1260,8 @@ namespace GitUI.Editor
                 case Commands.TreatFileAsText: TreatAllFilesAsTextToolStripMenuItemClick(null, null); break;
                 case Commands.NextChange: NextChangeButtonClick(null, null); break;
                 case Commands.PreviousChange: PreviousChangeButtonClick(null, null); break;
+                case Commands.NextOccurrence: internalFileViewer.GoToNextOccurrence(); break;
+                case Commands.PreviousOccurrence: internalFileViewer.GoToPreviousOccurrence(); break;
                 default: return base.ExecuteCommand(cmd);
             }
 

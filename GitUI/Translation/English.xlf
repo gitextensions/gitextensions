@@ -715,6 +715,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Color remote branch</source>
         <target />
       </trans-unit>
+      <trans-unit id="lblColorHighlightAllOccurrences.Text">
+        <source>Color highlight all occurences</source>
+        <target />
+      </trans-unit>
       <trans-unit id="lblColorHighlightAuthored.Text">
         <source>Color authored revisions</source>
         <target />

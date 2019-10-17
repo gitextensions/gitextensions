@@ -80,6 +80,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_ColorSectionLabel.BackColor = AppSettings.DiffSectionColor;
             _NO_TRANSLATE_ColorSectionLabel.Text = AppSettings.DiffSectionColor.Name;
             _NO_TRANSLATE_ColorSectionLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorSectionLabel.BackColor);
+            _NO_TRANSLATE_ColorHighlightAllOccurrencesLabel.BackColor = AppSettings.HighlightAllOccurencesColor;
+            _NO_TRANSLATE_ColorHighlightAllOccurrencesLabel.Text = AppSettings.HighlightAllOccurencesColor.Name;
+            _NO_TRANSLATE_ColorHighlightAllOccurrencesLabel.ForeColor =
+                ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorHighlightAllOccurrencesLabel.BackColor);
         }
 
         protected override void PageToSettings()
@@ -102,6 +106,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.DiffAddedExtraColor = _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor;
             AppSettings.DiffRemovedExtraColor = _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor;
             AppSettings.DiffSectionColor = _NO_TRANSLATE_ColorSectionLabel.BackColor;
+            AppSettings.HighlightAllOccurencesColor = _NO_TRANSLATE_ColorHighlightAllOccurrencesLabel.BackColor;
         }
 
         private void MulticolorBranches_CheckedChanged(object sender, EventArgs e)

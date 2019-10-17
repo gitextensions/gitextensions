@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -7,6 +9,7 @@ using GitExtUtils.GitUI;
 using GitUI.Editor.Diff;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
+using JetBrains.Annotations;
 
 namespace GitUI.Editor
 {
@@ -35,6 +38,7 @@ namespace GitUI.Editor
             InitializeComplete();
 
             _currentViewPositionCache = new CurrentViewPositionCache(this);
+            TextEditor.ActiveTextAreaControl.TextArea.SelectionManager.SelectionChanged += SelectionManagerSelectionChanged;
 
             TextEditor.ActiveTextAreaControl.TextArea.PreviewKeyDown += (s, e) =>
             {
@@ -69,6 +73,57 @@ namespace GitUI.Editor
             VRulerPosition = AppSettings.DiffVerticalRulerPosition;
         }
 
+        private void SelectionManagerSelectionChanged(object sender, EventArgs e)
+        {
+            string text = TextEditor.ActiveTextAreaControl.TextArea.SelectionManager.SelectedText;
+            TextEditor.Document.MarkerStrategy.RemoveAll(m => true);
+
+            IList<TextMarker> selectionMarkers = GetTextMarkersMatchingWord(text);
+
+            foreach (var selectionMarker in selectionMarkers)
+            {
+                TextEditor.Document.MarkerStrategy.AddMarker(selectionMarker);
+            }
+
+            _diffHighlightService.AddPatchHighlighting(TextEditor.Document);
+            TextEditor.ActiveTextAreaControl.TextArea.Invalidate();
+        }
+
+        /// <summary>
+        /// Create a list of TextMarker instances in the Document that match the given text
+        /// </summary>
+        /// <param name="word">The text to match.</param>
+        [NotNull]
+        private IList<TextMarker> GetTextMarkersMatchingWord(string word)
+        {
+            if (word.IsNullOrWhiteSpace())
+            {
+                return Array.Empty<TextMarker>();
+            }
+
+            var selectionMarkers = new List<TextMarker>();
+
+            string textContent = TextEditor.Document.TextContent;
+            int indexMatch = -1;
+            do
+            {
+                indexMatch = textContent.IndexOf(word, indexMatch + 1, StringComparison.OrdinalIgnoreCase);
+                if (indexMatch >= 0)
+                {
+                    Color highlightColor = AppSettings.HighlightAllOccurencesColor;
+
+                    var textMarker = new TextMarker(indexMatch,
+                        word.Length, TextMarkerType.SolidBlock, highlightColor,
+                        ColorHelper.GetForeColorForBackColor(highlightColor));
+
+                    selectionMarkers.Add(textMarker);
+                }
+            }
+            while (indexMatch >= 0 && indexMatch < textContent.Length - 1);
+
+            return selectionMarkers;
+        }
+
         public new Font Font
         {
             get => TextEditor.Font;
@@ -76,6 +131,43 @@ namespace GitUI.Editor
         }
 
         public Action OpenWithDifftool { get; private set; }
+
+        /// <summary>
+        /// Move the file viewer cursor position to the next TextMarker found in the document that matches the AppSettings.HighlightAllOccurencesColor/>
+        /// </summary>
+        public void GoToNextOccurrence()
+        {
+            int offset = TextEditor.ActiveTextAreaControl.TextArea.Caret.Offset;
+
+            List<TextMarker> markers = TextEditor.Document.MarkerStrategy.GetMarkers(offset,
+                TextEditor.Document.TextLength - offset);
+
+            TextMarker marker =
+                markers.FirstOrDefault(x => x.Offset > offset && x.Color == AppSettings.HighlightAllOccurencesColor);
+            if (marker != null)
+            {
+                TextLocation position = TextEditor.ActiveTextAreaControl.TextArea.Document.OffsetToPosition(marker.Offset);
+                TextEditor.ActiveTextAreaControl.Caret.Position = position;
+            }
+        }
+
+        /// <summary>
+        /// Move the file viewer cursor position to the previous TextMarker found in the document that matches the AppSettings.HighlightAllOccurencesColor/>
+        /// </summary>
+        public void GoToPreviousOccurrence()
+        {
+            int offset = TextEditor.ActiveTextAreaControl.TextArea.Caret.Offset;
+
+            List<TextMarker> markers = TextEditor.Document.MarkerStrategy.GetMarkers(0, offset);
+
+            TextMarker marker =
+                markers.LastOrDefault(x => x.Offset < offset && x.Color == AppSettings.HighlightAllOccurencesColor);
+            if (marker != null)
+            {
+                TextLocation position = TextEditor.ActiveTextAreaControl.TextArea.Document.OffsetToPosition(marker.Offset);
+                TextEditor.ActiveTextAreaControl.Caret.Position = position;
+            }
+        }
 
         public void Find()
         {
@@ -227,6 +319,7 @@ namespace GitUI.Editor
 
         public void AddPatchHighlighting()
         {
+            TextEditor.Document.MarkerStrategy.RemoveAll(m => true);
             _diffHighlightService.AddPatchHighlighting(TextEditor.Document);
         }
 
