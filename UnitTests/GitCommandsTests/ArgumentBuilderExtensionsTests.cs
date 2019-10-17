@@ -263,7 +263,7 @@ namespace GitCommandsTests
             foreach (int mode in Enum.GetValues(typeof(ForcePushOptions)))
             {
                 // unimplemented switches will result in InvalidEnumArgumentException
-                var args = new ArgumentBuilder
+                new ArgumentBuilder
                 {
                     (ForcePushOptions)mode
                 };
@@ -276,7 +276,7 @@ namespace GitCommandsTests
             foreach (int mode in Enum.GetValues(typeof(GitBisectOption)))
             {
                 // unimplemented switches will result in InvalidEnumArgumentException
-                var args = new ArgumentBuilder
+                new ArgumentBuilder
                 {
                     (GitBisectOption)mode
                 };
@@ -289,7 +289,7 @@ namespace GitCommandsTests
             foreach (int mode in Enum.GetValues(typeof(IgnoreSubmodulesMode)))
             {
                 // unimplemented switches will result in InvalidEnumArgumentException
-                var args = new ArgumentBuilder
+                new ArgumentBuilder
                 {
                     (IgnoreSubmodulesMode)mode
                 };
@@ -302,7 +302,7 @@ namespace GitCommandsTests
             foreach (int mode in Enum.GetValues(typeof(CleanMode)))
             {
                 // unimplemented switches will result in InvalidEnumArgumentException
-                var args = new ArgumentBuilder
+                new ArgumentBuilder
                 {
                     (CleanMode)mode
                 };
@@ -315,7 +315,7 @@ namespace GitCommandsTests
             foreach (int mode in Enum.GetValues(typeof(ResetMode)))
             {
                 // unimplemented switches will result in InvalidEnumArgumentException
-                var args = new ArgumentBuilder
+                new ArgumentBuilder
                 {
                     (ResetMode)mode
                 };

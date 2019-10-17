@@ -111,24 +111,26 @@ namespace GitCommandsTests.ExternalLinks
 
         private static BindingList<ConfigFileRemote> GetDefaultRemotes()
         {
-            var remotes = new BindingList<ConfigFileRemote>();
-            remotes.Add(new ConfigFileRemote
+            var remotes = new BindingList<ConfigFileRemote>
             {
-                Name = "origin",
-                Url = "https://github.com/jbialobr/gitextensions.git"
-            });
+                new ConfigFileRemote
+                {
+                    Name = "origin",
+                    Url = "https://github.com/jbialobr/gitextensions.git"
+                },
 
-            remotes.Add(new ConfigFileRemote
-            {
-                Name = "upstream",
-                Url = "https://github.com/gitextensions/gitextensions.git"
-            });
+                new ConfigFileRemote
+                {
+                    Name = "upstream",
+                    Url = "https://github.com/gitextensions/gitextensions.git"
+                },
 
-            remotes.Add(new ConfigFileRemote
-            {
-                Name = "RussKie",
-                Url = "https://github.com/russkie/gitextensions.git"
-            });
+                new ConfigFileRemote
+                {
+                    Name = "RussKie",
+                    Url = "https://github.com/russkie/gitextensions.git"
+                }
+            };
 
             return remotes;
         }
