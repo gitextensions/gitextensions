@@ -1,6 +1,6 @@
 version: 3.3.0.{build}
 
-os: Visual Studio 2017
+os: Visual Studio 2019
 
 branches:
   except:
@@ -9,7 +9,7 @@ branches:
 
 environment:
   matrix:
-  - IdeVersion: VS2017
+  - IdeVersion: VS2019
   SKIP_PAUSE: TRUE
   ARCHIVE_WITH_PDB: TRUE
 
