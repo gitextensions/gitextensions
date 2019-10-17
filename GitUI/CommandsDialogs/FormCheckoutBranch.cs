@@ -208,7 +208,7 @@ namespace GitUI.CommandsDialogs
             }
 
             tableLayoutPanel1.RowStyles[2].Height = Remotebranch.Checked ? _controls[remoteOptionsPanel] : 0;
-            tableLayoutPanel1.Height = tableLayoutPanel1.Height - _controls[remoteOptionsPanel];
+            tableLayoutPanel1.Height -= _controls[remoteOptionsPanel];
         }
 
         private void PopulateBranches()

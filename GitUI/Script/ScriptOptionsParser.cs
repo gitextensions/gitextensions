@@ -457,10 +457,10 @@ namespace GitUI.Script
                 newStringQuoted = "\"" + newStringQuoted;
                 if (newStringQuoted.EndsWith("\\"))
                 {
-                    newStringQuoted = newStringQuoted + "\\";
+                    newStringQuoted += "\\";
                 }
 
-                newStringQuoted = newStringQuoted + "\"";
+                newStringQuoted += "\"";
 
                 arguments = arguments.Replace(CreateOption(option, quoted: true), newStringQuoted);
                 arguments = arguments.Replace(CreateOption(option, quoted: false), newString);

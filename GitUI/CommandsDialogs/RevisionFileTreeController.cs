@@ -129,7 +129,7 @@ namespace GitUI.CommandsDialogs
                             if (!imageCollection.ContainsKey(extension))
                             {
                                 // a little optimisation - initialise the first time it is required
-                                workingDir = workingDir ?? _getWorkingDir();
+                                workingDir ??= _getWorkingDir();
 
                                 var fileIcon = _iconProvider.Get(workingDir, gitItem.FileName);
                                 if (fileIcon == null)

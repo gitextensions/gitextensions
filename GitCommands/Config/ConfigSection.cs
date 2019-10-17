@@ -153,7 +153,7 @@ namespace GitCommands.Config
                 result = result + " \"" + escSubSection + "\"";
             }
 
-            result = result + "]";
+            result += "]";
             return result;
         }
 

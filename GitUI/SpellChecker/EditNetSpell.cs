@@ -927,7 +927,7 @@ namespace GitUI.SpellChecker
 
         private void AcceptAutoComplete(AutoCompleteWord completionWord = null)
         {
-            completionWord = completionWord ?? (AutoCompleteWord)AutoComplete.SelectedItem;
+            completionWord ??= (AutoCompleteWord)AutoComplete.SelectedItem;
             var word = GetWordAtCursor();
             TextBox.Select(TextBox.SelectionStart - word.Length, word.Length);
             TextBox.SelectedText = completionWord.Word;

@@ -412,7 +412,7 @@ namespace GitUI.UserControls
                         return;
                 }
 
-                newValue = newValue ?? NativeMethods.GetScrollPos(Handle, NativeMethods.SB_VERT);
+                newValue ??= NativeMethods.GetScrollPos(Handle, NativeMethods.SB_VERT);
                 Scroll?.Invoke(this, new ScrollEventArgs(type, newValue.Value));
 
                 static short LowWord(long number) =>

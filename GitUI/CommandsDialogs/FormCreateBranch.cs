@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs
                 objectId = null;
             }
 
-            objectId = objectId ?? Module.GetCurrentCheckout();
+            objectId ??= Module.GetCurrentCheckout();
             if (objectId != null)
             {
                 commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());

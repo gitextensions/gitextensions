@@ -152,7 +152,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         gitRef.IsDereference && // see note on using IsDereference in CommitInfo class
                         AppSettings.ShowAnnotatedTagsMessages)
                     {
-                        name = name + " [...]";
+                        name += " [...]";
                     }
 
                     RevisionGridRefRenderer.DrawRef(isRowSelected, font, ref offset, name, headColor, arrowType, messageBounds, e.Graphics, dashedLine: superprojectRef != null, fill: true);

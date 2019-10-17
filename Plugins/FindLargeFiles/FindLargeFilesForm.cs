@@ -119,7 +119,7 @@ namespace FindLargeFiles
                         ThreadHelper.JoinableTaskFactory.Run(async () =>
                         {
                             await pbRevisions.SwitchToMainThreadAsync();
-                            pbRevisions.Value = pbRevisions.Value + (int)((_revList.Length * 0.1f) / packFiles.Length);
+                            pbRevisions.Value += (int)((_revList.Length * 0.1f) / packFiles.Length);
                         });
                         foreach (var gitObject in objects.Where(x => x.Contains(" blob ")))
                         {

@@ -81,7 +81,7 @@ namespace GitCommands
                     ms?.Dispose();
                 }
 
-                outputString = outputString + Environment.NewLine;
+                outputString += Environment.NewLine;
             }
 
             string errorString = null;

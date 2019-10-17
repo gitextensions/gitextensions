@@ -110,7 +110,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     : 0;
 
                 // Adjust the head of the cache
-                _graphCache.Head = _graphCache.Head + neededHeadAdjustment;
+                _graphCache.Head += neededHeadAdjustment;
                 _graphCache.HeadRow = (_graphCache.HeadRow + neededHeadAdjustment) % _graphCache.Capacity;
                 if (_graphCache.HeadRow < 0)
                 {
