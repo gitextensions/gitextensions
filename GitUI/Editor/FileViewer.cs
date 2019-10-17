@@ -1494,28 +1494,28 @@ namespace GitUI.Editor
                 _fileViewer = fileViewer;
             }
 
-            public ToolStripMenuItem CopyToolStripMenuItem => _fileViewer.copyToolStripMenuItem;
+            public readonly ToolStripMenuItem CopyToolStripMenuItem => _fileViewer.copyToolStripMenuItem;
 
-            public FileViewerInternal FileViewerInternal => _fileViewer.internalFileViewer;
+            public readonly FileViewerInternal FileViewerInternal => _fileViewer.internalFileViewer;
 
-            public IgnoreWhitespaceKind IgnoreWhitespace
+            public readonly IgnoreWhitespaceKind IgnoreWhitespace
             {
                 get => _fileViewer.IgnoreWhitespace;
                 set => _fileViewer.IgnoreWhitespace = value;
             }
 
-            internal void IgnoreWhitespaceAtEolToolStripMenuItem_Click(object sender, EventArgs e) => _fileViewer.IgnoreWhitespaceAtEolToolStripMenuItem_Click(sender, e);
-            internal void IgnoreWhitespaceChangesToolStripMenuItemClick(object sender, EventArgs e) => _fileViewer.IgnoreWhitespaceChangesToolStripMenuItemClick(sender, e);
-            internal void IgnoreAllWhitespaceChangesToolStripMenuItem_Click(object sender, EventArgs e) => _fileViewer.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(sender, e);
+            internal readonly void IgnoreWhitespaceAtEolToolStripMenuItem_Click(object sender, EventArgs e) => _fileViewer.IgnoreWhitespaceAtEolToolStripMenuItem_Click(sender, e);
+            internal readonly void IgnoreWhitespaceChangesToolStripMenuItemClick(object sender, EventArgs e) => _fileViewer.IgnoreWhitespaceChangesToolStripMenuItemClick(sender, e);
+            internal readonly void IgnoreAllWhitespaceChangesToolStripMenuItem_Click(object sender, EventArgs e) => _fileViewer.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(sender, e);
 
-            public ToolStripButton IgnoreWhitespaceAtEolButton => _fileViewer.ignoreWhitespaceAtEol;
-            public ToolStripMenuItem IgnoreWhitespaceAtEolMenuItem => _fileViewer.ignoreWhitespaceAtEolToolStripMenuItem;
+            public readonly ToolStripButton IgnoreWhitespaceAtEolButton => _fileViewer.ignoreWhitespaceAtEol;
+            public readonly ToolStripMenuItem IgnoreWhitespaceAtEolMenuItem => _fileViewer.ignoreWhitespaceAtEolToolStripMenuItem;
 
-            public ToolStripButton IgnoreWhiteSpacesButton => _fileViewer.ignoreWhiteSpaces;
-            public ToolStripMenuItem IgnoreWhiteSpacesMenuItem => _fileViewer.ignoreWhitespaceChangesToolStripMenuItem;
+            public readonly ToolStripButton IgnoreWhiteSpacesButton => _fileViewer.ignoreWhiteSpaces;
+            public readonly ToolStripMenuItem IgnoreWhiteSpacesMenuItem => _fileViewer.ignoreWhitespaceChangesToolStripMenuItem;
 
-            public ToolStripButton IgnoreAllWhitespacesButton => _fileViewer.ignoreAllWhitespaces;
-            public ToolStripMenuItem IgnoreAllWhitespacesMenuItem => _fileViewer.ignoreAllWhitespaceChangesToolStripMenuItem;
+            public readonly ToolStripButton IgnoreAllWhitespacesButton => _fileViewer.ignoreAllWhitespaces;
+            public readonly ToolStripMenuItem IgnoreAllWhitespacesMenuItem => _fileViewer.ignoreAllWhitespaceChangesToolStripMenuItem;
         }
     }
 }

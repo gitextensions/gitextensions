@@ -169,7 +169,7 @@ Send report anyway?");
                 _form = form;
             }
 
-            public bool CheckContainsInfo(string input) => _form.CheckContainsInfo(input);
+            public readonly bool CheckContainsInfo(string input) => _form.CheckContainsInfo(input);
         }
     }
 }

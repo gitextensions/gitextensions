@@ -123,9 +123,9 @@ namespace GitUI.CommandsDialogs
                 _form = form;
             }
 
-            public ComboBox DirectoryCombo => _form.Directory;
+            public readonly ComboBox DirectoryCombo => _form.Directory;
 
-            public bool IsRootedDirectoryPath(string path)
+            public readonly bool IsRootedDirectoryPath(string path)
             {
                 return FormInit.IsRootedDirectoryPath(path);
             }

@@ -162,13 +162,13 @@ namespace GitUI
                 _form = form;
             }
 
-            public IWindowPositionManager WindowPositionManager
+            public readonly IWindowPositionManager WindowPositionManager
             {
                 get => _form._windowPositionManager;
                 set => _form._windowPositionManager = value;
             }
 
-            public Func<IReadOnlyList<Rectangle>> GetScreensWorkingArea
+            public readonly Func<IReadOnlyList<Rectangle>> GetScreensWorkingArea
             {
                 get => _form._getScreensWorkingArea;
                 set => _form._getScreensWorkingArea = value;

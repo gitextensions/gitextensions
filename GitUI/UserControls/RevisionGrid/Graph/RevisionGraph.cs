@@ -357,7 +357,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             // This method will validate the topo order in brute force.
             // Only used for unit testing.
-            public bool ValidateTopoOrder()
+            public readonly bool ValidateTopoOrder()
             {
                 foreach (var node in _revisionGraph._nodes)
                 {

@@ -51,26 +51,26 @@ namespace GitUI
         /// <summary>
         /// Hue as a value between 0 and 1.
         /// </summary>
-        public double H { get; }
+        public readonly double H { get; }
 
         /// <summary>
         /// Saturation as a value between 0 and 1.
         /// </summary>
-        public double S { get; }
+        public readonly double S { get; }
 
         /// <summary>
         /// Luminosity (brightness) as a value between 0 and 1.
         /// </summary>
-        public double L { get; }
+        public readonly double L { get; }
 
-        public HslColor WithHue(double hue) => new HslColor(hue, S, L);
-        public HslColor WithSaturation(double saturation) => new HslColor(H, saturation, L);
-        public HslColor WithBrightness(double luminosity) => new HslColor(H, S, luminosity);
+        public readonly HslColor WithHue(double hue) => new HslColor(hue, S, L);
+        public readonly HslColor WithSaturation(double saturation) => new HslColor(H, saturation, L);
+        public readonly HslColor WithBrightness(double luminosity) => new HslColor(H, S, luminosity);
 
         /// <summary>
         /// Converts this HSL color object to a <see cref="Color"/> object based on RGB values.
         /// </summary>
-        public Color ToColor()
+        public readonly Color ToColor()
         {
             const double tolerance = 0.00001;
 
@@ -129,6 +129,6 @@ namespace GitUI
             }
         }
 
-        public override string ToString() => $"H = {H:#.000}, S = {S:#.000}, L = {L:#.000}";
+        public readonly override string ToString() => $"H = {H:#.000}, S = {S:#.000}, L = {L:#.000}";
     }
 }

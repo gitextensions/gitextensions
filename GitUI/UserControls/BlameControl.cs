@@ -546,16 +546,16 @@ namespace GitUI.Blame
                 _control = control;
             }
 
-            public GitBlame Blame
+            public readonly GitBlame Blame
             {
                 get => _control._blame;
                 set => _control._blame = value;
             }
 
-            public void BuildAuthorLine(GitBlameLine line, StringBuilder lineBuilder, string dateTimeFormat, string filename, bool showAuthor, bool showAuthorDate, bool showOriginalFilePath, bool displayAuthorFirst)
+            public readonly void BuildAuthorLine(GitBlameLine line, StringBuilder lineBuilder, string dateTimeFormat, string filename, bool showAuthor, bool showAuthorDate, bool showOriginalFilePath, bool displayAuthorFirst)
                 => _control.BuildAuthorLine(line, lineBuilder, dateTimeFormat, filename, showAuthor, showAuthorDate, showOriginalFilePath, displayAuthorFirst);
 
-            public (string gutter, string body) BuildBlameContents(string filename) => _control.BuildBlameContents(filename);
+            public readonly (string gutter, string body) BuildBlameContents(string filename) => _control.BuildBlameContents(filename);
         }
     }
 }

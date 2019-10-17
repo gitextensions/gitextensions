@@ -371,16 +371,16 @@ namespace DeleteUnusedBranches
                 CancellationToken = cancellationToken;
             }
 
-            public IGitModule Commands { get; }
-            public bool IncludeRemotes { get; }
-            public bool IncludeUnmerged { get; }
-            public string ReferenceBranch { get; }
-            public string RemoteRepositoryName { get; }
-            public string RegexFilter { get; }
-            public bool RegexIgnoreCase { get; }
-            public bool RegexDoesNotMatch { get; }
-            public TimeSpan ObsolescenceDuration { get; }
-            public CancellationToken CancellationToken { get; }
+            public readonly IGitModule Commands { get; }
+            public readonly bool IncludeRemotes { get; }
+            public readonly bool IncludeUnmerged { get; }
+            public readonly string ReferenceBranch { get; }
+            public readonly string RemoteRepositoryName { get; }
+            public readonly string RegexFilter { get; }
+            public readonly bool RegexIgnoreCase { get; }
+            public readonly bool RegexDoesNotMatch { get; }
+            public readonly TimeSpan ObsolescenceDuration { get; }
+            public readonly CancellationToken CancellationToken { get; }
         }
     }
 }

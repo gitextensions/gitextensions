@@ -3316,23 +3316,23 @@ namespace GitUI.CommandsDialogs
                 _formCommit = formCommit;
             }
 
-            internal ToolStripMenuItem EditFileToolStripMenuItem => _formCommit.editFileToolStripMenuItem;
+            internal readonly ToolStripMenuItem EditFileToolStripMenuItem => _formCommit.editFileToolStripMenuItem;
 
-            internal FileStatusList UnstagedList => _formCommit.Unstaged;
+            internal readonly FileStatusList UnstagedList => _formCommit.Unstaged;
 
-            internal EditNetSpell Message => _formCommit.Message;
+            internal readonly EditNetSpell Message => _formCommit.Message;
 
-            internal FileViewer SelectedDiff => _formCommit.SelectedDiff;
+            internal readonly FileViewer SelectedDiff => _formCommit.SelectedDiff;
 
-            internal ToolStripDropDownButton CommitMessageToolStripMenuItem => _formCommit.commitMessageToolStripMenuItem;
+            internal readonly ToolStripDropDownButton CommitMessageToolStripMenuItem => _formCommit.commitMessageToolStripMenuItem;
 
-            internal ToolStripStatusLabel CommitAuthorStatusToolStripStatusLabel => _formCommit.commitAuthorStatus;
+            internal readonly ToolStripStatusLabel CommitAuthorStatusToolStripStatusLabel => _formCommit.commitAuthorStatus;
 
-            internal ToolStripStatusLabel CurrentBranchNameLabelStatus => _formCommit.branchNameLabel;
+            internal readonly ToolStripStatusLabel CurrentBranchNameLabelStatus => _formCommit.branchNameLabel;
 
-            internal ToolStripStatusLabel RemoteNameLabelStatus => _formCommit.remoteNameLabel;
+            internal readonly ToolStripStatusLabel RemoteNameLabelStatus => _formCommit.remoteNameLabel;
 
-            internal CommandStatus ExecuteCommand(Command command) => _formCommit.ExecuteCommand((int)command);
+            internal readonly CommandStatus ExecuteCommand(Command command) => _formCommit.ExecuteCommand((int)command);
 
             internal static string FormatCommitMessageFromTextBox(
                 string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty)

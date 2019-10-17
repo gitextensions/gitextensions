@@ -508,15 +508,15 @@ namespace GitUI.Editor
                     _viewPositionCache = viewPositionCache;
                 }
 
-                public ViewPosition ViewPosition
+                public readonly ViewPosition ViewPosition
                 {
                     get => _viewPositionCache._currentViewPosition;
                     set => _viewPositionCache._currentViewPosition = value;
                 }
 
-                public TextEditorControl TextEditor => _viewPositionCache._viewer.TextEditor;
+                public readonly TextEditorControl TextEditor => _viewPositionCache._viewer.TextEditor;
 
-                public DiffViewerLineNumberControl LineNumberControl
+                public readonly DiffViewerLineNumberControl LineNumberControl
                 {
                     get => _viewPositionCache._viewer._lineNumbersControl;
                     set => _viewPositionCache._viewer._lineNumbersControl = value;
@@ -545,7 +545,7 @@ namespace GitUI.Editor
                 _control = control;
             }
 
-            public TextEditorControl TextEditor => _control.TextEditor;
+            public readonly TextEditorControl TextEditor => _control.TextEditor;
         }
     }
 }

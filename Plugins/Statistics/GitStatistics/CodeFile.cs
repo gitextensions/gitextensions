@@ -7,12 +7,12 @@ namespace GitStatistics
 {
     public readonly struct CodeFile
     {
-        public int TotalLineCount { get; }
-        public int BlankLineCount { get; }
-        public int DesignerLineCount { get; }
-        public int CommentLineCount { get; }
-        public int CodeLineCount { get; }
-        public bool IsTestFile { get; }
+        public readonly int TotalLineCount { get; }
+        public readonly int BlankLineCount { get; }
+        public readonly int DesignerLineCount { get; }
+        public readonly int CommentLineCount { get; }
+        public readonly int CodeLineCount { get; }
+        public readonly bool IsTestFile { get; }
 
         public static CodeFile Parse(FileInfo file)
         {

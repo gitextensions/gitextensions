@@ -45,7 +45,7 @@ namespace GitUI
         /// <summary>
         /// Restores <see cref="Cursor.Current"/> to the value captured in the constructor.
         /// </summary>
-        public void Dispose()
+        public readonly void Dispose()
         {
             Cursor.Current = _cursorAtStartOfScope;
         }

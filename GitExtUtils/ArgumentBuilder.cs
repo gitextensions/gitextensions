@@ -107,7 +107,7 @@ namespace GitExtUtils
                 _builder = builder;
             }
 
-            public StringBuilder Arguments => _builder._arguments;
+            public readonly StringBuilder Arguments => _builder._arguments;
         }
     }
 }

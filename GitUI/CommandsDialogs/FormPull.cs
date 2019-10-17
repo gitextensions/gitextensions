@@ -1077,18 +1077,18 @@ namespace GitUI.CommandsDialogs
                 _form = form;
             }
 
-            public string Title => _form.Text;
-            public string FetchTitleText => _form._formTitleFetch.Text;
-            public string PullTitleText => _form._formTitlePull.Text;
-            public RadioButton Merge => _form.Merge;
-            public RadioButton Rebase => _form.Rebase;
-            public RadioButton Fetch => _form.Fetch;
-            public CheckBox AutoStash => _form.AutoStash;
-            public CheckBox Prune => _form.Prune;
-            public ComboBox Remotes => _form._NO_TRANSLATE_Remotes;
-            public TextBox LocalBranch => _form.localBranch;
+            public readonly string Title => _form.Text;
+            public readonly string FetchTitleText => _form._formTitleFetch.Text;
+            public readonly string PullTitleText => _form._formTitlePull.Text;
+            public readonly RadioButton Merge => _form.Merge;
+            public readonly RadioButton Rebase => _form.Rebase;
+            public readonly RadioButton Fetch => _form.Fetch;
+            public readonly CheckBox AutoStash => _form.AutoStash;
+            public readonly CheckBox Prune => _form.Prune;
+            public readonly ComboBox Remotes => _form._NO_TRANSLATE_Remotes;
+            public readonly TextBox LocalBranch => _form.localBranch;
 
-            public void UpdateSettingsDuringPull() => _form.UpdateSettingsDuringPull();
+            public readonly void UpdateSettingsDuringPull() => _form.UpdateSettingsDuringPull();
         }
     }
 }

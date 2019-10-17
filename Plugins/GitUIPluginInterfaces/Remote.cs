@@ -5,9 +5,9 @@ namespace GitUIPluginInterfaces
 {
     public readonly struct Remote
     {
-        public string Name { get; }
-        public string FetchUrl { get; }
-        public List<string> PushUrls { get; }
+        public readonly string Name { get; }
+        public readonly string FetchUrl { get; }
+        public readonly List<string> PushUrls { get; }
 
         public Remote(string name, string fetchUrl, string firstPushUrl)
         {

@@ -31,7 +31,7 @@ namespace GitCommands.Statistics
             public int AddedLines { get; }
             public int DeletedLines { get; }
 
-            public int ChangedLines => AddedLines + DeletedLines;
+            public readonly int ChangedLines => AddedLines + DeletedLines;
 
             public DataPoint(int commits, int added, int deleted)
             {

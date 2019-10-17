@@ -3214,9 +3214,9 @@ namespace GitUI.CommandsDialogs
                 _form = form;
             }
 
-            public RepoObjectsTree RepoObjectsTree => _form.repoObjectsTree;
+            public readonly RepoObjectsTree RepoObjectsTree => _form.repoObjectsTree;
 
-            public void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, IList<Repository> repositoryHistory)
+            public readonly void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, IList<Repository> repositoryHistory)
             {
                 _form.PopulateFavouriteRepositoriesMenu(container, repositoryHistory);
             }

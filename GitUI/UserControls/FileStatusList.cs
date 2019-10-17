@@ -1534,13 +1534,13 @@ namespace GitUI
                 _fileStatusList = fileStatusList;
             }
 
-            internal Color ActiveInputColor => _fileStatusList._activeInputColor;
-            internal Color InvalidInputColor => _fileStatusList._invalidInputColor;
-            internal ListView FileStatusListView => _fileStatusList.FileStatusListView;
-            internal ComboBox FilterComboBox => _fileStatusList.FilterComboBox;
-            internal Regex Filter => _fileStatusList._filter;
-            internal bool FilterWatermarkLabelVisible => _fileStatusList.FilterWatermarkLabel.Visible;
-            internal void StoreFilter(string value) => _fileStatusList.StoreFilter(value);
+            internal readonly Color ActiveInputColor => _fileStatusList._activeInputColor;
+            internal readonly Color InvalidInputColor => _fileStatusList._invalidInputColor;
+            internal readonly ListView FileStatusListView => _fileStatusList.FileStatusListView;
+            internal readonly ComboBox FilterComboBox => _fileStatusList.FilterComboBox;
+            internal readonly Regex Filter => _fileStatusList._filter;
+            internal readonly bool FilterWatermarkLabelVisible => _fileStatusList.FilterWatermarkLabel.Visible;
+            internal readonly void StoreFilter(string value) => _fileStatusList.StoreFilter(value);
         }
     }
 }

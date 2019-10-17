@@ -96,7 +96,7 @@ namespace GitUI
                 _cancellationToken = cancellationToken;
             }
 
-            public ControlMainThreadAwaiter GetAwaiter()
+            public readonly ControlMainThreadAwaiter GetAwaiter()
             {
                 return new ControlMainThreadAwaiter(_awaitable.GetAwaiter(), _disposable, _cancellationToken);
             }
@@ -115,11 +115,11 @@ namespace GitUI
                 _cancellationToken = cancellationToken;
             }
 
-            public bool IsCompleted => _awaiter.IsCompleted;
+            public readonly bool IsCompleted => _awaiter.IsCompleted;
 
-            public void OnCompleted(Action continuation) => _awaiter.OnCompleted(continuation);
+            public readonly void OnCompleted(Action continuation) => _awaiter.OnCompleted(continuation);
 
-            public void GetResult()
+            public readonly void GetResult()
             {
                 try
                 {

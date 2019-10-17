@@ -239,8 +239,7 @@ namespace GitCommands.Settings
             _saveTimer.Start();
         }
 
-        internal TestAccessor GetTestAccessor()
-        => new TestAccessor(this);
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
 
         internal readonly struct TestAccessor
         {
@@ -251,10 +250,10 @@ namespace GitCommands.Settings
                 _fileSettingsCache = fileSettingsCache;
             }
 
-            public FileSystemWatcher FileSystemWatcher => _fileSettingsCache._fileWatcher;
-            public bool CanEnableFileWatcher => _fileSettingsCache._canEnableFileWatcher;
-            public void SaveImpl() => _fileSettingsCache.SaveImpl();
-            public void SetLastModificationDate(DateTime date) => _fileSettingsCache._lastModificationDate = date;
+            public readonly FileSystemWatcher FileSystemWatcher => _fileSettingsCache._fileWatcher;
+            public readonly bool CanEnableFileWatcher => _fileSettingsCache._canEnableFileWatcher;
+            public readonly void SaveImpl() => _fileSettingsCache.SaveImpl();
+            public readonly void SetLastModificationDate(DateTime date) => _fileSettingsCache._lastModificationDate = date;
         }
     }
 }

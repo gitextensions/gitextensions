@@ -9,7 +9,8 @@ namespace GitCommands
     public readonly struct ArgumentString
     {
         [CanBeNull] public string Arguments { get; }
-        public int Length { get => Arguments?.Length ?? 0; }
+
+        public readonly int Length { get => Arguments?.Length ?? 0; }
 
         private ArgumentString([NotNull] string arguments)
         {
@@ -20,6 +21,7 @@ namespace GitCommands
         public static implicit operator ArgumentString(ArgumentBuilder args) => new ArgumentString(args.ToString());
         [CanBeNull]
         public static implicit operator string(ArgumentString args) => args.Arguments;
-        public override string ToString() => Arguments ?? "";
+
+        public readonly override string ToString() => Arguments ?? "";
     }
 }

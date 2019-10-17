@@ -551,7 +551,7 @@ namespace GitCommands
                 _revisionReader = revisionReader;
             }
 
-            internal ArgumentBuilder BuildArgumentsBuildArguments(RefFilterOptions refFilterOptions,
+            internal readonly ArgumentBuilder BuildArgumentsBuildArguments(RefFilterOptions refFilterOptions,
                 string branchFilter, string revisionFilter, string pathFilter) =>
                 _revisionReader.BuildArguments(refFilterOptions, branchFilter, revisionFilter, pathFilter);
 

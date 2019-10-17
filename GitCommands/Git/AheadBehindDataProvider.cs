@@ -112,7 +112,7 @@ namespace GitCommands.Git
                 _provider = provider;
             }
 
-            public IDictionary<string, AheadBehindData> GetData(Encoding encoding, string branchName) => _provider.GetData(encoding, branchName);
+            public readonly IDictionary<string, AheadBehindData> GetData(Encoding encoding, string branchName) => _provider.GetData(encoding, branchName);
         }
     }
 }

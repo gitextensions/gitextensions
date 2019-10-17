@@ -10,7 +10,7 @@ namespace GitCommands.Git
             Filename = filename;
         }
 
-        public ObjectId ObjectId { get; }
-        public string Filename { get; }
+        public readonly ObjectId ObjectId { get; }
+        public readonly string Filename { get; }
     }
 }

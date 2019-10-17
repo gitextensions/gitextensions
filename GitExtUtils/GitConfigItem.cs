@@ -14,7 +14,7 @@
             Value = value;
         }
 
-        public void Deconstruct(out string key, out string value)
+        public readonly void Deconstruct(out string key, out string value)
         {
             key = Key;
             value = Value;

@@ -872,7 +872,7 @@ namespace GitUI.CommitInfo
                 _commitInfo = commitInfo;
             }
 
-            public IDictionary<string, int> GetSortedRefs() => _commitInfo.GetSortedRefs();
+            public readonly IDictionary<string, int> GetSortedRefs() => _commitInfo.GetSortedRefs();
         }
     }
 }

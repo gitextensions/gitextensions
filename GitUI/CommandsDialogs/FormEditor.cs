@@ -176,11 +176,11 @@ namespace GitUI.CommandsDialogs
                 _formEditor = formEditor;
             }
 
-            public FileViewer FileViewer => _formEditor.fileViewer;
+            public readonly FileViewer FileViewer => _formEditor.fileViewer;
 
-            public bool HasChanges => _formEditor.HasChanges;
+            public readonly bool HasChanges => _formEditor.HasChanges;
 
-            public void SaveChanges() => _formEditor.SaveChanges();
+            public readonly void SaveChanges() => _formEditor.SaveChanges();
         }
     }
 }

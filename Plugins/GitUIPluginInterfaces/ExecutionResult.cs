@@ -4,9 +4,9 @@ namespace GitUIPluginInterfaces
 {
     public readonly struct ExecutionResult
     {
-        public string? StandardOutput { get; }
-        public string? StandardError { get; }
-        public int? ExitCode { get; }
+        public readonly string? StandardOutput { get; }
+        public readonly string? StandardError { get; }
+        public readonly int? ExitCode { get; }
 
         public ExecutionResult(string standardOutput, string standardError, int? exitCode)
         {
@@ -15,8 +15,8 @@ namespace GitUIPluginInterfaces
             ExitCode = exitCode;
         }
 
-        public bool ExitedSuccessfully => ExitCode == 0;
+        public readonly bool ExitedSuccessfully => ExitCode == 0;
 
-        public string AllOutput => string.Concat(StandardOutput, Environment.NewLine, StandardError);
+        public readonly string AllOutput => string.Concat(StandardOutput, Environment.NewLine, StandardError);
     }
 }

@@ -92,7 +92,7 @@ namespace GitUI.CommandsDialogs
                 _button = button;
             }
 
-            public string GetToolTipText(AheadBehindData data) => _button.GetToolTipText(data);
+            public readonly string GetToolTipText(AheadBehindData data) => _button.GetToolTipText(data);
         }
     }
 }

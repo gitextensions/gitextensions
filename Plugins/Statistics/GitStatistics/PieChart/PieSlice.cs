@@ -1182,13 +1182,13 @@ namespace GitStatistics.PieChart
                 EndPoint = endPoint;
             }
 
-            public float StartAngle { get; }
+            public readonly float StartAngle { get; }
 
-            public float EndAngle { get; }
+            public readonly float EndAngle { get; }
 
-            public PointF StartPoint { get; }
+            public readonly PointF StartPoint { get; }
 
-            public PointF EndPoint { get; }
+            public readonly PointF EndPoint { get; }
         }
 
         #endregion

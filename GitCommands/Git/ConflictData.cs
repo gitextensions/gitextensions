@@ -15,10 +15,10 @@ namespace GitCommands.Git
             Remote = remote;
         }
 
-        public ConflictedFileData Base { get; }
-        public ConflictedFileData Local { get; }
-        public ConflictedFileData Remote { get; }
+        public readonly ConflictedFileData Base { get; }
+        public readonly ConflictedFileData Local { get; }
+        public readonly ConflictedFileData Remote { get; }
 
-        public string Filename => Local.Filename ?? Base.Filename ?? Remote.Filename;
+        public readonly string Filename => Local.Filename ?? Base.Filename ?? Remote.Filename;
     }
 }

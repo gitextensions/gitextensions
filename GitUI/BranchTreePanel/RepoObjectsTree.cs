@@ -480,14 +480,14 @@ namespace GitUI.BranchTreePanel
                 _repoObjectsTree = repoObjectsTree;
             }
 
-            public NativeTreeView TreeView => _repoObjectsTree.treeMain;
+            public readonly NativeTreeView TreeView => _repoObjectsTree.treeMain;
 
-            public void ReorderTreeNode(TreeNode node, bool up)
+            public readonly void ReorderTreeNode(TreeNode node, bool up)
             {
                 _repoObjectsTree.ReorderTreeNode(node, up);
             }
 
-            public void SetTreeVisibleByIndex(int index, bool visible)
+            public readonly void SetTreeVisibleByIndex(int index, bool visible)
             {
                 var tree = _repoObjectsTree.GetTreeToPositionIndex().FirstOrDefault(kvp => kvp.Value == index).Key;
                 if (tree.TreeViewNode.IsVisible == visible)
