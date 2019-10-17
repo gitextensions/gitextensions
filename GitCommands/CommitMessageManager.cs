@@ -38,8 +38,8 @@ namespace GitCommands
         private readonly string _commitMessagePath;
         private readonly string _mergeMessagePath;
 
-        private Encoding _commitEncoding;
-        private IFileSystem _fileSystem;
+        private readonly Encoding _commitEncoding;
+        private readonly IFileSystem _fileSystem;
 
         [CanBeNull]
         private string _overriddenCommitMessage;

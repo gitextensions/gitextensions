@@ -19,9 +19,9 @@ namespace GitUITests.BranchTreePanel
     {
         private const int expectedMenuItems = 7;
         private const int expectedTotal = expectedMenuItems + 1; // + end separator
-        private Queue<ToolStripMenuItem> _factoryQueue = new Queue<ToolStripMenuItem>();
+        private readonly Queue<ToolStripMenuItem> _factoryQueue = new Queue<ToolStripMenuItem>();
         private IMenuItemFactory _factory = null;
-        private TestBranchNode _testNode = new TestBranchNode();
+        private readonly TestBranchNode _testNode = new TestBranchNode();
         [SetUp]
         public void Setup()
         {

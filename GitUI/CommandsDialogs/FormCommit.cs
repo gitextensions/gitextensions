@@ -171,7 +171,7 @@ namespace GitUI.CommandsDialogs
         private bool _skipUpdate;
         private GitItemStatus _currentItem;
         private bool _currentItemStaged;
-        private ICommitMessageManager _commitMessageManager;
+        private readonly ICommitMessageManager _commitMessageManager;
         private string _commitTemplate;
         private bool _isMergeCommit;
         private bool _shouldRescanChanges = true;

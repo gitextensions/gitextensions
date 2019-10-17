@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs
         private readonly IReadOnlyList<ObjectId> _containRevisions;
         private readonly bool _isLoading;
         private readonly string _rbResetBranchDefaultText;
-        private TranslationString _invalidBranchName = new TranslationString("An existing branch must be selected.");
+        private readonly TranslationString _invalidBranchName = new TranslationString("An existing branch must be selected.");
         private bool? _isDirtyDir;
         private string _remoteName = "";
         private string _newLocalBranchName = "";

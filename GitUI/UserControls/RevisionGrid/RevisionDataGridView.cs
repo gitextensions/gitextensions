@@ -43,7 +43,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         private Font _normalFont;
         private Font _boldFont;
-        private Font _monospaceFont;
+        private readonly Font _monospaceFont;
 
         public bool UpdatingVisibleRows { get; private set; }
 

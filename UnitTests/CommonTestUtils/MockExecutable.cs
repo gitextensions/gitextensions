@@ -136,7 +136,7 @@ namespace CommonTestUtils
                 _exitCode = 0;
             }
 
-            private int? _exitCode;
+            private readonly int? _exitCode;
             public StreamWriter StandardInput { get; }
             public StreamReader StandardOutput { get; }
             public StreamReader StandardError { get; }

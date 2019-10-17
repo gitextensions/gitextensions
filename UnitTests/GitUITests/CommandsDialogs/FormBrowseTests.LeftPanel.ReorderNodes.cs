@@ -19,7 +19,7 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         // Created once for each test
         private GitUICommands _commands;
         private bool _originalShowAuthorAvatarColumn;
-        private List<bool> _originalRepoObjectsTreeShow = new List<bool>();
+        private readonly List<bool> _originalRepoObjectsTreeShow = new List<bool>();
 
         private GitModuleTestHelper _repo1;
 

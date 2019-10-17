@@ -20,7 +20,7 @@ namespace AppVeyorIntegrationTests
     [TestFixture]
     public class AppVeyorAdapterTests
     {
-        private AppVeyorAdapter.Project _project = new AppVeyorAdapter.Project
+        private readonly AppVeyorAdapter.Project _project = new AppVeyorAdapter.Project
             { Id = "ProjectId", Name = "ProjectName", QueryUrl = "ProjectQueryUrl" };
 
         [Test]

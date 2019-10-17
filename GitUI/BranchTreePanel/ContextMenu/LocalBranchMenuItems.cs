@@ -8,7 +8,7 @@ namespace GitUI.BranchTreePanel.ContextMenu
     internal class LocalBranchMenuItems<TNode> : MenuItemsGenerator<TNode>
         where TNode : class, INode
     {
-        private static MenuItemKey[] _inactiveBranchFilterKeys =
+        private static readonly MenuItemKey[] _inactiveBranchFilterKeys =
                 new[]
                 {
                     MenuItemKey.GitRefCheckout,

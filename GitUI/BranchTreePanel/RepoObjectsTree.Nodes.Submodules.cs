@@ -22,12 +22,12 @@ namespace GitUI.BranchTreePanel
         // If true, display submodules as a tree of folders and nodes; otherwise, display a single node per module
         // as in the Submodules menu.
         // TODO: Possibly expose this as a user option, or just get rid of it.
-        private static bool UseFolderTree = true;
+        private static readonly bool UseFolderTree = true;
 
         // Top-level nodes used to group SubmoduleNodes
         private class SubmoduleFolderNode : Node
         {
-            private string _name;
+            private readonly string _name;
 
             public SubmoduleFolderNode(Tree tree, string name)
                 : base(tree)
