@@ -7,6 +7,6 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
         /// <summary>
         /// returns null if can be loaded, the reason if can't
         /// </summary>
-        string CanBeLoaded { get; }
+        string? CanBeLoaded { get; }
     }
 }

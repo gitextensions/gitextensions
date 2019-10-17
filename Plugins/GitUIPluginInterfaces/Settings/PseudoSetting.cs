@@ -8,7 +8,7 @@ namespace GitUIPluginInterfaces
     /// </summary>
     public class PseudoSetting : ISetting
     {
-        private readonly Func<TextBox> _textBoxCreator;
+        private readonly Func<TextBox>? _textBoxCreator;
 
         public PseudoSetting(Control control, string caption = "")
         {
@@ -16,7 +16,7 @@ namespace GitUIPluginInterfaces
             CustomControl = control;
         }
 
-        public PseudoSetting(string text, string caption = "    ", int? height = null,  Action<TextBox> textboxSettings = null)
+        public PseudoSetting(string text, string caption = "    ", int? height = null,  Action<TextBox>? textboxSettings = null)
         {
             Caption = caption;
 
@@ -48,16 +48,21 @@ namespace GitUIPluginInterfaces
 
         private class PseudoBinding : SettingControlBinding<PseudoSetting, Control>
         {
-            private readonly Func<TextBox> _textBoxCreator;
-            public PseudoBinding(PseudoSetting setting, Control customControl, Func<TextBox> textBoxCreator)
+            private readonly Func<TextBox>? _textBoxCreator;
+            public PseudoBinding(PseudoSetting setting, Control customControl, Func<TextBox>? textBoxCreator)
                 : base(setting, customControl)
             {
+                if (_textBoxCreator == null && customControl == null)
+                {
+                    throw new InvalidOperationException("If control is null, text box creator must be non-null.");
+                }
+
                 _textBoxCreator = textBoxCreator;
             }
 
             public override Control CreateControl()
             {
-                Setting.CustomControl = _textBoxCreator();
+                Setting.CustomControl = _textBoxCreator!();
                 return Setting.CustomControl;
             }
 

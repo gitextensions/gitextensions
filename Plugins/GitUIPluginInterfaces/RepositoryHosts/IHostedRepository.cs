@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces.RepositoryHosts
 {
     public interface IHostedRepository
     {
-        [CanBeNull]
-        string Owner { get; }
+        string? Owner { get; }
         string Name { get; }
         string Description { get; }
         bool IsAFork { get; }
@@ -16,10 +14,8 @@ namespace GitUIPluginInterfaces.RepositoryHosts
 
         string Homepage { get; }
 
-        [CanBeNull]
-        string ParentReadOnlyUrl { get; }
-        [CanBeNull]
-        string ParentOwner { get; }
+        string? ParentReadOnlyUrl { get; }
+        string? ParentOwner { get; }
 
         string CloneReadWriteUrl { get; }
         string CloneReadOnlyUrl { get; }

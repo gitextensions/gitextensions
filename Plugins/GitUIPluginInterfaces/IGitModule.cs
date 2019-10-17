@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
 {
     /// <summary>Provides manipulation with git module.</summary>
     public interface IGitModule
     {
-        [NotNull]
         IConfigFileSettings LocalConfigFile { get; }
 
         string AddRemote(string remoteName, string path);
         IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true);
         IEnumerable<string> GetSettings(string setting);
-        IEnumerable<IGitItem> GetTree([CanBeNull] ObjectId commitId, bool full);
+        IEnumerable<IGitItem> GetTree(ObjectId? commitId, bool full);
 
         /// <summary>
         /// Removes the registered remote by running <c>git remote rm</c> command.
@@ -50,7 +49,6 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Gets the access to the current git executable associated with this module.
         /// </summary>
-        [NotNull]
         IGitCommandRunner GitCommandRunner { get; }
 
         /// <summary>
@@ -72,9 +70,7 @@ namespace GitUIPluginInterfaces
         /// <summary>Indicates HEAD is not pointing to a branch (i.e. it is detached).</summary>
         bool IsDetachedHead();
 
-        [ContractAnnotation("=>false,objectId:null")]
-        [ContractAnnotation("=>true,objectId:notnull")]
-        bool TryResolvePartialCommitId(string objectIdPrefix, out ObjectId objectId);
+        bool TryResolvePartialCommitId(string objectIdPrefix, [NotNullWhen(returnValue: true)] out ObjectId objectId);
 
         string GetSubmoduleFullPath(string localPath);
 
@@ -103,8 +99,7 @@ namespace GitUIPluginInterfaces
         /// Gets the commit ID of the currently checked out commit.
         /// If the repo is bare or has no commits, <c>null</c> is returned.
         /// </summary>
-        [CanBeNull]
-        ObjectId GetCurrentCheckout();
+        ObjectId? GetCurrentCheckout();
 
         /// <summary>Gets the remote of the current branch; or "" if no remote is configured.</summary>
         string GetCurrentRemote();
@@ -124,7 +119,6 @@ namespace GitUIPluginInterfaces
 
         bool IsRunningGitProcess();
 
-        [NotNull]
         ISettingsSource GetEffectiveSettings();
 
         string ReEncodeStringFromLossless(string s);

@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Net;
 using AdysTech.CredentialManager;
-using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
 {
@@ -14,8 +13,8 @@ namespace GitUIPluginInterfaces
 
     public class CredentialsManager : ICredentialsManager
     {
-        private static ConcurrentDictionary<string, NetworkCredential> Credentials { get; } = new ConcurrentDictionary<string, NetworkCredential>();
-        private readonly Func<string> _getWorkingDir;
+        private static ConcurrentDictionary<string, NetworkCredential?> Credentials { get; } = new ConcurrentDictionary<string, NetworkCredential?>();
+        private readonly Func<string>? _getWorkingDir;
 
         public CredentialsManager()
         {
@@ -44,7 +43,7 @@ namespace GitUIPluginInterfaces
             }
         }
 
-        protected NetworkCredential GetCredentialOrDefault(SettingLevel settingLevel, [NotNull] string name, NetworkCredential defaultValue)
+        protected NetworkCredential GetCredentialOrDefault(SettingLevel settingLevel, string name, NetworkCredential defaultValue)
         {
             var targetName = GetWindowsCredentialsTarget(name, settingLevel);
             if (string.IsNullOrWhiteSpace(targetName))
@@ -52,7 +51,7 @@ namespace GitUIPluginInterfaces
                 return defaultValue;
             }
 
-            if (Credentials.TryGetValue(targetName, out var result) || AdysTechCredentialManagerWrapper.TryGetCredentials(targetName, out result))
+            if (Credentials.TryGetValue(targetName!, out var result) || AdysTechCredentialManagerWrapper.TryGetCredentials(targetName!, out result))
             {
                 return result ?? defaultValue;
             }
@@ -60,17 +59,22 @@ namespace GitUIPluginInterfaces
             return defaultValue;
         }
 
-        protected void SetCredentials(SettingLevel settingLevel, [NotNull] string name, [CanBeNull] NetworkCredential value)
+        protected void SetCredentials(SettingLevel settingLevel, string name, NetworkCredential? value)
         {
             var targetName = GetWindowsCredentialsTarget(name, settingLevel);
-            Credentials.AddOrUpdate(targetName, value, (s, credential) => value);
+            Credentials.AddOrUpdate(targetName!, value, (s, credential) => value);
         }
 
-        private string GetWindowsCredentialsTarget(string name, SettingLevel settingLevel)
+        private string? GetWindowsCredentialsTarget(string name, SettingLevel settingLevel)
         {
             if (settingLevel == SettingLevel.Global)
             {
                 return $"{name}";
+            }
+
+            if (_getWorkingDir == null)
+            {
+                return null;
             }
 
             var suffix = _getWorkingDir();

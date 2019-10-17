@@ -1,12 +1,10 @@
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces.BuildServerIntegration
 {
     public interface IBuildServerWatcher
     {
-        [CanBeNull]
-        IBuildServerCredentials GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, bool useStoredCredentialsIfExisting);
+        IBuildServerCredentials? GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, bool useStoredCredentialsIfExisting);
 
         Task LaunchBuildServerInfoFetchOperationAsync();
 

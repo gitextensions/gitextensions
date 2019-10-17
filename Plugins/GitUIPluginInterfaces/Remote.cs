@@ -15,7 +15,7 @@ namespace GitUIPluginInterfaces
             FetchUrl = fetchUrl ?? throw new ArgumentNullException(nameof(fetchUrl));
 
             // At least one push URL must be added
-            PushUrls = firstPushUrl != null ? new List<string>() { firstPushUrl } : throw new ArgumentNullException(nameof(firstPushUrl));
+            PushUrls = new List<string>() { firstPushUrl ?? throw new ArgumentNullException(nameof(firstPushUrl)) };
         }
     }
 }

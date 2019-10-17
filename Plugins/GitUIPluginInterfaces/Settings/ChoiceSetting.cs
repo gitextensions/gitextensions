@@ -6,12 +6,12 @@ namespace GitUIPluginInterfaces
 {
     public class ChoiceSetting : ISetting
     {
-        public ChoiceSetting(string name, IList<string> values, string defaultValue = null)
+        public ChoiceSetting(string name, IList<string> values, string? defaultValue = null)
             : this(name, name, values, defaultValue)
         {
         }
 
-        public ChoiceSetting(string name, string caption, IList<string> values, string defaultValue = null)
+        public ChoiceSetting(string name, string caption, IList<string> values, string? defaultValue = null)
         {
             Name = name;
             Caption = caption;
@@ -25,9 +25,9 @@ namespace GitUIPluginInterfaces
 
         public string Name { get; }
         public string Caption { get; }
-        public string DefaultValue { get; set; }
+        public string? DefaultValue { get; set; }
         public IList<string> Values { get; set; }
-        public ComboBox CustomControl { get; set; }
+        public ComboBox? CustomControl { get; set; }
 
         public ISettingControlBinding CreateControlBinding()
         {
@@ -36,7 +36,7 @@ namespace GitUIPluginInterfaces
 
         private class ComboBoxBinding : SettingControlBinding<ChoiceSetting, ComboBox>
         {
-            public ComboBoxBinding(ChoiceSetting setting, ComboBox customControl)
+            public ComboBoxBinding(ChoiceSetting setting, ComboBox? customControl)
                 : base(setting, customControl)
             {
             }
@@ -50,11 +50,12 @@ namespace GitUIPluginInterfaces
 
             public override void LoadSetting(ISettingsSource settings, ComboBox control)
             {
-                string settingVal = settings.SettingLevel == SettingLevel.Effective
+                string? settingVal = settings.SettingLevel == SettingLevel.Effective
                     ? Setting.ValueOrDefault(settings)
                     : Setting[settings];
 
-                control.SelectedIndex = Setting.Values.IndexOf(settingVal);
+                // TODO can this actually be null here?
+                control.SelectedIndex = Setting.Values.IndexOf(settingVal!);
 
                 if (control.SelectedIndex == -1)
                 {
@@ -77,12 +78,12 @@ namespace GitUIPluginInterfaces
             }
         }
 
-        public string ValueOrDefault(ISettingsSource settings)
+        public string? ValueOrDefault(ISettingsSource settings)
         {
             return this[settings] ?? DefaultValue;
         }
 
-        public string this[ISettingsSource settings]
+        public string? this[ISettingsSource settings]
         {
             get => settings.GetString(Name, null);
 

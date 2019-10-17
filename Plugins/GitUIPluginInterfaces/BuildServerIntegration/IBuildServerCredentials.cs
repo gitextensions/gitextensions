@@ -4,8 +4,8 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
     {
         bool UseGuestAccess { get; set; }
 
-        string Username { get; set; }
+        string? Username { get; set; }
 
-        string Password { get; set; }
+        string? Password { get; set; }
     }
 }

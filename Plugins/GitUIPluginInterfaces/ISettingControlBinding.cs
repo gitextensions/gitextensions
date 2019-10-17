@@ -31,10 +31,10 @@ namespace GitUIPluginInterfaces
 
     public abstract class SettingControlBinding<TSetting, TControl> : ISettingControlBinding where TControl : Control where TSetting : ISetting
     {
-        private TControl _control;
+        private TControl? _control;
         protected readonly TSetting Setting;
 
-        protected SettingControlBinding(TSetting setting, TControl customControl)
+        protected SettingControlBinding(TSetting setting, TControl? customControl)
         {
             Setting = setting;
             _control = customControl;

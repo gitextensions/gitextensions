@@ -5,7 +5,7 @@ namespace GitUIPluginInterfaces.UserControls
 {
     public partial class CredentialsControl : UserControl
     {
-        public CredentialsControl(string userNameLabelText = null, string passwordLabelText = null)
+        public CredentialsControl(string? userNameLabelText = null, string? passwordLabelText = null)
         {
             InitializeComponent();
 

@@ -1801,7 +1801,7 @@ namespace GitCommands
             return SettingsContainer.GetColor(name, defaultValue);
         }
 
-        public static void SetEnum<T>(string name, T value)
+        public static void SetEnum<T>(string name, T value) where T : struct, Enum
         {
             SettingsContainer.SetEnum(name, value);
         }

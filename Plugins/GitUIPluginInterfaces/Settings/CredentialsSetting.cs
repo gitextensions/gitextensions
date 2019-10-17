@@ -16,7 +16,7 @@ namespace GitUIPluginInterfaces
         private readonly NetworkCredential _defaultValue = new NetworkCredential();
         public string Name { get; }
         public string Caption { get; }
-        public CredentialsControl CustomControl { get; set; }
+        public CredentialsControl? CustomControl { get; set; }
 
         public NetworkCredential GetValueOrDefault(ISettingsSource settings)
         {
@@ -47,7 +47,7 @@ namespace GitUIPluginInterfaces
 
         private class CredentialsControlBinding : SettingControlBinding<CredentialsSetting, CredentialsControl>
         {
-            public CredentialsControlBinding(CredentialsSetting setting, CredentialsControl control)
+            public CredentialsControlBinding(CredentialsSetting setting, CredentialsControl? control)
                 : base(setting, control)
             {
             }
