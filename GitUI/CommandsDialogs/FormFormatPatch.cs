@@ -126,13 +126,13 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            string rev1 = "";
-            string rev2 = "";
             string result = "";
 
             var revisions = RevisionGrid.GetSelectedRevisions(SortDirection.Descending);
             if (revisions.Count > 0)
             {
+                string rev1;
+                string rev2;
                 if (revisions.Count == 1)
                 {
                     var parents = revisions[0].ParentIds;

@@ -233,7 +233,7 @@ namespace GitUI.CommandsDialogs
             // Special case for "Fetch and prune" and "Fetch and prune all" to make sure user confirms the action.
             if (pullAction == AppSettings.PullAction.FetchPruneAll)
             {
-                string messageBoxTitle = null;
+                string messageBoxTitle;
                 if (remote.IsNullOrEmpty())
                 {
                     messageBoxTitle = string.Format(_pruneFromCaption.Text, AllRemotes);
