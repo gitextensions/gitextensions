@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using JetBrains.Annotations;
 
 namespace GitUI
 {
@@ -11,7 +10,7 @@ namespace GitUI
         /// <summary>
         /// Enumerates all descendant controls.
         /// </summary>
-        public static IEnumerable<Control> FindDescendants([NotNull] this Control control)
+        public static IEnumerable<Control> FindDescendants(this Control control)
         {
             var queue = new Queue<Control>();
 
@@ -36,7 +35,7 @@ namespace GitUI
         /// <summary>
         /// Enumerates all descendant controls of type <typeparamref name="T"/> in breadth-first order.
         /// </summary>
-        public static IEnumerable<T> FindDescendantsOfType<T>([NotNull] this Control control)
+        public static IEnumerable<T> FindDescendantsOfType<T>(this Control control) where T : Control
         {
             return FindDescendants(control).OfType<T>();
         }
@@ -45,8 +44,7 @@ namespace GitUI
         /// Finds the first descendent of <paramref name="control"/> that has type
         /// <typeparamref name="T"/> and satisfies <paramref name="predicate"/>.
         /// </summary>
-        [CanBeNull]
-        public static T FindDescendantOfType<T>(this Control control, Func<T, bool> predicate)
+        public static T? FindDescendantOfType<T>(this Control control, Func<T, bool> predicate) where T : Control
         {
             return FindDescendants(control).OfType<T>().Where(predicate).FirstOrDefault();
         }
@@ -57,7 +55,7 @@ namespace GitUI
         /// <remarks>
         /// The returned sequence does not include <paramref name="control"/>.
         /// </remarks>
-        public static IEnumerable<Control> FindAncestors([NotNull] this Control control)
+        public static IEnumerable<Control> FindAncestors(this Control control)
         {
             var parent = control.Parent;
 

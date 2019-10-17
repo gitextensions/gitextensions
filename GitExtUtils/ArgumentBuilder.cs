@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
-using JetBrains.Annotations;
 
 namespace GitExtUtils
 {
@@ -48,7 +48,7 @@ namespace GitExtUtils
         /// to the argument list.
         /// </remarks>
         /// <param name="s">The string to add.</param>
-        public void Add([CanBeNull] string s)
+        public void Add(string? s)
         {
             if (string.IsNullOrWhiteSpace(s))
             {
@@ -89,7 +89,7 @@ namespace GitExtUtils
         /// throws if called.
         /// </summary>
         /// <exception cref="InvalidOperationException">Always thrown.</exception>
-        [ContractAnnotation("=>halt")]
+        [DoesNotReturn]
         IEnumerator IEnumerable.GetEnumerator()
         {
             throw new InvalidOperationException($"{nameof(IEnumerable)} only implemented to support collection initialiser syntax.");

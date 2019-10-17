@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -16,11 +17,11 @@ namespace GitUI
         private const int RPC_E_WRONG_THREAD = unchecked((int)0x8001010E);
 #pragma warning restore SA1139 // Use literal suffix notation instead of casting
 
-        private static JoinableTaskContext _joinableTaskContext;
-        private static JoinableTaskCollection _joinableTaskCollection;
-        private static JoinableTaskFactory _joinableTaskFactory;
+        private static JoinableTaskContext? _joinableTaskContext;
+        private static JoinableTaskCollection? _joinableTaskCollection;
+        private static JoinableTaskFactory? _joinableTaskFactory;
 
-        public static JoinableTaskContext JoinableTaskContext
+        public static JoinableTaskContext? JoinableTaskContext
         {
             get
             {
@@ -49,7 +50,7 @@ namespace GitUI
             }
         }
 
-        public static JoinableTaskFactory JoinableTaskFactory => _joinableTaskFactory;
+        public static JoinableTaskFactory JoinableTaskFactory => _joinableTaskFactory!;
 
         public static void ThrowIfNotOnUIThread([CallerMemberName] string callerMemberName = "")
         {
@@ -58,7 +59,7 @@ namespace GitUI
                 return;
             }
 
-            if (!JoinableTaskContext.IsOnMainThread)
+            if (!JoinableTaskContext!.IsOnMainThread)
             {
                 string message = string.Format(CultureInfo.CurrentCulture, "{0} must be called on the UI thread.", callerMemberName);
                 throw new COMException(message, RPC_E_WRONG_THREAD);
@@ -74,26 +75,26 @@ namespace GitUI
                 return;
             }
 
-            Debug.Assert(JoinableTaskContext.IsOnMainThread, "Must be on the UI thread.");
+            Debug.Assert(JoinableTaskContext!.IsOnMainThread, "Must be on the UI thread.");
         }
 
         public static void ThrowIfOnUIThread([CallerMemberName] string callerMemberName = "")
         {
-            if (JoinableTaskContext.IsOnMainThread)
+            if (JoinableTaskContext!.IsOnMainThread)
             {
                 string message = string.Format(CultureInfo.CurrentCulture, "{0} must be called on a background thread.", callerMemberName);
                 throw new COMException(message, RPC_E_WRONG_THREAD);
             }
         }
 
-        public static void FileAndForget(this JoinableTask joinableTask, Func<Exception, bool> fileOnlyIf = null)
+        public static void FileAndForget(this JoinableTask joinableTask, Func<Exception, bool>? fileOnlyIf = null)
         {
             joinableTask.Task.FileAndForget(fileOnlyIf);
         }
 
-        public static void FileAndForget(this Task task, Func<Exception, bool> fileOnlyIf = null)
+        public static void FileAndForget(this Task task, Func<Exception, bool>? fileOnlyIf = null)
         {
-            JoinableTaskFactory.RunAsync(
+            JoinableTaskFactory!.RunAsync(
                 async () =>
                 {
                     try
@@ -114,7 +115,7 @@ namespace GitUI
 
         public static async Task JoinPendingOperationsAsync()
         {
-            await _joinableTaskCollection.JoinTillEmptyAsync();
+            await _joinableTaskCollection!.JoinTillEmptyAsync();
         }
 
         public static T CompletedResult<T>(this Task<T> task)
@@ -129,11 +130,12 @@ namespace GitUI
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
         }
 
+        [return: MaybeNull]
         public static T CompletedOrDefault<T>(this Task<T> task)
         {
             if (!task.IsCompleted)
             {
-                return default;
+                return default!;
             }
 
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits

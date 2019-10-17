@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -7,8 +6,7 @@ namespace GitCommands
     {
         private static readonly char[] _whiteSpaceChars = { ' ', '\r', '\n', '\t' };
 
-        [NotNull]
-        public static StringBuilder AppendQuoted([NotNull] this StringBuilder builder, [NotNull] string s)
+        public static StringBuilder AppendQuoted(this StringBuilder builder, string s)
         {
             if (NeedsEscaping())
             {

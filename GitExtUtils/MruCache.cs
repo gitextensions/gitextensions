@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using JetBrains.Annotations;
 
@@ -87,11 +88,11 @@ namespace GitExtUtils
         /// <returns><c>true</c> if <paramref name="key"/> exists in the cache, otherwise <c>false</c>.</returns>
         [ContractAnnotation("=>true,value:notnull")]
         [ContractAnnotation("=>false,value:null")]
-        public bool TryGetValue(TKey key, out TValue value)
+        public bool TryGetValue(TKey key, [MaybeNullWhen(returnValue: false)] out TValue value)
         {
             if (!_nodeByKey.TryGetValue(key, out var node))
             {
-                value = default;
+                value = default!;
                 return false;
             }
 
@@ -110,11 +111,11 @@ namespace GitExtUtils
         /// <returns><c>true</c> if <paramref name="key"/> was removed from the cache, otherwise <c>false</c>.</returns>
         [ContractAnnotation("=>true,value:notnull")]
         [ContractAnnotation("=>false,value:null")]
-        public bool TryRemove(TKey key, out TValue value)
+        public bool TryRemove(TKey key, [MaybeNullWhen(returnValue: false)] out TValue value)
         {
             if (!_nodeByKey.TryGetValue(key, out var node))
             {
-                value = default;
+                value = default!;
                 return false;
             }
 

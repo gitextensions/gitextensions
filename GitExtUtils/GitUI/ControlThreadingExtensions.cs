@@ -40,7 +40,7 @@ namespace GitUI
             }
 
             var disposedCancellationToken = ToolStripItemDisposedCancellationFactory.Instance.GetOrCreateCancellationToken(control);
-            CancellationTokenSource cancellationTokenSource = null;
+            CancellationTokenSource? cancellationTokenSource = null;
             if (cancellationToken.CanBeCanceled)
             {
                 cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(disposedCancellationToken, cancellationToken);
@@ -70,7 +70,7 @@ namespace GitUI
             }
 
             var disposedCancellationToken = ControlIsDisposedCancellationFactory.Instance.GetOrCreateCancellationToken(control);
-            CancellationTokenSource cancellationTokenSource = null;
+            CancellationTokenSource? cancellationTokenSource = null;
             if (cancellationToken.CanBeCanceled)
             {
                 cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(disposedCancellationToken, cancellationToken);
@@ -86,10 +86,10 @@ namespace GitUI
         public readonly struct ControlMainThreadAwaitable
         {
             private readonly JoinableTaskFactory.MainThreadAwaitable _awaitable;
-            private readonly IDisposable _disposable;
+            private readonly IDisposable? _disposable;
             private readonly CancellationToken _cancellationToken;
 
-            internal ControlMainThreadAwaitable(JoinableTaskFactory.MainThreadAwaitable awaitable, IDisposable disposable, CancellationToken cancellationToken)
+            internal ControlMainThreadAwaitable(JoinableTaskFactory.MainThreadAwaitable awaitable, IDisposable? disposable, CancellationToken cancellationToken)
             {
                 _awaitable = awaitable;
                 _disposable = disposable;
@@ -105,10 +105,10 @@ namespace GitUI
         public readonly struct ControlMainThreadAwaiter : INotifyCompletion
         {
             private readonly JoinableTaskFactory.MainThreadAwaiter _awaiter;
-            private readonly IDisposable _disposable;
+            private readonly IDisposable? _disposable;
             private readonly CancellationToken _cancellationToken;
 
-            internal ControlMainThreadAwaiter(JoinableTaskFactory.MainThreadAwaiter awaiter, IDisposable disposable, CancellationToken cancellationToken)
+            internal ControlMainThreadAwaiter(JoinableTaskFactory.MainThreadAwaiter awaiter, IDisposable? disposable, CancellationToken cancellationToken)
             {
                 _awaiter = awaiter;
                 _disposable = disposable;

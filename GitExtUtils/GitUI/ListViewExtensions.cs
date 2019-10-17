@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using GitCommands;
 
 namespace GitUI
 {
@@ -25,7 +24,7 @@ namespace GitUI
         public static T Tag<T>(this ListViewGroup grp) =>
             (T)grp.Tag;
 
-        public static Image Image(this ListViewItem item)
+        public static Image? Image(this ListViewItem item)
         {
             if (item.ImageList == null || item.ImageIndex == -1)
             {
@@ -45,7 +44,7 @@ namespace GitUI
         /// <para>For practical purposes: The last <see cref="ListViewItem"/> added to selection.</para>
         /// <para>Actually: Focused item if selected, otherwise last item in <see cref="SelectedItems"/> list</para>
         /// </summary>
-        public static ListViewItem LastSelectedItem(this ListView listView)
+        public static ListViewItem? LastSelectedItem(this ListView listView)
         {
             if (listView.FocusedItem?.Selected == true)
             {

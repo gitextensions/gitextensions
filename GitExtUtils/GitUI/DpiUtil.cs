@@ -162,8 +162,7 @@ namespace GitExtUtils.GitUI
                                (int)(padding.Bottom * ScaleX));
         }
 
-        [NotNull]
-        public static Image Scale([NotNull] Image image)
+        public static Image Scale(Image image)
         {
             const string dpiScaled = "__DPI_SCALED__";
 

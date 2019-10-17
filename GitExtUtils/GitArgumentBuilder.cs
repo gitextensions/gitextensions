@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
-using JetBrains.Annotations;
 
 namespace GitExtUtils
 {
@@ -42,7 +41,7 @@ namespace GitExtUtils
         private static readonly Regex CommandRegex = new Regex("^[a-z0-9_.-]+$", RegexOptions.Compiled);
 
         private readonly List<GitConfigItem> _configItems;
-        private readonly ArgumentString _gitArgs;
+        private readonly ArgumentString? _gitArgs;
         private readonly string _command;
 
         /// <summary>
@@ -53,7 +52,7 @@ namespace GitExtUtils
         /// <param name="gitOptions">Optional arguments that are for the git command.  EX: git --no-optional-locks status </param>
         /// <exception cref="ArgumentNullException"><paramref name="command"/> is <c>null</c>.</exception>
         /// <exception cref="ArgumentException"><paramref name="command"/> is an invalid string.</exception>
-        public GitArgumentBuilder([NotNull] string command, [CanBeNull] GitCommandConfiguration commandConfiguration = null, [CanBeNull] ArgumentString gitOptions = default)
+        public GitArgumentBuilder(string command, GitCommandConfiguration? commandConfiguration = null, ArgumentString? gitOptions = default)
         {
             if (command == null)
             {
@@ -103,7 +102,7 @@ namespace GitExtUtils
         public override string ToString()
         {
             var arguments = base.ToString();
-            var gitArgsLength = _gitArgs.Length;
+            var gitArgsLength = _gitArgs?.Length ?? 0;
             if (gitArgsLength == 0)
             {
                 gitArgsLength = -1; // prevent extra capacity when length is 0
