@@ -953,7 +953,7 @@ namespace GitUI.CommandsDialogs
 
             return;
 
-            string CleanCommandOutput(string processOutput)
+            static string CleanCommandOutput(string processOutput)
             {
                 // Command output consists of lines of format:
                 //

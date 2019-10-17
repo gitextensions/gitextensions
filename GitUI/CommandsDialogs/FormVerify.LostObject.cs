@@ -159,7 +159,7 @@ namespace GitUI.CommandsDialogs
                     return module.GitExecutable.GetOutput(string.Format(commandFormat, objectId), outputEncoding: GitModule.LosslessEncoding);
                 }
 
-                LostObjectType GetObjectType(Group matchedGroup)
+                static LostObjectType GetObjectType(Group matchedGroup)
                 {
                     if (!matchedGroup.Success)
                     {

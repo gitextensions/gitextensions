@@ -565,7 +565,7 @@ namespace GitUI.CommitInfo
             RevisionInfo.SetXHTMLText(body);
             return;
 
-            string GetAnnotatedTagsInfo(
+            static string GetAnnotatedTagsInfo(
                 IEnumerable<string> tagNames,
                 IDictionary<string, string> annotatedTagsMessages)
             {

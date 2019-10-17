@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             SetNumericUpDownValue(_NO_TRANSLATE_maxRecentRepositories, AppSettings.MaxMostRecentRepositories);
             SetNumericUpDownValue(_NO_TRANSLATE_RecentRepositoriesHistorySize, AppSettings.RecentRepositoriesHistorySize);
 
-            void SetNumericUpDownValue(NumericUpDown control, int value)
+            static void SetNumericUpDownValue(NumericUpDown control, int value)
             {
                 control.Value = Math.Min(Math.Max(control.Minimum, value), control.Maximum);
             }

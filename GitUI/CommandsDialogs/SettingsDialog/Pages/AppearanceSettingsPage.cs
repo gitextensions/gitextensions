@@ -107,7 +107,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             return;
 
-            int GetTruncatePathMethodIndex(TruncatePathMethod method)
+            static int GetTruncatePathMethodIndex(TruncatePathMethod method)
             {
                 switch (method)
                 {
@@ -159,7 +159,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             return;
 
-            TruncatePathMethod GetTruncatePathMethodString(int index)
+            static TruncatePathMethod GetTruncatePathMethodString(int index)
             {
                 switch (index)
                 {

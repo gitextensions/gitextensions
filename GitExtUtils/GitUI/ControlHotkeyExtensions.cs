@@ -72,7 +72,7 @@ namespace GitUI
                     (sender as ComboBox)?.Refresh();
                 }
 
-                int FindPreviousBreak(string value, int position)
+                static int FindPreviousBreak(string value, int position)
                 {
                     for (int i = position - 1; i >= 0; i--)
                     {
@@ -92,7 +92,7 @@ namespace GitUI
 
                     return -1;
 
-                    char GetCharType(char c)
+                    static char GetCharType(char c)
                     {
                         if (char.IsLetterOrDigit(c))
                         {

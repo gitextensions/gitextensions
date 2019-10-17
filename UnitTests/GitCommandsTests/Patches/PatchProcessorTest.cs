@@ -21,7 +21,7 @@ namespace GitCommandsTests.Patches
             _bigBinPatch = LoadPatch("bigBin.patch");
             _rebaseDiff = LoadPatch("rebase.diff");
 
-            string LoadPatch(string fileName)
+            static string LoadPatch(string fileName)
             {
                 var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Patches/testdata", fileName);
                 var bytes = File.ReadAllBytes(path);

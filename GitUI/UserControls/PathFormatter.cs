@@ -125,7 +125,7 @@ namespace GitUI
             var (prefix, text) = SplitPathName(TruncatePath(name, name.Length - step));
             return (prefix, text, null);
 
-            string TruncatePath(string path, int length)
+            static string TruncatePath(string path, int length)
             {
                 if (path.Length == length)
                 {

@@ -168,7 +168,7 @@ namespace GitUI.Hotkey
                 }
             }
 
-            string CalcDictionaryKey(string settingName, int commandCode) => settingName + ":" + commandCode;
+            static string CalcDictionaryKey(string settingName, int commandCode) => settingName + ":" + commandCode;
         }
 
         [CanBeNull]
@@ -226,7 +226,7 @@ namespace GitUI.Hotkey
 
         public static HotkeySettings[] CreateDefaultSettings()
         {
-            HotkeyCommand Hk(object en, Keys k) => new HotkeyCommand((int)en, en.ToString()) { KeyData = k };
+            static HotkeyCommand Hk(object en, Keys k) => new HotkeyCommand((int)en, en.ToString()) { KeyData = k };
 
             const Keys OpenWithDifftoolHotkey = Keys.F3;
             const Keys OpenWithDifftoolFirstToLocalHotkey = Keys.Alt | Keys.F3;
@@ -369,7 +369,7 @@ namespace GitUI.Hotkey
                     LoadScriptHotkeys())
             };
 
-            HotkeyCommand[] LoadScriptHotkeys()
+            static HotkeyCommand[] LoadScriptHotkeys()
             {
                 /* define unusable int for identifying a shortcut for a custom script is pressed
                  * all integers above 9000 represent a script hotkey

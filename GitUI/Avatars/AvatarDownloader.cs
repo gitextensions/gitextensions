@@ -105,7 +105,7 @@ namespace GitUI.Avatars
 
                     return new Uri($"http://www.gravatar.com/avatar/{hash}?s={imageSize}&r=g&d={d}");
 
-                    string GetDefaultImageString()
+                    static string GetDefaultImageString()
                     {
                         switch (AppSettings.GravatarFallbackAvatarType)
                         {
@@ -205,7 +205,7 @@ namespace GitUI.Avatars
                     return null;
                 }
 
-                void ClearOldCacheEntries()
+                static void ClearOldCacheEntries()
                 {
                     var now = DateTime.UtcNow;
 

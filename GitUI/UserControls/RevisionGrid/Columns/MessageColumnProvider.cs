@@ -229,7 +229,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 }
             }
 
-            bool FilterRef(IGitRef gitRef)
+            static bool FilterRef(IGitRef gitRef)
             {
                 if (gitRef.IsTag)
                 {
@@ -396,7 +396,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             sortedRefs.Sort(CompareRefs);
             return sortedRefs;
 
-            int CompareRefs(IGitRef left, IGitRef right)
+            static int CompareRefs(IGitRef left, IGitRef right)
             {
                 var leftTypeRank = RefTypeRank(left);
                 var rightTypeRank = RefTypeRank(right);
@@ -407,7 +407,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     ? string.Compare(left.Name, right.Name, StringComparison.Ordinal)
                     : c;
 
-                int RefTypeRank(IGitRef gitRef)
+                static int RefTypeRank(IGitRef gitRef)
                 {
                     if (gitRef.IsBisect)
                     {

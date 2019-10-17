@@ -89,7 +89,7 @@ namespace GitCommands
                 }
             }
 
-            int Get(IReadOnlyList<int> values, int index)
+            static int Get(IReadOnlyList<int> values, int index)
             {
                 return index < values.Count ? values[index] : 0;
             }

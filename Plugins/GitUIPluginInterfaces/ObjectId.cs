@@ -506,7 +506,7 @@ namespace GitUIPluginInterfaces
                 *p++ = ParseHexDigit(i & 0xF);
             }
 
-            char ParseHexDigit(uint j) => j < 10 ? (char)('0' + j) : (char)(j + 0x57);
+            static char ParseHexDigit(uint j) => j < 10 ? (char)('0' + j) : (char)(j + 0x57);
         }
 
         #region Equality and hashing

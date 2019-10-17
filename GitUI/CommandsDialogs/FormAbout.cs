@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs
                 _NO_TRANSLATE_ThanksTo.Text = thanksToContributorsText + contributorName;
             }
 
-            IReadOnlyList<string> GetContributorList()
+            static IReadOnlyList<string> GetContributorList()
             {
                 return new[] { Resources.Team, Resources.Coders, Resources.Translators, Resources.Designers }
                     .Select(c => c.Replace(Environment.NewLine, ""))

@@ -111,7 +111,7 @@ namespace GitUI
             error = null;
             return true;
 
-            string GetParentRef(GitRevision revision)
+            static string GetParentRef(GitRevision revision)
             {
                 return revision.FirstParentGuid?.ToString() ?? revision.Guid + '^';
             }

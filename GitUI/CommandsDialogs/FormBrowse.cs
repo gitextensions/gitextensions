@@ -2667,7 +2667,7 @@ namespace GitUI.CommandsDialogs
 
             return (item, loadDetails);
 
-            Image GetSubmoduleItemImage(DetailedSubmoduleInfo details)
+            static Image GetSubmoduleItemImage(DetailedSubmoduleInfo details)
             {
                 if (details.Status == null)
                 {

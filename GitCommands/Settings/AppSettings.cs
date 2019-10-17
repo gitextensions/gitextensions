@@ -1833,12 +1833,12 @@ namespace GitCommands
 
         private static void LoadEncodings()
         {
-            void AddEncoding(Encoding e)
+            static void AddEncoding(Encoding e)
             {
                 AvailableEncodings[e.HeaderName] = e;
             }
 
-            void AddEncodingByName(string s)
+            static void AddEncodingByName(string s)
             {
                 try
                 {

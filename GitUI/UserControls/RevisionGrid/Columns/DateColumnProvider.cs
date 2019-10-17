@@ -42,7 +42,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             e.Value = FormatDate(dateTime);
             e.FormattingApplied = true;
 
-            string FormatDate(DateTime dt)
+            static string FormatDate(DateTime dt)
             {
                 if (dt == DateTime.MinValue || dt == DateTime.MaxValue)
                 {

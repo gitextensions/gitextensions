@@ -171,7 +171,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             AppSettings.GitCommandValue = "git";
             return TestGitCommand(AppSettings.GitCommandValue);
 
-            bool TestGitCommand(string command)
+            static bool TestGitCommand(string command)
             {
                 try
                 {

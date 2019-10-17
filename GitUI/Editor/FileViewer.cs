@@ -1149,7 +1149,7 @@ namespace GitUI.Editor
 
             return;
 
-            bool IsDiffLine(string wholeText, string lineContent)
+            static bool IsDiffLine(string wholeText, string lineContent)
             {
                 var isCombinedDiff = DiffHighlightService.IsCombinedDiff(wholeText);
                 return lineContent.StartsWithAny(isCombinedDiff ? new[] { "+", "-", " +", " -" }

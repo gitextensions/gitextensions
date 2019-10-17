@@ -66,7 +66,7 @@ namespace GitCommands
 
             return;
 
-            string ComputeHomeLocation()
+            static string ComputeHomeLocation()
             {
                 if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir))
                 {

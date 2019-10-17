@@ -133,7 +133,7 @@ namespace GitCommands.UserRepositoryHistory
                     select repo);
             }
 
-            void AddNotSortedRepos(List<RecentRepoInfo> list, List<RecentRepoInfo> addToList)
+            static void AddNotSortedRepos(List<RecentRepoInfo> list, List<RecentRepoInfo> addToList)
             {
                 addToList.AddRange(list);
             }

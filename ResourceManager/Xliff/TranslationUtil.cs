@@ -216,7 +216,7 @@ namespace ResourceManager.Xliff
                 property.SetValue(obj, value, null);
             }
 
-            string ProvideDefaultValue() => "";
+            static string ProvideDefaultValue() => "";
         }
 
         public static void TranslateItemsFromFields(string category, object obj, ITranslation translation)

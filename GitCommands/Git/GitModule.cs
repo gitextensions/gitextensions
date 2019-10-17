@@ -115,7 +115,7 @@ namespace GitCommands
 
                 return (null, null, null);
 
-                bool HasGitModulesFile(string path)
+                static bool HasGitModulesFile(string path)
                     => File.Exists(Path.Combine(path, ".gitmodules")) && IsValidGitWorkingDir(path);
             }
         }
@@ -451,7 +451,7 @@ namespace GitCommands
                 }
             }
 
-            List<string> GetSubmodulePaths(GitModule module)
+            static List<string> GetSubmodulePaths(GitModule module)
             {
                 var configFile = module.GetSubmoduleConfigFile();
 
@@ -681,7 +681,7 @@ namespace GitCommands
                 return File.Exists(fileName) ? fileName : null;
             }
 
-            string FindAvailableFileName(string basePath)
+            static string FindAvailableFileName(string basePath)
             {
                 // If necessary, append an index to the base path until the file does not exist
                 var index = 1;
@@ -1200,7 +1200,7 @@ namespace GitCommands
                 .GetOutputLines(args)
                 .Any(IsTwoSha1Hashes);
 
-            bool IsTwoSha1Hashes(string parents)
+            static bool IsTwoSha1Hashes(string parents)
             {
                 // TODO use Regex here to avoid allocations
                 string[] tab = parents.Split(' ');
@@ -1451,7 +1451,7 @@ namespace GitCommands
 
             pageantExecutable.RunCommand(sshKeyFile.Quote());
 
-            bool IsPageantRunning()
+            static bool IsPageantRunning()
             {
                 var pageantProcName = Path.GetFileNameWithoutExtension(AppSettings.Pageant);
                 return Process.GetProcessesByName(pageantProcName).Length != 0;
@@ -2045,7 +2045,7 @@ namespace GitCommands
 
             return patchFiles;
 
-            string AppendQuotedString(string str1, string str2)
+            static string AppendQuotedString(string str1, string str2)
             {
                 var m1 = QuotedText.Match(str1);
                 var m2 = QuotedText.Match(str2);
@@ -2135,7 +2135,7 @@ namespace GitCommands
         {
             return ParseRemotes(await _gitExecutable.GetOutputLinesAsync("remote -v"));
 
-            IReadOnlyList<Remote> ParseRemotes(IEnumerable<string> lines)
+            static IReadOnlyList<Remote> ParseRemotes(IEnumerable<string> lines)
             {
                 var remotes = new List<Remote>();
 
@@ -2849,7 +2849,7 @@ namespace GitCommands
             }
 
             // BUG this sorting logic has no effect as CommitDate is not set by the GitRevision constructor
-            DateTime GetDate(IGitRef head) => new GitRevision(head.ObjectId).CommitDate;
+            static DateTime GetDate(IGitRef head) => new GitRevision(head.ObjectId).CommitDate;
         }
 
         public enum GetTagRefsSortOrder
@@ -4099,7 +4099,7 @@ namespace GitCommands
 
             return (totalCommits, countByName);
 
-            string GetDateParameter(string param, DateTime? date)
+            static string GetDateParameter(string param, DateTime? date)
             {
                 return date != null
                     ? $"{param}=\"{date:yyyy-MM-dd hh:mm:ss}\""

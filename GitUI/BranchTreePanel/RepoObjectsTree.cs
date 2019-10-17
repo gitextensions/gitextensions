@@ -117,7 +117,7 @@ namespace GitUI.BranchTreePanel
                 };
                 treeMain.SelectedImageKey = treeMain.ImageKey;
 
-                Image Pad(Image image)
+                static Image Pad(Image image)
                 {
                     var padded = new Bitmap(image.Width, image.Height + rowPadding + rowPadding, PixelFormat.Format32bppArgb);
                     using (var g = Graphics.FromImage(padded))
@@ -200,7 +200,7 @@ namespace GitUI.BranchTreePanel
 
             return;
 
-            bool IsOverride(MethodInfo m)
+            static bool IsOverride(MethodInfo m)
             {
                 return m != null && m.GetBaseDefinition().DeclaringType != m.DeclaringType;
             }
@@ -371,7 +371,7 @@ namespace GitUI.BranchTreePanel
                 return first;
             }
 
-            List<TreeNode> SearchTree(string text, IEnumerable<TreeNode> nodes)
+            static List<TreeNode> SearchTree(string text, IEnumerable<TreeNode> nodes)
             {
                 var queue = new Queue<TreeNode>(nodes);
                 var ret = new List<TreeNode>();

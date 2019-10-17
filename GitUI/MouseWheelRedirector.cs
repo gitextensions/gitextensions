@@ -81,7 +81,7 @@ namespace GitUI
             NativeMethods.SendMessage(hwnd, m.Msg, m.WParam, m.LParam);
             return true;
 
-            bool isNonScrollableRichTextBox(Control c) =>
+            static bool isNonScrollableRichTextBox(Control c) =>
                 c is RichTextBox rtb && rtb.ScrollBars == RichTextBoxScrollBars.None;
         }
 

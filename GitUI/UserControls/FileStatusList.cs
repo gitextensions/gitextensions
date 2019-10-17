@@ -85,7 +85,7 @@ namespace GitUI
 
             return;
 
-            ImageList CreateImageList()
+            static ImageList CreateImageList()
             {
                 const int rowHeight = 18;
                 bool light = ColorHelper.IsLightTheme();
@@ -113,7 +113,7 @@ namespace GitUI
                     }
                 };
 
-                Bitmap ScaleHeight(Bitmap input)
+                static Bitmap ScaleHeight(Bitmap input)
                 {
                     Debug.Assert(input.Height < rowHeight, "Can only increase row height");
                     var scaled = new Bitmap(input.Width, rowHeight, input.PixelFormat);
@@ -686,7 +686,7 @@ namespace GitUI
             SelectItems(item => regex.IsMatch(item.Name));
             return FileStatusListView.SelectedIndices.Count;
 
-            Regex RegexForSelecting(string value)
+            static Regex RegexForSelecting(string value)
             {
                 return string.IsNullOrEmpty(value)
                     ? new Regex("^$", RegexOptions.Compiled)
@@ -925,7 +925,7 @@ namespace GitUI
                 }
             }
 
-            int GetItemImageIndex(GitItemStatus gitItemStatus)
+            static int GetItemImageIndex(GitItemStatus gitItemStatus)
             {
                 if (gitItemStatus.IsDeleted)
                 {

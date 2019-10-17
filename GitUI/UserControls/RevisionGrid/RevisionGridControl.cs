@@ -1662,7 +1662,7 @@ namespace GitUI
 
             return;
 
-            void SetEnabled(ToolStripItem item, bool isEnabled)
+            static void SetEnabled(ToolStripItem item, bool isEnabled)
             {
                 // NOTE we have to set 'enabled' in order to filter separators because
                 // setting 'visible' to true sets some internal flag, yet the property still returns
@@ -1671,7 +1671,7 @@ namespace GitUI
                 item.Enabled = isEnabled;
             }
 
-            bool HasEnabledItem(ToolStrip item)
+            static bool HasEnabledItem(ToolStrip item)
             {
                 return item.Items.Count != 0 && item.Items.Cast<ToolStripItem>().Any(i => i.Enabled);
             }
@@ -1693,7 +1693,7 @@ namespace GitUI
                 }
             }
 
-            ToolStripMenuItem AddBranchMenuItem(ContextMenuStrip menu, IGitRef gitRef, EventHandler action)
+            static ToolStripMenuItem AddBranchMenuItem(ContextMenuStrip menu, IGitRef gitRef, EventHandler action)
             {
                 var menuItem = new ToolStripMenuItem(gitRef.Name)
                 {
@@ -2534,7 +2534,7 @@ namespace GitUI
                     (_shaFilter, _shaFilterRegex) = SetUpVars(messageFilter, false);
                 }
 
-                (string filterStr, Regex filterRegex) SetUpVars(string filterValue, bool ignoreKase)
+                static (string filterStr, Regex filterRegex) SetUpVars(string filterValue, bool ignoreKase)
                 {
                     var filterStr = filterValue?.Trim() ?? string.Empty;
 
@@ -2557,7 +2557,7 @@ namespace GitUI
                        (CheckCondition(_messageFilter, _messageFilterRegex, rev.Body) ||
                         (_shaFilter != null && CheckCondition(_shaFilter, _shaFilterRegex, rev.Guid)));
 
-                bool CheckCondition(string filter, Regex regex, string value)
+                static bool CheckCondition(string filter, Regex regex, string value)
                 {
                     return string.IsNullOrEmpty(filter) ||
                            (regex != null && value != null && regex.IsMatch(value));

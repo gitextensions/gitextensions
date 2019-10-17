@@ -146,7 +146,7 @@ namespace GitUI.BranchTreePanel
                 return;
 
                 // NOTE: Copied and adapated from FormBrowse.GetSubmoduleItemImage
-                string GetSubmoduleItemImage(DetailedSubmoduleInfo details)
+                static string GetSubmoduleItemImage(DetailedSubmoduleInfo details)
                 {
                     if (details.Status == null)
                     {

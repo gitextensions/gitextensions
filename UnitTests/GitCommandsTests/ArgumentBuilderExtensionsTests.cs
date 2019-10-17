@@ -48,7 +48,7 @@ namespace GitCommandsTests
                     { true, (string)null }
                 });
 
-            void Test(string expected, ArgumentBuilder command)
+            static void Test(string expected, ArgumentBuilder command)
             {
                 Assert.AreEqual(expected, command.ToString());
             }
@@ -105,7 +105,7 @@ namespace GitCommandsTests
                     { false, null, null }
                 });
 
-            void Test(string expected, ArgumentBuilder command)
+            static void Test(string expected, ArgumentBuilder command)
             {
                 Assert.AreEqual(expected, command.ToString());
             }
@@ -138,7 +138,7 @@ namespace GitCommandsTests
                     (IEnumerable<string>)null
                 });
 
-            void Test(string expected, ArgumentBuilder command)
+            static void Test(string expected, ArgumentBuilder command)
             {
                 Assert.AreEqual(expected, command.ToString());
             }
@@ -195,7 +195,7 @@ namespace GitCommandsTests
                     { false, (IEnumerable<string>)null }
                 });
 
-            void Test(string expected, ArgumentBuilder command)
+            static void Test(string expected, ArgumentBuilder command)
             {
                 Assert.AreEqual(expected, command.ToString());
             }

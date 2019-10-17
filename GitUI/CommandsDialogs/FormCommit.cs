@@ -473,7 +473,7 @@ namespace GitUI.CommandsDialogs
 
             return;
 
-            string TryAddPrefix(string prefix, string suffix)
+            static string TryAddPrefix(string prefix, string suffix)
             {
                 return suffix.StartsWith(prefix) ? suffix : $"{prefix} {suffix}";
             }

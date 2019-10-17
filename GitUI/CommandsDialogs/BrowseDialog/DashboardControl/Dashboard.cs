@@ -145,7 +145,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     AutoScrollMinSize = new Size(0, pnlLogo.Height + flpnlStart.MinimumSize.Height + flpnlContribute.MinimumSize.Height);
                 }
 
-                void AddLinks(Panel panel, Func<Panel, Control> addLinks, Action<Panel, Control> onLayout)
+                static void AddLinks(Panel panel, Func<Panel, Control> addLinks, Action<Panel, Control> onLayout)
                 {
                     panel.SuspendLayout();
                     panel.Controls.Clear();

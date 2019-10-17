@@ -17,7 +17,7 @@ namespace GitUI
             S = Preprocess(saturation);
             L = Preprocess(luminance);
 
-            double Preprocess(double value)
+            static double Preprocess(double value)
             {
                 if (double.IsNaN(value))
                 {

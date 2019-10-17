@@ -576,7 +576,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 DrawText(e.Graphics, e.Item.SubItems[2].Text, _secondaryFont, SystemBrushes.GrayText, textWidth, pointCategory, spacing4 * 2);
             }
 
-            RectangleF DrawText(Graphics g, string text, Font font, Brush brush, int maxTextWidth, PointF location, float spacing)
+            static RectangleF DrawText(Graphics g, string text, Font font, Brush brush, int maxTextWidth, PointF location, float spacing)
             {
                 var textBounds = TextRenderer.MeasureText(text, font);
                 var minWidth = Math.Min(textBounds.Width + spacing, maxTextWidth);

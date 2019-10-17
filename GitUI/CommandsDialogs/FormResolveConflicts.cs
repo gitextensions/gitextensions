@@ -548,7 +548,7 @@ namespace GitUI.CommandsDialogs
 
             return;
 
-            void DeleteTemporaryFile(string path)
+            static void DeleteTemporaryFile(string path)
             {
                 if (path != null && File.Exists(path))
                 {

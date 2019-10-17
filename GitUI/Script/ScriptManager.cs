@@ -27,7 +27,7 @@ namespace GitUI.Script
 
             return _scripts;
 
-            void FixAmbiguousHotkeyCommandIdentifiers()
+            static void FixAmbiguousHotkeyCommandIdentifiers()
             {
                 var ids = new HashSet<int>();
 
@@ -101,7 +101,7 @@ namespace GitUI.Script
                 return DeserializeFromOldFormat(xml);
             }
 
-            BindingList<ScriptInfo> GetDefaultScripts() => new BindingList<ScriptInfo>
+            static BindingList<ScriptInfo> GetDefaultScripts() => new BindingList<ScriptInfo>
             {
                 new ScriptInfo
                 {
@@ -165,7 +165,7 @@ namespace GitUI.Script
                 }
             };
 
-            BindingList<ScriptInfo> DeserializeFromOldFormat(string inputString)
+            static BindingList<ScriptInfo> DeserializeFromOldFormat(string inputString)
             {
                 const string paramSeparator = "<_PARAM_SEPARATOR_>";
                 const string scriptSeparator = "<_SCRIPT_SEPARATOR_>";

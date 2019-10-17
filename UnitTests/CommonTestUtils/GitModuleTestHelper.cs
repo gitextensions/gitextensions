@@ -37,7 +37,7 @@ namespace CommonTestUtils
 
             return;
 
-            string GetTemporaryPath()
+            static string GetTemporaryPath()
             {
                 var tempPath = Path.GetTempPath();
 

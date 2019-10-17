@@ -34,7 +34,7 @@ namespace GitExtUtilsTests
                 "",
                 new ArgumentBuilder { null });
 
-            void Test(string expected, ArgumentBuilder command)
+            static void Test(string expected, ArgumentBuilder command)
             {
                 Assert.AreEqual(expected, command.ToString());
             }

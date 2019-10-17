@@ -58,7 +58,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
 
                 return;
 
-                TextBox GetNewTextBox()
+                static TextBox GetNewTextBox()
                 {
                     return new TextBox
                     {
@@ -87,7 +87,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
                     return tabPage;
                 }
 
-                TabControl GetNewTabControl()
+                static TabControl GetNewTabControl()
                 {
                     return new FullBleedTabControl
                     {
