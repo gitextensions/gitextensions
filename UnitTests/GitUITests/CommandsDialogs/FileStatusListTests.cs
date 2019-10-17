@@ -21,8 +21,10 @@ namespace GitUITests.CommandsDialogs
         public void SetUp()
         {
             _form = new Form();
-            _fileStatusList = new FileStatusList();
-            _fileStatusList.Parent = _form;
+            _fileStatusList = new FileStatusList
+            {
+                Parent = _form
+            };
             _form.Show(); // must be visible to be able to change the focus
         }
 

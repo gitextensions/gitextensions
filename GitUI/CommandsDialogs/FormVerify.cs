@@ -288,8 +288,10 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            using var frm = new FormEdit(UICommands, Module.ShowObject(currentItem.ObjectId));
-            frm.IsReadOnly = true;
+            using var frm = new FormEdit(UICommands, Module.ShowObject(currentItem.ObjectId))
+            {
+                IsReadOnly = true
+            };
             frm.ShowDialog(this);
         }
 

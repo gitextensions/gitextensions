@@ -48,8 +48,10 @@ namespace GitUI
             if (GitCommands.Utils.EnvUtils.IsWindowsVistaOrGreater())
             {
                 // use Vista+ dialog
-                using var dialog = new CommonOpenFileDialog();
-                dialog.IsFolderPicker = true;
+                using var dialog = new CommonOpenFileDialog
+                {
+                    IsFolderPicker = true
+                };
 
                 if (selectedPath != null)
                 {

@@ -148,8 +148,10 @@ namespace GitUI.Script
 
         private static string AskToSpecify(IEnumerable<IGitRef> options, RevisionGridControl revisionGrid)
         {
-            using var f = new FormQuickGitRefSelector();
-            f.Location = revisionGrid?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
+            using var f = new FormQuickGitRefSelector
+            {
+                Location = revisionGrid?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point()
+            };
             f.Init(FormQuickGitRefSelector.Action.Select, options.ToList());
             f.ShowDialog();
             return f.SelectedRef.Name;
@@ -157,8 +159,10 @@ namespace GitUI.Script
 
         private static string AskToSpecify(IEnumerable<string> options, RevisionGridControl revisionGrid)
         {
-            using var f = new FormQuickStringSelector();
-            f.Location = revisionGrid?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
+            using var f = new FormQuickStringSelector
+            {
+                Location = revisionGrid?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point()
+            };
             f.Init(options.ToList());
             f.ShowDialog();
             return f.SelectedString;

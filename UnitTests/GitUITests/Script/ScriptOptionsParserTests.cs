@@ -202,8 +202,10 @@ namespace GitUITests.Script
         [Test]
         public void ScriptOptionsParser_resolve_StringWithDoubleQuotes()
         {
-            GitRevision gitRevision = new GitRevision(ObjectId.Random());
-            gitRevision.Subject = "test string with \"double qoutes\" and escaped \\\"double qoutes\\\"";
+            GitRevision gitRevision = new GitRevision(ObjectId.Random())
+            {
+                Subject = "test string with \"double qoutes\" and escaped \\\"double qoutes\\\""
+            };
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments("{{sMessage}}", "sMessage", null, null, null, null, null, null, null, null, null, gitRevision, null, null, null, null, null, null);
             result.Should().Be("\"test string with \\\"double qoutes\\\" and escaped \\\"double qoutes\\\"\"");

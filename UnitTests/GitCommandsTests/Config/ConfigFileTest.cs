@@ -466,8 +466,10 @@ namespace GitCommandsTests.Config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
 
                 // Make sure it is hidden
-                var configFile = new FileInfo(GetConfigFileName());
-                configFile.Attributes = FileAttributes.Hidden;
+                var configFile = new FileInfo(GetConfigFileName())
+                {
+                    Attributes = FileAttributes.Hidden
+                };
             }
 
             // PERFORM TEST
@@ -886,8 +888,10 @@ namespace GitCommandsTests.Config
             if (File.Exists(GetConfigFileName()))
             {
                 // Make sure it is hidden
-                var configFile = new FileInfo(GetConfigFileName());
-                configFile.Attributes = FileAttributes.Normal;
+                var configFile = new FileInfo(GetConfigFileName())
+                {
+                    Attributes = FileAttributes.Normal
+                };
 
                 File.Delete(GetConfigFileName());
             }

@@ -425,10 +425,11 @@ namespace NetSpell.SpellChecker.Dictionary
                             // if 3 parts, then new rule
                             if (partMatches.Count == 3)
                             {
-                                currentRule = new AffixRule();
-
-                                // part 1 = affix key
-                                currentRule.Name = partMatches[0].Value;
+                                currentRule = new AffixRule
+                                {
+                                    // part 1 = affix key
+                                    Name = partMatches[0].Value
+                                };
 
                                 // part 2 = combine flag
                                 if (partMatches[1].Value == "Y")
@@ -489,10 +490,12 @@ namespace NetSpell.SpellChecker.Dictionary
                         case "[Words]": // dictionary word list
                                         // splits word into its parts
                             string[] parts = tempLine.Split('/');
-                            var tempWord = new Word();
 
-                            // part 1 = base word
-                            tempWord.Text = parts[0];
+                            var tempWord = new Word
+                            {
+                                // part 1 = base word
+                                Text = parts[0]
+                            };
 
                             // part 2 = affix keys
                             if (parts.Length >= 2)

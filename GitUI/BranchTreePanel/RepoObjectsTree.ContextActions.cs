@@ -265,10 +265,12 @@ namespace GitUI.BranchTreePanel
             where TMenuItem : ToolStripItem, new()
             where TNode : class, INode
         {
-            var result = new TMenuItem();
-            result.Image = icon;
-            result.Text = text.Text;
-            result.ToolTipText = toolTip.Text;
+            var result = new TMenuItem
+            {
+                Image = icon,
+                Text = text.Text,
+                ToolTipText = toolTip.Text
+            };
             RegisterClick(result, onClick);
             return result;
         }

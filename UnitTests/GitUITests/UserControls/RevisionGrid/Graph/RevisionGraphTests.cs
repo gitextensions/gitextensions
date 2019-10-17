@@ -100,8 +100,10 @@ namespace GitUITests.UserControls.RevisionGrid
             Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
 
             // Add a new head
-            GitRevision newHead = new GitRevision(ObjectId.Random());
-            newHead.ParentIds = new ObjectId[] { _revisionGraph.GetNodeForRow(0).Objectid };
+            GitRevision newHead = new GitRevision(ObjectId.Random())
+            {
+                ParentIds = new ObjectId[] { _revisionGraph.GetNodeForRow(0).Objectid }
+            };
             _revisionGraph.Add(newHead, RevisionNodeFlags.None); // Add commit that has the current top node as parent.
 
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count); // Call to cache fix the order

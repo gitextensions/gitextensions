@@ -32,8 +32,10 @@ namespace GitUITests.UserControls.RevisionGrid
         [SetUp]
         public void Setup()
         {
-            _copyContextMenuItem = new CopyContextMenuItem();
-            _copyContextMenuItem.Owner = new ToolStrip();
+            _copyContextMenuItem = new CopyContextMenuItem
+            {
+                Owner = new ToolStrip()
+            };
         }
 
         [Test]

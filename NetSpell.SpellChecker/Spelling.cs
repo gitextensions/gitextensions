@@ -271,9 +271,11 @@ namespace NetSpell.SpellChecker
 
         private void SuggestWord(string word, List<Word> tempSuggestion)
         {
-            var ws = new Word();
-            ws.Text = word;
-            ws.EditDistance = EditDistance(CurrentWord, word);
+            var ws = new Word
+            {
+                Text = word,
+                EditDistance = EditDistance(CurrentWord, word)
+            };
             tempSuggestion.Add(ws);
         }
 
