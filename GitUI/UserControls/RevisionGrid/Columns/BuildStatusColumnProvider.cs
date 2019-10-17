@@ -110,23 +110,16 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             {
                 var isSelected = _gridView.Rows[e.RowIndex].Selected;
 
-                switch (revision.BuildStatus.Status)
+                return revision.BuildStatus.Status switch
                 {
-                    case BuildInfo.BuildStatus.Success:
-                        return isSelected ? Color.LightGreen : Color.DarkGreen;
-                    case BuildInfo.BuildStatus.Failure:
-                        return isSelected ? Color.Red : Color.DarkRed;
-                    case BuildInfo.BuildStatus.InProgress:
-                        return isSelected ? Color.LightBlue : Color.Blue;
-                    case BuildInfo.BuildStatus.Unstable:
-                        return Color.OrangeRed;
-                    case BuildInfo.BuildStatus.Stopped:
-                        return isSelected ? Color.LightGray : Color.Gray;
-                    case BuildInfo.BuildStatus.Unknown:
-                        return foreColor;
-                    default:
-                        throw new InvalidOperationException("Unsupported build status enum value.");
-                }
+                    BuildInfo.BuildStatus.Success => isSelected ? Color.LightGreen : Color.DarkGreen,
+                    BuildInfo.BuildStatus.Failure => isSelected ? Color.Red : Color.DarkRed,
+                    BuildInfo.BuildStatus.InProgress => isSelected ? Color.LightBlue : Color.Blue,
+                    BuildInfo.BuildStatus.Unstable => Color.OrangeRed,
+                    BuildInfo.BuildStatus.Stopped => isSelected ? Color.LightGray : Color.Gray,
+                    BuildInfo.BuildStatus.Unknown => foreColor,
+                    _ => throw new InvalidOperationException("Unsupported build status enum value."),
+                };
             }
 
             Brush GetBrush()

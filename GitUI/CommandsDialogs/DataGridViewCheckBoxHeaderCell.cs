@@ -105,17 +105,13 @@ namespace GitUI.CommandsDialogs
         {
             get
             {
-                switch (CheckedState)
+                return CheckedState switch
                 {
-                    case CheckState.Unchecked:
-                        return CheckBoxState.UncheckedNormal;
-                    case CheckState.Checked:
-                        return CheckBoxState.CheckedNormal;
-                    case CheckState.Indeterminate:
-                        return CheckBoxState.MixedNormal;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                    CheckState.Unchecked => CheckBoxState.UncheckedNormal,
+                    CheckState.Checked => CheckBoxState.CheckedNormal,
+                    CheckState.Indeterminate => CheckBoxState.MixedNormal,
+                    _ => throw new ArgumentOutOfRangeException(),
+                };
             }
         }
 

@@ -107,16 +107,16 @@ namespace GitUI.Avatars
 
                     static string GetDefaultImageString()
                     {
-                        switch (AppSettings.GravatarFallbackAvatarType)
+                        return AppSettings.GravatarFallbackAvatarType switch
                         {
-                            case GravatarFallbackAvatarType.Identicon: return "identicon";
-                            case GravatarFallbackAvatarType.MonsterId: return "monsterid";
-                            case GravatarFallbackAvatarType.Wavatar: return "wavatar";
-                            case GravatarFallbackAvatarType.Retro: return "retro";
-                            case GravatarFallbackAvatarType.Robohash: return "robohash";
-                            case GravatarFallbackAvatarType.AuthorInitials: return "404";
-                            default: return "404";
-                        }
+                            GravatarFallbackAvatarType.Identicon => "identicon",
+                            GravatarFallbackAvatarType.MonsterId => "monsterid",
+                            GravatarFallbackAvatarType.Wavatar => "wavatar",
+                            GravatarFallbackAvatarType.Retro => "retro",
+                            GravatarFallbackAvatarType.Robohash => "robohash",
+                            GravatarFallbackAvatarType.AuthorInitials => "404",
+                            _ => "404",
+                        };
                     }
 
                     string CalculateHash()

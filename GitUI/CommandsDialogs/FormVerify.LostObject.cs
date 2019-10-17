@@ -166,14 +166,14 @@ namespace GitUI.CommandsDialogs
                         return LostObjectType.Other;
                     }
 
-                    switch (matchedGroup.Value)
+                    return matchedGroup.Value switch
                     {
-                        case "commit": return LostObjectType.Commit;
-                        case "blob": return LostObjectType.Blob;
-                        case "tree": return LostObjectType.Tree;
-                        case "tag": return LostObjectType.Tag;
-                        default: return LostObjectType.Other;
-                    }
+                        "commit" => LostObjectType.Commit,
+                        "blob" => LostObjectType.Blob,
+                        "tree" => LostObjectType.Tree,
+                        "tag" => LostObjectType.Tag,
+                        _ => LostObjectType.Other,
+                    };
                 }
             }
         }

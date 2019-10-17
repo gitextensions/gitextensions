@@ -8,15 +8,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks
     {
         public ICloudProviderExternalLinkDefinitionExtractor Get(CloudProviderKind cloudProviderKind)
         {
-            switch (cloudProviderKind)
+            return cloudProviderKind switch
             {
-                case CloudProviderKind.GitHub:
-                    return new GitHubExternalLinkDefinitionExtractor();
-                case CloudProviderKind.AzureDevOps:
-                    return new AzureDevopsExternalLinkDefinitionExtractor();
-            }
-
-            return null;
+                CloudProviderKind.GitHub => new GitHubExternalLinkDefinitionExtractor(),
+                CloudProviderKind.AzureDevOps => new AzureDevopsExternalLinkDefinitionExtractor(),
+                _ => null,
+            };
         }
 
         public IEnumerable<ICloudProviderExternalLinkDefinitionExtractor> GetAllExtractor()

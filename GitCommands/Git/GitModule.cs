@@ -2824,15 +2824,12 @@ namespace GitCommands
         {
             var list = GetRefs(true, false);
 
-            switch (option)
+            return option switch
             {
-                case GetTagRefsSortOrder.ByCommitDateAscending:
-                    return list.OrderBy(GetDate).ToList();
-                case GetTagRefsSortOrder.ByCommitDateDescending:
-                    return list.OrderByDescending(GetDate).ToList();
-                default:
-                    return list;
-            }
+                GetTagRefsSortOrder.ByCommitDateAscending => list.OrderBy(GetDate).ToList(),
+                GetTagRefsSortOrder.ByCommitDateDescending => list.OrderByDescending(GetDate).ToList(),
+                _ => list,
+            };
 
             // BUG this sorting logic has no effect as CommitDate is not set by the GitRevision constructor
             static DateTime GetDate(IGitRef head) => new GitRevision(head.ObjectId).CommitDate;

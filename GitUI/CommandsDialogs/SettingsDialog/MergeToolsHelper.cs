@@ -204,33 +204,21 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public static string DiffToolCmdSuggest(string diffToolText, string exeFile)
         {
             string diffTool = diffToolText.ToLowerInvariant();
-            switch (diffTool)
+            return diffTool switch
             {
-                case "beyondcompare3":
-                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
-                case "beyondcompare4":
-                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
-                case "diffmerge":
-                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
-                case "kdiff3":
-                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
-                case "meld":
-                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
-                case "p4merge":
-                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
-                case "semanticdiff":
-                    return "\"" + exeFile + "\" -s \"$LOCAL\" -d \"$REMOTE\"";
-                case "tmerge":
-                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
-                case "winmerge":
-                    return "\"" + exeFile + "\" -e -u \"$LOCAL\" \"$REMOTE\"";
-                case "vsdiffmerge":
-                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
-                case "vscode":
-                    return "\"" + exeFile + "\" --wait --diff \"$LOCAL\" \"$REMOTE\"";
-            }
-
-            return "";
+                "beyondcompare3" => "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"",
+                "beyondcompare4" => "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"",
+                "diffmerge" => "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"",
+                "kdiff3" => "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"",
+                "meld" => "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"",
+                "p4merge" => "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"",
+                "semanticdiff" => "\"" + exeFile + "\" -s \"$LOCAL\" -d \"$REMOTE\"",
+                "tmerge" => "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"",
+                "winmerge" => "\"" + exeFile + "\" -e -u \"$LOCAL\" \"$REMOTE\"",
+                "vsdiffmerge" => "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"",
+                "vscode" => "\"" + exeFile + "\" --wait --diff \"$LOCAL\" \"$REMOTE\"",
+                _ => "",
+            };
         }
 
         [CanBeNull]

@@ -474,22 +474,22 @@ namespace GitUI.Script
 
         private static string SelectOne(IList<IGitRef> refs, RevisionGridControl revisionGrid)
         {
-            switch (refs.Count)
+            return refs.Count switch
             {
-                case 0: return string.Empty;
-                case 1: return refs[0].Name;
-                default: return AskToSpecify(refs, revisionGrid);
-            }
+                0 => string.Empty,
+                1 => refs[0].Name,
+                _ => AskToSpecify(refs, revisionGrid),
+            };
         }
 
         private static string SelectOne(IList<string> strings, RevisionGridControl revisionGrid)
         {
-            switch (strings.Count)
+            return strings.Count switch
             {
-                case 0: return string.Empty;
-                case 1: return strings[0];
-                default: return AskToSpecify(strings, revisionGrid);
-            }
+                0 => string.Empty,
+                1 => strings[0],
+                _ => AskToSpecify(strings, revisionGrid),
+            };
         }
 
         private static string StripRemoteName(string remoteBranchName)

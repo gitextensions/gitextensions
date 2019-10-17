@@ -411,19 +411,14 @@ namespace JenkinsIntegration
 
         private static BuildInfo.BuildStatus ParseBuildStatus(string statusValue)
         {
-            switch (statusValue)
+            return statusValue switch
             {
-                case "SUCCESS":
-                    return BuildInfo.BuildStatus.Success;
-                case "FAILURE":
-                    return BuildInfo.BuildStatus.Failure;
-                case "UNSTABLE":
-                    return BuildInfo.BuildStatus.Unstable;
-                case "ABORTED":
-                    return BuildInfo.BuildStatus.Stopped;
-                default:
-                    return BuildInfo.BuildStatus.Unknown;
-            }
+                "SUCCESS" => BuildInfo.BuildStatus.Success,
+                "FAILURE" => BuildInfo.BuildStatus.Failure,
+                "UNSTABLE" => BuildInfo.BuildStatus.Unstable,
+                "ABORTED" => BuildInfo.BuildStatus.Stopped,
+                _ => BuildInfo.BuildStatus.Unknown,
+            };
         }
 
         private async Task<Stream> GetStreamAsync(string restServicePath, CancellationToken cancellationToken)

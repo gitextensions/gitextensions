@@ -135,17 +135,13 @@ namespace GitExtensionsVSIX.Commands
 
         private static CommandTarget GetProjectItemTarget(ProjectItem projectItem)
         {
-            switch (projectItem.Kind.ToUpper())
+            return projectItem.Kind.ToUpper() switch
             {
-                case Constants.vsProjectItemKindPhysicalFile:
-                    return CommandTarget.File;
-                case Constants.vsProjectItemKindVirtualFolder:
-                    return CommandTarget.VirtualFolder;
-                case Constants.vsProjectItemKindPhysicalFolder:
-                    return CommandTarget.PhysicalFolder;
-                default:
-                    return CommandTarget.Any;
-            }
+                Constants.vsProjectItemKindPhysicalFile => CommandTarget.File,
+                Constants.vsProjectItemKindVirtualFolder => CommandTarget.VirtualFolder,
+                Constants.vsProjectItemKindPhysicalFolder => CommandTarget.PhysicalFolder,
+                _ => CommandTarget.Any,
+            };
         }
 
         [Flags]

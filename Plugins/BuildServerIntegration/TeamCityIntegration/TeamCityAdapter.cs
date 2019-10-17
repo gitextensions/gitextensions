@@ -341,15 +341,12 @@ namespace TeamCityIntegration
 
         private static BuildInfo.BuildStatus ParseBuildStatus(string statusValue)
         {
-            switch (statusValue)
+            return statusValue switch
             {
-                case "SUCCESS":
-                    return BuildInfo.BuildStatus.Success;
-                case "FAILURE":
-                    return BuildInfo.BuildStatus.Failure;
-                default:
-                    return BuildInfo.BuildStatus.Unknown;
-            }
+                "SUCCESS" => BuildInfo.BuildStatus.Success,
+                "FAILURE" => BuildInfo.BuildStatus.Failure,
+                _ => BuildInfo.BuildStatus.Unknown,
+            };
         }
 
         private Task<Stream> GetStreamAsync(string restServicePath, CancellationToken cancellationToken)

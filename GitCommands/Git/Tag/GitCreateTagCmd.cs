@@ -34,28 +34,19 @@ namespace GitCommands.Git.Tag
 
             string GetArgumentForOperation()
             {
-                switch (CreateTagArguments.Operation)
+                return CreateTagArguments.Operation switch
                 {
                     /* Lightweight */
-                    case TagOperation.Lightweight:
-                        return null;
-
+                    TagOperation.Lightweight => null,
                     /* Annotate */
-                    case TagOperation.Annotate:
-                        return "-a";
-
+                    TagOperation.Annotate => "-a",
                     /* Sign with default GPG */
-                    case TagOperation.SignWithDefaultKey:
-                        return "-s";
-
+                    TagOperation.SignWithDefaultKey => "-s",
                     /* Sign with specific GPG */
-                    case TagOperation.SignWithSpecificKey:
-                        return $"-u {CreateTagArguments.SignKeyId}";
-
+                    TagOperation.SignWithSpecificKey => $"-u {CreateTagArguments.SignKeyId}",
                     /* Error */
-                    default:
-                        throw new NotSupportedException($"Invalid tag operation: {CreateTagArguments.Operation}");
-                }
+                    _ => throw new NotSupportedException($"Invalid tag operation: {CreateTagArguments.Operation}"),
+                };
             }
         }
 
