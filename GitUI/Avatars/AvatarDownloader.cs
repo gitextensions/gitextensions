@@ -122,23 +122,22 @@ namespace GitUI.Avatars
                     string CalculateHash()
                     {
                         // Hash specified at http://en.gravatar.com/site/implement/hash/
-                        using (var md5 = new MD5CryptoServiceProvider())
+                        using var md5 = new MD5CryptoServiceProvider();
+
+                        // Gravatar doesn't specify an encoding
+                        var emailBytes = Encoding.UTF8.GetBytes(email.Trim().ToLowerInvariant());
+
+                        var hashBytes = md5.ComputeHash(emailBytes);
+
+                        // TODO can combine with more efficient logic from ObjectId if that PR is merged
+                        var builder = new StringBuilder(capacity: 32);
+
+                        foreach (var b in hashBytes)
                         {
-                            // Gravatar doesn't specify an encoding
-                            var emailBytes = Encoding.UTF8.GetBytes(email.Trim().ToLowerInvariant());
-
-                            var hashBytes = md5.ComputeHash(emailBytes);
-
-                            // TODO can combine with more efficient logic from ObjectId if that PR is merged
-                            var builder = new StringBuilder(capacity: 32);
-
-                            foreach (var b in hashBytes)
-                            {
-                                builder.Append(b.ToString("x2"));
-                            }
-
-                            return builder.ToString();
+                            builder.Append(b.ToString("x2"));
                         }
+
+                        return builder.ToString();
                     }
                 }
             }
@@ -182,15 +181,11 @@ namespace GitUI.Avatars
 
                     try
                     {
-                        using (var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy })
-                        {
-                            webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
+                        using var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy };
+                        webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
 
-                            using (var imageStream = await webClient.OpenReadTaskAsync(imageUrl))
-                            {
-                                return Image.FromStream(imageStream);
-                            }
-                        }
+                        using var imageStream = await webClient.OpenReadTaskAsync(imageUrl);
+                        return Image.FromStream(imageStream);
                     }
                     catch (Exception ex)
                     {

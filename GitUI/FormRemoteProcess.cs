@@ -48,11 +48,9 @@ namespace GitUI
 
         public static new bool ShowDialog(IWin32Window owner, GitModule module, ArgumentString arguments)
         {
-            using (var formRemoteProcess = new FormRemoteProcess(module, arguments))
-            {
-                formRemoteProcess.ShowDialog(owner);
-                return !formRemoteProcess.ErrorOccurred();
-            }
+            using var formRemoteProcess = new FormRemoteProcess(module, arguments);
+            formRemoteProcess.ShowDialog(owner);
+            return !formRemoteProcess.ErrorOccurred();
         }
 
         private string _urlTryingToConnect = string.Empty;

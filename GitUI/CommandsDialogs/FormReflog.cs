@@ -106,13 +106,11 @@ namespace GitUI.CommandsDialogs
 
             UICommands.DoActionOnRepo(() =>
             {
-                using (var form = new FormCreateBranch(UICommands, GetShaOfRefLine()))
-                {
-                    form.CheckoutAfterCreation = false;
-                    form.UserAbleToChangeRevision = false;
-                    form.CouldBeOrphan = false;
-                    return form.ShowDialog(this) == DialogResult.OK;
-                }
+                using var form = new FormCreateBranch(UICommands, GetShaOfRefLine());
+                form.CheckoutAfterCreation = false;
+                form.UserAbleToChangeRevision = false;
+                form.CouldBeOrphan = false;
+                return form.ShowDialog(this) == DialogResult.OK;
             });
         }
 
@@ -146,10 +144,8 @@ namespace GitUI.CommandsDialogs
             var resetType = _isDirtyDir ? FormResetCurrentBranch.ResetType.Soft : FormResetCurrentBranch.ResetType.Hard;
             UICommands.DoActionOnRepo(() =>
             {
-                using (var form = new FormResetCurrentBranch(UICommands, gitRevision, resetType))
-                {
-                    return form.ShowDialog(this) == DialogResult.OK;
-                }
+                using var form = new FormResetCurrentBranch(UICommands, gitRevision, resetType);
+                return form.ShowDialog(this) == DialogResult.OK;
             });
         }
 

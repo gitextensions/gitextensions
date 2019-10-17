@@ -80,10 +80,8 @@ namespace GitExtensions
 
             if (string.IsNullOrEmpty(AppSettings.Translation))
             {
-                using (var formChoose = new FormChooseTranslation())
-                {
-                    formChoose.ShowDialog();
-                }
+                using var formChoose = new FormChooseTranslation();
+                formChoose.ShowDialog();
             }
 
             if (!AppSettings.TelemetryEnabled.HasValue)
@@ -115,14 +113,12 @@ namespace GitExtensions
                         var commonLogic = new CommonLogic(uiCommands.Module);
                         var checkSettingsLogic = new CheckSettingsLogic(commonLogic);
                         var fakePageHost = new SettingsPageHostMock(checkSettingsLogic);
-                        using (var checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(fakePageHost))
+                        using var checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(fakePageHost);
+                        if (!checklistSettingsPage.CheckSettings())
                         {
-                            if (!checklistSettingsPage.CheckSettings())
+                            if (!checkSettingsLogic.AutoSolveAllSettings())
                             {
-                                if (!checkSettingsLogic.AutoSolveAllSettings())
-                                {
-                                    uiCommands.StartSettingsDialog();
-                                }
+                                uiCommands.StartSettingsDialog();
                             }
                         }
                     }
@@ -327,13 +323,11 @@ namespace GitExtensions
             UserEnvironmentInformation.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty);
             var envInfo = UserEnvironmentInformation.GetInformation();
 
-            using (var form = new GitUI.NBugReports.BugReportForm())
+            using var form = new GitUI.NBugReports.BugReportForm();
+            var result = form.ShowDialog(ex, envInfo);
+            if (result == DialogResult.Abort)
             {
-                var result = form.ShowDialog(ex, envInfo);
-                if (result == DialogResult.Abort)
-                {
-                    Environment.Exit(-1);
-                }
+                Environment.Exit(-1);
             }
         }
     }

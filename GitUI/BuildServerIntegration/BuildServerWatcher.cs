@@ -134,29 +134,27 @@ namespace GitUI.BuildServerIntegration
                         {
                             byte[] unprotectedData = ProtectedData.Unprotect(protectedData, null,
                                 DataProtectionScope.CurrentUser);
-                            using (var memoryStream = new MemoryStream(unprotectedData))
+                            using var memoryStream = new MemoryStream(unprotectedData);
+                            var credentialsConfig = new ConfigFile("", false);
+
+                            using (var textReader = new StreamReader(memoryStream, Encoding.UTF8))
                             {
-                                var credentialsConfig = new ConfigFile("", false);
+                                credentialsConfig.LoadFromString(textReader.ReadToEnd());
+                            }
 
-                                using (var textReader = new StreamReader(memoryStream, Encoding.UTF8))
+                            var section = credentialsConfig.FindConfigSection(CredentialsConfigName);
+
+                            if (section != null)
+                            {
+                                buildServerCredentials.UseGuestAccess = section.GetValueAsBool(UseGuestAccessKey,
+                                    true);
+                                buildServerCredentials.Username = section.GetValue(UsernameKey);
+                                buildServerCredentials.Password = section.GetValue(PasswordKey);
+                                foundInConfig = true;
+
+                                if (useStoredCredentialsIfExisting)
                                 {
-                                    credentialsConfig.LoadFromString(textReader.ReadToEnd());
-                                }
-
-                                var section = credentialsConfig.FindConfigSection(CredentialsConfigName);
-
-                                if (section != null)
-                                {
-                                    buildServerCredentials.UseGuestAccess = section.GetValueAsBool(UseGuestAccessKey,
-                                        true);
-                                    buildServerCredentials.Username = section.GetValue(UsernameKey);
-                                    buildServerCredentials.Password = section.GetValue(PasswordKey);
-                                    foundInConfig = true;
-
-                                    if (useStoredCredentialsIfExisting)
-                                    {
-                                        return buildServerCredentials;
-                                    }
+                                    return buildServerCredentials;
                                 }
                             }
                         }
@@ -188,16 +186,14 @@ namespace GitUI.BuildServerIntegration
 
                         using (var stream = GetBuildServerOptionsIsolatedStorageStream(buildServerAdapter, FileAccess.Write, FileShare.None))
                         {
-                            using (var memoryStream = new MemoryStream())
+                            using var memoryStream = new MemoryStream();
+                            using (var textWriter = new StreamWriter(memoryStream, Encoding.UTF8))
                             {
-                                using (var textWriter = new StreamWriter(memoryStream, Encoding.UTF8))
-                                {
-                                    textWriter.Write(credentialsConfig.GetAsString());
-                                }
-
-                                var protectedData = ProtectedData.Protect(memoryStream.ToArray(), null, DataProtectionScope.CurrentUser);
-                                stream.Write(protectedData, 0, protectedData.Length);
+                                textWriter.Write(credentialsConfig.GetAsString());
                             }
+
+                            var protectedData = ProtectedData.Protect(memoryStream.ToArray(), null, DataProtectionScope.CurrentUser);
+                            stream.Write(protectedData, 0, protectedData.Length);
                         }
 
                         return buildServerCredentials;

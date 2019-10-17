@@ -332,17 +332,15 @@ namespace GitUI
                 return;
             }
 
-            using (var dlg = new FormQuickGitRefSelector())
+            using var dlg = new FormQuickGitRefSelector();
+            dlg.Init(actionLabel, refs);
+            dlg.Location = GetQuickItemSelectorLocation();
+            if (dlg.ShowDialog(this) != DialogResult.OK || dlg.SelectedRef == null)
             {
-                dlg.Init(actionLabel, refs);
-                dlg.Location = GetQuickItemSelectorLocation();
-                if (dlg.ShowDialog(this) != DialogResult.OK || dlg.SelectedRef == null)
-                {
-                    return;
-                }
-
-                action(dlg.SelectedRef);
+                return;
             }
+
+            action(dlg.SelectedRef);
         }
 
         public Point GetQuickItemSelectorLocation()
@@ -1385,10 +1383,8 @@ namespace GitUI
 
             UICommands.DoActionOnRepo(() =>
                 {
-                    using (var frm = new FormCreateTag(UICommands, revision?.ObjectId))
-                    {
-                        return frm.ShowDialog(this) == DialogResult.OK;
-                    }
+                    using var frm = new FormCreateTag(UICommands, revision?.ObjectId);
+                    return frm.ShowDialog(this) == DialogResult.OK;
                 });
         }
 
@@ -2369,14 +2365,12 @@ namespace GitUI
                 return;
             }
 
-            using (var form = new FormCompareToBranch(UICommands, headCommit.ObjectId))
+            using var form = new FormCompareToBranch(UICommands, headCommit.ObjectId);
+            if (form.ShowDialog(this) == DialogResult.OK)
             {
-                if (form.ShowDialog(this) == DialogResult.OK)
-                {
-                    var baseCommit = Module.RevParse(form.BranchName);
-                    UICommands.ShowFormDiff(IsFirstParentValid(), baseCommit, headCommit.ObjectId,
-                        form.BranchName, headCommit.Subject);
-                }
+                var baseCommit = Module.RevParse(form.BranchName);
+                UICommands.ShowFormDiff(IsFirstParentValid(), baseCommit, headCommit.ObjectId,
+                    form.BranchName, headCommit.Subject);
             }
         }
 

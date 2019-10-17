@@ -59,10 +59,8 @@ namespace GitUITests.CommandsDialogs
                 UITest.RunForm<FormEditor>(
                     () =>
                     {
-                        using (var formEditor = new FormEditor(_commands, filePath, showWarning: false))
-                        {
-                            formEditor.ShowDialog();
-                        }
+                        using var formEditor = new FormEditor(_commands, filePath, showWarning: false);
+                        formEditor.ShowDialog();
                     },
                     form =>
                     {
@@ -111,10 +109,8 @@ namespace GitUITests.CommandsDialogs
                 UITest.RunForm<FormEditor>(
                     () =>
                     {
-                        using (var formEditor = new FormEditor(_commands, filePath, showWarning: false))
-                        {
-                            formEditor.ShowDialog();
-                        }
+                        using var formEditor = new FormEditor(_commands, filePath, showWarning: false);
+                        formEditor.ShowDialog();
                     },
                     form =>
                     {

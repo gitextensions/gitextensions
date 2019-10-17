@@ -458,17 +458,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private bool PromptCategoryName(List<string> categories, string originalName, out string name)
         {
-            using (var dialog = new FormDashboardCategoryTitle(categories, originalName))
+            using var dialog = new FormDashboardCategoryTitle(categories, originalName);
+            if (dialog.ShowDialog(this) == DialogResult.OK)
             {
-                if (dialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    name = dialog.Category;
-                    return true;
-                }
-
-                name = null;
-                return false;
+                name = dialog.Category;
+                return true;
             }
+
+            name = null;
+            return false;
         }
 
         private bool PromptUserConfirm(string question, string caption)
@@ -656,13 +654,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void mnuConfigure_Click(object sender, EventArgs e)
         {
-            using (var frm = new FormRecentReposSettings())
+            using var frm = new FormRecentReposSettings();
+            var result = frm.ShowDialog(this);
+            if (result == DialogResult.OK)
             {
-                var result = frm.ShowDialog(this);
-                if (result == DialogResult.OK)
-                {
-                    ShowRecentRepositories();
-                }
+                ShowRecentRepositories();
             }
         }
 

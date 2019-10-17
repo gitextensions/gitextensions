@@ -67,38 +67,34 @@ namespace GitUI
 
             try
             {
-                using (var path = CreateRoundRectPath(bounds, radius))
+                using var path = CreateRoundRectPath(bounds, radius);
+                if (fill)
                 {
-                    if (fill)
+                    var color1 = Lerp(color, light ? Color.White : Color.Black, 0.92F);
+                    var color2 = Lerp(color1, light ? Color.White : Color.DarkSlateBlue, light ? 0.9F : 0.3F);
+                    using var brush = new LinearGradientBrush(bounds, color1, color2, angle: 90);
+                    graphics.FillPath(brush, path);
+                }
+                else if (isRowSelected)
+                {
+                    graphics.FillPath(light ? Brushes.White : Brushes.Black, path);
+                }
+
+                // frame
+                using (var pen = new Pen(Lerp(color, light ? Color.White : Color.Black, light ? 0.83F : 0.7F)))
+                {
+                    if (dashedLine)
                     {
-                        var color1 = Lerp(color, light ? Color.White : Color.Black, 0.92F);
-                        var color2 = Lerp(color1, light ? Color.White : Color.DarkSlateBlue, light ? 0.9F : 0.3F);
-                        using (var brush = new LinearGradientBrush(bounds, color1, color2, angle: 90))
-                        {
-                            graphics.FillPath(brush, path);
-                        }
-                    }
-                    else if (isRowSelected)
-                    {
-                        graphics.FillPath(light ? Brushes.White : Brushes.Black, path);
+                        pen.DashPattern = _dashPattern;
                     }
 
-                    // frame
-                    using (var pen = new Pen(Lerp(color, light ? Color.White : Color.Black, light ? 0.83F : 0.7F)))
-                    {
-                        if (dashedLine)
-                        {
-                            pen.DashPattern = _dashPattern;
-                        }
+                    graphics.DrawPath(pen, path);
+                }
 
-                        graphics.DrawPath(pen, path);
-                    }
-
-                    // arrow if the head is the current branch
-                    if (arrowType != RefArrowType.None)
-                    {
-                        DrawArrow(graphics, bounds.X, bounds.Y, bounds.Height, color, filled: arrowType == RefArrowType.Filled);
-                    }
+                // arrow if the head is the current branch
+                if (arrowType != RefArrowType.None)
+                {
+                    DrawArrow(graphics, bounds.X, bounds.Y, bounds.Height, color, filled: arrowType == RefArrowType.Filled);
                 }
             }
             finally
@@ -167,17 +163,13 @@ namespace GitUI
 
             if (filled)
             {
-                using (var brush = new SolidBrush(color))
-                {
-                    graphics.FillPolygon(brush, _arrowPoints);
-                }
+                using var brush = new SolidBrush(color);
+                graphics.FillPolygon(brush, _arrowPoints);
             }
             else
             {
-                using (var pen = new Pen(color))
-                {
-                    graphics.DrawPolygon(pen, _arrowPoints);
-                }
+                using var pen = new Pen(color);
+                graphics.DrawPolygon(pen, _arrowPoints);
             }
         }
 

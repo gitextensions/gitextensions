@@ -85,11 +85,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         [CanBeNull]
         public static GitModule OpenModule(IWin32Window owner, [CanBeNull] GitModule currentModule)
         {
-            using (var open = new FormOpenDirectory(currentModule))
-            {
-                open.ShowDialog(owner);
-                return open._chosenModule;
-            }
+            using var open = new FormOpenDirectory(currentModule);
+            open.ShowDialog(owner);
+            return open._chosenModule;
         }
 
         private void LoadClick(object sender, EventArgs e)

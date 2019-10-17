@@ -120,13 +120,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             var label = (Label)sender;
 
-            using (var colorDialog = new ColorDialog { Color = label.BackColor })
-            {
-                colorDialog.ShowDialog(this);
-                label.BackColor = colorDialog.Color;
-                label.Text = colorDialog.Color.Name;
-                label.ForeColor = ColorHelper.GetForeColorForBackColor(label.BackColor);
-            }
+            using var colorDialog = new ColorDialog { Color = label.BackColor };
+            colorDialog.ShowDialog(this);
+            label.BackColor = colorDialog.Color;
+            label.Text = colorDialog.Color.Name;
+            label.ForeColor = ColorHelper.GetForeColorForBackColor(label.BackColor);
         }
 
         private void chkHighlightAuthored_CheckedChanged(object sender, EventArgs e)

@@ -134,16 +134,14 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    using (var bytes = new MemoryStream())
+                    using var bytes = new MemoryStream();
+                    bytes.Write(fileViewer.FilePreamble, 0, fileViewer.FilePreamble.Length);
+                    using (var writer = new StreamWriter(bytes, Module.FilesEncoding))
                     {
-                        bytes.Write(fileViewer.FilePreamble, 0, fileViewer.FilePreamble.Length);
-                        using (var writer = new StreamWriter(bytes, Module.FilesEncoding))
-                        {
-                            writer.Write(fileViewer.GetText());
-                        }
-
-                        File.WriteAllBytes(_fileName, bytes.ToArray());
+                        writer.Write(fileViewer.GetText());
                     }
+
+                    File.WriteAllBytes(_fileName, bytes.ToArray());
                 }
 
                 // we've written the changes out to disk now, nothing to save.

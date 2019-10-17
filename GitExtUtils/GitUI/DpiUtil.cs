@@ -22,27 +22,25 @@ namespace GitExtUtils.GitUI
 
         static DpiUtil()
         {
-            using (var hdc = GetDC(IntPtr.Zero))
+            using var hdc = GetDC(IntPtr.Zero);
+            try
             {
-                try
-                {
-                    const int LOGPIXELSX = 88;
-                    const int LOGPIXELSY = 90;
+                const int LOGPIXELSX = 88;
+                const int LOGPIXELSY = 90;
 
-                    DpiX = GetDeviceCaps(hdc, LOGPIXELSX);
-                    DpiY = GetDeviceCaps(hdc, LOGPIXELSY);
+                DpiX = GetDeviceCaps(hdc, LOGPIXELSX);
+                DpiY = GetDeviceCaps(hdc, LOGPIXELSY);
 
-                    ScaleX = DpiX / 96.0f;
-                    ScaleY = DpiY / 96.0f;
-                }
-                catch
-                {
-                    DpiX = 96;
-                    DpiY = 96;
+                ScaleX = DpiX / 96.0f;
+                ScaleY = DpiY / 96.0f;
+            }
+            catch
+            {
+                DpiX = 96;
+                DpiY = 96;
 
-                    ScaleX = 1.0f;
-                    ScaleY = 1.0f;
-                }
+                ScaleX = 1.0f;
+                ScaleY = 1.0f;
             }
         }
 

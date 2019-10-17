@@ -490,13 +490,9 @@ namespace JenkinsIntegration
 
         private async Task<string> GetResponseAsync(string relativePath, CancellationToken cancellationToken)
         {
-            using (var responseStream = await GetStreamAsync(relativePath, cancellationToken).ConfigureAwait(false))
-            {
-                using (var reader = new StreamReader(responseStream))
-                {
-                    return await reader.ReadToEndAsync();
-                }
-            }
+            using var responseStream = await GetStreamAsync(relativePath, cancellationToken).ConfigureAwait(false);
+            using var reader = new StreamReader(responseStream);
+            return await reader.ReadToEndAsync();
         }
 
         private static string FormatToGetJson(string restServicePath, bool buildsInfo = false)

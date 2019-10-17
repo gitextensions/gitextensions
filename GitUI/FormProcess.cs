@@ -86,21 +86,17 @@ namespace GitUI
 
         public static bool ShowDialog([CanBeNull] IWin32Window owner, string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
         {
-            using (var formProcess = new FormProcess(process, arguments, workingDirectory, input, useDialogSettings))
-            {
-                formProcess.ShowDialog(owner);
-                return !formProcess.ErrorOccurred();
-            }
+            using var formProcess = new FormProcess(process, arguments, workingDirectory, input, useDialogSettings);
+            formProcess.ShowDialog(owner);
+            return !formProcess.ErrorOccurred();
         }
 
         public static bool ShowStandardProcessDialog([CanBeNull] IWin32Window owner, string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
         {
             var outputCtrl = new EditboxBasedConsoleOutputControl();
-            using (var formProcess = new FormProcess(outputCtrl, process, arguments, workingDirectory, input, useDialogSettings))
-            {
-                formProcess.ShowDialog(owner);
-                return !formProcess.ErrorOccurred();
-            }
+            using var formProcess = new FormProcess(outputCtrl, process, arguments, workingDirectory, input, useDialogSettings);
+            formProcess.ShowDialog(owner);
+            return !formProcess.ErrorOccurred();
         }
 
         public static FormProcess ShowModeless([CanBeNull] IWin32Window owner, string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
@@ -127,11 +123,9 @@ namespace GitUI
 
         public static string ReadDialog([CanBeNull] IWin32Window owner, string process, ArgumentString arguments, GitModule module, string input, bool useDialogSettings)
         {
-            using (var formProcess = new FormProcess(process, arguments, module.WorkingDir, input, useDialogSettings))
-            {
-                formProcess.ShowDialog(owner);
-                return formProcess.GetOutputString();
-            }
+            using var formProcess = new FormProcess(process, arguments, module.WorkingDir, input, useDialogSettings);
+            formProcess.ShowDialog(owner);
+            return formProcess.GetOutputString();
         }
 
         protected virtual void BeforeProcessStart()

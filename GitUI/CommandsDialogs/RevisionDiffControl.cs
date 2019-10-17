@@ -783,25 +783,23 @@ namespace GitUI.CommandsDialogs
             GitItemStatus item = DiffFiles.SelectedItem;
 
             var fullName = _fullPathResolver.Resolve(item.Name);
-            using (var fileDialog =
+            using var fileDialog =
                 new SaveFileDialog
                 {
                     InitialDirectory = Path.GetDirectoryName(fullName),
                     FileName = Path.GetFileName(fullName),
                     DefaultExt = Path.GetExtension(fullName),
                     AddExtension = true
-                })
-            {
-                fileDialog.Filter =
-                    _saveFileFilterCurrentFormat.Text + " (*." +
-                    fileDialog.DefaultExt + ")|*." +
-                    fileDialog.DefaultExt +
-                    "|" + _saveFileFilterAllFiles.Text + " (*.*)|*.*";
+                };
+            fileDialog.Filter =
+_saveFileFilterCurrentFormat.Text + " (*." +
+fileDialog.DefaultExt + ")|*." +
+fileDialog.DefaultExt +
+"|" + _saveFileFilterAllFiles.Text + " (*.*)|*.*";
 
-                if (fileDialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    Module.SaveBlobAs(fileDialog.FileName, $"{DiffFiles.Revision?.Guid}:\"{item.Name}\"");
-                }
+            if (fileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                Module.SaveBlobAs(fileDialog.FileName, $"{DiffFiles.Revision?.Guid}:\"{item.Name}\"");
             }
         }
 
@@ -944,10 +942,8 @@ namespace GitUI.CommandsDialogs
                 summary += Module.GetSubmoduleSummary(name);
             }
 
-            using (var frm = new FormEdit(UICommands, summary))
-            {
-                frm.ShowDialog(this);
-            }
+            using var frm = new FormEdit(UICommands, summary);
+            frm.ShowDialog(this);
         }
 
         public void SwitchFocus(bool alreadyContainedFocus)

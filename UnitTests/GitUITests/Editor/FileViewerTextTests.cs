@@ -39,32 +39,30 @@ namespace GitUITests.Editor
         [TestCase(AutoCRLFType.input, "WindowsLines")]
         public void DoAutoCRLF_should_not_unnecessarily_duplicate_line_ending(AutoCRLFType autoCRLFType, string file)
         {
-            using (var testHelper = new GitModuleTestHelper())
+            using var testHelper = new GitModuleTestHelper();
+            testHelper.Module.LocalConfigFile.SetEnum("core.autocrlf", autoCRLFType);
+            testHelper.Module.LocalConfigFile.Save();
+
+            var content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.{file}.bin");
+
+            var uiCommands = new GitUICommands(testHelper.Module);
+            _uiCommandsSource.UICommands.Returns(x => uiCommands);
+            _fileViewer.UICommandsSource = _uiCommandsSource;
+
+            var fvi = _fileViewer.GetTestAccessor().FileViewerInternal;
+            fvi.SetText(content, null, false);
+            var doc = fvi.GetTestAccessor().TextEditor.Document;
+            var end = doc.OffsetToPosition(content.Length);
+            fvi.GetTestAccessor().TextEditor.ActiveTextAreaControl.SelectionManager.SetSelection(new TextLocation(0, 0), end);
+
+            // act - 'copy to selection' menu click will call through to DoAutoCRLF
+            _fileViewer.GetTestAccessor().CopyToolStripMenuItem.PerformClick();
+
+            // assert
+            var text = Clipboard.GetText();
+            using (ApprovalResults.ForScenario(file, autoCRLFType))
             {
-                testHelper.Module.LocalConfigFile.SetEnum("core.autocrlf", autoCRLFType);
-                testHelper.Module.LocalConfigFile.Save();
-
-                var content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.{file}.bin");
-
-                var uiCommands = new GitUICommands(testHelper.Module);
-                _uiCommandsSource.UICommands.Returns(x => uiCommands);
-                _fileViewer.UICommandsSource = _uiCommandsSource;
-
-                var fvi = _fileViewer.GetTestAccessor().FileViewerInternal;
-                fvi.SetText(content, null, false);
-                var doc = fvi.GetTestAccessor().TextEditor.Document;
-                var end = doc.OffsetToPosition(content.Length);
-                fvi.GetTestAccessor().TextEditor.ActiveTextAreaControl.SelectionManager.SetSelection(new TextLocation(0, 0), end);
-
-                // act - 'copy to selection' menu click will call through to DoAutoCRLF
-                _fileViewer.GetTestAccessor().CopyToolStripMenuItem.PerformClick();
-
-                // assert
-                var text = Clipboard.GetText();
-                using (ApprovalResults.ForScenario(file, autoCRLFType))
-                {
-                    Approvals.Verify(text);
-                }
+                Approvals.Verify(text);
             }
         }
     }

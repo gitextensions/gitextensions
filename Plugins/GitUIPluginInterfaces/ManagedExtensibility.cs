@@ -60,10 +60,8 @@ namespace GitUIPluginInterfaces
             IExportProviderFactory exportProviderFactory;
             if (applicationDataFolder != null && File.Exists(cacheFile))
             {
-                using (var cacheStream = File.OpenRead(cacheFile))
-                {
-                    exportProviderFactory = ThreadHelper.JoinableTaskFactory.Run(() => new CachedComposition().LoadExportProviderFactoryAsync(cacheStream, Resolver.DefaultInstance));
-                }
+                using var cacheStream = File.OpenRead(cacheFile);
+                exportProviderFactory = ThreadHelper.JoinableTaskFactory.Run(() => new CachedComposition().LoadExportProviderFactoryAsync(cacheStream, Resolver.DefaultInstance));
             }
             else
             {

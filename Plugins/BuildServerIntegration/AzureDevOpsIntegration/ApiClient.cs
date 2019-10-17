@@ -58,13 +58,11 @@ namespace AzureDevOpsIntegration
 
         private async Task<T> HttpGetAsync<T>(string url)
         {
-            using (var response = await _httpClient.GetAsync(url))
-            {
-                response.EnsureSuccessStatusCode();
-                string json = await response.Content.ReadAsStringAsync();
+            using var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            string json = await response.Content.ReadAsStringAsync();
 
-                return JsonConvert.DeserializeObject<T>(json);
-            }
+            return JsonConvert.DeserializeObject<T>(json);
         }
 
         [ItemCanBeNull]

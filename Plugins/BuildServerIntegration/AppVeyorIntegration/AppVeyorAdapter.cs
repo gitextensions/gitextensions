@@ -520,10 +520,8 @@ namespace AppVeyorIntegration
                         return string.Empty;
                     }
 
-                    using (var responseStream = task.Result)
-                    {
-                        return new StreamReader(responseStream).ReadToEnd();
-                    }
+                    using var responseStream = task.Result;
+                    return new StreamReader(responseStream).ReadToEnd();
                 },
                 cancellationToken,
                 taskContinuationOptions,

@@ -159,10 +159,8 @@ namespace Gource
                             Directory.CreateDirectory(fullDirPath);
                         }
 
-                        using (var fileStream = File.Create(fullPath))
-                        {
-                            zipInputStream.CopyTo(fileStream);
-                        }
+                        using var fileStream = File.Create(fullPath);
+                        zipInputStream.CopyTo(fileStream);
                     }
                 }
 

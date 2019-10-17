@@ -120,11 +120,9 @@ namespace GitUI.BranchTreePanel
                 static Image Pad(Image image)
                 {
                     var padded = new Bitmap(image.Width, image.Height + rowPadding + rowPadding, PixelFormat.Format32bppArgb);
-                    using (var g = Graphics.FromImage(padded))
-                    {
-                        g.DrawImageUnscaled(image, 0, rowPadding);
-                        return padded;
-                    }
+                    using var g = Graphics.FromImage(padded);
+                    g.DrawImageUnscaled(image, 0, rowPadding);
+                    return padded;
                 }
             }
 

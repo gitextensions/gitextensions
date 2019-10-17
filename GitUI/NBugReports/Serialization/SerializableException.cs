@@ -139,14 +139,12 @@ namespace GitUI.NBugReports.Serialization
         public string ToXmlString()
         {
             var serializer = new XmlSerializer(typeof(SerializableException));
-            using (var stream = new MemoryStream())
-            {
-                stream.SetLength(0);
-                serializer.Serialize(stream, this);
-                stream.Position = 0;
-                var doc = XDocument.Load(stream);
-                return doc.Root.ToString();
-            }
+            using var stream = new MemoryStream();
+            stream.SetLength(0);
+            serializer.Serialize(stream, this);
+            stream.Position = 0;
+            var doc = XDocument.Load(stream);
+            return doc.Root.ToString();
         }
 
         private SerializableDictionary<string, object> GetExtendedInformation(Exception exception)

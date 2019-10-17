@@ -64,16 +64,14 @@ namespace GitCommands
                 try
                 {
                     ms = new MemoryStream(output);
-                    using (var reader = new StreamReader(ms, encoding))
+                    using var reader = new StreamReader(ms, encoding);
+                    ms = null;
+                    reader.Peek();
+                    encoding = reader.CurrentEncoding;
+                    outputString = reader.ReadToEnd();
+                    if (error == null || error.Length == 0)
                     {
-                        ms = null;
-                        reader.Peek();
-                        encoding = reader.CurrentEncoding;
-                        outputString = reader.ReadToEnd();
-                        if (error == null || error.Length == 0)
-                        {
-                            return outputString;
-                        }
+                        return outputString;
                     }
                 }
                 finally
@@ -91,18 +89,16 @@ namespace GitCommands
                 try
                 {
                     ms = new MemoryStream(error);
-                    using (var reader = new StreamReader(ms, encoding))
-                    {
-                        ms = null;
-                        reader.Peek();
+                    using var reader = new StreamReader(ms, encoding);
+                    ms = null;
+                    reader.Peek();
 
-                        // .Net automatically detect Unicode encoding in StreamReader
-                        encoding = reader.CurrentEncoding;
-                        errorString = reader.ReadToEnd();
-                        if (output == null || output.Length == 0)
-                        {
-                            return errorString;
-                        }
+                    // .Net automatically detect Unicode encoding in StreamReader
+                    encoding = reader.CurrentEncoding;
+                    errorString = reader.ReadToEnd();
+                    if (output == null || output.Length == 0)
+                    {
+                        return errorString;
                     }
                 }
                 finally

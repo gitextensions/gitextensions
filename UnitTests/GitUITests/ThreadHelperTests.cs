@@ -28,93 +28,83 @@ namespace GitUITests
         [Test]
         public void FileAndForgetReportsThreadException()
         {
-            using (var helper = new ThreadExceptionHelper())
+            using var helper = new ThreadExceptionHelper();
+            var ex = new Exception();
+
+            ThreadHelper.JoinableTaskFactory.Run(() =>
             {
-                var ex = new Exception();
+                ThrowExceptionAsync(ex).FileAndForget();
+                return Task.CompletedTask;
+            });
 
-                ThreadHelper.JoinableTaskFactory.Run(() =>
-                {
-                    ThrowExceptionAsync(ex).FileAndForget();
-                    return Task.CompletedTask;
-                });
-
-                JoinPendingOperations();
-                Assert.AreSame(ex, helper.Exception);
-            }
+            JoinPendingOperations();
+            Assert.AreSame(ex, helper.Exception);
         }
 
         [Test]
         public void FileAndForgetIgnoresCancellationExceptions()
         {
-            using (var helper = new ThreadExceptionHelper())
+            using var helper = new ThreadExceptionHelper();
+            var form = new Form();
+            form.Dispose();
+
+            ThreadHelper.JoinableTaskFactory.Run(() =>
             {
-                var form = new Form();
-                form.Dispose();
+                YieldOntoControlMainThreadAsync(form).FileAndForget();
+                return Task.CompletedTask;
+            });
 
-                ThreadHelper.JoinableTaskFactory.Run(() =>
-                {
-                    YieldOntoControlMainThreadAsync(form).FileAndForget();
-                    return Task.CompletedTask;
-                });
-
-                JoinPendingOperations();
-                Assert.Null(helper.Exception, helper.Message);
-            }
+            JoinPendingOperations();
+            Assert.Null(helper.Exception, helper.Message);
         }
 
         [Test]
         public void FileAndForgetFilterCanAllowExceptions()
         {
-            using (var helper = new ThreadExceptionHelper())
+            using var helper = new ThreadExceptionHelper();
+            var ex = new Exception();
+
+            ThreadHelper.JoinableTaskFactory.Run(() =>
             {
-                var ex = new Exception();
+                ThrowExceptionAsync(ex).FileAndForget(fileOnlyIf: e => e == ex);
+                return Task.CompletedTask;
+            });
 
-                ThreadHelper.JoinableTaskFactory.Run(() =>
-                {
-                    ThrowExceptionAsync(ex).FileAndForget(fileOnlyIf: e => e == ex);
-                    return Task.CompletedTask;
-                });
-
-                JoinPendingOperations();
-                Assert.AreSame(ex, helper.Exception);
-            }
+            JoinPendingOperations();
+            Assert.AreSame(ex, helper.Exception);
         }
 
         [Test]
         public void FileAndForgetFilterCanIgnoreExceptions()
         {
-            using (var helper = new ThreadExceptionHelper())
+            using var helper = new ThreadExceptionHelper();
+            var ex = new Exception();
+
+            ThreadHelper.JoinableTaskFactory.Run(() =>
             {
-                var ex = new Exception();
+                ThrowExceptionAsync(ex).FileAndForget(fileOnlyIf: e => e != ex);
+                return Task.CompletedTask;
+            });
 
-                ThreadHelper.JoinableTaskFactory.Run(() =>
-                {
-                    ThrowExceptionAsync(ex).FileAndForget(fileOnlyIf: e => e != ex);
-                    return Task.CompletedTask;
-                });
-
-                JoinPendingOperations();
-                Assert.Null(helper.Exception, helper.Message);
-            }
+            JoinPendingOperations();
+            Assert.Null(helper.Exception, helper.Message);
         }
 
         [Test]
         public void FileAndForgetFilterIgnoresCancellationExceptions()
         {
-            using (var helper = new ThreadExceptionHelper())
+            using var helper = new ThreadExceptionHelper();
+            var form = new Form();
+            form.Dispose();
+
+            ThreadHelper.JoinableTaskFactory.Run(() =>
             {
-                var form = new Form();
-                form.Dispose();
+                YieldOntoControlMainThreadAsync(form).FileAndForget(fileOnlyIf: ex => true);
+                return Task.CompletedTask;
+            });
 
-                ThreadHelper.JoinableTaskFactory.Run(() =>
-                {
-                    YieldOntoControlMainThreadAsync(form).FileAndForget(fileOnlyIf: ex => true);
-                    return Task.CompletedTask;
-                });
-
-                JoinPendingOperations();
-                Assert.Null(helper.Exception, helper.Message);
-            }
+            JoinPendingOperations();
+            Assert.Null(helper.Exception, helper.Message);
         }
 
         [Test]

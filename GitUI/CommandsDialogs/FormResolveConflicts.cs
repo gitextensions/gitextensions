@@ -837,30 +837,28 @@ namespace GitUI.CommandsDialogs
                                             GetLocalSideString(),
                                             GetRemoteSideString());
 
-            using (var frm = new FormModifiedDeletedCreated(string.Format(_chooseLocalButtonText.Text + " ({0})", GetLocalSideString()),
+            using var frm = new FormModifiedDeletedCreated(string.Format(_chooseLocalButtonText.Text + " ({0})", GetLocalSideString()),
                                                                             string.Format(_chooseRemoteButtonText.Text + " ({0})", GetRemoteSideString()),
                                                                             _keepBaseButtonText.Text,
-                                                                            caption))
+                                                                            caption);
+            frm.ShowDialog(this);
+
+            if (frm.KeepBase)
             {
-                frm.ShowDialog(this);
+                // base
+                ChooseBaseOnConflict(item.Filename);
+            }
 
-                if (frm.KeepBase)
-                {
-                    // base
-                    ChooseBaseOnConflict(item.Filename);
-                }
+            if (frm.KeepLocal)
+            {
+                // local
+                ChooseLocalOnConflict(item.Filename);
+            }
 
-                if (frm.KeepLocal)
-                {
-                    // local
-                    ChooseLocalOnConflict(item.Filename);
-                }
-
-                if (frm.KeepRemote)
-                {
-                    // remote
-                    ChooseRemoteOnConflict(item.Filename);
-                }
+            if (frm.KeepRemote)
+            {
+                // remote
+                ChooseRemoteOnConflict(item.Filename);
             }
         }
 
@@ -1095,23 +1093,21 @@ namespace GitUI.CommandsDialogs
                 string fileName = conflictData.Filename;
                 fileName = PathUtil.GetFileName(fileName);
 
-                using (var fileDialog = new SaveFileDialog
+                using var fileDialog = new SaveFileDialog
                 {
                     FileName = fileName,
                     InitialDirectory = _fullPathResolver.Resolve(Path.GetDirectoryName(conflictData.Filename)),
                     AddExtension = true
-                })
-                {
-                    var ext = Path.GetExtension(fileDialog.FileName);
-                    fileDialog.DefaultExt = ext;
-                    fileDialog.Filter = string.Format(_currentFormatFilter.Text, ext) + "|*." + ext + "|" + _allFilesFilter.Text + "|*.*";
+                };
+                var ext = Path.GetExtension(fileDialog.FileName);
+                fileDialog.DefaultExt = ext;
+                fileDialog.Filter = string.Format(_currentFormatFilter.Text, ext) + "|*." + ext + "|" + _allFilesFilter.Text + "|*.*";
 
-                    if (fileDialog.ShowDialog(this) == DialogResult.OK)
+                if (fileDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (!Module.HandleConflictsSaveSide(conflictData.Filename, fileDialog.FileName, side))
                     {
-                        if (!Module.HandleConflictsSaveSide(conflictData.Filename, fileDialog.FileName, side))
-                        {
-                            MessageBox.Show(this, _failureWhileSaveFile.Text);
-                        }
+                        MessageBox.Show(this, _failureWhileSaveFile.Text);
                     }
                 }
             }

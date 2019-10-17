@@ -62,11 +62,9 @@ namespace GitUI.BranchTreePanel
 
             public bool Checkout()
             {
-                using (var form = new FormCheckoutRevision(UICommands))
-                {
-                    form.SetRevision(FullPath);
-                    return form.ShowDialog(TreeViewNode.TreeView) != DialogResult.Cancel;
-                }
+                using var form = new FormCheckoutRevision(UICommands);
+                form.SetRevision(FullPath);
+                return form.ShowDialog(TreeViewNode.TreeView) != DialogResult.Cancel;
             }
         }
 

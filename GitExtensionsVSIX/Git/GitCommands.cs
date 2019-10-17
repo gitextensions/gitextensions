@@ -13,15 +13,13 @@ namespace GitExtensionsVSIX.Git
         {
             try
             {
-                using (var rk = root.OpenSubKey(subkey, false))
+                using var rk = root.OpenSubKey(subkey, false);
+                if (rk?.GetValue(key) is string str)
                 {
-                    if (rk?.GetValue(key) is string str)
-                    {
-                        return str;
-                    }
-
-                    return "";
+                    return str;
                 }
+
+                return "";
             }
             catch (UnauthorizedAccessException)
             {
@@ -101,12 +99,10 @@ namespace GitExtensionsVSIX.Git
 
         public static string RunGitExWait(string command, string filename)
         {
-            using (var process = RunGitEx(command, filename))
-            {
-                string output = process.StandardOutput.ReadToEnd();
-                process.WaitForExit();
-                return output;
-            }
+            using var process = RunGitEx(command, filename);
+            string output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+            return output;
         }
 
         private static string RunGit(string arguments, string filename, out int exitCode)
@@ -115,13 +111,11 @@ namespace GitExtensionsVSIX.Git
 
             ProcessStartInfo startInfo = CreateStartInfo(gitcommand, arguments, filename);
 
-            using (var process = Process.Start(startInfo))
-            {
-                string output = process.StandardOutput.ReadToEnd();
-                exitCode = process.ExitCode;
-                process.WaitForExit();
-                return output;
-            }
+            using var process = Process.Start(startInfo);
+            string output = process.StandardOutput.ReadToEnd();
+            exitCode = process.ExitCode;
+            process.WaitForExit();
+            return output;
         }
 
         public static string GetCurrentBranch(string fileName)

@@ -54,20 +54,18 @@ namespace GitCommandsTests
 
                 stream.Position = 0;
 
-                using (var e = stream.ReadNullTerminatedChunks(ref buffer).GetEnumerator())
+                using var e = stream.ReadNullTerminatedChunks(ref buffer).GetEnumerator();
+                for (var chunkIndex = 0; chunkIndex < expectedChunks.Length; chunkIndex++)
                 {
-                    for (var chunkIndex = 0; chunkIndex < expectedChunks.Length; chunkIndex++)
-                    {
-                        var expected = expectedChunks[chunkIndex];
-                        Assert.IsTrue(e.MoveNext());
-                        Assert.AreEqual(
-                            expected,
-                            e.Current.ToArray(),
-                            "input=[{0}] chunkIndex={1} bufferSize={2}", string.Join(",", expected), chunkIndex, bufferSize);
-                    }
-
-                    Assert.IsFalse(e.MoveNext(), "bufferSize={0}", bufferSize);
+                    var expected = expectedChunks[chunkIndex];
+                    Assert.IsTrue(e.MoveNext());
+                    Assert.AreEqual(
+                        expected,
+                        e.Current.ToArray(),
+                        "input=[{0}] chunkIndex={1} bufferSize={2}", string.Join(",", expected), chunkIndex, bufferSize);
                 }
+
+                Assert.IsFalse(e.MoveNext(), "bufferSize={0}", bufferSize);
             }
         }
     }

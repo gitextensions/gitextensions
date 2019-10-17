@@ -88,10 +88,8 @@ namespace GitUI.CommandsDialogs
                         gitIgnoreFileAddition.Append(Environment.NewLine);
                     }
 
-                    using (TextWriter tw = new StreamWriter(x, true, GitModule.SystemEncoding))
-                    {
-                        tw.Write(gitIgnoreFileAddition);
-                    }
+                    using TextWriter tw = new StreamWriter(x, true, GitModule.SystemEncoding);
+                    tw.Write(gitIgnoreFileAddition);
                 });
             }
             catch (Exception ex)

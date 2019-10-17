@@ -132,14 +132,12 @@ namespace GitUI.CommitInfo
                 }
                 else
                 {
-                    using (var process = new Process
+                    using var process = new Process
                     {
                         EnableRaisingEvents = false,
                         StartInfo = { FileName = result.AbsoluteUri }
-                    })
-                    {
-                        process.Start();
-                    }
+                    };
+                    process.Start();
                 }
             }
             catch (UriFormatException)

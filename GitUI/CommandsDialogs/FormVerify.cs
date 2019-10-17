@@ -103,25 +103,21 @@ namespace GitUI.CommandsDialogs
 
         private void mnuLostObjectsCreateTag_Click(object sender, EventArgs e)
         {
-            using (var frm = new FormCreateTag(UICommands, GetCurrentGitRevision()))
+            using var frm = new FormCreateTag(UICommands, GetCurrentGitRevision());
+            var dialogResult = frm.ShowDialog(this);
+            if (dialogResult == DialogResult.OK)
             {
-                var dialogResult = frm.ShowDialog(this);
-                if (dialogResult == DialogResult.OK)
-                {
-                    UpdateLostObjects();
-                }
+                UpdateLostObjects();
             }
         }
 
         private void mnuLostObjectsCreateBranch_Click(object sender, EventArgs e)
         {
-            using (var frm = new FormCreateBranch(UICommands, GetCurrentGitRevision()))
+            using var frm = new FormCreateBranch(UICommands, GetCurrentGitRevision());
+            var dialogResult = frm.ShowDialog(this);
+            if (dialogResult == DialogResult.OK)
             {
-                var dialogResult = frm.ShowDialog(this);
-                if (dialogResult == DialogResult.OK)
-                {
-                    UpdateLostObjects();
-                }
+                UpdateLostObjects();
             }
         }
 
@@ -292,11 +288,9 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            using (var frm = new FormEdit(UICommands, Module.ShowObject(currentItem.ObjectId)))
-            {
-                frm.IsReadOnly = true;
-                frm.ShowDialog(this);
-            }
+            using var frm = new FormEdit(UICommands, Module.ShowObject(currentItem.ObjectId));
+            frm.IsReadOnly = true;
+            frm.ShowDialog(this);
         }
 
         private int CreateLostFoundTags()
@@ -413,7 +407,7 @@ namespace GitUI.CommandsDialogs
 
             if (lostObject.ObjectType == LostObjectType.Blob)
             {
-                using (var fileDialog =
+                using var fileDialog =
                     new SaveFileDialog
                     {
                         InitialDirectory = Module.WorkingDir,
@@ -421,12 +415,10 @@ namespace GitUI.CommandsDialogs
                         Filter = "(*.*)|*.*",
                         DefaultExt = "txt",
                         AddExtension = true
-                    })
+                    };
+                if (fileDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    if (fileDialog.ShowDialog(this) == DialogResult.OK)
-                    {
-                        Module.SaveBlobAs(fileDialog.FileName, lostObject.ObjectId.ToString());
-                    }
+                    Module.SaveBlobAs(fileDialog.FileName, lostObject.ObjectId.ToString());
                 }
             }
         }

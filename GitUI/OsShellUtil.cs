@@ -48,39 +48,35 @@ namespace GitUI
             if (GitCommands.Utils.EnvUtils.IsWindowsVistaOrGreater())
             {
                 // use Vista+ dialog
-                using (var dialog = new CommonOpenFileDialog())
+                using var dialog = new CommonOpenFileDialog();
+                dialog.IsFolderPicker = true;
+
+                if (selectedPath != null)
                 {
-                    dialog.IsFolderPicker = true;
+                    dialog.InitialDirectory = selectedPath;
+                }
 
-                    if (selectedPath != null)
-                    {
-                        dialog.InitialDirectory = selectedPath;
-                    }
+                var result = dialog.ShowDialog(ownerWindow.Handle);
 
-                    var result = dialog.ShowDialog(ownerWindow.Handle);
-
-                    if (result == CommonFileDialogResult.Ok)
-                    {
-                        return dialog.FileName;
-                    }
+                if (result == CommonFileDialogResult.Ok)
+                {
+                    return dialog.FileName;
                 }
             }
             else
             {
                 // use XP-era dialog
-                using (var dialog = new FolderBrowserDialog())
+                using var dialog = new FolderBrowserDialog();
+                if (selectedPath != null)
                 {
-                    if (selectedPath != null)
-                    {
-                        dialog.SelectedPath = selectedPath;
-                    }
+                    dialog.SelectedPath = selectedPath;
+                }
 
-                    var result = dialog.ShowDialog(ownerWindow);
+                var result = dialog.ShowDialog(ownerWindow);
 
-                    if (result == DialogResult.OK)
-                    {
-                        return dialog.SelectedPath;
-                    }
+                if (result == DialogResult.OK)
+                {
+                    return dialog.SelectedPath;
                 }
             }
 

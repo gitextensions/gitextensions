@@ -557,12 +557,10 @@ namespace GitUI.UserControls.RevisionGrid
         private void UpdateRowHeight()
         {
             // TODO allow custom grid row spacing
-            using (var g = Graphics.FromHwnd(Handle))
-            {
-                _rowHeight = (int)g.MeasureString("By", _normalFont).Height + DpiUtil.Scale(9);
-                //// + AppSettings.GridRowSpacing
-                RowTemplate.Height = _rowHeight;
-            }
+            using var g = Graphics.FromHwnd(Handle);
+            _rowHeight = (int)g.MeasureString("By", _normalFont).Height + DpiUtil.Scale(9);
+            //// + AppSettings.GridRowSpacing
+            RowTemplate.Height = _rowHeight;
         }
 
         public bool IsRevisionRelative(ObjectId objectId)

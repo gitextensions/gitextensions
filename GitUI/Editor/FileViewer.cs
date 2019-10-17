@@ -392,10 +392,8 @@ namespace GitUI.Editor
                         return null;
                     }
 
-                    using (var stream = File.OpenRead(path))
-                    {
-                        return CreateImage(fileName, stream);
-                    }
+                    using var stream = File.OpenRead(path);
+                    return CreateImage(fileName, stream);
                 }
                 catch
                 {
@@ -414,15 +412,13 @@ namespace GitUI.Editor
                     return null;
                 }
 
-                using (var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                using (var reader = new StreamReader(stream, Module.FilesEncoding))
-                {
+                using var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                using var reader = new StreamReader(stream, Module.FilesEncoding);
 #pragma warning disable VSTHRD103 // Call async methods when in an async method
-                    var content = reader.ReadToEnd();
+                var content = reader.ReadToEnd();
 #pragma warning restore VSTHRD103 // Call async methods when in an async method
-                    FilePreamble = reader.CurrentEncoding.GetPreamble();
-                    return content;
-                }
+                FilePreamble = reader.CurrentEncoding.GetPreamble();
+                return content;
             }
         }
 
@@ -721,10 +717,8 @@ namespace GitUI.Editor
             {
                 try
                 {
-                    using (var stream = Module.GetFileStream(sha))
-                    {
-                        return CreateImage(fileName, stream);
-                    }
+                    using var stream = Module.GetFileStream(sha);
+                    return CreateImage(fileName, stream);
                 }
                 catch
                 {
@@ -796,10 +790,8 @@ namespace GitUI.Editor
         {
             if (IsIcon())
             {
-                using (var icon = new Icon(stream))
-                {
-                    return icon.ToBitmap();
-                }
+                using var icon = new Icon(stream);
+                return icon.ToBitmap();
             }
 
             return new Bitmap(CopyStream());
@@ -1313,13 +1305,11 @@ namespace GitUI.Editor
 
         private void goToLineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var formGoToLine = new FormGoToLine())
+            using var formGoToLine = new FormGoToLine();
+            formGoToLine.SetMaxLineNumber(internalFileViewer.MaxLineNumber);
+            if (formGoToLine.ShowDialog(this) == DialogResult.OK)
             {
-                formGoToLine.SetMaxLineNumber(internalFileViewer.MaxLineNumber);
-                if (formGoToLine.ShowDialog(this) == DialogResult.OK)
-                {
-                    GoToLine(formGoToLine.GetLineNumber());
-                }
+                GoToLine(formGoToLine.GetLineNumber());
             }
         }
 

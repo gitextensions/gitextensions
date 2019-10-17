@@ -249,17 +249,15 @@ Current Branch:
 
         private void browseScriptButton_Click(object sender, EventArgs e)
         {
-            using (var ofd = new OpenFileDialog
+            using var ofd = new OpenFileDialog
             {
                 InitialDirectory = "c:\\",
                 Filter = "Executable files (*.exe)|*.exe|All files (*.*)|*.*",
                 RestoreDirectory = true
-            })
+            };
+            if (ofd.ShowDialog(this) == DialogResult.OK)
             {
-                if (ofd.ShowDialog(this) == DialogResult.OK)
-                {
-                    commandTextBox.Text = ofd.FileName;
-                }
+                commandTextBox.Text = ofd.FileName;
             }
         }
 

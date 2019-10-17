@@ -131,15 +131,13 @@ namespace GitUI.CommandsDialogs
 
         private string SelectPatchFile(string initialDirectory)
         {
-            using (var dialog = new OpenFileDialog
+            using var dialog = new OpenFileDialog
             {
                 Filter = _selectPatchFileFilter.Text + "|*.patch",
                 InitialDirectory = initialDirectory,
                 Title = _selectPatchFileCaption.Text
-            })
-            {
-                return (dialog.ShowDialog(this) == DialogResult.OK) ? dialog.FileName : PatchFile.Text;
-            }
+            };
+            return (dialog.ShowDialog(this) == DialogResult.OK) ? dialog.FileName : PatchFile.Text;
         }
 
         private void BrowsePatch_Click(object sender, EventArgs e)
@@ -194,12 +192,10 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                using (var sr = new StreamReader(path))
-                {
-                    string line = sr.ReadLine();
+                using var sr = new StreamReader(path);
+                string line = sr.ReadLine();
 
-                    return line != null && (line.StartsWith("diff ") || line.StartsWith("Index: "));
-                }
+                return line != null && (line.StartsWith("diff ") || line.StartsWith("Index: "));
             }
             catch
             {

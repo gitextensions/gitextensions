@@ -15,18 +15,16 @@ namespace GitUITests.CommandsDialogs
         {
             _moduleTestHelper = new GitModuleTestHelper();
 
-            using (var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir))
-            {
-                _moduleTestHelper.CreateRepoFile("A.txt", "A");
-                repository.Index.Add("A.txt");
+            using var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir);
+            _moduleTestHelper.CreateRepoFile("A.txt", "A");
+            repository.Index.Add("A.txt");
 
-                var message = "A commit message";
-                var author = new LibGit2Sharp.Signature("GitUITests", "unittests@gitextensions.com", DateTimeOffset.Now);
-                var committer = author;
-                var options = new LibGit2Sharp.CommitOptions();
-                var commit = repository.Commit(message, author, committer, options);
-                _commitHash = commit.Id.Sha;
-            }
+            var message = "A commit message";
+            var author = new LibGit2Sharp.Signature("GitUITests", "unittests@gitextensions.com", DateTimeOffset.Now);
+            var committer = author;
+            var options = new LibGit2Sharp.CommitOptions();
+            var commit = repository.Commit(message, author, committer, options);
+            _commitHash = commit.Id.Sha;
         }
 
         public GitModule Module => _moduleTestHelper.Module;
@@ -35,33 +33,27 @@ namespace GitUITests.CommandsDialogs
 
         public void CheckoutRevision()
         {
-            using (var repository = new LibGit2Sharp.Repository(Module.WorkingDir))
-            {
-                Commands.Checkout(repository, CommitHash, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
-            }
+            using var repository = new LibGit2Sharp.Repository(Module.WorkingDir);
+            Commands.Checkout(repository, CommitHash, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
         }
 
         public void CheckoutMaster()
         {
-            using (var repository = new LibGit2Sharp.Repository(Module.WorkingDir))
-            {
-                Commands.Checkout(repository, "master", new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
-            }
+            using var repository = new LibGit2Sharp.Repository(Module.WorkingDir);
+            Commands.Checkout(repository, "master", new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
         }
 
         public void CreateRemoteForMasterBranch()
         {
-            using (var repository = new LibGit2Sharp.Repository(Module.WorkingDir))
-            {
-                repository.Network.Remotes.Add("origin", "http://useless.url");
-                Remote remote = repository.Network.Remotes["origin"];
+            using var repository = new LibGit2Sharp.Repository(Module.WorkingDir);
+            repository.Network.Remotes.Add("origin", "http://useless.url");
+            Remote remote = repository.Network.Remotes["origin"];
 
-                var masterBranch = repository.Branches["master"];
+            var masterBranch = repository.Branches["master"];
 
-                repository.Branches.Update(masterBranch,
-                    b => b.Remote = remote.Name,
-                    b => b.UpstreamBranch = masterBranch.CanonicalName);
-            }
+            repository.Branches.Update(masterBranch,
+                b => b.Remote = remote.Name,
+                b => b.UpstreamBranch = masterBranch.CanonicalName);
         }
 
         public void Reset()

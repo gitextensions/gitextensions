@@ -599,22 +599,18 @@ namespace GitCommands
 
         public void SaveBlobAs(string saveAs, string blob)
         {
-            using (var blobStream = GetFileStream(blob))
+            using var blobStream = GetFileStream(blob);
+            var blobData = blobStream.ToArray();
+            if (EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
             {
-                var blobData = blobStream.ToArray();
-                if (EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
+                if (!FileHelper.IsBinaryFileName(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(blobData))
                 {
-                    if (!FileHelper.IsBinaryFileName(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(blobData))
-                    {
-                        blobData = GitConvert.ConvertCrLfToWorktree(blobData);
-                    }
-                }
-
-                using (var stream = File.Create(saveAs))
-                {
-                    stream.Write(blobData, 0, blobData.Length);
+                    blobData = GitConvert.ConvertCrLfToWorktree(blobData);
                 }
             }
+
+            using var stream = File.Create(saveAs);
+            stream.Write(blobData, 0, blobData.Length);
         }
 
         private static string GetSide(string side)
@@ -890,10 +886,8 @@ namespace GitCommands
 
         public void RunMergeTool()
         {
-            using (var process = _gitExecutable.Start("mergetool", createWindow: true))
-            {
-                process.WaitForExit();
-            }
+            using var process = _gitExecutable.Start("mergetool", createWindow: true);
+            process.WaitForExit();
         }
 
         /// <summary>Runs a bash or shell command.</summary>
@@ -1612,28 +1606,24 @@ namespace GitCommands
 
         public string ApplyPatch(string dir, ArgumentString amCommand)
         {
-            using (var process = _gitExecutable.Start(amCommand, createWindow: false, redirectInput: true, redirectOutput: true, SystemEncoding))
+            using var process = _gitExecutable.Start(amCommand, createWindow: false, redirectInput: true, redirectOutput: true, SystemEncoding);
+            var files = Directory.GetFiles(dir);
+
+            if (files.Length == 0)
             {
-                var files = Directory.GetFiles(dir);
-
-                if (files.Length == 0)
-                {
-                    return "";
-                }
-
-                foreach (var file in files)
-                {
-                    using (var fs = new FileStream(file, FileMode.Open))
-                    {
-                        fs.CopyTo(process.StandardInput.BaseStream);
-                    }
-                }
-
-                process.StandardInput.Close();
-                process.WaitForExit();
-
-                return process.StandardOutput.ReadToEnd().Trim();
+                return "";
             }
+
+            foreach (var file in files)
+            {
+                using var fs = new FileStream(file, FileMode.Open);
+                fs.CopyTo(process.StandardInput.BaseStream);
+            }
+
+            process.StandardInput.Close();
+            process.WaitForExit();
+
+            return process.StandardOutput.ReadToEnd().Trim();
         }
 
         #region Stage/Unstage
@@ -1821,10 +1811,8 @@ namespace GitCommands
                 file.Name.Quote()
             };
 
-            using (var process = _gitExecutable.Start(args, createWindow: true))
-            {
-                return await process.WaitForExitAsync() == 0;
-            }
+            using var process = _gitExecutable.Start(args, createWindow: true);
+            return await process.WaitForExitAsync() == 0;
         }
 
         public async Task<bool> ResetInteractiveAsync(GitItemStatus file)
@@ -1835,10 +1823,8 @@ namespace GitCommands
                 file.Name.Quote()
             };
 
-            using (var process = _gitExecutable.Start(args, createWindow: true))
-            {
-                return await process.WaitForExitAsync() == 0;
-            }
+            using var process = _gitExecutable.Start(args, createWindow: true);
+            return await process.WaitForExitAsync() == 0;
         }
 
         private static void UpdateIndex(StreamWriter inputWriter, string filename)
@@ -3436,14 +3422,12 @@ namespace GitCommands
                     "blob",
                     blob
                 };
-                using (var process = _gitCommandRunner.RunDetached(args, redirectOutput: true))
-                {
-                    var stream = new MemoryStream();
-                    process.StandardOutput.BaseStream.CopyTo(stream);
-                    process.WaitForExit();
-                    stream.Position = 0;
-                    return stream;
-                }
+                using var process = _gitCommandRunner.RunDetached(args, redirectOutput: true);
+                var stream = new MemoryStream();
+                process.StandardOutput.BaseStream.CopyTo(stream);
+                process.WaitForExit();
+                stream.Position = 0;
+                return stream;
             }
             catch (Win32Exception ex)
             {

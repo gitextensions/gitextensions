@@ -277,16 +277,14 @@ namespace GitImpact
                     return;
                 }
 
-                using (var font = new Font("Arial", LinesFontSize))
-                {
-                    Brush brush = Brushes.White;
+                using var font = new Font("Arial", LinesFontSize);
+                Brush brush = Brushes.White;
 
-                    foreach (var (point, size) in _lineLabels[author])
-                    {
-                        SizeF sz = g.MeasureString(size.ToString(), font);
-                        var pt = new PointF(point.X - (sz.Width / 2), point.Y - (sz.Height / 2));
-                        g.DrawString(size.ToString(), font, brush, pt);
-                    }
+                foreach (var (point, size) in _lineLabels[author])
+                {
+                    SizeF sz = g.MeasureString(size.ToString(), font);
+                    var pt = new PointF(point.X - (sz.Width / 2), point.Y - (sz.Height / 2));
+                    g.DrawString(size.ToString(), font, brush, pt);
                 }
             }
         }
@@ -295,16 +293,14 @@ namespace GitImpact
         {
             lock (_dataLock)
             {
-                using (var font = new Font("Arial", WeekFontSize))
-                {
-                    Brush brush = Brushes.Gray;
+                using var font = new Font("Arial", WeekFontSize);
+                Brush brush = Brushes.Gray;
 
-                    foreach (var (point, date) in _weekLabels)
-                    {
-                        SizeF sz = g.MeasureString(date.ToString("dd. MMM yy"), font);
-                        var pt = new PointF(point.X - (sz.Width / 2), point.Y + (sz.Height / 2));
-                        g.DrawString(date.ToString("dd. MMM yy"), font, brush, pt);
-                    }
+                foreach (var (point, date) in _weekLabels)
+                {
+                    SizeF sz = g.MeasureString(date.ToString("dd. MMM yy"), font);
+                    var pt = new PointF(point.X - (sz.Width / 2), point.Y + (sz.Height / 2));
+                    g.DrawString(date.ToString("dd. MMM yy"), font, brush, pt);
                 }
             }
         }

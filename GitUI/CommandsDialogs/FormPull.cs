@@ -678,14 +678,12 @@ namespace GitUI.CommandsDialogs
                     {
                         string remote = _NO_TRANSLATE_Remotes.Text;
                         string pruneCmd = "remote prune " + remote;
-                        using (var formPrune = new FormRemoteProcess(Module, pruneCmd)
+                        using var formPrune = new FormRemoteProcess(Module, pruneCmd)
                         {
                             Remote = remote,
                             Text = string.Format(_pruneFromCaption.Text, remote)
-                        })
-                        {
-                            formPrune.ShowDialog(form);
-                        }
+                        };
+                        formPrune.ShowDialog(form);
                     }
                 }
 

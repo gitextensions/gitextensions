@@ -364,20 +364,16 @@ namespace GitUI.CommandsDialogs
                             const int imgDim = 32;
                             const int dotDim = 15;
                             const int pad = 2;
-                            using (var bmp = new Bitmap(imgDim, imgDim))
+                            using var bmp = new Bitmap(imgDim, imgDim);
+                            using (var g = Graphics.FromImage(bmp))
                             {
-                                using (var g = Graphics.FromImage(bmp))
-                                {
-                                    g.SmoothingMode = SmoothingMode.AntiAlias;
-                                    g.Clear(Color.Transparent);
-                                    g.FillEllipse(brush, new Rectangle(imgDim - dotDim - pad, imgDim - dotDim - pad, dotDim, dotDim));
-                                }
-
-                                using (var overlay = Icon.FromHandle(bmp.GetHicon()))
-                                {
-                                    TaskbarManager.Instance.SetOverlayIcon(overlay, "");
-                                }
+                                g.SmoothingMode = SmoothingMode.AntiAlias;
+                                g.Clear(Color.Transparent);
+                                g.FillEllipse(brush, new Rectangle(imgDim - dotDim - pad, imgDim - dotDim - pad, dotDim, dotDim));
                             }
+
+                            using var overlay = Icon.FromHandle(bmp.GetHicon());
+                            TaskbarManager.Instance.SetOverlayIcon(overlay, "");
                         }
 
                         if (AppSettings.ShowSubmoduleStatus)
@@ -1098,31 +1094,29 @@ namespace GitUI.CommandsDialogs
                 () => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
 
             var mostRecentRepos = new List<RecentRepoInfo>();
-            using (var graphics = CreateGraphics())
+            using var graphics = CreateGraphics();
+            var splitter = new RecentRepoSplitter
             {
-                var splitter = new RecentRepoSplitter
-                {
-                    MeasureFont = _NO_TRANSLATE_WorkingDir.Font,
-                    Graphics = graphics
-                };
+                MeasureFont = _NO_TRANSLATE_WorkingDir.Font,
+                Graphics = graphics
+            };
 
-                splitter.SplitRecentRepos(recentRepositoryHistory, mostRecentRepos, mostRecentRepos);
+            splitter.SplitRecentRepos(recentRepositoryHistory, mostRecentRepos, mostRecentRepos);
 
-                var ri = mostRecentRepos.Find(e => e.Repo.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase));
+            var ri = mostRecentRepos.Find(e => e.Repo.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase));
 
-                _NO_TRANSLATE_WorkingDir.Text = PathUtil.GetDisplayPath(ri?.Caption ?? path);
+            _NO_TRANSLATE_WorkingDir.Text = PathUtil.GetDisplayPath(ri?.Caption ?? path);
 
-                if (AppSettings.RecentReposComboMinWidth > 0)
-                {
-                    _NO_TRANSLATE_WorkingDir.AutoSize = false;
-                    var captionWidth = graphics.MeasureString(_NO_TRANSLATE_WorkingDir.Text, _NO_TRANSLATE_WorkingDir.Font).Width;
-                    captionWidth = captionWidth + _NO_TRANSLATE_WorkingDir.DropDownButtonWidth + 5;
-                    _NO_TRANSLATE_WorkingDir.Width = Math.Max(AppSettings.RecentReposComboMinWidth, (int)captionWidth);
-                }
-                else
-                {
-                    _NO_TRANSLATE_WorkingDir.AutoSize = true;
-                }
+            if (AppSettings.RecentReposComboMinWidth > 0)
+            {
+                _NO_TRANSLATE_WorkingDir.AutoSize = false;
+                var captionWidth = graphics.MeasureString(_NO_TRANSLATE_WorkingDir.Text, _NO_TRANSLATE_WorkingDir.Font).Width;
+                captionWidth = captionWidth + _NO_TRANSLATE_WorkingDir.DropDownButtonWidth + 5;
+                _NO_TRANSLATE_WorkingDir.Width = Math.Max(AppSettings.RecentReposComboMinWidth, (int)captionWidth);
+            }
+            else
+            {
+                _NO_TRANSLATE_WorkingDir.AutoSize = true;
             }
         }
 
@@ -1345,10 +1339,8 @@ namespace GitUI.CommandsDialogs
 
         private void AboutToolStripMenuItemClick(object sender, EventArgs e)
         {
-            using (var frm = new FormAbout())
-            {
-                frm.ShowDialog(this);
-            }
+            using var frm = new FormAbout();
+            frm.ShowDialog(this);
         }
 
         private void PatchToolStripMenuItemClick(object sender, EventArgs e)
@@ -1479,10 +1471,8 @@ namespace GitUI.CommandsDialogs
 
         private void DonateToolStripMenuItemClick(object sender, EventArgs e)
         {
-            using (var frm = new FormDonate())
-            {
-                frm.ShowDialog(this);
-            }
+            using var frm = new FormDonate();
+            frm.ShowDialog(this);
         }
 
         private static void SaveApplicationSettings()
@@ -1608,10 +1598,8 @@ namespace GitUI.CommandsDialogs
 
         private void ChangelogToolStripMenuItemClick(object sender, EventArgs e)
         {
-            using (var frm = new FormChangeLog())
-            {
-                frm.ShowDialog(this);
-            }
+            using var frm = new FormChangeLog();
+            frm.ShowDialog(this);
         }
 
         private void ToolStripButtonPushClick(object sender, EventArgs e)
@@ -3043,10 +3031,8 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripMenuItemReflog_Click(object sender, EventArgs e)
         {
-            using (var formReflog = new FormReflog(UICommands))
-            {
-                formReflog.ShowDialog();
-            }
+            using var formReflog = new FormReflog(UICommands);
+            formReflog.ShowDialog();
         }
 
         #region Layout management

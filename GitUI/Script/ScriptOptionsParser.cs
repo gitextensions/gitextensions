@@ -148,24 +148,20 @@ namespace GitUI.Script
 
         private static string AskToSpecify(IEnumerable<IGitRef> options, RevisionGridControl revisionGrid)
         {
-            using (var f = new FormQuickGitRefSelector())
-            {
-                f.Location = revisionGrid?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
-                f.Init(FormQuickGitRefSelector.Action.Select, options.ToList());
-                f.ShowDialog();
-                return f.SelectedRef.Name;
-            }
+            using var f = new FormQuickGitRefSelector();
+            f.Location = revisionGrid?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
+            f.Init(FormQuickGitRefSelector.Action.Select, options.ToList());
+            f.ShowDialog();
+            return f.SelectedRef.Name;
         }
 
         private static string AskToSpecify(IEnumerable<string> options, RevisionGridControl revisionGrid)
         {
-            using (var f = new FormQuickStringSelector())
-            {
-                f.Location = revisionGrid?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
-                f.Init(options.ToList());
-                f.ShowDialog();
-                return f.SelectedString;
-            }
+            using var f = new FormQuickStringSelector();
+            f.Location = revisionGrid?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
+            f.Init(options.ToList());
+            f.ShowDialog();
+            return f.SelectedString;
         }
 
         private static GitRevision CalculateSelectedRevision(RevisionGridControl revisionGrid, List<IGitRef> selectedRemoteBranches,

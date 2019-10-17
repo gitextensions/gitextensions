@@ -75,59 +75,57 @@ namespace GitHub3
             string note = $"Token for Git Extensions on {Environment.MachineName} at {DateTime.Now:g}";
             string githubScopesJson = "{\"scopes\":[\"repo\", \"public_repo\"],\"note\":\"" + note + "\"}";
 
-            using (var request = new HttpRequestMessage(new HttpMethod("POST"), _authorizationApiUrl))
+            using var request = new HttpRequestMessage(new HttpMethod("POST"), _authorizationApiUrl);
+            var base64Authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{login}:{password}"));
+            request.Headers.Authorization = new AuthenticationHeaderValue("Basic", base64Authorization);
+            request.Headers.Add("User-Agent", "GitExtensions");
+
+            if (!string.IsNullOrWhiteSpace(secondFactorOtp))
             {
-                var base64Authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{login}:{password}"));
-                request.Headers.Authorization = new AuthenticationHeaderValue("Basic", base64Authorization);
-                request.Headers.Add("User-Agent", "GitExtensions");
+                request.Headers.TryAddWithoutValidation(otpHeaderKey, secondFactorOtp);
+            }
 
-                if (!string.IsNullOrWhiteSpace(secondFactorOtp))
+            request.Content = new StringContent(githubScopesJson, Encoding.UTF8, "application/json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            var response = await _httpClient.SendAsync(request);
+            if (response.IsSuccessStatusCode)
+            {
+                var gitHubToken = JsonSerializer.Deserialize<GitHubToken>(await response.Content.ReadAsStringAsync());
+                return gitHubToken?.token;
+            }
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized && response.Headers.Contains(otpHeaderKey))
+            {
+                txtGitHubLogin.Enabled = false;
+                txtGitHubPassword.Enabled = false;
+                _require2ndFactorCode = true;
+                Show2ndFactorControls();
+                UpdateOkButtonState();
+
+                var otpTypeHeader = response.Headers.GetValues(otpHeaderKey).First();
+                var otpType = otpTypeHeader.Substring(otpTypeHeader.Length - 3);
+
+                lblError.Text = string.Format(_ask2ndFactorCode.Text, otpType);
+            }
+            else
+            {
+                txtGitHubLogin.Enabled = true;
+                txtGitHubPassword.Enabled = true;
+                string message;
+                if ((int)response.StatusCode == 422)
                 {
-                    request.Headers.TryAddWithoutValidation(otpHeaderKey, secondFactorOtp);
-                }
-
-                request.Content = new StringContent(githubScopesJson, Encoding.UTF8, "application/json");
-                request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-                var response = await _httpClient.SendAsync(request);
-                if (response.IsSuccessStatusCode)
-                {
-                    var gitHubToken = JsonSerializer.Deserialize<GitHubToken>(await response.Content.ReadAsStringAsync());
-                    return gitHubToken?.token;
-                }
-
-                if (response.StatusCode == HttpStatusCode.Unauthorized && response.Headers.Contains(otpHeaderKey))
-                {
-                    txtGitHubLogin.Enabled = false;
-                    txtGitHubPassword.Enabled = false;
-                    _require2ndFactorCode = true;
-                    Show2ndFactorControls();
-                    UpdateOkButtonState();
-
-                    var otpTypeHeader = response.Headers.GetValues(otpHeaderKey).First();
-                    var otpType = otpTypeHeader.Substring(otpTypeHeader.Length - 3);
-
-                    lblError.Text = string.Format(_ask2ndFactorCode.Text, otpType);
+                    message = await response.Content.ReadAsStringAsync();
                 }
                 else
                 {
-                    txtGitHubLogin.Enabled = true;
-                    txtGitHubPassword.Enabled = true;
-                    string message;
-                    if ((int)response.StatusCode == 422)
-                    {
-                        message = await response.Content.ReadAsStringAsync();
-                    }
-                    else
-                    {
-                        message = response.ReasonPhrase;
-                    }
-
-                    lblError.Text = _generationFailed.Text + Environment.NewLine + message;
+                    message = response.ReasonPhrase;
                 }
 
-                return null;
+                lblError.Text = _generationFailed.Text + Environment.NewLine + message;
             }
+
+            return null;
         }
 
         private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

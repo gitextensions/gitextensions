@@ -3087,10 +3087,8 @@ namespace GitUI.CommandsDialogs
         private void submoduleSummaryMenuItem_Click(object sender, EventArgs e)
         {
             string summary = Module.GetSubmoduleSummary(_currentItem.Name);
-            using (var frm = new FormEdit(UICommands, summary))
-            {
-                frm.ShowDialog(this);
-            }
+            using var frm = new FormEdit(UICommands, summary);
+            frm.ShowDialog(this);
         }
 
         private void commitTemplatesToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
