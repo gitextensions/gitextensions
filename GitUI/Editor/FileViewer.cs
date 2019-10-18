@@ -562,12 +562,16 @@ namespace GitUI.Editor
                 patchText => ViewPatch(patchText.text, patchText.openWithDifftool));
         }
 
-        public async Task ViewTextAsync([NotNull] string fileName, [NotNull] string text, [CanBeNull] Action openWithDifftool = null)
+        public async Task ViewTextAsync([NotNull] string fileName, [NotNull] string text, [CanBeNull] Action openWithDifftool = null, bool checkGitAttributes = false)
         {
             ResetForText(fileName);
 
-            // Check for binary file.
-            if (FileHelper.IsBinaryFileAccordingToContent(text))
+            // Check for binary file. Using gitattributes could be misleading for a changed file,
+            // but not much other can be done
+            bool isBinary = (checkGitAttributes && FileHelper.IsBinaryFileName(Module, fileName))
+                || FileHelper.IsBinaryFileAccordingToContent(text);
+
+            if (isBinary)
             {
                 try
                 {
@@ -776,18 +780,12 @@ namespace GitUI.Editor
                                 internalFileViewer.SetText("", openWithDifftool);
                             });
             }
-
-            // Check binary from extension/attributes (a secondary check for file contents before display)
-            else if (FileHelper.IsBinaryFileName(Module, fileName))
-            {
-                return ViewTextAsync(fileName, $"Binary file: {fileName}", openWithDifftool);
-            }
             else
             {
                 return _async.LoadAsync(
                     getFileText,
                     text => ThreadHelper.JoinableTaskFactory.Run(
-                        () => ViewTextAsync(fileName, text, openWithDifftool)));
+                        () => ViewTextAsync(fileName, text, openWithDifftool, checkGitAttributes: true)));
             }
         }
 
