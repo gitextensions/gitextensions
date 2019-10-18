@@ -52,6 +52,14 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 return false;
             }
 
+            toolTip = GetAuthorAndCommiterToolTip(revision);
+
+            return true;
+        }
+
+        public static string GetAuthorAndCommiterToolTip(GitRevision revision)
+        {
+            string toolTip;
             if (revision.Author == revision.Committer && revision.AuthorEmail == revision.CommitterEmail)
             {
                 toolTip = $"{revision.Author} <{revision.AuthorEmail}> {Strings.AuthoredAndCommitted}";
@@ -63,7 +71,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     $"{revision.Committer} <{revision.CommitterEmail}> {Strings.Committed}";
             }
 
-            return true;
+            return toolTip;
         }
     }
 }
