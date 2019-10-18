@@ -177,8 +177,13 @@ namespace CommonTestUtils
                 Assert.AreEqual(StandardOutput.BaseStream.Length, StandardOutput.BaseStream.Position);
                 Assert.AreEqual(StandardError.BaseStream.Length, StandardError.BaseStream.Position);
 
-                // no input should have been written (yet)
-                Assert.AreEqual(0, StandardInput.BaseStream.Length);
+                // Only verify if std input is not closed.
+                // ExecutableExtensions.ExecuteAsync will close std input when writeInput action is specified
+                if (StandardInput.BaseStream != null)
+                {
+                    // no input should have been written (yet)
+                    Assert.AreEqual(0, StandardInput.BaseStream.Length);
+                }
             }
         }
 

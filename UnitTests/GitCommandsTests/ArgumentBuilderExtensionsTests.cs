@@ -324,25 +324,27 @@ namespace GitCommandsTests
 
         // 14: 'checkout name1'
         // 20: 'checkout name1 name2'
-        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 15, new string[] { "checkout name1", "checkout name2", "checkout name3" })]
-        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 16, new string[] { "checkout name1", "checkout name2", "checkout name3" })]
-        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 20, new string[] { "checkout name1", "checkout name2", "checkout name3" })]
-        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 21, new string[] { "checkout name1 name2", "checkout name3" })]
+        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 15, new string[] { "checkout name1", "checkout name2", "checkout name3" }, new int[] { 1, 1, 1 })]
+        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 16, new string[] { "checkout name1", "checkout name2", "checkout name3" }, new int[] { 1, 1, 1 })]
+        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 20, new string[] { "checkout name1", "checkout name2", "checkout name3" }, new int[] { 1, 1, 1 })]
+        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 21, new string[] { "checkout name1 name2", "checkout name3" }, new int[] { 2, 1 })]
 
         // With base length
-        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 31, new string[] { "checkout name1 name2", "checkout name3" }, 10)]
-        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 26, new string[] { "checkout name1", "checkout name2", "checkout name3" }, 10)]
-        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 30, new string[] { "checkout name1", "checkout name2", "checkout name3" }, 10)]
-        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 31, new string[] { "checkout name1 name2", "checkout name3" }, 10)]
-        public void BuildBatchArguments_builder_work_as_expected(string command, string[] arguments, int maxLength, string[] expected,
+        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 25, new string[] { "checkout name1", "checkout name2", "checkout name3" }, new int[] { 1, 1, 1 }, 10)]
+        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 26, new string[] { "checkout name1", "checkout name2", "checkout name3" }, new int[] { 1, 1, 1 }, 10)]
+        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 30, new string[] { "checkout name1", "checkout name2", "checkout name3" }, new int[] { 1, 1, 1 }, 10)]
+        [TestCase("checkout", new string[] { "name1", "name2", "name3" }, 31, new string[] { "checkout name1 name2", "checkout name3" }, new int[] { 2, 1 }, 10)]
+        public void BuildBatchArguments_builder_work_as_expected(string command, string[] arguments, int maxLength, string[] expected, int[] expectedCounts,
             int baseLength = 0)
         {
             var batch = new GitArgumentBuilder(command)
-                .BuildBatchArguments(arguments, baseLength, maxLength)
-                .Select(item => item.ToString())
-                .ToArray();
+                .BuildBatchArguments(arguments, baseLength, maxLength);
 
-            Assert.AreEqual(expected, batch);
+            var args = batch.Select(item => item.Argument.ToString()).ToArray();
+            var counts = batch.Select(item => item.BatchItemsCount).ToArray();
+
+            Assert.AreEqual(expected, args);
+            Assert.AreEqual(expectedCounts, counts);
         }
 
         // 8: 'checkout'

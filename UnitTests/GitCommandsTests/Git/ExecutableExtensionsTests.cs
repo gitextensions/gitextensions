@@ -89,10 +89,10 @@ namespace GitCommandsTests.Git
         }
 
         // Process argument upper bound is actually (short.MaxValue - 1)
-        [TestCase(32766, 32766, 32767, 2, true)]
-        [TestCase(32764, 1, 32767, 1, true)]
+        [TestCase(32766, 32766, 32767, 2, true, new int[] { 1, 1 })]
+        [TestCase(32764, 1, 32767, 1, true, new int[] { 2 })]
         public void RunBatchCommand_can_handle_max_length_arguments(int arg1Len, int arg2Len,
-            int maxLength, int argCount, bool expectedResult)
+            int maxLength, int argCount, bool expectedResult, int[] expectedProcessedCounts)
         {
             // 3: double quotes + ' '
             // 9: 'reset -- '
@@ -106,8 +106,14 @@ namespace GitCommandsTests.Git
                 GenerateStringByLength(Math.Max(1, arg2Len - appLength - len - 1))
             }, appLength, maxLength);
 
-            Assert.AreEqual(argCount, args.Length);
-            Assert.AreEqual(expectedResult, _gitExecutable.RunBatchCommand(args));
+            Assert.AreEqual(argCount, args.Count);
+            var index = 0;
+            Assert.AreEqual(expectedResult, _gitExecutable.RunBatchCommand(args, (eventArgs) =>
+            {
+                Assert.IsTrue(eventArgs.ExecutionResult);
+                Assert.AreEqual(expectedProcessedCounts[index], eventArgs.ProcessedCount);
+                index++;
+            }));
         }
 
         [TestCase(32766 - 8, 32766 - 8, int.MaxValue)]

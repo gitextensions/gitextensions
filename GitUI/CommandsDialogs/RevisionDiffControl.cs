@@ -504,25 +504,7 @@ namespace GitUI.CommandsDialogs
 
         private void UnstageFileToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var files = new List<GitItemStatus>();
-            foreach (var item in DiffFiles.SelectedItems.Where(item => item.Staged == StagedStatus.Index))
-            {
-                if (!item.IsNew)
-                {
-                    Module.UnstageFileToRemove(item.Name);
-
-                    if (item.IsRenamed)
-                    {
-                        Module.UnstageFileToRemove(item.OldName);
-                    }
-                }
-                else
-                {
-                    files.Add(item);
-                }
-            }
-
-            Module.UnstageFiles(files);
+            Module.BatchUnstageFiles(DiffFiles.SelectedItems.Where(item => item.Staged == StagedStatus.Index));
             RefreshArtificial();
         }
 
@@ -819,26 +801,7 @@ namespace GitUI.CommandsDialogs
                 var selectedItems = DiffFiles.SelectedItems;
 
                 // If any file is staged, it must be unstaged
-                var files = new List<GitItemStatus>();
-                var stagedItems = selectedItems.Where(item => item.Staged == StagedStatus.Index);
-                foreach (var item in stagedItems)
-                {
-                    if (!item.IsNew)
-                    {
-                        Module.UnstageFileToRemove(item.Name);
-
-                        if (item.IsRenamed)
-                        {
-                            Module.UnstageFileToRemove(item.OldName);
-                        }
-                    }
-                    else
-                    {
-                        files.Add(item);
-                    }
-                }
-
-                Module.UnstageFiles(files);
+                Module.BatchUnstageFiles(selectedItems.Where(item => item.Staged == StagedStatus.Index));
 
                 DiffFiles.StoreNextIndexToSelect();
                 var items = DiffFiles.SelectedItems.Where(item => !item.IsSubmodule);

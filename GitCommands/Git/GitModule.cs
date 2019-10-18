@@ -1355,6 +1355,22 @@ namespace GitCommands
             });
         }
 
+        public string ResetFiles(IReadOnlyList<string> files)
+        {
+            if (files == null || files.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            return _gitExecutable.GetBatchOutput(new GitArgumentBuilder("checkout-index")
+                {
+                    "--index",
+                    "--force",
+                    "--"
+                }
+                .BuildBatchArguments(files.Select(item => item.ToPosixPath().Quote())));
+        }
+
         /// <summary>
         /// Delete index.lock in the current working folder.
         /// </summary>
@@ -1402,7 +1418,7 @@ namespace GitCommands
                     revision,
                     "--"
                 }
-                .BuildBatchArguments(files.Select(f => f.ToPosixPath().Quote()), AppSettings.GitCommand.Length + 3));
+                .BuildBatchArguments(files.Select(f => f.ToPosixPath().Quote())));
         }
 
         public string RemoveFiles(IReadOnlyList<string> files, bool force)
@@ -1811,6 +1827,52 @@ namespace GitCommands
             }
 
             return output.ToString();
+        }
+
+        /// <summary>
+        /// Batch unstage files using <see cref="ExecutableExtensions.RunBatchCommand(IExecutable, ICollection{BatchArgumentItem}, Action{BatchProgressEventArgs}, byte[], bool)"/>
+        /// </summary>
+        /// <param name="selectedItems">Selected file items</param>
+        /// <param name="action">Progress update callback</param>
+        /// <returns><see langword="true" /> if changes should be rescanned; otherwise <see langword="false" /></returns>.
+        public bool BatchUnstageFiles(IEnumerable<GitItemStatus> selectedItems, Action<BatchProgressEventArgs> action = null)
+        {
+            var files = new List<GitItemStatus>();
+            var filesToRemove = new List<string>();
+            var shouldRescanChanges = false;
+            foreach (var item in selectedItems)
+            {
+                if (!item.IsNew)
+                {
+                    filesToRemove.Add(item.Name);
+
+                    if (item.IsRenamed)
+                    {
+                        filesToRemove.Add(item.OldName);
+                    }
+
+                    if (item.IsDeleted)
+                    {
+                        shouldRescanChanges = true;
+                    }
+                }
+                else
+                {
+                    files.Add(item);
+                }
+            }
+
+            if (filesToRemove.Count > 0)
+            {
+                var args = GitCommandHelpers.ResetCmd(ResetMode.ResetIndex, "HEAD");
+                _gitExecutable.RunBatchCommand(new ArgumentBuilder() { args }
+                    .BuildBatchArguments(filesToRemove),
+                    action);
+            }
+
+            UnstageFiles(files);
+
+            return shouldRescanChanges;
         }
 
         public async Task<bool> AddInteractiveAsync(GitItemStatus file)

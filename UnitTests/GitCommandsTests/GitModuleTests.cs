@@ -798,15 +798,86 @@ namespace GitCommandsTests
             _gitModule.FormatPatch(from, to, outputFile, start).Should().Be(dummyCommandOutput);
         }
 
+        [TestCase(null, "")]
+        [TestCase(new string[] { }, "")]
+        public void ResetFiles_should_handle_empty_list(string[] files, string expectedOutput)
+        {
+            Assert.AreEqual(expectedOutput, _gitModule.ResetFiles(files?.ToList()));
+        }
+
+        [TestCase(new string[] { "abc", "def" }, "checkout-index --index --force -- \"abc\" \"def\"")]
+        public void ResetFiles_should_work_as_expected(string[] files, string args)
+        {
+            // Real GitModule is need to access AppSettings.GitCommand static property, avoid exception with dummy GitModule
+            using (var moduleTestHelper = new GitModuleTestHelper())
+            {
+                var gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
+                string dummyCommandOutput = "The answer is 42. Just check that the Git arguments are as expected.";
+                _executable.StageOutput(args, dummyCommandOutput);
+                var result = gitModule.ResetFiles(files.ToList());
+                Assert.AreEqual(dummyCommandOutput, result);
+            }
+        }
+
+        [TestCaseSource(nameof(BatchUnstageFilesTestCases))]
+        public void BatchUnstageFiles_should_work_as_expected(GitItemStatus[] files, string[] args, bool expectedResult)
+        {
+            // Real GitModule is need to access AppSettings.GitCommand static property, avoid exception with dummy GitModule
+            using (var moduleTestHelper = new GitModuleTestHelper())
+            {
+                var gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
+
+                foreach (var arg in args)
+                {
+                    _executable.StageCommand(arg);
+                }
+
+                var result = gitModule.BatchUnstageFiles(files);
+                Assert.AreEqual(expectedResult, result);
+            }
+        }
+
+        private static TestCaseData[] BatchUnstageFilesTestCases { get; set; } =
+        {
+            new TestCaseData(new GitItemStatus[]
+            {
+                new GitItemStatus { Name = "abc2", IsNew = true },
+                new GitItemStatus { Name = "abc2", IsNew = true, IsDeleted = true },
+                new GitItemStatus { Name = "abc2", IsNew = false },
+                new GitItemStatus { Name = "abc3", IsNew = false, IsRenamed = true, OldName = "def" }
+            },
+            new string[]
+            {
+                "reset \"HEAD\" -- abc2 abc3 def",
+                "update-index --info-only --index-info",
+                "update-index --force-remove --stdin"
+            },
+            false),
+            new TestCaseData(new GitItemStatus[]
+            {
+                new GitItemStatus { Name = "abc2", IsNew = false },
+                new GitItemStatus { Name = "abc3", IsNew = false, IsDeleted = true }
+            },
+            new string[]
+            {
+                "reset \"HEAD\" -- abc2 abc3",
+            },
+            true)
+        };
+
         /// <summary>
         /// Create a GitModule with mockable GitExecutable
         /// </summary>
         /// <param name="path">Path to the module</param>
         /// <param name="executable">The mock executable</param>
         /// <returns>The GitModule</returns>
-        private GitModule GetGitModuleWithExecutable(IExecutable executable, string path = "")
+        private GitModule GetGitModuleWithExecutable(IExecutable executable, string path = "", GitModule module = null)
         {
-            var module = new GitModule(path);
+            if (module == null)
+            {
+                module = new GitModule(path);
+            }
+
             typeof(GitModule).GetField("_gitExecutable", BindingFlags.Instance | BindingFlags.NonPublic)
                 .SetValue(module, executable);
             var cmdRunner = new GitCommandRunner(executable, () => GitModule.SystemEncoding);

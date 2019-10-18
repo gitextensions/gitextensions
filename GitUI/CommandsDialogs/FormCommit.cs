@@ -1677,42 +1677,24 @@ namespace GitUI.CommandsDialogs
                         ? _currentSelection
                         : Array.Empty<GitItemStatus>();
 
+                    var allFiles = Staged.SelectedItems.ToList();
                     toolStripProgressBar1.Visible = true;
-                    toolStripProgressBar1.Maximum = Staged.SelectedItems.Count() * 2;
                     toolStripProgressBar1.Value = 0;
-                    Staged.StoreNextIndexToSelect();
 
-                    var files = new List<GitItemStatus>();
-                    var allFiles = new List<GitItemStatus>();
-
-                    var shouldRescanChanges = false;
-                    foreach (var item in Staged.SelectedItems)
+                    // Before batch execution is introduced, rename file counts as 1
+                    // When executing in batch executation, rename must be interpreted as 2 different file arguments in command line arguments
+                    // because Windows max command line have 32767 characters limitations, we can not separate the two.
+                    // So the only solution for exact progress bar update would be changing Maximum value to include renamed file count as 2 files
+                    toolStripProgressBar1.Maximum = allFiles.Aggregate(0, (count, item) =>
                     {
-                        toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
-                        if (!item.IsNew)
-                        {
-                            toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
-                            Module.UnstageFileToRemove(item.Name);
+                        return item.IsRenamed ? count + 2 : count + 1;
+                    });
 
-                            if (item.IsRenamed)
-                            {
-                                Module.UnstageFileToRemove(item.OldName);
-                            }
-
-                            if (item.IsDeleted)
-                            {
-                                shouldRescanChanges = true;
-                            }
-                        }
-                        else
-                        {
-                            files.Add(item);
-                        }
-
-                        allFiles.Add(item);
-                    }
-
-                    Module.UnstageFiles(files);
+                    Staged.StoreNextIndexToSelect();
+                    var shouldRescanChanges = Module.BatchUnstageFiles(allFiles, (eventArgs) =>
+                    {
+                        toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + eventArgs.ProcessedCount);
+                    });
 
                     _skipUpdate = true;
                     InitializedStaged();
@@ -2026,34 +2008,17 @@ namespace GitUI.CommandsDialogs
                 }
 
                 // Unstage file first, then reset
-                var files = new List<GitItemStatus>();
-
-                foreach (var item in Staged.SelectedItems)
+                Module.BatchUnstageFiles(Staged.SelectedItems, (eventArgs) =>
                 {
-                    toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
-                    if (!item.IsNew)
-                    {
-                        toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
-                        Module.UnstageFileToRemove(item.Name);
-
-                        if (item.IsRenamed)
-                        {
-                            Module.UnstageFileToRemove(item.OldName);
-                        }
-                    }
-                    else
-                    {
-                        files.Add(item);
-                    }
-                }
-
-                Module.UnstageFiles(files);
+                    toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + eventArgs.ProcessedCount);
+                });
 
                 // remember max selected index
                 _currentFilesList.StoreNextIndexToSelect();
 
                 var deleteNewFiles = _currentFilesList.SelectedItems.Any(item => item.IsNew) && (resetType == FormResetChanges.ActionEnum.ResetAndDelete);
                 var filesInUse = new List<string>();
+                var filesToReset = new List<string>();
                 var output = new StringBuilder();
                 foreach (var item in _currentFilesList.SelectedItems)
                 {
@@ -2084,9 +2049,11 @@ namespace GitUI.CommandsDialogs
                     }
                     else
                     {
-                        output.Append(Module.ResetFile(item.Name));
+                        filesToReset.Add(item.Name);
                     }
                 }
+
+                output.Append(Module.ResetFiles(filesToReset));
 
                 if (AppSettings.RevisionGraphShowWorkingDirChanges)
                 {
