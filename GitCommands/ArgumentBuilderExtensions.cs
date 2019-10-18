@@ -315,8 +315,15 @@ namespace GitCommands
         /// <param name="baseLength">Base executable file and command line length.</param>
         /// <param name="maxLength">Command line max length. Default is 32767 - 1 on Windows.</param>
         /// <returns>Array of batch arguments split by max length.</returns>
-        public static ArgumentString[] BuildBatchArguments(this ArgumentBuilder builder, IEnumerable<string> arguments, int baseLength, int maxLength = short.MaxValue)
+        public static List<BatchArgumentItem> BuildBatchArguments(this ArgumentBuilder builder, IEnumerable<string> arguments, int? baseLength = null, int maxLength = short.MaxValue)
         {
+            // 3: double quotes + ' '
+            // '"git.exe" ' is always included in final command line arguments
+            if (!baseLength.HasValue)
+            {
+                baseLength = AppSettings.GitCommand.Length + 3;
+            }
+
             var baseArgument = builder.ToString();
             if (baseLength + baseArgument.Length >= maxLength)
             {
@@ -324,7 +331,8 @@ namespace GitCommands
             }
 
             // Clone command as argument builder
-            var batches = new List<ArgumentString>();
+            var batches = new List<BatchArgumentItem>();
+            var currentBatchItemCount = 0;
             var currentArgumentLength = baseArgument.Length;
             var lastBatchBuilder = arguments.Aggregate(builder, (currentBatchBuilder, argument) =>
             {
@@ -333,21 +341,23 @@ namespace GitCommands
                 if (baseLength + currentArgumentLength + 1 + argument.Length >= maxLength)
                 {
                     // Handle abnormal case when base command and a single argument exceed max length
-                    if (currentArgumentLength == baseArgument.Length)
+                    if (currentBatchItemCount == 0)
                     {
                         throw new ArgumentException($"Git command \"{currentBatchBuilder}\" always exceeded max length of {maxLength} characters.", nameof(arguments));
                     }
 
                     // Finish current command line
-                    batches.Add(currentBatchBuilder);
+                    batches.Add(new BatchArgumentItem(currentBatchBuilder, currentBatchItemCount));
 
                     // Return new argument builder
+                    currentBatchItemCount = 1;
                     currentArgumentLength = baseArgument.Length + 1 + argument.Length;
                     return new ArgumentBuilder() { baseArgument, argument };
                 }
 
                 currentBatchBuilder.Add(argument);
                 currentArgumentLength += argument.Length + 1;
+                currentBatchItemCount++;
                 return currentBatchBuilder;
             });
 
@@ -360,10 +370,10 @@ namespace GitCommands
             // Add last commandline batch
             if (!lastBatchBuilder.IsEmpty)
             {
-                batches.Add(lastBatchBuilder.ToString());
+                batches.Add(new BatchArgumentItem(lastBatchBuilder, currentBatchItemCount));
             }
 
-            return batches.ToArray();
+            return batches;
         }
     }
 }
