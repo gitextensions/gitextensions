@@ -368,6 +368,12 @@ namespace GitCommands
             set => SetInt("commitDialogNumberOfPreviousMessages", value);
         }
 
+        public static bool CommitDialogShowOnlyMyMessages
+        {
+            get => GetBool("commitDialogShowOnlyMyMessages", false);
+            set => SetBool("commitDialogShowOnlyMyMessages", value);
+        }
+
         public static bool ShowCommitAndPush
         {
             get => GetBool("showcommitandpush", true);

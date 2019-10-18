@@ -103,3 +103,4 @@ YYYY/MM/DD, github id, Full name, email
 2019/10/14, FabMan08, Fabrizio Mancin, fabman08(at)gmail.com
 2019/10/15, manishkungwani, Manish Kungwani, manishkungwani{at]yahoo.com
 2019/10/18, lhiginbotham, Logan Higinbotham, logan.higinbotham(at)gmail.com
+2019/10/18, idealist1508, none, none(at)none.de

@@ -3514,7 +3514,7 @@ namespace GitCommands
             }
         }
 
-        public IEnumerable<string> GetPreviousCommitMessages(int count, string revision = "HEAD")
+        public IEnumerable<string> GetPreviousCommitMessages(int count, string revision = "HEAD", string authorPattern = "")
         {
             var args = new GitArgumentBuilder("log")
             {
@@ -3523,6 +3523,12 @@ namespace GitCommands
                 revision,
                 "--pretty=format:%e%n%s%n%n%b"
             };
+
+            if (!string.IsNullOrEmpty(authorPattern))
+            {
+                args.Add($"--author=\"{authorPattern}\"");
+            }
+
             var messages = _gitExecutable.GetOutput(
                 args,
                 outputEncoding: LosslessEncoding).Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
