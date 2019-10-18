@@ -28,6 +28,10 @@ namespace GitUI
         private readonly TranslationString _tag = new TranslationString("Tag");
         private readonly TranslationString _remote = new TranslationString("Remote");
 
+        private readonly TranslationString _authored = new TranslationString("authored");
+        private readonly TranslationString _committed = new TranslationString("committed");
+        private readonly TranslationString _authoredAndCommitted = new TranslationString("authored and committed");
+
         // public only because of FormTranslate
         public Strings()
         {
@@ -70,5 +74,9 @@ namespace GitUI
         public static string Remote => _instance.Value._remote.Text;
 
         public static string OpenReport => _instance.Value._openReport.Text;
+
+        public static string Authored => _instance.Value._authored.Text;
+        public static string Committed => _instance.Value._committed.Text;
+        public static string AuthoredAndCommitted => _instance.Value._authoredAndCommitted.Text;
     }
 }

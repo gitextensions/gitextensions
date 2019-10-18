@@ -9224,6 +9224,14 @@ When OpenSSH is used, command line dialogs are shown!
         <source>{0:Author|Authors}</source>
         <target />
       </trans-unit>
+      <trans-unit id="_authored.Text">
+        <source>authored</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_authoredAndCommitted.Text">
+        <source>authored and committed</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_bodyNotLoaded.Text">
         <source>
 
@@ -9249,6 +9257,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_commitHashText.Text">
         <source>{0:Commit hash|Commits hashes}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_committed.Text">
+        <source>committed</source>
         <target />
       </trans-unit>
       <trans-unit id="_committerText.Text">
