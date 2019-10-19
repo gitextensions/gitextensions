@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs
 
                 if (hasUnmergedBranches)
                 {
-                    if (MessageBox.Show(this, _confirmDeleteUnmergedRemoteBranchMessage.Text, _deleteRemoteBranchesCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    if (MessageBox.Show(this, _confirmDeleteUnmergedRemoteBranchMessage.Text, _deleteRemoteBranchesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                     {
                         return;
                     }

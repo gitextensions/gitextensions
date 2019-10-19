@@ -25,7 +25,7 @@ namespace GitExtensionsVSIX.Git
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show("Git Extensions has insufficient permissions to check the registry.");
+                MessageBox.Show("Git Extensions has insufficient permissions to check the registry.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return "";
@@ -92,7 +92,7 @@ namespace GitExtensionsVSIX.Git
             {
                 if (!File.Exists(Path.Combine(path, "GitExtensions.exe")))
                 {
-                    MessageBox.Show("This plugin requires Git Extensions to be installed. This application can be downloaded from http://gitextensions.github.io/");
+                    MessageBox.Show("This plugin requires Git Extensions to be installed. This application can be downloaded from http://gitextensions.github.io/", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 return null;

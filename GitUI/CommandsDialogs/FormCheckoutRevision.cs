@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs
 
                 if (selectedObjectId == null)
                 {
-                    MessageBox.Show(this, _noRevisionSelectedMsgBox.Text, _noRevisionSelectedMsgBoxCaption.Text);
+                    MessageBox.Show(this, _noRevisionSelectedMsgBox.Text, _noRevisionSelectedMsgBoxCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 

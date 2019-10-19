@@ -90,7 +90,7 @@ namespace GitUI.CommandsDialogs
             var objectId = commitPickerSmallControl1.SelectedObjectId;
             if (objectId == null)
             {
-                MessageBox.Show(this, _noRevisionSelected.Text, Text);
+                MessageBox.Show(this, _noRevisionSelected.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.None;
                 return;
             }
@@ -98,14 +98,14 @@ namespace GitUI.CommandsDialogs
             var branchName = BranchNameTextBox.Text.Trim();
             if (branchName.IsNullOrWhiteSpace())
             {
-                MessageBox.Show(_branchNameIsEmpty.Text, Text);
+                MessageBox.Show(_branchNameIsEmpty.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.None;
                 return;
             }
 
             if (!Module.CheckBranchFormat(branchName))
             {
-                MessageBox.Show(string.Format(_branchNameIsNotValid.Text, branchName), Text);
+                MessageBox.Show(string.Format(_branchNameIsNotValid.Text, branchName), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.None;
                 return;
             }
