@@ -33,8 +33,7 @@ namespace GitCommands.Config
             }
             catch (Exception ex)
             {
-                ex.Data.Add(GetType().Name + ".Load", "Could not load config file: " + FileName);
-                throw;
+                throw new GitConfigurationException(fileName, ex);
             }
         }
 
