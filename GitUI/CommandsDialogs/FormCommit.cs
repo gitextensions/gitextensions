@@ -2372,6 +2372,10 @@ namespace GitUI.CommandsDialogs
             var stagedFiles = Staged.AllItems;
 
             var configFile = Module.GetSubmoduleConfigFile();
+            if (configFile == null)
+            {
+                return;
+            }
 
             Dictionary<string, string> modules = stagedFiles
                 .Where(item => item.IsSubmodule)

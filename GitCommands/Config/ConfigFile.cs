@@ -415,6 +415,7 @@ namespace GitCommands.Config
             {
                 if (_escapedValue)
                 {
+                    // TODO: case 'b' is valid, according to https://git-scm.com/docs/git-config#_syntax
                     switch (c)
                     {
                         case '\\':

@@ -147,6 +147,11 @@ namespace GitUI.CommandsDialogs
                 Module.UnstageFile(SubModuleLocalPath.Text);
 
                 var modules = Module.GetSubmoduleConfigFile();
+                if (modules == null)
+                {
+                    return;
+                }
+
                 modules.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
                 if (modules.ConfigSections.Count > 0)
                 {

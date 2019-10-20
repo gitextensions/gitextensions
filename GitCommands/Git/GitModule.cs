@@ -454,6 +454,10 @@ namespace GitCommands
             List<string> GetSubmodulePaths(GitModule module)
             {
                 var configFile = module.GetSubmoduleConfigFile();
+                if (configFile == null)
+                {
+                    return new List<string>();
+                }
 
                 return configFile.ConfigSections
                     .Select(section => section.GetValue("path").Trim())
@@ -1208,9 +1212,19 @@ namespace GitCommands
             }
         }
 
+        [CanBeNull]
         public ConfigFile GetSubmoduleConfigFile()
         {
-            return new ConfigFile(WorkingDir + ".gitmodules", true);
+            try
+            {
+                return new ConfigFile(WorkingDir + ".gitmodules", true);
+            }
+            catch (Exception ex)
+            {
+                ExceptionUtils.ShowException(ex, false);
+            }
+
+            return null;
         }
 
         [CanBeNull]
@@ -1257,6 +1271,10 @@ namespace GitCommands
             string lastLine = null;
 
             var configFile = GetSubmoduleConfigFile();
+            if (configFile == null)
+            {
+                yield break;
+            }
 
             foreach (var line in lines)
             {
