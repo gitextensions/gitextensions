@@ -619,9 +619,13 @@ namespace GitUI.Editor
                 return "";
             }
 
+            // Do not freeze GE when selecting large binary files
+            // Show only the header of the binary file to indicate contents and files incorrectly handled
+            // Use a dedicated editor to view the complete file
+            var limit = Math.Min(bytes.Length, columnWidth * columnCount * 256);
             var i = 0;
 
-            while (i < bytes.Length)
+            while (i < limit)
             {
                 var baseIndex = i;
 
@@ -683,6 +687,12 @@ namespace GitUI.Editor
                         i++;
                     }
                 }
+           }
+
+            if (bytes.Length > limit)
+            {
+                str.AppendLine();
+                str.Append("[Truncated]");
             }
 
             return str.ToString();
