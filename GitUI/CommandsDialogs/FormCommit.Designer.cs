@@ -127,6 +127,7 @@ namespace GitUI.CommandsDialogs
             this.ResetUnStaged = new System.Windows.Forms.Button();
             this.toolbarCommit = new GitUI.ToolStripEx();
             this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
+            this.ShowOnlyMyMessagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.generateListOfChangesInSubmodulesChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripDropDownButton();
@@ -1225,7 +1226,8 @@ namespace GitUI.CommandsDialogs
             this.commitMessageToolStripMenuItem.AutoToolTip = false;
             this.commitMessageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
-            this.generateListOfChangesInSubmodulesChangesToolStripMenuItem});
+            this.generateListOfChangesInSubmodulesChangesToolStripMenuItem,
+            this.ShowOnlyMyMessagesToolStripMenuItem});
             this.commitMessageToolStripMenuItem.Image = global::GitUI.Properties.Images.WorkingDirChanges;
             this.commitMessageToolStripMenuItem.Name = "commitMessageToolStripMenuItem";
             this.commitMessageToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -1234,6 +1236,16 @@ namespace GitUI.CommandsDialogs
             this.commitMessageToolStripMenuItem.DropDownOpening += new System.EventHandler(this.CommitMessageToolStripMenuItemDropDownOpening);
             this.commitMessageToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.CommitMessageToolStripMenuItemDropDownItemClicked);
             //
+            // ShowOnlyMyMessagesToolStripMenuItem
+            // 
+            this.ShowOnlyMyMessagesToolStripMenuItem.Checked = true;
+            this.ShowOnlyMyMessagesToolStripMenuItem.CheckOnClick = true;
+            this.ShowOnlyMyMessagesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ShowOnlyMyMessagesToolStripMenuItem.Name = "ShowOnlyMyMessagesToolStripMenuItem";
+            this.ShowOnlyMyMessagesToolStripMenuItem.Size = new System.Drawing.Size(290, 22);
+            this.ShowOnlyMyMessagesToolStripMenuItem.Text = "Show only my messages";
+            this.ShowOnlyMyMessagesToolStripMenuItem.CheckedChanged += new System.EventHandler(this.ShowOnlyMyMessagesToolStripMenuItem_CheckedChanged);
+            // 
             // toolStripMenuItem1
             //
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
@@ -1678,5 +1690,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripComboBox gpgSignCommitToolStripComboBox;
         private ToolStripMenuItem stopTrackingThisFileToolStripMenuItem;
         private Button modifyCommitMessageButton;
+        private ToolStripMenuItem ShowOnlyMyMessagesToolStripMenuItem;
     }
 }
