@@ -1660,9 +1660,18 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (canUseUnstageAll &&
-                Staged.GitItemStatuses.Count > 10 &&
-                Staged.SelectedItems.Count() == Staged.GitItemStatuses.Count)
+            // Staged.SelectedItems is needed only once, so we can safely convert to list here
+            var allFiles = Staged.SelectedItems.ToList();
+            if (allFiles.Count == 0)
+            {
+                return;
+            }
+
+            // Getting Staged.GitItemStatuses will cause multiple enumerations, but this is intended for side-effects
+            // because we need to refresh git item statuses later.
+            // We can optimize a little bit here by querying only once for staged count
+            var initialStagedCount = Staged.GitItemStatuses.Count;
+            if (canUseUnstageAll && initialStagedCount > 10 && allFiles.Count == initialStagedCount)
             {
                 UnstageAllToolStripMenuItemClick(null, null);
                 return;
@@ -1677,7 +1686,6 @@ namespace GitUI.CommandsDialogs
                         ? _currentSelection
                         : Array.Empty<GitItemStatus>();
 
-                    var allFiles = Staged.SelectedItems.ToList();
                     toolStripProgressBar1.Visible = true;
                     toolStripProgressBar1.Value = 0;
 
@@ -2008,7 +2016,11 @@ namespace GitUI.CommandsDialogs
                 }
 
                 // Unstage file first, then reset
-                Module.BatchUnstageFiles(Staged.SelectedItems, (eventArgs) =>
+                var selectedFiles = Staged.SelectedItems.ToList();
+                toolStripProgressBar1.Visible = true;
+                toolStripProgressBar1.Maximum = selectedFiles.Count;
+                toolStripProgressBar1.Value = 0;
+                Module.BatchUnstageFiles(selectedFiles, (eventArgs) =>
                 {
                     toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + eventArgs.ProcessedCount);
                 });
@@ -2054,6 +2066,8 @@ namespace GitUI.CommandsDialogs
                 }
 
                 output.Append(Module.ResetFiles(filesToReset));
+                toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
+                toolStripProgressBar1.Visible = false;
 
                 if (AppSettings.RevisionGraphShowWorkingDirChanges)
                 {
