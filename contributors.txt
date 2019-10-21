@@ -1,4 +1,4 @@
-﻿Git Extensions Project Contributors Certification of Origin and Rights
+Git Extensions Project Contributors Certification of Origin and Rights
 
 All contributors to Git Extensions must formally agree to abide by this
 certificate of origin by signing on the bottom with their github
@@ -100,6 +100,7 @@ YYYY/MM/DD, github id, Full name, email
 2019/09/30, hieuxlu, Hieu Do, xlu.untitled(at)gmail.com
 2019/10/13, R0nd, Roland Gneev, rgneev(at)gmail.com
 2019/10/13, bansan85, Le Garrec Vincent, legarrec.vincent{at]gmail.com
+2019/10/13, meaney, Chris Meaney, meaney(at)iinet.net.au
 2019/10/14, FabMan08, Fabrizio Mancin, fabman08(at)gmail.com
 2019/10/15, manishkungwani, Manish Kungwani, manishkungwani{at]yahoo.com
 2019/10/18, lhiginbotham, Logan Higinbotham, logan.higinbotham(at)gmail.com

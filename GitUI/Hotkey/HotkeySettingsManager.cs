@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -337,7 +337,9 @@ namespace GitUI.Hotkey
                     Hk(FileViewer.Commands.NextChange, Keys.Alt | Keys.Down),
                     Hk(FileViewer.Commands.PreviousChange, Keys.Alt | Keys.Up),
                     Hk(FileViewer.Commands.ShowEntireFile, Keys.None),
-                    Hk(FileViewer.Commands.TreatFileAsText, Keys.None)),
+                    Hk(FileViewer.Commands.TreatFileAsText, Keys.None),
+                    Hk(FileViewer.Commands.NextOccurrence, Keys.Alt | Keys.Right),
+                    Hk(FileViewer.Commands.PreviousOccurrence, Keys.Alt | Keys.Left)),
                 new HotkeySettings(
                     FormResolveConflicts.HotkeySettingsName,
                     Hk(FormResolveConflicts.Commands.ChooseBase, Keys.B),

@@ -172,8 +172,6 @@ namespace GitUI.Editor.Diff
 
         public void AddPatchHighlighting(IDocument document)
         {
-            var markerStrategy = document.MarkerStrategy;
-            markerStrategy.RemoveAll(m => true);
             bool forceAbort = false;
 
             AddExtraPatchHighlighting(document);

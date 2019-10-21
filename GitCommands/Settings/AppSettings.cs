@@ -1270,6 +1270,12 @@ namespace GitCommands
             set => SetColor("diffaddedextracolor", value);
         }
 
+        public static Color HighlightAllOccurencesColor
+        {
+            get { return GetColor("highlightalloccurencesncolor", Color.LightYellow); }
+            set { SetColor("highlightalloccurencesncolor", value); }
+        }
+
         #endregion
 
         #region Fonts
