@@ -19,8 +19,8 @@ namespace ResourceManager
             HasSettings = hasSettings;
         }
 
-        // requried for the TranslationApp to work
-        private GitPluginBase()
+        // required for the TranslationApp to work
+        protected GitPluginBase()
             : this(false)
         {
         }
