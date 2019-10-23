@@ -8860,10 +8860,6 @@ See the changes in the commit form.</source>
         <source>Revision data</source>
         <target />
       </trans-unit>
-      <trans-unit id="toolStripManageCategories.Text">
-        <source>toolStrip1</source>
-        <target />
-      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="ScriptsSettingsPage" source-language="en">

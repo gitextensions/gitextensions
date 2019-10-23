@@ -144,7 +144,6 @@
             this.toolStripManageCategories.Name = "toolStripManageCategories";
             this.toolStripManageCategories.Size = new System.Drawing.Size(182, 25);
             this.toolStripManageCategories.TabIndex = 5;
-            this.toolStripManageCategories.Text = "toolStrip1";
             // 
             // Add
             // 
