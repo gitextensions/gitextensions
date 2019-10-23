@@ -3514,15 +3514,17 @@ namespace GitCommands
             }
         }
 
-        public IEnumerable<string> GetPreviousCommitMessages(int count, string revision = "HEAD")
+        public IEnumerable<string> GetPreviousCommitMessages(int count, string revision = "HEAD", string authorPattern = "")
         {
             var args = new GitArgumentBuilder("log")
             {
                 "-z",
                 $"-n {count}",
                 revision,
-                "--pretty=format:%e%n%s%n%n%b"
+                "--pretty=format:%e%n%s%n%n%b",
+                { !string.IsNullOrEmpty(authorPattern), string.Concat("--author=\"", authorPattern, "\"") }
             };
+
             var messages = _gitExecutable.GetOutput(
                 args,
                 outputEncoding: LosslessEncoding).Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);

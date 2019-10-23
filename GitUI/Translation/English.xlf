@@ -3187,6 +3187,10 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <source>Reset u&amp;nstaged changes</source>
         <target />
       </trans-unit>
+      <trans-unit id="ShowOnlyMyMessagesToolStripMenuItem.Text">
+        <source>Show only my messages</source>
+        <target />
+      </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
         <source>There are unresolved merge conflicts
 </source>

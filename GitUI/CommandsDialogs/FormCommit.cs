@@ -231,6 +231,7 @@ namespace GitUI.CommandsDialogs
             closeDialogAfterEachCommitToolStripMenuItem.Checked = AppSettings.CloseCommitDialogAfterCommit;
             closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = AppSettings.CloseCommitDialogAfterLastCommit;
             refreshDialogOnFormFocusToolStripMenuItem.Checked = AppSettings.RefreshCommitDialogOnFormFocus;
+            ShowOnlyMyMessagesToolStripMenuItem.Checked = AppSettings.CommitDialogShowOnlyMyMessages;
 
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
             Unstaged.FilterVisible = true;
@@ -284,7 +285,7 @@ namespace GitUI.CommandsDialogs
             ((ToolStripDropDownMenu)commitTemplatesToolStripMenuItem.DropDown).ShowCheckMargin = false;
 
             ((ToolStripDropDownMenu)commitMessageToolStripMenuItem.DropDown).ShowImageMargin = false;
-            ((ToolStripDropDownMenu)commitMessageToolStripMenuItem.DropDown).ShowCheckMargin = false;
+            ((ToolStripDropDownMenu)commitMessageToolStripMenuItem.DropDown).ShowCheckMargin = true;
 
             selectionFilter.Size = DpiUtil.Scale(selectionFilter.Size);
             toolStripStatusBranchIcon.Width = DpiUtil.Scale(toolStripStatusBranchIcon.Width);
@@ -764,6 +765,11 @@ namespace GitUI.CommandsDialogs
             }
 
             return true;
+        }
+
+        private void ShowOnlyMyMessagesToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            AppSettings.CommitDialogShowOnlyMyMessages = ShowOnlyMyMessagesToolStripMenuItem.Checked;
         }
 
         protected override CommandStatus ExecuteCommand(int cmd)
@@ -2281,9 +2287,18 @@ namespace GitUI.CommandsDialogs
         {
             var msg = AppSettings.LastCommitMessage;
             var maxCount = AppSettings.CommitDialogNumberOfPreviousMessages;
+            var authorPattern = string.Empty;
 
-            var prevMessages = Module.GetPreviousCommitMessages(maxCount)
+            if (ShowOnlyMyMessagesToolStripMenuItem.Checked)
+            {
+                var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
+                var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
+                authorPattern = $"^{Regex.Escape(userName)} <{Regex.Escape(userEmail)}>$";
+            }
+
+            var prevMessages = Module.GetPreviousCommitMessages(maxCount, "HEAD", authorPattern)
                 .Select(message => message.TrimEnd('\n'))
+                .Where(message => !string.IsNullOrWhiteSpace(message))
                 .ToList();
 
             if (!string.IsNullOrWhiteSpace(msg) && !prevMessages.Contains(msg))
@@ -2309,7 +2324,8 @@ namespace GitUI.CommandsDialogs
             commitMessageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
             {
                 toolStripMenuItem1,
-                generateListOfChangesInSubmodulesChangesToolStripMenuItem
+                generateListOfChangesInSubmodulesChangesToolStripMenuItem,
+                ShowOnlyMyMessagesToolStripMenuItem
             });
 
             void AddCommitMessageToMenu(string commitMessage)
