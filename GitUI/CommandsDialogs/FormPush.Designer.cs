@@ -390,6 +390,8 @@
             this.BranchGrid.Size = new System.Drawing.Size(546, 117);
             this.BranchGrid.TabIndex = 0;
             this.BranchGrid.CurrentCellDirtyStateChanged += new System.EventHandler(this.BranchGrid_CurrentCellDirtyStateChanged);
+            this.BranchGrid.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.BranchGrid_DataBindingComplete);
+            this.BranchGrid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.BranchGrid_CellPainting);
             // 
             // LocalColumn
             // 
