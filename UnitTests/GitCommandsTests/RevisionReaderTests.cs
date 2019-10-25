@@ -134,7 +134,7 @@ namespace GitCommandsTests
         [TestCase("subject", "sub\n1DEA7CC4-FB39-450A-8DDF-762FCEA28B05\nject")]
         public void ParseCommitBody_should_return_subject_ignoring_contents(string subject, string encodedMessage, string expectedAdditionalData = null)
         {
-            var reader = RevisionReader.TestAccessor.MakeReader(encodedMessage + (expectedAdditionalData ?? ""));
+            var reader = RevisionReader.TestAccessor.MakeReader(encodedMessage + expectedAdditionalData);
 
             var (body, additionalData) = RevisionReader.TestAccessor.ParseCommitBody(reader, subject);
 
