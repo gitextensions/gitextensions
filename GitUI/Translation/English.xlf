@@ -7313,16 +7313,8 @@ Context menu for additional operations</source>
         <source>Path to mergetool</source>
         <target />
       </trans-unit>
-      <trans-unit id="_diffToolSuggestCaption.Text">
-        <source>Suggest difftool cmd</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_mergeToolSuggestCaption.Text">
-        <source>Suggest mergetool cmd</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_toolSuggestPathText.Text">
-        <source>Please enter the path to {0} and press suggest.</source>
+      <trans-unit id="_selectFile.Text">
+        <source>Select file</source>
         <target />
       </trans-unit>
       <trans-unit id="globalAutoCrlfFalse.Text">

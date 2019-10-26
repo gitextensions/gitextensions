@@ -254,7 +254,6 @@
     <Compile Include="CommandsDialogs\SearchWindow.Designer.cs">
       <DependentUpon>SearchWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\MergeToolsHelper.cs" />
     <Compile Include="CommandsDialogs\RevisionFileTreeController.cs" />
     <Compile Include="CommandsDialogs\RevisionGpgInfoControl.cs">
       <SubType>UserControl</SubType>
@@ -317,6 +316,7 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.Designer.cs">
       <DependentUpon>FormBrowseRepoSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitConfigSettingsPageController.cs" />
     <Compile Include="CommandsDialogs\SettingsDialog\RevisionLinks\AzureDevopsExternalLinkDefinitionExtractor.cs" />
     <Compile Include="CommandsDialogs\SettingsDialog\RevisionLinks\CloudProviderExternalLinkDefinitionExtractorFactory.cs" />
     <Compile Include="CommandsDialogs\SettingsDialog\RevisionLinks\CloudProviderKind.cs" />

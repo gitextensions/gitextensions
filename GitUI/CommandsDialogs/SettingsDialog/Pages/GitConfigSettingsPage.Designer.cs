@@ -34,7 +34,7 @@
             this.label57 = new System.Windows.Forms.Label();
             this.CommitTemplatePath = new System.Windows.Forms.TextBox();
             this.DiffToolCmdSuggest = new System.Windows.Forms.Button();
-            this.DifftoolCmd = new System.Windows.Forms.ComboBox();
+            this.DifftoolCmd = new System.Windows.Forms.TextBox();
             this.label48 = new System.Windows.Forms.Label();
             this.BrowseDiffTool = new System.Windows.Forms.Button();
             this.label42 = new System.Windows.Forms.Label();
@@ -46,7 +46,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.MergeToolCmdSuggest = new System.Windows.Forms.Button();
-            this.MergeToolCmd = new System.Windows.Forms.ComboBox();
+            this.MergeToolCmd = new System.Windows.Forms.TextBox();
             this.label19 = new System.Windows.Forms.Label();
             this.BrowseMergeTool = new System.Windows.Forms.Button();
             this._NO_TRANSLATE_GlobalMergeTool = new System.Windows.Forms.ComboBox();
@@ -143,7 +143,6 @@
             // DifftoolCmd
             // 
             this.DifftoolCmd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.DifftoolCmd.FormattingEnabled = true;
             this.DifftoolCmd.Location = new System.Drawing.Point(192, 351);
             this.DifftoolCmd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.DifftoolCmd.Name = "DifftoolCmd";
@@ -192,33 +191,12 @@
             this.DifftoolPath.Name = "DifftoolPath";
             this.DifftoolPath.Size = new System.Drawing.Size(1417, 27);
             this.DifftoolPath.TabIndex = 10;
+            this.DifftoolPath.LostFocus += new System.EventHandler(this.DiffMergeToolPath_LostFocus);
             // 
             // _NO_TRANSLATE_GlobalDiffTool
             // 
             this._NO_TRANSLATE_GlobalDiffTool.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this._NO_TRANSLATE_GlobalDiffTool.FormattingEnabled = true;
-            this._NO_TRANSLATE_GlobalDiffTool.Items.AddRange(new object[] {
-            "araxis",
-            "beyondcompare3",
-            "beyondcompare4",
-            "diffuse",
-            "diffmerge",
-            "ecmerge",
-            "emerge",
-            "gvimdiff",
-            "kdiff3",
-            "kompare",
-            "meld",
-            "opendiff",
-            "p4merge",
-            "semanticdiff",
-            "tkdiff",
-            "tmerge",
-            "vimdiff",
-            "vscode",
-            "vsdiffmerge",
-            "winmerge",
-            "xxdiff"});
             this._NO_TRANSLATE_GlobalDiffTool.Location = new System.Drawing.Point(192, 265);
             this._NO_TRANSLATE_GlobalDiffTool.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._NO_TRANSLATE_GlobalDiffTool.Name = "_NO_TRANSLATE_GlobalDiffTool";
@@ -306,7 +284,6 @@
             // MergeToolCmd
             // 
             this.MergeToolCmd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.MergeToolCmd.FormattingEnabled = true;
             this.MergeToolCmd.Location = new System.Drawing.Point(192, 195);
             this.MergeToolCmd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MergeToolCmd.Name = "MergeToolCmd";
@@ -340,19 +317,6 @@
             // 
             this._NO_TRANSLATE_GlobalMergeTool.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this._NO_TRANSLATE_GlobalMergeTool.FormattingEnabled = true;
-            this._NO_TRANSLATE_GlobalMergeTool.Items.AddRange(new object[] {
-            "Araxis",
-            "BeyondCompare3",
-            "BeyondCompare4",
-            "DiffMerge",
-            "kdiff3",
-            "meld",
-            "p4merge",
-            "semanticmerge",
-            "TortoiseMerge",
-            "vscode",
-            "vsdiffmerge",
-            "winmerge"});
             this._NO_TRANSLATE_GlobalMergeTool.Location = new System.Drawing.Point(192, 109);
             this._NO_TRANSLATE_GlobalMergeTool.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._NO_TRANSLATE_GlobalMergeTool.Name = "_NO_TRANSLATE_GlobalMergeTool";
@@ -379,6 +343,7 @@
             this.MergetoolPath.Name = "MergetoolPath";
             this.MergetoolPath.Size = new System.Drawing.Size(1417, 27);
             this.MergetoolPath.TabIndex = 4;
+            this.MergetoolPath.LostFocus += new System.EventHandler(this.DiffMergeToolPath_LostFocus);
             // 
             // GlobalKeepMergeBackup
             // 
@@ -468,7 +433,7 @@
             // 
             // groupBoxLineEndings
             // 
-            this.groupBoxLineEndings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxLineEndings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxLineEndings.AutoSize = true;
             this.tableLayoutPanelGitConfig.SetColumnSpan(this.groupBoxLineEndings, 4);
@@ -649,7 +614,7 @@
         private System.Windows.Forms.Label label57;
         private System.Windows.Forms.TextBox CommitTemplatePath;
         private System.Windows.Forms.Button DiffToolCmdSuggest;
-        private System.Windows.Forms.ComboBox DifftoolCmd;
+        private System.Windows.Forms.TextBox DifftoolCmd;
         private System.Windows.Forms.Label label48;
         private System.Windows.Forms.Button BrowseDiffTool;
         private System.Windows.Forms.Label label42;
@@ -661,7 +626,7 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button MergeToolCmdSuggest;
-        private System.Windows.Forms.ComboBox MergeToolCmd;
+        private System.Windows.Forms.TextBox MergeToolCmd;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Button BrowseMergeTool;
         private System.Windows.Forms.ComboBox _NO_TRANSLATE_GlobalMergeTool;

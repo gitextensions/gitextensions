@@ -80,6 +80,7 @@
     <Compile Include="IBrowseRepo.cs" />
     <Compile Include="IConfigFileSettings.cs" />
     <Compile Include="IConfigSection.cs" />
+    <Compile Include="IConfigValueStore.cs" />
     <Compile Include="IExecutable.cs" />
     <Compile Include="IGitCommand.cs" />
     <Compile Include="IGitCommandRunner.cs" />

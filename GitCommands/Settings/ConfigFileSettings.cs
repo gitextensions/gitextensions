@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using GitCommands.Config;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands.Settings
 {
-    public class ConfigFileSettings : SettingsContainer<ConfigFileSettings, ConfigFileSettingsCache>, IConfigFileSettings
+    public sealed class ConfigFileSettings : SettingsContainer<ConfigFileSettings, ConfigFileSettingsCache>, IConfigFileSettings, IConfigValueStore
     {
         public ConfigFileSettings(ConfigFileSettings lowerPriority, ConfigFileSettingsCache settingsCache,
             SettingLevel settingLevel)
@@ -98,9 +97,15 @@ namespace GitCommands.Settings
             SetString(setting, value);
         }
 
-        public void SetPathValue(string setting, [NotNull] string value)
+        public void SetPathValue(string setting, [CanBeNull] string value)
         {
-            SetValue(setting, ConfigSection.FixPath(value));
+            // for using unc paths -> these need to be backward slashes
+            if (!string.IsNullOrWhiteSpace(value) && !value.StartsWith("\\\\"))
+            {
+                value = value.ToPosixPath();
+            }
+
+            SetValue(setting, value);
         }
 
         public IReadOnlyList<IConfigSection> GetConfigSections()

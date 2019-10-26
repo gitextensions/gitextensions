@@ -64,6 +64,7 @@
     <Compile Include="Avatars\InitialsAvatarGeneratorTests.cs" />
     <Compile Include="Avatars\BackupAvatarProviderTests.cs" />
     <Compile Include="BranchTreePanel\GitRefMenuItemsTest.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitConfigSettingsPageControllerTests.cs" />
     <Compile Include="NBugReports\BugReportFormTests.cs" />
     <Compile Include="CancellationTokenSequenceTests.cs" />
     <Compile Include="CommandsDialogs\FormAddSubmoduleTests.cs" />
