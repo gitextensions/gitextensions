@@ -84,7 +84,8 @@ namespace GitUI.CommandsDialogs
             this.Ok.Location = new System.Drawing.Point(480, 20);
             this.Ok.Margin = new System.Windows.Forms.Padding(0, 20, 6, 6);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(62, 23);
+            this.Ok.MinimumSize = new System.Drawing.Size(72, 23);
+            this.Ok.Size = new System.Drawing.Size(72, 23);
             this.Ok.TabIndex = 1;
             this.Ok.Text = "Checkout";
             this.Ok.UseVisualStyleBackColor = true;
