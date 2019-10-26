@@ -154,7 +154,7 @@
             this._NO_TRANSLATE_ColorHighlightAuthoredLabel.Location = new System.Drawing.Point(176, 138);
             this._NO_TRANSLATE_ColorHighlightAuthoredLabel.Name = "_NO_TRANSLATE_ColorHighlightAuthoredLabel";
             this._NO_TRANSLATE_ColorHighlightAuthoredLabel.Size = new System.Drawing.Size(27, 19);
-            this._NO_TRANSLATE_ColorHighlightAuthoredLabel.TabIndex = 8;
+            this._NO_TRANSLATE_ColorHighlightAuthoredLabel.TabIndex = 7;
             this._NO_TRANSLATE_ColorHighlightAuthoredLabel.Text = "Red";
             this._NO_TRANSLATE_ColorHighlightAuthoredLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this._NO_TRANSLATE_ColorHighlightAuthoredLabel.Click += new System.EventHandler(this.ColorLabel_Click);
@@ -168,7 +168,7 @@
             this.lblColorHighlightAuthored.Margin = new System.Windows.Forms.Padding(3);
             this.lblColorHighlightAuthored.Name = "lblColorHighlightAuthored";
             this.lblColorHighlightAuthored.Size = new System.Drawing.Size(167, 13);
-            this.lblColorHighlightAuthored.TabIndex = 7;
+            this.lblColorHighlightAuthored.TabIndex = 6;
             this.lblColorHighlightAuthored.Text = "Color authored revisions";
             // 
             // chkHighlightAuthored
@@ -178,7 +178,7 @@
             this.chkHighlightAuthored.Location = new System.Drawing.Point(3, 118);
             this.chkHighlightAuthored.Name = "chkHighlightAuthored";
             this.chkHighlightAuthored.Size = new System.Drawing.Size(167, 17);
-            this.chkHighlightAuthored.TabIndex = 6;
+            this.chkHighlightAuthored.TabIndex = 5;
             this.chkHighlightAuthored.Text = "Highlight authored revisions";
             this.chkHighlightAuthored.UseVisualStyleBackColor = true;
             this.chkHighlightAuthored.CheckedChanged += new System.EventHandler(this.chkHighlightAuthored_CheckedChanged);
@@ -204,7 +204,7 @@
             this._NO_TRANSLATE_ColorRemoteBranchLabel.Location = new System.Drawing.Point(176, 195);
             this._NO_TRANSLATE_ColorRemoteBranchLabel.Name = "_NO_TRANSLATE_ColorRemoteBranchLabel";
             this._NO_TRANSLATE_ColorRemoteBranchLabel.Size = new System.Drawing.Size(27, 19);
-            this._NO_TRANSLATE_ColorRemoteBranchLabel.TabIndex = 14;
+            this._NO_TRANSLATE_ColorRemoteBranchLabel.TabIndex = 13;
             this._NO_TRANSLATE_ColorRemoteBranchLabel.Text = "Red";
             this._NO_TRANSLATE_ColorRemoteBranchLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this._NO_TRANSLATE_ColorRemoteBranchLabel.Click += new System.EventHandler(this.ColorLabel_Click);
@@ -217,7 +217,7 @@
             this.lblColorBranchRemote.Margin = new System.Windows.Forms.Padding(3);
             this.lblColorBranchRemote.Name = "lblColorBranchRemote";
             this.lblColorBranchRemote.Size = new System.Drawing.Size(167, 13);
-            this.lblColorBranchRemote.TabIndex = 13;
+            this.lblColorBranchRemote.TabIndex = 12;
             this.lblColorBranchRemote.Text = "Color remote branch";
             // 
             // _NO_TRANSLATE_ColorOtherLabel
@@ -229,7 +229,7 @@
             this._NO_TRANSLATE_ColorOtherLabel.Location = new System.Drawing.Point(176, 214);
             this._NO_TRANSLATE_ColorOtherLabel.Name = "_NO_TRANSLATE_ColorOtherLabel";
             this._NO_TRANSLATE_ColorOtherLabel.Size = new System.Drawing.Size(27, 19);
-            this._NO_TRANSLATE_ColorOtherLabel.TabIndex = 16;
+            this._NO_TRANSLATE_ColorOtherLabel.TabIndex = 15;
             this._NO_TRANSLATE_ColorOtherLabel.Text = "Red";
             this._NO_TRANSLATE_ColorOtherLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this._NO_TRANSLATE_ColorOtherLabel.Click += new System.EventHandler(this.ColorLabel_Click);
@@ -242,7 +242,7 @@
             this.lblColorLabel.Margin = new System.Windows.Forms.Padding(3);
             this.lblColorLabel.Name = "lblColorLabel";
             this.lblColorLabel.Size = new System.Drawing.Size(167, 13);
-            this.lblColorLabel.TabIndex = 15;
+            this.lblColorLabel.TabIndex = 14;
             this.lblColorLabel.Text = "Color other label";
             // 
             // chkDrawAlternateBackColor
@@ -252,7 +252,7 @@
             this.chkDrawAlternateBackColor.Location = new System.Drawing.Point(3, 49);
             this.chkDrawAlternateBackColor.Name = "chkDrawAlternateBackColor";
             this.chkDrawAlternateBackColor.Size = new System.Drawing.Size(167, 17);
-            this.chkDrawAlternateBackColor.TabIndex = 3;
+            this.chkDrawAlternateBackColor.TabIndex = 2;
             this.chkDrawAlternateBackColor.Text = "Draw alternate background";
             this.chkDrawAlternateBackColor.UseVisualStyleBackColor = true;
             // 
@@ -263,7 +263,7 @@
             this.DrawNonRelativesTextGray.Location = new System.Drawing.Point(3, 95);
             this.DrawNonRelativesTextGray.Name = "DrawNonRelativesTextGray";
             this.DrawNonRelativesTextGray.Size = new System.Drawing.Size(167, 17);
-            this.DrawNonRelativesTextGray.TabIndex = 5;
+            this.DrawNonRelativesTextGray.TabIndex = 4;
             this.DrawNonRelativesTextGray.Text = "Draw non relatives text gray";
             this.DrawNonRelativesTextGray.UseVisualStyleBackColor = true;
             // 
@@ -288,7 +288,7 @@
             this.DrawNonRelativesGray.Location = new System.Drawing.Point(3, 72);
             this.DrawNonRelativesGray.Name = "DrawNonRelativesGray";
             this.DrawNonRelativesGray.Size = new System.Drawing.Size(167, 17);
-            this.DrawNonRelativesGray.TabIndex = 4;
+            this.DrawNonRelativesGray.TabIndex = 3;
             this.DrawNonRelativesGray.Text = "Draw non relatives graph gray";
             this.DrawNonRelativesGray.UseVisualStyleBackColor = true;
             // 
@@ -300,7 +300,7 @@
             this.lblColorBranchLocal.Margin = new System.Windows.Forms.Padding(3);
             this.lblColorBranchLocal.Name = "lblColorBranchLocal";
             this.lblColorBranchLocal.Size = new System.Drawing.Size(167, 13);
-            this.lblColorBranchLocal.TabIndex = 11;
+            this.lblColorBranchLocal.TabIndex = 10;
             this.lblColorBranchLocal.Text = "Color branch";
             // 
             // _NO_TRANSLATE_ColorBranchLabel
@@ -312,7 +312,7 @@
             this._NO_TRANSLATE_ColorBranchLabel.Location = new System.Drawing.Point(176, 176);
             this._NO_TRANSLATE_ColorBranchLabel.Name = "_NO_TRANSLATE_ColorBranchLabel";
             this._NO_TRANSLATE_ColorBranchLabel.Size = new System.Drawing.Size(27, 19);
-            this._NO_TRANSLATE_ColorBranchLabel.TabIndex = 12;
+            this._NO_TRANSLATE_ColorBranchLabel.TabIndex = 11;
             this._NO_TRANSLATE_ColorBranchLabel.Text = "Red";
             this._NO_TRANSLATE_ColorBranchLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this._NO_TRANSLATE_ColorBranchLabel.Click += new System.EventHandler(this.ColorLabel_Click);
@@ -326,7 +326,7 @@
             this._NO_TRANSLATE_ColorTagLabel.Location = new System.Drawing.Point(176, 157);
             this._NO_TRANSLATE_ColorTagLabel.Name = "_NO_TRANSLATE_ColorTagLabel";
             this._NO_TRANSLATE_ColorTagLabel.Size = new System.Drawing.Size(27, 19);
-            this._NO_TRANSLATE_ColorTagLabel.TabIndex = 10;
+            this._NO_TRANSLATE_ColorTagLabel.TabIndex = 9;
             this._NO_TRANSLATE_ColorTagLabel.Text = "Red";
             this._NO_TRANSLATE_ColorTagLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this._NO_TRANSLATE_ColorTagLabel.Click += new System.EventHandler(this.ColorLabel_Click);
@@ -339,7 +339,7 @@
             this.lblColorTag.Margin = new System.Windows.Forms.Padding(3);
             this.lblColorTag.Name = "lblColorTag";
             this.lblColorTag.Size = new System.Drawing.Size(167, 13);
-            this.lblColorTag.TabIndex = 9;
+            this.lblColorTag.TabIndex = 8;
             this.lblColorTag.Text = "Color tag";
             // 
             // gbDiffView

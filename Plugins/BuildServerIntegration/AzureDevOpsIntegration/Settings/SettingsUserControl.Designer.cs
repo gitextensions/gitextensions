@@ -108,7 +108,7 @@ namespace AzureDevOpsIntegration.Settings
             this.TfsServer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TfsServer.Name = "TfsServer";
             this.TfsServer.Size = new System.Drawing.Size(1100, 20);
-            this.TfsServer.TabIndex = 0;
+            this.TfsServer.TabIndex = 2;
             this.TfsServer.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             // 
             // TfsBuildDefinitionNameFilter
@@ -176,7 +176,7 @@ namespace AzureDevOpsIntegration.Settings
             this.ExtractLink.Location = new System.Drawing.Point(126, 0);
             this.ExtractLink.Name = "ExtractLink";
             this.ExtractLink.Size = new System.Drawing.Size(1100, 13);
-            this.ExtractLink.TabIndex = 15;
+            this.ExtractLink.TabIndex = 1;
             this.ExtractLink.TabStop = true;
             this.ExtractLink.Text = "Extract data from a build result url copied in the clipboard";
             this.ExtractLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ExtractLink_LinkClicked);
@@ -198,7 +198,7 @@ namespace AzureDevOpsIntegration.Settings
             this.TokenManagementLink.Location = new System.Drawing.Point(126, 220);
             this.TokenManagementLink.Name = "TokenManagementLink";
             this.TokenManagementLink.Size = new System.Drawing.Size(1100, 13);
-            this.TokenManagementLink.TabIndex = 1;
+            this.TokenManagementLink.TabIndex = 5;
             this.TokenManagementLink.TabStop = true;
             this.TokenManagementLink.Text = "Go to token management page";
             this.TokenManagementLink.Click += new System.EventHandler(this.RestApiTokenLink_Click);

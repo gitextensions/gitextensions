@@ -111,7 +111,7 @@ namespace TeamCityIntegration.Settings
             this.TeamCityServerUrl.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TeamCityServerUrl.Name = "TeamCityServerUrl";
             this.TeamCityServerUrl.Size = new System.Drawing.Size(437, 21);
-            this.TeamCityServerUrl.TabIndex = 1;
+            this.TeamCityServerUrl.TabIndex = 2;
             this.TeamCityServerUrl.TextChanged += new System.EventHandler(this.TeamCityServerUrl_TextChanged);
             // 
             // TeamCityProjectName
@@ -153,7 +153,7 @@ namespace TeamCityIntegration.Settings
             this.CheckBoxLogAsGuest.Margin = new System.Windows.Forms.Padding(3, 6, 3, 2);
             this.CheckBoxLogAsGuest.Name = "CheckBoxLogAsGuest";
             this.CheckBoxLogAsGuest.Size = new System.Drawing.Size(213, 17);
-            this.CheckBoxLogAsGuest.TabIndex = 11;
+            this.CheckBoxLogAsGuest.TabIndex = 6;
             this.CheckBoxLogAsGuest.Text = "Log as guest to display the build report";
             this.CheckBoxLogAsGuest.UseVisualStyleBackColor = true;
             // 
@@ -164,7 +164,7 @@ namespace TeamCityIntegration.Settings
             this.buttonProjectChooser.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonProjectChooser.Name = "buttonProjectChooser";
             this.buttonProjectChooser.Size = new System.Drawing.Size(24, 20);
-            this.buttonProjectChooser.TabIndex = 12;
+            this.buttonProjectChooser.TabIndex = 4;
             this.buttonProjectChooser.Text = "...";
             this.buttonProjectChooser.UseVisualStyleBackColor = true;
             this.buttonProjectChooser.Click += new System.EventHandler(this.buttonProjectChooser_Click);
@@ -176,7 +176,7 @@ namespace TeamCityIntegration.Settings
             this.lnkExtractDataFromBuildUrlCopiedInTheClipboard.Margin = new System.Windows.Forms.Padding(3, 0, 3, 6);
             this.lnkExtractDataFromBuildUrlCopiedInTheClipboard.Name = "lnkExtractDataFromBuildUrlCopiedInTheClipboard";
             this.lnkExtractDataFromBuildUrlCopiedInTheClipboard.Size = new System.Drawing.Size(280, 13);
-            this.lnkExtractDataFromBuildUrlCopiedInTheClipboard.TabIndex = 13;
+            this.lnkExtractDataFromBuildUrlCopiedInTheClipboard.TabIndex = 1;
             this.lnkExtractDataFromBuildUrlCopiedInTheClipboard.TabStop = true;
             this.lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text = "Extract the data from the build url copied in the clipboard";
             this.lnkExtractDataFromBuildUrlCopiedInTheClipboard.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkExtractDataFromBuildUrlCopiedInTheClipboard_LinkClicked);

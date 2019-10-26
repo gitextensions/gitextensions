@@ -39,7 +39,7 @@
             this.checkBoxRebaseAutostash.Location = new System.Drawing.Point(19, 80);
             this.checkBoxRebaseAutostash.Name = "checkBoxRebaseAutostash";
             this.checkBoxRebaseAutostash.Size = new System.Drawing.Size(228, 17);
-            this.checkBoxRebaseAutostash.TabIndex = 1;
+            this.checkBoxRebaseAutostash.TabIndex = 3;
             this.checkBoxRebaseAutostash.Text = "Automatically stash before doing a rebase";
             this.checkBoxRebaseAutostash.UseVisualStyleBackColor = true;
             // 
@@ -59,7 +59,7 @@
             this.checkBoxPullRebase.Location = new System.Drawing.Point(19, 14);
             this.checkBoxPullRebase.Name = "checkBoxPullRebase";
             this.checkBoxPullRebase.Size = new System.Drawing.Size(276, 17);
-            this.checkBoxPullRebase.TabIndex = 3;
+            this.checkBoxPullRebase.TabIndex = 1;
             this.checkBoxPullRebase.Text = "Rebase local branch when pulling (instead of merge)";
             this.checkBoxPullRebase.UseVisualStyleBackColor = true;
             // 

@@ -145,7 +145,7 @@
             this.chkShowAheadBehindDataInBrowseWindow.Location = new System.Drawing.Point(3, 141);
             this.chkShowAheadBehindDataInBrowseWindow.Name = "chkShowAheadBehindDataInBrowseWindow";
             this.chkShowAheadBehindDataInBrowseWindow.Size = new System.Drawing.Size(347, 17);
-            this.chkShowAheadBehindDataInBrowseWindow.TabIndex = 10;
+            this.chkShowAheadBehindDataInBrowseWindow.TabIndex = 6;
             this.chkShowAheadBehindDataInBrowseWindow.Text = "Show ahead and behind information on status bar in browse window";
             this.chkShowAheadBehindDataInBrowseWindow.UseVisualStyleBackColor = true;
             // 
@@ -156,7 +156,7 @@
             this.chkCheckForUncommittedChangesInCheckoutBranch.Location = new System.Drawing.Point(3, 164);
             this.chkCheckForUncommittedChangesInCheckoutBranch.Name = "chkCheckForUncommittedChangesInCheckoutBranch";
             this.chkCheckForUncommittedChangesInCheckoutBranch.Size = new System.Drawing.Size(347, 17);
-            this.chkCheckForUncommittedChangesInCheckoutBranch.TabIndex = 6;
+            this.chkCheckForUncommittedChangesInCheckoutBranch.TabIndex = 7;
             this.chkCheckForUncommittedChangesInCheckoutBranch.Text = "Check for uncommitted changes in checkout branch dialog";
             this.chkCheckForUncommittedChangesInCheckoutBranch.UseVisualStyleBackColor = true;
             // 
@@ -336,7 +336,7 @@
             0});
             this.RevisionGridQuickSearchTimeout.Name = "RevisionGridQuickSearchTimeout";
             this.RevisionGridQuickSearchTimeout.Size = new System.Drawing.Size(85, 20);
-            this.RevisionGridQuickSearchTimeout.TabIndex = 12;
+            this.RevisionGridQuickSearchTimeout.TabIndex = 10;
             this.RevisionGridQuickSearchTimeout.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.RevisionGridQuickSearchTimeout.ThousandsSeparator = true;
             this.RevisionGridQuickSearchTimeout.Value = new decimal(new int[] {
@@ -352,7 +352,7 @@
             this.btnDefaultDestinationBrowse.Location = new System.Drawing.Point(1247, 141);
             this.btnDefaultDestinationBrowse.Name = "btnDefaultDestinationBrowse";
             this.btnDefaultDestinationBrowse.Size = new System.Drawing.Size(52, 23);
-            this.btnDefaultDestinationBrowse.TabIndex = 10;
+            this.btnDefaultDestinationBrowse.TabIndex = 8;
             this.btnDefaultDestinationBrowse.Text = "Browse";
             this.btnDefaultDestinationBrowse.UseVisualStyleBackColor = true;
             this.btnDefaultDestinationBrowse.Click += new System.EventHandler(this.DefaultCloneDestinationBrowseClick);
@@ -388,7 +388,7 @@
             this.cbDefaultCloneDestination.Location = new System.Drawing.Point(273, 141);
             this.cbDefaultCloneDestination.Name = "cbDefaultCloneDestination";
             this.cbDefaultCloneDestination.Size = new System.Drawing.Size(968, 21);
-            this.cbDefaultCloneDestination.TabIndex = 9;
+            this.cbDefaultCloneDestination.TabIndex = 7;
             // 
             // chkShowGitCommandLine
             // 
@@ -526,7 +526,7 @@
             this.cboDefaultPullAction.Location = new System.Drawing.Point(273, 170);
             this.cboDefaultPullAction.Name = "cboDefaultPullAction";
             this.cboDefaultPullAction.Size = new System.Drawing.Size(121, 21);
-            this.cboDefaultPullAction.TabIndex = 14;
+            this.cboDefaultPullAction.TabIndex = 9;
             // 
             // GeneralSettingsPage
             // 
