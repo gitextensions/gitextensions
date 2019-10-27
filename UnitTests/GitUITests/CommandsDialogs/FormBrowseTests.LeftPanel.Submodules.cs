@@ -83,10 +83,10 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         public void RepoObjectTree_should_show_all_submodules()
         {
             RunFormTest(
-                form =>
+                async (form) =>
                 {
                     // act
-                    SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, _repo1Module);
+                    await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo1Module);
 
                     // assert
                     var submodulesNode = GetSubmoduleNode(form);
