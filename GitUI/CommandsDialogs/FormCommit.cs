@@ -899,7 +899,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!string.IsNullOrEmpty(output))
             {
-                MessageBox.Show(this, output + "\n\n" + SelectedDiff.Encoding.GetString(patch), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(this, output + "\n\n" + SelectedDiff.Encoding.GetString(patch), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             if (_currentItemStaged)
@@ -2090,12 +2090,12 @@ namespace GitUI.CommandsDialogs
 
                 if (filesInUse.Count > 0)
                 {
-                    MessageBox.Show(this, "The following files are currently in use and will not be reset:" + Environment.NewLine + "\u2022 " + string.Join(Environment.NewLine + "\u2022 ", filesInUse), "Files In Use", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(this, "The following files are currently in use and will not be reset:" + Environment.NewLine + "\u2022 " + string.Join(Environment.NewLine + "\u2022 ", filesInUse), "Files In Use", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 if (!string.IsNullOrEmpty(output.ToString()))
                 {
-                    MessageBox.Show(this, output.ToString(), _resetChangesCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(this, output.ToString(), _resetChangesCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             finally
@@ -2592,7 +2592,7 @@ namespace GitUI.CommandsDialogs
                 string output = Module.OpenWithDifftool(item.Name, null, firstRevision, secondRevision, "", item.IsTracked);
                 if (!string.IsNullOrEmpty(output))
                 {
-                    MessageBox.Show(this, output, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(this, output, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
