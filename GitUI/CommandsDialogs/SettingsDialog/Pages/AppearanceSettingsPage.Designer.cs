@@ -266,7 +266,7 @@
             this.AvatarProvider.Location = new System.Drawing.Point(164, 75);
             this.AvatarProvider.Name = "AvatarProvider";
             this.AvatarProvider.Size = new System.Drawing.Size(183, 21);
-            this.AvatarProvider.TabIndex = 10;
+            this.AvatarProvider.TabIndex = 3;
             this.AvatarProvider.SelectedIndexChanged += new System.EventHandler(this.AvatarProvider_SelectedIndexChanged);
             // 
             // ShowAuthorAvatarInCommitGraph
@@ -352,7 +352,7 @@
             this.Dictionary.Location = new System.Drawing.Point(158, 30);
             this.Dictionary.Name = "Dictionary";
             this.Dictionary.Size = new System.Drawing.Size(86, 21);
-            this.Dictionary.TabIndex = 4;
+            this.Dictionary.TabIndex = 3;
             this.Dictionary.DropDown += new System.EventHandler(this.Dictionary_DropDown);
             // 
             // downloadDictionary
@@ -363,7 +363,7 @@
             this.downloadDictionary.Location = new System.Drawing.Point(250, 27);
             this.downloadDictionary.Name = "downloadDictionary";
             this.downloadDictionary.Size = new System.Drawing.Size(103, 27);
-            this.downloadDictionary.TabIndex = 5;
+            this.downloadDictionary.TabIndex = 4;
             this.downloadDictionary.TabStop = true;
             this.downloadDictionary.Text = "Download dictionary";
             this.downloadDictionary.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -399,7 +399,7 @@
             this.Language.Location = new System.Drawing.Point(158, 3);
             this.Language.Name = "Language";
             this.Language.Size = new System.Drawing.Size(86, 21);
-            this.Language.TabIndex = 1;
+            this.Language.TabIndex = 0;
             // 
             // helpTranslate
             // 
@@ -409,7 +409,7 @@
             this.helpTranslate.Location = new System.Drawing.Point(250, 0);
             this.helpTranslate.Name = "helpTranslate";
             this.helpTranslate.Size = new System.Drawing.Size(103, 27);
-            this.helpTranslate.TabIndex = 2;
+            this.helpTranslate.TabIndex = 1;
             this.helpTranslate.TabStop = true;
             this.helpTranslate.Text = "Help translate";
             this.helpTranslate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -423,7 +423,7 @@
             this._NO_TRANSLATE_NoImageService.Location = new System.Drawing.Point(164, 102);
             this._NO_TRANSLATE_NoImageService.Name = "_NO_TRANSLATE_NoImageService";
             this._NO_TRANSLATE_NoImageService.Size = new System.Drawing.Size(183, 21);
-            this._NO_TRANSLATE_NoImageService.TabIndex = 5;
+            this._NO_TRANSLATE_NoImageService.TabIndex = 4;
             // 
             // lblCacheDays
             // 
@@ -457,7 +457,7 @@
             0});
             this._NO_TRANSLATE_DaysToCacheImages.Name = "_NO_TRANSLATE_DaysToCacheImages";
             this._NO_TRANSLATE_DaysToCacheImages.Size = new System.Drawing.Size(38, 20);
-            this._NO_TRANSLATE_DaysToCacheImages.TabIndex = 3;
+            this._NO_TRANSLATE_DaysToCacheImages.TabIndex = 2;
             this._NO_TRANSLATE_DaysToCacheImages.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // pictureAvatarHelp
@@ -468,7 +468,7 @@
             this.pictureAvatarHelp.Name = "pictureAvatarHelp";
             this.pictureAvatarHelp.Size = new System.Drawing.Size(16, 16);
             this.pictureAvatarHelp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureAvatarHelp.TabIndex = 8;
+            this.pictureAvatarHelp.TabIndex = 3;
             this.pictureAvatarHelp.TabStop = false;
             this.pictureAvatarHelp.Click += new System.EventHandler(this.pictureAvatarHelp_Click);
             // 

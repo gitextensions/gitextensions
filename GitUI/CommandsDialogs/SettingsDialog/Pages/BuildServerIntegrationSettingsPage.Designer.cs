@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this.BuildServerType.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.BuildServerType.Name = "BuildServerType";
             this.BuildServerType.Size = new System.Drawing.Size(1455, 21);
-            this.BuildServerType.TabIndex = 4;
+            this.BuildServerType.TabIndex = 3;
             this.BuildServerType.SelectedIndexChanged += new System.EventHandler(this.BuildServerType_SelectedIndexChanged);
             // 
             // labelBuildServerType

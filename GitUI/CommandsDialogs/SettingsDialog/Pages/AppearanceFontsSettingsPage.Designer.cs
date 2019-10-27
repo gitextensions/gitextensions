@@ -97,7 +97,6 @@
             this.label56.TabIndex = 0;
             this.label56.Text = "Code font";
             this.label56.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // commitFontChangeButton
             // 
             this.commitFontChangeButton.AutoSize = true;
@@ -106,7 +105,7 @@
             this.commitFontChangeButton.Location = new System.Drawing.Point(91, 61);
             this.commitFontChangeButton.Name = "commitFontChangeButton";
             this.commitFontChangeButton.Size = new System.Drawing.Size(66, 23);
-            this.commitFontChangeButton.TabIndex = 5;
+            this.commitFontChangeButton.TabIndex = 2;
             this.commitFontChangeButton.Text = "font name";
             this.commitFontChangeButton.UseVisualStyleBackColor = true;
             this.commitFontChangeButton.Click += new System.EventHandler(this.commitFontChangeButton_Click);
@@ -119,7 +118,7 @@
             this.diffFontChangeButton.Location = new System.Drawing.Point(91, 3);
             this.diffFontChangeButton.Name = "diffFontChangeButton";
             this.diffFontChangeButton.Size = new System.Drawing.Size(66, 23);
-            this.diffFontChangeButton.TabIndex = 1;
+            this.diffFontChangeButton.TabIndex = 0;
             this.diffFontChangeButton.Text = "font name";
             this.diffFontChangeButton.UseVisualStyleBackColor = true;
             this.diffFontChangeButton.Click += new System.EventHandler(this.diffFontChangeButton_Click);
@@ -132,7 +131,7 @@
             this.applicationFontChangeButton.Location = new System.Drawing.Point(91, 32);
             this.applicationFontChangeButton.Name = "applicationFontChangeButton";
             this.applicationFontChangeButton.Size = new System.Drawing.Size(66, 23);
-            this.applicationFontChangeButton.TabIndex = 3;
+            this.applicationFontChangeButton.TabIndex = 1;
             this.applicationFontChangeButton.Text = "font name";
             this.applicationFontChangeButton.UseVisualStyleBackColor = true;
             this.applicationFontChangeButton.Click += new System.EventHandler(this.applicationFontChangeButton_Click);
@@ -178,10 +177,10 @@
             this.monospaceFontChangeButton.Location = new System.Drawing.Point(91, 61);
             this.monospaceFontChangeButton.Name = "monospaceFontChangeButton";
             this.monospaceFontChangeButton.Size = new System.Drawing.Size(66, 23);
-            this.monospaceFontChangeButton.TabIndex = 6;
             this.monospaceFontChangeButton.Text = "font name";
             this.monospaceFontChangeButton.UseVisualStyleBackColor = true;
             this.monospaceFontChangeButton.Click += new System.EventHandler(this.monospaceFontChangeButton_Click);
+            this.monospaceFontChangeButton.TabIndex = 3;
             // 
             // diffFontDialog
             // 

@@ -246,7 +246,7 @@
             this.scriptEvent.Location = new System.Drawing.Point(3, 4);
             this.scriptEvent.Name = "scriptEvent";
             this.scriptEvent.Size = new System.Drawing.Size(208, 23);
-            this.scriptEvent.TabIndex = 21;
+            this.scriptEvent.TabIndex = 15;
             this.scriptEvent.SelectedIndexChanged += new System.EventHandler(this.scriptEvent_SelectedIndexChanged);
             this.scriptEvent.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
             // 
@@ -272,7 +272,7 @@
             this.sbtn_icon.Name = "sbtn_icon";
             this.sbtn_icon.Size = new System.Drawing.Size(92, 25);
             this.sbtn_icon.SplitMenuStrip = this.contextMenuStrip_SplitButton;
-            this.sbtn_icon.TabIndex = 23;
+            this.sbtn_icon.TabIndex = 16;
             this.sbtn_icon.Text = "Select icon";
             this.sbtn_icon.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.sbtn_icon.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -387,7 +387,7 @@
             this.argumentsTextBox.Location = new System.Drawing.Point(90, 114);
             this.argumentsTextBox.Name = "argumentsTextBox";
             this.argumentsTextBox.Size = new System.Drawing.Size(938, 52);
-            this.argumentsTextBox.TabIndex = 16;
+            this.argumentsTextBox.TabIndex = 14;
             this.argumentsTextBox.Text = "";
             this.argumentsTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.argumentsTextBox_KeyDown);
             this.argumentsTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
@@ -399,7 +399,6 @@
             this.labelOnEvent.Location = new System.Drawing.Point(3, 180);
             this.labelOnEvent.Name = "labelOnEvent";
             this.labelOnEvent.Size = new System.Drawing.Size(58, 15);
-            this.labelOnEvent.TabIndex = 20;
             this.labelOnEvent.Text = "On event:";
             // 
             // flowLayoutPanel4
@@ -420,7 +419,6 @@
             this.argumentsLabel.Location = new System.Drawing.Point(3, 0);
             this.argumentsLabel.Name = "argumentsLabel";
             this.argumentsLabel.Size = new System.Drawing.Size(69, 15);
-            this.argumentsLabel.TabIndex = 14;
             this.argumentsLabel.Text = "Arguments:";
             // 
             // buttonShowArgumentsHelp
@@ -428,7 +426,7 @@
             this.buttonShowArgumentsHelp.Location = new System.Drawing.Point(3, 18);
             this.buttonShowArgumentsHelp.Name = "buttonShowArgumentsHelp";
             this.buttonShowArgumentsHelp.Size = new System.Drawing.Size(75, 23);
-            this.buttonShowArgumentsHelp.TabIndex = 15;
+            this.buttonShowArgumentsHelp.TabIndex = 13;
             this.buttonShowArgumentsHelp.Text = "Help";
             this.buttonShowArgumentsHelp.UseVisualStyleBackColor = true;
             this.buttonShowArgumentsHelp.Click += new System.EventHandler(this.buttonShowArgumentsHelp_Click);
