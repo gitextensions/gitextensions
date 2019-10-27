@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using GitCommands;
 using GitCommands.Submodules;
 
@@ -6,12 +7,12 @@ namespace CommonTestUtils
 {
     public class SubmoduleTestHelpers
     {
-        public static SubmoduleInfoResult UpdateSubmoduleStructureAndWaitForResult(ISubmoduleStatusProvider provider, GitModule module, bool updateStatus = false)
+        public static async Task<SubmoduleInfoResult> UpdateSubmoduleStructureAndWaitForResultAsync(ISubmoduleStatusProvider provider, GitModule module, bool updateStatus = false)
         {
             SubmoduleInfoResult result = null;
             provider.StatusUpdated += Provider_StatusUpdated;
 
-            provider.UpdateSubmodulesStructure(
+            await provider.UpdateSubmodulesStructureAsync(
                 workingDirectory: module.WorkingDir,
                 noBranchText: string.Empty,
                 updateStatus: updateStatus);
@@ -33,15 +34,13 @@ namespace CommonTestUtils
             List<DetailedSubmoduleInfo> result = new List<DetailedSubmoduleInfo>();
             provider.StatusUpdated += Provider_StatusUpdated;
 
-            provider.UpdateSubmodulesStatus(
+            provider.UpdateSubmodulesStatusAsync(
                 workingDirectory: module.WorkingDir,
                 gitStatus: gitStatus);
 
             AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
 
             provider.StatusUpdated -= Provider_StatusUpdated;
-
-            return;
 
             void Provider_StatusUpdated(object sender, SubmoduleStatusEventArgs e)
             {

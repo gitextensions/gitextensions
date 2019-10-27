@@ -25,14 +25,14 @@ namespace GitCommands.Submodules
         /// <param name="workingDirectory">Current module working directory</param>
         /// <param name="noBranchText">The text where no branch is checked out for the submodule</param>
         /// <param name="updateStatus">Update the detailed submodule status (set when current module is not top project)</param>
-        void UpdateSubmodulesStructure(string workingDirectory, string noBranchText, bool updateStatus);
+        Task UpdateSubmodulesStructureAsync(string workingDirectory, string noBranchText, bool updateStatus);
 
         /// <summary>
         /// Update the submodule status
         /// </summary>
         /// <param name="workingDirectory">Current module working directory</param>
         /// <param name="gitStatus">The Git status for the changes (also other than submodules)</param>
-        void UpdateSubmodulesStatus(string workingDirectory, [CanBeNull] IReadOnlyList<GitItemStatus> gitStatus);
+        Task UpdateSubmodulesStatusAsync(string workingDirectory, [CanBeNull] IReadOnlyList<GitItemStatus> gitStatus);
     }
 
     public sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
@@ -64,72 +64,70 @@ namespace GitCommands.Submodules
         }
 
         /// <inheritdoc />
-        public void UpdateSubmodulesStructure(string workingDirectory, string noBranchText, bool updateStatus)
+        public async Task UpdateSubmodulesStructureAsync(string workingDirectory, string noBranchText, bool updateStatus)
         {
             _submoduleInfoResult = null;
             _gitStatusWhileUpdatingStructure = null;
             _submoduleInfos.Clear();
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+
+            // Cancel any previous async activities:
+            var cancelToken = _submodulesStatusSequence.Next();
+
+            // Do not throttle next status update
+            _previousSubmoduleUpdateTime = DateTime.MinValue;
+
+            OnStatusUpdating();
+
+            await TaskScheduler.Default;
+
+            // Start gathering new submodule structure asynchronously.
+            var currentModule = new GitModule(workingDirectory);
+            var result = new SubmoduleInfoResult
             {
-                // Cancel any previous async activities:
-                var cancelToken = _submodulesStatusSequence.Next();
+                Module = currentModule
+            };
 
-                // Do not throttle next status update
-                _previousSubmoduleUpdateTime = DateTime.MinValue;
+            // Add all submodules inside the current repository:
+            GetRepositorySubmodulesStructure(result, noBranchText);
+            GetSuperProjectRepositorySubmodulesStructure(currentModule, result, noBranchText);
 
-                OnStatusUpdating();
+            // Structure is updated
+            OnStatusUpdated(result, cancelToken);
 
-                await TaskScheduler.Default;
+            // Prepare info for status updates (normally triggered by StatusMonitor)
+            foreach (var info in result.OurSubmodules)
+            {
+                _submoduleInfos[info.Path] = info;
+            }
 
-                // Start gathering new submodule structure asynchronously.
-                var currentModule = new GitModule(workingDirectory);
-                var result = new SubmoduleInfoResult
+            foreach (var info in result.SuperSubmodules)
+            {
+                _submoduleInfos[info.Path] = info;
+            }
+
+            // Start update status for the submodules
+            if (updateStatus)
+            {
+                if (result.SuperProject != null)
                 {
-                    Module = currentModule
-                };
+                    // Update from top module (will stop at current)
+                    await GetSubmoduleDetailedStatusAsync(currentModule.GetTopModule(), cancelToken);
+                }
 
-                // Add all submodules inside the current repository:
-                GetRepositorySubmodulesStructure(result, noBranchText);
-                GetSuperProjectRepositorySubmodulesStructure(currentModule, result, noBranchText);
+                if (_gitStatusWhileUpdatingStructure != null)
+                {
+                    // Current module must be updated separetly (not in _submoduleInfos)
+                    await UpdateSubmodulesStatusInternalAsync(currentModule, _gitStatusWhileUpdatingStructure, cancelToken);
+                }
 
-                // Structure is updated
                 OnStatusUpdated(result, cancelToken);
+            }
 
-                // Prepare info for status updates (normally triggered by StatusMonitor)
-                foreach (var info in result.OurSubmodules)
-                {
-                    _submoduleInfos[info.Path] = info;
-                }
-
-                foreach (var info in result.SuperSubmodules)
-                {
-                    _submoduleInfos[info.Path] = info;
-                }
-
-                // Start update status for the submodules
-                if (updateStatus)
-                {
-                    if (result.SuperProject != null)
-                    {
-                        // Update from top module (will stop at current)
-                        await GetSubmoduleDetailedStatusAsync(currentModule.GetTopModule(), cancelToken);
-                    }
-
-                    if (_gitStatusWhileUpdatingStructure != null)
-                    {
-                        // Current module must be updated separetly (not in _submoduleInfos)
-                        await UpdateSubmodulesStatusAsync(currentModule, _gitStatusWhileUpdatingStructure, cancelToken);
-                    }
-
-                    OnStatusUpdated(result, cancelToken);
-                }
-
-                _submoduleInfoResult = result;
-            }).FileAndForget();
+            _submoduleInfoResult = result;
         }
 
         /// <inheritdoc />
-        public void UpdateSubmodulesStatus(string workingDirectory, [CanBeNull] IReadOnlyList<GitItemStatus> gitStatus)
+        public async Task UpdateSubmodulesStatusAsync(string workingDirectory, [CanBeNull] IReadOnlyList<GitItemStatus> gitStatus)
         {
             if (_submoduleInfoResult == null)
             {
@@ -146,15 +144,13 @@ namespace GitCommands.Submodules
 
             var cancelToken = _submodulesStatusSequence.Next();
             _gitStatusWhileUpdatingStructure = null;
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await TaskScheduler.Default;
 
-                var currentModule = new GitModule(workingDirectory);
-                await UpdateSubmodulesStatusAsync(currentModule, gitStatus, cancelToken);
+            await TaskScheduler.Default;
 
-                OnStatusUpdated(_submoduleInfoResult, cancelToken);
-            }).FileAndForget();
+            var currentModule = new GitModule(workingDirectory);
+            await UpdateSubmodulesStatusInternalAsync(currentModule, gitStatus, cancelToken);
+
+            OnStatusUpdated(_submoduleInfoResult, cancelToken);
         }
 
         private void OnStatusUpdating()
@@ -304,7 +300,7 @@ namespace GitCommands.Submodules
         /// <param name="gitStatus">git status</param>
         /// <param name="cancelToken">Cancellation token</param>
         /// <returns>The task</returns>
-        private async Task UpdateSubmodulesStatusAsync(GitModule module, [CanBeNull] IReadOnlyList<GitItemStatus> gitStatus, CancellationToken cancelToken)
+        private async Task UpdateSubmodulesStatusInternalAsync(GitModule module, [CanBeNull] IReadOnlyList<GitItemStatus> gitStatus, CancellationToken cancelToken)
         {
             _previousSubmoduleUpdateTime = DateTime.Now;
             await TaskScheduler.Default;

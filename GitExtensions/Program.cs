@@ -37,11 +37,8 @@ namespace GitExtensions
             {
                 DiagnosticsClient.Initialize(ThisAssembly.Git.IsDirty);
 
-                if (!Debugger.IsAttached)
-                {
-                    AppDomain.CurrentDomain.UnhandledException += (s, e) => ReportBug((Exception)e.ExceptionObject);
-                    Application.ThreadException += (s, e) => ReportBug(e.Exception);
-                }
+                AppDomain.CurrentDomain.UnhandledException += (s, e) => UncaughtExceptionHandler((Exception)e.ExceptionObject);
+                Application.ThreadException += (s, e) => UncaughtExceptionHandler(e.Exception);
             }
             catch (TypeInitializationException tie)
             {
@@ -323,6 +320,22 @@ namespace GitExtensions
                     {
                         return false;
                     }
+            }
+        }
+
+        private static void UncaughtExceptionHandler(Exception ex)
+        {
+            if (ex is GitCommands.Config.GitConfigurationException)
+            {
+                var configEx = (GitCommands.Config.GitConfigurationException)ex;
+                string message = string.Format(Strings.GeneralGitConfigExceptionMessage, configEx.ConfigPath, Environment.NewLine, configEx.InnerException.Message);
+                MessageBox.Show(message, Strings.GeneralGitConfigExceptionCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Environment.Exit(-1);
+            }
+
+            if (!Debugger.IsAttached)
+            {
+                ReportBug(ex);
             }
         }
 

@@ -451,17 +451,12 @@ namespace GitCommands
                 }
             }
 
-            List<string> GetSubmodulePaths(GitModule module)
+            IEnumerable<string> GetSubmodulePaths(GitModule module)
             {
-                var configFile = module.GetSubmoduleConfigFile();
-                if (configFile == null)
-                {
-                    return new List<string>();
-                }
+                ConfigFile configFile = module.GetSubmoduleConfigFile();
 
                 return configFile.ConfigSections
-                    .Select(section => section.GetValue("path").Trim())
-                    .ToList();
+                    .Select(section => section.GetValue("path").Trim());
             }
         }
 
@@ -1212,19 +1207,9 @@ namespace GitCommands
             }
         }
 
-        [CanBeNull]
         public ConfigFile GetSubmoduleConfigFile()
         {
-            try
-            {
-                return new ConfigFile(WorkingDir + ".gitmodules", true);
-            }
-            catch (Exception ex)
-            {
-                ExceptionUtils.ShowException(ex, false);
-            }
-
-            return null;
+            return new ConfigFile(WorkingDir + ".gitmodules", true);
         }
 
         [CanBeNull]

@@ -71,6 +71,7 @@
     <Compile Include="CommitDataManager.cs" />
     <Compile Include="CommitTemplateItem.cs" />
     <Compile Include="CommitTemplateManager.cs" />
+    <Compile Include="Config\GitConfigurationException.cs" />
     <Compile Include="Config\SettingKeyString.cs" />
     <Compile Include="DateTimeExtensions.cs" />
     <Compile Include="DateTimeUtils.cs" />

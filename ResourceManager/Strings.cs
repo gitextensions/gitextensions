@@ -43,6 +43,9 @@ Yes, I allow telemetry!");
         private readonly TranslationString _parentsText = new TranslationString("{0:Parent|Parents}");
         private readonly TranslationString _childrenText = new TranslationString("{0:Child|Children}");
 
+        private readonly TranslationString _generalGitConfigExceptionMessage = new TranslationString("GitExtensions failed to read the Git configuration file \"{0}\" due to the following error:{1}{1}{2}{1}{1}Due to the nature of this problem, the behavior of the application cannot be guaranteed and must be closed.  Please correct this issue and re-open GitExtensions.");
+        private readonly TranslationString _generalGitConfigExceptionCaption = new TranslationString("Error in Git configuration file");
+
         // public only because of FormTranslate
         public Strings()
         {
@@ -75,6 +78,9 @@ Yes, I allow telemetry!");
         public static string ShowAll => _instance.Value._showAllText.Text;
         public static string Workspace => _instance.Value._workspaceText.Text;
         public static string Index => _instance.Value._indexText.Text;
+
+        public static string GeneralGitConfigExceptionMessage => _instance.Value._generalGitConfigExceptionMessage.Text;
+        public static string GeneralGitConfigExceptionCaption => _instance.Value._generalGitConfigExceptionCaption.Text;
 
         public static string GetParents(int value)
         {
