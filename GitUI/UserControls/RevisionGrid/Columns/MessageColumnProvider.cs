@@ -311,11 +311,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     {
                         if (gitRef.IsBisectGood)
                         {
-                            _toolTipBuilder.AppendLine("Marked as good in bisect");
+                            _toolTipBuilder.AppendLine(Strings.MarkBisectAsGood);
                         }
                         else if (gitRef.IsBisectBad)
                         {
-                            _toolTipBuilder.AppendLine("Marked as bad in bisect");
+                            _toolTipBuilder.AppendLine(Strings.MarkBisectAsBad);
                         }
                         else
                         {

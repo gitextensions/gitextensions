@@ -9327,6 +9327,14 @@ Select this commit to populate the full message.</source>
         <source>Local</source>
         <target />
       </trans-unit>
+      <trans-unit id="_markBisectAsBad.Text">
+        <source>Marked as bad in bisect</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_markBisectAsGood.Text">
+        <source>Marked as good in bisect</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_messageText.Text">
         <source>{0:Message|Messages}</source>
         <target />
