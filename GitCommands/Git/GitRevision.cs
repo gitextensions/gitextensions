@@ -27,7 +27,6 @@ namespace GitCommands
         public static readonly Regex Sha1HashShortRegex = new Regex(@"\b[a-f\d]{7,40}\b", RegexOptions.Compiled);
 
         private BuildInfo _buildStatus;
-        private string _bodySummary = null;
         private const int CommitSummaryMaxLineLength = 150;
         private const int CommitSummaryMaxNumberOfLines = 30;
 
@@ -95,7 +94,7 @@ namespace GitCommands
                     return Body;
                 }
 
-                return _bodySummary ?? (_bodySummary = BuildSummary(Body.TrimEnd()));
+                return BuildSummary(Body.TrimEnd());
             }
         }
 

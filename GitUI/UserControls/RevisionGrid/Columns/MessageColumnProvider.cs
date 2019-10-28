@@ -294,10 +294,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             if (!revision.IsArtificial && (revision.HasMultiLineMessage || revision.Refs.Count != 0))
             {
-                var initialLength = (revision.BodySummary?.Length ?? 50) + 10;
+                var bodySummary = revision.BodySummary;
+                var initialLength = (bodySummary?.Length ?? 50) + 10;
                 _toolTipBuilder.EnsureCapacity(initialLength);
 
-                _toolTipBuilder.Append(revision.BodySummary ?? revision.Subject + Strings.BodyNotLoaded);
+                _toolTipBuilder.Append(bodySummary ?? revision.Subject + Strings.BodyNotLoaded);
 
                 if (revision.Refs.Count != 0)
                 {
