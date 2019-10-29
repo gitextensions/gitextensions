@@ -245,7 +245,7 @@ namespace GitUI.CommandsDialogs
 
                 bool isActionConfirmed = AppSettings.DontConfirmFetchAndPruneAll
                                          || MessageBox.Show(
-                                             this,
+                                             owner,
                                              _pullFetchPruneAllConfirmation.Text,
                                              messageBoxTitle,
                                              MessageBoxButtons.YesNo) == DialogResult.Yes;
