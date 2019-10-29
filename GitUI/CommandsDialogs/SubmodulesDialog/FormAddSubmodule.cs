@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -70,20 +73,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
 
         private void BranchDropDown(object sender, EventArgs e)
         {
-            var module = new GitModule(Directory.Text);
-
-            var heads = new List<IGitRef>
-            {
-                GitRef.NoHead(module)
-            };
-
-            if (module.IsValidGitWorkingDir())
-            {
-                heads.AddRange(module.GetRefs(false));
-            }
-
-            Branch.DisplayMember = nameof(IGitRef.Name);
-            Branch.DataSource = heads;
+            Branch.DataSource = LoadRemoteRepoBranches(Module.GitExecutable, url: Directory.Text);
         }
 
         private void DirectoryTextUpdate(object sender, EventArgs e)
@@ -94,6 +84,38 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
             {
                 LocalPath.Text = path;
             }
+        }
+
+        /// <summary>
+        /// Returns the branches of a remote repository as strings; ignores git errors and warnings.
+        /// </summary>
+        /// 'git ls-remotes --heads "URL"' is completely independent from a local repo clone.
+        /// Hence there is no need for a GitModule.
+        /// <param name="gitExecutable">the git executable</param>
+        /// <param name="url">the repo URL; can also be a local path</param>
+        private static IEnumerable<string> LoadRemoteRepoBranches(IExecutable gitExecutable, string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return Array.Empty<string>();
+            }
+
+            var gitArguments = new GitArgumentBuilder("ls-remote") { "--heads", url.ToPosixPath().Quote() };
+            var heads = gitExecutable.GetOutput(gitArguments);
+            return heads.SplitLines()
+                        .Select(head =>
+                        {
+                            int branchIndex = head.IndexOf(GitRefName.RefsHeadsPrefix);
+                            return branchIndex == -1 ? null : head.Substring(branchIndex + GitRefName.RefsHeadsPrefix.Length);
+                        })
+                        .Where(branch => branch != null)
+                        .ToImmutableList();
+        }
+
+        public static class TestAccessor
+        {
+            public static IEnumerable<string> LoadRemoteRepoBranches(IExecutable gitExecutable, string url)
+                => FormAddSubmodule.LoadRemoteRepoBranches(gitExecutable, url);
         }
     }
 }
