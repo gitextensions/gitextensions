@@ -390,7 +390,7 @@ See the changes in the commit form.");
                 return;
             }
 
-            if (e.Node?.Tag is GitItem gitItem)
+            if (e.Node.Tag is GitItem gitItem)
             {
                 e.Node.Nodes.Clear();
                 _revisionFileTreeController.LoadChildren(gitItem, e.Node.Nodes, tvGitTree.ImageList.Images);
