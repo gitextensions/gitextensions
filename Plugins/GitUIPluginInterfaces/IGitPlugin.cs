@@ -23,6 +23,9 @@ namespace GitUIPluginInterfaces
 
         void Unregister(IGitUICommands gitUiCommands);
 
+        /// <summary>
+        /// Runs the plugin and returns whether the RevisionGrid should be refreshed.
+        /// </summary>
         bool Execute(GitUIEventArgs args);
     }
 }
