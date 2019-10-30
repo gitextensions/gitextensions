@@ -225,6 +225,11 @@ namespace GitUI.CommitInfo
             var dict = new Dictionary<string, int>();
             foreach (var entry in tree.Split('\n'))
             {
+                if (dict.ContainsKey(entry))
+                {
+                    continue;
+                }
+
                 dict.Add(entry, i);
                 i++;
             }

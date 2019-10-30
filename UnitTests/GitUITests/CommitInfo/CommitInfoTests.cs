@@ -141,5 +141,25 @@ namespace GitUITests.CommitInfo
             refs.Count.Should().Be(5);
             refs.Should().BeEquivalentTo(expected);
         }
+
+        [Test]
+        public void GetSortedRefs_should_remove_duplicate_refs()
+        {
+            _gitExecutable.StageOutput("for-each-ref --sort=-committerdate --sort=-taggerdate --format=\"%(refname)\" refs/",
+                "refs/remotes/origin/master\nrefs/remotes/foo/duplicate\nrefs/remotes/foo/bar\nrefs/remotes/foo/duplicate\nrefs/remotes/foo/last"); // exact duplicates
+
+            var expected = new Dictionary<string, int>
+            {
+                ["refs/remotes/origin/master"] = 0,
+                ["refs/remotes/foo/duplicate"] = 1,
+                ["refs/remotes/foo/bar"] = 2,
+                ["refs/remotes/foo/last"] = 3,
+            };
+
+            var refs = _commitInfo.GetTestAccessor().GetSortedRefs();
+
+            refs.Count.Should().Be(4);
+            refs.Should().BeEquivalentTo(expected);
+        }
     }
 }
