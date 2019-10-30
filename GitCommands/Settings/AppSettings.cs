@@ -944,6 +944,12 @@ namespace GitCommands
             set => SetBool("updateSubmodulesOnCheckout", value);
         }
 
+        public static bool? DontConfirmUpdateSubmodulesOnCheckout
+        {
+            get => GetBool("dontConfirmUpdateSubmodulesOnCheckout");
+            set => SetBool("dontConfirmUpdateSubmodulesOnCheckout", value);
+        }
+
         public static string Dictionary
         {
             get => SettingsContainer.Dictionary;
