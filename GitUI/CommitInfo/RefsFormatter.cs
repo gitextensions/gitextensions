@@ -12,6 +12,8 @@ namespace GitUI.CommitInfo
 {
     public sealed class RefsFormatter
     {
+        private const int MaximumDisplayedRefs = 20;
+
         [NotNull]
         private readonly ILinkFactory _linkFactory;
 
@@ -20,7 +22,13 @@ namespace GitUI.CommitInfo
             _linkFactory = linkFactory ?? throw new ArgumentNullException("RefsFormatter requires an ILinkFactory instance");
         }
 
-        public string FormatBranches(IEnumerable<string> branches, bool showAsLinks)
+        public string FormatBranches(List<string> branches, bool showAsLinks, bool limit)
+            => ToString(branches, l => FormatBranches(l, showAsLinks), Strings.ContainedInBranches, Strings.ContainedInNoBranch, limit);
+
+        public string FormatTags(List<string> tags, bool showAsLinks, bool limit)
+            => ToString(tags, l => FormatTags(l, showAsLinks), Strings.ContainedInTags, Strings.ContainedInNoTag, limit);
+
+        private IEnumerable<string> FormatBranches(IEnumerable<string> branches, bool showAsLinks)
         {
             const string remotesPrefix = "remotes/";
 
@@ -72,25 +80,34 @@ namespace GitUI.CommitInfo
                 }
             }
 
-            if (links.Any())
-            {
-                return WebUtility.HtmlEncode(Strings.ContainedInBranches) + " " + links.Join(", ");
-            }
-
-            return WebUtility.HtmlEncode(Strings.ContainedInNoBranch);
+            return links;
         }
 
-        public string FormatTags(IEnumerable<string> tags, bool showAsLinks)
+        public IEnumerable<string> FormatTags(IEnumerable<string> tags, bool showAsLinks)
         {
-            var tagString = tags
-                .Select(s => showAsLinks ? _linkFactory.CreateTagLink(s) : WebUtility.HtmlEncode(s)).Join(", ");
+            return tags.Select(s => showAsLinks ? _linkFactory.CreateTagLink(s) : WebUtility.HtmlEncode(s));
+        }
 
-            if (!string.IsNullOrEmpty(tagString))
+        private static void Limit(List<string> refs, bool limit = true)
+        {
+            if (limit && refs.Count > MaximumDisplayedRefs)
             {
-                return WebUtility.HtmlEncode(Strings.ContainedInTags) + " " + tagString;
+                refs[MaximumDisplayedRefs - 2] = "…";
+                refs[MaximumDisplayedRefs - 1] = refs[refs.Count - 1];
+                refs.RemoveRange(MaximumDisplayedRefs, refs.Count - MaximumDisplayedRefs);
+            }
+        }
+
+        private static string ToString(List<string> refs, Func<IEnumerable<string>, IEnumerable<string>> formatRefs, string prefix, string textIfEmpty, bool limit)
+        {
+            Limit(refs, limit);
+            var links = formatRefs(refs);
+            if (links.Any())
+            {
+                return WebUtility.HtmlEncode(prefix) + " " + links.Join(", ");
             }
 
-            return WebUtility.HtmlEncode(Strings.ContainedInNoTag);
+            return WebUtility.HtmlEncode(textIfEmpty);
         }
     }
 }
