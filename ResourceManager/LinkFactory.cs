@@ -12,6 +12,7 @@ namespace ResourceManager
         string CreateTagLink(string tag);
         string CreateBranchLink(string noPrefixBranch);
         string CreateCommitLink(ObjectId objectId, string linkText = null, bool preserveGuidInLinkText = false);
+        string CreateShowAllLink(string what);
         string ParseLink(string linkText);
     }
 
@@ -83,6 +84,9 @@ namespace ResourceManager
 
             return AddLink(linkText, "gitext://gotocommit/" + objectId);
         }
+
+        public string CreateShowAllLink(string what)
+            => AddLink($"[ {Strings.ShowAll} ]", $"gitext://showall/{what}");
 
         public string ParseLink(string linkText)
         {

@@ -812,22 +812,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>The repository refs seem to be broken:</source>
         <target />
       </trans-unit>
-      <trans-unit id="_containedInBranches.Text">
-        <source>Contained in branches:</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_containedInNoBranch.Text">
-        <source>Contained in no branch</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_containedInNoTag.Text">
-        <source>Contained in no tag</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_containedInTags.Text">
-        <source>Contained in tags:</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_copyLink.Text">
         <source>Copy &amp;link ({0})</source>
         <target />
@@ -9243,6 +9227,22 @@ Select this commit to populate the full message.</source>
         <source>Committer</source>
         <target />
       </trans-unit>
+      <trans-unit id="_containedInBranchesText.Text">
+        <source>Contained in branches:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_containedInNoBranchText.Text">
+        <source>Contained in no branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_containedInNoTagText.Text">
+        <source>Contained in no tag</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_containedInTagsText.Text">
+        <source>Contained in tags:</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_createPullRequest.Text">
         <source>Create pull request</source>
         <target />
@@ -9325,6 +9325,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_secondsAgo.Text">
         <source>{0} {1:second|seconds} ago</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_showAllText.Text">
+        <source>Show all</source>
         <target />
       </trans-unit>
       <trans-unit id="_submodulesText.Text">

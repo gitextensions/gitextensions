@@ -36,6 +36,7 @@ Yes, I allow telemetry!");
         private readonly TranslationString _commitDateText = new TranslationString("{0:Commit date|Commits dates}");
         private readonly TranslationString _commitHashText = new TranslationString("{0:Commit hash|Commits hashes}");
         private readonly TranslationString _messageText = new TranslationString("{0:Message|Messages}");
+        private readonly TranslationString _showAllText = new TranslationString("Show all");
         private readonly TranslationString _workspaceText = new TranslationString("Working directory");
         private readonly TranslationString _indexText = new TranslationString("Commit index");
 
@@ -71,6 +72,7 @@ Yes, I allow telemetry!");
         public static string Committer => _instance.Value._committerText.Text;
         public static string CommitDate => GetCommitDate(1);
         public static string CommitHash => GetCommitHash(1);
+        public static string ShowAll => _instance.Value._showAllText.Text;
         public static string Workspace => _instance.Value._workspaceText.Text;
         public static string Index => _instance.Value._indexText.Text;
 

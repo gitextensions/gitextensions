@@ -2597,6 +2597,9 @@ namespace GitUI.CommandsDialogs
                 case "navigateforward":
                     RevisionGrid.NavigateForward();
                     break;
+                case "showall":
+                    RevisionInfo.ShowAll(e.Data);
+                    break;
             }
         }
 

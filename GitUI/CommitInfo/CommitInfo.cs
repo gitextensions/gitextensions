@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -81,6 +82,8 @@ namespace GitUI.CommitInfo
         [CanBeNull] private IDictionary<string, int> _refsOrderDict;
         private int _revisionInfoHeight;
         private int _commitMessageHeight;
+        private bool _showAllBranches;
+        private bool _showAllTags;
 
         [DefaultValue(false)]
         public bool ShowBranchesAsLinks { get; set; }
@@ -201,6 +204,26 @@ namespace GitUI.CommitInfo
             ReloadCommitInfo();
         }
 
+        public void ShowAll(string what)
+        {
+            switch (what)
+            {
+                case "branches":
+                    _showAllBranches = true;
+                    _branchInfo = null; // forces update
+                    break;
+                case "tags":
+                    _showAllTags = true;
+                    _tagInfo = null; // forces update
+                    break;
+                default:
+                    Debug.Fail("unsupported type in ShowAll(\"" + what + "\")");
+                    return;
+            }
+
+            UpdateRevisionInfo();
+        }
+
         private IDictionary<string, int> GetSortedRefs()
         {
             var args = new GitArgumentBuilder("for-each-ref")
@@ -266,9 +289,11 @@ namespace GitUI.CommitInfo
             showMessagesOfAnnotatedTagsToolStripMenuItem.Checked = AppSettings.ShowAnnotatedTagsMessages;
             showTagThisCommitDerivesFromMenuItem.Checked = AppSettings.CommitInfoShowTagThisCommitDerivesFrom;
 
+            _showAllBranches = false;
+            _showAllTags = false;
             _branches = null;
-            _annotatedTagsMessages = null;
             _tags = null;
+            _annotatedTagsMessages = null;
             _linkFactory.Clear();
 
             UpdateCommitMessage();
@@ -536,13 +561,13 @@ namespace GitUI.CommitInfo
                 if (_tags != null && string.IsNullOrEmpty(_tagInfo))
                 {
                     _tags.Sort(new ItemTpComparer(_refsOrderDict, "refs/tags/"));
-                    _tagInfo = _refsFormatter.FormatTags(_tags, ShowBranchesAsLinks, limit: true);
+                    _tagInfo = _refsFormatter.FormatTags(_tags, ShowBranchesAsLinks, limit: !_showAllTags);
                 }
 
                 if (_branches != null && string.IsNullOrEmpty(_branchInfo))
                 {
-                    _branches.Sort(new ItemTpComparer(_refsOrderDict, "refs/heads/"));
-                    _branchInfo = _refsFormatter.FormatBranches(_branches, ShowBranchesAsLinks, limit: true);
+                    _branches.Sort(new BranchComparer(Module.GetSelectedBranch()));
+                    _branchInfo = _refsFormatter.FormatBranches(_branches, ShowBranchesAsLinks, limit: !_showAllBranches);
                 }
             }
 
@@ -740,6 +765,47 @@ namespace GitUI.CommitInfo
             _revisionInfoResizedSubscription.Dispose();
             _commitMessageResizedSubscription.Dispose();
             base.DisposeCustomResources();
+        }
+
+        internal sealed class BranchComparer : IComparer<string>
+        {
+            private const string RemoteBranchPrefix = "remotes/";
+
+            private static readonly Regex _importantRepoRegex = new Regex($"^{RemoteBranchPrefix}(origin|upstream)/",
+                RegexOptions.Compiled | RegexOptions.CultureInvariant);
+            private static readonly Regex _remoteMasterRegex = new Regex($"^{RemoteBranchPrefix}.*/master[^/]*$",
+                RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
+            private readonly string _currentBranch;
+
+            public BranchComparer(string currentBranch)
+            {
+                _currentBranch = currentBranch;
+            }
+
+            public int Compare(string a, string b)
+            {
+                int priorityA = GetBranchPriority(a);
+                int priorityB = GetBranchPriority(b);
+                return priorityA == priorityB ? Comparer<string>.Default.Compare(a, b)
+                    : priorityA - priorityB;
+            }
+
+            private int GetBranchPriority(string branch)
+            {
+                return branch == _currentBranch ? 0
+                    : IsImportantLocalBranch() ? 1
+                    : IsImportantRemoteBranch() ? IsImportantRepo() ? 2 : 3
+                    : IsLocalBranch() ? 4
+                    : IsImportantRepo() ? 5
+                    : 6;
+
+                // Note: This assumes that branches starting with "master" are important branches, this is not configurable.
+                bool IsImportantLocalBranch() => branch.StartsWith("master");
+                bool IsImportantRemoteBranch() => _remoteMasterRegex.IsMatch(branch);
+                bool IsImportantRepo() => _importantRepoRegex.IsMatch(branch);
+                bool IsLocalBranch() => !branch.StartsWith(RemoteBranchPrefix);
+            }
         }
 
         private sealed class ItemTpComparer : IComparer<string>

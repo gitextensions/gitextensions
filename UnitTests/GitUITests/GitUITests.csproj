@@ -86,6 +86,7 @@
     <Compile Include="CommandsDialogs\Settings\GitHubExternalLinkDefinitionExtractorTests.cs" />
     <Compile Include="CommandsDialogs\Settings\AzureDevOpsExternalLinkDefinitionExtractorTests.cs" />
     <Compile Include="CommitInfo\CommitInfoTests.cs" />
+    <Compile Include="CommitInfo\RefsFormatterTests.cs" />
     <Compile Include="ControlThreadingExtensionsTests.cs" />
     <Compile Include="UserEnvironmentInformationTests.cs" />
     <Compile Include="Editor\FileViewerInternal.CurrentViewPositionCacheTests.cs" />
