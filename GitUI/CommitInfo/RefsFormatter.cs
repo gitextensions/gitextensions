@@ -40,6 +40,29 @@ namespace GitUI.CommitInfo
                 return string.Empty;
             }
 
+            var (formattedBranches, truncated) = FilterAndFormatBranches(branches, showAsLinks, limit);
+            return ToString(formattedBranches, Strings.ContainedInBranches, Strings.ContainedInNoBranch, "branches", truncated);
+        }
+
+        public string FormatTags(IReadOnlyList<string> tags, bool showAsLinks, bool limit)
+        {
+            if (tags == null)
+            {
+                return string.Empty;
+            }
+
+            bool truncate = limit && tags.Count > MaximumDisplayedLinesIfLimited;
+            var formattedTags = FormatTags(truncate ? tags.Take(MaximumDisplayedRefsIfLimited) : tags);
+            return ToString(formattedTags, Strings.ContainedInTags, Strings.ContainedInNoTag, "tags", truncate);
+
+            IEnumerable<string> FormatTags(IEnumerable<string> selectedTags)
+            {
+                return selectedTags.Select(s => showAsLinks ? _linkFactory.CreateTagLink(s) : WebUtility.HtmlEncode(s));
+            }
+        }
+
+        private (IEnumerable<string> formattedBranches, bool truncated) FilterAndFormatBranches(IEnumerable<string> branches, bool showAsLinks, bool limit)
+        {
             var formattedBranches = new List<string>();
             bool truncated = false;
 
@@ -99,24 +122,7 @@ namespace GitUI.CommitInfo
                 }
             }
 
-            return ToString(formattedBranches, Strings.ContainedInBranches, Strings.ContainedInNoBranch, "branches", truncated);
-        }
-
-        public string FormatTags(IReadOnlyList<string> tags, bool showAsLinks, bool limit)
-        {
-            if (tags == null)
-            {
-                return string.Empty;
-            }
-
-            bool truncate = limit && tags.Count > MaximumDisplayedLinesIfLimited;
-            var formattedTags = FormatTags(truncate ? tags.Take(MaximumDisplayedRefsIfLimited) : tags);
-            return ToString(formattedTags, Strings.ContainedInTags, Strings.ContainedInNoTag, "tags", truncate);
-
-            IEnumerable<string> FormatTags(IEnumerable<string> selectedTags)
-            {
-                return selectedTags.Select(s => showAsLinks ? _linkFactory.CreateTagLink(s) : WebUtility.HtmlEncode(s));
-            }
+            return (formattedBranches, truncated);
         }
 
         private string ToString(IEnumerable<string> formattedRefs, string prefix, string textIfEmpty, string refsType, bool truncated)
