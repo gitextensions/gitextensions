@@ -89,6 +89,7 @@ namespace GitUI
 
             if (PSTaskDialog.cTaskDialog.VerificationChecked)
             {
+                AppSettings.DontConfirmUpdateSubmodulesOnCheckout = result;
                 AppSettings.UpdateSubmodulesOnCheckout = result;
             }
 

@@ -7211,6 +7211,10 @@ Context menu for additional operations</source>
         <source>Yes, I allow telemetry!</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkUpdateModules.Text">
+        <source>Update submodules on checkout</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkUseFastChecks.Text">
         <source>Use FileSystemWatcher to check if index is changed</source>
         <target />
