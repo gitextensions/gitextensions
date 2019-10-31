@@ -2330,26 +2330,19 @@ namespace GitUI.CommandsDialogs
 
             void AddCommitMessageToMenu(string commitMessage)
             {
-                const int maxLabelLength = 50;
+                const int maxLabelLength = 72;
 
-                string label;
+                string label = commitMessage;
+                var newlineIndex = label.IndexOf('\n');
 
-                if (commitMessage.Length <= maxLabelLength)
+                if (newlineIndex != -1)
                 {
-                    label = commitMessage;
+                    label = label.Substring(0, newlineIndex);
                 }
-                else
-                {
-                    var newlineIndex = commitMessage.IndexOf('\n');
 
-                    if (newlineIndex != -1 && newlineIndex <= maxLabelLength)
-                    {
-                        label = commitMessage.Substring(0, newlineIndex);
-                    }
-                    else
-                    {
-                        label = commitMessage.ShortenTo(maxLabelLength);
-                    }
+                if (label.Length > maxLabelLength)
+                {
+                    label = label.ShortenTo(maxLabelLength);
                 }
 
                 commitMessageToolStripMenuItem.DropDownItems.Add(new ToolStripMenuItem

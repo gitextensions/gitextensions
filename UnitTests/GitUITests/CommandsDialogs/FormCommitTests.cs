@@ -185,6 +185,22 @@ namespace GitUITests.CommandsDialogs.CommitDialog
             });
         }
 
+        [Test]
+        public void Should_handle_well_commit_message_in_commit_message_menu()
+        {
+            _referenceRepository.CreateCommit("Only first line\n\nof a multi-line commit message\nmust be displayed in the menu");
+            _referenceRepository.CreateCommit("Too long commit message that should be shorten because first line of a commit message is only 50 chars long");
+            RunFormTest(form =>
+            {
+                var commitMessageToolStripMenuItem = form.GetTestAccessor().CommitMessageToolStripMenuItem;
+
+                // Verify the message appears correctly
+                commitMessageToolStripMenuItem.ShowDropDown();
+                Assert.AreEqual("Too long commit message that should be shorten because first line of ...", commitMessageToolStripMenuItem.DropDownItems[0].Text);
+                Assert.AreEqual("Only first line", commitMessageToolStripMenuItem.DropDownItems[1].Text);
+            });
+        }
+
         [Test, TestCaseSource(typeof(FormatCommitMessageTestData), "TestCases")]
         public void FormatCommitMessageFromTextBox(
             string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty, string expectedMessage)

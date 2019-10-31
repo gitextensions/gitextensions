@@ -15,23 +15,32 @@ namespace GitUITests.CommandsDialogs
         {
             _moduleTestHelper = new GitModuleTestHelper();
 
-            using (var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir))
-            {
-                _moduleTestHelper.CreateRepoFile("A.txt", "A");
-                repository.Index.Add("A.txt");
-
-                var message = "A commit message";
-                var author = new LibGit2Sharp.Signature("GitUITests", "unittests@gitextensions.com", DateTimeOffset.Now);
-                var committer = author;
-                var options = new LibGit2Sharp.CommitOptions();
-                var commit = repository.Commit(message, author, committer, options);
-                _commitHash = commit.Id.Sha;
-            }
+            CreateCommit("A commit message", "A");
         }
 
         public GitModule Module => _moduleTestHelper.Module;
 
         public string CommitHash => _commitHash;
+
+        private string Commit(Repository repository, string commitMessage)
+        {
+            var author = new LibGit2Sharp.Signature("GitUITests", "unittests@gitextensions.com", DateTimeOffset.Now);
+            var committer = author;
+            var options = new LibGit2Sharp.CommitOptions() { PrettifyMessage = false };
+            var commit = repository.Commit(commitMessage, author, committer, options);
+            return commit.Id.Sha;
+        }
+
+        public void CreateCommit(string commitMessage, string content = null)
+        {
+            using (var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir))
+            {
+                _moduleTestHelper.CreateRepoFile("A.txt", content ?? commitMessage);
+                repository.Index.Add("A.txt");
+
+                _commitHash = Commit(repository, commitMessage);
+            }
+        }
 
         public void CheckoutRevision()
         {
