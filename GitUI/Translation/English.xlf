@@ -3122,19 +3122,19 @@ Do you want to open the new repository "{0}" now?</source>
         <source>Use LFS extension</source>
         <target />
       </trans-unit>
+      <trans-unit id="destinationLabel.Text">
+        <source>&amp;Destination:</source>
+        <target />
+      </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Repository type</source>
         <target />
       </trans-unit>
-      <trans-unit id="label1.Text">
+      <trans-unit id="repositoryLabel.Text">
         <source>Repository to &amp;clone:</source>
         <target />
       </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>&amp;Destination:</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label3.Text">
+      <trans-unit id="subdirectoryLabel.Text">
         <source>&amp;Subdirectory to create:</source>
         <target />
       </trans-unit>
