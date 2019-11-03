@@ -79,7 +79,7 @@ namespace GitUI.CommitInfo
         private List<string> _branches;
         private string _branchInfo;
         private string _gitDescribeInfo;
-        [CanBeNull] private IDictionary<string, int> _refsOrderDict;
+        [CanBeNull] private IDictionary<string, int> _tagsOrderDict;
         private int _revisionInfoHeight;
         private int _commitMessageHeight;
         private bool _showAllBranches;
@@ -97,10 +97,10 @@ namespace GitUI.CommitInfo
             {
                 this.InvokeAsync(() =>
                 {
-                    UICommandsSource.UICommandsChanged += delegate { RefreshSortedRefs(); };
+                    UICommandsSource.UICommandsChanged += delegate { RefreshSortedTags(); };
 
                     // call this event handler also now (necessary for "Contained in branches/tags")
-                    RefreshSortedRefs();
+                    RefreshSortedTags();
                 }).FileAndForget();
             };
 
@@ -139,7 +139,7 @@ namespace GitUI.CommitInfo
             commitInfoHeader.SetContextMenuStrip(commitInfoContextMenuStrip);
         }
 
-        private void RefreshSortedRefs()
+        private void RefreshSortedTags()
         {
             if (!Module.IsValidGitWorkingDir())
             {
@@ -148,7 +148,7 @@ namespace GitUI.CommitInfo
 
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                await LoadSortedRefsAsync();
+                await LoadSortedTagsAsync();
             }).FileAndForget();
         }
 
@@ -224,14 +224,13 @@ namespace GitUI.CommitInfo
             UpdateRevisionInfo();
         }
 
-        private IDictionary<string, int> GetSortedRefs()
+        private IDictionary<string, int> GetSortedTags()
         {
             var args = new GitArgumentBuilder("for-each-ref")
             {
-                "--sort=-committerdate",
                 "--sort=-taggerdate",
                 "--format=\"%(refname)\"",
-                "refs/"
+                "refs/tags/"
             };
 
             string tree = Module.GitExecutable.GetOutput(args);
@@ -257,18 +256,18 @@ namespace GitUI.CommitInfo
             return dict;
         }
 
-        private async Task LoadSortedRefsAsync()
+        private async Task LoadSortedTagsAsync()
         {
             ThreadHelper.AssertOnUIThread();
-            _refsOrderDict = null;
+            _tagsOrderDict = null;
 
             await TaskScheduler.Default.SwitchTo();
             try
             {
-                var refsOrderDict = GetSortedRefs();
+                var tagsOrderDict = GetSortedTags();
 
                 await this.SwitchToMainThreadAsync();
-                _refsOrderDict = refsOrderDict;
+                _tagsOrderDict = tagsOrderDict;
                 UpdateRevisionInfo();
             }
             catch (RefsWarningException ex)
@@ -538,7 +537,7 @@ namespace GitUI.CommitInfo
 
         private void UpdateRevisionInfo()
         {
-            if (_refsOrderDict != null)
+            if (_tagsOrderDict != null)
             {
                 if (_annotatedTagsMessages != null &&
                     _annotatedTagsMessages.Count > 0 &&
@@ -554,21 +553,21 @@ namespace GitUI.CommitInfo
                         .Select(r => r.LocalName)
                         .ToList();
 
-                    thisRevisionTagNames.Sort(new ItemTpComparer(_refsOrderDict, "refs/tags/"));
+                    thisRevisionTagNames.Sort(new TagsComparer(_tagsOrderDict));
                     _annotatedTagsInfo = GetAnnotatedTagsInfo(thisRevisionTagNames, _annotatedTagsMessages);
                 }
 
                 if (_tags != null && string.IsNullOrEmpty(_tagInfo))
                 {
-                    _tags.Sort(new ItemTpComparer(_refsOrderDict, "refs/tags/"));
+                    _tags.Sort(new TagsComparer(_tagsOrderDict));
                     _tagInfo = _refsFormatter.FormatTags(_tags, ShowBranchesAsLinks, limit: !_showAllTags);
                 }
+            }
 
-                if (_branches != null && string.IsNullOrEmpty(_branchInfo))
-                {
-                    _branches.Sort(new BranchComparer(Module.GetSelectedBranch()));
-                    _branchInfo = _refsFormatter.FormatBranches(_branches, ShowBranchesAsLinks, limit: !_showAllBranches);
-                }
+            if (_branches != null && string.IsNullOrEmpty(_branchInfo))
+            {
+                _branches.Sort(new BranchComparer(Module.GetSelectedBranch()));
+                _branchInfo = _refsFormatter.FormatBranches(_branches, ShowBranchesAsLinks, limit: !_showAllBranches);
             }
 
             string body = string.Join(Environment.NewLine,
@@ -808,12 +807,12 @@ namespace GitUI.CommitInfo
             }
         }
 
-        private sealed class ItemTpComparer : IComparer<string>
+        private sealed class TagsComparer : IComparer<string>
         {
             private readonly IDictionary<string, int> _orderDict;
             private readonly string _prefix;
 
-            public ItemTpComparer(IDictionary<string, int> orderDict, string prefix)
+            public TagsComparer(IDictionary<string, int> orderDict, string prefix = "refs/tags/")
             {
                 _orderDict = orderDict;
                 _prefix = prefix;
@@ -856,7 +855,7 @@ namespace GitUI.CommitInfo
                 _commitInfo = commitInfo;
             }
 
-            public IDictionary<string, int> GetSortedRefs() => _commitInfo.GetSortedRefs();
+            public IDictionary<string, int> GetSortedTags() => _commitInfo.GetSortedTags();
         }
     }
 }
