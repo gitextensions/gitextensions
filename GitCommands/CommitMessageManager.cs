@@ -49,7 +49,7 @@ namespace GitCommands
         {
         }
 
-        private CommitMessageManager(string workingDirGitDir, Encoding commitEncoding, IFileSystem fileSystem, string overriddenCommitMessage = null)
+        internal CommitMessageManager(string workingDirGitDir, Encoding commitEncoding, IFileSystem fileSystem, string overriddenCommitMessage = null)
         {
             _fileSystem = fileSystem;
             _commitEncoding = commitEncoding;
@@ -130,12 +130,6 @@ namespace GitCommands
             }
 
             return (_commitMessagePath, _fileSystem.File.Exists(_commitMessagePath));
-        }
-
-        internal class TestAccessor
-        {
-            internal static CommitMessageManager Construct(string workingDirGitDir, Encoding commitEncoding, IFileSystem fileSystem, string overriddenCommitMessage)
-                => new CommitMessageManager(workingDirGitDir, commitEncoding, fileSystem, overriddenCommitMessage);
         }
     }
 }

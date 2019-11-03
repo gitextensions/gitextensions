@@ -473,7 +473,7 @@ namespace GitUI.BranchTreePanel
         internal TestAccessor GetTestAccessor()
             => new TestAccessor(this);
 
-        public readonly struct TestAccessor
+        internal readonly struct TestAccessor
         {
             private readonly RepoObjectsTree _repoObjectsTree;
 

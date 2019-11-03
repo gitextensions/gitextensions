@@ -51,12 +51,12 @@ namespace GitCommandsTests
             _fileSystem.File.Returns(_file);
             _fileSystem.Path.Returns(path);
 
-            _manager = CommitMessageManager.TestAccessor.Construct(_workingDirGitDir, _encoding, _fileSystem, overriddenCommitMessage: null);
+            _manager = new CommitMessageManager(_workingDirGitDir, _encoding, _fileSystem, overriddenCommitMessage: null);
         }
 
         public void SetupExtra(string overriddenCommitMessage)
         {
-            _manager = CommitMessageManager.TestAccessor.Construct(_workingDirGitDir, _encoding, _fileSystem, overriddenCommitMessage);
+            _manager = new CommitMessageManager(_workingDirGitDir, _encoding, _fileSystem, overriddenCommitMessage);
         }
 
         [TearDown]

@@ -185,7 +185,7 @@ namespace GitUI
             TextFormatFlags.VerticalCenter |
             TextFormatFlags.TextBoxControl;
 
-        internal class TestAccessor
+        internal readonly struct TestAccessor
         {
             internal static string FormatOldName(string oldName) => PathFormatter.FormatOldName(oldName);
             internal static (string Path, string FileName) SplitPathName(string name) => PathFormatter.SplitPathName(name);

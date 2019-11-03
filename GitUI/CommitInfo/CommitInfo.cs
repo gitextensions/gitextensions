@@ -870,7 +870,7 @@ namespace GitUI.CommitInfo
         internal TestAccessor GetTestAccessor()
             => new TestAccessor(this);
 
-        public readonly struct TestAccessor
+        internal readonly struct TestAccessor
         {
             private readonly CommitInfo _commitInfo;
 
