@@ -592,7 +592,7 @@ namespace GitUI.Editor
                 }
             }
 
-            public readonly struct TestAccessor
+            internal readonly struct TestAccessor
             {
                 private readonly CurrentViewPositionCache _viewPositionCache;
 

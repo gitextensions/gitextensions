@@ -112,7 +112,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
                         .ToImmutableList();
         }
 
-        public static class TestAccessor
+        internal readonly struct TestAccessor
         {
             public static IEnumerable<string> LoadRemoteRepoBranches(IExecutable gitExecutable, string url)
                 => FormAddSubmodule.LoadRemoteRepoBranches(gitExecutable, url);

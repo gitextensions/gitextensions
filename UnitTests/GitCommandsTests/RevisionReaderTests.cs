@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using FluentAssertions;
 using GitCommands;
 using NUnit.Framework;
@@ -147,8 +148,11 @@ namespace GitCommandsTests
         [TestCase("subject", "subject\nl2")]
         public void ParseCommitBody_should_return_null_if_no_EndOfBody(string subject, string encodedBody)
         {
-            var reader = RevisionReader.TestAccessor.MakeReader(encodedBody);
-            RevisionReader.TestAccessor.ParseCommitBody(reader, subject).Should().Be((null, null));
+            using (new NoAssertContext())
+            {
+                var reader = RevisionReader.TestAccessor.MakeReader(encodedBody);
+                RevisionReader.TestAccessor.ParseCommitBody(reader, subject).Should().Be((null, null));
+            }
         }
     }
 }
