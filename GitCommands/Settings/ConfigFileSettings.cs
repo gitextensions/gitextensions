@@ -74,6 +74,8 @@ namespace GitCommands.Settings
         }
 
         public readonly CorePath core;
+
+        // TODO: remove
         public readonly MergeToolPath mergetool;
 
         public string GetValue(string setting)
