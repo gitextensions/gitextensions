@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager;
@@ -15,6 +16,8 @@ namespace GitUI.HelperDialogs
         {
             Soft,
             Mixed,
+            Keep,
+            Merge,
             Hard
         }
 
@@ -39,6 +42,12 @@ namespace GitUI.HelperDialogs
                     break;
                 case ResetType.Mixed:
                     Mixed.Checked = true;
+                    break;
+                case ResetType.Keep:
+                    Keep.Checked = true;
+                    break;
+                case ResetType.Merge:
+                    Merge.Checked = true;
                     break;
                 case ResetType.Hard:
                     Hard.Checked = true;
@@ -87,6 +96,14 @@ namespace GitUI.HelperDialogs
                     return;
                 }
             }
+            else if (Merge.Checked)
+            {
+                FormProcess.ShowDialog(this, GitCommandHelpers.ResetCmd(ResetMode.Merge, Revision.Guid));
+            }
+            else if (Keep.Checked)
+            {
+                FormProcess.ShowDialog(this, GitCommandHelpers.ResetCmd(ResetMode.Keep, Revision.Guid));
+            }
 
             UICommands.RepoChangedNotifier.Notify();
             DialogResult = DialogResult.OK;
@@ -97,6 +114,33 @@ namespace GitUI.HelperDialogs
         {
             DialogResult = DialogResult.Cancel;
             Close();
+        }
+
+        private void FormResetCurrentBranch_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            string helpSection = default;
+            if (Soft.Checked)
+            {
+                helpSection = "--soft";
+            }
+            else if (Mixed.Checked)
+            {
+                helpSection = "--mixed";
+            }
+            else if (Keep.Checked)
+            {
+                helpSection = "--keep";
+            }
+            else if (Merge.Checked)
+            {
+                helpSection = "--merge";
+            }
+            else if (Hard.Checked)
+            {
+                helpSection = "--hard";
+            }
+
+            Process.Start($"https://git-scm.com/docs/git-reset#Documentation/git-reset.txt-{helpSection}");
         }
     }
 }

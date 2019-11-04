@@ -83,9 +83,15 @@ namespace GitCommands
         Mixed,
 
         /// <summary>--hard</summary>
-        Hard
+        Hard,
 
-        // All options are not implemented, like --merge, --keep, --patch
+        /// <summary>--merge</summary>
+        Merge,
+
+        /// <summary>--keep</summary>
+        Keep
+
+        // All options are not implemented, like --patch
     }
 
     public static class GitCommandHelpers
