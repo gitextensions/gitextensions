@@ -54,7 +54,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
         {
             if (string.IsNullOrEmpty(Directory.Text) || string.IsNullOrEmpty(LocalPath.Text))
             {
-                MessageBox.Show(this, _remoteAndLocalPathRequired.Text, Text);
+                MessageBox.Show(this, _remoteAndLocalPathRequired.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

@@ -195,7 +195,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             catch
             {
-                MessageBox.Show(this, string.Format(_noDictFilesFound.Text, AppSettings.GetDictionaryDir()));
+                MessageBox.Show(this, string.Format(_noDictFilesFound.Text, AppSettings.GetDictionaryDir()), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

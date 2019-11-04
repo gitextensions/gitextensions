@@ -79,7 +79,8 @@ namespace AutoCompileSubmodules
                                       solutionFile.Name,
                                       SolutionFilesToString(solutionFiles)),
                         "Build",
-                        MessageBoxButtons.YesNoCancel);
+                        MessageBoxButtons.YesNoCancel,
+                        MessageBoxIcon.Question);
 
                 if (result == DialogResult.Cancel)
                 {
@@ -93,7 +94,7 @@ namespace AutoCompileSubmodules
 
                 if (string.IsNullOrEmpty(msbuildPath) || !File.Exists(msbuildPath))
                 {
-                    MessageBox.Show(args.OwnerForm, _enterCorrectMsBuildPath.Text);
+                    MessageBox.Show(args.OwnerForm, _enterCorrectMsBuildPath.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {

@@ -137,7 +137,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (MessageBox.Show(this, _continueResetCurrentBranchEvenWithChangesText.Text,
                         _continueResetCurrentBranchCaptionText.Text,
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
                 {
                     return;
                 }

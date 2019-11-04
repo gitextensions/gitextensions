@@ -48,22 +48,22 @@ namespace GitUI
 
         public static bool UnresolvedMergeConflicts(IWin32Window owner)
         {
-            return MessageBox.Show(owner, Instance._unresolvedMergeConflicts.Text, Instance._unresolvedMergeConflictsCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
+            return MessageBox.Show(owner, Instance._unresolvedMergeConflicts.Text, Instance._unresolvedMergeConflictsCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
         public static bool MiddleOfRebase(IWin32Window owner)
         {
-            return MessageBox.Show(owner, Instance._middleOfRebase.Text, Instance._middleOfRebaseCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
+            return MessageBox.Show(owner, Instance._middleOfRebase.Text, Instance._middleOfRebaseCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
         public static bool MiddleOfPatchApply(IWin32Window owner)
         {
-            return MessageBox.Show(owner, Instance._middleOfPatchApply.Text, Instance._middleOfPatchApplyCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
+            return MessageBox.Show(owner, Instance._middleOfPatchApply.Text, Instance._middleOfPatchApplyCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
         public static void PAgentNotFound(IWin32Window owner)
         {
-            MessageBox.Show(owner, Instance._pageantNotFound.Text, _putty);
+            MessageBox.Show(owner, Instance._pageantNotFound.Text, _putty, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public static bool CacheHostkey(IWin32Window owner)

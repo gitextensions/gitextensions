@@ -268,7 +268,7 @@ namespace GitUI.CommandsDialogs
             ErrorOccurred = false;
             if (PushToUrl.Checked && !PathUtil.IsUrl(PushDestination.Text))
             {
-                MessageBox.Show(owner, _selectDestinationDirectory.Text);
+                MessageBox.Show(owner, _selectDestinationDirectory.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -280,7 +280,7 @@ namespace GitUI.CommandsDialogs
             var selectedRemoteName = _selectedRemote.Name;
             if (TabControlTagBranch.SelectedTab == TagTab && string.IsNullOrEmpty(TagComboBox.Text))
             {
-                MessageBox.Show(owner, _selectTag.Text);
+                MessageBox.Show(owner, _selectTag.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -298,7 +298,7 @@ namespace GitUI.CommandsDialogs
                 {
                     // Ask if this is really what the user wants
                     if (!AppSettings.DontConfirmPushNewBranch &&
-                        MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) == DialogResult.No)
+                        MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                     {
                         return false;
                     }
@@ -347,7 +347,9 @@ namespace GitUI.CommandsDialogs
                         var result = MessageBox.Show(owner,
                                                      string.Format(_updateTrackingReference.Text, selectedLocalBranch.Name, RemoteBranch.Text),
                                                      _pushCaption.Text,
-                                                     MessageBoxButtons.YesNoCancel);
+                                                     MessageBoxButtons.YesNoCancel,
+                                                     MessageBoxIcon.Question,
+                                                     MessageBoxDefaultButton.Button1);
                         if (result == DialogResult.Cancel)
                         {
                             return false;
@@ -363,7 +365,7 @@ namespace GitUI.CommandsDialogs
                     {
                         var choice = MessageBox.Show(owner,
                                                      _useForceWithLeaseInstead.Text,
-                                                     "", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                                                     "Question", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
                                                      MessageBoxDefaultButton.Button1);
                         switch (choice)
                         {

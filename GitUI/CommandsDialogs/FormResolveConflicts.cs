@@ -314,7 +314,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "Merge using script failed.\n" + ex);
+                MessageBox.Show(this, "Merge using script failed.\n" + ex, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return false;
@@ -353,7 +353,7 @@ namespace GitUI.CommandsDialogs
                 // The file is not modified, do not stage file and present warning
                 if (lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge)
                 {
-                    MessageBox.Show(this, _fileUnchangedAfterMerge.Text);
+                    MessageBox.Show(this, _fileUnchangedAfterMerge.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
@@ -494,7 +494,7 @@ namespace GitUI.CommandsDialogs
                     {
                         var text = string.Format(_noBaseRevision.Text, item.Filename);
                         DialogResult result = MessageBox.Show(this, text, _noBaseFileMergeCaption.Text,
-                            MessageBoxButtons.YesNoCancel);
+                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                         if (result == DialogResult.Yes)
                         {
                             Use2WayMerge(ref arguments);
@@ -527,7 +527,7 @@ namespace GitUI.CommandsDialogs
                     {
                         var text = string.Format(_errorStartingMergetool.Text, _mergetoolPath);
                         MessageBox.Show(this, text, _noBaseFileMergeCaption.Text,
-                            MessageBoxButtons.OK);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
@@ -800,7 +800,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!Module.HandleConflictSelectSide(fileName, "BASE"))
             {
-                MessageBox.Show(this, _chooseBaseFileFailedText.Text);
+                MessageBox.Show(this, _chooseBaseFileFailedText.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -829,7 +829,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!Module.HandleConflictSelectSide(fileName, "LOCAL"))
             {
-                MessageBox.Show(this, _chooseLocalFileFailedText.Text);
+                MessageBox.Show(this, _chooseLocalFileFailedText.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -858,7 +858,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!Module.HandleConflictSelectSide(fileName, "REMOTE"))
             {
-                MessageBox.Show(this, _chooseRemoteFileFailedText.Text);
+                MessageBox.Show(this, _chooseRemoteFileFailedText.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1084,7 +1084,7 @@ namespace GitUI.CommandsDialogs
 
                 if (!Module.HandleConflictsSaveSide(conflictData.Filename, fileName, side))
                 {
-                    MessageBox.Show(this, _failureWhileOpenFile.Text);
+                    MessageBox.Show(this, _failureWhileOpenFile.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 OsShellUtil.OpenAs(fileName);
@@ -1142,7 +1142,7 @@ namespace GitUI.CommandsDialogs
                     {
                         if (!Module.HandleConflictsSaveSide(conflictData.Filename, fileDialog.FileName, side))
                         {
-                            MessageBox.Show(this, _failureWhileSaveFile.Text);
+                            MessageBox.Show(this, _failureWhileSaveFile.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }

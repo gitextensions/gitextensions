@@ -138,7 +138,7 @@ namespace GitUI.UserControls.RevisionGrid
                     Name = "QuickSearch",
                     Text = "Quick search",
                     ToolTipText = _quickSearchQuickHelp.Text,
-                    ExecuteAction = () => MessageBox.Show(_quickSearchQuickHelp.Text)
+                    ExecuteAction = () => MessageBox.Show(_quickSearchQuickHelp.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 },
                 new MenuCommand
                 {
@@ -417,7 +417,7 @@ namespace GitUI.UserControls.RevisionGrid
                 }
                 else
                 {
-                    MessageBox.Show(_revisionGrid, _noRevisionFoundError.Text);
+                    MessageBox.Show(_revisionGrid, _noRevisionFoundError.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

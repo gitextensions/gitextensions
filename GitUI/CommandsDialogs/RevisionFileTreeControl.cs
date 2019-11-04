@@ -115,7 +115,7 @@ See the changes in the commit form.");
             {
                 if (isIncompleteMatch)
                 {
-                    MessageBox.Show(_nodeNotFoundNextAvailableParentSelected.Text);
+                    MessageBox.Show(_nodeNotFoundNextAvailableParentSelected.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 tvGitTree.SelectedNode = foundNode;
@@ -123,7 +123,7 @@ See the changes in the commit form.");
             }
             else
             {
-                MessageBox.Show(_nodeNotFoundSelectionNotChanged.Text);
+                MessageBox.Show(_nodeNotFoundSelectionNotChanged.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -624,7 +624,7 @@ See the changes in the commit form.");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message);
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -654,7 +654,7 @@ See the changes in the commit form.");
         {
             if (tvGitTree.SelectedNode?.Tag is GitItem gitItem && _revision != null)
             {
-                if (MessageBox.Show(_resetFileText.Text, _resetFileCaption.Text, MessageBoxButtons.OKCancel) == DialogResult.OK)
+                if (MessageBox.Show(_resetFileText.Text, _resetFileCaption.Text, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
                 {
                     Module.CheckoutFiles(new[] { gitItem.FileName }, _revision.ObjectId, false);
                 }

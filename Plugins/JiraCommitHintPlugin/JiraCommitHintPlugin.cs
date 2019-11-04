@@ -71,7 +71,7 @@ namespace JiraCommitHintPlugin
                 {
                     var message = await GetMessageToCommitAsync(_jira, _query, _stringTemplate);
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                    MessageBox.Show(string.Join(Environment.NewLine, message.Select(jt => jt.Text).ToArray()));
+                    MessageBox.Show(string.Join(Environment.NewLine, message.Select(jt => jt.Text).ToArray()), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 });
 
             return false;
@@ -152,14 +152,14 @@ namespace JiraCommitHintPlugin
                         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                         var preview = message.FirstOrDefault();
 
-                        MessageBox.Show(null, preview == null ? EmptyQueryResultMessage.Text : preview.Text, EmptyQueryResultCaption.Text);
+                        MessageBox.Show(null, preview == null ? EmptyQueryResultMessage.Text : preview.Text, EmptyQueryResultCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         _btnPreview.Enabled = true;
                     });
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 _btnPreview.Enabled = true;
             }
         }

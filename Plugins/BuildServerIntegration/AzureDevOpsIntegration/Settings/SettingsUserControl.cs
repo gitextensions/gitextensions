@@ -143,14 +143,14 @@ namespace AzureDevOpsIntegration.Settings
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show(_failToLoadBuildDefinitionInfoMessage.Text, _failToExtractDataFromClipboardCaption.Text);
+                        MessageBox.Show(_failToLoadBuildDefinitionInfoMessage.Text, _failToExtractDataFromClipboardCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                 }
                 else
                 {
                     buildDefinitionName = "";
-                    MessageBox.Show(_infoNoApiTokenMessage.Text, _failToExtractDataFromClipboardCaption.Text);
+                    MessageBox.Show(_infoNoApiTokenMessage.Text, _failToExtractDataFromClipboardCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 _currentSettings.ProjectUrl = projectUrl;
@@ -159,7 +159,7 @@ namespace AzureDevOpsIntegration.Settings
             }
             else
             {
-                MessageBox.Show(_failToExtractDataFromClipboardMessage.Text, _failToExtractDataFromClipboardCaption.Text);
+                MessageBox.Show(_failToExtractDataFromClipboardMessage.Text, _failToExtractDataFromClipboardCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

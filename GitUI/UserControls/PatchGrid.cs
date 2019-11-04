@@ -90,7 +90,7 @@ namespace GitUI
 
             if (string.IsNullOrEmpty(patchFile.FullName))
             {
-                MessageBox.Show(_unableToShowPatchDetails.Text);
+                MessageBox.Show(_unableToShowPatchDetails.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

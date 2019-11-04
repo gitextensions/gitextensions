@@ -247,7 +247,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (string.IsNullOrEmpty(Branches.Text))
                 {
-                    MessageBox.Show(this, _noBranchSelectedText.Text);
+                    MessageBox.Show(this, _noBranchSelectedText.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -270,7 +270,7 @@ namespace GitUI.CommandsDialogs
                 var dialogResult = FormProcess.ReadDialog(this, rebaseCmd);
                 if (dialogResult.Trim() == "Current branch a is up to date.")
                 {
-                    MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text);
+                    MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 if (!Module.InTheMiddleOfAction() &&

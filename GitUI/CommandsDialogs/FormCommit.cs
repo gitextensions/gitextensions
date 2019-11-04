@@ -930,7 +930,7 @@ namespace GitUI.CommandsDialogs
             }
 
             if (MessageBox.Show(this, _resetSelectedLinesConfirmation.Text, _resetChangesCaption.Text,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
             {
                 return;
             }
@@ -1287,7 +1287,7 @@ namespace GitUI.CommandsDialogs
                     // commit, because amend may be used just to change the commit message or timestamp.
                     if (!AppSettings.DontConfirmAmend)
                     {
-                        if (MessageBox.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
+                        if (MessageBox.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                         {
                             return false;
                         }

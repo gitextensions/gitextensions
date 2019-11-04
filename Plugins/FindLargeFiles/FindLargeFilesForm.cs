@@ -204,7 +204,7 @@ namespace FindLargeFiles
 
         private void Delete_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, _areYouSureToDelete.Text, _deleteCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(this, _areYouSureToDelete.Text, _deleteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 var sb = new StringBuilder();
                 foreach (GitObject gitObject in _gitObjects.Where(gitObject => gitObject.Delete))

@@ -106,7 +106,7 @@ namespace Gerrit
             catch (Exception ex)
             {
                 MessageBox.Show(this, _cannotAccessGitreview.Text + Environment.NewLine + ex.Message,
-                    _cannotAccessGitreviewCaption.Text);
+                    _cannotAccessGitreviewCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -139,7 +139,7 @@ namespace Gerrit
                 return;
             }
 
-            MessageBox.Show(this, _gitreviewOnlyInWorkingDirSupported.Text, _gitreviewOnlyInWorkingDirSupportedCaption.Text);
+            MessageBox.Show(this, _gitreviewOnlyInWorkingDirSupported.Text, _gitreviewOnlyInWorkingDirSupportedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             Close();
         }
 

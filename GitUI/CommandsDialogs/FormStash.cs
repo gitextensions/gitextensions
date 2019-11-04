@@ -244,10 +244,8 @@ namespace GitUI.CommandsDialogs
         {
             if (chkIncludeUntrackedFiles.Checked && !GitVersion.Current.StashUntrackedFilesSupported)
             {
-                if (MessageBox.Show(_stashUntrackedFilesNotSupported.Text, _stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-                {
-                    return;
-                }
+                MessageBox.Show(_stashUntrackedFilesNotSupported.Text, _stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
 
             using (WaitCursorScope.Enter())
@@ -262,10 +260,8 @@ namespace GitUI.CommandsDialogs
         {
             if (chkIncludeUntrackedFiles.Checked && !GitVersion.Current.StashUntrackedFilesSupported)
             {
-                if (MessageBox.Show(_stashUntrackedFilesNotSupported.Text, _stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-                {
-                    return;
-                }
+                MessageBox.Show(_stashUntrackedFilesNotSupported.Text, _stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
 
             using (WaitCursorScope.Enter())

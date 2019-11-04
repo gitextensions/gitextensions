@@ -1462,7 +1462,7 @@ namespace GitUI.Editor
                 {
                     if (!MergeConflictHandler.HandleMergeConflicts(UICommands, this, false, false))
                     {
-                        MessageBox.Show(this, output + "\n\n" + Encoding.GetString(patch));
+                        MessageBox.Show(this, output + "\n\n" + Encoding.GetString(patch), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

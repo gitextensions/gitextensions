@@ -344,11 +344,11 @@ namespace GitUI
 
             if (count == 0)
             {
-                MessageBox.Show(this, _noOccurrencesFoundString.Text);
+                MessageBox.Show(this, _noOccurrencesFoundString.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                MessageBox.Show(this, string.Format(_replacedOccurrencesString.Text, count));
+                MessageBox.Show(this, string.Format(_replacedOccurrencesString.Text, count), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Close();
             }
         }
