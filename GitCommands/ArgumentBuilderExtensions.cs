@@ -224,6 +224,10 @@ namespace GitCommands
                         return "--soft";
                     case ResetMode.Mixed:
                         return "--mixed";
+                    case ResetMode.Keep:
+                        return "--keep";
+                    case ResetMode.Merge:
+                        return "--merge";
                     case ResetMode.Hard:
                         return "--hard";
                     default:
