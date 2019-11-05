@@ -164,23 +164,25 @@ namespace GitExtensions
                 // while parsing command line arguments, it unescapes " incorrectly
                 // https://github.com/gitextensions/gitextensions/issues/3489
                 string dirArg = args[2].TrimEnd('"');
-
-                if (!Directory.Exists(dirArg))
+                if (!string.IsNullOrWhiteSpace(dirArg))
                 {
-                    dirArg = Path.GetDirectoryName(dirArg);
+                    if (!Directory.Exists(dirArg))
+                    {
+                        dirArg = Path.GetDirectoryName(dirArg);
+                    }
+
+                    workingDir = GitModule.TryFindGitWorkingDir(dirArg);
+
+                    if (Directory.Exists(workingDir))
+                    {
+                        workingDir = Path.GetFullPath(workingDir);
+                    }
+
+                    // Do not add this working directory to the recent repositories. It is a nice feature, but it
+                    // also increases the startup time
+                    ////if (Module.ValidWorkingDir())
+                    ////   Repositories.RepositoryHistory.AddMostRecentRepository(Module.WorkingDir);
                 }
-
-                workingDir = GitModule.TryFindGitWorkingDir(dirArg);
-
-                if (Directory.Exists(workingDir))
-                {
-                    workingDir = Path.GetFullPath(workingDir);
-                }
-
-                // Do not add this working directory to the recent repositories. It is a nice feature, but it
-                // also increases the startup time
-                ////if (Module.ValidWorkingDir())
-                ////   Repositories.RepositoryHistory.AddMostRecentRepository(Module.WorkingDir);
             }
 
             if (args.Length <= 1 && workingDir == null && AppSettings.StartWithRecentWorkingDir)
