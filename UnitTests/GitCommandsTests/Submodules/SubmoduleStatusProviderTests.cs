@@ -62,9 +62,9 @@ namespace GitCommandsTests.Submodules
             }
 
             [Test]
-            public async Task UpdateSubmoduleStructure_valid_result_for_top_module()
+            public void UpdateSubmoduleStructure_valid_result_for_top_module()
             {
-                var result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo1Module);
+                var result = SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, _repo1Module);
 
                 result.TopProject.Path.Should().Be(_repo1Module.WorkingDir);
                 result.SuperProject.Should().Be(null);
@@ -75,9 +75,9 @@ namespace GitCommandsTests.Submodules
             }
 
             [Test]
-            public async Task UpdateSubmoduleStructure_valid_result_for_first_nested_submodule()
+            public void UpdateSubmoduleStructure_valid_result_for_first_nested_submodule()
             {
-                var result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo2Module, true);
+                var result = SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, _repo2Module, true);
 
                 result.TopProject.Path.Should().Be(_repo1Module.WorkingDir);
                 result.SuperProject.Should().Be(result.TopProject);
@@ -88,9 +88,9 @@ namespace GitCommandsTests.Submodules
             }
 
             [Test]
-            public async Task UpdateSubmoduleStructure_valid_result_for_second_nested_submodule()
+            public void UpdateSubmoduleStructure_valid_result_for_second_nested_submodule()
             {
-                var result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo3Module, true);
+                var result = SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, _repo3Module, true);
 
                 result.TopProject.Path.Should().Be(_repo1Module.WorkingDir);
                 result.SuperProject.Path.Should().Be(_repo2Module.WorkingDir);
@@ -101,10 +101,10 @@ namespace GitCommandsTests.Submodules
             }
 
             [Test]
-            public async Task Submodule_status_changes_for_top_module()
+            public void Submodule_status_changes_for_top_module()
             {
                 var currentModule = _repo1Module;
-                var result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
+                var result = SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, currentModule);
 
                 // No changes in repo
                 var changedFiles = GetStatusChangedFiles(currentModule);
@@ -131,10 +131,10 @@ namespace GitCommandsTests.Submodules
             }
 
             [Test]
-            public async Task Submodule_status_changes_for_first_nested_module()
+            public void Submodule_status_changes_for_first_nested_module()
             {
                 var currentModule = _repo2Module;
-                var result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
+                var result = SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, currentModule);
 
                 // No changes in repo
                 var changedFiles = GetStatusChangedFiles(currentModule);

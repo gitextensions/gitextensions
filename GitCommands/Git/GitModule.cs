@@ -431,7 +431,15 @@ namespace GitCommands
         public IReadOnlyList<string> GetSubmodulesLocalPaths(bool recursive = true)
         {
             var localPaths = new List<string>();
-            DoGetSubmodulesLocalPaths(this, "", localPaths, recursive);
+            try
+            {
+                DoGetSubmodulesLocalPaths(this, "", localPaths, recursive);
+            }
+            catch (GitConfigurationException)
+            {
+                // swallow any exceptions here, any config exceptions would have been shown to the user already
+            }
+
             return localPaths;
 
             void DoGetSubmodulesLocalPaths(GitModule module, string parentPath, List<string> paths, bool recurse)
@@ -1208,9 +1216,7 @@ namespace GitCommands
         }
 
         public ConfigFile GetSubmoduleConfigFile()
-        {
-            return new ConfigFile(WorkingDir + ".gitmodules", true);
-        }
+            => new ConfigFile(WorkingDir + ".gitmodules", true);
 
         [CanBeNull]
         public string GetCurrentSubmoduleLocalPath()
@@ -1250,16 +1256,26 @@ namespace GitCommands
 
         public IEnumerable<IGitSubmoduleInfo> GetSubmodulesInfo()
         {
+            ConfigFile configFile;
+            try
+            {
+                configFile = GetSubmoduleConfigFile();
+            }
+            catch (GitConfigurationException)
+            {
+                // swallow any exceptions here, any config exceptions would have been shown to the user already
+                configFile = null;
+            }
+
+            if (configFile == null)
+            {
+                yield return default;
+            }
+
             var args = new GitArgumentBuilder("submodule") { "status" };
             var lines = _gitExecutable.GetOutputLines(args);
 
             string lastLine = null;
-
-            var configFile = GetSubmoduleConfigFile();
-            if (configFile == null)
-            {
-                yield break;
-            }
 
             foreach (var line in lines)
             {

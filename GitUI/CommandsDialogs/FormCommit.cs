@@ -2371,9 +2371,14 @@ namespace GitUI.CommandsDialogs
         {
             var stagedFiles = Staged.AllItems;
 
-            var configFile = Module.GetSubmoduleConfigFile();
-            if (configFile == null)
+            ConfigFile configFile;
+            try
             {
+                configFile = Module.GetSubmoduleConfigFile();
+            }
+            catch (GitConfigurationException ex)
+            {
+                MessageBox.Show(this, ex.Message, "Failed to parse " + ex.ConfigPath, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

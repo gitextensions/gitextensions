@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -116,8 +115,8 @@ namespace GitCommands.Submodules
 
                 if (_gitStatusWhileUpdatingStructure != null)
                 {
-                    // Current module must be updated separetly (not in _submoduleInfos)
-                    await UpdateSubmodulesStatusInternalAsync(currentModule, _gitStatusWhileUpdatingStructure, cancelToken);
+                    // Current module must be updated separately (not in _submoduleInfos)
+                    await UpdateSubmodulesStatusAsync(currentModule, _gitStatusWhileUpdatingStructure, cancelToken);
                 }
 
                 OnStatusUpdated(result, cancelToken);
@@ -148,7 +147,7 @@ namespace GitCommands.Submodules
             await TaskScheduler.Default;
 
             var currentModule = new GitModule(workingDirectory);
-            await UpdateSubmodulesStatusInternalAsync(currentModule, gitStatus, cancelToken);
+            await UpdateSubmodulesStatusAsync(currentModule, gitStatus, cancelToken);
 
             OnStatusUpdated(_submoduleInfoResult, cancelToken);
         }
@@ -223,7 +222,7 @@ namespace GitCommands.Submodules
             {
                 var localPath = superprojectModule.WorkingDir.Substring(topProject.WorkingDir.Length);
                 name = Path.GetDirectoryName(localPath).ToPosixPath();
-             }
+            }
 
             string path = superprojectModule.WorkingDir;
             name += GetBranchNameSuffix(path, noBranchText);
@@ -300,7 +299,7 @@ namespace GitCommands.Submodules
         /// <param name="gitStatus">git status</param>
         /// <param name="cancelToken">Cancellation token</param>
         /// <returns>The task</returns>
-        private async Task UpdateSubmodulesStatusInternalAsync(GitModule module, [CanBeNull] IReadOnlyList<GitItemStatus> gitStatus, CancellationToken cancelToken)
+        private async Task UpdateSubmodulesStatusAsync(GitModule module, [CanBeNull] IReadOnlyList<GitItemStatus> gitStatus, CancellationToken cancelToken)
         {
             _previousSubmoduleUpdateTime = DateTime.Now;
             await TaskScheduler.Default;

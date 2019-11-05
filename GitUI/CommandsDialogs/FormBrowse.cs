@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ConEmu.WinForms;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Gpg;
 using GitCommands.Submodules;
@@ -101,7 +102,7 @@ namespace GitUI.CommandsDialogs
         private readonly IAppTitleGenerator _appTitleGenerator;
         [CanBeNull] private readonly IAheadBehindDataProvider _aheadBehindDataProvider;
         private readonly WindowsJumpListManager _windowsJumpListManager;
-        private readonly SubmoduleStatusProvider _submoduleStatusProvider;
+        private readonly ISubmoduleStatusProvider _submoduleStatusProvider;
         private readonly FormBrowseDiagnosticsReporter _formBrowseDiagnosticsReporter;
         [CanBeNull] private BuildReportTabPageExtension _buildReportTabPageExtension;
         private ConEmuControl _terminal;
@@ -355,8 +356,7 @@ namespace GitUI.CommandsDialogs
                     }
                 };
 
-#pragma warning disable VSTHRD101 // Avoid unsupported async delegates
-                gitStatusMonitor.GitWorkingDirectoryStatusChanged += async (s, e) =>
+                gitStatusMonitor.GitWorkingDirectoryStatusChanged += (s, e) =>
                 {
                     var status = e.ItemStatuses?.ToList();
 
@@ -397,18 +397,22 @@ namespace GitUI.CommandsDialogs
 
                         if (AppSettings.ShowSubmoduleStatus)
                         {
-                            try
+                            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                             {
-                                await _submoduleStatusProvider.UpdateSubmodulesStatusAsync(Module.WorkingDir, status);
-                            }
-                            catch (GitCommands.Config.GitConfigurationException configEx)
-                            {
-                                DoFatalExit(configEx);
-                            }
+                                try
+                                {
+                                    await TaskScheduler.Default;
+                                    await _submoduleStatusProvider.UpdateSubmodulesStatusAsync(Module.WorkingDir, status);
+                                }
+                                catch (GitConfigurationException ex)
+                                {
+                                    await this.SwitchToMainThreadAsync();
+                                    MessageBox.Show(this, ex.Message, "Failed to parse " + ex.ConfigPath, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                }
+                            });
                         }
                     }
                 };
-#pragma warning restore VSTHRD101 // Avoid unsupported async delegates
             }
 
             Brush UpdateCommitButtonAndGetBrush(IReadOnlyList<GitItemStatus> status, bool showCount)
@@ -545,7 +549,7 @@ namespace GitUI.CommandsDialogs
                         })
                     .FileAndForget();
             };
-            _ = UpdateSubmodulesStructureAsync();
+            UpdateSubmodulesStructure();
             UpdateStashCount();
 
             toolStripButtonPush.Initialize(_aheadBehindDataProvider);
@@ -628,7 +632,7 @@ namespace GitUI.CommandsDialogs
         private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
         {
             this.InvokeAsync(RefreshRevisions).FileAndForget();
-            _ = UpdateSubmodulesStructureAsync();
+            UpdateSubmodulesStructure();
             UpdateStashCount();
         }
 
@@ -1645,7 +1649,7 @@ namespace GitUI.CommandsDialogs
         private void ManageSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartSubmodulesDialog(this);
-            _ = UpdateSubmodulesStructureAsync();
+            UpdateSubmodulesStructure();
         }
 
         private void UpdateSubmoduleToolStripMenuItemClick(object sender, EventArgs e)
@@ -1662,13 +1666,13 @@ namespace GitUI.CommandsDialogs
         private void UpdateAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartUpdateSubmodulesDialog(this);
-            _ = UpdateSubmodulesStructureAsync();
+            UpdateSubmodulesStructure();
         }
 
         private void SynchronizeAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartSyncSubmodulesDialog(this);
-            _ = UpdateSubmodulesStructureAsync();
+            UpdateSubmodulesStructure();
         }
 
         private void ToolStripSplitStashButtonClick(object sender, EventArgs e)
@@ -2724,20 +2728,26 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private async Task UpdateSubmodulesStructureAsync()
+        private void UpdateSubmodulesStructure()
         {
             // Submodule status is updated on git-status updates. To make sure supermodule status is updated, update immediately (once)
             var updateStatus = AppSettings.ShowSubmoduleStatus && _gitStatusMonitor.Active && (Module.SuperprojectModule != null);
 
             toolStripButtonLevelUp.ToolTipText = "";
-            try
+
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                await _submoduleStatusProvider.UpdateSubmodulesStructureAsync(Module.WorkingDir, _noBranchTitle.Text, updateStatus);
-            }
-            catch (GitCommands.Config.GitConfigurationException configEx)
-            {
-                DoFatalExit(configEx);
-            }
+                try
+                {
+                    await TaskScheduler.Default;
+                    await _submoduleStatusProvider.UpdateSubmodulesStructureAsync(Module.WorkingDir, _noBranchTitle.Text, updateStatus);
+                }
+                catch (GitConfigurationException ex)
+                {
+                    await this.SwitchToMainThreadAsync();
+                    MessageBox.Show(this, ex.Message, "Failed to parse " + ex.ConfigPath, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            });
         }
 
         private void SubmoduleStatusProvider_StatusUpdating(object sender, EventArgs e)
@@ -3317,13 +3327,6 @@ namespace GitUI.CommandsDialogs
         private void HelpToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             tsmiTelemetryEnabled.Checked = AppSettings.TelemetryEnabled ?? false;
-        }
-
-        private void DoFatalExit(GitCommands.Config.GitConfigurationException configEx)
-        {
-            string message = string.Format(ResourceManager.Strings.GeneralGitConfigExceptionMessage, configEx.ConfigPath, Environment.NewLine, configEx.InnerException.Message);
-            MessageBox.Show(message, ResourceManager.Strings.GeneralGitConfigExceptionCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            Environment.Exit(-1);
         }
     }
 }

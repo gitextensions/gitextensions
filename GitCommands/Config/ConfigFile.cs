@@ -33,7 +33,7 @@ namespace GitCommands.Config
             }
             catch (Exception ex)
             {
-                throw new GitCommands.Config.GitConfigurationException(fileName, ex);
+                throw new GitConfigurationException(fileName, ex);
             }
         }
 
