@@ -6,6 +6,10 @@ namespace GitUI
 {
     internal sealed class Strings : Translate
     {
+        private readonly TranslationString _containedInBranchesText = new TranslationString("Contained in branches:");
+        private readonly TranslationString _containedInNoBranchText = new TranslationString("Contained in no branch");
+        private readonly TranslationString _containedInTagsText = new TranslationString("Contained in tags:");
+        private readonly TranslationString _containedInNoTagText = new TranslationString("Contained in no tag");
         private readonly TranslationString _viewPullRequest = new TranslationString("View pull requests");
         private readonly TranslationString _createPullRequest = new TranslationString("Create pull request");
         private readonly TranslationString _forkCloneRepo = new TranslationString("Fork or clone a repository");
@@ -39,6 +43,11 @@ namespace GitUI
                 _instance = new Lazy<Strings>();
             }
         }
+
+        public static string ContainedInBranches => _instance.Value._containedInBranchesText.Text;
+        public static string ContainedInNoBranch => _instance.Value._containedInNoBranchText.Text;
+        public static string ContainedInTags => _instance.Value._containedInTagsText.Text;
+        public static string ContainedInNoTag => _instance.Value._containedInNoTagText.Text;
 
         public static string CreatePullRequest => _instance.Value._createPullRequest.Text;
         public static string ForkCloneRepo => _instance.Value._forkCloneRepo.Text;

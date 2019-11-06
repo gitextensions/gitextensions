@@ -327,6 +327,7 @@
     <Compile Include="CommandsDialogs\ToolStripPushButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CommitInfo\RefsFormatter.cs" />
     <Compile Include="CommitInfo\CommitInfoHeader.cs">
       <SubType>UserControl</SubType>
     </Compile>
