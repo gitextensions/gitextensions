@@ -12,7 +12,7 @@ $opencover_console = "packages\OpenCover.$opencover_version\tools\OpenCover.Cons
     -excludebyfile:*\*Designer.cs `
     -output:"OpenCover.GitExtensions.xml" `
     -target:"nunit3-console.exe" `
-    -targetargs:"$testAssemblies"
+    -targetargs:"$testAssemblies --workers=1 --timeout=90000"
 if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 $codecov_version = $packageConfig.SelectSingleNode('/packages/package[@id="Codecov"]').version
