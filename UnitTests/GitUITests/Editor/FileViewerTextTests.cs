@@ -116,5 +116,102 @@ namespace GitUITests.Editor
                 caretOffset.Should().Be(4, "Caret should have been moved back to the first occurence of '" + textToSelect + "'");
             }
         }
+
+        [Test]
+        public void FileViewer_ShowSyntaxHighlightingInDiff_enabled_use_highlighting()
+        {
+            // a sample c sharp file diff
+            const string sampleCsharpPatch =
+@"diff --git a/GitUI/Editor/FileViewerInternal.cs b/GitUI/Editor/FileViewerInternal.cs
+index 62a5c2f08..2bc482714 100644
+--- a/GitUI/Editor/FileViewerInternal.cs
++++ b/GitUI/Editor/FileViewerInternal.cs
+@@ -229 +229 @@ public void SetText(string text, Action openWithDifftool, bool isDiff = false)
+-            int scrollPos = ScrollPos;
++            int scrollPos = VScrollPosition;";
+
+            using (var testHelper = new GitModuleTestHelper())
+            {
+                var uiCommands = new GitUICommands(testHelper.Module);
+                _uiCommandsSource.UICommands.Returns(x => uiCommands);
+                _fileViewer.UICommandsSource = _uiCommandsSource;
+
+                FileViewer.TestAccessor testAccessor = _fileViewer.GetTestAccessor();
+                testAccessor.ShowSyntaxHighlightingInDiff = true;
+
+                // act
+                _fileViewer.ViewPatch(sampleCsharpPatch, null, "FileViewerInternal.cs");
+
+                // assert
+                IHighlightingStrategy csharpHighlighting = HighlightingManager.Manager.FindHighlighterForFile("anycsharpfile.cs");
+
+                csharpHighlighting.Should().NotBe(HighlightingManager.Manager.DefaultHighlighting);
+
+                _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.Document
+                    .HighlightingStrategy.Should().Be(csharpHighlighting);
+            }
+        }
+
+        [Test]
+        public void FileViewer_ShowSyntaxHighlightingInDiff_disabled_do_not_use_highlighting()
+        {
+            // a sample c sharp file diff
+            const string sampleCsharpPatch =
+@"diff --git a/GitUI/Editor/FileViewerInternal.cs b/GitUI/Editor/FileViewerInternal.cs
+index 62a5c2f08..2bc482714 100644
+--- a/GitUI/Editor/FileViewerInternal.cs
++++ b/GitUI/Editor/FileViewerInternal.cs
+@@ -229 +229 @@ public void SetText(string text, Action openWithDifftool, bool isDiff = false)
+-            int scrollPos = ScrollPos;
++            int scrollPos = VScrollPosition;";
+
+            using (var testHelper = new GitModuleTestHelper())
+            {
+                var uiCommands = new GitUICommands(testHelper.Module);
+                _uiCommandsSource.UICommands.Returns(x => uiCommands);
+                _fileViewer.UICommandsSource = _uiCommandsSource;
+
+                FileViewer.TestAccessor testAccessor = _fileViewer.GetTestAccessor();
+                testAccessor.ShowSyntaxHighlightingInDiff = false;
+
+                // act
+                _fileViewer.ViewPatch(sampleCsharpPatch, null, "FileViewerInternal.cs");
+
+                // assert
+                _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.Document.HighlightingStrategy.Should().Be(HighlightingManager.Manager.DefaultHighlighting);
+            }
+        }
+
+        [Test]
+        public void FileViewer_given_non_text_use_default_highlighting()
+        {
+            // a sample c sharp file diff
+            const string sampleBinaryPatch =
+                @"diff --git a/binaryfile.bin b/binaryfile.bin
+index b25b745..5194740 100644
+Binary files a/binaryfile.bin and b/binaryfile.bin differ";
+
+            using (var testHelper = new GitModuleTestHelper())
+            {
+                var uiCommands = new GitUICommands(testHelper.Module);
+                _uiCommandsSource.UICommands.Returns(x => uiCommands);
+                _fileViewer.UICommandsSource = _uiCommandsSource;
+
+                // act
+                _fileViewer.ViewPatch(sampleBinaryPatch, null, "binaryfile.bin");
+
+                // assert
+                _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.Document.HighlightingStrategy.Should().Be(HighlightingManager.Manager.DefaultHighlighting);
+
+                const string sampleRandomText =
+                @"fldaksjflkdsjlfj";
+
+                // act
+                _fileViewer.ViewPatch(sampleRandomText, null, null);
+
+                // assert
+                _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.Document.HighlightingStrategy.Should().Be(HighlightingManager.Manager.DefaultHighlighting);
+            }
+        }
     }
 }

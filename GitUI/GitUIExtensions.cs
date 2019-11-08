@@ -121,11 +121,11 @@ namespace GitUI
                 string selectedPatch = diffViewer.GetSelectedPatch(firstRevision, secondRevision, file);
                 if (selectedPatch == null)
                 {
-                    return (text: defaultText, openWithDifftool: null /* not applicable */);
+                    return (text: defaultText, openWithDifftool: null /* not applicable */, file.Name);
                 }
 
                 return (text: selectedPatch,
-                    openWithDifftool: openWithDifftool ?? OpenWithDifftool);
+                    openWithDifftool: openWithDifftool ?? OpenWithDifftool, file.Name);
 
                 void OpenWithDifftool()
                 {
