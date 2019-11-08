@@ -1,6 +1,12 @@
-﻿using GitCommands;
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
+using ApprovalTests;
+using ApprovalTests.Namers;
+using CommonTestUtils;
+using GitCommands;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace GitCommandsTests
 {
@@ -32,22 +38,19 @@ namespace GitCommandsTests
             Assert.AreEqual(bodyContent, gitRevision.BodySummary);
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [Test]
-        public void Should_do_ellipsis_When_too_many_lines()
+        [TestCase("Too_many_lines")]
+        [TestCase("Too_long_lines")]
+        public void Should_do_ellipsis(string testName)
         {
-            var gitRevision = new GitRevision(ObjectId.Random());
-            gitRevision.Body = "line1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10\nline11\nline12\nline13\nline14\nline15\nline16\nline17\nline18\nline19\nline20\nline21\nline22\nline23\nline24\nline25\nline26\nline27\nline28\nline29\nline30\nline31";
-            gitRevision.HasMultiLineMessage = true;
-            Assert.AreEqual("line1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10\nline11\nline12\nline13\nline14\nline15\nline16\nline17\nline18\nline19\nline20\nline21\nline22\nline23\nline24\nline25\nline26\nline27\nline28\nline29\nline30\n[...]", gitRevision.BodySummary);
-        }
+            var content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.{testName}.txt");
+            var gitRevision = new GitRevision(ObjectId.Random()) { Body = content, HasMultiLineMessage = true };
 
-        [Test]
-        public void Should_do_ellipsis_When_too_long_lines()
-        {
-            var gitRevision = new GitRevision(ObjectId.Random());
-            gitRevision.Body = "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890|<-150 chars <==> too long";
-            gitRevision.HasMultiLineMessage = true;
-            Assert.AreEqual("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 [...]", gitRevision.BodySummary);
+            using (ApprovalResults.ForScenario(testName))
+            {
+                Approvals.Verify(gitRevision.BodySummary);
+            }
         }
     }
 }
