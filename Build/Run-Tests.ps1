@@ -12,8 +12,10 @@ $opencover_console = "packages\OpenCover.$opencover_version\tools\OpenCover.Cons
     -excludebyfile:*\*Designer.cs `
     -output:"OpenCover.GitExtensions.xml" `
     -target:"nunit3-console.exe" `
-    -targetargs:"$testAssemblies"
-if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    -targetargs:"$testAssemblies --workers=1 --timeout=90000"
+$testExitCode = $LastExitCode
+Push-AppveyorArtifact "TestResult.xml"
+if ($testExitCode -ne 0) { $host.SetShouldExit($testExitCode) }
 
 $codecov_version = $packageConfig.SelectSingleNode('/packages/package[@id="Codecov"]').version
 $codecov = "packages\Codecov.$codecov_version\tools\codecov.exe"

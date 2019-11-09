@@ -41,7 +41,7 @@ namespace GitUITests.UserControls.RevisionGrid
             _revisionGraph.Add(revision, RevisionNodeFlags.CheckedOut);
         }
 
-        [Test]
+        [Test, Timeout(10 /*min*/ * 60 /*s*/ * 1000 /*ms*/)]
         public void ShouldReorderInTopoOrder()
         {
             for (int i = 0; i < _numberOfRepeats; i++)
