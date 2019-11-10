@@ -26,6 +26,7 @@ namespace GitCommandsTests
         private readonly bool _rememberAmendCommitState;
 
         private FileBase _file;
+        private DirectoryBase _directory;
         private IFileSystem _fileSystem;
         private CommitMessageManager _manager;
 
@@ -43,12 +44,14 @@ namespace GitCommandsTests
             _file = Substitute.For<FileBase>();
             _file.ReadAllText(_commitMessagePath, _encoding).Returns(_commitMessage);
             _file.ReadAllText(_mergeMessagePath, _encoding).Returns(_mergeMessage);
+            _directory = Substitute.For<DirectoryBase>();
 
             var path = Substitute.For<PathBase>();
             path.Combine(Arg.Any<string>(), Arg.Any<string>()).Returns(x => Path.Combine((string)x[0], (string)x[1]));
 
             _fileSystem = Substitute.For<IFileSystem>();
             _fileSystem.File.Returns(_file);
+            _fileSystem.Directory.Returns(_directory);
             _fileSystem.Path.Returns(path);
 
             _manager = new CommitMessageManager(_workingDirGitDir, _encoding, _fileSystem, overriddenCommitMessage: null);
@@ -238,6 +241,7 @@ namespace GitCommandsTests
             _file.When(x => x.WriteAllText(_mergeMessagePath, _newMessage, _encoding)).Do(_ => correctlyWritten = true);
             _file.Exists(_commitMessagePath).Returns(true);
             _file.Exists(_mergeMessagePath).Returns(true);
+            _directory.Exists(Path.GetDirectoryName(_commitMessagePath)).Returns(true);
 
             _manager.MergeOrCommitMessage = _newMessage;
 
@@ -265,6 +269,7 @@ namespace GitCommandsTests
             _file.When(x => x.WriteAllText(_commitMessagePath, _newMessage, _encoding)).Do(_ => correctlyWritten = true);
             _file.Exists(_commitMessagePath).Returns(true);
             _file.Exists(_mergeMessagePath).Returns(false);
+            _directory.Exists(Path.GetDirectoryName(_commitMessagePath)).Returns(true);
 
             _manager.MergeOrCommitMessage = _newMessage;
 
@@ -278,6 +283,7 @@ namespace GitCommandsTests
             _file.When(x => x.WriteAllText(_commitMessagePath, _newMessage, _encoding)).Do(_ => correctlyWritten = true);
             _file.Exists(_commitMessagePath).Returns(false);
             _file.Exists(_mergeMessagePath).Returns(false);
+            _directory.Exists(Path.GetDirectoryName(_commitMessagePath)).Returns(true);
 
             _manager.MergeOrCommitMessage = _newMessage;
 
@@ -291,10 +297,25 @@ namespace GitCommandsTests
             _file.When(x => x.WriteAllText(_commitMessagePath, string.Empty, _encoding)).Do(_ => correctlyWritten = true);
             _file.Exists(_commitMessagePath).Returns(false);
             _file.Exists(_mergeMessagePath).Returns(false);
+            _directory.Exists(Path.GetDirectoryName(_commitMessagePath)).Returns(true);
 
             _manager.MergeOrCommitMessage = null;
 
             Assert.That(correctlyWritten);
+        }
+
+        [Test]
+        public void MergeOrCommitMessage_should_not_write_if_dir_no_longer_exists()
+        {
+            bool correctlyWritten = false;
+            _file.When(x => x.WriteAllText(_commitMessagePath, string.Empty, _encoding)).Do(_ => correctlyWritten = true);
+            _file.Exists(_commitMessagePath).Returns(false);
+            _file.Exists(_mergeMessagePath).Returns(false);
+            _directory.Exists(Path.GetDirectoryName(_commitMessagePath)).Returns(false);
+
+            _manager.MergeOrCommitMessage = null;
+
+            Assert.That(!correctlyWritten);
         }
 
         [Test]
