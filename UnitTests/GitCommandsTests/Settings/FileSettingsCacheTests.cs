@@ -50,6 +50,7 @@ namespace GitCommandsTests.Settings
             new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor().CanEnableFileWatcher.Should().BeFalse();
         }
 
+        [Ignore("Popup instead of a throw")]
         [TestCase(null)]
         [TestCase("")]
         [TestCase("C:\\" + "\t")]
