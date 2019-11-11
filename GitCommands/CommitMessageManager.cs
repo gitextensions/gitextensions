@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions;
+﻿using System.IO;
+using System.IO.Abstractions;
 using System.Text;
 using JetBrains.Annotations;
 
@@ -108,7 +109,14 @@ namespace GitCommands
                 // do not remember commit message when they have been specified by the command line
                 if (content != _overriddenCommitMessage)
                 {
-                    _fileSystem.File.WriteAllText(GetMergeOrCommitMessagePath().FilePath, content, _commitEncoding);
+                    var path = GetMergeOrCommitMessagePath().FilePath;
+                    if (!_fileSystem.Directory.Exists(Path.GetDirectoryName(path)))
+                    {
+                        // The repo no longer exists
+                        return;
+                    }
+
+                    _fileSystem.File.WriteAllText(path, content, _commitEncoding);
                 }
             }
         }
