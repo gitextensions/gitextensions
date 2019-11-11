@@ -141,12 +141,6 @@ namespace GitCommands.Settings
                     return;
                 }
 
-                int currentProcessId;
-                using (var currentProcess = Process.GetCurrentProcess())
-                {
-                    currentProcessId = currentProcess.Id;
-                }
-
                 var tmpFile = Path.GetTempFileName();
                 WriteSettings(tmpFile);
 
@@ -161,6 +155,13 @@ namespace GitCommands.Settings
                     {
                         // Ignore errors for the backup file
                     }
+                }
+
+                // ensure the directory structure exists
+                var parentFolder = Path.GetDirectoryName(SettingsFilePath);
+                if (!Directory.Exists(parentFolder))
+                {
+                    Directory.CreateDirectory(parentFolder);
                 }
 
                 File.Copy(tmpFile, SettingsFilePath, true);

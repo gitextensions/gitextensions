@@ -60,6 +60,39 @@ namespace GitCommandsTests.Settings
             ((Action)(() => cache.SaveImpl())).Should().Throw<Exception>();
         }
 
+        [Test]
+        public void SaveImpl_should_create_folder_if_absent()
+        {
+            var tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            var settingsFilePath = Path.Combine(tempPath, "GitExtensions.settings");
+
+            try
+            {
+                var cache = new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor();
+                cache.SetLastModificationDate(DateTime.Now);
+
+                Directory.Exists(tempPath).Should().BeFalse();
+                File.Exists(settingsFilePath).Should().BeFalse();
+
+                cache.SaveImpl();
+
+                Directory.Exists(tempPath).Should().BeTrue();
+                File.Exists(settingsFilePath).Should().BeTrue();
+            }
+            finally
+            {
+                // clean up
+                try
+                {
+                    Directory.Delete(tempPath, true);
+                }
+                catch
+                {
+                    // no-op
+                }
+            }
+        }
+
         private class MockFileSettingsCache : FileSettingsCache
         {
             public MockFileSettingsCache(string settingsFilePath, bool autoSave = true)
