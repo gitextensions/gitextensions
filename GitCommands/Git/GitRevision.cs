@@ -30,6 +30,12 @@ namespace GitCommands
         private const int CommitSummaryMaxLineLength = 150;
         private const int CommitSummaryMaxNumberOfLines = 30;
 
+        private const int LineEllipsisLength = 7;
+        private const int CommitSummaryEllipsisLength = 5;
+
+        // Maximum size of the commit summary with ellipsis strings on each lines and at the end
+        private const int CommitSummaryWorstCaseLength = (CommitSummaryMaxNumberOfLines * (CommitSummaryMaxLineLength + LineEllipsisLength)) + CommitSummaryEllipsisLength;
+
         public GitRevision([NotNull] ObjectId objectId)
         {
             ObjectId = objectId ?? throw new ArgumentNullException(nameof(objectId));
@@ -100,7 +106,7 @@ namespace GitCommands
 
         private static string BuildSummary(string body)
         {
-            var s = new StringBuilder(100);
+            var s = new StringBuilder(Math.Min(body.Length, CommitSummaryWorstCaseLength));
 
             int lineCount = 0;
             int lineStartPos = 0;
