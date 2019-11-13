@@ -159,7 +159,7 @@ namespace GitUI.CommandsDialogs
                 ConflictedFiles.Columns[0].DataPropertyName = nameof(ConflictData.Filename);
 
                 // if the last row was previously selected, select the last row again
-                if (isLastRow && ConflictedFiles.Rows.Count >= oldSelectedRow)
+                if (isLastRow && oldSelectedRow >= ConflictedFiles.Rows.Count)
                 {
                     oldSelectedRow = ConflictedFiles.Rows.Count - 1;
                 }
