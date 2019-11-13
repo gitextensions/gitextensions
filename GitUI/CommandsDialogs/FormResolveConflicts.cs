@@ -148,16 +148,40 @@ namespace GitUI.CommandsDialogs
             using (WaitCursorScope.Enter())
             {
                 int oldSelectedRow = 0;
+                bool isLastRow = false;
                 if (ConflictedFiles.SelectedRows.Count > 0)
                 {
                     oldSelectedRow = ConflictedFiles.SelectedRows[0].Index;
+                    isLastRow = ConflictedFiles.Rows.Count - 1 == oldSelectedRow;
                 }
 
                 ConflictedFiles.DataSource = ThreadHelper.JoinableTaskFactory.Run(() => Module.GetConflictsAsync());
                 ConflictedFiles.Columns[0].DataPropertyName = nameof(ConflictData.Filename);
+
+                // if the last row was previously selected, select the last row again
+                if (isLastRow && ConflictedFiles.Rows.Count >= oldSelectedRow)
+                {
+                    oldSelectedRow = ConflictedFiles.Rows.Count - 1;
+                }
+
                 if (ConflictedFiles.Rows.Count > oldSelectedRow)
                 {
-                    ConflictedFiles.Rows[oldSelectedRow].Selected = true;
+                    if (oldSelectedRow != 0)
+                    {
+                        if (ConflictedFiles.SelectedRows.Count > 0)
+                        {
+                            // as part of the databinding event, the fist row is selected automatically
+                            // if previously another row was selected, we need to reset the selection,
+                            // and select the desired row
+
+                            ConflictedFiles.SelectionChanged -= ConflictedFiles_SelectionChanged;
+                            ConflictedFiles.SelectedRows[0].Selected = false;
+                            ConflictedFiles.SelectionChanged += ConflictedFiles_SelectionChanged;
+                        }
+
+                        // select the desired row
+                        ConflictedFiles.Rows[oldSelectedRow].Selected = true;
+                    }
 
                     if (oldSelectedRow < ConflictedFiles.FirstDisplayedScrollingRowIndex ||
                         oldSelectedRow > (ConflictedFiles.FirstDisplayedScrollingRowIndex + ConflictedFiles.DisplayedRowCount(false)))
