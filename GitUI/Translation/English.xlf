@@ -7341,10 +7341,6 @@ Context menu for additional operations</source>
         <source>Mergetool command</source>
         <target />
       </trans-unit>
-      <trans-unit id="label28.Text">
-        <source>Keep backup (.orig) after merge</source>
-        <target />
-      </trans-unit>
       <trans-unit id="label3.Text">
         <source>User name</source>
         <target />

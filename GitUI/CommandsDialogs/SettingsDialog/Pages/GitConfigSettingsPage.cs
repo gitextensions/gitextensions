@@ -55,7 +55,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_GlobalMergeTool.Enabled = canFindGitCmd;
             MergetoolPath.Enabled = canFindGitCmd;
             MergeToolCmd.Enabled = canFindGitCmd;
-            GlobalKeepMergeBackup.Enabled = canFindGitCmd;
             InvalidGitPathGlobal.Visible = !canFindGitCmd;
         }
 
@@ -78,8 +77,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_GlobalDiffTool.Text = diffTool;
             DifftoolPath.Text = _diffMergeToolConfigurationManager.GetToolPath(diffTool, DiffMergeToolType.Diff);
             DifftoolCmd.Text = _diffMergeToolConfigurationManager.GetToolCommand(diffTool, DiffMergeToolType.Diff);
-
-            GlobalKeepMergeBackup.SetNullableChecked(CurrentSettings.mergetool.keepBackup.Value);
 
             globalAutoCrlfFalse.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.@false;
             globalAutoCrlfInput.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.input;
@@ -126,8 +123,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 _diffMergeToolConfigurationManager.UnsetCurrentTool(DiffMergeToolType.Merge);
             }
-
-            CurrentSettings.mergetool.keepBackup.Value = GlobalKeepMergeBackup.GetNullableChecked();
 
             if (globalAutoCrlfFalse.Checked)
             {

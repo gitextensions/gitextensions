@@ -15,7 +15,6 @@ namespace GitCommands.Settings
             : base(lowerPriority, settingsCache)
         {
             core = new CorePath(this);
-            mergetool = new MergeToolPath(this);
             SettingLevel = settingLevel;
         }
 
@@ -74,9 +73,6 @@ namespace GitCommands.Settings
         }
 
         public readonly CorePath core;
-
-        // TODO: remove
-        public readonly MergeToolPath mergetool;
 
         public string GetValue(string setting)
         {
@@ -189,17 +185,6 @@ namespace GitCommands.Settings
             : base(container, "core")
         {
             autocrlf = new EnumNullableSetting<AutoCRLFType>("autocrlf", this);
-        }
-    }
-
-    public class MergeToolPath : SettingsPath
-    {
-        public readonly BoolNullableSetting keepBackup;
-
-        public MergeToolPath(ConfigFileSettings container)
-            : base(container, "mergetool")
-        {
-            keepBackup = new BoolNullableSetting("keepBackup", this, true);
         }
     }
 }
