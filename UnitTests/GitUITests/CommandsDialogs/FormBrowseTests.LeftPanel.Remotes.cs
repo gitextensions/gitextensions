@@ -10,7 +10,7 @@ using GitUI;
 using GitUI.CommandsDialogs;
 using NUnit.Framework;
 
-namespace GitUITests.CommandsDialogs.CommitDialog
+namespace GitUITests.CommandsDialogs
 {
     [Apartment(ApartmentState.STA)]
     public class FormBrowseLeftPanelRemotesTests

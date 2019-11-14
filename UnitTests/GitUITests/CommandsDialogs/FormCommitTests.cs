@@ -9,7 +9,7 @@ using GitUI.CommandsDialogs;
 using ICSharpCode.TextEditor;
 using NUnit.Framework;
 
-namespace GitUITests.CommandsDialogs.CommitDialog
+namespace GitUITests.CommandsDialogs
 {
     [Apartment(ApartmentState.STA)]
     public class FormCommitTests
