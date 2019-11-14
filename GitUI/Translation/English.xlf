@@ -280,10 +280,6 @@ See http://en.gravatar.com/site/implement/images#default-image for more details.
         <source>Show changes</source>
         <target />
       </trans-unit>
-      <trans-unit id="viewInWebSiteToolStripMenuItem.Text">
-        <source>View in WebSite</source>
-        <target />
-      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="BranchComboBox" source-language="en">

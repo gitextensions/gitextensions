@@ -444,13 +444,13 @@ namespace GitUI.Blame
         {
             if (_gitHoster == null)
             {
-                viewInWebSiteToolStripMenuItem.Visible = false;
+                _NO_TRANSLATE_ViewInWebSiteToolStripMenuItem.Visible = false;
                 return;
             }
 
-            viewInWebSiteToolStripMenuItem.Text = string.Format(_viewInWebSite.Text, _gitHoster.Name);
+            _NO_TRANSLATE_ViewInWebSiteToolStripMenuItem.Text = string.Format(_viewInWebSite.Text, _gitHoster.Name);
 
-            viewInWebSiteToolStripMenuItem.Visible = true;
+            _NO_TRANSLATE_ViewInWebSiteToolStripMenuItem.Visible = true;
 
             if (_hostedRemotesForModule != null)
             {
@@ -460,13 +460,13 @@ namespace GitUI.Blame
             _hostedRemotesForModule = _gitHoster.GetHostedRemotesForModule();
             if (_hostedRemotesForModule.Count == 0)
             {
-                viewInWebSiteToolStripMenuItem.Enabled = false;
+                _NO_TRANSLATE_ViewInWebSiteToolStripMenuItem.Enabled = false;
                 return;
             }
 
             foreach (IHostedRemote hostedRemote in _hostedRemotesForModule.OrderBy(r => r.Data))
             {
-                ToolStripItem toolStripItem = viewInWebSiteToolStripMenuItem.DropDownItems.Add(hostedRemote.DisplayData);
+                ToolStripItem toolStripItem = _NO_TRANSLATE_ViewInWebSiteToolStripMenuItem.DropDownItems.Add(hostedRemote.DisplayData);
 
                 toolStripItem.Click += (sender, args) => ViewInGitHosterWebSite(hostedRemote.GetBlameUrl(_blameId.ToString(), _fileName, _lineIndex + 1));
             }
