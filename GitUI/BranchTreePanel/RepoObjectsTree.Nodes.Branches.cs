@@ -281,8 +281,11 @@ namespace GitUI.BranchTreePanel
                 #endregion
 
                 var nodes = new Nodes(this);
+
+                token.ThrowIfCancellationRequested();
                 var aheadBehindData = _aheadBehindDataProvider?.GetData();
 
+                token.ThrowIfCancellationRequested();
                 var currentBranch = Module.GetSelectedBranch();
                 var pathToNode = new Dictionary<string, BaseBranchNode>();
                 foreach (var branch in branches)
