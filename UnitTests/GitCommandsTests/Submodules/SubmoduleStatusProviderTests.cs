@@ -65,6 +65,7 @@ namespace GitCommandsTests.Submodules
             public void UpdateSubmoduleStructure_valid_result_for_top_module()
             {
                 var result = SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, _repo1Module);
+                result.Should().NotBeNull();
 
                 result.TopProject.Path.Should().Be(_repo1Module.WorkingDir);
                 result.SuperProject.Should().Be(null);
@@ -78,6 +79,7 @@ namespace GitCommandsTests.Submodules
             public void UpdateSubmoduleStructure_valid_result_for_first_nested_submodule()
             {
                 var result = SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, _repo2Module, true);
+                result.Should().NotBeNull();
 
                 result.TopProject.Path.Should().Be(_repo1Module.WorkingDir);
                 result.SuperProject.Should().Be(result.TopProject);
@@ -91,6 +93,7 @@ namespace GitCommandsTests.Submodules
             public void UpdateSubmoduleStructure_valid_result_for_second_nested_submodule()
             {
                 var result = SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, _repo3Module, true);
+                result.Should().NotBeNull();
 
                 result.TopProject.Path.Should().Be(_repo1Module.WorkingDir);
                 result.SuperProject.Path.Should().Be(_repo2Module.WorkingDir);
@@ -105,6 +108,7 @@ namespace GitCommandsTests.Submodules
             {
                 var currentModule = _repo1Module;
                 var result = SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, currentModule);
+                result.Should().NotBeNull();
 
                 // No changes in repo
                 var changedFiles = GetStatusChangedFiles(currentModule);
@@ -135,6 +139,7 @@ namespace GitCommandsTests.Submodules
             {
                 var currentModule = _repo2Module;
                 var result = SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, currentModule);
+                result.Should().NotBeNull();
 
                 // No changes in repo
                 var changedFiles = GetStatusChangedFiles(currentModule);

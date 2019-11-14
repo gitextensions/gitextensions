@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GitCommands;
 using GitCommands.Submodules;
+using GitUI;
 
 namespace CommonTestUtils
 {
@@ -11,10 +13,20 @@ namespace CommonTestUtils
             SubmoduleInfoResult result = null;
             provider.StatusUpdated += Provider_StatusUpdated;
 
-            provider.UpdateSubmodulesStructure(
-                workingDirectory: module.WorkingDir,
-                noBranchText: string.Empty,
-                updateStatus: updateStatus);
+            try
+            {
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await provider.UpdateSubmodulesStructureAsync(
+                        workingDirectory: module.WorkingDir,
+                        noBranchText: string.Empty,
+                        updateStatus: updateStatus);
+                });
+            }
+            catch (Exception)
+            {
+                return null;
+            }
 
             AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
 
@@ -33,9 +45,19 @@ namespace CommonTestUtils
             List<DetailedSubmoduleInfo> result = new List<DetailedSubmoduleInfo>();
             provider.StatusUpdated += Provider_StatusUpdated;
 
-            provider.UpdateSubmodulesStatus(
-                workingDirectory: module.WorkingDir,
-                gitStatus: gitStatus);
+            try
+            {
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await provider.UpdateSubmodulesStatusAsync(
+                        workingDirectory: module.WorkingDir,
+                        gitStatus: gitStatus);
+                });
+            }
+            catch (Exception)
+            {
+                return;
+            }
 
             AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
 
