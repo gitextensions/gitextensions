@@ -55,7 +55,7 @@ namespace GitHub3
 
         public string GetBlameUrl(string commitHash, string fileName, int lineIndex)
         {
-            return $"https://github.com/{Data}/blame/{commitHash}/{fileName}#L{lineIndex}";
+            return $"{GitHub3Plugin.Instance.GitHubEndpoint}/{Data}/blame/{commitHash}/{fileName}#L{lineIndex}";
         }
     }
 }

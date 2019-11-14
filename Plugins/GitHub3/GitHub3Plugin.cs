@@ -71,14 +71,16 @@ namespace GitHub3
     {
         public static string GitHubAuthorizationRelativeUrl = "authorizations";
         public static string UpstreamConventionName = "upstream";
-        public readonly StringSetting GitHubApiEndpoint = new StringSetting("GitHub (Enterprise) API endpoint", "https://api.github.com");
+        public readonly StringSetting GitHubHost = new StringSetting("GitHub (Enterprise) hostname", "github.com");
         public readonly StringSetting OAuthToken = new StringSetting("OAuth Token", "");
+        public string GitHubApiEndpoint => $"https://api.{GitHubHost.ValueOrDefault(Settings)}";
+        public string GitHubEndpoint => $"https://{GitHubHost.ValueOrDefault(Settings)}";
 
         private readonly TranslationString _tokenAlreadyExist = new TranslationString("You already have an OAuth token. To get a new one, delete your old one in Plugins > Settings first.");
 
         internal static GitHub3Plugin Instance;
         internal static Client _gitHub;
-        internal static Client GitHub => _gitHub ?? (_gitHub = new Client(Instance.GitHubApiEndpoint.ValueOrDefault(Instance.Settings)));
+        internal static Client GitHub => _gitHub ?? (_gitHub = new Client(Instance.GitHubApiEndpoint));
 
         private IGitUICommands _currentGitUiCommands;
 
@@ -113,7 +115,7 @@ namespace GitHub3
         {
             if (string.IsNullOrEmpty(GitHubLoginInfo.OAuthToken))
             {
-                var authorizationApiUrl = new Uri(new Uri(GitHubApiEndpoint.ValueOrDefault(Settings)), GitHubAuthorizationRelativeUrl).ToString();
+                var authorizationApiUrl = new Uri(new Uri(GitHubApiEndpoint), GitHubAuthorizationRelativeUrl).ToString();
                 using (var gitHubCredentialsPrompt = new GitHubCredentialsPrompt(authorizationApiUrl))
                 {
                     gitHubCredentialsPrompt.ShowDialog(args.OwnerForm);

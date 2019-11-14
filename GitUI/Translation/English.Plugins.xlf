@@ -1013,8 +1013,8 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <source>GitHub</source>
         <target />
       </trans-unit>
-      <trans-unit id="GitHubApiEndpoint.Caption">
-        <source>GitHub (Enterprise) API endpoint</source>
+      <trans-unit id="GitHubHost.Caption">
+        <source>GitHub (Enterprise) hostname</source>
         <target />
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
