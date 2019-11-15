@@ -37,13 +37,13 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test]
-        public void Should_should_show_nothing_if_no_revision_supplied()
+        public void Should_should_contain_single_item_if_no_revision_supplied()
         {
             _copyContextMenuItem.SetRevisionFunc(() => null);
 
             _copyContextMenuItem.ShowDropDown();
 
-            _copyContextMenuItem.DropDownItems.Count.Should().Be(0);
+            _copyContextMenuItem.DropDownItems.Count.Should().Be(1);
         }
 
         [TestCaseSource(nameof(GetArtificialCommits))]
