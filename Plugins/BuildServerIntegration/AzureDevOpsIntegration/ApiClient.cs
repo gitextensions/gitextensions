@@ -58,6 +58,11 @@ namespace AzureDevOpsIntegration
 
         private async Task<T> HttpGetAsync<T>(string url)
         {
+            if (!Uri.CheckSchemeName(url))
+            {
+                return default;
+            }
+
             using (var response = await _httpClient.GetAsync(url))
             {
                 response.EnsureSuccessStatusCode();
@@ -73,7 +78,12 @@ namespace AzureDevOpsIntegration
             var isNotFiltered = string.IsNullOrWhiteSpace(buildDefinitionNameFilter);
             var buildDefinitionUriFilter = isNotFiltered ? string.Empty : "&name=" + buildDefinitionNameFilter;
             var buildDefinitions = await HttpGetAsync<ListWrapper<BuildDefinition>>(BuildDefinitionsUrl + buildDefinitionUriFilter);
-            if (buildDefinitions.Count != 0)
+            if (buildDefinitions == null)
+            {
+                return null;
+            }
+
+            if (buildDefinitions.Count > 0)
             {
                 return GetBuildDefinitionsIds(buildDefinitions.Value);
             }
@@ -84,6 +94,10 @@ namespace AzureDevOpsIntegration
             }
 
             buildDefinitions = await HttpGetAsync<ListWrapper<BuildDefinition>>(BuildDefinitionsUrl);
+            if (buildDefinitions == null)
+            {
+                return null;
+            }
 
             var tfsBuildDefinitionNameFilter = new Regex(buildDefinitionNameFilter, RegexOptions.Compiled);
             return GetBuildDefinitionsIds(buildDefinitions.Value.Where(b => tfsBuildDefinitionNameFilter.IsMatch(b.Name)));
@@ -109,7 +123,7 @@ namespace AzureDevOpsIntegration
         public async Task<string> GetBuildDefinitionNameFromIdAsync(int buildId)
         {
             var build = await HttpGetAsync<Build>($"build/builds/{buildId}?api-version=2.0");
-            return build.Definition.Name;
+            return build?.Definition.Name ?? string.Empty;
         }
 
         public async Task<IEnumerable<Build>> QueryBuildsAsync(string buildDefinitionFilter, DateTime? sinceDate, bool? running)
@@ -125,12 +139,15 @@ namespace AzureDevOpsIntegration
                 return Enumerable.Empty<Build>();
             }
 
-            var builds = (await HttpGetAsync<ListWrapper<Build>>($"build/builds?api-version=2.0&definitions={_buildDefinitionsToQuery}")).Value;
+            var builds = await HttpGetAsync<ListWrapper<Build>>($"build/builds?api-version=2.0&definitions={_buildDefinitionsToQuery}");
+            if (builds == null)
+            {
+                return Array.Empty<Build>();
+            }
 
-            return builds
+            return builds.Value
                 .Where(b => !running.HasValue || running.Value == b.IsInProgress)
-                .Where(b => !sinceDate.HasValue || b.StartTime >= sinceDate.Value)
-                .ToList();
+                .Where(b => !sinceDate.HasValue || b.StartTime >= sinceDate.Value);
         }
 
         public void Dispose()
