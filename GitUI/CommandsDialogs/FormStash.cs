@@ -51,6 +51,21 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
         }
 
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _asyncLoader.Dispose();
+                components?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
         protected override void OnKeyDown(KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape && e.Modifiers == Keys.None)
