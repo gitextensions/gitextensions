@@ -23,25 +23,14 @@ namespace GitUI.UserControls.RevisionGrid
             Text = _copyToClipboardText.Text;
 
             DropDownOpening += OnDropDownOpening;
-
-            // Don't show the menu as long as no revision function is set
-            HideDropDown();
         }
 
         public void SetRevisionFunc(Func<IReadOnlyList<GitRevision>> revisionFunc)
         {
             _revisionFunc = revisionFunc;
 
-            if (_revisionFunc?.Invoke() != null)
-            {
-                // Add dummy item for the menu entry to appear expandable (triangle on the right)
-                DropDownItems.Add(new ToolStripMenuItem());
-                ShowDropDown();
-            }
-            else
-            {
-                HideDropDown();
-            }
+            // Add dummy item for the menu entry to appear expandable (triangle on the right)
+            DropDownItems.Add(new ToolStripMenuItem());
         }
 
         private void AddItem(string displayText, Func<GitRevision, string> extractRevisionText, Image image, char? hotkey)
