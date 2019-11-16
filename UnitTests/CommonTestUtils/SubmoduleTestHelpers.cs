@@ -34,7 +34,7 @@ namespace CommonTestUtils
 
         public static void UpdateSubmoduleStatusAndWaitForResult(ISubmoduleStatusProvider provider, GitModule module, IReadOnlyList<GitItemStatus> gitStatus)
         {
-            provider.UpdateSubmodulesStatus(workingDirectory: module.WorkingDir, gitStatus: gitStatus);
+            provider.UpdateSubmodulesStatus(workingDirectory: module.WorkingDir, gitStatus: gitStatus, forceUpdate: true);
 
             AsyncTestHelper.WaitForPendingOperations();
         }

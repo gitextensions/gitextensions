@@ -32,7 +32,8 @@ namespace GitCommands.Submodules
         /// </summary>
         /// <param name="workingDirectory">Current module working directory</param>
         /// <param name="gitStatus">The Git status for the changes (also other than submodules)</param>
-        void UpdateSubmodulesStatus(string workingDirectory, [CanBeNull] IReadOnlyList<GitItemStatus> gitStatus);
+        /// <param name="forceUpdate">Suppress the usual delay of 15 seconds between consecutive updates</param>
+        void UpdateSubmodulesStatus(string workingDirectory, [CanBeNull] IReadOnlyList<GitItemStatus> gitStatus, bool forceUpdate = false);
     }
 
     public sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
@@ -129,7 +130,7 @@ namespace GitCommands.Submodules
         }
 
         /// <inheritdoc />
-        public void UpdateSubmodulesStatus(string workingDirectory, [CanBeNull] IReadOnlyList<GitItemStatus> gitStatus)
+        public void UpdateSubmodulesStatus(string workingDirectory, [CanBeNull] IReadOnlyList<GitItemStatus> gitStatus, bool forceUpdate)
         {
             if (_submoduleInfoResult == null)
             {
@@ -139,7 +140,7 @@ namespace GitCommands.Submodules
 
             // Throttle updates triggered from status updates
             TimeSpan elapsed = DateTime.Now - _previousSubmoduleUpdateTime;
-            if (gitStatus == null || elapsed.TotalSeconds <= 15)
+            if (gitStatus == null || (!forceUpdate && elapsed.TotalSeconds <= 15))
             {
                 return;
             }
