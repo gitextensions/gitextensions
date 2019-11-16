@@ -73,7 +73,7 @@
     <PackageReference Include="System.IO.Abstractions">
       <Version>2.0.0.144</Version>
     </PackageReference>
-    <PackageReference Include="System.Reactive" Version="3.1.1" />
+    <PackageReference Include="System.Reactive" Version="4.2.0" />
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation">
       <Version>4.3.0</Version>
     </PackageReference>

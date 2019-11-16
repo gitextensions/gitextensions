@@ -133,8 +133,6 @@ xcopy /y /i ..\GitExtensions\bin\%Configuration%\System.Net.WebSockets.dll GitEx
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\System.ObjectModel.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1 
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\System.Reactive.Windows.Threading.dll GitExtensions\
-IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\System.Reflection.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\System.Reflection.Extensions.dll GitExtensions\
@@ -488,13 +486,9 @@ xcopy /y /i ..\Plugins\AutoCompileSubmodules\bin\%Configuration%\AutoCompileSubm
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\Plugins\BackgroundFetch\bin\%Configuration%\BackgroundFetch.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\BackgroundFetch\bin\%Configuration%\System.Reactive.Core.dll GitExtensions\
-IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\Plugins\BackgroundFetch\bin\%Configuration%\System.Reactive.Interfaces.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\Plugins\BackgroundFetch\bin\%Configuration%\System.Reactive.Linq.dll GitExtensions\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\BackgroundFetch\bin\%Configuration%\System.Reactive.PlatformServices.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\Plugins\Bitbucket\bin\%Configuration%\Bitbucket.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1

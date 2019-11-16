@@ -182,17 +182,11 @@
       <Component Id="Ben.Demystifier.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Ben.Demystifier.dll" />
       </Component>
-      <Component Id="System.Reactive.Core.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reactive.Core.dll" />
-      </Component>
       <Component Id="System.Reactive.Interfaces.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reactive.Interfaces.dll" />
       </Component>
       <Component Id="System.Reactive.Linq.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reactive.Linq.dll" />
-      </Component>
-      <Component Id="System.Reactive.PlatformServices.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reactive.PlatformServices.dll" />
       </Component>
       <Component Id="System.ValueTuple.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\System.ValueTuple.dll" />
@@ -380,9 +374,6 @@
       </Component>
       <Component Id="System.ObjectModel.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\System.ObjectModel.dll" />
-      </Component>
-      <Component Id="System.Reactive.Windows.Threading.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reactive.Windows.Threading.dll" />
       </Component>
       <Component Id="System.Reflection.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reflection.dll" />
@@ -1010,7 +1001,6 @@
       <ComponentRef Id="System.Net.WebSockets.Client.dll" />
       <ComponentRef Id="System.Net.WebSockets.dll" />
       <ComponentRef Id="System.ObjectModel.dll" />
-      <ComponentRef Id="System.Reactive.Windows.Threading.dll" />
       <ComponentRef Id="System.Reflection.dll" />
       <ComponentRef Id="System.Reflection.Extensions.dll" />
       <ComponentRef Id="System.Reflection.Primitives.dll" />
@@ -1550,10 +1540,8 @@
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll" />
       <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll" />
       <ComponentRef Id="System.IO.Abstractions.dll" />
-      <ComponentRef Id="System.Reactive.Core.dll" />
       <ComponentRef Id="System.Reactive.Interfaces.dll" />
       <ComponentRef Id="System.Reactive.Linq.dll" />
-      <ComponentRef Id="System.Reactive.PlatformServices.dll" />
       <ComponentRef Id="System.ValueTuple.dll" />
       <ComponentRef Id="SmartFormat.dll" />
       <ComponentRef Id="Ben.Demystifier.dll" />
