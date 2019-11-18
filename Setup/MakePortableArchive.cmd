@@ -486,6 +486,8 @@ xcopy /y /i ..\Plugins\AutoCompileSubmodules\bin\%Configuration%\AutoCompileSubm
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\Plugins\BackgroundFetch\bin\%Configuration%\BackgroundFetch.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y /i ..\Plugins\BackgroundFetch\bin\%Configuration%\System.Reactive.dll GitExtensions\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\Plugins\BackgroundFetch\bin\%Configuration%\System.Reactive.Interfaces.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\Plugins\BackgroundFetch\bin\%Configuration%\System.Reactive.Linq.dll GitExtensions\
