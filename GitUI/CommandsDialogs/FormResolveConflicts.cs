@@ -161,19 +161,18 @@ namespace GitUI.CommandsDialogs
                 // if the last row was previously selected, select the last row again
                 if (isLastRow && oldSelectedRow >= ConflictedFiles.Rows.Count)
                 {
-                    oldSelectedRow = ConflictedFiles.Rows.Count - 1;
+                    oldSelectedRow = Math.Max(0, ConflictedFiles.Rows.Count - 1);
                 }
 
                 if (ConflictedFiles.Rows.Count > oldSelectedRow)
                 {
-                    if (oldSelectedRow != 0)
+                    // as part of the databinding event, the fist row is selected automatically
+                    // if previously another row was selected, we need to reset the selection,
+                    // and select the desired row
+                    if (oldSelectedRow > 0)
                     {
                         if (ConflictedFiles.SelectedRows.Count > 0)
                         {
-                            // as part of the databinding event, the fist row is selected automatically
-                            // if previously another row was selected, we need to reset the selection,
-                            // and select the desired row
-
                             ConflictedFiles.SelectionChanged -= ConflictedFiles_SelectionChanged;
                             ConflictedFiles.SelectedRows[0].Selected = false;
                             ConflictedFiles.SelectionChanged += ConflictedFiles_SelectionChanged;
