@@ -182,6 +182,9 @@
       <Component Id="Ben.Demystifier.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Ben.Demystifier.dll" />
       </Component>
+      <Component Id="System.Reactive.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reactive.dll" />
+      </Component>
       <Component Id="System.Reactive.Interfaces.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reactive.Interfaces.dll" />
       </Component>
@@ -1540,6 +1543,7 @@
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll" />
       <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll" />
       <ComponentRef Id="System.IO.Abstractions.dll" />
+      <ComponentRef Id="System.Reactive.dll" />
       <ComponentRef Id="System.Reactive.Interfaces.dll" />
       <ComponentRef Id="System.Reactive.Linq.dll" />
       <ComponentRef Id="System.ValueTuple.dll" />
