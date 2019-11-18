@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace GitUIPluginInterfaces.RepositoryHosts
 {
@@ -10,6 +11,8 @@ namespace GitUIPluginInterfaces.RepositoryHosts
         IHostedRepository GetRepository(string user, string repositoryName);
 
         IReadOnlyList<IHostedRepository> GetMyRepos();
+
+        void ConfigureContextMenu(ContextMenuStrip contextMenu);
 
         bool ConfigurationOk { get; }
 

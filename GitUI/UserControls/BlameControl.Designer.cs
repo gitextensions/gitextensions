@@ -31,7 +31,6 @@
             this.allCommitInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BlameFile = new GitUI.Editor.FileViewer();
             this.blameTooltip = new System.Windows.Forms.ToolTip(this.components);
-            this._NO_TRANSLATE_ViewInWebSiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -110,8 +109,7 @@
             this.blamePreviousRevisionToolStripMenuItem,
             this.showChangesToolStripMenuItem,
             this.toolStripSeparator1,
-            this.copyToClipboardToolStripMenuItem,
-            this._NO_TRANSLATE_ViewInWebSiteToolStripMenuItem});
+            this.copyToClipboardToolStripMenuItem});
             this.contextMenu.Name = "ContextMenu";
             this.contextMenu.Size = new System.Drawing.Size(239, 76);
             this.contextMenu.Opened += new System.EventHandler(this.contextMenu_Opened);
@@ -187,13 +185,6 @@
             this.BlameFile.Size = new System.Drawing.Size(666, 576);
             this.BlameFile.TabIndex = 0;
             // 
-            // viewInGitHubToolStripMenuItem
-            // 
-            this._NO_TRANSLATE_ViewInWebSiteToolStripMenuItem.Name = "_NO_TRANSLATE_ViewInWebSiteToolStripMenuItem";
-            this._NO_TRANSLATE_ViewInWebSiteToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
-            this._NO_TRANSLATE_ViewInWebSiteToolStripMenuItem.Text = "View in WebSite";
-            this._NO_TRANSLATE_ViewInWebSiteToolStripMenuItem.Click += new System.EventHandler(this.ViewInWebSiteToolStripMenuItem_Click);
-            // 
             // BlameControl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -231,6 +222,5 @@
         private System.Windows.Forms.ToolStripMenuItem commitMessageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem allCommitInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem blameRevisionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem _NO_TRANSLATE_ViewInWebSiteToolStripMenuItem;
     }
 }

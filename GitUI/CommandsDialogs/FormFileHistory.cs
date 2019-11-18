@@ -66,7 +66,7 @@ namespace GitUI.CommandsDialogs
 
             InitializeComplete();
 
-            Blame.SetRepositoryHostPlugin(PluginRegistry.TryGetGitHosterForModule(Module));
+            Blame.ConfigureRepositoryHostPlugin(PluginRegistry.TryGetGitHosterForModule(Module));
 
             return;
 

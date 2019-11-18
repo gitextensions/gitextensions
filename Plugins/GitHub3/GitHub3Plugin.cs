@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,6 +18,7 @@ namespace GitHub3
     internal static class GitHubLoginInfo
     {
         private static string _username;
+
         public static string Username
         {
             get
@@ -69,6 +71,9 @@ namespace GitHub3
     [Export(typeof(IGitPlugin))]
     public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin
     {
+        private readonly TranslationString _viewInWebSite = new TranslationString("View in {0}");
+        private readonly TranslationString _tokenAlreadyExist = new TranslationString("You already have an OAuth token. To get a new one, delete your old one in Plugins > Settings first.");
+
         public static string GitHubAuthorizationRelativeUrl = "authorizations";
         public static string UpstreamConventionName = "upstream";
         public readonly StringSetting GitHubHost = new StringSetting("GitHub (Enterprise) hostname", "github.com");
@@ -76,13 +81,12 @@ namespace GitHub3
         public string GitHubApiEndpoint => $"https://api.{GitHubHost.ValueOrDefault(Settings)}";
         public string GitHubEndpoint => $"https://{GitHubHost.ValueOrDefault(Settings)}";
 
-        private readonly TranslationString _tokenAlreadyExist = new TranslationString("You already have an OAuth token. To get a new one, delete your old one in Plugins > Settings first.");
-
         internal static GitHub3Plugin Instance;
         internal static Client _gitHub;
         internal static Client GitHub => _gitHub ?? (_gitHub = new Client(Instance.GitHubApiEndpoint));
 
         private IGitUICommands _currentGitUiCommands;
+        private IReadOnlyList<IHostedRemote> _hostedRemotesForModule;
 
         public GitHub3Plugin() : base(true)
         {
@@ -220,6 +224,35 @@ namespace GitHub3
                         }
                     }
                 }
+            }
+        }
+
+        public void ConfigureContextMenu(ContextMenuStrip contextMenu)
+        {
+            _hostedRemotesForModule = GetHostedRemotesForModule();
+            if (_hostedRemotesForModule.Count == 0)
+            {
+                return;
+            }
+
+            var toolStripMenuItem = new ToolStripMenuItem(string.Format(_viewInWebSite.Text, Name), Icon);
+            contextMenu.Items.Add(toolStripMenuItem);
+            toolStripMenuItem.Click += (s, e) => Process.Start(_hostedRemotesForModule.First().Data);
+
+            foreach (IHostedRemote hostedRemote in _hostedRemotesForModule.OrderBy(r => r.Data))
+            {
+                ToolStripItem toolStripItem = toolStripMenuItem.DropDownItems.Add(hostedRemote.DisplayData);
+                toolStripItem.Click += (s, e) =>
+                {
+                    var blameContext = contextMenu?.Tag as GitBlameContext;
+                    if (blameContext == null)
+                    {
+                        return;
+                    }
+
+                    Process.Start(hostedRemote.GetBlameUrl(blameContext.BlameId.ToString(), blameContext.FileName,
+                        blameContext.LineIndex + 1));
+                };
             }
         }
     }

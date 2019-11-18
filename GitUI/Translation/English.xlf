@@ -248,10 +248,6 @@ See http://en.gravatar.com/site/implement/images#default-image for more details.
   </file>
   <file datatype="plaintext" original="BlameControl" source-language="en">
     <body>
-      <trans-unit id="_viewInWebSite.Text">
-        <source>View in {0}</source>
-        <target />
-      </trans-unit>
       <trans-unit id="allCommitInfoToolStripMenuItem.Text">
         <source>All commit info</source>
         <target />
