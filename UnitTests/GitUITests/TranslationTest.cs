@@ -40,9 +40,11 @@ namespace GitUITests
 
                 foreach (var type in types)
                 {
+                    IDisposable disposableObj = null;
                     try
                     {
                         var obj = (ITranslate)TranslationUtil.CreateInstanceOfClass(type);
+                        disposableObj = obj as IDisposable;
 
                         obj.AddTranslationItems(translation);
                         obj.TranslateItems(translation);
@@ -50,6 +52,10 @@ namespace GitUITests
                     catch (Exception ex)
                     {
                         problems.Add((type.FullName, ex));
+                    }
+                    finally
+                    {
+                        disposableObj?.Dispose();
                     }
                 }
             }
