@@ -166,19 +166,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             return chosenModule;
         }
 
-        internal TestAccessor GetTestAccessor()
-            => new TestAccessor(this);
-
         internal readonly struct TestAccessor
         {
-            private readonly FormOpenDirectory _form;
-
-            public TestAccessor(FormOpenDirectory form)
-            {
-                _form = form;
-            }
-
-            public GitModule OpenGitRepository([NotNull] string path, ILocalRepositoryManager localRepositoryManager) => FormOpenDirectory.OpenGitRepository(path, localRepositoryManager);
+            public static GitModule OpenGitRepository([NotNull] string path, ILocalRepositoryManager localRepositoryManager)
+                => FormOpenDirectory.OpenGitRepository(path, localRepositoryManager);
         }
     }
 }

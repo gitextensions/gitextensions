@@ -15,8 +15,6 @@ namespace GitUITests.CommandsDialogs
         private ReferenceRepository _referenceRepository;
         private ILocalRepositoryManager _localRepositoryManager;
 
-        private FormOpenDirectory _form;
-
         [SetUp]
         public void Setup()
         {
@@ -30,7 +28,14 @@ namespace GitUITests.CommandsDialogs
             }
 
             _localRepositoryManager = Substitute.For<ILocalRepositoryManager>();
-            _form = new FormOpenDirectory(null);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _localRepositoryManager = null;
+            _referenceRepository?.Dispose();
+            _referenceRepository = null;
         }
 
         [Test]
@@ -38,7 +43,7 @@ namespace GitUITests.CommandsDialogs
         {
             string path = @"C:\some\directory\that\does\not\exist\at\all";
 
-            _form.GetTestAccessor().OpenGitRepository(path, _localRepositoryManager).Should().BeNull();
+            FormOpenDirectory.TestAccessor.OpenGitRepository(path, _localRepositoryManager).Should().BeNull();
             _localRepositoryManager.DidNotReceive().AddAsMostRecentAsync(Arg.Any<string>());
         }
 
@@ -49,7 +54,7 @@ namespace GitUITests.CommandsDialogs
             string path = Path.GetTempPath();
             path[path.Length - 1].Should().Be(Path.DirectorySeparatorChar);
 
-            _form.GetTestAccessor().OpenGitRepository(path, _localRepositoryManager).Should().BeNull();
+            FormOpenDirectory.TestAccessor.OpenGitRepository(path, _localRepositoryManager).Should().BeNull();
             _localRepositoryManager.DidNotReceive().AddAsMostRecentAsync(Arg.Any<string>());
         }
 
@@ -62,7 +67,7 @@ namespace GitUITests.CommandsDialogs
 
             // ensure absence of the trailing slash isn't a problem
             path = path.Substring(0, path.Length - 1);
-            Assert.DoesNotThrow(() => _form.GetTestAccessor().OpenGitRepository(path, _localRepositoryManager));
+            Assert.DoesNotThrow(() => FormOpenDirectory.TestAccessor.OpenGitRepository(path, _localRepositoryManager));
         }
 
         [Test]
@@ -72,7 +77,7 @@ namespace GitUITests.CommandsDialogs
             string path = Path.GetTempPath();
             path[path.Length - 1].Should().Be(Path.DirectorySeparatorChar);
 
-            var module = _form.GetTestAccessor().OpenGitRepository(_referenceRepository.Module.WorkingDir, _localRepositoryManager);
+            var module = FormOpenDirectory.TestAccessor.OpenGitRepository(_referenceRepository.Module.WorkingDir, _localRepositoryManager);
 
             module.Should().NotBeNull();
             module.WorkingDir.Should().Be(_referenceRepository.Module.WorkingDir);
