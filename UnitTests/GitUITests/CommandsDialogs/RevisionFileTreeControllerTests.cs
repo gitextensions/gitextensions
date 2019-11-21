@@ -38,7 +38,6 @@ namespace GitUITests.CommandsDialogs
         public void TearDown()
         {
             _imageList?.Dispose();
-            _imageList = null;
         }
 
         [Test]

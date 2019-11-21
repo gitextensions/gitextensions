@@ -46,13 +46,12 @@ namespace GitUITests.CommandsDialogs
             AppSettings.DefaultPullAction = _originalDefaultPullAction;
             AppSettings.FormPullAction = _originalFormPullAction;
             AppSettings.AutoStash = _originalAutoStash;
-            _commands = null;
         }
 
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            _referenceRepository.Dispose();
+            _referenceRepository?.Dispose();
         }
 
         [Test]

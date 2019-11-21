@@ -30,6 +30,12 @@ namespace GitUITests.Editor
             _fileViewer = new FileViewer();
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            _fileViewer?.Dispose();
+        }
+
         [Test]
         [TestCase(AutoCRLFType.@true, "UnixLines")]
         [TestCase(AutoCRLFType.@true, "MacLines")]

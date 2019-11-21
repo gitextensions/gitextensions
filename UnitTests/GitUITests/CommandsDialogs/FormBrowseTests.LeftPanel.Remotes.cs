@@ -60,8 +60,7 @@ namespace GitUITests.CommandsDialogs
         [TearDown]
         public void TearDown()
         {
-            _referenceRepository.Dispose();
-            _commands = null;
+            _referenceRepository?.Dispose();
         }
 
         [Test]

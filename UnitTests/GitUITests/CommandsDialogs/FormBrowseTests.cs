@@ -36,7 +36,7 @@ namespace GitUITests.CommandsDialogs
         public void OneTimeTearDown()
         {
             AppSettings.ShowAuthorAvatarColumn = _originalShowAuthorAvatarColumn;
-            _referenceRepository.Dispose();
+            _referenceRepository?.Dispose();
         }
 
         [SetUp]
@@ -52,12 +52,6 @@ namespace GitUITests.CommandsDialogs
             }
 
             _commands = new GitUICommands(_referenceRepository.Module);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            _commands = null;
         }
 
         [Test]

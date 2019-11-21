@@ -17,6 +17,12 @@ namespace GitUITests.NBugReports
             _form = new BugReportForm();
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            _form?.Dispose();
+        }
+
         [TestCase("", false)]
         [TestCase("\t\r\n\t\t   \r   \n   \r", false)]
         [TestCase("\t\r\n\t\t  a \r   \n   \r", true)]

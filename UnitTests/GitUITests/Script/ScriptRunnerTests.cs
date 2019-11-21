@@ -52,16 +52,10 @@ namespace GitUITests.Script
             _exampleScript.RunInBackground = true; // avoid any dialogs popping up
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-            _uiCommands = null;
-        }
-
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            _referenceRepository.Dispose();
+            _referenceRepository?.Dispose();
         }
 
         [Test]

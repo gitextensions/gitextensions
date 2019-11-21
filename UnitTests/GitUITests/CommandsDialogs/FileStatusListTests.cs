@@ -30,9 +30,7 @@ namespace GitUITests.CommandsDialogs
         public void TearDown()
         {
             _fileStatusList?.Dispose();
-            _fileStatusList = null;
             _form?.Dispose();
-            _form = null;
         }
 
         [Test]

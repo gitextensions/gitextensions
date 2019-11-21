@@ -30,12 +30,10 @@ namespace GitUITests.CommandsDialogs
             _localRepositoryManager = Substitute.For<ILocalRepositoryManager>();
         }
 
-        [TearDown]
-        public void TearDown()
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
-            _localRepositoryManager = null;
             _referenceRepository?.Dispose();
-            _referenceRepository = null;
         }
 
         [Test]

@@ -22,6 +22,12 @@ namespace GitUITests.Editor
             _viewPositionCache = new FileViewerInternal.CurrentViewPositionCache(_fileViewerInternal);
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            _fileViewerInternal?.Dispose();
+        }
+
         [TestCase(null)]
         [TestCase("a")]
         public void Capture_should_not_change_capture_if_less_then_two_lines(string text)

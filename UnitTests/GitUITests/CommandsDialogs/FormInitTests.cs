@@ -31,16 +31,10 @@ namespace GitUITests.CommandsDialogs
             _commands = new GitUICommands(_referenceRepository.Module);
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-            _commands = null;
-        }
-
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            _referenceRepository.Dispose();
+            _referenceRepository?.Dispose();
         }
 
         [Test]
