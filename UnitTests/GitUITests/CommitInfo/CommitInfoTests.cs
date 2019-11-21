@@ -59,7 +59,7 @@ namespace GitUITests.CommitInfo
             };
 
             // let the async call be executed before the mockup of _gitExecutable will be changed
-            Thread.Sleep(100);
+            AsyncTestHelper.WaitForPendingOperations();
         }
 
         [TearDown]
