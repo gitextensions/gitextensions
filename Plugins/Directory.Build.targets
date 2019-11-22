@@ -1,0 +1,20 @@
+<Project>
+
+  <!-- Import content of parent file otherwise the content is masked -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.targets', '$(SolutionDir)'))" />
+  <!--
+      Direct plugins artifacts to be placed under GitExtensions/Plugins folder
+    -->
+  <Target Name="CopyPlugin"
+          BeforeTargets="GetTargetPath"
+          Condition=" '$(Configuration)' == 'Debug' And '$(ProjectName)' != 'GitUIPluginInterfaces'">
+
+    <PropertyGroup>
+      <OutDir>$(SolutionDir)GitExtensions\$(OutDir)Plugins\</OutDir>
+    </PropertyGroup>
+
+    <!-- Fail if we don't have 'SolutionDir' variable is not set -->
+    <Error Condition="'$(SolutionDir)' == ''" Text="'SolutionDir' is unset" />
+  </Target>
+
+</Project>
