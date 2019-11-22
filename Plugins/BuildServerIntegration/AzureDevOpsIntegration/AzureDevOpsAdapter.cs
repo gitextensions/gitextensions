@@ -77,7 +77,7 @@ namespace AzureDevOpsIntegration
             return GetBuilds(scheduler, null, true);
         }
 
-        public IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
+        private IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
         {
             return Observable.Create<BuildInfo>((observer, cancellationToken) => ObserveBuildsAsync(sinceDate, running, observer, cancellationToken));
         }
@@ -94,7 +94,10 @@ namespace AzureDevOpsIntegration
             {
                 var builds = await _apiClient.QueryBuildsAsync(_settings.BuildDefinitionFilter, sinceDate, running);
 
-                Parallel.ForEach(builds, detail => { observer.OnNext(CreateBuildInfo(detail)); });
+                foreach (var build in builds)
+                {
+                    observer.OnNext(CreateBuildInfo(build));
+                }
             }
             catch (OperationCanceledException)
             {
