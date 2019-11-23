@@ -225,14 +225,34 @@ namespace GitUI
         {
             if (disposing)
             {
+                //// MenuCommands not disposable
+                //// _superprojectCurrentCheckout not disposable
+                //// _selectedObjectIds not disposable
+                //// _baseCommitToCompare not disposable
                 _revisionSubscription?.Dispose();
                 _revisionReader?.Dispose();
+                //// _artificialStatus not disposable
+                //// _ambiguousRefs not disposable
+                //// _refFilterOptions not disposable
+                _lastVisibleResizableColumn?.Dispose();
+                _maximizedColumn?.Dispose();
+                //// _revisionGraphColumnProvider not disposable
+                _selectionTimer?.Dispose();
                 _buildServerWatcher?.Dispose();
 
                 if (_indexWatcher.IsValueCreated)
                 {
                     _indexWatcher.Value.Dispose();
                 }
+
+                //// _authorHighlighting not disposable
+                //// _parentChildNavigationHistory not disposable
+                //// _quickSearchProvider not disposable
+                //// _toolTipProvider  not disposable
+                _loadingControlSync.Dispose();
+                _loadingControlAsync.Dispose();
+                //// _navigationHistory not disposable
+                _revisionFilter?.Dispose();
 
                 components?.Dispose();
             }

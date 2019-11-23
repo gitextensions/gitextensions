@@ -73,6 +73,25 @@ namespace GitUI.Editor
             VRulerPosition = AppSettings.DiffVerticalRulerPosition;
         }
 
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                //// _diffHighlightService not disposable
+                //// _lineNumbersControl not disposable
+                //// _currentViewPositionCache not disposable
+                _findAndReplaceForm?.Dispose();
+
+                components?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
         private void SelectionManagerSelectionChanged(object sender, EventArgs e)
         {
             string text = TextEditor.ActiveTextAreaControl.TextArea.SelectionManager.SelectedText;
