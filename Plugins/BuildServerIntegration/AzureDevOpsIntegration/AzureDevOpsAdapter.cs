@@ -53,6 +53,12 @@ namespace AzureDevOpsIntegration
             }
 
             var projectUrl = _buildServerWatcher.ReplaceVariables(_settings.ProjectUrl);
+
+            if (!Uri.IsWellFormedUriString(projectUrl, UriKind.Absolute) || string.IsNullOrWhiteSpace(_settings.ApiToken))
+            {
+                return;
+            }
+
             _apiClient = new ApiClient(projectUrl, _settings.ApiToken);
         }
 
@@ -78,6 +84,12 @@ namespace AzureDevOpsIntegration
 
         private async Task ObserveBuildsAsync(DateTime? sinceDate, bool? running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
         {
+            if (_apiClient == null)
+            {
+                observer.OnCompleted();
+                return;
+            }
+
             try
             {
                 var builds = await _apiClient.QueryBuildsAsync(_settings.BuildDefinitionFilter, sinceDate, running);
