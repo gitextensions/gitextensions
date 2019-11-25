@@ -238,13 +238,18 @@ namespace GitUITests
 
         private static void JoinPendingOperations()
         {
+            if (ThreadHelper.JoinableTaskContext == null)
+            {
+                throw new InvalidOperationException("Join is pointless without JoinableTaskContext.");
+            }
+
             // Since we are testing a FileAndForget method, we need to join all pending operations before continuing.
             // Note that ThreadHelper.JoinableTaskContext.Factory must be used to bypass the default behavior of
             // ThreadHelper.JoinableTaskFactory since the latter adds new tasks to the collection and would therefore
             // never complete.
             using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
             {
-                ThreadHelper.JoinableTaskContext?.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cts.Token));
+                ThreadHelper.JoinableTaskContext.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cts.Token));
             }
         }
 

@@ -58,9 +58,14 @@ namespace CommonTestUtils
             {
                 try
                 {
+                    if (ThreadHelper.JoinableTaskContext == null)
+                    {
+                        throw new InvalidOperationException("A JoinableTaskContext must have been created by BeforeTest.");
+                    }
+
                     using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
                     {
-                        ThreadHelper.JoinableTaskContext?.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cts.Token));
+                        ThreadHelper.JoinableTaskContext.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cts.Token));
                     }
                 }
                 finally
@@ -73,6 +78,10 @@ namespace CommonTestUtils
                 }
 
                 _denyExecutionSynchronizationContext?.ThrowIfSwitchOccurred();
+            }
+            catch (Exception) when (_threadException != null)
+            {
+                // ignore the follow-up exception
             }
             finally
             {
