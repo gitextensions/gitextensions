@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using GitUI;
 
@@ -9,31 +8,41 @@ namespace CommonTestUtils
 {
     public static class AsyncTestHelper
     {
-        public static void RunAndWaitForPendingOperations(Func<Task> asyncMethod)
+        public static TimeSpan UnexpectedTimeout
+        {
+            get
+            {
+                return Debugger.IsAttached ? TimeSpan.FromHours(1) : TimeSpan.FromMinutes(1);
+            }
+        }
+
+        public static void RunAndWaitForPendingOperations(Func<Task> asyncMethod, CancellationToken cancellationToken)
         {
             ThreadHelper.JoinableTaskFactory.Run(asyncMethod);
 
-            WaitForPendingOperations();
+            WaitForPendingOperations(cancellationToken);
         }
 
-        public static T RunAndWaitForPendingOperations<T>(Func<Task<T>> asyncMethod)
+        public static T RunAndWaitForPendingOperations<T>(Func<Task<T>> asyncMethod, CancellationToken cancellationToken)
         {
             var result = ThreadHelper.JoinableTaskFactory.Run(asyncMethod);
 
-            WaitForPendingOperations();
+            WaitForPendingOperations(cancellationToken);
 
             return result;
         }
 
-        public static void WaitForPendingOperations()
+        public static void WaitForPendingOperations(TimeSpan timeout)
         {
-            try
+            using (var cts = new CancellationTokenSource(timeout))
             {
-                ThreadHelper.JoinableTaskContext?.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync());
+                WaitForPendingOperations(cts.Token);
             }
-            catch (OperationCanceledException)
-            {
-            }
+        }
+
+        public static void WaitForPendingOperations(CancellationToken cancellationToken)
+        {
+            ThreadHelper.JoinableTaskContext?.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cancellationToken));
         }
     }
 }

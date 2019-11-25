@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Threading;
@@ -112,9 +113,9 @@ namespace GitUI
                 });
         }
 
-        public static async Task JoinPendingOperationsAsync()
+        public static async Task JoinPendingOperationsAsync(CancellationToken cancellationToken)
         {
-            await _joinableTaskCollection.JoinTillEmptyAsync();
+            await _joinableTaskCollection.JoinTillEmptyAsync(cancellationToken);
         }
 
         public static T CompletedResult<T>(this Task<T> task)
