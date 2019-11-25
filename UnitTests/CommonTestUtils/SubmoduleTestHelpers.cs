@@ -17,7 +17,7 @@ namespace CommonTestUtils
                     noBranchText: string.Empty,
                     updateStatus: updateStatus);
 
-                AsyncTestHelper.WaitForPendingOperations();
+                AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
             }
             finally
             {
@@ -36,7 +36,7 @@ namespace CommonTestUtils
         {
             provider.UpdateSubmodulesStatus(workingDirectory: module.WorkingDir, gitStatus: gitStatus, forceUpdate: true);
 
-            AsyncTestHelper.WaitForPendingOperations();
+            AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
         }
     }
 }
