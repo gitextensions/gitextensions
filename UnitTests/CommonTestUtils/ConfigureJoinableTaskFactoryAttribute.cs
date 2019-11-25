@@ -21,6 +21,8 @@ namespace CommonTestUtils
 
         public void BeforeTest(ITest test)
         {
+            Assert.IsNull(ThreadHelper.JoinableTaskContext, "Tests with joinable tasks must not be run in parallel!");
+
             Application.ThreadException += HandleApplicationThreadException;
 
             IList apartmentState = null;
