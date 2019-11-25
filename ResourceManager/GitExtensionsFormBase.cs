@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
@@ -9,6 +11,25 @@ using ResourceManager.Properties;
 
 namespace ResourceManager
 {
+    public class InstanceRegistry
+    {
+        private ConcurrentDictionary<object, string> _instances = new ConcurrentDictionary<object, string>();
+
+        internal void Add(object obj)
+            => Debug.Assert(_instances.TryAdd(obj, obj.GetType().FullName),
+                            $"Already registered object '{obj.ToString()}' of type {obj.GetType().FullName}!");
+
+        internal void Remove(object obj)
+            => Debug.Assert(_instances.TryRemove(obj, out var type) || true,
+                            $"Not registered object '{obj.ToString()}' of type {obj.GetType().FullName}!");
+
+        public void Clear() => _instances.Clear();
+
+        public int Count => _instances.Count;
+
+        public override string ToString() => _instances.Values.Join(Environment.NewLine);
+    }
+
     // NOTE do not make this class abstract as it breaks the WinForms designer in VS
 
     /// <summary>
@@ -20,15 +41,29 @@ namespace ResourceManager
     /// </remarks>
     public class GitExtensionsFormBase : Form, ITranslate
     {
+        public static InstanceRegistry InstanceRegistry = new InstanceRegistry();
+
         private readonly GitExtensionsControlInitialiser _initialiser;
 
         /// <summary>Creates a new <see cref="GitExtensionsFormBase"/> indicating position restore.</summary>
         public GitExtensionsFormBase()
         {
+            InstanceRegistry?.Add(this);
+
             _initialiser = new GitExtensionsControlInitialiser(this);
 
             ShowInTaskbar = Application.OpenForms.Count <= 0;
             Icon = Resources.GitExtensionsLogoIcon;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                InstanceRegistry?.Remove(this);
+            }
+
+            base.Dispose(disposing);
         }
 
         protected bool IsDesignModeActive => _initialiser.IsDesignModeActive;

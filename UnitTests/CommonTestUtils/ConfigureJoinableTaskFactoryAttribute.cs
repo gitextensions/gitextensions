@@ -8,6 +8,7 @@ using GitUI;
 using Microsoft.VisualStudio.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
+using ResourceManager;
 
 namespace CommonTestUtils
 {
@@ -21,6 +22,9 @@ namespace CommonTestUtils
 
         public void BeforeTest(ITest test)
         {
+            // Ignore instances from previous failed tests.
+            GitExtensionsFormBase.InstanceRegistry.Clear();
+
             Assert.IsNull(ThreadHelper.JoinableTaskContext, "Tests with joinable tasks must not be run in parallel!");
 
             Application.ThreadException += HandleApplicationThreadException;
@@ -67,6 +71,10 @@ namespace CommonTestUtils
                     {
                         ThreadHelper.JoinableTaskContext.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cts.Token));
                     }
+
+                    Assert.IsTrue(GitExtensionsFormBase.InstanceRegistry.Count == 0,
+                        $"{GitExtensionsFormBase.InstanceRegistry.Count} undisposed form(s):{Environment.NewLine}"
+                        + $"{GitExtensionsFormBase.InstanceRegistry}");
                 }
                 finally
                 {
