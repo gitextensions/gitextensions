@@ -81,13 +81,8 @@ namespace GitUITests.CommandsDialogs
         public void Should_display_branch_and_no_remote_info_in_statusbar()
         {
             _referenceRepository.CheckoutMaster();
-            RunFormTest(async form =>
+            RunFormTest(form =>
             {
-                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
-                {
-                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
-                }
-
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
@@ -100,13 +95,8 @@ namespace GitUITests.CommandsDialogs
         public void Should_display_detached_head_info_in_statusbar()
         {
             _referenceRepository.CheckoutRevision();
-            RunFormTest(async form =>
+            RunFormTest(form =>
             {
-                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
-                {
-                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
-                }
-
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
@@ -119,13 +109,8 @@ namespace GitUITests.CommandsDialogs
         public void Should_display_branch_and_remote_info_in_statusbar()
         {
             _referenceRepository.CreateRemoteForMasterBranch();
-            RunFormTest(async form =>
+            RunFormTest(form =>
             {
-                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
-                {
-                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
-                }
-
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
@@ -255,13 +240,8 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void editFileToolStripMenuItem_Click_no_selection_should_not_throw()
         {
-            RunFormTest(async form =>
+            RunFormTest(form =>
             {
-                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
-                {
-                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
-                }
-
                 form.GetTestAccessor().UnstagedList.ClearSelected();
 
                 var editFileToolStripMenuItem = form.GetTestAccessor().EditFileToolStripMenuItem;

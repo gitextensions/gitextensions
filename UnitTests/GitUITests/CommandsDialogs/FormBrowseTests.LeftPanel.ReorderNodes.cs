@@ -8,6 +8,7 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitUI;
+using GitUI.BranchTreePanel;
 using GitUI.CommandsDialogs;
 using NUnit.Framework;
 
@@ -70,10 +71,9 @@ namespace GitUITests.CommandsDialogs
         public void RepoObjectTree_moving_first_up_and_last_down_does_nothing()
         {
             RunFormTest(
-                form =>
+                repoObjectTree =>
                 {
                     // act
-                    var repoObjectTree = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor();
                     var currNodes = repoObjectTree.TreeView.Nodes;
                     List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
 
@@ -98,10 +98,9 @@ namespace GitUITests.CommandsDialogs
         public void RepoObjectTree_moving_node_legally_moves_it()
         {
             RunFormTest(
-                form =>
+                repoObjectTree =>
                 {
                     // act
-                    var repoObjectTree = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor();
                     var currNodes = repoObjectTree.TreeView.Nodes;
                     List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
 
@@ -131,11 +130,9 @@ namespace GitUITests.CommandsDialogs
         public void RepoObjectTree_moving_node_across_hidden_trees_skips_them()
         {
             RunFormTest(
-                form =>
+                repoObjectTree =>
                 {
                     // act
-                    var repoObjectTree = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor();
-
                     List<TreeNode> initialNodes = repoObjectTree.TreeView.Nodes.OfType<TreeNode>().ToList();
 
                     // Hide nodes between first and last
@@ -173,12 +170,12 @@ namespace GitUITests.CommandsDialogs
             }
         }
 
-        private void RunFormTest(Action<FormBrowse> testDriver)
+        private void RunFormTest(Action<RepoObjectsTree.TestAccessor> testDriver)
         {
             RunFormTest(
                 form =>
                 {
-                    testDriver(form);
+                    testDriver(form.GetTestAccessor().RepoObjectsTree.GetTestAccessor());
                     return Task.CompletedTask;
                 });
         }

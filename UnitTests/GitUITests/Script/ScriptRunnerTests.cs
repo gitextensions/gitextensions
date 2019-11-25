@@ -180,12 +180,6 @@ namespace GitUITests.Script
 
             RunFormTest(formBrowse =>
             {
-                // wait until the revisions are loaded
-                while (formBrowse.RevisionGridControl.LatestSelectedRevision == null)
-                {
-                    Application.DoEvents();
-                }
-
                 var result = ScriptRunner.RunScript(null, _referenceRepository.Module, _keyOfExampleScript, _uiCommands, formBrowse.RevisionGridControl);
 
                 result.Should().BeEquivalentTo(new CommandStatus(executed: true, needsGridRefresh: false));
