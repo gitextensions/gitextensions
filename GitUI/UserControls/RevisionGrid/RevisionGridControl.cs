@@ -255,6 +255,12 @@ namespace GitUI
                 _revisionFilter?.Dispose();
 
                 components?.Dispose();
+
+                if (!Controls.Contains(_gridView))
+                {
+                    // Dispose _gridView explicitly since it won't be disposed automatically
+                    _gridView.Dispose();
+                }
             }
 
             base.Dispose(disposing);
