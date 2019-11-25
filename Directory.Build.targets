@@ -5,7 +5,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(EnableVisualStudioThreading)' != 'false'">
-    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="15.8.132" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="16.4.33" />
   </ItemGroup>
 
 </Project>
