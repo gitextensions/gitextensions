@@ -2078,12 +2078,16 @@ namespace GitUI.CommandsDialogs
 
                 IEnumerable<string> GetBranchNames()
                 {
+                    var branchNames = Module.GetRefs(tags: false, branches: true, noLocks: true).Select(b => b.Name);
+
+                    if (AppSettings.BranchOrderingCriteria == BranchOrdering.Alphabetically)
+                    {
+                        branchNames = branchNames.OrderBy(b => b);
+                    }
+
                     // Make sure there are never more than a 100 branches added to the menu
                     // Git Extensions will hang when the drop down is too large...
-                    return Module
-                        .GetRefs(tags: false, branches: true, noLocks: true)
-                        .Select(b => b.Name)
-                        .Take(100);
+                    return branchNames.Take(100);
                 }
             }
         }

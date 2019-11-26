@@ -5,12 +5,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Git;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.Properties;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
-using ResourceManager;
 
 namespace GitUI.BranchTreePanel
 {
@@ -245,6 +245,12 @@ namespace GitUI.BranchTreePanel
                 token.ThrowIfCancellationRequested();
 
                 var branchNames = Module.GetRefs(tags: false, branches: true, noLocks: true).Select(b => b.Name);
+
+                if (AppSettings.BranchOrderingCriteria == BranchOrdering.Alphabetically)
+                {
+                    branchNames = branchNames.OrderBy(b => b);
+                }
+
                 return FillBranchTree(branchNames, token);
             }
 

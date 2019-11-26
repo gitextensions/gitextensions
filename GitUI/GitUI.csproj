@@ -317,6 +317,12 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.Designer.cs">
       <DependentUpon>FormBrowseRepoSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\BranchesSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\BranchesSettingsPage.designer.cs">
+      <DependentUpon>BranchesSettingsPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\RevisionLinks\AzureDevopsExternalLinkDefinitionExtractor.cs" />
     <Compile Include="CommandsDialogs\SettingsDialog\RevisionLinks\CloudProviderExternalLinkDefinitionExtractorFactory.cs" />
     <Compile Include="CommandsDialogs\SettingsDialog\RevisionLinks\CloudProviderKind.cs" />
@@ -1324,6 +1330,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.resx">
       <DependentUpon>FormBrowseRepoSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\BranchesSettingsPage.resx">
+      <DependentUpon>BranchesSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\RepoDistSettingsPage.resx">
       <DependentUpon>RepoDistSettingsPage.cs</DependentUpon>

@@ -129,6 +129,7 @@
     <Compile Include="Remotes\RemoteParser.cs" />
     <Compile Include="Remotes\RepoNameExtractor.cs" />
     <Compile Include="Settings\AvatarProvider.cs" />
+    <Compile Include="Settings\BranchOrdering.cs" />
     <Compile Include="Settings\GravatarFallbackAvatarType.cs" />
     <Compile Include="Settings\IgnoreWhitespaceKind.cs" />
     <Compile Include="Submodules\DetailedSubmoduleInfo.cs" />

@@ -286,6 +286,26 @@ See http://en.gravatar.com/site/implement/images#default-image for more details.
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="BranchesSettingsPage" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbBranchOrderingCriteria.Item0">
+        <source>Last access date</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbBranchOrderingCriteria.Item1">
+        <source>Alphabetically</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Branch ordering criteria</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="BranchMenuItemsStrings" source-language="en">
     <body>
       <trans-unit id="CheckoutTooltip.Text">

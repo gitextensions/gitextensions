@@ -1620,6 +1620,12 @@ namespace GitCommands
             set => SetBool("UseConsoleEmulatorForCommands", value);
         }
 
+        public static BranchOrdering BranchOrderingCriteria
+        {
+            get { return GetEnum("BranchOrderingCriteria", BranchOrdering.ByLastAccessDate); }
+            set { SetEnum("BranchOrderingCriteria", value); }
+        }
+
         public static DiffListSortType DiffListSorting
         {
             get => GetEnum("DiffListSortType", DiffListSortType.FilePath);
