@@ -3,6 +3,7 @@ using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CommonTestUtils;
 using FluentAssertions;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -88,7 +89,10 @@ namespace GitUITests.CommandsDialogs.CommitDialog
             _referenceRepository.CheckoutMaster();
             RunFormTest(async form =>
             {
-                await ThreadHelper.JoinPendingOperationsAsync();
+                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
+                {
+                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
+                }
 
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
@@ -104,7 +108,10 @@ namespace GitUITests.CommandsDialogs.CommitDialog
             _referenceRepository.CheckoutRevision();
             RunFormTest(async form =>
             {
-                await ThreadHelper.JoinPendingOperationsAsync();
+                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
+                {
+                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
+                }
 
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
@@ -120,7 +127,10 @@ namespace GitUITests.CommandsDialogs.CommitDialog
             _referenceRepository.CreateRemoteForMasterBranch();
             RunFormTest(async form =>
             {
-                await ThreadHelper.JoinPendingOperationsAsync();
+                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
+                {
+                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
+                }
 
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
@@ -253,7 +263,10 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         {
             RunFormTest(async form =>
             {
-                await ThreadHelper.JoinPendingOperationsAsync();
+                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
+                {
+                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
+                }
 
                 form.GetTestAccessor().UnstagedList.ClearSelected();
 

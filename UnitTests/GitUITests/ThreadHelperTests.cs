@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CommonTestUtils;
 using GitUI;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
@@ -241,7 +242,10 @@ namespace GitUITests
             // Note that ThreadHelper.JoinableTaskContext.Factory must be used to bypass the default behavior of
             // ThreadHelper.JoinableTaskFactory since the latter adds new tasks to the collection and would therefore
             // never complete.
-            ThreadHelper.JoinableTaskContext?.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync());
+            using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
+            {
+                ThreadHelper.JoinableTaskContext?.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cts.Token));
+            }
         }
 
         private sealed class ThreadExceptionHelper : IDisposable

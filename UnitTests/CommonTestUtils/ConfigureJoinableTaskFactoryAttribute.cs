@@ -54,13 +54,23 @@ namespace CommonTestUtils
         {
             try
             {
-                ThreadHelper.JoinableTaskContext?.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync());
-                ThreadHelper.JoinableTaskContext = null;
-                if (_denyExecutionSynchronizationContext != null)
+                try
                 {
-                    SynchronizationContext.SetSynchronizationContext(_denyExecutionSynchronizationContext.UnderlyingContext);
-                    _denyExecutionSynchronizationContext.ThrowIfSwitchOccurred();
+                    using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
+                    {
+                        ThreadHelper.JoinableTaskContext?.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cts.Token));
+                    }
                 }
+                finally
+                {
+                    ThreadHelper.JoinableTaskContext = null;
+                    if (_denyExecutionSynchronizationContext != null)
+                    {
+                        SynchronizationContext.SetSynchronizationContext(_denyExecutionSynchronizationContext.UnderlyingContext);
+                    }
+                }
+
+                _denyExecutionSynchronizationContext?.ThrowIfSwitchOccurred();
             }
             finally
             {
