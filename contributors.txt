@@ -107,3 +107,4 @@ YYYY/MM/DD, github id, Full name, email
 2019/10/18, RalphJSmart, Ralph J Smart, id1508-gitextensions_github(at)yahoo.com
 2019/10/24, jvitkauskas, Julius Vitkauskas, zadintuvas(at)gmail.com
 2019/10/31, rickaas, Ricky Lindeman, saakcir(at)gmail.com
+2019/11/27, andrewcartwright1, Andrew Cartwright, kickme93(at)hotmail.co.uk
