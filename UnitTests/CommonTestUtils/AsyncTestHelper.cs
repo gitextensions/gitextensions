@@ -46,7 +46,14 @@ namespace CommonTestUtils
         {
             using (var cts = new CancellationTokenSource(timeout))
             {
-                WaitForPendingOperations(cts.Token);
+                try
+                {
+                    WaitForPendingOperations(cts.Token);
+                }
+                catch (OperationCanceledException ex) when (cts.IsCancellationRequested)
+                {
+                    Console.WriteLine($"{nameof(WaitForPendingOperations)} cts canceled, ex {ex.Demystify()}");
+                }
             }
         }
 
