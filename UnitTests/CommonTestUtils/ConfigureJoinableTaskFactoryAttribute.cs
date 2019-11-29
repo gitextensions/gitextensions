@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Threading;
@@ -48,7 +49,7 @@ namespace CommonTestUtils
 
             Assert.AreEqual(ApartmentState.STA, Thread.CurrentThread.GetApartmentState());
 
-            // This form created for obtain UI synchronization context only
+            // This form is created to obtain an UI synchronization context only.
             using (new Form())
             {
                 // Store the shared JoinableTaskContext
@@ -62,6 +63,9 @@ namespace CommonTestUtils
             {
                 try
                 {
+                    Console.WriteLine($"{nameof(AfterTest)} entry");
+
+                    // Wait for eventual pending operations triggered by the test.
                     if (ThreadHelper.JoinableTaskContext == null)
                     {
                         throw new InvalidOperationException("A JoinableTaskContext must have been created by BeforeTest.");
@@ -69,7 +73,16 @@ namespace CommonTestUtils
 
                     using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
                     {
-                        ThreadHelper.JoinableTaskContext.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cts.Token));
+                        try
+                        {
+                            ThreadHelper.JoinableTaskContext.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cts.Token));
+                            Console.WriteLine($"{nameof(AfterTest)} pending operations finished");
+                        }
+                        catch (OperationCanceledException ex)
+                        {
+                            var ctsCancelled = cts.IsCancellationRequested ? string.Empty : "not ";
+                            Console.WriteLine($"{nameof(AfterTest)} cts {ctsCancelled}cancelled, ex {ex.Demystify()}");
+                        }
                     }
 
                     Assert.IsTrue(GitExtensionsFormBase.InstanceRegistry.Count == 0,
@@ -87,15 +100,20 @@ namespace CommonTestUtils
 
                 _denyExecutionSynchronizationContext?.ThrowIfSwitchOccurred();
             }
-            catch (Exception) when (_threadException != null)
+            catch (Exception ex) when (_threadException != null)
             {
                 // ignore the follow-up exception
+                Console.WriteLine($"{nameof(AfterTest)} ignored {ex.Demystify()}");
             }
             finally
             {
                 Application.ThreadException -= HandleApplicationThreadException;
+                string threadException = _threadException?.SourceException.Demystify().ToString() ?? "none";
+                Console.WriteLine($"{nameof(AfterTest)} rethrow {threadException}");
                 _threadException?.Throw();
             }
+
+            Console.WriteLine($"{nameof(AfterTest)} exit");
         }
 
         private void HandleApplicationThreadException(object sender, ThreadExceptionEventArgs e)
