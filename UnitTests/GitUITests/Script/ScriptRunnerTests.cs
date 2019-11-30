@@ -180,8 +180,19 @@ namespace GitUITests.Script
 
             RunFormTest(formBrowse =>
             {
-                var result = ScriptRunner.RunScript(null, _referenceRepository.Module, _keyOfExampleScript, _uiCommands, formBrowse.RevisionGridControl);
+                // For a yet unknown cause randomly, the wait in UITest.RunForm does not suffice.
+                if (formBrowse.RevisionGridControl.GetSelectedRevisions().Count == 0)
+                {
+                    Console.WriteLine($"{nameof(RunScript_with_arguments_with_s_option_with_RevisionGrid_with_selection_shall_succeed)} waits itself");
+                    AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
+                }
 
+                Assert.AreEqual(1, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
+
+                string errorMessage = null;
+                var result = ScriptRunner.RunScript(formBrowse, _referenceRepository.Module, _keyOfExampleScript, _uiCommands, formBrowse.RevisionGridControl, error => errorMessage = error);
+
+                errorMessage.Should().BeNull();
                 result.Should().BeEquivalentTo(new CommandStatus(executed: true, needsGridRefresh: false));
             });
         }
