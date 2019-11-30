@@ -12,12 +12,13 @@ $submodules | ForEach-Object {
     popd
 }
 
+& git update-index --skip-worktree .nuget/NuGet.exe
+& git update-index --skip-worktree GitUI/CommandsDialogs/FormBrowse.cs
 & git update-index --skip-worktree CommonAssemblyInfo.cs
 & git update-index --skip-worktree CommonAssemblyInfoExternals.cs
 & git update-index --skip-worktree GitExtSshAskPass/SshAskPass.rc2
 & git update-index --skip-worktree GitExtensionsShellEx/GitExtensionsShellEx.rc
 & git update-index --skip-worktree GitExtensionsVSIX/source.extension.vsixmanifest
-& git update-index --skip-worktree Setup/MakeInstallers.cmd
 
 cd GitExtensionsDoc
 & git update-index --skip-worktree source/conf.py

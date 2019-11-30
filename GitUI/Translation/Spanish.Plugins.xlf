@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.1.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="3.2.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="es">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -336,8 +336,8 @@
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
-        <source>Cancel</source>
-        <target>Cancelar</target>
+        <source>Search branches</source>
+        <target>Buscar ramas</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -426,11 +426,6 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
         <target>Eliminar ramas completamente fusionadas con la rama</target>
-        
-      </trans-unit>
-      <trans-unit id="lblStatus.Text">
-        <source>Loading...</source>
-        <target>Cargando...</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -696,9 +691,8 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
         <target>&amp;Publicar</target>
         
       </trans-unit>
-      <trans-unit id="PublishDraft.Text">
-        <source>Submit review as draft</source>
-        <target>Enviar revisión como borrador</target>
+      <trans-unit id="PublishType.Text">
+        <source>For Review</source>
         
       </trans-unit>
       <trans-unit id="_publishCaption.Text">
@@ -709,6 +703,19 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       <trans-unit id="_publishGerritChangeCaption.Text">
         <source>Publish Gerrit Change</source>
         <target>Publicar cambio Gerrit</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypePrivate.Text">
+        <source>Private</source>
+        <target>Privado</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeReview.Text">
+        <source>For Review</source>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeWip.Text">
+        <source>Work-in-Progress</source>
         
       </trans-unit>
       <trans-unit id="_selectBranch.Text">
@@ -724,6 +731,10 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       <trans-unit id="labelBranch.Text">
         <source>Branch:</source>
         <target>Rama:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelPublishType.Text">
+        <source>Publish Type</source>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">

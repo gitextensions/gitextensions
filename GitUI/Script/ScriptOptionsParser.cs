@@ -308,7 +308,6 @@ namespace GitUI.Script
                     if (!string.IsNullOrEmpty(newString))
                     {
                         remote = newString;
-                        newString = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                         url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                         newString = GetRemotePath(url);
                     }

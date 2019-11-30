@@ -86,17 +86,16 @@
   <ItemGroup>
     <Folder Include="UI" />
   </ItemGroup>
+
   <Import Project="$(WixTargetsPath)" Condition="Exists('$(WixTargetsPath)')" />
+
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\WiX.3.11.0\build\wix.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WiX.3.11.0\build\wix.props'))" />
   </Target>
-  <Target Name="BeforeBuild">
-    <Exec Command="&#xD;&#xA;	call BuildGitExtNative.cmd $(Configuration) build">
-    </Exec>
-  </Target>
+
   <Target Name="DownloadPluginManager" BeforeTargets="BeforeBuild">
     <Exec Command="powershell.exe ..\Build\Download-PluginManager.ps1 -ExtractRootPath '..\Plugins\GitExtensions.PluginManager'" />
   </Target>

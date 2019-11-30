@@ -119,24 +119,7 @@ if __name__ == '__main__':
     for i in range(1, len(verSplitted)):
         if len(verSplitted[i]) == 1:
             verSplitted[i] = "0" + verSplitted[i]
-    
-    filename = "MakeInstallers.cmd"
-    makeInstallers = open(filename, "r").readlines()
-    o = ""
-    for i in makeInstallers:
-        line = i
-        if line.find("set numericVersion=") == 0:
-            data = line.split('=')
-            data[1] = '.'.join(verSplitted) + '\n'
-            line = '='.join(data)
-        elif line.find("set version=") == 0:
-            data = line.split('=')
-            data[1] = args.text + '\n'
-            line= '='.join(data)
-        o += line
-    outfile = open(filename, "w")
-    outfile.writelines(o)
-    
+
     filename = "..\GitExtensionsDoc\source\conf.py"
     docoConf = open(filename, "r").readlines()
     o = ""
