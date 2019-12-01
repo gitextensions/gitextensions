@@ -99,6 +99,27 @@ namespace GitUITests
             {
                 Application.Idle -= HandleApplicationIdle;
                 Console.WriteLine($"{nameof(RunForm)} unsubscribed");
+
+                // Safety net for the case the task "test" threw very early and didn't close the form.
+                var form = Application.OpenForms.OfType<T>().SingleOrDefault();
+                if (form != null)
+                {
+                    try
+                    {
+                        string formState = form.Visible ? "open" : "exists";
+                        Console.WriteLine($"{nameof(RunForm)} {typeof(T).FullName} still {formState}");
+
+                        form.Close();
+                        Console.WriteLine($"{nameof(RunForm)} {typeof(T).FullName} closed");
+                    }
+                    finally
+                    {
+                        form.Dispose();
+                        Console.WriteLine($"{nameof(RunForm)} {typeof(T).FullName} disposed");
+                    }
+                }
+
+                Assert.IsTrue(Application.OpenForms.Count == 0, $"{Application.OpenForms.Count} open form(s)");
             }
 
             return;
@@ -107,6 +128,60 @@ namespace GitUITests
             {
                 Console.WriteLine($"{nameof(HandleApplicationIdle)}");
                 idleCompletionSource.TrySetResult(default);
+            }
+        }
+
+        public static void RunDialog<T>(
+            Action<Form> showDialog,
+            Func<T, Task> runTestAsync)
+            where T : Form
+        {
+            Form mainForm = null;
+            try
+            {
+                RunForm<T>(
+                    () =>
+                    {
+                        mainForm = new Form { Text = $"Test {typeof(T).Name}" };
+                        mainForm.Shown += (s, e) =>
+                        {
+                            showDialog(mainForm);
+                        };
+
+                        if (Application.MessageLoop)
+                        {
+                            mainForm.Show(owner: null);
+                        }
+                        else
+                        {
+                            Application.Run(mainForm);
+                        }
+                    },
+                    async (dialogForm) =>
+                    {
+                        try
+                        {
+                            await runTestAsync(dialogForm);
+                        }
+                        finally
+                        {
+                            mainForm.Close();
+                            Console.WriteLine($"{nameof(RunDialog)} main form closed");
+                        }
+                    });
+            }
+            finally
+            {
+                try
+                {
+                    mainForm?.Close();
+                    Console.WriteLine($"{nameof(RunDialog)} main form closed finally");
+                }
+                finally
+                {
+                    mainForm?.Dispose();
+                    Console.WriteLine($"{nameof(RunDialog)} main form disposed finally");
+                }
             }
         }
 

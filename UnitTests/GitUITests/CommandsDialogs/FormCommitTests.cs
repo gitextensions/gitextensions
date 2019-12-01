@@ -64,6 +64,7 @@ namespace GitUITests.CommandsDialogs
 
                 using (var tempForm = new Form())
                 {
+                    tempForm.Owner = form.Owner;
                     tempForm.Show();
                     tempForm.Focus();
 
@@ -72,6 +73,8 @@ namespace GitUITests.CommandsDialogs
                 }
 
                 form.Focus();
+
+                AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
 
                 Assert.AreEqual("Committer new author <new_author@mail.com>", commitAuthorStatus.Text);
             });
@@ -99,6 +102,13 @@ namespace GitUITests.CommandsDialogs
             {
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
+
+                // For a yet unknown cause randomly, the wait in UITest.RunForm does not suffice.
+                if (!remoteNameLabelStatus.Text.IsNullOrEmpty())
+                {
+                    Console.WriteLine($"{nameof(Should_display_detached_head_info_in_statusbar)} waits itself");
+                    AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
+                }
 
                 Assert.AreEqual("(no branch)", currentBranchNameLabelStatus.Text);
                 Assert.AreEqual(string.Empty, remoteNameLabelStatus.Text);
@@ -297,21 +307,21 @@ namespace GitUITests.CommandsDialogs
 
         private void RunFormTest(Func<FormCommit, Task> testDriverAsync, CommitKind commitKind = CommitKind.Normal)
         {
-            UITest.RunForm(
-                () =>
+            UITest.RunDialog(
+                (mainForm) =>
                 {
                     switch (commitKind)
                     {
                         case CommitKind.Normal:
-                            Assert.True(_commands.StartCommitDialog(owner: null));
+                            Assert.True(_commands.StartCommitDialog(owner: mainForm));
                             break;
 
                         case CommitKind.Squash:
-                            Assert.True(_commands.StartSquashCommitDialog(owner: null, _referenceRepository.Module.GetRevision()));
+                            Assert.True(_commands.StartSquashCommitDialog(owner: mainForm, _referenceRepository.Module.GetRevision()));
                             break;
 
                         case CommitKind.Fixup:
-                            Assert.True(_commands.StartFixupCommitDialog(owner: null, _referenceRepository.Module.GetRevision()));
+                            Assert.True(_commands.StartFixupCommitDialog(owner: mainForm, _referenceRepository.Module.GetRevision()));
                             break;
 
                         default:
