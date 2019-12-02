@@ -36,6 +36,7 @@ namespace AzureDevOpsIntegration
         private IntegrationSettings _settings;
         private ApiClient _apiClient;
         private static readonly IBuildDurationFormatter _buildDurationFormatter = new BuildDurationFormatter();
+        private Task<string> _buildDefinitionsTask;
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
@@ -60,6 +61,7 @@ namespace AzureDevOpsIntegration
             }
 
             _apiClient = new ApiClient(projectUrl, _settings.ApiToken);
+            _buildDefinitionsTask = _apiClient.GetBuildDefinitionsAsync(_settings.BuildDefinitionFilter);
         }
 
         /// <summary>
@@ -92,7 +94,15 @@ namespace AzureDevOpsIntegration
 
             try
             {
-                var builds = await _apiClient.QueryBuildsAsync(_settings.BuildDefinitionFilter, sinceDate, running);
+                var buildDefinitions = await _buildDefinitionsTask;
+
+                if (buildDefinitions == null)
+                {
+                    observer.OnCompleted();
+                    return;
+                }
+
+                var builds = await _apiClient.QueryBuildsAsync(buildDefinitions, sinceDate, running);
 
                 foreach (var build in builds)
                 {
