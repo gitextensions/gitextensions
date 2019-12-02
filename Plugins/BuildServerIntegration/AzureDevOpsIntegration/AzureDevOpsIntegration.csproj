@@ -53,6 +53,7 @@
     <Compile Include="..\..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CacheAzureDevOps.cs" />
     <Compile Include="Settings\SettingsUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
