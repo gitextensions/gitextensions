@@ -83,8 +83,6 @@ namespace GitUI.CommandsDialogs
             this.GpgInfoTabPage = new System.Windows.Forms.TabPage();
             this.revisionGpgInfo1 = new GitUI.CommandsDialogs.RevisionGpgInfoControl();
             this.FilterToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.closeStatusBarItem = new System.Windows.Forms.ToolStripStatusLabel();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.initNewRepositoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -214,7 +212,6 @@ namespace GitUI.CommandsDialogs
             this.TreeTabPage.SuspendLayout();
             this.DiffTabPage.SuspendLayout();
             this.GpgInfoTabPage.SuspendLayout();
-            this.statusStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
@@ -859,25 +856,6 @@ namespace GitUI.CommandsDialogs
             this.FilterToolTip.ToolTipTitle = "RegEx";
             this.FilterToolTip.UseAnimation = false;
             this.FilterToolTip.UseFading = false;
-            // 
-            // statusStrip
-            // 
-            this.statusStrip.BackColor = System.Drawing.SystemColors.Control;
-            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.closeStatusBarItem});
-            this.statusStrip.Location = new System.Drawing.Point(0, 551);
-            this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Padding = new System.Windows.Forms.Padding(0);
-            this.statusStrip.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.statusStrip.Size = new System.Drawing.Size(923, 22);
-            this.statusStrip.TabIndex = 4;
-            // 
-            // closeStatusBarItem
-            // 
-            this.closeStatusBarItem.Name = "closeStatusBarItem";
-            this.closeStatusBarItem.Size = new System.Drawing.Size(14, 17);
-            this.closeStatusBarItem.Image = global::GitUI.Properties.Images.CloseStatusBar;
-            this.closeStatusBarItem.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
             // 
             // fileToolStripMenuItem
             // 
@@ -1782,7 +1760,6 @@ namespace GitUI.CommandsDialogs
             this.ClientSize = new System.Drawing.Size(923, 573);
             this.Controls.Add(this.toolPanel);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.statusStrip);
             this.Name = "FormBrowse";
             this.Text = "Git Extensions";
             this.ToolStrip.ResumeLayout(false);
@@ -1804,8 +1781,6 @@ namespace GitUI.CommandsDialogs
             this.TreeTabPage.ResumeLayout(false);
             this.DiffTabPage.ResumeLayout(false);
             this.GpgInfoTabPage.ResumeLayout(false);
-            this.statusStrip.ResumeLayout(false);
-            this.statusStrip.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
@@ -1836,7 +1811,6 @@ namespace GitUI.CommandsDialogs
         private GitUI.RevisionGridControl RevisionGrid;
         private ToolStripEx ToolStrip;
         private CommitInfo.CommitInfo RevisionInfo;
-        private StatusStrip statusStrip;
         private MenuStripEx menuStrip1;
         private GitUI.BranchTreePanel.RepoObjectsTree repoObjectsTree;
         private ToolTip FilterToolTip;
@@ -1868,7 +1842,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripComboBox toolStripBranchFilterComboBox;
         private ToolStripDropDownButton toolStripBranchFilterDropDownButton;
         private ToolStripDropDownButton toolStripRevisionFilterDropDownButton;
-        private ToolStripStatusLabel closeStatusBarItem;
         private ToolStripSplitButton branchSelect;
         private ToolStripButton toggleBranchTreePanel;
         private ToolStripButton toggleSplitViewLayout;
