@@ -12,7 +12,7 @@ using GitUI.BranchTreePanel;
 using GitUI.CommandsDialogs;
 using NUnit.Framework;
 
-namespace GitUITests.CommandsDialogs
+namespace GitExtensions.UITests.CommandsDialogs
 {
     [Apartment(ApartmentState.STA)]
     public class FormBrowseLeftPanelReorderNodesTest

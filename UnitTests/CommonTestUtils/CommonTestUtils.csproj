@@ -39,12 +39,14 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="LibGit2Sharp" Version="0.25.0" />
     <PackageReference Include="NUnit" Version="3.10.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncTestHelper.cs" />
     <Compile Include="MockExecutable.cs" />
     <Compile Include="NoAssertContext.cs" />
+    <Compile Include="ReferenceRepository.cs" />
     <Compile Include="SubmoduleTestHelpers.cs" />
     <Compile Include="ConfigureJoinableTaskFactoryAttribute.cs" />
     <Compile Include="EmbeddedResourceLoader.cs" />

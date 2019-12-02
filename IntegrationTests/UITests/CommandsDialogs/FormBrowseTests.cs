@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
@@ -11,7 +12,7 @@ using GitUI;
 using GitUI.CommandsDialogs;
 using NUnit.Framework;
 
-namespace GitUITests.CommandsDialogs
+namespace GitExtensions.UITests.CommandsDialogs
 {
     [Apartment(ApartmentState.STA)]
     public class FormBrowseTests

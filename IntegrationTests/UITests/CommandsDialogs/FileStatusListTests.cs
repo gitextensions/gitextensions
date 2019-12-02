@@ -8,7 +8,7 @@ using GitCommands;
 using GitUI;
 using NUnit.Framework;
 
-namespace GitUITests.CommandsDialogs
+namespace GitExtensions.UITests.CommandsDialogs
 {
     [Apartment(ApartmentState.STA)]
     public class FileStatusListTests

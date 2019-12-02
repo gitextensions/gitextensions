@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CommonTestUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using NUnit.Framework;
 
-namespace GitUITests.CommandsDialogs
+namespace GitExtensions.UITests.CommandsDialogs
 {
     [Apartment(ApartmentState.STA)]
     public class FormInitTests

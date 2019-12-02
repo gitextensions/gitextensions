@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{27545CC5-7FFD-4F3F-8A33-8F3EF0CAC90C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GitExtensions.UITests</RootNamespace>
+    <AssemblyName>UITests</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RuntimeIdentifier>win</RuntimeIdentifier>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TestProjectType>UnitTest</TestProjectType>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\GitExtensionsTest.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Debug\UITests.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\GitExtensionsTest.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Release\UITests.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ApprovalTests" Version="3.0.13" />
+    <PackageReference Include="FluentAssertions" Version="5.2.0" />
+    <PackageReference Include="NSubstitute" Version="3.1.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CommandsDialogs\FileStatusListTests.cs" />
+    <Compile Include="CommandsDialogs\FormBrowseTests.LeftPanel.Remotes.cs" />
+    <Compile Include="CommandsDialogs\FormBrowseTests.LeftPanel.ReorderNodes.cs" />
+    <Compile Include="CommandsDialogs\FormBrowseTests.LeftPanel.Submodules.cs" />
+    <Compile Include="CommandsDialogs\FormBrowseTests.cs" />
+    <Compile Include="CommandsDialogs\FormCommitTests.cs" />
+    <Compile Include="CommandsDialogs\FormEditorTests.cs" />
+    <Compile Include="CommandsDialogs\FormInitTests.cs" />
+    <Compile Include="CommandsDialogs\FormPullTests.cs" />
+    <Compile Include="NBugReports\BugReportFormTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Script\ScriptRunnerTests.cs" />
+    <Compile Include="UITest.cs" />
+    <Compile Include="UserControls\RevisionGrid\CopyContextMenuItemTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Externals\ICSharpCode.TextEditor\Project\ICSharpCode.TextEditor.csproj">
+      <Project>{2d18be89-d210-49eb-a9dd-2246fbb3df6d}</Project>
+      <Name>ICSharpCode.TextEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">
+      <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
+      <Name>GitCommands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj">
+      <Project>{0f1f1168-a4b2-4fa2-b17b-735140d17f39}</Project>
+      <Name>GitExtUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\GitUI\GitUI.csproj">
+      <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
+      <Name>GitUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
+      <Project>{27559302-f35e-4b62-a6ec-11ff21a5fa6f}</Project>
+      <Name>GitUIPluginInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj">
+      <Project>{d3440fd7-afc5-4351-8741-6cdbf15ce944}</Project>
+      <Name>ResourceManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitTests\CommonTestUtils\CommonTestUtils.csproj">
+      <Project>{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}</Project>
+      <Name>CommonTestUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommonTestUtils;
 using GitUI;
-using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 
-namespace GitUITests
+namespace GitExtensions.UITests
 {
     public static class UITest
     {
