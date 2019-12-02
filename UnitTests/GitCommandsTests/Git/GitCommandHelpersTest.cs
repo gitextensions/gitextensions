@@ -751,6 +751,18 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
+        public void ContinueMergeCmd()
+        {
+            Assert.AreEqual("merge --continue", GitCommandHelpers.ContinueMergeCmd().Arguments);
+        }
+
+        [Test]
+        public void AbortMergeCmd()
+        {
+            Assert.AreEqual("merge --abort", GitCommandHelpers.AbortMergeCmd().Arguments);
+        }
+
+        [Test]
         public void ApplyDiffPatchCmd()
         {
             Assert.AreEqual(

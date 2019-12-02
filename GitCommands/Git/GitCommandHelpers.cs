@@ -379,6 +379,16 @@ namespace GitCommands
             return new GitArgumentBuilder("rebase") { "--skip" };
         }
 
+        public static ArgumentString ContinueMergeCmd()
+        {
+            return new GitArgumentBuilder("merge") { "--continue" };
+        }
+
+        public static ArgumentString AbortMergeCmd()
+        {
+            return new GitArgumentBuilder("merge") { "--abort" };
+        }
+
         public static ArgumentString StartBisectCmd()
         {
             return new GitArgumentBuilder("bisect") { "start" };
