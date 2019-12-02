@@ -974,6 +974,9 @@ namespace GitUI.CommandsDialogs
 
         private void OnActivate()
         {
+            // check if we are in the middle of an action (merge/rebase/bisect)
+            RevisionHeader.RefreshGitAction();
+
             CheckForMergeConflicts();
             return;
 
@@ -3161,7 +3164,7 @@ namespace GitUI.CommandsDialogs
 
                 RevisionsSplitContainer.FixedPanel = FixedPanel.Panel2;
                 RevisionInfo.Parent = CommitInfoTabPage;
-                RevisionGrid.Parent = RevisionsSplitContainer.Panel1;
+                RevisionGridContainer.Parent = RevisionsSplitContainer.Panel1;
                 RevisionsSplitContainer.Panel2Collapsed = true;
             }
             else
@@ -3175,14 +3178,14 @@ namespace GitUI.CommandsDialogs
                     RevisionsSplitContainer.FixedPanel = FixedPanel.Panel2;
                     RevisionsSplitContainer.SplitterDistance = Math.Max(0, RevisionsSplitContainer.Width - width);
                     RevisionInfo.Parent = RevisionsSplitContainer.Panel2;
-                    RevisionGrid.Parent = RevisionsSplitContainer.Panel1;
+                    RevisionGridContainer.Parent = RevisionsSplitContainer.Panel1;
                 }
                 else if (commitInfoPosition == CommitInfoPosition.LeftwardFromList)
                 {
                     RevisionsSplitContainer.FixedPanel = FixedPanel.Panel1;
                     RevisionsSplitContainer.SplitterDistance = width;
                     RevisionInfo.Parent = RevisionsSplitContainer.Panel1;
-                    RevisionGrid.Parent = RevisionsSplitContainer.Panel2;
+                    RevisionGridContainer.Parent = RevisionsSplitContainer.Panel2;
                 }
                 else
                 {

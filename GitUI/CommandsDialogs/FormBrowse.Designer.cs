@@ -70,7 +70,9 @@ namespace GitUI.CommandsDialogs
             this.repoObjectsTree = new GitUI.BranchTreePanel.RepoObjectsTree();
             this.RightSplitContainer = new System.Windows.Forms.SplitContainer();
             this.RevisionsSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.RevisionGridContainer = new System.Windows.Forms.Panel();
             this.RevisionGrid = new GitUI.RevisionGridControl();
+            this.RevisionHeader = new GitUI.UserControls.InteractiveGitActionControl();
             this.CommitInfoTabControl = new GitUI.CommandsDialogs.FullBleedTabControl();
             this.CommitInfoTabPage = new System.Windows.Forms.TabPage();
             this.RevisionInfo = new GitUI.CommitInfo.CommitInfo();
@@ -206,6 +208,7 @@ namespace GitUI.CommandsDialogs
             ((System.ComponentModel.ISupportInitialize)(this.RevisionsSplitContainer)).BeginInit();
             this.RevisionsSplitContainer.Panel1.SuspendLayout();
             this.RevisionsSplitContainer.SuspendLayout();
+            this.RevisionGridContainer.SuspendLayout();
             this.CommitInfoTabControl.SuspendLayout();
             this.CommitInfoTabPage.SuspendLayout();
             this.TreeTabPage.SuspendLayout();
@@ -712,11 +715,21 @@ namespace GitUI.CommandsDialogs
             // 
             // RevisionsSplitContainer.Panel1
             // 
-            this.RevisionsSplitContainer.Panel1.Controls.Add(this.RevisionGrid);
             this.RevisionsSplitContainer.Size = new System.Drawing.Size(650, 209);
             this.RevisionsSplitContainer.SplitterDistance = 350;
             this.RevisionsSplitContainer.SplitterWidth = 6;
+            this.RevisionsSplitContainer.Panel1.Controls.Add(this.RevisionGridContainer);
             this.RevisionsSplitContainer.TabIndex = 0;
+            // 
+            // RevisionGridContainer
+            // 
+            this.RevisionGridContainer.Controls.Add(this.RevisionGrid);
+            this.RevisionGridContainer.Controls.Add(this.RevisionHeader);
+            this.RevisionGridContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGridContainer.Location = new System.Drawing.Point(0, 0);
+            this.RevisionGridContainer.Name = "RevisionGridContainer";
+            this.RevisionGridContainer.Size = new System.Drawing.Size(606, 205);
+            this.RevisionGridContainer.TabIndex = 2;
             // 
             // RevisionGrid
             // 
@@ -726,6 +739,16 @@ namespace GitUI.CommandsDialogs
             this.RevisionGrid.Name = "RevisionGrid";
             this.RevisionGrid.Size = new System.Drawing.Size(350, 209);
             this.RevisionGrid.TabIndex = 0;
+            // 
+            // RevisionHeader
+            // 
+            this.RevisionHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.RevisionHeader.Location = new System.Drawing.Point(0, 0);
+            this.RevisionHeader.MinimumSize = new System.Drawing.Size(0, 33);
+            this.RevisionHeader.Name = "RevisionHeader";
+            this.RevisionHeader.Size = new System.Drawing.Size(561, 33);
+            this.RevisionHeader.TabIndex = 1;
+            this.RevisionHeader.Visible = false;
             // 
             // CommitInfoTabControl
             // 
@@ -1775,6 +1798,7 @@ namespace GitUI.CommandsDialogs
             this.RevisionsSplitContainer.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.RevisionsSplitContainer)).EndInit();
             this.RevisionsSplitContainer.ResumeLayout(false);
+            this.RevisionGridContainer.ResumeLayout(false);
             this.CommitInfoTabControl.ResumeLayout(false);
             this.CommitInfoTabPage.ResumeLayout(false);
             this.TreeTabPage.ResumeLayout(false);
@@ -1967,5 +1991,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem commitInfoLeftwardMenuItem;
         private ToolStripMenuItem commitInfoRightwardMenuItem;
         private ToolStripMenuItem tsmiTelemetryEnabled;
+        private Panel RevisionGridContainer;
+        private UserControls.InteractiveGitActionControl RevisionHeader;
     }
 }
