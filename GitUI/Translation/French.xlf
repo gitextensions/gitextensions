@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.2.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="3.3.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AdvancedSettingsPage" source-language="en" target-language="fr">
     <body>
       <trans-unit id="$this.Text">
@@ -624,8 +624,7 @@ Un compte GitHub valide est nécessaire.</target>
         
       </trans-unit>
       <trans-unit id="_adviceDiffToolConfiguration.Text">
-        <source>You should configure a diff tool to show file diff in external program (kdiff3 for example).</source>
-        <target>Vous devez configurer un outils de diff pour afficher les différences de fichiers dans un programme externe (kdiff3 par exemple).</target>
+        <source>You should configure a diff tool to show file diff in external program.</source>
         
       </trans-unit>
       <trans-unit id="_cantRegisterShellExtension.Text">
@@ -634,8 +633,7 @@ Un compte GitHub valide est nécessaire.</target>
         
       </trans-unit>
       <trans-unit id="_configureMergeTool.Text">
-        <source>You need to configure merge tool in order to solve merge conflicts (kdiff3 for example).</source>
-        <target>Vous devez configurer un outils de merge pour résoudre les conflits de merge (kdiff3 par exemple).</target>
+        <source>You need to configure merge tool in order to solve merge conflicts.</source>
         
       </trans-unit>
       <trans-unit id="_customMergeToolXConfigured.Text">
@@ -679,33 +677,6 @@ Un compte GitHub valide est nécessaire.</target>
         <target>Git {0} a été trouvé sur votre ordinateur.</target>
         
       </trans-unit>
-      <trans-unit id="_kdiff3NotFoundAuto.Text">
-        <source>Path to kdiff3 could not be found automatically.
-Please make sure KDiff3 is installed or set path manually.</source>
-        <target>Le chemin vers KDiff3 n'a pas pu être trouvé automatiquement.
-Veuillez vérifier que KDiff3 est installé ou entrer un chemin manuellement. </target>
-        
-      </trans-unit>
-      <trans-unit id="_kdiffAsDiffConfigured.Text">
-        <source>KDiff3 is configured as difftool.</source>
-        <target>KDiff3 est défini comme difftool.</target>
-        
-      </trans-unit>
-      <trans-unit id="_kdiffAsDiffConfiguredButNotFound.Text">
-        <source>KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.</source>
-        <target>KDiff3 est défini comme difftool, mais le chemin vers kdiff.exe n'est pas renseigné.</target>
-        
-      </trans-unit>
-      <trans-unit id="_kdiffAsMergeConfigured.Text">
-        <source>KDiff3 is configured as mergetool.</source>
-        <target>KDiff3 est défini comme mergetool.</target>
-        
-      </trans-unit>
-      <trans-unit id="_kdiffAsMergeConfiguredButNotFound.Text">
-        <source>KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.</source>
-        <target>KDiff3 est défini comme mergetool, mais le chemin vers kdiff.exe n'est pas renseigné.</target>
-        
-      </trans-unit>
       <trans-unit id="_languageConfigured.Text">
         <source>The configured language is {0}.</source>
         <target>La langue utilisée est {0}.</target>
@@ -743,13 +714,6 @@ Veuillez vérifier que des outils linux sont installés (par Git fo Windows ou c
         <target>{0} est configuré comme outil de fusion, c'est un outil de fusion personnalisé et la configuration d'une commande personnalisée est nécessaire.</target>
         
       </trans-unit>
-      <trans-unit id="_noDiffToolConfigured.Text">
-        <source>There is no difftool configured. Do you want to configure kdiff3 as your difftool?
-Select no if you want to configure a different difftool yourself.</source>
-        <target>Il n'y a pas d'outil de diff configuré. Voulez-vous configurer kdiff3 comme votre outil de diff?
-Sélectionnez non si vous voulez vous-même configurer un autre outil de diff.</target>
-        
-      </trans-unit>
       <trans-unit id="_noDiffToolConfiguredCaption.Text">
         <source>Difftool</source>
         <target>Outil de diff</target>
@@ -763,18 +727,6 @@ Sélectionnez non si vous voulez vous-même configurer un autre outil de diff.</
       <trans-unit id="_noLanguageConfigured.Text">
         <source>There is no language configured for Git Extensions.</source>
         <target>Il n'y a aucun langue configurée pour Git Extensions.</target>
-        
-      </trans-unit>
-      <trans-unit id="_noMergeToolConfigured.Text">
-        <source>There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?
-Select no if you want to configure a different mergetool yourself.</source>
-        <target>Il n'y a pas d'outil de fusion configuré. Voulez-vous configurer kdiff3 comme votre outil de fusion?
-Sélectionnez non si vous voulez vous-même configurer un autre outil de fusion.</target>
-        
-      </trans-unit>
-      <trans-unit id="_noMergeToolConfiguredCaption.Text">
-        <source>Mergetool</source>
-        <target>Outil de fusion</target>
         
       </trans-unit>
       <trans-unit id="_notRecommendedGitVersion.Text">
@@ -927,6 +879,10 @@ Veuillez vous assurez que git (Git for Windows ou cygwin) est installé ou rense
         <target>Couleur des branches distantes</target>
         
       </trans-unit>
+      <trans-unit id="lblColorHighlightAllOccurrences.Text">
+        <source>Color highlight all occurences</source>
+        
+      </trans-unit>
       <trans-unit id="lblColorHighlightAuthored.Text">
         <source>Color authored revisions</source>
         <target>Colorer les révisions des auteurs</target>
@@ -1040,26 +996,6 @@ Veuillez vous assurez que git (Git for Windows ou cygwin) est installé ou rense
       <trans-unit id="_brokenRefs.Text">
         <source>The repository refs seem to be broken:</source>
         <target>Les refs du dépôt semblent être cassées :</target>
-        
-      </trans-unit>
-      <trans-unit id="_containedInBranches.Text">
-        <source>Contained in branches:</source>
-        <target>Présent dans les branches :</target>
-        
-      </trans-unit>
-      <trans-unit id="_containedInNoBranch.Text">
-        <source>Contained in no branch</source>
-        <target>Présent dans aucune branche</target>
-        
-      </trans-unit>
-      <trans-unit id="_containedInNoTag.Text">
-        <source>Contained in no tag</source>
-        <target>Présent dans aucune étiquette</target>
-        
-      </trans-unit>
-      <trans-unit id="_containedInTags.Text">
-        <source>Contained in tags:</source>
-        <target>Présent dans les étiquettes:</target>
         
       </trans-unit>
       <trans-unit id="_copyLink.Text">
@@ -1250,6 +1186,10 @@ Veuillez vous assurez que git (Git for Windows ou cygwin) est installé ou rense
       <trans-unit id="chkSecondAbortConfirmation.Text">
         <source>Confirm for the second time to abort a merge</source>
         <target>Confirmer une seconde fois pour interrompre une fusion</target>
+        
+      </trans-unit>
+      <trans-unit id="chkSwitchWorktree.Text">
+        <source>Switch Worktree</source>
         
       </trans-unit>
       <trans-unit id="chkUndoLastCommitConfirmation.Text">
@@ -1533,6 +1473,10 @@ Veuillez vous assurez que git (Git for Windows ou cygwin) est installé ou rense
         <target>Mémoriser la préférence 'Afficher les caractères non imprimables'</target>
         
       </trans-unit>
+      <trans-unit id="chkRememberShowSyntaxHighlightingInDiff.Text">
+        <source>Remember the 'Show syntax highlighting' preference</source>
+        
+      </trans-unit>
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog</source>
         <target>Afficher les différences du fichier pour tous les parents dans la fenêtre de parcours.</target>
@@ -1802,6 +1746,10 @@ Veuillez vous assurez que git (Git for Windows ou cygwin) est installé ou rense
       <trans-unit id="showNonprintableCharactersToolStripMenuItem.Text">
         <source>Show nonprinting characters</source>
         <target>Afficher les caractères non-imprimables</target>
+        
+      </trans-unit>
+      <trans-unit id="showSyntaxHighlighting.ToolTipText">
+        <source>Show syntax highlighting</source>
         
       </trans-unit>
       <trans-unit id="treatAllFilesAsTextToolStripMenuItem.Text">
@@ -2697,8 +2645,7 @@ compare with first:</source>
         
       </trans-unit>
       <trans-unit id="_hintUnresolvedMergeConflicts.Text">
-        <source>There are unresolved merge conflicts!</source>
-        <target>Il y a des conflits de fusion non-résolus !</target>
+        <source>There are unresolved merge conflicts. Res&amp;olve...</source>
         
       </trans-unit>
       <trans-unit id="_indexLockCantDelete.Text">
@@ -2804,18 +2751,15 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_warningMiddleOfBisect.Text">
-        <source>You are in the middle of a bisect</source>
-        <target>Vous êtes au milieu d'une bisection</target>
+        <source>You are in the middle of a bisect. C&amp;ontinue...</source>
         
       </trans-unit>
       <trans-unit id="_warningMiddleOfPatchApply.Text">
-        <source>You are in the middle of a patch apply</source>
-        <target>Vous êtes au milieu de l'application d'un patch</target>
+        <source>You are in the middle of a patch apply. C&amp;ontinue...</source>
         
       </trans-unit>
       <trans-unit id="_warningMiddleOfRebase.Text">
-        <source>You are in the middle of a rebase</source>
-        <target>Vous êtes au milieu d'un rebase</target>
+        <source>You are in the middle of a rebase. C&amp;ontinue...</source>
         
       </trans-unit>
       <trans-unit id="aboutToolStripMenuItem.Text">
@@ -3890,22 +3834,22 @@ Voulez-vous ouvrir le nouveau dépôt &quot;{0}&quot; maintenant ?</target>
         <target>Utiliser extension LFS</target>
         
       </trans-unit>
+      <trans-unit id="destinationLabel.Text">
+        <source>&amp;Destination:</source>
+        <target>&amp;Destination :</target>
+        
+      </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Repository type</source>
         <target>Type de dépôt</target>
         
       </trans-unit>
-      <trans-unit id="label1.Text">
+      <trans-unit id="repositoryLabel.Text">
         <source>Repository to &amp;clone:</source>
         <target>Dépôt à &amp;cloner :</target>
         
       </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>&amp;Destination:</source>
-        <target>&amp;Destination :</target>
-        
-      </trans-unit>
-      <trans-unit id="label3.Text">
+      <trans-unit id="subdirectoryLabel.Text">
         <source>&amp;Subdirectory to create:</source>
         <target>Sous-dossier à créer :</target>
         
@@ -3951,8 +3895,7 @@ gitex.cmd / gitex (situé dans le même répertoire que GitExtensions.exe) :</ta
         
       </trans-unit>
       <trans-unit id="CommitAndPush.Text">
-        <source>C&amp;ommit &amp;&amp; push</source>
-        <target>C&amp;ommiter &amp;&amp; pousser</target>
+        <source>Commit &amp;&amp; &amp;push</source>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -3961,13 +3904,15 @@ gitex.cmd / gitex (situé dans le même répertoire que GitExtensions.exe) :</ta
         
       </trans-unit>
       <trans-unit id="Reset.Text">
-        <source>Reset all changes</source>
-        <target>Réinit. toutes les modifs</target>
+        <source>&amp;Reset all changes</source>
         
       </trans-unit>
       <trans-unit id="ResetUnStaged.Text">
-        <source>Reset unstaged changes</source>
-        <target>Réinitialiser les modifications non indexées</target>
+        <source>Reset u&amp;nstaged changes</source>
+        
+      </trans-unit>
+      <trans-unit id="ShowOnlyMyMessagesToolStripMenuItem.Text">
+        <source>Show only my messages</source>
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
@@ -3978,8 +3923,7 @@ gitex.cmd / gitex (situé dans le même répertoire que GitExtensions.exe) :</ta
         
       </trans-unit>
       <trans-unit id="StageInSuperproject.Text">
-        <source>Stage in Superproject</source>
-        <target>Indexer dans le projet supérieur</target>
+        <source>Stage &amp;in Superproject</source>
         
       </trans-unit>
       <trans-unit id="_addSelectionToCommitMessage.Text">
@@ -4134,6 +4078,11 @@ Voulez-vous continuer?</target>
       <trans-unit id="_mergeConflictsCaption.Text">
         <source>Merge conflicts</source>
         <target>Conflits de fusion</target>
+        
+      </trans-unit>
+      <trans-unit id="_modifyCommitMessageButtonToolTip.Text">
+        <source>If you change the first line of the commit message, git will treat this commit as an ordinary commit,
+i.e. it may no longer be a fixup or an autosquash commit.</source>
         
       </trans-unit>
       <trans-unit id="_noFilesStagedAndConfirmAnEmptyMergeCommit.Text">
@@ -4368,8 +4317,7 @@ $ git config --unset commit.template</target>
         
       </trans-unit>
       <trans-unit id="createBranchToolStripButton.Text">
-        <source>Create branch</source>
-        <target>Créer une branche</target>
+        <source>Create &amp;branch</source>
         
       </trans-unit>
       <trans-unit id="deleteAllUntrackedFilesToolStripMenuItem.Text">
@@ -4425,6 +4373,10 @@ $ git config --unset commit.template</target>
       <trans-unit id="interactiveAddToolStripMenuItem.Text">
         <source>Interactive Add</source>
         <target>Ajout intéractif</target>
+        
+      </trans-unit>
+      <trans-unit id="modifyCommitMessageButton.Text">
+        <source>Modify the commit m&amp;essage</source>
         
       </trans-unit>
       <trans-unit id="noVerifyToolStripMenuItem.Text">
@@ -4623,8 +4575,7 @@ $ git config --unset commit.template</target>
         
       </trans-unit>
       <trans-unit id="toolStripMenuItem3.Text">
-        <source>Options</source>
-        <target>Options</target>
+        <source>&amp;Options</source>
         
       </trans-unit>
       <trans-unit id="toolUnstageAllItem.Text">
@@ -4653,8 +4604,7 @@ $ git config --unset commit.template</target>
         
       </trans-unit>
       <trans-unit id="workingToolStripMenuItem.Text">
-        <source>Working directory changes</source>
-        <target>Changements dans le répertoire de travail</target>
+        <source>&amp;Working directory changes</source>
         
       </trans-unit>
     </body>
@@ -6195,6 +6145,22 @@ commande &quot;git help shortlog&quot;</target>
         <target>Type</target>
         
       </trans-unit>
+      <trans-unit id="_deleteWorktreeText.Text">
+        <source>Are you sure you want to delete this worktree?</source>
+        
+      </trans-unit>
+      <trans-unit id="_deleteWorktreeTitle.Text">
+        <source>Delete a worktree</source>
+        
+      </trans-unit>
+      <trans-unit id="_switchWorktreeText.Text">
+        <source>Are you sure you want to switch to this worktree?</source>
+        
+      </trans-unit>
+      <trans-unit id="_switchWorktreeTitle.Text">
+        <source>Open a worktree</source>
+        
+      </trans-unit>
       <trans-unit id="buttonClose.Text">
         <source>Close</source>
         <target>Fermer</target>
@@ -6927,7 +6893,7 @@ Voulez-vous le faire maintenant? </target>
         
       </trans-unit>
       <trans-unit id="_pullRepositoryButtons.Text">
-        <source>Pull with the default pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel</source>
+        <source>Pull with the default pull action ({0})|Pull with rebase|Pull with merge|Force push with lease|Cancel</source>
         
       </trans-unit>
       <trans-unit id="_pullRepositoryCaption.Text">
@@ -7694,13 +7660,11 @@ La valeur a été réinitialisée à vide.</target>
         
       </trans-unit>
       <trans-unit id="btnCancel.Text">
-        <source>Cancel</source>
-        <target>Annuler</target>
+        <source>&amp;Cancel</source>
         
       </trans-unit>
       <trans-unit id="btnReset.Text">
-        <source>Reset</source>
-        <target>Réinitialiser</target>
+        <source>&amp;Reset</source>
         
       </trans-unit>
       <trans-unit id="cbDeleteNewFilesAndDirectories.Text">
@@ -7737,6 +7701,16 @@ La valeur a été réinitialisée à vide.</target>
 (discard ALL local changes, even uncommitted changes)</source>
         <target>Hard/Violent : réinitialise le répertoire de travail et l'index
 (annule TOUTES les modifications, même les modifications non commitées)</target>
+        
+      </trans-unit>
+      <trans-unit id="Keep.Text">
+        <source>Keep: update working directory to the commit 
+(abort if there are local changes), reset index</source>
+        
+      </trans-unit>
+      <trans-unit id="Merge.Text">
+        <source>Merge: update working directory to the commit and keep local changes 
+(abort if there are conflicts), reset index</source>
         
       </trans-unit>
       <trans-unit id="Mixed.Text">
@@ -7994,6 +7968,10 @@ Le conflit de merge est-il résolu ?</target>
       <trans-unit id="_errorCaption.Text">
         <source>Error</source>
         <target>Erreur</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorStartingMergetool.Text">
+        <source>Error starting mergetool: {0}</source>
         
       </trans-unit>
       <trans-unit id="_failureWhileOpenFile.Text">
@@ -9003,8 +8981,7 @@ du menu contextuel pour des opérations supplémentaires</target>
         
       </trans-unit>
       <trans-unit id="chkStashUntrackedFiles.Text">
-        <source>Include untracked files in stash</source>
-        <target>Inclure les fichiers non traqués dans le stash</target>
+        <source>Include untracked files in autostash</source>
         
       </trans-unit>
       <trans-unit id="chkTelemetry.Text">
@@ -9012,14 +8989,18 @@ du menu contextuel pour des opérations supplémentaires</target>
         <target>Oui, je permets la transmission d'informations !</target>
         
       </trans-unit>
+      <trans-unit id="chkUpdateModules.Text">
+        <source>Update submodules on checkout</source>
+        <target>Mettre à jour les sous modules lors d'un chargement</target>
+        
+      </trans-unit>
       <trans-unit id="chkUseFastChecks.Text">
         <source>Use FileSystemWatcher to check if index is changed</source>
         <target>Utiliser FileSystemWatcher to vérifier si l'index a changé</target>
         
       </trans-unit>
-      <trans-unit id="chkUsePatienceDiffAlgorithm.Text">
-        <source>Use patience diff algorithm</source>
-        <target>Utiliser un algorithme de diff patient </target>
+      <trans-unit id="chkUseHistogramDiffAlgorithm.Text">
+        <source>Use histogram diff algorithm</source>
         
       </trans-unit>
       <trans-unit id="groupBoxBehaviour.Text">
@@ -9125,7 +9106,7 @@ du menu contextuel pour des opérations supplémentaires</target>
         <target>Suggerer</target>
         
       </trans-unit>
-      <trans-unit id="PathToKDiff3.Text">
+      <trans-unit id="MergeToolPathLabel.Text">
         <source>Path to mergetool</source>
         <target>Chemin de l'outil de fusion</target>
         
@@ -9955,6 +9936,10 @@ Pour voir toutes les branches, clic droit dans la grille des révisions, sélect
         <target>Replier tout</target>
         
       </trans-unit>
+      <trans-unit id="mnubtnCreateBranch.Text">
+        <source>Create Branch...</source>
+        
+      </trans-unit>
       <trans-unit id="mnubtnDeleteAllBranches.Text">
         <source>Delete All</source>
         <target>Supprimer tout</target>
@@ -10118,8 +10103,7 @@ Pour voir toutes les branches, clic droit dans la grille des révisions, sélect
         
       </trans-unit>
       <trans-unit id="cherryPickSelectedDiffFileToolStripMenuItem.Text">
-        <source>Cherry pick file's changes</source>
-        <target>Cherry picker les modifications du fichier</target>
+        <source>Cherry pick changes</source>
         
       </trans-unit>
       <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
@@ -11057,10 +11041,6 @@ Vous pouvez voir les changements dans le formulaire de commit.</target>
         <target>Données de révision</target>
         
       </trans-unit>
-      <trans-unit id="toolStripManageCategories.Text">
-        <source>toolStrip1</source>
-        
-      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="ScriptsSettingsPage" source-language="en" target-language="fr">
@@ -11500,6 +11480,26 @@ Select this commit to populate the full message.</source>
         <target>Commiteur</target>
         
       </trans-unit>
+      <trans-unit id="_containedInBranchesText.Text">
+        <source>Contained in branches:</source>
+        <target>Présent dans les branches :</target>
+        
+      </trans-unit>
+      <trans-unit id="_containedInNoBranchText.Text">
+        <source>Contained in no branch</source>
+        <target>Présent dans aucune branche</target>
+        
+      </trans-unit>
+      <trans-unit id="_containedInNoTagText.Text">
+        <source>Contained in no tag</source>
+        <target>Présent dans aucune étiquette</target>
+        
+      </trans-unit>
+      <trans-unit id="_containedInTagsText.Text">
+        <source>Contained in tags:</source>
+        <target>Présent dans les étiquettes:</target>
+        
+      </trans-unit>
       <trans-unit id="_createPullRequest.Text">
         <source>Create pull request</source>
         <target>Créer une pull request</target>
@@ -11550,6 +11550,11 @@ Select this commit to populate the full message.</source>
         <target>Chargement des données...</target>
         
       </trans-unit>
+      <trans-unit id="_local.Text">
+        <source>Local</source>
+        <target>Branche locale</target>
+        
+      </trans-unit>
       <trans-unit id="_messageText.Text">
         <source>{0:Message|Messages}</source>
         <target>{0:Message|Messages}</target>
@@ -11565,9 +11570,22 @@ Select this commit to populate the full message.</source>
         <target>Il y a {0} mois</target>
         
       </trans-unit>
+      <trans-unit id="_noResultsFound.Text">
+        <source>&lt;No results found&gt;</source>
+        
+      </trans-unit>
+      <trans-unit id="_openReport.Text">
+        <source>Open report</source>
+        
+      </trans-unit>
       <trans-unit id="_parentsText.Text">
         <source>{0:Parent|Parents}</source>
         <target>{0:Parent|Parents}</target>
+        
+      </trans-unit>
+      <trans-unit id="_remote.Text">
+        <source>Remote</source>
+        <target>Branche distante</target>
         
       </trans-unit>
       <trans-unit id="_remotesText.Text">
@@ -11585,9 +11603,18 @@ Select this commit to populate the full message.</source>
         <target>Il y a {0} {1:seconde|secondes}</target>
         
       </trans-unit>
+      <trans-unit id="_showAllText.Text">
+        <source>Show all</source>
+        
+      </trans-unit>
       <trans-unit id="_submodulesText.Text">
         <source>Submodules</source>
         <target>Sous modules</target>
+        
+      </trans-unit>
+      <trans-unit id="_tag.Text">
+        <source>Tag</source>
+        <target>Étiquette</target>
         
       </trans-unit>
       <trans-unit id="_tagsText.Text">

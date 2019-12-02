@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.2.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="3.3.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AdvancedSettingsPage" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
@@ -163,6 +163,7 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="_authorDateSortWarningTooltip.Text">
         <source>Sorting by author date may delay rendering of the revision graph.</source>
+        <target>Сортировка по дате автора может задержать рендеринг графа ревизий.</target>
         
       </trans-unit>
       <trans-unit id="_noDictFile.Text">
@@ -417,6 +418,11 @@ See http://en.gravatar.com/site/implement/images#default-image for more details.
 Because of this, make sure to fill in all the fields in the report template please.
 
 Send report anyway?</source>
+        <target>Сообщите как можно больше информации, чтобы помочь разработчикам решить эту проблему. В противном случае ваша заявка может быть закрыта без каких-либо дополнительных действий со стороны разработчиков.
+
+Поэтому обязательно заполните все поля в шаблоне отчета.
+
+Отправить отчет в любом случае?</target>
         
       </trans-unit>
       <trans-unit id="_title.Text">
@@ -625,8 +631,8 @@ A valid GitHub account is required</source>
         
       </trans-unit>
       <trans-unit id="_adviceDiffToolConfiguration.Text">
-        <source>You should configure a diff tool to show file diff in external program (kdiff3 for example).</source>
-        <target>Необходимо настроить инструмент сравнения для просмотра изменений файла во внешней программе (например, kdiff3).</target>
+        <source>You should configure a diff tool to show file diff in external program.</source>
+        <target>Вы должны настроить инструмент сравнения, чтобы показать различия в файлах во внешней программе.</target>
         
       </trans-unit>
       <trans-unit id="_cantRegisterShellExtension.Text">
@@ -635,8 +641,8 @@ A valid GitHub account is required</source>
         
       </trans-unit>
       <trans-unit id="_configureMergeTool.Text">
-        <source>You need to configure merge tool in order to solve merge conflicts (kdiff3 for example).</source>
-        <target>Необходимо настроить инструмент слияния для решения конфликтов (например, kdiff3).</target>
+        <source>You need to configure merge tool in order to solve merge conflicts.</source>
+        <target>Для решения конфликтов слияния необходима настройка этого инструмента.</target>
         
       </trans-unit>
       <trans-unit id="_customMergeToolXConfigured.Text">
@@ -679,33 +685,6 @@ A valid GitHub account is required</source>
         <target>Git {0} найден на компьютере.</target>
         
       </trans-unit>
-      <trans-unit id="_kdiff3NotFoundAuto.Text">
-        <source>Path to kdiff3 could not be found automatically.
-Please make sure KDiff3 is installed or set path manually.</source>
-        <target>Путь к kdiff3 не может быть найден автоматически.
-Пожалуйста, убедитесь что KDiff3 установлен или задайте путь вручную.</target>
-        
-      </trans-unit>
-      <trans-unit id="_kdiffAsDiffConfigured.Text">
-        <source>KDiff3 is configured as difftool.</source>
-        <target>KDiff3 настроен как инструмент сравнения.</target>
-        
-      </trans-unit>
-      <trans-unit id="_kdiffAsDiffConfiguredButNotFound.Text">
-        <source>KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.</source>
-        <target>KDiff3 настроен как инструмент сравнения, но путь к kdiff.exe не указан.</target>
-        
-      </trans-unit>
-      <trans-unit id="_kdiffAsMergeConfigured.Text">
-        <source>KDiff3 is configured as mergetool.</source>
-        <target>KDiff3 настроен как инструмент слияния.</target>
-        
-      </trans-unit>
-      <trans-unit id="_kdiffAsMergeConfiguredButNotFound.Text">
-        <source>KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.</source>
-        <target>KDiff3 настроен как инструмент слияния, но путь к kdiff.exe не указан.</target>
-        
-      </trans-unit>
       <trans-unit id="_languageConfigured.Text">
         <source>The configured language is {0}.</source>
         <target>Язык выбран: {0}.</target>
@@ -743,13 +722,6 @@ Please make sure there are linux tools installed (through Git for Windows or cyg
         <target>{0} сконфигурирован как инструмент слияния, это пользовательский инструмент слияния и нуждается в настройке команды для запуска.</target>
         
       </trans-unit>
-      <trans-unit id="_noDiffToolConfigured.Text">
-        <source>There is no difftool configured. Do you want to configure kdiff3 as your difftool?
-Select no if you want to configure a different difftool yourself.</source>
-        <target>Инструмент сравнения не настроен. Вы хотите настроить kdiff3 как ваш инструмент сравнения?
-Выберите &quot;Нет&quot;, если вы хотите настроить другой инструмент сравнения сами.</target>
-        
-      </trans-unit>
       <trans-unit id="_noDiffToolConfiguredCaption.Text">
         <source>Difftool</source>
         <target>Инструмент сравнения</target>
@@ -763,18 +735,6 @@ Select no if you want to configure a different difftool yourself.</source>
       <trans-unit id="_noLanguageConfigured.Text">
         <source>There is no language configured for Git Extensions.</source>
         <target>Язык не настроен для Git Extensions.</target>
-        
-      </trans-unit>
-      <trans-unit id="_noMergeToolConfigured.Text">
-        <source>There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?
-Select no if you want to configure a different mergetool yourself.</source>
-        <target>Инструмент слияния не настроен. Вы хотите настроить kdiff3 как ваш инструмент слияния?
-Выберите &quot;Нет&quot;, если вы хотите настроить другой инструмент слияния сами.</target>
-        
-      </trans-unit>
-      <trans-unit id="_noMergeToolConfiguredCaption.Text">
-        <source>Mergetool</source>
-        <target>Инструмент слияния</target>
         
       </trans-unit>
       <trans-unit id="_notRecommendedGitVersion.Text">
@@ -928,6 +888,11 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target>Цвет внешней ветки</target>
         
       </trans-unit>
+      <trans-unit id="lblColorHighlightAllOccurrences.Text">
+        <source>Color highlight all occurences</source>
+        <target>Полная подсветка</target>
+        
+      </trans-unit>
       <trans-unit id="lblColorHighlightAuthored.Text">
         <source>Color authored revisions</source>
         <target>Цвет ревизий с вашим авторством</target>
@@ -1041,26 +1006,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       <trans-unit id="_brokenRefs.Text">
         <source>The repository refs seem to be broken:</source>
         <target>Ссылки на репозиторий, похоже, не работают:</target>
-        
-      </trans-unit>
-      <trans-unit id="_containedInBranches.Text">
-        <source>Contained in branches:</source>
-        <target>Содержится в ветках:</target>
-        
-      </trans-unit>
-      <trans-unit id="_containedInNoBranch.Text">
-        <source>Contained in no branch</source>
-        <target>Не содержится в ветках</target>
-        
-      </trans-unit>
-      <trans-unit id="_containedInNoTag.Text">
-        <source>Contained in no tag</source>
-        <target>Не содержится ни в одной метке</target>
-        
-      </trans-unit>
-      <trans-unit id="_containedInTags.Text">
-        <source>Contained in tags:</source>
-        <target>Содержится в метках:</target>
         
       </trans-unit>
       <trans-unit id="_copyLink.Text">
@@ -1253,6 +1198,11 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       <trans-unit id="chkSecondAbortConfirmation.Text">
         <source>Confirm for the second time to abort a merge</source>
         <target>Подтвердите еще раз для отмены слияния</target>
+        
+      </trans-unit>
+      <trans-unit id="chkSwitchWorktree.Text">
+        <source>Switch Worktree</source>
+        <target>Выбор ветвления</target>
         
       </trans-unit>
       <trans-unit id="chkUndoLastCommitConfirmation.Text">
@@ -1535,6 +1485,11 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target>Запомнить настройку &quot;Показывать непечатные символы&quot;</target>
         
       </trans-unit>
+      <trans-unit id="chkRememberShowSyntaxHighlightingInDiff.Text">
+        <source>Remember the 'Show syntax highlighting' preference</source>
+        <target>Запомнить настройку «Показать подсветку синтаксиса»</target>
+        
+      </trans-unit>
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog</source>
         <target>Показать различия между файлами для всех родителей в окне обзора</target>
@@ -1804,6 +1759,11 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       <trans-unit id="showNonprintableCharactersToolStripMenuItem.Text">
         <source>Show nonprinting characters</source>
         <target>Показывать непечатные символы</target>
+        
+      </trans-unit>
+      <trans-unit id="showSyntaxHighlighting.ToolTipText">
+        <source>Show syntax highlighting</source>
+        <target>Показать подсветку синтаксиса</target>
         
       </trans-unit>
       <trans-unit id="treatAllFilesAsTextToolStripMenuItem.Text">
@@ -2703,8 +2663,8 @@ compare with first:</source>
         
       </trans-unit>
       <trans-unit id="_hintUnresolvedMergeConflicts.Text">
-        <source>There are unresolved merge conflicts!</source>
-        <target>Есть неразрешённые конфликты слияния!</target>
+        <source>There are unresolved merge conflicts. Res&amp;olve...</source>
+        <target>Есть неразрешенные конфликты слияния. Разрешить...</target>
         
       </trans-unit>
       <trans-unit id="_indexLockCantDelete.Text">
@@ -2812,18 +2772,18 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_warningMiddleOfBisect.Text">
-        <source>You are in the middle of a bisect</source>
-        <target>Вы посередине bisect</target>
+        <source>You are in the middle of a bisect. C&amp;ontinue...</source>
+        <target>Вы находитесь на пол-пути. Продолжить...</target>
         
       </trans-unit>
       <trans-unit id="_warningMiddleOfPatchApply.Text">
-        <source>You are in the middle of a patch apply</source>
-        <target>Вы посередине применения патча</target>
+        <source>You are in the middle of a patch apply. C&amp;ontinue...</source>
+        <target>Вы в центре заплатки. Продолжить...</target>
         
       </trans-unit>
       <trans-unit id="_warningMiddleOfRebase.Text">
-        <source>You are in the middle of a rebase</source>
-        <target>Вы посередине перемещения</target>
+        <source>You are in the middle of a rebase. C&amp;ontinue...</source>
+        <target>Вы посреди перемещения. Продолжить...</target>
         
       </trans-unit>
       <trans-unit id="aboutToolStripMenuItem.Text">
@@ -3901,22 +3861,22 @@ Do you want to open the new repository &quot;{0}&quot; now?</source>
         <target>Использовать расширение LFS</target>
         
       </trans-unit>
+      <trans-unit id="destinationLabel.Text">
+        <source>&amp;Destination:</source>
+        <target>&amp;Назначение:</target>
+        
+      </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Repository type</source>
         <target>Тип репозитория</target>
         
       </trans-unit>
-      <trans-unit id="label1.Text">
+      <trans-unit id="repositoryLabel.Text">
         <source>Repository to &amp;clone:</source>
         <target>&amp;Внешний репозиторий:</target>
         
       </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>&amp;Destination:</source>
-        <target>&amp;Назначение:</target>
-        
-      </trans-unit>
-      <trans-unit id="label3.Text">
+      <trans-unit id="subdirectoryLabel.Text">
         <source>&amp;Subdirectory to create:</source>
         <target>&amp;Подкаталог для создания:</target>
         
@@ -3962,8 +3922,8 @@ gitex.cmd / gitex (находится в той же папке, что и GitEx
         
       </trans-unit>
       <trans-unit id="CommitAndPush.Text">
-        <source>C&amp;ommit &amp;&amp; push</source>
-        <target>&amp;Фиксировать и отправить</target>
+        <source>Commit &amp;&amp; &amp;push</source>
+        <target>Толкнуть коммит</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -3972,13 +3932,18 @@ gitex.cmd / gitex (находится в той же папке, что и GitEx
         
       </trans-unit>
       <trans-unit id="Reset.Text">
-        <source>Reset all changes</source>
-        <target>Сброс всех изменений</target>
+        <source>&amp;Reset all changes</source>
+        <target>Сбросить все правки</target>
         
       </trans-unit>
       <trans-unit id="ResetUnStaged.Text">
-        <source>Reset unstaged changes</source>
-        <target>Отмена неиндексир.-ых</target>
+        <source>Reset u&amp;nstaged changes</source>
+        <target>Сброс лишних правок</target>
+        
+      </trans-unit>
+      <trans-unit id="ShowOnlyMyMessagesToolStripMenuItem.Text">
+        <source>Show only my messages</source>
+        <target>Показать только мои сообщения</target>
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
@@ -3989,8 +3954,8 @@ gitex.cmd / gitex (находится в той же папке, что и GitEx
         
       </trans-unit>
       <trans-unit id="StageInSuperproject.Text">
-        <source>Stage in Superproject</source>
-        <target>Индексировать в суперпроекте</target>
+        <source>Stage &amp;in Superproject</source>
+        <target>Этап в суперпроекте</target>
         
       </trans-unit>
       <trans-unit id="_addSelectionToCommitMessage.Text">
@@ -4144,6 +4109,11 @@ Do you want to continue?</source>
       <trans-unit id="_mergeConflictsCaption.Text">
         <source>Merge conflicts</source>
         <target>Конфликты слияния</target>
+        
+      </trans-unit>
+      <trans-unit id="_modifyCommitMessageButtonToolTip.Text">
+        <source>If you change the first line of the commit message, git will treat this commit as an ordinary commit,
+i.e. it may no longer be a fixup or an autosquash commit.</source>
         
       </trans-unit>
       <trans-unit id="_noFilesStagedAndConfirmAnEmptyMergeCommit.Text">
@@ -4382,8 +4352,8 @@ $ git config --unset commit.template</target>
         
       </trans-unit>
       <trans-unit id="createBranchToolStripButton.Text">
-        <source>Create branch</source>
-        <target>Создать ветку</target>
+        <source>Create &amp;branch</source>
+        <target>Создать ветвь</target>
         
       </trans-unit>
       <trans-unit id="deleteAllUntrackedFilesToolStripMenuItem.Text">
@@ -4439,6 +4409,10 @@ $ git config --unset commit.template</target>
       <trans-unit id="interactiveAddToolStripMenuItem.Text">
         <source>Interactive Add</source>
         <target>Интерактивное добавление</target>
+        
+      </trans-unit>
+      <trans-unit id="modifyCommitMessageButton.Text">
+        <source>Modify the commit m&amp;essage</source>
         
       </trans-unit>
       <trans-unit id="noVerifyToolStripMenuItem.Text">
@@ -4637,8 +4611,8 @@ $ git config --unset commit.template</target>
         
       </trans-unit>
       <trans-unit id="toolStripMenuItem3.Text">
-        <source>Options</source>
-        <target>Настройки</target>
+        <source>&amp;Options</source>
+        <target>&amp;Настройки</target>
         
       </trans-unit>
       <trans-unit id="toolUnstageAllItem.Text">
@@ -4667,8 +4641,7 @@ $ git config --unset commit.template</target>
         
       </trans-unit>
       <trans-unit id="workingToolStripMenuItem.Text">
-        <source>Working directory changes</source>
-        <target>Изменения в рабочем каталоге</target>
+        <source>&amp;Working directory changes</source>
         
       </trans-unit>
     </body>
@@ -6214,6 +6187,23 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <target>Тип</target>
         
       </trans-unit>
+      <trans-unit id="_deleteWorktreeText.Text">
+        <source>Are you sure you want to delete this worktree?</source>
+        
+      </trans-unit>
+      <trans-unit id="_deleteWorktreeTitle.Text">
+        <source>Delete a worktree</source>
+        
+      </trans-unit>
+      <trans-unit id="_switchWorktreeText.Text">
+        <source>Are you sure you want to switch to this worktree?</source>
+        
+      </trans-unit>
+      <trans-unit id="_switchWorktreeTitle.Text">
+        <source>Open a worktree</source>
+        <target>Открыть рабочее дерево</target>
+        
+      </trans-unit>
       <trans-unit id="buttonClose.Text">
         <source>Close</source>
         <target>Закрыть</target>
@@ -6951,8 +6941,7 @@ Would you like to do it now?</source>
         
       </trans-unit>
       <trans-unit id="_pullRepositoryButtons.Text">
-        <source>Pull with the default pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel</source>
-        <target>Получить с действием по умолчанию ({0})|Получить и переместить|Получить и объединить|Принудительная отправка|Отмена</target>
+        <source>Pull with the default pull action ({0})|Pull with rebase|Pull with merge|Force push with lease|Cancel</source>
         
       </trans-unit>
       <trans-unit id="_pullRepositoryCaption.Text">
@@ -7719,13 +7708,13 @@ Value has been reset to empty value.</source>
         
       </trans-unit>
       <trans-unit id="btnCancel.Text">
-        <source>Cancel</source>
-        <target>Отмена</target>
+        <source>&amp;Cancel</source>
+        <target>&amp;Отмена</target>
         
       </trans-unit>
       <trans-unit id="btnReset.Text">
-        <source>Reset</source>
-        <target>Сбросить</target>
+        <source>&amp;Reset</source>
+        <target>&amp;Сброс</target>
         
       </trans-unit>
       <trans-unit id="cbDeleteNewFilesAndDirectories.Text">
@@ -7762,6 +7751,16 @@ Value has been reset to empty value.</source>
 (discard ALL local changes, even uncommitted changes)</source>
         <target>Жесткий: сбросить изменения в рабочем каталоге и в индексе
 (отменить ВСЕ локальные изменения, даже не зафиксированные)</target>
+        
+      </trans-unit>
+      <trans-unit id="Keep.Text">
+        <source>Keep: update working directory to the commit 
+(abort if there are local changes), reset index</source>
+        
+      </trans-unit>
+      <trans-unit id="Merge.Text">
+        <source>Merge: update working directory to the commit and keep local changes 
+(abort if there are conflicts), reset index</source>
         
       </trans-unit>
       <trans-unit id="Mixed.Text">
@@ -8020,6 +8019,10 @@ Is the merge conflict solved?</source>
       <trans-unit id="_errorCaption.Text">
         <source>Error</source>
         <target>Ошибка</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorStartingMergetool.Text">
+        <source>Error starting mergetool: {0}</source>
         
       </trans-unit>
       <trans-unit id="_failureWhileOpenFile.Text">
@@ -9040,8 +9043,7 @@ Context menu for additional operations</source>
         
       </trans-unit>
       <trans-unit id="chkStashUntrackedFiles.Text">
-        <source>Include untracked files in stash</source>
-        <target>Включать не отслеживаемые файлы в спрятанные изменения</target>
+        <source>Include untracked files in autostash</source>
         
       </trans-unit>
       <trans-unit id="chkTelemetry.Text">
@@ -9049,14 +9051,18 @@ Context menu for additional operations</source>
         <target>Да, я разрешаю сбор телеметрии!</target>
         
       </trans-unit>
+      <trans-unit id="chkUpdateModules.Text">
+        <source>Update submodules on checkout</source>
+        <target>Обновить субмодули при переключении</target>
+        
+      </trans-unit>
       <trans-unit id="chkUseFastChecks.Text">
         <source>Use FileSystemWatcher to check if index is changed</source>
         <target>Использовать FileSystemWatcher для уведомлений об изменении index</target>
         
       </trans-unit>
-      <trans-unit id="chkUsePatienceDiffAlgorithm.Text">
-        <source>Use patience diff algorithm</source>
-        <target>Показывать граф ревизий в логе коммитов</target>
+      <trans-unit id="chkUseHistogramDiffAlgorithm.Text">
+        <source>Use histogram diff algorithm</source>
         
       </trans-unit>
       <trans-unit id="groupBoxBehaviour.Text">
@@ -9162,7 +9168,7 @@ Context menu for additional operations</source>
         <target>Предложить</target>
         
       </trans-unit>
-      <trans-unit id="PathToKDiff3.Text">
+      <trans-unit id="MergeToolPathLabel.Text">
         <source>Path to mergetool</source>
         <target>Путь к инструменту слияния</target>
         
@@ -10000,6 +10006,11 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target>Свернуть все</target>
         
       </trans-unit>
+      <trans-unit id="mnubtnCreateBranch.Text">
+        <source>Create Branch...</source>
+        <target>Создать ветку...</target>
+        
+      </trans-unit>
       <trans-unit id="mnubtnDeleteAllBranches.Text">
         <source>Delete All</source>
         <target>Удалить все</target>
@@ -10170,8 +10181,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
         
       </trans-unit>
       <trans-unit id="cherryPickSelectedDiffFileToolStripMenuItem.Text">
-        <source>Cherry pick file's changes</source>
-        <target>Забрать изменения файла</target>
+        <source>Cherry pick changes</source>
         
       </trans-unit>
       <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
@@ -11111,10 +11121,6 @@ See the changes in the commit form.</source>
         <target>Граф ревизий</target>
         
       </trans-unit>
-      <trans-unit id="toolStripManageCategories.Text">
-        <source>toolStrip1</source>
-        
-      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="ScriptsSettingsPage" source-language="en" target-language="ru">
@@ -11559,6 +11565,26 @@ Select this commit to populate the full message.</source>
         <target>Автор коммита</target>
         
       </trans-unit>
+      <trans-unit id="_containedInBranchesText.Text">
+        <source>Contained in branches:</source>
+        <target>Содержится в ветках:</target>
+        
+      </trans-unit>
+      <trans-unit id="_containedInNoBranchText.Text">
+        <source>Contained in no branch</source>
+        <target>Не содержится в ветках</target>
+        
+      </trans-unit>
+      <trans-unit id="_containedInNoTagText.Text">
+        <source>Contained in no tag</source>
+        <target>Не содержится ни в одной метке</target>
+        
+      </trans-unit>
+      <trans-unit id="_containedInTagsText.Text">
+        <source>Contained in tags:</source>
+        <target>Содержится в метках:</target>
+        
+      </trans-unit>
       <trans-unit id="_createPullRequest.Text">
         <source>Create pull request</source>
         <target>Создать pull request</target>
@@ -11609,6 +11635,11 @@ Select this commit to populate the full message.</source>
         <target>Загрузка данных...</target>
         
       </trans-unit>
+      <trans-unit id="_local.Text">
+        <source>Local</source>
+        <target>Локальный</target>
+        
+      </trans-unit>
       <trans-unit id="_messageText.Text">
         <source>{0:Message|Messages}</source>
         <target>{0:Message|Messages}</target>
@@ -11624,9 +11655,22 @@ Select this commit to populate the full message.</source>
         <target>{0} {1:месяц|месяца|месяцев} назад</target>
         
       </trans-unit>
+      <trans-unit id="_noResultsFound.Text">
+        <source>&lt;No results found&gt;</source>
+        
+      </trans-unit>
+      <trans-unit id="_openReport.Text">
+        <source>Open report</source>
+        
+      </trans-unit>
       <trans-unit id="_parentsText.Text">
         <source>{0:Parent|Parents}</source>
         <target>{0:Parent|Parents}</target>
+        
+      </trans-unit>
+      <trans-unit id="_remote.Text">
+        <source>Remote</source>
+        <target>Внешний</target>
         
       </trans-unit>
       <trans-unit id="_remotesText.Text">
@@ -11644,9 +11688,18 @@ Select this commit to populate the full message.</source>
         <target>{0} {1:секунда|секунды|секунд} назад</target>
         
       </trans-unit>
+      <trans-unit id="_showAllText.Text">
+        <source>Show all</source>
+        
+      </trans-unit>
       <trans-unit id="_submodulesText.Text">
         <source>Submodules</source>
         <target>Субмодули</target>
+        
+      </trans-unit>
+      <trans-unit id="_tag.Text">
+        <source>Tag</source>
+        <target>Метка</target>
         
       </trans-unit>
       <trans-unit id="_tagsText.Text">

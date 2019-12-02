@@ -143,16 +143,6 @@ try {
     Write-Host ----------------------------------------------------------------------
     Generate-Changelog -milestones $milestoneNumbers
 
-    Write-Host ----------------------------------------------------------------------
-    Write-Host Download PluginManager
-    Write-Host ----------------------------------------------------------------------
-    ..\Build\Download-PluginManager.ps1 -ExtractRootPath '..\Plugins\GitExtensions.PluginManager'
-    Write-Host ----------------------------------------------------------------------
-    Write-Host Download PluginManager
-    Write-Host ----------------------------------------------------------------------
-    ..\Build\Download-PluginManager.ps1 -ExtractRootPath '..\Plugins\GitExtensions.PluginManager'
-
-
 }
 catch {
     Write-Error $_;

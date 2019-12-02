@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.2.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="3.3.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="fr">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -738,9 +738,16 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
         <target>Branche :</target>
         
       </trans-unit>
+      <trans-unit id="labelCc.Text">
+        <source>CC:</source>
+        
+      </trans-unit>
+      <trans-unit id="labelHashtag.Text">
+        <source>Hashtag:</source>
+        
+      </trans-unit>
       <trans-unit id="labelPublishType.Text">
-        <source>Publish Type</source>
-        <target>Type de publication</target>
+        <source>Publish Type:</source>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">
@@ -1157,6 +1164,10 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <target>Envoyer après avoir terminé</target>
         
       </trans-unit>
+      <trans-unit id="cbSquash.Text">
+        <source>Squash</source>
+        
+      </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
         <target>Gérer les branches existantes :</target>
@@ -1230,9 +1241,17 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <target>GitHub</target>
         
       </trans-unit>
+      <trans-unit id="GitHubApiEndpoint.Caption">
+        <source>GitHub (Enterprise) API endpoint</source>
+        
+      </trans-unit>
       <trans-unit id="OAuthToken.Caption">
         <source>OAuth Token</source>
         <target>Jeton OAuth</target>
+        
+      </trans-unit>
+      <trans-unit id="_tokenAlreadyExist.Text">
+        <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
         
       </trans-unit>
     </body>
@@ -1425,6 +1444,40 @@ Voulez-vous réinitialiser le chemin configuré?</target>
         <target>Lien commit-Jira</target>
         
       </trans-unit>
+      <trans-unit id="EmptyQueryResultCaption.Text">
+        <source>First Task Preview</source>
+        
+      </trans-unit>
+      <trans-unit id="EmptyQueryResultMessage.Text">
+        <source>[Empty Jira Query Result]</source>
+        
+      </trans-unit>
+      <trans-unit id="InvalidUrlCaption.Text">
+        <source>Invalid Jira url</source>
+        
+      </trans-unit>
+      <trans-unit id="InvalidUrlMessage.Text">
+        <source>A valid url is required to launch the Jira query helper</source>
+        
+      </trans-unit>
+      <trans-unit id="JiraFieldsLabel.Text">
+        <source>Jira fields</source>
+        <target>Champs Jira</target>
+        
+      </trans-unit>
+      <trans-unit id="PreviewButtonText.Text">
+        <source>Preview</source>
+        <target>Prévisualisation</target>
+        
+      </trans-unit>
+      <trans-unit id="QueryHelperLinkText.Text">
+        <source>Open the query helper inside Jira</source>
+        
+      </trans-unit>
+      <trans-unit id="QueryHelperOpenErrorText.Text">
+        <source>Unable to open Jira query helper</source>
+        
+      </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
         <source>Jira credentials</source>
         <target>Identifiants JIRA</target>
@@ -1433,11 +1486,6 @@ Voulez-vous réinitialiser le chemin configuré?</target>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
         <target>Plugin lien commit-Jira activé</target>
-        
-      </trans-unit>
-      <trans-unit id="_jiraFields.Caption">
-        <source>Jira fields</source>
-        <target>Champs Jira</target>
         
       </trans-unit>
       <trans-unit id="_jqlQuerySettings.Caption">

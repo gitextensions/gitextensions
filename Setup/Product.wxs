@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension"
-    xmlns:VSExtension="http://schemas.microsoft.com/wix/VSExtension">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:VSExtension="http://schemas.microsoft.com/wix/VSExtension">
   <?include Config.wxi?>
   <Product Id="*" UpgradeCode="$(var.UpgradeCode)" Name="$(var.ProductName) $(var.Version)" Manufacturer="$(var.Manufacturer)" Version="$(var.NumericVersion)" Language="1033">
     <Package InstallerVersion="200" Compressed="yes" Description="$(var.ProductName)" />
@@ -18,12 +17,10 @@
     <Property Id="SSHCLIENT" Value="PuTTY" Secure="yes" />
     <Property Id="LAUNCH" Value="0" />
     <Property Id="TELEMETRY_ENABLED" Value="1" Secure="yes" />
-
     <WixVariable Id="WixUIDialogBmp" Value="dialog.bmp" />
     <WixVariable Id="WixUIBannerBmp" Value="banner.bmp" />
     <WixVariable Id="WixUISupportPerUser" Value="1" Overridable="yes" />
     <WixVariable Id="WixUISupportPerMachine" Value="1" Overridable="yes" />
-    
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
         <Directory Id="INSTALLDIR" Name="$(var.InstallName)">
@@ -72,7 +69,7 @@
         <Directory Id="LocalAppDataOrganizationDir" Name="GitExtensions">
           <Directory Id="UserPluginsDir" Name="UserPlugins">
             <Directory Id="PluginManagerDir" Name="GitExtensions.PluginManager">
-              <Directory Id="PackageManagerDir" Name="PackageManager">              
+              <Directory Id="PackageManagerDir" Name="PackageManager">
                 <Component Id="PackageManager" Guid="{81556E1B-270C-448D-A68D-FD30678D4827}">
                   <RemoveFolder Id="RemoveLocalAppDataOrganizationDir" Directory="LocalAppDataOrganizationDir" On="uninstall" />
                   <RemoveFolder Id="RemoveUserPluginsDir" Directory="UserPluginsDir" On="uninstall" />
@@ -197,7 +194,6 @@
       <Component Id="System.Runtime.InteropServices.RuntimeInformation.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.InteropServices.RuntimeInformation.dll" />
       </Component>
-
       <Component Id="Microsoft.Win32.Primitives.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.Win32.Primitives.dll" />
       </Component>
@@ -617,7 +613,6 @@
       <Component Id="NString.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\NString.dll" />
       </Component>
-
       <!--Remove unused dll, installed in versions <= 2.31-->
       <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
         <RemoveFile Name="Github.dll" Id="Github.dll" On="both" />
@@ -756,33 +751,35 @@
       <Component Id="English.Plugins.xlf" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\English.Plugins.xlf" />
       </Component>
+      <Component Id="French.gif" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\French.gif" />
+      </Component>
       <Component Id="French.xlf" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\French.xlf" />
       </Component>
       <Component Id="French.Plugins.xlf" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\French.Plugins.xlf" />
       </Component>
-      <Component Id="French.gif" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\French.gif" />
+      <Component Id="German.gif" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\German.gif" />
       </Component>
-
       <Component Id="German.xlf" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\German.xlf" />
       </Component>
       <Component Id="German.Plugins.xlf" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\German.Plugins.xlf" />
       </Component>
-      <Component Id="German.gif" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\German.gif" />
+      <Component Id="Polish.gif" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Polish.gif" />
       </Component>
-      <Component Id="Japanese.xlf" Guid="*">
-        <File Source="..\GitUI\Translation\Japanese.xlf" />
+      <Component Id="Polish.xlf" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Polish.xlf" />
       </Component>
-      <Component Id="Japanese.Plugins.xlf" Guid="*">
-        <File Source="..\GitUI\Translation\Japanese.Plugins.xlf" />
+      <Component Id="Polish.Plugins.xlf" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Polish.Plugins.xlf" />
       </Component>
-      <Component Id="Japanese.gif" Guid="*">
-        <File Source="..\GitUI\Translation\Japanese.gif" />
+      <Component Id="Russian.gif" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Russian.gif" />
       </Component>
       <Component Id="Russian.xlf" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Russian.xlf" />
@@ -790,20 +787,16 @@
       <Component Id="Russian.Plugins.xlf" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Russian.Plugins.xlf" />
       </Component>
-      <Component Id="Russian.gif" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Russian.gif" />
+      <Component Id="SimplifiedChinese.gif" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Simplified Chinese.gif" />
       </Component>
-      <Component Id="Spanish.xlf" Guid="*">
-        <File Source="..\GitUI\Translation\Spanish.xlf" />
+      <Component Id="SimplifiedChinese.xlf" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Simplified Chinese.xlf" />
       </Component>
-      <Component Id="Spanish.Plugins.xlf" Guid="*">
-        <File Source="..\GitUI\Translation\Spanish.Plugins.xlf" />
-      </Component>
-      <Component Id="Spanish.gif" Guid="*">
-        <File Source="..\GitUI\Translation\Spanish.gif" />
+      <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Simplified Chinese.Plugins.xlf" />
       </Component>
     </DirectoryRef>
-
     <DirectoryRef Id="PuttyDir">
       <Component Id="plink.exe" Guid="*">
         <File Source="..\Bin\plink.exe" />
@@ -1084,7 +1077,6 @@
       <ComponentRef Id="Plugins_zh_Hant_Microsoft.VisualStudio.Services.Common.resources.dll" />
       <ComponentRef Id="Plugins_zh_Hant_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
     </ComponentGroup>
-
     <DirectoryRef Id="cs">
       <Component Id="cs_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\cs\Microsoft.VisualStudio.Composition.resources.dll" Id="cs_Microsoft.VisualStudio.Composition.resources.dll" />
@@ -1651,7 +1643,6 @@
           <ComponentRef Id="plPL.dic" />
         </Feature>
       </Feature>
-
       <Feature Id="Translation" Title="Translations" Level="1">
         <Feature Id="French" Title="French" Level="1">
           <ComponentRef Id="French.xlf" />
@@ -1663,22 +1654,21 @@
           <ComponentRef Id="German.Plugins.xlf" />
           <ComponentRef Id="German.gif" />
         </Feature>
-        <Feature Id="Japanese" Title="Japanese" Level="1">
-          <ComponentRef Id="Japanese.xlf" />
-          <ComponentRef Id="Japanese.Plugins.xlf" />
-          <ComponentRef Id="Japanese.gif" />
+        <Feature Id="Polish" Title="Polish" Level="1">
+          <ComponentRef Id="Polish.xlf" />
+          <ComponentRef Id="Polish.Plugins.xlf" />
+          <ComponentRef Id="Polish.gif" />
         </Feature>
         <Feature Id="Russian" Title="Russian" Level="1">
           <ComponentRef Id="Russian.xlf" />
           <ComponentRef Id="Russian.Plugins.xlf" />
           <ComponentRef Id="Russian.gif" />
         </Feature>
-        <Feature Id="Spanish" Title="Spanish" Level="1">
-          <ComponentRef Id="Spanish.xlf" />
-          <ComponentRef Id="Spanish.Plugins.xlf" />
-          <ComponentRef Id="Spanish.gif" />
+        <Feature Id="SimplifiedChinese" Title="SimplifiedChinese" Level="1">
+          <ComponentRef Id="SimplifiedChinese.xlf" />
+          <ComponentRef Id="SimplifiedChinese.Plugins.xlf" />
+          <ComponentRef Id="SimplifiedChinese.gif" />
         </Feature>
-
       </Feature>
       <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">
         <ComponentRef Id="GitExtensionsShellEx32.dll" />
@@ -1695,10 +1685,10 @@
         <ComponentRef Id="Protocol.github_mac" />
       </Feature>
     </Feature>
-    <CustomAction Id='LaunchFile' FileKey='GitExtensions.exe' ExeCommand='' Return='asyncNoWait' />
+    <CustomAction Id="LaunchFile" FileKey="GitExtensions.exe" ExeCommand="" Return="asyncNoWait" />
     <UI />
     <InstallExecuteSequence>
-      <Custom Action='LaunchFile' After='InstallFinalize'>( NOT Installed ) AND ( LAUNCH = "1" )</Custom>
+      <Custom Action="LaunchFile" After="InstallFinalize">( NOT Installed ) AND ( LAUNCH = "1" )</Custom>
     </InstallExecuteSequence>
   </Product>
 </Wix>

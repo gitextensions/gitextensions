@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.2.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="3.3.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="de">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -327,7 +327,7 @@
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
         <source>Delete remote branches from</source>
-        <target>Löschen Remote Branches von</target>
+        <target>Remote Branches löschen von</target>
         
       </trans-unit>
       <trans-unit id="Message.HeaderText">
@@ -695,6 +695,7 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       </trans-unit>
       <trans-unit id="PublishType.Text">
         <source>For Review</source>
+        <target>Zur Review</target>
         
       </trans-unit>
       <trans-unit id="_publishCaption.Text">
@@ -714,6 +715,7 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       </trans-unit>
       <trans-unit id="_publishTypeReview.Text">
         <source>For Review</source>
+        <target>Zur Review</target>
         
       </trans-unit>
       <trans-unit id="_publishTypeWip.Text">
@@ -736,8 +738,19 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
         <target>Branch:</target>
         
       </trans-unit>
+      <trans-unit id="labelCc.Text">
+        <source>CC:</source>
+        <target>CC:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelHashtag.Text">
+        <source>Hashtag:</source>
+        <target>Hashtag:</target>
+        
+      </trans-unit>
       <trans-unit id="labelPublishType.Text">
-        <source>Publish Type</source>
+        <source>Publish Type:</source>
+        <target>Veröffentlichungs-Typ:</target>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">
@@ -870,7 +883,7 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="TotalCommits.Text">
         <source>Total commits</source>
-        <target>Anzahl Commits</target>
+        <target>Gesamtanzahl Commits</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode.Text">
@@ -979,7 +992,7 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="cbIncludingSubmodules.Text">
         <source>Including submodules</source>
-        <target>Untermodule miteinbezogen</target>
+        <target>Untermodule einbeziehen</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
@@ -1157,6 +1170,10 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
         <target>Push nach Beendigung</target>
         
       </trans-unit>
+      <trans-unit id="cbSquash.Text">
+        <source>Squash</source>
+        
+      </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
         <target>Verwalte vorhandene Branches:</target>
@@ -1230,9 +1247,19 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
         <target>GitHub</target>
         
       </trans-unit>
+      <trans-unit id="GitHubApiEndpoint.Caption">
+        <source>GitHub (Enterprise) API endpoint</source>
+        <target>GitHub (Enterprise) API Endpunkt</target>
+        
+      </trans-unit>
       <trans-unit id="OAuthToken.Caption">
         <source>OAuth Token</source>
         <target>OAuth Token</target>
+        
+      </trans-unit>
+      <trans-unit id="_tokenAlreadyExist.Text">
+        <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
+        <target>Sie haben schon ein OAuth Token. Um ein neues anzufordern, löschen Sie das alte zuerst unter Plugins &gt; Einstellungen.</target>
         
       </trans-unit>
     </body>
@@ -1425,6 +1452,46 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
         <target>JIRA Commit Hinweis</target>
         
       </trans-unit>
+      <trans-unit id="EmptyQueryResultCaption.Text">
+        <source>First Task Preview</source>
+        <target>Erste Aufgaben Preview</target>
+        
+      </trans-unit>
+      <trans-unit id="EmptyQueryResultMessage.Text">
+        <source>[Empty Jira Query Result]</source>
+        <target>[Leeres Ergebnis der JIRA Query]</target>
+        
+      </trans-unit>
+      <trans-unit id="InvalidUrlCaption.Text">
+        <source>Invalid Jira url</source>
+        <target>Ungültige JIRA URL</target>
+        
+      </trans-unit>
+      <trans-unit id="InvalidUrlMessage.Text">
+        <source>A valid url is required to launch the Jira query helper</source>
+        <target>Eine gültige URL wird benötigt, um den JIRA Query Helper zu öffnen</target>
+        
+      </trans-unit>
+      <trans-unit id="JiraFieldsLabel.Text">
+        <source>Jira fields</source>
+        <target>JIRA Felder</target>
+        
+      </trans-unit>
+      <trans-unit id="PreviewButtonText.Text">
+        <source>Preview</source>
+        <target>Vorschau</target>
+        
+      </trans-unit>
+      <trans-unit id="QueryHelperLinkText.Text">
+        <source>Open the query helper inside Jira</source>
+        <target>Öffne den Query Helper in JIRA</target>
+        
+      </trans-unit>
+      <trans-unit id="QueryHelperOpenErrorText.Text">
+        <source>Unable to open Jira query helper</source>
+        <target>Konnte den JIRA Query Helper nicht öffnen</target>
+        
+      </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
         <source>Jira credentials</source>
         <target>JIRA Zugangsdaten</target>
@@ -1433,11 +1500,6 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
         <target>JIRA Hinweis Plugin aktiviert</target>
-        
-      </trans-unit>
-      <trans-unit id="_jiraFields.Caption">
-        <source>Jira fields</source>
-        <target>JIRA Felder</target>
         
       </trans-unit>
       <trans-unit id="_jqlQuerySettings.Caption">
