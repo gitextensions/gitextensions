@@ -38,9 +38,9 @@
             this._NO_TRANSLATE_BranchInfo = new System.Windows.Forms.Label();
             this.commitSummaryUserControl1 = new GitUI.UserControls.CommitSummaryUserControl();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.Ok = new System.Windows.Forms.Button();
-            this.Cancel = new System.Windows.Forms.Button();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.Cancel = new System.Windows.Forms.Button();
+            this.Ok = new System.Windows.Forms.Button();
             gbResetType = new System.Windows.Forms.GroupBox();
             gbResetType.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -59,7 +59,7 @@
             gbResetType.Name = "gbResetType";
             gbResetType.Padding = new System.Windows.Forms.Padding(11);
             gbResetType.Size = new System.Drawing.Size(459, 245);
-            gbResetType.TabIndex = 2;
+            gbResetType.TabIndex = 0;
             gbResetType.TabStop = false;
             gbResetType.Text = "Reset type";
             // 
@@ -128,7 +128,7 @@
             this.Keep.Name = "Keep";
             this.Keep.Padding = new System.Windows.Forms.Padding(3);
             this.Keep.Size = new System.Drawing.Size(431, 36);
-            this.Keep.TabIndex = 4;
+            this.Keep.TabIndex = 2;
             this.Keep.Text = "Keep: update working directory to the commit \r\n(abort if there are local changes)" +
     ", reset index";
             this.Keep.UseVisualStyleBackColor = false;
@@ -158,7 +158,7 @@
             this.Hard.Name = "Hard";
             this.Hard.Padding = new System.Windows.Forms.Padding(3);
             this.Hard.Size = new System.Drawing.Size(431, 36);
-            this.Hard.TabIndex = 2;
+            this.Hard.TabIndex = 4;
             this.Hard.Text = "Hard: reset working directory and index\r\n(discard ALL local changes, even uncommi" +
     "tted changes)";
             this.Hard.UseVisualStyleBackColor = false;
@@ -171,7 +171,7 @@
             this._NO_TRANSLATE_BranchInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._NO_TRANSLATE_BranchInfo.Name = "_NO_TRANSLATE_BranchInfo";
             this._NO_TRANSLATE_BranchInfo.Size = new System.Drawing.Size(455, 13);
-            this._NO_TRANSLATE_BranchInfo.TabIndex = 0;
+            this._NO_TRANSLATE_BranchInfo.TabIndex = 5;
             this._NO_TRANSLATE_BranchInfo.Text = "##Reset branch \'{0}\' to:";
             // 
             // commitSummaryUserControl1
@@ -185,7 +185,8 @@
             this.commitSummaryUserControl1.Name = "commitSummaryUserControl1";
             this.commitSummaryUserControl1.Revision = null;
             this.commitSummaryUserControl1.Size = new System.Drawing.Size(461, 150);
-            this.commitSummaryUserControl1.TabIndex = 1;
+            this.commitSummaryUserControl1.TabIndex = 6;
+            this.commitSummaryUserControl1.TabStop = false;
             // 
             // tableLayoutPanel1
             // 
@@ -209,30 +210,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(469, 459);
-            this.tableLayoutPanel1.TabIndex = 0;
-            // 
-            // Ok
-            // 
-            this.Ok.Location = new System.Drawing.Point(273, 2);
-            this.Ok.Margin = new System.Windows.Forms.Padding(2);
-            this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(91, 25);
-            this.Ok.TabIndex = 6;
-            this.Ok.Text = "OK";
-            this.Ok.UseVisualStyleBackColor = true;
-            this.Ok.Click += new System.EventHandler(this.Ok_Click);
-            // 
-            // Cancel
-            // 
-            this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Cancel.Location = new System.Drawing.Point(368, 2);
-            this.Cancel.Margin = new System.Windows.Forms.Padding(2);
-            this.Cancel.Name = "Cancel";
-            this.Cancel.Size = new System.Drawing.Size(91, 25);
-            this.Cancel.TabIndex = 7;
-            this.Cancel.Text = "Cancel";
-            this.Cancel.UseVisualStyleBackColor = true;
-            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
+            this.tableLayoutPanel1.TabIndex = 7;
             // 
             // flowLayoutPanel1
             // 
@@ -246,7 +224,30 @@
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(1);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(461, 29);
-            this.flowLayoutPanel1.TabIndex = 3;
+            this.flowLayoutPanel1.TabIndex = 10;
+            // 
+            // Cancel
+            // 
+            this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.Cancel.Location = new System.Drawing.Point(368, 2);
+            this.Cancel.Margin = new System.Windows.Forms.Padding(2);
+            this.Cancel.Name = "Cancel";
+            this.Cancel.Size = new System.Drawing.Size(91, 25);
+            this.Cancel.TabIndex = 2;
+            this.Cancel.Text = "Cancel";
+            this.Cancel.UseVisualStyleBackColor = true;
+            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
+            // 
+            // Ok
+            // 
+            this.Ok.Location = new System.Drawing.Point(273, 2);
+            this.Ok.Margin = new System.Windows.Forms.Padding(2);
+            this.Ok.Name = "Ok";
+            this.Ok.Size = new System.Drawing.Size(91, 25);
+            this.Ok.TabIndex = 1;
+            this.Ok.Text = "OK";
+            this.Ok.UseVisualStyleBackColor = true;
+            this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
             // FormResetCurrentBranch
             // 
