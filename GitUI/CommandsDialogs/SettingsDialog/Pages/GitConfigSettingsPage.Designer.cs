@@ -30,28 +30,21 @@
         {
             this.label60 = new System.Windows.Forms.Label();
             this.Global_FilesEncoding = new System.Windows.Forms.ComboBox();
-            this.BrowseCommitTemplate = new System.Windows.Forms.Button();
-            this.label57 = new System.Windows.Forms.Label();
-            this.CommitTemplatePath = new System.Windows.Forms.TextBox();
-            this.DiffToolCmdSuggest = new System.Windows.Forms.Button();
-            this.DifftoolCmd = new System.Windows.Forms.TextBox();
-            this.label48 = new System.Windows.Forms.Label();
-            this.BrowseDiffTool = new System.Windows.Forms.Button();
-            this.label42 = new System.Windows.Forms.Label();
-            this.DifftoolPath = new System.Windows.Forms.TextBox();
-            this._NO_TRANSLATE_GlobalDiffTool = new System.Windows.Forms.ComboBox();
-            this.label41 = new System.Windows.Forms.Label();
+            this.btnCommitTemplateBrowse = new System.Windows.Forms.Button();
+            this.txtCommitTemplatePath = new System.Windows.Forms.TextBox();
+            this.btnDiffToolCommandSuggest = new System.Windows.Forms.Button();
+            this.txtDiffToolCommand = new System.Windows.Forms.TextBox();
+            this.btnDiffToolBrowse = new System.Windows.Forms.Button();
+            this.txtDiffToolPath = new System.Windows.Forms.TextBox();
+            this._NO_TRANSLATE_cboDiffTool = new System.Windows.Forms.ComboBox();
             this.InvalidGitPathGlobal = new System.Windows.Forms.Panel();
             this.label9 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.MergeToolCmdSuggest = new System.Windows.Forms.Button();
-            this.MergeToolCmd = new System.Windows.Forms.TextBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.BrowseMergeTool = new System.Windows.Forms.Button();
-            this._NO_TRANSLATE_GlobalMergeTool = new System.Windows.Forms.ComboBox();
-            this.MergeToolPathLabel = new System.Windows.Forms.Label();
-            this.MergetoolPath = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
+            this.btnMergeToolCommandSuggest = new System.Windows.Forms.Button();
+            this.txtMergeToolCommand = new System.Windows.Forms.TextBox();
+            this.btnMergeToolBrowse = new System.Windows.Forms.Button();
+            this._NO_TRANSLATE_cboMergeTool = new System.Windows.Forms.ComboBox();
+            this.txtMergeToolPath = new System.Windows.Forms.TextBox();
             this.GlobalEditor = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.GlobalUserEmail = new System.Windows.Forms.TextBox();
@@ -66,6 +59,13 @@
             this.globalAutoCrlfNotSet = new System.Windows.Forms.RadioButton();
             this.tableLayoutPanelGitConfig = new System.Windows.Forms.TableLayoutPanel();
             this.ConfigureEncoding = new System.Windows.Forms.Button();
+            this.lblCommitTemplatePath = new System.Windows.Forms.Label();
+            this.lblDiffToolCommand = new System.Windows.Forms.Label();
+            this.lblDiffToolPath = new System.Windows.Forms.Label();
+            this.lblDiffTool = new System.Windows.Forms.Label();
+            this.lblMergeToolCommand = new System.Windows.Forms.Label();
+            this.lblMergeToolPath = new System.Windows.Forms.Label();
+            this.lblMergeTool = new System.Windows.Forms.Label();
             this.InvalidGitPathGlobal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxLineEndings.SuspendLayout();
@@ -92,113 +92,113 @@
             this.Global_FilesEncoding.Size = new System.Drawing.Size(241, 21);
             this.Global_FilesEncoding.TabIndex = 17;
             // 
-            // BrowseCommitTemplate
+            // btnCommitTemplateBrowse
             // 
-            this.BrowseCommitTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.BrowseCommitTemplate.Location = new System.Drawing.Point(1037, 260);
-            this.BrowseCommitTemplate.Name = "BrowseCommitTemplate";
-            this.BrowseCommitTemplate.Size = new System.Drawing.Size(123, 25);
-            this.BrowseCommitTemplate.TabIndex = 15;
-            this.BrowseCommitTemplate.Text = "Browse";
-            this.BrowseCommitTemplate.UseVisualStyleBackColor = true;
-            this.BrowseCommitTemplate.Click += new System.EventHandler(this.BrowseCommitTemplate_Click);
+            this.btnCommitTemplateBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCommitTemplateBrowse.Location = new System.Drawing.Point(1037, 260);
+            this.btnCommitTemplateBrowse.Name = "btnCommitTemplateBrowse";
+            this.btnCommitTemplateBrowse.Size = new System.Drawing.Size(123, 25);
+            this.btnCommitTemplateBrowse.TabIndex = 15;
+            this.btnCommitTemplateBrowse.Text = "Browse";
+            this.btnCommitTemplateBrowse.UseVisualStyleBackColor = true;
+            this.btnCommitTemplateBrowse.Click += new System.EventHandler(this.btnCommitTemplateBrowse_Click);
             // 
-            // label57
+            // lblCommitTemplatePath
             // 
-            this.label57.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label57.AutoSize = true;
-            this.label57.Location = new System.Drawing.Point(3, 266);
-            this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(120, 13);
-            this.label57.TabIndex = 76;
-            this.label57.Text = "Path to commit template";
+            this.lblCommitTemplatePath.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblCommitTemplatePath.AutoSize = true;
+            this.lblCommitTemplatePath.Location = new System.Drawing.Point(3, 266);
+            this.lblCommitTemplatePath.Name = "lblCommitTemplatePath";
+            this.lblCommitTemplatePath.Size = new System.Drawing.Size(120, 13);
+            this.lblCommitTemplatePath.TabIndex = 76;
+            this.lblCommitTemplatePath.Text = "Path to commit template";
             // 
-            // CommitTemplatePath
+            // txtCommitTemplatePath
             // 
-            this.CommitTemplatePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.CommitTemplatePath.Location = new System.Drawing.Point(129, 262);
-            this.CommitTemplatePath.Name = "CommitTemplatePath";
-            this.CommitTemplatePath.Size = new System.Drawing.Size(902, 20);
-            this.CommitTemplatePath.TabIndex = 14;
+            this.txtCommitTemplatePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCommitTemplatePath.Location = new System.Drawing.Point(129, 262);
+            this.txtCommitTemplatePath.Name = "txtCommitTemplatePath";
+            this.txtCommitTemplatePath.Size = new System.Drawing.Size(902, 20);
+            this.txtCommitTemplatePath.TabIndex = 14;
             // 
-            // DiffToolCmdSuggest
+            // btnDiffToolCommandSuggest
             // 
-            this.DiffToolCmdSuggest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.DiffToolCmdSuggest.Location = new System.Drawing.Point(1037, 229);
-            this.DiffToolCmdSuggest.Name = "DiffToolCmdSuggest";
-            this.DiffToolCmdSuggest.Size = new System.Drawing.Size(123, 25);
-            this.DiffToolCmdSuggest.TabIndex = 13;
-            this.DiffToolCmdSuggest.Text = "Suggest";
-            this.DiffToolCmdSuggest.UseVisualStyleBackColor = true;
-            this.DiffToolCmdSuggest.Click += new System.EventHandler(this.DiffToolCmdSuggest_Click);
+            this.btnDiffToolCommandSuggest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDiffToolCommandSuggest.Location = new System.Drawing.Point(1037, 229);
+            this.btnDiffToolCommandSuggest.Name = "btnDiffToolCommandSuggest";
+            this.btnDiffToolCommandSuggest.Size = new System.Drawing.Size(123, 25);
+            this.btnDiffToolCommandSuggest.TabIndex = 13;
+            this.btnDiffToolCommandSuggest.Text = "Suggest";
+            this.btnDiffToolCommandSuggest.UseVisualStyleBackColor = true;
+            this.btnDiffToolCommandSuggest.Click += new System.EventHandler(this.btnDiffToolCommandSuggest_Click);
             // 
-            // DifftoolCmd
+            // txtDiffToolCommand
             // 
-            this.DifftoolCmd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.DifftoolCmd.Location = new System.Drawing.Point(129, 231);
-            this.DifftoolCmd.Name = "DifftoolCmd";
-            this.DifftoolCmd.Size = new System.Drawing.Size(902, 20);
-            this.DifftoolCmd.TabIndex = 12;
+            this.txtDiffToolCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtDiffToolCommand.Location = new System.Drawing.Point(129, 231);
+            this.txtDiffToolCommand.Name = "txtDiffToolCommand";
+            this.txtDiffToolCommand.Size = new System.Drawing.Size(902, 20);
+            this.txtDiffToolCommand.TabIndex = 12;
             // 
-            // label48
+            // lblDiffToolCommand
             // 
-            this.label48.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(3, 235);
-            this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(89, 13);
-            this.label48.TabIndex = 72;
-            this.label48.Text = "Difftool command";
+            this.lblDiffToolCommand.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblDiffToolCommand.AutoSize = true;
+            this.lblDiffToolCommand.Location = new System.Drawing.Point(3, 235);
+            this.lblDiffToolCommand.Name = "lblDiffToolCommand";
+            this.lblDiffToolCommand.Size = new System.Drawing.Size(89, 13);
+            this.lblDiffToolCommand.TabIndex = 72;
+            this.lblDiffToolCommand.Text = "Difftool command";
             // 
-            // BrowseDiffTool
+            // btnDiffToolBrowse
             // 
-            this.BrowseDiffTool.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.BrowseDiffTool.Location = new System.Drawing.Point(1037, 198);
-            this.BrowseDiffTool.Name = "BrowseDiffTool";
-            this.BrowseDiffTool.Size = new System.Drawing.Size(123, 25);
-            this.BrowseDiffTool.TabIndex = 11;
-            this.BrowseDiffTool.Text = "Browse";
-            this.BrowseDiffTool.UseVisualStyleBackColor = true;
-            this.BrowseDiffTool.Click += new System.EventHandler(this.BrowseDiffTool_Click);
+            this.btnDiffToolBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDiffToolBrowse.Location = new System.Drawing.Point(1037, 198);
+            this.btnDiffToolBrowse.Name = "btnDiffToolBrowse";
+            this.btnDiffToolBrowse.Size = new System.Drawing.Size(123, 25);
+            this.btnDiffToolBrowse.TabIndex = 11;
+            this.btnDiffToolBrowse.Text = "Browse";
+            this.btnDiffToolBrowse.UseVisualStyleBackColor = true;
+            this.btnDiffToolBrowse.Click += new System.EventHandler(this.btnDiffToolBrowse_Click);
             // 
-            // label42
+            // lblDiffToolPath
             // 
-            this.label42.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(3, 204);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(75, 13);
-            this.label42.TabIndex = 70;
-            this.label42.Text = "Path to difftool";
+            this.lblDiffToolPath.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblDiffToolPath.AutoSize = true;
+            this.lblDiffToolPath.Location = new System.Drawing.Point(3, 204);
+            this.lblDiffToolPath.Name = "lblDiffToolPath";
+            this.lblDiffToolPath.Size = new System.Drawing.Size(75, 13);
+            this.lblDiffToolPath.TabIndex = 70;
+            this.lblDiffToolPath.Text = "Path to difftool";
             // 
-            // DifftoolPath
+            // txtDiffToolPath
             // 
-            this.DifftoolPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.DifftoolPath.Location = new System.Drawing.Point(129, 200);
-            this.DifftoolPath.Name = "DifftoolPath";
-            this.DifftoolPath.Size = new System.Drawing.Size(902, 20);
-            this.DifftoolPath.TabIndex = 10;
-            this.DifftoolPath.LostFocus += new System.EventHandler(this.DiffMergeToolPath_LostFocus);
+            this.txtDiffToolPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtDiffToolPath.Location = new System.Drawing.Point(129, 200);
+            this.txtDiffToolPath.Name = "txtDiffToolPath";
+            this.txtDiffToolPath.Size = new System.Drawing.Size(902, 20);
+            this.txtDiffToolPath.TabIndex = 10;
+            this.txtDiffToolPath.LostFocus += new System.EventHandler(this.txtDiffMergeToolPath_LostFocus);
             // 
-            // _NO_TRANSLATE_GlobalDiffTool
+            // _NO_TRANSLATE_cboDiffTool
             // 
-            this._NO_TRANSLATE_GlobalDiffTool.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this._NO_TRANSLATE_GlobalDiffTool.FormattingEnabled = true;
-            this._NO_TRANSLATE_GlobalDiffTool.Location = new System.Drawing.Point(129, 171);
-            this._NO_TRANSLATE_GlobalDiffTool.Name = "_NO_TRANSLATE_GlobalDiffTool";
-            this._NO_TRANSLATE_GlobalDiffTool.Size = new System.Drawing.Size(241, 21);
-            this._NO_TRANSLATE_GlobalDiffTool.TabIndex = 9;
-            this._NO_TRANSLATE_GlobalDiffTool.TextChanged += new System.EventHandler(this.GlobalDiffTool_TextChanged);
+            this._NO_TRANSLATE_cboDiffTool.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this._NO_TRANSLATE_cboDiffTool.FormattingEnabled = true;
+            this._NO_TRANSLATE_cboDiffTool.Location = new System.Drawing.Point(129, 171);
+            this._NO_TRANSLATE_cboDiffTool.Name = "_NO_TRANSLATE_cboDiffTool";
+            this._NO_TRANSLATE_cboDiffTool.Size = new System.Drawing.Size(241, 21);
+            this._NO_TRANSLATE_cboDiffTool.TabIndex = 9;
+            this._NO_TRANSLATE_cboDiffTool.TextChanged += new System.EventHandler(this.cboDiffTool_TextChanged);
             // 
-            // label41
+            // lblDiffTool
             // 
-            this.label41.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(3, 175);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(40, 13);
-            this.label41.TabIndex = 67;
-            this.label41.Text = "Difftool";
+            this.lblDiffTool.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblDiffTool.AutoSize = true;
+            this.lblDiffTool.Location = new System.Drawing.Point(3, 175);
+            this.lblDiffTool.Name = "lblDiffTool";
+            this.lblDiffTool.Size = new System.Drawing.Size(40, 13);
+            this.lblDiffTool.TabIndex = 67;
+            this.lblDiffTool.Text = "Difftool";
             // 
             // InvalidGitPathGlobal
             // 
@@ -239,84 +239,84 @@
             this.pictureBox1.TabIndex = 18;
             this.pictureBox1.TabStop = false;
             // 
-            // MergeToolCmdSuggest
+            // btnMergeToolCommandSuggest
             // 
-            this.MergeToolCmdSuggest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.MergeToolCmdSuggest.Location = new System.Drawing.Point(1037, 140);
-            this.MergeToolCmdSuggest.Name = "MergeToolCmdSuggest";
-            this.MergeToolCmdSuggest.Size = new System.Drawing.Size(123, 25);
-            this.MergeToolCmdSuggest.TabIndex = 7;
-            this.MergeToolCmdSuggest.Text = "Suggest";
-            this.MergeToolCmdSuggest.UseVisualStyleBackColor = true;
-            this.MergeToolCmdSuggest.Click += new System.EventHandler(this.MergeToolCmdSuggest_Click);
+            this.btnMergeToolCommandSuggest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnMergeToolCommandSuggest.Location = new System.Drawing.Point(1037, 140);
+            this.btnMergeToolCommandSuggest.Name = "btnMergeToolCommandSuggest";
+            this.btnMergeToolCommandSuggest.Size = new System.Drawing.Size(123, 25);
+            this.btnMergeToolCommandSuggest.TabIndex = 7;
+            this.btnMergeToolCommandSuggest.Text = "Suggest";
+            this.btnMergeToolCommandSuggest.UseVisualStyleBackColor = true;
+            this.btnMergeToolCommandSuggest.Click += new System.EventHandler(this.btnMergeToolCommandSuggest_Click);
             // 
-            // MergeToolCmd
+            // txtMergeToolCommand
             // 
-            this.MergeToolCmd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.MergeToolCmd.Location = new System.Drawing.Point(129, 142);
-            this.MergeToolCmd.Name = "MergeToolCmd";
-            this.MergeToolCmd.Size = new System.Drawing.Size(902, 20);
-            this.MergeToolCmd.TabIndex = 6;
+            this.txtMergeToolCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtMergeToolCommand.Location = new System.Drawing.Point(129, 142);
+            this.txtMergeToolCommand.Name = "txtMergeToolCommand";
+            this.txtMergeToolCommand.Size = new System.Drawing.Size(902, 20);
+            this.txtMergeToolCommand.TabIndex = 6;
             // 
-            // label19
+            // lblMergeToolCommand
             // 
-            this.label19.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(3, 146);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(103, 13);
-            this.label19.TabIndex = 62;
-            this.label19.Text = "Mergetool command";
+            this.lblMergeToolCommand.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblMergeToolCommand.AutoSize = true;
+            this.lblMergeToolCommand.Location = new System.Drawing.Point(3, 146);
+            this.lblMergeToolCommand.Name = "lblMergeToolCommand";
+            this.lblMergeToolCommand.Size = new System.Drawing.Size(103, 13);
+            this.lblMergeToolCommand.TabIndex = 62;
+            this.lblMergeToolCommand.Text = "Mergetool command";
             // 
-            // BrowseMergeTool
+            // btnMergeToolBrowse
             // 
-            this.BrowseMergeTool.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.BrowseMergeTool.Location = new System.Drawing.Point(1037, 109);
-            this.BrowseMergeTool.Name = "BrowseMergeTool";
-            this.BrowseMergeTool.Size = new System.Drawing.Size(123, 25);
-            this.BrowseMergeTool.TabIndex = 5;
-            this.BrowseMergeTool.Text = "Browse";
-            this.BrowseMergeTool.UseVisualStyleBackColor = true;
-            this.BrowseMergeTool.Click += new System.EventHandler(this.BrowseMergeTool_Click);
+            this.btnMergeToolBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnMergeToolBrowse.Location = new System.Drawing.Point(1037, 109);
+            this.btnMergeToolBrowse.Name = "btnMergeToolBrowse";
+            this.btnMergeToolBrowse.Size = new System.Drawing.Size(123, 25);
+            this.btnMergeToolBrowse.TabIndex = 5;
+            this.btnMergeToolBrowse.Text = "Browse";
+            this.btnMergeToolBrowse.UseVisualStyleBackColor = true;
+            this.btnMergeToolBrowse.Click += new System.EventHandler(this.btnMergeToolBrowse_Click);
             // 
-            // _NO_TRANSLATE_GlobalMergeTool
+            // _NO_TRANSLATE_cboMergeTool
             // 
-            this._NO_TRANSLATE_GlobalMergeTool.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this._NO_TRANSLATE_GlobalMergeTool.FormattingEnabled = true;
-            this._NO_TRANSLATE_GlobalMergeTool.Location = new System.Drawing.Point(129, 82);
-            this._NO_TRANSLATE_GlobalMergeTool.Name = "_NO_TRANSLATE_GlobalMergeTool";
-            this._NO_TRANSLATE_GlobalMergeTool.Size = new System.Drawing.Size(241, 21);
-            this._NO_TRANSLATE_GlobalMergeTool.TabIndex = 3;
-            this._NO_TRANSLATE_GlobalMergeTool.TextChanged += new System.EventHandler(this.GlobalMergeTool_TextChanged);
+            this._NO_TRANSLATE_cboMergeTool.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this._NO_TRANSLATE_cboMergeTool.FormattingEnabled = true;
+            this._NO_TRANSLATE_cboMergeTool.Location = new System.Drawing.Point(129, 82);
+            this._NO_TRANSLATE_cboMergeTool.Name = "_NO_TRANSLATE_cboMergeTool";
+            this._NO_TRANSLATE_cboMergeTool.Size = new System.Drawing.Size(241, 21);
+            this._NO_TRANSLATE_cboMergeTool.TabIndex = 3;
+            this._NO_TRANSLATE_cboMergeTool.TextChanged += new System.EventHandler(this.cboMergeTool_TextChanged);
             // 
-            // MergeToolPathLabel
+            // lblMergeToolPath
             // 
-            this.MergeToolPathLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.MergeToolPathLabel.AutoSize = true;
-            this.MergeToolPathLabel.Location = new System.Drawing.Point(3, 115);
-            this.MergeToolPathLabel.Name = "MergeToolPathLabel";
-            this.MergeToolPathLabel.Size = new System.Drawing.Size(90, 13);
-            this.MergeToolPathLabel.TabIndex = 59;
-            this.MergeToolPathLabel.Text = "Path to mergetool";
+            this.lblMergeToolPath.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblMergeToolPath.AutoSize = true;
+            this.lblMergeToolPath.Location = new System.Drawing.Point(3, 115);
+            this.lblMergeToolPath.Name = "lblMergeToolPath";
+            this.lblMergeToolPath.Size = new System.Drawing.Size(90, 13);
+            this.lblMergeToolPath.TabIndex = 59;
+            this.lblMergeToolPath.Text = "Path to mergetool";
             // 
-            // MergetoolPath
+            // txtMergeToolPath
             // 
-            this.MergetoolPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.MergetoolPath.Location = new System.Drawing.Point(129, 111);
-            this.MergetoolPath.Name = "MergetoolPath";
-            this.MergetoolPath.Size = new System.Drawing.Size(902, 20);
-            this.MergetoolPath.TabIndex = 4;
-            this.MergetoolPath.LostFocus += new System.EventHandler(this.DiffMergeToolPath_LostFocus);
+            this.txtMergeToolPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtMergeToolPath.Location = new System.Drawing.Point(129, 111);
+            this.txtMergeToolPath.Name = "txtMergeToolPath";
+            this.txtMergeToolPath.Size = new System.Drawing.Size(902, 20);
+            this.txtMergeToolPath.TabIndex = 4;
+            this.txtMergeToolPath.LostFocus += new System.EventHandler(this.txtDiffMergeToolPath_LostFocus);
             // 
-            // label7
+            // lblMergeTool
             // 
-            this.label7.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 86);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(54, 13);
-            this.label7.TabIndex = 56;
-            this.label7.Text = "Mergetool";
+            this.lblMergeTool.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblMergeTool.AutoSize = true;
+            this.lblMergeTool.Location = new System.Drawing.Point(3, 86);
+            this.lblMergeTool.Name = "lblMergeTool";
+            this.lblMergeTool.Size = new System.Drawing.Size(54, 13);
+            this.lblMergeTool.TabIndex = 56;
+            this.lblMergeTool.Text = "Mergetool";
             // 
             // GlobalEditor
             // 
@@ -374,7 +374,7 @@
             // 
             // groupBoxLineEndings
             // 
-            this.groupBoxLineEndings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxLineEndings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxLineEndings.AutoSize = true;
             this.tableLayoutPanelGitConfig.SetColumnSpan(this.groupBoxLineEndings, 4);
@@ -462,28 +462,28 @@
             this.tableLayoutPanelGitConfig.Controls.Add(this.label4, 0, 1);
             this.tableLayoutPanelGitConfig.Controls.Add(this.GlobalUserEmail, 1, 1);
             this.tableLayoutPanelGitConfig.Controls.Add(this.label6, 0, 2);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.CommitTemplatePath, 1, 9);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.label57, 0, 9);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.txtCommitTemplatePath, 1, 9);
+            this.tableLayoutPanelGitConfig.Controls.Add(lblCommitTemplatePath, 0, 9);
             this.tableLayoutPanelGitConfig.Controls.Add(this.GlobalEditor, 1, 2);
             this.tableLayoutPanelGitConfig.Controls.Add(this.InvalidGitPathGlobal, 2, 0);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.label7, 0, 3);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.DifftoolCmd, 1, 8);
-            this.tableLayoutPanelGitConfig.Controls.Add(this._NO_TRANSLATE_GlobalMergeTool, 1, 3);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.label48, 0, 8);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.MergeToolPathLabel, 0, 4);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.MergetoolPath, 1, 4);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.DifftoolPath, 1, 7);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.label42, 0, 7);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.label19, 0, 5);
-            this.tableLayoutPanelGitConfig.Controls.Add(this._NO_TRANSLATE_GlobalDiffTool, 1, 6);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.MergeToolCmd, 1, 5);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.label41, 0, 6);
+            this.tableLayoutPanelGitConfig.Controls.Add(lblMergeTool, 0, 3);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.txtDiffToolCommand, 1, 8);
+            this.tableLayoutPanelGitConfig.Controls.Add(this._NO_TRANSLATE_cboMergeTool, 1, 3);
+            this.tableLayoutPanelGitConfig.Controls.Add(lblDiffToolCommand, 0, 8);
+            this.tableLayoutPanelGitConfig.Controls.Add(lblMergeToolPath, 0, 4);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.txtMergeToolPath, 1, 4);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.txtDiffToolPath, 1, 7);
+            this.tableLayoutPanelGitConfig.Controls.Add(lblDiffToolPath, 0, 7);
+            this.tableLayoutPanelGitConfig.Controls.Add(lblMergeToolCommand, 0, 5);
+            this.tableLayoutPanelGitConfig.Controls.Add(this._NO_TRANSLATE_cboDiffTool, 1, 6);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.txtMergeToolCommand, 1, 5);
+            this.tableLayoutPanelGitConfig.Controls.Add(lblDiffTool, 0, 6);
             this.tableLayoutPanelGitConfig.Controls.Add(this.Global_FilesEncoding, 1, 11);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.BrowseMergeTool, 2, 4);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.MergeToolCmdSuggest, 2, 5);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.BrowseDiffTool, 2, 7);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.DiffToolCmdSuggest, 2, 8);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.BrowseCommitTemplate, 2, 9);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.btnMergeToolBrowse, 2, 4);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.btnMergeToolCommandSuggest, 2, 5);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.btnDiffToolBrowse, 2, 7);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.btnDiffToolCommandSuggest, 2, 8);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.btnCommitTemplateBrowse, 2, 9);
             this.tableLayoutPanelGitConfig.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanelGitConfig.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanelGitConfig.Name = "tableLayoutPanelGitConfig";
@@ -540,28 +540,21 @@
 
         private System.Windows.Forms.Label label60;
         private System.Windows.Forms.ComboBox Global_FilesEncoding;
-        private System.Windows.Forms.Button BrowseCommitTemplate;
-        private System.Windows.Forms.Label label57;
-        private System.Windows.Forms.TextBox CommitTemplatePath;
-        private System.Windows.Forms.Button DiffToolCmdSuggest;
-        private System.Windows.Forms.TextBox DifftoolCmd;
-        private System.Windows.Forms.Label label48;
-        private System.Windows.Forms.Button BrowseDiffTool;
-        private System.Windows.Forms.Label label42;
-        private System.Windows.Forms.TextBox DifftoolPath;
-        private System.Windows.Forms.ComboBox _NO_TRANSLATE_GlobalDiffTool;
-        private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.Button btnCommitTemplateBrowse;
+        private System.Windows.Forms.TextBox txtCommitTemplatePath;
+        private System.Windows.Forms.Button btnDiffToolCommandSuggest;
+        private System.Windows.Forms.TextBox txtDiffToolCommand;
+        private System.Windows.Forms.Button btnDiffToolBrowse;
+        private System.Windows.Forms.TextBox txtDiffToolPath;
+        private System.Windows.Forms.ComboBox _NO_TRANSLATE_cboDiffTool;
         private System.Windows.Forms.Panel InvalidGitPathGlobal;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button MergeToolCmdSuggest;
-        private System.Windows.Forms.TextBox MergeToolCmd;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Button BrowseMergeTool;
-        private System.Windows.Forms.ComboBox _NO_TRANSLATE_GlobalMergeTool;
-        private System.Windows.Forms.Label MergeToolPathLabel;
-        private System.Windows.Forms.TextBox MergetoolPath;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button btnMergeToolCommandSuggest;
+        private System.Windows.Forms.TextBox txtMergeToolCommand;
+        private System.Windows.Forms.Button btnMergeToolBrowse;
+        private System.Windows.Forms.ComboBox _NO_TRANSLATE_cboMergeTool;
+        private System.Windows.Forms.TextBox txtMergeToolPath;
         private System.Windows.Forms.ComboBox GlobalEditor;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox GlobalUserEmail;
@@ -576,5 +569,12 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelGitConfig;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelLineEndings;
         private System.Windows.Forms.Button ConfigureEncoding;
+        private System.Windows.Forms.Label lblCommitTemplatePath;
+        private System.Windows.Forms.Label lblDiffToolCommand;
+        private System.Windows.Forms.Label lblDiffToolPath;
+        private System.Windows.Forms.Label lblDiffTool;
+        private System.Windows.Forms.Label lblMergeToolCommand;
+        private System.Windows.Forms.Label lblMergeToolPath;
+        private System.Windows.Forms.Label lblMergeTool;
     }
 }
