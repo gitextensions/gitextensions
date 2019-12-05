@@ -16,12 +16,18 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         public const int MaxSuperprojectRefs = 4;
         private readonly StringBuilder _toolTipBuilder = new StringBuilder(200);
 
-        private readonly RevisionGridControl _grid;
+        private readonly Image _bisectGoodImage = DpiUtil.Scale(Images.BisectGood);
+        private readonly Image _bisectBadImage = DpiUtil.Scale(Images.BisectBad);
+        private readonly Image _fixupAndSquashImage = DpiUtil.Scale(Images.FixupAndSquashMessageMarker);
 
-        public MessageColumnProvider(RevisionGridControl grid)
+        private readonly RevisionGridControl _grid;
+        private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
+
+        public MessageColumnProvider(RevisionGridControl grid, IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
             : base("Message")
         {
             _grid = grid;
+            _gitRevisionSummaryBuilder = gitRevisionSummaryBuilder;
 
             Column = new DataGridViewTextBoxColumn
             {
@@ -34,23 +40,15 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             };
         }
 
-        private readonly Image _bisectGoodImage = DpiUtil.Scale(Images.BisectGood);
-        private readonly Image _bisectBadImage = DpiUtil.Scale(Images.BisectBad);
-        private readonly Image _fixupAndSquashImage = DpiUtil.Scale(Images.FixupAndSquashMessageMarker);
-
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
         {
             var isRowSelected = e.State.HasFlag(DataGridViewElementStates.Selected);
-
             var indicator = new MultilineIndicator(e, revision);
-
             var messageBounds = indicator.RemainingCellBounds;
-
             var superprojectRefs = new List<IGitRef>();
-
             var offset = ColumnLeftMargin;
-
             var normalFont = style.NormalFont;
+            var hasSelectedRef = false;
 
             #region Draw super project references (for submodules)
 
@@ -94,12 +92,9 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             #endregion
 
-            var hasSelectedRef = false;
-
             if (revision.Refs.Count != 0)
             {
                 var gitRefs = SortRefs(revision.Refs.Where(FilterRef));
-
                 foreach (var gitRef in gitRefs)
                 {
                     if (offset > indicator.RemainingCellBounds.Width)
@@ -294,7 +289,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             if (!revision.IsArtificial && (revision.HasMultiLineMessage || revision.Refs.Count != 0))
             {
-                var bodySummary = revision.BodySummary;
+                var bodySummary = _gitRevisionSummaryBuilder.BuildSummary(revision.Body);
                 var initialLength = (bodySummary?.Length ?? 50) + 10;
                 _toolTipBuilder.EnsureCapacity(initialLength);
 

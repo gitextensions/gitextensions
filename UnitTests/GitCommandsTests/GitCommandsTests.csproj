@@ -50,7 +50,7 @@
     <None Include="UserRepositoryHistory\Legacy\RepositoryCategorySerialiserTests.Verify_backwards_compatibility_of_object_graph.approved.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="GitRevisionTests.Should_do_ellipsis.ForScenario.Too_long_lines.approved.txt" />
-    <None Include="GitRevisionTests.Should_do_ellipsis.ForScenario.Too_many_lines.approved.txt" />
+    <None Include="GitRevisionSummaryBuilderTests.Should_do_ellipsis.ForScenario.Too_long_lines.approved.txt" />
+    <None Include="GitRevisionSummaryBuilderTests.Should_do_ellipsis.ForScenario.Too_many_lines.approved.txt" />
   </ItemGroup>
 </Project>

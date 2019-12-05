@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.RegularExpressions;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
@@ -27,14 +26,6 @@ namespace GitCommands
         public static readonly Regex Sha1HashShortRegex = new Regex(@"\b[a-f\d]{7,40}\b", RegexOptions.Compiled);
 
         private BuildInfo _buildStatus;
-        private const int CommitSummaryMaxLineLength = 150;
-        private const int CommitSummaryMaxNumberOfLines = 30;
-
-        private const int LineEllipsisLength = 7;
-        private const int CommitSummaryEllipsisLength = 5;
-
-        // Maximum size of the commit summary with ellipsis strings on each lines and at the end
-        private const int CommitSummaryWorstCaseLength = (CommitSummaryMaxNumberOfLines * (CommitSummaryMaxLineLength + LineEllipsisLength)) + CommitSummaryEllipsisLength;
 
         public GitRevision([NotNull] ObjectId objectId)
         {
@@ -89,75 +80,6 @@ namespace GitCommands
         public string Subject { get; set; } = "";
         [CanBeNull]
         public string Body { get; set; }
-
-        [CanBeNull]
-        public string BodySummary
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(Body) || !HasMultiLineMessage)
-                {
-                    return Body;
-                }
-
-                return BuildSummary(Body.TrimEnd());
-            }
-        }
-
-        private static string BuildSummary(string body)
-        {
-            var s = new StringBuilder(Math.Min(body.Length, CommitSummaryWorstCaseLength));
-
-            int lineCount = 0;
-            int lineStartPos = 0;
-            int pos;
-            for (pos = 0; pos < body.Length; ++pos)
-            {
-                if (body[pos] == '\n')
-                {
-                    if (pos - lineStartPos > CommitSummaryMaxLineLength)
-                    {
-                        AppendLine(CommitSummaryMaxLineLength, withEllipsis: true);
-                    }
-                    else
-                    {
-                        AppendLine(pos - lineStartPos);
-                    }
-
-                    lineStartPos = pos + 1;
-
-                    if (++lineCount == CommitSummaryMaxNumberOfLines)
-                    {
-                        return s.Append("[...]").ToString();
-                    }
-                }
-
-                if (pos == body.Length - 1)
-                {
-                    if (pos - lineStartPos > CommitSummaryMaxLineLength)
-                    {
-                        AppendLine(CommitSummaryMaxLineLength, withEllipsis: true);
-                    }
-                    else
-                    {
-                        AppendLine(pos - lineStartPos + 1);
-                    }
-                }
-
-                void AppendLine(int length, bool withEllipsis = false)
-                {
-                    s.Append(body.Substring(lineStartPos, length));
-                    if (withEllipsis)
-                    {
-                        s.Append(" [...]");
-                    }
-
-                    s.Append("\n");
-                }
-            }
-
-            return s.ToString().TrimEnd('\n');
-        }
 
         public bool HasMultiLineMessage { get; set; }
         public bool HasNotes { get; set; }
