@@ -412,19 +412,23 @@ namespace GitUI.CommandsDialogs
             base.OnActivated(e);
         }
 
-        protected override void OnFormClosing(FormClosingEventArgs e)
+        protected override void OnFormClosed(FormClosedEventArgs e)
         {
-            // Do not remember commit message of fixup or squash commits, since they have
-            // a special meaning, and can be dangerous if used inappropriately.
-            if (CommitKind == CommitKind.Normal)
+            // Do not attempt to store again if the form has already been closed. Unfortunately, OnFormClosed is always called by Close.
+            if (Visible)
             {
-                _commitMessageManager.MergeOrCommitMessage = Message.Text;
-                _commitMessageManager.AmendState = Amend.Checked;
+                // Do not remember commit message of fixup or squash commits, since they have
+                // a special meaning, and can be dangerous if used inappropriately.
+                if (CommitKind == CommitKind.Normal)
+                {
+                    _commitMessageManager.MergeOrCommitMessage = Message.Text;
+                    _commitMessageManager.AmendState = Amend.Checked;
+                }
+
+                _splitterManager.SaveSplitters();
             }
 
-            _splitterManager.SaveSplitters();
-
-            base.OnFormClosing(e);
+            base.OnFormClosed(e);
         }
 
         protected override void OnLoad(EventArgs e)
