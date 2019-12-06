@@ -12,7 +12,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
 <a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/sponsors/badge.svg" /></a>
 
 The work has been [split into two streams](https://github.com/gitextensions/gitextensions/wiki/Compare-versions):
- * version 3.x - **[Download it now](https://github.com/gitextensions/gitextensions/releases/latest)** or [install it with Chocolatey](https://chocolatey.org/packages/gitextensions).
+ * version 3.x - **[Download it now](https://github.com/gitextensions/gitextensions/releases/latest)** or install it with [Chocolatey](https://chocolatey.org/packages/gitextensions) or [AppGet](https://appget.net/packages/i/gitextensions).
  * version 2.5x
 
 ### Version 3.x
