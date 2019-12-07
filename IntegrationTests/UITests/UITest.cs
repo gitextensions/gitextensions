@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommonTestUtils;
@@ -16,7 +17,7 @@ namespace GitExtensions.UITests
             Func<T, Task> runTestAsync)
             where T : Form
         {
-            Console.WriteLine($"{nameof(RunForm)} entry");
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} entry");
             var idleCompletionSource = new TaskCompletionSource<VoidResult>();
 
             // Start runAsync before calling showForm.
@@ -27,11 +28,11 @@ namespace GitExtensions.UITests
             // complete.
             var test = ThreadHelper.JoinableTaskContext.Factory.RunAsync(async () =>
             {
-                Console.WriteLine($"{nameof(RunForm)}.test entry");
+                Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}.test entry");
 
                 // Wait for the form to be opened by the test thread.
                 await idleCompletionSource.Task;
-                Console.WriteLine($"{nameof(RunForm)}.test idle");
+                Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}.test idle");
                 var form = Application.OpenForms.OfType<T>().Single();
                 if (!form.Visible)
                 {
@@ -43,49 +44,46 @@ namespace GitExtensions.UITests
                 try
                 {
                     // Wait for potential pending asynchronous tasks triggered by the form.
-                    Application.DoEvents();
-                    AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
-                    Application.DoEvents();
-                    Console.WriteLine($"{nameof(RunForm)}.test form loaded");
+                    WaitForPendingOperations();
+                    Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}.test form loaded");
 
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                    Console.WriteLine($"{nameof(RunForm)}.test on main thread");
+                    Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}.test on main thread");
 
                     await runTestAsync(form);
-                    Console.WriteLine($"{nameof(RunForm)}.test passed");
+                    Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}.test passed");
                 }
                 finally
                 {
-                    form.Close(); // also calls form.Dispose()
-                    Console.WriteLine($"{nameof(RunForm)}.test form closed");
+                    CloseOrDispose(form, $"{MethodBase.GetCurrentMethod().Name}.test");
                 }
             });
 
             // The following call to showForm will trigger messages.
             // So we can be sure we don't stall waiting for idle if the application was already idle.
             Application.Idle += HandleApplicationIdle;
-            Console.WriteLine($"{nameof(RunForm)} subscribed");
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} subscribed");
             try
             {
                 try
                 {
                     showForm();
-                    Console.WriteLine($"{nameof(RunForm)} form shown");
+                    Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} form shown");
                 }
                 catch (Exception outer)
                 {
                     try
                     {
                         // Wake up and join the asynchronous test operation.
-                        Console.WriteLine($"{nameof(RunForm)} exception {outer.Demystify()}");
+                        Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} exception {outer.Demystify()}");
                         idleCompletionSource.TrySetResult(default);
                         test.Join();
-                        Console.WriteLine($"{nameof(RunForm)} test joined");
+                        Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} test joined");
                     }
                     catch (Exception inner)
                     {
                         // ignore
-                        Console.WriteLine($"{nameof(RunForm)} exception {inner.Demystify()}");
+                        Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} exception {inner.Demystify()}");
                     }
 
                     throw;
@@ -93,30 +91,21 @@ namespace GitExtensions.UITests
 
                 // Join the asynchronous test operation so any exceptions are rethrown on this thread.
                 test.Join();
-                Console.WriteLine($"{nameof(RunForm)} test joined");
+                Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} test joined");
             }
             finally
             {
                 Application.Idle -= HandleApplicationIdle;
-                Console.WriteLine($"{nameof(RunForm)} unsubscribed");
+                Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} unsubscribed");
 
                 // Safety net for the case the task "test" threw very early and didn't close the form.
                 var form = Application.OpenForms.OfType<T>().SingleOrDefault();
                 if (form != null)
                 {
-                    try
-                    {
-                        string formState = form.Visible ? "open" : "exists";
-                        Console.WriteLine($"{nameof(RunForm)} {typeof(T).FullName} still {formState}");
+                    string formState = form.Visible ? "open" : "exists";
+                    Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} {typeof(T).FullName} still {formState}");
 
-                        form.Close();
-                        Console.WriteLine($"{nameof(RunForm)} {typeof(T).FullName} closed");
-                    }
-                    finally
-                    {
-                        form.Dispose();
-                        Console.WriteLine($"{nameof(RunForm)} {typeof(T).FullName} disposed");
-                    }
+                    CloseOrDispose(form, $"{MethodBase.GetCurrentMethod().Name} {typeof(T).FullName}");
                 }
 
                 Assert.IsTrue(Application.OpenForms.Count == 0, $"{Application.OpenForms.Count} open form(s)");
@@ -126,7 +115,7 @@ namespace GitExtensions.UITests
 
             void HandleApplicationIdle(object sender, EventArgs e)
             {
-                Console.WriteLine($"{nameof(HandleApplicationIdle)}");
+                Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}");
                 idleCompletionSource.TrySetResult(default);
             }
         }
@@ -165,24 +154,64 @@ namespace GitExtensions.UITests
                         }
                         finally
                         {
-                            mainForm.Close();
-                            Console.WriteLine($"{nameof(RunDialog)} main form closed");
+                            CloseOrDispose(mainForm, $"{MethodBase.GetCurrentMethod().Name} main");
+                            mainForm = null;
                         }
                     });
             }
             finally
             {
+                CloseOrDispose(mainForm, $"{MethodBase.GetCurrentMethod().Name} finally main");
+            }
+        }
+
+        private static void CloseOrDispose(Form form, string description)
+        {
+            try
+            {
+                if (form == null)
+                {
+                    Console.WriteLine($"{description} form is null");
+                    return;
+                }
+
+                var actionDescription = description + " form ";
                 try
                 {
-                    mainForm?.Close();
-                    Console.WriteLine($"{nameof(RunDialog)} main form closed finally");
+                    if (form.Visible)
+                    {
+                        actionDescription += "close";
+                        form.Close(); // also calls form.Dispose()
+                    }
+                    else
+                    {
+                        actionDescription += "dispose";
+                        form.Dispose();
+                    }
+
+                    Console.WriteLine($"{actionDescription}d");
                 }
-                finally
+                catch (Exception ex)
                 {
-                    mainForm?.Dispose();
-                    Console.WriteLine($"{nameof(RunDialog)} main form disposed finally");
+                    Console.WriteLine($"{actionDescription} threw {ex.Demystify()}");
+                    form.Dispose();
+                    Console.WriteLine($"{description} form disposed");
                 }
             }
+            finally
+            {
+                // Wait for potential pending asynchronous tasks triggered by the form.
+                WaitForPendingOperations();
+                Console.WriteLine($"{description} form operations done");
+            }
+        }
+
+        private static void WaitForPendingOperations()
+        {
+            // Workaround for canceled operations: Process the message loop before and after the wait.
+            Application.DoEvents();
+            AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
+            Application.DoEvents();
         }
 
         private readonly struct VoidResult
