@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Threading;
@@ -124,7 +125,10 @@ namespace CommonTestUtils
 
         private void HandleApplicationThreadException(object sender, ThreadExceptionEventArgs e)
         {
-            if (_threadException == null)
+            bool ignore = e.Exception.GetType() == typeof(ThreadAbortException);
+            string ignoring = ignore ? "ignoring " : string.Empty;
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} {ignoring}{e.Exception.Demystify()}");
+            if (!ignore && _threadException == null)
             {
                 _threadException = ExceptionDispatchInfo.Capture(e.Exception);
             }
