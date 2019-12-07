@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Git;
@@ -142,6 +143,7 @@ namespace GitCommands.Submodules
             TimeSpan elapsed = DateTime.Now - _previousSubmoduleUpdateTime;
             if (gitStatus == null || (!forceUpdate && elapsed.TotalSeconds <= 15))
             {
+                Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} called to early again - aborting");
                 return;
             }
 

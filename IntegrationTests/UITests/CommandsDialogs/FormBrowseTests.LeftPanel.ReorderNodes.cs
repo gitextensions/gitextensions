@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -29,18 +31,10 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             _originalShowAuthorAvatarColumn = AppSettings.ShowAuthorAvatarColumn;
 
-            // we don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
-            AppSettings.ShowAuthorAvatarColumn = false;
-
-            // Show all root nodes for test, restore when done
             _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowBranches);
             _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowRemotes);
             _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowTags);
             _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowSubmodules);
-            AppSettings.RepoObjectsTreeShowBranches = true;
-            AppSettings.RepoObjectsTreeShowRemotes = true;
-            AppSettings.RepoObjectsTreeShowTags = true;
-            AppSettings.RepoObjectsTreeShowSubmodules = true;
         }
 
         [OneTimeTearDown]
@@ -57,6 +51,15 @@ namespace GitExtensions.UITests.CommandsDialogs
         [SetUp]
         public void SetUp()
         {
+            // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar...
+            AppSettings.ShowAuthorAvatarColumn = false;
+
+            // Show all root nodes for test, restore when done
+            AppSettings.RepoObjectsTreeShowBranches = true;
+            AppSettings.RepoObjectsTreeShowRemotes = true;
+            AppSettings.RepoObjectsTreeShowTags = true;
+            AppSettings.RepoObjectsTreeShowSubmodules = true;
+
             _repo1 = new GitModuleTestHelper("repo1");
             _commands = new GitUICommands(_repo1.Module);
         }
@@ -103,6 +106,11 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // act
                     var currNodes = repoObjectTree.TreeView.Nodes;
                     List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
+                    if (initialNodes.Count != 4)
+                    {
+                        var nodes = initialNodes.Select(n => n.Text).Join(", ");
+                        Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} {nameof(initialNodes)}: {nodes}");
+                    }
 
                     // assert
                     currNodes.Count.Should().Be(4);
@@ -133,14 +141,19 @@ namespace GitExtensions.UITests.CommandsDialogs
                 repoObjectTree =>
                 {
                     // act
-                    List<TreeNode> initialNodes = repoObjectTree.TreeView.Nodes.OfType<TreeNode>().ToList();
+                    var currNodes = repoObjectTree.TreeView.Nodes;
+                    List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
+                    if (initialNodes.Count != 4)
+                    {
+                        var nodes = initialNodes.Select(n => n.Text).Join(", ");
+                        Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} {nameof(initialNodes)}: {nodes}");
+                    }
 
                     // Hide nodes between first and last
                     repoObjectTree.SetTreeVisibleByIndex(1, false);
                     repoObjectTree.SetTreeVisibleByIndex(2, false);
 
                     // assert
-                    var currNodes = repoObjectTree.TreeView.Nodes;
                     currNodes.Count.Should().Be(2);
 
                     // Move node 0 down, which should move it to index 3
@@ -151,7 +164,12 @@ namespace GitExtensions.UITests.CommandsDialogs
                     repoObjectTree.SetTreeVisibleByIndex(2, true);
 
                     // Reset currNodes, should be back to 4
-                    currNodes = repoObjectTree.TreeView.Nodes;
+                    if (currNodes.Count != 4)
+                    {
+                        var nodes = currNodes.OfType<TreeNode>().Select(n => n.Text).Join(", ");
+                        Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} {nameof(currNodes)}: {nodes}");
+                    }
+
                     currNodes.Count.Should().Be(4);
 
                     // Only first and last nodes should have swapped
