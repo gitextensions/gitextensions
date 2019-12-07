@@ -50,8 +50,16 @@ namespace GitExtensions.UITests
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                     Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}.test on main thread");
 
-                    await runTestAsync(form);
-                    Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}.test passed");
+                    try
+                    {
+                        await runTestAsync(form);
+                        Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}.test passed");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}.test failed: {ex.Demystify()}");
+                        throw;
+                    }
                 }
                 finally
                 {
