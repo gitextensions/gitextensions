@@ -477,14 +477,32 @@ namespace GitUI.CommandsDialogs
             {
                 // ReSharper disable ConstantConditionalAccessQualifier - these can be null if run from under the TranslatioApp
 
-                _formBrowseMenus?.Dispose();
-                _filterRevisionsHelper?.Dispose();
-                _filterBranchHelper?.Dispose();
-                components?.Dispose();
-                _gitStatusMonitor?.Dispose();
+                //// _buildReportTabPageExtension not disposable
+                //// _formBrowseDiagnosticsReporter not disposable
+                //// _submoduleStatusProvider is a singleton which must not be disposed
                 _windowsJumpListManager?.Dispose();
+                //// _aheadBehindDataProvider not disposable
+                //// _appTitleGenerator not disposable
+                //// _commitDataManager not disposable
+                //// _controller not disposable
+                _formBrowseMenus?.Dispose();
+                _filterBranchHelper?.Dispose();
+                _filterRevisionsHelper?.Dispose();
+                _gitStatusMonitor?.Dispose();
+                //// _splitterManager not disposable
+
+                _consoleTabPage?.Dispose();
+                _warning?.Dispose();
+                _bisect?.Dispose();
+                _rebase?.Dispose();
+                _dashboard?.Dispose();
+                _terminal?.Dispose();
+
+                components?.Dispose();
 
                 // ReSharper restore ConstantConditionalAccessQualifier
+
+                Console.WriteLine($"{nameof(FormBrowse)} disposed");
             }
 
             base.Dispose(disposing);
