@@ -130,6 +130,7 @@ namespace GitUI.BranchTreePanel
             mnubtnFetchAllBranchesFromARemote.Visible = node.Enabled;
             mnubtnDisableRemote.Visible = node.Enabled;
             mnuBtnPruneAllBranchesFromARemote.Visible = node.Enabled;
+            mnuBtnOpenRemoteUrlInBrowser.Visible = node.IsRemoteUrlUsingHttp;
 
             // Actions on disabled remotes
             mnubtnEnableRemote.Visible = !node.Enabled;
@@ -219,6 +220,7 @@ namespace GitUI.BranchTreePanel
             RegisterClick<RemoteRepoNode>(mnubtnManageRemotes, remoteBranch => remoteBranch.PopupManageRemotesForm());
             RegisterClick<RemoteRepoNode>(mnubtnFetchAllBranchesFromARemote, remote => remote.Fetch());
             RegisterClick<RemoteRepoNode>(mnuBtnPruneAllBranchesFromARemote, remote => remote.Prune());
+            RegisterClick<RemoteRepoNode>(mnuBtnOpenRemoteUrlInBrowser, remote => remote.OpenRemoteUrlInBrowser());
             RegisterClick<RemoteRepoNode>(mnubtnEnableRemote, remote => remote.Enable(fetch: false));
             RegisterClick<RemoteRepoNode>(mnubtnEnableRemoteAndFetch, remote => remote.Enable(fetch: true));
             RegisterClick<RemoteRepoNode>(mnubtnDisableRemote, remote => remote.Disable());
