@@ -27,6 +27,12 @@ namespace CommonTestUtils
 
         public static bool IgnoreExceptions { get; set; }
 
+        static ConfigureJoinableTaskFactoryAttribute()
+        {
+            // route unhandled application exceptions to HandleApplicationThreadException
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+        }
+
         public void BeforeTest(ITest test)
         {
             AppSettings.CheckForUpdates = false;
