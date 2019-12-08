@@ -25,6 +25,8 @@ namespace CommonTestUtils
 
         public ActionTargets Targets => ActionTargets.Test;
 
+        public static bool IgnoreExceptions { get; set; }
+
         public void BeforeTest(ITest test)
         {
             AppSettings.CheckForUpdates = false;
@@ -34,6 +36,7 @@ namespace CommonTestUtils
 
             Assert.IsNull(ThreadHelper.JoinableTaskContext, "Tests with joinable tasks must not be run in parallel!");
 
+            IgnoreExceptions = false;
             Application.ThreadException += HandleApplicationThreadException;
 
             IList apartmentState = null;
@@ -125,7 +128,7 @@ namespace CommonTestUtils
 
         private void HandleApplicationThreadException(object sender, ThreadExceptionEventArgs e)
         {
-            bool ignore = e.Exception.GetType() == typeof(ThreadAbortException);
+            bool ignore = IgnoreExceptions || e.Exception.GetType() == typeof(ThreadAbortException);
             string ignoring = ignore ? "ignoring " : string.Empty;
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} {ignoring}{e.Exception.Demystify()}");
             if (!ignore && _threadException == null)

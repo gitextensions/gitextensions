@@ -177,6 +177,8 @@ namespace GitExtensions.UITests
         {
             try
             {
+                ConfigureJoinableTaskFactoryAttribute.IgnoreExceptions = true;
+
                 if (form == null)
                 {
                     Console.WriteLine($"{description} form is null");
