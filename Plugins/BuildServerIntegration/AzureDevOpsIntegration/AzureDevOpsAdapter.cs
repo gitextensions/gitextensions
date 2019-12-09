@@ -31,6 +31,7 @@ namespace AzureDevOpsIntegration
     {
         public const string PluginName = "Azure DevOps and Team Foundation Server (since TFS2015)";
 
+        private bool _firstCallForFinishedBuildsWasIgnored = false;
         private IBuildServerWatcher _buildServerWatcher;
         private IntegrationSettings _settings;
         private ApiClient _apiClient;
@@ -86,6 +87,12 @@ namespace AzureDevOpsIntegration
 
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
         {
+            if (!_firstCallForFinishedBuildsWasIgnored)
+            {
+                _firstCallForFinishedBuildsWasIgnored = true;
+                return Observable.Empty<BuildInfo>();
+            }
+
             return GetBuilds(scheduler, sinceDate, false);
         }
 
