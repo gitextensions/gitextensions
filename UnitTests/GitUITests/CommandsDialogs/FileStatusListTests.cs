@@ -242,6 +242,9 @@ namespace GitUITests.CommandsDialogs
             var accessor = _fileStatusList.GetTestAccessor();
 
             accessor.FilterComboBox.Text = "";
+
+            // FilterVisibleInternal has been reset because no items were added, toggle it
+            _fileStatusList.FilterVisible = false;
             _fileStatusList.FilterVisible = true;
 
             accessor.FilterWatermarkLabelVisible.Should().BeTrue();
@@ -265,9 +268,14 @@ namespace GitUITests.CommandsDialogs
             var expectedColor = active ? accessor.ActiveInputColor : SystemColors.Window;
             string expectedRegex = string.IsNullOrEmpty(regex) ? null : regex;
 
-            accessor.StoreFilter(regex);
+            _fileStatusList.SetFilter(regex);
 
             CheckStoreFilter(expectedColor, expectedRegex, accessor);
+
+            // FilterVisibleInternal has been reset because no items were added, toggle it
+            _fileStatusList.FilterVisible = false;
+            _fileStatusList.FilterVisible = true;
+            accessor.DeleteFilterButton.Visible.Should().Be(active);
         }
 
         [Test]

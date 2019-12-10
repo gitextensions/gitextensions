@@ -234,7 +234,6 @@ namespace GitUI.CommandsDialogs
             ShowOnlyMyMessagesToolStripMenuItem.Checked = AppSettings.CommitDialogShowOnlyMyMessages;
 
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
-            Unstaged.FilterVisible = true;
             Staged.SetNoFilesText(_noStagedChanges.Text);
 
             ConfigureMessageBox();

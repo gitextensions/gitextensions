@@ -118,17 +118,32 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="ChangeLog" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../Resources/ChangeLog.md;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="bug" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bug.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Team" xml:space="preserve">
-    <value>Henk Westhuis, Arkady Shapkin, Janusz Białobrzewski, Igor Velikorossov aka RussKie, Gerhard Olsson, Drew Noakes</value>
+  <data name="GitExtensionsLogoIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Logo\git-extensions-logo.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="branch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\branch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CommitId" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\CommitId.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CommitSummary" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\CommitSummary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="FileStatusAdded" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\FileStatusAdded.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="FileStatusRemoved" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\FileStatusRemoved.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="RepoOpen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\RepoOpen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RecentRepositories" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\RecentRepositories.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Designers" xml:space="preserve">
+    <value>Andréj Telle, Oliver Friedrich</value>
   </data>
   <data name="Coders" xml:space="preserve">
     <value>Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide,
@@ -171,8 +186,35 @@ aivanov-oneinc, chun, oriash93, pmme, szaliszali, Ákos Szabados, Antonio Maiora
 Lee Richardson, Logan Higinbotham, Marek Fišera, Mark Bell, Peter Hultqvist, anaplian, olegivo, rbares,
 tank09, yiabiten, Dzmitry Mikhalap, Matthijs ter Woord, NN, Noah Lerner, Novak Ondrej, RSchwoerer</value>
   </data>
-  <data name="Designers" xml:space="preserve">
-    <value>Andréj Telle, Oliver Friedrich</value>
+  <data name="FileStatusRemoved" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\FileStatusRemoved.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ChangeLog" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/ChangeLog.md;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="Team" xml:space="preserve">
+    <value>Henk Westhuis, Arkady Shapkin, Janusz Białobrzewski, Igor Velikorossov aka RussKie, Gerhard Olsson, Drew Noakes</value>
+  </data>
+  <data name="information" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\information.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Message" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\Message.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CopyToClipboard" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\CopyToClipboard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CherryPick" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\CherryPick.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SyntaxHighlighting" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\SyntaxHighlighting.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="branch_inv" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\branch_inv.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Blame" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\Blame.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Translators" xml:space="preserve">
     <value>79 collaborators on Transifex website, Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, xaro, bleis-tift, Ralph Haußmann,
@@ -180,46 +222,7 @@ Jasper Chien, Arkadiy Shapkin, ferow2k, Thibault D'Archivio, australiensun, Aira
 diegoaossas, hogelog, Philippe Miossec, Michael Benz (Copro), KUNIMI Taiyoh, Victor Shih, bygreencn, mrahn80,
 Alexander Eifler, Marcelo Ghelman, ghanique, olshevskiy87</value>
   </data>
-  <data name="information" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\information.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="RecentRepositories" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\RecentRepositories.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="CopyToClipboard" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\CopyToClipboard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="CommitId" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\CommitId.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="CommitSummary" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\CommitSummary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Message" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\Message.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="RepoOpen" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\RepoOpen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="branch" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\branch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="branch_inv" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\branch_inv.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="GitExtensionsLogoIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\Logo\git-extensions-logo.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="bug" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\bug.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Blame" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\Blame.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="CherryPick" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\CherryPick.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="SyntaxHighlighting" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\SyntaxHighlighting.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="DeleteText" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\DeleteText.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

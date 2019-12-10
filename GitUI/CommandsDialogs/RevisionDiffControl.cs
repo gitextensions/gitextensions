@@ -180,7 +180,6 @@ namespace GitUI.CommandsDialogs
         {
             _revisionDiffController = new RevisionDiffController(_gitRevisionTester);
 
-            DiffFiles.FilterVisible = true;
             DiffFiles.DescribeRevision = objectId => DescribeRevision(objectId);
             DiffText.SetFileLoader(GetNextPatchFile);
             DiffText.Font = AppSettings.FixedWidthFont;
