@@ -79,11 +79,20 @@ namespace GitUI.BuildServerIntegration
 
             var fullDayObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
             var fullObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler);
-            var fromNowObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
 
-            bool anyBuilds = false;
+            bool anyRunningBuilds = false;
             var delayObservable = Observable.Defer(() => Observable.Empty<BuildInfo>()
-                                                                   .DelaySubscription(anyBuilds ? ShortPollInterval : LongPollInterval));
+                                                                   .DelaySubscription(anyRunningBuilds ? ShortPollInterval : LongPollInterval));
+
+            var shouldLookForNewlyFinishedBuilds = false;
+            DateTime nowFrozen = DateTime.Now;
+
+            // All finished builds have already been retrieved,
+            // so looking for new finished builds make sense only if running builds have been found previously
+            var fromNowObservable = Observable.If(() => shouldLookForNewlyFinishedBuilds,
+                buildServerAdapter.GetFinishedBuildsSince(scheduler, nowFrozen)
+                            .Finally(() => shouldLookForNewlyFinishedBuilds = false));
+
             var cancellationToken = new CompositeDisposable
                     {
                         fullDayObservable.OnErrorResumeNext(fullObservable)
@@ -95,10 +104,14 @@ namespace GitUI.BuildServerIntegration
                                          .ObserveOn(MainThreadScheduler.Instance)
                                          .Subscribe(OnBuildInfoUpdate),
 
-                        runningBuildsObservable.Do(buildInfo => anyBuilds = true)
+                        runningBuildsObservable.Do(buildInfo =>
+                                                    {
+                                                        anyRunningBuilds = true;
+                                                        shouldLookForNewlyFinishedBuilds = true;
+                                                    })
                                                .Retry()
                                                .Concat(delayObservable)
-                                               .Finally(() => anyBuilds = false)
+                                               .Finally(() => anyRunningBuilds = false)
                                                .Repeat()
                                                .ObserveOn(MainThreadScheduler.Instance)
                                                .Subscribe(OnBuildInfoUpdate)
