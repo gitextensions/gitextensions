@@ -740,6 +740,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="labelCc.Text">
         <source>CC:</source>
+        <target>Копия:</target>
         
       </trans-unit>
       <trans-unit id="labelHashtag.Text">
@@ -1170,6 +1171,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="cbSquash.Text">
         <source>Squash</source>
+        <target>Объединить</target>
         
       </trans-unit>
       <trans-unit id="gbManage.Text">
@@ -1247,6 +1249,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="GitHubApiEndpoint.Caption">
         <source>GitHub (Enterprise) API endpoint</source>
+        <target>Точка приёма GitHub (Enterprise) API</target>
         
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
@@ -1256,6 +1259,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
+        <target>У вас уже есть токен OAuth. Чтобы получить новый, удалите старый в Плагинах &gt; Настройках.</target>
         
       </trans-unit>
     </body>
@@ -1455,6 +1459,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="EmptyQueryResultMessage.Text">
         <source>[Empty Jira Query Result]</source>
+        <target>[Пустой результат запроса Jira]</target>
         
       </trans-unit>
       <trans-unit id="InvalidUrlCaption.Text">
@@ -1464,6 +1469,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="InvalidUrlMessage.Text">
         <source>A valid url is required to launch the Jira query helper</source>
+        <target>Требуется действительная ссылка для запуска помощника запросов Jira</target>
         
       </trans-unit>
       <trans-unit id="JiraFieldsLabel.Text">
@@ -1478,10 +1484,12 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="QueryHelperLinkText.Text">
         <source>Open the query helper inside Jira</source>
+        <target>Открыть помощник запросов с помощью Jira</target>
         
       </trans-unit>
       <trans-unit id="QueryHelperOpenErrorText.Text">
         <source>Unable to open Jira query helper</source>
+        <target>Не удалось открыть помощник запросов Jira</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">

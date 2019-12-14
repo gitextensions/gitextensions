@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.3.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="4.0.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AdvancedSettingsPage" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
@@ -2384,7 +2384,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="_noRevisionSelected.Text">
         <source>You need to choose a target revision.</source>
-        <target>Вам нужно выбрать ревизию</target>
+        <target>Вам нужно выбрать целевую ревизию.</target>
         
       </trans-unit>
       <trans-unit id="_noRevisionSelectedCaption.Text">
@@ -2783,7 +2783,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_warningMiddleOfRebase.Text">
         <source>You are in the middle of a rebase. C&amp;ontinue...</source>
-        <target>Вы посреди перемещения. Продолжить...</target>
+        <target>Вы в процессе перемещения. П&amp;родолжить...</target>
         
       </trans-unit>
       <trans-unit id="aboutToolStripMenuItem.Text">
@@ -3517,7 +3517,7 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="_noRevisionSelectedMsgBox.Text">
         <source>Select 1 revision to checkout.</source>
-        <target>Выберите 1 ревизию, чтобы переключиться на нее.</target>
+        <target>Выберите 1 ревизию, чтобы переключиться на неё.</target>
         
       </trans-unit>
       <trans-unit id="_noRevisionSelectedMsgBoxCaption.Text">
@@ -4413,6 +4413,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="modifyCommitMessageButton.Text">
         <source>Modify the commit m&amp;essage</source>
+        <target>Изм&amp;енить сообщение коммита</target>
         
       </trans-unit>
       <trans-unit id="noVerifyToolStripMenuItem.Text">
@@ -4642,6 +4643,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="workingToolStripMenuItem.Text">
         <source>&amp;Working directory changes</source>
+        <target>&amp;Изменения в рабочем каталоге</target>
         
       </trans-unit>
     </body>
@@ -4826,7 +4828,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="_noRevisionSelected.Text">
         <source>Select 1 revision to create the tag on.</source>
-        <target>Выберите 1 ревизию, которую хотите пометить</target>
+        <target>Выберите 1 ревизию, которую хотите пометить.</target>
         
       </trans-unit>
       <trans-unit id="_pushToCaption.Text">
@@ -6189,14 +6191,17 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
       </trans-unit>
       <trans-unit id="_deleteWorktreeText.Text">
         <source>Are you sure you want to delete this worktree?</source>
+        <target>Вы уверены, что хотите удалить это рабочее дерево?</target>
         
       </trans-unit>
       <trans-unit id="_deleteWorktreeTitle.Text">
         <source>Delete a worktree</source>
+        <target>Удалить рабочее дерево</target>
         
       </trans-unit>
       <trans-unit id="_switchWorktreeText.Text">
         <source>Are you sure you want to switch to this worktree?</source>
+        <target>Вы уверены, что хотите переключиться на это рабочее дерево?</target>
         
       </trans-unit>
       <trans-unit id="_switchWorktreeTitle.Text">
@@ -8023,6 +8028,7 @@ Is the merge conflict solved?</source>
       </trans-unit>
       <trans-unit id="_errorStartingMergetool.Text">
         <source>Error starting mergetool: {0}</source>
+        <target>Ошибка запуска инструмента слияния: {0}</target>
         
       </trans-unit>
       <trans-unit id="_failureWhileOpenFile.Text">
@@ -8042,6 +8048,7 @@ Choose to keep the local ({1}), remote ({2}) or base file.</source>
       </trans-unit>
       <trans-unit id="_fileChangeLocallyAndRemotely.Text">
         <source>The file has been changed both locally ({0}) and remotely ({1}). Merge the changes.</source>
+        <target>Файл был изменен локально({0}) и извне({1}). Выполните слияние изменений.</target>
         
       </trans-unit>
       <trans-unit id="_fileCreatedLocallyAndRemotely.Text">
@@ -8117,7 +8124,7 @@ The merge conflict will not be marked as solved. Please try again.</source>
         <source>There is no base revision for {0}.
 Fall back to 2-way merge?</source>
         <target>Базы слияния для {0} не существует.
-Использовать двустороннее слияние ?</target>
+Использовать двустороннее слияние?</target>
         
       </trans-unit>
       <trans-unit id="_noMergeTool.Text">
@@ -9044,6 +9051,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="chkStashUntrackedFiles.Text">
         <source>Include untracked files in autostash</source>
+        <target>Включать неотслеживаемые файлы в автоматически спрятанные изменения</target>
         
       </trans-unit>
       <trans-unit id="chkTelemetry.Text">
@@ -9063,6 +9071,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="chkUseHistogramDiffAlgorithm.Text">
         <source>Use histogram diff algorithm</source>
+        <target>Использовать гистограмму графа сравнения</target>
         
       </trans-unit>
       <trans-unit id="groupBoxBehaviour.Text">
@@ -10182,6 +10191,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="cherryPickSelectedDiffFileToolStripMenuItem.Text">
         <source>Cherry pick changes</source>
+        <target>Забрать изменения</target>
         
       </trans-unit>
       <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
@@ -11657,10 +11667,12 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_noResultsFound.Text">
         <source>&lt;No results found&gt;</source>
+        <target>&lt;No results found&gt;</target>
         
       </trans-unit>
       <trans-unit id="_openReport.Text">
         <source>Open report</source>
+        <target>Открыть отчет</target>
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
@@ -11690,6 +11702,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_showAllText.Text">
         <source>Show all</source>
+        <target>Показать все</target>
         
       </trans-unit>
       <trans-unit id="_submodulesText.Text">
