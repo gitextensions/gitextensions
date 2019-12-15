@@ -278,7 +278,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // _fileStatusList
             // 
             this._fileStatusList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._fileStatusList.FilterVisible = false;
             this._fileStatusList.GroupByRevision = false;
             this._fileStatusList.Location = new System.Drawing.Point(0, 0);
             this._fileStatusList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
