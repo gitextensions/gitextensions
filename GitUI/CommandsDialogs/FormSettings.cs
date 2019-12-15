@@ -156,6 +156,74 @@ namespace GitUI.CommandsDialogs
             }
 
             WindowState = FormWindowState.Normal;
+
+            if (HasClippedControl())
+            {
+                var appFont = AppSettings.Font;
+                var smallFont = new Font(appFont.FontFamily, emSize: 8);
+                ReplaceFont(Controls, appFont, smallFont);
+                foreach (var page in settingsTreeView.SettingsPages)
+                {
+                    ReplaceFont(page?.GuiControl?.Controls, appFont, smallFont);
+                }
+            }
+
+            return;
+
+            // TODO: C#8 static
+            void ReplaceFont(Control.ControlCollection controls, Font oldFont, Font newFont)
+            {
+                if (controls == null)
+                {
+                    return;
+                }
+
+                foreach (Control control in controls)
+                {
+                    if (control.Font.Equals(oldFont))
+                    {
+                        control.Font = newFont;
+                    }
+
+                    ReplaceFont(control.Controls, oldFont, newFont);
+                }
+            }
+
+            bool HasClippedControl()
+            {
+                foreach (var page in settingsTreeView.SettingsPages)
+                {
+                    if (ContainsClippedControl(page?.GuiControl?.Controls))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+
+                bool ContainsClippedControl(Control.ControlCollection controls)
+                {
+                    if (controls == null)
+                    {
+                        return false;
+                    }
+
+                    foreach (Control control in controls)
+                    {
+                        if (control.Bottom > panelCurrentSettingsPage.Bottom && control.Visible && control.GetType() != typeof(TableLayoutPanel))
+                        {
+                            return true;
+                        }
+
+                        if (ContainsClippedControl(control.Controls))
+                        {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+            }
         }
 
         private void FormSettings_Shown(object sender, EventArgs e)
