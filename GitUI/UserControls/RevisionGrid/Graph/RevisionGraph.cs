@@ -11,6 +11,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 {
     internal interface IRevisionGraphRowProvider
     {
+        int GetRowForNode(RevisionGraphRevision revision);
         IRevisionGraphRow GetSegmentsForRow(int row);
     }
 
@@ -113,8 +114,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return false;
             }
 
-            index = BuildOrderedNodesCache(Count).IndexOf(revision);
+            index = GetRowForNode(revision);
             return index >= 0;
+        }
+
+        public int GetRowForNode(RevisionGraphRevision revision)
+        {
+            return BuildOrderedNodesCache(Count).IndexOf(revision);
         }
 
         public RevisionGraphRevision GetNodeForRow(int row)

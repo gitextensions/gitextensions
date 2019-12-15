@@ -6,6 +6,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     internal interface ILaneNodeLocator
     {
         (RevisionGraphRevision, bool isAtNode) FindPrevNode(int rowIndex, int lane);
+        RevisionGraphRevision GetLeftmostNonartificialChild(RevisionGraphRevision node);
     }
 
     internal sealed class LaneNodeLocator : ILaneNodeLocator
@@ -55,6 +56,18 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             return NotFoundResult;
+        }
+
+        public RevisionGraphRevision GetLeftmostNonartificialChild(RevisionGraphRevision node)
+        {
+            int rowIndex = _revisionGraphRowProvider.GetRowForNode(node);
+            if (rowIndex < 0)
+            {
+                return null;
+            }
+
+            var segments = _revisionGraphRowProvider.GetSegmentsForRow(rowIndex);
+            return segments?.Segments?.FirstOrDefault(segment => segment.Parent == node && !segment.Child.GitRevision.IsArtificial)?.Child;
         }
     }
 }
