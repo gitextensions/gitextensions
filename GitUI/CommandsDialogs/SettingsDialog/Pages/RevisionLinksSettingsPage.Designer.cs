@@ -134,13 +134,14 @@
             // toolStripManageCategories
             // 
             this.toolStripManageCategories.AllowMerge = false;
+            this.toolStripManageCategories.GripMargin = new System.Windows.Forms.Padding(0);
             this.toolStripManageCategories.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStripManageCategories.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Add,
             this.toolStripSeparator1,
             this.Remove});
-            this.toolStripManageCategories.Location = new System.Drawing.Point(5, 0);
-            this.toolStripManageCategories.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.toolStripManageCategories.Location = new System.Drawing.Point(0, 1);
+            this.toolStripManageCategories.Margin = new System.Windows.Forms.Padding(0, 1, 0, 0);
             this.toolStripManageCategories.Name = "toolStripManageCategories";
             this.toolStripManageCategories.Size = new System.Drawing.Size(182, 25);
             this.toolStripManageCategories.TabIndex = 5;

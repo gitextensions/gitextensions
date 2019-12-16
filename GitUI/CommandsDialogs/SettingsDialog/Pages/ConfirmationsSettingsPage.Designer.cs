@@ -119,7 +119,7 @@
             this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlConfirmations.Size = new System.Drawing.Size(1337, 342);
             this.tlpnlConfirmations.TabIndex = 1;
             // 
