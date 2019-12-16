@@ -1,74 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{6D468574-C232-4FA8-B1CB-F559579F800D}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TfsInterop.Vs2015</RootNamespace>
-    <AssemblyName>TfsInterop.Vs2015</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <RuntimeIdentifier>win</RuntimeIdentifier>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\..\..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\TfsInterop.Vs2015.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\..\..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Release\TfsInterop.Vs2015.xml</DocumentationFile>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="netstandard" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.TeamFoundation.Build.Client" Version="11.0.60610.1" />
     <PackageReference Include="Microsoft.TeamFoundation.Client-final" Version="12.0.21005.1" />
     <PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="15.112.1" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\..\..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TfsHelper2015.cs" />
+    <ProjectReference Include="..\..\..\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\TfsIntegration\TfsIntegration.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\GitExtUtils\GitExtUtils.csproj">
-      <Project>{0F1F1168-A4B2-4FA2-B17B-735140D17F39}</Project>
-      <Name>GitExtUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TfsIntegration\TfsIntegration.csproj">
-      <Project>{452cbba1-8af0-4f3b-8beb-b8b31dc2b749}</Project>
-      <Name>TfsIntegration</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>

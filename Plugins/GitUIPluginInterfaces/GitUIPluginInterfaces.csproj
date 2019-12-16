@@ -1,46 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GitUIPluginInterfaces</RootNamespace>
-    <AssemblyName>GitUIPluginInterfaces</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <RuntimeIdentifier>win</RuntimeIdentifier>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\GitUIPluginInterfaces.xml</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Release\GitUIPluginInterfaces.xml</DocumentationFile>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -48,96 +10,16 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="netstandard" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Composition" Version="15.6.36" />
-    <PackageReference Include="System.Collections.Immutable">
-      <Version>1.5.0</Version>
-    </PackageReference>
+    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
     <PackageReference Include="System.Reactive.Interfaces" Version="4.2.0" />
-    <PackageReference Include="System.ValueTuple">
-      <Version>4.5.0</Version>
-    </PackageReference>
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="BuildServerIntegration\BuildDurationFormatter.cs" />
-    <Compile Include="BuildServerIntegration\BuildInfo.cs" />
-    <Compile Include="BuildServerIntegration\BuildServerAdapterMetadataAttribute.cs" />
-    <Compile Include="BuildServerIntegration\BuildServerCredentials.cs" />
-    <Compile Include="BuildServerIntegration\BuildServerSettingsHelper.cs" />
-    <Compile Include="BuildServerIntegration\BuildServerSettingsUserControlMetadata.cs" />
-    <Compile Include="BuildServerIntegration\IBuildServerAdapter.cs" />
-    <Compile Include="BuildServerIntegration\IBuildServerCredentials.cs" />
-    <Compile Include="BuildServerIntegration\IBuildServerSettingsUserControl.cs" />
-    <Compile Include="BuildServerIntegration\IBuildServerTypeMetadata.cs" />
-    <Compile Include="BuildServerIntegration\IBuildServerWatcher.cs" />
-    <Compile Include="CredentialsManager.cs" />
-    <Compile Include="ExecutionResult.cs" />
-    <Compile Include="FontParser.cs" />
-    <Compile Include="GitCmdResult.cs" />
-    <Compile Include="GitUIPostActionEventArgs.cs" />
-    <Compile Include="IBrowseRepo.cs" />
-    <Compile Include="IConfigFileSettings.cs" />
-    <Compile Include="IConfigSection.cs" />
-    <Compile Include="IConfigValueStore.cs" />
-    <Compile Include="IExecutable.cs" />
-    <Compile Include="IGitCommand.cs" />
-    <Compile Include="IGitCommandRunner.cs" />
-    <Compile Include="IGitItem.cs" />
-    <Compile Include="IGitPluginForRepository.cs" />
-    <Compile Include="IGitModule.cs" />
-    <Compile Include="IGitRef.cs" />
-    <Compile Include="IGitRemoteCommand.cs" />
-    <Compile Include="ILockableNotifier.cs" />
-    <Compile Include="IProcess.cs" />
-    <Compile Include="ISettingControlBinding.cs" />
-    <Compile Include="PluginsPathScanner.cs" />
-    <Compile Include="RepositoryHosts\GitProtocol.cs" />
-    <Compile Include="RepositoryHosts\GitProtocolExtensions.cs" />
-    <Compile Include="SettingLevel.cs" />
-    <Compile Include="ISettingsValueGetter.cs" />
-    <Compile Include="ObjectId.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Remote.cs" />
-    <Compile Include="Settings\BoolSetting.cs" />
-    <Compile Include="ISetting.cs" />
-    <Compile Include="ISettingsSource.cs" />
-    <Compile Include="ManagedExtensibility.cs" />
-    <Compile Include="RepositoryHosts\IRepositoryHostPlugin.cs" />
-    <Compile Include="IGitPlugin.cs" />
-    <Compile Include="IGitPluginSettingsContainer.cs" />
-    <Compile Include="IGitSubmoduleInfo.cs" />
-    <Compile Include="IGitUICommands.cs" />
-    <Compile Include="GitUIEventArgs.cs" />
-    <Compile Include="RepositoryHosts\IHostedRepository.cs" />
-    <Compile Include="RepositoryHosts\IPasswordHelper.cs" />
-    <Compile Include="RepositoryHosts\IHostedRemote.cs" />
-    <Compile Include="RepositoryHosts\IPullRequestInformation.cs" />
-    <Compile Include="Settings\NumberSetting.cs" />
-    <Compile Include="Settings\ChoiceSetting.cs" />
-    <Compile Include="Settings\CredentialsSetting.cs" />
-    <Compile Include="Settings\PasswordSetting.cs" />
-    <Compile Include="Settings\PseudoSetting.cs" />
-    <Compile Include="Settings\StringSetting.cs" />
-    <Compile Include="UserControls\CredentialsControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\CredentialsControl.Designer.cs">
-      <DependentUpon>CredentialsControl.cs</DependentUpon>
-    </Compile>
+    <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj">
-      <Project>{0f1f1168-a4b2-4fa2-b17b-735140d17f39}</Project>
-      <Name>GitExtUtils</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UserControls\CredentialsControl.resx">
-      <DependentUpon>CredentialsControl.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

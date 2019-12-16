@@ -4,6 +4,14 @@
     <LangVersion>7.3</LangVersion>
     <NoWarn>$(NoWarn);1573;1591;1712</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+    <TargetFramework>net461</TargetFramework>
+    <Prefer32Bit>false</Prefer32Bit>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
+
+    <!-- TODO once all project migrated to SDK-style, remove this and move properties to Directory.Build.props -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup>

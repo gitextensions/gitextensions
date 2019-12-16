@@ -1,44 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ResourceManager</RootNamespace>
-    <AssemblyName>ResourceManager</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <RuntimeIdentifier>win</RuntimeIdentifier>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\ResourceManager.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Release\ResourceManager.xml</DocumentationFile>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
+  </ItemGroup>
+
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
@@ -46,79 +11,21 @@
     <Reference Include="System.Xml" />
     <Reference Include="netstandard" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="SmartFormat.NET" Version="2.0.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="CommitDataRenders\CommitDataBodyRenderer.cs" />
-    <Compile Include="CommitDataRenders\CommitDataHeaderRenderer.cs" />
-    <Compile Include="CommitDataRenders\DateFormatter.cs" />
-    <Compile Include="CommitDataRenders\TabbedHeaderRenderStyleProvider.cs" />
-    <Compile Include="GitExtensionsControlInitialiser.cs" />
-    <Compile Include="GitExtensionsFormBase.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GitExtensionsControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GitPluginBase.cs" />
-    <Compile Include="HotkeyCommand.cs" />
-    <Compile Include="ITranslate.cs" />
-    <Compile Include="LinkFactory.cs" />
-    <Compile Include="LocalizationHelpers.cs" />
-    <Compile Include="CommitDataRenders\IHeaderRenderStyleProvider.cs" />
-    <Compile Include="CommitDataRenders\MonospacedHeaderRenderStyleProvider.cs" />
-    <Compile Include="NativeMethods.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <DependentUpon>Resources.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Strings.cs" />
-    <Compile Include="Translate.cs" />
-    <Compile Include="ITranslation.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TranslationUtils.cs" />
-    <Compile Include="CommitDataRenders\MonospacedHeaderLabelFormatter.cs" />
-    <Compile Include="CommitDataRenders\TabbedHeaderLabelFormatter.cs" />
-    <Compile Include="CommitDataRenders\IHeaderLabelFormatter.cs" />
-    <Compile Include="Xliff\TranslationUtil.cs" />
-    <Compile Include="TranslationString.cs" />
-    <Compile Include="Translator.cs" />
-    <Compile Include="Xliff\TranslationFile.cs" />
-    <Compile Include="Xliff\TranslationBody.cs" />
-    <Compile Include="Xliff\TranslationCategory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Xliff\TranslationItem.cs" />
-    <Compile Include="Xliff\TranslationSerializer.cs" />
+    <ProjectReference Include="..\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\GitCommands\GitCommands.csproj">
-      <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
-      <Name>GitCommands</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj">
-      <Project>{0f1f1168-a4b2-4fa2-b17b-735140d17f39}</Project>
-      <Name>GitExtUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
-      <Project>{27559302-f35e-4b62-a6ec-11ff21a5fa6f}</Project>
-      <Name>GitUIPluginInterfaces</Name>
-    </ProjectReference>
+    <!-- Resources -->
+    <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
+    <Compile Update="Properties\Resources.Designer.cs" AutoGen="True" DependentUpon="Resources.resx" DesignTime="True" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="GitExtensionsControl.resx">
-      <DependentUpon>GitExtensionsControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>

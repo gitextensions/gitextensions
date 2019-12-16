@@ -1,43 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{92615565-CF33-4539-A0E6-610CE0734B8C}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AzureDevOpsIntegration</RootNamespace>
-    <AssemblyName>AzureDevOpsIntegration</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <RuntimeIdentifier>win</RuntimeIdentifier>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\..\..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\AzureDevOpsIntegration.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\..\..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\AzureDevOpsIntegration.xml</DocumentationFile>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -46,53 +7,17 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="netstandard" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="System.Reactive.Linq" Version="4.2.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\..\..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="CacheAzureDevOps.cs" />
-    <Compile Include="Settings\SettingsUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Settings\SettingsUserControl.Designer.cs">
-      <DependentUpon>SettingsUserControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\ProjectUrlHelper.cs" />
-    <Compile Include="ApiClient.cs" />
-    <Compile Include="AzureDevOpsAdapter.cs" />
-    <Compile Include="Settings\IntegrationSettings.cs" />
+    <ProjectReference Include="..\..\..\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\..\..\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\..\..\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\GitCommands\GitCommands.csproj">
-      <Project>{bd6aa2a2-997d-4aff-acc7-b64f6e51d181}</Project>
-      <Name>GitCommands</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\GitExtUtils\GitExtUtils.csproj">
-      <Project>{0F1F1168-A4B2-4FA2-B17B-735140D17F39}</Project>
-      <Name>GitExtUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\ResourceManager\ResourceManager.csproj">
-      <Project>{d3440fd7-afc5-4351-8741-6cdbf15ce944}</Project>
-      <Name>ResourceManager</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
-      <Project>{27559302-f35e-4b62-a6ec-11ff21a5fa6f}</Project>
-      <Name>GitUIPluginInterfaces</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Settings\SettingsUserControl.resx">
-      <DependentUpon>SettingsUserControl.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>

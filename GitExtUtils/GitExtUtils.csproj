@@ -1,96 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0F1F1168-A4B2-4FA2-B17B-735140D17F39}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GitExtUtils</RootNamespace>
-    <AssemblyName>GitExtUtils</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <RuntimeIdentifier>win</RuntimeIdentifier>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\GitExtUtils.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Release\GitExtUtils.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="ArgumentBuilder.cs" />
-    <Compile Include="ArgumentString.cs" />
-    <Compile Include="ArrayExtensions.cs" />
-    <Compile Include="BinarySearch.cs" />
-    <Compile Include="ClipboardUtil.cs" />
-    <Compile Include="GitArgumentBuilder.cs" />
-    <Compile Include="GitCommandConfiguration.cs" />
-    <Compile Include="GitConfigItem.cs" />
-    <Compile Include="GitUI\CancellationTokenSequence.cs" />
-    <Compile Include="GitUI\ControlTagExtensions.cs" />
-    <Compile Include="GitUI\Theming\AppColor.cs" />
-    <Compile Include="GitUI\Theming\AppColorDefaults.cs" />
-    <Compile Include="GitUI\Theming\BmpTransformation.cs" />
-    <Compile Include="GitUI\Theming\ColorHelper.cs" />
-    <Compile Include="GitUI\Theming\DefaultTheme.cs" />
-    <Compile Include="GitUI\Theming\LightnessCorrection.cs" />
-    <Compile Include="GitUI\Theming\ComparableExtensions.cs" />
-    <Compile Include="GitUI\Theming\TabControlPaintContext.cs" />
-    <Compile Include="GitUI\Theming\TabControlRenderer.cs" />
-    <Compile Include="GitUI\Theming\ThemeAwareAttribute.cs" />
-    <Compile Include="GitUI\Theming\ThemeFix.cs" />
-    <Compile Include="GitUI\Theming\HslColor.cs" />
-    <Compile Include="GitUI\Theming\Theme.cs" />
-    <Compile Include="GitUI\ComboBoxExtensions.cs" />
-    <Compile Include="GitUI\ControlDpiExtensions.cs" />
-    <Compile Include="GitUI\ControlHotkeyExtensions.cs" />
-    <Compile Include="GitUI\ControlThreadingExtensions.cs" />
-    <Compile Include="GitUI\ControlUtil.cs" />
-    <Compile Include="GitUI\DpiUtil.cs" />
-    <Compile Include="GitUI\HighDpiMouseCursors.cs" />
-    <Compile Include="GitUI\ListViewExtensions.cs" />
-    <Compile Include="GitUI\TableLayoutPanelExtensions.cs" />
-    <Compile Include="GitUI\Theming\ThemeAwareToolStripRenderer.cs" />
-    <Compile Include="GitUI\ThreadHelper.cs" />
-    <Compile Include="GitUI\UIExtensions.cs" />
-    <Compile Include="GitUI\Win32ApiUtil.cs" />
-    <Compile Include="Linq\LinqExtensions.cs" />
-    <Compile Include="MruCache.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringBuilderExtensions.cs" />
+    <Compile Include="..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
+
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -99,15 +12,11 @@
     <Reference Include="netstandard" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AdysTech.CredentialManager">
-      <Version>1.7.0</Version>
-    </PackageReference>
+    <PackageReference Include="AdysTech.CredentialManager" Version="1.7.0" />
     <PackageReference Include="Ben.Demystifier" Version="0.1.4" />
     <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" />
     <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
-    <PackageReference Include="System.ValueTuple">
-      <Version>4.5.0</Version>
-    </PackageReference>
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <Reference Include="netstandard" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

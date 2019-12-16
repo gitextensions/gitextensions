@@ -1,90 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{452CBBA1-8AF0-4F3B-8BEB-B8B31DC2B749}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TfsIntegration</RootNamespace>
-    <AssemblyName>TfsIntegration</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <RuntimeIdentifier>win</RuntimeIdentifier>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\..\..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\TfsIntegration.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\..\..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Release\TfsIntegration.xml</DocumentationFile>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="System.Reactive.Linq" Version="4.2.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\..\..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="ITfsHelper.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings\TfsSettingsUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Settings\TfsSettingsUserControl.Designer.cs">
-      <DependentUpon>TfsSettingsUserControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TfsAdapter.cs" />
+    <ProjectReference Include="..\..\..\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\..\..\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\GitCommands\GitCommands.csproj">
-      <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
-      <Name>GitCommands</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\ResourceManager\ResourceManager.csproj">
-      <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
-      <Name>ResourceManager</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
-      <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
-      <Name>GitUIPluginInterfaces</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Settings\TfsSettingsUserControl.resx">
-      <DependentUpon>TfsSettingsUserControl.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>

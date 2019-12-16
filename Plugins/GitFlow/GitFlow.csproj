@@ -1,44 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D4628A13-CD53-401F-A645-CB16FD15ABBB}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GitFlow</RootNamespace>
-    <AssemblyName>GitFlow</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <RuntimeIdentifier>win</RuntimeIdentifier>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\GitFlow.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Release\GitFlow.xml</DocumentationFile>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -46,56 +6,14 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="netstandard" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="GitFlowForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GitFlowForm.Designer.cs">
-      <DependentUpon>GitFlowForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GitFlowPlugin.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resource.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Compile>
+    <ProjectReference Include="..\..\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
+    <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">
-      <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
-      <Name>GitCommands</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj">
-      <Project>{0F1F1168-A4B2-4FA2-B17B-735140D17F39}</Project>
-      <Name>GitExtUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
-      <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
-      <Name>GitUIPluginInterfaces</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj">
-      <Project>{d3440fd7-afc5-4351-8741-6cdbf15ce944}</Project>
-      <Name>ResourceManager</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="GitFlowForm.resx">
-      <DependentUpon>GitFlowForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
+
   <ItemGroup>
     <Content Include="..\..\GitUI\Resources\Icons\error.png">
       <Link>Properties\error.png</Link>
@@ -108,5 +26,10 @@
     </Content>
     <None Include="Resources\IconGitFlow.png" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <ItemGroup>
+    <!-- Resources -->
+    <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
+  </ItemGroup>
+
 </Project>

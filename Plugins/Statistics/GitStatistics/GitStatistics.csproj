@@ -1,44 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{92B57383-233E-46AE-8A86-6E98BF349A72}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GitStatistics</RootNamespace>
-    <AssemblyName>GitStatistics</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <RuntimeIdentifier>win</RuntimeIdentifier>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\..\..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\GitStatistics.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\..\..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Release\GitStatistics.xml</DocumentationFile>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -46,75 +6,22 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="netstandard" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\..\..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="FormGitStatistics.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormGitStatistics.Designer.cs">
-      <DependentUpon>FormGitStatistics.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GitStatisticsPlugin.cs" />
-    <Compile Include="CodeFile.cs" />
-    <Compile Include="LineCounter.cs" />
-    <Compile Include="PieChart\ColorUtil.cs" />
-    <Compile Include="PieChart\EdgeColor.cs" />
-    <Compile Include="PieChart\EdgeColorType.cs" />
-    <Compile Include="PieChart\GraphicsUtil.cs" />
-    <Compile Include="PieChart\PieChart3D.cs" />
-    <Compile Include="PieChart\PieChartControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="PieChart\PieSlice.cs" />
-    <Compile Include="PieChart\Quadrilateral.cs" />
-    <Compile Include="PieChart\SliceSelectedArgs.cs" />
-    <Compile Include="PieChart\ShadowStyle.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
+    <ProjectReference Include="..\..\..\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\..\..\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\..\..\GitUI\GitUI.csproj" />
+    <ProjectReference Include="..\..\..\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\GitCommands\GitCommands.csproj">
-      <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
-      <Name>GitCommands</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\GitExtUtils\GitExtUtils.csproj">
-      <Project>{0F1F1168-A4B2-4FA2-B17B-735140D17F39}</Project>
-      <Name>GitExtUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\GitUI\GitUI.csproj">
-      <Project>{cf5b22e7-230f-4e50-be88-c4f7023ced2c}</Project>
-      <Name>GitUI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\ResourceManager\ResourceManager.csproj">
-      <Project>{d3440fd7-afc5-4351-8741-6cdbf15ce944}</Project>
-      <Name>ResourceManager</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
-      <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
-      <Name>GitUIPluginInterfaces</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="PieChart\PieChartControl.resx">
-      <DependentUpon>PieChartControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+
   <ItemGroup>
     <None Include="Resources\IconGitStatistics.png" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <ItemGroup>
+    <!-- Resources -->
+    <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
+  </ItemGroup>
+
 </Project>

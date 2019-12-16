@@ -1,39 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CommonTestUtils</RootNamespace>
-    <AssemblyName>CommonTestUtils</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <RuntimeIdentifier>win</RuntimeIdentifier>
-    <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <TargetFramework>net461</TargetFramework>
     <CodeAnalysisRuleSet>..\..\GitExtensionsTest.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\CommonTestUtils.xml</DocumentationFile>
+    
+    <!-- TODO once all project migrated to SDK-style, remove this and move properties to Directory.Build.props -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\..\GitExtensionsTest.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Release\CommonTestUtils.xml</DocumentationFile>
-  </PropertyGroup>
+
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Windows.Forms" />
@@ -42,29 +15,11 @@
   <ItemGroup>
     <PackageReference Include="NUnit" Version="3.10.1" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="AsyncTestHelper.cs" />
-    <Compile Include="MockExecutable.cs" />
-    <Compile Include="NoAssertContext.cs" />
-    <Compile Include="SubmoduleTestHelpers.cs" />
-    <Compile Include="ConfigureJoinableTaskFactoryAttribute.cs" />
-    <Compile Include="EmbeddedResourceLoader.cs" />
-    <Compile Include="GitModuleTestHelper.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <ProjectReference Include="..\..\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">
-      <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
-      <Name>GitCommands</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj">
-      <Project>{0F1F1168-A4B2-4FA2-B17B-735140D17F39}</Project>
-      <Name>GitExtUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
-      <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
-      <Name>GitUIPluginInterfaces</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>

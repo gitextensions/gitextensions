@@ -1,48 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GitCommands</RootNamespace>
-    <AssemblyName>GitCommands</AssemblyName>
-    <FileAlignment>512</FileAlignment>
-    <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>gitcommandkey.snk.pfx</AssemblyOriginatorKeyFile>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <RuntimeIdentifier>win</RuntimeIdentifier>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\GitCommands.xml</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Release\GitCommands.xml</DocumentationFile>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+
+    <!-- Settings -->
+    <None Update="Properties\Settings.settings" Generator="SettingsSingleFileGenerator" LastGenOutput="Settings.Designer.cs" />
+    <Compile Update="Properties\Settings.Designer.cs" AutoGen="True" DependentUpon="Settings.settings" />
+
+  </ItemGroup>
+
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,214 +23,16 @@
     <Reference Include="System.Xml" />
     <Reference Include="netstandard" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" />
     <PackageReference Include="System.IO.Abstractions" Version="2.0.0.144" />
     <PackageReference Include="System.Reactive.Linq" Version="4.2.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="AppTitleGenerator.cs" />
-    <Compile Include="ArgumentBuilderExtensions.cs" />
-    <Compile Include="AsyncLoader.cs" />
-    <Compile Include="BatchArgumentItem.cs" />
-    <Compile Include="CommandStatus.cs" />
-    <Compile Include="CommitData.cs" />
-    <Compile Include="CommitDataManager.cs" />
-    <Compile Include="CommitTemplateItem.cs" />
-    <Compile Include="CommitTemplateManager.cs" />
-    <Compile Include="Config\SettingKeyString.cs" />
-    <Compile Include="DateTimeExtensions.cs" />
-    <Compile Include="DateTimeUtils.cs" />
-    <Compile Include="DeconstructionExtensions.cs" />
-    <Compile Include="DiffListSortService.cs" />
-    <Compile Include="DiffMergeTools\DiffMergeToolConfiguration.cs" />
-    <Compile Include="DiffMergeTools\DiffMergeToolConfigurationManager.cs" />
-    <Compile Include="DiffMergeTools\DiffMergeToolType.cs" />
-    <Compile Include="DiffMergeTools\RegisteredDiffMergeTools.cs" />
-    <Compile Include="EnvironmentAbstraction.cs" />
-    <Compile Include="EnvironmentPathsProvider.cs" />
-    <Compile Include="DiffMergeTools\BeyondCompare4.cs" />
-    <Compile Include="DiffMergeTools\BeyondCompare3.cs" />
-    <Compile Include="DiffMergeTools\DiffMerge.cs" />
-    <Compile Include="DiffMergeTools\DiffMergeTool.cs" />
-    <Compile Include="DiffMergeTools\Kdiff3.cs" />
-    <Compile Include="DiffMergeTools\Meld.cs" />
-    <Compile Include="DiffMergeTools\P4Merge.cs" />
-    <Compile Include="DiffMergeTools\SemanticMerge.cs" />
-    <Compile Include="DiffMergeTools\TortoiseGitMerge.cs" />
-    <Compile Include="DiffMergeTools\VsCode.cs" />
-    <Compile Include="DiffMergeTools\VsDiffMerge.cs" />
-    <Compile Include="DiffMergeTools\WinMerge.cs" />
-    <Compile Include="ExceptionUtils.cs" />
-    <Compile Include="ExternalLinks\ConfiguredLinkDefinitionsProvider.cs" />
-    <Compile Include="ExternalLinks\ExternalLinkDefinition.cs" />
-    <Compile Include="ExternalLinks\ExternalLinkFormat.cs" />
-    <Compile Include="ExternalLinks\ExternalLinkRevisionParser.cs" />
-    <Compile Include="ExternalLinks\ExternalLinksManager.cs" />
-    <Compile Include="ExternalLinks\ExternalLinksStorage.cs" />
-    <Compile Include="ExternalLinks\GitRevisionExternalLinksParser.cs" />
-    <Compile Include="FileAssociatedIconProvider.cs" />
-    <Compile Include="FileHelper.cs" />
-    <Compile Include="FullPathResolver.cs" />
-    <Compile Include="GitRevisionInfoProvider.cs" />
-    <Compile Include="Git\AheadBehindData.cs" />
-    <Compile Include="Git\AheadBehindDataProvider.cs" />
-    <Compile Include="Git\BatchProgressEventArgs.cs" />
-    <Compile Include="Git\ConflictData.cs" />
-    <Compile Include="Git\ConflictedFileData.cs" />
-    <Compile Include="Git\ExecutableExtensions.cs" />
-    <Compile Include="Git\ForcePushOptions.cs" />
-    <Compile Include="Git\GitCommandRunner.cs" />
-    <Compile Include="Git\GitDescribeProvider.cs" />
-    <Compile Include="Git\DetachedHeadParser.cs" />
-    <Compile Include="Git\EnvironmentConfiguration.cs" />
-    <Compile Include="Git\FileDeleteException.cs" />
-    <Compile Include="Git\GitBranchNameNormaliser.cs" />
-    <Compile Include="Git\GitBranchNameOptions.cs" />
-    <Compile Include="Git\GitException.cs" />
-    <Compile Include="Git\RefsWarningException.cs" />
-    <Compile Include="Git\Extensions\GitRevisionExtensions.cs" />
-    <Compile Include="Git\Executable.cs" />
-    <Compile Include="Git\GitItemStatusFileExtensionComparer.cs" />
-    <Compile Include="Git\GitModuleEventArgs.cs" />
-    <Compile Include="Git\GitRevisionTester.cs" />
-    <Compile Include="Git\GitRefName.cs" />
-    <Compile Include="Git\SubmoduleStatus.cs" />
-    <Compile Include="Git\SystemEncodingReader.cs" />
-    <Compile Include="Git\Tag\GitCreateTagArgs.cs" />
-    <Compile Include="Git\Tag\GitCreateTagCmd.cs" />
-    <Compile Include="Git\GitDeleteRemoteBranchesCmd.cs" />
-    <Compile Include="Git\GitDirectoryResolver.cs" />
-    <Compile Include="Git\RevisionDiffProvider.cs" />
-    <Compile Include="Git\Tag\GitTagController.cs" />
-    <Compile Include="Git\Tag\TagOperation.cs" />
-    <Compile Include="Git\Tag\TagOperationExtensions.cs" />
-    <Compile Include="IDiffListSortService.cs" />
-    <Compile Include="Plink.cs" />
-    <Compile Include="Remotes\ConfigFileRemoteSettingsManager.cs" />
-    <Compile Include="Remotes\AzureDevOpsRemoteParser.cs" />
-    <Compile Include="Remotes\GitHubRemoteParser.cs" />
-    <Compile Include="Remotes\RemoteParser.cs" />
-    <Compile Include="Remotes\RepoNameExtractor.cs" />
-    <Compile Include="Settings\AvatarProvider.cs" />
-    <Compile Include="Settings\GravatarFallbackAvatarType.cs" />
-    <Compile Include="Settings\IgnoreWhitespaceKind.cs" />
-    <Compile Include="Submodules\DetailedSubmoduleInfo.cs" />
-    <Compile Include="Submodules\SubmoduleInfo.cs" />
-    <Compile Include="Submodules\SubmoduleInfoResult.cs" />
-    <Compile Include="Submodules\SubmoduleStatusEventArgs.cs" />
-    <Compile Include="Submodules\SubmoduleStatusProvider.cs" />
-    <Compile Include="UserRepositoryHistory\IRepositoryManager.cs" />
-    <Compile Include="UserRepositoryHistory\IRepositorySerialiser.cs" />
-    <Compile Include="UserRepositoryHistory\Legacy\Repository.cs" />
-    <Compile Include="UserRepositoryHistory\Legacy\RepositoryCategory.cs" />
-    <Compile Include="UserRepositoryHistory\Legacy\RepositoryCategoryXmlSerialiser.cs" />
-    <Compile Include="UserRepositoryHistory\Legacy\RepositoryHistoryMigrator.cs" />
-    <Compile Include="UserRepositoryHistory\Legacy\RepositoryHistorySurrogate.cs" />
-    <Compile Include="UserRepositoryHistory\Legacy\RepositoryStorage.cs" />
-    <Compile Include="UserRepositoryHistory\LocalRepositoryManager.cs" />
-    <Compile Include="UserRepositoryHistory\RemoteRepositoryManager.cs" />
-    <Compile Include="UserRepositoryHistory\RepositoryHistoryManager.cs" />
-    <Compile Include="UserRepositoryHistory\RepositoryDescriptionProvider.cs" />
-    <Compile Include="UserRepositoryHistory\RepositoryStorage.cs" />
-    <Compile Include="UserRepositoryHistory\RepositoryXmlSerialiser.cs" />
-    <Compile Include="Git\GitGpgController.cs" />
-    <Compile Include="SshPathLocator.cs" />
-    <Compile Include="Git\IndexLockManager.cs" />
-    <Compile Include="Git\GitTreeParser.cs" />
-    <Compile Include="PathEqualityComparer.cs" />
-    <Compile Include="RemoteActionResult.cs" />
-    <Compile Include="Remotes\ConfigFileRemote.cs" />
-    <Compile Include="Remotes\ConfigFileRemoteSaveResult.cs" />
-    <Compile Include="Settings\BasicSettingTypes.cs" />
-    <Compile Include="Settings\CommonSettingsTypes.cs" />
-    <Compile Include="Settings\ConfigFileSettings.cs" />
-    <Compile Include="Settings\ConfigFileSettingsCache.cs" />
-    <Compile Include="Settings\FileSettingsCache.cs" />
-    <Compile Include="Settings\GitExtSettingsCache.cs" />
-    <Compile Include="Settings\MemorySettings.cs" />
-    <Compile Include="Settings\MemorySettingsCache.cs" />
-    <Compile Include="Settings\RepoDistSettings.cs" />
-    <Compile Include="Settings\Setting.cs" />
-    <Compile Include="Settings\SettingsCache.cs" />
-    <Compile Include="Settings\SettingsContainer.cs" />
-    <Compile Include="Settings\SettingsPath.cs" />
-    <Compile Include="StreamExtensions.cs" />
-    <Compile Include="StringPool.cs" />
-    <Compile Include="Utils\EnumHelper.cs" />
-    <Compile Include="Utils\EnvUtils.cs" />
-    <Compile Include="ExternalLinks\ExternalLink.cs" />
-    <Compile Include="Git\GitBisectOption.cs" />
-    <Compile Include="Git\GitCheckoutBranchCmd.cs" />
-    <Compile Include="Git\GitCommand.cs" />
-    <Compile Include="Utils\EncodingHelper.cs" />
-    <Compile Include="Git\GitConvert.cs" />
-    <Compile Include="Git\GitDeleteBranchCmd.cs" />
-    <Compile Include="Git\GitCommandHelpers.cs" />
-    <Compile Include="Git\GitModule.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Git\GitSubmoduleStatus.cs" />
-    <Compile Include="LockableNotifier.cs" />
-    <Compile Include="Logging\CommandLog.cs" />
-    <Compile Include="CommitMessageManager.cs" />
-    <Compile Include="Config\ConfigFile.cs" />
-    <Compile Include="Config\ConfigSection.cs" />
-    <Compile Include="Git\CommandCache.cs" />
-    <Compile Include="Patches\PatchProcessor.cs" />
-    <Compile Include="PathUtil.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="UserRepositoryHistory\Repository.cs" />
-    <Compile Include="Git\GitBlame.cs" />
-    <Compile Include="Git\GitItemStatus.cs" />
-    <Compile Include="Git\GitPushAction.cs" />
-    <Compile Include="Git\GitRevision.cs" />
-    <Compile Include="Git\GitRef.cs" />
-    <Compile Include="Git\GitItem.cs" />
-    <Compile Include="Git\GitStash.cs" />
-    <Compile Include="Git\GitSubmoduleInfo.cs" />
-    <Compile Include="Git\GitVersion.cs" />
-    <Compile Include="Patches\Patch.cs" />
-    <Compile Include="Patches\PatchFile.cs" />
-    <Compile Include="Patches\PatchManager.cs" />
-    <Compile Include="RevisionReader.cs" />
-    <Compile Include="Settings\AppSettings.cs" />
-    <Compile Include="Statistics\ImpactLoader.cs" />
-    <Compile Include="FileInfoExtensions.cs" />
-    <Compile Include="StringExtensions.cs" />
-    <Compile Include="Utils\JsonSerializer.cs" />
-    <Compile Include="Utils\RFC2047Decoder.cs" />
-    <Compile Include="Utils\WeakRefCache.cs" />
-    <Compile Include="XmlSerializableDictionary.cs" />
+    <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="gitcommandkey.snk.pfx" />
-    <Compile Include="UserRepositoryHistory\RecentRepoInfo.cs" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj">
-      <Project>{0f1f1168-a4b2-4fa2-b17b-735140d17f39}</Project>
-      <Name>GitExtUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
-      <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
-      <Name>GitUIPluginInterfaces</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

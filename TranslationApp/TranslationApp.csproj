@@ -1,118 +1,33 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TranslationApp</RootNamespace>
-    <AssemblyName>TranslationApp</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <RuntimeIdentifier>win</RuntimeIdentifier>
-    <FileAlignment>512</FileAlignment>
     <ApplicationIcon>..\Logo\git-extensions-logo.ico</ApplicationIcon>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\GitExtensions\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>..\GitExtensions\bin\Debug\TranslationApp.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\GitExtensions\bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>..\GitExtensions\bin\Release\TranslationApp.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup />
-  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
     <StartupObject />
   </PropertyGroup>
-  <PropertyGroup>
-    <NoWin32Manifest>true</NoWin32Manifest>
-  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
+  </ItemGroup>
+
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="netstandard" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="TranslationItemWithCategory.cs" />
-    <Compile Include="TranslationHelpers.cs" />
+    <ProjectReference Include="..\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\GitUI\GitUI.csproj" />
+    <ProjectReference Include="..\NetSpell.SpellChecker\SpellChecker.csproj" />
+    <ProjectReference Include="..\ResourceManager\ResourceManager.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GitCommands\GitCommands.csproj">
-      <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
-      <Name>GitCommands</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj">
-      <Project>{0F1F1168-A4B2-4FA2-B17B-735140D17F39}</Project>
-      <Name>GitExtUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GitUI\GitUI.csproj">
-      <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
-      <Name>GitUI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NetSpell.SpellChecker\SpellChecker.csproj">
-      <Project>{A426EE0B-E52E-4D74-AF24-06797142D7B2}</Project>
-      <Name>SpellChecker</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ResourceManager\ResourceManager.csproj">
-      <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
-      <Name>ResourceManager</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="AddPluginBinaries" AfterTargets="ResolveProjectReferences">
+
+  <Target Name="CopyTranslationApp" AfterTargets="AfterBuild">
     <ItemGroup>
-      <!-- Plugin binaries-->
-      <PluginProjects Include="..\Plugins\*\*.csproj;..\Plugins\*\*\*.csproj" />
-      <PluginDirectory Include="@(PluginProjects->'%(RelativeDir)')" />
+      <TranslationApp Include="$(TargetDir)\TranslationApp.exe" />
     </ItemGroup>
-    <PropertyGroup>
-      <PluginBinariesExpression>@(PluginDirectory->'%(Identity)bin\$(Configuration)\*.dll')</PluginBinariesExpression>
-      <PluginSymbolsExpression>@(PluginDirectory->'%(Identity)bin\$(Configuration)\*.pdb')</PluginSymbolsExpression>
-      <PluginSatelliteBinariesExpression>@(PluginDirectory->'%(Identity)bin\$(Configuration)\*\*.dll')</PluginSatelliteBinariesExpression>
-    </PropertyGroup>
-    <ItemGroup>
-      <PluginBinary Include="$(PluginBinariesExpression)" />
-      <!-- Plugin symbols-->
-      <PluginBinary Include="$(PluginSymbolsExpression)" />
-      <!-- Plugin satellite assemblies -->
-      <PluginSatelliteBinary Include="$(PluginSatelliteBinariesExpression)" />
-    </ItemGroup>
-    <ItemGroup>
-      <None Include="@(PluginBinary)" Condition="'%(Filename)' != 'Microsoft.TeamFoundation.WorkItemTracking.Client.DataStoreLoader' AND '%(Filename)' != 'Microsoft.WITDataStore'">
-        <Link>Plugins\%(Filename)%(Extension)</Link>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Include="@(PluginSatelliteBinary)">
-        <Link>Plugins\$([System.IO.Path]::GetFileName($([System.IO.Path]::GetDirectoryName(%(Identity)))))\%(Filename)%(Extension)</Link>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
+    <Copy SourceFiles="@(TranslationApp)" DestinationFolder="$(ProjectDir)\..\GitExtensions\$(OutDir)" ContinueOnError="false" />
   </Target>
+
 </Project>
