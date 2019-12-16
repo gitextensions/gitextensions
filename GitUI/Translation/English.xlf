@@ -5139,8 +5139,12 @@ ancestor tree.</source>
         <source>Error</source>
         <target />
       </trans-unit>
+      <trans-unit id="folderBrowserButton.Text">
+        <source>&amp;Browse...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="label1.Text">
-        <source>Directory</source>
+        <source>&amp;Directory:</source>
         <target />
       </trans-unit>
     </body>
