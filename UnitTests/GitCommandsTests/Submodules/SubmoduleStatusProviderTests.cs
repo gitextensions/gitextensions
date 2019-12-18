@@ -62,9 +62,9 @@ namespace GitCommandsTests.Submodules
             }
 
             [Test]
-            public void UpdateSubmoduleStructure_valid_result_for_top_module()
+            public async Task UpdateSubmoduleStructure_valid_result_for_top_module()
             {
-                var result = SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, _repo1Module);
+                var result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo1Module).ConfigureAwait(false);
                 result.Should().NotBeNull();
 
                 result.TopProject.Path.Should().Be(_repo1Module.WorkingDir);
@@ -76,9 +76,9 @@ namespace GitCommandsTests.Submodules
             }
 
             [Test]
-            public void UpdateSubmoduleStructure_valid_result_for_first_nested_submodule()
+            public async Task UpdateSubmoduleStructure_valid_result_for_first_nested_submodule()
             {
-                var result = SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, _repo2Module, true);
+                var result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo2Module, true).ConfigureAwait(false);
                 result.Should().NotBeNull();
 
                 result.TopProject.Path.Should().Be(_repo1Module.WorkingDir);
@@ -90,9 +90,9 @@ namespace GitCommandsTests.Submodules
             }
 
             [Test]
-            public void UpdateSubmoduleStructure_valid_result_for_second_nested_submodule()
+            public async Task UpdateSubmoduleStructure_valid_result_for_second_nested_submodule()
             {
-                var result = SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, _repo3Module, true);
+                var result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo3Module, true).ConfigureAwait(false);
                 result.Should().NotBeNull();
 
                 result.TopProject.Path.Should().Be(_repo1Module.WorkingDir);
@@ -104,23 +104,23 @@ namespace GitCommandsTests.Submodules
             }
 
             [Test]
-            public void Submodule_status_changes_for_top_module()
+            public async Task Submodule_status_changes_for_top_module()
             {
                 var currentModule = _repo1Module;
-                var result = SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, currentModule);
+                var result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule).ConfigureAwait(false);
                 result.Should().NotBeNull();
 
                 // No changes in repo
                 var changedFiles = GetStatusChangedFiles(currentModule);
                 changedFiles.Should().HaveCount(0);
-                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, currentModule, changedFiles);
+                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
                 result.OurSubmodules.All(i => i.Detailed == null).Should().BeTrue();
 
                 // Make a change in repo2
                 _repo1.CreateFile(_repo2Module.WorkingDir, "test.txt", "test");
                 changedFiles = GetStatusChangedFiles(currentModule);
                 changedFiles.Should().HaveCount(1);
-                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, currentModule, changedFiles);
+                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
 
                 // Disabled test as the test case does not await async retrieval of submodule status
                 ////result.OurSubmodules[0].Detailed.IsDirty.Should().BeTrue();
@@ -130,42 +130,42 @@ namespace GitCommandsTests.Submodules
                 File.Delete(Path.Combine(_repo2Module.WorkingDir, "test.txt"));
                 changedFiles = GetStatusChangedFiles(currentModule);
                 changedFiles.Should().HaveCount(0);
-                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, currentModule, changedFiles);
+                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
                 result.OurSubmodules.All(i => i.Detailed == null).Should().BeTrue();
             }
 
             [Test]
-            public void Submodule_status_changes_for_first_nested_module()
+            public async Task Submodule_status_changes_for_first_nested_module()
             {
                 var currentModule = _repo2Module;
-                var result = SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, currentModule);
+                var result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule).ConfigureAwait(false);
                 result.Should().NotBeNull();
 
                 // No changes in repo
                 var changedFiles = GetStatusChangedFiles(currentModule);
                 changedFiles.Should().HaveCount(0);
-                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, currentModule, changedFiles);
+                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
                 result.OurSubmodules.All(i => i.Detailed == null).Should().BeTrue();
 
                 // Make a change in repo1
                 _repo1.CreateFile(_repo1Module.WorkingDir, "test.txt", "test");
                 changedFiles = GetStatusChangedFiles(currentModule);
                 changedFiles.Should().HaveCount(0);
-                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, currentModule, changedFiles);
+                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
                 result.OurSubmodules.All(i => i.Detailed == null).Should().BeTrue();
 
                 // Revert the change
                 File.Delete(Path.Combine(_repo1Module.WorkingDir, "test.txt"));
                 changedFiles = GetStatusChangedFiles(currentModule);
                 changedFiles.Should().HaveCount(0);
-                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, currentModule, changedFiles);
+                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
                 result.OurSubmodules.All(i => i.Detailed == null).Should().BeTrue();
 
                 // Make a change in repo3
                 _repo1.CreateFile(_repo3Module.WorkingDir, "test.txt", "test");
                 changedFiles = GetStatusChangedFiles(currentModule);
                 changedFiles.Should().HaveCount(1);
-                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, currentModule, changedFiles);
+                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
 
                 // Fails, for same reason as previous test
                 ////result.OurSubmodules[0].Detailed.IsDirty.Should().BeTrue();
@@ -174,7 +174,7 @@ namespace GitCommandsTests.Submodules
                 File.Delete(Path.Combine(_repo3Module.WorkingDir, "test.txt"));
                 changedFiles = GetStatusChangedFiles(currentModule);
                 changedFiles.Should().HaveCount(0);
-                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, currentModule, changedFiles);
+                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
                 result.OurSubmodules.All(i => i.Detailed == null).Should().BeTrue();
             }
 
