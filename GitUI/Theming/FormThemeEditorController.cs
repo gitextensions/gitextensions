@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
+using ResourceManager;
 
 namespace GitUI.Theming
 {
@@ -14,9 +15,9 @@ namespace GitUI.Theming
         private const string Subdirectory = "Themes";
         public const string Extension = ".colors";
         private const string CurrentThemeName = "current";
-        private const string SaveDialogTitle = "Save theme";
-        private const string LoadDialogTitle = "Load theme";
-        private static readonly string Filter = $"GitExtensions theme (*{Extension})|*{Extension}";
+        private readonly TranslationString _saveDialogTitle = new TranslationString("Save theme");
+        private readonly TranslationString _loadDialogTitle = new TranslationString("Load theme");
+        private readonly TranslationString _filter = new TranslationString("GitExtensions theme (*{0})|*{0}");
 
         private readonly string _currentThemePath;
         private readonly string _invariantThemePath;
@@ -152,15 +153,18 @@ namespace GitUI.Theming
                     DefaultExt = Extension,
                     InitialDirectory = UserDirectory,
                     AddExtension = true,
-                    Filter = Filter,
-                    Title = SaveDialogTitle,
+                    Filter = string.Format(_filter.Text, Extension),
+                    Title = _saveDialogTitle.Text,
                     CheckPathExists = true
                 };
 
-                if (dlg.ShowDialog() == DialogResult.OK)
+                using (dlg)
                 {
-                    filename = dlg.FileName;
-                    return true;
+                    if (dlg.ShowDialog() == DialogResult.OK)
+                    {
+                        filename = dlg.FileName;
+                        return true;
+                    }
                 }
 
                 filename = null;
@@ -184,18 +188,21 @@ namespace GitUI.Theming
                     DefaultExt = Extension,
                     InitialDirectory = UserDirectory,
                     AddExtension = true,
-                    Filter = Filter,
-                    Title = LoadDialogTitle,
+                    Filter = string.Format(_filter.Text, Extension),
+                    Title = _loadDialogTitle.Text,
                     CheckFileExists = true
                 };
 
-                if (dlg.ShowDialog() != DialogResult.OK)
+                using (dlg)
                 {
-                    return false;
-                }
+                    if (dlg.ShowDialog() != DialogResult.OK)
+                    {
+                        return false;
+                    }
 
-                result = dlg.FileName;
-                return true;
+                    result = dlg.FileName;
+                    return true;
+                }
             }
         }
 

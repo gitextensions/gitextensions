@@ -5,13 +5,18 @@ using System.Text;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
+using ResourceManager;
 
 namespace GitUI.Theming
 {
     public class FormThemeEditor : GitExtensionsForm
     {
-        private const string Title = "Theme editor";
-        private const string HintOnResettingColor = "middle-click to reset";
+        private readonly TranslationString _title = new TranslationString("Theme editor");
+        private readonly TranslationString _hintOnResettingColor = new TranslationString("middle-click to reset");
+        private readonly TranslationString _resetAllColors = new TranslationString("Reset all colors");
+        private readonly TranslationString _save = new TranslationString("Save");
+        private readonly TranslationString _load = new TranslationString("Load");
+
         private readonly Size _cellSize;
         private readonly Padding _cellMargin;
         private readonly FlowLayoutPanel _layoutPanel;
@@ -32,7 +37,7 @@ namespace GitUI.Theming
 
             ShowIcon = false;
             StartPosition = FormStartPosition.CenterScreen;
-            Text = Title;
+            Text = _title.Text;
 
             FormClosing += (sender, args) =>
             {
@@ -163,7 +168,7 @@ namespace GitUI.Theming
                 if (getColor(_controller, colorName) != getDefaultColor(_controller, colorName))
                 {
                     result.AppendLine("*");
-                    result.Append(HintOnResettingColor);
+                    result.Append(_hintOnResettingColor);
                 }
 
                 control.Text = result.ToString();
@@ -178,19 +183,22 @@ namespace GitUI.Theming
                 switch (te.Button)
                 {
                     case MouseButtons.Left:
-                        var dialog = new ColorDialog();
-                        dialog.Color = ctrl.BackColor;
-                        var result = dialog.ShowDialog();
-                        if (result != DialogResult.OK)
+                        using (var dialog = new ColorDialog())
                         {
-                            break;
+                            dialog.Color = ctrl.BackColor;
+                            var result = dialog.ShowDialog();
+                            if (result != DialogResult.OK)
+                            {
+                                break;
+                            }
+
+                            var name = ctrl.GetTag<TName>();
+                            var value = dialog.Color;
+                            setColor(_controller, name, value);
+                            ctrl.BackColor = dialog.Color;
+                            ctrl.SetForeColorForBackColor();
                         }
 
-                        var name = ctrl.GetTag<TName>();
-                        var value = dialog.Color;
-                        setColor(_controller, name, value);
-                        ctrl.BackColor = dialog.Color;
-                        ctrl.SetForeColorForBackColor();
                         break;
 
                     case MouseButtons.Middle:
@@ -204,7 +212,7 @@ namespace GitUI.Theming
 
         private void AddButtons()
         {
-            CreateButton("Reset all colors", (s, e) =>
+            CreateButton(_resetAllColors.Text, (s, e) =>
             {
                 if (_resetting)
                 {
@@ -216,12 +224,12 @@ namespace GitUI.Theming
                 _resetting = false;
             });
 
-            CreateButton("Save", (s, e) =>
+            CreateButton(_save.Text, (s, e) =>
             {
                 _controller.SaveToFileDialog();
             });
 
-            CreateButton("Load", (s, e) =>
+            CreateButton(_load.Text, (s, e) =>
             {
                 _controller.ApplyThemeFromFileDialog();
             });
