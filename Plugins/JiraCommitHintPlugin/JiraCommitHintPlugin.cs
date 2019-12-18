@@ -102,18 +102,15 @@ namespace JiraCommitHintPlugin
                 Multiline = true,
                 ScrollBars = ScrollBars.Horizontal
             };
-            txtTemplate.SizeChanged += (s, e) =>
-            {
-                _btnPreview.Left = txtTemplate.Width - _btnPreview.Width - DpiUtil.Scale(8);
-            };
             _btnPreview = new Button
             {
                 Text = PreviewButtonText.Text,
                 Top = DpiUtil.Scale(45),
-                Anchor = AnchorStyles.Right
+                Anchor = AnchorStyles.Right | AnchorStyles.Bottom
             };
             _btnPreview.Size = DpiUtil.Scale(_btnPreview.Size);
             _btnPreview.Click += btnPreviewClick;
+            _btnPreview.Left = txtTemplate.Width - _btnPreview.Width - DpiUtil.Scale(8);
             txtTemplate.Controls.Add(_btnPreview);
             _stringTemplateSetting.CustomControl = txtTemplate;
             yield return _stringTemplateSetting;
