@@ -11,18 +11,13 @@
     <Reference Include="PSTaskDialog">
       <HintPath>..\Bin\PSTaskDialog.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.DirectoryServices" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="netstandard" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AppInsights.WindowsDesktop" Version="2.10.42-preview" />

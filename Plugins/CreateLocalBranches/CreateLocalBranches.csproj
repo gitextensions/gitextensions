@@ -1,10 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj" />

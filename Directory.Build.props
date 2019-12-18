@@ -19,6 +19,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="netstandard" />
+
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)Build\stylecop.json">
       <Link>stylecop.json</Link>
     </AdditionalFiles>

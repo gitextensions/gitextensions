@@ -15,13 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="netstandard" />
   </ItemGroup>
 
   <ItemGroup>
