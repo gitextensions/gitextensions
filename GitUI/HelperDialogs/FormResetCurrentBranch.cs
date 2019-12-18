@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI.Theming;
 using ResourceManager;
 
 namespace GitUI.HelperDialogs
@@ -33,6 +34,11 @@ namespace GitUI.HelperDialogs
             Revision = revision;
 
             InitializeComponent();
+            Soft.SetForeColorForBackColor();
+            Hard.SetForeColorForBackColor();
+            Mixed.SetForeColorForBackColor();
+            Merge.SetForeColorForBackColor();
+            Keep.SetForeColorForBackColor();
             InitializeComplete();
 
             switch (resetType)

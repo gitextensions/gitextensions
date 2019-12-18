@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -88,17 +89,17 @@ namespace GitUI
             ImageList CreateImageList()
             {
                 const int rowHeight = 18;
-                bool light = ColorHelper.IsLightTheme();
 
                 return new ImageList
                 {
+                    ColorDepth = ColorDepth.Depth32Bit,
                     ImageSize = DpiUtil.Scale(new Size(16, rowHeight)), // Scale ImageSize and images scale automatically
                     Images =
                     {
                         ScaleHeight(Images.FileStatusRemoved), // 0
                         ScaleHeight(Images.FileStatusAdded), // 1
                         ScaleHeight(Images.FileStatusModified), // 2
-                        ScaleHeight(light ? Images.FileStatusRenamed : Images.FileStatusRenamed_inv), // 3
+                        ScaleHeight(Images.FileStatusRenamed.AdaptLightness()), // 3
                         ScaleHeight(Images.FileStatusCopied), // 4
                         ScaleHeight(Images.SubmoduleDirty), // 5
                         ScaleHeight(Images.SubmoduleRevisionUp), // 6
@@ -1543,8 +1544,8 @@ namespace GitUI
 
         #region private Color constants
         //// Do not declare the colors "static" because Color.FromArgb() will not work at their initialization.
-        private readonly Color _activeInputColor = Color.FromArgb(0xC8, 0xFF, 0xC8);
-        private readonly Color _invalidInputColor = Color.FromArgb(0xFF, 0xC8, 0xC8);
+        private readonly Color _activeInputColor = Color.FromArgb(0xC8, 0xFF, 0xC8).AdaptBackColor();
+        private readonly Color _invalidInputColor = Color.FromArgb(0xFF, 0xC8, 0xC8).AdaptBackColor();
         #endregion
 
         internal TestAccessor GetTestAccessor() => new TestAccessor(this);

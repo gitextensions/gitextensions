@@ -226,7 +226,7 @@ namespace GitImpact
         private void OnPaint(object sender, PaintEventArgs e)
         {
             // White background
-            e.Graphics.Clear(Color.White);
+            e.Graphics.Clear(SystemColors.Window);
             UpdateScrollbar();
             lock (_dataLock)
             {
@@ -256,7 +256,7 @@ namespace GitImpact
                 string selectedAuthor = _authorStack[_authorStack.Count - 1];
                 if (_brushes.ContainsKey(selectedAuthor) && _paths.ContainsKey(selectedAuthor))
                 {
-                    e.Graphics.DrawPath(new Pen(Color.Black, 2), _paths[selectedAuthor]);
+                    e.Graphics.DrawPath(new Pen(SystemColors.WindowText, 2), _paths[selectedAuthor]);
                 }
 
                 foreach (var author in _authorStack)

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using ResourceManager;
 
@@ -39,6 +40,9 @@ namespace GitUI.CommandsDialogs
         {
             _defaultBranch = defaultBranch;
             InitializeComponent();
+            SolveMergeconflicts.BackColor = AppSettings.BranchColor;
+            SolveMergeconflicts.SetForeColorForBackColor();
+            helpImageDisplayUserControl1.Image1 = Properties.Images.HelpCommandRebase.AdaptLightness();
             InitializeComplete();
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
@@ -143,22 +147,26 @@ namespace GitUI.CommandsDialogs
 
             Resolved.Text = _continueRebaseText.Text;
             Mergetool.Text = _solveConflictsText.Text;
+            Resolved.ForeColor = SystemColors.ControlText;
+            Mergetool.ForeColor = SystemColors.ControlText;
             ContinuePanel.BackColor = Color.Transparent;
             MergeToolPanel.BackColor = Color.Transparent;
+
+            var highlightColor = Color.Yellow.AdaptBackColor();
 
             if (Module.InTheMiddleOfConflictedMerge())
             {
                 AcceptButton = Mergetool;
                 Mergetool.Focus();
                 Mergetool.Text = _solveConflictsText2.Text;
-                MergeToolPanel.BackColor = Color.Yellow;
+                MergeToolPanel.BackColor = highlightColor;
             }
             else if (Module.InTheMiddleOfRebase())
             {
                 AcceptButton = Resolved;
                 Resolved.Focus();
                 Resolved.Text = _continueRebaseText2.Text;
-                ContinuePanel.BackColor = Color.Yellow;
+                ContinuePanel.BackColor = highlightColor;
             }
         }
 

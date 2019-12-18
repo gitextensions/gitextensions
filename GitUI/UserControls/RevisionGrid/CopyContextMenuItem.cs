@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -122,7 +123,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                 foreach (var name in branchNames)
                 {
-                    AddItem(name, textToCopy: name, Images.Branch, hotkey: null);
+                    AddItem(name, textToCopy: name, Images.Branch.AdaptLightness(), hotkey: null);
                 }
 
                 DropDownItems.Add(new ToolStripSeparator());

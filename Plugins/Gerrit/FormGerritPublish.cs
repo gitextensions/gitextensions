@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -32,9 +33,8 @@ namespace Gerrit
             : base(uiCommand)
         {
             InitializeComponent();
+            Publish.Image = Images.Push.AdaptLightness();
             InitializeComplete();
-
-            Publish.Image = Images.Push;
             PublishType.Items.AddRange(new object[]
             {
                 new KeyValuePair<string, string>(_publishTypeReview.Text, ""),

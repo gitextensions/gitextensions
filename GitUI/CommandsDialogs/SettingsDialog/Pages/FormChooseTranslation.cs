@@ -29,6 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             var imageList = new ImageList
             {
+                ColorDepth = ColorDepth.Depth32Bit,
                 ImageSize = DpiUtil.Scale(new Size(150, 75)),
             };
 

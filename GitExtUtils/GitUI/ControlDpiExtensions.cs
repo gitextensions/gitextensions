@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using JetBrains.Annotations;
 
 namespace GitUI

@@ -10,6 +10,7 @@ using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -381,14 +382,14 @@ namespace GitUI.CommandsDialogs
             if (destinationUnfilled || subDirectoryUnfilled)
             {
                 Info.Text = newRepositoryLocationInfo;
-                Info.ForeColor = Color.Red;
+                Info.ForeColor = Color.Red.AdaptTextColor();
                 return;
             }
 
             if (Directory.Exists(destinationPath) && Directory.EnumerateFileSystemEntries(destinationPath).Any())
             {
                 Info.Text = $@"{newRepositoryLocationInfo} {_infoDirectoryExists.Text}";
-                Info.ForeColor = Color.Red;
+                Info.ForeColor = Color.Red.AdaptTextColor();
                 return;
             }
 

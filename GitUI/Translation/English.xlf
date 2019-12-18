@@ -691,6 +691,14 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Multicolor branches</source>
         <target />
       </trans-unit>
+      <trans-unit id="btnResetTheme.Text">
+        <source>Reset</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnTheme.Text">
+        <source>Edit...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkDrawAlternateBackColor.Text">
         <source>Draw alternate background</source>
         <target />
@@ -699,12 +707,20 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Highlight authored revisions</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkUseSystemVisualStyle.Text">
+        <source>Use system-defined visual style (looks bad with dark colors)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="gbDiffView.Text">
         <source>Difference view</source>
         <target />
       </trans-unit>
       <trans-unit id="gbRevisionGraph.Text">
         <source>Revision graph</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="gbTheme.Text">
+        <source>Color scheme</source>
         <target />
       </trans-unit>
       <trans-unit id="lblColorBranchLocal.Text">
@@ -749,6 +765,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="lblColorTag.Text">
         <source>Color tag</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblRestartNeeded.Text">
+        <source>     To apply changes restart is necessary</source>
         <target />
       </trans-unit>
     </body>

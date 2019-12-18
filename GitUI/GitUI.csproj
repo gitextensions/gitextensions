@@ -59,6 +59,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="netstandard" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AppInsights.WindowsDesktop">
@@ -132,6 +133,32 @@
       <DependentUpon>RepoObjectsTree.cs</DependentUpon>
     </Compile>
     <Compile Include="BuildServerIntegration\BuildServerWatcher.cs" />
+    <Compile Include="Theming\SystemDialogDetector.cs" />
+    <Compile Include="Theming\Renderers\ButtonRenderer.cs" />
+    <Compile Include="Theming\Renderers\ComboBoxRenderer.cs" />
+    <Compile Include="Theming\Renderers\EditRenderer.cs" />
+    <Compile Include="Theming\Renderers\HeaderRenderer.cs" />
+    <Compile Include="Theming\Renderers\ThemeProperty.cs" />
+    <Compile Include="Theming\Renderers\ThemeRenderer.cs" />
+    <Compile Include="Theming\Renderers\ListViewRenderer.cs" />
+    <Compile Include="Theming\Renderers\RectangleExtension.cs" />
+    <Compile Include="Theming\Renderers\ScrollBarRenderer.cs" />
+    <Compile Include="Theming\Renderers\SpinRenderer.cs" />
+    <Compile Include="Theming\Renderers\TooltipRenderer.cs" />
+    <Compile Include="Theming\Renderers\TreeViewRenderer.cs" />
+    <Compile Include="Theming\ThemeChangedHandler.cs" />
+    <Compile Include="Theming\ThemeManager.cs" />
+    <Compile Include="Theming\ThemeDeployment.cs" />
+    <Compile Include="Theming\FormThemeEditorController.cs" />
+    <Compile Include="Theming\ThemePersistence.cs" />
+    <Compile Include="Theming\FormThemeEditor.cs" />
+    <Compile Include="Theming\ThemeModule.cs" />
+    <Compile Include="Theming\ThemeBasedHighlighting.cs" />
+    <Compile Include="Theming\HighlightingExtension.cs" />
+    <Compile Include="Theming\StaticTheme.cs" />
+    <Compile Include="Theming\Win32ColorTranslator.cs" />
+    <Compile Include="Theming\Win32ThemeDelegates.cs" />
+    <Compile Include="Theming\Win32ThemeHooks.cs" />
     <Compile Include="CommandsDialogs\EnvironmentInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1748,6 +1775,10 @@
       <Project>{1DC7D403-484B-43B4-B017-1356397A32CB}</Project>
       <Name>ConEmuWinForms</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Externals\EasyHook\EasyHook\EasyHook.csproj">
+      <Project>{ab53862b-3b5c-4efc-9787-1f01199ebfbf}</Project>
+      <Name>EasyHook</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Externals\Git.hub\Git.hub\Git.hub.csproj">
       <Project>{f50b1dbf-1c9f-4437-87ec-7aba805cc446}</Project>
       <Name>Git.hub</Name>
@@ -1893,6 +1924,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Icons\SyntaxHighlighting.png" />
+    <Content Include="Themes\dark.colors">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Themes\win10default.colors">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Icons\DeleteText.png" />

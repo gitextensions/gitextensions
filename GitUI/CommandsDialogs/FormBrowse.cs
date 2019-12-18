@@ -19,6 +19,7 @@ using GitCommands.UserRepositoryHistory;
 using GitCommands.Utils;
 using GitExtUtils;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.BranchTreePanel;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
@@ -136,10 +137,23 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
 
-            bool light = ColorHelper.IsLightTheme();
-            translateToolStripMenuItem.Image = light ? Images.Translate : Images.Translate_inv;
-            recoverLostObjectsToolStripMenuItem.Image = light ? Images.RecoverLostObjects : Images.RecoverLostObjects_inv;
-            branchSelect.Image = light ? Resources.branch : Resources.branch_inv;
+            new ToolStripItem[]
+            {
+                translateToolStripMenuItem,
+                recoverLostObjectsToolStripMenuItem,
+                branchSelect,
+                toolStripButtonPull,
+                pullToolStripMenuItem,
+                pullToolStripMenuItem1,
+                mergeToolStripMenuItem,
+                rebaseToolStripMenuItem1,
+                fetchToolStripMenuItem,
+                fetchAllToolStripMenuItem,
+                fetchPruneAllToolStripMenuItem,
+                toolStripButtonPush,
+                pushToolStripMenuItem,
+                branchToolStripMenuItem,
+            }.ForEach(ColorHelper.AdaptImageLightness);
 
             _formBrowseDiagnosticsReporter = new FormBrowseDiagnosticsReporter(this);
 
@@ -151,7 +165,7 @@ namespace GitUI.CommandsDialogs
             // set tab page images
             CommitInfoTabControl.ImageList = new ImageList
             {
-                ColorDepth = ColorDepth.Depth8Bit,
+                ColorDepth = ColorDepth.Depth32Bit,
                 ImageSize = DpiUtil.Scale(new Size(16, 16)),
                 Images =
                 {
@@ -2520,32 +2534,32 @@ namespace GitUI.CommandsDialogs
             switch (defaultPullAction)
             {
                 case AppSettings.PullAction.Fetch:
-                    toolStripButtonPull.Image = Images.PullFetch;
+                    toolStripButtonPull.Image = Images.PullFetch.AdaptLightness();
                     toolStripButtonPull.ToolTipText = _pullFetch.Text;
                     break;
 
                 case AppSettings.PullAction.FetchAll:
-                    toolStripButtonPull.Image = Images.PullFetchAll;
+                    toolStripButtonPull.Image = Images.PullFetchAll.AdaptLightness();
                     toolStripButtonPull.ToolTipText = _pullFetchAll.Text;
                     break;
 
                 case AppSettings.PullAction.FetchPruneAll:
-                    toolStripButtonPull.Image = Images.PullFetchPruneAll;
+                    toolStripButtonPull.Image = Images.PullFetchPruneAll.AdaptLightness();
                     toolStripButtonPull.ToolTipText = _pullFetchPruneAll.Text;
                     break;
 
                 case AppSettings.PullAction.Merge:
-                    toolStripButtonPull.Image = Images.PullMerge;
+                    toolStripButtonPull.Image = Images.PullMerge.AdaptLightness();
                     toolStripButtonPull.ToolTipText = _pullMerge.Text;
                     break;
 
                 case AppSettings.PullAction.Rebase:
-                    toolStripButtonPull.Image = Images.PullRebase;
+                    toolStripButtonPull.Image = Images.PullRebase.AdaptLightness();
                     toolStripButtonPull.ToolTipText = _pullRebase.Text;
                     break;
 
                 default:
-                    toolStripButtonPull.Image = Images.Pull;
+                    toolStripButtonPull.Image = Images.Pull.AdaptLightness();
                     toolStripButtonPull.ToolTipText = _pullOpenDialog.Text;
                     break;
             }

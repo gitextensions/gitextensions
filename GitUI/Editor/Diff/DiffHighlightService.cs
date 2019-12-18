@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using GitCommands;
 using GitCommands.Patches;
+using GitExtUtils.GitUI.Theming;
 using ICSharpCode.TextEditor.Document;
 using JetBrains.Annotations;
 

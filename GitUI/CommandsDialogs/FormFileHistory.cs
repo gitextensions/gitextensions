@@ -72,7 +72,7 @@ namespace GitUI.CommandsDialogs
             {
                 tabControl1.ImageList = new ImageList
                 {
-                    ColorDepth = ColorDepth.Depth8Bit,
+                    ColorDepth = ColorDepth.Depth32Bit,
                     ImageSize = DpiUtil.Scale(new Size(16, 16)),
                     Images =
                     {

@@ -359,7 +359,6 @@
             // 
             this.downloadDictionary.AutoSize = true;
             this.downloadDictionary.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.downloadDictionary.LinkColor = System.Drawing.SystemColors.HotTrack;
             this.downloadDictionary.Location = new System.Drawing.Point(250, 27);
             this.downloadDictionary.Name = "downloadDictionary";
             this.downloadDictionary.Size = new System.Drawing.Size(103, 27);
@@ -405,7 +404,6 @@
             // 
             this.helpTranslate.AutoSize = true;
             this.helpTranslate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.helpTranslate.LinkColor = System.Drawing.SystemColors.HotTrack;
             this.helpTranslate.Location = new System.Drawing.Point(250, 0);
             this.helpTranslate.Name = "helpTranslate";
             this.helpTranslate.Size = new System.Drawing.Size(103, 27);

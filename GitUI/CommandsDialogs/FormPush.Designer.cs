@@ -160,7 +160,6 @@
             // 
             // BranchTab
             // 
-            this.BranchTab.BackColor = System.Drawing.Color.Transparent;
             this.BranchTab.Controls.Add(this.tableLayoutPanel1);
             this.BranchTab.Controls.Add(this.ShowOptions);
             this.BranchTab.Controls.Add(this.PushOptionsPanel);
@@ -312,7 +311,6 @@
             // 
             // TagTab
             // 
-            this.TagTab.BackColor = System.Drawing.Color.Transparent;
             this.TagTab.Controls.Add(this.ForcePushTags);
             this.TagTab.Controls.Add(this.label1);
             this.TagTab.Controls.Add(this.TagComboBox);

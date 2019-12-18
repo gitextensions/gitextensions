@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Script;
 using ResourceManager;
 
@@ -26,6 +27,8 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
+            helpImageDisplayUserControl1.Image1 = Properties.Images.HelpCommandMerge.AdaptLightness();
+            helpImageDisplayUserControl1.Image2 = Properties.Images.HelpCommandMergeFastForward.AdaptLightness();
             InitializeComplete();
 
             currentBranchLabel.Font = new Font(currentBranchLabel.Font, FontStyle.Bold);

@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 
-namespace GitUI
+namespace GitExtUtils.GitUI.Theming
 {
     public readonly struct HslColor
     {
@@ -24,28 +24,59 @@ namespace GitUI
                     throw new ArgumentOutOfRangeException(nameof(value), value, "Cannot have a NaN channel value.");
                 }
 
-                // limit to range [0-1] inclusive
-                return value > 1
-                    ? 1
-                    : value < 0
-                        ? 0
-                        : value;
+                return value.WithinRange(0, 1);
             }
         }
 
         /// <summary>
         /// Creates an <see cref="HslColor"/> from an RGB <see cref="Color"/> object.
         /// </summary>
-        /// <remarks>Takes advantage of whats already built in to .NET by using the Color.GetHue, Color.GetSaturation and Color.GetBrightness methods</remarks>
         /// <param name="c">A Color to convert</param>
         /// <returns>An HSL value</returns>
         public HslColor(in Color c)
         {
-            // TODO avoid method calls and consequent defensive copies
-            // we store hue as 0-1 as opposed to 0-360
-            H = c.GetHue() / 360.0;
-            S = c.GetSaturation();
-            L = c.GetBrightness();
+            double r = c.R / 255d;
+            double g = c.G / 255d;
+            double b = c.B / 255d;
+
+            double max = Math.Max(r, Math.Max(g, b));
+            double min = Math.Min(r, Math.Min(g, b));
+
+            double h;
+            double s;
+            double l = (max + min) / 2;
+
+            if (max.Equals(min))
+            {
+                h = s = 0; // achromatic
+            }
+            else
+            {
+                double d = max - min;
+                s = l > 0.5
+                    ? d / (2 - max - min)
+                    : d / (max + min);
+
+                if (max.Equals(r))
+                {
+                    h = ((g - b) / d) + (g < b ? 6 : 0);
+                }
+                else if (max.Equals(g))
+                {
+                    h = ((b - r) / d) + 2;
+                }
+                else
+                {
+                    // if (max.Equals(b))
+                    h = ((r - g) / d) + 4;
+                }
+
+                h /= 6;
+            }
+
+            H = h;
+            S = s;
+            L = l;
         }
 
         /// <summary>
@@ -65,67 +96,63 @@ namespace GitUI
 
         public HslColor WithHue(double hue) => new HslColor(hue, S, L);
         public HslColor WithSaturation(double saturation) => new HslColor(H, saturation, L);
-        public HslColor WithBrightness(double luminosity) => new HslColor(H, S, luminosity);
+        public HslColor WithLuminosity(double luminosity) => new HslColor(H, S, luminosity);
 
         /// <summary>
         /// Converts this HSL color object to a <see cref="Color"/> object based on RGB values.
         /// </summary>
         public Color ToColor()
         {
-            const double tolerance = 0.00001;
+            double r;
+            double g;
+            double b;
 
-            if (Math.Abs(L) < tolerance)
+            if (S.Equals(0))
             {
-                return Color.Black;
+                r = g = b = L; // achromatic
             }
-
-            if (Math.Abs(S) < tolerance)
+            else
             {
-                var l = (int)(255 * L);
-                return Color.FromArgb(l, l, l);
+                var q = L < 0.5 ? L * (1 + S) : L + S - (L * S);
+                var p = (2 * L) - q;
+                r = Hue2Rgb(p, q, H + (1 / 3d));
+                g = Hue2Rgb(p, q, H);
+                b = Hue2Rgb(p, q, H - (1 / 3d));
             }
-
-            var v1 = L <= 0.5
-                ? L * (1 + S)
-                : L + S - (L * S);
-
-            var v2 = (2 * L) - v1;
-
-            const double oneOnThree = 1d / 3;
 
             return Color.FromArgb(
-                (int)(255 * CalculateChannel(H + oneOnThree)),
-                (int)(255 * CalculateChannel(H)),
-                (int)(255 * CalculateChannel(H - oneOnThree)));
+                (int)Math.Floor(r * 256).AtMost(255),
+                (int)Math.Floor(g * 256).AtMost(255),
+                (int)Math.Floor(b * 256).AtMost(255));
 
-            double CalculateChannel(double v3)
+            double Hue2Rgb(double p, double q, double t)
             {
-                if (v3 < 0)
+                if (t < 0)
                 {
-                    v3 += 1;
+                    t++;
                 }
 
-                if (v3 > 1)
+                if (t > 1)
                 {
-                    v3 -= 1;
+                    t--;
                 }
 
-                if (6 * v3 < 1)
+                if (t < 1 / 6d)
                 {
-                    return v2 + ((v1 - v2) * v3 * 6);
+                    return p + ((q - p) * 6 * t);
                 }
-                else if (2 * v3 < 1)
+
+                if (t < 1 / 2d)
                 {
-                    return v1;
+                    return q;
                 }
-                else if (3 * v3 < 2)
+
+                if (t < 2 / 3d)
                 {
-                    return v2 + ((v1 - v2) * ((2d / 3) - v3) * 6);
+                    return p + ((q - p) * ((2 / 3d) - t) * 6);
                 }
-                else
-                {
-                    return v2;
-                }
+
+                return p;
             }
         }
 

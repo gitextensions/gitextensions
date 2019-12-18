@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -48,14 +49,14 @@ namespace GitUI.CommandsDialogs
 
             if (!string.IsNullOrEmpty(data.BehindCount))
             {
-                Image = Images.Unstage;
+                Image = Images.Unstage.AdaptLightness();
             }
         }
 
         private void ResetToDefaultState()
         {
             DisplayStyle = ToolStripItemDisplayStyle.Image;
-            Image = Images.Push;
+            Image = Images.Push.AdaptLightness();
             ToolTipText = _push.Text;
         }
 
