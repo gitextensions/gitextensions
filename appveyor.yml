@@ -80,14 +80,14 @@ test_script:
 
 
 # scripts to run after tests
-after_test:
-- ps: |
-    Write-Host "Preparing build artifacts..."
-    & .\Build\Prepare-Artifacts.ps1
-
-
-artifacts:
-  # upload the generated portable archive only
-  - path: 'Setup/GitExtensions-Portable-*.zip'
-  - path: 'Setup/GitExtensions-pdbs-*.zip'
-  - path: 'GitExtensionsVSIX/bin/Release/GitExtensionsVSIX.vsix'
+#after_test:
+#- ps: |
+#    Write-Host "Preparing build artifacts..."
+#    & .\Build\Prepare-Artifacts.ps1
+#
+#
+#artifacts:
+#  # upload the generated portable archive only
+#  - path: 'Setup/GitExtensions-Portable-*.zip'
+#  - path: 'Setup/GitExtensions-pdbs-*.zip'
+#  - path: 'GitExtensionsVSIX/bin/Release/GitExtensionsVSIX.vsix'
