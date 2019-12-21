@@ -118,10 +118,15 @@ namespace AzureDevOpsIntegration
 
             var builds = (await HttpGetAsync<ListWrapper<Build>>($"build/builds?api-version=2.0&definitions={buildDefinitionsToQuery}")).Value;
 
+            if (!running.HasValue || running.Value)
+            {
+                return builds
+                    .Where(b => !running.HasValue || running.Value == b.IsInProgress)
+                    .Where(b => !sinceDate.HasValue || b.StartTime >= sinceDate.Value.ToUniversalTime());
+            }
+
             return builds
-                .Where(b => !running.HasValue || running.Value == b.IsInProgress)
-                .Where(b => !sinceDate.HasValue || b.StartTime >= sinceDate.Value)
-                .ToList();
+                .Where(b => !sinceDate.HasValue || (b.FinishTime != null && b.FinishTime >= sinceDate.Value.ToUniversalTime()));
         }
 
         public void Dispose()
