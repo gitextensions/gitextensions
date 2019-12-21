@@ -7309,44 +7309,32 @@ Context menu for additional operations</source>
         <source>Config</source>
         <target />
       </trans-unit>
-      <trans-unit id="BrowseCommitTemplate.Text">
-        <source>Browse</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="BrowseDiffTool.Text">
-        <source>Browse</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="BrowseMergeTool.Text">
-        <source>Browse</source>
-        <target />
-      </trans-unit>
       <trans-unit id="ConfigureEncoding.Text">
         <source>Configure</source>
         <target />
       </trans-unit>
-      <trans-unit id="DiffToolCmdSuggest.Text">
+      <trans-unit id="_selectFile.Text">
+        <source>Select file</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnCommitTemplateBrowse.Text">
+        <source>Browse</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnDiffToolBrowse.Text">
+        <source>Browse</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnDiffToolCommandSuggest.Text">
         <source>Suggest</source>
         <target />
       </trans-unit>
-      <trans-unit id="MergeToolCmdSuggest.Text">
+      <trans-unit id="btnMergeToolBrowse.Text">
+        <source>Browse</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnMergeToolCommandSuggest.Text">
         <source>Suggest</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="MergeToolPathLabel.Text">
-        <source>Path to mergetool</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_diffToolSuggestCaption.Text">
-        <source>Suggest difftool cmd</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_mergeToolSuggestCaption.Text">
-        <source>Suggest mergetool cmd</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_toolSuggestPathText.Text">
-        <source>Please enter the path to {0} and press suggest.</source>
         <target />
       </trans-unit>
       <trans-unit id="globalAutoCrlfFalse.Text">
@@ -7369,36 +7357,12 @@ Context menu for additional operations</source>
         <source>Line endings</source>
         <target />
       </trans-unit>
-      <trans-unit id="label19.Text">
-        <source>Mergetool command</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label28.Text">
-        <source>Keep backup (.orig) after merge</source>
-        <target />
-      </trans-unit>
       <trans-unit id="label3.Text">
         <source>User name</source>
         <target />
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>User email</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label41.Text">
-        <source>Difftool</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label42.Text">
-        <source>Path to difftool</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label48.Text">
-        <source>Difftool command</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label57.Text">
-        <source>Path to commit template</source>
         <target />
       </trans-unit>
       <trans-unit id="label6.Text">
@@ -7409,15 +7373,39 @@ Context menu for additional operations</source>
         <source>Files content encoding</source>
         <target />
       </trans-unit>
-      <trans-unit id="label7.Text">
-        <source>Mergetool</source>
-        <target />
-      </trans-unit>
       <trans-unit id="label9.Text">
         <source>You need to set the correct path to 
 git before you can change
 global settings.
 </source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblCommitTemplatePath.Text">
+        <source>Path to commit template</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblDiffTool.Text">
+        <source>Difftool</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblDiffToolCommand.Text">
+        <source>Difftool command</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblDiffToolPath.Text">
+        <source>Path to difftool</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblMergeTool.Text">
+        <source>Mergetool</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblMergeToolCommand.Text">
+        <source>Mergetool command</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblMergeToolPath.Text">
+        <source>Path to mergetool</source>
         <target />
       </trans-unit>
     </body>

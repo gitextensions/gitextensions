@@ -56,6 +56,8 @@
     <Compile Include="CommitMessageManagerTests.cs" />
     <Compile Include="CommitTemplateManagerTests.cs" />
     <Compile Include="Config\ConfigFileTest.cs" />
+    <Compile Include="DiffMergeTools\DiffMergeToolConfigurationManagerTests.cs" />
+    <Compile Include="DiffMergeTools\RegisteredDiffMergeToolsTests.cs" />
     <Compile Include="EnvironmentPathsProviderTests.cs" />
     <Compile Include="ExternalLinks\ConfiguredLinkDefinitionsProviderTests.cs" />
     <Compile Include="ExternalLinks\ExternalLinkRevisionParserTests.cs" />
@@ -168,5 +170,6 @@
   <ItemGroup>
     <None Include="UserRepositoryHistory\Legacy\RepositoryCategorySerialiserTests.Verify_backwards_compatibility_of_object_graph.approved.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
