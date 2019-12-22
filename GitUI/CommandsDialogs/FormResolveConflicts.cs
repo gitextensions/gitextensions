@@ -18,7 +18,6 @@ namespace GitUI.CommandsDialogs
     public partial class FormResolveConflicts : GitModuleForm
     {
         #region Translation
-        private readonly TranslationString _errorCaption = new TranslationString("Error");
         private readonly TranslationString _uskUseCustomMergeScript = new TranslationString("There is a custom merge script ({0}) for this file type." + Environment.NewLine + Environment.NewLine + "Do you want to use this custom merge script?");
         private readonly TranslationString _uskUseCustomMergeScriptCaption = new TranslationString("Custom merge script");
         private readonly TranslationString _fileUnchangedAfterMerge = new TranslationString("The file has not been modified by the merge. Usually this means that the file has been saved to the wrong location." + Environment.NewLine + Environment.NewLine + "The merge conflict will not be marked as solved. Please try again.");
@@ -26,14 +25,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _allConflictsResolvedCaption = new TranslationString("Commit");
         private readonly TranslationString _fileIsBinary = new TranslationString("The selected file appears to be a binary file." + Environment.NewLine + "Are you sure you want to open this file in {0}?");
         private readonly TranslationString _askMergeConflictSolvedAfterCustomMergeScript = new TranslationString("The merge conflict need to be solved and the result must be saved as:" + Environment.NewLine + "{0}" + Environment.NewLine + Environment.NewLine + "Is the merge conflict solved?");
-        private readonly TranslationString _askMergeConflictSolved = new TranslationString("Is the merge conflict solved?");
         private readonly TranslationString _askMergeConflictSolvedCaption = new TranslationString("Conflict solved?");
-        private readonly TranslationString _noMergeTool = new TranslationString("There is no mergetool configured." + Environment.NewLine + "Please go to settings and set a mergetool!");
-        private readonly TranslationString _noMergeToolConfigured = new TranslationString("The mergetool is not correctly configured." + Environment.NewLine + "Please go to settings and configure the mergetool!");
-        private readonly TranslationString _errorStartingMergetool = new TranslationString("Error starting mergetool: {0}");
         private readonly TranslationString _stageFilename = new TranslationString("Stage {0}");
 
-        private readonly TranslationString _noBaseRevision = new TranslationString("There is no base revision for {0}." + Environment.NewLine + "Fall back to 2-way merge?");
         private readonly TranslationString _ours = new TranslationString("ours");
         private readonly TranslationString _theirs = new TranslationString("theirs");
         private readonly TranslationString _fileBinaryChooseLocalBaseRemote = new TranslationString("File ({0}) appears to be a binary file." + Environment.NewLine + "Choose to keep the local ({1}), remote ({2}) or base file.");
@@ -65,9 +59,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _contextChooseRemoteMergeText = new TranslationString("Choose remote (theirs)");
 
         private readonly TranslationString _binaryFileWarningCaption = new TranslationString("Warning");
-
-        private readonly TranslationString _noBaseFileMergeCaption = new TranslationString("Merge");
-
         private readonly TranslationString _chooseBaseFileFailedText = new TranslationString("Choose base file failed.");
         private readonly TranslationString _chooseLocalFileFailedText = new TranslationString("Choose local file failed.");
         private readonly TranslationString _chooseRemoteFileFailedText = new TranslationString("Choose remote file failed.");
@@ -197,15 +188,9 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                if (!InitMergetool())
-                {
-                    Close();
-                    return;
-                }
-
                 ConflictedFilesContextMenu.Text = _conflictedFilesContextMenuText.Text;
-                OpenMergetool.Text = _openMergeToolItemText.Text + " " + _mergetool;
-                openMergeToolBtn.Text = _button1Text.Text + " " + _mergetool;
+                OpenMergetool.Text = _openMergeToolItemText.Text + " " + "mergetool"; //// Standard Git
+                openMergeToolBtn.Text = _button1Text.Text + " " + "GE mergetool"; //// GE filters too
 
                 if (Module.InTheMiddleOfRebase())
                 {
@@ -242,10 +227,6 @@ namespace GitUI.CommandsDialogs
         {
             Initialize();
         }
-
-        private string _mergetool;
-        private string _mergetoolCmd;
-        private string _mergetoolPath;
 
         private ConflictData GetConflict()
         {
@@ -378,27 +359,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void Use2WayMerge(ref string arguments)
-        {
-            string mergeToolLower = _mergetool.ToLowerInvariant();
-            switch (mergeToolLower)
-            {
-                case "kdiff3":
-                case "diffmerge":
-                case "beyondcompare3":
-                    arguments = arguments.Replace("\"$BASE\"", "");
-                    break;
-                case "araxis":
-                    arguments = arguments.Replace("-merge -3", "-merge");
-                    arguments = arguments.Replace("\"$BASE\"", "");
-                    break;
-                case "tortoisemerge":
-                    arguments = arguments.Replace("-base:\"$BASE\"", "").Replace("/base:\"$BASE\"", "");
-                    arguments = arguments.Replace("mine:\"$LOCAL\"", "base:\"$LOCAL\"");
-                    break;
-            }
-        }
-
         private enum ItemType
         {
             File,
@@ -479,88 +439,17 @@ namespace GitUI.CommandsDialogs
 
                     if (FileHelper.IsBinaryFileName(Module, item.Local.Filename))
                     {
-                        if (MessageBox.Show(this, string.Format(_fileIsBinary.Text, _mergetool),
-                            _binaryFileWarningCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
-                            MessageBoxDefaultButton.Button2) == DialogResult.No)
+                        if (MessageBox.Show(this, string.Format(_fileIsBinary.Text, "mergetool"),
+                                _binaryFileWarningCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
+                                MessageBoxDefaultButton.Button2) == DialogResult.No)
                         {
                             BinaryFilesChooseLocalBaseRemote(item);
                             return;
                         }
                     }
-
-                    string arguments = _mergetoolCmd;
-
-                    // Check if there is a base file. If not, ask user to fall back to 2-way merge.
-                    // git doesn't support 2-way merge, but we can try to adjust attributes to fix this.
-                    // For kdiff3 this is easy; just remove the 3rd file from the arguments. Since the
-                    // filenames are quoted, this takes a little extra effort. We need to remove these
-                    // quotes also. For tortoise and araxis a little bit more magic is needed.
-                    if (item.Base.Filename == null)
-                    {
-                        var text = string.Format(_noBaseRevision.Text, item.Filename);
-                        DialogResult result = MessageBox.Show(this, text, _noBaseFileMergeCaption.Text,
-                            MessageBoxButtons.YesNoCancel);
-                        if (result == DialogResult.Yes)
-                        {
-                            Use2WayMerge(ref arguments);
-                        }
-
-                        if (result == DialogResult.Cancel)
-                        {
-                            return;
-                        }
-                    }
-
-                    arguments = arguments.Replace("$BASE", baseFile);
-                    arguments = arguments.Replace("$LOCAL", localFile);
-                    arguments = arguments.Replace("$REMOTE", remoteFile);
-                    arguments = arguments.Replace("$MERGED", item.Filename);
-
-                    // get timestamp of file before merge. This is an extra check to verify if merge was successful
-                    DateTime lastWriteTimeBeforeMerge = DateTime.Now;
-                    if (File.Exists(_fullPathResolver.Resolve(item.Filename)))
-                    {
-                        lastWriteTimeBeforeMerge = File.GetLastWriteTime(_fullPathResolver.Resolve(item.Filename));
-                    }
-
-                    GitUIPluginInterfaces.ExecutionResult res;
-                    try
-                    {
-                        res = new Executable(_mergetoolPath, Module.WorkingDir).Execute(arguments);
-                    }
-                    catch (Exception)
-                    {
-                        var text = string.Format(_errorStartingMergetool.Text, _mergetoolPath);
-                        MessageBox.Show(this, text, _noBaseFileMergeCaption.Text,
-                            MessageBoxButtons.OK);
-                        return;
-                    }
-
-                    DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
-                    if (File.Exists(_fullPathResolver.Resolve(item.Filename)))
-                    {
-                        lastWriteTimeAfterMerge = File.GetLastWriteTime(_fullPathResolver.Resolve(item.Filename));
-                    }
-
-                    // Check exitcode AND timestamp of the file. If exitcode is success and
-                    // time timestamp is changed, we are pretty sure the merge was done.
-                    if (res.ExitCode == 0 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge)
-                    {
-                        StageFile(item.Filename);
-                    }
-
-                    // If the exitcode is 1, but the file is changed, ask if the merge conflict is solved.
-                    // If the exitcode is 0, but the file is not changed, ask if the merge conflict is solved.
-                    if ((res.ExitCode == 1 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge) ||
-                        (res.ExitCode == 0 && lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge))
-                    {
-                        if (MessageBox.Show(this, _askMergeConflictSolved.Text, _askMergeConflictSolvedCaption.Text,
-                            MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                        {
-                            StageFile(item.Filename);
-                        }
-                    }
                 }
+
+                Module.RunMergeTool(item.Filename);
             }
             finally
             {
@@ -578,50 +467,6 @@ namespace GitUI.CommandsDialogs
                     File.Delete(path);
                 }
             }
-        }
-
-        private bool InitMergetool()
-        {
-            _mergetool = Module.GetEffectiveSetting("merge.tool");
-            if (string.IsNullOrEmpty(_mergetool))
-            {
-                MessageBox.Show(this, _noMergeTool.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
-            using (WaitCursorScope.Enter())
-            {
-                _mergetoolCmd = Module.GetEffectiveSetting($"mergetool.{_mergetool}.cmd");
-                _mergetoolPath = Module.GetEffectiveSetting($"mergetool.{_mergetool}.path");
-
-                if (string.IsNullOrWhiteSpace(_mergetoolCmd) && string.IsNullOrWhiteSpace(_mergetoolPath))
-                {
-                    MessageBox.Show(this, _noMergeToolConfigured.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-
-                if (EnvUtils.RunningOnWindows())
-                {
-                    // This only works when on Windows....
-                    const string executablePattern = ".exe";
-                    int idx = _mergetoolCmd.IndexOf(executablePattern);
-                    if (idx >= 0)
-                    {
-                        _mergetoolPath = _mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim('\"', ' ');
-                        _mergetoolCmd = _mergetoolCmd.Substring(idx + executablePattern.Length + 1);
-                    }
-                }
-
-                if (!PathUtil.TryFindFullPath(_mergetoolPath, out string fullPath))
-                {
-                    MessageBox.Show(this, _noMergeToolConfigured.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-
-                _mergetoolPath = fullPath;
-            }
-
-            return true;
         }
 
         private bool ShowAbortMessage()
