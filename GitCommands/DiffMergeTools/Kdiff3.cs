@@ -8,6 +8,9 @@ namespace GitCommands.DiffMergeTools
         public override string ExeFileName => "kdiff3.exe";
 
         /// <inheritdoc />
+        public override string MergeCommand => "\"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
+
+        /// <inheritdoc />
         public override string Name => "kdiff3";
 
         /// <inheritdoc />
