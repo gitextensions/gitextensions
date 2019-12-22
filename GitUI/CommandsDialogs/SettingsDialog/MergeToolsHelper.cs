@@ -320,6 +320,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"";
                 case "diffmerge":
                     return "\"" + exeFile + "\" -merge -result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"";
+                case "kdiff3":
+                    return "\"" + exeFile + "\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
                 case "meld":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output \"$MERGED\"";
                 case "p4merge":
