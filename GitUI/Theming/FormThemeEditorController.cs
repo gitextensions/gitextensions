@@ -71,8 +71,8 @@ namespace GitUI.Theming
             set => _manager.UseInitialTheme = value;
         }
 
-        public StaticTheme LoadInvariantTheme() =>
-            _persistence.LoadFile(GetOriginalThemePath(InvariantThemeName));
+        public StaticTheme LoadInvariantTheme(bool quiet = false) =>
+            _persistence.LoadFile(GetOriginalThemePath(InvariantThemeName), quiet);
 
         public bool IsCurrentThemeFile(string path) =>
             StringComparer.OrdinalIgnoreCase.Equals(path, GetThemePath(CurrentThemeName));

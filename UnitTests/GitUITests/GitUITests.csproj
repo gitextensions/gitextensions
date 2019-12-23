@@ -90,6 +90,8 @@
     <Compile Include="CommitInfo\CommitInfoTests.cs" />
     <Compile Include="CommitInfo\RefsFormatterTests.cs" />
     <Compile Include="ControlThreadingExtensionsTests.cs" />
+    <Compile Include="Theming\AppColorDefaultsTests.cs" />
+    <Compile Include="Theming\ThemeManagerTests.cs" />
     <Compile Include="UserEnvironmentInformationTests.cs" />
     <Compile Include="Editor\FileViewerInternal.CurrentViewPositionCacheTests.cs" />
     <Compile Include="Editor\FileViewerTests.cs" />
@@ -177,6 +179,5 @@
     <EmbeddedResource Include="Editor\MockData\UnixLines.bin" />
     <EmbeddedResource Include="Editor\MockData\WindowsLines.bin" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

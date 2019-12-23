@@ -197,7 +197,9 @@ namespace GitUI.Theming
             SysColors.Any(c => GetModifiedColor(c) != GetThemeColor(c));
 
         public bool IsCurrentThemeInitial() =>
-            CurrentTheme != null && CurrentTheme.Path == InitialTheme.Path;
+            ReferenceEquals(CurrentTheme, InitialTheme) || (
+                CurrentTheme?.Path != null &&
+                StringComparer.OrdinalIgnoreCase.Equals(CurrentTheme.Path, InitialTheme.Path));
 
         /// <summary>
         /// <inheritdoc cref="Theme"/>

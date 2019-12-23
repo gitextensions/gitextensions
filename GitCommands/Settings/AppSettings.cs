@@ -1651,7 +1651,10 @@ namespace GitCommands
         [CanBeNull]
         public static string GetGitExtensionsDirectory()
         {
-            return Path.GetDirectoryName(GetGitExtensionsFullPath());
+            var assembly = Assembly.GetEntryAssembly() ?? // common case, GitExtensions.exe
+                           Assembly.GetExecutingAssembly(); // unit test, GitCommands.dll
+            var path = new Uri(assembly.CodeBase).LocalPath;
+            return Path.GetDirectoryName(path);
         }
 
         private static RegistryKey _versionIndependentRegKey;
