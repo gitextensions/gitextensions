@@ -47,7 +47,7 @@ namespace GitExtUtils.GitUI.Theming
         {
             if (!IsSystemColor(name))
             {
-                return Color.FromKnownColor(name);
+                throw new ArgumentException($"{name} is not system color");
             }
 
             var actualName = Duplicates.TryGetValue(name, out var duplicate)

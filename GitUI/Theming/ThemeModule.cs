@@ -10,13 +10,13 @@ namespace GitUI.Theming
     public static class ThemeModule
     {
         private static readonly Lazy<ThemeDeployment> DeploymentLazy =
-            new Lazy<ThemeDeployment>(() => new ThemeDeployment(FormEditorController));
+            new Lazy<ThemeDeployment>(() => new ThemeDeployment(Controller));
 
         private static readonly Lazy<FormThemeEditorController> FormEditorControllerLazy =
             new Lazy<FormThemeEditorController>(CreateEditorController);
 
         private static readonly Lazy<FormThemeEditor> FormEditorLazy =
-            new Lazy<FormThemeEditor>(() => new FormThemeEditor(FormEditorController));
+            new Lazy<FormThemeEditor>(() => new FormThemeEditor(Controller));
 
         private static ThemePersistence Persistence { get; } = new ThemePersistence();
 
@@ -32,7 +32,7 @@ namespace GitUI.Theming
         private static ThemeDeployment Deployment =>
             DeploymentLazy.Value;
 
-        public static FormThemeEditorController FormEditorController =>
+        public static FormThemeEditorController Controller =>
             FormEditorControllerLazy.Value;
 
         private static FormThemeEditor FormEditor =>
@@ -53,7 +53,7 @@ namespace GitUI.Theming
             {
                 // Load default theme to prevent mixing dark AppColors with bright SystemColors
                 // when AppSettings.UIThemeName points to dark theme
-                FormEditorController.ApplySavedTheme("win10default", quiet: true);
+                Controller.SetInitialTheme("win10default", useSystemVisualStyle: true);
             }
         }
 
@@ -69,15 +69,18 @@ namespace GitUI.Theming
                 Trace.WriteLine($"Failed to deploy schemes to user directory: {ex}");
             }
 
-            if (!FormEditorController.TryLoadInvariantTheme(out var invariantTheme))
+            var invariantTheme = Controller.LoadInvariantTheme();
+            if (invariantTheme == null)
             {
                 return false;
             }
 
-            if (!FormEditorController.ApplyCurrentTheme(AppSettings.UIThemeName))
+            if (!Controller.SetInitialTheme(AppSettings.UIThemeName, AppSettings.UseSystemVisualStyle))
             {
                 return false;
             }
+
+            ThemeFix.UseSystemVisualStyle = Controller.UseSystemVisualStyleInitial;
 
             try
             {
@@ -109,7 +112,7 @@ namespace GitUI.Theming
 
         private static FormThemeEditorController CreateEditorController()
         {
-            var editor = new FormThemeEditorController(ThemeManager, DefaultTheme, Persistence);
+            var editor = new FormThemeEditorController(ThemeManager, Persistence);
             AppSettings.Saved += editor.SaveCurrentTheme;
             return editor;
         }
@@ -119,13 +122,7 @@ namespace GitUI.Theming
             switch (Control.FromHandle(hwnd))
             {
                 case Form form:
-                    form.Load += (s, e) =>
-                    {
-                        if (!AppSettings.UseSystemVisualStyle)
-                        {
-                            ((Form)s).FixVisualStyle();
-                        }
-                    };
+                    form.Load += (s, e) => ((Form)s).FixVisualStyle();
                     break;
             }
         }

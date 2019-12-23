@@ -11,7 +11,8 @@ namespace GitUI.Theming
 {
     public class FormThemeEditor : GitExtensionsForm
     {
-        private readonly TranslationString _title = new TranslationString("Theme editor");
+        private readonly TranslationString _title = new TranslationString("Color scheme editor");
+        private readonly TranslationString _modifiedThemeName = new TranslationString("unsaved");
         private readonly TranslationString _hintOnResettingColor = new TranslationString("middle-click to reset");
         private readonly TranslationString _resetAllColors = new TranslationString("Reset all colors");
         private readonly TranslationString _save = new TranslationString("Save");
@@ -25,6 +26,8 @@ namespace GitUI.Theming
 
         public FormThemeEditor()
         {
+            ShowInTaskbar = true;
+
             _cellSize = DpiUtil.Scale(new Size(128, 36));
             _cellMargin = DpiUtil.Scale(new Padding(3));
             _layoutPanel = new FlowLayoutPanel
@@ -34,10 +37,7 @@ namespace GitUI.Theming
             };
 
             Controls.Add(_layoutPanel);
-
-            ShowIcon = false;
             StartPosition = FormStartPosition.CenterScreen;
-            Text = _title.Text;
 
             FormClosing += (sender, args) =>
             {
@@ -81,21 +81,11 @@ namespace GitUI.Theming
             _layoutPanel.SetFlowBreak(_layoutPanel.Controls[_layoutPanel.Controls.Count - 1], true);
 
             AddButtons();
-
-            Closing += (s, e) =>
-            {
-                Hide();
-                e.Cancel = true;
-            };
-
+            UpdateTitle();
             UpdateFormSize();
+            VisibleChanged += HandleVisibleChanged;
+            _controller.ThemeChanged += HandleThemeChanged;
             InitializeComplete();
-        }
-
-        public sealed override string Text
-        {
-            get => base.Text;
-            set => base.Text = value;
         }
 
         private void BindColor(Control c)
@@ -226,12 +216,12 @@ namespace GitUI.Theming
 
             CreateButton(_save.Text, (s, e) =>
             {
-                _controller.SaveToFileDialog();
+                _controller.SaveThemeDialog();
             });
 
             CreateButton(_load.Text, (s, e) =>
             {
-                _controller.ApplyThemeFromFileDialog();
+                _controller.SetThemeFileDialog();
             });
         }
 
@@ -249,6 +239,23 @@ namespace GitUI.Theming
             BindColor(control);
             control.Click += clickHandler;
             _layoutPanel.Controls.Add(control);
+        }
+
+        private void HandleVisibleChanged(object sender, EventArgs e)
+        {
+            // When editor is hidden, use colors from theme loaded at startup.
+            // We have to, because restart is needed to fully apply changes.
+            _controller.UseInitialTheme = !Visible;
+        }
+
+        private void HandleThemeChanged(bool colorsChanged, string themeName) =>
+            UpdateTitle();
+
+        private void UpdateTitle()
+        {
+            string themeName = _controller.ThemeName ?? _modifiedThemeName.Text;
+            bool modified = _controller.IsThemeModified();
+            Text = $@"{_title} - {themeName}{(modified ? "*" : string.Empty)}";
         }
     }
 }

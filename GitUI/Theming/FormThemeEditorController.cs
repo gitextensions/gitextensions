@@ -15,28 +15,22 @@ namespace GitUI.Theming
         private const string Subdirectory = "Themes";
         public const string Extension = ".colors";
         private const string CurrentThemeName = "current";
+        private const string InvariantThemeName = "win10default";
+
         private readonly TranslationString _saveDialogTitle = new TranslationString("Save theme");
         private readonly TranslationString _loadDialogTitle = new TranslationString("Load theme");
         private readonly TranslationString _filter = new TranslationString("GitExtensions theme (*{0})|*{0}");
 
-        private readonly string _currentThemePath;
-        private readonly string _invariantThemePath;
         private readonly ThemeManager _manager;
-        private readonly Theme _defaultTheme;
         private readonly ThemePersistence _persistence;
+        private bool _useSystemVisualStyle = true;
 
-        public FormThemeEditorController(
-            ThemeManager manager,
-            Theme defaultTheme,
-            ThemePersistence persistence)
+        public FormThemeEditorController(ThemeManager manager, ThemePersistence persistence)
         {
             _manager = manager;
-            _defaultTheme = defaultTheme;
             _persistence = persistence;
             UserDirectory = Path.Combine(AppSettings.ApplicationDataPath.Value, Subdirectory);
             AppDirectory = Path.Combine(AppSettings.GetGitExtensionsDirectory(), Subdirectory);
-            _currentThemePath = Path.Combine(UserDirectory, CurrentThemeName + Extension);
-            _invariantThemePath = Path.Combine(AppDirectory, "win10default" + Extension);
         }
 
         public event Action ColorChanged
@@ -47,58 +41,75 @@ namespace GitUI.Theming
 
         public event ThemeChangedHandler ThemeChanged;
 
+        public bool UseSystemVisualStyleInitial { get; private set; } = true;
+
+        public bool UseSystemVisualStyle
+        {
+            get => UseInitialTheme ? UseSystemVisualStyleInitial : _useSystemVisualStyle;
+            set => _useSystemVisualStyle = value;
+        }
+
         public string UserDirectory { get; }
         public string AppDirectory { get; }
 
-        public bool TryLoadInvariantTheme(out StaticTheme theme)
-        {
-            if (_persistence.TryLoadFile(_invariantThemePath, out var appColors, out var sysColors))
-            {
-                theme = new StaticTheme(appColors, sysColors);
-                return true;
-            }
+        public string ThemeName =>
+            GetThemeName(_manager.CurrentTheme?.Path);
 
-            theme = null;
-            return false;
+        public bool IsThemeModified() =>
+            _manager.IsCurrentThemeModified();
+
+        public bool IsThemeInitial() =>
+            _manager.IsCurrentThemeInitial() &&
+            _useSystemVisualStyle == UseSystemVisualStyleInitial;
+
+        /// <summary>
+        /// <inheritdoc cref="ThemeManager.UseInitialTheme"/>
+        /// </summary>
+        public bool UseInitialTheme
+        {
+            private get => _manager.UseInitialTheme;
+            set => _manager.UseInitialTheme = value;
         }
 
-        public bool IsCurrentThemeFile(string filename) =>
-            string.Equals(Path.GetFileNameWithoutExtension(filename), CurrentThemeName,
-                StringComparison.InvariantCultureIgnoreCase);
+        public StaticTheme LoadInvariantTheme() =>
+            _persistence.LoadFile(GetOriginalThemePath(InvariantThemeName));
+
+        public bool IsCurrentThemeFile(string path) =>
+            StringComparer.OrdinalIgnoreCase.Equals(path, GetThemePath(CurrentThemeName));
 
         public IEnumerable<string> GetSavedThemeNames() =>
             Directory
                 .GetFiles(UserDirectory, "*" + Extension, SearchOption.TopDirectoryOnly)
-                .Select(Path.GetFileNameWithoutExtension)
-                .Where(n => !string.Equals(n, CurrentThemeName, StringComparison.InvariantCultureIgnoreCase));
+                .Where(path => !IsCurrentThemeFile(path))
+                .Select(GetThemeName);
 
-        public bool ApplySavedTheme(string name, bool quiet = true)
+        public bool SetInitialTheme(string name, bool useSystemVisualStyle)
         {
-            string fileName = Path.Combine(UserDirectory, name + Extension);
-            if (ApplyThemeFile(fileName, quiet))
+            UseSystemVisualStyleInitial = useSystemVisualStyle;
+            UseSystemVisualStyle = useSystemVisualStyle;
+
+            var path = GetThemePath(string.IsNullOrEmpty(name) ? CurrentThemeName : name);
+            var theme = _persistence.LoadFile(path, quiet: false);
+            if (theme == null)
             {
-                OnThemeChanged(true, fileName);
-                return true;
+                return false;
             }
 
-            return false;
+            _manager.SetInitialTheme(theme);
+            return true;
         }
 
-        public bool ApplyCurrentTheme(string name)
+        public void SetTheme(string name, bool quiet = true)
         {
-            if (!string.IsNullOrEmpty(name) && ApplySavedTheme(name, quiet: false))
-            {
-                return true;
-            }
-
-            return ApplyThemeFile(_currentThemePath, quiet: false);
+            string path = GetThemePath(name);
+            SetThemeFile(path, quiet);
         }
 
         public void SaveCurrentTheme()
         {
-            string file = _currentThemePath;
-            _manager.GetColors(out var appColors, out var sysColors);
-            _persistence.SaveToFile(appColors, sysColors, file, quiet: true);
+            string path = GetThemePath(CurrentThemeName);
+            var theme = _manager.GetTheme();
+            _persistence.SaveToFile(theme, path, quiet: true);
         }
 
         public void SetColor(AppColor name, Color value)
@@ -125,26 +136,33 @@ namespace GitUI.Theming
             OnThemeChanged(true, null);
         }
 
+        public void ResetTheme()
+        {
+            _manager.ResetTheme();
+            OnThemeChanged(true, _manager.CurrentTheme?.Path);
+        }
+
         public void ResetAllColors()
         {
             _manager.ResetAllColors();
-            OnThemeChanged(true, null);
+            OnThemeChanged(true, _manager.CurrentTheme?.Path);
         }
 
-        public void SaveToFileDialog()
+        public void SaveThemeDialog()
         {
-            if (!SaveDialog(out var selectedFile))
+            if (!SaveDialog(out var path))
             {
                 return;
             }
 
-            _manager.GetColors(out var appColors, out var sysColors);
-            if (!_persistence.SaveToFile(appColors, sysColors, selectedFile, quiet: false))
+            var theme = _manager.GetTheme();
+            if (!_persistence.SaveToFile(theme, path, quiet: false))
             {
                 return;
             }
 
-            OnThemeChanged(false, selectedFile);
+            _manager.SetTheme(theme.WithPath(path));
+            OnThemeChanged(false, path);
 
             bool SaveDialog(out string filename)
             {
@@ -172,16 +190,16 @@ namespace GitUI.Theming
             }
         }
 
-        public void ApplyThemeFromFileDialog()
+        public void SetThemeFileDialog()
         {
-            if (TrySelectFile(out string selectedFile) && ApplyThemeFile(selectedFile))
+            if (TrySelectFile(out string path))
             {
-                OnThemeChanged(true, selectedFile);
+                SetThemeFile(path, quiet: false);
             }
 
-            bool TrySelectFile(out string result)
+            bool TrySelectFile(out string filename)
             {
-                result = null;
+                filename = null;
 
                 var dlg = new OpenFileDialog
                 {
@@ -200,7 +218,7 @@ namespace GitUI.Theming
                         return false;
                     }
 
-                    result = dlg.FileName;
+                    filename = dlg.FileName;
                     return true;
                 }
             }
@@ -213,28 +231,48 @@ namespace GitUI.Theming
             _manager.GetColor(name);
 
         public Color GetDefaultColor(KnownColor name) =>
-            _defaultTheme.GetColor(name);
+            _manager.GetThemeColor(name);
 
         public Color GetDefaultColor(AppColor name) =>
-            _defaultTheme.GetColor(name);
+            _manager.GetThemeColor(name);
 
-        private bool ApplyThemeFile(string file, bool quiet = false)
+        private void SetThemeFile(string path, bool quiet = false)
         {
-            if (_persistence.TryLoadFile(file, out var appColors, out var sysColors, quiet))
+            var theme = _persistence.LoadFile(path, quiet);
+            if (theme == null)
             {
-                _manager.SetColors(appColors, sysColors);
-                return true;
+                return;
             }
 
-            return false;
+            _manager.SetTheme(theme);
+            OnThemeChanged(true, path);
         }
 
-        private void OnThemeChanged(bool colorsChanged, string file)
+        private void OnThemeChanged(bool colorsChanged, string path)
         {
-            string schemaName = string.IsNullOrEmpty(file) || file.Equals(_currentThemePath, StringComparison.OrdinalIgnoreCase)
-                ? string.Empty
-                : Path.GetFileNameWithoutExtension(file);
-            ThemeChanged?.Invoke(colorsChanged, schemaName);
+            string name = GetThemeName(path);
+            ThemeChanged?.Invoke(colorsChanged, name);
         }
+
+        private string GetThemeName(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return path;
+            }
+
+            if (IsCurrentThemeFile(path))
+            {
+                return null;
+            }
+
+            return Path.GetFileNameWithoutExtension(path);
+        }
+
+        private string GetThemePath(string name) =>
+            Path.Combine(UserDirectory, name + Extension);
+
+        private string GetOriginalThemePath(string name) =>
+            Path.Combine(AppDirectory, name + Extension);
     }
 }

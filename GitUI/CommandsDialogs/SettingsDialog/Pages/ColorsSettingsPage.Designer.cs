@@ -588,7 +588,7 @@
             this.lblRestartNeeded.Name = "lblRestartNeeded";
             this.lblRestartNeeded.Size = new System.Drawing.Size(221, 16);
             this.lblRestartNeeded.TabIndex = 5;
-            this.lblRestartNeeded.Text = "To apply changes restart is necessary";
+            this.lblRestartNeeded.Text = "Restart required to apply changes";
             this.lblRestartNeeded.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // _NO_TRANSLATE_cbSelectTheme
@@ -634,6 +634,7 @@
             this.chkUseSystemVisualStyle.TabIndex = 4;
             this.chkUseSystemVisualStyle.Text = "Use system-defined visual style (looks bad with dark colors)";
             this.chkUseSystemVisualStyle.UseVisualStyleBackColor = true;
+            this.chkUseSystemVisualStyle.CheckedChanged += new System.EventHandler(this.ChkUseSystemVisualStyle_CheckedChanged);
             // 
             // ColorsSettingsPage
             // 

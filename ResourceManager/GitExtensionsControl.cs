@@ -4,8 +4,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using GitCommands;
-using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using JetBrains.Annotations;
 
@@ -56,10 +54,7 @@ namespace ResourceManager
         protected void InitializeComplete()
         {
             _initialiser.InitializeComplete();
-            if (!AppSettings.UseSystemVisualStyle)
-            {
-                this.FixVisualStyle();
-            }
+            this.FixVisualStyle();
         }
 
         public virtual void AddTranslationItems(ITranslation translation)
