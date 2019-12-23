@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -63,7 +64,7 @@ namespace GitUI
             SetupUnifiedDiffListSorting();
             lblSplitter.Height = DpiUtil.Scale(1);
             InitializeComplete();
-            FilterVisible = false;
+            FilterVisible = true;
 
             SelectFirstItemOnSetItems = true;
 
@@ -88,17 +89,17 @@ namespace GitUI
             ImageList CreateImageList()
             {
                 const int rowHeight = 18;
-                bool light = ColorHelper.IsLightTheme();
 
                 return new ImageList
                 {
+                    ColorDepth = ColorDepth.Depth32Bit,
                     ImageSize = DpiUtil.Scale(new Size(16, rowHeight)), // Scale ImageSize and images scale automatically
                     Images =
                     {
                         ScaleHeight(Images.FileStatusRemoved), // 0
                         ScaleHeight(Images.FileStatusAdded), // 1
                         ScaleHeight(Images.FileStatusModified), // 2
-                        ScaleHeight(light ? Images.FileStatusRenamed : Images.FileStatusRenamed_inv), // 3
+                        ScaleHeight(Images.FileStatusRenamed.AdaptLightness()), // 3
                         ScaleHeight(Images.FileStatusCopied), // 4
                         ScaleHeight(Images.SubmoduleDirty), // 5
                         ScaleHeight(Images.SubmoduleRevisionUp), // 6
@@ -202,6 +203,8 @@ namespace GitUI
 
         public bool FilterFocused => FilterComboBox.Focused;
 
+        public bool ShouldSerializeFilterVisible => FilterVisible != true;
+
         public bool FilterVisible
         {
             get { return _filterVisible; }
@@ -223,6 +226,7 @@ namespace GitUI
             set
             {
                 FilterComboBox.Visible = value;
+                SetDeleteFilterButtonVisibility();
                 SetFilterWatermarkLabelVisibility();
 
                 int top = value
@@ -802,6 +806,11 @@ namespace GitUI
             StoreNextIndexToSelect();
         }
 
+        private void SetDeleteFilterButtonVisibility()
+        {
+            DeleteFilterButton.Visible = FilterVisibleInternal && !FilterComboBox.Text.IsNullOrEmpty();
+        }
+
         private void SetFilterWatermarkLabelVisibility()
         {
             FilterWatermarkLabel.Visible = FilterVisibleInternal && !FilterComboBox.Focused && string.IsNullOrEmpty(FilterComboBox.Text);
@@ -1307,12 +1316,17 @@ namespace GitUI
         private string _toolTipText = "";
         private readonly Subject<string> _filterSubject = new Subject<string>();
         [CanBeNull] private Regex _filter;
-        private bool _filterVisible = true;
+        private bool _filterVisible = false;
 
         public void SetFilter(string value)
         {
             FilterComboBox.Text = value;
             FilterFiles(value);
+        }
+
+        private void DeleteFilterButton_Click(object sender, EventArgs e)
+        {
+            SetFilter(string.Empty);
         }
 
         private int FilterFiles(string value)
@@ -1392,7 +1406,17 @@ namespace GitUI
 
         private void FilterComboBox_TextUpdate(object sender, EventArgs e)
         {
-            var filterText = FilterComboBox.Text;
+            // show DeleteFilterButton at once
+            SetDeleteFilterButtonVisibility();
+
+            string filterText = FilterComboBox.Text;
+
+            // workaround for text getting selected if it matches the start of the combobox items
+            if (FilterComboBox.SelectionLength == filterText.Length && FilterComboBox.SelectionStart == 0)
+            {
+                FilterComboBox.SelectionLength = 0;
+                FilterComboBox.SelectionStart = filterText.Length;
+            }
 
             _filterSubject.OnNext(filterText);
         }
@@ -1448,6 +1472,7 @@ namespace GitUI
 
         private void StoreFilter(string value)
         {
+            SetDeleteFilterButtonVisibility();
             if (string.IsNullOrEmpty(value))
             {
                 FilterComboBox.BackColor = SystemColors.Window;
@@ -1519,8 +1544,8 @@ namespace GitUI
 
         #region private Color constants
         //// Do not declare the colors "static" because Color.FromArgb() will not work at their initialization.
-        private readonly Color _activeInputColor = Color.FromArgb(0xC8, 0xFF, 0xC8);
-        private readonly Color _invalidInputColor = Color.FromArgb(0xFF, 0xC8, 0xC8);
+        private readonly Color _activeInputColor = Color.FromArgb(0xC8, 0xFF, 0xC8).AdaptBackColor();
+        private readonly Color _invalidInputColor = Color.FromArgb(0xFF, 0xC8, 0xC8).AdaptBackColor();
         #endregion
 
         internal TestAccessor GetTestAccessor() => new TestAccessor(this);
@@ -1536,6 +1561,7 @@ namespace GitUI
 
             internal Color ActiveInputColor => _fileStatusList._activeInputColor;
             internal Color InvalidInputColor => _fileStatusList._invalidInputColor;
+            internal Label DeleteFilterButton => _fileStatusList.DeleteFilterButton;
             internal ListView FileStatusListView => _fileStatusList.FileStatusListView;
             internal ComboBox FilterComboBox => _fileStatusList.FilterComboBox;
             internal Regex Filter => _fileStatusList._filter;

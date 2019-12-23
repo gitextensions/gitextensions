@@ -51,7 +51,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private static string GetEditorCommandLine(string editorName, string executableName, string commandLineParameter, params string[] installFolders)
         {
-            string exec = MergeToolsHelper.FindFileInFolders(executableName, installFolders);
+            string exec = executableName.FindInFolders(installFolders);
 
             if (string.IsNullOrEmpty(exec))
             {

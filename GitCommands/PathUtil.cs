@@ -264,5 +264,73 @@ namespace GitCommands
                 yield return path.EnsureTrailingPathSeparator();
             }
         }
+
+        public static string FindInFolders([NotNull] this string fileName, [NotNull] IEnumerable<string> folders)
+        {
+            foreach (string location in folders)
+            {
+                if (string.IsNullOrWhiteSpace(location))
+                {
+                    continue;
+                }
+
+                string fullName;
+                if (Path.IsPathRooted(location))
+                {
+                    fullName = FindFile(location, fileName);
+                    if (fullName != null)
+                    {
+                        return fullName;
+                    }
+
+                    continue;
+                }
+
+                fullName = FindFileInEnvVarFolder("ProgramFiles", location, fileName);
+                if (fullName != null)
+                {
+                    return fullName;
+                }
+
+                if (IntPtr.Size == 8 || (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
+                {
+                    fullName = FindFileInEnvVarFolder("ProgramFiles(x86)", location, fileName);
+                    if (fullName != null)
+                    {
+                        return fullName;
+                    }
+                }
+            }
+
+            return string.Empty;
+
+            string FindFileInEnvVarFolder(string environmentVariable, string location, string fileName1)
+            {
+                var envVarFolder = Environment.GetEnvironmentVariable(environmentVariable);
+                if (string.IsNullOrEmpty(envVarFolder))
+                {
+                    return null;
+                }
+
+                var path = Path.Combine(envVarFolder, location);
+                if (!Directory.Exists(path))
+                {
+                    return null;
+                }
+
+                return FindFile(path, fileName1);
+            }
+
+            string FindFile(string location, string fileName1)
+            {
+                string fullName = Path.Combine(location, fileName1);
+                if (File.Exists(fullName))
+                {
+                    return fullName;
+                }
+
+                return null;
+            }
+        }
     }
 }

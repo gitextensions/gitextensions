@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
@@ -29,8 +30,7 @@ namespace GitUI.UserControls.RevisionGrid
 
     public sealed class RevisionDataGridView : DataGridView
     {
-        private static readonly SolidBrush _alternatingRowBackgroundBrush = new SolidBrush(
-            ColorHelper.MakeColorDarker(SystemColors.Window, 0.025)); // 0.018
+        private readonly SolidBrush _alternatingRowBackgroundBrush;
 
         internal RevisionGraph _revisionGraph = new RevisionGraph();
 
@@ -62,6 +62,9 @@ namespace GitUI.UserControls.RevisionGrid
 
             InitializeComponent();
             DoubleBuffered = true;
+
+            _alternatingRowBackgroundBrush =
+                new SolidBrush(KnownColor.Window.MakeBackgroundDarkerBy(0.025)); // 0.018
 
             UpdateRowHeight();
 
@@ -248,8 +251,8 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             return AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(rowIndex)
-                ? Color.Gray
-                : ColorHelper.IsLightTheme() ? Color.Black : Color.LightGray;
+                ? SystemColors.GrayText
+                : SystemColors.ControlText;
         }
 
         private Brush GetBackground(DataGridViewElementStates state, int rowIndex, GitRevision revision)

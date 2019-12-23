@@ -56,6 +56,11 @@ namespace GitUI
 
         public void Initialize()
         {
+            if (DesignMode)
+            {
+                return;
+            }
+
             DisplayPatches(GetPatches());
         }
 

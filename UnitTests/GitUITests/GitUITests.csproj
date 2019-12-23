@@ -42,6 +42,7 @@
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="netstandard" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ApprovalTests" Version="3.0.13" />
@@ -74,6 +75,7 @@
     <Compile Include="CommandsDialogs\RevisionDiffControllerTests.cs" />
     <Compile Include="CommandsDialogs\Settings\GitHubExternalLinkDefinitionExtractorTests.cs" />
     <Compile Include="CommandsDialogs\Settings\AzureDevOpsExternalLinkDefinitionExtractorTests.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitConfigSettingsPageControllerTests.cs" />
     <Compile Include="CommitInfo\CommitInfoTests.cs" />
     <Compile Include="CommitInfo\RefsFormatterTests.cs" />
     <Compile Include="ControlThreadingExtensionsTests.cs" />

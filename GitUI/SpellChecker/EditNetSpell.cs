@@ -745,7 +745,7 @@ namespace GitUI.SpellChecker
             {
                 _isWatermarkShowing = true;
                 TextBox.Font = new Font(TextBox.Font, FontStyle.Italic);
-                TextBox.ForeColor = SystemColors.InactiveCaption;
+                TextBox.ForeColor = SystemColors.GrayText;
                 TextBox.Text = WatermarkText;
             }
         }

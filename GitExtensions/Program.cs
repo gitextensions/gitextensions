@@ -10,6 +10,7 @@ using GitUI;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Infrastructure.Telemetry;
+using GitUI.Theming;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
@@ -26,6 +27,9 @@ namespace GitExtensions
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            ThemeModule.Load();
+            Application.ApplicationExit += (s, e) => ThemeModule.Unload();
 
             HighDpiMouseCursors.Enable();
 

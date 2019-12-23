@@ -3,20 +3,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using GitCommands.Config;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands.Settings
 {
-    public class ConfigFileSettings : SettingsContainer<ConfigFileSettings, ConfigFileSettingsCache>, IConfigFileSettings
+    public sealed class ConfigFileSettings : SettingsContainer<ConfigFileSettings, ConfigFileSettingsCache>, IConfigFileSettings, IConfigValueStore
     {
         public ConfigFileSettings(ConfigFileSettings lowerPriority, ConfigFileSettingsCache settingsCache,
             SettingLevel settingLevel)
             : base(lowerPriority, settingsCache)
         {
             core = new CorePath(this);
-            mergetool = new MergeToolPath(this);
             SettingLevel = settingLevel;
         }
 
@@ -75,7 +73,6 @@ namespace GitCommands.Settings
         }
 
         public readonly CorePath core;
-        public readonly MergeToolPath mergetool;
 
         public string GetValue(string setting)
         {
@@ -98,9 +95,15 @@ namespace GitCommands.Settings
             SetString(setting, value);
         }
 
-        public void SetPathValue(string setting, [NotNull] string value)
+        public void SetPathValue(string setting, [CanBeNull] string value)
         {
-            SetValue(setting, ConfigSection.FixPath(value));
+            // for using unc paths -> these need to be backward slashes
+            if (!string.IsNullOrWhiteSpace(value) && !value.StartsWith("\\\\"))
+            {
+                value = value.ToPosixPath();
+            }
+
+            SetValue(setting, value);
         }
 
         public IReadOnlyList<IConfigSection> GetConfigSections()
@@ -182,17 +185,6 @@ namespace GitCommands.Settings
             : base(container, "core")
         {
             autocrlf = new EnumNullableSetting<AutoCRLFType>("autocrlf", this);
-        }
-    }
-
-    public class MergeToolPath : SettingsPath
-    {
-        public readonly BoolNullableSetting keepBackup;
-
-        public MergeToolPath(ConfigFileSettings container)
-            : base(container, "mergetool")
-        {
-            keepBackup = new BoolNullableSetting("keepBackup", this, true);
         }
     }
 }

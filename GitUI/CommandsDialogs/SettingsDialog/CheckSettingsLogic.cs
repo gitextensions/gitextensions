@@ -232,65 +232,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return PathUtil.TryFindFullPath(fileName, out _);
         }
 
-        public static string GetDiffToolFromConfig(ConfigFileSettings settings)
-        {
-            return settings.GetValue("diff.guitool");
-        }
-
-        public static void SetDiffToolToConfig(ConfigFileSettings settings, string diffTool)
-        {
-            settings.SetValue("diff.guitool", diffTool);
-        }
-
         public bool CanFindGitCmd()
         {
             return !string.IsNullOrEmpty(Module.GitExecutable.GetOutput(""));
-        }
-
-        public void AutoConfigMergeToolCmd()
-        {
-            string exeFile = MergeToolsHelper.FindMergeToolFullPath(CommonLogic.ConfigFileSettingsSet, GetGlobalMergeToolText(), out _);
-
-            if (string.IsNullOrEmpty(exeFile))
-            {
-                SetMergetoolPathText("");
-                SetMergeToolCmdText("");
-            }
-
-            SetMergetoolPathText(exeFile);
-            SetMergeToolCmdText(MergeToolsHelper.AutoConfigMergeToolCmd(GetGlobalMergeToolText(), exeFile));
-        }
-
-        private void SetMergetoolPathText(string text)
-        {
-            GlobalConfigFileSettings.SetPathValue(string.Format("mergetool.{0}.path", GetGlobalMergeToolText()), text);
-
-            // orig (TODO: remove comment and rename method):
-            //// MergetoolPath.Text = ...
-        }
-
-        private void SetMergeToolCmdText(string text)
-        {
-            GlobalConfigFileSettings.SetPathValue(string.Format("mergetool.{0}.cmd", GetGlobalMergeToolText()), text);
-
-            // orig (TODO: remove comment and rename method):
-            //// MergeToolCmd.Text = ...
-        }
-
-        private string GetGlobalMergeToolText()
-        {
-            return GlobalConfigFileSettings.GetValue("merge.tool");
-
-            // orig (TODO: remove comment and rename method):
-            //// GlobalMergeTool.Text;
-        }
-
-        public string GetMergeToolCmdText()
-        {
-            return GlobalConfigFileSettings.GetValue(string.Format("mergetool.{0}.cmd", GetGlobalMergeToolText()));
-
-            // orig (TODO: remove comment and rename method):
-            //// MergeToolCmd.Text
         }
     }
 }

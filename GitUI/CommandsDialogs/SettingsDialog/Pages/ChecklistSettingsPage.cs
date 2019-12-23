@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.DiffMergeTools;
 using GitCommands.Utils;
 using Microsoft.Win32;
 using ResourceManager;
@@ -135,6 +135,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private const string _putty = "PuTTY";
         private readonly ISshPathLocator _sshPathLocator = new SshPathLocator();
+        private DiffMergeToolConfigurationManager _diffMergeToolConfigurationManager;
 
         /// <summary>
         /// TODO: remove this direct dependency to another SettingsPage later when possible
@@ -146,11 +147,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComponent();
             Text = "Checklist";
             InitializeComplete();
-        }
-
-        public static SettingsPageReference GetPageReference()
-        {
-            return new SettingsPageReferenceByType(typeof(ChecklistSettingsPage));
         }
 
         public override bool IsInstantSavePage => true;
@@ -165,18 +161,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public override void OnPageShown()
         {
-            ////LoadSettings();
             CheckSettings();
         }
 
         private string GetGlobalSetting(string settingName)
         {
             return CommonLogic.ConfigFileSettingsSet.GlobalSettings.GetValue(settingName);
-        }
-
-        private void SetGlobalPathSetting(string settingName, string value)
-        {
-            CommonLogic.ConfigFileSettingsSet.GlobalSettings.SetPathValue(settingName, value);
         }
 
         private void translationConfig_Click(object sender, EventArgs e)
@@ -285,7 +275,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void DiffToolFix_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(CheckSettingsLogic.GetDiffToolFromConfig(CheckSettingsLogic.CommonLogic.ConfigFileSettingsSet.GlobalSettings)))
+            var diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
+            if (string.IsNullOrEmpty(diffTool))
             {
                 GotoPageGlobalSettings();
                 return;
@@ -294,23 +285,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             SaveAndRescan_Click(null, null);
         }
 
-        private readonly string[] _autoConfigMergeTools =
-        {
-            "p4merge",
-            "TortoiseMerge",
-            "meld",
-            "beyondcompare3",
-            "beyondcompare4",
-            "diffmerge",
-            "semanticmerge",
-            "vscode",
-            "vsdiffmerge",
-            "winmerge"
-        };
-
         private void MergeToolFix_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(CommonLogic.GetGlobalMergeTool()))
+            var mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
+            if (string.IsNullOrEmpty(mergeTool))
             {
                 GotoPageGlobalSettings();
                 return;
@@ -364,6 +342,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public bool CheckSettings()
         {
+            _diffMergeToolConfigurationManager = new DiffMergeToolConfigurationManager(() => CheckSettingsLogic.CommonLogic.ConfigFileSettingsSet.EffectiveSettings);
+
             var isValid = PerformChecks();
             CheckAtStartup.Checked = IsCheckAtStartupChecked(isValid);
             return isValid;
@@ -502,81 +482,42 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private bool CheckDiffToolConfiguration()
         {
             DiffTool.Visible = true;
-            string difftool = CommonLogic.GetGlobalDiffTool();
-            if (string.IsNullOrEmpty(difftool))
+            var diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
+            if (string.IsNullOrEmpty(diffTool))
             {
                 RenderSettingUnset(DiffTool, DiffTool_Fix, _adviceDiffToolConfiguration.Text);
                 return false;
             }
 
-            string cmd = GetGlobalSetting($"difftool.{difftool}.cmd");
+            string cmd = _diffMergeToolConfigurationManager.GetToolCommand(diffTool, DiffMergeToolType.Diff);
             if (cmd.IsNullOrWhiteSpace())
             {
-                cmd = MergeToolsHelper.DiffToolCmdSuggest(difftool, "");
-                if (cmd.IsNullOrWhiteSpace())
-                {
-                    RenderSettingUnset(DiffTool, DiffTool_Fix, _adviceDiffToolConfiguration.Text);
-                    return false;
-                }
+                RenderSettingUnset(DiffTool, DiffTool_Fix, _adviceDiffToolConfiguration.Text);
+                return false;
             }
 
-            RenderSettingSet(DiffTool, DiffTool_Fix, string.Format(_diffToolXConfigured.Text, difftool));
+            RenderSettingSet(DiffTool, DiffTool_Fix, string.Format(_diffToolXConfigured.Text, diffTool));
             return true;
         }
 
         private bool CheckMergeTool()
         {
             MergeTool.Visible = true;
-            string mergetool = CommonLogic.GetGlobalMergeTool();
-            if (string.IsNullOrEmpty(mergetool))
+            var mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
+            if (string.IsNullOrEmpty(mergeTool))
             {
                 RenderSettingUnset(MergeTool, MergeTool_Fix, _configureMergeTool.Text);
                 return false;
             }
 
-            // Hardcode parameters to some mergetools
-            if (EnvUtils.RunningOnWindows())
-            {
-                if (mergetool.ToLowerInvariant() == "kdiff3")
-                {
-                    string p = GetGlobalSetting($"mergetool.{mergetool}.path");
-                    if (string.IsNullOrEmpty(p) || !File.Exists(p))
-                    {
-                        RenderSettingUnset(MergeTool, MergeTool_Fix, string.Format(_mergeToolXConfiguredNeedsCmd.Text, mergetool));
-                        return false;
-                    }
-
-                    RenderSettingSet(MergeTool, MergeTool_Fix, string.Format(_customMergeToolXConfigured.Text, mergetool));
-                    return true;
-                }
-
-                if (mergetool.ToLowerInvariant() == "tmerge")
-                {
-                    string p = GetGlobalSetting($"mergetool.{mergetool}.cmd");
-                    if (string.IsNullOrEmpty(p))
-                    {
-                        RenderSettingUnset(MergeTool, MergeTool_Fix, string.Format(_mergeToolXConfiguredNeedsCmd.Text, mergetool));
-                        return false;
-                    }
-
-                    RenderSettingSet(MergeTool, MergeTool_Fix, string.Format(_customMergeToolXConfigured.Text, mergetool));
-                    return true;
-                }
-            }
-
-            // This will check parameters for some tools only, the user may have to set the tool cmd
-            string cmd = GetGlobalSetting($"mergetool.{mergetool}.cmd");
+            string cmd = _diffMergeToolConfigurationManager.GetToolCommand(mergeTool, DiffMergeToolType.Merge);
             if (cmd.IsNullOrWhiteSpace())
             {
-                cmd = MergeToolsHelper.AutoConfigMergeToolCmd(mergetool, "");
-                if (cmd.IsNullOrWhiteSpace())
-                {
-                    RenderSettingUnset(MergeTool, MergeTool_Fix, string.Format(_mergeToolXConfiguredNeedsCmd.Text, mergetool));
-                    return false;
-                }
+                RenderSettingUnset(MergeTool, MergeTool_Fix, string.Format(_mergeToolXConfiguredNeedsCmd.Text, mergeTool));
+                return false;
             }
 
-            RenderSettingSet(MergeTool, MergeTool_Fix, string.Format(_mergeToolXConfigured.Text, mergetool));
+            RenderSettingSet(MergeTool, MergeTool_Fix, string.Format(_mergeToolXConfigured.Text, mergeTool));
             return true;
         }
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -49,6 +50,9 @@ namespace GitUI.CommandsDialogs
             _firstParentIsValid = firstParentIsValid;
 
             InitializeComponent();
+
+            btnSwap.AdaptImageLightness();
+
             InitializeComplete();
 
             _toolTipControl.SetToolTip(btnAnotherBaseBranch, _anotherBranchTooltip.Text);

@@ -19,7 +19,7 @@ namespace GitUI.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -83,16 +83,6 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap branch_inv {
-            get {
-                object obj = ResourceManager.GetObject("branch_inv", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap bug {
             get {
                 object obj = ResourceManager.GetObject("bug", resourceCulture);
@@ -104,16 +94,16 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///### Version 3.1.1 (2 June 2019)
+        ///### Version 3.2.1 (2 Sep 2019)
         ///
-        ///#### Fixes:
-        ///* Ctrl+Backspace affects ReadOnly TextBox - Issue [6667]
-        ///* incorrect {sRemotePathFromUrl} parameter evaluation - Issue [6567]
-        ///* [NBug] Remote URLs should appear in pairs. - Issue [6562]
-        ///* Commit Dialog: New submodule without text if unstaged - Issue [6559]
-        ///* Pull dialog stopped &quot;remembering&quot; previous user selection - Issue [6503]
-        ///* Commit message not stored after reverting a commit - Issue [6244]
-        ///* System.Exception opening an exis [rest of string was truncated]&quot;;.
+        ///#### Features:
+        ///* Fix scrolling for committers label in statistics plugin - PR [7092]
+        ///* Display icons in commit templates menu items - PR [7037]
+        ///* Settings: Display label to the top to make UI more readable on multiline controls - PR [7036]
+        ///* Fix potential bad end of line replacement - PR [7032]
+        ///* Pull form items clipped on HiDPI scaled displays  - Issue [7020]
+        ///* TortoiseGitMerge.exe old default name - PR [7004]
+        ///* Add support for &quot;--rebase-merg [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {
@@ -176,11 +166,41 @@ namespace GitUI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DeleteText {
+            get {
+                object obj = ResourceManager.GetObject("DeleteText", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Andréj Telle, Oliver Friedrich.
         /// </summary>
         internal static string Designers {
             get {
                 return ResourceManager.GetString("Designers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap FileStatusAdded {
+            get {
+                object obj = ResourceManager.GetObject("FileStatusAdded", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap FileStatusRemoved {
+            get {
+                object obj = ResourceManager.GetObject("FileStatusRemoved", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -220,26 +240,6 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap RecentRepositories {
             get {
                 object obj = ResourceManager.GetObject("RecentRepositories", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap FileStatusAdded {
-            get {
-                object obj = ResourceManager.GetObject("FileStatusAdded", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap FileStatusRemoved {
-            get {
-                object obj = ResourceManager.GetObject("FileStatusRemoved", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

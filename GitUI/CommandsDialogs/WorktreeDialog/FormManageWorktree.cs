@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using ResourceManager;
 
@@ -37,6 +38,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             Open.Width = DpiUtil.Scale(39);
             Delete.Width = DpiUtil.Scale(44);
             Worktrees.AutoGenerateColumns = false;
+            Delete.Image = Images.Delete.AdaptLightness();
             InitializeComplete();
 
             Path.DataPropertyName = nameof(WorkTree.Path);
@@ -44,9 +46,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             Branch.DataPropertyName = nameof(WorkTree.Branch);
             Sha1.DataPropertyName = nameof(WorkTree.Sha1);
             IsDeleted.DataPropertyName = nameof(WorkTree.IsDeleted);
-
-            bool light = ColorHelper.IsLightTheme();
-            Delete.Image = light ? Images.Delete : Images.Delete_inv;
         }
 
         private void FormManageWorktree_Load(object sender, EventArgs e)

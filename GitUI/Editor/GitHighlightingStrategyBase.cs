@@ -8,7 +8,7 @@ namespace GitUI.Editor
 {
     internal abstract class GitHighlightingStrategyBase : IHighlightingStrategy
     {
-        protected static HighlightColor ColorNormal { get; } = new HighlightColor(Color.Black, bold: false, italic: false);
+        protected static HighlightColor ColorNormal { get; } = new HighlightColor(SystemColors.WindowText, bold: false, italic: false);
 
         private static HighlightColor ColorComment { get; } = new HighlightColor(Color.DarkGreen, bold: false, italic: false);
 

@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
+using GitUI.Theming;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using JetBrains.Annotations;
@@ -269,16 +271,12 @@ namespace GitUI.Editor
             }
         }
 
-        public void SetHighlighting(string syntax)
-        {
-            TextEditor.SetHighlighting(syntax);
-            TextEditor.Refresh();
-        }
+        public void SetHighlighting(string syntax) =>
+            SetHighlightingStrategy(HighlightingStrategyFactory.CreateHighlightingStrategy(syntax));
 
         public void SetHighlightingForFile(string filename)
         {
             IHighlightingStrategy highlightingStrategy;
-
             if (filename.EndsWith("git-rebase-todo"))
             {
                 highlightingStrategy = new RebaseTodoHighlightingStrategy(Module);
@@ -292,15 +290,15 @@ namespace GitUI.Editor
                 highlightingStrategy = HighlightingManager.Manager.FindHighlighterForFile(filename);
             }
 
-            if (highlightingStrategy != null)
-            {
-                TextEditor.Document.HighlightingStrategy = highlightingStrategy;
-            }
-            else
-            {
-                TextEditor.SetHighlighting("XML");
-            }
+            SetHighlightingStrategy(highlightingStrategy);
+        }
 
+        private void SetHighlightingStrategy(IHighlightingStrategy highlightingStrategy)
+        {
+            TextEditor.Document.HighlightingStrategy =
+                AppSettings.UseSystemVisualStyle
+                    ? highlightingStrategy
+                    : new ThemeBasedHighlighting(highlightingStrategy);
             TextEditor.Refresh();
         }
 

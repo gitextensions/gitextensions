@@ -19,9 +19,6 @@ namespace AzureDevOpsIntegration
         private const string BuildDefinitionsUrl = "build/definitions?api-version=2.0";
         private readonly HttpClient _httpClient;
 
-        private string _buildDefinitionsToQuery;
-        private string _lastBuildDefinitionFilter;
-
         /// <summary>
         /// Creates a new API client instance for the given Azure DevOps / TFS project, that uses the given authentication token.
         /// </summary>
@@ -68,7 +65,7 @@ namespace AzureDevOpsIntegration
         }
 
         [ItemCanBeNull]
-        private async Task<string> GetBuildDefinitionsAsync(string buildDefinitionNameFilter)
+        public async Task<string> GetBuildDefinitionsAsync(string buildDefinitionNameFilter)
         {
             var isNotFiltered = string.IsNullOrWhiteSpace(buildDefinitionNameFilter);
             var buildDefinitionUriFilter = isNotFiltered ? string.Empty : "&name=" + buildDefinitionNameFilter;
@@ -112,25 +109,24 @@ namespace AzureDevOpsIntegration
             return build.Definition.Name;
         }
 
-        public async Task<IEnumerable<Build>> QueryBuildsAsync(string buildDefinitionFilter, DateTime? sinceDate, bool? running)
+        public async Task<IEnumerable<Build>> QueryBuildsAsync(string buildDefinitionsToQuery, DateTime? sinceDate, bool? running)
         {
-            if (_buildDefinitionsToQuery == null || !string.Equals(_lastBuildDefinitionFilter, buildDefinitionFilter, StringComparison.OrdinalIgnoreCase))
-            {
-                _buildDefinitionsToQuery = await GetBuildDefinitionsAsync(buildDefinitionFilter);
-                _lastBuildDefinitionFilter = buildDefinitionFilter;
-            }
-
-            if (_buildDefinitionsToQuery == null)
+            if (buildDefinitionsToQuery == null)
             {
                 return Enumerable.Empty<Build>();
             }
 
-            var builds = (await HttpGetAsync<ListWrapper<Build>>($"build/builds?api-version=2.0&definitions={_buildDefinitionsToQuery}")).Value;
+            var builds = (await HttpGetAsync<ListWrapper<Build>>($"build/builds?api-version=2.0&definitions={buildDefinitionsToQuery}")).Value;
+
+            if (!running.HasValue || running.Value)
+            {
+                return builds
+                    .Where(b => !running.HasValue || running.Value == b.IsInProgress)
+                    .Where(b => !sinceDate.HasValue || b.StartTime >= sinceDate.Value.ToUniversalTime());
+            }
 
             return builds
-                .Where(b => !running.HasValue || running.Value == b.IsInProgress)
-                .Where(b => !sinceDate.HasValue || b.StartTime >= sinceDate.Value)
-                .ToList();
+                .Where(b => !sinceDate.HasValue || (b.FinishTime != null && b.FinishTime >= sinceDate.Value.ToUniversalTime()));
         }
 
         public void Dispose()

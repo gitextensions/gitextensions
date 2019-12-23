@@ -326,7 +326,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             {
                                 nodeRect.Inflate(1, 1);
 
-                                var outlineColor = Color.Black;
+                                var outlineColor = SystemColors.WindowText;
 
                                 using (var pen = new Pen(outlineColor, 2))
                                 {

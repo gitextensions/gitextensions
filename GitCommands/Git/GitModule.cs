@@ -2288,6 +2288,7 @@ namespace GitCommands
             LocalConfigFile.SetValue(setting, value);
         }
 
+        // TODO: remove
         public void SetPathSetting(string setting, string value)
         {
             LocalConfigFile.SetPathValue(setting, value);

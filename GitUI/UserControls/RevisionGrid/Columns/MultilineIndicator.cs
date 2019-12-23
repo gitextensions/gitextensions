@@ -7,8 +7,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 {
     internal readonly struct MultilineIndicator
     {
-        private static readonly Brush _indicatorForeBrush = new SolidBrush(Color.FromArgb(128, Color.Black));
-        private static readonly Brush _indicatorBackBrush = new SolidBrush(Color.FromArgb(32, Color.Black));
+        private static readonly Brush _indicatorForeBrush = new SolidBrush(Color.FromArgb(128, SystemColors.WindowText));
+        private static readonly Brush _indicatorBackBrush = new SolidBrush(Color.FromArgb(32, SystemColors.WindowText));
 
         private const int DotCount = 3;
 

@@ -6,11 +6,13 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
+    [ThemeAware]
     public partial class Dashboard : GitModuleControl
     {
         private readonly TranslationString _cloneFork = new TranslationString("Clone {0} repository");
@@ -70,6 +72,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             void ApplyTheme()
             {
                 _selectedTheme = ColorHelper.IsLightTheme() ? DashboardTheme.Light : DashboardTheme.Dark;
+                BackgroundImage = _selectedTheme.BackgroundImage;
 
                 BackColor = _selectedTheme.Primary;
                 pnlLogo.BackColor = _selectedTheme.PrimaryVeryDark;
@@ -83,12 +86,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 userRepositoriesList.HeaderBackColor = _selectedTheme.PrimaryDark;
                 userRepositoriesList.HoverColor = _selectedTheme.PrimaryLight;
                 userRepositoriesList.MainBackColor = _selectedTheme.Primary;
-                BackgroundImage = _selectedTheme.BackgroundImage;
 
                 foreach (var item in flpnlContribute.Controls.OfType<LinkLabel>().Union(flpnlStart.Controls.OfType<LinkLabel>()))
                 {
                     item.LinkColor = _selectedTheme.PrimaryText;
                 }
+
+                Invalidate(true);
             }
 
             void InitDashboardLayout()
@@ -96,7 +100,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 try
                 {
                     pnlLeft.SuspendLayout();
-                    bool light = ColorHelper.IsLightTheme();
 
                     AddLinks(flpnlContribute,
                         panel =>
@@ -104,9 +107,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                             panel.Controls.Add(lblContribute);
                             lblContribute.Font = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints + 5.5f);
 
-                            CreateLink(panel, _develop.Text, light ? Images.Develop : Images.Develop_inv, GitHubItem_Click);
+                            CreateLink(panel, _develop.Text, Images.Develop.AdaptLightness(), GitHubItem_Click);
                             CreateLink(panel, _donate.Text, Images.DollarSign, DonateItem_Click);
-                            CreateLink(panel, _translate.Text, light ? Images.Translate : Images.Translate_inv, TranslateItem_Click);
+                            CreateLink(panel, _translate.Text, Images.Translate.AdaptLightness(), TranslateItem_Click);
                             var lastControl = CreateLink(panel, _issues.Text, Images.Bug, IssuesItem_Click);
                             return lastControl;
                         },

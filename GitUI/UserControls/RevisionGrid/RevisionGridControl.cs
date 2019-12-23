@@ -16,6 +16,7 @@ using GitCommands.Config;
 using GitCommands.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Avatars;
 using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
@@ -129,10 +130,9 @@ namespace GitUI
         public RevisionGridControl()
         {
             InitializeComponent();
+            openPullRequestPageStripMenuItem.AdaptImageLightness();
+            renameBranchToolStripMenuItem.AdaptImageLightness();
             InitializeComplete();
-
-            bool light = ColorHelper.IsLightTheme();
-            openPullRequestPageStripMenuItem.Image = light ? Images.PullRequest : Images.PullRequest_inv;
 
             _loadingControlAsync = new Label
             {

@@ -27,6 +27,8 @@ namespace GitUI.BuildServerIntegration
 {
     public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
     {
+        private static readonly TimeSpan ShortPollInterval = TimeSpan.FromSeconds(10);
+        private static readonly TimeSpan LongPollInterval = TimeSpan.FromSeconds(120);
         private readonly CancellationTokenSequence _launchCancellation = new CancellationTokenSequence();
         private readonly object _buildServerCredentialsLock = new object();
         private readonly RevisionGridControl _revisionGrid;
@@ -79,6 +81,9 @@ namespace GitUI.BuildServerIntegration
             var fullObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler);
             var fromNowObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
 
+            bool anyBuilds = false;
+            var delayObservable = Observable.Defer(() => Observable.Empty<BuildInfo>()
+                                                                   .DelaySubscription(anyBuilds ? ShortPollInterval : LongPollInterval));
             var cancellationToken = new CompositeDisposable
                     {
                         fullDayObservable.OnErrorResumeNext(fullObservable)
@@ -90,9 +95,10 @@ namespace GitUI.BuildServerIntegration
                                          .ObserveOn(MainThreadScheduler.Instance)
                                          .Subscribe(OnBuildInfoUpdate),
 
-                        runningBuildsObservable.OnErrorResumeNext(Observable.Empty<BuildInfo>()
-                                                                            .DelaySubscription(TimeSpan.FromSeconds(10)))
+                        runningBuildsObservable.Do(buildInfo => anyBuilds = true)
                                                .Retry()
+                                               .Concat(delayObservable)
+                                               .Finally(() => anyBuilds = false)
                                                .Repeat()
                                                .ObserveOn(MainThreadScheduler.Instance)
                                                .Subscribe(OnBuildInfoUpdate)

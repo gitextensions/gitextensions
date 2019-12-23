@@ -150,7 +150,6 @@
             // 
             this.downloadGitForWindows.AutoSize = true;
             this.downloadGitForWindows.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.downloadGitForWindows.LinkColor = System.Drawing.SystemColors.HotTrack;
             this.downloadGitForWindows.Location = new System.Drawing.Point(3, 71);
             this.downloadGitForWindows.Name = "downloadGitForWindows";
             this.downloadGitForWindows.Size = new System.Drawing.Size(291, 13);

@@ -126,22 +126,6 @@ namespace GitCommands.Config
             SetStringValue(setting, value);
         }
 
-        public void SetPathValue(string setting, string value)
-        {
-            SetStringValue(setting, ConfigSection.FixPath(value));
-        }
-
-        public bool HasValue(string setting)
-        {
-            var keyIndex = FindAndCheckKeyIndex(setting);
-
-            var configSectionName = setting.Substring(0, keyIndex);
-            var keyName = setting.Substring(keyIndex + 1);
-
-            var configSection = FindConfigSection(configSectionName);
-            return configSection != null && configSection.GetValue(keyName) != string.Empty;
-        }
-
         private static int FindAndCheckKeyIndex(string setting)
         {
             var keyIndex = FindKeyIndex(setting);
@@ -159,18 +143,7 @@ namespace GitCommands.Config
             return setting.LastIndexOf('.');
         }
 
-        public bool HasConfigSection(string configSectionName)
-        {
-            var configSection = FindConfigSection(configSectionName);
-            return configSection != null;
-        }
-
         private string GetStringValue(string setting)
-        {
-            return GetValue(setting, string.Empty);
-        }
-
-        public string GetValue(string setting)
         {
             return GetValue(setting, string.Empty);
         }
@@ -217,18 +190,6 @@ namespace GitCommands.Config
             }
 
             return configSection.GetValues(keyName);
-        }
-
-        public void RemoveSetting(string setting)
-        {
-            var keyIndex = FindAndCheckKeyIndex(setting);
-
-            var configSectionName = setting.Substring(0, keyIndex);
-            var keyName = setting.Substring(keyIndex + 1);
-
-            var configSection = FindConfigSection(configSectionName);
-
-            configSection?.SetValue(keyName, null);
         }
 
         public IConfigSection FindOrCreateConfigSection(string name)

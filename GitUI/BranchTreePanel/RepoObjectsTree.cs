@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUI.UserControls;
@@ -47,6 +48,17 @@ namespace GitUI.BranchTreePanel
             treeMain.PreviewKeyDown += OnPreviewKeyDown;
             btnSearch.PreviewKeyDown += OnPreviewKeyDown;
             PreviewKeyDown += OnPreviewKeyDown;
+
+            mnubtnCollapseAll.AdaptImageLightness();
+            btnCollapseAll.AdaptImageLightness();
+            btnSettings.AdaptImageLightness();
+            mnubtnExpandAll.AdaptImageLightness();
+            mnubtnFetchAllBranchesFromARemote.AdaptImageLightness();
+            mnuBtnPruneAllBranchesFromARemote.AdaptImageLightness();
+            mnuBtnFetchAllRemotes.AdaptImageLightness();
+            mnuBtnPruneAllRemotes.AdaptImageLightness();
+            mnubtnFetchCreateBranch.AdaptImageLightness();
+            mnubtnPullFromRemoteBranch.AdaptImageLightness();
             InitializeComplete();
 
             RegisterContextActions();
@@ -82,6 +94,7 @@ namespace GitUI.BranchTreePanel
 
                 treeMain.ImageList = new ImageList
                 {
+                    ColorDepth = ColorDepth.Depth32Bit,
                     ImageSize = DpiUtil.Scale(new Size(16, 16 + rowPadding + rowPadding)), // Scale ImageSize and images scale automatically
                     Images =
                     {
@@ -89,7 +102,7 @@ namespace GitUI.BranchTreePanel
                         { nameof(Images.ArrowDown), Pad(Images.ArrowDown) },
                         { nameof(Images.FolderClosed), Pad(Images.FolderClosed) },
                         { nameof(Images.BranchDocument), Pad(Images.BranchDocument) },
-                        { nameof(Images.Branch), Pad(Images.Branch) },
+                        { nameof(Images.Branch), Pad(Images.Branch.AdaptLightness()) },
                         { nameof(Images.Remote), Pad(Images.Remote) },
                         { nameof(Images.BitBucket), Pad(Images.BitBucket) },
                         { nameof(Images.GitHub), Pad(Images.GitHub) },
@@ -232,7 +245,8 @@ namespace GitUI.BranchTreePanel
 
         private static void AddTreeNodeToSearchResult(ICollection<TreeNode> ret, TreeNode node)
         {
-            node.BackColor = Color.LightYellow;
+            node.BackColor = SystemColors.Info;
+            node.ForeColor = SystemColors.InfoText;
             ret.Add(node);
         }
 
