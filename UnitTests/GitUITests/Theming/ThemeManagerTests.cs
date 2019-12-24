@@ -56,6 +56,7 @@ namespace GitUITests.Theming
                     throw new NotSupportedException();
             }
 
+            // repeats to make sure UseInitialTheme property does not exhibit any sticky behavior
             int repeats = 3;
             for (int i = 0; i < repeats; i++)
             {
