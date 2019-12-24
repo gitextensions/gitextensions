@@ -35,7 +35,8 @@ namespace GitExtUtils.GitUI.Theming
                     .Where(c => IsSystemColor(c) && !Duplicates.ContainsKey(c)));
 
         /// <summary>
-        /// Get GitExtensions app-specific color value as defined by this instance
+        /// Get GitExtensions app-specific color value as defined by this instance. If not defined,
+        /// returns <see cref="Color.Empty"/>
         /// </summary>
         public abstract Color GetColor(AppColor name);
 
@@ -47,7 +48,7 @@ namespace GitExtUtils.GitUI.Theming
         {
             if (!IsSystemColor(name))
             {
-                return Color.FromKnownColor(name);
+                throw new ArgumentException($"{name} is not system color");
             }
 
             var actualName = Duplicates.TryGetValue(name, out var duplicate)

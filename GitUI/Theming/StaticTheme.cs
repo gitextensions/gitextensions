@@ -9,24 +9,30 @@ namespace GitUI.Theming
     /// </summary>
     public class StaticTheme : Theme
     {
-        private readonly IReadOnlyDictionary<AppColor, Color> _appColors;
-        private readonly IReadOnlyDictionary<KnownColor, Color> _sysColors;
+        public IReadOnlyDictionary<AppColor, Color> AppColorValues { get; }
+        public IReadOnlyDictionary<KnownColor, Color> SysColorValues { get; }
+        public string Path { get; }
 
         public StaticTheme(
             IReadOnlyDictionary<AppColor, Color> appColors,
-            IReadOnlyDictionary<KnownColor, Color> sysColors)
+            IReadOnlyDictionary<KnownColor, Color> sysColors,
+            string path = null)
         {
-            _appColors = appColors;
-            _sysColors = sysColors;
+            Path = path;
+            AppColorValues = appColors;
+            SysColorValues = sysColors;
         }
 
+        public StaticTheme WithPath(string path) =>
+            new StaticTheme(AppColorValues, SysColorValues, path);
+
         public override Color GetColor(AppColor name) =>
-            _appColors.TryGetValue(name, out var result)
+            AppColorValues.TryGetValue(name, out var result)
                 ? result
                 : Color.Empty;
 
         protected override Color GetSysColor(KnownColor name) =>
-            _sysColors.TryGetValue(name, out var result)
+            SysColorValues.TryGetValue(name, out var result)
                 ? result
                 : Color.Empty;
     }

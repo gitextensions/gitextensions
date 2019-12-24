@@ -38,7 +38,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             tlpnlRevisionGraph.AdjustWidthToSize(1, colorControls);
             tlpnlDiffView.AdjustWidthToSize(1, colorControls);
 
-            ThemeModule.FormEditorController.ThemeChanged += Theme_Changed;
+            ThemeModule.Controller.ThemeChanged += Theme_Changed;
+            ThemeModule.Controller.ColorChanged += Theme_ColorChanged;
         }
 
         protected override void SettingsToPage()
@@ -52,8 +53,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkHighlightAuthored.Checked = AppSettings.HighlightAuthoredRevisions;
             chkUseSystemVisualStyle.Checked = AppSettings.UseSystemVisualStyle;
 
-            UpdateAppColors();
-
             _syncingTheme = true;
             try
             {
@@ -63,6 +62,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 _syncingTheme = false;
             }
+
+            ThemeModule.Controller.SetTheme(AppSettings.UIThemeName);
+            UpdateAppColors();
+            UpdateRestartWarningVisibility();
         }
 
         private void UpdateAppColors()
@@ -175,7 +178,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void BtnResetTheme_Click(object sender, EventArgs e)
         {
-            ThemeModule.FormEditorController.ResetAllColors();
+            ThemeModule.Controller.ResetTheme();
             chkUseSystemVisualStyle.Checked = true;
         }
 
@@ -195,12 +198,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _syncingTheme = true;
             try
             {
-                ThemeModule.FormEditorController.ApplySavedTheme((string)menu.SelectedItem);
+                ThemeModule.Controller.SetTheme((string)menu.SelectedItem);
             }
             finally
             {
                 _syncingTheme = false;
             }
+        }
+
+        private void ChkUseSystemVisualStyle_CheckedChanged(object sender, EventArgs e)
+        {
+            ThemeModule.Controller.UseSystemVisualStyle = chkUseSystemVisualStyle.Checked;
+            UpdateRestartWarningVisibility();
         }
 
         private void Theme_Changed(bool colorsChanged, string themeName)
@@ -227,6 +236,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     _syncingTheme = false;
                 }
             }
+
+            UpdateRestartWarningVisibility();
+        }
+
+        private void Theme_ColorChanged() =>
+            UpdateAppColors();
+
+        private void UpdateRestartWarningVisibility()
+        {
+            lblRestartNeeded.Visible =
+                !ThemeModule.Controller.IsThemeInitial() ||
+                ThemeModule.Controller.IsThemeModified();
         }
 
         private void UpdateComboBoxTheme(string themeName)
@@ -235,7 +256,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             _NO_TRANSLATE_cbSelectTheme.Items.Clear();
             _NO_TRANSLATE_cbSelectTheme.Items.AddRange(
-                ThemeModule.FormEditorController.GetSavedThemeNames().Cast<object>().ToArray());
+                ThemeModule.Controller.GetSavedThemeNames().Cast<object>().ToArray());
             _NO_TRANSLATE_cbSelectTheme.SelectedIndex = _NO_TRANSLATE_cbSelectTheme.Items.IndexOf(
                 themeName ?? string.Empty);
 

@@ -30,6 +30,7 @@ MenuBar: f0f0f0
 MenuHighlight: 3399ff
 OtherTag: 808080
 AuthoredHighlight: ffffe0
+HighlightAllOccurences: ffffe0
 Tag: 00008b
 Graph: 8b0000
 Branch: 8b0000

@@ -768,7 +768,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target />
       </trans-unit>
       <trans-unit id="lblRestartNeeded.Text">
-        <source>     To apply changes restart is necessary</source>
+        <source>Restart required to apply changes</source>
         <target />
       </trans-unit>
     </body>

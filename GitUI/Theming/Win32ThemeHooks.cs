@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using EasyHook;
-using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.UserControls;
 
@@ -34,8 +33,10 @@ namespace GitUI.Theming
 
         public static event Action<IntPtr> WindowCreated;
 
-        private static bool Bypass =>
-            AppSettings.UseSystemVisualStyle ||
+        private static bool BypassThemeRenderers =>
+            ThemeModule.Controller.UseSystemVisualStyle || BypassAnyHook;
+
+        private static bool BypassAnyHook =>
             _systemDialogDetector?.IsSystemDialogOpen == true;
 
         public static void InstallHooks(Theme theme, SystemDialogDetector systemDialogDetector)
@@ -158,7 +159,7 @@ namespace GitUI.Theming
 
         private static int GetSysColorHook(int nindex)
         {
-            if (!Bypass)
+            if (!BypassAnyHook)
             {
                 var name = Win32ColorTranslator.GetKnownColor(nindex);
                 var color = _theme.GetColor(name);
@@ -173,7 +174,7 @@ namespace GitUI.Theming
 
         private static IntPtr GetSysColorBrushHook(int nindex)
         {
-            if (!Bypass)
+            if (!BypassAnyHook)
             {
                 var name = Win32ColorTranslator.GetKnownColor(nindex);
                 var color = _theme.GetColor(name);
@@ -193,7 +194,7 @@ namespace GitUI.Theming
             int partid, int stateid,
             NativeMethods.RECT prect, NativeMethods.RECT pcliprect)
         {
-            if (!Bypass)
+            if (!BypassThemeRenderers)
             {
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
                 if (renderer?.RenderBackground(hdc, partid, stateid, prect, pcliprect) == 0)
@@ -208,7 +209,7 @@ namespace GitUI.Theming
         private static int GetThemeColorHook(IntPtr htheme, int ipartid, int istateid, int ipropid,
             out int pcolor)
         {
-            if (!Bypass)
+            if (!BypassThemeRenderers)
             {
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
                 if (renderer != null && renderer.GetThemeColor(ipartid, istateid, ipropid, out pcolor) == 0)
@@ -227,7 +228,7 @@ namespace GitUI.Theming
             string psztext, int cchtext,
             NativeMethods.DT dwtextflags, int dwtextflags2, IntPtr prect)
         {
-            if (!Bypass)
+            if (!BypassThemeRenderers)
             {
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
                 if (renderer != null && renderer.ForceUseRenderTextEx)
@@ -259,7 +260,7 @@ namespace GitUI.Theming
             NativeMethods.DT dwtextflags,
             IntPtr prect, ref NativeMethods.DTTOPTS poptions)
         {
-            if (!Bypass)
+            if (!BypassThemeRenderers)
             {
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
                 if (renderer != null && renderer.RenderTextEx(

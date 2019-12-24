@@ -21,13 +21,38 @@ namespace GitUI.Theming
         private readonly PropertyInfo _threadDataProperty;
         private readonly object _systemBrushesKey;
         private readonly object _systemPensKey;
-        private readonly Dictionary<KnownColor, Color> _sysColors;
+
+        private readonly Dictionary<KnownColor, Color> _sysColorValues =
+            new Dictionary<KnownColor, Color>();
+        private readonly Dictionary<AppColor, Color> _appColorValues =
+            new Dictionary<AppColor, Color>();
+        private bool _useInitialTheme = true;
+
+        private StaticTheme InitialTheme { get; set; }
+        public StaticTheme CurrentTheme { get; private set; }
+
+        /// <summary>
+        /// if true: use colors from theme loaded at application startup, otherwise use colors
+        /// possibly changed in <see cref="FormThemeEditor"/>
+        /// </summary>
+        public bool UseInitialTheme
+        {
+            get => _useInitialTheme;
+            set
+            {
+                if (_useInitialTheme != value)
+                {
+                    _useInitialTheme = value;
+                    UpdateAppColors();
+                    ResetGdiCaches();
+                    ColorChanged?.Invoke();
+                }
+            }
+        }
 
         public ThemeManager(Theme defaultTheme)
         {
             _defaultTheme = defaultTheme;
-            _sysColors = new Dictionary<KnownColor, Color>();
-
             var systemDrawingAssembly = typeof(Color).Assembly;
 
             _colorTableField = systemDrawingAssembly.GetType("System.Drawing.KnownColorTable")
@@ -51,41 +76,49 @@ namespace GitUI.Theming
         private IDictionary ThreadData =>
             (IDictionary)_threadDataProperty.GetValue(null, null);
 
+        public void SetInitialTheme(StaticTheme theme)
+        {
+            InitialTheme = theme;
+            SetTheme(theme);
+        }
+
         /// <summary>
         /// Set current theme colors
         /// </summary>
-        /// <param name="appColors">GitExtensions app-specific colors</param>
-        /// <param name="systemColors">.Net system colors</param>
-        public void SetColors(
-            IReadOnlyDictionary<AppColor, Color> appColors,
-            IReadOnlyDictionary<KnownColor, Color> systemColors)
+        public void SetTheme(StaticTheme theme)
         {
-            _sysColors.Clear();
-            foreach (var (name, value) in systemColors)
+            _sysColorValues.Clear();
+            foreach (var (name, value) in theme.SysColorValues)
             {
-                _sysColors.Add(name, value);
+                _sysColorValues.Add(name, value);
             }
 
-            foreach (var (name, value) in appColors)
+            _appColorValues.Clear();
+            foreach (var (name, value) in theme.AppColorValues)
             {
-                AppSettings.SetColor(name, value);
+                _appColorValues.Add(name, value);
             }
 
+            CurrentTheme = theme;
+            UpdateAppColors();
             ResetGdiCaches();
             ColorChanged?.Invoke();
         }
 
+        public void ResetTheme()
+        {
+            CurrentTheme = null;
+            ResetAllColors();
+        }
+
         /// <summary>
         /// Get current theme colors
-        /// <param name="appColors">GitExtensions application-specific colors</param>
-        /// <param name="sysColors">.Net system colors</param>
         /// </summary>
-        public void GetColors(
-            out IReadOnlyDictionary<AppColor, Color> appColors,
-            out IReadOnlyDictionary<KnownColor, Color> sysColors)
+        public StaticTheme GetTheme()
         {
-            appColors = AppColors.ToDictionary(c => c, GetColor);
-            sysColors = SysColors.ToDictionary(c => c, GetSysColor);
+            return new StaticTheme(
+                AppColors.ToDictionary(c => c, GetModifiedColor),
+                SysColors.ToDictionary(c => c, GetModifiedColor));
         }
 
         /// <summary>
@@ -95,7 +128,7 @@ namespace GitUI.Theming
         /// </summary>
         public void ResetAllColors()
         {
-            SysColors.ForEach(ResetColor);
+            SysColors.ForEach(ResetInternal);
             AppColors.ForEach(ResetInternal);
 
             ResetGdiCaches();
@@ -107,8 +140,7 @@ namespace GitUI.Theming
         /// </summary>
         public void ResetColor(KnownColor name)
         {
-            _sysColors.Remove(name);
-
+            ResetInternal(name);
             ResetGdiCaches();
             ColorChanged?.Invoke();
         }
@@ -119,21 +151,29 @@ namespace GitUI.Theming
         public void ResetColor(AppColor name)
         {
             ResetInternal(name);
+            UpdateAppColors(name);
             ColorChanged?.Invoke();
         }
 
-        /// <summary>
-        /// <inheritdoc cref="Theme"/>
-        /// </summary>
-        public override Color GetColor(AppColor name) =>
-            AppSettings.GetColor(name);
+        public Color GetThemeColor(AppColor name) =>
+            (CurrentTheme ?? _defaultTheme).GetColor(name);
+
+        public Color GetThemeColor(KnownColor name) =>
+            (CurrentTheme ?? _defaultTheme).GetColor(name);
+
+        private Color GetInitialColor(AppColor name) =>
+            (InitialTheme ?? _defaultTheme).GetColor(name);
+
+        private Color GetInitialColor(KnownColor name) =>
+            (InitialTheme ?? _defaultTheme).GetColor(name);
 
         /// <summary>
         /// Define color value for GitExtensions app-specific color
         /// </summary>
-        public void SetColor(AppColor name, Color color)
+        public void SetColor(AppColor name, Color value)
         {
-            AppSettings.SetColor(name, color);
+            _appColorValues[name] = value;
+            UpdateAppColors(name);
             ColorChanged?.Invoke();
         }
 
@@ -147,18 +187,65 @@ namespace GitUI.Theming
                 throw new ArgumentException($"{name} is not system color");
             }
 
-            _sysColors[name] = value;
+            _sysColorValues[name] = value;
             ResetGdiCaches();
             ColorChanged?.Invoke();
         }
 
+        public bool IsCurrentThemeModified() =>
+            AppColors.Any(c => GetModifiedColor(c) != GetThemeColor(c)) ||
+            SysColors.Any(c => GetModifiedColor(c) != GetThemeColor(c));
+
+        public bool IsCurrentThemeInitial() =>
+            ReferenceEquals(CurrentTheme, InitialTheme) || (
+                CurrentTheme?.Path != null &&
+                StringComparer.OrdinalIgnoreCase.Equals(CurrentTheme.Path, InitialTheme.Path));
+
+        /// <summary>
+        /// <inheritdoc cref="Theme"/>
+        /// </summary>
+        public override Color GetColor(AppColor name) =>
+            UseInitialTheme
+                ? GetInitialColor(name)
+                : GetModifiedColor(name);
+
         protected override Color GetSysColor(KnownColor name) =>
-            _sysColors.TryGetValue(name, out var result)
+            UseInitialTheme
+                ? GetInitialColor(name)
+                : GetModifiedColor(name);
+
+        private Color GetModifiedColor(AppColor name) =>
+            _appColorValues.TryGetValue(name, out var result)
                 ? result
-                : _defaultTheme.GetColor(name);
+                : GetThemeColor(name);
+
+        private Color GetModifiedColor(KnownColor name) =>
+            _sysColorValues.TryGetValue(name, out var result)
+                ? result
+                : GetThemeColor(name);
+
+        private void ResetInternal(KnownColor name) =>
+            _sysColorValues.Remove(name);
 
         private void ResetInternal(AppColor name) =>
-            AppSettings.SetColor(name, _defaultTheme.GetColor(name));
+            _appColorValues.Remove(name);
+
+        private void UpdateAppColors(AppColor? nameToUpdate = null)
+        {
+            if (nameToUpdate.HasValue)
+            {
+                var color = GetColor(nameToUpdate.Value);
+                AppSettings.SetColor(nameToUpdate.Value, color);
+            }
+            else
+            {
+                foreach (var name in AppColors)
+                {
+                    var color = GetColor(name);
+                    AppSettings.SetColor(name, color);
+                }
+            }
+        }
 
         private void ResetGdiCaches()
         {

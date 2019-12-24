@@ -581,16 +581,15 @@
             // lblRestartNeeded
             // 
             this.lblRestartNeeded.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblRestartNeeded.AutoSize = true;
             this.fpnlTheme.SetFlowBreak(this.lblRestartNeeded, true);
-            this.lblRestartNeeded.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblRestartNeeded.Image = global::GitUI.Properties.Images.Warning;
-            this.lblRestartNeeded.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.lblRestartNeeded.Location = new System.Drawing.Point(3, 3);
+            this.lblRestartNeeded.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblRestartNeeded.Location = new System.Drawing.Point(3, 5);
             this.lblRestartNeeded.Name = "lblRestartNeeded";
-            this.lblRestartNeeded.Size = new System.Drawing.Size(284, 21);
+            this.lblRestartNeeded.Size = new System.Drawing.Size(221, 16);
             this.lblRestartNeeded.TabIndex = 5;
-            this.lblRestartNeeded.Text = "     To apply changes restart is necessary";
+            this.lblRestartNeeded.Text = "Restart required to apply changes";
+            this.lblRestartNeeded.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // _NO_TRANSLATE_cbSelectTheme
             // 
@@ -635,6 +634,7 @@
             this.chkUseSystemVisualStyle.TabIndex = 4;
             this.chkUseSystemVisualStyle.Text = "Use system-defined visual style (looks bad with dark colors)";
             this.chkUseSystemVisualStyle.UseVisualStyleBackColor = true;
+            this.chkUseSystemVisualStyle.CheckedChanged += new System.EventHandler(this.ChkUseSystemVisualStyle_CheckedChanged);
             // 
             // ColorsSettingsPage
             // 

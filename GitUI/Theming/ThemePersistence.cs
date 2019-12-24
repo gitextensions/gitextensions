@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitExtUtils.GitUI.Theming;
+using ResourceManager;
 
 namespace GitUI.Theming
 {
@@ -18,16 +19,30 @@ namespace GitUI.Theming
             @"^(?<name>\w+): (?<argb>[\da-f]{6})$",
             RegexOptions.IgnoreCase);
 
+        private readonly TranslationString _failedToLoadThemeFrom =
+            new TranslationString("Failed to read theme from {0}");
+        private readonly TranslationString _failedToLoadTheme =
+            new TranslationString("Failed to read theme");
+        private readonly TranslationString _failedToWriteFile =
+            new TranslationString("Failed write file {0}");
+        private readonly TranslationString _fileNotFound =
+            new TranslationString("File not found");
+        private readonly TranslationString _fileTooLarge =
+            new TranslationString("File too large");
+        private readonly TranslationString _invalidFormatOfLine =
+            new TranslationString("Invalid format of line {0}: {1}");
+        private readonly TranslationString _invalidColorValueAtLine =
+            new TranslationString("Invalid color value at line {0}: {1}");
+
         public bool SaveToFile(
-            IReadOnlyDictionary<AppColor, Color> appColors,
-            IReadOnlyDictionary<KnownColor, Color> systemColors,
+            StaticTheme theme,
             string file,
             bool quiet = false)
         {
             string serialized = string.Join(
                 Environment.NewLine,
-                systemColors.Select(_ => string.Format(Format, _.Key, ToRbgInt(_.Value))).Concat(
-                    appColors.Select(_ => string.Format(Format, _.Key, ToRbgInt(_.Value)))));
+                theme.SysColorValues.Select(_ => string.Format(Format, _.Key, ToRbgInt(_.Value))).Concat(
+                theme.AppColorValues.Select(_ => string.Format(Format, _.Key, ToRbgInt(_.Value)))));
             try
             {
                 File.WriteAllText(file, serialized);
@@ -35,9 +50,11 @@ namespace GitUI.Theming
             }
             catch (Exception ex)
             {
+                string message = string.Format(_failedToWriteFile.Text, file) + Environment.NewLine + ex.Message;
+                Trace.WriteLine(message);
                 if (!quiet)
                 {
-                    MessageBox.Show($"Failed to write file: {file}{Environment.NewLine}{ex.Message}");
+                    MessageBox.Show(message);
                 }
 
                 return false;
@@ -46,20 +63,19 @@ namespace GitUI.Theming
             int ToRbgInt(Color с) => с.ToArgb() & 0x00ffffff;
         }
 
-        public bool TryLoadFile(
-            string fileName,
-            out IReadOnlyDictionary<AppColor, Color> appColors,
-            out IReadOnlyDictionary<KnownColor, Color> sysColors,
-            bool quiet = false)
+        public StaticTheme LoadFile(string fileName, bool quiet = false)
         {
-            if (TryReadFile(fileName, out string serialized, quiet))
+            if (!TryReadFile(fileName, out string serialized, quiet))
             {
-                return TryParse(fileName, serialized, out appColors, out sysColors, quiet);
+                return null;
             }
 
-            appColors = new Dictionary<AppColor, Color>();
-            sysColors = new Dictionary<KnownColor, Color>();
-            return false;
+            if (!TryParse(fileName, serialized, out var appColors, out var sysColors, quiet))
+            {
+                return null;
+            }
+
+            return new StaticTheme(appColors, sysColors, fileName);
         }
 
         private bool TryParse(
@@ -86,7 +102,7 @@ namespace GitUI.Theming
                 var match = Pattern.Match(line);
                 if (!match.Success)
                 {
-                    WarnOnInvalidContent(fileName, $"Invalid format of line {i + 1}: {line}", quiet);
+                    WarnOnInvalidContent(fileName, string.Format(_invalidFormatOfLine.Text, i + 1, line), quiet);
                     return false;
                 }
 
@@ -96,7 +112,7 @@ namespace GitUI.Theming
                 if (!int.TryParse(rgbaStr, NumberStyles.HexNumber, CultureInfo.InvariantCulture,
                     out int rgb))
                 {
-                    WarnOnInvalidContent(fileName, $"Invalid color value at line {i + 1}: {rgbaStr}", quiet);
+                    WarnOnInvalidContent(fileName, string.Format(_invalidColorValueAtLine.Text, i + 1, rgbaStr), quiet);
                     return false;
                 }
 
@@ -125,14 +141,14 @@ namespace GitUI.Theming
 
             if (!fileInfo.Exists)
             {
-                WarnOnInvalidContent(fileName, "File not found", quiet);
+                WarnOnInvalidContent(fileName, _fileNotFound.Text, quiet);
                 return false;
             }
 
             // > 1MB
             if (fileInfo.Length > (1 << 20))
             {
-                WarnOnInvalidContent(fileName, "File too large", quiet);
+                WarnOnInvalidContent(fileName, _fileTooLarge.Text, quiet);
                 return false;
             }
 
@@ -150,14 +166,14 @@ namespace GitUI.Theming
 
         private void WarnOnInvalidContent(string fileName, string message, bool quiet)
         {
-            var line = $"Failed to read theme from: {fileName}" +
-                $"{Environment.NewLine}{message}";
+            var fullMessage = string.Format(_failedToLoadThemeFrom.Text, fileName) +
+                Environment.NewLine + message;
 
-            Trace.WriteLine(line);
+            Trace.WriteLine(fullMessage);
             if (!quiet)
             {
                 MessageBox.Show(
-                    message, "Failed to load theme",
+                    message, _failedToLoadTheme.Text,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
             }
