@@ -9,14 +9,14 @@ namespace GitUI.Theming
 {
     public static class ThemeModule
     {
+        // TODO: cleanup
+        //      there is no need for all lazy allocations since this class is ONLY used to hook and unhook global themeing.
+
         private static readonly Lazy<ThemeDeployment> DeploymentLazy =
             new Lazy<ThemeDeployment>(() => new ThemeDeployment(Controller));
 
         private static readonly Lazy<FormThemeEditorController> FormEditorControllerLazy =
             new Lazy<FormThemeEditorController>(CreateEditorController);
-
-        private static readonly Lazy<FormThemeEditor> FormEditorLazy =
-            new Lazy<FormThemeEditor>(() => new FormThemeEditor(Controller));
 
         private static ThemePersistence Persistence { get; } = new ThemePersistence();
 
@@ -29,14 +29,29 @@ namespace GitUI.Theming
         private static readonly Lazy<SystemDialogDetector> SystemDialogDetectorLazy =
             new Lazy<SystemDialogDetector>(() => new SystemDialogDetector());
 
+        public static void Load()
+        {
+            if (TryInitialize())
+            {
+                return;
+            }
+
+            // Load default theme to prevent mixing dark AppColors with bright SystemColors
+            // when AppSettings.UIThemeName points to dark theme
+            Controller.SetInitialTheme(Controller.InvariantThemeName, useSystemVisualStyle: true);
+        }
+
+        public static void Unload()
+        {
+            Win32ThemeHooks.Uninstall();
+            Win32ThemeHooks.WindowCreated -= Handle_WindowCreated;
+        }
+
         private static ThemeDeployment Deployment =>
             DeploymentLazy.Value;
 
-        public static FormThemeEditorController Controller =>
+        private static FormThemeEditorController Controller =>
             FormEditorControllerLazy.Value;
-
-        private static FormThemeEditor FormEditor =>
-            FormEditorLazy.Value;
 
         private static Theme DefaultTheme =>
             DefaultThemeLazy.Value;
@@ -46,16 +61,6 @@ namespace GitUI.Theming
 
         private static SystemDialogDetector SystemDialogDetector =>
             SystemDialogDetectorLazy.Value;
-
-        public static void Load()
-        {
-            if (!TryInitialize())
-            {
-                // Load default theme to prevent mixing dark AppColors with bright SystemColors
-                // when AppSettings.UIThemeName points to dark theme
-                Controller.SetInitialTheme("win10default", useSystemVisualStyle: true);
-            }
-        }
 
         private static bool TryInitialize()
         {
@@ -96,18 +101,6 @@ namespace GitUI.Theming
             Win32ThemeHooks.WindowCreated += Handle_WindowCreated;
             ColorHelper.SetUITheme(ThemeManager, invariantTheme);
             return true;
-        }
-
-        public static void Unload()
-        {
-            Win32ThemeHooks.Uninstall();
-            Win32ThemeHooks.WindowCreated -= Handle_WindowCreated;
-        }
-
-        public static void ShowEditor()
-        {
-            FormEditor.Show();
-            FormEditor.BringToFront();
         }
 
         private static FormThemeEditorController CreateEditorController()

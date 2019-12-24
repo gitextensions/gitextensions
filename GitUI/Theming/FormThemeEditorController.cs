@@ -15,8 +15,6 @@ namespace GitUI.Theming
         private const string Subdirectory = "Themes";
         public const string Extension = ".colors";
         private const string CurrentThemeName = "current";
-        private const string InvariantThemeName = "win10default";
-
         private readonly TranslationString _saveDialogTitle = new TranslationString("Save theme");
         private readonly TranslationString _loadDialogTitle = new TranslationString("Load theme");
         private readonly TranslationString _filter = new TranslationString("GitExtensions theme (*{0})|*{0}");
@@ -39,7 +37,9 @@ namespace GitUI.Theming
             remove => _manager.ColorChanged -= value;
         }
 
-        public event ThemeChangedHandler ThemeChanged;
+        public event EventHandler<ThemeChangedEventArgs> ThemeChanged;
+
+        internal string InvariantThemeName { get; } = "win10default";
 
         public bool UseSystemVisualStyleInitial { get; private set; } = true;
 
@@ -55,11 +55,11 @@ namespace GitUI.Theming
         public string ThemeName =>
             GetThemeName(_manager.CurrentTheme?.Path);
 
-        public bool IsThemeModified() =>
-            _manager.IsCurrentThemeModified();
+        public bool IsThemeModified =>
+            _manager.IsCurrentThemeModified;
 
-        public bool IsThemeInitial() =>
-            _manager.IsCurrentThemeInitial() &&
+        public bool IsThemeInitial =>
+            _manager.IsCurrentThemeInitial &&
             _useSystemVisualStyle == UseSystemVisualStyleInitial;
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace GitUI.Theming
             set => _manager.UseInitialTheme = value;
         }
 
-        public StaticTheme LoadInvariantTheme(bool quiet = false) =>
+        public ReadOnlyTheme LoadInvariantTheme(bool quiet = false) =>
             _persistence.LoadFile(GetOriginalThemePath(InvariantThemeName), quiet);
 
         public bool IsCurrentThemeFile(string path) =>
@@ -102,13 +102,13 @@ namespace GitUI.Theming
         public void SetTheme(string name, bool quiet = true)
         {
             string path = GetThemePath(name);
-            SetThemeFile(path, quiet);
+            SetThemeFromFile(path, quiet);
         }
 
         public void SaveCurrentTheme()
         {
             string path = GetThemePath(CurrentThemeName);
-            var theme = _manager.GetTheme();
+            var theme = _manager.GetModifiedTheme();
             _persistence.SaveToFile(theme, path, quiet: true);
         }
 
@@ -148,14 +148,14 @@ namespace GitUI.Theming
             OnThemeChanged(true, _manager.CurrentTheme?.Path);
         }
 
-        public void SaveThemeDialog()
+        public void SaveThemeToUserSelectedFile()
         {
             if (!SaveDialog(out var path))
             {
                 return;
             }
 
-            var theme = _manager.GetTheme();
+            var theme = _manager.GetModifiedTheme();
             if (!_persistence.SaveToFile(theme, path, quiet: false))
             {
                 return;
@@ -163,6 +163,8 @@ namespace GitUI.Theming
 
             _manager.SetTheme(theme.WithPath(path));
             OnThemeChanged(false, path);
+
+            return;
 
             bool SaveDialog(out string filename)
             {
@@ -190,12 +192,14 @@ namespace GitUI.Theming
             }
         }
 
-        public void SetThemeFileDialog()
+        public void SetThemeFromUserSelectedFile()
         {
             if (TrySelectFile(out string path))
             {
-                SetThemeFile(path, quiet: false);
+                SetThemeFromFile(path, quiet: false);
             }
+
+            return;
 
             bool TrySelectFile(out string filename)
             {
@@ -236,7 +240,7 @@ namespace GitUI.Theming
         public Color GetDefaultColor(AppColor name) =>
             _manager.GetThemeColor(name);
 
-        private void SetThemeFile(string path, bool quiet = false)
+        private void SetThemeFromFile(string path, bool quiet = false)
         {
             var theme = _persistence.LoadFile(path, quiet);
             if (theme == null)
@@ -251,7 +255,7 @@ namespace GitUI.Theming
         private void OnThemeChanged(bool colorsChanged, string path)
         {
             string name = GetThemeName(path);
-            ThemeChanged?.Invoke(colorsChanged, name);
+            ThemeChanged?.Invoke(this, new ThemeChangedEventArgs(name, colorsChanged));
         }
 
         private string GetThemeName(string path)

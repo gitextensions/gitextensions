@@ -35,7 +35,7 @@ namespace GitUI.Theming
             new TranslationString("Invalid color value at line {0}: {1}");
 
         public bool SaveToFile(
-            StaticTheme theme,
+            ReadOnlyTheme theme,
             string file,
             bool quiet = false)
         {
@@ -63,7 +63,7 @@ namespace GitUI.Theming
             int ToRbgInt(Color с) => с.ToArgb() & 0x00ffffff;
         }
 
-        public StaticTheme LoadFile(string fileName, bool quiet = false)
+        public ReadOnlyTheme LoadFile(string fileName, bool quiet = false)
         {
             if (!TryReadFile(fileName, out string serialized, quiet))
             {
@@ -75,7 +75,7 @@ namespace GitUI.Theming
                 return null;
             }
 
-            return new StaticTheme(appColors, sysColors, fileName);
+            return new ReadOnlyTheme(appColors, sysColors, fileName);
         }
 
         private bool TryParse(

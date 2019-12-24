@@ -28,8 +28,8 @@ namespace GitUI.Theming
             new Dictionary<AppColor, Color>();
         private bool _useInitialTheme = true;
 
-        private StaticTheme InitialTheme { get; set; }
-        public StaticTheme CurrentTheme { get; private set; }
+        private ReadOnlyTheme InitialTheme { get; set; }
+        public ReadOnlyTheme CurrentTheme { get; private set; }
 
         /// <summary>
         /// if true: use colors from theme loaded at application startup, otherwise use colors
@@ -40,13 +40,15 @@ namespace GitUI.Theming
             get => _useInitialTheme;
             set
             {
-                if (_useInitialTheme != value)
+                if (_useInitialTheme == value)
                 {
-                    _useInitialTheme = value;
-                    UpdateAppColors();
-                    ResetGdiCaches();
-                    ColorChanged?.Invoke();
+                    return;
                 }
+
+                _useInitialTheme = value;
+                UpdateAppColors();
+                ResetGdiCaches();
+                ColorChanged?.Invoke();
             }
         }
 
@@ -76,16 +78,16 @@ namespace GitUI.Theming
         private IDictionary ThreadData =>
             (IDictionary)_threadDataProperty.GetValue(null, null);
 
-        public void SetInitialTheme(StaticTheme theme)
+        public void SetInitialTheme(ReadOnlyTheme theme)
         {
             InitialTheme = theme;
             SetTheme(theme);
         }
 
         /// <summary>
-        /// Set current theme colors
+        /// Set current theme
         /// </summary>
-        public void SetTheme(StaticTheme theme)
+        public void SetTheme(ReadOnlyTheme theme)
         {
             _sysColorValues.Clear();
             foreach (var (name, value) in theme.SysColorValues)
@@ -112,19 +114,17 @@ namespace GitUI.Theming
         }
 
         /// <summary>
-        /// Get current theme colors
+        /// Get current theme copy with changes possibly made by SetColor calls
         /// </summary>
-        public StaticTheme GetTheme()
+        public ReadOnlyTheme GetModifiedTheme()
         {
-            return new StaticTheme(
+            return new ReadOnlyTheme(
                 AppColors.ToDictionary(c => c, GetModifiedColor),
                 SysColors.ToDictionary(c => c, GetModifiedColor));
         }
 
         /// <summary>
-        /// Reset current theme colors to default values.
-        /// GitExtensions app-specific colors are reset to <see cref="AppColorDefaults"/>
-        /// .Net system colors are reset to values defined by Windows theme
+        /// Reset modified theme colors to original values from current theme
         /// </summary>
         public void ResetAllColors()
         {
@@ -136,7 +136,7 @@ namespace GitUI.Theming
         }
 
         /// <summary>
-        /// Reset specific .Net system color to default values defined by Windows theme
+        /// Reset specific .Net system color to original value from current theme
         /// </summary>
         public void ResetColor(KnownColor name)
         {
@@ -146,7 +146,7 @@ namespace GitUI.Theming
         }
 
         /// <summary>
-        /// Reset GitExtensions app-specific color to <see cref="AppColorDefaults"/>
+        /// Reset GitExtensions app-specific color to original value from current theme
         /// </summary>
         public void ResetColor(AppColor name)
         {
@@ -168,7 +168,7 @@ namespace GitUI.Theming
             (InitialTheme ?? _defaultTheme).GetColor(name);
 
         /// <summary>
-        /// Define color value for GitExtensions app-specific color
+        /// Change color value for GitExtensions app-specific color
         /// </summary>
         public void SetColor(AppColor name, Color value)
         {
@@ -178,7 +178,7 @@ namespace GitUI.Theming
         }
 
         /// <summary>
-        /// Define color value for .Net system color
+        /// Change color value for .Net system color
         /// </summary>
         public void SetColor(KnownColor name, Color value)
         {
@@ -192,11 +192,11 @@ namespace GitUI.Theming
             ColorChanged?.Invoke();
         }
 
-        public bool IsCurrentThemeModified() =>
+        public bool IsCurrentThemeModified =>
             AppColors.Any(c => GetModifiedColor(c) != GetThemeColor(c)) ||
             SysColors.Any(c => GetModifiedColor(c) != GetThemeColor(c));
 
-        public bool IsCurrentThemeInitial() =>
+        public bool IsCurrentThemeInitial =>
             ReferenceEquals(CurrentTheme, InitialTheme) || (
                 CurrentTheme?.Path != null &&
                 StringComparer.OrdinalIgnoreCase.Equals(CurrentTheme.Path, InitialTheme.Path));
@@ -236,14 +236,13 @@ namespace GitUI.Theming
             {
                 var color = GetColor(nameToUpdate.Value);
                 AppSettings.SetColor(nameToUpdate.Value, color);
+                return;
             }
-            else
+
+            foreach (var name in AppColors)
             {
-                foreach (var name in AppColors)
-                {
-                    var color = GetColor(name);
-                    AppSettings.SetColor(name, color);
-                }
+                var color = GetColor(name);
+                AppSettings.SetColor(name, color);
             }
         }
 

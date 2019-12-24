@@ -7,13 +7,13 @@ namespace GitUI.Theming
     /// <summary>
     /// A read-only set of values for .Net system colors and GitExtensions app-specific colors
     /// </summary>
-    public class StaticTheme : Theme
+    public class ReadOnlyTheme : Theme
     {
         public IReadOnlyDictionary<AppColor, Color> AppColorValues { get; }
         public IReadOnlyDictionary<KnownColor, Color> SysColorValues { get; }
         public string Path { get; }
 
-        public StaticTheme(
+        public ReadOnlyTheme(
             IReadOnlyDictionary<AppColor, Color> appColors,
             IReadOnlyDictionary<KnownColor, Color> sysColors,
             string path = null)
@@ -23,8 +23,8 @@ namespace GitUI.Theming
             SysColorValues = sysColors;
         }
 
-        public StaticTheme WithPath(string path) =>
-            new StaticTheme(AppColorValues, SysColorValues, path);
+        public ReadOnlyTheme WithPath(string path) =>
+            new ReadOnlyTheme(AppColorValues, SysColorValues, path);
 
         public override Color GetColor(AppColor name) =>
             AppColorValues.TryGetValue(name, out var result)

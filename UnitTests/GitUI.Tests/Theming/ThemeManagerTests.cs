@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
+using FluentAssertions;
+using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using NUnit.Framework;
@@ -24,55 +25,65 @@ namespace GitUITests.Theming
         {
             var themeManager = new ThemeManager(DefaultTheme);
 
-            Assert.That(themeManager.UseInitialTheme, Is.True);
+            themeManager.UseInitialTheme.Should().BeTrue();
 
             themeManager.SetInitialTheme(CreateTheme(InitialColor));
 
-            Assert.That(themeManager.UseInitialTheme, Is.True);
-            Assert.That(themeManager.IsCurrentThemeInitial(), Is.True);
+            themeManager.UseInitialTheme.Should().BeTrue();
+            themeManager.IsCurrentThemeInitial.Should().BeTrue();
         }
 
-        [TestCase(ThemeEditVariant.SelectAnotherTheme)]
-        [TestCase(ThemeEditVariant.ModifyCurrentTheme)]
-        public void When_using_initial_theme_returns_color_from_initial_theme(ThemeEditVariant editVariant)
+        [Test]
+        public void When_using_initial_theme_SetColor_does_not_affect_result()
         {
             var themeManager = new ThemeManager(DefaultTheme);
             themeManager.SetInitialTheme(CreateTheme(InitialColor));
 
-            switch (editVariant)
-            {
-                case ThemeEditVariant.SelectAnotherTheme:
-                    themeManager.SetTheme(CreateTheme(ModifiedColor));
-                    Assert.That(themeManager.IsCurrentThemeInitial(), Is.False);
-                    Assert.That(themeManager.IsCurrentThemeModified(), Is.False);
-                    break;
-                case ThemeEditVariant.ModifyCurrentTheme:
-                    themeManager.SetColor(AppColor, ModifiedColor);
-                    themeManager.SetColor(SysColor, ModifiedColor);
-                    Assert.That(themeManager.IsCurrentThemeInitial(), Is.True);
-                    Assert.That(themeManager.IsCurrentThemeModified(), Is.True);
-                    break;
-                default:
-                    throw new NotSupportedException();
-            }
+            themeManager.SetColor(AppColor, ModifiedColor);
+            themeManager.SetColor(SysColor, ModifiedColor);
+            themeManager.IsCurrentThemeInitial.Should().BeTrue();
+            themeManager.IsCurrentThemeModified.Should().BeTrue();
 
             // repeats to make sure UseInitialTheme property does not exhibit any sticky behavior
             int repeats = 3;
             for (int i = 0; i < repeats; i++)
             {
                 themeManager.UseInitialTheme = true;
-                Assert.That(themeManager.GetColor(AppColor), Is.EqualTo(InitialColor));
-                Assert.That(themeManager.GetColor(SysColor), Is.EqualTo(InitialColor));
+                themeManager.GetColor(AppColor).Should().Be(InitialColor);
+                themeManager.GetColor(SysColor).Should().Be(InitialColor);
 
                 themeManager.UseInitialTheme = false;
-                Assert.That(themeManager.GetColor(AppColor), Is.EqualTo(ModifiedColor));
-                Assert.That(themeManager.GetColor(SysColor), Is.EqualTo(ModifiedColor));
+                themeManager.GetColor(AppColor).Should().Be(ModifiedColor);
+                themeManager.GetColor(SysColor).Should().Be(ModifiedColor);
             }
         }
 
-        [TestCase(ResetColorsVariant.ResetAllColors)]
-        [TestCase(ResetColorsVariant.ResetIndividualColor)]
-        public void ResetColor_reverts_to_current_theme(ResetColorsVariant resetVariant)
+        [Test]
+        public void When_using_initial_theme_SetTheme_does_not_affect_result()
+        {
+            var themeManager = new ThemeManager(DefaultTheme);
+            themeManager.SetInitialTheme(CreateTheme(InitialColor));
+
+            themeManager.SetTheme(CreateTheme(ModifiedColor));
+            themeManager.IsCurrentThemeInitial.Should().BeFalse();
+            themeManager.IsCurrentThemeModified.Should().BeFalse();
+
+            // repeats to make sure UseInitialTheme property does not exhibit any sticky behavior
+            int repeats = 3;
+            for (int i = 0; i < repeats; i++)
+            {
+                themeManager.UseInitialTheme = true;
+                themeManager.GetColor(AppColor).Should().Be(InitialColor);
+                themeManager.GetColor(SysColor).Should().Be(InitialColor);
+
+                themeManager.UseInitialTheme = false;
+                themeManager.GetColor(AppColor).Should().Be(ModifiedColor);
+                themeManager.GetColor(SysColor).Should().Be(ModifiedColor);
+            }
+        }
+
+        [Test]
+        public void ResetColor_reverts_to_current_theme()
         {
             var themeManager = new ThemeManager(DefaultTheme);
 
@@ -82,27 +93,40 @@ namespace GitUITests.Theming
             themeManager.SetColor(SysColor, ModifiedColor);
             themeManager.UseInitialTheme = false;
 
-            Assert.That(themeManager.IsCurrentThemeInitial(), Is.False);
-            Assert.That(themeManager.IsCurrentThemeModified(), Is.True);
+            themeManager.IsCurrentThemeInitial.Should().BeFalse();
+            themeManager.IsCurrentThemeModified.Should().BeTrue();
 
-            Assert.That(themeManager.GetColor(AppColor), Is.EqualTo(ModifiedColor));
-            Assert.That(themeManager.GetColor(SysColor), Is.EqualTo(ModifiedColor));
+            themeManager.GetColor(AppColor).Should().Be(ModifiedColor);
+            themeManager.GetColor(SysColor).Should().Be(ModifiedColor);
 
-            switch (resetVariant)
-            {
-                case ResetColorsVariant.ResetIndividualColor:
-                    themeManager.ResetColor(AppColor);
-                    themeManager.ResetColor(SysColor);
-                    break;
-                case ResetColorsVariant.ResetAllColors:
-                    themeManager.ResetAllColors();
-                    break;
-                default:
-                    throw new NotSupportedException();
-            }
+            themeManager.ResetColor(AppColor);
+            themeManager.ResetColor(SysColor);
 
-            Assert.That(themeManager.GetColor(AppColor), Is.EqualTo(CurrentThemeColor));
-            Assert.That(themeManager.GetColor(SysColor), Is.EqualTo(CurrentThemeColor));
+            themeManager.GetColor(AppColor).Should().Be(CurrentThemeColor);
+            themeManager.GetColor(SysColor).Should().Be(CurrentThemeColor);
+        }
+
+        [Test]
+        public void ResetAllColors_reverts_to_current_theme()
+        {
+            var themeManager = new ThemeManager(DefaultTheme);
+
+            themeManager.SetInitialTheme(CreateTheme(InitialColor));
+            themeManager.SetTheme(CreateTheme(CurrentThemeColor));
+            themeManager.SetColor(AppColor, ModifiedColor);
+            themeManager.SetColor(SysColor, ModifiedColor);
+            themeManager.UseInitialTheme = false;
+
+            themeManager.IsCurrentThemeInitial.Should().BeFalse();
+            themeManager.IsCurrentThemeModified.Should().BeTrue();
+
+            themeManager.GetColor(AppColor).Should().Be(ModifiedColor);
+            themeManager.GetColor(SysColor).Should().Be(ModifiedColor);
+
+            themeManager.ResetAllColors();
+
+            themeManager.GetColor(AppColor).Should().Be(CurrentThemeColor);
+            themeManager.GetColor(SysColor).Should().Be(CurrentThemeColor);
         }
 
         [Test]
@@ -117,34 +141,22 @@ namespace GitUITests.Theming
 
             themeManager.ResetTheme();
 
-            Assert.That(themeManager.CurrentTheme == null);
+            themeManager.CurrentTheme.Should().BeNull();
 
             themeManager.UseInitialTheme = true;
 
-            Assert.That(themeManager.GetColor(AppColor), Is.EqualTo(InitialColor));
-            Assert.That(themeManager.GetColor(SysColor), Is.EqualTo(InitialColor));
+            themeManager.GetColor(AppColor).Should().Be(InitialColor);
+            themeManager.GetColor(SysColor).Should().Be(InitialColor);
 
             themeManager.UseInitialTheme = false;
 
-            Assert.That(themeManager.GetColor(AppColor), Is.EqualTo(DefaultTheme.GetColor(AppColor)));
-            Assert.That(themeManager.GetColor(SysColor), Is.EqualTo(DefaultTheme.GetColor(SysColor)));
+            themeManager.GetColor(AppColor).Should().Be(DefaultTheme.GetColor(AppColor));
+            themeManager.GetColor(SysColor).Should().Be(DefaultTheme.GetColor(SysColor));
         }
 
-        private static StaticTheme CreateTheme(Color color) =>
-            new StaticTheme(
+        private static ReadOnlyTheme CreateTheme(Color color) =>
+            new ReadOnlyTheme(
                 new Dictionary<AppColor, Color> { [AppColor] = color },
                 new Dictionary<KnownColor, Color> { [SysColor] = color });
-
-        public enum ThemeEditVariant
-        {
-            SelectAnotherTheme,
-            ModifyCurrentTheme
-        }
-
-        public enum ResetColorsVariant
-        {
-            ResetIndividualColor,
-            ResetAllColors
-        }
     }
 }

@@ -57,6 +57,7 @@ namespace GitCommands
         public static string ProductVersion => Application.ProductVersion;
         public static readonly string SettingsFileName = "GitExtensions.settings";
         public static readonly string UserPluginsDirectoryName = "UserPlugins";
+        private static string _applicationExecutablePath = Application.ExecutablePath;
         private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
 
         public static readonly Lazy<string> ApplicationDataPath;
@@ -1645,16 +1646,13 @@ namespace GitCommands
 
         public static string GetGitExtensionsFullPath()
         {
-            return Application.ExecutablePath;
+            return _applicationExecutablePath;
         }
 
         [CanBeNull]
         public static string GetGitExtensionsDirectory()
         {
-            var assembly = Assembly.GetEntryAssembly() ?? // common case, GitExtensions.exe
-                           Assembly.GetExecutingAssembly(); // unit test, GitCommands.dll
-            var path = assembly.Location;
-            return Path.GetDirectoryName(path);
+            return Path.GetDirectoryName(GetGitExtensionsFullPath());
         }
 
         private static RegistryKey _versionIndependentRegKey;
@@ -1964,6 +1962,17 @@ namespace GitCommands
             string availableEncodings = AvailableEncodings.Values.Select(e => e.HeaderName).Join(";");
             availableEncodings = availableEncodings.Replace(Encoding.Default.HeaderName, "Default");
             SetString("AvailableEncodings", availableEncodings);
+        }
+
+        public static TestAccessor GetTestAccessor() => new TestAccessor();
+
+        public struct TestAccessor
+        {
+            public string ApplicationExecutablePath
+            {
+                get => _applicationExecutablePath;
+                set => _applicationExecutablePath = value;
+            }
         }
     }
 

@@ -24,7 +24,13 @@ namespace GitUI.Theming
         private readonly FormThemeEditorController _controller;
         private bool _resetting;
 
-        public FormThemeEditor()
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
+        private FormThemeEditor()
+        {
+            InitializeComplete();
+        }
+
+        public FormThemeEditor(FormThemeEditorController controller)
         {
             ShowInTaskbar = true;
 
@@ -47,11 +53,7 @@ namespace GitUI.Theming
                     ((Form)sender).Hide();
                 }
             };
-        }
 
-        public FormThemeEditor(FormThemeEditorController controller)
-            : this()
-        {
             _controller = controller;
 
             var sysColors = Theme.SysColors.OrderBy(c => c.ToString(), StringComparer.InvariantCulture);
@@ -216,12 +218,12 @@ namespace GitUI.Theming
 
             CreateButton(_save.Text, (s, e) =>
             {
-                _controller.SaveThemeDialog();
+                _controller.SaveThemeToUserSelectedFile();
             });
 
             CreateButton(_load.Text, (s, e) =>
             {
-                _controller.SetThemeFileDialog();
+                _controller.SetThemeFromUserSelectedFile();
             });
         }
 
@@ -248,13 +250,13 @@ namespace GitUI.Theming
             _controller.UseInitialTheme = !Visible;
         }
 
-        private void HandleThemeChanged(bool colorsChanged, string themeName) =>
+        private void HandleThemeChanged(object sender, ThemeChangedEventArgs args) =>
             UpdateTitle();
 
         private void UpdateTitle()
         {
             string themeName = _controller.ThemeName ?? _modifiedThemeName.Text;
-            bool modified = _controller.IsThemeModified();
+            bool modified = _controller.IsThemeModified;
             Text = $@"{_title} - {themeName}{(modified ? "*" : string.Empty)}";
         }
     }
