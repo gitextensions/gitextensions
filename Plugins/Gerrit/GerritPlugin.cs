@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Gerrit.Properties;
+using Gerrit.Server;
 using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -28,6 +29,13 @@ namespace Gerrit
         private readonly TranslationString _installCommitMsgHookDownloadFileFailed = new TranslationString("Could not download the commit-msg file. Please install the commit-msg hook manually.");
         #endregion
 
+        private const string DefaultGerritVersion = "2.15 or newer";
+
+        private readonly ChoiceSetting _predefinedGerritVersion = new ChoiceSetting(
+            "Treat Gerrit as having version",
+            new[] { DefaultGerritVersion, "Older then 2.15" },
+            DefaultGerritVersion);
+
         private static readonly Dictionary<string, bool> _validatedHooks = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
         private static readonly object _syncRoot = new object();
 
@@ -42,7 +50,7 @@ namespace Gerrit
         private ToolStripButton _installCommitMsgMenuItem;
 
         // public only because of FormTranslate
-        public GerritPlugin() : base(false)
+        public GerritPlugin() : base(true)
         {
             SetNameAndDescription("Gerrit Code Review");
             Translate();
@@ -248,7 +256,11 @@ namespace Gerrit
 
         private void publishMenuItem_Click(object sender, EventArgs e)
         {
-            using (var form = new FormGerritPublish(_gitUiCommands))
+            var capabilities = _predefinedGerritVersion.ValueOrDefault(Settings) == DefaultGerritVersion
+                ? GerritCapabilities.Version2_15
+                : GerritCapabilities.OldestVersion;
+
+            using (var form = new FormGerritPublish(_gitUiCommands, capabilities))
             {
                 form.ShowDialog(_mainForm);
             }
@@ -420,6 +432,11 @@ namespace Gerrit
             }
 
             return false;
+        }
+
+        public override IEnumerable<ISetting> GetSettings()
+        {
+            yield return _predefinedGerritVersion;
         }
     }
 }
