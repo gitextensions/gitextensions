@@ -128,7 +128,7 @@ namespace Gerrit
                 }
             }
 
-            return true;
+            return !pushCommand.ErrorOccurred;
         }
 
         [CanBeNull]
