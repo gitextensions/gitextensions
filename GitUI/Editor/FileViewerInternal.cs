@@ -285,7 +285,7 @@ namespace GitUI.Editor
         private void SetHighlightingStrategy(IHighlightingStrategy highlightingStrategy)
         {
             TextEditor.Document.HighlightingStrategy =
-                ThemeModule.Controller.UseSystemVisualStyle
+                ThemeModule.Settings.UseSystemVisualStyle
                     ? highlightingStrategy
                     : new ThemeBasedHighlighting(highlightingStrategy);
             TextEditor.Refresh();

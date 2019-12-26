@@ -1230,6 +1230,12 @@ namespace GitCommands
             set => SetString("uitheme", value ?? string.Empty);
         }
 
+        public static bool UIThemeIsBuiltin
+        {
+            get => GetBool("uithemeisbuiltin", true);
+            set => SetBool("uithemeisbuiltin", value);
+        }
+
         #region Colors
 
         public static Color OtherTagColor
@@ -1964,9 +1970,9 @@ namespace GitCommands
             SetString("AvailableEncodings", availableEncodings);
         }
 
-        public static TestAccessor GetTestAccessor() => new TestAccessor();
+        internal static TestAccessor GetTestAccessor() => new TestAccessor();
 
-        public struct TestAccessor
+        internal struct TestAccessor
         {
             public string ApplicationExecutablePath
             {

@@ -695,10 +695,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Reset</source>
         <target />
       </trans-unit>
-      <trans-unit id="btnTheme.Text">
-        <source>Edit...</source>
-        <target />
-      </trans-unit>
       <trans-unit id="chkDrawAlternateBackColor.Text">
         <source>Draw alternate background</source>
         <target />
@@ -720,7 +716,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target />
       </trans-unit>
       <trans-unit id="gbTheme.Text">
-        <source>Color scheme</source>
+        <source>Theme</source>
         <target />
       </trans-unit>
       <trans-unit id="lblColorBranchLocal.Text">

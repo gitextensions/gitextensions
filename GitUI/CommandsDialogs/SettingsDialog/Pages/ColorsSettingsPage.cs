@@ -5,18 +5,51 @@ using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class ColorsSettingsPage : SettingsPageWithHeader
     {
-        private bool _syncingTheme;
-        private FormThemeEditorController _themeEditorController;
+        private int _updateThemeSettingsCounter;
+
+        private static readonly TranslationString FormatBuiltinThemeName =
+            new TranslationString("{0}");
+
+        private static readonly TranslationString FormatUserDefinedThemeName =
+            new TranslationString("{0}, user-defined");
+
+        private static readonly TranslationString DefaultThemeName =
+            new TranslationString("default");
 
         public ColorsSettingsPage()
         {
             InitializeComponent();
             InitializeComplete();
+        }
+
+        private ThemeId SelectedThemeId
+        {
+            get
+            {
+                return ((FormattedThemeId)_NO_TRANSLATE_cbSelectTheme.SelectedItem).ThemeId;
+            }
+            set
+            {
+                int index = _NO_TRANSLATE_cbSelectTheme.Items.IndexOf(new FormattedThemeId(value));
+                if (index < 0)
+                {
+                    throw new ArgumentException("Selected theme was not added to ComboBox");
+                }
+
+                _NO_TRANSLATE_cbSelectTheme.SelectedIndex = index;
+            }
+        }
+
+        public bool UseSystemVisualStyle
+        {
+            get => chkUseSystemVisualStyle.Checked;
+            set => chkUseSystemVisualStyle.Checked = value;
         }
 
         protected override void OnRuntimeLoad()
@@ -28,8 +61,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 SettingsToPage();
             }
 
-            _themeEditorController = new FormThemeEditorController(new ThemeManager(new DefaultTheme()), new ThemePersistence());
-
             // align 1st columns across all tables
             tlpnlRevisionGraph.AdjustWidthToSize(0, MulticolorBranches, lblColorLineRemoved);
             tlpnlDiffView.AdjustWidthToSize(0, MulticolorBranches, lblColorLineRemoved);
@@ -40,9 +71,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 .ToArray();
             tlpnlRevisionGraph.AdjustWidthToSize(1, colorControls);
             tlpnlDiffView.AdjustWidthToSize(1, colorControls);
-
-            _themeEditorController.ThemeChanged += Theme_Changed;
-            _themeEditorController.ColorChanged += Theme_ColorChanged;
         }
 
         protected override void SettingsToPage()
@@ -54,25 +82,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             DrawNonRelativesGray.Checked = AppSettings.RevisionGraphDrawNonRelativesGray;
             DrawNonRelativesTextGray.Checked = AppSettings.RevisionGraphDrawNonRelativesTextGray;
             chkHighlightAuthored.Checked = AppSettings.HighlightAuthoredRevisions;
-            chkUseSystemVisualStyle.Checked = AppSettings.UseSystemVisualStyle;
 
-            _syncingTheme = true;
-            try
-            {
-                UpdateComboBoxTheme(AppSettings.UIThemeName);
-            }
-            finally
-            {
-                _syncingTheme = false;
-            }
-
-            _themeEditorController.SetTheme(AppSettings.UIThemeName);
-            UpdateAppColors();
-            UpdateRestartWarningVisibility();
-        }
-
-        private void UpdateAppColors()
-        {
             _NO_TRANSLATE_ColorHighlightAuthoredLabel.BackColor = AppSettings.HighlightAuthoredRevisions
                 ? AppSettings.AuthoredRevisionsHighlightColor
                 : Color.LightYellow;
@@ -115,13 +125,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_ColorHighlightAllOccurrencesLabel.Text = AppSettings.HighlightAllOccurencesColor.Name;
             _NO_TRANSLATE_ColorHighlightAllOccurrencesLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorHighlightAllOccurrencesLabel.BackColor);
+
+            BeginUpdateThemeSettings();
+            var themeRepository = new ThemeRepository(new ThemePersistence());
+            _NO_TRANSLATE_cbSelectTheme.Items.Clear();
+            _NO_TRANSLATE_cbSelectTheme.Items.Add(new FormattedThemeId(ThemeId.Default));
+            _NO_TRANSLATE_cbSelectTheme.Items.AddRange(themeRepository.GetThemeIds()
+                .Select(id => new FormattedThemeId(id))
+                .Cast<object>()
+                .ToArray());
+
+            UseSystemVisualStyle = AppSettings.UseSystemVisualStyle;
+            SelectedThemeId = new ThemeId(AppSettings.UIThemeName, AppSettings.UIThemeIsBuiltin);
+            EndUpdateThemeSettings();
         }
 
         protected override void PageToSettings()
         {
-            AppSettings.UseSystemVisualStyle = chkUseSystemVisualStyle.Checked;
-            AppSettings.UIThemeName = (string)_NO_TRANSLATE_cbSelectTheme.SelectedItem;
-
             AppSettings.MulticolorBranches = MulticolorBranches.Checked;
             AppSettings.RevisionGraphDrawAlternateBackColor = chkDrawAlternateBackColor.Checked;
             AppSettings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
@@ -141,6 +161,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.DiffRemovedExtraColor = _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor;
             AppSettings.DiffSectionColor = _NO_TRANSLATE_ColorSectionLabel.BackColor;
             AppSettings.HighlightAllOccurencesColor = _NO_TRANSLATE_ColorHighlightAllOccurrencesLabel.BackColor;
+
+            AppSettings.UseSystemVisualStyle = UseSystemVisualStyle;
+            AppSettings.UIThemeName = SelectedThemeId.Name;
+            AppSettings.UIThemeIsBuiltin = SelectedThemeId.IsBuiltin;
         }
 
         private void MulticolorBranches_CheckedChanged(object sender, EventArgs e)
@@ -174,105 +198,89 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_ColorHighlightAuthoredLabel.Enabled = chkHighlightAuthored.Checked;
         }
 
-        private void BtnTheme_Click(object sender, EventArgs e)
-        {
-            using (var dialog = new FormThemeEditor(_themeEditorController))
-            {
-                var result = dialog.ShowDialog(this);
-                if (result != DialogResult.OK)
-                {
-                    return;
-                }
-
-                _themeEditorController.SaveCurrentTheme();
-            }
-        }
-
-        private void BtnResetTheme_Click(object sender, EventArgs e)
-        {
-            _themeEditorController.ResetTheme();
-            chkUseSystemVisualStyle.Checked = true;
-        }
-
         private void ComboBoxTheme_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var menu = (ComboBox)sender;
-            if (menu.SelectedIndex < 0)
+            if (IsThemeSettingsUpdating())
             {
                 return;
             }
 
-            if (_syncingTheme)
-            {
-                return;
-            }
-
-            _syncingTheme = true;
-            try
-            {
-                _themeEditorController.SetTheme((string)menu.SelectedItem);
-            }
-            finally
-            {
-                _syncingTheme = false;
-            }
+            BeginUpdateThemeSettings();
+            UseSystemVisualStyle = SelectedThemeId == ThemeId.Default;
+            EndUpdateThemeSettings();
         }
 
         private void ChkUseSystemVisualStyle_CheckedChanged(object sender, EventArgs e)
         {
-            _themeEditorController.UseSystemVisualStyle = chkUseSystemVisualStyle.Checked;
-            UpdateRestartWarningVisibility();
+            BeginUpdateThemeSettings();
+            EndUpdateThemeSettings();
         }
 
-        private void Theme_Changed(object sender, ThemeChangedEventArgs e)
+        private void BeginUpdateThemeSettings()
         {
-            if (e.ColorsChanged)
+            _updateThemeSettingsCounter++;
+        }
+
+        private bool IsThemeSettingsUpdating() =>
+            _updateThemeSettingsCounter > 0;
+
+        private void EndUpdateThemeSettings()
+        {
+            int counter = --_updateThemeSettingsCounter;
+            if (counter < 0)
             {
-                UpdateAppColors();
+                throw new InvalidOperationException($"{nameof(EndUpdateThemeSettings)} must be called after {nameof(BeginUpdateThemeSettings)}");
             }
 
-            if (!string.IsNullOrEmpty(e.ThemeName))
+            if (counter == 0)
             {
-                chkUseSystemVisualStyle.Checked = false;
+                bool settingsChanged =
+                    UseSystemVisualStyle != ThemeModule.Settings.UseSystemVisualStyle ||
+                    SelectedThemeId != ThemeModule.Settings.Theme.Id;
+
+                lblRestartNeeded.Visible = settingsChanged;
+                chkUseSystemVisualStyle.Enabled = SelectedThemeId != ThemeId.Default;
+            }
+        }
+
+        private struct FormattedThemeId
+        {
+            public FormattedThemeId(ThemeId themeId)
+            {
+                ThemeId = themeId;
             }
 
-            if (!_syncingTheme)
+            public ThemeId ThemeId { get; }
+
+            public override bool Equals(object obj) =>
+                obj is FormattedThemeId other && Equals(other);
+
+            public override int GetHashCode() =>
+                ThemeId.GetHashCode();
+
+            public static bool operator ==(FormattedThemeId left, FormattedThemeId right) =>
+                left.Equals(right);
+
+            public static bool operator !=(FormattedThemeId left, FormattedThemeId right) =>
+                !left.Equals(right);
+
+            public override string ToString()
             {
-                _syncingTheme = true;
-                try
+                if (ThemeId == ThemeId.Default)
                 {
-                    UpdateComboBoxTheme(e.ThemeName);
+                    return DefaultThemeName.Text;
                 }
-                finally
+
+                if (ThemeId.IsBuiltin)
                 {
-                    _syncingTheme = false;
+                    return string.Format(FormatBuiltinThemeName.Text, ThemeId.Name);
                 }
+
+                return string.Format(FormatUserDefinedThemeName.Text, ThemeId.Name);
             }
 
-            UpdateRestartWarningVisibility();
-        }
-
-        private void Theme_ColorChanged() =>
-            UpdateAppColors();
-
-        private void UpdateRestartWarningVisibility()
-        {
-            lblRestartNeeded.Visible =
-                !_themeEditorController.IsThemeInitial ||
-                _themeEditorController.IsThemeModified;
-        }
-
-        private void UpdateComboBoxTheme(string themeName)
-        {
-            _NO_TRANSLATE_cbSelectTheme.BeginUpdate();
-
-            _NO_TRANSLATE_cbSelectTheme.Items.Clear();
-            _NO_TRANSLATE_cbSelectTheme.Items.AddRange(
-                _themeEditorController.GetSavedThemeNames().Cast<object>().ToArray());
-            _NO_TRANSLATE_cbSelectTheme.SelectedIndex = _NO_TRANSLATE_cbSelectTheme.Items.IndexOf(
-                themeName ?? string.Empty);
-
-            _NO_TRANSLATE_cbSelectTheme.EndUpdate();
+            private bool Equals(FormattedThemeId other) =>
+                ThemeId.Equals(other.ThemeId);
         }
     }
 }

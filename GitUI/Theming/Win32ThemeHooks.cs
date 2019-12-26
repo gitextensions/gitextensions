@@ -33,8 +33,10 @@ namespace GitUI.Theming
 
         public static event Action<IntPtr> WindowCreated;
 
+        internal static ThemeSettings ThemeSettings { private get; set; } = ThemeSettings.Default;
+
         private static bool BypassThemeRenderers =>
-            ThemeModule.Controller.UseSystemVisualStyle || BypassAnyHook;
+            ThemeSettings.UseSystemVisualStyle || BypassAnyHook;
 
         private static bool BypassAnyHook =>
             _systemDialogDetector?.IsSystemDialogOpen == true;

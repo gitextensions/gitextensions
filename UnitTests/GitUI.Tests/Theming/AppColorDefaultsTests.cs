@@ -12,6 +12,23 @@ namespace GitUITests.Theming
     [TestFixture]
     public class AppColorDefaultsTests
     {
+        private string _originalPath;
+
+        [OneTimeSetUp]
+        public void Setup()
+        {
+            var testAccessor = AppSettings.GetTestAccessor();
+            _originalPath = testAccessor.ApplicationExecutablePath;
+            testAccessor.ApplicationExecutablePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "gitextensions.exe");
+        }
+
+        [OneTimeTearDown]
+        public void Teardown()
+        {
+            var testAccessor = AppSettings.GetTestAccessor();
+            testAccessor.ApplicationExecutablePath = _originalPath;
+        }
+
         [Test]
         public void Default_values_are_defined_in_AppColorDefaults()
         {
@@ -25,24 +42,13 @@ namespace GitUITests.Theming
         [Test]
         public void Default_values_are_specified_in_invariant_theme()
         {
-            var testAccessor = AppSettings.GetTestAccessor();
-            string applicationExecutablePath = testAccessor.ApplicationExecutablePath;
-
-            try
+            var repository = new ThemeRepository(new ThemePersistence());
+            var invariantTheme = repository.GetInvariantTheme();
+            invariantTheme.Should().NotBeNull();
+            foreach (AppColor name in Enum.GetValues(typeof(AppColor)))
             {
-                testAccessor.ApplicationExecutablePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "gitextensions.exe");
-
-                var controller = new FormThemeEditorController(null, new ThemePersistence());
-                var invariantTheme = controller.LoadInvariantTheme(quiet: true);
-                foreach (AppColor name in Enum.GetValues(typeof(AppColor)))
-                {
-                    Color value = invariantTheme.GetColor(name);
-                    value.Should().NotBe(Color.Empty);
-                }
-            }
-            finally
-            {
-                testAccessor.ApplicationExecutablePath = applicationExecutablePath;
+                Color value = invariantTheme.GetColor(name);
+                value.Should().NotBe(Color.Empty);
             }
         }
     }

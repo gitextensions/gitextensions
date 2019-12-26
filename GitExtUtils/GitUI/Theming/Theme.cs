@@ -6,10 +6,9 @@ using System.Linq;
 namespace GitExtUtils.GitUI.Theming
 {
     /// <summary>
-    /// Interface and common utility methods to get color values by
-    /// .Net system color identifiers or GitExtensions app-specific color identifiers
+    /// A set of values for .Net system colors and GitExtensions app-specific colors
     /// </summary>
-    public abstract class Theme
+    public class Theme
     {
         private static readonly IReadOnlyDictionary<KnownColor, KnownColor> Duplicates =
             new Dictionary<KnownColor, KnownColor>
@@ -19,26 +18,56 @@ namespace GitExtUtils.GitUI.Theming
                 [KnownColor.ButtonHighlight] = KnownColor.ControlLight
             };
 
-        /// <summary>
-        /// GitExtension app-specific color identifiers
-        /// </summary>
-        public static HashSet<AppColor> AppColors { get; } =
-            new HashSet<AppColor>(Enum.GetValues(typeof(AppColor)).Cast<AppColor>());
+        private static Theme _default;
+        private IReadOnlyDictionary<AppColor, Color> AppColorValues { get; }
+        private IReadOnlyDictionary<KnownColor, Color> SysColorValues { get; }
 
-        /// <summary>
-        /// .Net system color identifiers
-        /// </summary>
-        public static HashSet<KnownColor> SysColors { get; } =
-            new HashSet<KnownColor>(
-                Enum.GetValues(typeof(KnownColor))
-                    .Cast<KnownColor>()
-                    .Where(c => IsSystemColor(c) && !Duplicates.ContainsKey(c)));
+        public static Theme Default =>
+            _default ?? (_default = CreateDefaultTheme());
+
+        public Theme(
+            IReadOnlyDictionary<AppColor, Color> appColors,
+            IReadOnlyDictionary<KnownColor, Color> sysColors,
+            ThemeId id)
+        {
+            Id = id;
+            AppColorValues = appColors;
+            SysColorValues = sysColors;
+        }
+
+        public ThemeId Id { get; }
 
         /// <summary>
         /// Get GitExtensions app-specific color value as defined by this instance. If not defined,
         /// returns <see cref="Color.Empty"/>
         /// </summary>
-        public abstract Color GetColor(AppColor name);
+        public Color GetColor(AppColor name) =>
+            AppColorValues.TryGetValue(name, out var result)
+                ? result
+                : Color.Empty;
+
+        /// <summary>
+        /// Get .Net system color value as defined by this instance
+        /// </summary>
+        private Color GetSysColor(KnownColor name) =>
+            SysColorValues.TryGetValue(name, out var result)
+                ? result
+                : Color.Empty;
+
+        /// <summary>
+        /// GitExtension app-specific color identifiers
+        /// </summary>
+        public static IReadOnlyCollection<AppColor> AppColorNames { get; } =
+            new HashSet<AppColor>(Enum.GetValues(typeof(AppColor)).Cast<AppColor>());
+
+        /// <summary>
+        /// .Net system color identifiers
+        /// </summary>
+        private static IReadOnlyCollection<KnownColor> SysColorNames { get; } =
+            new HashSet<KnownColor>(
+                Enum.GetValues(typeof(KnownColor))
+                    .Cast<KnownColor>()
+                    .Where(c => IsSystemColor(c) && !Duplicates.ContainsKey(c)));
 
         /// <summary>
         /// Get .Net system color value as defined by this instance. If not defined, returns
@@ -73,10 +102,12 @@ namespace GitExtUtils.GitUI.Theming
             return result;
         }
 
-        /// <summary>
-        /// Get .Net system color value as defined by this instance
-        /// </summary>
-        protected abstract Color GetSysColor(KnownColor name);
+        private static Theme CreateDefaultTheme()
+        {
+            var appColors = AppColorNames.ToDictionary(name => name, AppColorDefaults.GetBy);
+            var sysColors = SysColorNames.ToDictionary(name => name, GetFixedColor);
+            return new Theme(appColors, sysColors, ThemeId.Default);
+        }
 
         /// <summary>
         /// Get .Net system color value as defined by system.
@@ -89,7 +120,7 @@ namespace GitExtUtils.GitUI.Theming
         ///
         /// This method should only be called before our modifications to .Net system colors.
         /// </summary>
-        protected static Color GetFixedColor(KnownColor systemColor) =>
+        private static Color GetFixedColor(KnownColor systemColor) =>
             Color.FromArgb(Color.FromKnownColor(systemColor).ToArgb());
 
         /// <summary>
@@ -97,7 +128,7 @@ namespace GitExtUtils.GitUI.Theming
         /// produces same result as <see cref="Color.IsSystemColor"/> without the need to
         /// create <see cref="Color"/> instance
         /// </summary>
-        protected static bool IsSystemColor(KnownColor name) =>
+        private static bool IsSystemColor(KnownColor name) =>
             name < KnownColor.Transparent || name > KnownColor.YellowGreen;
     }
 }
