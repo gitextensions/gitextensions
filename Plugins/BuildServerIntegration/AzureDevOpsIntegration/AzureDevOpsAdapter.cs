@@ -103,12 +103,12 @@ namespace AzureDevOpsIntegration
             return GetBuilds(scheduler, null, true);
         }
 
-        private IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
+        private IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool running = false)
         {
             return Observable.Create<BuildInfo>((observer, cancellationToken) => ObserveBuildsAsync(sinceDate, running, observer, cancellationToken));
         }
 
-        private async Task ObserveBuildsAsync(DateTime? sinceDate, bool? running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
+        private async Task ObserveBuildsAsync(DateTime? sinceDate, bool running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
         {
             if (_apiClient == null)
             {
@@ -131,7 +131,15 @@ namespace AzureDevOpsIntegration
                     CacheAzureDevOps = new CacheAzureDevOps { Id = CacheKey, BuildDefinitions = _buildDefinitions };
                 }
 
-                var builds = await _apiClient.QueryBuildsAsync(_buildDefinitions, sinceDate, running);
+                if (_buildDefinitions == null)
+                {
+                    observer.OnCompleted();
+                    return;
+                }
+
+                var builds = running ?
+                    await _apiClient.QueryRunningBuildsAsync(_buildDefinitions) :
+                    await _apiClient.QueryFinishedBuildsAsync(_buildDefinitions, sinceDate);
 
                 foreach (var build in builds)
                 {

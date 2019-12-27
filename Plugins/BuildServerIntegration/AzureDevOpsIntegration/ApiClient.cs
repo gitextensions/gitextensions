@@ -17,6 +17,7 @@ namespace AzureDevOpsIntegration
     public class ApiClient : IDisposable
     {
         private const string BuildDefinitionsUrl = "build/definitions?api-version=2.0";
+        private const string Properties = "properties=sourceVersion,status,buildNumber,result,definition,_links,startTime,finishTime";
         private readonly HttpClient _httpClient;
 
         /// <summary>
@@ -109,25 +110,28 @@ namespace AzureDevOpsIntegration
             return build.Definition.Name;
         }
 
-        public async Task<IEnumerable<Build>> QueryBuildsAsync(string buildDefinitionsToQuery, DateTime? sinceDate, bool? running)
+        public async Task<IEnumerable<Build>> QueryFinishedBuildsAsync(string buildDefinitionsToQuery, DateTime? sinceDate)
         {
-            if (buildDefinitionsToQuery == null)
-            {
-                return Enumerable.Empty<Build>();
-            }
+            string queryUrl = QueryForBuildStatus(buildDefinitionsToQuery, "completed");
+            queryUrl += sinceDate.HasValue
+                ? $"&minTime={sinceDate.Value.ToUniversalTime():s}&api-version=4.1"
+                : "&api-version=2.0";
 
-            var builds = (await HttpGetAsync<ListWrapper<Build>>($"build/builds?api-version=2.0&definitions={buildDefinitionsToQuery}")).Value;
-
-            if (!running.HasValue || running.Value)
-            {
-                return builds
-                    .Where(b => !running.HasValue || running.Value == b.IsInProgress)
-                    .Where(b => !sinceDate.HasValue || b.StartTime >= sinceDate.Value.ToUniversalTime());
-            }
-
-            return builds
-                .Where(b => !sinceDate.HasValue || (b.FinishTime != null && b.FinishTime >= sinceDate.Value.ToUniversalTime()));
+            var finishedBuilds = (await HttpGetAsync<ListWrapper<Build>>(queryUrl)).Value;
+            return finishedBuilds;
         }
+
+        public async Task<IEnumerable<Build>> QueryRunningBuildsAsync(string buildDefinitionsToQuery)
+        {
+            string queryUrl = QueryForBuildStatus(buildDefinitionsToQuery, "cancelling,inProgress,none,notStarted,postponed") + "&api-version=2.0";
+
+            var runningBuilds = (await HttpGetAsync<ListWrapper<Build>>(queryUrl)).Value;
+            return runningBuilds;
+        }
+
+        // Api doc: https://docs.microsoft.com/en-us/rest/api/azure/devops/build/builds/list?view=azure-devops-rest-4.1
+        private string QueryForBuildStatus(string buildDefinitionsToQuery, string statusFilter)
+            => $"build/builds?{Properties}&definitions={buildDefinitionsToQuery}&statusFilter={statusFilter}";
 
         public void Dispose()
         {
@@ -161,6 +165,14 @@ namespace AzureDevOpsIntegration
     /// </summary>
     public class Build
     {
+        public const string StatusAll = "all"; // All status.
+        public const string StatusCancelling = "cancelling"; // The build is cancelling
+        public const string StatusCompleted = "completed"; // The build has completed.
+        public const string StatusInProgress = "inProgress"; // The build is currently in progress.
+        public const string StatusNone = "none"; // No status.
+        public const string StatusNotStarted = "notStarted"; // The build has not yet started.
+        public const string StatusPostponed = "postponed"; // The build is inactive in the queue.
+
         public string SourceVersion { get; set; }
         public string Status { get; set; }
         public string BuildNumber { get; set; }
@@ -170,7 +182,7 @@ namespace AzureDevOpsIntegration
         public DateTime? StartTime { get; set; }
         public DateTime? FinishTime { get; set; }
 
-        public bool IsInProgress => Status != "completed";
+        public bool IsInProgress => Status != StatusCompleted;
     }
 
     public class BuildLinks
