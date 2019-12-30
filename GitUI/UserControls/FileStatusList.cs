@@ -620,11 +620,17 @@ namespace GitUI
                 GitRevision[] parentRevs;
                 if (revisions.Count == 1)
                 {
-                    // Note: RevisionGrid could in some forms be used to get the parent guids
+                    // Get the parents for the selected revision
                     parentRevs = Revision.ParentIds?.Select(item => new GitRevision(item)).ToArray();
+                }
+                else if (revisions.Count > 4)
+                {
+                    // Assume only first to selected is interesting
+                    parentRevs = new GitRevision[1] { revisions.Last() };
                 }
                 else
                 {
+                    // Limited selections: Show multi selection
                     parentRevs = revisions.Skip(1).ToArray();
                 }
 
@@ -646,6 +652,7 @@ namespace GitUI
                     }
 
                     // Show combined (merge conflicts) only when all first (A) are parents to selected (B)
+                    // (a single merge commit is selected with parents explicit or implicit selected)
                     var isMergeCommit = AppSettings.ShowDiffForAllParents &&
                                         Revision.ParentIds != null && Revision.ParentIds.Count > 1 &&
                                         _revisionTester.AllFirstAreParentsToSelected(parentRevs, Revision);
