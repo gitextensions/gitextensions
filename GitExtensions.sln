@@ -211,6 +211,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeleteUnusedBranchesTests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyHook", "Externals\EasyHook\EasyHook\EasyHook.csproj", "{26B8A7CB-F911-4ADE-85F6-FF3FE95BE0AC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GerritTests", "UnitTests\Plugins\GerritTests\GerritTests.csproj", "{02A5CF27-302A-48FA-9FFD-E9A2C341FAE3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -403,6 +405,10 @@ Global
 		{26B8A7CB-F911-4ADE-85F6-FF3FE95BE0AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26B8A7CB-F911-4ADE-85F6-FF3FE95BE0AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26B8A7CB-F911-4ADE-85F6-FF3FE95BE0AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02A5CF27-302A-48FA-9FFD-E9A2C341FAE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02A5CF27-302A-48FA-9FFD-E9A2C341FAE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02A5CF27-302A-48FA-9FFD-E9A2C341FAE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02A5CF27-302A-48FA-9FFD-E9A2C341FAE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -456,6 +462,7 @@ Global
 		{EFBCA0B9-9E08-4464-BEAA-DAF2FF85C6AB} = {D017F26A-694F-4127-B917-9B1BD3F01E2F}
 		{3FD5B353-17C0-4122-A693-27B707D06EFF} = {C2276A26-13DF-485A-8B2C-414CF507798F}
 		{26B8A7CB-F911-4ADE-85F6-FF3FE95BE0AC} = {0E859634-B3DF-46AC-A73C-D49734F19D6A}
+		{02A5CF27-302A-48FA-9FFD-E9A2C341FAE3} = {C2276A26-13DF-485A-8B2C-414CF507798F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}

@@ -96,6 +96,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Server\CommandBuilder.cs" />
+    <Compile Include="Server\CommandBuilderWithDraftSupport.cs" />
+    <Compile Include="Server\CommandBuilderWithPrivateSupport.cs" />
+    <Compile Include="Server\GerritCapabilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">
@@ -157,5 +161,6 @@
     <Content Include="Resources\GerritInstallHook.png" />
     <None Include="Resources\IconGerrit.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

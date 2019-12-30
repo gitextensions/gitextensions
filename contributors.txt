@@ -109,3 +109,4 @@ YYYY/MM/DD, github id, Full name, email
 2019/10/31, rickaas, Ricky Lindeman, saakcir(at)gmail.com
 2019/11/27, andrewcartwright1, Andrew Cartwright, kickme93(at)hotmail.co.uk
 2019/12/02, nick-bulleid, Nick Bulleid, nickedb(at)gmail.com
+2019/12/25, dfev77, Florin Daneliuc, florin.daneliuc@gmail.com

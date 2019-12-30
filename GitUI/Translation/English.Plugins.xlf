@@ -563,28 +563,12 @@ Are you sure you want to continue?</source>
         <source>&amp;Publish</source>
         <target />
       </trans-unit>
-      <trans-unit id="PublishType.Text">
-        <source>For Review</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_publishCaption.Text">
         <source>Publish change</source>
         <target />
       </trans-unit>
       <trans-unit id="_publishGerritChangeCaption.Text">
         <source>Publish Gerrit Change</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_publishTypePrivate.Text">
-        <source>Private</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_publishTypeReview.Text">
-        <source>For Review</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_publishTypeWip.Text">
-        <source>Work-in-Progress</source>
         <target />
       </trans-unit>
       <trans-unit id="_selectBranch.Text">
@@ -823,6 +807,26 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GerritCapabilities" source-language="en">
+    <body>
+      <trans-unit id="_publishTypeDraft.Text">
+        <source>Draft</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_publishTypePrivate.Text">
+        <source>Private</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_publishTypeReview.Text">
+        <source>For Review</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_publishTypeWip.Text">
+        <source>Work-in-Progress</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GerritPlugin" source-language="en">
     <body>
       <trans-unit id="Description.Text">
@@ -855,6 +859,10 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_installCommitMsgHookShortText.Text">
         <source>Install commit-msg hook</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_predefinedGerritVersion.Caption">
+        <source>Treat Gerrit as having version</source>
         <target />
       </trans-unit>
       <trans-unit id="_publishGerritChange.Text">
