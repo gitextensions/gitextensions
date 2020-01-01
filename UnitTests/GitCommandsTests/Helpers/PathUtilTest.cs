@@ -175,6 +175,7 @@ namespace GitCommandsTests.Helpers
         [TestCase("C:\\Progra~1", "C:\\Program Files")]
         [TestCase("\\\\folder\\filename.txt", "\\\\folder\\filename.txt")]
         [TestCase("a:\\\\folder/filename.txt", "a:\\folder\\filename.txt")]
+        [TestCase(@"c:\folder#\filename.txt", @"c:\folder#\filename.txt")]
         public void NormalizePath(string path, string expected)
         {
             PathUtil.NormalizePath(path).Should().Be(expected);

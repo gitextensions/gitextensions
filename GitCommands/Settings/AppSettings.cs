@@ -1653,7 +1653,7 @@ namespace GitCommands
         {
             var assembly = Assembly.GetEntryAssembly() ?? // common case, GitExtensions.exe
                            Assembly.GetExecutingAssembly(); // unit test, GitCommands.dll
-            var path = new Uri(assembly.CodeBase).LocalPath;
+            var path = assembly.Location;
             return Path.GetDirectoryName(path);
         }
 
