@@ -1,5 +1,6 @@
 ﻿using GitCommands;
 using GitCommands.Git;
+using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {
@@ -111,7 +112,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowSubmoduleMenus(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsAnySubmodule && selectionInfo.SelectedRevision.Guid == GitRevision.WorkTreeGuid;
+            return selectionInfo.IsAnySubmodule && selectionInfo.SelectedRevision.ObjectId == ObjectId.WorkTreeId;
         }
 
         public bool ShouldShowMenuEditWorkingDirectoryFile(ContextMenuSelectionInfo selectionInfo)

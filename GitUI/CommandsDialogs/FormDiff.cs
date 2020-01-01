@@ -105,7 +105,7 @@ namespace GitUI.CommandsDialogs
             // I.e., git difftool --gui --no-prompt --dir-diff -R HEAD fails, but
             // git difftool --gui --no-prompt --dir-diff HEAD succeeds
             // Thus, we disable comparing "from" working directory.
-            var enableDifftoolDirDiff = _baseRevision?.Guid != GitRevision.WorkTreeGuid;
+            var enableDifftoolDirDiff = _baseRevision?.ObjectId != ObjectId.WorkTreeId;
             btnCompareDirectoriesWithDiffTool.Enabled = enableDifftoolDirDiff;
         }
 
