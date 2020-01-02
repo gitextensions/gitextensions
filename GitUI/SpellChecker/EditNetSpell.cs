@@ -369,7 +369,7 @@ namespace GitUI.SpellChecker
 
         private void ToggleAutoCompletion()
         {
-            if (!AppSettings.ProvideAutocompletion)
+            if (!AppSettings.ProvideAutocompletion || (Site != null && Site.DesignMode))
             {
                 CloseAutoComplete();
                 CancelAutoComplete();
