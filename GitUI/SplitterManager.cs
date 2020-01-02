@@ -68,15 +68,20 @@ namespace GitUI
 
                 if (prevSize > 0 && prevDistance > 0)
                 {
+                    var fixedPanel = Splitter.FixedPanel;
+                    var splitterWidth = Splitter.SplitterWidth;
                     if (SplitterSize == prevSize && Dpi == prevDpi)
                     {
-                        SetSplitterDistance(prevDistance);
+                        SetSplitterDistance(fixedPanel == FixedPanel.Panel2 ? prevDistance + splitterWidth : prevDistance);
                     }
                     else
                     {
-                        switch (Splitter.FixedPanel)
+                        switch (fixedPanel)
                         {
                             case FixedPanel.None:
+                                // At this point, the property "SplitterSize" has its original value from design time,
+                                // i.e. the actual size after opening the window is unknown yet. The calculation below
+                                // determines the resulting splitter distance by the ratio of both sides of the splitter.
                                 SetSplitterDistance((float)SplitterSize * prevDistance / prevSize);
                                 break;
                             case FixedPanel.Panel1:
@@ -84,7 +89,7 @@ namespace GitUI
                                 break;
                             case FixedPanel.Panel2:
                                 int panel2PrevSize = DpiUtil.Scale(prevSize, prevDpi) - DpiUtil.Scale(prevDistance, prevDpi);
-                                SetSplitterDistance(SplitterSize - panel2PrevSize);
+                                SetSplitterDistance(SplitterSize - panel2PrevSize + splitterWidth);
                                 break;
                         }
                     }

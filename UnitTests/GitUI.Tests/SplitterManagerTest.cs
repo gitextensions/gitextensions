@@ -107,7 +107,9 @@ namespace GitUITests
                 splitManager.RestoreSplitters();
 
                 // assert splitter moved by the width delta
-                splitter.SplitterDistance.Should().Be(splitterDistance + deltaWidth);
+                // Note: if the width of the splitter control itself is not regarded,
+                // this splitter control would move to the left every time the splitter container is restored.
+                splitter.SplitterDistance.Should().Be(splitterDistance + deltaWidth + splitter.SplitterWidth);
             }
         }
 
@@ -133,7 +135,8 @@ namespace GitUITests
                 var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitManager.AddSplitter(splitter, splitterName);
-                const int splitterNewWidth = 180;
+                const int deltaWidth = -20;
+                const int splitterNewWidth = splitterWidth + deltaWidth;
                 splitter.Width = splitterNewWidth;
                 splitter.SplitterDistance = splitterDistance;
                 splitter.FixedPanel = FixedPanel.Panel2;
@@ -151,7 +154,9 @@ namespace GitUITests
                 }
                 else
                 {
-                    splitter.SplitterDistance.Should().Be(100);
+                    // Note: if the width of the splitter control itself is not regarded,
+                    // this splitter control would move to the left every time the splitter container is restored.
+                    splitter.SplitterDistance.Should().Be(splitterDistance + deltaWidth + splitter.SplitterWidth);
                 }
             }
         }
