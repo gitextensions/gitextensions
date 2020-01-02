@@ -6932,6 +6932,14 @@ Do you want to register the host's fingerprint and restart the process?</source>
         <source>Downloading update...</source>
         <target />
       </trans-unit>
+      <trans-unit id="_errorHeading.Text">
+        <source>Download Failed</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_errorMessage.Text">
+        <source>Failed to download an update.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_newVersionAvailable.Text">
         <source>There is a new version {0} of Git Extensions available</source>
         <target />
