@@ -67,7 +67,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void RepoObjectTree_should_load_active_remotes()
         {
-            RunFormTest(
+            RunRepoObjectsTreeTest(
                 remotesNode =>
                 {
                     // act
@@ -81,7 +81,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void RepoObjectTree_should_order_active_remotes_alphabetically()
         {
-            RunFormTest(
+            RunRepoObjectsTreeTest(
                 remotesNode =>
                 {
                     // act
@@ -97,7 +97,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void RepoObjectTree_should_order_should_not_display_inactive_if_none()
         {
-            RunFormTest(
+            RunRepoObjectsTreeTest(
                 remotesNode =>
                 {
                     // act
@@ -114,7 +114,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             // setup
             DeactivateTreeNode(RemoteNames[1]);
 
-            RunFormTest(
+            RunRepoObjectsTreeTest(
                 remotesNode =>
                 {
                     // act
@@ -131,7 +131,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             // setup
             DeactivateTreeNode(RemoteNames[1]);
 
-            RunFormTest(
+            RunRepoObjectsTreeTest(
                 remotesNode =>
                 {
                     // act
@@ -150,7 +150,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             DeactivateTreeNode(RemoteNames[0]);
             DeactivateTreeNode(RemoteNames[1]);
 
-            RunFormTest(
+            RunRepoObjectsTreeTest(
                 remotesNode =>
                 {
                     // act
@@ -177,7 +177,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             return remotesNode;
         }
 
-        private void RunFormTest(Action<TreeNode> testDriver)
+        private void RunRepoObjectsTreeTest(Action<TreeNode> testDriver)
         {
             RunFormTest(
                 form =>

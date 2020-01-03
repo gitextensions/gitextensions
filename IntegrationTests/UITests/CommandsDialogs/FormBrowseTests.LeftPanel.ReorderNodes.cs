@@ -73,11 +73,13 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void RepoObjectTree_moving_first_up_and_last_down_does_nothing()
         {
-            RunFormTest(
+            RunRepoObjectsTreeTest(
                 repoObjectTree =>
                 {
+                    var testAccessor = repoObjectTree.GetTestAccessor();
+
                     // act
-                    var currNodes = repoObjectTree.TreeView.Nodes;
+                    var currNodes = testAccessor.TreeView.Nodes;
                     List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
 
                     // assert
@@ -88,11 +90,11 @@ namespace GitExtensions.UITests.CommandsDialogs
                     int last = currNodes.Count - 1;
 
                     // Trying to move first node up should do nothing
-                    repoObjectTree.ReorderTreeNode(currNodes[first], up: true);
+                    testAccessor.ReorderTreeNode(currNodes[first], up: true);
                     ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3);
 
                     // Similarly, moving last node down should do nothing
-                    repoObjectTree.ReorderTreeNode(currNodes[last], up: false);
+                    testAccessor.ReorderTreeNode(currNodes[last], up: false);
                     ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3);
                 });
         }
@@ -100,11 +102,13 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void RepoObjectTree_moving_node_legally_moves_it()
         {
-            RunFormTest(
+            RunRepoObjectsTreeTest(
                 repoObjectTree =>
                 {
+                    var testAccessor = repoObjectTree.GetTestAccessor();
+
                     // act
-                    var currNodes = repoObjectTree.TreeView.Nodes;
+                    var currNodes = testAccessor.TreeView.Nodes;
                     List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
                     if (initialNodes.Count != 4)
                     {
@@ -117,19 +121,19 @@ namespace GitExtensions.UITests.CommandsDialogs
                     ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3);
 
                     // Move first down
-                    repoObjectTree.ReorderTreeNode(currNodes[0], up: false);
+                    testAccessor.ReorderTreeNode(currNodes[0], up: false);
                     ValidateOrder(initialNodes, currNodes, 1, 0, 2, 3);
-                    repoObjectTree.ReorderTreeNode(currNodes[1], up: false);
+                    testAccessor.ReorderTreeNode(currNodes[1], up: false);
                     ValidateOrder(initialNodes, currNodes, 1, 2, 0, 3);
-                    repoObjectTree.ReorderTreeNode(currNodes[2], up: false);
+                    testAccessor.ReorderTreeNode(currNodes[2], up: false);
                     ValidateOrder(initialNodes, currNodes, 1, 2, 3, 0);
 
                     // Then back up
-                    repoObjectTree.ReorderTreeNode(currNodes[3], up: true);
+                    testAccessor.ReorderTreeNode(currNodes[3], up: true);
                     ValidateOrder(initialNodes, currNodes, 1, 2, 0, 3);
-                    repoObjectTree.ReorderTreeNode(currNodes[2], up: true);
+                    testAccessor.ReorderTreeNode(currNodes[2], up: true);
                     ValidateOrder(initialNodes, currNodes, 1, 0, 2, 3);
-                    repoObjectTree.ReorderTreeNode(currNodes[1], up: true);
+                    testAccessor.ReorderTreeNode(currNodes[1], up: true);
                     ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3);
                 });
         }
@@ -137,11 +141,13 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void RepoObjectTree_moving_node_across_hidden_trees_skips_them()
         {
-            RunFormTest(
+            RunRepoObjectsTreeTest(
                 repoObjectTree =>
                 {
+                    var testAccessor = repoObjectTree.GetTestAccessor();
+
                     // act
-                    var currNodes = repoObjectTree.TreeView.Nodes;
+                    var currNodes = testAccessor.TreeView.Nodes;
                     List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
                     if (initialNodes.Count != 4)
                     {
@@ -150,18 +156,18 @@ namespace GitExtensions.UITests.CommandsDialogs
                     }
 
                     // Hide nodes between first and last
-                    repoObjectTree.SetTreeVisibleByIndex(1, false);
-                    repoObjectTree.SetTreeVisibleByIndex(2, false);
+                    testAccessor.SetTreeVisibleByIndex(1, false);
+                    testAccessor.SetTreeVisibleByIndex(2, false);
 
                     // assert
                     currNodes.Count.Should().Be(2);
 
                     // Move node 0 down, which should move it to index 3
-                    repoObjectTree.ReorderTreeNode(currNodes[0], up: false);
+                    testAccessor.ReorderTreeNode(currNodes[0], up: false);
 
                     // Unhide nodes between first and last
-                    repoObjectTree.SetTreeVisibleByIndex(1, true);
-                    repoObjectTree.SetTreeVisibleByIndex(2, true);
+                    testAccessor.SetTreeVisibleByIndex(1, true);
+                    testAccessor.SetTreeVisibleByIndex(2, true);
 
                     // Reset currNodes, should be back to 4
                     if (currNodes.Count != 4)
@@ -188,12 +194,12 @@ namespace GitExtensions.UITests.CommandsDialogs
             }
         }
 
-        private void RunFormTest(Action<RepoObjectsTree.TestAccessor> testDriver)
+        private void RunRepoObjectsTreeTest(Action<RepoObjectsTree> testDriver)
         {
             RunFormTest(
                 form =>
                 {
-                    testDriver(form.GetTestAccessor().RepoObjectsTree.GetTestAccessor());
+                    testDriver(form.GetTestAccessor().RepoObjectsTree);
                     return Task.CompletedTask;
                 });
         }
