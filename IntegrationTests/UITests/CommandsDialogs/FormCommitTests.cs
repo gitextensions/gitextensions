@@ -64,7 +64,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                 using (var tempForm = new Form())
                 {
-                    tempForm.Owner = form.Owner;
+                    tempForm.Owner = form;
                     tempForm.Show();
                     tempForm.Focus();
 
