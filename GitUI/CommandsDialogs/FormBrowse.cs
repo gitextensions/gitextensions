@@ -3019,31 +3019,27 @@ namespace GitUI.CommandsDialogs
             {
                 if (PathUtil.TryConvertWindowsPathToPosix(path, out var posixPath))
                 {
-                    ClearTerminalCommandLineAndRunCommand("cd " + posixPath);
+                    ClearTerminalCommandLineWithCommentAndRunCommand("cd " + posixPath, "#");
                 }
             }
             else if (AppSettings.ConEmuTerminal.ValueOrDefault == "powershell")
             {
-                ClearTerminalCommandLineAndRunCommand("cd \"" + path + "\"");
+                ClearTerminalCommandLineWithCommentAndRunCommand("cd \"" + path + "\"", "#");
             }
             else
             {
-                ClearTerminalCommandLineAndRunCommand("cd /D \"" + path + "\"");
+                ClearTerminalCommandLineWithCommentAndRunCommand("cd /D \"" + path + "\"", "REM");
             }
         }
 
-        private void ClearTerminalCommandLineAndRunCommand(string command)
+        private void ClearTerminalCommandLineWithCommentAndRunCommand(string command, string comment)
         {
             if (_terminal?.RunningSession == null || string.IsNullOrWhiteSpace(command))
             {
                 return;
             }
 
-            // Clear terminal line by sending 'backspace' characters
-            for (int i = 0; i < 10000; i++)
-            {
-                _terminal.RunningSession.WriteInputTextAsync("\b");
-            }
+            _terminal.RunningSession.WriteInputTextAsync($"\x01 {comment} {Environment.NewLine}");
 
             _terminal.RunningSession.WriteInputTextAsync(command + Environment.NewLine);
         }
