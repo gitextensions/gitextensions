@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -83,7 +84,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
 
                     // assert
-                    currNodes.Count.Should().Be(4);
+                    AssertListCount(currNodes, 4);
                     ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3);
 
                     int first = 0;
@@ -110,14 +111,9 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // act
                     var currNodes = testAccessor.TreeView.Nodes;
                     List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
-                    if (initialNodes.Count != 4)
-                    {
-                        var nodes = initialNodes.Select(n => n.Text).Join(", ");
-                        Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} {nameof(initialNodes)}: {nodes}");
-                    }
 
                     // assert
-                    currNodes.Count.Should().Be(4);
+                    AssertListCount(currNodes, 4);
                     ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3);
 
                     // Move first down
@@ -149,18 +145,14 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // act
                     var currNodes = testAccessor.TreeView.Nodes;
                     List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
-                    if (initialNodes.Count != 4)
-                    {
-                        var nodes = initialNodes.Select(n => n.Text).Join(", ");
-                        Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} {nameof(initialNodes)}: {nodes}");
-                    }
+                    AssertListCount(initialNodes, 4);
 
                     // Hide nodes between first and last
                     testAccessor.SetTreeVisibleByIndex(1, false);
                     testAccessor.SetTreeVisibleByIndex(2, false);
 
                     // assert
-                    currNodes.Count.Should().Be(2);
+                    AssertListCount(currNodes, 2);
 
                     // Move node 0 down, which should move it to index 3
                     testAccessor.ReorderTreeNode(currNodes[0], up: false);
@@ -170,23 +162,29 @@ namespace GitExtensions.UITests.CommandsDialogs
                     testAccessor.SetTreeVisibleByIndex(2, true);
 
                     // Reset currNodes, should be back to 4
-                    if (currNodes.Count != 4)
-                    {
-                        var nodes = currNodes.OfType<TreeNode>().Select(n => n.Text).Join(", ");
-                        Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} {nameof(currNodes)}: {nodes}");
-                    }
-
-                    currNodes.Count.Should().Be(4);
+                    AssertListCount(currNodes, 4);
 
                     // Only first and last nodes should have swapped
                     ValidateOrder(initialNodes, currNodes, 3, 1, 2, 0);
                 });
         }
 
+        private static void AssertListCount(ICollection collection, int expectedCount)
+        {
+            int actualCount = collection.Count;
+            if (actualCount == expectedCount)
+            {
+                return;
+            }
+
+            string items = collection.OfType<object>().Select(n => n.ToString()).Join(", ");
+            Assert.Fail($"Actual count {actualCount} differs from expected {expectedCount}.{Environment.NewLine}Actual items: {items}");
+        }
+
         private void ValidateOrder(List<TreeNode> initialNodes, TreeNodeCollection currNodes, params int[] expectedOrder)
         {
-            initialNodes.Count.Should().Be(currNodes.Count);
-            initialNodes.Count.Should().Be(expectedOrder.Count());
+            AssertListCount(currNodes, expectedOrder.Length);
+            AssertListCount(initialNodes, expectedOrder.Length);
 
             for (int i = 0; i < initialNodes.Count; ++i)
             {
