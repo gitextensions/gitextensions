@@ -43,8 +43,8 @@ Yes, I allow telemetry!");
         private readonly TranslationString _parentsText = new TranslationString("{0:Parent|Parents}");
         private readonly TranslationString _childrenText = new TranslationString("{0:Child|Children}");
 
-        private readonly TranslationString _generalGitConfigExceptionMessage = new TranslationString("GitExtensions failed to read the Git configuration file \"{0}\" due to the following error:{1}{1}{2}{1}{1}Due to the nature of this problem, the behavior of the application cannot be guaranteed and must be closed.  Please correct this issue and re-open GitExtensions.");
-        private readonly TranslationString _generalGitConfigExceptionCaption = new TranslationString("Error in Git configuration file");
+        private readonly TranslationString _generalGitConfigExceptionMessage = new TranslationString("Failed to read \"{0}\" due to the following error:{1}{1}{2}{1}{1}Due to the nature of this problem, the behavior of the application cannot be guaranteed and must be closed.  Please correct this issue and re-open GitExtensions.");
+        private readonly TranslationString _generalGitConfigExceptionCaption = new TranslationString("Configuration Error");
 
         // public only because of FormTranslate
         public Strings()

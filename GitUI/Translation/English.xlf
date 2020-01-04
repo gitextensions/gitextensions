@@ -9284,11 +9284,11 @@ Select this commit to populate the full message.</source>
         <target />
       </trans-unit>
       <trans-unit id="_generalGitConfigExceptionCaption.Text">
-        <source>Error in Git configuration file</source>
+        <source>Configuration Error</source>
         <target />
       </trans-unit>
       <trans-unit id="_generalGitConfigExceptionMessage.Text">
-        <source>GitExtensions failed to read the Git configuration file "{0}" due to the following error:{1}{1}{2}{1}{1}Due to the nature of this problem, the behavior of the application cannot be guaranteed and must be closed.  Please correct this issue and re-open GitExtensions.</source>
+        <source>Failed to read "{0}" due to the following error:{1}{1}{2}{1}{1}Due to the nature of this problem, the behavior of the application cannot be guaranteed and must be closed.  Please correct this issue and re-open GitExtensions.</source>
         <target />
       </trans-unit>
       <trans-unit id="_gitExecutableNotFoundText.Text">
