@@ -31,7 +31,7 @@ namespace CommonTestUtils
             }
         }
 
-        public static async void UpdateSubmoduleStatusAndWaitForResultAsync(ISubmoduleStatusProvider provider, GitModule module, IReadOnlyList<GitItemStatus> gitStatus)
+        public static async Task UpdateSubmoduleStatusAndWaitForResultAsync(ISubmoduleStatusProvider provider, GitModule module, IReadOnlyList<GitItemStatus> gitStatus)
         {
             List<DetailedSubmoduleInfo> result = new List<DetailedSubmoduleInfo>();
             provider.StatusUpdated += Provider_StatusUpdated;
