@@ -20,7 +20,7 @@ namespace GitExtensions.UITests.NBugReports
         [TearDown]
         public void TearDown()
         {
-            _form?.Dispose();
+            _form.Dispose();
         }
 
         [TestCase("", false)]

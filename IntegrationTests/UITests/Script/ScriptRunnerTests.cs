@@ -54,7 +54,7 @@ namespace GitExtensions.UITests.Script
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            _referenceRepository?.Dispose();
+            _referenceRepository.Dispose();
         }
 
         [Test]

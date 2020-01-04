@@ -65,13 +65,13 @@ namespace GitUITests.CommitInfo
         [TearDown]
         public void TearDown()
         {
-            _commitInfo?.Dispose();
+            _commitInfo.Dispose();
         }
 
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            _referenceRepository?.Dispose();
+            _referenceRepository.Dispose();
         }
 
         [Test]

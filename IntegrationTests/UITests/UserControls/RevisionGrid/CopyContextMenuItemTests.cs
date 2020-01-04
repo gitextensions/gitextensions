@@ -37,7 +37,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         }
 
         [TearDown]
-        public void Dispose()
+        public void TearDown()
         {
             var owner = _copyContextMenuItem.Owner;
             _copyContextMenuItem.Dispose();

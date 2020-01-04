@@ -48,11 +48,11 @@ namespace GitCommandsTests.ExternalLinks
         [TearDown]
         public void TearDown()
         {
-            _userRoaming.SettingsCache?.Dispose();
-            _repoDistributed.SettingsCache?.Dispose();
-            _repoLocal.SettingsCache?.Dispose();
+            _userRoaming.SettingsCache.Dispose();
+            _repoDistributed.SettingsCache.Dispose();
+            _repoLocal.SettingsCache.Dispose();
 
-            _testHelper?.Dispose();
+            _testHelper.Dispose();
         }
 
         [Test]

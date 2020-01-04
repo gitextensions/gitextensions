@@ -25,7 +25,7 @@ namespace GitUITests.Editor
         [TearDown]
         public void TearDown()
         {
-            _fileViewerInternal?.Dispose();
+            _fileViewerInternal.Dispose();
         }
 
         [TestCase(null)]

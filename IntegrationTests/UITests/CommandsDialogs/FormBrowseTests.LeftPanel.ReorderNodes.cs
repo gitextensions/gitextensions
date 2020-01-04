@@ -68,7 +68,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [TearDown]
         public void TearDown()
         {
-            _repo1?.Dispose();
+            _repo1.Dispose();
         }
 
         [Test]

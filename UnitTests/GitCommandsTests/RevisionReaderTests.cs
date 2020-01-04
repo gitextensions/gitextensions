@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using NUnit.Framework;

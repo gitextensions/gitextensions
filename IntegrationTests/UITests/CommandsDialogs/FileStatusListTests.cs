@@ -29,8 +29,8 @@ namespace GitExtensions.UITests.CommandsDialogs
         [TearDown]
         public void TearDown()
         {
-            _fileStatusList?.Dispose();
-            _form?.Dispose();
+            _fileStatusList.Dispose();
+            _form.Dispose();
         }
 
         [Test]

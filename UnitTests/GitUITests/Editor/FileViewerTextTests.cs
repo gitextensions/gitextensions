@@ -33,7 +33,7 @@ namespace GitUITests.Editor
         [TearDown]
         public void TearDown()
         {
-            _fileViewer?.Dispose();
+            _fileViewer.Dispose();
         }
 
         [Test]

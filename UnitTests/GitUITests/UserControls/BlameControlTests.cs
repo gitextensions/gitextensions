@@ -65,7 +65,7 @@ namespace GitUITests.UserControls
         [TearDown]
         public void TearDown()
         {
-            _blameControl?.Dispose();
+            _blameControl.Dispose();
         }
 
         [TestCase(true, true, true, true, "author1 - 3/22/2010 - fileName.txt")]
