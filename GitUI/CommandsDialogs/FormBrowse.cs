@@ -515,8 +515,6 @@ namespace GitUI.CommandsDialogs
                 components?.Dispose();
 
                 // ReSharper restore ConstantConditionalAccessQualifier
-
-                Console.WriteLine($"{nameof(FormBrowse)} disposed");
             }
 
             base.Dispose(disposing);
