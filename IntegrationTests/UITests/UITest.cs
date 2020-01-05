@@ -17,7 +17,7 @@ namespace GitExtensions.UITests
             Func<T, Task> runTestAsync)
             where T : Form
         {
-            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} entry");
+            LoggingService.Log($"{MethodBase.GetCurrentMethod().Name} entry");
             var idleCompletionSource = new TaskCompletionSource<VoidResult>();
 
             // Start runAsync before calling showForm.
@@ -28,11 +28,11 @@ namespace GitExtensions.UITests
             // complete.
             var test = ThreadHelper.JoinableTaskContext.Factory.RunAsync(async () =>
             {
-                Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}.test entry");
+                LoggingService.Log($"{MethodBase.GetCurrentMethod().Name}.test entry");
 
                 // Wait for the form to be opened by the test thread.
                 await idleCompletionSource.Task;
-                Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}.test idle");
+                LoggingService.Log($"{MethodBase.GetCurrentMethod().Name}.test idle");
                 var form = Application.OpenForms.OfType<T>().Single();
                 if (!form.Visible)
                 {
@@ -45,19 +45,19 @@ namespace GitExtensions.UITests
                 {
                     // Wait for potential pending asynchronous tasks triggered by the form.
                     WaitForPendingOperations();
-                    Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}.test form loaded");
+                    LoggingService.Log($"{MethodBase.GetCurrentMethod().Name}.test form loaded");
 
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                    Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}.test on main thread");
+                    LoggingService.Log($"{MethodBase.GetCurrentMethod().Name}.test on main thread");
 
                     try
                     {
                         await runTestAsync(form);
-                        Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}.test passed");
+                        LoggingService.Log($"{MethodBase.GetCurrentMethod().Name}.test passed");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}.test failed: {ex.Demystify()}");
+                        LoggingService.Log($"{MethodBase.GetCurrentMethod().Name}.test failed", ex);
                         throw;
                     }
                 }
@@ -70,28 +70,28 @@ namespace GitExtensions.UITests
             // The following call to showForm will trigger messages.
             // So we can be sure we don't stall waiting for idle if the application was already idle.
             Application.Idle += HandleApplicationIdle;
-            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} subscribed");
+            LoggingService.Log($"{MethodBase.GetCurrentMethod().Name} subscribed");
             try
             {
                 try
                 {
                     showForm();
-                    Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} form shown");
+                    LoggingService.Log($"{MethodBase.GetCurrentMethod().Name} form shown");
                 }
                 catch (Exception outer)
                 {
                     try
                     {
                         // Wake up and join the asynchronous test operation.
-                        Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} exception {outer.Demystify()}");
+                        LoggingService.Log($"{MethodBase.GetCurrentMethod().Name} exception",  outer);
                         idleCompletionSource.TrySetResult(default);
                         test.Join();
-                        Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} test joined");
+                        LoggingService.Log($"{MethodBase.GetCurrentMethod().Name} test joined");
                     }
                     catch (Exception inner)
                     {
                         // ignore
-                        Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} exception {inner.Demystify()}");
+                        LoggingService.Log($"{MethodBase.GetCurrentMethod().Name} exception", inner);
                     }
 
                     throw;
@@ -99,19 +99,19 @@ namespace GitExtensions.UITests
 
                 // Join the asynchronous test operation so any exceptions are rethrown on this thread.
                 test.Join();
-                Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} test joined");
+                LoggingService.Log($"{MethodBase.GetCurrentMethod().Name} test joined");
             }
             finally
             {
                 Application.Idle -= HandleApplicationIdle;
-                Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} unsubscribed");
+                LoggingService.Log($"{MethodBase.GetCurrentMethod().Name} unsubscribed");
 
                 // Safety net for the case the task "test" threw very early and didn't close the form.
                 var form = Application.OpenForms.OfType<T>().SingleOrDefault();
                 if (form != null)
                 {
                     string formState = form.Visible ? "open" : "exists";
-                    Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} {typeof(T).FullName} still {formState}");
+                    LoggingService.Log($"{MethodBase.GetCurrentMethod().Name} {typeof(T).FullName} still {formState}");
 
                     CloseOrDispose(form, $"{MethodBase.GetCurrentMethod().Name} {typeof(T).FullName}");
                 }
@@ -123,7 +123,7 @@ namespace GitExtensions.UITests
 
             void HandleApplicationIdle(object sender, EventArgs e)
             {
-                Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}");
+                LoggingService.Log($"{MethodBase.GetCurrentMethod().Name}");
                 idleCompletionSource.TrySetResult(default);
             }
         }
@@ -181,7 +181,7 @@ namespace GitExtensions.UITests
 
                 if (form == null)
                 {
-                    Console.WriteLine($"{description} form is null");
+                    LoggingService.Log($"{description} form is null");
                     return;
                 }
 
@@ -199,20 +199,20 @@ namespace GitExtensions.UITests
                         form.Dispose();
                     }
 
-                    Console.WriteLine($"{actionDescription}d");
+                    LoggingService.Log($"{actionDescription}d");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"{actionDescription} threw {ex.Demystify()}");
+                    LoggingService.Log($"{actionDescription} threw {ex.Demystify()}");
                     form.Dispose();
-                    Console.WriteLine($"{description} form disposed");
+                    LoggingService.Log($"{description} form disposed");
                 }
             }
             finally
             {
                 // Wait for potential pending asynchronous tasks triggered by the form.
                 WaitForPendingOperations();
-                Console.WriteLine($"{description} form operations done");
+                LoggingService.Log($"{description} form operations done");
             }
         }
 

@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncTestHelper.cs" />
+    <Compile Include="LoggingService.cs" />
     <Compile Include="MockExecutable.cs" />
     <Compile Include="NoAssertContext.cs" />
     <Compile Include="ReferenceRepository.cs" />

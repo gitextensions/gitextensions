@@ -78,7 +78,7 @@ namespace CommonTestUtils
             {
                 try
                 {
-                    Console.WriteLine($"{nameof(AfterTest)} entry");
+                    LoggingService.Log($"{nameof(AfterTest)} entry");
 
                     // Wait for eventual pending operations triggered by the test.
                     if (ThreadHelper.JoinableTaskContext == null)
@@ -91,12 +91,12 @@ namespace CommonTestUtils
                         try
                         {
                             ThreadHelper.JoinableTaskContext.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cts.Token));
-                            Console.WriteLine($"{nameof(AfterTest)} pending operations finished");
+                            LoggingService.Log($"{nameof(AfterTest)} pending operations finished");
                         }
                         catch (OperationCanceledException ex)
                         {
                             var ctsCancelled = cts.IsCancellationRequested ? string.Empty : "not ";
-                            Console.WriteLine($"{nameof(AfterTest)} cts {ctsCancelled}cancelled, ex {ex.Demystify()}");
+                            LoggingService.Log($"{nameof(AfterTest)} cts {ctsCancelled}cancelled", ex);
                         }
                     }
 
@@ -118,25 +118,25 @@ namespace CommonTestUtils
             catch (Exception ex) when (_threadException != null)
             {
                 // ignore the follow-up exception
-                Console.WriteLine($"{nameof(AfterTest)} ignored {ex.Demystify()}");
+                LoggingService.Log($"{nameof(AfterTest)} ignored", ex);
             }
             finally
             {
                 AppSettings.CheckForUpdates = _checkForUpdatesOriginalValue;
                 Application.ThreadException -= HandleApplicationThreadException;
                 string threadException = _threadException?.SourceException.Demystify().ToString() ?? "none";
-                Console.WriteLine($"{nameof(AfterTest)} rethrow {threadException}");
+                LoggingService.Log($"{nameof(AfterTest)} rethrow {threadException}");
                 _threadException?.Throw();
             }
 
-            Console.WriteLine($"{nameof(AfterTest)} exit");
+            LoggingService.Log($"{nameof(AfterTest)} exit");
         }
 
         private void HandleApplicationThreadException(object sender, ThreadExceptionEventArgs e)
         {
             bool ignore = IgnoreExceptions || e.Exception.GetType() == typeof(ThreadAbortException);
-            string ignoring = ignore ? "ignoring " : string.Empty;
-            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} {ignoring}{e.Exception.Demystify()}");
+            string ignoring = ignore ? " ignoring" : string.Empty;
+            LoggingService.Log($"{MethodBase.GetCurrentMethod().Name}{ignoring}", e.Exception);
             if (!ignore && _threadException == null)
             {
                 _threadException = ExceptionDispatchInfo.Capture(e.Exception);

@@ -143,7 +143,7 @@ namespace GitCommands.Submodules
             TimeSpan elapsed = DateTime.Now - _previousSubmoduleUpdateTime;
             if (gitStatus == null || (!forceUpdate && elapsed.TotalSeconds <= 15))
             {
-                Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} called to early again - aborting");
+                Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} called too early again - aborting");
                 return;
             }
 
