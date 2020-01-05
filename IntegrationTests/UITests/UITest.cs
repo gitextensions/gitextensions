@@ -218,7 +218,8 @@ namespace GitExtensions.UITests
 
         private static void WaitForPendingOperations()
         {
-            // Workaround for canceled operations: Process the message loop before and after the wait.
+            // Workaround for tests hanging in conjunction with canceled operations:
+            // Process the message loop before and after the wait.
             Application.DoEvents();
             AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
             Application.DoEvents();
