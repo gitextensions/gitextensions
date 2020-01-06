@@ -1,6 +1,26 @@
 Changelog
 =========
 
+
+
+### Version 3.3.1 (7 Jan 2020)
+
+#### Fixes
+
+* Unable to update due to network configurations - PR [7576]
+* gitex: If no argument start browse in current workdir - PR [7554]
+* kdiff3: add configuration for merge arguments - PR [7549]
+* Installer defaults to PuTTY - PR [7545]
+* Prevent crash where _btnPreview is null when event triggered - PR [7536]
+
+
+[7576]:https://github.com/gitextensions/gitextensions/pull/7576
+[7554]:https://github.com/gitextensions/gitextensions/pull/7554
+[7549]:https://github.com/gitextensions/gitextensions/pull/7549
+[7545]:https://github.com/gitextensions/gitextensions/pull/7545
+[7536]:https://github.com/gitextensions/gitextensions/pull/7536
+
+
 ### Version 3.3 (1 Dec 2019)
 
 #### Features:
