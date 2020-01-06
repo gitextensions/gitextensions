@@ -623,10 +623,25 @@ namespace GitUI
                     // Get the parents for the selected revision
                     parentRevs = Revision.ParentIds?.Select(item => new GitRevision(item)).ToArray();
                 }
-                else if (revisions.Count > 4)
+                else if (revisions.Count == 2 || revisions.Count > 4)
                 {
-                    // Assume only first to selected is interesting
-                    parentRevs = new GitRevision[1] { revisions.Last() };
+                    // only first -> selected is interesting
+                    parentRevs = new[] { revisions.Last() };
+                    if (AppSettings.ShowDiffForAllParents)
+                    {
+                        // Get base commit, add as parent if unique
+                        Lazy<ObjectId> head = new Lazy<ObjectId>(() => Module.RevParse("HEAD"));
+                        var revA = parentRevs[0].ObjectId;
+                        var revB = Revision.ObjectId;
+                        ObjectId baseRevGuid = Module.GetMergeBase(GetRevisionOrHead(revA, head), GetRevisionOrHead(revB, head));
+                        if (baseRevGuid != null
+                            && baseRevGuid != revA
+                            && baseRevGuid != revB)
+                        {
+                            Array.Resize(ref parentRevs, 2);
+                            parentRevs[1] = new GitRevision(baseRevGuid);
+                        }
+                    }
                 }
                 else
                 {
@@ -669,6 +684,13 @@ namespace GitUI
             }
 
             GitItemStatusesWithParents = tuples;
+
+            return;
+
+            ObjectId GetRevisionOrHead(ObjectId rev, Lazy<ObjectId> head)
+            {
+                return rev.IsArtificial ? head.Value : rev;
+            }
         }
 
         public void SetDiffs(GitRevision selectedRev = null, GitRevision parentRev = null, IReadOnlyList<GitItemStatus> items = null)
