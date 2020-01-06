@@ -3022,13 +3022,16 @@ namespace GitUI.CommandsDialogs
                     ClearTerminalCommandLineWithCommentAndRunCommand("cd " + posixPath, "#");
                 }
             }
-            else if (AppSettings.ConEmuTerminal.ValueOrDefault == "powershell")
-            {
-                ClearTerminalCommandLineWithCommentAndRunCommand("cd \"" + path + "\"", "#");
-            }
             else
             {
-                ClearTerminalCommandLineWithCommentAndRunCommand("cd /D \"" + path + "\"", "REM");
+                if (AppSettings.ConEmuTerminal.ValueOrDefault == "cmd")
+                {
+                    ClearTerminalCommandLineWithEscapeAndRunCommand("cd /D \"" + path + "\"");
+                }
+                else
+                {
+                    ClearTerminalCommandLineWithEscapeAndRunCommand("cd \"" + path + "\"");
+                }
             }
         }
 
@@ -3042,6 +3045,16 @@ namespace GitUI.CommandsDialogs
             _terminal.RunningSession.WriteInputTextAsync($"\x01 {comment} {Environment.NewLine}");
 
             _terminal.RunningSession.WriteInputTextAsync(command + Environment.NewLine);
+        }
+
+        private void ClearTerminalCommandLineWithEscapeAndRunCommand(string command)
+        {
+            if (_terminal?.RunningSession == null || string.IsNullOrWhiteSpace(command))
+            {
+                return;
+            }
+
+            _terminal.RunningSession.WriteInputTextAsync("\x1B" + command + Environment.NewLine);
         }
 
         private void menuitemSparseWorkingCopy_Click(object sender, EventArgs e)
