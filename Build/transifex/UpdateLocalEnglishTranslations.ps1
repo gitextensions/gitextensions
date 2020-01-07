@@ -7,11 +7,11 @@ pushd $PSScriptRoot
 try {
     Write-Host "Copying the latest English translation before the update..."
     $translationsFolder = Resolve-Path "$PSScriptRoot\..\..\GitUI\Translation";
-    $releaseTranslationsFolder = Resolve-Path ..\..\GitExtensions\bin\$Configuration\Translation
+    $releaseTranslationsFolder = Resolve-Path ..\..\GitExtensions\bin\$Configuration\*\Translation
     Write-Host "Copying '$translationsFolder\English*.xlf' to '$releaseTranslationsFolder'"
     xcopy "$translationsFolder\English*.xlf" "$releaseTranslationsFolder" /Y
 
-    $src = Resolve-Path ..\..\GitExtensions\bin\$Configuration
+    $src = Split-Path -Path $releaseTranslationsFolder -Parent
     pushd "$src"
     try {
         Write-Host "Updating the English translation..."

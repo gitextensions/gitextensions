@@ -2,6 +2,8 @@
 using System.Runtime.InteropServices;
 using ApprovalTests.Namers;
 using ApprovalTests.Reporters;
+using ApprovalTests.Reporters.ContinuousIntegration;
+using ApprovalTests.Reporters.TestFrameworks;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
