@@ -3019,7 +3019,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (PathUtil.TryConvertWindowsPathToPosix(path, out var posixPath))
                 {
-                    ClearTerminalCommandLineWithBackspacesAndRunCommand("cd " + posixPath, "#");
+                    CommentTerminalCommandAndRunCommand("cd " + posixPath, "#");
                 }
             }
             else
@@ -3035,15 +3035,15 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void ClearTerminalCommandLineWithBackspacesAndRunCommand(string command, string comment)
+        private void CommentTerminalCommandAndRunCommand(string command, string shellCommentString)
         {
             if (_terminal?.RunningSession == null || string.IsNullOrWhiteSpace(command))
             {
                 return;
             }
 
-            // Clear terminal line by sending 'backspace' characters
-            _terminal.RunningSession.WriteInputTextAsync(new string('\b', 500) + command + Environment.NewLine);
+            // Go to the begin of the line, type the command and comment the rest of the line
+            _terminal.RunningSession.WriteInputTextAsync($"\x01 {command} {shellCommentString} {Environment.NewLine}");
         }
 
         private void ClearTerminalCommandLineWithEscapeAndRunCommand(string command)
