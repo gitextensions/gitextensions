@@ -12,7 +12,7 @@ $opencover_console = "packages\OpenCover.$opencover_version\tools\OpenCover.Cons
     -excludebyfile:*\*Designer.cs `
     -output:"OpenCover.GitExtensions.xml" `
     -target:"nunit3-console.exe" `
-    -targetargs:"$testAssemblies --workers=1 --timeout=90000"
+    -targetargs:"$testAssemblies --agents=1 --workers=1 --timeout=90000"
 $testExitCode = $LastExitCode
 Push-AppveyorArtifact "TestResult.xml"
 if ($testExitCode -ne 0) { $host.SetShouldExit($testExitCode) }
