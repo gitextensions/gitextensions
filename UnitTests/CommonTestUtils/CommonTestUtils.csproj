@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LibGit2Sharp" Version="0.25.0" />
     <PackageReference Include="NUnit" Version="3.10.1" />
   </ItemGroup>
 

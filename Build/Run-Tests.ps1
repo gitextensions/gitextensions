@@ -1,4 +1,6 @@
-$testAssemblies = (Get-ChildItem -Path UnitTests -Filter '*Tests.dll' -Recurse -Exclude 'ApprovalTests.dll').FullName | Where-Object { $_.Contains('\bin\Release') }
+$testAssemblies = @();
+$testAssemblies += (Get-ChildItem -Path UnitTests        -Filter '*Tests.dll' -Recurse -Exclude 'ApprovalTests.dll').FullName | Where-Object { $_.Contains('\bin\Release') }
+$testAssemblies += (Get-ChildItem -Path IntegrationTests -Filter '*Tests.dll' -Recurse -Exclude 'ApprovalTests.dll').FullName | Where-Object { $_.Contains('\bin\Release') }
 $packageConfig = [xml](Get-Content .nuget\packages.config)
 $opencover_version = $packageConfig.SelectSingleNode('/packages/package[@id="OpenCover"]').version
 $opencover_console = "packages\OpenCover.$opencover_version\tools\OpenCover.Console.exe"

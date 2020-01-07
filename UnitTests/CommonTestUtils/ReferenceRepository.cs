@@ -1,10 +1,9 @@
 ﻿using System;
-using CommonTestUtils;
 using GitCommands;
 using LibGit2Sharp;
 using Remote = LibGit2Sharp.Remote;
 
-namespace GitUITests.CommandsDialogs
+namespace CommonTestUtils
 {
     public class ReferenceRepository : IDisposable
     {

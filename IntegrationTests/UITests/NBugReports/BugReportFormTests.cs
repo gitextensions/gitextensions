@@ -3,7 +3,7 @@ using FluentAssertions;
 using GitUI.NBugReports;
 using NUnit.Framework;
 
-namespace GitUITests.NBugReports
+namespace GitExtensions.UITests.NBugReports
 {
     [Apartment(ApartmentState.STA)]
     [TestFixture]

@@ -2,17 +2,17 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Script;
 using GitUIPluginInterfaces;
-using GitUITests.CommandsDialogs;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace GitUITests.Script
+namespace GitExtensions.UITests.Script
 {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
