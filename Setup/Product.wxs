@@ -9,7 +9,7 @@
     <Condition Message=".NET Framework 4.6.1 must be installed prior to installation of Git Extensions.">
       Installed OR WIX_IS_NETFRAMEWORK_461_OR_LATER_INSTALLED
     </Condition>
-    <!-- 
+    <!--
       Read the currently configured value.
      -->
     <Property Id="CURRENT_SSHCLIENT" Secure="yes">
@@ -74,6 +74,7 @@
           <Directory Id="zh_Hans" Name="zh-Hans" />
           <Directory Id="zh_Hant" Name="zh-Hant" />
           <Directory Id="ru_RU" Name="ru-RU" />
+          <Directory Id="ThemesDir" Name="Themes" />
         </Directory>
       </Directory>
       <Directory Id="LocalAppDataFolder">
@@ -204,6 +205,15 @@
       </Component>
       <Component Id="System.Runtime.InteropServices.RuntimeInformation.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.InteropServices.RuntimeInformation.dll" />
+      </Component>
+      <Component Id="EasyHook.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\EasyHook.dll" />
+      </Component>
+      <Component Id="EasyHook32.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\EasyHook32.dll" />
+      </Component>
+      <Component Id="EasyHook64.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\EasyHook64.dll" />
       </Component>
       <Component Id="Microsoft.Win32.Primitives.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.Win32.Primitives.dll" />
@@ -576,6 +586,14 @@
         <RegistryKey Root="HKCR" Key="github-mac\shell\open\command">
           <RegistryValue Value="&quot;[INSTALLDIR]GitExtensions.exe&quot; %1" Type="string" />
         </RegistryKey>
+      </Component>
+    </DirectoryRef>
+    <DirectoryRef Id="ThemesDir">
+      <Component Id="win10default.colors" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Themes\win10default.colors" />
+      </Component>
+      <Component Id="dark.colors" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Themes\dark.colors" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="PluginsDir">
@@ -1581,6 +1599,11 @@
       <ComponentRef Id="Microsoft.VisualStudio.Threading.dll" />
       <ComponentRef Id="Microsoft.VisualStudio.Validation.dll" />
       <ComponentRef Id="System.Runtime.InteropServices.RuntimeInformation.dll" />
+      <ComponentRef Id="EasyHook.dll" />
+      <ComponentRef Id="EasyHook32.dll" />
+      <ComponentRef Id="EasyHook64.dll" />
+      <ComponentRef Id="win10default.colors" />
+      <ComponentRef Id="dark.colors" />
       <!--Remove unused dll, installed in versions <= 2.31-->
       <ComponentRef Id="GithubSharp.Core.dll" />
       <!--Remove unused dll, installed in versions <= 2.31-->
