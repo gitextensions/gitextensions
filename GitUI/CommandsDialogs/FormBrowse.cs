@@ -3015,27 +3015,27 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (AppSettings.ConEmuTerminal.ValueOrDefault == "bash")
+            switch (AppSettings.ConEmuTerminal.ValueOrDefault)
             {
-                if (PathUtil.TryConvertWindowsPathToPosix(path, out var posixPath))
-                {
-                    ClearTerminalCommandLineWithMacroAndRunCommand("cd " + posixPath, "#");
-                }
-            }
-            else
-            {
-                if (AppSettings.ConEmuTerminal.ValueOrDefault == "cmd")
-                {
-                    ClearTerminalCommandLineWithEscapeAndRunCommand("cd /D \"" + path + "\"");
-                }
-                else
-                {
-                    ClearTerminalCommandLineWithEscapeAndRunCommand("cd \"" + path + "\"");
-                }
+                case "bash":
+                    if (PathUtil.TryConvertWindowsPathToPosix(path, out var posixPath))
+                    {
+                        ClearTerminalCommandLineWithMacroAndRunCommand($"cd {posixPath}");
+                    }
+
+                    break;
+                case "cmd":
+                    ClearTerminalCommandLineWithEscapeAndRunCommand($"cd /D \"{path}\"");
+                    break;
+                case "powershell":
+                    ClearTerminalCommandLineWithEscapeAndRunCommand($"cd \"{path}\"");
+                    break;
+                default:
+                    break;
             }
         }
 
-        private void ClearTerminalCommandLineWithMacroAndRunCommand(string command, string shellCommentString)
+        private void ClearTerminalCommandLineWithMacroAndRunCommand(string command)
         {
             if (_terminal?.RunningSession == null || string.IsNullOrWhiteSpace(command))
             {
