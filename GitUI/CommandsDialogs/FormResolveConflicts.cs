@@ -385,11 +385,6 @@ namespace GitUI.CommandsDialogs
             {
                 case "kdiff3":
                 case "diffmerge":
-                case "beyondcompare3":
-                    arguments = arguments.Replace("\"$BASE\"", "");
-                    break;
-                case "araxis":
-                    arguments = arguments.Replace("-merge -3", "-merge");
                     arguments = arguments.Replace("\"$BASE\"", "");
                     break;
                 case "tortoisemerge":
