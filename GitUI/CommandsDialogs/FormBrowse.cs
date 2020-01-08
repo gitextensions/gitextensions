@@ -3019,33 +3019,41 @@ namespace GitUI.CommandsDialogs
             {
                 if (PathUtil.TryConvertWindowsPathToPosix(path, out var posixPath))
                 {
-                    ClearTerminalCommandLineAndRunCommand("cd " + posixPath);
+                    CommentTerminalCommandAndRunCommand("cd " + posixPath, "#");
                 }
-            }
-            else if (AppSettings.ConEmuTerminal.ValueOrDefault == "powershell")
-            {
-                ClearTerminalCommandLineAndRunCommand("cd \"" + path + "\"");
             }
             else
             {
-                ClearTerminalCommandLineAndRunCommand("cd /D \"" + path + "\"");
+                if (AppSettings.ConEmuTerminal.ValueOrDefault == "cmd")
+                {
+                    ClearTerminalCommandLineWithEscapeAndRunCommand("cd /D \"" + path + "\"");
+                }
+                else
+                {
+                    ClearTerminalCommandLineWithEscapeAndRunCommand("cd \"" + path + "\"");
+                }
             }
         }
 
-        private void ClearTerminalCommandLineAndRunCommand(string command)
+        private void CommentTerminalCommandAndRunCommand(string command, string shellCommentString)
         {
             if (_terminal?.RunningSession == null || string.IsNullOrWhiteSpace(command))
             {
                 return;
             }
 
-            // Clear terminal line by sending 'backspace' characters
-            for (int i = 0; i < 10000; i++)
+            // Go to the begin of the line, type the command and comment the rest of the line
+            _terminal.RunningSession.WriteInputTextAsync($"\x01 {command} {shellCommentString} {Environment.NewLine}");
+        }
+
+        private void ClearTerminalCommandLineWithEscapeAndRunCommand(string command)
+        {
+            if (_terminal?.RunningSession == null || string.IsNullOrWhiteSpace(command))
             {
-                _terminal.RunningSession.WriteInputTextAsync("\b");
+                return;
             }
 
-            _terminal.RunningSession.WriteInputTextAsync(command + Environment.NewLine);
+            _terminal.RunningSession.WriteInputTextAsync("\x1B" + command + Environment.NewLine);
         }
 
         private void menuitemSparseWorkingCopy_Click(object sender, EventArgs e)
