@@ -3019,7 +3019,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (PathUtil.TryConvertWindowsPathToPosix(path, out var posixPath))
                 {
-                    CommentTerminalCommandAndRunCommand("cd " + posixPath, "#");
+                    ClearTerminalCommandLineWithMacroAndRunCommand("cd " + posixPath, "#");
                 }
             }
             else
@@ -3035,15 +3035,16 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void CommentTerminalCommandAndRunCommand(string command, string shellCommentString)
+        private void ClearTerminalCommandLineWithMacroAndRunCommand(string command, string shellCommentString)
         {
             if (_terminal?.RunningSession == null || string.IsNullOrWhiteSpace(command))
             {
                 return;
             }
 
-            // Go to the begin of the line, type the command and comment the rest of the line
-            _terminal.RunningSession.WriteInputTextAsync($"\x01 {command} {shellCommentString} {Environment.NewLine}");
+            // Use a ConEmu macro to send the sequence for clearing the bash command line
+            _terminal.RunningSession.BeginGuiMacro("Keys").WithParam("^A").WithParam("^K").ExecuteSync();
+            _terminal.RunningSession.WriteInputTextAsync(command + Environment.NewLine);
         }
 
         private void ClearTerminalCommandLineWithEscapeAndRunCommand(string command)
