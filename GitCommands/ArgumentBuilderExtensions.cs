@@ -379,5 +379,8 @@ namespace GitCommands
 
             return batches;
         }
+
+        public static List<BatchArgumentItem> BuildBatchArgumentsForFiles(this ArgumentBuilder builder, IEnumerable<string> files)
+            => builder.BuildBatchArguments(files.Select(f => f.ToPosixPath().QuoteNE()));
     }
 }
