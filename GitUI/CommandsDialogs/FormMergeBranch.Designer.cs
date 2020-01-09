@@ -191,8 +191,7 @@
             // 
             this.allowUnrelatedHistories.AutoSize = true;
             this.advancedPanel.SetColumnSpan(this.allowUnrelatedHistories, 2);
-            this.allowUnrelatedHistories.Location = new System.Drawing.Point(2, 52);
-            this.allowUnrelatedHistories.Margin = new System.Windows.Forms.Padding(2);
+            this.allowUnrelatedHistories.Location = new System.Drawing.Point(3, 52);
             this.allowUnrelatedHistories.Name = "allowUnrelatedHistories";
             this.allowUnrelatedHistories.Size = new System.Drawing.Size(143, 17);
             this.allowUnrelatedHistories.TabIndex = 3;
@@ -429,6 +428,7 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(772, 460);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(478, 380);
