@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.1.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="4.0.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="es">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -336,8 +336,8 @@
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
-        <source>Cancel</source>
-        <target>Cancelar</target>
+        <source>Search branches</source>
+        <target>Buscar ramas</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -426,11 +426,6 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
         <target>Eliminar ramas completamente fusionadas con la rama</target>
-        
-      </trans-unit>
-      <trans-unit id="lblStatus.Text">
-        <source>Loading...</source>
-        <target>Cargando...</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -696,11 +691,6 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
         <target>&amp;Publicar</target>
         
       </trans-unit>
-      <trans-unit id="PublishDraft.Text">
-        <source>Submit review as draft</source>
-        <target>Enviar revisión como borrador</target>
-        
-      </trans-unit>
       <trans-unit id="_publishCaption.Text">
         <source>Publish change</source>
         <target>Publicar cambio</target>
@@ -724,6 +714,18 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       <trans-unit id="labelBranch.Text">
         <source>Branch:</source>
         <target>Rama:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelCc.Text">
+        <source>CC:</source>
+        
+      </trans-unit>
+      <trans-unit id="labelHashtag.Text">
+        <source>Hashtag:</source>
+        
+      </trans-unit>
+      <trans-unit id="labelPublishType.Text">
+        <source>Publish Type:</source>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">
@@ -995,6 +997,27 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GerritCapabilities" source-language="en" target-language="es">
+    <body>
+      <trans-unit id="_publishTypeDraft.Text">
+        <source>Draft</source>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypePrivate.Text">
+        <source>Private</source>
+        <target>Privado</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeReview.Text">
+        <source>For Review</source>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeWip.Text">
+        <source>Work-in-Progress</source>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GerritPlugin" source-language="en" target-language="es">
     <body>
       <trans-unit id="Description.Text">
@@ -1035,6 +1058,10 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
       <trans-unit id="_installCommitMsgHookShortText.Text">
         <source>Install commit-msg hook</source>
         <target>Instalar gancho commit-msg</target>
+        
+      </trans-unit>
+      <trans-unit id="_predefinedGerritVersion.Caption">
+        <source>Treat Gerrit as having version</source>
         
       </trans-unit>
       <trans-unit id="_publishGerritChange.Text">
@@ -1140,6 +1167,10 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
         <target>Hacer push al terminar</target>
         
       </trans-unit>
+      <trans-unit id="cbSquash.Text">
+        <source>Squash</source>
+        
+      </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
         <target>Gestionar ramas existentes:</target>
@@ -1213,9 +1244,17 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
         <target>GitHub</target>
         
       </trans-unit>
+      <trans-unit id="GitHubApiEndpoint.Caption">
+        <source>GitHub (Enterprise) API endpoint</source>
+        
+      </trans-unit>
       <trans-unit id="OAuthToken.Caption">
         <source>OAuth Token</source>
         <target>Token OAuth</target>
+        
+      </trans-unit>
+      <trans-unit id="_tokenAlreadyExist.Text">
+        <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
         
       </trans-unit>
     </body>
@@ -1406,6 +1445,40 @@ Do you want to reset the configured path?</source>
         <source>Jira Commit Hint</source>
         
       </trans-unit>
+      <trans-unit id="EmptyQueryResultCaption.Text">
+        <source>First Task Preview</source>
+        
+      </trans-unit>
+      <trans-unit id="EmptyQueryResultMessage.Text">
+        <source>[Empty Jira Query Result]</source>
+        
+      </trans-unit>
+      <trans-unit id="InvalidUrlCaption.Text">
+        <source>Invalid Jira url</source>
+        
+      </trans-unit>
+      <trans-unit id="InvalidUrlMessage.Text">
+        <source>A valid url is required to launch the Jira query helper</source>
+        
+      </trans-unit>
+      <trans-unit id="JiraFieldsLabel.Text">
+        <source>Jira fields</source>
+        <target>Campos de Jira</target>
+        
+      </trans-unit>
+      <trans-unit id="PreviewButtonText.Text">
+        <source>Preview</source>
+        <target>Previsualización</target>
+        
+      </trans-unit>
+      <trans-unit id="QueryHelperLinkText.Text">
+        <source>Open the query helper inside Jira</source>
+        
+      </trans-unit>
+      <trans-unit id="QueryHelperOpenErrorText.Text">
+        <source>Unable to open Jira query helper</source>
+        
+      </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
         <source>Jira credentials</source>
         <target>Credenciales de Jira</target>
@@ -1414,11 +1487,6 @@ Do you want to reset the configured path?</source>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
         <target>El plugin Jira Hint está habilitado</target>
-        
-      </trans-unit>
-      <trans-unit id="_jiraFields.Caption">
-        <source>Jira fields</source>
-        <target>Campos de Jira</target>
         
       </trans-unit>
       <trans-unit id="_jqlQuerySettings.Caption">

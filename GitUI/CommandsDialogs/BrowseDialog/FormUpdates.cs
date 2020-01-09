@@ -19,12 +19,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
     public partial class FormUpdates : GitExtensionsForm
     {
         #region Translation
-        private readonly TranslationString _newVersionAvailable =
-            new TranslationString("There is a new version {0} of Git Extensions available");
-        private readonly TranslationString _noUpdatesFound =
-            new TranslationString("No updates found");
-        private readonly TranslationString _downloadingUpdate =
-            new TranslationString("Downloading update...");
+        private readonly TranslationString _newVersionAvailable = new TranslationString("There is a new version {0} of Git Extensions available");
+        private readonly TranslationString _noUpdatesFound = new TranslationString("No updates found");
+        private readonly TranslationString _downloadingUpdate = new TranslationString("Downloading update...");
+        private readonly TranslationString _errorHeading = new TranslationString("Download Failed");
+        private readonly TranslationString _errorMessage = new TranslationString("Failed to download an update.");
         #endregion
 
         public IWin32Window OwnerWindow;
@@ -175,19 +174,27 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private async void btnUpdateNow_Click(object sender, EventArgs e)
         {
+            linkChangeLog.Visible = false;
+            progressBar1.Visible = true;
+            btnUpdateNow.Enabled = false;
+            UpdateLabel.Text = _downloadingUpdate.Text;
+            string fileName = Path.GetFileName(UpdateUrl);
+
             try
             {
-                linkChangeLog.Visible = false;
-                progressBar1.Visible = true;
-                btnUpdateNow.Enabled = false;
-                UpdateLabel.Text = _downloadingUpdate.Text;
-                string fileName = Path.GetFileName(UpdateUrl);
-
                 using (WebClient webClient = new WebClient())
                 {
                     await webClient.DownloadFileTaskAsync(new Uri(UpdateUrl), Environment.GetEnvironmentVariable("TEMP") + "\\" + fileName);
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, _errorMessage.Text + Environment.NewLine + ex.Message, _errorHeading.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
+            try
+            {
                 Process process = new Process();
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.FileName = "msiexec.exe";

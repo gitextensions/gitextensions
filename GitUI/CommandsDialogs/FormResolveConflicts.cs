@@ -595,6 +595,20 @@ namespace GitUI.CommandsDialogs
                     return false;
                 }
 
+                // Temporary compatibility with GE <3.3
+                if (_mergetool == "kdiff3")
+                {
+                    if (string.IsNullOrEmpty(_mergetoolPath))
+                    {
+                        _mergetoolPath = "kdiff3";
+                    }
+
+                    if (string.IsNullOrEmpty(_mergetoolCmd))
+                    {
+                        _mergetoolCmd = "\"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
+                    }
+                }
+
                 if (EnvUtils.RunningOnWindows())
                 {
                     // This only works when on Windows....

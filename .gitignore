@@ -72,3 +72,4 @@ Directory.Build.rsp
 GitStatus.txt
 OpenCover.GitExtensions.xml
 tree.txt
+*.binlog

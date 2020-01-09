@@ -1,9 +1,9 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.1.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="4.0.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="zh-Hans">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>在每个构建结果的构建状态摘要中显示测试结果（网络密集型！）</target>
+        <target>在每个构建结果的构建状态摘要中显示测试结果（会大量使用网络！）</target>
         
       </trans-unit>
     </body>
@@ -36,12 +36,12 @@
       </trans-unit>
       <trans-unit id="_msBuildEnabled.Caption">
         <source>Enabled</source>
-        <target>可用</target>
+        <target>已启用</target>
         
       </trans-unit>
       <trans-unit id="_msBuildPath.Caption">
         <source>Path to msbuild.exe</source>
-        <target>msbuild.exe路径</target>
+        <target>msbuild.exe 路径</target>
         
       </trans-unit>
     </body>
@@ -55,22 +55,22 @@
       </trans-unit>
       <trans-unit id="_autoRefresh.Caption">
         <source>Refresh view after fetch</source>
-        <target>提取后刷新视图</target>
+        <target>拉取后刷新视图</target>
         
       </trans-unit>
       <trans-unit id="_fetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
-        <target>提取所有子模块</target>
+        <target>拉取所有子模块</target>
         
       </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>每（几秒）提取一次 - 设定为0以禁用</target>
+        <target>每（几）秒自动拉取一次 - 设为 0 以禁用</target>
         
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
         <source>Arguments of git command to run</source>
-        <target>git命令运行参数</target>
+        <target>git 命令运行参数</target>
         
       </trans-unit>
     </body>
@@ -84,7 +84,7 @@
       </trans-unit>
       <trans-unit id="BitbucketDisableSsl.Caption">
         <source>Disable SSL verification</source>
-        <target>禁用 SSL 校验</target>
+        <target>禁用 SSL 验证</target>
         
       </trans-unit>
       <trans-unit id="BitbucketPassword.Caption">
@@ -104,7 +104,7 @@
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
         <source>Your repository is not hosted in BitBucket Server.</source>
-        <target>您的档案库没有托管在 Bitbucket 上。</target>
+        <target>您的版本库没有托管在 Bitbucket 上。</target>
         
       </trans-unit>
     </body>
@@ -250,7 +250,7 @@
       </trans-unit>
       <trans-unit id="lblTargetRepository.Text">
         <source>Repository</source>
-        <target>档案库</target>
+        <target>版本库</target>
         
       </trans-unit>
       <trans-unit id="lblTitle.Text">
@@ -336,8 +336,8 @@
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
-        <source>Cancel</source>
-        <target>取消</target>
+        <source>Search branches</source>
+        <target>搜索分支</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -429,11 +429,6 @@ Are you sure you want to continue?</source>
         <target>删除全部分支合并到分支</target>
         
       </trans-unit>
-      <trans-unit id="lblStatus.Text">
-        <source>Loading...</source>
-        <target>载入...</target>
-        
-      </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
         <source>Name</source>
         <target>名称</target>
@@ -470,12 +465,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_daysOlderThan.Caption">
         <source>Delete obsolete branches older than (days)</source>
-        <target>删除超过(天)的过时分支</target>
+        <target>删除未变更超过多少（天）的过时分支</target>
         
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
         <source>Delete obsolete branches from remote</source>
-        <target>删除过时的远程分支的名字</target>
+        <target>删除过时分支的时一并删除远程分支</target>
         
       </trans-unit>
       <trans-unit id="_includeUnmergedBranchesFlag.Caption">
@@ -490,12 +485,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_regexCaseInsensitiveFlag.Caption">
         <source>Is regex filter case insensitive?</source>
-        <target>正则表达式过滤器是否不敏感？</target>
+        <target>正则表达式过滤器是否大小写不敏感？</target>
         
       </trans-unit>
       <trans-unit id="_regexFilter.Caption">
         <source>Regex to filter branches to delete</source>
-        <target>正则表达式过滤分支删除</target>
+        <target>用于过滤要删除的分支的正则表达式</target>
         
       </trans-unit>
       <trans-unit id="_regexInvertedFlag.Caption">
@@ -593,7 +588,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_sizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
-        <target>查找大于(Mb)的大文件</target>
+        <target>查找大于多少（Mb）的大文件</target>
         
       </trans-unit>
     </body>
@@ -698,11 +693,6 @@ Are you sure you want to continue?</source>
         <target>发布(&amp;P)</target>
         
       </trans-unit>
-      <trans-unit id="PublishDraft.Text">
-        <source>Submit review as draft</source>
-        <target>提交审阅草稿</target>
-        
-      </trans-unit>
       <trans-unit id="_publishCaption.Text">
         <source>Publish change</source>
         <target>发布更改</target>
@@ -726,6 +716,21 @@ Are you sure you want to continue?</source>
       <trans-unit id="labelBranch.Text">
         <source>Branch:</source>
         <target>分支：</target>
+        
+      </trans-unit>
+      <trans-unit id="labelCc.Text">
+        <source>CC:</source>
+        <target>CC：</target>
+        
+      </trans-unit>
+      <trans-unit id="labelHashtag.Text">
+        <source>Hashtag:</source>
+        <target># 标签：</target>
+        
+      </trans-unit>
+      <trans-unit id="labelPublishType.Text">
+        <source>Publish Type:</source>
+        <target>发布类型：</target>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">
@@ -992,6 +997,33 @@ defaultrebase=0</target>
         <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
 
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
+        <target>用于Git Extensions的Gerrit插件提供了与用于Git Extensions的Gerrit的集成。 该插件基于git-review工具。
+
+要启用对版本库的Gerrit支持，必须创建.gitreview文件。 可以通过版本库 | 编辑.gitreview菜单选项。 有关.gitreview文件和git-review工具的更多信息，请参见下面的链接。</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GerritCapabilities" source-language="en" target-language="zh-Hans">
+    <body>
+      <trans-unit id="_publishTypeDraft.Text">
+        <source>Draft</source>
+        <target>草稿</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypePrivate.Text">
+        <source>Private</source>
+        <target>私有</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeReview.Text">
+        <source>For Review</source>
+        <target>待审查</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeWip.Text">
+        <source>Work-in-Progress</source>
+        <target>尚未完工</target>
         
       </trans-unit>
     </body>
@@ -1036,6 +1068,11 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       <trans-unit id="_installCommitMsgHookShortText.Text">
         <source>Install commit-msg hook</source>
         <target>安装commit-msg钩子</target>
+        
+      </trans-unit>
+      <trans-unit id="_predefinedGerritVersion.Caption">
+        <source>Treat Gerrit as having version</source>
+        <target>将视Gerrit为已有版本</target>
         
       </trans-unit>
       <trans-unit id="_publishGerritChange.Text">
@@ -1141,6 +1178,11 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <target>完成后推送</target>
         
       </trans-unit>
+      <trans-unit id="cbSquash.Text">
+        <source>Squash</source>
+        <target>Squash提交</target>
+        
+      </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
         <target>管理已有分支：</target>
@@ -1214,9 +1256,19 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <target>GitHub</target>
         
       </trans-unit>
+      <trans-unit id="GitHubApiEndpoint.Caption">
+        <source>GitHub (Enterprise) API endpoint</source>
+        <target>GitHub（企业版）API 终端</target>
+        
+      </trans-unit>
       <trans-unit id="OAuthToken.Caption">
         <source>OAuth Token</source>
         <target>授权令牌</target>
+        
+      </trans-unit>
+      <trans-unit id="_tokenAlreadyExist.Text">
+        <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
+        <target>你已经有一个OAuth令牌.获取一个新的,在插件&gt;设置中删除老的令牌.</target>
         
       </trans-unit>
     </body>
@@ -1409,6 +1461,46 @@ Do you want to reset the configured path?</source>
         <target>Jira Commit 提示</target>
         
       </trans-unit>
+      <trans-unit id="EmptyQueryResultCaption.Text">
+        <source>First Task Preview</source>
+        <target>首任务预览</target>
+        
+      </trans-unit>
+      <trans-unit id="EmptyQueryResultMessage.Text">
+        <source>[Empty Jira Query Result]</source>
+        <target>[空白 Jira 查询结果]</target>
+        
+      </trans-unit>
+      <trans-unit id="InvalidUrlCaption.Text">
+        <source>Invalid Jira url</source>
+        <target>无效的 Jira URL</target>
+        
+      </trans-unit>
+      <trans-unit id="InvalidUrlMessage.Text">
+        <source>A valid url is required to launch the Jira query helper</source>
+        <target>需要有效的 URL 才能启动 Jira 查询助手</target>
+        
+      </trans-unit>
+      <trans-unit id="JiraFieldsLabel.Text">
+        <source>Jira fields</source>
+        <target>Jira 字段</target>
+        
+      </trans-unit>
+      <trans-unit id="PreviewButtonText.Text">
+        <source>Preview</source>
+        <target>预览</target>
+        
+      </trans-unit>
+      <trans-unit id="QueryHelperLinkText.Text">
+        <source>Open the query helper inside Jira</source>
+        <target>打开 Jira 内置的查询助手</target>
+        
+      </trans-unit>
+      <trans-unit id="QueryHelperOpenErrorText.Text">
+        <source>Unable to open Jira query helper</source>
+        <target>无法打开 Jira 查询助手</target>
+        
+      </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
         <source>Jira credentials</source>
         <target>Jira 登录凭证</target>
@@ -1416,12 +1508,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
-        <target>启用 Jira 提示插件</target>
-        
-      </trans-unit>
-      <trans-unit id="_jiraFields.Caption">
-        <source>Jira fields</source>
-        <target>Jira 字段</target>
+        <target>已启用 Jira 提示插件</target>
         
       </trans-unit>
       <trans-unit id="_jqlQuerySettings.Caption">

@@ -9,4 +9,21 @@
     DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit."
     AllowSameVersionUpgrades="yes"/>
 
+
+  <SetProperty After="FindRelatedProducts" Id="FirstInstall" Value="true">
+      NOT Installed AND NOT WIX_UPGRADE_DETECTED AND NOT WIX_DOWNGRADE_DETECTED
+  </SetProperty>
+  <SetProperty After="SetFirstInstall" Id="Upgrading" Value="true">
+      WIX_UPGRADE_DETECTED AND NOT (REMOVE="ALL")
+  </SetProperty>
+  <SetProperty After="RemoveExistingProducts" Id="RemovingForUpgrade" Sequence="execute" Value="true">
+      (REMOVE="ALL") AND UPGRADINGPRODUCTCODE
+  </SetProperty>
+  <SetProperty After="SetUpgrading" Id="Uninstalling" Value="true">
+      Installed AND (REMOVE="ALL") AND NOT (WIX_UPGRADE_DETECTED OR UPGRADINGPRODUCTCODE)
+  </SetProperty>
+  <SetProperty After="SetUninstalling" Id="Maintenance" Value="true">
+      Installed AND NOT Upgrading AND NOT Uninstalling AND NOT UPGRADINGPRODUCTCODE
+  </SetProperty>
+
 </Include>

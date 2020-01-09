@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.1.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="4.0.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="pl">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -335,8 +335,8 @@ zatwierdzono przez {0}</target>
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
-        <source>Cancel</source>
-        <target>Anuluj</target>
+        <source>Search branches</source>
+        <target>Szukaj gałęzi</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -426,11 +426,6 @@ Na pewno chcesz kontynuować?</target>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
         <target>Usuń gałęzie w pełni scalone do gałęzi</target>
-        
-      </trans-unit>
-      <trans-unit id="lblStatus.Text">
-        <source>Loading...</source>
-        <target>Ładowanie...</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -697,11 +692,6 @@ Na pewno chcesz kontynuować?</target>
         <target>Publikuj</target>
         
       </trans-unit>
-      <trans-unit id="PublishDraft.Text">
-        <source>Submit review as draft</source>
-        <target>Prześlij przegląd jako szkic</target>
-        
-      </trans-unit>
       <trans-unit id="_publishCaption.Text">
         <source>Publish change</source>
         <target>Opublikuj zmianę</target>
@@ -725,6 +715,19 @@ Na pewno chcesz kontynuować?</target>
       <trans-unit id="labelBranch.Text">
         <source>Branch:</source>
         <target>Gałąź:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelCc.Text">
+        <source>CC:</source>
+        
+      </trans-unit>
+      <trans-unit id="labelHashtag.Text">
+        <source>Hashtag:</source>
+        
+      </trans-unit>
+      <trans-unit id="labelPublishType.Text">
+        <source>Publish Type:</source>
+        <target>Rodzaj publikacji:</target>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">
@@ -995,6 +998,29 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GerritCapabilities" source-language="en" target-language="pl">
+    <body>
+      <trans-unit id="_publishTypeDraft.Text">
+        <source>Draft</source>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypePrivate.Text">
+        <source>Private</source>
+        <target>Prywatne</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeReview.Text">
+        <source>For Review</source>
+        <target>Do przeglądu</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeWip.Text">
+        <source>Work-in-Progress</source>
+        <target>Praca-w-toku</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GerritPlugin" source-language="en" target-language="pl">
     <body>
       <trans-unit id="Description.Text">
@@ -1024,6 +1050,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_installCommitMsgHookFolderCreationFailed.Text">
         <source>Could not create the hooks folder. Please create the folder manually and try again.</source>
+        <target>Nie można stworzyć katalogu hooks. Proszę stworzyć katalog ręcznie i spróbować ponownie.</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookMessage.Text">
@@ -1034,6 +1061,10 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       <trans-unit id="_installCommitMsgHookShortText.Text">
         <source>Install commit-msg hook</source>
         <target>Zainstaluj hook wiadomości zatwierdzenia</target>
+        
+      </trans-unit>
+      <trans-unit id="_predefinedGerritVersion.Caption">
+        <source>Treat Gerrit as having version</source>
         
       </trans-unit>
       <trans-unit id="_publishGerritChange.Text">
@@ -1139,6 +1170,11 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <target>Wyślij po zakończeniu</target>
         
       </trans-unit>
+      <trans-unit id="cbSquash.Text">
+        <source>Squash</source>
+        <target>Dopasuj</target>
+        
+      </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
         <target>Zarządzaj istniejącymi gałęziami:</target>
@@ -1212,9 +1248,19 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <target>GitHub</target>
         
       </trans-unit>
+      <trans-unit id="GitHubApiEndpoint.Caption">
+        <source>GitHub (Enterprise) API endpoint</source>
+        <target>Punkt końcowy API GitHub (Enterprise)</target>
+        
+      </trans-unit>
       <trans-unit id="OAuthToken.Caption">
         <source>OAuth Token</source>
         <target>Token OAuth</target>
+        
+      </trans-unit>
+      <trans-unit id="_tokenAlreadyExist.Text">
+        <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
+        <target>Już posiadasz token OAuth. Aby uzyskać nowy, usuń najpierw stary w Wtyczki &gt; Ustawienia.</target>
         
       </trans-unit>
     </body>
@@ -1406,21 +1452,58 @@ Chcesz zresetować skonfigurowaną ścieżkę?</target>
         <source>Jira Commit Hint</source>
         
       </trans-unit>
-      <trans-unit id="_credentialsSettings.Caption">
-        <source>Jira credentials</source>
+      <trans-unit id="EmptyQueryResultCaption.Text">
+        <source>First Task Preview</source>
         
       </trans-unit>
-      <trans-unit id="_enabledSettings.Caption">
-        <source>Jira hint plugin enabled</source>
+      <trans-unit id="EmptyQueryResultMessage.Text">
+        <source>[Empty Jira Query Result]</source>
+        <target>[Pusty wynik zapytania Jira]</target>
         
       </trans-unit>
-      <trans-unit id="_jiraFields.Caption">
+      <trans-unit id="InvalidUrlCaption.Text">
+        <source>Invalid Jira url</source>
+        <target>Błędny adres URL Jira</target>
+        
+      </trans-unit>
+      <trans-unit id="InvalidUrlMessage.Text">
+        <source>A valid url is required to launch the Jira query helper</source>
+        <target>Do załączenia pomocy do zapytań Jira wymagany jest poprawny adres URL</target>
+        
+      </trans-unit>
+      <trans-unit id="JiraFieldsLabel.Text">
         <source>Jira fields</source>
         <target>Pola Jira</target>
         
       </trans-unit>
+      <trans-unit id="PreviewButtonText.Text">
+        <source>Preview</source>
+        <target>Podgląd</target>
+        
+      </trans-unit>
+      <trans-unit id="QueryHelperLinkText.Text">
+        <source>Open the query helper inside Jira</source>
+        <target>Otwórz pomoc do zapytań wewnątrz Jira</target>
+        
+      </trans-unit>
+      <trans-unit id="QueryHelperOpenErrorText.Text">
+        <source>Unable to open Jira query helper</source>
+        <target>Nie udało się otworzyć pomocy do zapytań Jira</target>
+        
+      </trans-unit>
+      <trans-unit id="_credentialsSettings.Caption">
+        <source>Jira credentials</source>
+        <target>Dane logowania Jira</target>
+        
+      </trans-unit>
+      <trans-unit id="_enabledSettings.Caption">
+        <source>Jira hint plugin enabled</source>
+        <target>Wtyczka podpowiedzi Jira włączona</target>
+        
+      </trans-unit>
       <trans-unit id="_jqlQuerySettings.Caption">
         <source>JQL Query</source>
+        <target>Zapytanie JQL</target>
         
       </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
@@ -1746,6 +1829,7 @@ Proszę sprawdzić adres URL serwera.</target>
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
+        <target>Wyodrębnij dane z URL wyniku tworzenia skopiowanego do schowka</target>
         
       </trans-unit>
     </body>
