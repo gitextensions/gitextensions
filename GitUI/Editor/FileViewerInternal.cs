@@ -39,6 +39,14 @@ namespace GitUI.Editor
             InitializeComponent();
             InitializeComplete();
 
+            Disposed += (sender, e) =>
+            {
+                //// _diffHighlightService not disposable
+                //// _lineNumbersControl not disposable
+                //// _currentViewPositionCache not disposable
+                _findAndReplaceForm.Dispose();
+            };
+
             _currentViewPositionCache = new CurrentViewPositionCache(this);
             TextEditor.ActiveTextAreaControl.TextArea.SelectionManager.SelectionChanged += SelectionManagerSelectionChanged;
 
