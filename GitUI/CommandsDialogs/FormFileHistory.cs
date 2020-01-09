@@ -66,6 +66,8 @@ namespace GitUI.CommandsDialogs
 
             InitializeComplete();
 
+            Blame.ConfigureRepositoryHostPlugin(PluginRegistry.TryGetGitHosterForModule(Module));
+
             return;
 
             void ConfigureTabControl()

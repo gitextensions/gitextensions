@@ -1013,8 +1013,8 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <source>GitHub</source>
         <target />
       </trans-unit>
-      <trans-unit id="GitHubApiEndpoint.Caption">
-        <source>GitHub (Enterprise) API endpoint</source>
+      <trans-unit id="GitHubHost.Caption">
+        <source>GitHub (Enterprise) hostname</source>
         <target />
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
@@ -1023,6 +1023,10 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_viewInWebSite.Text">
+        <source>View in {0}</source>
         <target />
       </trans-unit>
     </body>

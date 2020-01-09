@@ -24,5 +24,7 @@ namespace GitUIPluginInterfaces.RepositoryHosts
 
         string RemoteUrl { get; }
         GitProtocol CloneProtocol { get; }
+
+        string GetBlameUrl(string commitHash, string fileName, int lineIndex);
     }
 }
