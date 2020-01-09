@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -29,6 +30,10 @@ namespace ResourceManager
         {
             Name = name;
             Description = name;
+        }
+
+        void IDisposable.Dispose()
+        {
         }
 
         public bool HasSettings { get; }
