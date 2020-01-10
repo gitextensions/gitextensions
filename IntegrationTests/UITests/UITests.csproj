@@ -8,14 +8,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LibGit2Sharp" Version="0.25.0" />
-    <PackageReference Include="NUnit" Version="3.10.1" />
+    <PackageReference Include="ApprovalTests" Version="3.0.13" />
+    <PackageReference Include="FluentAssertions" Version="5.2.0" />
+    <PackageReference Include="NSubstitute" Version="3.1.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Externals\ICSharpCode.TextEditor\Project\ICSharpCode.TextEditor.csproj" />
     <ProjectReference Include="..\..\GitCommands\GitCommands.csproj" />
     <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\..\GitUI\GitUI.csproj" />
     <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
+    <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\..\UnitTests\CommonTestUtils\CommonTestUtils.csproj" />
   </ItemGroup>
 
 </Project>
+

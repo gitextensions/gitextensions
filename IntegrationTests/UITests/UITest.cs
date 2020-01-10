@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitUI;
 
-namespace GitUITests
+namespace GitExtensions.UITests
 {
     public static class UITest
     {

@@ -8,7 +8,7 @@ using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
 
-namespace GitUITests.UserControls.RevisionGrid
+namespace GitExtensions.UITests.UserControls.RevisionGrid
 {
     [TestFixture]
     public class CopyContextMenuItemTests
