@@ -1439,7 +1439,7 @@ namespace GitUI.CommandsDialogs
 
         private void CherryPickToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var revisions = RevisionGrid.GetSelectedRevisions(System.DirectoryServices.SortDirection.Descending);
+            var revisions = RevisionGrid.GetSelectedRevisions(SortDirection.Descending);
 
             UICommands.StartCherryPickDialog(this, revisions);
         }
