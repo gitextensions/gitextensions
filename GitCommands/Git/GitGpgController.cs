@@ -280,5 +280,7 @@ namespace GitCommands.Gpg
 
             return module;
         }
+
+        // TODO Add key retrieval using https://github.com/gpg/gnupg/blob/master/doc/DETAILS and `gpg -K --with-colons` to get private keys
     }
 }
