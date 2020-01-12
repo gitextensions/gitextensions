@@ -28,6 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.Label lblCommitTemplatePath;
+            System.Windows.Forms.Label lblMergeTool;
+            System.Windows.Forms.Label lblDiffToolCommand;
+            System.Windows.Forms.Label lblMergeToolPath;
+            System.Windows.Forms.Label lblDiffToolPath;
+            System.Windows.Forms.Label lblMergeToolCommand;
+            System.Windows.Forms.Label lblDiffTool;
             this.label60 = new System.Windows.Forms.Label();
             this.Global_FilesEncoding = new System.Windows.Forms.ComboBox();
             this.btnCommitTemplateBrowse = new System.Windows.Forms.Button();
@@ -59,19 +66,96 @@
             this.globalAutoCrlfNotSet = new System.Windows.Forms.RadioButton();
             this.tableLayoutPanelGitConfig = new System.Windows.Forms.TableLayoutPanel();
             this.ConfigureEncoding = new System.Windows.Forms.Button();
-            this.lblCommitTemplatePath = new System.Windows.Forms.Label();
-            this.lblDiffToolCommand = new System.Windows.Forms.Label();
-            this.lblDiffToolPath = new System.Windows.Forms.Label();
-            this.lblDiffTool = new System.Windows.Forms.Label();
-            this.lblMergeToolCommand = new System.Windows.Forms.Label();
-            this.lblMergeToolPath = new System.Windows.Forms.Label();
-            this.lblMergeTool = new System.Windows.Forms.Label();
+            this.lblGPGProgram = new System.Windows.Forms.Label();
+            this.lblSigningKey = new System.Windows.Forms.Label();
+            this.lblCommitSigning = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.chkCommitSigning = new System.Windows.Forms.CheckBox();
+            this.txtGPGProgram = new System.Windows.Forms.TextBox();
+            this.txtSigningKey = new System.Windows.Forms.TextBox();
+            lblCommitTemplatePath = new System.Windows.Forms.Label();
+            lblMergeTool = new System.Windows.Forms.Label();
+            lblDiffToolCommand = new System.Windows.Forms.Label();
+            lblMergeToolPath = new System.Windows.Forms.Label();
+            lblDiffToolPath = new System.Windows.Forms.Label();
+            lblMergeToolCommand = new System.Windows.Forms.Label();
+            lblDiffTool = new System.Windows.Forms.Label();
             this.InvalidGitPathGlobal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxLineEndings.SuspendLayout();
             this.flowLayoutPanelLineEndings.SuspendLayout();
             this.tableLayoutPanelGitConfig.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // lblCommitTemplatePath
+            // 
+            lblCommitTemplatePath.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            lblCommitTemplatePath.AutoSize = true;
+            lblCommitTemplatePath.Location = new System.Drawing.Point(3, 266);
+            lblCommitTemplatePath.Name = "lblCommitTemplatePath";
+            lblCommitTemplatePath.Size = new System.Drawing.Size(120, 13);
+            lblCommitTemplatePath.TabIndex = 76;
+            lblCommitTemplatePath.Text = "Path to commit template";
+            // 
+            // lblMergeTool
+            // 
+            lblMergeTool.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            lblMergeTool.AutoSize = true;
+            lblMergeTool.Location = new System.Drawing.Point(3, 86);
+            lblMergeTool.Name = "lblMergeTool";
+            lblMergeTool.Size = new System.Drawing.Size(54, 13);
+            lblMergeTool.TabIndex = 56;
+            lblMergeTool.Text = "Mergetool";
+            // 
+            // lblDiffToolCommand
+            // 
+            lblDiffToolCommand.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            lblDiffToolCommand.AutoSize = true;
+            lblDiffToolCommand.Location = new System.Drawing.Point(3, 235);
+            lblDiffToolCommand.Name = "lblDiffToolCommand";
+            lblDiffToolCommand.Size = new System.Drawing.Size(89, 13);
+            lblDiffToolCommand.TabIndex = 72;
+            lblDiffToolCommand.Text = "Difftool command";
+            // 
+            // lblMergeToolPath
+            // 
+            lblMergeToolPath.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            lblMergeToolPath.AutoSize = true;
+            lblMergeToolPath.Location = new System.Drawing.Point(3, 115);
+            lblMergeToolPath.Name = "lblMergeToolPath";
+            lblMergeToolPath.Size = new System.Drawing.Size(90, 13);
+            lblMergeToolPath.TabIndex = 59;
+            lblMergeToolPath.Text = "Path to mergetool";
+            // 
+            // lblDiffToolPath
+            // 
+            lblDiffToolPath.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            lblDiffToolPath.AutoSize = true;
+            lblDiffToolPath.Location = new System.Drawing.Point(3, 204);
+            lblDiffToolPath.Name = "lblDiffToolPath";
+            lblDiffToolPath.Size = new System.Drawing.Size(75, 13);
+            lblDiffToolPath.TabIndex = 70;
+            lblDiffToolPath.Text = "Path to difftool";
+            // 
+            // lblMergeToolCommand
+            // 
+            lblMergeToolCommand.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            lblMergeToolCommand.AutoSize = true;
+            lblMergeToolCommand.Location = new System.Drawing.Point(3, 146);
+            lblMergeToolCommand.Name = "lblMergeToolCommand";
+            lblMergeToolCommand.Size = new System.Drawing.Size(103, 13);
+            lblMergeToolCommand.TabIndex = 62;
+            lblMergeToolCommand.Text = "Mergetool command";
+            // 
+            // lblDiffTool
+            // 
+            lblDiffTool.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            lblDiffTool.AutoSize = true;
+            lblDiffTool.Location = new System.Drawing.Point(3, 175);
+            lblDiffTool.Name = "lblDiffTool";
+            lblDiffTool.Size = new System.Drawing.Size(40, 13);
+            lblDiffTool.TabIndex = 67;
+            lblDiffTool.Text = "Difftool";
             // 
             // label60
             // 
@@ -95,7 +179,7 @@
             // btnCommitTemplateBrowse
             // 
             this.btnCommitTemplateBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCommitTemplateBrowse.Location = new System.Drawing.Point(1037, 260);
+            this.btnCommitTemplateBrowse.Location = new System.Drawing.Point(1902, 260);
             this.btnCommitTemplateBrowse.Name = "btnCommitTemplateBrowse";
             this.btnCommitTemplateBrowse.Size = new System.Drawing.Size(123, 25);
             this.btnCommitTemplateBrowse.TabIndex = 15;
@@ -103,28 +187,18 @@
             this.btnCommitTemplateBrowse.UseVisualStyleBackColor = true;
             this.btnCommitTemplateBrowse.Click += new System.EventHandler(this.btnCommitTemplateBrowse_Click);
             // 
-            // lblCommitTemplatePath
-            // 
-            this.lblCommitTemplatePath.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblCommitTemplatePath.AutoSize = true;
-            this.lblCommitTemplatePath.Location = new System.Drawing.Point(3, 266);
-            this.lblCommitTemplatePath.Name = "lblCommitTemplatePath";
-            this.lblCommitTemplatePath.Size = new System.Drawing.Size(120, 13);
-            this.lblCommitTemplatePath.TabIndex = 76;
-            this.lblCommitTemplatePath.Text = "Path to commit template";
-            // 
             // txtCommitTemplatePath
             // 
             this.txtCommitTemplatePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCommitTemplatePath.Location = new System.Drawing.Point(129, 262);
             this.txtCommitTemplatePath.Name = "txtCommitTemplatePath";
-            this.txtCommitTemplatePath.Size = new System.Drawing.Size(902, 20);
+            this.txtCommitTemplatePath.Size = new System.Drawing.Size(1767, 20);
             this.txtCommitTemplatePath.TabIndex = 14;
             // 
             // btnDiffToolCommandSuggest
             // 
             this.btnDiffToolCommandSuggest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDiffToolCommandSuggest.Location = new System.Drawing.Point(1037, 229);
+            this.btnDiffToolCommandSuggest.Location = new System.Drawing.Point(1902, 229);
             this.btnDiffToolCommandSuggest.Name = "btnDiffToolCommandSuggest";
             this.btnDiffToolCommandSuggest.Size = new System.Drawing.Size(123, 25);
             this.btnDiffToolCommandSuggest.TabIndex = 13;
@@ -137,23 +211,13 @@
             this.txtDiffToolCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtDiffToolCommand.Location = new System.Drawing.Point(129, 231);
             this.txtDiffToolCommand.Name = "txtDiffToolCommand";
-            this.txtDiffToolCommand.Size = new System.Drawing.Size(902, 20);
+            this.txtDiffToolCommand.Size = new System.Drawing.Size(1767, 20);
             this.txtDiffToolCommand.TabIndex = 12;
-            // 
-            // lblDiffToolCommand
-            // 
-            this.lblDiffToolCommand.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblDiffToolCommand.AutoSize = true;
-            this.lblDiffToolCommand.Location = new System.Drawing.Point(3, 235);
-            this.lblDiffToolCommand.Name = "lblDiffToolCommand";
-            this.lblDiffToolCommand.Size = new System.Drawing.Size(89, 13);
-            this.lblDiffToolCommand.TabIndex = 72;
-            this.lblDiffToolCommand.Text = "Difftool command";
             // 
             // btnDiffToolBrowse
             // 
             this.btnDiffToolBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDiffToolBrowse.Location = new System.Drawing.Point(1037, 198);
+            this.btnDiffToolBrowse.Location = new System.Drawing.Point(1902, 198);
             this.btnDiffToolBrowse.Name = "btnDiffToolBrowse";
             this.btnDiffToolBrowse.Size = new System.Drawing.Size(123, 25);
             this.btnDiffToolBrowse.TabIndex = 11;
@@ -161,22 +225,12 @@
             this.btnDiffToolBrowse.UseVisualStyleBackColor = true;
             this.btnDiffToolBrowse.Click += new System.EventHandler(this.btnDiffToolBrowse_Click);
             // 
-            // lblDiffToolPath
-            // 
-            this.lblDiffToolPath.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblDiffToolPath.AutoSize = true;
-            this.lblDiffToolPath.Location = new System.Drawing.Point(3, 204);
-            this.lblDiffToolPath.Name = "lblDiffToolPath";
-            this.lblDiffToolPath.Size = new System.Drawing.Size(75, 13);
-            this.lblDiffToolPath.TabIndex = 70;
-            this.lblDiffToolPath.Text = "Path to difftool";
-            // 
             // txtDiffToolPath
             // 
             this.txtDiffToolPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtDiffToolPath.Location = new System.Drawing.Point(129, 200);
             this.txtDiffToolPath.Name = "txtDiffToolPath";
-            this.txtDiffToolPath.Size = new System.Drawing.Size(902, 20);
+            this.txtDiffToolPath.Size = new System.Drawing.Size(1767, 20);
             this.txtDiffToolPath.TabIndex = 10;
             this.txtDiffToolPath.LostFocus += new System.EventHandler(this.txtDiffMergeToolPath_LostFocus);
             // 
@@ -190,16 +244,6 @@
             this._NO_TRANSLATE_cboDiffTool.TabIndex = 9;
             this._NO_TRANSLATE_cboDiffTool.TextChanged += new System.EventHandler(this.cboDiffTool_TextChanged);
             // 
-            // lblDiffTool
-            // 
-            this.lblDiffTool.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblDiffTool.AutoSize = true;
-            this.lblDiffTool.Location = new System.Drawing.Point(3, 175);
-            this.lblDiffTool.Name = "lblDiffTool";
-            this.lblDiffTool.Size = new System.Drawing.Size(40, 13);
-            this.lblDiffTool.TabIndex = 67;
-            this.lblDiffTool.Text = "Difftool";
-            // 
             // InvalidGitPathGlobal
             // 
             this.InvalidGitPathGlobal.Anchor = System.Windows.Forms.AnchorStyles.Right;
@@ -209,9 +253,9 @@
             this.tableLayoutPanelGitConfig.SetColumnSpan(this.InvalidGitPathGlobal, 2);
             this.InvalidGitPathGlobal.Controls.Add(this.label9);
             this.InvalidGitPathGlobal.Controls.Add(this.pictureBox1);
-            this.InvalidGitPathGlobal.Location = new System.Drawing.Point(1037, 29);
+            this.InvalidGitPathGlobal.Location = new System.Drawing.Point(1902, 29);
             this.InvalidGitPathGlobal.Name = "InvalidGitPathGlobal";
-            this.InvalidGitPathGlobal.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.InvalidGitPathGlobal.Padding = new System.Windows.Forms.Padding(3);
             this.tableLayoutPanelGitConfig.SetRowSpan(this.InvalidGitPathGlobal, 4);
             this.InvalidGitPathGlobal.Size = new System.Drawing.Size(237, 47);
             this.InvalidGitPathGlobal.TabIndex = 65;
@@ -242,7 +286,7 @@
             // btnMergeToolCommandSuggest
             // 
             this.btnMergeToolCommandSuggest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMergeToolCommandSuggest.Location = new System.Drawing.Point(1037, 140);
+            this.btnMergeToolCommandSuggest.Location = new System.Drawing.Point(1902, 140);
             this.btnMergeToolCommandSuggest.Name = "btnMergeToolCommandSuggest";
             this.btnMergeToolCommandSuggest.Size = new System.Drawing.Size(123, 25);
             this.btnMergeToolCommandSuggest.TabIndex = 7;
@@ -255,23 +299,13 @@
             this.txtMergeToolCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtMergeToolCommand.Location = new System.Drawing.Point(129, 142);
             this.txtMergeToolCommand.Name = "txtMergeToolCommand";
-            this.txtMergeToolCommand.Size = new System.Drawing.Size(902, 20);
+            this.txtMergeToolCommand.Size = new System.Drawing.Size(1767, 20);
             this.txtMergeToolCommand.TabIndex = 6;
-            // 
-            // lblMergeToolCommand
-            // 
-            this.lblMergeToolCommand.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblMergeToolCommand.AutoSize = true;
-            this.lblMergeToolCommand.Location = new System.Drawing.Point(3, 146);
-            this.lblMergeToolCommand.Name = "lblMergeToolCommand";
-            this.lblMergeToolCommand.Size = new System.Drawing.Size(103, 13);
-            this.lblMergeToolCommand.TabIndex = 62;
-            this.lblMergeToolCommand.Text = "Mergetool command";
             // 
             // btnMergeToolBrowse
             // 
             this.btnMergeToolBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMergeToolBrowse.Location = new System.Drawing.Point(1037, 109);
+            this.btnMergeToolBrowse.Location = new System.Drawing.Point(1902, 109);
             this.btnMergeToolBrowse.Name = "btnMergeToolBrowse";
             this.btnMergeToolBrowse.Size = new System.Drawing.Size(123, 25);
             this.btnMergeToolBrowse.TabIndex = 5;
@@ -289,41 +323,21 @@
             this._NO_TRANSLATE_cboMergeTool.TabIndex = 3;
             this._NO_TRANSLATE_cboMergeTool.TextChanged += new System.EventHandler(this.cboMergeTool_TextChanged);
             // 
-            // lblMergeToolPath
-            // 
-            this.lblMergeToolPath.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblMergeToolPath.AutoSize = true;
-            this.lblMergeToolPath.Location = new System.Drawing.Point(3, 115);
-            this.lblMergeToolPath.Name = "lblMergeToolPath";
-            this.lblMergeToolPath.Size = new System.Drawing.Size(90, 13);
-            this.lblMergeToolPath.TabIndex = 59;
-            this.lblMergeToolPath.Text = "Path to mergetool";
-            // 
             // txtMergeToolPath
             // 
             this.txtMergeToolPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtMergeToolPath.Location = new System.Drawing.Point(129, 111);
             this.txtMergeToolPath.Name = "txtMergeToolPath";
-            this.txtMergeToolPath.Size = new System.Drawing.Size(902, 20);
+            this.txtMergeToolPath.Size = new System.Drawing.Size(1767, 20);
             this.txtMergeToolPath.TabIndex = 4;
             this.txtMergeToolPath.LostFocus += new System.EventHandler(this.txtDiffMergeToolPath_LostFocus);
-            // 
-            // lblMergeTool
-            // 
-            this.lblMergeTool.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblMergeTool.AutoSize = true;
-            this.lblMergeTool.Location = new System.Drawing.Point(3, 86);
-            this.lblMergeTool.Name = "lblMergeTool";
-            this.lblMergeTool.Size = new System.Drawing.Size(54, 13);
-            this.lblMergeTool.TabIndex = 56;
-            this.lblMergeTool.Text = "Mergetool";
             // 
             // GlobalEditor
             // 
             this.GlobalEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.GlobalEditor.Location = new System.Drawing.Point(129, 55);
             this.GlobalEditor.Name = "GlobalEditor";
-            this.GlobalEditor.Size = new System.Drawing.Size(902, 21);
+            this.GlobalEditor.Size = new System.Drawing.Size(1767, 21);
             this.GlobalEditor.TabIndex = 2;
             // 
             // label6
@@ -374,7 +388,7 @@
             // 
             // groupBoxLineEndings
             // 
-            this.groupBoxLineEndings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBoxLineEndings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxLineEndings.AutoSize = true;
             this.tableLayoutPanelGitConfig.SetColumnSpan(this.groupBoxLineEndings, 4);
@@ -382,7 +396,7 @@
             this.groupBoxLineEndings.Location = new System.Drawing.Point(3, 291);
             this.groupBoxLineEndings.Margin = new System.Windows.Forms.Padding(3, 3, 3, 6);
             this.groupBoxLineEndings.Name = "groupBoxLineEndings";
-            this.groupBoxLineEndings.Size = new System.Drawing.Size(1271, 111);
+            this.groupBoxLineEndings.Size = new System.Drawing.Size(2136, 111);
             this.groupBoxLineEndings.TabIndex = 16;
             this.groupBoxLineEndings.TabStop = false;
             this.groupBoxLineEndings.Text = "Line endings";
@@ -398,7 +412,7 @@
             this.flowLayoutPanelLineEndings.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanelLineEndings.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanelLineEndings.Name = "flowLayoutPanelLineEndings";
-            this.flowLayoutPanelLineEndings.Size = new System.Drawing.Size(1265, 92);
+            this.flowLayoutPanelLineEndings.Size = new System.Drawing.Size(2130, 92);
             this.flowLayoutPanelLineEndings.TabIndex = 5;
             // 
             // globalAutoCrlfTrue
@@ -484,10 +498,20 @@
             this.tableLayoutPanelGitConfig.Controls.Add(this.btnDiffToolBrowse, 2, 7);
             this.tableLayoutPanelGitConfig.Controls.Add(this.btnDiffToolCommandSuggest, 2, 8);
             this.tableLayoutPanelGitConfig.Controls.Add(this.btnCommitTemplateBrowse, 2, 9);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.lblGPGProgram, 0, 12);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.lblSigningKey, 0, 13);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.lblCommitSigning, 0, 14);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.button1, 2, 12);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.chkCommitSigning, 1, 14);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.txtGPGProgram, 1, 12);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.txtSigningKey, 1, 13);
             this.tableLayoutPanelGitConfig.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanelGitConfig.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanelGitConfig.Name = "tableLayoutPanelGitConfig";
-            this.tableLayoutPanelGitConfig.RowCount = 13;
+            this.tableLayoutPanelGitConfig.RowCount = 16;
+            this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -501,14 +525,13 @@
             this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanelGitConfig.Size = new System.Drawing.Size(1277, 778);
+            this.tableLayoutPanelGitConfig.Size = new System.Drawing.Size(2142, 778);
             this.tableLayoutPanelGitConfig.TabIndex = 81;
             // 
             // ConfigureEncoding
             // 
             this.ConfigureEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.ConfigureEncoding.Location = new System.Drawing.Point(1037, 411);
+            this.ConfigureEncoding.Location = new System.Drawing.Point(1902, 411);
             this.ConfigureEncoding.Name = "ConfigureEncoding";
             this.ConfigureEncoding.Size = new System.Drawing.Size(123, 25);
             this.ConfigureEncoding.TabIndex = 81;
@@ -516,13 +539,81 @@
             this.ConfigureEncoding.UseVisualStyleBackColor = true;
             this.ConfigureEncoding.Click += new System.EventHandler(this.ConfigureEncoding_Click);
             // 
+            // lblGPGProgram
+            // 
+            this.lblGPGProgram.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblGPGProgram.AutoSize = true;
+            this.lblGPGProgram.Location = new System.Drawing.Point(3, 448);
+            this.lblGPGProgram.Name = "lblGPGProgram";
+            this.lblGPGProgram.Size = new System.Drawing.Size(97, 13);
+            this.lblGPGProgram.TabIndex = 79;
+            this.lblGPGProgram.Text = "GPG Program Path";
+            // 
+            // lblSigningKey
+            // 
+            this.lblSigningKey.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblSigningKey.AutoSize = true;
+            this.lblSigningKey.Location = new System.Drawing.Point(3, 476);
+            this.lblSigningKey.Name = "lblSigningKey";
+            this.lblSigningKey.Size = new System.Drawing.Size(88, 13);
+            this.lblSigningKey.TabIndex = 79;
+            this.lblSigningKey.Text = "User Signing Key";
+            // 
+            // lblCommitSigning
+            // 
+            this.lblCommitSigning.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblCommitSigning.AutoSize = true;
+            this.lblCommitSigning.Location = new System.Drawing.Point(3, 501);
+            this.lblCommitSigning.Name = "lblCommitSigning";
+            this.lblCommitSigning.Size = new System.Drawing.Size(79, 13);
+            this.lblCommitSigning.TabIndex = 79;
+            this.lblCommitSigning.Text = "Commit Signing";
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(1902, 442);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(123, 25);
+            this.button1.TabIndex = 5;
+            this.button1.Text = "Browse";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.btnGPGProgramBrowse_Click);
+            // 
+            // chkCommitSigning
+            // 
+            this.chkCommitSigning.AutoSize = true;
+            this.chkCommitSigning.Location = new System.Drawing.Point(129, 499);
+            this.chkCommitSigning.Name = "chkCommitSigning";
+            this.chkCommitSigning.Size = new System.Drawing.Size(158, 17);
+            this.chkCommitSigning.TabIndex = 82;
+            this.chkCommitSigning.Text = "Sign commits automatically?";
+            this.chkCommitSigning.UseVisualStyleBackColor = true;
+            // 
+            // txtGPGProgram
+            // 
+            this.txtGPGProgram.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGPGProgram.Location = new System.Drawing.Point(129, 444);
+            this.txtGPGProgram.Name = "txtGPGProgram";
+            this.txtGPGProgram.Size = new System.Drawing.Size(1767, 20);
+            this.txtGPGProgram.TabIndex = 4;
+            this.txtGPGProgram.LostFocus += new System.EventHandler(this.txtDiffMergeToolPath_LostFocus);
+            // 
+            // txtSigningKey
+            // 
+            this.txtSigningKey.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.txtSigningKey.Location = new System.Drawing.Point(129, 473);
+            this.txtSigningKey.Name = "txtSigningKey";
+            this.txtSigningKey.Size = new System.Drawing.Size(241, 20);
+            this.txtSigningKey.TabIndex = 0;
+            // 
             // GitConfigSettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.tableLayoutPanelGitConfig);
             this.Name = "GitConfigSettingsPage";
-            this.Size = new System.Drawing.Size(1277, 715);
+            this.Size = new System.Drawing.Size(2142, 868);
             this.InvalidGitPathGlobal.ResumeLayout(false);
             this.InvalidGitPathGlobal.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -569,12 +660,12 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelGitConfig;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelLineEndings;
         private System.Windows.Forms.Button ConfigureEncoding;
-        private System.Windows.Forms.Label lblCommitTemplatePath;
-        private System.Windows.Forms.Label lblDiffToolCommand;
-        private System.Windows.Forms.Label lblDiffToolPath;
-        private System.Windows.Forms.Label lblDiffTool;
-        private System.Windows.Forms.Label lblMergeToolCommand;
-        private System.Windows.Forms.Label lblMergeToolPath;
-        private System.Windows.Forms.Label lblMergeTool;
+        private System.Windows.Forms.Label lblGPGProgram;
+        private System.Windows.Forms.Label lblSigningKey;
+        private System.Windows.Forms.Label lblCommitSigning;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.CheckBox chkCommitSigning;
+        private System.Windows.Forms.TextBox txtGPGProgram;
+        private System.Windows.Forms.TextBox txtSigningKey;
     }
 }
