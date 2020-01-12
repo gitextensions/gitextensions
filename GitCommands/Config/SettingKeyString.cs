@@ -12,9 +12,34 @@
         public static string BranchRemote = "branch.{0}.remote";
 
         /// <summary>
+        /// commit.gpgsign  Determines if commits are signed by default
+        /// </summary>
+        public static string CommitGPGSign = "commit.gpgsign";
+
+        /// <summary>
         /// "credential.helper"
         /// </summary>
         public static string CredentialHelper = "credential.helper";
+
+        /// <summary>
+        /// diff.guitool
+        /// </summary>
+        public static string DiffToolKey = "diff.guitool";
+
+        /// <summary>
+        /// gpg.program  Stores the path to the gpg program
+        /// </summary>
+        public static string GPGProgram = "gpg.program";
+
+        /// <summary>
+        /// merge.guitool, requires Git 2.20.0
+        /// </summary>
+        public static string MergeToolKey = "merge.guitool";
+
+        /// <summary>
+        /// merge.tool
+        /// </summary>
+        public static string MergeToolNoGuiKey = "merge.tool";
 
         /// <summary>
         /// "remote.{0}.push"
@@ -27,19 +52,14 @@
         public static string RemotePushUrl = "remote.{0}.pushurl";
 
         /// <summary>
-        /// "remote.{0}.url"
-        /// </summary>
-        public static string RemoteUrl = "remote.{0}.url";
-
-        /// <summary>
         /// "remote.{0}.puttykeyfile"
         /// </summary>
         public static string RemotePuttySshKey = "remote.{0}.puttykeyfile";
 
         /// <summary>
-        /// user.name
+        /// "remote.{0}.url"
         /// </summary>
-        public static string UserName = "user.name";
+        public static string RemoteUrl = "remote.{0}.url";
 
         /// <summary>
         /// user.email
@@ -47,18 +67,13 @@
         public static string UserEmail = "user.email";
 
         /// <summary>
-        /// diff.guitool
+        /// user.name
         /// </summary>
-        public static string DiffToolKey = "diff.guitool";
+        public static string UserName = "user.name";
 
         /// <summary>
-        /// merge.guitool, requires Git 2.20.0
+        /// user.signingkey  Stores the key ID to use when signing a commit with GPG
         /// </summary>
-        public static string MergeToolKey = "merge.guitool";
-
-        /// <summary>
-        /// merge.tool
-        /// </summary>
-        public static string MergeToolNoGuiKey = "merge.tool";
+        public static string UserSigningKey = "user.signingkey";
     }
 }
