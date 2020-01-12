@@ -44,7 +44,7 @@ namespace CommonTestUtils
 
             Assert.AreEqual(ApartmentState.STA, Thread.CurrentThread.GetApartmentState());
 
-            // This form created for obtain UI synchronization context only
+            // This form is created to obtain a UI synchronization context only.
             using (new Form())
             {
                 // Store the shared JoinableTaskContext
@@ -72,6 +72,10 @@ namespace CommonTestUtils
 
                 _denyExecutionSynchronizationContext?.ThrowIfSwitchOccurred();
             }
+            catch (Exception ex) when (_threadException != null)
+            {
+                StoreThreadException(ex);
+            }
             finally
             {
                 Application.ThreadException -= HandleApplicationThreadException;
@@ -80,11 +84,16 @@ namespace CommonTestUtils
         }
 
         private void HandleApplicationThreadException(object sender, ThreadExceptionEventArgs e)
+            => StoreThreadException(e.Exception);
+
+        private void StoreThreadException(Exception ex)
         {
-            if (_threadException == null)
+            if (_threadException != null)
             {
-                _threadException = ExceptionDispatchInfo.Capture(e.Exception);
+                ex = new AggregateException(new Exception[] { _threadException.SourceException, ex });
             }
+
+            _threadException = ExceptionDispatchInfo.Capture(ex);
         }
 
         private class DenyExecutionSynchronizationContext : SynchronizationContext
