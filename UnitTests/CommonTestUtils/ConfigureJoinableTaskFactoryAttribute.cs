@@ -21,6 +21,8 @@ namespace CommonTestUtils
 
         public void BeforeTest(ITest test)
         {
+            Assert.IsNull(ThreadHelper.JoinableTaskContext, "Tests with joinable tasks must not be run in parallel!");
+
             Application.ThreadException += HandleApplicationThreadException;
 
             IList apartmentState = null;
@@ -56,10 +58,8 @@ namespace CommonTestUtils
             {
                 try
                 {
-                    using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
-                    {
-                        ThreadHelper.JoinableTaskContext?.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cts.Token));
-                    }
+                    // Wait for eventual pending operations triggered by the test.
+                    AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
                 }
                 finally
                 {

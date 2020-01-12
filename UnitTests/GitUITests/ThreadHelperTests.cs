@@ -232,21 +232,10 @@ namespace GitUITests
         [Test]
         [Apartment(ApartmentState.MTA)]
         public async Task AllowAwaitForAsynchronousMTATest()
-        {
-            await Task.Yield();
-        }
+            => await Task.Yield();
 
         private static void JoinPendingOperations()
-        {
-            // Since we are testing a FileAndForget method, we need to join all pending operations before continuing.
-            // Note that ThreadHelper.JoinableTaskContext.Factory must be used to bypass the default behavior of
-            // ThreadHelper.JoinableTaskFactory since the latter adds new tasks to the collection and would therefore
-            // never complete.
-            using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
-            {
-                ThreadHelper.JoinableTaskContext?.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cts.Token));
-            }
-        }
+            => AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
 
         private sealed class ThreadExceptionHelper : IDisposable
         {

@@ -18,6 +18,11 @@ namespace CommonTestUtils
 
         public static void RunAndWaitForPendingOperations(Func<Task> asyncMethod, CancellationToken cancellationToken)
         {
+            if (ThreadHelper.JoinableTaskFactory == null)
+            {
+                throw new InvalidOperationException($"Run & wait is pointless without {nameof(ThreadHelper.JoinableTaskFactory)}.");
+            }
+
             ThreadHelper.JoinableTaskFactory.Run(asyncMethod);
 
             WaitForPendingOperations(cancellationToken);
@@ -25,6 +30,11 @@ namespace CommonTestUtils
 
         public static T RunAndWaitForPendingOperations<T>(Func<Task<T>> asyncMethod, CancellationToken cancellationToken)
         {
+            if (ThreadHelper.JoinableTaskFactory == null)
+            {
+                throw new InvalidOperationException($"Run & wait is pointless without {nameof(ThreadHelper.JoinableTaskFactory)}.");
+            }
+
             var result = ThreadHelper.JoinableTaskFactory.Run(asyncMethod);
 
             WaitForPendingOperations(cancellationToken);
@@ -42,7 +52,15 @@ namespace CommonTestUtils
 
         public static void WaitForPendingOperations(CancellationToken cancellationToken)
         {
-            ThreadHelper.JoinableTaskContext?.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cancellationToken));
+            if (ThreadHelper.JoinableTaskContext == null)
+            {
+                throw new InvalidOperationException($"Wait is pointless without {nameof(ThreadHelper.JoinableTaskContext)}.");
+            }
+
+            // Note that ThreadHelper.JoinableTaskContext.Factory must be used to bypass the default behavior of
+            // ThreadHelper.JoinableTaskFactory since the latter adds new tasks to the collection and would therefore
+            // never complete.
+            ThreadHelper.JoinableTaskContext.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cancellationToken));
         }
     }
 }
