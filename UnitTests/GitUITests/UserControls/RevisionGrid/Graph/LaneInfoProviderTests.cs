@@ -90,6 +90,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
         private RevisionGraphRevision _undetectedMergeCommitNode;
         private RevisionGraphRevision _innerCommitNode;
         private ILaneNodeLocator _laneNodeLocator;
+        private IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
         private LaneInfoProvider _infoProvider;
 
         [SetUp]
@@ -97,7 +98,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
         {
             _artificialCommitNode = new RevisionGraphRevision(ObjectId.WorkTreeId, 0)
             {
-                GitRevision = new GitCommands.GitRevision(ObjectId.WorkTreeId)
+                GitRevision = new GitRevision(ObjectId.WorkTreeId)
                 {
                     Author = "John Doe",
                     AuthorDate = DateTime.Parse("2010-03-24 13:37:12"),
@@ -108,7 +109,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             var realCommitObjectId = ObjectId.Parse("a48da1aba59a65b2a7f0df7e3512817caf16819f");
             _realCommitNode = new RevisionGraphRevision(realCommitObjectId, 0)
             {
-                GitRevision = new GitCommands.GitRevision(realCommitObjectId)
+                GitRevision = new GitRevision(realCommitObjectId)
                 {
                     Author = "John Doe",
                     AuthorDate = DateTime.Parse("2010-03-24 13:37:12"),
@@ -120,7 +121,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             var mergeCommitObjectId = ObjectId.Parse("b48da1aba59a65b2a7f0df7e3512817caf16819f");
             _mergeCommitNode = new RevisionGraphRevision(mergeCommitObjectId, 0)
             {
-                GitRevision = new GitCommands.GitRevision(mergeCommitObjectId)
+                GitRevision = new GitRevision(mergeCommitObjectId)
                 {
                     Author = "John Doe",
                     AuthorDate = DateTime.Parse("2010-03-24 13:37:12"),
@@ -133,7 +134,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             var undetectedMergeCommitObjectId = ObjectId.Parse("c48da1aba59a65b2a7f0df7e3512817caf16819f");
             _undetectedMergeCommitNode = new RevisionGraphRevision(undetectedMergeCommitObjectId, 0)
             {
-                GitRevision = new GitCommands.GitRevision(undetectedMergeCommitObjectId)
+                GitRevision = new GitRevision(undetectedMergeCommitObjectId)
                 {
                     Author = "John Doe",
                     AuthorDate = DateTime.Parse("2010-03-24 13:37:12"),
@@ -146,7 +147,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             var innerCommitObjectId = ObjectId.Parse("d48da1aba59a65b2a7f0df7e3512817caf16819f");
             _innerCommitNode = new RevisionGraphRevision(innerCommitObjectId, 0)
             {
-                GitRevision = new GitCommands.GitRevision(innerCommitObjectId)
+                GitRevision = new GitRevision(innerCommitObjectId)
                 {
                     Author = "John Doe",
                     AuthorDate = DateTime.Parse("2010-03-24 13:37:12"),
@@ -155,8 +156,11 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
                     Body = "fix: further bugs"
                 }
             };
+
+            _gitRevisionSummaryBuilder = Substitute.For<IGitRevisionSummaryBuilder>();
+            _gitRevisionSummaryBuilder.BuildSummary(Arg.Any<string>()).Returns(i => (string)i.Args()[0]);
             _laneNodeLocator = Substitute.For<ILaneNodeLocator>();
-            _infoProvider = new LaneInfoProvider(_laneNodeLocator);
+            _infoProvider = new LaneInfoProvider(_laneNodeLocator, _gitRevisionSummaryBuilder);
         }
 
         private void GetLaneInfo_should_display(RevisionGraphRevision node,

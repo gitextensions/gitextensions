@@ -1,5 +1,12 @@
-﻿using GitCommands;
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
+using ApprovalTests;
+using ApprovalTests.Namers;
+using CommonTestUtils;
+using GitCommands;
+using GitUIPluginInterfaces;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace GitCommandsTests
 {
