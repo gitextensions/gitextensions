@@ -1368,7 +1368,7 @@ namespace GitCommands
                     "--force",
                     "--"
                 }
-                .BuildBatchArguments(files.Select(item => item.ToPosixPath().Quote())));
+                .BuildBatchArgumentsForFiles(files));
         }
 
         /// <summary>
@@ -1418,7 +1418,7 @@ namespace GitCommands
                     revision,
                     "--"
                 }
-                .BuildBatchArguments(files.Select(f => f.ToPosixPath().Quote())));
+                .BuildBatchArgumentsForFiles(files));
         }
 
         public string RemoveFiles(IReadOnlyList<string> files, bool force)
@@ -1866,7 +1866,7 @@ namespace GitCommands
             {
                 var args = GitCommandHelpers.ResetCmd(ResetMode.ResetIndex, "HEAD");
                 _gitExecutable.RunBatchCommand(new ArgumentBuilder() { args }
-                    .BuildBatchArguments(filesToRemove),
+                    .BuildBatchArgumentsForFiles(filesToRemove),
                     action);
             }
 

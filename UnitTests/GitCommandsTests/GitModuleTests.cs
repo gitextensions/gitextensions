@@ -848,7 +848,7 @@ namespace GitCommandsTests
             },
             new string[]
             {
-                "reset \"HEAD\" -- abc2 abc3 def",
+                "reset \"HEAD\" -- \"abc2\" \"abc3\" \"def\"",
                 "update-index --info-only --index-info",
                 "update-index --force-remove --stdin"
             },
@@ -860,7 +860,7 @@ namespace GitCommandsTests
             },
             new string[]
             {
-                "reset \"HEAD\" -- abc2 abc3",
+                "reset \"HEAD\" -- \"abc2\" \"abc3\"",
             },
             true)
         };
