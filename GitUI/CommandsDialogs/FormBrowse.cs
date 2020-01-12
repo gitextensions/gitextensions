@@ -3020,15 +3020,15 @@ namespace GitUI.CommandsDialogs
                 case "bash":
                     if (PathUtil.TryConvertWindowsPathToPosix(path, out var posixPath))
                     {
-                        ClearTerminalCommandLineWithMacroAndRunCommand($"cd \"{posixPath}\"");
+                        ClearTerminalCommandLineWithMacroAndRunCommand($"cd {posixPath.QuoteNE()}");
                     }
 
                     break;
                 case "cmd":
-                    ClearTerminalCommandLineWithEscapeAndRunCommand($"cd /D \"{path}\"");
+                    ClearTerminalCommandLineWithEscapeAndRunCommand($"cd /D {path.QuoteNE()}");
                     break;
                 case "powershell":
-                    ClearTerminalCommandLineWithEscapeAndRunCommand($"cd \"{path}\"");
+                    ClearTerminalCommandLineWithEscapeAndRunCommand($"cd {path.QuoteNE()}");
                     break;
                 default:
                     break;
