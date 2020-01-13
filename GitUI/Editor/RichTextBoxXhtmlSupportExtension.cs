@@ -710,7 +710,6 @@ namespace GitUI.Editor.RichTextBoxExtension
             }
             catch (Exception /*ex*/)
             {
-                ////MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -1086,7 +1085,6 @@ namespace GitUI.Editor.RichTextBoxExtension
             }
             catch (Exception /*ex*/)
             {
-                ////MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
