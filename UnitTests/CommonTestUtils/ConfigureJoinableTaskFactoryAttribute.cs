@@ -79,7 +79,9 @@ namespace CommonTestUtils
             finally
             {
                 Application.ThreadException -= HandleApplicationThreadException;
-                _threadException?.Throw();
+
+                // Reset _threadException to null, and throw if it was set during the current test.
+                Interlocked.Exchange(ref _threadException, null)?.Throw();
             }
         }
 
