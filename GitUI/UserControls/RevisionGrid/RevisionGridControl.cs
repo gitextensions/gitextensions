@@ -146,6 +146,7 @@ namespace GitUI
                 AutoSize = true,
                 Text = _strLoading.Text
             };
+            Controls.Add(_loadingControlAsync);
 
             _loadingControlSync = new WaitSpinner
             {
@@ -153,6 +154,7 @@ namespace GitUI
                 Visible = false,
                 Size = DpiUtil.Scale(new Size(50, 50))
             };
+            Controls.Add(_loadingControlSync);
 
             // Delay raising the SelectionChanged event for a barely noticeable period to throttle
             // rapid changes, for example by holding the down arrow key in the revision grid.
@@ -226,14 +228,34 @@ namespace GitUI
         {
             if (disposing)
             {
+                //// MenuCommands not disposable
+                //// _superprojectCurrentCheckout not disposable
+                //// _selectedObjectIds not disposable
+                //// _baseCommitToCompare not disposable
                 _revisionSubscription?.Dispose();
                 _revisionReader?.Dispose();
+                //// _artificialStatus not disposable
+                //// _ambiguousRefs not disposable
+                //// _refFilterOptions not disposable
+                //// _lastVisibleResizableColumn not owned
+                //// _maximizedColumn not owned
+                //// _revisionGraphColumnProvider not disposable
+                //// _selectionTimer handled by this.components
                 _buildServerWatcher?.Dispose();
 
                 if (_indexWatcher.IsValueCreated)
                 {
                     _indexWatcher.Value.Dispose();
                 }
+
+                //// _authorHighlighting not disposable
+                //// _parentChildNavigationHistory not disposable
+                //// _quickSearchProvider not disposable
+                //// _toolTipProvider  not disposable
+                //// _loadingControlSync handled by this.Controls
+                //// _loadingControlAsync handled by this.Controls
+                //// _navigationHistory not disposable
+                _revisionFilter.Dispose();
 
                 components?.Dispose();
 
@@ -729,8 +751,6 @@ namespace GitUI
 
             _loadingControlAsync.Visible = !sync;
             _loadingControlAsync.Left = ClientSize.Width - _loadingControlSync.Width;
-            Controls.Add(_loadingControlSync);
-            Controls.Add(_loadingControlAsync);
             _loadingControlSync.BringToFront();
             _loadingControlAsync.BringToFront();
         }
