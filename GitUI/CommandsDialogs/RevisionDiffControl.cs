@@ -210,26 +210,23 @@ namespace GitUI.CommandsDialogs
         /// Provide a description for the first selected or parent to the "primary" selected last
         /// </summary>
         /// <returns>A description of the selected parent</returns>
-        private string DescribeSelectedParentRevision(bool showWorkTreeAndCombined)
+        private string DescribeSelectedParentRevision()
         {
             var parents = DiffFiles.SelectedItemParents
-                .Where(i => showWorkTreeAndCombined ||
-                    !(i.Guid.IsNullOrWhiteSpace() || i.Guid == GitRevision.WorkTreeGuid || i.Guid == GitRevision.CombinedDiffGuid))
                 .Distinct()
                 .Count();
 
-            if (parents == 0)
-            {
-                return null;
-            }
-            else if (parents == 1)
+            if (parents == 1)
             {
                 return DescribeRevision(DiffFiles.SelectedItemParent?.ObjectId, 50);
             }
-            else
+
+            if (parents > 1)
             {
                 return _multipleDescription.Text;
             }
+
+            return null;
         }
 
         private bool GetNextPatchFile(bool searchBackward, bool loop, out int fileIndex, out Task loadFileContent)
@@ -694,7 +691,7 @@ namespace GitUI.CommandsDialogs
                 MenuUtil.SetAsCaptionMenuItem(selectedDiffCaptionMenuItem, DiffContextMenu);
 
                 firstDiffCaptionMenuItem.Text = _firstRevision + ":";
-                var parentDesc = DescribeSelectedParentRevision(true);
+                var parentDesc = DescribeSelectedParentRevision();
                 if (parentDesc.IsNotNullOrWhitespace())
                 {
                     firstDiffCaptionMenuItem.Text += " (" + parentDesc + ")";
@@ -723,6 +720,18 @@ namespace GitUI.CommandsDialogs
             ResetSelectedItemsTo(sender == resetFileToSelectedToolStripMenuItem);
         }
 
+        /// <summary>
+        /// Checks if it is possible to reset to the revision.
+        /// For artificial is Index is possible but not WorkTree or Combined
+        /// </summary>
+        /// <param name="rev">The GitRevision</param>
+        /// <returns>If it is possible to reset to the revisions</returns>
+        private bool CanResetToRevision(GitRevision rev)
+        {
+            return rev.ObjectId != ObjectId.WorkTreeId
+                   && rev.ObjectId != ObjectId.CombinedDiffId;
+        }
+
         private void resetFileToToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             if (DiffFiles.Revision == null)
@@ -732,25 +741,26 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (DiffFiles.Revision.Guid == GitRevision.WorkTreeGuid)
+            if (!CanResetToRevision(DiffFiles.Revision))
             {
                 resetFileToSelectedToolStripMenuItem.Visible = false;
             }
             else
             {
                 resetFileToSelectedToolStripMenuItem.Visible = true;
-                resetFileToSelectedToolStripMenuItem.Text = _selectedRevision + " (" + _revisionGrid.DescribeRevision(DiffFiles.Revision, 50) + ")";
+                resetFileToSelectedToolStripMenuItem.Text =
+                    _selectedRevision + " (" + _revisionGrid.DescribeRevision(DiffFiles.Revision, 50) + ")";
             }
 
-            var parentDesc = DescribeSelectedParentRevision(false);
-            if (parentDesc.IsNullOrWhiteSpace())
+            var parents = DiffFiles.SelectedItemParents.Distinct();
+            if (parents.Count() != 1 || !CanResetToRevision(parents.FirstOrDefault()))
             {
                 resetFileToParentToolStripMenuItem.Visible = false;
             }
             else
             {
                 resetFileToParentToolStripMenuItem.Visible = true;
-                resetFileToParentToolStripMenuItem.Text = _firstRevision + " (" + parentDesc + ")";
+                resetFileToParentToolStripMenuItem.Text = _firstRevision + " (" + _revisionGrid.DescribeRevision(parents.FirstOrDefault(), 50) + ")";
             }
         }
 
