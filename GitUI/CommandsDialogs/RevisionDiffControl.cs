@@ -210,18 +210,14 @@ namespace GitUI.CommandsDialogs
         /// Provide a description for the first selected or parent to the "primary" selected last
         /// </summary>
         /// <returns>A description of the selected parent</returns>
-        private string DescribeSelectedParentRevision()
+        private string DescribeSelectedParentRevision(IEnumerable<GitRevision> parents)
         {
-            var parents = DiffFiles.SelectedItemParents
-                .Distinct()
-                .Count();
-
-            if (parents == 1)
+            if (parents.Count() == 1)
             {
-                return DescribeRevision(DiffFiles.SelectedItemParent?.ObjectId, 50);
+                return DescribeRevision(parents.FirstOrDefault()?.ObjectId, 50);
             }
 
-            if (parents > 1)
+            if (parents.Count() > 1)
             {
                 return _multipleDescription.Text;
             }
@@ -686,12 +682,12 @@ namespace GitUI.CommandsDialogs
 
             if (DiffFiles.SelectedItemsWithParent.Any())
             {
-                selectedDiffCaptionMenuItem.Text = _selectedRevision + ": (" + _revisionGrid.DescribeRevision(DiffFiles.Revision, 50) + ")";
+                selectedDiffCaptionMenuItem.Text = _selectedRevision + " (" + DescribeRevision(DiffFiles.Revision?.ObjectId, 50) + ")";
                 selectedDiffCaptionMenuItem.Visible = true;
                 MenuUtil.SetAsCaptionMenuItem(selectedDiffCaptionMenuItem, DiffContextMenu);
 
                 firstDiffCaptionMenuItem.Text = _firstRevision + ":";
-                var parentDesc = DescribeSelectedParentRevision();
+                var parentDesc = DescribeSelectedParentRevision(DiffFiles.SelectedItemParents);
                 if (parentDesc.IsNotNullOrWhitespace())
                 {
                     firstDiffCaptionMenuItem.Text += " (" + parentDesc + ")";
@@ -749,10 +745,10 @@ namespace GitUI.CommandsDialogs
             {
                 resetFileToSelectedToolStripMenuItem.Visible = true;
                 resetFileToSelectedToolStripMenuItem.Text =
-                    _selectedRevision + " (" + _revisionGrid.DescribeRevision(DiffFiles.Revision, 50) + ")";
+                    _selectedRevision + " (" + DescribeRevision(DiffFiles.Revision?.ObjectId, 50) + ")";
             }
 
-            var parents = DiffFiles.SelectedItemParents.Distinct();
+            var parents = DiffFiles.SelectedItemParents;
             if (parents.Count() != 1 || !CanResetToRevision(parents.FirstOrDefault()))
             {
                 resetFileToParentToolStripMenuItem.Visible = false;
@@ -760,7 +756,8 @@ namespace GitUI.CommandsDialogs
             else
             {
                 resetFileToParentToolStripMenuItem.Visible = true;
-                resetFileToParentToolStripMenuItem.Text = _firstRevision + " (" + _revisionGrid.DescribeRevision(parents.FirstOrDefault(), 50) + ")";
+                resetFileToParentToolStripMenuItem.Text =
+                    _firstRevision + " (" + DescribeRevision(parents.FirstOrDefault()?.ObjectId, 50) + ")";
             }
         }
 
