@@ -64,6 +64,7 @@ namespace GitExtensions
 
             // This is done here so these values can be used in the GitGui project but this project is the authority of the values.
             UserEnvironmentInformation.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty);
+            AppTitleGenerator.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.Branch);
 
             // NOTE we perform the rest of the application's startup in another method to defer
             // the JIT processing more types than required to configure NBug.
