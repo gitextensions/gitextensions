@@ -632,20 +632,19 @@ namespace GitUI
 
         public string DescribeRevision(GitRevision revision, int maxLength = 0)
         {
+            var description = revision.IsArtificial
+                ? string.Empty
+                : revision.ObjectId.ToShortString() + ": ";
+
             var gitRefListsForRevision = new GitRefListsForRevision(revision);
 
             var descriptiveRef = gitRefListsForRevision.AllBranches
                 .Concat(gitRefListsForRevision.AllTags)
                 .FirstOrDefault();
 
-            var description = descriptiveRef != null
+            description += descriptiveRef != null
                 ? GetRefUnambiguousName(descriptiveRef)
                 : revision.Subject;
-
-            if (!revision.IsArtificial)
-            {
-                description += " @" + revision.ObjectId.ToShortString(4);
-            }
 
             if (maxLength > 0)
             {

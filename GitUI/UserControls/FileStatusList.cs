@@ -29,7 +29,7 @@ namespace GitUI
     public sealed partial class FileStatusList : GitModuleControl
     {
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
-        private readonly TranslationString _diffWithParent = new TranslationString("Diff with:");
+        private readonly TranslationString _diffWithParent = new TranslationString("Diff with (A)");
         public readonly TranslationString CombinedDiff = new TranslationString("Combined Diff");
         private readonly IGitRevisionTester _revisionTester;
         private readonly IFullPathResolver _fullPathResolver;

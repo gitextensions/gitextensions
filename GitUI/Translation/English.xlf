@@ -1317,7 +1317,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target />
       </trans-unit>
       <trans-unit id="_diffWithParent.Text">
-        <source>Diff with:</source>
+        <source>Diff with (A)</source>
         <target />
       </trans-unit>
       <trans-unit id="_openSubmoduleMenuItem.Text">
@@ -8113,7 +8113,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target />
       </trans-unit>
       <trans-unit id="_firstRevision.Text">
-        <source>First</source>
+        <source>First: (A)</source>
         <target />
       </trans-unit>
       <trans-unit id="_multipleDescription.Text">
@@ -8129,7 +8129,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target />
       </trans-unit>
       <trans-unit id="_selectedRevision.Text">
-        <source>Selected</source>
+        <source>Selected: (B)</source>
         <target />
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
