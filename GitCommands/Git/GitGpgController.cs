@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using GitCommands.Config;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 
@@ -51,6 +52,8 @@ namespace GitCommands.Gpg
         /// </summary>
         /// <returns>Full concatenated string coming from GPG analysis on all tags on current git revision.</returns>
         string GetTagVerifyMessage(GitRevision revision);
+
+        Task<IEnumerable<GpgKeyInfo>> GetGpgSecretKeys();
     }
 
     public class GitGpgController : IGitGpgController
@@ -281,6 +284,55 @@ namespace GitCommands.Gpg
             return module;
         }
 
-        // TODO Add key retrieval using https://github.com/gpg/gnupg/blob/master/doc/DETAILS and `gpg -K --with-colons` to get private keys
+        public async Task<IEnumerable<GpgKeyInfo>> GetGpgSecretKeys()
+        {
+            var args = new ArgumentBuilder()
+            {
+                "-K", // Secret Keys
+                "--with-colons"
+            };
+
+            string txt = await _getModule().GpgExecutable.GetOutputAsync(args);
+
+            var rec = txt.Split(Environment.NewLine.ToCharArray()).Select(ln => ln.Split(':')).Select((f, i) => new { Record = i, Fields = f.Select((d, i2) => new { Index = i2, Field = d }) });
+
+            var keys = from r in rec
+                       where r.Fields.First().Field == "sec"
+                       select r;
+
+            var fingerprints = from r in rec
+                               where r.Fields.First().Field == "fpr"
+                               select r;
+
+            var users = from r in rec
+                        where r.Fields.First().Field == "uid"
+                        select r;
+
+            var output = keys.Select((k, i) => new GpgKeyInfo(
+                fingerprints.First(f => f.Record > k.Record).Fields.ElementAt(9).Field,
+                k.Fields.ElementAt(4).Field,
+                users.Skip(i).First().Fields.ElementAt(9).Field));
+
+            return output.ToArray();
+        }
+    }
+
+    public class GpgKeyInfo
+    {
+        public GpgKeyInfo(string fingerprint, string keyID, string userID)
+        {
+            Fingerprint = fingerprint;
+            KeyID = keyID;
+            UserID = userID;
+        }
+
+        public string Fingerprint { get; set; }
+        public string KeyID { get; set; }
+        public string UserID { get; set; }
+
+        public override string ToString()
+        {
+            return $"{UserID} ({KeyID})";
+        }
     }
 }

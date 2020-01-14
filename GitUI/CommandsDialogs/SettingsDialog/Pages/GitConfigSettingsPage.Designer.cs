@@ -73,6 +73,7 @@
             this.chkCommitSigning = new System.Windows.Forms.CheckBox();
             this.txtGPGProgram = new System.Windows.Forms.TextBox();
             this.txtSigningKey = new System.Windows.Forms.TextBox();
+            this.button2 = new System.Windows.Forms.Button();
             lblCommitTemplatePath = new System.Windows.Forms.Label();
             lblMergeTool = new System.Windows.Forms.Label();
             lblDiffToolCommand = new System.Windows.Forms.Label();
@@ -505,6 +506,7 @@
             this.tableLayoutPanelGitConfig.Controls.Add(this.chkCommitSigning, 1, 14);
             this.tableLayoutPanelGitConfig.Controls.Add(this.txtGPGProgram, 1, 12);
             this.tableLayoutPanelGitConfig.Controls.Add(this.txtSigningKey, 1, 13);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.button2, 2, 13);
             this.tableLayoutPanelGitConfig.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanelGitConfig.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanelGitConfig.Name = "tableLayoutPanelGitConfig";
@@ -553,7 +555,7 @@
             // 
             this.lblSigningKey.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblSigningKey.AutoSize = true;
-            this.lblSigningKey.Location = new System.Drawing.Point(3, 476);
+            this.lblSigningKey.Location = new System.Drawing.Point(3, 478);
             this.lblSigningKey.Name = "lblSigningKey";
             this.lblSigningKey.Size = new System.Drawing.Size(88, 13);
             this.lblSigningKey.TabIndex = 79;
@@ -563,7 +565,7 @@
             // 
             this.lblCommitSigning.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblCommitSigning.AutoSize = true;
-            this.lblCommitSigning.Location = new System.Drawing.Point(3, 501);
+            this.lblCommitSigning.Location = new System.Drawing.Point(3, 504);
             this.lblCommitSigning.Name = "lblCommitSigning";
             this.lblCommitSigning.Size = new System.Drawing.Size(79, 13);
             this.lblCommitSigning.TabIndex = 79;
@@ -583,7 +585,7 @@
             // chkCommitSigning
             // 
             this.chkCommitSigning.AutoSize = true;
-            this.chkCommitSigning.Location = new System.Drawing.Point(129, 499);
+            this.chkCommitSigning.Location = new System.Drawing.Point(129, 502);
             this.chkCommitSigning.Name = "chkCommitSigning";
             this.chkCommitSigning.Size = new System.Drawing.Size(158, 17);
             this.chkCommitSigning.TabIndex = 82;
@@ -602,10 +604,20 @@
             // txtSigningKey
             // 
             this.txtSigningKey.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.txtSigningKey.Location = new System.Drawing.Point(129, 473);
+            this.txtSigningKey.Location = new System.Drawing.Point(129, 474);
             this.txtSigningKey.Name = "txtSigningKey";
             this.txtSigningKey.Size = new System.Drawing.Size(241, 20);
             this.txtSigningKey.TabIndex = 0;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(1902, 473);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 83;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
             // GitConfigSettingsPage
             // 
@@ -613,7 +625,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.tableLayoutPanelGitConfig);
             this.Name = "GitConfigSettingsPage";
-            this.Size = new System.Drawing.Size(2142, 868);
+            this.Size = new System.Drawing.Size(2142, 554);
             this.InvalidGitPathGlobal.ResumeLayout(false);
             this.InvalidGitPathGlobal.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -667,5 +679,6 @@
         private System.Windows.Forms.CheckBox chkCommitSigning;
         private System.Windows.Forms.TextBox txtGPGProgram;
         private System.Windows.Forms.TextBox txtSigningKey;
+        private System.Windows.Forms.Button button2;
     }
 }

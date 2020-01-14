@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
+using GitCommands.Gpg;
 using GitCommands.Settings;
 using ResourceManager;
 
@@ -320,6 +321,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     CommonLogic.FillEncodings(Global_FilesEncoding);
                 }
             }
+        }
+
+        private async void Button2_Click(object sender, EventArgs e)
+        {
+            var gpg = new GitGpgController(() => Module);
+            var lst = await gpg.GetGpgSecretKeys();
         }
     }
 }
