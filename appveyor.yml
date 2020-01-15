@@ -12,6 +12,8 @@ environment:
   - IdeVersion: VS2019
   SKIP_PAUSE: TRUE
   ARCHIVE_WITH_PDB: TRUE
+  GE_TEST_SLEEP_SECONDS_ON_HANG: 0
+  GE_TEST_LAUNCH_DEBUGGER_ON_HANG: 0
 
 init:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
