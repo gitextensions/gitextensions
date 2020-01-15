@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Threading;
@@ -15,6 +16,7 @@ namespace CommonTestUtils
     public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestAction
     {
         private DenyExecutionSynchronizationContext _denyExecutionSynchronizationContext;
+        private HangReporter _hangReporter;
         private ExceptionDispatchInfo _threadException;
 
         public ActionTargets Targets => ActionTargets.Test;
@@ -49,6 +51,7 @@ namespace CommonTestUtils
             {
                 // Store the shared JoinableTaskContext
                 ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+                _hangReporter = new HangReporter(ThreadHelper.JoinableTaskContext);
             }
         }
 
@@ -178,6 +181,37 @@ namespace CommonTestUtils
             private static void ThrowFailedTransferExceptionForCapture()
             {
                 throw new InvalidOperationException("Tests cannot use SwitchToMainThreadAsync unless they are marked with ApartmentState.STA.");
+            }
+        }
+
+        private sealed class HangReporter : JoinableTaskContextNode
+        {
+            public HangReporter(JoinableTaskContext context)
+                : base(context)
+            {
+                RegisterOnHangDetected();
+            }
+
+            protected override void OnHangDetected(TimeSpan hangDuration, int notificationCount, Guid hangId)
+            {
+                if (notificationCount > 1)
+                {
+                    return;
+                }
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"{Environment.NewLine}HANG DETECTED: guid {hangId}{Environment.NewLine}");
+                Console.ResetColor();
+
+                if (Environment.GetEnvironmentVariable("GE_TEST_LAUNCH_DEBUGGER_ON_HANG") != "1")
+                {
+                    return;
+                }
+
+                Console.WriteLine("launching debugger...");
+
+                Debugger.Launch();
+                Debugger.Break();
             }
         }
     }

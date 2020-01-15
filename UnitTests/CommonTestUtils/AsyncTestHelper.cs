@@ -46,7 +46,19 @@ namespace CommonTestUtils
         {
             using (var cts = new CancellationTokenSource(timeout))
             {
-                WaitForPendingOperations(cts.Token);
+                try
+                {
+                    WaitForPendingOperations(cts.Token);
+                }
+                catch (OperationCanceledException) when (cts.IsCancellationRequested)
+                {
+                    if (int.TryParse(Environment.GetEnvironmentVariable("GE_TEST_SLEEP_SECONDS_ON_HANG"), out var sleepSeconds) && sleepSeconds > 0)
+                    {
+                        Thread.Sleep(TimeSpan.FromSeconds(sleepSeconds));
+                    }
+
+                    throw;
+                }
             }
         }
 
