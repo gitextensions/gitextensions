@@ -39,7 +39,6 @@ namespace GitHub3
                     if (user != null)
                     {
                         _username = user.Login;
-                        ////MessageBox.Show("GitHub username: " + _username);
                         return _username;
                     }
                     else
@@ -127,7 +126,7 @@ namespace GitHub3
             }
             else
             {
-                MessageBox.Show(args.OwnerForm, _tokenAlreadyExist.Text);
+                MessageBox.Show(args.OwnerForm, _tokenAlreadyExist.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return false;

@@ -49,7 +49,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _sshKeyOpenCaption =
             new TranslationString("Select ssh key file");
 
-        private readonly TranslationString _warningNoKeyEntered =
+        private readonly TranslationString _errorNoKeyEntered =
             new TranslationString("No SSH key file entered");
 
         private readonly TranslationString _labelUrlAsFetch =
@@ -459,7 +459,8 @@ Inactive remote is completely invisible to git.");
                     MessageBox.Show(this,
                         _questionAutoPullBehaviour.Text,
                         _questionAutoPullBehaviourCaption.Text,
-                        MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     UICommands.StartPullDialogAndPullImmediately(
                         remote: remote,
@@ -492,12 +493,14 @@ Inactive remote is completely invisible to git.");
             if (MessageBox.Show(this,
                                 _questionDeleteRemote.Text,
                                 _questionDeleteRemoteCaption.Text,
-                                MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Warning,
+                                MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
                 var output = _remotesManager.RemoveRemote(_selectedRemote);
                 if (!string.IsNullOrEmpty(output))
                 {
-                    MessageBox.Show(this, output, _gitMessage.Text);
+                    MessageBox.Show(this, output, _gitMessage.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 // Deleting a remote from the history list may be undesirable as
@@ -528,7 +531,7 @@ Inactive remote is completely invisible to git.");
         {
             if (string.IsNullOrEmpty(PuttySshKey.Text))
             {
-                MessageBox.Show(this, _warningNoKeyEntered.Text);
+                MessageBox.Show(this, _errorNoKeyEntered.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
@@ -548,7 +551,8 @@ Inactive remote is completely invisible to git.");
         private void RemoteBranchesDataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             MessageBox.Show(this,
-                            string.Format(_remoteBranchDataError.Text, RemoteBranches.Rows[e.RowIndex].Cells[0].Value, RemoteBranches.Columns[e.ColumnIndex].HeaderText));
+                            string.Format(_remoteBranchDataError.Text, RemoteBranches.Rows[e.RowIndex].Cells[0].Value, RemoteBranches.Columns[e.ColumnIndex].HeaderText),
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             RemoteBranches.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = "";
         }
 

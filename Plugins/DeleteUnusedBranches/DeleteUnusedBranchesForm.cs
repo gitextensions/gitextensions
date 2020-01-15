@@ -153,11 +153,11 @@ namespace DeleteUnusedBranches
             var selectedBranches = _branches.Where(branch => branch.Delete).ToList();
             if (selectedBranches.Count == 0)
             {
-                MessageBox.Show(string.Format(_selectBranchesToDelete.Text, _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.HeaderText), _deleteCaption.Text);
+                MessageBox.Show(string.Format(_selectBranchesToDelete.Text, _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.HeaderText), _deleteCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if (MessageBox.Show(this, string.Format(_areYouSureToDelete.Text, selectedBranches.Count), _deleteCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
+            if (MessageBox.Show(this, string.Format(_areYouSureToDelete.Text, selectedBranches.Count), _deleteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
             {
                 return;
             }
@@ -172,7 +172,7 @@ namespace DeleteUnusedBranches
             if (remoteBranches.Count > 0)
             {
                 var message = string.Format(_dangerousAction.Text, remoteName);
-                if (MessageBox.Show(this, message, _deleteCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
+                if (MessageBox.Show(this, message, _deleteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                 {
                     return;
                 }
@@ -231,7 +231,7 @@ namespace DeleteUnusedBranches
 
             if (includeUnmergedBranches.Checked)
             {
-                MessageBox.Show(this, _deletingUnmergedBranches.Text, _deleteCaption.Text, MessageBoxButtons.OK);
+                MessageBox.Show(this, _deletingUnmergedBranches.Text, _deleteCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

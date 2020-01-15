@@ -93,7 +93,7 @@ namespace GitUI.CommandsDialogs
             catch (Exception ex)
             {
                 MessageBox.Show(this, _cannotAccessGitattributes.Text + Environment.NewLine + ex.Message,
-                    _cannotAccessGitattributesCaption.Text);
+                    _cannotAccessGitattributesCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -136,7 +136,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            MessageBox.Show(this, _noWorkingDir.Text, _noWorkingDirCaption.Text);
+            MessageBox.Show(this, _noWorkingDir.Text, _noWorkingDirCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             Close();
         }
 

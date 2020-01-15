@@ -50,7 +50,7 @@ namespace Gource
             }
             catch (Exception e)
             {
-                MessageBox.Show(this, e.Message);
+                MessageBox.Show(this, e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -58,7 +58,7 @@ namespace Gource
         {
             if (!File.Exists(GourcePath.Text))
             {
-                MessageBox.Show(this, "Cannot find Gource.\nPlease download Gource and set the correct path.");
+                MessageBox.Show(this, "Cannot find Gource.\nPlease download Gource and set the correct path.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

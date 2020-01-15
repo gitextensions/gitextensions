@@ -188,7 +188,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 if (SshSettingsPage.AutoFindPuttyPaths())
                 {
-                    MessageBox.Show(this, _puttyFoundAuto.Text, _putty);
+                    MessageBox.Show(this, _puttyFoundAuto.Text, _putty, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
@@ -207,12 +207,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             if (!CheckSettingsLogic.SolveLinuxToolsDir())
             {
-                MessageBox.Show(this, _linuxToolsShNotFound.Text, _linuxToolsShNotFoundCaption.Text);
+                MessageBox.Show(this, _linuxToolsShNotFound.Text, _linuxToolsShNotFoundCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 PageHost.GotoPage(GitSettingsPage.GetPageReference());
                 return;
             }
 
-            MessageBox.Show(this, string.Format(_shCanBeRun.Text, AppSettings.GitBinDir), _shCanBeRunCaption.Text);
+            MessageBox.Show(this, string.Format(_shCanBeRun.Text, AppSettings.GitBinDir), _shCanBeRunCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             ////GitBinPath.Text = Settings.GitBinDir;
             PageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
             SaveAndRescan_Click(null, null);
@@ -256,7 +256,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                         }
                         else
                         {
-                            MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx64Name));
+                            MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx64Name), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
@@ -267,7 +267,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             else
             {
-                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx32Name));
+                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx32Name), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             CheckSettings();
@@ -313,13 +313,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             if (!CheckSettingsLogic.SolveGitCommand())
             {
-                MessageBox.Show(this, _solveGitCommandFailed.Text, _solveGitCommandFailedCaption.Text);
+                MessageBox.Show(this, _solveGitCommandFailed.Text, _solveGitCommandFailedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 PageHost.GotoPage(GitSettingsPage.GetPageReference());
                 return;
             }
 
-            MessageBox.Show(this, string.Format(_gitCanBeRun.Text, AppSettings.GitCommandValue), _gitCanBeRunCaption.Text);
+            MessageBox.Show(this, string.Format(_gitCanBeRun.Text, AppSettings.GitCommandValue), _gitCanBeRunCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             PageHost.GotoPage(GitSettingsPage.GetPageReference());
             SaveAndRescan_Click(null, null);
@@ -359,7 +359,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show(this, e.Message);
+                        MessageBox.Show(this, e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
 

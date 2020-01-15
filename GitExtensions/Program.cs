@@ -245,7 +245,7 @@ namespace GitExtensions
                                 Directory.Delete(localSettingsPath, true); // deletes all application settings not just for this instance - but should work
 
                                 // Restart Git Extensions with the same arguments after old config is deleted?
-                                if (DialogResult.OK.Equals(MessageBox.Show(string.Format("Files have been deleted.{0}{0}Would you like to attempt to restart Git Extensions?", Environment.NewLine), "Configuration Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Information)))
+                                if (DialogResult.OK.Equals(MessageBox.Show(string.Format("Files have been deleted.{0}{0}Would you like to attempt to restart Git Extensions?", Environment.NewLine), "Configuration Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)))
                                 {
                                     var args = Environment.GetCommandLineArgs();
                                     var p = new System.Diagnostics.Process { StartInfo = { FileName = args[0] } };

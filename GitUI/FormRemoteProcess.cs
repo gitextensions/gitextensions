@@ -15,7 +15,13 @@ namespace GitUI
     {
         #region Translation
         private readonly TranslationString _fingerprintNotRegistredText =
-            new TranslationString("The fingerprint of this host is not registered by PuTTY." + Environment.NewLine + "This causes this process to hang, and that why it is automatically stopped." + Environment.NewLine + Environment.NewLine + "When the connection is opened detached from Git and Git Extensions, the host's fingerprint can be registered." + Environment.NewLine + "You could also manually add the host's fingerprint or run Test Connection from the remotes dialog." + Environment.NewLine + Environment.NewLine + "Do you want to register the host's fingerprint and restart the process?");
+            new TranslationString(@"The fingerprint of this host is not registered by PuTTY.
+This causes this process to hang, and that why it is automatically stopped.
+
+When the connection is opened detached from Git and Git Extensions, the host's fingerprint can be registered.
+You could also manually add the host's fingerprint or run Test Connection from the remotes dialog.
+
+Do you want to register the host's fingerprint and restart the process?");
         private readonly TranslationString _fingerprintNotRegistredTextCaption =
             new TranslationString("Host Fingerprint not registered");
         #endregion
@@ -156,7 +162,7 @@ namespace GitUI
         {
             if (Plink && e.Text.Contains("If you trust this host, enter \"y\" to add the key to"))
             {
-                if (MessageBox.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     string remoteUrl;
                     if (string.IsNullOrEmpty(_urlTryingToConnect))

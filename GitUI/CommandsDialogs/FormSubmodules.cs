@@ -136,7 +136,7 @@ namespace GitUI.CommandsDialogs
         {
             if (Submodules.SelectedRows.Count != 1 ||
                 MessageBox.Show(this, _removeSelectedSubmodule.Text, _removeSelectedSubmoduleCaption.Text,
-                                MessageBoxButtons.YesNo) !=
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) !=
                 DialogResult.Yes)
             {
                 return;

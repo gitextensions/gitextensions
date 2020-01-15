@@ -70,13 +70,13 @@ namespace Gerrit
 
             if (string.IsNullOrEmpty(_NO_TRANSLATE_Remotes.Text))
             {
-                MessageBox.Show(owner, _selectRemote.Text);
+                MessageBox.Show(owner, _selectRemote.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
             if (string.IsNullOrEmpty(branch))
             {
-                MessageBox.Show(owner, _selectBranch.Text);
+                MessageBox.Show(owner, _selectBranch.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 

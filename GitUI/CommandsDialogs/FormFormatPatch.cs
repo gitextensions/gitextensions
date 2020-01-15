@@ -86,25 +86,25 @@ namespace GitUI.CommandsDialogs
         {
             if (SaveToDir.Checked && string.IsNullOrEmpty(OutputPath.Text))
             {
-                MessageBox.Show(this, _noOutputPathEnteredText.Text);
+                MessageBox.Show(this, _noOutputPathEnteredText.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (!SaveToDir.Checked && string.IsNullOrEmpty(MailTo.Text))
             {
-                MessageBox.Show(this, _noEmailEnteredText.Text);
+                MessageBox.Show(this, _noEmailEnteredText.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (!SaveToDir.Checked && string.IsNullOrEmpty(MailSubject.Text))
             {
-                MessageBox.Show(this, _noSubjectEnteredText.Text);
+                MessageBox.Show(this, _noSubjectEnteredText.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (!SaveToDir.Checked && string.IsNullOrEmpty(AppSettings.SmtpServer))
             {
-                MessageBox.Show(this, _wrongSmtpSettingsText.Text);
+                MessageBox.Show(this, _wrongSmtpSettingsText.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -162,7 +162,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                MessageBox.Show(this, _revisionsNeededText.Text, _revisionsNeededCaption.Text);
+                MessageBox.Show(this, _revisionsNeededText.Text, _revisionsNeededCaption.Text,  MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -194,7 +194,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                MessageBox.Show(this, result, _patchResultCaption.Text);
+                MessageBox.Show(this, result, _patchResultCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Close();
             }
         }
@@ -207,7 +207,7 @@ namespace GitUI.CommandsDialogs
 
                 if (string.IsNullOrEmpty(from))
                 {
-                    MessageBox.Show(this, _noGitMailConfigured.Text);
+                    MessageBox.Show(this, _noGitMailConfigured.Text, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 string to = MailTo.Text;
@@ -242,7 +242,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message);
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 

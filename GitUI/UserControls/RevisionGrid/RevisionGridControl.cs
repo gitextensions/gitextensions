@@ -1830,7 +1830,7 @@ namespace GitUI
             var selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Count > 2)
             {
-                MessageBox.Show(this, "Select only one or two revisions. Abort.", "Archive revision");
+                MessageBox.Show(this, "Select only one or two revisions. Abort.", "Archive revision", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2249,7 +2249,7 @@ namespace GitUI
         {
             if (_revisionReader != null)
             {
-                MessageBox.Show(_cannotHighlightSelectedBranch.Text);
+                MessageBox.Show(_cannotHighlightSelectedBranch.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2321,7 +2321,7 @@ namespace GitUI
             var mergeBaseCommitId = UICommands.GitModule.GitExecutable.GetOutput(args).TrimEnd('\n');
             if (string.IsNullOrWhiteSpace(mergeBaseCommitId))
             {
-                MessageBox.Show(_noMergeBaseCommit.Text);
+                MessageBox.Show(_noMergeBaseCommit.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2364,7 +2364,7 @@ namespace GitUI
             }
             else if (showNoRevisionMsg)
             {
-                MessageBox.Show(ParentForm as IWin32Window ?? this, _noRevisionFoundError.Text);
+                MessageBox.Show(ParentForm as IWin32Window ?? this, _noRevisionFoundError.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2412,7 +2412,7 @@ namespace GitUI
             var headBranch = Module.GetSelectedBranch(setDefaultIfEmpty: false);
             if (headBranch.IsNullOrWhiteSpace())
             {
-                MessageBox.Show(this, "No branch is currently selected");
+                MessageBox.Show(this, "No branch is currently selected", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2459,7 +2459,7 @@ namespace GitUI
 
             if (baseCommit.ObjectId == ObjectId.WorkTreeId)
             {
-                MessageBox.Show(this, "Cannot diff working directory to itself");
+                MessageBox.Show(this, "Cannot diff working directory to itself", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2474,7 +2474,7 @@ namespace GitUI
                 .FirstOrDefault();
             if (headCommit == null || baseCommit == null)
             {
-                MessageBox.Show(this, "You must have two commits selected to compare");
+                MessageBox.Show(this, "You must have two commits selected to compare", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2628,7 +2628,7 @@ namespace GitUI
                 if (fileNameArray.Length > 10)
                 {
                     // Some users need to be protected against themselves!
-                    MessageBox.Show(this, _droppingFilesBlocked.Text);
+                    MessageBox.Show(this, _droppingFilesBlocked.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 

@@ -48,13 +48,13 @@ namespace Gerrit
 
             if (string.IsNullOrEmpty(_NO_TRANSLATE_Remotes.Text))
             {
-                MessageBox.Show(owner, _selectRemote.Text);
+                MessageBox.Show(owner, _selectRemote.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
             if (string.IsNullOrEmpty(change))
             {
-                MessageBox.Show(owner, _selectChange.Text);
+                MessageBox.Show(owner, _selectChange.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -65,7 +65,7 @@ namespace Gerrit
 
             if (reviewInfo?["id"] == null)
             {
-                MessageBox.Show(owner, _cannotGetChangeDetails.Text);
+                MessageBox.Show(owner, _cannotGetChangeDetails.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 

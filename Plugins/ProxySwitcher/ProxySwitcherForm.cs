@@ -45,7 +45,7 @@ namespace ProxySwitcher
         {
             if (string.IsNullOrEmpty(_plugin.HttpProxy.ValueOrDefault(_settings)))
             {
-                MessageBox.Show(this, _pleaseSetProxy.Text, Text, MessageBoxButtons.OK);
+                MessageBox.Show(this, _pleaseSetProxy.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
             }
             else

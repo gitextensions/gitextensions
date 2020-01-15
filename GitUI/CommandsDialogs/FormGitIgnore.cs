@@ -161,7 +161,7 @@ namespace GitUI.CommandsDialogs
             catch (Exception ex)
             {
                 MessageBox.Show(this, _dialogModel.CannotAccessFile + Environment.NewLine + ex.Message,
-                    _dialogModel.CannotAccessFileCaption);
+                    _dialogModel.CannotAccessFileCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -194,7 +194,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            MessageBox.Show(this, _dialogModel.FileOnlyInWorkingDirSupported, _gitignoreOnlyInWorkingDirSupportedCaption.Text);
+            MessageBox.Show(this, _dialogModel.FileOnlyInWorkingDirSupported, _gitignoreOnlyInWorkingDirSupportedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             Close();
         }
 

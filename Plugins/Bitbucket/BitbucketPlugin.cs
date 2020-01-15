@@ -33,7 +33,7 @@ namespace Bitbucket
                                 _yourRepositoryIsNotInBitbucket.Text,
                                 string.Empty,
                                 MessageBoxButtons.OK,
-                                MessageBoxIcon.Exclamation);
+                                MessageBoxIcon.Error);
                 return false;
             }
 

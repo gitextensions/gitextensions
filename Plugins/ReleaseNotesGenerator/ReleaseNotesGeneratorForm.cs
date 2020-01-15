@@ -48,14 +48,14 @@ namespace ReleaseNotesGenerator
 
             if (string.IsNullOrWhiteSpace(textBoxRevFrom.Text))
             {
-                MessageBox.Show(this, _fromCommitNotSpecified.Text, _caption.Text);
+                MessageBox.Show(this, _fromCommitNotSpecified.Text, _caption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 textBoxRevFrom.Focus();
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(_NO_TRANSLATE_textBoxRevTo.Text))
             {
-                MessageBox.Show(this, _toCommitNotSpecified.Text, _caption.Text);
+                MessageBox.Show(this, _toCommitNotSpecified.Text, _caption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 _NO_TRANSLATE_textBoxRevTo.Focus();
                 return;
             }

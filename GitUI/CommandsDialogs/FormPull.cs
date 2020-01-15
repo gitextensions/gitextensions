@@ -276,7 +276,7 @@ namespace GitUI.CommandsDialogs
             Module.RunMergeTool();
 
             if (MessageBox.Show(this, _allMergeConflictSolvedQuestion.Text, _allMergeConflictSolvedQuestionCaption.Text,
-                                MessageBoxButtons.YesNo) != DialogResult.Yes)
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
             {
                 return;
             }
@@ -455,19 +455,19 @@ namespace GitUI.CommandsDialogs
             {
                 if (PullFromUrl.Checked && string.IsNullOrEmpty(comboBoxPullSource.Text))
                 {
-                    MessageBox.Show(this, _selectSourceDirectory.Text);
+                    MessageBox.Show(this, _selectSourceDirectory.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 
                 if (PullFromRemote.Checked && string.IsNullOrEmpty(_NO_TRANSLATE_Remotes.Text) && !IsPullAll())
                 {
-                    MessageBox.Show(this, _selectRemoteRepository.Text);
+                    MessageBox.Show(this, _selectRemoteRepository.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 
                 if (!Fetch.Checked && Branches.Text == "*")
                 {
-                    MessageBox.Show(this, _fetchAllBranchesCanOnlyWithFetch.Text);
+                    MessageBox.Show(this, _fetchAllBranchesCanOnlyWithFetch.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 
@@ -610,7 +610,9 @@ namespace GitUI.CommandsDialogs
             {
                 dialogResult = MessageBox.Show(this, _areYouSureYouWantToRebaseMerge.Text,
                                                   _areYouSureYouWantToRebaseMergeCaption.Text,
-                                                  MessageBoxButtons.YesNoCancel);
+                                                  MessageBoxButtons.YesNoCancel,
+                                                  MessageBoxIcon.Warning,
+                                                  MessageBoxDefaultButton.Button2);
             }
             else
             {

@@ -1519,7 +1519,7 @@ namespace GitUI.CommandsDialogs
             var revisions = RevisionGrid.GetSelectedRevisions();
             if (revisions.Count < 1 || revisions.Count > 2)
             {
-                MessageBox.Show(this, @"Select only one or two revisions. Abort.", @"Archive revision");
+                MessageBox.Show(this, @"Select only one or two revisions. Abort.", @"Archive revision", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -1990,7 +1990,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message);
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2040,7 +2040,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (FileDeleteException ex)
             {
-                MessageBox.Show(this, $@"{_indexLockCantDelete.Text}: {ex.FileName}{Environment.NewLine}{ex.Message}");
+                MessageBox.Show(this, $@"{_indexLockCantDelete.Text}: {ex.FileName}{Environment.NewLine}{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

@@ -95,7 +95,7 @@ namespace GitUI.CommandsDialogs
             catch (Exception ex)
             {
                 MessageBox.Show(this, _cannotAccessMailmap.Text + Environment.NewLine + ex.Message,
-                    _cannotAccessMailmapCaption.Text);
+                    _cannotAccessMailmapCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -138,7 +138,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            MessageBox.Show(this, _mailmapOnlyInWorkingDirSupported.Text, _mailmapOnlyInWorkingDirSupportedCaption.Text);
+            MessageBox.Show(this, _mailmapOnlyInWorkingDirSupported.Text, _mailmapOnlyInWorkingDirSupportedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             Close();
         }
 

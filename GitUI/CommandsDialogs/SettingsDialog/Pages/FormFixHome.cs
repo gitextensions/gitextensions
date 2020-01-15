@@ -88,7 +88,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public void ShowIfUserWant()
         {
             if (MessageBox.Show(string.Format(_gitGlobalConfigNotFound.Text, Environment.GetEnvironmentVariable("HOME")),
-                     _gitGlobalConfigNotFoundCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                     _gitGlobalConfigNotFoundCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
             {
                 ShowDialog();
             }
@@ -139,7 +139,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 string userHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
                 if (!string.IsNullOrEmpty(userHomeDir) && File.Exists(Path.Combine(userHomeDir, ".gitconfig")))
                 {
-                    MessageBox.Show(this, string.Format(_gitconfigFoundHome.Text, userHomeDir));
+                    MessageBox.Show(this, string.Format(_gitconfigFoundHome.Text, userHomeDir), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     defaultHome.Checked = true;
                     return;
                 }
@@ -157,7 +157,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                            Environment.GetEnvironmentVariable("HOMEPATH");
                 if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, ".gitconfig")))
                 {
-                    MessageBox.Show(this, string.Format(_gitconfigFoundHomedrive.Text, path));
+                    MessageBox.Show(this, string.Format(_gitconfigFoundHomedrive.Text, path), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     defaultHome.Checked = true;
                     return;
                 }
@@ -174,7 +174,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 var path = Environment.GetEnvironmentVariable("USERPROFILE");
                 if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, ".gitconfig")))
                 {
-                    MessageBox.Show(this, string.Format(_gitconfigFoundUserprofile.Text, path));
+                    MessageBox.Show(this, string.Format(_gitconfigFoundUserprofile.Text, path), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     userprofileHome.Checked = true;
                     return;
                 }
@@ -191,7 +191,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 var path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
                 if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, ".gitconfig")))
                 {
-                    MessageBox.Show(this, string.Format(_gitconfigFoundPersonalFolder.Text, Environment.GetFolderPath(Environment.SpecialFolder.Personal)));
+                    MessageBox.Show(this, string.Format(_gitconfigFoundPersonalFolder.Text, Environment.GetFolderPath(Environment.SpecialFolder.Personal)),
+                        "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     otherHome.Checked = true;
                     otherHomeDir.Text = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
                 }
@@ -210,7 +211,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 if (string.IsNullOrEmpty(otherHomeDir.Text))
                 {
-                    MessageBox.Show(this, _noHomeDirectorySpecified.Text);
+                    MessageBox.Show(this, _noHomeDirectorySpecified.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -227,7 +228,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             string path = Environment.GetEnvironmentVariable("HOME");
             if (!Directory.Exists(path) || string.IsNullOrEmpty(path))
             {
-                MessageBox.Show(this, string.Format(_homeNotAccessible.Text, path));
+                MessageBox.Show(this, string.Format(_homeNotAccessible.Text, path), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 return;
             }

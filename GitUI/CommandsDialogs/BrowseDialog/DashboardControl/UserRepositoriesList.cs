@@ -750,7 +750,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message);
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

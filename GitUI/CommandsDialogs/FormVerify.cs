@@ -87,7 +87,8 @@ namespace GitUI.CommandsDialogs
             if (MessageBox.Show(this,
                 _removeDanglingObjectsQuestion.Text,
                 _removeDanglingObjectsCaption.Text,
-                MessageBoxButtons.YesNo) != DialogResult.Yes)
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question) != DialogResult.Yes)
             {
                 return;
             }

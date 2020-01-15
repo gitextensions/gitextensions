@@ -35,7 +35,7 @@ namespace GitUI.UserControls
             if (SelectedObjectId == null && !commitHash.IsNullOrWhiteSpace())
             {
                 SelectedObjectId = oldCommitHash;
-                MessageBox.Show("The given commit hash is not valid for this repository and was therefore discarded.");
+                MessageBox.Show("The given commit hash is not valid for this repository and was therefore discarded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             var isArtificialCommitForEmptyRepo = commitHash == "HEAD";

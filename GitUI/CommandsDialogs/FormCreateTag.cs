@@ -79,7 +79,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message);
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -89,7 +89,7 @@ namespace GitUI.CommandsDialogs
 
             if (objectId == null)
             {
-                MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text);
+                MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return "";
             }
 

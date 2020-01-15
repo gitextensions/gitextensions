@@ -40,7 +40,7 @@ namespace GitHub3
             {
                 GitHubLoginInfo.OAuthToken = token;
 
-                MessageBox.Show(this, _generationSucceed.Text, Text);
+                MessageBox.Show(this, _generationSucceed.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = DialogResult.OK;
                 Close();
             }

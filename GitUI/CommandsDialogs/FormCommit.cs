@@ -899,7 +899,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!string.IsNullOrEmpty(output))
             {
-                MessageBox.Show(this, output + "\n\n" + SelectedDiff.Encoding.GetString(patch));
+                MessageBox.Show(this, output + "\n\n" + SelectedDiff.Encoding.GetString(patch), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             if (_currentItemStaged)
@@ -930,7 +930,7 @@ namespace GitUI.CommandsDialogs
             }
 
             if (MessageBox.Show(this, _resetSelectedLinesConfirmation.Text, _resetChangesCaption.Text,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
             {
                 return;
             }
@@ -1287,7 +1287,7 @@ namespace GitUI.CommandsDialogs
                     // commit, because amend may be used just to change the commit message or timestamp.
                     if (!AppSettings.DontConfirmAmend)
                     {
-                        if (MessageBox.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
+                        if (MessageBox.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                         {
                             return false;
                         }
@@ -1454,7 +1454,7 @@ namespace GitUI.CommandsDialogs
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(this, $"Exception: {e.Message}");
+                    MessageBox.Show(this, $"Exception: {e.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 return;
@@ -2090,12 +2090,12 @@ namespace GitUI.CommandsDialogs
 
                 if (filesInUse.Count > 0)
                 {
-                    MessageBox.Show(this, "The following files are currently in use and will not be reset:" + Environment.NewLine + "\u2022 " + string.Join(Environment.NewLine + "\u2022 ", filesInUse), "Files In Use");
+                    MessageBox.Show(this, "The following files are currently in use and will not be reset:" + Environment.NewLine + "\u2022 " + string.Join(Environment.NewLine + "\u2022 ", filesInUse), "Files In Use", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 if (!string.IsNullOrEmpty(output.ToString()))
                 {
-                    MessageBox.Show(this, output.ToString(), _resetChangesCaption.Text);
+                    MessageBox.Show(this, output.ToString(), _resetChangesCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             finally
@@ -2111,7 +2111,7 @@ namespace GitUI.CommandsDialogs
             try
             {
                 if (Unstaged.SelectedItem == null ||
-                    MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo) !=
+                    MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) !=
                     DialogResult.Yes)
                 {
                     return;
@@ -2129,7 +2129,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message);
+                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2143,7 +2143,7 @@ namespace GitUI.CommandsDialogs
 
         private void DeleteSelectedFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo) !=
+            if (MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) !=
                 DialogResult.Yes)
             {
                 return;
@@ -2158,7 +2158,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex);
+                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             Initialize();
@@ -2166,7 +2166,7 @@ namespace GitUI.CommandsDialogs
 
         private void ResetSelectedFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, _resetSelectedChangesText.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo) !=
+            if (MessageBox.Show(this, _resetSelectedChangesText.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) !=
                 DialogResult.Yes)
             {
                 return;
@@ -2263,7 +2263,8 @@ namespace GitUI.CommandsDialogs
             if (MessageBox.Show(this,
                 _deleteUntrackedFiles.Text,
                 _deleteUntrackedFilesCaption.Text,
-                MessageBoxButtons.YesNo) !=
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question) !=
                 DialogResult.Yes)
             {
                 return;
@@ -2591,7 +2592,7 @@ namespace GitUI.CommandsDialogs
                 string output = Module.OpenWithDifftool(item.Name, null, firstRevision, secondRevision, "", item.IsTracked);
                 if (!string.IsNullOrEmpty(output))
                 {
-                    MessageBox.Show(this, output);
+                    MessageBox.Show(this, output, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -2607,7 +2608,7 @@ namespace GitUI.CommandsDialogs
 
             if (items.Count != 1)
             {
-                MessageBox.Show(this, _onlyStageChunkOfSingleFileError.Text, _resetStageChunkOfFileCaption.Text);
+                MessageBox.Show(this, _onlyStageChunkOfSingleFileError.Text, _resetStageChunkOfFileCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2726,7 +2727,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                MessageBox.Show(this, _selectOnlyOneFile.Text, _error.Text);
+                MessageBox.Show(this, _selectOnlyOneFile.Text, _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

@@ -213,7 +213,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             if (e.ColumnIndex == 5)
             {
                 if (AppSettings.DontConfirmSwitchWorktree || MessageBox.Show(this,
-                        _switchWorktreeText.Text, _switchWorktreeTitle.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        _switchWorktreeText.Text, _switchWorktreeTitle.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     if (Directory.Exists(workTree.Path))
                     {
@@ -233,7 +233,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 }
 
                 if (MessageBox.Show(this, _deleteWorktreeText.Text, _deleteWorktreeTitle.Text,
-                        MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     if (Directory.Exists(workTree.Path))
                     {
