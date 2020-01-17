@@ -136,7 +136,7 @@ namespace GitUI.Theming
             }
         }
 
-        private static (LocalHook, TDelegate) InstallHook<TDelegate>(string dll, string method,
+        private static (LocalHook hook, TDelegate original) InstallHook<TDelegate>(string dll, string method,
             TDelegate hookImpl)
             where TDelegate : Delegate
         {
