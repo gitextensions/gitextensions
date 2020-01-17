@@ -214,8 +214,8 @@ namespace GitCommandsTests.DiffMergeTools
         {
             var info = _configurationManager.GetTestAccessor().GetInfo(toolType);
 
-            info.ToolKey.Should().Be(expectedToolKey);
-            info.Prefix.Should().Be(expectedPrefix);
+            info.toolKey.Should().Be(expectedToolKey);
+            info.prefix.Should().Be(expectedPrefix);
         }
 
         [Test]

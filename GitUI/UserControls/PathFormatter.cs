@@ -28,7 +28,7 @@ namespace GitUI
             _font = font ?? throw new ArgumentNullException(nameof(font));
         }
 
-        public (string Prefix, string Text, string Suffix, int Width) FormatTextForDrawing(int maxWidth, string name, string oldName)
+        public (string prefix, string text, string suffix, int width) FormatTextForDrawing(int maxWidth, string name, string oldName)
         {
             string prefix = null;
             string text = string.Empty;
@@ -75,7 +75,7 @@ namespace GitUI
         }
 
         [CanBeNull]
-        public static (string Text, string Suffix) FormatTextForFileNameOnly(string name, string oldName)
+        public static (string text, string suffix) FormatTextForFileNameOnly(string name, string oldName)
         {
             name = name.TrimEnd(PathUtil.PosixDirectorySeparatorChar);
             var fileName = Path.GetFileName(name);
@@ -109,7 +109,7 @@ namespace GitUI
         public void DrawString(string str, Rectangle rect, Color color) =>
             TextRenderer.DrawText(_graphics, str, _font, rect, color, FilePathStringFormat);
 
-        private static (string Prefix, string Text, string Suffix) FormatString(string name, string oldName, int step, bool isNameTruncated)
+        private static (string prefix, string text, string suffix) FormatString(string name, string oldName, int step, bool isNameTruncated)
         {
             if (oldName != null)
             {
@@ -161,7 +161,7 @@ namespace GitUI
             return string.IsNullOrEmpty(oldName) ? null : " (" + oldName + ")";
         }
 
-        private static (string Path, string FileName) SplitPathName(string name)
+        private static (string path, string fileName) SplitPathName(string name)
         {
             if (name == null)
             {
@@ -188,7 +188,7 @@ namespace GitUI
         internal readonly struct TestAccessor
         {
             internal static string FormatOldName(string oldName) => PathFormatter.FormatOldName(oldName);
-            internal static (string Path, string FileName) SplitPathName(string name) => PathFormatter.SplitPathName(name);
+            internal static (string path, string fileName) SplitPathName(string name) => PathFormatter.SplitPathName(name);
         }
     }
 }

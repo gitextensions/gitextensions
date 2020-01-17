@@ -419,7 +419,7 @@ namespace GitUI
             }
         }
 
-        private static (Image Image, string Prefix, string Text, string Suffix, int PrefixTextStartX, int TextWidth, int TextMaxWidth)
+        private static (Image image, string prefix, string text, string suffix, int prefixTextStartX, int textWidth, int textMaxWidth)
             FormatListViewItem(ListViewItem item, PathFormatter formatter, int itemWidth)
         {
             var gitItemStatus = item.Tag<GitItemStatus>();
