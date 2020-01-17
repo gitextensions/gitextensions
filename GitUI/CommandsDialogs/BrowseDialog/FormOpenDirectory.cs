@@ -188,7 +188,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 _form = form;
             }
 
-            public GitModule OpenGitRepository([NotNull] string path, ILocalRepositoryManager localRepositoryManager) => FormOpenDirectory.OpenGitRepository(path, localRepositoryManager);
+            public static GitModule OpenGitRepository([NotNull] string path, ILocalRepositoryManager localRepositoryManager)
+                => FormOpenDirectory.OpenGitRepository(path, localRepositoryManager);
         }
     }
 }
