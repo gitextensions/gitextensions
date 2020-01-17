@@ -4,7 +4,8 @@
         "namingRules": {
             "allowedHungarianPrefixes": [
                 "ui", "x", "y", "my", "ls", "am", "id", "ie", "vs", "up"
-            ]
+            ],
+            "tupleElementNameCasing": "camelCase"
         }
     }
 }
