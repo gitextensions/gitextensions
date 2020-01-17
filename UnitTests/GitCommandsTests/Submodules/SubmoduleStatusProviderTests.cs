@@ -118,8 +118,7 @@ namespace GitCommandsTests.Submodules
                 changedFiles.Should().HaveCount(1);
                 SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, currentModule, changedFiles);
 
-                // Disabled test as the test case does not await async retrieval of submodule status
-                ////result.OurSubmodules[0].Detailed.IsDirty.Should().BeTrue();
+                result.OurSubmodules[0].Detailed.IsDirty.Should().BeTrue();
                 result.OurSubmodules[1].Detailed.Should().BeNull();
 
                 // Revert the change
