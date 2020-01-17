@@ -341,7 +341,7 @@ namespace GitUI.Editor
             internalFileViewer.EnableScrollBars(enable);
         }
 
-        public void SetVisibilityDiffContextMenu(bool visible, [CanBeNull] string fileName, bool isStagingDiff)
+        public void SetVisibilityDiffContextMenu(bool visible, [CanBeNull] string fileName)
         {
             _currentViewIsPatch = visible;
             ignoreWhitespaceAtEolToolStripMenuItem.Visible = visible;
@@ -360,8 +360,14 @@ namespace GitUI.Editor
 
             cherrypickSelectedLinesToolStripMenuItem.Visible =
                 revertSelectedLinesToolStripMenuItem.Visible =
-                    visible && fileExists && !isStagingDiff && !Module.IsBareRepository();
+                    visible && fileExists && !Module.IsBareRepository();
             copyPatchToolStripMenuItem.Visible = visible;
+        }
+
+        private void SetVisibilityDiffContextMenuStaging()
+        {
+            cherrypickSelectedLinesToolStripMenuItem.Visible = false;
+            revertSelectedLinesToolStripMenuItem.Visible = false;
         }
 
         private void OnExtraDiffArgumentsChanged()
@@ -492,38 +498,33 @@ namespace GitUI.Editor
 
         public string GetText() => internalFileViewer.GetText();
 
-        public void ViewCurrentChanges(GitItemStatus item)
-        {
-            ViewCurrentChanges(item.Name, item.OldName, item.Staged == StagedStatus.Index, item.IsSubmodule, item.GetSubmoduleStatusAsync, null /* not implemented */);
-        }
-
         public void ViewCurrentChanges(GitItemStatus item, bool isStaged, [CanBeNull] Action openWithDifftool)
         {
-            ViewCurrentChanges(item.Name, item.OldName, isStaged, item.IsSubmodule, item.GetSubmoduleStatusAsync, openWithDifftool);
-        }
-
-        private void ViewCurrentChanges(string fileName, string oldFileName, bool staged,
-            bool isSubmodule, Func<Task<GitSubmoduleStatus>> getStatusAsync, [CanBeNull] Action openWithDifftool)
-        {
             ShowOrDeferAsync(
-                fileName,
+                item.Name,
                 async () =>
                 {
-                    if (!isSubmodule)
+                    if (!item.IsTracked)
+                    {
+                        await ViewGitItemRevisionAsync(item.Name, ObjectId.WorkTreeId, openWithDifftool);
+                        SetVisibilityDiffContextMenuStaging();
+                    }
+                    else if (!item.IsSubmodule)
                     {
                         var patch = await Module.GetCurrentChangesAsync(
-                            fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding);
-                        ViewStagingPatch(patch, openWithDifftool, fileName);
+                            item.Name, item.OldName, isStaged, GetExtraDiffArguments(), Encoding);
+                        ViewStagingPatch(patch, openWithDifftool, item.Name);
+                        SetVisibilityDiffContextMenuStaging();
                     }
                     else
                     {
-                        var getStatusTask = getStatusAsync();
+                        var getStatusTask = item.GetSubmoduleStatusAsync();
                         if (getStatusTask != null)
                         {
                             var status = await getStatusTask;
                             if (status == null)
                             {
-                                ViewPatch($"Submodule \"{fileName}\" has unresolved conflicts", null);
+                                ViewPatch($"Submodule \"{item.Name}\" has unresolved conflicts", null);
                                 return;
                             }
 
@@ -532,8 +533,8 @@ namespace GitUI.Editor
                         }
                         else
                         {
-                            var changes = await Module.GetCurrentChangesAsync(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding);
-                            var text = LocalizationHelpers.ProcessSubmodulePatch(Module, fileName, changes);
+                            var changes = await Module.GetCurrentChangesAsync(item.Name, item.OldName, isStaged, GetExtraDiffArguments(), Encoding);
+                            var text = LocalizationHelpers.ProcessSubmodulePatch(Module, item.Name, changes);
                             ViewPatch(text, null);
                             return;
                         }
@@ -544,7 +545,6 @@ namespace GitUI.Editor
         public void ViewStagingPatch(Patch patch, [CanBeNull] Action openWithDifftool, string filename)
         {
             ViewPatch(patch, openWithDifftool, filename);
-            Reset(true, true, filename, true);
         }
 
         public void ViewPatch([CanBeNull] Patch patch, [CanBeNull] Action openWithDifftool = null, string filename = null)
@@ -876,10 +876,10 @@ namespace GitUI.Editor
             _patchHighlighting = true;
         }
 
-        private void Reset(bool diff, bool text, [CanBeNull] string fileName, bool isStagingDiff = false)
+        private void Reset(bool diff, bool text, [CanBeNull] string fileName)
         {
             _patchHighlighting = diff;
-            SetVisibilityDiffContextMenu(diff, fileName, isStagingDiff);
+            SetVisibilityDiffContextMenu(diff, fileName);
             ClearImage();
             PictureBox.Visible = !text;
             internalFileViewer.Visible = text;

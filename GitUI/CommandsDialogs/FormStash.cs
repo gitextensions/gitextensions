@@ -191,7 +191,7 @@ namespace GitUI.CommandsDialogs
                     gitStash == _currentWorkingDirStashItem)
                 {
                     // current working directory
-                    View.ViewCurrentChanges(stashedItem);
+                    View.ViewCurrentChanges(stashedItem, isStaged: false, openWithDifftool: null);
                 }
                 else if (stashedItem != null)
                 {
