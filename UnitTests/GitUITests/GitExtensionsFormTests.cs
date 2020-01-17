@@ -25,7 +25,7 @@ namespace GitUITests
         [Test]
         public void RestorePosition_should_not_restore_position_if_not_required()
         {
-            var form = new MockForm(false)
+            using var form = new MockForm(false)
             {
                 Location = new Point(-100, -100),
                 Size = new Size(500, 500)
@@ -43,7 +43,7 @@ namespace GitUITests
         [Test]
         public void RestorePosition_should_not_restore_position_if_minimised()
         {
-            var form = new MockForm(false)
+            using var form = new MockForm(false)
             {
                 Location = new Point(-100, -100),
                 Size = new Size(500, 500),
@@ -63,7 +63,7 @@ namespace GitUITests
         [Test]
         public void RestorePosition_should_not_restore_position_if_not_persisted()
         {
-            var form = new MockForm(true)
+            using var form = new MockForm(true)
             {
                 Location = new Point(-100, -100),
                 Size = new Size(500, 500)
@@ -88,13 +88,12 @@ namespace GitUITests
         [TestCase(FormBorderStyle.None)]
         public void RestorePosition_should_not_scale_fixed_window_if_different_dpi(FormBorderStyle borderStyle)
         {
-            var form = new MockForm(true)
+            using var form = new MockForm(true)
             {
                 Location = new Point(-100, -100),
                 Size = new Size(300, 300),
                 FormBorderStyle = borderStyle
             };
-
             var screens = new[]
             {
                 new Rectangle(-1920, 0, 1920, 1080),
@@ -106,7 +105,8 @@ namespace GitUITests
             test.GetScreensWorkingArea = () => screens;
             test.WindowPositionManager = _windowPositionManager;
 
-            _windowPositionManager.LoadPosition(form).Returns(x => new WindowPosition(new Rectangle(100, 100, 500, 500), 96, FormWindowState.Normal, "bla"));
+            _windowPositionManager.LoadPosition(form)
+                .Returns(x => new WindowPosition(new Rectangle(100, 100, 500, 500), 96, FormWindowState.Normal, "bla"));
 
             form.InvokeRestorePosition();
 
@@ -124,12 +124,11 @@ namespace GitUITests
                 Assert.Inconclusive("The test must be run at 96dpi");
             }
 
-            var form = new MockForm(true)
+            using var form = new MockForm(true)
             {
                 Location = new Point(-100, -100),
                 Size = new Size(300, 300),
             };
-
             var screens = new[]
             {
                 new Rectangle(-1920, 0, 1920, 1080),
@@ -141,7 +140,8 @@ namespace GitUITests
             test.GetScreensWorkingArea = () => screens;
             test.WindowPositionManager = _windowPositionManager;
 
-            _windowPositionManager.LoadPosition(form).Returns(x => new WindowPosition(new Rectangle(100, 100, 500, 500), savedDpi, FormWindowState.Normal, "bla"));
+            _windowPositionManager.LoadPosition(form)
+                .Returns(x => new WindowPosition(new Rectangle(100, 100, 500, 500), savedDpi, FormWindowState.Normal, "bla"));
 
             form.InvokeRestorePosition();
 
@@ -158,12 +158,12 @@ namespace GitUITests
                 Assert.Inconclusive("The test must be run at 96dpi");
             }
 
-            var owner = new Form
+            using var owner = new Form
             {
                 Location = new Point(ownerFormTop, ownerFormLeft),
                 Size = new Size(800, 600)
             };
-            var form = new MockForm(true)
+            using var form = new MockForm(true)
             {
                 Owner = owner,
                 StartPosition = FormStartPosition.CenterParent
@@ -178,7 +178,8 @@ namespace GitUITests
             var test = form.GetGitExtensionsFormTestAccessor();
             test.GetScreensWorkingArea = () => screens;
             test.WindowPositionManager = _windowPositionManager;
-            _windowPositionManager.LoadPosition(form).Returns(x => new WindowPosition(new Rectangle(100, 100, 300, 200), 96, FormWindowState.Normal, "bla"));
+            _windowPositionManager.LoadPosition(form)
+                .Returns(x => new WindowPosition(new Rectangle(100, 100, 300, 200), 96, FormWindowState.Normal, "bla"));
 
             form.InvokeRestorePosition();
 
