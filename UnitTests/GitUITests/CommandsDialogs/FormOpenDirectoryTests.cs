@@ -34,6 +34,12 @@ namespace GitUITests.CommandsDialogs
             _form = new FormOpenDirectory(null);
         }
 
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            _referenceRepository.Dispose();
+        }
+
         [Test]
         public void OpenGitRepository_should_return_null_if_directory_not_exist()
         {

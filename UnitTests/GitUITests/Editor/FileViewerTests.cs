@@ -17,6 +17,12 @@ namespace GitUITests.Editor
             _fileViewer = new FileViewer();
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            _fileViewer.Dispose();
+        }
+
         [Test]
         [TestCase(IgnoreWhitespaceKind.None, IgnoreWhitespaceKind.Eol, true, false, false)]
         [TestCase(IgnoreWhitespaceKind.None, IgnoreWhitespaceKind.Change, true, true, false)]

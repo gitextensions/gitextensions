@@ -72,8 +72,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [TearDown]
         public void TearDown()
         {
-            _commands = null;
-
+            //// _provider is a singleton and must not be disposed
             _repo1.Dispose();
             _repo2.Dispose();
             _repo3.Dispose();

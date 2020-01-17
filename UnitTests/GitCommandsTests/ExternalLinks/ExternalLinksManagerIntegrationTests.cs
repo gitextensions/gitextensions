@@ -48,7 +48,6 @@ namespace GitCommandsTests.ExternalLinks
             _repoLocal.SettingsCache.Dispose();
 
             _testHelper.Dispose();
-            _testHelper = null;
         }
 
         [Test]
