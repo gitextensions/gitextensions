@@ -67,29 +67,27 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void RepoObjectTree_should_load_active_remotes()
         {
-            RunFormTest(
-                form =>
+            RunRepoObjectsTreeTest(
+                remotesNode =>
                 {
                     // act
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    var remotesNode = GetRemoteNode(form);
-                    remotesNode.Nodes.Count.Should().Be(5);
+                    remotesNode.Nodes.Count.Should().Be(RemoteNames.Length);
                 });
         }
 
         [Test]
         public void RepoObjectTree_should_order_active_remotes_alphabetically()
         {
-            RunFormTest(
-                form =>
+            RunRepoObjectsTreeTest(
+                remotesNode =>
                 {
                     // act
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    var remotesNode = GetRemoteNode(form);
                     var names = remotesNode.Nodes.OfType<TreeNode>().Select(x => x.Text).ToList();
                     names.Should().BeEquivalentTo(RemoteNames);
                     names.Should().BeInAscendingOrder();
@@ -99,14 +97,13 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void RepoObjectTree_should_order_should_not_display_inactive_if_none()
         {
-            RunFormTest(
-                form =>
+            RunRepoObjectsTreeTest(
+                remotesNode =>
                 {
                     // act
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    var remotesNode = GetRemoteNode(form);
                     remotesNode.Nodes.OfType<TreeNode>().Any(n => n.Text == InactiveLabel).Should().BeFalse();
                 });
         }
@@ -117,14 +114,13 @@ namespace GitExtensions.UITests.CommandsDialogs
             // setup
             DeactivateTreeNode(RemoteNames[1]);
 
-            RunFormTest(
-                form =>
+            RunRepoObjectsTreeTest(
+                remotesNode =>
                 {
                     // act
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    var remotesNode = GetRemoteNode(form);
                     remotesNode.Nodes.OfType<TreeNode>().Count(n => n.Text == InactiveLabel).Should().Be(1);
                 });
         }
@@ -135,14 +131,13 @@ namespace GitExtensions.UITests.CommandsDialogs
             // setup
             DeactivateTreeNode(RemoteNames[1]);
 
-            RunFormTest(
-                form =>
+            RunRepoObjectsTreeTest(
+                remotesNode =>
                 {
                     // act
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    var remotesNode = GetRemoteNode(form);
                     remotesNode.Nodes.OfType<TreeNode>().Last().Text.Should().Be(InactiveLabel);
                 });
         }
@@ -155,14 +150,13 @@ namespace GitExtensions.UITests.CommandsDialogs
             DeactivateTreeNode(RemoteNames[0]);
             DeactivateTreeNode(RemoteNames[1]);
 
-            RunFormTest(
-                form =>
+            RunRepoObjectsTreeTest(
+                remotesNode =>
                 {
                     // act
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    var remotesNode = GetRemoteNode(form);
                     var inactiveNodes = remotesNode.Nodes.OfType<TreeNode>().Last().Nodes.OfType<TreeNode>().Select(n => n.Text).ToList();
                     inactiveNodes.Count.Should().Be(3);
                     inactiveNodes.Should().BeEquivalentTo(RemoteNames[3], RemoteNames[0], RemoteNames[1]);
@@ -183,12 +177,12 @@ namespace GitExtensions.UITests.CommandsDialogs
             return remotesNode;
         }
 
-        private void RunFormTest(Action<FormBrowse> testDriver)
+        private void RunRepoObjectsTreeTest(Action<TreeNode> testDriver)
         {
             RunFormTest(
                 form =>
                 {
-                    testDriver(form);
+                    testDriver(GetRemoteNode(form));
                     return Task.CompletedTask;
                 });
         }
