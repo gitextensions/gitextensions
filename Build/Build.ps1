@@ -6,6 +6,7 @@ Param(
   [switch] $restore,
   [switch][Alias('b')]$build,
   [switch] $rebuild,
+  [switch] $buildNative,
   [switch] $clean,
   [switch][Alias('t')] $test,
   [switch][Alias('bl')] $binaryLog,
@@ -25,9 +26,47 @@ $env:SKIP_PAUSE=1
 $TfmConfiguration = "$Configuration\net461";
 
 
+ 
 function Build {
   $toolsetBuildProj = Resolve-Path 'Build\tools\Build.proj'
   Write-Host $toolsetBuildProj
+
+  if ($buildNative) {
+    $bl = if ($binaryLog) { "/bl:" + (Join-Path $LogDir "GitExtSshAskPass.binlog") } else { "" }
+    MSBuild $toolsetBuildProj `
+        $bl `
+        /p:Platform=Win32 `
+        /p:Configuration=$configuration `
+        /p:RepoRoot=$RepoRoot `
+        /p:Projects=$RepoRoot\GitExtSshAskPass\GitExtSshAskPass.sln `
+        /p:Build=$buildNative `
+        /p:Rebuild=$rebuild `
+        @properties;
+
+    # force rebuild both configurations, otherwise there is a risk of failure with
+    # error BK4502: truncated .SBR file
+    $bl = if ($binaryLog) { "/bl:" + (Join-Path $LogDir "GitExtensionsShellEx32.binlog") } else { "" }
+    MSBuild $toolsetBuildProj `
+        $bl `
+        /p:Platform=Win32 `
+        /p:Configuration=$configuration `
+        /p:RepoRoot=$RepoRoot `
+        /p:Projects=$RepoRoot\GitExtensionsShellEx\GitExtensionsShellEx.sln `
+        /p:Build=$buildNative `
+        /p:Rebuild=true `
+        @properties;
+
+    $bl = if ($binaryLog) { "/bl:" + (Join-Path $LogDir "GitExtensionsShellEx64.binlog") } else { "" }
+    MSBuild $toolsetBuildProj `
+        $bl `
+        /p:Platform=x64 `
+        /p:Configuration=$configuration `
+        /p:RepoRoot=$RepoRoot `
+        /p:Projects=$RepoRoot\GitExtensionsShellEx\GitExtensionsShellEx.sln `
+        /p:Build=$buildNative `
+        /p:Rebuild=true `
+        @properties;
+  }
 
   # build the solution
   $bl = if ($binaryLog) { "/bl:" + (Join-Path $LogDir "build.binlog") } else { "" }

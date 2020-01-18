@@ -4,6 +4,7 @@
 #include "resource.h"
 #include <initguid.h>
 #include "Generated/GitExtensionsShellEx.h"
+#include "VersionHelpers.h"
 
 #include "Generated/GitExtensionsShellEx_i.c"
 #include "GitExtensionsShellEx.h"
@@ -62,7 +63,8 @@ STDAPI DllRegisterServer()
     // is all that's necessary.)
     CRegKey reg;
     LONG    lRet;
-    if (0 == (GetVersion() & 0x80000000UL))
+
+    if (IsWindows7SP1OrGreater())
     {
         lRet = reg.Open(HKEY_LOCAL_MACHINE,
             _T("Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved"),
@@ -154,7 +156,7 @@ STDAPI DllUnregisterServer()
     CRegKey reg;
     LONG    lRet;
 
-    if (0 == (GetVersion() & 0x80000000UL))
+    if (IsWindows7SP1OrGreater())
     {
         lRet = reg.Open(HKEY_LOCAL_MACHINE,
             _T("Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved"),
