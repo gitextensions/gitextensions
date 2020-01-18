@@ -44,7 +44,7 @@ namespace GitStatistics.PieChart
                     Color.Maroon,
                     Color.Teal,
                     Color.Fuchsia
-                };
+            };
 
         /// <summary>
         ///   Array of relative displacements from the common center.

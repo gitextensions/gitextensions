@@ -7,7 +7,7 @@ namespace GitExtUtils.GitUI.Theming
 {
     public static class ColorHelper
     {
-        private static readonly (KnownColor Back, KnownColor Fore)[] BackForeExamples =
+        private static readonly (KnownColor back, KnownColor fore)[] BackForeExamples =
         {
             (KnownColor.Window, KnownColor.WindowText),
             (KnownColor.Control, KnownColor.ControlText),
@@ -44,16 +44,16 @@ namespace GitExtUtils.GitUI.Theming
             var hsl1 = backColor.ToPerceptedHsl();
 
             var closestBack = Enumerable.Range(0, BackForeExamples.Length)
-                .Select(i => (Distance: DistanceTo(BackForeExamples[i].Back), Index: i))
+                .Select(i => (Distance: DistanceTo(BackForeExamples[i].back), Index: i))
                 .Min();
 
             var closestFore = Enumerable.Range(0, BackForeExamples.Length)
-                .Select(i => (Distance: DistanceTo(BackForeExamples[i].Fore), Index: i))
+                .Select(i => (Distance: DistanceTo(BackForeExamples[i].fore), Index: i))
                 .Min();
 
             return _theme.GetNonEmptyColor(closestBack.Distance <= closestFore.Distance * 1.25 // prefer back-fore combination
-                ? BackForeExamples[closestBack.Index].Fore
-                : BackForeExamples[closestFore.Index].Back);
+                ? BackForeExamples[closestBack.Index].fore
+                : BackForeExamples[closestFore.Index].back);
 
             double DistanceTo(KnownColor c2)
             {
@@ -83,14 +83,14 @@ namespace GitExtUtils.GitUI.Theming
             var index = Enumerable.Range(0, BackForeExamples.Length)
                 .Select(i => (
                     distance: DistanceTo(
-                        isForeground ? BackForeExamples[i].Fore : BackForeExamples[i].Back),
+                        isForeground ? BackForeExamples[i].fore : BackForeExamples[i].back),
                     index: i))
                 .Min().index;
 
             var option = BackForeExamples[index];
             return isForeground
-                ? AdaptColor(originalRgb, option.Fore, option.Back)
-                : AdaptColor(originalRgb, option.Back, option.Fore);
+                ? AdaptColor(originalRgb, option.fore, option.back)
+                : AdaptColor(originalRgb, option.back, option.fore);
 
             double DistanceTo(KnownColor c2)
             {
@@ -186,15 +186,15 @@ namespace GitExtUtils.GitUI.Theming
                 PerceptedL(example),
                 PerceptedL(opposite));
 
-            double actualL = ActualL(original.Rgb, perceptedL);
+            double actualL = ActualL(original.rgb, perceptedL);
 
-            var result = original.Hsl.WithLuminosity(actualL).ToColor();
+            var result = original.hsl.WithLuminosity(actualL).ToColor();
             return result;
 
-            double PerceptedL((Color Rgb, HslColor Hsl) c) =>
-                ColorHelper.PerceptedL(c.Rgb, c.Hsl.L);
+            double PerceptedL((Color rgb, HslColor hsl) c) =>
+                ColorHelper.PerceptedL(c.rgb, c.hsl.L);
 
-            (Color Rgb, HslColor Hsl) RgbHsl(Color c) =>
+            (Color rgb, HslColor hsl) RgbHsl(Color c) =>
                 (c, new HslColor(c));
         }
 

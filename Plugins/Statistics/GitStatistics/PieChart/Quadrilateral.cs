@@ -19,7 +19,7 @@ namespace GitStatistics.PieChart
                     (byte)PathPointType.Line
 
                     // | (byte)PathPointType.CloseSubpath
-                };
+            };
 
         public static readonly Quadrilateral Empty = new Quadrilateral();
 

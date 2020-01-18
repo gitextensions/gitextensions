@@ -7,7 +7,7 @@ namespace GitUI.UserControls
 {
     internal interface IRepoStateVisualiser
     {
-        (Image, Brush) Invoke(IReadOnlyList<GitItemStatus> allChangedFiles);
+        (Image image, Brush brush) Invoke(IReadOnlyList<GitItemStatus> allChangedFiles);
     }
 
     internal sealed class RepoStateVisualiser : IRepoStateVisualiser
@@ -22,7 +22,7 @@ namespace GitUI.UserControls
         internal static readonly (Bitmap, Brush) Unknown = (Images.RepoStateUnknown, Brushes.Gray);
         internal static readonly (Bitmap, Brush) UntrackedOnly = (Images.RepoStateUntrackedOnly, Brushes.BlueViolet);
 
-        public (Image, Brush) Invoke(IReadOnlyList<GitItemStatus> allChangedFiles)
+        public (Image image, Brush brush) Invoke(IReadOnlyList<GitItemStatus> allChangedFiles)
         {
             if (allChangedFiles == null)
             {

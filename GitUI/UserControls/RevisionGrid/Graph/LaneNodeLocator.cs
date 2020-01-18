@@ -5,7 +5,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 {
     internal interface ILaneNodeLocator
     {
-        (RevisionGraphRevision, bool isAtNode) FindPrevNode(int rowIndex, int lane);
+        (RevisionGraphRevision revision, bool isAtNode) FindPrevNode(int rowIndex, int lane);
     }
 
     internal sealed class LaneNodeLocator : ILaneNodeLocator
@@ -19,7 +19,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             _revisionGraphRowProvider = revisionGraphRowProvider;
         }
 
-        public (RevisionGraphRevision, bool isAtNode) FindPrevNode(int rowIndex, int lane)
+        public (RevisionGraphRevision revision, bool isAtNode) FindPrevNode(int rowIndex, int lane)
         {
             if (rowIndex < 0 || lane < 0)
             {

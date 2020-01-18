@@ -109,7 +109,7 @@ namespace GitCommands
                 // do not remember commit message when they have been specified by the command line
                 if (content != _overriddenCommitMessage)
                 {
-                    var path = GetMergeOrCommitMessagePath().FilePath;
+                    var path = GetMergeOrCommitMessagePath().filePath;
                     if (!_fileSystem.Directory.Exists(Path.GetDirectoryName(path)))
                     {
                         // The repo no longer exists
@@ -130,11 +130,11 @@ namespace GitCommands
 
         private string GetFilePath(string workingDirGitDir, string fileName) => _fileSystem.Path.Combine(workingDirGitDir, fileName);
 
-        private (string FilePath, bool FileExists) GetMergeOrCommitMessagePath()
+        private (string filePath, bool fileExists) GetMergeOrCommitMessagePath()
         {
             if (IsMergeCommit)
             {
-                return (_mergeMessagePath, FileExists: true);
+                return (_mergeMessagePath, fileExists: true);
             }
 
             return (_commitMessagePath, _fileSystem.File.Exists(_commitMessagePath));

@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                             Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH"),
                             Environment.GetEnvironmentVariable("USERPROFILE"),
                             Environment.GetFolderPath(Environment.SpecialFolder.Personal)
-                                      };
+                };
 
                 foreach (string candidate in candidates)
                 {

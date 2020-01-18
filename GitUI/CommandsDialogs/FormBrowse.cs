@@ -429,7 +429,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    toolStripButtonCommit.Image = repoStateVisualiser.Invoke(new List<GitItemStatus>()).Item1;
+                    toolStripButtonCommit.Image = repoStateVisualiser.Invoke(new List<GitItemStatus>()).image;
 
                     toolStripButtonCommit.Text = _commitButtonText.Text;
                     toolStripButtonCommit.AutoSize = true;
