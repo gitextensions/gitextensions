@@ -10,6 +10,7 @@ Param(
   [switch] $clean,
   [switch] $ci,
   [switch][Alias('t')] $test,
+  [switch][Alias('it')] $integrationTest,
   [switch][Alias('bl')] $binaryLog,
   [string] $platform = $null,
   [switch] $help,
@@ -78,6 +79,8 @@ function Build {
     /p:Restore=$restore `
     /p:Build=$build `
     /p:Rebuild=$rebuild `
+    /p:Test=$test `
+    /p:IntegrationTest=$integrationTest `
     @properties;
 }
 

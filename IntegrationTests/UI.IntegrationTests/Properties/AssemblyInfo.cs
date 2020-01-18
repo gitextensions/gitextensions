@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 using ApprovalTests.Reporters;
+using ApprovalTests.Reporters.ContinuousIntegration;
+using ApprovalTests.Reporters.TestFrameworks;
 using CommonTestUtils;
 
 // General Information about an assembly is controlled through the following

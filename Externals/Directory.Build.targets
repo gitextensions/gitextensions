@@ -3,6 +3,7 @@
 
   <!-- Create a dummy test targets -->
   <Target Name="Test" />
+  <Target Name="IntegrationTest" />
   <Target Name="LegacyClean" />
 
 </Project>
