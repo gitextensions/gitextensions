@@ -1,0 +1,8 @@
+<Project>
+  <Import Project="..\Directory.Build.props" />
+
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>..\..\..\GitExtensionsTest.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  
+</Project>

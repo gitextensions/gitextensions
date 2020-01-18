@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <_SuppressSdkImports>true</_SuppressSdkImports>
+    <DeterministicSourcePaths>false</DeterministicSourcePaths>
   </PropertyGroup>
 
 </Project>

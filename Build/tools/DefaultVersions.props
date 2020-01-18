@@ -10,11 +10,19 @@
     Default versions
   -->
   <PropertyGroup>
+    <MicrosoftNETTestSdkVersion Condition="'$(MicrosoftNETTestSdkVersion)' == ''">15.9.0</MicrosoftNETTestSdkVersion>
+
     <UsingToolNUnit Condition="'$(UsingToolNUnit)' == ''">true</UsingToolNUnit>
 
     <XliffTasksVersion Condition="'$(XliffTasksVersion)' == ''">1.0.0-beta.19252.1</XliffTasksVersion>
-    <NUnitVersion Condition="'$(NUnitVersion)' == ''">3.10.1</NUnitVersion>
-    <NUnitRunnerConsoleVersion Condition="'$(NUnitRunnerConsoleVersion)' == ''">$(NUnitVersion)</NUnitRunnerConsoleVersion>
+
+    <ApprovalTestsVersion Condition="'$(ApprovalTestsVersion)' == ''">4.4.0</ApprovalTestsVersion>
+    <FluentAssertionsVersion Condition="'$(FluentAssertionsVersion)' == ''">5.2.0</FluentAssertionsVersion>
+    <OpenCoverVersion Condition="'$(OpenCoverVersion)' == ''">4.7.922</OpenCoverVersion>
+    <NSubstituteVersion Condition="'$(NSubstituteVersion)' == ''">3.1.0</NSubstituteVersion>
+    <NUnitVersion Condition="'$(NUnitVersion)' == ''">3.12.0</NUnitVersion>
+    <NUnitTestAdapterVersion Condition="'$(NUnitTestAdapterVersion)' == ''">3.16.1</NUnitTestAdapterVersion>
+
     <VSWhereVersion Condition="'$(VSWhereVersion)' == ''">2.6.7</VSWhereVersion>
   </PropertyGroup>
 

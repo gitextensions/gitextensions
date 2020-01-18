@@ -8,6 +8,7 @@ Param(
   [switch] $rebuild,
   [switch] $buildNative,
   [switch] $clean,
+  [switch] $ci,
   [switch][Alias('t')] $test,
   [switch][Alias('bl')] $binaryLog,
   [string] $platform = $null,

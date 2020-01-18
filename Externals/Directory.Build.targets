@@ -2,6 +2,7 @@
 <Project>
 
   <!-- Create a dummy test targets -->
+  <Target Name="Test" />
   <Target Name="LegacyClean" />
 
 </Project>

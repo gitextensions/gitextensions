@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Plugins\DeleteUnusedBranches\DeleteUnusedBranches.csproj" />
+    <ProjectReference Include="..\..\CommonTestUtils\CommonTestUtils.csproj" />
+  </ItemGroup>
+
+</Project>
