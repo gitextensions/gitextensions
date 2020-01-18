@@ -59,7 +59,7 @@ namespace GitCommandsTests.Config
             var args = new GitArgumentBuilder("config")
             {
                 "-f",
-                cfgFile.QuoteNE(),
+                cfgFile.Quote(),
                 "--add",
                 section,
                 value
@@ -72,7 +72,7 @@ namespace GitCommandsTests.Config
             var args = new GitArgumentBuilder("config")
             {
                 "-f",
-                cfgFile.QuoteNE(),
+                cfgFile.Quote(),
                 "--get",
                 key.Quote()
             };
