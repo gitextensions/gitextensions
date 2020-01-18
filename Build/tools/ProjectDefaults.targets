@@ -36,4 +36,23 @@
     <None Include="$(PackageIconFullPath)" Pack="true" PackagePath="$(PackageIcon)" Visible="false" />
   </ItemGroup>
 
+  <!--
+    Clean solution.
+  -->
+  <Target Name="LegacyClean" AfterTargets="Clean">
+
+    <PropertyGroup>
+      <DefaultBinDirectory>$(MSBuildProjectDirectory)\bin</DefaultBinDirectory>
+      <DefaultObjDirectory>$(MSBuildProjectDirectory)\obj</DefaultObjDirectory>
+    </PropertyGroup>
+  
+    <Message Text="Cleaning $(MSBuildProjectFile)" 
+              Condition="Exists('$(DefaultBinDirectory)') OR Exists('$(DefaultObjDirectory)')"
+             Importance="High" />
+    <RemoveDir Directories="$(DefaultBinDirectory)" Condition="Exists('$(DefaultBinDirectory)')" />
+    <Message Text="...$(DefaultBinDirectory)" Importance="High" Condition="Exists('$(DefaultBinDirectory)')" />
+    <RemoveDir Directories="$(DefaultObjDirectory)" Condition="Exists('$(DefaultObjDirectory)')" />
+    <Message Text="...$(DefaultObjDirectory)" Importance="High" Condition="Exists('$(DefaultObjDirectory)')" />
+  </Target>
+
 </Project>

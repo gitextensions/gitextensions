@@ -24,12 +24,9 @@ $PSDefaultParameterValues['*:ErrorAction'] = 'Stop'
 
 $env:SKIP_PAUSE=1
 $TfmConfiguration = "$Configuration\net461";
-
-
+$toolsetBuildProj = Resolve-Path 'Build\tools\Build.proj'
  
 function Build {
-  $toolsetBuildProj = Resolve-Path 'Build\tools\Build.proj'
-  Write-Host $toolsetBuildProj
 
   if ($buildNative) {
     $bl = if ($binaryLog) { "/bl:" + (Join-Path $LogDir "GitExtSshAskPass.binlog") } else { "" }
@@ -91,6 +88,12 @@ try {
       Remove-Item -Recurse -Force $ArtifactsDir
       Write-Host 'Artifacts directory deleted.'
     }
+
+    MSBuild $toolsetBuildProj `
+      /p:RepoRoot=$RepoRoot `
+      /p:Clean=$clean `
+      @properties;
+
     exit 0
   }
 

@@ -11,6 +11,7 @@
 
     ContinuousIntegrationBuild      "true" when building on a CI server (PR build or official build)
     Restore                         "true" to restore toolset and solution
+    Clean                           "true" to clean solution
     Build                           "true" to build solution
     Rebuild                         "true" to rebuild solution
     Test                            "true" to run tests
@@ -62,6 +63,8 @@
     <Error Text="File 'global.json' must exist in directory specified by RepoRoot: '$(_RepoRootOriginal)'" Condition="'$(_RepoRootOriginal)' != '' and !Exists('$(RepoRoot)global.json')"/>
 
     <ItemGroup>
+      <!-- Remove bin/obj folders -->
+      <_SolutionBuildTargets Include="LegacyClean" Condition="'$(Clean)' == 'true'" />
       <_SolutionBuildTargets Include="Rebuild" Condition="'$(Rebuild)' == 'true'" />
       <_SolutionBuildTargets Include="Build" Condition="'$(Build)' == 'true' and '$(Rebuild)' != 'true'" />
       <!-- Extensibility point to run addition build targets after build. -->
@@ -182,5 +185,7 @@
              SkipNonexistentTargets="true"
              Condition="'@(_SolutionBuildTargets)' != ''" />
 
+
   </Target>
+
 </Project>
