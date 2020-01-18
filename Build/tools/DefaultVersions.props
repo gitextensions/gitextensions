@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <!--
+    Sets versions of packages used by the toolset unless they were already specified by the repo.
+    Version.props shall be imported prior this file.
+  -->
+
+  <!-- 
+    Default versions
+  -->
+  <PropertyGroup>
+    <UsingToolNUnit Condition="'$(UsingToolNUnit)' == ''">true</UsingToolNUnit>
+
+    <XliffTasksVersion Condition="'$(XliffTasksVersion)' == ''">1.0.0-beta.19252.1</XliffTasksVersion>
+    <NUnitVersion Condition="'$(NUnitVersion)' == ''">3.10.1</NUnitVersion>
+    <NUnitRunnerConsoleVersion Condition="'$(NUnitRunnerConsoleVersion)' == ''">$(NUnitVersion)</NUnitRunnerConsoleVersion>
+    <VSWhereVersion Condition="'$(VSWhereVersion)' == ''">2.6.7</VSWhereVersion>
+  </PropertyGroup>
+
+</Project>

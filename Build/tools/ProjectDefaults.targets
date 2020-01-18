@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
+<Project>
+
+  <PropertyGroup>
+    <!--
+      Set PackageOutputPath based on the IsShippingPackage flag set by projects.
+      This distinction allows publishing tools to determine which assets to publish to official channels.
+
+      Visual Studio Build (aka CoreXT) packages are non-shipping packages that are used to insert binaries into an internal 
+      Visual Studio repository that builds the product from components. These packages are not standard NuGet packages.
+    -->
+    <PackageOutputPath Condition="'$(IsShippingPackage)' == 'true'">$(ArtifactsShippingPackagesDir)</PackageOutputPath>
+    <PackageOutputPath Condition="'$(IsShippingPackage)' != 'true'">$(ArtifactsNonShippingPackagesDir)</PackageOutputPath>
+
+    <IsSwixProject>false</IsSwixProject>
+    <IsSwixProject Condition="'$(IsVsixProject)' != 'true'">true</IsSwixProject>
+  </PropertyGroup>
+
+  <!--
+    Closed source license must be added to the package. 
+    NuGet.org accepts only OSI or FSF approved licenses when using license type expression. 
+  -->
+  <PropertyGroup Condition="'$(PackageLicenseExpressionInternal)' != '' and '$(IsPackable)' == 'true' and '$(PackageLicenseFile)' == ''">
+    <PackageLicenseFile>License.txt</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(PackageLicenseExpressionInternal)' != '' and '$(IsPackable)' == 'true'">
+    <None Include="$(MSBuildThisFileDirectory)Licenses\$(PackageLicenseExpressionInternal).txt" Pack="true" PackagePath="$(PackageLicenseFile)" Visible="false" />
+  </ItemGroup>
+
+  <!--
+    Include package icon in the package.
+  -->
+  <ItemGroup Condition="'$(PackageIcon)' != '' and '$(IsPackable)' == 'true'">
+    <None Include="$(PackageIconFullPath)" Pack="true" PackagePath="$(PackageIcon)" Visible="false" />
+  </ItemGroup>
+
+</Project>

@@ -41,35 +41,6 @@
     <EmbeddedResource Include="AutoCompleteRegexes.txt" />
   </ItemGroup>
 
-  <Target Name="AddPluginBinaries" AfterTargets="ResolveProjectReferences">
-    <ItemGroup>
-      <!-- Plugin binaries-->
-      <PluginProjects Include="..\Plugins\*\*.csproj;..\Plugins\*\*\*.csproj" />
-      <PluginDirectory Include="@(PluginProjects->'%(RelativeDir)')" />
-    </ItemGroup>
-    <PropertyGroup>
-      <PluginBinariesExpression>@(PluginDirectory->'%(Identity)bin\$(Configuration)\*.dll')</PluginBinariesExpression>
-      <PluginSymbolsExpression>@(PluginDirectory->'%(Identity)bin\$(Configuration)\*.pdb')</PluginSymbolsExpression>
-      <PluginSatelliteBinariesExpression>@(PluginDirectory->'%(Identity)bin\$(Configuration)\*\*.dll')</PluginSatelliteBinariesExpression>
-    </PropertyGroup>
-    <ItemGroup>
-      <PluginBinary Include="$(PluginBinariesExpression)" />
-      <!-- Plugin symbols-->
-      <PluginBinary Include="$(PluginSymbolsExpression)" />
-      <!-- Plugin satellite assemblies -->
-      <PluginSatelliteBinary Include="$(PluginSatelliteBinariesExpression)" />
-    </ItemGroup>
-    <ItemGroup>
-      <None Include="@(PluginBinary)" Condition="'%(Filename)' != 'Microsoft.TeamFoundation.WorkItemTracking.Client.DataStoreLoader' AND '%(Filename)' != 'Microsoft.WITDataStore'">
-        <Link>Plugins\%(Filename)%(Extension)</Link>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Include="@(PluginSatelliteBinary)">
-        <Link>Plugins\$([System.IO.Path]::GetFileName($([System.IO.Path]::GetDirectoryName(%(Identity)))))\%(Filename)%(Extension)</Link>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-  </Target>
   <Target Name="CopyTranslations" AfterTargets="AfterBuild">
     <ItemGroup>
       <Translations Include="$(ProjectDir)\..\GitUI\Translation\*.xlf;$(ProjectDir)\..\GitUI\Translation\*.gif" />

@@ -1,4 +1,5 @@
 <Project>
+  <Import Project=".\Build\sdk\Sdk.props" />
 
   <PropertyGroup>
     <LangVersion>8</LangVersion>
