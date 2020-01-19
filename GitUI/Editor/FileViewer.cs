@@ -341,7 +341,7 @@ namespace GitUI.Editor
             internalFileViewer.EnableScrollBars(enable);
         }
 
-        public void SetVisibilityDiffContextMenu(bool visible, bool isStagingDiff)
+        public void SetVisibilityDiffContextMenu(bool visible, [CanBeNull] string fileName, bool isStagingDiff)
         {
             _currentViewIsPatch = visible;
             ignoreWhitespaceAtEolToolStripMenuItem.Visible = visible;
@@ -355,9 +355,12 @@ namespace GitUI.Editor
             copyNewVersionToolStripMenuItem.Visible = visible;
             copyOldVersionToolStripMenuItem.Visible = visible;
 
-            // TODO The following should not be enabled if this is a file and the file does not exist
-            cherrypickSelectedLinesToolStripMenuItem.Visible = visible && !isStagingDiff && !Module.IsBareRepository();
-            revertSelectedLinesToolStripMenuItem.Visible = visible && !isStagingDiff && !Module.IsBareRepository();
+            bool fileExists = !string.IsNullOrWhiteSpace(fileName)
+                              && File.Exists(_fullPathResolver.Resolve(fileName));
+
+            cherrypickSelectedLinesToolStripMenuItem.Visible =
+                revertSelectedLinesToolStripMenuItem.Visible =
+                    visible && fileExists && !isStagingDiff && !Module.IsBareRepository();
             copyPatchToolStripMenuItem.Visible = visible;
         }
 
@@ -541,7 +544,7 @@ namespace GitUI.Editor
         public void ViewStagingPatch(Patch patch, [CanBeNull] Action openWithDifftool, string filename)
         {
             ViewPatch(patch, openWithDifftool, filename);
-            Reset(true, true, true);
+            Reset(true, true, filename, true);
         }
 
         public void ViewPatch([CanBeNull] Patch patch, [CanBeNull] Action openWithDifftool = null, string filename = null)
@@ -556,7 +559,7 @@ namespace GitUI.Editor
                     text.Length,
                     () =>
                     {
-                        ResetForDiff();
+                        ResetForDiff(filename);
 
                         if (ShowSyntaxHighlightingInDiff && filename != null)
                         {
@@ -786,7 +789,7 @@ namespace GitUI.Editor
                 return _async.LoadAsync(getImage,
                             image =>
                             {
-                                ResetForImage();
+                                ResetForImage(fileName);
                                 if (image != null)
                                 {
                                     var size = DpiUtil.Scale(image.Size);
@@ -839,15 +842,15 @@ namespace GitUI.Editor
             }
         }
 
-        private void ResetForImage()
+        private void ResetForImage([CanBeNull] string fileName)
         {
-            Reset(false, false);
+            Reset(false, false, fileName);
             internalFileViewer.SetHighlighting("Default");
         }
 
         private void ResetForText([CanBeNull] string fileName)
         {
-            Reset(false, true);
+            Reset(false, true, fileName);
 
             if (fileName == null)
             {
@@ -862,21 +865,21 @@ namespace GitUI.Editor
                 (fileName.EndsWith(".diff", StringComparison.OrdinalIgnoreCase) ||
                  fileName.EndsWith(".patch", StringComparison.OrdinalIgnoreCase)))
             {
-                ResetForDiff();
+                ResetForDiff(fileName);
             }
         }
 
-        private void ResetForDiff()
+        private void ResetForDiff([CanBeNull] string fileName)
         {
-            Reset(true, true);
+            Reset(true, true, fileName);
             internalFileViewer.SetHighlighting("");
             _patchHighlighting = true;
         }
 
-        private void Reset(bool diff, bool text, bool isStagingDiff = false)
+        private void Reset(bool diff, bool text, [CanBeNull] string fileName, bool isStagingDiff = false)
         {
             _patchHighlighting = diff;
-            SetVisibilityDiffContextMenu(diff, isStagingDiff);
+            SetVisibilityDiffContextMenu(diff, fileName, isStagingDiff);
             ClearImage();
             PictureBox.Visible = !text;
             internalFileViewer.Visible = text;
