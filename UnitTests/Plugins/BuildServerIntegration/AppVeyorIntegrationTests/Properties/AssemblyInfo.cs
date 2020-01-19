@@ -4,6 +4,7 @@ using ApprovalTests.Namers;
 using ApprovalTests.Reporters;
 using ApprovalTests.Reporters.ContinuousIntegration;
 using ApprovalTests.Reporters.TestFrameworks;
+using CommonTestUtils;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
@@ -38,5 +39,6 @@ using ApprovalTests.Reporters.TestFrameworks;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
+[assembly: TestAppSettings]
 [assembly: UseReporter(typeof(NUnitReporter), typeof(AppVeyorReporter), typeof(DiffReporter))]
 [assembly: UseApprovalSubdirectory("ApprovedFiles")]

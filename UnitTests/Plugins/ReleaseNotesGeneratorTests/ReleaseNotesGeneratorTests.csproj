@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Plugins\ReleaseNotesGenerator\ReleaseNotesGenerator.csproj" />
+    <ProjectReference Include="..\..\CommonTestUtils\CommonTestUtils.csproj" />
   </ItemGroup>
 
 </Project>
