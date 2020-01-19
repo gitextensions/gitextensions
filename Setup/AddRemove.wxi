@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Include>
-  <Property Id='ARPPRODUCTICON'>gitextensions.ico</Property>
-  <Property Id='ARPHELPLINK'>https://github.com/gitextensions/gitextensions/issues</Property>
-  <Property Id='ARPURLINFOABOUT'>https://gitextensions.github.io/</Property>
-  <Property Id='ARPURLUPDATEINFO'>https://gitextensions.github.io/</Property>
-</Include>

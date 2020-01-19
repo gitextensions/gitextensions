@@ -220,13 +220,24 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
         {
-            string path = Path.Combine(AppSettings.GetInstallDir(), CommonLogic.GitExtensionsShellEx32Name);
+            string file;
+
+            if (Environment.Is64BitProcess)
+            {
+                file = CommonLogic.GitExtensionsShellEx64Name;
+            }
+            else
+            {
+                file = CommonLogic.GitExtensionsShellEx32Name;
+            }
+
+            string path = Path.Combine(AppSettings.GetInstallDir(), file);
 
             if (!File.Exists(path))
             {
                 path = Assembly.GetAssembly(GetType()).Location;
                 path = Path.GetDirectoryName(path);
-                path = Path.Combine(path, CommonLogic.GitExtensionsShellEx32Name);
+                path = Path.Combine(path, file);
             }
 
             if (File.Exists(path))
@@ -243,22 +254,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
                     var process = Process.Start(pi);
                     process.WaitForExit();
-
-                    if (IntPtr.Size == 8)
-                    {
-                        path = path.Replace(CommonLogic.GitExtensionsShellEx32Name, CommonLogic.GitExtensionsShellEx64Name);
-                        if (File.Exists(path))
-                        {
-                            pi.Arguments = path.Quote();
-
-                            var process64 = Process.Start(pi);
-                            process64.WaitForExit();
-                        }
-                        else
-                        {
-                            MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx64Name));
-                        }
-                    }
                 }
                 catch (System.ComponentModel.Win32Exception)
                 {
@@ -267,7 +262,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             else
             {
-                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx32Name));
+                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, file));
             }
 
             CheckSettings();

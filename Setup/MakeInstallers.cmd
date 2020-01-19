@@ -5,11 +5,9 @@ rem
 rem Update this version number with every release
 rem
 setlocal
-set version=3.1.0
-set numericVersion=3.1.0
+set Version=3.1.0
 if not "%APPVEYOR_BUILD_VERSION%"=="" (
-    set version=%APPVEYOR_BUILD_VERSION%
-    set numericVersion=%APPVEYOR_BUILD_VERSION%
+    set Version=%APPVEYOR_BUILD_VERSION%
 )
 
 SET Configuration=%1
@@ -18,9 +16,10 @@ IF "%Configuration%"=="" SET Configuration=Release
 SET BuildType=%2
 IF "%BuildType%"=="" SET BuildType=Rebuild
 
-set normal=GitExtensions-%Version%.msi
+SET AI=%3
+IF "%AI%"=="" SET AI="C:\Program Files (x86)\Caphyon\Advanced Installer 16.6.1\bin\x86\AdvancedInstaller.com"
+
 set msbuild=hMSBuild
-set output=bin\%Configuration%\GitExtensions.msi
 
 REM HACK: for some reason when we build the full solution the VSIX contains too many files, clean and rebuild the VSIX
 rmdir ..\GitExtensionsVSIX\bin\Release /s /q
@@ -29,15 +28,10 @@ set msbuild32=..\Setup\hMSBuild -notamd64
 call %msbuild32% /t:%BuildType% /p:Configuration=%Configuration% /nologo /v:m
 popd
 
-echo Creating installers for Git Extensions %version%
+echo Creating installers for Git Extensions %Version%
 echo.
 
-echo Removing %normal%
-del %normal% 2> nul
-
-echo.
-
-call %msbuild% Setup.wixproj /t:%BuildType% /p:Version=%version% /p:NumericVersion=%numericVersion% /p:Configuration=%Configuration% /nologo /v:m
+call GenerateInstallerOutput.cmd %Configuration%
 IF ERRORLEVEL 1 EXIT /B 1
-copy %output% %normal%
+call GenerateInstallerBuild.cmd %AI% %Configuration% %Version%
 IF ERRORLEVEL 1 EXIT /B 1
