@@ -483,13 +483,22 @@ namespace GitUI.CommandsDialogs
                         }
                     }
 
+                    if (string.IsNullOrWhiteSpace(_mergetoolCmd) || string.IsNullOrWhiteSpace(_mergetoolPath))
+                    {
+                        // mergetool is set, but arguments cannot be manipulated
+                        Module.RunMergeTool(item.Filename);
+
+                        // git-mergetool does not provide exit status, do not stage
+                        return;
+                    }
+
                     string arguments = _mergetoolCmd;
 
                     // Check if there is a base file. If not, ask user to fall back to 2-way merge.
                     // git doesn't support 2-way merge, but we can try to adjust attributes to fix this.
                     // For kdiff3 this is easy; just remove the 3rd file from the arguments. Since the
                     // filenames are quoted, this takes a little extra effort. We need to remove these
-                    // quotes also. For tortoise and araxis a little bit more magic is needed.
+                    // quotes also. For other tools a little bit more magic is needed.
                     if (item.Base.Filename == null)
                     {
                         var text = string.Format(_noBaseRevision.Text, item.Filename);
@@ -588,12 +597,6 @@ namespace GitUI.CommandsDialogs
             {
                 _mergetoolCmd = Module.GetEffectiveSetting($"mergetool.{_mergetool}.cmd");
                 _mergetoolPath = Module.GetEffectiveSetting($"mergetool.{_mergetool}.path");
-
-                if (string.IsNullOrWhiteSpace(_mergetoolCmd) && string.IsNullOrWhiteSpace(_mergetoolPath))
-                {
-                    MessageBox.Show(this, _noMergeToolConfigured.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
 
                 // Temporary compatibility with GE <3.3
                 if (_mergetool == "kdiff3")

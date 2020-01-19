@@ -897,9 +897,14 @@ namespace GitCommands
             }
         }
 
-        public void RunMergeTool()
+        public void RunMergeTool([CanBeNull] string fileName = "")
         {
-            using (var process = _gitExecutable.Start("mergetool", createWindow: true))
+            var args = new GitArgumentBuilder("mergetool")
+            {
+                { fileName.IsNotNullOrWhitespace(), "--" },
+                fileName.ToPosixPath().QuoteNE()
+            };
+            using (var process = _gitExecutable.Start(args, createWindow: true))
             {
                 process.WaitForExit();
             }
