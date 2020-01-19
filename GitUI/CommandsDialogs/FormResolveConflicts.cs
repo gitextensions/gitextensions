@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Utils;
 using GitExtUtils;
@@ -586,7 +587,17 @@ namespace GitUI.CommandsDialogs
 
         private bool InitMergetool()
         {
-            _mergetool = Module.GetEffectiveSetting("merge.tool");
+            if (GitVersion.Current.SupportGuiMergeTool)
+            {
+                _mergetool = Module.GetEffectiveSetting(SettingKeyString.MergeToolKey);
+            }
+
+            // Fallback and older Git
+            if (string.IsNullOrEmpty(_mergetool))
+            {
+                _mergetool = Module.GetEffectiveSetting(SettingKeyString.MergeToolNoGuiKey);
+            }
+
             if (string.IsNullOrEmpty(_mergetool))
             {
                 MessageBox.Show(this, _noMergeTool.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
