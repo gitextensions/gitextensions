@@ -213,29 +213,35 @@ namespace GitUI.CommandsDialogs
                     {
                         string extraDiffArguments = View.GetExtraDiffArguments();
                         Encoding encoding = View.Encoding;
-                        View.ViewPatchAsync(
+                        ThreadHelper.JoinableTaskFactory.Run(
                             () =>
                             {
-                                Patch patch = Module.GetSingleDiff(gitStash.Name + "^", gitStash.Name, stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding, true, stashedItem.IsTracked);
+                                Patch patch = Module.GetSingleDiff(gitStash.Name + "^",
+                                    gitStash.Name,
+                                    stashedItem.Name,
+                                    stashedItem.OldName,
+                                    extraDiffArguments,
+                                    encoding,
+                                    true,
+                                    stashedItem.IsTracked);
                                 if (patch == null)
                                 {
-                                    return (text: string.Empty, openWithDifftool: null /* not applicable */, filename: null);
+                                    return View.ViewPatchAsync(fileName: null, text: string.Empty, openWithDifftool: null /* not applicable */, isText: true);
                                 }
 
                                 if (stashedItem.IsSubmodule)
                                 {
-                                    return (text: LocalizationHelpers.ProcessSubmodulePatch(Module, stashedItem.Name, patch),
-                                            openWithDifftool: null /* not implemented */, filename: null);
+                                    return View.ViewPatchAsync(fileName: null, text: LocalizationHelpers.ProcessSubmodulePatch(Module, stashedItem.Name, patch),
+                                            openWithDifftool: null /* not implemented */, isText: stashedItem.IsSubmodule);
                                 }
 
-                                return (text: patch.Text, openWithDifftool: null /* not implemented */, filename: stashedItem.Name);
+                                return View.ViewPatchAsync(fileName: stashedItem.Name, text: patch.Text, openWithDifftool: null /* not implemented */, isText: stashedItem.IsSubmodule);
                             });
                     }
                 }
                 else
                 {
-                    ThreadHelper.JoinableTaskFactory.RunAsync(
-                        () => View.ViewTextAsync("", ""));
+                    View.Clear();
                 }
             }
         }

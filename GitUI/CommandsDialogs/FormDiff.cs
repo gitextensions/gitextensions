@@ -113,7 +113,7 @@ namespace GitUI.CommandsDialogs
         {
             if (DiffFiles.SelectedItem == null)
             {
-                DiffText.ViewPatch(null);
+                DiffText.Clear();
                 return;
             }
 

@@ -140,7 +140,7 @@ index 62a5c2f08..2bc482714 100644
                 testAccessor.ShowSyntaxHighlightingInDiff = true;
 
                 // act
-                _fileViewer.ViewPatch(sampleCsharpPatch, null, "FileViewerInternal.cs");
+                _fileViewer.ViewPatch("FileViewerInternal.cs", sampleCsharpPatch);
 
                 // assert
                 IHighlightingStrategy csharpHighlighting = HighlightingManager.Manager.FindHighlighterForFile("anycsharpfile.cs");
@@ -175,7 +175,7 @@ index 62a5c2f08..2bc482714 100644
                 testAccessor.ShowSyntaxHighlightingInDiff = false;
 
                 // act
-                _fileViewer.ViewPatch(sampleCsharpPatch, null, "FileViewerInternal.cs");
+                _fileViewer.ViewPatch("FileViewerInternal.cs", sampleCsharpPatch, null);
 
                 // assert
                 _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.Document.HighlightingStrategy.Should().Be(HighlightingManager.Manager.DefaultHighlighting);
@@ -198,7 +198,7 @@ Binary files a/binaryfile.bin and b/binaryfile.bin differ";
                 _fileViewer.UICommandsSource = _uiCommandsSource;
 
                 // act
-                _fileViewer.ViewPatch(sampleBinaryPatch, null, "binaryfile.bin");
+                _fileViewer.ViewPatch("binaryfile.bin", sampleBinaryPatch, null);
 
                 // assert
                 _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.Document.HighlightingStrategy.Should().Be(HighlightingManager.Manager.DefaultHighlighting);
@@ -207,7 +207,7 @@ Binary files a/binaryfile.bin and b/binaryfile.bin differ";
                 @"fldaksjflkdsjlfj";
 
                 // act
-                _fileViewer.ViewPatch(sampleRandomText, null, null);
+                _fileViewer.ViewPatch(null, sampleRandomText, null);
 
                 // assert
                 _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.Document.HighlightingStrategy.Should().Be(HighlightingManager.Manager.DefaultHighlighting);

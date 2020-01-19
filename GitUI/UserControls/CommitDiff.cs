@@ -95,7 +95,11 @@ namespace GitUI.UserControls
                     diffOfConflict = Strings.UninterestingDiffOmitted;
                 }
 
-                DiffText.ViewPatch(text: diffOfConflict, openWithDifftool: null /* not implemented */);
+                DiffText.ViewPatch(DiffFiles.SelectedItem.Name,
+                    text: diffOfConflict,
+                    openWithDifftool: null,
+                    isText: DiffFiles.SelectedItem.IsSubmodule);
+
                 return;
             }
 
