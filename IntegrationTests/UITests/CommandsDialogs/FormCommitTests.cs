@@ -70,6 +70,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                 using (var tempForm = new Form())
                 {
+                    tempForm.Owner = form;
                     tempForm.Show();
                     tempForm.Focus();
 
@@ -79,6 +80,8 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                 form.Focus();
 
+                AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
+
                 Assert.AreEqual("Committer new author <new_author@mail.com>", commitAuthorStatus.Text);
             });
         }
@@ -87,12 +90,9 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void Should_display_branch_and_no_remote_info_in_statusbar()
         {
             _referenceRepository.CheckoutMaster();
-            RunFormTest(async form =>
+            RunFormTest(form =>
             {
-                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
-                {
-                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
-                }
+                AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
 
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
@@ -106,15 +106,19 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void Should_display_detached_head_info_in_statusbar()
         {
             _referenceRepository.CheckoutRevision();
-            RunFormTest(async form =>
+            RunFormTest(form =>
             {
-                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
-                {
-                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
-                }
+                AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
 
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
+
+                // For a yet unknown cause randomly, the wait in UITest.RunForm does not suffice.
+                if (!remoteNameLabelStatus.Text.IsNullOrEmpty())
+                {
+                    Console.WriteLine($"{nameof(Should_display_detached_head_info_in_statusbar)} waits again");
+                    AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
+                }
 
                 Assert.AreEqual("(no branch)", currentBranchNameLabelStatus.Text);
                 Assert.AreEqual(string.Empty, remoteNameLabelStatus.Text);
@@ -125,12 +129,9 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void Should_display_branch_and_remote_info_in_statusbar()
         {
             _referenceRepository.CreateRemoteForMasterBranch();
-            RunFormTest(async form =>
+            RunFormTest(form =>
             {
-                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
-                {
-                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
-                }
+                AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
 
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
@@ -261,12 +262,9 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void editFileToolStripMenuItem_Click_no_selection_should_not_throw()
         {
-            RunFormTest(async form =>
+            RunFormTest(form =>
             {
-                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
-                {
-                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
-                }
+                AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
 
                 form.GetTestAccessor().UnstagedList.ClearSelected();
 
