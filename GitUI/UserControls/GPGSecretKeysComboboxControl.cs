@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -59,11 +60,14 @@ namespace GitUI.UserControls
 
         private IEnumerable<GpgKeyDisplayInfo> CurrentKeys { get => (IEnumerable<GpgKeyDisplayInfo>)gpgKeyDisplayInfoBindingSource.DataSource; }
 
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string KeyID
         {
             get => ((GpgKeyDisplayInfo)comboBoxKeys.SelectedItem)?.KeyID ?? "";
             set
             {
+                LoadKeys();
                 var empty = CurrentKeys.First();
                 var matched = CurrentKeys.FirstOrDefault(k => !string.IsNullOrWhiteSpace(value) && k.KeyID.EndsWith(value));
                 comboBoxKeys.SelectedItem = matched ?? empty;
