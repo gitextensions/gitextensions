@@ -707,9 +707,17 @@ namespace GitCommands
             filename = filename.ToPosixPath();
 
             var list = new List<ConflictData>();
+            var args = new GitArgumentBuilder("ls-files")
+            {
+                "-z",
+                "--unmerged",
+                { filename.IsNotNullOrWhitespace(), "--" },
+                filename.QuoteNE()
+            };
 
             var unmerged = (await _gitExecutable
-                .GetOutputAsync("ls-files -z --unmerged " + filename.QuoteNE()).ConfigureAwait(false))
+                .GetOutputAsync(args)
+                .ConfigureAwait(false))
                 .Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             var item = new ConflictedFileData[3];
@@ -804,6 +812,7 @@ namespace GitCommands
             var args = new GitArgumentBuilder("ls-tree")
             {
                 refName,
+                { filename.IsNotNullOrWhitespace(), "--" },
                 filename.QuoteNE()
             };
             var output = _gitExecutable.GetOutput(args);
@@ -3458,6 +3467,7 @@ namespace GitCommands
                 var args = new GitArgumentBuilder("ls-files")
                 {
                     "-s",
+                    { fileName.IsNotNullOrWhitespace(), "--" },
                     fileName.QuoteNE()
                 };
 
@@ -3475,6 +3485,7 @@ namespace GitCommands
                 {
                     "-r",
                     objectId,
+                    { fileName.IsNotNullOrWhitespace(), "--" },
                     fileName.QuoteNE()
                 };
                 var lines = _gitExecutable.GetOutput(args).Split(' ', '\t');
