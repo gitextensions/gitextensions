@@ -615,6 +615,7 @@
             // 
             this.gpgSecretKeysComboboxUserKeys.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gpgSecretKeysComboboxUserKeys.KeyID = "";
             this.gpgSecretKeysComboboxUserKeys.Location = new System.Drawing.Point(129, 473);
             this.gpgSecretKeysComboboxUserKeys.MinimumSize = new System.Drawing.Size(20, 20);
             this.gpgSecretKeysComboboxUserKeys.Name = "gpgSecretKeysComboboxUserKeys";

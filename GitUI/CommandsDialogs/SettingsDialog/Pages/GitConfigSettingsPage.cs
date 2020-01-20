@@ -327,6 +327,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             var gpg = new GitGpgController(() => Module);
             var lst = await gpg.GetGpgSecretKeys();
+
+            gpgSecretKeysComboboxUserKeys.KeyID = lst.Skip(1).First().KeyID; // just a test to make sure the combobox changes and ignore empty key info
         }
     }
 }
