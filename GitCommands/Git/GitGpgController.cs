@@ -313,7 +313,8 @@ namespace GitCommands.Gpg
                 k.Fields.ElementAt(4).Field,
                 users.Skip(i).First().Fields.ElementAt(9).Field));
 
-            return output.ToArray();
+            GpgKeyInfo[] empty = new GpgKeyInfo[] { new GpgKeyInfo("", "", "") };
+            return empty.Concat(output).ToArray();
         }
     }
 
