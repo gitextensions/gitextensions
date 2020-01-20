@@ -1,5 +1,5 @@
 ﻿using GitUI.SpellChecker;
-
+using GitUI.UserControls.GPGKeys;
 namespace GitUI.CommandsDialogs
 {
     partial class FormCreateTag
@@ -35,7 +35,6 @@ namespace GitUI.CommandsDialogs
             this.textBoxTagName = new System.Windows.Forms.TextBox();
             this.annotate = new System.Windows.Forms.ComboBox();
             this.keyIdLbl = new System.Windows.Forms.Label();
-            this.textBoxGpgKey = new System.Windows.Forms.TextBox();
             this.pushTag = new System.Windows.Forms.CheckBox();
             this.tagMessage = new GitUI.SpellChecker.EditNetSpell();
             this.label2 = new System.Windows.Forms.Label();
@@ -43,6 +42,7 @@ namespace GitUI.CommandsDialogs
             this.label3 = new System.Windows.Forms.Label();
             this.commitPickerSmallControl1 = new GitUI.UserControls.CommitPickerSmallControl();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.gpgSecretKeysComboboxUserKey = new GPGSecretKeysCombobox();
             this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(132, 28);
+            this.label1.Size = new System.Drawing.Size(126, 28);
             this.label1.TabIndex = 0;
             this.label1.Text = "Tag name";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Ok.Image = global::GitUI.Properties.Images.TagCreate;
-            this.Ok.Location = new System.Drawing.Point(317, 200);
+            this.Ok.Location = new System.Drawing.Point(342, 272);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(128, 26);
             this.Ok.TabIndex = 10;
@@ -74,15 +74,15 @@ namespace GitUI.CommandsDialogs
             // textBoxTagName
             // 
             this.textBoxTagName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxTagName.Location = new System.Drawing.Point(141, 3);
+            this.textBoxTagName.Location = new System.Drawing.Point(135, 3);
             this.textBoxTagName.Name = "textBoxTagName";
-            this.textBoxTagName.Size = new System.Drawing.Size(304, 21);
+            this.textBoxTagName.Size = new System.Drawing.Size(335, 20);
             this.textBoxTagName.TabIndex = 1;
             // 
             // annotate
             // 
             this.annotate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.annotate.Location = new System.Drawing.Point(141, 87);
+            this.annotate.Location = new System.Drawing.Point(135, 87);
             this.annotate.Name = "annotate";
             this.annotate.Size = new System.Drawing.Size(150, 21);
             this.annotate.TabIndex = 5;
@@ -95,27 +95,18 @@ namespace GitUI.CommandsDialogs
             this.keyIdLbl.Enabled = false;
             this.keyIdLbl.Location = new System.Drawing.Point(3, 112);
             this.keyIdLbl.Name = "keyIdLbl";
-            this.keyIdLbl.Size = new System.Drawing.Size(132, 28);
+            this.keyIdLbl.Size = new System.Drawing.Size(126, 40);
             this.keyIdLbl.TabIndex = 6;
             this.keyIdLbl.Text = "Specific Key Id";
             this.keyIdLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // textBoxGpgKey
-            // 
-            this.textBoxGpgKey.Enabled = false;
-            this.textBoxGpgKey.Location = new System.Drawing.Point(141, 115);
-            this.textBoxGpgKey.MaxLength = 8;
-            this.textBoxGpgKey.Name = "textBoxGpgKey";
-            this.textBoxGpgKey.Size = new System.Drawing.Size(60, 21);
-            this.textBoxGpgKey.TabIndex = 7;
             // 
             // pushTag
             // 
             this.pushTag.AutoSize = true;
             this.pushTag.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pushTag.Location = new System.Drawing.Point(141, 59);
+            this.pushTag.Location = new System.Drawing.Point(135, 59);
             this.pushTag.Name = "pushTag";
-            this.pushTag.Size = new System.Drawing.Size(304, 22);
+            this.pushTag.Size = new System.Drawing.Size(335, 22);
             this.pushTag.TabIndex = 4;
             this.pushTag.Text = "Push tag to \'{0}\'";
             this.pushTag.UseVisualStyleBackColor = true;
@@ -126,20 +117,21 @@ namespace GitUI.CommandsDialogs
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tagMessage.Enabled = false;
-            this.tagMessage.Location = new System.Drawing.Point(140, 142);
+            this.tagMessage.Location = new System.Drawing.Point(134, 154);
             this.tagMessage.Margin = new System.Windows.Forms.Padding(2);
             this.tagMessage.Name = "tagMessage";
-            this.tagMessage.Size = new System.Drawing.Size(327, 75);
+            this.tagMessage.Size = new System.Drawing.Size(337, 113);
             this.tagMessage.TabIndex = 9;
+            this.tagMessage.TextBoxFont = new System.Drawing.Font("Segoe UI", 9F);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Location = new System.Drawing.Point(3, 140);
+            this.label2.Location = new System.Drawing.Point(3, 152);
             this.label2.Name = "label2";
             this.label2.Padding = new System.Windows.Forms.Padding(0, 2, 0, 0);
-            this.label2.Size = new System.Drawing.Size(132, 57);
+            this.label2.Size = new System.Drawing.Size(126, 117);
             this.label2.TabIndex = 8;
             this.label2.Text = "Message";
             // 
@@ -160,19 +152,20 @@ namespace GitUI.CommandsDialogs
             this.label3.Location = new System.Drawing.Point(3, 33);
             this.label3.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(132, 23);
+            this.label3.Size = new System.Drawing.Size(126, 23);
             this.label3.TabIndex = 2;
             this.label3.Text = "Create tag at this revision";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // commitPickerSmallControl1
             // 
+            this.commitPickerSmallControl1.AutoSize = true;
             this.commitPickerSmallControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.commitPickerSmallControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.commitPickerSmallControl1.Location = new System.Drawing.Point(141, 31);
+            this.commitPickerSmallControl1.Location = new System.Drawing.Point(135, 31);
             this.commitPickerSmallControl1.MinimumSize = new System.Drawing.Size(100, 26);
             this.commitPickerSmallControl1.Name = "commitPickerSmallControl1";
-            this.commitPickerSmallControl1.Size = new System.Drawing.Size(304, 26);
+            this.commitPickerSmallControl1.Size = new System.Drawing.Size(335, 26);
             this.commitPickerSmallControl1.TabIndex = 3;
             // 
             // tableLayoutPanel2
@@ -184,13 +177,13 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel2.Controls.Add(this.tagMessage, 1, 5);
             this.tableLayoutPanel2.Controls.Add(this.label2, 0, 5);
             this.tableLayoutPanel2.Controls.Add(this.commitPickerSmallControl1, 1, 1);
-            this.tableLayoutPanel2.Controls.Add(this.textBoxGpgKey, 1, 4);
             this.tableLayoutPanel2.Controls.Add(this.keyIdLbl, 0, 4);
             this.tableLayoutPanel2.Controls.Add(this.annotate, 1, 3);
             this.tableLayoutPanel2.Controls.Add(this.pushTag, 1, 2);
             this.tableLayoutPanel2.Controls.Add(this.label3, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.textBoxTagName, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.gpgSecretKeysComboboxUserKey, 1, 4);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(8, 8);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -199,18 +192,26 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(448, 229);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(473, 301);
             this.tableLayoutPanel2.TabIndex = 0;
+            // 
+            // gpgSecretKeysComboboxUserKey
+            // 
+            this.gpgSecretKeysComboboxUserKey.Location = new System.Drawing.Point(135, 115);
+            this.gpgSecretKeysComboboxUserKey.MinimumSize = new System.Drawing.Size(20, 20);
+            this.gpgSecretKeysComboboxUserKey.Name = "gpgSecretKeysComboboxUserKey";
+            this.gpgSecretKeysComboboxUserKey.Size = new System.Drawing.Size(291, 34);
+            this.gpgSecretKeysComboboxUserKey.TabIndex = 11;
             // 
             // FormCreateTag
             // 
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(464, 245);
+            this.ClientSize = new System.Drawing.Size(489, 317);
             this.Controls.Add(this.tableLayoutPanel2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -233,7 +234,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.TextBox textBoxTagName;
         private System.Windows.Forms.ComboBox annotate;
         private System.Windows.Forms.Label keyIdLbl;
-        private System.Windows.Forms.TextBox textBoxGpgKey;
         private System.Windows.Forms.CheckBox pushTag;
         private EditNetSpell tagMessage;
         private System.Windows.Forms.Label label2;
@@ -241,5 +241,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.Label label3;
         private UserControls.CommitPickerSmallControl commitPickerSmallControl1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private GPGSecretKeysCombobox gpgSecretKeysComboboxUserKey;
     }
 }

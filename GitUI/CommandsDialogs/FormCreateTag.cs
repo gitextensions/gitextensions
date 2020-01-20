@@ -97,7 +97,7 @@ namespace GitUI.CommandsDialogs
                                                      objectId,
                                                      GetSelectedOperation(annotate.SelectedIndex),
                                                      tagMessage.Text,
-                                                     textBoxGpgKey.Text,
+                                                     gpgSecretKeysComboboxUserKey.KeyID,
                                                      ForceTag.Checked);
             var success = _gitTagController.CreateTag(createTagArgs, this);
             if (!success)
@@ -133,7 +133,7 @@ namespace GitUI.CommandsDialogs
         private void AnnotateDropDownChanged(object sender, EventArgs e)
         {
             TagOperation tagOperation = GetSelectedOperation(annotate.SelectedIndex);
-            textBoxGpgKey.Enabled = tagOperation == TagOperation.SignWithSpecificKey;
+            gpgSecretKeysComboboxUserKey.Enabled = tagOperation == TagOperation.SignWithSpecificKey;
             keyIdLbl.Enabled = tagOperation == TagOperation.SignWithSpecificKey;
             bool providesMessage = tagOperation.CanProvideMessage();
             tagMessage.Enabled = providesMessage;

@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
+﻿using GitUI.UserControls.GPGKeys;
+
+namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     partial class GitConfigSettingsPage
     {
@@ -73,7 +75,7 @@
             this.chkCommitSigning = new System.Windows.Forms.CheckBox();
             this.txtGPGProgram = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
-            this.gpgSecretKeysComboboxUserKeys = new GitUI.UserControls.GPGSecretKeysComboboxControl();
+            this.gpgSecretKeysComboboxUserKeys = new GPGSecretKeysCombobox();
             lblCommitTemplatePath = new System.Windows.Forms.Label();
             lblMergeTool = new System.Windows.Forms.Label();
             lblDiffToolCommand = new System.Windows.Forms.Label();
@@ -681,6 +683,6 @@
         private System.Windows.Forms.CheckBox chkCommitSigning;
         private System.Windows.Forms.TextBox txtGPGProgram;
         private System.Windows.Forms.Button button2;
-        private UserControls.GPGSecretKeysComboboxControl gpgSecretKeysComboboxUserKeys;
+        private GPGSecretKeysCombobox gpgSecretKeysComboboxUserKeys;
     }
 }
