@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Plugins\Gerrit\Gerrit.csproj" />
     <ProjectReference Include="..\..\..\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\..\CommonTestUtils\CommonTestUtils.csproj" />
   </ItemGroup>
 
 </Project>

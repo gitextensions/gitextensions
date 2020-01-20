@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Plugins\DeleteUnusedBranches\DeleteUnusedBranches.csproj" />
+    <ProjectReference Include="..\..\CommonTestUtils\CommonTestUtils.csproj" />
   </ItemGroup>
 
 </Project>
