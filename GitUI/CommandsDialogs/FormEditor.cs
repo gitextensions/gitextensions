@@ -64,7 +64,6 @@ namespace GitUI.CommandsDialogs
             {
                 fileViewer.ViewFileAsync(_fileName);
                 fileViewer.IsReadOnly = false;
-                fileViewer.SetVisibilityDiffContextMenu(false, false);
                 Text = _fileName;
 
                 // loading a new file from disk, the text hasn't been changed yet.

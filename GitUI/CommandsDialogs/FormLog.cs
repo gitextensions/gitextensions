@@ -33,7 +33,7 @@ namespace GitUI.CommandsDialogs
         {
             if (DiffFiles.SelectedItem == null)
             {
-                diffViewer.ViewPatch(null);
+                diffViewer.Clear();
                 return;
             }
 

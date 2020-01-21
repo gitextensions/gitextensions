@@ -331,7 +331,7 @@ namespace GitUI.CommandsDialogs
         {
             if (DiffFiles.SelectedItem == null || DiffFiles.Revision == null)
             {
-                DiffText.ViewPatch(null);
+                DiffText.Clear();
                 return;
             }
 
@@ -345,7 +345,11 @@ namespace GitUI.CommandsDialogs
                     diffOfConflict = Strings.UninterestingDiffOmitted;
                 }
 
-                DiffText.ViewPatch(text: diffOfConflict, openWithDifftool: null /* not implemented */);
+                DiffText.ViewPatch(DiffFiles.SelectedItem.Name,
+                    text: diffOfConflict,
+                    openWithDifftool: () => firstToSelectedToolStripMenuItem.PerformClick(),
+                    isText: DiffFiles.SelectedItem.IsSubmodule);
+
                 return;
             }
 
@@ -403,7 +407,7 @@ namespace GitUI.CommandsDialogs
         {
             if (DiffFiles.GitItemStatuses == null || !DiffFiles.GitItemStatuses.Any())
             {
-                DiffText.ViewPatch(null);
+                DiffText.Clear();
             }
         }
 

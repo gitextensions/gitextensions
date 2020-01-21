@@ -69,7 +69,6 @@ namespace GitUI.Editor
             this.copyPatchToolStripMenuItem,
             this.copyNewVersionToolStripMenuItem,
             this.copyOldVersionToolStripMenuItem,
-            this.findToolStripMenuItem,
             this.toolStripSeparator1,
             this.ignoreWhitespaceAtEolToolStripMenuItem,
             this.ignoreWhitespaceChangesToolStripMenuItem,
@@ -80,6 +79,7 @@ namespace GitUI.Editor
             this.toolStripSeparator2,
             this.treatAllFilesAsTextToolStripMenuItem,
             this.showNonprintableCharactersToolStripMenuItem,
+            this.findToolStripMenuItem,
             this.goToLineToolStripMenuItem});
             this.contextMenu.Name = "ContextMenu";
             this.contextMenu.Size = new System.Drawing.Size(244, 346);

@@ -199,7 +199,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void ResetAllAndShowLoadingPullRequests()
         {
             _discussionWB.DocumentText = "";
-            _diffViewer.ViewPatch(null);
+            _diffViewer.Clear();
             _fileStatusList.SetDiffs();
 
             _pullRequestsList.Items.Clear();
@@ -250,8 +250,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 _currentPullRequestInfo = null;
                 _discussionWB.DocumentText = "";
-                ThreadHelper.JoinableTaskFactory.RunAsync(
-                    () => _diffViewer.ViewTextAsync("", ""));
+                _diffViewer.Clear();
                 return;
             }
 
@@ -269,7 +268,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _currentPullRequestInfo.HeadRepo.CloneProtocol = _cloneGitProtocol;
 
             _discussionWB.DocumentText = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo);
-            _diffViewer.ViewPatch(null);
+            _diffViewer.Clear();
             _fileStatusList.SetDiffs();
 
             LoadDiffPatch();
@@ -465,7 +464,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
 
             var data = _diffCache[gis.Name];
-            _diffViewer.ViewPatch(text: data, openWithDifftool: null /* not implemented */);
+            _diffViewer.ViewPatch(gis.Name, text: data, openWithDifftool: null, isText: gis.IsSubmodule);
         }
 
         private void _closePullRequestBtn_Click(object sender, EventArgs e)

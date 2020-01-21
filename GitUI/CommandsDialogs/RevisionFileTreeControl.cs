@@ -203,7 +203,7 @@ See the changes in the commit form.");
 
                 if (tvGitTree.SelectedNode == null)
                 {
-                    ThreadHelper.JoinableTaskFactory.Run(() => FileText.ViewTextAsync("", ""));
+                    FileText.Clear();
                 }
             }
             finally
