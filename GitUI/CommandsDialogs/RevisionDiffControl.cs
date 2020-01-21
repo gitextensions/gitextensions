@@ -200,7 +200,7 @@ namespace GitUI.CommandsDialogs
 
             if (revision == null)
             {
-                return objectId.ToShortString(length: 8);
+                return objectId.ToShortString();
             }
 
             return _revisionGrid.DescribeRevision(revision, maxLength);

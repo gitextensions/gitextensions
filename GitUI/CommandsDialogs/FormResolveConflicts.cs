@@ -680,7 +680,7 @@ namespace GitUI.CommandsDialogs
                 return "@" + _deleted.Text;
             }
 
-            return '@' + item.ObjectId.ToShortString(8);
+            return '@' + item.ObjectId.ToShortString();
         }
 
         private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)

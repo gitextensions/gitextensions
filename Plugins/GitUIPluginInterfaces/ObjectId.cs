@@ -480,7 +480,7 @@ namespace GitUIPluginInterfaces
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="length"/> is less than zero, or more than 40.</exception>
         [Pure]
         [NotNull]
-        public unsafe string ToShortString(int length = 10)
+        public unsafe string ToShortString(int length = 8)
         {
             if (length < 0)
             {
