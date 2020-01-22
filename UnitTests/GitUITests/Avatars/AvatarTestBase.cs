@@ -50,6 +50,7 @@ namespace GitUITests.Avatars
             _img2.Dispose();
             _img3.Dispose();
             _img4.Dispose();
+            _imgGenerated.Dispose();
         }
 
         [SetUp]

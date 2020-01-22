@@ -65,7 +65,7 @@ namespace GitUITests.CommitInfo
         [TearDown]
         public void TearDown()
         {
-            _commands = null;
+            _commitInfo.Dispose();
         }
 
         [OneTimeTearDown]

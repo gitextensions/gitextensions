@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -8,6 +9,7 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitUI;
+using GitUI.BranchTreePanel;
 using GitUI.CommandsDialogs;
 using NUnit.Framework;
 
@@ -63,34 +65,34 @@ namespace GitExtensions.UITests.CommandsDialogs
         [TearDown]
         public void TearDown()
         {
-            _commands = null;
             _repo1.Dispose();
         }
 
         [Test]
         public void RepoObjectTree_moving_first_up_and_last_down_does_nothing()
         {
-            RunFormTest(
-                form =>
+            RunRepoObjectsTreeTest(
+                repoObjectTree =>
                 {
+                    var testAccessor = repoObjectTree.GetTestAccessor();
+
                     // act
-                    var repoObjectTree = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor();
-                    var currNodes = repoObjectTree.TreeView.Nodes;
+                    var currNodes = testAccessor.TreeView.Nodes;
                     List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
 
                     // assert
-                    currNodes.Count.Should().Be(4);
+                    AssertListCount(currNodes, 4);
                     ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3);
 
                     int first = 0;
                     int last = currNodes.Count - 1;
 
                     // Trying to move first node up should do nothing
-                    repoObjectTree.ReorderTreeNode(currNodes[first], up: true);
+                    testAccessor.ReorderTreeNode(currNodes[first], up: true);
                     ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3);
 
                     // Similarly, moving last node down should do nothing
-                    repoObjectTree.ReorderTreeNode(currNodes[last], up: false);
+                    testAccessor.ReorderTreeNode(currNodes[last], up: false);
                     ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3);
                 });
         }
@@ -98,32 +100,33 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void RepoObjectTree_moving_node_legally_moves_it()
         {
-            RunFormTest(
-                form =>
+            RunRepoObjectsTreeTest(
+                repoObjectTree =>
                 {
+                    var testAccessor = repoObjectTree.GetTestAccessor();
+
                     // act
-                    var repoObjectTree = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor();
-                    var currNodes = repoObjectTree.TreeView.Nodes;
+                    var currNodes = testAccessor.TreeView.Nodes;
                     List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
 
                     // assert
-                    currNodes.Count.Should().Be(4);
+                    AssertListCount(currNodes, 4);
                     ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3);
 
                     // Move first down
-                    repoObjectTree.ReorderTreeNode(currNodes[0], up: false);
+                    testAccessor.ReorderTreeNode(currNodes[0], up: false);
                     ValidateOrder(initialNodes, currNodes, 1, 0, 2, 3);
-                    repoObjectTree.ReorderTreeNode(currNodes[1], up: false);
+                    testAccessor.ReorderTreeNode(currNodes[1], up: false);
                     ValidateOrder(initialNodes, currNodes, 1, 2, 0, 3);
-                    repoObjectTree.ReorderTreeNode(currNodes[2], up: false);
+                    testAccessor.ReorderTreeNode(currNodes[2], up: false);
                     ValidateOrder(initialNodes, currNodes, 1, 2, 3, 0);
 
                     // Then back up
-                    repoObjectTree.ReorderTreeNode(currNodes[3], up: true);
+                    testAccessor.ReorderTreeNode(currNodes[3], up: true);
                     ValidateOrder(initialNodes, currNodes, 1, 2, 0, 3);
-                    repoObjectTree.ReorderTreeNode(currNodes[2], up: true);
+                    testAccessor.ReorderTreeNode(currNodes[2], up: true);
                     ValidateOrder(initialNodes, currNodes, 1, 0, 2, 3);
-                    repoObjectTree.ReorderTreeNode(currNodes[1], up: true);
+                    testAccessor.ReorderTreeNode(currNodes[1], up: true);
                     ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3);
                 });
         }
@@ -131,42 +134,54 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void RepoObjectTree_moving_node_across_hidden_trees_skips_them()
         {
-            RunFormTest(
-                form =>
+            RunRepoObjectsTreeTest(
+                repoObjectTree =>
                 {
-                    // act
-                    var repoObjectTree = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor();
+                    var testAccessor = repoObjectTree.GetTestAccessor();
 
-                    List<TreeNode> initialNodes = repoObjectTree.TreeView.Nodes.OfType<TreeNode>().ToList();
+                    // act
+                    var currNodes = testAccessor.TreeView.Nodes;
+                    List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
+                    AssertListCount(initialNodes, 4);
 
                     // Hide nodes between first and last
-                    repoObjectTree.SetTreeVisibleByIndex(1, false);
-                    repoObjectTree.SetTreeVisibleByIndex(2, false);
+                    testAccessor.SetTreeVisibleByIndex(1, false);
+                    testAccessor.SetTreeVisibleByIndex(2, false);
 
                     // assert
-                    var currNodes = repoObjectTree.TreeView.Nodes;
-                    currNodes.Count.Should().Be(2);
+                    AssertListCount(currNodes, 2);
 
                     // Move node 0 down, which should move it to index 3
-                    repoObjectTree.ReorderTreeNode(currNodes[0], up: false);
+                    testAccessor.ReorderTreeNode(currNodes[0], up: false);
 
                     // Unhide nodes between first and last
-                    repoObjectTree.SetTreeVisibleByIndex(1, true);
-                    repoObjectTree.SetTreeVisibleByIndex(2, true);
+                    testAccessor.SetTreeVisibleByIndex(1, true);
+                    testAccessor.SetTreeVisibleByIndex(2, true);
 
                     // Reset currNodes, should be back to 4
-                    currNodes = repoObjectTree.TreeView.Nodes;
-                    currNodes.Count.Should().Be(4);
+                    AssertListCount(currNodes, 4);
 
                     // Only first and last nodes should have swapped
                     ValidateOrder(initialNodes, currNodes, 3, 1, 2, 0);
                 });
         }
 
+        private static void AssertListCount(ICollection collection, int expectedCount)
+        {
+            int actualCount = collection.Count;
+            if (actualCount == expectedCount)
+            {
+                return;
+            }
+
+            string items = collection.OfType<object>().Select(n => n.ToString()).Join(", ");
+            Assert.Fail($"Actual count {actualCount} differs from expected {expectedCount}.{Environment.NewLine}Actual items: {items}");
+        }
+
         private void ValidateOrder(List<TreeNode> initialNodes, TreeNodeCollection currNodes, params int[] expectedOrder)
         {
-            initialNodes.Count.Should().Be(currNodes.Count);
-            initialNodes.Count.Should().Be(expectedOrder.Count());
+            AssertListCount(currNodes, expectedOrder.Length);
+            AssertListCount(initialNodes, expectedOrder.Length);
 
             for (int i = 0; i < initialNodes.Count; ++i)
             {
@@ -174,12 +189,12 @@ namespace GitExtensions.UITests.CommandsDialogs
             }
         }
 
-        private void RunFormTest(Action<FormBrowse> testDriver)
+        private void RunRepoObjectsTreeTest(Action<RepoObjectsTree> testDriver)
         {
             RunFormTest(
                 form =>
                 {
-                    testDriver(form);
+                    testDriver(form.GetTestAccessor().RepoObjectsTree);
                     return Task.CompletedTask;
                 });
         }

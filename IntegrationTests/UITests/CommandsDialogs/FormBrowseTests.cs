@@ -55,12 +55,6 @@ namespace GitExtensions.UITests.CommandsDialogs
             _commands = new GitUICommands(_referenceRepository.Module);
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-            _commands = null;
-        }
-
         [Test]
         public void PopulateFavouriteRepositoriesMenu_should_order_favourites_alphabetically()
         {

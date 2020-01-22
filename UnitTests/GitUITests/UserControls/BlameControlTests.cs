@@ -17,7 +17,7 @@ namespace GitUITests.UserControls
     [Apartment(ApartmentState.STA)]
     public class BlameControlTests
     {
-        private BlameControl.TestAccessor _sut;
+        private BlameControl _blameControl;
         private GitBlameLine _gitBlameLine;
 
         [SetUp]
@@ -51,14 +51,20 @@ namespace GitUITests.UserControls
 
             _gitBlameLine = new GitBlameLine(blameCommit1, 1, 1, "line1");
 
-            _sut = new BlameControl().GetTestAccessor();
-            _sut.Blame = new GitBlame(new GitBlameLine[]
+            _blameControl = new BlameControl();
+            _blameControl.GetTestAccessor().Blame = new GitBlame(new GitBlameLine[]
             {
                 _gitBlameLine,
                 new GitBlameLine(blameCommit1, 2, 2, "line2"),
                 new GitBlameLine(blameCommit2, 3, 3, "line3"),
                 new GitBlameLine(blameCommit2, 4, 4, "line4"),
             });
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _blameControl.Dispose();
         }
 
         [TestCase(true, true, true, true, "author1 - 3/22/2010 - fileName.txt")]
@@ -70,7 +76,8 @@ namespace GitUITests.UserControls
         {
             var line = new StringBuilder();
 
-            _sut.BuildAuthorLine(_gitBlameLine, line, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern, "fileName_different.txt", showAuthor, showAuthorDate, showFilePath, displayAuthorFirst);
+            _blameControl.GetTestAccessor().BuildAuthorLine(_gitBlameLine, line, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
+                "fileName_different.txt", showAuthor, showAuthorDate, showFilePath, displayAuthorFirst);
 
             line.ToString().Should().StartWith(expectedResult);
         }
@@ -80,7 +87,8 @@ namespace GitUITests.UserControls
         {
             var line = new StringBuilder();
 
-            _sut.BuildAuthorLine(_gitBlameLine, line, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern, "fileName.txt", true, true, true, false);
+            _blameControl.GetTestAccessor().BuildAuthorLine(_gitBlameLine, line, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
+                "fileName.txt", true, true, true, false);
 
             line.ToString().Should().StartWith("3/22/2010 - author1");
         }
@@ -94,7 +102,7 @@ namespace GitUITests.UserControls
             {
                 AppSettings.BlameShowAuthorTime = true;
 
-                var (gutter, content) = _sut.BuildBlameContents("fileName.txt");
+                var (gutter, content) = _blameControl.GetTestAccessor().BuildBlameContents("fileName.txt");
 
                 content.Should().Be($"line1{Environment.NewLine}line2{Environment.NewLine}line3{Environment.NewLine}line4{Environment.NewLine}");
                 var gutterLines = gutter.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
@@ -123,7 +131,7 @@ namespace GitUITests.UserControls
                 AppSettings.BlameShowAuthorTime = false;
 
                 // When
-                var (gutter, content) = _sut.BuildBlameContents("fileName.txt");
+                var (gutter, content) = _blameControl.GetTestAccessor().BuildBlameContents("fileName.txt");
 
                 // Then
                 content.Should().Be($"line1{Environment.NewLine}line2{Environment.NewLine}line3{Environment.NewLine}line4{Environment.NewLine}");

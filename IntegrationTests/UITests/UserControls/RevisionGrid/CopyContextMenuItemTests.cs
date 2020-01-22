@@ -36,6 +36,12 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             _copyContextMenuItem.Owner = new ToolStrip();
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            _copyContextMenuItem.Owner.Dispose();
+        }
+
         [Test]
         public void Should_should_contain_single_item_if_no_revision_supplied()
         {

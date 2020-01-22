@@ -22,6 +22,7 @@ namespace GitUITests.BranchTreePanel
         private Queue<ToolStripMenuItem> _factoryQueue = new Queue<ToolStripMenuItem>();
         private IMenuItemFactory _factory = null;
         private TestBranchNode _testNode = new TestBranchNode();
+
         [SetUp]
         public void Setup()
         {
