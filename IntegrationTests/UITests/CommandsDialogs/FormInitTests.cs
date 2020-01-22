@@ -112,10 +112,10 @@ namespace GitExtensions.UITests.CommandsDialogs
 
         private void RunFormTest(Func<FormInit, Task> testDriverAsync, string path)
         {
-            UITest.RunForm(
-                () =>
+            UITest.RunDialog(
+                (mainForm) =>
                 {
-                    Assert.True(_commands.StartInitializeDialog(owner: null, path));
+                    Assert.True(_commands.StartInitializeDialog(owner: mainForm, path));
                 },
                 testDriverAsync);
         }

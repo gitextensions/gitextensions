@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitUI;
+using NUnit.Framework;
 
 namespace GitExtensions.UITests
 {
@@ -27,8 +28,8 @@ namespace GitExtensions.UITests
         }
 
         public static void RunForm<T>(
-            Action showDialog,
-            Func<T, Task> runAsync)
+            Action showForm,
+            Func<T, Task> runTestAsync)
             where T : Form
         {
             // Avoid using ThreadHelper.JoinableTaskFactory for the outermost operation because we don't want the task
@@ -38,21 +39,52 @@ namespace GitExtensions.UITests
             {
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 await WaitForIdleAsync();
-                var dialog = Application.OpenForms.OfType<T>().Single();
+                using var form = Application.OpenForms.OfType<T>().Single();
+                Assert.True(form.Visible, $"{form.GetType().FullName} {form.Name} should be visible");
                 try
                 {
-                    await runAsync(dialog);
+                    await runTestAsync(form);
                 }
                 finally
                 {
-                    dialog.Close();
+                    form.Close();
                 }
             });
 
-            showDialog();
+            showForm();
 
             // Join the asynchronous test operation so any exceptions are rethrown on this thread
             test.Join();
+        }
+
+        public static void RunDialog<T>(
+            Action<Form> showDialog,
+            Func<T, Task> runTestAsync)
+            where T : Form
+        {
+            using var mainForm = new Form { Text = $"Test {typeof(T).Name}" };
+            RunForm<T>(
+                showForm: () =>
+                {
+                    mainForm.Shown += (s, e) =>
+                    {
+                        showDialog(mainForm);
+                    };
+
+                    Application.Run(mainForm);
+                },
+                runTestAsync: async (dialog) =>
+                {
+                    try
+                    {
+                        await runTestAsync(dialog);
+                    }
+                    finally
+                    {
+                        // Explicitely close the mainForm here, in order to let Application.Run(mainForm) finish.
+                        mainForm.Close();
+                    }
+                });
         }
 
         private readonly struct VoidResult

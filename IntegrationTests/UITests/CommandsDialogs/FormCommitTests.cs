@@ -321,21 +321,21 @@ namespace GitExtensions.UITests.CommandsDialogs
 
         private void RunFormTest(Func<FormCommit, Task> testDriverAsync, CommitKind commitKind = CommitKind.Normal)
         {
-            UITest.RunForm(
-                () =>
+            UITest.RunDialog(
+                (mainForm) =>
                 {
                     switch (commitKind)
                     {
                         case CommitKind.Normal:
-                            Assert.True(_commands.StartCommitDialog(owner: null));
+                            Assert.True(_commands.StartCommitDialog(owner: mainForm));
                             break;
 
                         case CommitKind.Squash:
-                            Assert.True(_commands.StartSquashCommitDialog(owner: null, _referenceRepository.Module.GetRevision()));
+                            Assert.True(_commands.StartSquashCommitDialog(owner: mainForm, _referenceRepository.Module.GetRevision()));
                             break;
 
                         case CommitKind.Fixup:
-                            Assert.True(_commands.StartFixupCommitDialog(owner: null, _referenceRepository.Module.GetRevision()));
+                            Assert.True(_commands.StartFixupCommitDialog(owner: mainForm, _referenceRepository.Module.GetRevision()));
                             break;
 
                         default:
