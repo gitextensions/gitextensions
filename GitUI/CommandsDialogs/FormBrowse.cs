@@ -3015,37 +3015,46 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (AppSettings.ConEmuTerminal.ValueOrDefault == "bash")
+            switch (AppSettings.ConEmuTerminal.ValueOrDefault)
             {
-                if (PathUtil.TryConvertWindowsPathToPosix(path, out var posixPath))
-                {
-                    ClearTerminalCommandLineAndRunCommand("cd " + posixPath);
-                }
-            }
-            else if (AppSettings.ConEmuTerminal.ValueOrDefault == "powershell")
-            {
-                ClearTerminalCommandLineAndRunCommand("cd \"" + path + "\"");
-            }
-            else
-            {
-                ClearTerminalCommandLineAndRunCommand("cd /D \"" + path + "\"");
+                case "bash":
+                    if (PathUtil.TryConvertWindowsPathToPosix(path, out var posixPath))
+                    {
+                        ClearTerminalCommandLineWithMacroAndRunCommand($"cd {posixPath.QuoteNE()}");
+                    }
+
+                    break;
+                case "cmd":
+                    ClearTerminalCommandLineWithEscapeAndRunCommand($"cd /D {path.QuoteNE()}");
+                    break;
+                case "powershell":
+                    ClearTerminalCommandLineWithEscapeAndRunCommand($"cd {path.QuoteNE()}");
+                    break;
+                default:
+                    break;
             }
         }
 
-        private void ClearTerminalCommandLineAndRunCommand(string command)
+        private void ClearTerminalCommandLineWithMacroAndRunCommand(string command)
         {
             if (_terminal?.RunningSession == null || string.IsNullOrWhiteSpace(command))
             {
                 return;
             }
 
-            // Clear terminal line by sending 'backspace' characters
-            for (int i = 0; i < 10000; i++)
+            // Use a ConEmu macro to send the sequence for clearing the bash command line
+            _terminal.RunningSession.BeginGuiMacro("Keys").WithParam("^A").WithParam("^K").ExecuteSync();
+            _terminal.RunningSession.WriteInputTextAsync(command + Environment.NewLine);
+        }
+
+        private void ClearTerminalCommandLineWithEscapeAndRunCommand(string command)
+        {
+            if (_terminal?.RunningSession == null || string.IsNullOrWhiteSpace(command))
             {
-                _terminal.RunningSession.WriteInputTextAsync("\b");
+                return;
             }
 
-            _terminal.RunningSession.WriteInputTextAsync(command + Environment.NewLine);
+            _terminal.RunningSession.WriteInputTextAsync("\x1B" + command + Environment.NewLine);
         }
 
         private void menuitemSparseWorkingCopy_Click(object sender, EventArgs e)
