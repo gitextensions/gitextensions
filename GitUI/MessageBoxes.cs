@@ -30,6 +30,9 @@ namespace GitUI
         private readonly TranslationString _rememberChoice = new TranslationString("Remember choice");
         private readonly TranslationString _confirmDeleteRemoteBranch = new TranslationString("Do you want to delete the branch {0} from {1}?");
 
+        private readonly TranslationString _shellNotFoundCaption = new TranslationString("Shell not found");
+        private readonly TranslationString _shellNotFound = new TranslationString("The selected shell is not installed, or is not on your path.");
+
         // internal for FormTranslate
         internal MessageBoxes()
         {
@@ -99,6 +102,11 @@ namespace GitUI
         {
             return MessageBox.Show(owner, string.Format(Instance._confirmDeleteRemoteBranch.Text, branchName, remote),
                 "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
+        }
+
+        public static void ShellNotFound([CanBeNull] IWin32Window owner)
+        {
+            MessageBox.Show(owner, Instance._shellNotFound.Text, Instance._shellNotFoundCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

@@ -2854,44 +2854,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 startInfo.BaseConfiguration = startInfoBaseConfiguration;
-
-                string[] exeList;
-                switch (AppSettings.ConEmuTerminal.ValueOrDefault)
-                {
-                    case "cmd":
-                        exeList = new[] { "cmd.exe" };
-                        break;
-                    case "powershell":
-                        exeList = new[] { "powershell.exe" };
-                        break;
-                    default:
-                        // Choose the console: bash from git with fallback to cmd
-                        const string justBash = "bash.exe"; // Generic bash, should generally be in the git dir, less configured than the specific git-bash
-                        const string justSh = "sh.exe"; // Fallback to SH
-                        exeList = new[] { justBash, justSh };
-                        break;
-                }
-
-                string cmdPath = exeList.
-                      Select(shell => PathUtil.TryFindShellPath(shell, out var shellPath) ? shellPath : null).
-                      FirstOrDefault(shellPath => shellPath != null);
-
-                if (cmdPath == null)
-                {
-                    startInfo.ConsoleProcessCommandLine = ConEmuConstants.DefaultConsoleCommandLine;
-                }
-                else
-                {
-                    cmdPath = cmdPath.Quote();
-                    if (AppSettings.ConEmuTerminal.ValueOrDefault == "bash")
-                    {
-                        startInfo.ConsoleProcessCommandLine = cmdPath + " --login -i";
-                    }
-                    else
-                    {
-                        startInfo.ConsoleProcessCommandLine = cmdPath;
-                    }
-                }
+                startInfo.ConsoleProcessCommandLine = ShellHelper.GetCommandLineForCurrentShell();
 
                 if (AppSettings.ConEmuStyle.ValueOrDefault != "Default")
                 {
@@ -2925,51 +2888,7 @@ namespace GitUI.CommandsDialogs
 
         public void ChangeTerminalActiveFolder(string path)
         {
-            if (_terminal?.RunningSession == null || string.IsNullOrWhiteSpace(path))
-            {
-                return;
-            }
-
-            switch (AppSettings.ConEmuTerminal.ValueOrDefault)
-            {
-                case "bash":
-                    if (PathUtil.TryConvertWindowsPathToPosix(path, out var posixPath))
-                    {
-                        ClearTerminalCommandLineWithMacroAndRunCommand($"cd {posixPath.QuoteNE()}");
-                    }
-
-                    break;
-                case "cmd":
-                    ClearTerminalCommandLineWithEscapeAndRunCommand($"cd /D {path.QuoteNE()}");
-                    break;
-                case "powershell":
-                    ClearTerminalCommandLineWithEscapeAndRunCommand($"cd {path.QuoteNE()}");
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void ClearTerminalCommandLineWithMacroAndRunCommand(string command)
-        {
-            if (_terminal?.RunningSession == null || string.IsNullOrWhiteSpace(command))
-            {
-                return;
-            }
-
-            // Use a ConEmu macro to send the sequence for clearing the bash command line
-            _terminal.RunningSession.BeginGuiMacro("Keys").WithParam("^A").WithParam("^K").ExecuteSync();
-            _terminal.RunningSession.WriteInputTextAsync(command + Environment.NewLine);
-        }
-
-        private void ClearTerminalCommandLineWithEscapeAndRunCommand(string command)
-        {
-            if (_terminal?.RunningSession == null || string.IsNullOrWhiteSpace(command))
-            {
-                return;
-            }
-
-            _terminal.RunningSession.WriteInputTextAsync("\x1B" + command + Environment.NewLine);
+            _terminal?.ChangeFolder(path);
         }
 
         private void menuitemSparseWorkingCopy_Click(object sender, EventArgs e)

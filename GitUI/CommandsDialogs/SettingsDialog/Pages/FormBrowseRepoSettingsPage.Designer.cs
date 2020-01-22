@@ -180,12 +180,15 @@
             this.cboTerminal.Items.AddRange(new object[] {
             "bash",
             "cmd",
-            "powershell"});
+            "powershell",
+            "pwsh"});
             this.cboTerminal.Location = new System.Drawing.Point(118, 59);
             this.cboTerminal.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cboTerminal.Name = "cboTerminal";
             this.cboTerminal.Size = new System.Drawing.Size(262, 21);
             this.cboTerminal.TabIndex = 4;
+            this.cboTerminal.SelectionChangeCommitted += new System.EventHandler(this.cboTerminal_SelectionChangeCommitted);
+            this.cboTerminal.Enter += new System.EventHandler(this.cboTerminal_Enter);
             // 
             // _NO_TRANSLATE_cboStyle
             // 
