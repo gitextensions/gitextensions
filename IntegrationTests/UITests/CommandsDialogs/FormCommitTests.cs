@@ -47,6 +47,8 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             RunFormTest(form =>
             {
+                AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
+
                 var commitAuthorStatus = form.GetTestAccessor().CommitAuthorStatusToolStripStatusLabel;
 
                 Assert.AreEqual("Committer author <author@mail.com>", commitAuthorStatus.Text);
@@ -58,6 +60,8 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             RunFormTest(form =>
             {
+                AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
+
                 var commitAuthorStatus = form.GetTestAccessor().CommitAuthorStatusToolStripStatusLabel;
 
                 Assert.AreEqual("Committer author <author@mail.com>", commitAuthorStatus.Text);
@@ -142,12 +146,16 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             RunFormTest(form =>
             {
+                AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
                 Assert.IsEmpty(form.GetTestAccessor().Message.Text);
                 form.GetTestAccessor().Message.Text = generatedCommitMessage;
             });
 
+            AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
+
             RunFormTest(form =>
             {
+                AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
                 Assert.AreEqual(generatedCommitMessage, form.GetTestAccessor().Message.Text);
             });
         }
@@ -161,14 +169,18 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
+                    AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
                     string prefix = commitKind.ToString().ToLowerInvariant();
                     Assert.AreEqual($"{prefix}! A commit message", form.GetTestAccessor().Message.Text);
                     form.GetTestAccessor().Message.Text = generatedCommitMessage;
                 },
                 commitKind);
 
+            AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
+
             RunFormTest(form =>
             {
+                AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
                 Assert.IsEmpty(form.GetTestAccessor().Message.Text);
             });
         }
