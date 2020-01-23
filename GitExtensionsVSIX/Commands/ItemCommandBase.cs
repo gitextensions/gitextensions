@@ -14,7 +14,15 @@ namespace GitExtensionsVSIX.Commands
         {
             if (!RunForSelection)
             {
-                var activeDocument = application.ActiveDocument;
+                Document activeDocument = null;
+                try
+                {
+                    activeDocument = application.ActiveDocument;
+                }
+                catch (Exception)
+                {
+                    // It can fail when there's no active document. for example - "project properties" dialog.
+                }
 
                 if (activeDocument?.ProjectItem == null)
                 {
