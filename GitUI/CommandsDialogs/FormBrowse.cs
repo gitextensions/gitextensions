@@ -2119,7 +2119,8 @@ namespace GitUI.CommandsDialogs
             FocusNextTab = 31,
             FocusPrevTab = 32,
             OpenWithDifftoolFirstToLocal = 33,
-            OpenWithDifftoolSelectedToLocal = 34
+            OpenWithDifftoolSelectedToLocal = 34,
+            OpenCommitsWithDifftool = 35
         }
 
         internal Keys GetShortcutKeys(Command cmd)
@@ -2197,6 +2198,7 @@ namespace GitUI.CommandsDialogs
                 case Command.CloseRepository: CloseToolStripMenuItemClick(null, null); break;
                 case Command.Stash: UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash); break;
                 case Command.StashPop: UICommands.StashPop(this); break;
+                case Command.OpenCommitsWithDifftool: RevisionGrid.DiffSelectedCommitsWithDifftool(); break;
                 case Command.OpenWithDifftool: OpenWithDifftool(); break;
                 case Command.OpenWithDifftoolFirstToLocal: OpenWithDifftoolFirstToLocal(); break;
                 case Command.OpenWithDifftoolSelectedToLocal: OpenWithDifftoolSelectedToLocal(); break;
