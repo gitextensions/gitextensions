@@ -727,23 +727,30 @@ namespace GitUI
                 // Also delete new files, if requested.
                 if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
                 {
-                    try
+                    string errorCaption = null;
+                    string errorMessage = null;
+                    string path = _fullPathResolver.Resolve(fileName);
+                    if (File.Exists(path))
                     {
-                        string path = _fullPathResolver.Resolve(fileName);
-                        if (File.Exists(path))
+                        try
                         {
                             File.Delete(path);
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            Directory.Delete(path, true);
+                            errorCaption = Strings.ErrorCaptionFailedDeleteFile;
+                            errorMessage = ex.Message;
                         }
                     }
-                    catch (IOException)
+                    else
                     {
+                        errorCaption = Strings.ErrorCaptionFailedDeleteFolder;
+                        path.TryDeleteDirectory(out errorMessage);
                     }
-                    catch (UnauthorizedAccessException)
+
+                    if (errorMessage != null)
                     {
+                        MessageBox.Show(null, errorMessage, errorCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

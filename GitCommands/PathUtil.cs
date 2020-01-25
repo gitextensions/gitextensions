@@ -332,5 +332,34 @@ namespace GitCommands
                 return null;
             }
         }
+
+        /// <summary>
+        ///  Deletes the requested folder recursively.
+        /// </summary>
+        /// <returns>
+        ///  <see langword="true" /> if the folder is absent or successfully removed; otherwise <see langword="false" />.
+        /// </returns>
+        [ContractAnnotation("=>false,errorMessage:notnull")]
+        [ContractAnnotation("=>true,errorMessage:null")]
+        public static bool TryDeleteDirectory([NotNull] this string path, out string errorMessage)
+        {
+            errorMessage = null;
+            if (string.IsNullOrWhiteSpace(path) || !Directory.Exists(path))
+            {
+                return true;
+            }
+
+            try
+            {
+                Directory.Delete(path, recursive: true);
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return false;
+            }
+
+            return true;
+        }
     }
 }

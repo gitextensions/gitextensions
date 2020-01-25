@@ -34,6 +34,9 @@ namespace GitUI
         private readonly TranslationString _markBisectAsGood = new TranslationString("Marked as good in bisect");
         private readonly TranslationString _markBisectAsBad = new TranslationString("Marked as bad in bisect");
 
+        private readonly TranslationString _errorCaptionFailedDeleteFile = new TranslationString("Failed to delete file");
+        private readonly TranslationString _errorCaptionFailedDeleteFolder = new TranslationString("Failed to delete directory");
+
         // public only because of FormTranslate
         public Strings()
         {
@@ -83,5 +86,8 @@ namespace GitUI
 
         public static string MarkBisectAsGood => _instance.Value._markBisectAsGood.Text;
         public static string MarkBisectAsBad => _instance.Value._markBisectAsBad.Text;
+
+        public static string ErrorCaptionFailedDeleteFile => _instance.Value._errorCaptionFailedDeleteFile.Text;
+        public static string ErrorCaptionFailedDeleteFolder => _instance.Value._errorCaptionFailedDeleteFolder.Text;
     }
 }
