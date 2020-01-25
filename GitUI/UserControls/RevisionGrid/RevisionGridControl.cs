@@ -656,7 +656,7 @@ namespace GitUI
 
             if (!revision.IsArtificial)
             {
-                description += " @" + revision.ObjectId.ToShortString(4);
+                description += " @" + revision.ObjectId.ToShortString();
             }
 
             if (maxLength > 0)

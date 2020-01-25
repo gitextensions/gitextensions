@@ -1037,7 +1037,7 @@ namespace GitUI
                     return DescribeRevision(objectId);
                 }
 
-                return objectId.ToShortString(length: 8);
+                return objectId.ToShortString();
             }
         }
 

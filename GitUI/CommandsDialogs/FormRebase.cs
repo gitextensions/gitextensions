@@ -308,7 +308,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
                 {
-                    txtFrom.Text = chooseForm.SelectedRevision.ObjectId.ToShortString(8);
+                    txtFrom.Text = chooseForm.SelectedRevision.ObjectId.ToShortString();
                 }
             }
         }
