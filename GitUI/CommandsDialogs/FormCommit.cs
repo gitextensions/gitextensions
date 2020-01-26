@@ -1236,7 +1236,7 @@ namespace GitUI.CommandsDialogs
             if (FileHelper.IsImage(item.Name))
             {
                 var guid = staged ? ObjectId.IndexId : ObjectId.WorkTreeId;
-                await SelectedDiff.ViewGitItemRevisionAsync(item.Name, guid, openWithDiffTool);
+                await SelectedDiff.ViewGitItemRevisionAsync(item, guid, openWithDiffTool);
             }
             else
             {

@@ -387,12 +387,39 @@ namespace GitUI.Editor
             };
         }
 
-        public Task ViewFileAsync(string fileName, [CanBeNull] Action openWithDifftool = null)
+        /// <summary>
+        /// Get contents in the file system async if not too big, otherwise ask user
+        /// </summary>
+        /// <param name="fileName">The file/submodule path</param>
+        /// <param name="isSubmodule">If submodule</param>
+        /// <param name="openWithDifftool">Diff action</param>
+        /// <returns>Task</returns>
+        public Task ViewFileAsync(string fileName, bool isSubmodule = false, [CanBeNull] Action openWithDifftool = null)
         {
+            string fullPath = Path.GetFullPath(_fullPathResolver.Resolve(fileName));
+
+            if (isSubmodule && !GitModule.IsValidGitWorkingDir(fullPath))
+            {
+                return ViewTextAsync(fileName, "Invalid submodule: " + fileName);
+            }
+
+            if (!isSubmodule && (fileName.EndsWith("/") || Directory.Exists(fullPath)))
+            {
+                if (GitModule.IsValidGitWorkingDir(fullPath))
+                {
+                    return ViewTextAsync(fileName, "Submodule: " + fileName);
+                }
+                else
+                {
+                    return ViewTextAsync(fileName, "Directory: " + fileName);
+                }
+            }
+
             return ShowOrDeferAsync(
                 fileName,
                 () => ViewItemAsync(
                     fileName,
+                    isSubmodule,
                     getImage: GetImage,
                     getFileText: GetFileText,
                     getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""),
@@ -505,7 +532,7 @@ namespace GitUI.Editor
                 {
                     if (!item.IsTracked)
                     {
-                        await ViewGitItemRevisionAsync(item.Name, ObjectId.WorkTreeId, openWithDifftool);
+                        await ViewFileAsync(item.Name, item.IsSubmodule, openWithDifftool);
                         SetVisibilityDiffContextMenuStaging();
                     }
                     else if (!item.IsSubmodule)
@@ -542,11 +569,6 @@ namespace GitUI.Editor
                         }
                     }
                 });
-        }
-
-        public void ViewPatch([CanBeNull] string fileName, [CanBeNull] Patch patch, [CanBeNull] Action openWithDifftool = null)
-        {
-            ViewPatch(fileName, patch?.Text ?? "", openWithDifftool, isText: false);
         }
 
         /// <summary>
@@ -725,38 +747,37 @@ namespace GitUI.Editor
             return str.ToString();
         }
 
-        public Task ViewGitItemRevisionAsync(string fileName, ObjectId objectId, [CanBeNull] Action openWithDifftool = null)
+        public Task ViewGitItemRevisionAsync(GitItemStatus file, ObjectId revision, [CanBeNull] Action openWithDifftool = null)
         {
-            if (objectId == ObjectId.WorkTreeId)
+            if (revision == ObjectId.WorkTreeId)
             {
                 // No blob exists for worktree, present contents from file system
-                return ViewFileAsync(fileName, openWithDifftool);
+                return ViewFileAsync(file.Name, file.IsSubmodule, openWithDifftool);
             }
             else
             {
-                // Retrieve blob, same as GitItemStatus.TreeGuid
-                var blob = Module.GetFileBlobHash(fileName, objectId);
-                return ViewGitItemAsync(fileName, blob, openWithDifftool);
+                if (file.TreeGuid == null)
+                {
+                    file.TreeGuid = Module.GetFileBlobHash(file.Name, revision);
+                }
+
+                return ViewGitItemAsync(file, openWithDifftool);
             }
         }
 
-        public Task ViewGitItemAsync(string fileName, [CanBeNull] ObjectId objectId, [CanBeNull] Action openWithDifftool = null)
+        public Task ViewGitItemAsync(GitItemStatus file, [CanBeNull] Action openWithDifftool = null)
         {
-            var sha = objectId?.ToString();
+            var sha = file.TreeGuid?.ToString();
 
             return ViewItemAsync(
-                fileName,
+                file.Name,
+                file.IsSubmodule,
                 getImage: GetImage,
                 getFileText: GetFileTextIfBlobExists,
-                getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), sha),
-                openWithDifftool: openWithDifftool ?? OpenWithDifftool);
+                getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, file.Name.TrimEnd('/'), sha),
+                openWithDifftool: openWithDifftool);
 
-            string GetFileTextIfBlobExists() => objectId != null ? Module.GetFileText(objectId, Encoding) : "";
-
-            void OpenWithDifftool()
-            {
-                Module.OpenWithDifftool(fileName, firstRevision: sha);
-            }
+            string GetFileTextIfBlobExists() => file.TreeGuid != null ? Module.GetFileText(file.TreeGuid, Encoding) : "";
 
             Image GetImage()
             {
@@ -764,7 +785,7 @@ namespace GitUI.Editor
                 {
                     using (var stream = Module.GetFileStream(sha))
                     {
-                        return CreateImage(fileName, stream);
+                        return CreateImage(file.Name, stream);
                     }
                 }
                 catch
@@ -774,27 +795,16 @@ namespace GitUI.Editor
             }
         }
 
-        private Task ViewItemAsync(string fileName, Func<Image> getImage, Func<string> getFileText, Func<string> getSubmoduleText, [CanBeNull] Action openWithDifftool)
+        private Task ViewItemAsync(string fileName, bool isSubmodule, Func<Image> getImage, Func<string> getFileText, Func<string> getSubmoduleText, [CanBeNull] Action openWithDifftool)
         {
             FilePreamble = null;
 
-            string fullPath = Path.GetFullPath(_fullPathResolver.Resolve(fileName));
-
-            // TODO This check fails if a former file name is now a directory
-            if (fileName.EndsWith("/") || Directory.Exists(fullPath))
+            if (isSubmodule)
             {
-                // TODO Fails if a former submodule now is removed
-                if (GitModule.IsValidGitWorkingDir(fullPath))
-                {
-                    return _async.LoadAsync(
-                        getSubmoduleText,
-                        text => ThreadHelper.JoinableTaskFactory.Run(
-                            () => ViewTextAsync(fileName, text, openWithDifftool)));
-                }
-                else
-                {
-                    return ViewTextAsync(fileName, "Directory: " + fileName, openWithDifftool: null /* not applicable */);
-                }
+                return _async.LoadAsync(
+                    getSubmoduleText,
+                    text => ThreadHelper.JoinableTaskFactory.Run(
+                        () => ViewTextAsync(fileName, text, openWithDifftool)));
             }
             else if (FileHelper.IsImage(fileName))
             {

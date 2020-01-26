@@ -366,13 +366,17 @@ See the changes in the commit form.");
                 switch (gitItem.ObjectType)
                 {
                     case GitObjectType.Blob:
-                    {
-                        return FileText.ViewGitItemAsync(gitItem.FileName, gitItem.ObjectId);
-                    }
-
                     case GitObjectType.Commit:
                     {
-                        return FileText.ViewTextAsync(gitItem.FileName, LocalizationHelpers.GetSubmoduleText(Module, gitItem.FileName, gitItem.Guid));
+                        var file = new GitItemStatus
+                        {
+                            IsTracked = true,
+                            Name = gitItem.Name,
+                            TreeGuid = gitItem.ObjectId,
+                            IsSubmodule = gitItem.ObjectType == GitObjectType.Commit
+                        };
+
+                        return FileText.ViewGitItemAsync(file);
                     }
 
                     default:
