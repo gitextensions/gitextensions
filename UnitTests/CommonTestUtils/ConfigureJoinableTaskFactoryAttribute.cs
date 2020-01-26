@@ -21,11 +21,14 @@ namespace CommonTestUtils
 
         public ActionTargets Targets => ActionTargets.Test;
 
+        public ConfigureJoinableTaskFactoryAttribute()
+        {
+            Application.ThreadException += HandleApplicationThreadException;
+        }
+
         public void BeforeTest(ITest test)
         {
             Assert.IsNull(ThreadHelper.JoinableTaskContext, "Tests with joinable tasks must not be run in parallel!");
-
-            Application.ThreadException += HandleApplicationThreadException;
 
             IList apartmentState = null;
             for (var scope = test; scope != null; scope = scope.Parent)
@@ -81,8 +84,6 @@ namespace CommonTestUtils
             }
             finally
             {
-                Application.ThreadException -= HandleApplicationThreadException;
-
                 // Reset _threadException to null, and throw if it was set during the current test.
                 Interlocked.Exchange(ref _threadException, null)?.Throw();
             }
