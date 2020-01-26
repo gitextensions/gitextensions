@@ -65,7 +65,23 @@ namespace CommonTestUtils
                 try
                 {
                     // Wait for eventual pending operations triggered by the test.
-                    AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
+                    using var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout);
+                    try
+                    {
+                        // Note that ThreadHelper.JoinableTaskContext.Factory must be used to bypass the default behavior of
+                        // ThreadHelper.JoinableTaskFactory since the latter adds new tasks to the collection and would therefore
+                        // never complete.
+                        ThreadHelper.JoinableTaskContext.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cts.Token));
+                    }
+                    catch (OperationCanceledException) when (cts.IsCancellationRequested)
+                    {
+                        if (int.TryParse(Environment.GetEnvironmentVariable("GE_TEST_SLEEP_SECONDS_ON_HANG"), out var sleepSeconds) && sleepSeconds > 0)
+                        {
+                            Thread.Sleep(TimeSpan.FromSeconds(sleepSeconds));
+                        }
+
+                        throw;
+                    }
                 }
                 finally
                 {

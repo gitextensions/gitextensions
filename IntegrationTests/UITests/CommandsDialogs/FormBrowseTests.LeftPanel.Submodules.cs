@@ -82,10 +82,10 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void RepoObjectTree_should_show_all_submodules()
         {
             RunFormTest(
-                form =>
+                async form =>
                 {
                     // act
-                    SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, _repo1Module);
+                    await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo1Module);
 
                     // assert
                     var submodulesNode = GetSubmoduleNode(form);
@@ -112,16 +112,6 @@ namespace GitExtensions.UITests.CommandsDialogs
             var remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == GitUI.Strings.Submodules);
             remotesNode.Should().NotBeNull();
             return remotesNode;
-        }
-
-        private void RunFormTest(Action<FormBrowse> testDriver)
-        {
-            RunFormTest(
-                form =>
-                {
-                    testDriver(form);
-                    return Task.CompletedTask;
-                });
         }
 
         private void RunFormTest(Func<FormBrowse, Task> testDriverAsync)

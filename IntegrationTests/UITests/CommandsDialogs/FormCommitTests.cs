@@ -56,7 +56,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void Should_update_committer_info_on_form_activated()
         {
-            RunFormTest(form =>
+            RunFormTest(async form =>
             {
                 var commitAuthorStatus = form.GetTestAccessor().CommitAuthorStatusToolStripStatusLabel;
 
@@ -74,7 +74,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                 form.Focus();
 
-                AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
+                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 Assert.AreEqual("Committer new author <new_author@mail.com>", commitAuthorStatus.Text);
             });
@@ -84,9 +84,9 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void Should_display_branch_and_no_remote_info_in_statusbar()
         {
             _referenceRepository.CheckoutMaster();
-            RunFormTest(form =>
+            RunFormTest(async form =>
             {
-                AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
+                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
@@ -100,9 +100,9 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void Should_display_detached_head_info_in_statusbar()
         {
             _referenceRepository.CheckoutRevision();
-            RunFormTest(form =>
+            RunFormTest(async form =>
             {
-                AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
+                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
@@ -111,7 +111,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 if (!remoteNameLabelStatus.Text.IsNullOrEmpty())
                 {
                     Console.WriteLine($"{nameof(Should_display_detached_head_info_in_statusbar)} waits again");
-                    AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
+                    await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                 }
 
                 Assert.AreEqual("(no branch)", currentBranchNameLabelStatus.Text);
@@ -123,9 +123,9 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void Should_display_branch_and_remote_info_in_statusbar()
         {
             _referenceRepository.CreateRemoteForMasterBranch();
-            RunFormTest(form =>
+            RunFormTest(async form =>
             {
-                AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
+                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
@@ -256,9 +256,9 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void editFileToolStripMenuItem_Click_no_selection_should_not_throw()
         {
-            RunFormTest(form =>
+            RunFormTest(async form =>
             {
-                AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
+                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 form.GetTestAccessor().UnstagedList.ClearSelected();
 

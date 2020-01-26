@@ -27,7 +27,7 @@ namespace GitUITests
         }
 
         [Test]
-        public void FileAndForgetReportsThreadException()
+        public async Task FileAndForgetReportsThreadException()
         {
             using (var helper = new ThreadExceptionHelper())
             {
@@ -39,13 +39,13 @@ namespace GitUITests
                     return Task.CompletedTask;
                 });
 
-                JoinPendingOperations();
+                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                 Assert.AreSame(ex, helper.Exception);
             }
         }
 
         [Test]
-        public void FileAndForgetIgnoresCancellationExceptions()
+        public async Task FileAndForgetIgnoresCancellationExceptions()
         {
             using (var helper = new ThreadExceptionHelper())
             {
@@ -58,13 +58,13 @@ namespace GitUITests
                     return Task.CompletedTask;
                 });
 
-                JoinPendingOperations();
+                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                 Assert.Null(helper.Exception, helper.Message);
             }
         }
 
         [Test]
-        public void FileAndForgetFilterCanAllowExceptions()
+        public async Task FileAndForgetFilterCanAllowExceptions()
         {
             using (var helper = new ThreadExceptionHelper())
             {
@@ -76,13 +76,13 @@ namespace GitUITests
                     return Task.CompletedTask;
                 });
 
-                JoinPendingOperations();
+                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                 Assert.AreSame(ex, helper.Exception);
             }
         }
 
         [Test]
-        public void FileAndForgetFilterCanIgnoreExceptions()
+        public async Task FileAndForgetFilterCanIgnoreExceptions()
         {
             using (var helper = new ThreadExceptionHelper())
             {
@@ -94,13 +94,13 @@ namespace GitUITests
                     return Task.CompletedTask;
                 });
 
-                JoinPendingOperations();
+                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                 Assert.Null(helper.Exception, helper.Message);
             }
         }
 
         [Test]
-        public void FileAndForgetFilterIgnoresCancellationExceptions()
+        public async Task FileAndForgetFilterIgnoresCancellationExceptions()
         {
             using (var helper = new ThreadExceptionHelper())
             {
@@ -113,7 +113,7 @@ namespace GitUITests
                     return Task.CompletedTask;
                 });
 
-                JoinPendingOperations();
+                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                 Assert.Null(helper.Exception, helper.Message);
             }
         }
@@ -233,9 +233,6 @@ namespace GitUITests
         [Apartment(ApartmentState.MTA)]
         public async Task AllowAwaitForAsynchronousMTATest()
             => await Task.Yield();
-
-        private static void JoinPendingOperations()
-            => AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
 
         private sealed class ThreadExceptionHelper : IDisposable
         {

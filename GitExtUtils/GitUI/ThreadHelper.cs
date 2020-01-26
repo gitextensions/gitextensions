@@ -113,6 +113,12 @@ namespace GitUI
                 });
         }
 
+        public static async Task JoinPendingOperationsAsync(TimeSpan timeout)
+        {
+            using var cancellationTokenSource = new CancellationTokenSource(timeout);
+            await JoinPendingOperationsAsync(cancellationTokenSource.Token);
+        }
+
         public static async Task JoinPendingOperationsAsync(CancellationToken cancellationToken)
         {
             await _joinableTaskCollection.JoinTillEmptyAsync(cancellationToken);

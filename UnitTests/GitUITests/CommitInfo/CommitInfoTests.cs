@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Reflection;
 using System.Threading;
 using CommonTestUtils;
@@ -8,7 +7,6 @@ using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitUI;
-using GitUITests.CommandsDialogs;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -57,9 +55,6 @@ namespace GitUITests.CommitInfo
             {
                 UICommandsSource = uiCommandsSource
             };
-
-            // let the async call be executed before the mockup of _gitExecutable will be changed
-            AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
         }
 
         [TearDown]
