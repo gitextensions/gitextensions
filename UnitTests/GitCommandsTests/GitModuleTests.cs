@@ -696,6 +696,7 @@ namespace GitCommandsTests
             }
         }
 
+        [Ignore("Flaky test - issue #7681")]
         [Test]
         public void GetSuperprojectCurrentCheckout()
         {
