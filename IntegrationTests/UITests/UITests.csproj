@@ -11,7 +11,7 @@
     <PackageReference Include="ApprovalTests" Version="3.0.13" />
     <PackageReference Include="FluentAssertions" Version="5.2.0" />
     <PackageReference Include="NSubstitute" Version="3.1.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
   </ItemGroup>
 
   <ItemGroup>
