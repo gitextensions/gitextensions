@@ -28,8 +28,8 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Are you sure you want to delete the selected file(s)?");
         private readonly TranslationString _deleteFailed = new TranslationString("Delete file failed");
         private readonly TranslationString _multipleDescription = new TranslationString("<multiple>");
-        private readonly TranslationString _selectedRevision = new TranslationString("Selected");
-        private readonly TranslationString _firstRevision = new TranslationString("First");
+        private readonly TranslationString _selectedRevision = new TranslationString("Selected: b/");
+        private readonly TranslationString _firstRevision = new TranslationString("First: a/");
 
         private RevisionGridControl _revisionGrid;
         private RevisionFileTreeControl _revisionFileTree;
@@ -210,18 +210,14 @@ namespace GitUI.CommandsDialogs
         /// Provide a description for the first selected or parent to the "primary" selected last
         /// </summary>
         /// <returns>A description of the selected parent</returns>
-        private string DescribeSelectedParentRevision()
+        private string DescribeRevision(List<GitRevision> parents)
         {
-            var parents = DiffFiles.SelectedItemParents
-                .Distinct()
-                .Count();
-
-            if (parents == 1)
+            if (parents.Count == 1)
             {
-                return DescribeRevision(DiffFiles.SelectedItemParent?.ObjectId, 50);
+                return DescribeRevision(parents.FirstOrDefault()?.ObjectId, 50);
             }
 
-            if (parents > 1)
+            if (parents.Count > 1)
             {
                 return _multipleDescription.Text;
             }
@@ -690,15 +686,15 @@ namespace GitUI.CommandsDialogs
 
             if (DiffFiles.SelectedItemsWithParent.Any())
             {
-                selectedDiffCaptionMenuItem.Text = _selectedRevision + ": (" + _revisionGrid.DescribeRevision(DiffFiles.Revision, 50) + ")";
+                selectedDiffCaptionMenuItem.Text = _selectedRevision + DescribeRevision(DiffFiles.Revision?.ObjectId, 50);
                 selectedDiffCaptionMenuItem.Visible = true;
                 MenuUtil.SetAsCaptionMenuItem(selectedDiffCaptionMenuItem, DiffContextMenu);
 
-                firstDiffCaptionMenuItem.Text = _firstRevision + ":";
-                var parentDesc = DescribeSelectedParentRevision();
+                firstDiffCaptionMenuItem.Text = _firstRevision.Text;
+                var parentDesc = DescribeRevision(DiffFiles.SelectedItemParents.ToList());
                 if (parentDesc.IsNotNullOrWhitespace())
                 {
-                    firstDiffCaptionMenuItem.Text += " (" + parentDesc + ")";
+                    firstDiffCaptionMenuItem.Text += parentDesc;
                 }
 
                 firstDiffCaptionMenuItem.Visible = true;
@@ -753,18 +749,19 @@ namespace GitUI.CommandsDialogs
             {
                 resetFileToSelectedToolStripMenuItem.Visible = true;
                 resetFileToSelectedToolStripMenuItem.Text =
-                    _selectedRevision + " (" + _revisionGrid.DescribeRevision(DiffFiles.Revision, 50) + ")";
+                    _selectedRevision + DescribeRevision(DiffFiles.Revision?.ObjectId, 50);
             }
 
-            var parents = DiffFiles.SelectedItemParents.Distinct();
-            if (parents.Count() != 1 || !CanResetToRevision(parents.FirstOrDefault()))
+            var parents = DiffFiles.SelectedItemParents.ToList();
+            if (parents.Count != 1 || !CanResetToRevision(parents.FirstOrDefault()))
             {
                 resetFileToParentToolStripMenuItem.Visible = false;
             }
             else
             {
                 resetFileToParentToolStripMenuItem.Visible = true;
-                resetFileToParentToolStripMenuItem.Text = _firstRevision + " (" + _revisionGrid.DescribeRevision(parents.FirstOrDefault(), 50) + ")";
+                resetFileToParentToolStripMenuItem.Text =
+                    _firstRevision + DescribeRevision(parents.FirstOrDefault()?.ObjectId, 50);
             }
         }
 

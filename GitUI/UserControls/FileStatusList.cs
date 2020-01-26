@@ -29,7 +29,7 @@ namespace GitUI
     public sealed partial class FileStatusList : GitModuleControl
     {
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
-        private readonly TranslationString _diffWithParent = new TranslationString("Diff with:");
+        private readonly TranslationString _diffWithParent = new TranslationString("Diff with: a/");
         public readonly TranslationString CombinedDiff = new TranslationString("Combined Diff");
         private readonly IGitRevisionTester _revisionTester;
         private readonly IFullPathResolver _fullPathResolver;
@@ -885,7 +885,7 @@ namespace GitUI
                     }
                     else
                     {
-                        groupName = _diffWithParent.Text + " " + GetDescriptionForRevision(revision.ObjectId);
+                        groupName = _diffWithParent.Text + GetDescriptionForRevision(revision.ObjectId);
                     }
 
                     group = new ListViewGroup(groupName)
