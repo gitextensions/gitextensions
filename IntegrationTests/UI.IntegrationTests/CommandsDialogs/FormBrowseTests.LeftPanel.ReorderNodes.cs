@@ -191,22 +191,13 @@ namespace GitExtensions.UITests.CommandsDialogs
 
         private void RunRepoObjectsTreeTest(Action<RepoObjectsTree> testDriver)
         {
-            RunFormTest(
-                form =>
+            UITest.RunForm<FormBrowse>(
+                showForm: () => Assert.True(_commands.StartBrowseDialog(owner: null)),
+                runTestAsync: async form =>
                 {
+                    await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                     testDriver(form.GetTestAccessor().RepoObjectsTree);
-                    return Task.CompletedTask;
                 });
-        }
-
-        private void RunFormTest(Func<FormBrowse, Task> testDriverAsync)
-        {
-            UITest.RunForm(
-                () =>
-                {
-                    Assert.True(_commands.StartBrowseDialog(owner: null));
-                },
-                testDriverAsync);
         }
     }
 }
