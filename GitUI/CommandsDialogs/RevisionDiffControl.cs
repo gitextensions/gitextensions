@@ -278,8 +278,7 @@ namespace GitUI.CommandsDialogs
 
             // Combined diff is a display only diff, no manipulations
             bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item.ObjectId == ObjectId.CombinedDiffId);
-            bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
-            bool isAnyItemSelected = DiffFiles.SelectedItems.Any();
+            int selectedGitItemCount = DiffFiles.SelectedItems.Count();
 
             // No changes to files in bare repos
             bool isBareRepository = Module.IsBareRepository();
@@ -287,17 +286,16 @@ namespace GitUI.CommandsDialogs
             bool isAnyIndex = DiffFiles.SelectedItems.Any(item => item.Staged == StagedStatus.Index);
             bool isAnyWorkTree = DiffFiles.SelectedItems.Any(item => item.Staged == StagedStatus.WorkTree);
             bool isAnySubmodule = DiffFiles.SelectedItems.Any(item => item.IsSubmodule);
-            bool singleFileExists = isExactlyOneItemSelected && File.Exists(_fullPathResolver.Resolve(DiffFiles.SelectedItem.Name));
+            bool allFilesExist = DiffFiles.SelectedItems.All(item => File.Exists(_fullPathResolver.Resolve(item.Name)));
 
             var selectionInfo = new ContextMenuSelectionInfo(DiffFiles.Revision,
                 firstIsParent: firstIsParent,
                 isAnyCombinedDiff: isAnyCombinedDiff,
-                isSingleGitItemSelected: isExactlyOneItemSelected,
-                isAnyItemSelected: isAnyItemSelected,
+                selectedGitItemCount: selectedGitItemCount,
                 isAnyItemIndex: isAnyIndex,
                 isAnyItemWorkTree: isAnyWorkTree,
                 isBareRepository: isBareRepository,
-                singleFileExists: singleFileExists,
+                allFilesExist: allFilesExist,
                 isAnyTracked: isAnyTracked,
                 isAnySubmodule: isAnySubmodule);
             return selectionInfo;
@@ -431,6 +429,7 @@ namespace GitUI.CommandsDialogs
             blameToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBlame(selectionInfo);
             resetFileToToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowResetFileMenus(selectionInfo);
 
+            diffDeleteFileToolStripMenuItem.Text = ResourceManager.Strings.GetDeleteFile(selectionInfo.SelectedGitItemCount);
             diffDeleteFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuDeleteFile(selectionInfo);
             diffEditWorkingDirectoryFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo);
             diffOpenWorkingDirectoryFileWithToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo);

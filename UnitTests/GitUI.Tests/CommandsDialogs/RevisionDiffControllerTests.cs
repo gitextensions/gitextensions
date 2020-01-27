@@ -31,13 +31,13 @@ namespace GitUITests.CommandsDialogs
             _controller.ShouldShowDifftoolMenus(selectionInfo).Should().BeTrue();
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public void BrowseDiff_DifftoolMenu_Selected(bool t)
+        [TestCase(0)]
+        [TestCase(1)]
+        public void BrowseDiff_DifftoolMenu_Selected(int t)
         {
             var rev = new GitRevision(ObjectId.Random());
-            var selectionInfo = new ContextMenuSelectionInfo(rev, isAnyItemSelected: t);
-            _controller.ShouldShowDifftoolMenus(selectionInfo).Should().Be(t);
+            var selectionInfo = new ContextMenuSelectionInfo(rev, selectedGitItemCount: t);
+            _controller.ShouldShowDifftoolMenus(selectionInfo).Should().Be(t != 0);
         }
 
         [TestCase(true)]
@@ -69,13 +69,13 @@ namespace GitUITests.CommandsDialogs
             _controller.ShouldShowResetFileMenus(selectionInfo).Should().BeTrue();
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public void BrowseDiff_ResetMenu_Selected(bool t)
+        [TestCase(0)]
+        [TestCase(1)]
+        public void BrowseDiff_ResetMenu_Selected(int t)
         {
             var rev = new GitRevision(ObjectId.Random());
-            var selectionInfo = new ContextMenuSelectionInfo(rev, isAnyItemSelected: t);
-            _controller.ShouldShowResetFileMenus(selectionInfo).Should().Be(t);
+            var selectionInfo = new ContextMenuSelectionInfo(rev, selectedGitItemCount: t);
+            _controller.ShouldShowResetFileMenus(selectionInfo).Should().Be(t != 0);
         }
 
         [TestCase(true)]
@@ -119,24 +119,24 @@ namespace GitUITests.CommandsDialogs
             _controller.ShouldShowMenuBlame(selectionInfo).Should().BeTrue();
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public void BrowseDiff_MainMenus_SingleSelected(bool t)
+        [TestCase(0)]
+        [TestCase(1)]
+        public void BrowseDiff_MainMenus_SingleSelected(int t)
         {
             var rev = new GitRevision(ObjectId.Random());
-            var selectionInfo = new ContextMenuSelectionInfo(selectedRevision: rev, isSingleGitItemSelected: t);
-            _controller.ShouldShowMenuSaveAs(selectionInfo).Should().Be(t);
-            _controller.ShouldShowMenuCherryPick(selectionInfo).Should().Be(t);
+            var selectionInfo = new ContextMenuSelectionInfo(selectedRevision: rev, selectedGitItemCount: t);
+            _controller.ShouldShowMenuSaveAs(selectionInfo).Should().Be(t != 0);
+            _controller.ShouldShowMenuCherryPick(selectionInfo).Should().Be(t != 0);
             _controller.ShouldShowMenuStage(selectionInfo).Should().BeFalse();
             _controller.ShouldShowMenuUnstage(selectionInfo).Should().BeFalse();
             _controller.ShouldShowSubmoduleMenus(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo).Should().Be(t);
-            _controller.ShouldShowMenuOpenRevision(selectionInfo).Should().Be(t);
+            _controller.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo).Should().Be(t != 0);
+            _controller.ShouldShowMenuOpenRevision(selectionInfo).Should().Be(t != 0);
             _controller.ShouldShowMenuDeleteFile(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuCopyFileName(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuShowInFileTree(selectionInfo).Should().Be(t);
-            _controller.ShouldShowMenuFileHistory(selectionInfo).Should().Be(t);
-            _controller.ShouldShowMenuBlame(selectionInfo).Should().Be(t);
+            _controller.ShouldShowMenuCopyFileName(selectionInfo).Should().Be(t != 0);
+            _controller.ShouldShowMenuShowInFileTree(selectionInfo).Should().Be(t != 0);
+            _controller.ShouldShowMenuFileHistory(selectionInfo).Should().Be(t != 0);
+            _controller.ShouldShowMenuBlame(selectionInfo).Should().Be(t != 0);
         }
 
         [TestCase(true)]
@@ -163,7 +163,6 @@ namespace GitUITests.CommandsDialogs
         {
             var rev = new GitRevision(ObjectId.Random());
             var selectionInfo = new ContextMenuSelectionInfo(selectedRevision: rev, isAnySubmodule: t);
-            _controller.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo).Should().Be(!t);
             _controller.ShouldShowMenuOpenRevision(selectionInfo).Should().Be(!t);
         }
 

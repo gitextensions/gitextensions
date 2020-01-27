@@ -43,6 +43,8 @@ Yes, I allow telemetry!");
         private readonly TranslationString _parentsText = new TranslationString("{0:Parent|Parents}");
         private readonly TranslationString _childrenText = new TranslationString("{0:Child|Children}");
 
+        private readonly TranslationString _deleteFile = new TranslationString("{0:Delete file|Delete files}");
+
         // public only because of FormTranslate
         public Strings()
         {
@@ -84,6 +86,11 @@ Yes, I allow telemetry!");
         public static string GetChildren(int value)
         {
             return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._childrenText.Text, value, Math.Abs(value));
+        }
+
+        public static string GetDeleteFile(int value)
+        {
+            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._deleteFile.Text, value, Math.Abs(value));
         }
 
         public static string GetCommitDate(int value)
