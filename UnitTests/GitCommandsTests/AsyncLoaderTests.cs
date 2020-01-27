@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using CommonTestUtils;
 using GitCommands;
 using GitUI;
 using NUnit.Framework;
@@ -266,7 +267,7 @@ namespace GitCommandsTests
         }
 
         [Test]
-        public void Using_load_or_cancel_after_dispose_throws()
+        public async Task Using_load_or_cancel_after_dispose_throws()
         {
             var loader = new AsyncLoader();
 
@@ -276,10 +277,10 @@ namespace GitCommandsTests
             loader.Dispose();
 
             // Any use after dispose should throw
-            Assert.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(() => { }, () => { }));
-            Assert.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(() => 1, i => { }));
-            Assert.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(_ => { }, () => { }));
-            Assert.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(_ => 1, i => { }));
+            await AssertEx.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(() => { }, () => { }));
+            await AssertEx.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(() => 1, i => { }));
+            await AssertEx.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(_ => { }, () => { }));
+            await AssertEx.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(_ => 1, i => { }));
             Assert.Throws<ObjectDisposedException>(() => loader.Cancel());
         }
     }
