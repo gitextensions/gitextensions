@@ -149,10 +149,10 @@ namespace GitUITests
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                await TaskScheduler.Default;
-
                 var form = new Form();
                 form.Dispose();
+
+                await TaskScheduler.Default;
 
                 Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
                 await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await form.SwitchToMainThreadAsync());
@@ -164,9 +164,10 @@ namespace GitUITests
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
+                var form = new Form();
+
                 await TaskScheduler.Default;
 
-                var form = new Form();
                 var cancellationTokenSource = new CancellationTokenSource();
                 cancellationTokenSource.Cancel();
 
@@ -180,13 +181,17 @@ namespace GitUITests
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                await TaskScheduler.Default;
-
                 var form = new Form();
+
+                await TaskScheduler.Default;
 
                 var awaitable = form.SwitchToMainThreadAsync();
 
-                form.Dispose();
+                ThreadHelper.JoinableTaskFactory.Run(async () =>
+                {
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    form.Dispose();
+                });
 
                 Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
                 await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await awaitable);
@@ -198,9 +203,10 @@ namespace GitUITests
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
+                var form = new Form();
+
                 await TaskScheduler.Default;
 
-                var form = new Form();
                 var cancellationTokenSource = new CancellationTokenSource();
 
                 var awaitable = form.SwitchToMainThreadAsync(cancellationTokenSource.Token);
