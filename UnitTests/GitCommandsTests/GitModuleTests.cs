@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -472,11 +473,11 @@ namespace GitCommandsTests
 
         [TestCase("ignorenopush\tgit@github.com:drewnoakes/gitextensions.git (fetch)")]
         [TestCase("ignorenopull\tgit@github.com:drewnoakes/gitextensions.git (push)")]
-        public void GetRemotes_should_throw_if_not_pairs(string line)
+        public async Task GetRemotes_should_throw_if_not_pairs(string line)
         {
             using (_executable.StageOutput("remote -v", line))
             {
-                Assert.ThrowsAsync<System.Exception>(async () => await _gitModule.GetRemotesAsync());
+                await AssertEx.ThrowsAsync<System.Exception>(async () => await _gitModule.GetRemotesAsync());
             }
         }
 
