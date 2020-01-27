@@ -145,77 +145,65 @@ namespace GitUITests
         }
 
         [Test]
-        public void ControlDisposedBeforeSwitchOnBackgroundThread()
+        public async Task ControlDisposedBeforeSwitchOnBackgroundThread()
         {
+            var form = new Form();
+            form.Dispose();
+
+            await TaskScheduler.Default;
+
+            Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
+            await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await form.SwitchToMainThreadAsync());
+        }
+
+        [Test]
+        public async Task TokenCancelledBeforeSwitchOnBackgroundThread()
+        {
+            var form = new Form();
+
+            await TaskScheduler.Default;
+
+            var cancellationTokenSource = new CancellationTokenSource();
+            cancellationTokenSource.Cancel();
+
+            Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
+            await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await form.SwitchToMainThreadAsync(cancellationTokenSource.Token));
+        }
+
+        [Test]
+        public async Task ControlDisposedAfterSwitchOnBackgroundThread()
+        {
+            var form = new Form();
+
+            await TaskScheduler.Default;
+
+            var awaitable = form.SwitchToMainThreadAsync();
+
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var form = new Form();
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 form.Dispose();
-
-                await TaskScheduler.Default;
-
-                Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
-                await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await form.SwitchToMainThreadAsync());
             });
+
+            Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
+            await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await awaitable);
         }
 
         [Test]
-        public void TokenCancelledBeforeSwitchOnBackgroundThread()
+        public async Task TokenCancelledAfterSwitchOnBackgroundThread()
         {
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                var form = new Form();
+            var form = new Form();
 
-                await TaskScheduler.Default;
+            await TaskScheduler.Default;
 
-                var cancellationTokenSource = new CancellationTokenSource();
-                cancellationTokenSource.Cancel();
+            var cancellationTokenSource = new CancellationTokenSource();
 
-                Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
-                await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await form.SwitchToMainThreadAsync(cancellationTokenSource.Token));
-            });
-        }
+            var awaitable = form.SwitchToMainThreadAsync(cancellationTokenSource.Token);
 
-        [Test]
-        public void ControlDisposedAfterSwitchOnBackgroundThread()
-        {
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                var form = new Form();
+            cancellationTokenSource.Cancel();
 
-                await TaskScheduler.Default;
-
-                var awaitable = form.SwitchToMainThreadAsync();
-
-                ThreadHelper.JoinableTaskFactory.Run(async () =>
-                {
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                    form.Dispose();
-                });
-
-                Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
-                await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await awaitable);
-            });
-        }
-
-        [Test]
-        public void TokenCancelledAfterSwitchOnBackgroundThread()
-        {
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                var form = new Form();
-
-                await TaskScheduler.Default;
-
-                var cancellationTokenSource = new CancellationTokenSource();
-
-                var awaitable = form.SwitchToMainThreadAsync(cancellationTokenSource.Token);
-
-                cancellationTokenSource.Cancel();
-
-                Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
-                await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await awaitable);
-            });
+            Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
+            await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await awaitable);
         }
     }
 }
