@@ -133,7 +133,7 @@ namespace GitCommandsTests.Submodules
             public async Task Submodule_status_changes_for_first_nested_module()
             {
                 var currentModule = _repo2Module;
-                var result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule).ConfigureAwait(false);
+                var result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
 
                 // No changes in repo
                 var changedFiles = GetStatusChangedFiles(currentModule);
