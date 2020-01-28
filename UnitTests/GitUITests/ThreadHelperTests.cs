@@ -27,93 +27,73 @@ namespace GitUITests
         }
 
         [Test]
-        public void FileAndForgetReportsThreadException()
+        public async Task FileAndForgetReportsThreadException()
         {
             using (var helper = new ThreadExceptionHelper())
             {
                 var ex = new Exception();
 
-                ThreadHelper.JoinableTaskFactory.Run(() =>
-                {
-                    ThrowExceptionAsync(ex).FileAndForget();
-                    return Task.CompletedTask;
-                });
+                ThrowExceptionAsync(ex).FileAndForget();
 
-                JoinPendingOperations();
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                 Assert.AreSame(ex, helper.Exception);
             }
         }
 
         [Test]
-        public void FileAndForgetIgnoresCancellationExceptions()
+        public async Task FileAndForgetIgnoresCancellationExceptions()
         {
             using (var helper = new ThreadExceptionHelper())
             {
                 var form = new Form();
                 form.Dispose();
 
-                ThreadHelper.JoinableTaskFactory.Run(() =>
-                {
-                    YieldOntoControlMainThreadAsync(form).FileAndForget();
-                    return Task.CompletedTask;
-                });
+                YieldOntoControlMainThreadAsync(form).FileAndForget();
 
-                JoinPendingOperations();
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                 Assert.Null(helper.Exception, helper.Message);
             }
         }
 
         [Test]
-        public void FileAndForgetFilterCanAllowExceptions()
+        public async Task FileAndForgetFilterCanAllowExceptions()
         {
             using (var helper = new ThreadExceptionHelper())
             {
                 var ex = new Exception();
 
-                ThreadHelper.JoinableTaskFactory.Run(() =>
-                {
-                    ThrowExceptionAsync(ex).FileAndForget(fileOnlyIf: e => e == ex);
-                    return Task.CompletedTask;
-                });
+                ThrowExceptionAsync(ex).FileAndForget(fileOnlyIf: e => e == ex);
 
-                JoinPendingOperations();
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                 Assert.AreSame(ex, helper.Exception);
             }
         }
 
         [Test]
-        public void FileAndForgetFilterCanIgnoreExceptions()
+        public async Task FileAndForgetFilterCanIgnoreExceptions()
         {
             using (var helper = new ThreadExceptionHelper())
             {
                 var ex = new Exception();
 
-                ThreadHelper.JoinableTaskFactory.Run(() =>
-                {
-                    ThrowExceptionAsync(ex).FileAndForget(fileOnlyIf: e => e != ex);
-                    return Task.CompletedTask;
-                });
+                ThrowExceptionAsync(ex).FileAndForget(fileOnlyIf: e => e != ex);
 
-                JoinPendingOperations();
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                 Assert.Null(helper.Exception, helper.Message);
             }
         }
 
         [Test]
-        public void FileAndForgetFilterIgnoresCancellationExceptions()
+        public async Task FileAndForgetFilterIgnoresCancellationExceptions()
         {
             using (var helper = new ThreadExceptionHelper())
             {
                 var form = new Form();
                 form.Dispose();
 
-                ThreadHelper.JoinableTaskFactory.Run(() =>
-                {
-                    YieldOntoControlMainThreadAsync(form).FileAndForget(fileOnlyIf: ex => true);
-                    return Task.CompletedTask;
-                });
+                YieldOntoControlMainThreadAsync(form).FileAndForget(fileOnlyIf: ex => true);
 
-                JoinPendingOperations();
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                 Assert.Null(helper.Exception, helper.Message);
             }
         }
@@ -233,9 +213,6 @@ namespace GitUITests
         [Apartment(ApartmentState.MTA)]
         public async Task AllowAwaitForAsynchronousMTATest()
             => await Task.Yield();
-
-        private static void JoinPendingOperations()
-            => AsyncTestHelper.WaitForPendingOperations(AsyncTestHelper.UnexpectedTimeout);
 
         private sealed class ThreadExceptionHelper : IDisposable
         {
