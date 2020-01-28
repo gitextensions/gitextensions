@@ -1950,6 +1950,11 @@ namespace GitCommands
             return !File.Exists(GetRebaseDir() + "rebasing") && Directory.Exists(GetRebaseDir());
         }
 
+        public bool InTheMiddleOfMerge()
+        {
+            return File.Exists(Path.Combine(GetGitDirectory(), "MERGE_HEAD"));
+        }
+
         public bool InTheMiddleOfAction()
         {
             return InTheMiddleOfConflictedMerge() || InTheMiddleOfRebase();
