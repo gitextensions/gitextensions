@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using GitCommands;
 using GitCommands.Submodules;
-using GitUI;
 
 namespace CommonTestUtils
 {
@@ -19,7 +18,7 @@ namespace CommonTestUtils
                     noBranchText: string.Empty,
                     updateStatus: updateStatus);
 
-                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
             }
             finally
             {
@@ -38,7 +37,7 @@ namespace CommonTestUtils
         {
             provider.UpdateSubmodulesStatus(workingDirectory: module.WorkingDir, gitStatus: gitStatus, forceUpdate: true);
 
-            await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+            await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
         }
     }
 }

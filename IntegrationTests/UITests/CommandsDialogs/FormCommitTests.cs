@@ -74,7 +74,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                 form.Focus();
 
-                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 Assert.AreEqual("Committer new author <new_author@mail.com>", commitAuthorStatus.Text);
             });
@@ -86,7 +86,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             _referenceRepository.CheckoutMaster();
             RunFormTest(async form =>
             {
-                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
@@ -102,7 +102,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             _referenceRepository.CheckoutRevision();
             RunFormTest(async form =>
             {
-                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
@@ -111,7 +111,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 if (!remoteNameLabelStatus.Text.IsNullOrEmpty())
                 {
                     Console.WriteLine($"{nameof(Should_display_detached_head_info_in_statusbar)} waits again");
-                    await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                    await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                 }
 
                 Assert.AreEqual("(no branch)", currentBranchNameLabelStatus.Text);
@@ -125,7 +125,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             _referenceRepository.CreateRemoteForMasterBranch();
             RunFormTest(async form =>
             {
-                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
@@ -258,7 +258,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             RunFormTest(async form =>
             {
-                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 form.GetTestAccessor().UnstagedList.ClearSelected();
 

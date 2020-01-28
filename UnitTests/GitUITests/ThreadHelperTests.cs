@@ -35,7 +35,7 @@ namespace GitUITests
 
                 ThrowExceptionAsync(ex).FileAndForget();
 
-                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                 Assert.AreSame(ex, helper.Exception);
             }
         }
@@ -50,7 +50,7 @@ namespace GitUITests
 
                 YieldOntoControlMainThreadAsync(form).FileAndForget();
 
-                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                 Assert.Null(helper.Exception, helper.Message);
             }
         }
@@ -64,7 +64,7 @@ namespace GitUITests
 
                 ThrowExceptionAsync(ex).FileAndForget(fileOnlyIf: e => e == ex);
 
-                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                 Assert.AreSame(ex, helper.Exception);
             }
         }
@@ -78,7 +78,7 @@ namespace GitUITests
 
                 ThrowExceptionAsync(ex).FileAndForget(fileOnlyIf: e => e != ex);
 
-                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                 Assert.Null(helper.Exception, helper.Message);
             }
         }
@@ -93,7 +93,7 @@ namespace GitUITests
 
                 YieldOntoControlMainThreadAsync(form).FileAndForget(fileOnlyIf: ex => true);
 
-                await ThreadHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                 Assert.Null(helper.Exception, helper.Message);
             }
         }
