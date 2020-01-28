@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CommonTestUtils;
 using GitUI;
 using NUnit.Framework;
 
@@ -61,7 +63,8 @@ namespace GitExtensions.UITests
                 showForm();
 
                 // Join the asynchronous test operation so any exceptions are rethrown on this thread.
-                test.Join();
+                using var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout);
+                test.Join(cts.Token);
             }
             finally
             {
