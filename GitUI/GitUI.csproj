@@ -79,11 +79,4 @@
     </Content>
   </ItemGroup>
 
-  <Target Name="CopyTranslations" AfterTargets="AfterBuild">
-    <ItemGroup>
-      <Translations Include="$(ProjectDir)Translation\*.xlf;$(ProjectDir)Translation\*.gif" />
-    </ItemGroup>
-    <Copy SourceFiles="@(Translations)" DestinationFolder="$(TargetDir)Translation" ContinueOnError="false" />
-  </Target>
-
 </Project>

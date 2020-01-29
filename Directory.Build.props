@@ -1,4 +1,5 @@
 <Project>
+  <Import Project=".\Build\sdk\Sdk.props" />
 
   <PropertyGroup>
     <LangVersion>8</LangVersion>
@@ -16,6 +17,15 @@
 
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <!-- Coverlet's PDB check cannot handle deterministic source paths https://github.com/tonerdo/coverlet/issues/363 -->
+    <DeterministicSourcePaths>false</DeterministicSourcePaths>
+  </PropertyGroup>
+
+  <!-- For the purposes of generating code coverage as part of the build -->
+  <PropertyGroup Condition="'$(Coverage)' == 'true'">
+    <!-- Coverlet assumes PDB files exist on disk https://github.com/tonerdo/coverlet/issues/362 -->
+    <DebugType Condition="'$(DebugType)' == 'embedded'">portable</DebugType>
+
   </PropertyGroup>
 
   <ItemGroup>

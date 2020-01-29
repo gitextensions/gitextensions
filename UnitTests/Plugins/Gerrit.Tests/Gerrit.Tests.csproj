@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Plugins\Gerrit\Gerrit.csproj" />
+    <ProjectReference Include="..\..\..\ResourceManager\ResourceManager.csproj" />
+  </ItemGroup>
+
+</Project>

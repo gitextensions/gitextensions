@@ -1,0 +1,24 @@
+<Project>
+  <Import Project="..\Directory.Build.props" />
+
+  <PropertyGroup>
+    <RootNamespace>$([System.String]::Copy('$(MSBuildProjectName)').Replace('.IntegrationTests', 'Tests'))</RootNamespace>
+
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <Prefer32Bit>false</Prefer32Bit>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DebugType>full</DebugType>
+
+    <CodeAnalysisRuleSet>..\..\GitExtensionsTest.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <!--
+      Direct integration test artifacts to be placed under tests/IntegrationTests folder
+    -->
+  <PropertyGroup>
+    <BaseOutputPath>$([System.IO.Path]::GetFullPath('$(ArtifactsBinDir)tests\IntegrationTests\$(OutDirName)'))</BaseOutputPath>
+    <OutputPath>$(BaseOutputPath)</OutputPath>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
+    <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\CommonTestUtils\CommonTestUtils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="ExternalLinks\MockData\level3_roaming_GitExtensions.settings.xml" />
+    <EmbeddedResource Include="ExternalLinks\MockData\level1_repogit_GitExtensions.settings.xml" />
+    <EmbeddedResource Include="ExternalLinks\MockData\level2_repodist_GitExtensions.settings.xml" />
+    <EmbeddedResource Include="MockData\Too_long_lines.txt" />
+    <EmbeddedResource Include="MockData\Too_many_lines.txt" />
+    <None Include="Patches\testdata\big.patch">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Patches\testdata\bigBin.patch">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Patches\testdata\rebase.diff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\README.blame">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <EmbeddedResource Include="UserRepositoryHistory\Legacy\MockData\CategorisedRepositories01.xml" />
+    <EmbeddedResource Include="UserRepositoryHistory\Legacy\MockData\CategorisedRepositories02.xml" />
+    <None Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Deserialize_remote_repositories_without_ns.approved.txt" />
+    <None Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Deserialize_remote_repositories_with_ns.approved.txt" />
+    <None Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Serialize_recent_repositories.approved.xml" />
+    <None Include="UserRepositoryHistory\Legacy\RepositoryCategorySerialiserTests.Verify_backwards_compatibility_of_object_graph.approved.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GitRevisionSummaryBuilderTests.Should_do_ellipsis.ForScenario.Too_long_lines.approved.txt" />
+    <None Include="GitRevisionSummaryBuilderTests.Should_do_ellipsis.ForScenario.Too_many_lines.approved.txt" />
+  </ItemGroup>
+</Project>

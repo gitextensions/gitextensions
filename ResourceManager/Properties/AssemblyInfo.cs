@@ -3,4 +3,4 @@ using System.Runtime.CompilerServices;
 
 [assembly: AssemblyDescription("GitExtensions shared resource manager")]
 
-[assembly: InternalsVisibleTo("ResourceManagerTests")]
+[assembly: InternalsVisibleTo("ResourceManager.Tests")]
