@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,6 +37,7 @@ namespace GitExtensions.UITests
         {
             // If form.Dipose was called by the async test task, closing the window would be done in a strange order.
             T form = null;
+            Console.WriteLine($"RunForm<{nameof(T)}> entry");
             try
             {
                 // Start runTestAsync before calling showForm.
@@ -46,8 +48,11 @@ namespace GitExtensions.UITests
                 // complete.
                 var test = ThreadHelper.JoinableTaskContext.Factory.RunAsync(async () =>
                 {
+                    Console.WriteLine($"RunForm<{form.GetType().FullName}> async test entry");
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    Console.WriteLine($"RunForm<{form.GetType().FullName}> async test on main thread");
                     await WaitForIdleAsync();
+                    Console.WriteLine($"RunForm<{form.GetType().FullName}> async test idle");
                     form = Application.OpenForms.OfType<T>().Single();
                     try
                     {
@@ -65,6 +70,11 @@ namespace GitExtensions.UITests
                 // Join the asynchronous test operation so any exceptions are rethrown on this thread.
                 using var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout);
                 test.Join(cts.Token);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"RunForm<{form.GetType().FullName}> failed: {ex.Demystify()}");
+                throw;
             }
             finally
             {
