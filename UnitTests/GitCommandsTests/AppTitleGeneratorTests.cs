@@ -56,11 +56,24 @@ namespace GitCommandsTests
 
 #if DEBUG
         [Test]
-        public void Generate_should_include_debug_suffix()
+        public void Generate_should_include_debug_suffix([Values(null, "invalid")] string buildSha)
         {
+            string buildBranch = "build_branch";
+            AppTitleGenerator.Initialise(buildSha, buildBranch);
             var title = _appTitleGenerator.Generate("a", true, null);
 
             title.Should().Be($"{ShortName} (no branch) - Git Extensions [DEBUG]");
+        }
+
+        [Test]
+        public void Generate_should_include_build_suffix()
+        {
+            string buildSha = "1234567812345678123456781234567812345678";
+            string buildBranch = "build_branch";
+            AppTitleGenerator.Initialise(buildSha, buildBranch);
+            var title = _appTitleGenerator.Generate("a", true, null);
+
+            title.Should().Be($"{ShortName} (no branch) - Git Extensions @{buildSha.Substring(0, 8)} [{buildBranch}]");
         }
 #endif
     }
