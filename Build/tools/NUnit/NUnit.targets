@@ -41,7 +41,10 @@
       <_OpenCoverRegister Condition="'$(_TestArchitecture)' == 'x86'">path32</_OpenCoverRegister>
       <_OpenCoverRegister Condition="'$(_TestArchitecture)' == 'x64'">path64</_OpenCoverRegister>
       <_OpenCoverCommandArgs>-register:$(_OpenCoverRegister) -returntargetcode -hideskipped:All -filter:"+[*]* -[FluentAssertions*]* -[SmartFormat*]* -[nunit*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -excludebyfile:*\*Designer.cs -output:"$(_TestResultsOpenCoverPath)"</_OpenCoverCommandArgs>
-      <_TestRunnerCommand>"$(_OpenCoverCommand)" $(_OpenCoverCommandArgs) -target:"$(_NUnitRunnerCommand)" -targetargs:"$(_NUnitRunnerCommandArgs.Replace(`"`, `\"`)) --agents=1 --workers=1 --timeout=90000"</_TestRunnerCommand>
+      <_TestTargetArgs>$(_NUnitRunnerCommandArgs.Replace(`"`, `\"`)) --timeout=90000</_TestTargetArgs>
+      <_TestTargetArgs Condition="$(IsIntegrationTestProject) == true">$(_TestTargetArgs) --agents=1 --workers=1</_TestTargetArgs>
+      <_TestTargetArgs Condition="$(IsIntegrationTestProject) == false">$(_TestTargetArgs) --agents=1 --workers=1</_TestTargetArgs>
+      <_TestRunnerCommand>"$(_OpenCoverCommand)" $(_OpenCoverCommandArgs) -target:"$(_NUnitRunnerCommand)" -targetargs:"$(_TestTargetArgs)"</_TestRunnerCommand>
     </PropertyGroup>
 
     <MakeDir Directories="$(ArtifactsTestResultsDir)"/>

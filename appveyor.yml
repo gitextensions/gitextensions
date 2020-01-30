@@ -59,8 +59,11 @@ test_script:
 - ps: |
     Write-Host "Tests are running..."
     Write-Host $pwd
-    & .\cibuild.cmd -test -integrationTest
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    & .\cibuild.cmd -integrationTest
+    $TestError = $LastExitCode
+    & .\cibuild.cmd -test
+    $TestError += $LastExitCode
+    if ($TestError -ne 0) { $host.SetShouldExit($TestError) }
 
 
 # scripts to run after tests
