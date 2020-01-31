@@ -82,6 +82,8 @@ namespace ResourceManager
             sb.AppendLine("Submodule " + name);
             sb.AppendLine();
             GitModule module = superproject.GetSubmodule(name);
+
+            // TODO File access for Git revision access
             if (module.IsValidGitWorkingDir())
             {
                 // TEMP, will be moved in the follow up refactor
@@ -141,6 +143,8 @@ namespace ResourceManager
             sb.AppendLine();
             sb.AppendLine("From:\t" + (status.OldCommit?.ToString() ?? "null"));
             CommitData oldCommitData = null;
+
+            // TODO File access for Git revision access
             if (gitModule.IsValidGitWorkingDir())
             {
                 if (status.OldCommit != null)
@@ -168,6 +172,8 @@ namespace ResourceManager
             string dirty = !status.IsDirty ? "" : " (dirty)";
             sb.AppendLine("To:\t\t" + (status.Commit?.ToString() ?? "null") + dirty);
             CommitData commitData = null;
+
+            // TODO File access for Git revision access
             if (gitModule.IsValidGitWorkingDir())
             {
                 if (status.Commit != null)
