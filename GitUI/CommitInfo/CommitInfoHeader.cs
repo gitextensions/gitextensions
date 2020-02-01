@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
@@ -123,27 +124,29 @@ namespace GitUI.CommitInfo
         {
             var link = _linkFactory.ParseLink(e.LinkText);
 
-            try
+            if (Uri.TryCreate(link, UriKind.Absolute, out var uri))
             {
-                var result = new Uri(link);
-                if (result.Scheme == "gitext")
+                if (uri.Scheme == "gitext")
                 {
-                    CommandClicked?.Invoke(sender, new CommandEventArgs(result.Host, result.AbsolutePath.TrimStart('/')));
+                    CommandClicked?.Invoke(sender, new CommandEventArgs(uri.Host, uri.AbsolutePath.TrimStart('/')));
                 }
                 else
                 {
-                    using (var process = new Process
+                    using var process = new Process
                     {
                         EnableRaisingEvents = false,
-                        StartInfo = { FileName = result.AbsoluteUri }
-                    })
+                        StartInfo = { FileName = uri.AbsoluteUri }
+                    };
+
+                    try
                     {
                         process.Start();
                     }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(this, ex.Message, new TranslationString("Error").Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
-            }
-            catch (UriFormatException)
-            {
             }
         }
 
