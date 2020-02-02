@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using GitExtUtils.GitUI.Theming;
 using ResourceManager;
@@ -16,6 +17,8 @@ namespace GitUI.Theming
             @"^(?<name>\w+): (?<argb>[\da-f]{6})$",
             RegexOptions.IgnoreCase);
 
+        private const string Format = "{0}: {1:x6}";
+
         private readonly TranslationString _failedToLoadThemeFrom =
             new TranslationString("Failed to read theme from {0}");
         private readonly TranslationString _fileNotFound =
@@ -27,7 +30,7 @@ namespace GitUI.Theming
         private readonly TranslationString _invalidColorValueAtLine =
             new TranslationString("Invalid color value at line {0}: {1}");
 
-        public Theme LoadFile(string fileName, ThemeId id)
+        public Theme Load(string fileName, ThemeId id)
         {
             if (!TryReadFile(fileName, out string serialized))
             {
@@ -40,6 +43,18 @@ namespace GitUI.Theming
             }
 
             return new Theme(appColors, sysColors, id);
+        }
+
+        public void Save(Theme theme, string fileName)
+        {
+            string serialized = string.Join(
+                Environment.NewLine,
+                theme.SysColorValues.Select(_ => string.Format(Format, _.Key, ToRbgInt(_.Value))).Concat(
+                    theme.AppColorValues.Select(_ => string.Format(Format, _.Key, ToRbgInt(_.Value)))));
+
+            File.WriteAllText(fileName, serialized);
+
+            static int ToRbgInt(Color с) => с.ToArgb() & 0x00ffffff;
         }
 
         private bool TryParse(

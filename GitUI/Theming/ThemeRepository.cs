@@ -11,7 +11,6 @@ namespace GitUI.Theming
     {
         private const string Subdirectory = "Themes";
         private const string Extension = ".colors";
-        private const string InvariantThemeName = "win10default";
 
         private readonly ThemePersistence _persistence;
 
@@ -26,18 +25,19 @@ namespace GitUI.Theming
 
         private string AppDirectory { get; }
         private string DataDirectory { get; }
+        public string InvariantThemeName { get; } = "win10default";
 
         public Theme GetTheme(ThemeId id)
         {
-            string directory = id.IsBuiltin
-                ? AppDirectory
-                : DataDirectory;
-            string path = Path.Combine(directory, id.Name + Extension);
-            return _persistence.LoadFile(path, id);
+            string path = GetPath(id);
+            return _persistence.Load(path, id);
         }
 
+        public void Save(Theme theme) =>
+            _persistence.Save(theme, GetPath(theme.Id));
+
         public Theme GetInvariantTheme() =>
-            GetTheme(new ThemeId(InvariantThemeName, true));
+            GetTheme(new ThemeId(InvariantThemeName, isBuiltin: true));
 
         public IEnumerable<ThemeId> GetThemeIds() =>
             GetBuiltinThemeIds().Concat(GetUserCustomizedThemeIds());
@@ -49,6 +49,17 @@ namespace GitUI.Theming
                 .Where(name => !name.Equals(InvariantThemeName, StringComparison.OrdinalIgnoreCase))
                 .Select(name => new ThemeId(name, true));
 
+        public void Delete(ThemeId id)
+        {
+            if (id.IsBuiltin)
+            {
+                throw new InvalidOperationException("Only user-defined theme can be deleted");
+            }
+
+            var path = GetPath(id);
+            File.Delete(path);
+        }
+
         private IEnumerable<ThemeId> GetUserCustomizedThemeIds()
         {
             var directory = new DirectoryInfo(DataDirectory);
@@ -59,5 +70,10 @@ namespace GitUI.Theming
                     .Select(name => new ThemeId(name, false))
                 : Enumerable.Empty<ThemeId>();
         }
+
+        private string GetPath(ThemeId id) =>
+            Path.Combine(id.IsBuiltin
+                ? AppDirectory
+                : DataDirectory, id.Name + Extension);
     }
 }

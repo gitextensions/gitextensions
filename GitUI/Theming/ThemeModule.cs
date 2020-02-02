@@ -16,15 +16,11 @@ namespace GitUI.Theming
 
         public static void Load()
         {
+            new ThemeMigration(new ThemeRepository(new ThemePersistence())).Migrate();
             Settings = TryLoadTheme();
             ColorHelper.ThemeSettings = Settings;
             ThemeFix.ThemeSettings = Settings;
             Win32ThemeHooks.ThemeSettings = Settings;
-
-            foreach (var color in Theme.AppColorNames)
-            {
-                AppSettings.SetColor(color, Settings.Theme.GetColor(color));
-            }
         }
 
         private static bool TryInstallHooks(Theme theme)
@@ -57,14 +53,14 @@ namespace GitUI.Theming
                 return ThemeSettings.Default;
             }
 
-            if (string.IsNullOrEmpty(AppSettings.UIThemeName))
+            ThemeId themeId = AppSettings.ThemeId;
+            if (string.IsNullOrEmpty(themeId.Name))
             {
                 return new ThemeSettings(Theme.Default, invariantTheme, AppSettings.UseSystemVisualStyle);
             }
 
-            var themeId = new ThemeId(AppSettings.UIThemeName, AppSettings.UIThemeIsBuiltin);
             var theme = repository.GetTheme(themeId);
-            if (!TryInstallHooks(theme))
+            if (theme == null || !TryInstallHooks(theme))
             {
                 return new ThemeSettings(Theme.Default, invariantTheme, AppSettings.UseSystemVisualStyle);
             }

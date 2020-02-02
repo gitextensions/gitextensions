@@ -2,9 +2,9 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using GitCommands;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -131,20 +131,20 @@ namespace GitUI
         {
             if (gitRef.IsTag)
             {
-                return AppSettings.TagColor;
+                return AppColor.Tag.Value();
             }
 
             if (gitRef.IsHead)
             {
-                return AppSettings.BranchColor;
+                return AppColor.Branch.Value();
             }
 
             if (gitRef.IsRemote)
             {
-                return AppSettings.RemoteBranchColor;
+                return AppColor.RemoteBranch.Value();
             }
 
-            return AppSettings.OtherTagColor;
+            return AppColor.OtherTag.Value();
         }
 
         private static void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color, bool filled)

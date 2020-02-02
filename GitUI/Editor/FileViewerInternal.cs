@@ -120,7 +120,7 @@ namespace GitUI.Editor
                 indexMatch = textContent.IndexOf(word, indexMatch + 1, StringComparison.OrdinalIgnoreCase);
                 if (indexMatch >= 0)
                 {
-                    Color highlightColor = AppSettings.HighlightAllOccurencesColor;
+                    Color highlightColor = AppColor.HighlightAllOccurences.Value();
 
                     var textMarker = new TextMarker(indexMatch,
                         word.Length, TextMarkerType.SolidBlock, highlightColor,
@@ -143,7 +143,7 @@ namespace GitUI.Editor
         public Action OpenWithDifftool { get; private set; }
 
         /// <summary>
-        /// Move the file viewer cursor position to the next TextMarker found in the document that matches the AppSettings.HighlightAllOccurencesColor/>
+        /// Move the file viewer cursor position to the next TextMarker found in the document that matches the AppColor.HighlightAllOccurences/>
         /// </summary>
         public void GoToNextOccurrence()
         {
@@ -153,7 +153,7 @@ namespace GitUI.Editor
                 TextEditor.Document.TextLength - offset);
 
             TextMarker marker =
-                markers.FirstOrDefault(x => x.Offset > offset && x.Color == AppSettings.HighlightAllOccurencesColor);
+                markers.FirstOrDefault(x => x.Offset > offset && x.Color == AppColor.HighlightAllOccurences.Value());
             if (marker != null)
             {
                 TextLocation position = TextEditor.ActiveTextAreaControl.TextArea.Document.OffsetToPosition(marker.Offset);
@@ -162,7 +162,7 @@ namespace GitUI.Editor
         }
 
         /// <summary>
-        /// Move the file viewer cursor position to the previous TextMarker found in the document that matches the AppSettings.HighlightAllOccurencesColor/>
+        /// Move the file viewer cursor position to the previous TextMarker found in the document that matches the AppColor.HighlightAllOccurences/>
         /// </summary>
         public void GoToPreviousOccurrence()
         {
@@ -171,7 +171,7 @@ namespace GitUI.Editor
             List<TextMarker> markers = TextEditor.Document.MarkerStrategy.GetMarkers(0, offset);
 
             TextMarker marker =
-                markers.LastOrDefault(x => x.Offset < offset && x.Color == AppSettings.HighlightAllOccurencesColor);
+                markers.LastOrDefault(x => x.Offset < offset && x.Color == AppColor.HighlightAllOccurences.Value());
             if (marker != null)
             {
                 TextLocation position = TextEditor.ActiveTextAreaControl.TextArea.Document.OffsetToPosition(marker.Offset);

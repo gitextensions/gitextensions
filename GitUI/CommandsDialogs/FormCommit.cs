@@ -29,6 +29,7 @@ using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUI.SpellChecker;
+using GitUI.Theming;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
@@ -305,7 +306,7 @@ namespace GitUI.CommandsDialogs
 
             SelectedDiff.EscapePressed += () => DialogResult = DialogResult.Cancel;
 
-            SolveMergeconflicts.BackColor = AppSettings.BranchColor;
+            SolveMergeconflicts.BackColor = AppColor.Branch.Value();
             SolveMergeconflicts.SetForeColorForBackColor();
 
             toolStripStatusBranchIcon.AdaptImageLightness();
@@ -3238,7 +3239,7 @@ namespace GitUI.CommandsDialogs
             if (AppSettings.CommitAndPushForcedWhenAmend)
             {
                 CommitAndPush.BackColor = Amend.Checked
-                    ? AppSettings.BranchColor
+                    ? AppColor.Branch.Value()
                     : SystemColors.ButtonFace;
 
                 CommitAndPush.SetForeColorForBackColor();

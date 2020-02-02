@@ -19,8 +19,8 @@ namespace GitExtUtils.GitUI.Theming
             };
 
         private static Theme _default;
-        private IReadOnlyDictionary<AppColor, Color> AppColorValues { get; }
-        private IReadOnlyDictionary<KnownColor, Color> SysColorValues { get; }
+        public IReadOnlyDictionary<AppColor, Color> AppColorValues { get; }
+        public IReadOnlyDictionary<KnownColor, Color> SysColorValues { get; }
 
         public static Theme Default =>
             _default ?? (_default = CreateDefaultTheme());
