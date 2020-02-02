@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitUI;
+using NUnit.Framework;
 
 namespace GitExtensions.UITests
 {
@@ -27,32 +28,47 @@ namespace GitExtensions.UITests
         }
 
         public static void RunForm<T>(
-            Action showDialog,
-            Func<T, Task> runAsync)
+            Action showForm,
+            Func<T, Task> runTestAsync)
             where T : Form
         {
-            // Avoid using ThreadHelper.JoinableTaskFactory for the outermost operation because we don't want the task
-            // tracked by its collection. Otherwise, test code would not be able to wait for pending operations to
-            // complete.
-            var test = ThreadHelper.JoinableTaskContext.Factory.RunAsync(async () =>
+            // If form.Dipose was called by the async test task, closing the window would be done in a strange order.
+            T form = null;
+            try
             {
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                await WaitForIdleAsync();
-                var dialog = Application.OpenForms.OfType<T>().Single();
-                try
-                {
-                    await runAsync(dialog);
-                }
-                finally
-                {
-                    dialog.Close();
-                }
-            });
+                // Start runTestAsync before calling showForm.
+                // The latter might block until the form is closed, especially if using Application.Run(form).
 
-            showDialog();
+                // Avoid using ThreadHelper.JoinableTaskFactory for the outermost operation because we don't want the task
+                // tracked by its collection. Otherwise, test code would not be able to wait for pending operations to
+                // complete.
+                var test = ThreadHelper.JoinableTaskContext.Factory.RunAsync(async () =>
+                {
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    await WaitForIdleAsync();
+                    form = Application.OpenForms.OfType<T>().Single();
+                    try
+                    {
+                        Assert.True(form.Visible, $"{form.GetType().FullName} {form.Name} should be visible");
+                        await runTestAsync(form);
+                    }
+                    finally
+                    {
+                        form.Close();
+                    }
+                });
 
-            // Join the asynchronous test operation so any exceptions are rethrown on this thread
-            test.Join();
+                showForm();
+
+                // Join the asynchronous test operation so any exceptions are rethrown on this thread.
+                test.Join();
+            }
+            finally
+            {
+                form?.Close();
+                form?.Dispose();
+                Assert.IsTrue(Application.OpenForms.Count == 0, $"{Application.OpenForms.Count} open form(s) after test");
+            }
         }
 
         private readonly struct VoidResult
