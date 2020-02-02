@@ -78,7 +78,7 @@ namespace GitUI.CommandsDialogs
 
                 if (revisions.Count > 0 && revisions[0].IsArtificial)
                 {
-                    DiffFiles.SetDiffs(revisions);
+                    DiffFiles.SetDiffs(revisions, _revisionGrid.GetRevision);
                 }
             }
         }
@@ -156,7 +156,7 @@ namespace GitUI.CommandsDialogs
         public void DisplayDiffTab()
         {
             var revisions = _revisionGrid.GetSelectedRevisions();
-            DiffFiles.SetDiffs(revisions);
+            DiffFiles.SetDiffs(revisions, _revisionGrid.GetRevision);
             if (_oldDiffItem != null && DiffFiles.Revision?.Guid == _oldRevision)
             {
                 DiffFiles.SelectedItem = _oldDiffItem;

@@ -609,7 +609,7 @@ namespace GitUI
             _nextIndexToSelect = -1;
         }
 
-        public void SetDiffs(IReadOnlyList<GitRevision> revisions)
+        public void SetDiffs(IReadOnlyList<GitRevision> revisions, Func<ObjectId, GitRevision> getRevision = null)
         {
             Revision = revisions.FirstOrDefault();
 
@@ -630,10 +630,13 @@ namespace GitUI
                     if (AppSettings.ShowDiffForAllParents)
                     {
                         // Get base commit, add as parent if unique
-                        Lazy<ObjectId> head = new Lazy<ObjectId>(() => Module.RevParse("HEAD"));
+                        Lazy<ObjectId> head = getRevision != null
+                            ? new Lazy<ObjectId>(() => getRevision(ObjectId.IndexId).FirstParentGuid)
+                            : new Lazy<ObjectId>(() => Module.RevParse("HEAD"));
                         var revA = parentRevs[0].ObjectId;
                         var revB = Revision.ObjectId;
-                        ObjectId baseRevGuid = Module.GetMergeBase(GetRevisionOrHead(revA, head), GetRevisionOrHead(revB, head));
+                        ObjectId baseRevGuid = Module.GetMergeBase(GetRevisionOrHead(revA, head),
+                            GetRevisionOrHead(revB, head));
                         if (baseRevGuid != null
                             && baseRevGuid != revA
                             && baseRevGuid != revB)
