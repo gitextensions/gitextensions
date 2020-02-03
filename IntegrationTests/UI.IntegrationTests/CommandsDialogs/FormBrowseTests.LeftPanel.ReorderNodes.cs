@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -180,13 +181,17 @@ namespace GitExtensions.UITests.CommandsDialogs
 
         private void ValidateOrder(List<TreeNode> initialNodes, TreeNodeCollection currNodes, params int[] expectedOrder)
         {
+            Console.WriteLine("ValidateOrder entry");
             AssertListCount(currNodes, expectedOrder.Length);
             AssertListCount(initialNodes, expectedOrder.Length);
+            Console.WriteLine("ValidateOrder length OK");
 
             for (int i = 0; i < initialNodes.Count; ++i)
             {
                 currNodes[i].Should().Be(initialNodes[expectedOrder[i]]);
             }
+
+            Console.WriteLine("ValidateOrder passed");
         }
 
         private void RunRepoObjectsTreeTest(Action<RepoObjectsTree> testDriver)
@@ -195,8 +200,20 @@ namespace GitExtensions.UITests.CommandsDialogs
                 showForm: () => Assert.True(_commands.StartBrowseDialog(owner: null)),
                 runTestAsync: async form =>
                 {
+                    Console.WriteLine("RunRepoObjectsTreeTest entry");
                     await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
-                    testDriver(form.GetTestAccessor().RepoObjectsTree);
+                    Console.WriteLine("RunRepoObjectsTreeTest joinded pending ops");
+                    try
+                    {
+                        testDriver(form.GetTestAccessor().RepoObjectsTree);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"RunRepoObjectsTreeTest test failed: {ex.Demystify()}");
+                        throw;
+                    }
+
+                    Console.WriteLine("RunRepoObjectsTreeTest test passed");
                 });
         }
     }
