@@ -1,4 +1,6 @@
-﻿namespace GitUI.UserControls
+﻿using System;
+
+namespace GitUI.UserControls
 {
     public class NativeListView : System.Windows.Forms.ListView
     {

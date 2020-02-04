@@ -751,7 +751,7 @@ namespace GitUI
 
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == NativeConstants.WM_MOUSEACTIVATE)
+            if (m.Msg == NativeMethods.WM_MOUSEACTIVATE)
             {
                 _mouseEntered = !Focused;
             }
