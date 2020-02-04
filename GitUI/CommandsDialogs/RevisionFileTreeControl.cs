@@ -342,7 +342,7 @@ See the changes in the commit form.");
                     WorkingDirectory = _fullPathResolver.Resolve(item.FileName.EnsureTrailingPathSeparator())
                 }
             };
-            if (item.Guid.IsNotNullOrWhitespace())
+            if (item.ObjectId != null)
             {
                 process.StartInfo.Arguments += " -commit=" + item.Guid;
             }

@@ -879,7 +879,7 @@ namespace GitUI
                 if (revision != null)
                 {
                     string groupName;
-                    if (revision.Guid == GitRevision.CombinedDiffGuid)
+                    if (revision.ObjectId == ObjectId.CombinedDiffId)
                     {
                         groupName = CombinedDiff.Text;
                     }

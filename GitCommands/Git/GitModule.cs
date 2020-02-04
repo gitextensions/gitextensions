@@ -1044,7 +1044,7 @@ namespace GitCommands
             if (loadRefs)
             {
                 revision.Refs = GetRefs()
-                    .Where(r => r.Guid == revision.Guid)
+                    .Where(r => r.ObjectId == revision.ObjectId)
                     .ToList();
             }
 
@@ -3009,7 +3009,7 @@ namespace GitCommands
             foreach (var gitRef in gitRefs)
             {
                 if (headByRemote.TryGetValue(gitRef.Remote, out var defaultHead) &&
-                    gitRef.Guid == defaultHead.Guid)
+                    gitRef.ObjectId == defaultHead.ObjectId)
                 {
                     headByRemote.Remove(gitRef.Remote);
                 }

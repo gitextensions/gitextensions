@@ -263,7 +263,7 @@ namespace GitUI.CommandsDialogs
             bool firstIsParent = _gitRevisionTester.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents, DiffFiles.Revision);
 
             // Combined diff is a display only diff, no manipulations
-            bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item.Guid == GitRevision.CombinedDiffGuid);
+            bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item.ObjectId == ObjectId.CombinedDiffId);
             bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
             bool isAnyItemSelected = DiffFiles.SelectedItems.Any();
 
@@ -331,7 +331,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (DiffFiles.SelectedItemParent?.Guid == GitRevision.CombinedDiffGuid)
+            if (DiffFiles.SelectedItemParent?.ObjectId == ObjectId.CombinedDiffId)
             {
                 var diffOfConflict = Module.GetCombinedDiffContent(DiffFiles.Revision, DiffFiles.SelectedItem.Name,
                     DiffText.GetExtraDiffArguments(), DiffText.Encoding);
@@ -587,7 +587,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
             {
-                if (itemWithParent.ParentRevision.Guid == GitRevision.CombinedDiffGuid)
+                if (itemWithParent.ParentRevision.ObjectId == ObjectId.CombinedDiffId)
                 {
                     // CombinedDiff cannot be viewed in a difftool
                     // Disabled in menues but can be activated from shortcuts, just ignore

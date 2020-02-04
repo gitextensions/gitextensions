@@ -85,7 +85,7 @@ namespace GitUI.UserControls
                 return;
             }
 
-            if (DiffFiles.SelectedItemParent?.Guid == GitRevision.CombinedDiffGuid)
+            if (DiffFiles.SelectedItemParent?.ObjectId == ObjectId.CombinedDiffId)
             {
                 var diffOfConflict = Module.GetCombinedDiffContent(DiffFiles.Revision, DiffFiles.SelectedItem.Name,
                     DiffText.GetExtraDiffArguments(), DiffText.Encoding);
