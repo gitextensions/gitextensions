@@ -61,13 +61,12 @@ namespace GitUI.UserControls
         [CanBeNull]
         public ListViewGroupHitInfo GetGroupHitInfo(Point location)
         {
-            var info = new NativeMethods.LVHITTESTINFO
+            var info = new LVHITTESTINFO
             {
                 pt = location
             };
 
-            var handleRef = new HandleRef(this, Handle);
-            if (SendMessage(handleRef, LVM_SUBITEMHITTEST, (IntPtr)(-1), ref info) == new IntPtr(-1))
+            if (SendMessageW(Handle, LVM_SUBITEMHITTEST, (IntPtr)(-1), ref info) == new IntPtr(-1))
             {
                 return null;
             }
@@ -261,9 +260,7 @@ namespace GitUI.UserControls
                     lvgroup.Mask = ListViewGroupMask.State;
                     lvgroup.IGroupId = groupId;
 
-                    var handleRef = new HandleRef(this, Handle);
-
-                    SendMessage(handleRef, LVM_SETGROUPINFO, (IntPtr)groupId, ref lvgroup);
+                    NativeMethods.SendMessageW(Handle, LVM_SETGROUPINFO, (IntPtr)groupId, ref lvgroup);
                 }
             }
 
@@ -294,7 +291,7 @@ namespace GitUI.UserControls
         /// Call this method once after <see cref="ListView.Groups"/> collection was cleared (or created)
         /// before making any calls to <see cref="ListViewGroupCollection.Insert"/>
         ///
-        /// <see cref="ListViewGroupCollection.Add(System.Windows.Forms.ListViewGroup)"/> calls must
+        /// <see cref="ListViewGroupCollection.Add(ListViewGroup)"/> calls must
         /// not be used after calling this method
         /// </summary>
         private void BeginGroupInsertion()

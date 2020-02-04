@@ -2,8 +2,6 @@
 {
     internal static partial class NativeMethods
     {
-        public const int SB_LEFT = 6;
-
         public const int WM_USER = 0x0400;
         public const int WM_LBUTTONDOWN = 0x0201;
         public const int WM_LBUTTONUP = 0x0202;

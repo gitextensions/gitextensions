@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -9,7 +8,6 @@ using GitCommands;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.UserControls;
 using JetBrains.Annotations;
-using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.BranchTreePanel
 {
@@ -284,7 +282,7 @@ namespace GitUI.BranchTreePanel
                     // EnsureVisible leads to horizontal scrolling in some cases. We make sure to force horizontal
                     // scroll back to 0. Note that we use SendMessage rather than SetScrollPos as the former works
                     // outside of Begin/EndUpdate.
-                    NativeMethods.SendMessageInt((IntPtr)TreeViewNode.TreeView.Handle, NativeMethods.WM_HSCROLL, (IntPtr)NativeMethods.SB_LEFT, IntPtr.Zero);
+                    NativeMethods.SendMessageW(TreeViewNode.TreeView.Handle, NativeMethods.WM_HSCROLL, (IntPtr)NativeMethods.SBH.LEFT, IntPtr.Zero);
                 }
             }
         }
