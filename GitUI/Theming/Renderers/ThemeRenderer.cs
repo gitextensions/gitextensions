@@ -104,11 +104,8 @@ namespace GitUI.Theming
             {
                 var graphics = Graphics.FromHdcInternal(_hdc);
                 _originalClip = graphics.Clip;
-                if (_clip != null)
-                {
-                    graphics.SetClip((Rectangle)_clip);
-                    _clipChanged = true;
-                }
+                graphics.SetClip((Rectangle)_clip);
+                _clipChanged = true;
 
                 return graphics;
             }

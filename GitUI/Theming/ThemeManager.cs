@@ -255,8 +255,7 @@ namespace GitUI.Theming
 
             foreach (Form form in Application.OpenForms)
             {
-                NativeMethods.SendMessageInt(form.Handle, NativeConstants.WM_SYSCOLORCHANGE,
-                    IntPtr.Zero, IntPtr.Zero);
+                NativeMethods.SendMessageW(form.Handle, NativeMethods.WM_SYSCOLORCHANGE);
             }
         }
     }
