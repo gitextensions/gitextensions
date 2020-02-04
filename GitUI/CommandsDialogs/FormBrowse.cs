@@ -1734,7 +1734,10 @@ namespace GitUI.CommandsDialogs
 
                     menuItemCategory.DropDownItems.Add(item);
 
-                    item.Click += delegate { ChangeWorkingDir(r.Repo.Path); };
+                    item.Click += (obj, args) =>
+                    {
+                        OpenRepo(r.Repo.Path);
+                    };
 
                     if (r.Repo.Path != r.Caption)
                     {
@@ -1798,13 +1801,37 @@ namespace GitUI.CommandsDialogs
 
                 container.DropDownItems.Add(item);
 
-                item.Click += (hs, he) => ChangeWorkingDir(repo.Path);
+                item.Click += (obj, args) =>
+                {
+                    OpenRepo(repo.Path);
+                };
 
                 if (repo.Path != caption)
                 {
                     item.ToolTipText = repo.Path;
                 }
             }
+        }
+
+        private void OpenRepo(string repoPath)
+        {
+            if (ModifierKeys != Keys.Control)
+            {
+                ChangeWorkingDir(repoPath);
+                return;
+            }
+
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = AppSettings.GetGitExtensionsFullPath(),
+                    Arguments = "browse",
+                    WorkingDirectory = repoPath,
+                    UseShellExecute = false
+                }
+            };
+            process.Start();
         }
 
         public void SetWorkingDir(string path)
