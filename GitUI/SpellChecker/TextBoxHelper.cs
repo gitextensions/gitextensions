@@ -33,18 +33,18 @@ namespace GitUI.SpellChecker
 
             var rect = new NativeMethods.RECT
             {
-                Top = 0,
-                Bottom = (int)AnInch,
-                Left = 0,
-                Right = 10000000 ////(int)(rtb.Width * anInch + 20);
+                top = 0,
+                bottom = (int)AnInch,
+                left = 0,
+                right = 10000000 ////(int)(rtb.Width * anInch + 20);
             };
 
             var rectPage = new NativeMethods.RECT
             {
-                Top = 0,
-                Bottom = (int)AnInch,
-                Left = 0,
-                Right = 10000000 ////(int)(rtb.Width * anInch + 20);
+                top = 0,
+                bottom = (int)AnInch,
+                left = 0,
+                right = 10000000 ////(int)(rtb.Width * anInch + 20);
             };
 
             var canvas = Graphics.FromHwnd(rtb.Handle);
@@ -64,7 +64,7 @@ namespace GitUI.SpellChecker
             canvas.ReleaseHdc(canvasHdc);
             canvas.Dispose();
 
-            return (int)((formatRange.rc.Bottom - formatRange.rc.Top) / AnInch);
+            return (int)((formatRange.rc.bottom - formatRange.rc.top) / AnInch);
         }
     }
 }

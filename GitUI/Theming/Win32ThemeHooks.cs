@@ -192,7 +192,7 @@ namespace GitUI.Theming
         private static int DrawThemeBackgroundHook(
             IntPtr htheme, IntPtr hdc,
             int partid, int stateid,
-            NativeMethods.RECT prect, NativeMethods.RECT pcliprect)
+            ref NativeMethods.RECT prect, ref NativeMethods.RECT pcliprect)
         {
             if (!BypassThemeRenderers)
             {
@@ -203,7 +203,7 @@ namespace GitUI.Theming
                 }
             }
 
-            return _drawThemeBackgroundBypass(htheme, hdc, partid, stateid, prect, pcliprect);
+            return _drawThemeBackgroundBypass(htheme, hdc, partid, stateid, ref prect, ref pcliprect);
         }
 
         private static int GetThemeColorHook(IntPtr htheme, int ipartid, int istateid, int ipropid,
