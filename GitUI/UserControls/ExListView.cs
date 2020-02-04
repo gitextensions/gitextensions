@@ -230,7 +230,7 @@ namespace GitUI.UserControls
                 }
 
                 var listViewGroup = Groups[groupIndex];
-                SetGrpState(listViewGroup, ListViewGroupState.Collapsible);
+                SetGrpState(listViewGroup, LVGS.Collapsible);
                 Invalidate();
 
                 int GetGroupIndex()
@@ -246,7 +246,7 @@ namespace GitUI.UserControls
                     return index - 1 + _minGroupInsertionIndex;
                 }
 
-                void SetGrpState(ListViewGroup grp, ListViewGroupState state)
+                unsafe void SetGrpState(ListViewGroup grp, LVGS state)
                 {
                     int groupId = GetGroupId(grp);
                     if (groupId < 0)
@@ -254,11 +254,11 @@ namespace GitUI.UserControls
                         groupId = Groups.IndexOf(grp) - _minGroupInsertionIndex;
                     }
 
-                    var lvgroup = new NativeMethods.LVGROUP();
-                    lvgroup.CbSize = Marshal.SizeOf(lvgroup);
-                    lvgroup.State = state;
-                    lvgroup.Mask = ListViewGroupMask.State;
-                    lvgroup.IGroupId = groupId;
+                    var lvgroup = new LVGROUPW();
+                    lvgroup.cbSize = (uint)sizeof(LVGROUPW);
+                    lvgroup.state = state;
+                    lvgroup.mask = LVGF.STATE;
+                    lvgroup.iGroupId = groupId;
 
                     NativeMethods.SendMessageW(Handle, LVM_SETGROUPINFO, (IntPtr)groupId, ref lvgroup);
                 }

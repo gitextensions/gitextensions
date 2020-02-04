@@ -3,7 +3,7 @@
     internal static partial class NativeMethods
     {
         [Flags]
-        public enum ListViewGroupState : uint
+        public enum LVGS : uint
         {
             /// <summary>
             /// Groups are expanded, the group name is displayed,
