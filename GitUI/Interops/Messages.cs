@@ -2,7 +2,6 @@
 {
     internal static partial class NativeMethods
     {
-        public const int SB_VERT = 1;
         public const int SB_LEFT = 6;
 
         public const int WM_USER = 0x0400;

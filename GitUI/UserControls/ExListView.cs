@@ -207,7 +207,7 @@ namespace GitUI.UserControls
                         return;
                 }
 
-                newValue = newValue ?? GetScrollPos(Handle, SB_VERT);
+                newValue = newValue ?? GetScrollPos(Handle, SB.VERT);
                 Scroll?.Invoke(this, new ScrollEventArgs(type, newValue.Value));
 
                 short LowWord(long number) =>
