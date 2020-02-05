@@ -16,7 +16,7 @@ environment:
   ARCHIVE_WITH_PDB: TRUE
   GE_TEST_SLEEP_SECONDS_ON_HANG: 0
   GE_TEST_LAUNCH_DEBUGGER_ON_HANG: 0
-  TEST_RUN_COUNT: 1
+  TEST_RUN_COUNT: 6
   IGNORE_TEST_RESULT: FALSE
 
 init:
@@ -98,7 +98,7 @@ test_script:
             }
         }
     }
-    if ($testErrorsTotal -ne 0  -and  $env:IGNORE_TEST_RESULT -ne "true") { $host.SetShouldExit($testErrorsTotal) }
+    if ($testErrorsTotal -ne 0) { $host.SetShouldExit($testErrorsTotal) }
 
 
 # scripts to run after tests
