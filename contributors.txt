@@ -113,3 +113,4 @@ YYYY/MM/DD, github id, Full name, email
 2020/01/02, c3er, Christian Dreier, flipper.x3r(at)googlemail.com
 2020/01/04, MarkJ74, Mark Jackson, markj74(at)outlook.com
 2020/01/07, asherber, Aaron Sherber, aaron(at)sherber.com
+2020/02/05, azarkevich, Sergey Azarkevich, azarkevich/at/gmail.com
