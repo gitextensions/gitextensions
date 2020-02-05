@@ -110,7 +110,7 @@ namespace AzureDevOpsIntegration
             return build.Definition.Name;
         }
 
-        public async Task<IEnumerable<Build>> QueryFinishedBuildsAsync(string buildDefinitionsToQuery, DateTime? sinceDate)
+        public async Task<IList<Build>> QueryFinishedBuildsAsync(string buildDefinitionsToQuery, DateTime? sinceDate)
         {
             string queryUrl = QueryForBuildStatus(buildDefinitionsToQuery, "completed");
             queryUrl += sinceDate.HasValue
@@ -121,11 +121,12 @@ namespace AzureDevOpsIntegration
             return finishedBuilds;
         }
 
-        public async Task<IEnumerable<Build>> QueryRunningBuildsAsync(string buildDefinitionsToQuery)
+        public async Task<IList<Build>> QueryRunningBuildsAsync(string buildDefinitionsToQuery)
         {
             string queryUrl = QueryForBuildStatus(buildDefinitionsToQuery, "cancelling,inProgress,none,notStarted,postponed") + "&api-version=2.0";
 
             var runningBuilds = (await HttpGetAsync<ListWrapper<Build>>(queryUrl)).Value;
+
             return runningBuilds;
         }
 
