@@ -179,7 +179,7 @@ namespace AzureDevOpsIntegration
             var buildInfo = new BuildInfo
             {
                 Id = buildDetail.BuildNumber,
-                StartDate = buildDetail.StartTime ?? DateTime.Now.AddHours(1),
+                StartDate = buildDetail.StartTime ?? DateTime.MinValue,
                 Status = buildDetail.IsInProgress ? BuildInfo.BuildStatus.InProgress : MapResult(buildDetail.Result),
                 Description = duration + " " + buildDetail.BuildNumber,
                 Tooltip = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(buildDetail.IsInProgress ? buildDetail.Status : buildDetail.Result) + Environment.NewLine + duration + Environment.NewLine + buildDetail.BuildNumber,
