@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
@@ -28,13 +29,16 @@ namespace GitCommandsTests
             ((Action)(() => _provider.LoadChildren(null))).Should().Throw<ArgumentNullException>();
         }
 
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase(" ")]
-        public void LoadChildren_should_throw_if_guid_not_supplied(string guid)
+        [Test]
+        public void LoadChildren_should_throw_if_ObjectId_is_null()
         {
             var item = Substitute.For<IGitItem>();
-            item.Guid.Returns(guid);
+
+            // ObjectId checks input, use Try to get an illegal value
+            ObjectId objectId;
+            var sourceBytes = Encoding.ASCII.GetBytes("");
+            ObjectId.TryParseAsciiHexBytes(sourceBytes, 0, out objectId);
+            item.ObjectId.Returns(objectId);
 
             ((Action)(() => _provider.LoadChildren(item))).Should().Throw<ArgumentException>();
         }
