@@ -226,16 +226,25 @@ Detail of the error:");
                     FilterRunningBuilds(await _apiClient.QueryRunningBuildsAsync(_buildDefinitions)) :
                     await _apiClient.QueryFinishedBuildsAsync(_buildDefinitions, sinceDate);
 
-                foreach (var build in builds)
+                if (running)
                 {
-                    var buildInfo = CreateBuildInfo(build);
-                    observer.OnNext(buildInfo);
-                    if (!running)
+                    foreach (var build in builds)
                     {
+                        observer.OnNext(CreateBuildInfo(build));
+                    }
+                }
+                else
+                {
+                    var buildsByCommit = builds.GroupBy(b => b.SourceVersion);
+                    foreach (var buildsForACommit in buildsByCommit)
+                    {
+                        var buildToDisplay = buildsForACommit.OrderByDescending(b => b.FinishTime).First();
+                        var buildInfo = CreateBuildInfo(buildToDisplay);
+                        observer.OnNext(buildInfo);
                         CacheAzureDevOps.FinishedBuilds.Add(buildInfo);
-                        if (build.FinishTime.HasValue && build.FinishTime.Value >= CacheAzureDevOps.LastCall)
+                        if (buildToDisplay.FinishTime.HasValue && buildToDisplay.FinishTime.Value >= CacheAzureDevOps.LastCall)
                         {
-                            CacheAzureDevOps.LastCall = build.FinishTime.Value.AddSeconds(1);
+                            CacheAzureDevOps.LastCall = buildToDisplay.FinishTime.Value.AddSeconds(1);
                         }
                     }
                 }
