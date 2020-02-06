@@ -7,11 +7,13 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using AzureDevOpsIntegration.Settings;
 using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft.VisualStudio.Threading;
+using ResourceManager;
 
 namespace AzureDevOpsIntegration
 {
@@ -48,6 +50,17 @@ namespace AzureDevOpsIntegration
         // * there is only one instance at every given time (link to the revision grid and recreated on revision grid refresh)
         // * data is created by the first instance and used in readonly by the later instances
         private static CacheAzureDevOps CacheAzureDevOps = null;
+        private static string ProjectOnErrorKey = null;
+
+        private readonly TranslationString _buildIntegrationErrorCaption = new TranslationString("Azure DevOps error");
+        private readonly TranslationString _badTokenErrorMessage = new TranslationString(@"The personal access token is invalid or has expired. Update it in the 'Build server integration' settings.
+
+The build server integration has been disabled for this session.");
+        private readonly TranslationString _genericErrorMessage = new TranslationString(@"An error occured when requesting build server results.
+
+As a consequence, the build server integration has been disabled for this session.
+
+Detail of the error:");
         private string CacheKey => _projectUrl + "|" + _settings.BuildDefinitionFilter;
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<ObjectId, bool> isCommitInRevisionGrid = null)
@@ -122,15 +135,41 @@ namespace AzureDevOpsIntegration
             {
                 if (_buildDefinitions == null)
                 {
-                    _buildDefinitions = await _buildDefinitionsTask.JoinAsync();
-
-                    if (_buildDefinitions == null)
+                    try
                     {
-                        observer.OnCompleted();
+                        _buildDefinitions = await _buildDefinitionsTask.JoinAsync();
+
+                        if (_buildDefinitions == null)
+                        {
+                            observer.OnCompleted();
+                            return;
+                        }
+
+                        CacheAzureDevOps = new CacheAzureDevOps { Id = CacheKey, BuildDefinitions = _buildDefinitions };
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        ManageError(_badTokenErrorMessage.Text);
                         return;
                     }
+                    catch (Exception ex)
+                    {
+                        ManageError(_genericErrorMessage.Text + ex.Message);
+                        return;
+                    }
+                }
 
-                    CacheAzureDevOps = new CacheAzureDevOps { Id = CacheKey, BuildDefinitions = _buildDefinitions };
+                void ManageError(string errorMessage)
+                {
+                    _apiClient = null;
+                    observer.OnNext(new BuildInfo { CommitHashList = new[] { ObjectId.WorkTreeId }, Description = errorMessage, Status = BuildInfo.BuildStatus.Failure });
+                    observer.OnCompleted();
+
+                    if (ProjectOnErrorKey == null || ProjectOnErrorKey != CacheKey)
+                    {
+                        ProjectOnErrorKey = CacheKey;
+                        MessageBox.Show(errorMessage, _buildIntegrationErrorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
 
                 if (_buildDefinitions == null)
