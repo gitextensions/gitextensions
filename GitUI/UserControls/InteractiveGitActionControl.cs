@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using ResourceManager;
@@ -98,7 +99,8 @@ namespace GitUI.UserControls
             }
 
             IconBox.Image = _hasConflicts ? Properties.Images.SolveMerge : Properties.Resources.information;
-            BackColor = _hasConflicts ? System.Drawing.Color.Orange : System.Drawing.Color.LightSkyBlue;
+            BackColor = (_hasConflicts ? System.Drawing.Color.Orange : System.Drawing.Color.LightSkyBlue).AdaptBackColor();
+            this.SetForeColorForBackColor();
 
             string actionStr = "";
 
