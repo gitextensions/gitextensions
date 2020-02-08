@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommonTestUtils;
 using FluentAssertions;
+using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
 using ICSharpCode.TextEditor;
@@ -24,6 +25,9 @@ namespace GitExtensions.UITests.CommandsDialogs
         [SetUp]
         public void SetUp()
         {
+            // Avoid auto-completion popups.
+            AppSettings.ProvideAutocompletion = false;
+
             if (_referenceRepository == null)
             {
                 _referenceRepository = new ReferenceRepository();
