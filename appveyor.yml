@@ -81,18 +81,18 @@ test_script:
             | foreach {
                 $result = $_.Matches.Groups
                 #$result[0].Value
-                #$total  = $result[1].Value
-                #$passed = $result[4].Value
+                $total  = $result[1].Value
+                $passed = $result[4].Value
                 $failed = $result[5].Value
-                #$notPassed = $total - $passed
+                $notPassed = $total - $passed
                 $testErrors = $failed
                 $testName = $resultFilePath.Split('\\')[-3]
                 $artifactName = "TestResult#${testRun}.${testErrors}err.${testName}"
                 Push-AppveyorArtifact $resultFilePath -FileName "${artifactName}.xml"
-                if ($testErrors -ne 0) {
+                if ($notPassed -ne 0) {
                     $logFile = Get-ChildItem -recurse artifacts\$testname*.log
                     Get-Content $logFile
-                    Push-AppveyorArtifact $logFile -FileName "${artifactName}.log"
+                    if ($testErrors -ne 0) { Push-AppveyorArtifact $logFile -FileName "${artifactName}.log" }
                 }
                 $testErrorsTotal += $testErrors
             }
