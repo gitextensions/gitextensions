@@ -179,7 +179,9 @@ namespace GitUITests
 
             var awaitable = form.SwitchToMainThreadAsync();
 
+#pragma warning disable VSTHRD103 // Call async methods when in an async method (this is intentional for the test)
             ThreadHelper.JoinableTaskFactory.Run(async () =>
+#pragma warning restore VSTHRD103 // Call async methods when in an async method
             {
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 form.Dispose();
