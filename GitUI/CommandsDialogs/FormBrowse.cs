@@ -2036,18 +2036,21 @@ namespace GitUI.CommandsDialogs
             UICommands.StartCreatePullRequest(this, repoHost);
         }
 
-        private async void _addUpstreamRemoteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void _addUpstreamRemoteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!TryGetRepositoryHost(out var repoHost))
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                return;
-            }
+                if (!TryGetRepositoryHost(out var repoHost))
+                {
+                    return;
+                }
 
-            var remoteName = await repoHost.AddUpstreamRemoteAsync();
-            if (!string.IsNullOrEmpty(remoteName))
-            {
-                UICommands.StartPullDialogAndPullImmediately(this, null, remoteName, AppSettings.PullAction.Fetch);
-            }
+                var remoteName = await repoHost.AddUpstreamRemoteAsync();
+                if (!string.IsNullOrEmpty(remoteName))
+                {
+                    UICommands.StartPullDialogAndPullImmediately(this, null, remoteName, AppSettings.PullAction.Fetch);
+                }
+            }).FileAndForget();
         }
 
         private bool TryGetRepositoryHost(out IRepositoryHostPlugin repoHost)

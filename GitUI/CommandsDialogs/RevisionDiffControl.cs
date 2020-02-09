@@ -341,7 +341,7 @@ namespace GitUI.CommandsDialogs
                     diffOfConflict = Strings.UninterestingDiffOmitted;
                 }
 
-                DiffText.ViewPatch(DiffFiles.SelectedItem.Name,
+                await DiffText.ViewPatchAsync(DiffFiles.SelectedItem.Name,
                     text: diffOfConflict,
                     openWithDifftool: () => firstToSelectedToolStripMenuItem.PerformClick(),
                     isText: DiffFiles.SelectedItem.IsSubmodule);
@@ -353,15 +353,12 @@ namespace GitUI.CommandsDialogs
                 openWithDifftool: () => firstToSelectedToolStripMenuItem.PerformClick());
         }
 
-        private async void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
+        private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
-            try
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await ShowSelectedFileDiffAsync();
-            }
-            catch (OperationCanceledException)
-            {
-            }
+            }).FileAndForget();
         }
 
         private void DiffFiles_DoubleClick(object sender, EventArgs e)
@@ -407,15 +404,12 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private async void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
+        private void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
-            try
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await ShowSelectedFileDiffAsync();
-            }
-            catch (OperationCanceledException)
-            {
-            }
+            }).FileAndForget();
         }
 
         private void diffShowInFileTreeToolStripMenuItem_Click(object sender, EventArgs e)

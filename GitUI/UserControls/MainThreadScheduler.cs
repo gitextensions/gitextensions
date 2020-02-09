@@ -52,7 +52,9 @@ namespace GitUI.UserControls
                         }
                         else
                         {
+#pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks (t is a completed task)
                             return t;
+#pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
                         }
                     },
                     CancellationToken.None,

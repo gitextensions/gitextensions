@@ -132,14 +132,20 @@ namespace GitUI
             txtLookFor.Focus();
         }
 
-        private async void btnFindPrevious_Click(object sender, EventArgs e)
+        private void btnFindPrevious_Click(object sender, EventArgs e)
         {
-            await FindNextAsync(false, true, _textNotFoundString.Text);
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await FindNextAsync(false, true, _textNotFoundString.Text);
+            }).FileAndForget();
         }
 
-        private async void btnFindNext_Click(object sender, EventArgs e)
+        private void btnFindNext_Click(object sender, EventArgs e)
         {
-            await FindNextAsync(false, false, _textNotFoundString.Text);
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await FindNextAsync(false, false, _textNotFoundString.Text);
+            }).FileAndForget();
         }
 
         [ItemCanBeNull]
@@ -300,15 +306,18 @@ namespace GitUI
             Close();
         }
 
-        private async void btnReplace_Click(object sender, EventArgs e)
+        private void btnReplace_Click(object sender, EventArgs e)
         {
-            SelectionManager sm = _editor.ActiveTextAreaControl.SelectionManager;
-            if (string.Equals(sm.SelectedText, txtLookFor.Text, StringComparison.OrdinalIgnoreCase))
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                InsertText(txtReplaceWith.Text);
-            }
+                SelectionManager sm = _editor.ActiveTextAreaControl.SelectionManager;
+                if (string.Equals(sm.SelectedText, txtLookFor.Text, StringComparison.OrdinalIgnoreCase))
+                {
+                    InsertText(txtReplaceWith.Text);
+                }
 
-            await FindNextAsync(false, _lastSearchWasBackward, _textNotFoundString.Text);
+                await FindNextAsync(false, _lastSearchWasBackward, _textNotFoundString.Text);
+            }).FileAndForget();
         }
 
         private void btnReplaceAll_Click(object sender, EventArgs e)

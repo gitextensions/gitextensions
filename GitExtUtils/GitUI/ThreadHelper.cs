@@ -99,7 +99,9 @@ namespace GitUI
                 {
                     try
                     {
+#pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks (As a fire-and-forget continuation, deadlocks can't happen.)
                         await task.ConfigureAwait(false);
+#pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
                     }
                     catch (OperationCanceledException)
                     {
