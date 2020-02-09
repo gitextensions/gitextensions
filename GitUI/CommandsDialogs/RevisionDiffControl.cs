@@ -341,7 +341,7 @@ namespace GitUI.CommandsDialogs
                     diffOfConflict = Strings.UninterestingDiffOmitted;
                 }
 
-                DiffText.ViewPatch(DiffFiles.SelectedItem.Name,
+                await DiffText.ViewPatchAsync(DiffFiles.SelectedItem.Name,
                     text: diffOfConflict,
                     openWithDifftool: () => firstToSelectedToolStripMenuItem.PerformClick(),
                     isText: DiffFiles.SelectedItem.IsSubmodule);
