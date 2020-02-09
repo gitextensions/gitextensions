@@ -358,7 +358,9 @@ namespace TeamCityIntegration
 
             return _httpClient.GetAsync(FormatRelativePath(restServicePath), HttpCompletionOption.ResponseHeadersRead, cancellationToken)
                              .ContinueWith(
+#pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks (The task is completed)
                                  task => GetStreamFromHttpResponseAsync(task, restServicePath, cancellationToken),
+#pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
                                  cancellationToken,
                                  TaskContinuationOptions.AttachedToParent,
                                  TaskScheduler.Current)
