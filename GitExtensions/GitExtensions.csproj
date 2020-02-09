@@ -48,6 +48,31 @@
     <Copy SourceFiles="@(Translations)" DestinationFolder="$(TargetDir)Translation" ContinueOnError="false" />
   </Target>
 
+  <Target Name="EnumeratePlugins" AfterTargets="AfterBuild">
+    <PropertyGroup>
+      <PluginsFolder>$(TargetDir)Plugins</PluginsFolder>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folders Include="$([System.IO.Directory]::GetDirectories(&quot;$(PluginsFolder)&quot;))" />
+      <OnlyDirs Include="@(Folders->Replace($(TargetDir), ''))"/>
+    </ItemGroup>
+
+    <PropertyGroup>
+      <ProbingPrivatePath>Plugins;@(OnlyDirs)</ProbingPrivatePath>
+      <TargetAppConfig>@(AppConfigFileDestination)</TargetAppConfig>
+
+      <Namespace>
+        <Namespace Prefix="ns" Uri="urn:schemas-microsoft-com:asm.v1" />
+      </Namespace>
+    </PropertyGroup>
+
+    <XmlPoke XmlInputPath="$(TargetAppConfig.ToString())"
+            Namespaces="$(Namespace)"
+            Query="configuration/runtime/ns:assemblyBinding/ns:probing/@privatePath" 
+            Value="$(ProbingPrivatePath.ToString())" />
+  </Target>
+
   <Target Condition="Exists('$(VCTargetsPath)\Microsoft.Cpp.Default.props')" Name="BuildEasyHookDll" AfterTargets="AfterBuild">
     <MSBuild Projects="$(SolutionDir)\Externals\EasyHook\EasyHookDll\EasyHookDll.vcxproj" Properties="Configuration=Release;Platform=x64" />
     <MSBuild Projects="$(SolutionDir)\Externals\EasyHook\EasyHookDll\EasyHookDll.vcxproj" Properties="Configuration=Release;Platform=Win32" />
