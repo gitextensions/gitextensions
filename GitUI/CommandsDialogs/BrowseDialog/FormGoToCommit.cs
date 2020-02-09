@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces;
@@ -38,8 +39,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void FormGoToCommit_Load(object sender, EventArgs e)
         {
-            LoadTagsAsync();
-            LoadBranchesAsync();
+            LoadTagsAsync().FileAndForget();
+            LoadBranchesAsync().FileAndForget();
             SetCommitExpressionFromClipboard();
         }
 
@@ -73,38 +74,32 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Process.Start(@"https://git-scm.com/docs/git-rev-parse#_specifying_revisions");
         }
 
-        private void LoadTagsAsync()
+        private Task LoadTagsAsync()
         {
             comboBoxTags.Text = Strings.LoadingData;
-            ThreadHelper.JoinableTaskFactory.RunAsync(() =>
-            {
-                return _tagsLoader.LoadAsync(
-                    () => Module.GetTagRefs(GitModule.GetTagRefsSortOrder.ByCommitDateDescending).ToList(),
-                    list =>
-                    {
-                        comboBoxTags.Text = string.Empty;
-                        comboBoxTags.DataSource = list;
-                        comboBoxTags.DisplayMember = nameof(IGitRef.LocalName);
-                        SetSelectedRevisionByFocusedControl();
-                    });
-            });
+            return _tagsLoader.LoadAsync(
+                () => Module.GetTagRefs(GitModule.GetTagRefsSortOrder.ByCommitDateDescending).ToList(),
+                list =>
+                {
+                    comboBoxTags.Text = string.Empty;
+                    comboBoxTags.DataSource = list;
+                    comboBoxTags.DisplayMember = nameof(IGitRef.LocalName);
+                    SetSelectedRevisionByFocusedControl();
+                });
         }
 
-        private void LoadBranchesAsync()
+        private Task LoadBranchesAsync()
         {
             comboBoxBranches.Text = Strings.LoadingData;
-            ThreadHelper.JoinableTaskFactory.RunAsync(() =>
-            {
-                return _branchesLoader.LoadAsync(
-                    () => Module.GetRefs(false).ToList(),
-                    list =>
-                    {
-                        comboBoxBranches.Text = string.Empty;
-                        comboBoxBranches.DataSource = list;
-                        comboBoxBranches.DisplayMember = nameof(IGitRef.LocalName);
-                        SetSelectedRevisionByFocusedControl();
-                    });
-            });
+            return _branchesLoader.LoadAsync(
+                () => Module.GetRefs(false).ToList(),
+                list =>
+                {
+                    comboBoxBranches.Text = string.Empty;
+                    comboBoxBranches.DataSource = list;
+                    comboBoxBranches.DisplayMember = nameof(IGitRef.LocalName);
+                    SetSelectedRevisionByFocusedControl();
+                });
         }
 
         private static IReadOnlyList<IGitRef> DataSourceToGitRefs(ComboBox cb)
