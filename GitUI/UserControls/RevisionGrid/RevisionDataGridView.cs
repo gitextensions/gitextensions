@@ -472,12 +472,13 @@ namespace GitUI.UserControls.RevisionGrid
                     try
                     {
                         using (var timeoutTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(200)))
+                        using (var linkedCancellation = timeoutTokenSource.Token.CombineWith(cancellationToken))
                         {
                             timeoutToken = timeoutTokenSource.Token;
-                            (backgroundOperation, backgroundOperationCancellation) = await _backgroundQueue.DequeueAsync(timeoutToken);
+                            (backgroundOperation, backgroundOperationCancellation) = await _backgroundQueue.DequeueAsync(linkedCancellation.Token);
                         }
                     }
-                    catch (OperationCanceledException) when (timeoutToken.IsCancellationRequested)
+                    catch (OperationCanceledException) when (timeoutToken.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
                     {
                         // No work was received from the queue within the timeout.
                         if (RowCount < _revisionGraph.Count)
