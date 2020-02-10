@@ -70,8 +70,11 @@ namespace GitExtensions.UITests.CommandsDialogs
         }
 
         [TearDown]
-        public void TearDown()
+        public async Task TearDownAsync()
         {
+            // Wait for pending operations so the repository is not deleted while operations run in the background
+            await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+
             //// _provider is a singleton and must not be disposed
             _repo1.Dispose();
             _repo2.Dispose();
