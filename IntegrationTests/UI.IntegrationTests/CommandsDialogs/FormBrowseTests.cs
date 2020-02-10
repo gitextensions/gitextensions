@@ -91,11 +91,10 @@ namespace GitExtensions.UITests.CommandsDialogs
         private void RunFormTest(Func<FormBrowse, Task> testDriverAsync)
         {
             UITest.RunForm(
-                () =>
-                {
-                    Assert.True(_commands.StartBrowseDialog(owner: null));
-                },
-                testDriverAsync);
+                showForm: () => _commands.StartBrowseDialog(owner: null).Should().BeTrue(),
+                testDriverAsync,
+                joinPendingOperationsAfterwards: true // so the repository is not deleted while operations run in the background
+            );
         }
     }
 }

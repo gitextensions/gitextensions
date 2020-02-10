@@ -32,7 +32,8 @@ namespace GitExtensions.UITests
 
         public static void RunForm<T>(
             Action showForm,
-            Func<T, Task> runTestAsync)
+            Func<T, Task> runTestAsync,
+            bool joinPendingOperationsAfterwards = false)
             where T : Form
         {
             // If form.Dipose was called by the async test task, closing the window would be done in a strange order.
@@ -73,25 +74,35 @@ namespace GitExtensions.UITests
                         }
                         finally
                         {
-                            // Try to close all open Forms in order to let return the blocking Application.Run(form)
-                            // which might have been called by showForm() below.
-                            for (int trial = 0; trial < 3 && Application.OpenForms.Count > 0; ++trial)
+                            try
                             {
-                                Application.DoEvents();
-                                Application.OpenForms.OfType<Form>().ForEach(f =>
+                                // Try to close all open Forms in order to let return the blocking Application.Run(form)
+                                // which might have been called by showForm() below.
+                                for (int trial = 0; trial < 3 && Application.OpenForms.Count > 0; ++trial)
                                 {
-                                    try
+                                    Application.DoEvents();
+                                    Application.OpenForms.OfType<Form>().ForEach(f =>
                                     {
-                                        Log($"RunForm<T> async test CLOSING DANGLING FORM {f.GetType().FullName} {f.Name}");
-                                        f.Close();
-                                        Log("RunForm<T> async test dangling form closed");
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        // ignore
-                                        Log("RunForm<T> async test IGNORING EXCEPTION from closing dangling form", ex);
-                                    }
-                                });
+                                        try
+                                        {
+                                            Log($"RunForm<T> async test CLOSING DANGLING FORM {f.GetType().FullName} {f.Name}");
+                                            f.Close();
+                                            Log("RunForm<T> async test dangling form closed");
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            // ignore
+                                            Log("RunForm<T> async test IGNORING EXCEPTION from closing dangling form", ex);
+                                        }
+                                    });
+                                }
+                            }
+                            finally
+                            {
+                                if (joinPendingOperationsAfterwards)
+                                {
+                                    await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                                }
                             }
                         }
                     }

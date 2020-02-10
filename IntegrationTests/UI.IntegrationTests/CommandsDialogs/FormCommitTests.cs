@@ -320,7 +320,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         private void RunFormTest(Func<FormCommit, Task> testDriverAsync, CommitKind commitKind = CommitKind.Normal)
         {
             UITest.RunForm(
-                () =>
+                showForm: () =>
                 {
                     switch (commitKind)
                     {
@@ -340,7 +340,9 @@ namespace GitExtensions.UITests.CommandsDialogs
                             throw new ArgumentException($"Unsupported commit kind: {commitKind}", nameof(commitKind));
                     }
                 },
-                testDriverAsync);
+                testDriverAsync,
+                joinPendingOperationsAfterwards: true // so the repository is not deleted while operations run in the background
+            );
         }
     }
 
