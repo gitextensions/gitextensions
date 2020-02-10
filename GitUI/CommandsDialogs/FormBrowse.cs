@@ -339,7 +339,11 @@ namespace GitUI.CommandsDialogs
                         // fall back to operation without info in the button
                         UpdateCommitButtonAndGetBrush(null, showCount: false);
                         RevisionGrid.UpdateArtificialCommitCount(null);
-                        TaskbarManager.Instance.SetOverlayIcon(null, "");
+                        if (EnvUtils.RunningOnWindowsWithMainWindow())
+                        {
+                            TaskbarManager.Instance.SetOverlayIcon(null, "");
+                        }
+
                         lastBrush = null;
                     }
                 };
@@ -360,7 +364,8 @@ namespace GitUI.CommandsDialogs
 
                     if (countToolbar || countArtificial)
                     {
-                        if (!ReferenceEquals(brush, lastBrush))
+                        if (!ReferenceEquals(brush, lastBrush)
+                            && EnvUtils.RunningOnWindowsWithMainWindow())
                         {
                             lastBrush = brush;
 
