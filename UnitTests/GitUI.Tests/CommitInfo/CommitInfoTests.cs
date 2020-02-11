@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -24,7 +25,7 @@ namespace GitUITests.CommitInfo
         private GitUI.CommitInfo.CommitInfo _commitInfo;
 
         [SetUp]
-        public void SetUp()
+        public async Task SetUpAsync()
         {
             if (_referenceRepository == null)
             {
@@ -55,6 +56,9 @@ namespace GitUITests.CommitInfo
             {
                 UICommandsSource = uiCommandsSource
             };
+
+            // Wait for pending operations so the Contol is loaded completely before testing it
+            await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
         }
 
         [TearDown]
