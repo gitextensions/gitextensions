@@ -130,6 +130,31 @@ namespace GitExtensions.UITests
             }
         }
 
+        public static void RunControl<T>(
+            Func<Form, T> createControl,
+            Func<T, Task> runTestAsync,
+            bool joinPendingOperationsAfterwards = false)
+            where T : Control
+        {
+            T control = null;
+            try
+            {
+                RunForm<Form>(
+                    showForm: () =>
+                    {
+                        var form = new Form { Text = $"Test {typeof(T).Name}" };
+                        control = createControl(form);
+                        Application.Run(form);
+                    },
+                    runTestAsync: form => runTestAsync(control),
+                    joinPendingOperationsAfterwards);
+            }
+            finally
+            {
+                control?.Dispose();
+            }
+        }
+
         public static LoggingService Log(string message)
             => ConfigureJoinableTaskFactoryAttribute.LoggingService?.Log(message, debugOnly: false);
 
