@@ -10,7 +10,7 @@ namespace GitUI.Theming
         protected override string Clsid { get; } = "Scrollbar";
 
         public override int RenderBackground(IntPtr hdc, int partId, int stateId, Rectangle prect,
-            NativeMethods.RECT pcliprect)
+            NativeMethods.RECTCLS pcliprect)
         {
             using (var ctx = CreateRenderContext(hdc, pcliprect))
             {

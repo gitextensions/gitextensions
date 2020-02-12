@@ -37,5 +37,22 @@ namespace System
             public Size Size
                 => new Size(right - left, bottom - top);
         }
+
+        /// <summary>
+        /// Theming interop requires RECT to be class
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public class RECTCLS
+        {
+#pragma warning disable 649
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+#pragma warning restore 649
+
+            public static implicit operator Rectangle(RECTCLS r)
+                => Rectangle.FromLTRB(r.Left, r.Top, r.Right, r.Bottom);
+        }
     }
 }
