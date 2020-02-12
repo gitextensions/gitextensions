@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -178,16 +177,18 @@ namespace GitExtensions.UITests.Script
             _exampleScript.Arguments = "/c echo {sHash}";
             _referenceRepository.CheckoutRevision();
 
-            RunFormTest(formBrowse =>
+            RunFormTest(async formBrowse =>
             {
                 // wait until the revisions are loaded
-                while (formBrowse.RevisionGridControl.LatestSelectedRevision == null)
-                {
-                    Application.DoEvents();
-                }
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-                var result = ScriptRunner.RunScript(null, _referenceRepository.Module, _keyOfExampleScript, _uiCommands, formBrowse.RevisionGridControl);
+                Assert.AreEqual(1, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
 
+                string errorMessage = null;
+                var result = ScriptRunner.RunScript(formBrowse, _referenceRepository.Module, _keyOfExampleScript, _uiCommands,
+                                                    formBrowse.RevisionGridControl, error => errorMessage = error);
+
+                errorMessage.Should().BeNull();
                 result.Should().BeEquivalentTo(new CommandStatus(executed: true, needsGridRefresh: false));
             });
         }
