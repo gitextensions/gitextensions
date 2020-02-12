@@ -119,3 +119,5 @@ YYYY/MM/DD, github id, Full name, email
 2020/02/10, ierof, Irina Erofeeva, babasya(at)gmail.com
 2020/02/10, Quppa, David Warner, david.p.warner(at)gmail.com
 2020/02/10, gpongelli, Gabriele Pongelli, gabriele.pongelli(at)gmail.com
+2020/02/10, EbenZhang, Eben Zhang, zhangyingneng(at)gmail.com
+2020/02/11, mwerle, Michael Werle, micha(at)michaelwerle.com
