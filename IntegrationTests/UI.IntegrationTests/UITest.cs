@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CommonTestUtils;
 using GitUI;
 using NUnit.Framework;
 
@@ -57,6 +58,10 @@ namespace GitExtensions.UITests
                         // Close the form after the test completes. This will unblock the 'showForm()' call if it's
                         // waiting for the form to close.
                         form.Close();
+
+                        // This should be changed to assert no pending operations once background operations are tied
+                        // to the life of the owning dialog - issue #7792.
+                        await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                     }
                 });
 

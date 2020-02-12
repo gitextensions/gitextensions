@@ -91,10 +91,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         private void RunFormTest(Func<FormBrowse, Task> testDriverAsync)
         {
             UITest.RunForm(
-                () =>
-                {
-                    Assert.True(_commands.StartBrowseDialog(owner: null));
-                },
+                showForm: () => _commands.StartBrowseDialog(owner: null).Should().BeTrue(),
                 testDriverAsync);
         }
     }

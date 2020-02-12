@@ -204,7 +204,9 @@ namespace GitExtensions.UITests.Script
 
         private void RunFormTest(Func<FormBrowse, Task> testDriverAsync)
         {
-            UITest.RunForm(() => _uiCommands.StartBrowseDialog().Should().BeTrue(), testDriverAsync);
+            UITest.RunForm(
+                showForm: () => _uiCommands.StartBrowseDialog(owner: null).Should().BeTrue(),
+                testDriverAsync);
         }
     }
 }
