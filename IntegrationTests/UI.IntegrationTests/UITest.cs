@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -49,34 +50,26 @@ namespace GitExtensions.UITests
                         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                         await WaitForIdleAsync();
                         form = Application.OpenForms.OfType<T>().Single();
+                    }
+                    catch (Exception ex)
+                    {
+                        // This exception might not be visible because showForm might not return if the opened form is not closed.
+                        // Log it for the case the "finally" code does not help.
+                        Console.WriteLine($"{nameof(RunForm)}<{typeof(T).FullName}> async test preparation threw {ex.Demystify()}");
+                        throw;
+                    }
+                    finally
+                    {
+                        Application.OpenForms.OfType<Form>().ForEach(f => f.Close());
+                    }
+
+                    try
+                    {
                         await runTestAsync(form);
                     }
                     finally
                     {
-                        try
-                        {
-                            form?.Close();
-                        }
-                        finally
-                        {
-                            // Try to close all open Forms in order to let return the blocking Application.Run(form)
-                            // which might have been called by showForm() below.
-                            for (int trial = 0; trial < 3 && Application.OpenForms.Count > 0; ++trial)
-                            {
-                                Application.DoEvents();
-                                Application.OpenForms.OfType<Form>().ForEach(f =>
-                                {
-                                    try
-                                    {
-                                        f.Close();
-                                    }
-                                    catch (Exception)
-                                    {
-                                        // ignore
-                                    }
-                                });
-                            }
-                        }
+                        form.Close();
                     }
                 });
 
@@ -87,7 +80,6 @@ namespace GitExtensions.UITests
             }
             finally
             {
-                form?.Close();
                 form?.Dispose();
                 Assert.IsTrue(Application.OpenForms.Count == 0, $"{Application.OpenForms.Count} open form(s) after test");
             }
