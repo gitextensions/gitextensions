@@ -358,6 +358,7 @@ namespace GitUI.CommandsDialogs
                     var brush = UpdateCommitButtonAndGetBrush(status, countToolbar);
 
                     RevisionGrid.UpdateArtificialCommitCount(countArtificial ? status : null);
+                    toolStripButtonLevelUp.Image = Module.SuperprojectModule != null ? Images.NavigateUp : Images.SubmodulesManage;
 
                     // The diff filelist is not updated, as the selected diff is unset
                     ////_revisionDiff.RefreshArtificial();
