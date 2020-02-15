@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using GitCommands;
 using GitCommands.Config;
 using LibGit2Sharp;
@@ -81,6 +82,12 @@ namespace CommonTestUtils
                 var options = new LibGit2Sharp.CheckoutOptions();
                 repository.Reset(LibGit2Sharp.ResetMode.Hard, (LibGit2Sharp.Commit)repository.Lookup(CommitHash, LibGit2Sharp.ObjectType.Commit), options);
                 repository.RemoveUntrackedFiles();
+
+                var remoteNames = repository.Network.Remotes.Select(remote => remote.Name).ToArray();
+                foreach (var remoteName in remoteNames)
+                {
+                    repository.Network.Remotes.Remove(remoteName);
+                }
 
                 repository.Config.Set(SettingKeyString.UserName, "author");
                 repository.Config.Set(SettingKeyString.UserEmail, "author@mail.com");
