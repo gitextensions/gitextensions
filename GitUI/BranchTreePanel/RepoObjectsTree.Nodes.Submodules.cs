@@ -11,19 +11,12 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Submodules;
 using GitUI.Properties;
-using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
-using ResourceManager;
 
 namespace GitUI.BranchTreePanel
 {
     partial class RepoObjectsTree
     {
-        // If true, display submodules as a tree of folders and nodes; otherwise, display a single node per module
-        // as in the Submodules menu.
-        // TODO: Possibly expose this as a user option, or just get rid of it.
-        private static bool UseFolderTree = true;
-
         // Top-level nodes used to group SubmoduleNodes
         private class SubmoduleFolderNode : Node
         {
@@ -88,11 +81,6 @@ namespace GitUI.BranchTreePanel
 
             protected override string DisplayText()
             {
-                if (!UseFolderTree)
-                {
-                    return Info.Text;
-                }
-
                 return SubmoduleName + BranchText + Info.Detailed?.AddedAndRemovedText;
             }
 
@@ -345,12 +333,6 @@ namespace GitUI.BranchTreePanel
                 GitModule threadModule,
                 SubmoduleInfo topProject)
             {
-                if (!UseFolderTree)
-                {
-                    nodes.AddNodes(submoduleNodes);
-                    return;
-                }
-
                 // Create tree of SubmoduleFolderNode for each path directory and add input SubmoduleNodes as leaves.
 
                 // Example of (SuperPath + LocalPath).ToPosixPath() for all nodes:
