@@ -17,6 +17,7 @@ namespace GitUI.CommitInfo
 {
     public partial class CommitInfoHeader : GitModuleControl
     {
+        private readonly TranslationString _error = new TranslationString("Error");
         private readonly IDateFormatter _dateFormatter = new DateFormatter();
         private readonly ILinkFactory _linkFactory = new LinkFactory();
         private readonly ICommitDataManager _commitDataManager;
@@ -124,28 +125,30 @@ namespace GitUI.CommitInfo
         {
             var link = _linkFactory.ParseLink(e.LinkText);
 
-            if (Uri.TryCreate(link, UriKind.Absolute, out var uri))
+            if (!Uri.TryCreate(link, UriKind.Absolute, out var uri))
             {
-                if (uri.Scheme == "gitext")
-                {
-                    CommandClicked?.Invoke(sender, new CommandEventArgs(uri.Host, uri.AbsolutePath.TrimStart('/')));
-                }
-                else
-                {
-                    using var process = new Process
-                    {
-                        EnableRaisingEvents = false,
-                        StartInfo = { FileName = uri.AbsoluteUri }
-                    };
+                return;
+            }
 
-                    try
-                    {
-                        process.Start();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(this, ex.Message, new TranslationString("Error").Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+            if (uri.Scheme == "gitext")
+            {
+                CommandClicked?.Invoke(sender, new CommandEventArgs(uri.Host, uri.AbsolutePath.TrimStart('/')));
+            }
+            else
+            {
+                using var process = new Process
+                {
+                    EnableRaisingEvents = false,
+                    StartInfo = { FileName = uri.AbsoluteUri }
+                };
+
+                try
+                {
+                    process.Start();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, ex.Message, _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
