@@ -100,7 +100,7 @@ namespace GitUI.UserControls
 
             IconBox.Image = _hasConflicts ? Properties.Images.SolveMerge : Properties.Resources.information;
             BackColor = (_hasConflicts ? System.Drawing.Color.Orange : System.Drawing.Color.LightSkyBlue).AdaptBackColor();
-            this.SetForeColorForBackColor();
+            TextLabel.SetForeColorForBackColor();
 
             string actionStr = "";
 
