@@ -1,5 +1,6 @@
 ﻿using System;
 using GitCommands;
+using GitCommands.Config;
 using LibGit2Sharp;
 using Remote = LibGit2Sharp.Remote;
 
@@ -80,6 +81,9 @@ namespace CommonTestUtils
                 var options = new LibGit2Sharp.CheckoutOptions();
                 repository.Reset(LibGit2Sharp.ResetMode.Hard, (LibGit2Sharp.Commit)repository.Lookup(CommitHash, LibGit2Sharp.ObjectType.Commit), options);
                 repository.RemoveUntrackedFiles();
+
+                repository.Config.Set(SettingKeyString.UserName, "author");
+                repository.Config.Set(SettingKeyString.UserEmail, "author@mail.com");
             }
 
             new CommitMessageManager(Module.WorkingDirGitDir, Module.CommitEncoding).ResetCommitMessage();
