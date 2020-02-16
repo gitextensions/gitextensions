@@ -142,6 +142,7 @@ namespace GitUI.Theming
             }
         }
 
+        [Conditional("DEBUG")]
         private void PrintTraceWarning(string fileName, string message) =>
             Trace.WriteLine(string.Format(_failedToLoadThemeFrom.Text, fileName) + Environment.NewLine + message);
     }

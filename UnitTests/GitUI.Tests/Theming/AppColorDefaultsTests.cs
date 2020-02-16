@@ -15,7 +15,7 @@ namespace GitUITests.Theming
         private string _originalPath;
 
         [OneTimeSetUp]
-        public void Setup()
+        public void OneTimeSetUp()
         {
             var testAccessor = AppSettings.GetTestAccessor();
             _originalPath = testAccessor.ApplicationExecutablePath;
@@ -23,7 +23,7 @@ namespace GitUITests.Theming
         }
 
         [OneTimeTearDown]
-        public void Teardown()
+        public void OneTimeTearDown()
         {
             var testAccessor = AppSettings.GetTestAccessor();
             testAccessor.ApplicationExecutablePath = _originalPath;

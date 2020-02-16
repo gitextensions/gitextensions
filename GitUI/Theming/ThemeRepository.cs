@@ -16,7 +16,7 @@ namespace GitUI.Theming
 
         public ThemeRepository(ThemePersistence persistence)
         {
-            _persistence = persistence;
+            _persistence = persistence ?? throw new ArgumentNullException(nameof(persistence));
             string appDirectory = AppSettings.GetGitExtensionsDirectory() ??
                 throw new InvalidOperationException("Missing application directory");
             AppDirectory = Path.Combine(appDirectory, Subdirectory);

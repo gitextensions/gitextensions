@@ -16,17 +16,19 @@ namespace GitUI.Theming
 
         public ThemeMigration(ThemeRepository repository)
         {
-            _repository = repository;
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _themeIds = _repository.GetThemeIds().ToArray();
         }
 
         public void Migrate()
         {
-            if (!MigrationAlreadyHappened())
+            if (MigrationAlreadyHappened())
             {
-                MigrateColorSettings();
-                MigratePrebuiltThemes();
+                return;
             }
+
+            MigrateColorSettings();
+            MigratePrebuiltThemes();
         }
 
         /// <summary>

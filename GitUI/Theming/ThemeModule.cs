@@ -14,9 +14,11 @@ namespace GitUI.Theming
     {
         public static ThemeSettings Settings { get; private set; } = ThemeSettings.Default;
 
+        private static ThemeRepository Repository { get; } = new ThemeRepository(new ThemePersistence());
+
         public static void Load()
         {
-            new ThemeMigration(new ThemeRepository(new ThemePersistence())).Migrate();
+            new ThemeMigration(Repository).Migrate();
             Settings = TryLoadTheme();
             ColorHelper.ThemeSettings = Settings;
             ThemeFix.ThemeSettings = Settings;
@@ -44,8 +46,7 @@ namespace GitUI.Theming
 
         private static ThemeSettings TryLoadTheme()
         {
-            var repository = new ThemeRepository(new ThemePersistence());
-            var invariantTheme = repository.GetInvariantTheme();
+            var invariantTheme = Repository.GetInvariantTheme();
             if (invariantTheme == null)
             {
                 // Not good, ColorHelper needs actual InvariantTheme to correctly transform colors.
@@ -59,7 +60,7 @@ namespace GitUI.Theming
                 return new ThemeSettings(Theme.Default, invariantTheme, AppSettings.UseSystemVisualStyle);
             }
 
-            var theme = repository.GetTheme(themeId);
+            var theme = Repository.GetTheme(themeId);
             if (theme == null || !TryInstallHooks(theme))
             {
                 return new ThemeSettings(Theme.Default, invariantTheme, AppSettings.UseSystemVisualStyle);
