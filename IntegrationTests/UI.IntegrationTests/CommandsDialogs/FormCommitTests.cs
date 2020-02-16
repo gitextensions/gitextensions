@@ -354,8 +354,16 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             var bounds1 = Rectangle.Empty;
             var bounds2 = Rectangle.Empty;
-            RunFormTest(form => bounds1 = boundsAccessor(form));
-            RunFormTest(form => bounds2 = boundsAccessor(form));
+            RunFormTest(async form =>
+            {
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                bounds1 = boundsAccessor(form);
+            });
+            RunFormTest(async form =>
+            {
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                bounds2 = boundsAccessor(form);
+            });
             testDriver(bounds1, bounds2);
         }
 
