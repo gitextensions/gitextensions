@@ -77,7 +77,7 @@ namespace GitUI.Editor.Diff
 
             if (lineAdded.Length - beginOffset - reverseOffset > 0)
             {
-                color = AppColor.DiffAddedExtra.Value();
+                color = AppColor.DiffAddedExtra.GetThemeColor();
                 markerStrategy.AddMarker(new TextMarker(lineAdded.Offset + beginOffset,
                                                         lineAdded.Length - beginOffset - reverseOffset,
                                                         TextMarkerType.SolidBlock, color,
@@ -86,7 +86,7 @@ namespace GitUI.Editor.Diff
 
             if (lineRemoved.Length - beginOffset - reverseOffset > 0)
             {
-                color = AppColor.DiffRemovedExtra.Value();
+                color = AppColor.DiffRemovedExtra.GetThemeColor();
                 markerStrategy.AddMarker(new TextMarker(lineRemoved.Offset + beginOffset,
                                                         lineRemoved.Length - beginOffset - reverseOffset,
                                                         TextMarkerType.SolidBlock, color,
@@ -193,15 +193,15 @@ namespace GitUI.Editor.Diff
 
                 line = TryHighlightAddedAndDeletedLines(document, line, lineSegment);
 
-                ProcessLineSegment(document, ref line, lineSegment, "@", AppColor.DiffSection.Value());
-                ProcessLineSegment(document, ref line, lineSegment, "\\", AppColor.DiffSection.Value());
+                ProcessLineSegment(document, ref line, lineSegment, "@", AppColor.DiffSection.GetThemeColor());
+                ProcessLineSegment(document, ref line, lineSegment, "\\", AppColor.DiffSection.GetThemeColor());
             }
         }
 
         protected virtual int TryHighlightAddedAndDeletedLines(IDocument document, int line, LineSegment lineSegment)
         {
-            ProcessLineSegment(document, ref line, lineSegment, "+", AppColor.DiffAdded.Value());
-            ProcessLineSegment(document, ref line, lineSegment, "-", AppColor.DiffRemoved.Value());
+            ProcessLineSegment(document, ref line, lineSegment, "+", AppColor.DiffAdded.GetThemeColor());
+            ProcessLineSegment(document, ref line, lineSegment, "-", AppColor.DiffRemoved.GetThemeColor());
             return line;
         }
 

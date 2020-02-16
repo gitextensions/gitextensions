@@ -306,7 +306,7 @@ namespace GitUI.CommandsDialogs
 
             SelectedDiff.EscapePressed += () => DialogResult = DialogResult.Cancel;
 
-            SolveMergeconflicts.BackColor = AppColor.Branch.Value();
+            SolveMergeconflicts.BackColor = AppColor.Branch.GetThemeColor();
             SolveMergeconflicts.SetForeColorForBackColor();
 
             toolStripStatusBranchIcon.AdaptImageLightness();
@@ -3239,7 +3239,7 @@ namespace GitUI.CommandsDialogs
             if (AppSettings.CommitAndPushForcedWhenAmend)
             {
                 CommitAndPush.BackColor = Amend.Checked
-                    ? AppColor.Branch.Value()
+                    ? AppColor.Branch.GetThemeColor()
                     : SystemColors.ButtonFace;
 
                 CommitAndPush.SetForeColorForBackColor();

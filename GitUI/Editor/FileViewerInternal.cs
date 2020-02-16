@@ -120,7 +120,7 @@ namespace GitUI.Editor
                 indexMatch = textContent.IndexOf(word, indexMatch + 1, StringComparison.OrdinalIgnoreCase);
                 if (indexMatch >= 0)
                 {
-                    Color highlightColor = AppColor.HighlightAllOccurences.Value();
+                    Color highlightColor = AppColor.HighlightAllOccurences.GetThemeColor();
 
                     var textMarker = new TextMarker(indexMatch,
                         word.Length, TextMarkerType.SolidBlock, highlightColor,
@@ -153,7 +153,7 @@ namespace GitUI.Editor
                 TextEditor.Document.TextLength - offset);
 
             TextMarker marker =
-                markers.FirstOrDefault(x => x.Offset > offset && x.Color == AppColor.HighlightAllOccurences.Value());
+                markers.FirstOrDefault(x => x.Offset > offset && x.Color == AppColor.HighlightAllOccurences.GetThemeColor());
             if (marker != null)
             {
                 TextLocation position = TextEditor.ActiveTextAreaControl.TextArea.Document.OffsetToPosition(marker.Offset);
@@ -171,7 +171,7 @@ namespace GitUI.Editor
             List<TextMarker> markers = TextEditor.Document.MarkerStrategy.GetMarkers(0, offset);
 
             TextMarker marker =
-                markers.LastOrDefault(x => x.Offset < offset && x.Color == AppColor.HighlightAllOccurences.Value());
+                markers.LastOrDefault(x => x.Offset < offset && x.Color == AppColor.HighlightAllOccurences.GetThemeColor());
             if (marker != null)
             {
                 TextLocation position = TextEditor.ActiveTextAreaControl.TextArea.Document.OffsetToPosition(marker.Offset);

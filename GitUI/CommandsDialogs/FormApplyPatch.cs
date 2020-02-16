@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
             EnableButtons();
 
-            SolveMergeConflicts.BackColor = AppColor.Branch.Value();
+            SolveMergeConflicts.BackColor = AppColor.Branch.GetThemeColor();
             SolveMergeConflicts.SetForeColorForBackColor();
         }
 

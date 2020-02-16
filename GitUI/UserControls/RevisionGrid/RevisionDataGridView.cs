@@ -265,7 +265,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (AppSettings.HighlightAuthoredRevisions && revision != null && !revision.IsArtificial && AuthorHighlighting.IsHighlighted(revision))
             {
-                return new SolidBrush(AppColor.AuthoredHighlight.Value());
+                return new SolidBrush(AppColor.AuthoredHighlight.GetThemeColor());
             }
 
             if (rowIndex % 2 == 0 && AppSettings.RevisionGraphDrawAlternateBackColor)

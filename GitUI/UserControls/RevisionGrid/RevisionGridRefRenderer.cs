@@ -131,20 +131,20 @@ namespace GitUI
         {
             if (gitRef.IsTag)
             {
-                return AppColor.Tag.Value();
+                return AppColor.Tag.GetThemeColor();
             }
 
             if (gitRef.IsHead)
             {
-                return AppColor.Branch.Value();
+                return AppColor.Branch.GetThemeColor();
             }
 
             if (gitRef.IsRemote)
             {
-                return AppColor.RemoteBranch.Value();
+                return AppColor.RemoteBranch.GetThemeColor();
             }
 
-            return AppColor.OtherTag.Value();
+            return AppColor.OtherTag.GetThemeColor();
         }
 
         private static void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color, bool filled)

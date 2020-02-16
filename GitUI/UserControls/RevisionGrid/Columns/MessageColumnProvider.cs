@@ -178,7 +178,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 var baseOffset = offset;
 
                 // Add fake "refs" for artificial commits
-                RevisionGridRefRenderer.DrawRef(isRowSelected, normalFont, ref offset, revision.Subject, AppColor.OtherTag.Value(), RefArrowType.None, messageBounds, e.Graphics, dashedLine: false, fill: true);
+                RevisionGridRefRenderer.DrawRef(isRowSelected, normalFont, ref offset, revision.Subject, AppColor.OtherTag.GetThemeColor(), RefArrowType.None, messageBounds, e.Graphics, dashedLine: false, fill: true);
 
                 var max = Math.Max(
                     TextRenderer.MeasureText(ResourceManager.Strings.Workspace, normalFont).Width,

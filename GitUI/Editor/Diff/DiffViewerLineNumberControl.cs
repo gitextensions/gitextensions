@@ -93,13 +93,13 @@ namespace GitUI.Editor.Diff
                         case DiffLineType.Context:
                             break;
                         case DiffLineType.Plus:
-                            brush = new SolidBrush(AppColor.DiffAdded.Value());
+                            brush = new SolidBrush(AppColor.DiffAdded.GetThemeColor());
                             break;
                         case DiffLineType.Minus:
-                            brush = new SolidBrush(AppColor.DiffRemoved.Value());
+                            brush = new SolidBrush(AppColor.DiffRemoved.GetThemeColor());
                             break;
                         case DiffLineType.Header:
-                            brush = new SolidBrush(AppColor.DiffSection.Value());
+                            brush = new SolidBrush(AppColor.DiffSection.GetThemeColor());
                             break;
                     }
 
