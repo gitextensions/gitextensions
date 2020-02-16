@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -273,6 +274,49 @@ namespace GitExtensions.UITests.CommandsDialogs
             });
         }
 
+        [Test]
+        public void Dialog_remembers_window_geometry()
+        {
+            RunGeometryMemoryTest(
+                form => form.GetTestAccessor().Bounds,
+                (bounds1, bounds2) => bounds2.Should().Be(bounds1));
+        }
+
+        [Test]
+        public void MessageEdit_remembers_geometry()
+        {
+            RunGeometryMemoryTest(
+                form => form.GetTestAccessor().Message.Bounds,
+                (bounds1, bounds2) => bounds2.Should().Be(bounds1));
+        }
+
+        [Test]
+        public void UnstagedList_remembers_geometry()
+        {
+            RunGeometryMemoryTest(
+                form => form.GetTestAccessor().UnstagedList.Bounds,
+                (bounds1, bounds2) =>
+                {
+                    bounds2.Width.Should().Be(bounds1.Width);
+
+                    // The method to determine the height is prone to rounding errors.
+                    // This seems not to affect the user experience, because
+                    // - the rounding error is only +- 1 pixel
+                    // - if the user does not change the geometry, the height will oscillate to a constant value
+                    var height1 = bounds1.Height;
+                    var height2 = bounds2.Height;
+                    Assert.IsTrue(height1 >= height2 - 1 && height1 <= height2 + 1);
+                });
+        }
+
+        [Test]
+        public void SelectedDiff_remembers_geometry()
+        {
+            RunGeometryMemoryTest(
+                form => form.GetTestAccessor().SelectedDiff.Bounds,
+                (bounds1, bounds2) => bounds2.Should().Be(bounds1));
+        }
+
         private void TestAddSelectionToCommitMessage(
             bool focusSelectedDiff,
             string selectedText,
@@ -304,6 +348,15 @@ namespace GitExtensions.UITests.CommandsDialogs
                 ta.Message.SelectionStart.Should().Be(expectedSelectionStart);
                 ta.Message.SelectionLength.Should().Be(expectedResult ? 0 : selectionLength);
             });
+        }
+
+        private void RunGeometryMemoryTest(Func<FormCommit, Rectangle> boundsAccessor, Action<Rectangle, Rectangle> testDriver)
+        {
+            var bounds1 = Rectangle.Empty;
+            var bounds2 = Rectangle.Empty;
+            RunFormTest(form => bounds1 = boundsAccessor(form));
+            RunFormTest(form => bounds2 = boundsAccessor(form));
+            testDriver(bounds1, bounds2);
         }
 
         private void RunFormTest(Action<FormCommit> testDriver, CommitKind commitKind = CommitKind.Normal)
