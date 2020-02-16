@@ -120,15 +120,7 @@ namespace GitUI.BranchTreePanel
                     TreeViewNode.NodeFont = new Font(AppSettings.Font, FontStyle.Bold);
                 }
 
-                if (Info.Detailed == null)
-                {
-                    TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.FolderSubmodule);
-                }
-                else
-                {
-                    TreeViewNode.ImageKey = GetSubmoduleItemImage(Info.Detailed);
-                }
-
+                TreeViewNode.ImageKey = GetSubmoduleItemImage(Info.Detailed);
                 TreeViewNode.SelectedImageKey = TreeViewNode.ImageKey;
 
                 return;
@@ -136,7 +128,7 @@ namespace GitUI.BranchTreePanel
                 // NOTE: Copied and adapated from FormBrowse.GetSubmoduleItemImage
                 string GetSubmoduleItemImage(DetailedSubmoduleInfo details)
                 {
-                    if (details.Status == null)
+                    if (details?.Status == null)
                     {
                         return nameof(Images.FolderSubmodule);
                     }
@@ -161,6 +153,7 @@ namespace GitUI.BranchTreePanel
                         return details.IsDirty ? nameof(Images.SubmoduleRevisionSemiDownDirty) : nameof(Images.SubmoduleRevisionSemiDown);
                     }
 
+                    // Unknown
                     return details.IsDirty ? nameof(Images.SubmoduleDirty) : nameof(Images.FileStatusModified);
                 }
             }
