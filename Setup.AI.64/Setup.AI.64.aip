@@ -10,7 +10,7 @@
     <ROW Property="AI_REQUIRED_DOTNET_VERSION" MultiBuildValue="DefaultBuild:4.6.1" ValueLocId="-"/>
     <ROW Property="AI_RUN_AS_ADMIN" Value="0"/>
     <ROW Property="AI_ThemeStyle" Value="aero" MsiKey="AI_ThemeStyle"/>
-    <ROW Property="ALLUSERS" Value="1" MultiBuildValue="DefaultBuild:2"/>
+    <ROW Property="ALLUSERS" Value="1"/>
     <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
     <ROW Property="ARPHELPLINK" Value="https://github.com/gitextensions/gitextensions/issues"/>
     <ROW Property="ARPPRODUCTICON" Value="gitextensionslogo.exe" Type="8"/>
@@ -24,7 +24,7 @@
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="Git Extensions"/>
     <ROW Property="ProductVersion" Value="0.0.1" Type="32"/>
-    <ROW Property="SSHCLIENT" Value="Putty"/>
+    <ROW Property="SSHCLIENT" Value="OpenSSH"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="TELEMETRY_ENABLED" Value="1"/>
     <ROW Property="UpgradeCode" Value="{140E80EA-5053-42DC-AB0E-6FF0E49E6BCF}"/>
@@ -822,7 +822,6 @@
   <COMPONENT cid="caphyon.advinst.msicomp.FragmentComponent">
     <ROW Fragment="CommonUI.aip" Path="&lt;AI_FRAGS&gt;CommonUI.aip"/>
     <ROW Fragment="FolderDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\FolderDlg.aip"/>
-    <ROW Fragment="InstallTypeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\InstallTypeDlg.aip"/>
     <ROW Fragment="MaintenanceTypeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\MaintenanceTypeDlg.aip"/>
     <ROW Fragment="MaintenanceWelcomeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\MaintenanceWelcomeDlg.aip"/>
     <ROW Fragment="OptionalFeatsDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\OptionalFeatsDlg.aip"/>
@@ -866,7 +865,6 @@
     <ROW Dialog_="DiskCostDlg" Control="Logo" Type="Text" X="4" Y="228" Width="80" Height="12" Attributes="1" Text="[Manufacturer]" Order="400" MsiKey="DiskCostDlg#Logo"/>
     <ROW Dialog_="FilesInUse" Control="Logo" Type="Text" X="4" Y="228" Width="80" Height="12" Attributes="1" Text="[Manufacturer]" Order="600" MsiKey="FilesInUse#Logo"/>
     <ROW Dialog_="FolderDlg" Control="Logo" Type="Text" X="4" Y="228" Width="80" Height="12" Attributes="1" Text="[Manufacturer]" Order="600" MsiKey="FolderDlg#Logo"/>
-    <ROW Dialog_="InstallTypeDlg" Control="Logo" Type="Text" X="4" Y="228" Width="80" Height="12" Attributes="1" Text="[Manufacturer]" Order="800" MsiKey="InstallTypeDlg#Logo"/>
     <ROW Dialog_="MaintenanceTypeDlg" Control="Logo" Type="Text" X="4" Y="228" Width="80" Height="12" Attributes="1" Text="[Manufacturer]" Order="1200" MsiKey="MaintenanceTypeDlg#Logo"/>
     <ROW Dialog_="MsiRMFilesInUse" Control="Logo" Type="Text" X="4" Y="228" Width="80" Height="12" Attributes="1" Text="[Manufacturer]" Order="1100" MsiKey="MsiRMFilesInUse#Logo"/>
     <ROW Dialog_="OptionalFeatsDlg" Control="Logo" Type="Text" X="4" Y="228" Width="80" Height="12" Attributes="1" Text="[Manufacturer]" Order="800" MsiKey="OptionalFeatsDlg#Logo"/>
@@ -901,7 +899,7 @@
     <ROW Dialog_="VerifyRepairDlg" Control="Logo" Type="Text" X="4" Y="228" Width="80" Height="12" Attributes="1" Text="[Manufacturer]" Order="500" MsiKey="VerifyRepairDlg#Logo"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiControlEventComponent">
-    <ROW Dialog_="WelcomeDlg" Control_="Next" Event="NewDialog" Argument="InstallTypeDlg" Condition="AI_INSTALL" Ordering="12"/>
+    <ROW Dialog_="WelcomeDlg" Control_="Next" Event="NewDialog" Argument="FolderDlg" Condition="AI_INSTALL" Ordering="12"/>
     <ROW Dialog_="MaintenanceWelcomeDlg" Control_="Next" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT" Ordering="99"/>
     <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_MAINT" Ordering="198"/>
     <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="CustomizeDlg" Condition="AI_MAINT" Ordering="204"/>
@@ -923,10 +921,8 @@
     <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="PatchWelcomeDlg" Condition="AI_PATCH" Ordering="205"/>
     <ROW Dialog_="SSHDialog" Control_="Cancel" Event="SpawnDialog" Argument="CancelDlg" Condition="1" Ordering="100"/>
     <ROW Dialog_="TelemetryDialog" Control_="Cancel" Event="SpawnDialog" Argument="CancelDlg" Condition="1" Ordering="100"/>
-    <ROW Dialog_="InstallTypeDlg" Control_="Next" Event="NewDialog" Argument="FolderDlg" Condition="AI_INSTALL" Ordering="101"/>
-    <ROW Dialog_="InstallTypeDlg" Control_="Back" Event="NewDialog" Argument="WelcomeDlg" Condition="AI_INSTALL" Ordering="1"/>
     <ROW Dialog_="FolderDlg" Control_="Next" Event="NewDialog" Argument="OptionalFeatsDlg" Condition="AI_INSTALL" Ordering="201"/>
-    <ROW Dialog_="FolderDlg" Control_="Back" Event="NewDialog" Argument="InstallTypeDlg" Condition="AI_INSTALL" Ordering="1"/>
+    <ROW Dialog_="FolderDlg" Control_="Back" Event="NewDialog" Argument="WelcomeDlg" Condition="AI_INSTALL" Ordering="1"/>
     <ROW Dialog_="OptionalFeatsDlg" Control_="Next" Event="NewDialog" Argument="SSHDialog" Condition="AI_INSTALL" Ordering="2"/>
     <ROW Dialog_="OptionalFeatsDlg" Control_="Back" Event="NewDialog" Argument="FolderDlg" Condition="AI_INSTALL" Ordering="2"/>
     <ROW Dialog_="SSHDialog" Control_="Next" Event="NewDialog" Argument="TelemetryDialog" Condition="AI_INSTALL" Ordering="1"/>
@@ -941,7 +937,6 @@
     <ROW Directory_="APPDIR" Component_="APPDIR" ManualDelete="true"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCustActComponent">
-    <ROW Action="AI_AuthorSinglePackage" Type="1" Source="aicustact.dll" Target="AI_AuthorSinglePackage" WithoutSeq="true"/>
     <ROW Action="AI_BACKUP_AI_SETUPEXEPATH" Type="51" Source="AI_SETUPEXEPATH_ORIGINAL" Target="[AI_SETUPEXEPATH]"/>
     <ROW Action="AI_DATA_SETTER" Type="51" Source="CustomActionData" Target="AEkAcwA2ADQAQgBpAHQAAgAxAAEASQBzAEYAYQBsAGwAYgBhAGMAawAzADIAQgBpAHQAAgABAFAAYQByAGEAbQBzAAIAWwBUAEUATABFAE0ARQBUAFIAWQBfAEUATgBBAEIATABFAEQAXQABAFMAYwByAGkAcAB0AAIAIwAgAEIAbABvAGMAawAgAGYAbwByACAAZABlAGMAbABhAHIAaQBuAGcAIAB0AGgAZQAgAHMAYwByAGkAcAB0ACAAcABhAHIAYQBtAGUAdABlAHIAcwAuAA0ACgBQAGEAcgBhAG0AKAAkAFQARQApAA0ACgANAAoAIwAgAFkAbwB1AHIAIABjAG8AZABlACAAZwBvAGUAcwAgAGgAZQByAGUALgANAAoAWwBcAFsAXQBiAG8AbwBsAFsAXABdAF0AJAB0AGUAbABlAG0AZQB0AHIAeQBFAG4AYQBiAGwAZQBkACAAPQAgACQAVABFAA0ACgANAAoAaQBmACAAKAAkAEUAeABlAGMAdQB0AGkAbwBuAEMAbwBuAHQAZQB4AHQALgBTAGUAcwBzAGkAbwBuAFMAdABhAHQAZQAuAEwAYQBuAGcAdQBhAGcAZQBNAG8AZABlACAALQBuAGUAIAAiAEYAdQBsAGwATABhAG4AZwB1AGEAZwBlACIAKQANAAoAWwBcAHsAXQANAAoAIAAgACAAIABlAHgAaQB0ACAAMAANAAoAWwBcAH0AXQANAAoADQAKAFsAXABbAF0AcwB0AHIAaQBuAGcAWwBcAF0AXQAkAHUAcwBlAHIAQQBwAHAARABhAHQAYQBQAGEAdABoACAAPQAgAEoAbwBpAG4ALQBQAGEAdABoACAALQBQAGEAdABoACAAJABlAG4AdgA6AEEAUABQAEQAQQBUAEEAIAAtAEMAaABpAGwAZABQAGEAdABoACAAJwBHAGkAdABFAHgAdABlAG4AcwBpAG8AbgBzAFwARwBpAHQARQB4AHQAZQBuAHMAaQBvAG4AcwBcAEcAaQB0AEUAeAB0AGUAbgBzAGkAbwBuAHMALgBzAGUAdAB0AGkAbgBnAHMAJwANAAoAaQBmACAAKAAtAG4AbwB0ACAAKABUAGUAcwB0AC0AUABhAHQAaAAgAC0AUABhAHQAaAAgACQAdQBzAGUAcgBBAHAAcABEAGEAdABhAFAAYQB0AGgAKQApACAAWwBcAHsAXQANAAoAIAAgACAAIABbAFwAWwBdAHMAdAByAGkAbgBnAFsAXABdAF0AJAB1AHMAZQByAEEAcABwAEQAYQB0AGEARgBvAGwAZABlAHIAIAA9ACAAUwBwAGwAaQB0AC0AUABhAHQAaAAgACQAdQBzAGUAcgBBAHAAcABEAGEAdABhAFAAYQB0AGgAIAAtAFAAYQByAGUAbgB0AA0ACgAgACAAIAAgAGkAZgAgACgALQBuAG8AdAAgACgAVABlAHMAdAAtAFAAYQB0AGgAIAAtAFAAYQB0AGgAIAAkAHUAcwBlAHIAQQBwAHAARABhAHQAYQBGAG8AbABkAGUAcgApACkAIABbAFwAewBdAA0ACgAgACAAIAAgACAAIAAgACAATgBlAHcALQBJAHQAZQBtACAALQBJAHQAZQBtAFQAeQBwAGUAIABEAGkAcgBlAGMAdABvAHIAeQAgAC0AUABhAHQAaAAgACQAdQBzAGUAcgBBAHAAcABEAGEAdABhAEYAbwBsAGQAZQByACAAfAAgAE8AdQB0AC0ATgB1AGwAbAANAAoAIAAgACAAIABbAFwAfQBdAA0ACgANAAoAIAAgACAAIAAnADwAPwB4AG0AbAAgAHYAZQByAHMAaQBvAG4APQAiADEALgAwACIAIABlAG4AYwBvAGQAaQBuAGcAPQAiAHUAdABmAC0AOAAiAD8APgA8AGQAaQBjAHQAaQBvAG4AYQByAHkAIAAvAD4AJwAgAHwAIABPAHUAdAAtAEYAaQBsAGUAIAAkAHUAcwBlAHIAQQBwAHAARABhAHQAYQBQAGEAdABoACAALQBFAG4AYwBvAGQAaQBuAGcAIAB1AHQAZgA4AA0ACgBbAFwAfQBdAA0ACgANAAoAWwBcAFsAXQB4AG0AbABbAFwAXQBdACQAZABvAGMAIAA9ACAARwBlAHQALQBDAG8AbgB0AGUAbgB0ACAAJAB1AHMAZQByAEEAcABwAEQAYQB0AGEAUABhAHQAaAANAAoAaQBmACAAKAAhACQAZABvAGMAKQAgAFsAXAB7AF0ADQAKACAAIAAgACAAJABkAG8AYwAgAD0AIAAnADwAPwB4AG0AbAAgAHYAZQByAHMAaQBvAG4APQAiADEALgAwACIAIABlAG4AYwBvAGQAaQBuAGcAPQAiAHUAdABmAC0AOAAiAD8APgAnADsADQAKAFsAXAB9AF0ADQAKAA0ACgAkAG4AbwBkAGUAIAA9ACAAJABkAG8AYwAuAFMAZQBsAGUAYwB0AFMAaQBuAGcAbABlAE4AbwBkAGUAKAAiAC8AZABpAGMAdABpAG8AbgBhAHIAeQAvAGkAdABlAG0ALwBrAGUAeQAvAHMAdAByAGkAbgBnAFsAXABbAF0AdABlAHgAdAAoACkAPQAnAFQAZQBsAGUAbQBlAHQAcgB5AEUAbgBhAGIAbABlAGQAJwBbAFwAXQBdACIAKQANAAoAaQBmACAAKAAkAG4AbwBkAGUAIAAtAG4AZQAgACQAbgB1AGwAbAApACAAWwBcAHsAXQANAAoAIAAgACAAIAAkAG4AbwBkAGUALgBQAGEAcgBlAG4AdABOAG8AZABlAC4AUABhAHIAZQBuAHQATgBvAGQAZQAuAHYAYQBsAHUAZQAuAHMAdAByAGkAbgBnACAAPQAgACIAJAB0AGUAbABlAG0AZQB0AHIAeQBFAG4AYQBiAGwAZQBkACIAOwANAAoAIAAgACAAIAAkAGQAbwBjAC4AUwBhAHYAZQAoACQAdQBzAGUAcgBBAHAAcABEAGEAdABhAFAAYQB0AGgAKQANAAoAIAAgACAAIABlAHgAaQB0ACAAMAANAAoAWwBcAH0AXQANAAoADQAKACQAdABvAHAATgBvAGQAZQAgAD0AIAAkAGQAbwBjAC4AUwBlAGwAZQBjAHQAUwBpAG4AZwBsAGUATgBvAGQAZQAoACIALwBkAGkAYwB0AGkAbwBuAGEAcgB5ACIAKQA7AA0ACgBpAGYAIAAoACQAdABvAHAATgBvAGQAZQAgAC0AZQBxACAAJABuAHUAbABsACkAIABbAFwAewBdAA0ACgAgACAAIAAgACQAdABvAHAATgBvAGQAZQAgAD0AIAAkAGQAbwBjAC4AQwByAGUAYQB0AGUARQBsAGUAbQBlAG4AdAAoACcAZABpAGMAdABpAG8AbgBhAHIAeQAnACkAOwANAAoAIAAgACAAIAAkAF8AIAA9ACAAJABkAG8AYwAuAEEAcABwAGUAbgBkAEMAaABpAGwAZAAoACQAdABvAHAATgBvAGQAZQApADsADQAKAFsAXAB9AF0ADQAKAA0ACgAkAG4AbwBkAGUAIAA9ACAAJABkAG8AYwAuAEMAcgBlAGEAdABlAEUAbABlAG0AZQBuAHQAKAAnAGkAdABlAG0AJwApADsADQAKACQAbgBvAGQAZQAuAEkAbgBuAGUAcgBYAG0AbAAgAD0AIAAiADwAawBlAHkAPgA8AHMAdAByAGkAbgBnAD4AVABlAGwAZQBtAGUAdAByAHkARQBuAGEAYgBsAGUAZAA8AC8AcwB0AHIAaQBuAGcAPgA8AC8AawBlAHkAPgA8AHYAYQBsAHUAZQA+ADwAcwB0AHIAaQBuAGcAPgAkAHQAZQBsAGUAbQBlAHQAcgB5AEUAbgBhAGIAbABlAGQAPAAvAHMAdAByAGkAbgBnAD4APAAvAHYAYQBsAHUAZQA+ACIAOwANAAoAJABfACAAPQAgACQAdABvAHAATgBvAGQAZQAuAEEAcABwAGUAbgBkAEMAaABpAGwAZAAoACQAbgBvAGQAZQApADsADQAKACQAZABvAGMALgBTAGEAdgBlACgAJAB1AHMAZQByAEEAcABwAEQAYQB0AGEAUABhAHQAaAAp"/>
     <ROW Action="AI_DATA_SETTER_1" Type="51" Source="CustomActionData" Target="[~]"/>
@@ -960,12 +955,11 @@
     <ROW Action="AI_RESTORE_AI_SETUPEXEPATH" Type="51" Source="AI_SETUPEXEPATH" Target="[AI_SETUPEXEPATH_ORIGINAL]"/>
     <ROW Action="AI_RESTORE_LOCATION" Type="65" Source="aicustact.dll" Target="RestoreLocation"/>
     <ROW Action="AI_ResolveKnownFolders" Type="1" Source="aicustact.dll" Target="AI_ResolveKnownFolders"/>
-    <ROW Action="AI_SETMIXINSTLOCATION" Type="1" Source="aicustact.dll" Target="MixedAllUsersInstallLocation"/>
     <ROW Action="AI_SHOW_LOG" Type="65" Source="aicustact.dll" Target="LaunchLogFile" WithoutSeq="true"/>
     <ROW Action="AI_STORE_LOCATION" Type="51" Source="ARPINSTALLLOCATION" Target="[APPDIR]"/>
     <ROW Action="ConfigureTelemetry" Type="1" Source="PowerShellScriptLauncher.dll" Target="RunPowerShellScript" Options="1" AdditionalSeq="AI_DATA_SETTER"/>
     <ROW Action="LaunchGitExtensions" Type="210" Source="GitExtensions.exe"/>
-    <ROW Action="SET_APPDIR" Type="307" Source="APPDIR" Target="[ProgramFilesFolder][Manufacturer]\[ProductName]" MultiBuildTarget="DefaultBuild:[AI_UserProgramFiles]\[ProductName]"/>
+    <ROW Action="SET_APPDIR" Type="307" Source="APPDIR" Target="[ProgramFilesFolder][Manufacturer]\[ProductName]" MultiBuildTarget="DefaultBuild:[ProgramFiles64Folder]\[ProductName]"/>
     <ROW Action="SET_SHORTCUTDIR" Type="307" Source="SHORTCUTDIR" Target="[ProgramMenuFolder][ProductName]" MultiBuildTarget="DefaultBuild:[ProgramMenuFolder]"/>
     <ROW Action="SET_TARGETDIR_TO_APPDIR" Type="51" Source="TARGETDIR" Target="[APPDIR]"/>
     <ROW Action="SetSSHClientDataProperty" Type="1" Source="PowerShellScriptLauncher.dll" Target="RunPowerShellScript" Options="1" AdditionalSeq="AI_DATA_SETTER_3"/>
@@ -1336,7 +1330,7 @@
     <ROW Name="gitextensionslogo.exe" SourcePath="..\Logo\git-extensions-logo.ico" Index="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
-    <ROW Action="AI_RESTORE_LOCATION" Condition="APPDIR=&quot;&quot;" Sequence="747"/>
+    <ROW Action="AI_RESTORE_LOCATION" Condition="APPDIR=&quot;&quot;" Sequence="746"/>
     <ROW Action="AI_STORE_LOCATION" Condition="(Not Installed) OR REINSTALL" Sequence="1501"/>
     <ROW Action="AI_PREPARE_UPGRADE" Condition="AI_UPGRADE=&quot;No&quot; AND (Not Installed)" Sequence="1399"/>
     <ROW Action="AI_ResolveKnownFolders" Sequence="52"/>
@@ -1351,21 +1345,19 @@
     <ROW Action="AI_NativeImageUnInstallCommit" Condition="DISABLEROLLBACK = 1" Sequence="6251"/>
     <ROW Action="ConfigureTelemetry" Condition="( NOT Installed AND NOT OLDPRODUCTS ) AND ( (VersionNT &gt; 501) OR (VersionNT = 501 AND ServicePackLevel &gt;= 2) )" Sequence="6402"/>
     <ROW Action="AI_DATA_SETTER" Condition="( NOT Installed AND NOT OLDPRODUCTS ) AND ( (VersionNT &gt; 501) OR (VersionNT = 501 AND ServicePackLevel &gt;= 2) )" Sequence="6401"/>
-    <ROW Action="AI_SETMIXINSTLOCATION" Sequence="746"/>
     <ROW Action="AI_DOWNGRADE" Condition="AI_NEWERPRODUCTFOUND AND (UILevel &lt;&gt; 5)" Sequence="201"/>
     <ROW Action="AI_DETECT_MODERNWIN" Condition="(VersionNT &gt;= 603)" Sequence="53" MsiKey="AI_DETECT_MODERNWIN"/>
     <ROW Action="SetSSHClientDataProperty" Condition="( NOT Installed ) AND ( (VersionNT &gt; 501) OR (VersionNT = 501 AND ServicePackLevel &gt;= 2) )" Sequence="1202"/>
     <ROW Action="AI_DATA_SETTER_3" Condition="( NOT Installed ) AND ( (VersionNT &gt; 501) OR (VersionNT = 501 AND ServicePackLevel &gt;= 2) )" Sequence="1201"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiInstallUISequenceComponent">
-    <ROW Action="AI_RESTORE_LOCATION" Condition="APPDIR=&quot;&quot;" Sequence="747"/>
+    <ROW Action="AI_RESTORE_LOCATION" Condition="APPDIR=&quot;&quot;" Sequence="746"/>
     <ROW Action="AI_ResolveKnownFolders" Sequence="53"/>
     <ROW Action="AI_DpiContentScale" Sequence="52"/>
     <ROW Action="AI_EnableDebugLog" Sequence="51"/>
     <ROW Action="AI_DetectSoftware" Sequence="102"/>
     <ROW Action="AI_BACKUP_AI_SETUPEXEPATH" Sequence="98"/>
     <ROW Action="AI_RESTORE_AI_SETUPEXEPATH" Condition="AI_SETUPEXEPATH_ORIGINAL" Sequence="101"/>
-    <ROW Action="AI_SETMIXINSTLOCATION" Sequence="746"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiLaunchConditionsComponent">
     <ROW Condition="( Version9X OR VersionNT64 )" Description="[ProductName] cannot be installed on [WindowsTypeNTDisplay]." DescriptionLocId="AI.LaunchCondition.NoNT" IsPredefined="true" Builds="DefaultBuild"/>
