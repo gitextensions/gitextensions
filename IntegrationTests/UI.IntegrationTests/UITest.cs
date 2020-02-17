@@ -33,35 +33,21 @@ namespace GitExtensions.UITests
             Func<T, Task> runTestAsync)
             where T : Form
         {
-            // If form.Dipose was called by the async test task, closing the window would be done in a strange order.
+            Assert.IsEmpty(Application.OpenForms.OfType<T>(), $"{Application.OpenForms.OfType<T>().Count()} open form(s) before test");
+
             T form = null;
             try
             {
-                // Start runTestAsync before calling showForm.
-                // The latter might block until the form is closed, especially if using Application.Run(form).
-
+                // Start runTestAsync before calling showForm, since the latter might block until the form is closed.
+                //
                 // Avoid using ThreadHelper.JoinableTaskFactory for the outermost operation because we don't want the task
                 // tracked by its collection. Otherwise, test code would not be able to wait for pending operations to
                 // complete.
                 var test = ThreadHelper.JoinableTaskContext.Factory.RunAsync(async () =>
                 {
-                    try
-                    {
-                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                        await WaitForIdleAsync();
-                        form = Application.OpenForms.OfType<T>().Single();
-                    }
-                    catch (Exception ex)
-                    {
-                        // This exception might not be visible because showForm might not return if the opened form is not closed.
-                        // Log it for the case the "finally" code does not help.
-                        Console.WriteLine($"{nameof(RunForm)}<{typeof(T).FullName}> async test preparation threw {ex.Demystify()}");
-                        throw;
-                    }
-                    finally
-                    {
-                        Application.OpenForms.OfType<Form>().ForEach(f => f.Close());
-                    }
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    await WaitForIdleAsync();
+                    form = Application.OpenForms.OfType<T>().Single();
 
                     try
                     {
@@ -69,6 +55,8 @@ namespace GitExtensions.UITests
                     }
                     finally
                     {
+                        // Close the form after the test completes. This will unblock the 'showForm()' call if it's
+                        // waiting for the form to close.
                         form.Close();
                     }
                 });
@@ -81,7 +69,7 @@ namespace GitExtensions.UITests
             finally
             {
                 form?.Dispose();
-                Assert.IsTrue(Application.OpenForms.Count == 0, $"{Application.OpenForms.Count} open form(s) after test");
+                Assert.IsEmpty(Application.OpenForms.OfType<T>(), $"{Application.OpenForms.OfType<T>().Count()} open form(s) after test");
             }
         }
 
