@@ -1,4 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="Project.Build.targets" />
+
   <PropertyGroup>
     <ApplicationIcon>..\Logo\git-extensions-logo.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
@@ -7,6 +9,9 @@
     <!-- Default debugging command starts GitExtensions browsing this repository -->
     <StartArguments>browse "$(MSBuildThisFileDirectory).."</StartArguments>
     <Prefer32bit>true</Prefer32bit>
+
+    <IsPublishable>true</IsPublishable>
+    <PublishDir Condition="'$(IsPublishable)' == 'true'">$(AppPublishDir)</PublishDir>
   </PropertyGroup>
 
   <ItemGroup>
@@ -40,46 +45,5 @@
     <None Include="app.manifest" />
     <EmbeddedResource Include="AutoCompleteRegexes.txt" />
   </ItemGroup>
-
-  <Target Name="CopyTranslations" AfterTargets="AfterBuild">
-    <ItemGroup>
-      <Translations Include="$(ProjectDir)\..\GitUI\Translation\*.xlf;$(ProjectDir)\..\GitUI\Translation\*.gif" />
-    </ItemGroup>
-    <Copy SourceFiles="@(Translations)" DestinationFolder="$(TargetDir)Translation" ContinueOnError="false" />
-  </Target>
-
-  <Target Name="EnumeratePlugins" AfterTargets="AfterBuild">
-    <PropertyGroup>
-      <PluginsFolder>$(TargetDir)Plugins</PluginsFolder>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <Folders Include="$([System.IO.Directory]::GetDirectories(&quot;$(PluginsFolder)&quot;))" />
-      <OnlyDirs Include="@(Folders->Replace($(TargetDir), ''))"/>
-    </ItemGroup>
-
-    <PropertyGroup>
-      <ProbingPrivatePath>Plugins;@(OnlyDirs)</ProbingPrivatePath>
-      <TargetAppConfig>@(AppConfigFileDestination)</TargetAppConfig>
-
-      <Namespace>
-        <Namespace Prefix="ns" Uri="urn:schemas-microsoft-com:asm.v1" />
-      </Namespace>
-    </PropertyGroup>
-
-    <XmlPoke XmlInputPath="$(TargetAppConfig.ToString())"
-            Namespaces="$(Namespace)"
-            Query="configuration/runtime/ns:assemblyBinding/ns:probing/@privatePath" 
-            Value="$(ProbingPrivatePath.ToString())" />
-  </Target>
-
-  <Target Condition="Exists('$(VCTargetsPath)\Microsoft.Cpp.Default.props')" Name="BuildEasyHookDll" AfterTargets="AfterBuild">
-    <MSBuild Projects="$(SolutionDir)\Externals\EasyHook\EasyHookDll\EasyHookDll.vcxproj" Properties="Configuration=Release;Platform=x64" />
-    <MSBuild Projects="$(SolutionDir)\Externals\EasyHook\EasyHookDll\EasyHookDll.vcxproj" Properties="Configuration=Release;Platform=Win32" />
-  </Target>
-  <Target Condition="Exists('$(VCTargetsPath)\Microsoft.Cpp.Default.props')" Name="CopyEasyHookDll" AfterTargets="BuildEasyHookDll">
-    <Copy SourceFiles="$(SolutionDir)\Externals\EasyHook\EasyHookDll\Build\Release\x64\EasyHook64.dll" DestinationFolder="$(TargetDir)" />
-    <Copy SourceFiles="$(SolutionDir)\Externals\EasyHook\EasyHookDll\Build\Release\x86\EasyHook32.dll" DestinationFolder="$(TargetDir)" />
-  </Target>
 
 </Project>

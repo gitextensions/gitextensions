@@ -33,5 +33,7 @@
     <ArtifactsTmpDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'tmp', '$(Configuration)'))</ArtifactsTmpDir>
     <ArtifactsTestResultsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'TestResults', '$(Configuration)'))</ArtifactsTestResultsDir>
     <ArtifactsPackagesDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'packages', '$(Configuration)'))</ArtifactsPackagesDir>
+
+    <AppPublishDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'publish', '$(Configuration)'))</AppPublishDir>
   </PropertyGroup>
 </Project>

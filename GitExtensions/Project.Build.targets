@@ -1,0 +1,73 @@
+<Project>
+
+  <ItemGroup>
+    <Translations Include="$(ProjectDir)\..\GitUI\Translation\*.xlf;$(ProjectDir)\..\GitUI\Translation\*.gif" />
+  </ItemGroup>
+
+  <Target Name="CopyTranslations" AfterTargets="AfterBuild">
+    <Copy SourceFiles="@(Translations)" DestinationFolder="$(TargetDir)Translation" ContinueOnError="false" />
+  </Target>
+
+  <Target Name="EnumeratePlugins" AfterTargets="AfterBuild">
+    <PropertyGroup>
+      <PluginsFolder>$(TargetDir)Plugins</PluginsFolder>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folders Include="$([System.IO.Directory]::GetDirectories(&quot;$(PluginsFolder)&quot;))" />
+      <OnlyDirs Include="@(Folders->Replace($(TargetDir), ''))"/>
+    </ItemGroup>
+
+    <PropertyGroup>
+      <ProbingPrivatePath>Plugins;@(OnlyDirs)</ProbingPrivatePath>
+      <TargetAppConfig>@(AppConfigFileDestination)</TargetAppConfig>
+
+      <Namespace>
+        <Namespace Prefix="ns" Uri="urn:schemas-microsoft-com:asm.v1" />
+      </Namespace>
+    </PropertyGroup>
+
+    <XmlPoke XmlInputPath="$(TargetAppConfig.ToString())"
+            Namespaces="$(Namespace)"
+            Query="configuration/runtime/ns:assemblyBinding/ns:probing/@privatePath" 
+            Value="$(ProbingPrivatePath.ToString())" />
+  </Target>
+
+  <Target Condition="Exists('$(VCTargetsPath)\Microsoft.Cpp.Default.props')" Name="BuildEasyHookDll" AfterTargets="AfterBuild">
+    <MSBuild Projects="$(SolutionDir)\Externals\EasyHook\EasyHookDll\EasyHookDll.vcxproj" Properties="Configuration=Release;Platform=x64" />
+    <MSBuild Projects="$(SolutionDir)\Externals\EasyHook\EasyHookDll\EasyHookDll.vcxproj" Properties="Configuration=Release;Platform=Win32" />
+  </Target>
+  <Target Condition="Exists('$(VCTargetsPath)\Microsoft.Cpp.Default.props')" Name="CopyEasyHookDll" AfterTargets="BuildEasyHookDll">
+    <Copy SourceFiles="$(SolutionDir)\Externals\EasyHook\EasyHookDll\Build\Release\x64\EasyHook64.dll" DestinationFolder="$(TargetDir)" />
+    <Copy SourceFiles="$(SolutionDir)\Externals\EasyHook\EasyHookDll\Build\Release\x86\EasyHook32.dll" DestinationFolder="$(TargetDir)" />
+  </Target>
+
+  <Target Name="CopyTranslations" AfterTargets="Publish">
+    <Copy SourceFiles="@(Translations)" DestinationFolder="$(PublishDir)Translation" ContinueOnError="false" />
+  </Target>
+
+  <Target Name="CreatePortable" AfterTargets="Publish">
+
+    <PropertyGroup>
+      <PublishAppConfig>$([System.IO.Path]::GetFileName('$(TargetAppConfig)'))</PublishAppConfig>
+      <PublishAppConfigPath>$([System.IO.Path]::Combine('$(PublishDir)', '$(PublishAppConfig)'))</PublishAppConfigPath>
+      <_PortablePath>$([System.IO.Path]::Combine('$(AppPublishDir)', '..', 'Portable.zip'))</_PortablePath>
+      <PublishPortablePath>$([System.IO.Path]::GetFullPath($(_PortablePath)))</PublishPortablePath>
+    </PropertyGroup>
+
+    <!-- Mark the package as "portable" -->
+    <XmlPoke XmlInputPath="$(PublishAppConfigPath)"
+            Query="configuration/applicationSettings/GitCommands.Properties.Settings/setting[@name='IsPortable']/value" 
+            Value="True" />
+
+    <ZipDirectory
+            SourceDirectory="$(PublishDir)"
+            DestinationFile="$(PublishPortablePath)" />
+
+    <!-- Reset the "portable" flag -->
+    <XmlPoke XmlInputPath="$(PublishAppConfigPath)"
+            Query="configuration/applicationSettings/GitCommands.Properties.Settings/setting[@name='IsPortable']/value" 
+            Value="False" />
+  </Target>
+
+</Project>
