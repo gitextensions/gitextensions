@@ -6,7 +6,9 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
+using GitUI.Theming;
 using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Columns
@@ -176,7 +178,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 var baseOffset = offset;
 
                 // Add fake "refs" for artificial commits
-                RevisionGridRefRenderer.DrawRef(isRowSelected, normalFont, ref offset, revision.Subject, AppSettings.OtherTagColor, RefArrowType.None, messageBounds, e.Graphics, dashedLine: false, fill: true);
+                RevisionGridRefRenderer.DrawRef(isRowSelected, normalFont, ref offset, revision.Subject, AppColor.OtherTag.GetThemeColor(), RefArrowType.None, messageBounds, e.Graphics, dashedLine: false, fill: true);
 
                 var max = Math.Max(
                     TextRenderer.MeasureText(ResourceManager.Strings.Workspace, normalFont).Width,

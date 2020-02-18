@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace GitUI.Theming
 {
-    public class SystemDialogDetector
+    internal class SystemDialogDetector
     {
         /// <summary>
         /// Determines whether a system dialog such as MessageBox.Show or Debug.Assert is currently

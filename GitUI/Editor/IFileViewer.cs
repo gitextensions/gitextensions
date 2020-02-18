@@ -73,12 +73,12 @@ namespace GitUI.Editor
         void SetFileLoader(GetNextFileFnc fileLoader);
 
         /// <summary>
-        /// Move the file viewer caret position to the next TextMarker found in the document that matches the AppSettings.HighlightAllOccurencesColor/>
+        /// Move the file viewer caret position to the next TextMarker found in the document that matches the AppColor.HighlightAllOccurences/>
         /// </summary>
         void GoToNextOccurrence();
 
         /// <summary>
-        /// Move the file viewer caret position to the previous TextMarker found in the document that matches the AppSettings.HighlightAllOccurencesColor/>
+        /// Move the file viewer caret position to the previous TextMarker found in the document that matches the AppColor.HighlightAllOccurences/>
         /// </summary>
         void GoToPreviousOccurrence();
     }
