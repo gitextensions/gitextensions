@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitUI;
+using NUnit.Framework;
 
 namespace GitExtensions.UITests
 {
@@ -27,32 +28,48 @@ namespace GitExtensions.UITests
         }
 
         public static void RunForm<T>(
-            Action showDialog,
-            Func<T, Task> runAsync)
+            Action showForm,
+            Func<T, Task> runTestAsync)
             where T : Form
         {
-            // Avoid using ThreadHelper.JoinableTaskFactory for the outermost operation because we don't want the task
-            // tracked by its collection. Otherwise, test code would not be able to wait for pending operations to
-            // complete.
-            var test = ThreadHelper.JoinableTaskContext.Factory.RunAsync(async () =>
+            Assert.IsEmpty(Application.OpenForms.OfType<T>(), $"{Application.OpenForms.OfType<T>().Count()} open form(s) before test");
+
+            T form = null;
+            try
             {
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                await WaitForIdleAsync();
-                var dialog = Application.OpenForms.OfType<T>().Single();
-                try
+                // Start runTestAsync before calling showForm, since the latter might block until the form is closed.
+                //
+                // Avoid using ThreadHelper.JoinableTaskFactory for the outermost operation because we don't want the task
+                // tracked by its collection. Otherwise, test code would not be able to wait for pending operations to
+                // complete.
+                var test = ThreadHelper.JoinableTaskContext.Factory.RunAsync(async () =>
                 {
-                    await runAsync(dialog);
-                }
-                finally
-                {
-                    dialog.Close();
-                }
-            });
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    await WaitForIdleAsync();
+                    form = Application.OpenForms.OfType<T>().Single();
 
-            showDialog();
+                    try
+                    {
+                        await runTestAsync(form);
+                    }
+                    finally
+                    {
+                        // Close the form after the test completes. This will unblock the 'showForm()' call if it's
+                        // waiting for the form to close.
+                        form.Close();
+                    }
+                });
 
-            // Join the asynchronous test operation so any exceptions are rethrown on this thread
-            test.Join();
+                showForm();
+
+                // Join the asynchronous test operation so any exceptions are rethrown on this thread.
+                test.Join();
+            }
+            finally
+            {
+                form?.Dispose();
+                Assert.IsEmpty(Application.OpenForms.OfType<T>(), $"{Application.OpenForms.OfType<T>().Count()} open form(s) after test");
+            }
         }
 
         private readonly struct VoidResult
