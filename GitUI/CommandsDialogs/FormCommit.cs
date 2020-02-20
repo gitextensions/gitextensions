@@ -3340,6 +3340,8 @@ namespace GitUI.CommandsDialogs
 
             internal CommandStatus ExecuteCommand(Command command) => _formCommit.ExecuteCommand((int)command);
 
+            internal Rectangle Bounds => _formCommit.Bounds;
+
             internal static string FormatCommitMessageFromTextBox(
                 string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty)
                     => FormCommit.FormatCommitMessageFromTextBox(commitMessageText, usingCommitTemplate, ensureCommitMessageSecondLineEmpty);
