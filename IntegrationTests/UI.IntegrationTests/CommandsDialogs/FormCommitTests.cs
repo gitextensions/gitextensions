@@ -369,7 +369,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         private void RunFormTest(Func<FormCommit, Task> testDriverAsync, CommitKind commitKind = CommitKind.Normal)
         {
             UITest.RunForm(
-                () =>
+                showForm: () =>
                 {
                     switch (commitKind)
                     {
