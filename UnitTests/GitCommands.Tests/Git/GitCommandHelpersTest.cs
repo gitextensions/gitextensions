@@ -740,6 +740,9 @@ namespace GitCommandsTests.Git
                 "merge -m \"message\" branch",
                 GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, message: "message", log: null, strategy: null).Arguments);
             Assert.AreEqual(
+                "merge -m \"this is \\\"some important\\\" message\" branch",
+                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, message: "this is \"some important\" message", log: null, strategy: null).Arguments);
+            Assert.AreEqual(
                 "merge --log=0 branch",
                 GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, message: null, log: 0, strategy: null).Arguments);
             Assert.AreEqual(
