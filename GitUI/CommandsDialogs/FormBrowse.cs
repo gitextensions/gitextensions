@@ -630,7 +630,7 @@ namespace GitUI.CommandsDialogs
 
             if (_dashboard == null || !_dashboard.Visible)
             {
-                revisionDiff.ForceRefreshRevisions();
+                revisionDiff.RefreshArtificial();
                 RevisionGrid.ForceRefreshRevisions();
                 InternalInitialize(true);
             }
