@@ -1011,6 +1011,8 @@ namespace GitCommands
         {
             // TODO Quote should (optionally?) escape any " characters, at least for usages like the below
 
+            message = EscapeDoubleQuotes(message);
+
             return new GitArgumentBuilder("merge")
             {
                 { !allowFastForward, "--no-ff" },
@@ -1022,6 +1024,11 @@ namespace GitCommands
                 { log != null, $"--log={log}" },
                 branch
             };
+        }
+
+        private static string EscapeDoubleQuotes(string message)
+        {
+            return message?.Replace("\"", "\\\"");
         }
 
         // returns " --find-renames=..." according to app settings
