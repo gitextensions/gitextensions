@@ -901,6 +901,7 @@ namespace GitCommands
         {
             var args = new GitArgumentBuilder("mergetool")
             {
+                { GitVersion.Current.SupportGuiMergeTool, "--gui" },
                 { fileName.IsNotNullOrWhitespace(), "--" },
                 fileName.ToPosixPath().QuoteNE()
             };

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitUIPluginInterfaces;
 using NSubstitute;
@@ -15,8 +16,13 @@ namespace GitCommandsTests.DiffMergeTools
     {
         private const string DiffToolName = "customDiffTool";
         private const string MergeToolName = "customMergeTool";
+        private const string MergeToolNameNoGui = "customMergeToolNoGui";
         private IConfigValueStore _fileSettings;
         private DiffMergeToolConfigurationManager _configurationManager;
+
+        private const string DiffToolKey = "diff.guitool";
+        private const string MergeToolKey = "merge.guitool";
+        private const string MergeToolNoGuiKey = "merge.tool";
 
         [SetUp]
         public void Setup()
@@ -25,8 +31,18 @@ namespace GitCommandsTests.DiffMergeTools
 
             _configurationManager = new DiffMergeToolConfigurationManager(() => _fileSettings);
 
-            _fileSettings.GetValue(_configurationManager.GetTestAccessor().DiffToolKey).Returns(DiffToolName);
-            _fileSettings.GetValue(_configurationManager.GetTestAccessor().MergeToolKey).Returns(MergeToolName);
+            _fileSettings.GetValue(SettingKeyString.DiffToolKey).Returns(DiffToolName);
+            _fileSettings.GetValue(SettingKeyString.MergeToolKey).Returns(MergeToolName);
+            _fileSettings.GetValue(SettingKeyString.MergeToolNoGuiKey).Returns(MergeToolNameNoGui);
+        }
+
+        [Test]
+        public void Check_that_application_toolkey_is_same_as_test_constant()
+        {
+            // Test cases requires constants, test that they are equal
+            SettingKeyString.DiffToolKey.Should().Be(DiffToolKey);
+            SettingKeyString.MergeToolKey.Should().Be(MergeToolKey);
+            SettingKeyString.MergeToolNoGuiKey.Should().Be(MergeToolNoGuiKey);
         }
 
         [Test]
@@ -50,7 +66,7 @@ namespace GitCommandsTests.DiffMergeTools
         [Test]
         public void ConfiguredMergeTool_should_return_value_in_config_file()
         {
-            _configurationManager.ConfiguredMergeTool.Should().Be(MergeToolName);
+            _configurationManager.ConfiguredMergeTool.Should().Be(GitVersion.Current.SupportGuiMergeTool ? MergeToolName : MergeToolNameNoGui);
         }
 
         [TestCase(null)]
@@ -75,8 +91,8 @@ namespace GitCommandsTests.DiffMergeTools
             _configurationManager.ConfigureDiffMergeTool("bla", DiffMergeToolType.Diff, "", "");
         }
 
-        [TestCase("bla", DiffMergeToolType.Diff, @"c:\some\path\to the tool\MyTool.exe", "--wait --diff \"$LOCAL\" \"$REMOTE\"", "diff.guitool", "difftool.bla.path", "difftool.bla.cmd")]
-        [TestCase("bla", DiffMergeToolType.Merge, @"c:\some\path\to the tool\MyTool.exe", "--wait \"$MERGED\"", "merge.tool", "mergetool.bla.path", "mergetool.bla.cmd")]
+        [TestCase("bla", DiffMergeToolType.Diff, @"c:\some\path\to the tool\MyTool.exe", "--wait --diff \"$LOCAL\" \"$REMOTE\"", DiffToolKey, "difftool.bla.path", "difftool.bla.cmd")]
+        [TestCase("bla", DiffMergeToolType.Merge, @"c:\some\path\to the tool\MyTool.exe", "--wait \"$MERGED\"", MergeToolKey, "mergetool.bla.path", "mergetool.bla.cmd")]
         public void ConfigureDiffMergeTool_should_configure_tool(string toolName, DiffMergeToolType toolType, string toolPath, string toolCommand,
             string expectedValueKey, string expectedPathKey, string expectedCommandKey)
         {
@@ -208,8 +224,8 @@ namespace GitCommandsTests.DiffMergeTools
             _fileSettings.Received(1).GetValue(expectedValueKey);
         }
 
-        [TestCase(DiffMergeToolType.Diff, "diff.guitool", "difftool")]
-        [TestCase(DiffMergeToolType.Merge, "merge.tool", "mergetool")]
+        [TestCase(DiffMergeToolType.Diff, DiffToolKey, "difftool")]
+        [TestCase(DiffMergeToolType.Merge, MergeToolKey, "mergetool")]
         public void GetInfo(DiffMergeToolType toolType, string expectedToolKey, string expectedPrefix)
         {
             var info = _configurationManager.GetTestAccessor().GetInfo(toolType);
@@ -226,7 +242,7 @@ namespace GitCommandsTests.DiffMergeTools
 
             settings.Should().BeEmpty();
             _fileSettings.Received(1).GetValue(Arg.Any<string>());
-            _fileSettings.Received(1).GetValue(_configurationManager.GetTestAccessor().DiffToolKey);
+            _fileSettings.Received(1).GetValue(SettingKeyString.DiffToolKey);
         }
 
         [TestCase(DiffMergeToolType.Diff, "difftool")]
