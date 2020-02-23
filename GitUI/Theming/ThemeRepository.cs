@@ -10,7 +10,7 @@ namespace GitUI.Theming
     public class ThemeRepository
     {
         private const string Subdirectory = "Themes";
-        private const string Extension = ".colors";
+        private const string Extension = ".css";
 
         private readonly ThemePersistence _persistence;
 
