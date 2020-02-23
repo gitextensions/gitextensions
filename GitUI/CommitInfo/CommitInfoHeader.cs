@@ -133,23 +133,21 @@ namespace GitUI.CommitInfo
             if (uri.Scheme == "gitext")
             {
                 CommandClicked?.Invoke(sender, new CommandEventArgs(uri.Host, uri.AbsolutePath.TrimStart('/')));
+                return;
             }
-            else
+
+            try
             {
                 using var process = new Process
                 {
                     EnableRaisingEvents = false,
                     StartInfo = { FileName = uri.AbsoluteUri }
                 };
-
-                try
-                {
-                    process.Start();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(this, ex.Message, _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                process.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
