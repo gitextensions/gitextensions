@@ -1313,7 +1313,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target />
       </trans-unit>
       <trans-unit id="_diffWithParent.Text">
-        <source>Diff with: a/</source>
+        <source>Diff with a/</source>
         <target />
       </trans-unit>
       <trans-unit id="_openSubmoduleMenuItem.Text">
