@@ -28,7 +28,6 @@ namespace GitUI.Theming
             }
 
             MigrateColorSettings();
-            MigratePrebuiltThemes();
         }
 
         /// <summary>
@@ -67,28 +66,6 @@ namespace GitUI.Theming
             }
 
             AppSettings.ThemeId = _migratedThemeId;
-        }
-
-        /// <summary>
-        /// Previously all themes were deployed to user data directory.
-        /// Now we deploy builtin themes to application directory, leaving user directory for
-        /// custom user-defined themes, so built-in themes must be purged from there.
-        /// </summary>
-        private void MigratePrebuiltThemes()
-        {
-            // TODO remove this method after 4.0 is released
-            foreach (ThemeId id in _themeIds)
-            {
-                if (!id.IsBuiltin)
-                {
-                    _repository.Delete(id);
-                }
-            }
-
-            ThemeId themeId = new ThemeId(AppSettings.ThemeId.Name, isBuiltin: true);
-            AppSettings.ThemeId = _themeIds.Contains(themeId)
-                ? themeId
-                : ThemeId.Default;
         }
 
         private bool MigrationAlreadyHappened() =>

@@ -5,7 +5,7 @@
     /// </summary>
     /// <remarks>
     /// Values are stored in AppSettings class. Whenever new name is added here, add default value
-    /// to <see cref="AppColorDefaults"/> and \GitUI\Themes\win10default.colors
+    /// to <see cref="AppColorDefaults"/> and \GitUI\Themes\win10default.css
     /// </remarks>
     public enum AppColor
     {
