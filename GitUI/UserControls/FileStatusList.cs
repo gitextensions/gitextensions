@@ -715,7 +715,7 @@ namespace GitUI
             Revision = selectedRev;
             GitItemStatusesWithDescription = items == null
                 ? Array.Empty<(GitRevision, string, IReadOnlyList<GitItemStatus>)>()
-                : new[] { (parentRev, _diffWithParent.Text + GetDescriptionForRevision(parentRev.ObjectId), items) };
+                : new[] { (parentRev, _diffWithParent.Text + GetDescriptionForRevision(parentRev?.ObjectId), items) };
         }
 
         private string GetDescriptionForRevision(ObjectId objectId)
@@ -725,7 +725,7 @@ namespace GitUI
                 return DescribeRevision(objectId);
             }
 
-            return objectId.ToShortString();
+            return objectId?.ToShortString();
         }
 
         public void SetNoFilesText(string text)
