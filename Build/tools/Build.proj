@@ -14,6 +14,7 @@
     Clean                           "true" to clean solution
     Build                           "true" to build solution
     Rebuild                         "true" to rebuild solution
+    Publish                         "true" to publish the application
     Test                            "true" to run tests
     IntegrationTest                 "true" to run integration tests
     Pack                            "true" to build artifacts
@@ -67,6 +68,7 @@
       <_SolutionBuildTargets Include="LegacyClean" Condition="'$(Clean)' == 'true'" />
       <_SolutionBuildTargets Include="Rebuild" Condition="'$(Rebuild)' == 'true'" />
       <_SolutionBuildTargets Include="Build" Condition="'$(Build)' == 'true' and '$(Rebuild)' != 'true'" />
+      <_SolutionBuildTargets Include="Publish" Condition="'$(Publish)' == 'true'" />
       <!-- Extensibility point to run addition build targets after build. -->
       <_SolutionBuildTargets Include="@(SolutionBuildTargets)" />
       <!-- Deploy target is set up to chain after Build so that F5 in VS works. -->
