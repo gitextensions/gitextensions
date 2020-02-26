@@ -10,7 +10,7 @@ using GitUI;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace GitUITests.CommitInfo
+namespace GitExtensions.UITests.UserControls.CommitInfo
 {
     [Apartment(ApartmentState.STA)]
     public class CommitInfoTests
