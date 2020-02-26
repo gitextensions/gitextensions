@@ -77,6 +77,23 @@ namespace GitExtensions.UITests
             }
         }
 
+        public static void RunControl<T>(
+            Func<Form, T> createControl,
+            Func<T, Task> runTestAsync)
+            where T : Control
+        {
+            T control = null;
+            RunForm<Form>(
+                showForm: () =>
+                {
+                    var form = new Form { Text = $"Test {typeof(T).Name}" };
+                    control = createControl(form);
+                    Assert.True(form.Controls.Contains(control));
+                    Application.Run(form);
+                },
+                runTestAsync: form => runTestAsync(control));
+        }
+
         private readonly struct VoidResult
         {
         }
