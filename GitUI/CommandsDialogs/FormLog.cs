@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace GitUI.CommandsDialogs
 {
@@ -39,7 +40,10 @@ namespace GitUI.CommandsDialogs
 
             using (WaitCursorScope.Enter())
             {
-                diffViewer.ViewChangesAsync(RevisionGrid.GetSelectedRevisions(), DiffFiles.SelectedItem, string.Empty);
+                var revisions = RevisionGrid.GetSelectedRevisions();
+                var selectedRev = revisions.FirstOrDefault();
+                var firstId = revisions.Skip(1).LastOrDefault()?.ObjectId;
+                diffViewer.ViewChangesAsync(firstId, selectedRev, DiffFiles.SelectedItem, string.Empty);
             }
         }
 
