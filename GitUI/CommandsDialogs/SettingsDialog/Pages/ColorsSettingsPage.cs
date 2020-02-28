@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
@@ -34,10 +35,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             set
             {
-                int index = _NO_TRANSLATE_cbSelectTheme.Items.IndexOf(new FormattedThemeId(value));
+                var formattedThemeId = new FormattedThemeId(value);
+                int index = _NO_TRANSLATE_cbSelectTheme.Items.IndexOf(formattedThemeId);
                 if (index < 0)
                 {
-                    throw new InvalidOperationException("Themes were not added to ComboBox");
+                    // Handle case when selected theme is missing gracefully.
+                    // It may happen in a following scenario:
+                    // - user creates custom theme and selects it in this settings page
+                    // - user saves app settings
+                    // - user deletes the file with custom theme
+                    Trace.WriteLine("Theme not found: " + formattedThemeId);
+                    index = 0;
                 }
 
                 _NO_TRANSLATE_cbSelectTheme.SelectedIndex = index;
@@ -77,9 +85,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 .Select(id => new FormattedThemeId(id))
                 .Cast<object>()
                 .ToArray());
-
-            UseSystemVisualStyle = AppSettings.UseSystemVisualStyle;
             SelectedThemeId = AppSettings.ThemeId;
+            UseSystemVisualStyle = AppSettings.UseSystemVisualStyle;
             EndUpdateThemeSettings();
         }
 
