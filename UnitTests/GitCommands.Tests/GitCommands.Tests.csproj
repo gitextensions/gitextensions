@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,13 +32,17 @@
     </None>
     <EmbeddedResource Include="UserRepositoryHistory\Legacy\MockData\CategorisedRepositories01.xml" />
     <EmbeddedResource Include="UserRepositoryHistory\Legacy\MockData\CategorisedRepositories02.xml" />
-    <None Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Deserialize_remote_repositories_without_ns.approved.txt" />
-    <None Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Deserialize_remote_repositories_with_ns.approved.txt" />
-    <None Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Serialize_recent_repositories.approved.xml" />
-    <None Include="UserRepositoryHistory\Legacy\RepositoryCategorySerialiserTests.Verify_backwards_compatibility_of_object_graph.approved.xml" />
+    <None Include="**\*.approved.*" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="GitRevisionSummaryBuilderTests.Should_do_ellipsis.ForScenario.Too_long_lines.approved.txt" />
-    <None Include="GitRevisionSummaryBuilderTests.Should_do_ellipsis.ForScenario.Too_many_lines.approved.txt" />
+    <None Update="**\*.approved.*">
+      <DependentUpon>$(
+        [System.String]::Copy('%(FileName)')
+            .SubString(
+              0,
+              $([System.String]::Copy('%(FileName)').IndexOf('.'))
+            )
+        )$(ProjectExt.Replace('proj', ''))</DependentUpon>
+    </None>
   </ItemGroup>
 </Project>
