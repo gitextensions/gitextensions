@@ -96,7 +96,7 @@ namespace GitUI.CommandsDialogs
                                                                                                    noCommit.Checked,
                                                                                                    _NO_TRANSLATE_mergeStrategy.Text,
                                                                                                    allowUnrelatedHistories.Checked,
-                                                                                                   Module.WorkingDir,
+                                                                                                   Module.WorkingDirGitDir,
                                                                                                    addLogMessages.Checked ? (int)nbMessages.Value : (int?)null));
 
             var wasConflict = MergeConflictHandler.HandleMergeConflicts(UICommands, this, !noCommit.Checked);
