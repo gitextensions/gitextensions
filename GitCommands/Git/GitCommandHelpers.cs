@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitCommands.Git;
@@ -1007,11 +1008,9 @@ namespace GitCommands
             };
         }
 
-        public static ArgumentString MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string message, int? log)
+        public static ArgumentString MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string folderPath, int? log)
         {
             // TODO Quote should (optionally?) escape any " characters, at least for usages like the below
-
-            message = EscapeDoubleQuotes(message);
 
             return new GitArgumentBuilder("merge")
             {
@@ -1020,15 +1019,10 @@ namespace GitCommands
                 { squash, "--squash" },
                 { noCommit, "--no-commit" },
                 { allowUnrelatedHistories, "--allow-unrelated-histories" },
-                { !string.IsNullOrEmpty(message), $"-m {message.Quote()}" },
                 { log != null, $"--log={log}" },
+                { $"-F \"{Path.Combine(folderPath, "MERGE_MSG")}\"" },
                 branch
             };
-        }
-
-        private static string EscapeDoubleQuotes(string message)
-        {
-            return message?.Replace("\"", "\\\"");
         }
 
         // returns " --find-renames=..." according to app settings
@@ -1080,6 +1074,41 @@ namespace GitCommands
             {
                 process.Kill();
             }
+        }
+
+        public static string FormatCommitMessageFromTextBox(
+            string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty)
+        {
+            if (commitMessageText == null)
+            {
+                return string.Empty;
+            }
+
+            var formattedCommitMessage = new StringBuilder();
+
+            var lineNumber = 1;
+            foreach (var line in commitMessageText.Split('\n'))
+            {
+                string nonNullLine = line ?? string.Empty;
+
+                // When a committemplate is used, skip comments and do not count them as line.
+                // otherwise: "#" is probably not used for comment but for issue number
+                if (usingCommitTemplate && nonNullLine.StartsWith("#"))
+                {
+                    continue;
+                }
+
+                if (ensureCommitMessageSecondLineEmpty && lineNumber == 2 && !string.IsNullOrEmpty(nonNullLine))
+                {
+                    formattedCommitMessage.AppendLine();
+                }
+
+                formattedCommitMessage.AppendLine(nonNullLine);
+
+                lineNumber++;
+            }
+
+            return formattedCommitMessage.ToString();
         }
     }
 }

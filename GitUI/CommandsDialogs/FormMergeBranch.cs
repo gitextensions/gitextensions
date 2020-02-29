@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
@@ -83,13 +85,18 @@ namespace GitUI.CommandsDialogs
             AppSettings.DontCommitMerge = noCommit.Checked;
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforeMerge);
 
+            if (addMergeMessage.Checked)
+            {
+                WriteMessageToMergeFile(mergeMessage.Text);
+            }
+
             var successfullyMerged = FormProcess.ShowDialog(this, GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(),
                                                                                                    fastForward.Checked,
                                                                                                    squash.Checked,
                                                                                                    noCommit.Checked,
                                                                                                    _NO_TRANSLATE_mergeStrategy.Text,
                                                                                                    allowUnrelatedHistories.Checked,
-                                                                                                   addMergeMessage.Checked ? mergeMessage.Text : null,
+                                                                                                   Module.WorkingDir,
                                                                                                    addLogMessages.Checked ? (int)nbMessages.Value : (int?)null));
 
             var wasConflict = MergeConflictHandler.HandleMergeConflicts(UICommands, this, !noCommit.Checked);
@@ -100,6 +107,21 @@ namespace GitUI.CommandsDialogs
                 UICommands.RepoChangedNotifier.Notify();
                 Close();
             }
+        }
+
+        private void WriteMessageToMergeFile(string mergeMessage)
+        {
+            var formattedCommitMessage = GitCommandHelpers.FormatCommitMessageFromTextBox(
+                mergeMessage,
+                usingCommitTemplate: false,
+                AppSettings.EnsureCommitMessageSecondLineEmpty);
+
+            // Commit messages are UTF-8 by default unless otherwise in the config file.
+            Encoding encoding = Module.CommitEncoding;
+
+            var path = Path.Combine(Module.WorkingDirGitDir, "MERGE_MSG");
+
+            File.WriteAllText(path, formattedCommitMessage, encoding);
         }
 
         private void NonDefaultMergeStrategy_CheckedChanged(object sender, EventArgs e)

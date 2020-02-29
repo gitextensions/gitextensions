@@ -2203,41 +2203,6 @@ namespace GitUI.CommandsDialogs
             Initialize();
         }
 
-        private static string FormatCommitMessageFromTextBox(
-            string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty)
-        {
-            if (commitMessageText == null)
-            {
-                return string.Empty;
-            }
-
-            var formattedCommitMessage = new StringBuilder();
-
-            var lineNumber = 1;
-            foreach (var line in commitMessageText.Split('\n'))
-            {
-                string nonNullLine = line ?? string.Empty;
-
-                // When a committemplate is used, skip comments and do not count them as line.
-                // otherwise: "#" is probably not used for comment but for issue number
-                if (usingCommitTemplate && nonNullLine.StartsWith("#"))
-                {
-                    continue;
-                }
-
-                if (ensureCommitMessageSecondLineEmpty && lineNumber == 2 && !string.IsNullOrEmpty(nonNullLine))
-                {
-                    formattedCommitMessage.AppendLine();
-                }
-
-                formattedCommitMessage.AppendLine(nonNullLine);
-
-                lineNumber++;
-            }
-
-            return formattedCommitMessage.ToString();
-        }
-
         private void SetCommitMessageFromTextBox(string commitMessageText)
         {
             // Save last commit message in settings. This way it can be used in multiple repositories.
@@ -2245,7 +2210,7 @@ namespace GitUI.CommandsDialogs
 
             var path = _commitMessageManager.CommitMessagePath;
 
-            var formattedCommitMessage = FormatCommitMessageFromTextBox(
+            var formattedCommitMessage = GitCommandHelpers.FormatCommitMessageFromTextBox(
                 commitMessageText, usingCommitTemplate: !string.IsNullOrEmpty(_commitTemplate), AppSettings.EnsureCommitMessageSecondLineEmpty);
 
             // Commit messages are UTF-8 by default unless otherwise in the config file.
@@ -3344,7 +3309,7 @@ namespace GitUI.CommandsDialogs
 
             internal static string FormatCommitMessageFromTextBox(
                 string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty)
-                    => FormCommit.FormatCommitMessageFromTextBox(commitMessageText, usingCommitTemplate, ensureCommitMessageSecondLineEmpty);
+                    => GitCommandHelpers.FormatCommitMessageFromTextBox(commitMessageText, usingCommitTemplate, ensureCommitMessageSecondLineEmpty);
         }
     }
 
