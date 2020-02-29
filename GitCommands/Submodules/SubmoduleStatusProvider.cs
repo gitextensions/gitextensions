@@ -230,7 +230,7 @@ namespace GitCommands.Submodules
             {
                 var localPath = superprojectModule.WorkingDir.Substring(topProject.WorkingDir.Length);
                 name = Path.GetDirectoryName(localPath).ToPosixPath();
-             }
+            }
 
             string path = superprojectModule.WorkingDir;
             name += GetBranchNameSuffix(path, noBranchText);
