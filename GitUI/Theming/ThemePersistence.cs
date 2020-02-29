@@ -6,7 +6,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using GitExtUtils.GitUI.Theming;
 using ResourceManager;
 
@@ -14,17 +13,14 @@ namespace GitUI.Theming
 {
     public class ThemePersistence
     {
-        private const string Format = "{0}: {1:x6}";
         private static readonly Regex Pattern = new Regex(
-            @"^(?<name>\w+): (?<argb>[\da-f]{6})$",
+            @"^\s*\.\s*(?<name>\w+)\s*\{\s*color\s*:\s*#(?<argb>[\da-f]{6})\s*\}\s*$",
             RegexOptions.IgnoreCase);
+
+        private const string Format = ".{0} {{ color: #{1:x6} }}";
 
         private readonly TranslationString _failedToLoadThemeFrom =
             new TranslationString("Failed to read theme from {0}");
-        private readonly TranslationString _failedToLoadTheme =
-            new TranslationString("Failed to read theme");
-        private readonly TranslationString _failedToWriteFile =
-            new TranslationString("Failed write file {0}");
         private readonly TranslationString _fileNotFound =
             new TranslationString("File not found");
         private readonly TranslationString _fileTooLarge =
@@ -34,56 +30,38 @@ namespace GitUI.Theming
         private readonly TranslationString _invalidColorValueAtLine =
             new TranslationString("Invalid color value at line {0}: {1}");
 
-        public bool SaveToFile(
-            StaticTheme theme,
-            string file,
-            bool quiet = false)
+        public Theme Load(string fileName, ThemeId id)
+        {
+            if (!TryReadFile(fileName, out string serialized))
+            {
+                return null;
+            }
+
+            if (!TryParse(fileName, serialized, out var appColors, out var sysColors))
+            {
+                return null;
+            }
+
+            return new Theme(appColors, sysColors, id);
+        }
+
+        public void Save(Theme theme, string fileName)
         {
             string serialized = string.Join(
                 Environment.NewLine,
                 theme.SysColorValues.Select(_ => string.Format(Format, _.Key, ToRbgInt(_.Value))).Concat(
-                theme.AppColorValues.Select(_ => string.Format(Format, _.Key, ToRbgInt(_.Value)))));
-            try
-            {
-                File.WriteAllText(file, serialized);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                string message = string.Format(_failedToWriteFile.Text, file) + Environment.NewLine + ex.Message;
-                Trace.WriteLine(message);
-                if (!quiet)
-                {
-                    MessageBox.Show(message);
-                }
+                    theme.AppColorValues.Select(_ => string.Format(Format, _.Key, ToRbgInt(_.Value)))));
 
-                return false;
-            }
+            File.WriteAllText(fileName, serialized);
 
-            int ToRbgInt(Color с) => с.ToArgb() & 0x00ffffff;
-        }
-
-        public StaticTheme LoadFile(string fileName, bool quiet = false)
-        {
-            if (!TryReadFile(fileName, out string serialized, quiet))
-            {
-                return null;
-            }
-
-            if (!TryParse(fileName, serialized, out var appColors, out var sysColors, quiet))
-            {
-                return null;
-            }
-
-            return new StaticTheme(appColors, sysColors, fileName);
+            static int ToRbgInt(Color с) => с.ToArgb() & 0x00ffffff;
         }
 
         private bool TryParse(
             string fileName,
             string input,
             out IReadOnlyDictionary<AppColor, Color> applicationColors,
-            out IReadOnlyDictionary<KnownColor, Color> systemColors,
-            bool quiet = false)
+            out IReadOnlyDictionary<KnownColor, Color> systemColors)
         {
             var appColors = new Dictionary<AppColor, Color>();
             var sysColors = new Dictionary<KnownColor, Color>();
@@ -102,7 +80,7 @@ namespace GitUI.Theming
                 var match = Pattern.Match(line);
                 if (!match.Success)
                 {
-                    WarnOnInvalidContent(fileName, string.Format(_invalidFormatOfLine.Text, i + 1, line), quiet);
+                    PrintTraceWarning(fileName, string.Format(_invalidFormatOfLine.Text, i + 1, line));
                     return false;
                 }
 
@@ -112,7 +90,7 @@ namespace GitUI.Theming
                 if (!int.TryParse(rgbaStr, NumberStyles.HexNumber, CultureInfo.InvariantCulture,
                     out int rgb))
                 {
-                    WarnOnInvalidContent(fileName, string.Format(_invalidColorValueAtLine.Text, i + 1, rgbaStr), quiet);
+                    PrintTraceWarning(fileName, string.Format(_invalidColorValueAtLine.Text, i + 1, rgbaStr));
                     return false;
                 }
 
@@ -134,21 +112,21 @@ namespace GitUI.Theming
                 Color.FromArgb(rbgInt | -16777216); // 0xff000000, add alpha bits
         }
 
-        private bool TryReadFile(string fileName, out string result, bool quiet)
+        private bool TryReadFile(string fileName, out string result)
         {
             result = null;
             var fileInfo = new FileInfo(fileName);
 
             if (!fileInfo.Exists)
             {
-                WarnOnInvalidContent(fileName, _fileNotFound.Text, quiet);
+                PrintTraceWarning(fileName, _fileNotFound.Text);
                 return false;
             }
 
             // > 1MB
             if (fileInfo.Length > (1 << 20))
             {
-                WarnOnInvalidContent(fileName, _fileTooLarge.Text, quiet);
+                PrintTraceWarning(fileName, _fileTooLarge.Text);
                 return false;
             }
 
@@ -159,24 +137,13 @@ namespace GitUI.Theming
             }
             catch (Exception ex)
             {
-                WarnOnInvalidContent(fileName, ex.Message, quiet);
+                PrintTraceWarning(fileName, ex.Message);
                 return false;
             }
         }
 
-        private void WarnOnInvalidContent(string fileName, string message, bool quiet)
-        {
-            var fullMessage = string.Format(_failedToLoadThemeFrom.Text, fileName) +
-                Environment.NewLine + message;
-
-            Trace.WriteLine(fullMessage);
-            if (!quiet)
-            {
-                MessageBox.Show(
-                    message, _failedToLoadTheme.Text,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Exclamation);
-            }
-        }
+        [Conditional("DEBUG")]
+        private void PrintTraceWarning(string fileName, string message) =>
+            Trace.WriteLine(string.Format(_failedToLoadThemeFrom.Text, fileName) + Environment.NewLine + message);
     }
 }

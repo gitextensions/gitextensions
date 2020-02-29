@@ -321,7 +321,13 @@ namespace GitCommands.Submodules
             if (gitStatus != null
                 && gitStatus.Count > 0)
             {
-                SetTopModuleAsDirty(module);
+                SetTopModuleAsDirty(module.GetTopModule().WorkingDir);
+            }
+            else if (module.GetTopModule() == module)
+            {
+                // status includes top module changes to files and 'dirty' can be cleared
+                // (keep 'dirty' if unknown)
+                _submoduleInfos[module.WorkingDir].Detailed = null;
             }
 
             var changedSubmodules = gitStatus.Where(i => i.IsSubmodule);
@@ -342,12 +348,12 @@ namespace GitCommands.Submodules
         /// Set the top module as dirty
         /// If any module is changed
         /// </summary>
-        /// <param name="module">current Git module</param>
-        private void SetTopModuleAsDirty(GitModule module)
+        /// <param name="topModuleWorkingDir">path to top module</param>
+        private void SetTopModuleAsDirty(string topModuleWorkingDir)
         {
-            if (_submoduleInfos[module.GetTopModule().WorkingDir].Detailed == null)
+            if (_submoduleInfos[topModuleWorkingDir].Detailed == null)
             {
-                _submoduleInfos[module.GetTopModule().WorkingDir].Detailed = new DetailedSubmoduleInfo()
+                _submoduleInfos[topModuleWorkingDir].Detailed = new DetailedSubmoduleInfo()
                 {
                     Status = SubmoduleStatus.Unknown,
                     IsDirty = true,
@@ -413,7 +419,7 @@ namespace GitCommands.Submodules
 
             if (submoduleStatus != null)
             {
-                SetTopModuleAsDirty(superModule);
+                SetTopModuleAsDirty(superModule.GetTopModule().WorkingDir);
             }
 
             // Recursively update submodules

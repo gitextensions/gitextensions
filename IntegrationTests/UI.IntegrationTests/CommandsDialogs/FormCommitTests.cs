@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommonTestUtils;
 using FluentAssertions;
-using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
 using ICSharpCode.TextEditor;
@@ -26,9 +25,6 @@ namespace GitExtensions.UITests.CommandsDialogs
         [SetUp]
         public void SetUp()
         {
-            // Avoid auto-completion popups.
-            AppSettings.ProvideAutocompletion = false;
-
             if (_referenceRepository == null)
             {
                 _referenceRepository = new ReferenceRepository();
@@ -354,16 +350,8 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             var bounds1 = Rectangle.Empty;
             var bounds2 = Rectangle.Empty;
-            RunFormTest(async form =>
-            {
-                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
-                bounds1 = boundsAccessor(form);
-            });
-            RunFormTest(async form =>
-            {
-                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
-                bounds2 = boundsAccessor(form);
-            });
+            RunFormTest(form => bounds1 = boundsAccessor(form));
+            RunFormTest(form => bounds2 = boundsAccessor(form));
             testDriver(bounds1, bounds2);
         }
 
@@ -401,9 +389,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                             throw new ArgumentException($"Unsupported commit kind: {commitKind}", nameof(commitKind));
                     }
                 },
-                testDriverAsync,
-                joinPendingOperationsAfterwards: true // so the repository is not deleted while operations run in the background
-            );
+                testDriverAsync);
         }
     }
 

@@ -1,0 +1,88 @@
+<Project>
+
+  <!--
+    ============================================================
+                       _PublishTranslations
+
+    Copies all available translations to the publish directory.
+    ============================================================
+    -->
+  <Target Name="_PublishTranslations">
+    <Copy SourceFiles="@(Translations)" DestinationFolder="$(PublishDir)Translation" ContinueOnError="false" />
+  </Target>
+
+  <!--
+    ============================================================
+                       _PublishExtraDependecies
+
+    Copies additional files (e.g. EasyHook dlls) to the publish directory.
+    ============================================================
+    -->
+  <Target Name="_PublishExtraDependecies">
+    <Copy SourceFiles="$(SolutionDir)\Externals\EasyHook\EasyHookDll\Build\Release\x64\EasyHook64.dll" DestinationFolder="$(PublishDir)" />
+    <Copy SourceFiles="$(SolutionDir)\Externals\EasyHook\EasyHookDll\Build\Release\x86\EasyHook32.dll" DestinationFolder="$(PublishDir)" />
+  </Target>
+
+  <!--
+    ============================================================
+                       _RetrieveCurrentBuildVersion
+
+    Retrieves the current build version.
+    ============================================================
+    -->
+  <Target Name="_RetrieveCurrentBuildVersion">
+    <PropertyGroup>
+      <ExeAssembly>$([MSBuild]::NormalizePath('$(PublishDir)', $(_DeploymentApplicationManifestIdentity)))</ExeAssembly>
+    </PropertyGroup>
+
+    <GetAssemblyIdentity AssemblyFiles="$(ExeAssembly)">
+      <Output TaskParameter="Assemblies" ItemName="ExeAssemblyIdentities"/>
+    </GetAssemblyIdentity>
+
+    <PropertyGroup>
+      <CurrentBuildVersion>%(ExeAssemblyIdentities.Version)</CurrentBuildVersion>
+    </PropertyGroup>    
+  </Target>
+
+  <!--
+    ============================================================
+                       CreatePortable
+
+    Creates a portable archive.
+    ============================================================
+    -->
+
+  <Target Name="CreatePortable" AfterTargets="Publish" DependsOnTargets="_RetrieveCurrentBuildVersion;_PublishTranslations;_PublishExtraDependecies">
+    <PropertyGroup>
+      <!-- Resolve app.config, so we can set/unset "portable" flag -->
+      <_PublishAppConfig>$([System.IO.Path]::GetFileName('$(TargetAppConfig)'))</_PublishAppConfig>
+      <_PublishAppConfigPath>$([System.IO.Path]::Combine('$(PublishDir)', '$(_PublishAppConfig)'))</_PublishAppConfigPath>
+
+      <!-- Resolve the output file -->
+      <_PublishPortableVersionSuffix>-$(CurrentBuildVersion.ToString())</_PublishPortableVersionSuffix>
+      <_PublishPortableCommitHashSuffix Condition="'$(GitCommit)' != ''">-$(GitCommit)</_PublishPortableCommitHashSuffix>
+      <_PublishPortableCommitHashSuffix Condition="'$(env:APPVEYOR_REPO_COMMIT)' != ''">-$(env:APPVEYOR_REPO_COMMIT)</_PublishPortableCommitHashSuffix>
+      <_PublishPortableFileName>GitExtensions-Portable$(_PublishPortableVersionSuffix)$(_PublishPortableCommitHashSuffix).zip</_PublishPortableFileName>
+      <_PublishPortablePath>$([MSBuild]::NormalizePath('$(ArtifactsPublishDir)', '$(_PublishPortableFileName)'))</_PublishPortablePath>
+
+      <!-- We want to archive the whole publish folder, so get one level up -->
+      <_PublishedPath>$([MSBuild]::NormalizeDirectory('$(PublishDir)', '..'))</_PublishedPath>
+    </PropertyGroup>
+
+    <!-- Mark the package as "portable" -->
+    <XmlPoke XmlInputPath="$(_PublishAppConfigPath)"
+            Query="configuration/applicationSettings/GitCommands.Properties.Settings/setting[@name='IsPortable']/value" 
+            Value="True" />
+
+    <ZipDirectory
+            SourceDirectory="$(_PublishedPath)"
+            DestinationFile="$(_PublishPortablePath)"
+            Overwrite="true" />
+
+    <!-- Reset the "portable" flag -->
+    <XmlPoke XmlInputPath="$(_PublishAppConfigPath)"
+            Query="configuration/applicationSettings/GitCommands.Properties.Settings/setting[@name='IsPortable']/value" 
+            Value="False" />
+  </Target>
+
+</Project>

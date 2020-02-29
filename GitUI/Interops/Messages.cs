@@ -8,7 +8,6 @@
         public const int WM_RBUTTONDOWN = 0x0204;
         public const int WM_RBUTTONUP = 0x0205;
         public const int WM_MOUSEACTIVATE = 0x21;
-        public const int WM_SYSCOLORCHANGE = 21;
 
         public const int WM_HSCROLL = 276;
         public const int WM_VSCROLL = 0x115;

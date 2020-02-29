@@ -207,9 +207,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             UITest.RunForm(
                 showForm: () => _commands.StartBrowseDialog(owner: null).Should().BeTrue(),
-                testDriverAsync,
-                joinPendingOperationsAfterwards: true // so the repository is not deleted while operations run in the background
-            );
+                testDriverAsync);
         }
     }
 }

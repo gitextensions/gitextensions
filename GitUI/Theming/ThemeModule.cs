@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Diagnostics;
+using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
@@ -9,82 +12,26 @@ namespace GitUI.Theming
 {
     public static class ThemeModule
     {
-        private static readonly Lazy<ThemeDeployment> DeploymentLazy =
-            new Lazy<ThemeDeployment>(() => new ThemeDeployment(Controller));
+        public static ThemeSettings Settings { get; private set; } = ThemeSettings.Default;
 
-        private static readonly Lazy<FormThemeEditorController> FormEditorControllerLazy =
-            new Lazy<FormThemeEditorController>(CreateEditorController);
-
-        private static readonly Lazy<FormThemeEditor> FormEditorLazy =
-            new Lazy<FormThemeEditor>(() => new FormThemeEditor(Controller));
-
-        private static ThemePersistence Persistence { get; } = new ThemePersistence();
-
-        private static readonly Lazy<Theme> DefaultThemeLazy =
-            new Lazy<Theme>(() => new DefaultTheme());
-
-        private static readonly Lazy<ThemeManager> ControllerLazy =
-            new Lazy<ThemeManager>(() => new ThemeManager(DefaultTheme));
-
-        private static readonly Lazy<SystemDialogDetector> SystemDialogDetectorLazy =
-            new Lazy<SystemDialogDetector>(() => new SystemDialogDetector());
-
-        private static ThemeDeployment Deployment =>
-            DeploymentLazy.Value;
-
-        public static FormThemeEditorController Controller =>
-            FormEditorControllerLazy.Value;
-
-        private static FormThemeEditor FormEditor =>
-            FormEditorLazy.Value;
-
-        private static Theme DefaultTheme =>
-            DefaultThemeLazy.Value;
-
-        private static ThemeManager ThemeManager =>
-            ControllerLazy.Value;
-
-        private static SystemDialogDetector SystemDialogDetector =>
-            SystemDialogDetectorLazy.Value;
+        private static ThemeRepository Repository { get; } = new ThemeRepository(new ThemePersistence());
 
         public static void Load()
         {
-            if (!TryInitialize())
-            {
-                // Load default theme to prevent mixing dark AppColors with bright SystemColors
-                // when AppSettings.UIThemeName points to dark theme
-                Controller.SetInitialTheme("win10default", useSystemVisualStyle: true);
-            }
+            new ThemeMigration(Repository).Migrate();
+            Settings = TryLoadTheme();
+            ColorHelper.ThemeSettings = Settings;
+            ThemeFix.ThemeSettings = Settings;
+            Win32ThemeHooks.ThemeSettings = Settings;
         }
 
-        private static bool TryInitialize()
+        private static bool TryInstallHooks(Theme theme)
         {
-            try
-            {
-                Deployment.DeployThemesToUserDirectory();
-            }
-            catch (Exception ex)
-            {
-                // non mission-critical, proceed
-                Trace.WriteLine($"Failed to deploy schemes to user directory: {ex}");
-            }
-
-            var invariantTheme = Controller.LoadInvariantTheme();
-            if (invariantTheme == null)
-            {
-                return false;
-            }
-
-            if (!Controller.SetInitialTheme(AppSettings.UIThemeName, AppSettings.UseSystemVisualStyle))
-            {
-                return false;
-            }
-
-            ThemeFix.UseSystemVisualStyle = Controller.UseSystemVisualStyleInitial;
+            Win32ThemeHooks.WindowCreated += Handle_WindowCreated;
 
             try
             {
-                Win32ThemeHooks.InstallHooks(ThemeManager, SystemDialogDetector);
+                Win32ThemeHooks.InstallHooks(theme, new SystemDialogDetector());
             }
             catch (Exception ex)
             {
@@ -93,28 +40,74 @@ namespace GitUI.Theming
                 return false;
             }
 
-            Win32ThemeHooks.WindowCreated += Handle_WindowCreated;
-            ColorHelper.SetUITheme(ThemeManager, invariantTheme);
+            ResetGdiCaches();
             return true;
+        }
+
+        private static ThemeSettings TryLoadTheme()
+        {
+            var invariantTheme = Repository.GetInvariantTheme();
+            if (invariantTheme == null)
+            {
+                // Not good, ColorHelper needs actual InvariantTheme to correctly transform colors.
+                // Still not a mission-critical failure, do not raise.
+                return ThemeSettings.Default;
+            }
+
+            ThemeId themeId = AppSettings.ThemeId;
+            if (string.IsNullOrEmpty(themeId.Name))
+            {
+                return new ThemeSettings(Theme.Default, invariantTheme, AppSettings.UseSystemVisualStyle);
+            }
+
+            var theme = Repository.GetTheme(themeId);
+            if (theme == null || !TryInstallHooks(theme))
+            {
+                return new ThemeSettings(Theme.Default, invariantTheme, AppSettings.UseSystemVisualStyle);
+            }
+
+            return new ThemeSettings(theme, invariantTheme, AppSettings.UseSystemVisualStyle);
+        }
+
+        private static void ResetGdiCaches()
+        {
+            var systemDrawingAssembly = typeof(Color).Assembly;
+
+            var colorTableField =
+                systemDrawingAssembly.GetType("System.Drawing.KnownColorTable")
+                    .GetField("colorTable", BindingFlags.Static | BindingFlags.NonPublic) ??
+                throw new NotSupportedException();
+
+            var threadDataProperty =
+                systemDrawingAssembly.GetType("System.Drawing.SafeNativeMethods")
+                    .GetNestedType("Gdip", BindingFlags.NonPublic)
+                    .GetProperty("ThreadData", BindingFlags.Static | BindingFlags.NonPublic) ??
+                throw new NotSupportedException();
+
+            var systemBrushesKeyField =
+                    typeof(SystemBrushes).GetField("SystemBrushesKey", BindingFlags.Static | BindingFlags.NonPublic) ??
+                    throw new NotSupportedException();
+
+            var systemBrushesKey = systemBrushesKeyField.GetValue(null);
+
+            FieldInfo systemPensKeyField = typeof(SystemPens)
+                .GetField("SystemPensKey", BindingFlags.Static | BindingFlags.NonPublic) ??
+                throw new NotSupportedException();
+
+            var systemPensKey = systemPensKeyField
+                .GetValue(null);
+
+            var threadData = (IDictionary)threadDataProperty.GetValue(null, null);
+            colorTableField.SetValue(null, null);
+
+            threadData[systemBrushesKey] = null;
+            threadData[systemPensKey] = null;
         }
 
         public static void Unload()
         {
             Win32ThemeHooks.Uninstall();
             Win32ThemeHooks.WindowCreated -= Handle_WindowCreated;
-        }
-
-        public static void ShowEditor()
-        {
-            FormEditor.Show();
-            FormEditor.BringToFront();
-        }
-
-        private static FormThemeEditorController CreateEditorController()
-        {
-            var editor = new FormThemeEditorController(ThemeManager, Persistence);
-            AppSettings.Saved += editor.SaveCurrentTheme;
-            return editor;
         }
 
         private static void Handle_WindowCreated(IntPtr hwnd)

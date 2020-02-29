@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using JetBrains.Annotations;
 
 namespace GitExtUtils.GitUI.Theming
 {
@@ -16,22 +17,8 @@ namespace GitExtUtils.GitUI.Theming
             (KnownColor.MenuHighlight, KnownColor.HighlightText),
         };
 
-        private static Theme _theme;
-        private static Theme _invariantTheme;
-        private static bool _isDefaultTheme;
-
-        static ColorHelper()
-        {
-            _theme = _invariantTheme = new DefaultTheme();
-            _isDefaultTheme = true;
-        }
-
-        public static void SetUITheme(Theme theme, Theme invariantTheme)
-        {
-            _theme = theme;
-            _invariantTheme = invariantTheme;
-            _isDefaultTheme = false;
-        }
+        [NotNull]
+        public static ThemeSettings ThemeSettings { private get; set; } = ThemeSettings.Default;
 
         public static void SetForeColorForBackColor(this Control control) =>
             control.ForeColor = GetForeColorForBackColor(control.BackColor);
@@ -51,13 +38,13 @@ namespace GitExtUtils.GitUI.Theming
                 .Select(i => (Distance: DistanceTo(BackForeExamples[i].fore), Index: i))
                 .Min();
 
-            return _theme.GetNonEmptyColor(closestBack.Distance <= closestFore.Distance * 1.25 // prefer back-fore combination
+            return ThemeSettings.Theme.GetNonEmptyColor(closestBack.Distance <= closestFore.Distance * 1.25 // prefer back-fore combination
                 ? BackForeExamples[closestBack.Index].fore
                 : BackForeExamples[closestFore.Index].back);
 
             double DistanceTo(KnownColor c2)
             {
-                var hsl2 = _theme.GetNonEmptyColor(c2).ToPerceptedHsl();
+                var hsl2 = ThemeSettings.Theme.GetNonEmptyColor(c2).ToPerceptedHsl();
                 return
                     Math.Abs(hsl1.L - hsl2.L) +
                     (0.25 * Math.Abs(hsl1.S - hsl2.S)) +
@@ -73,7 +60,7 @@ namespace GitExtUtils.GitUI.Theming
 
         public static Color AdaptColor(Color originalRgb, bool isForeground)
         {
-            if (_isDefaultTheme)
+            if (ThemeSettings == ThemeSettings.Default)
             {
                 return originalRgb;
             }
@@ -94,7 +81,7 @@ namespace GitExtUtils.GitUI.Theming
 
             double DistanceTo(KnownColor c2)
             {
-                var hsl2 = _invariantTheme.GetNonEmptyColor(c2).ToPerceptedHsl();
+                var hsl2 = ThemeSettings.InvariantTheme.GetNonEmptyColor(c2).ToPerceptedHsl();
                 return Math.Abs(hsl1.L - hsl2.L) + (0.25 * Math.Abs(hsl1.S - hsl2.S));
             }
         }
@@ -141,7 +128,7 @@ namespace GitExtUtils.GitUI.Theming
 
         /// <remarks>0.05 is subtle. 0.3 is quite strong.</remarks>
         public static Color MakeBackgroundDarkerBy(this KnownColor name, double amount) =>
-            _invariantTheme.GetNonEmptyColor(name)
+            ThemeSettings.InvariantTheme.GetNonEmptyColor(name)
                 .TransformHsl(l: l => l - amount)
                 .AdaptBackColor();
 
@@ -161,7 +148,7 @@ namespace GitExtUtils.GitUI.Theming
 
         public static Bitmap AdaptLightness(this Bitmap original)
         {
-            if (_isDefaultTheme)
+            if (ThemeSettings == ThemeSettings.Default)
             {
                 return original;
             }
@@ -173,10 +160,10 @@ namespace GitExtUtils.GitUI.Theming
 
         private static Color AdaptColor(Color originalRgb, KnownColor exampleName, KnownColor oppositeName)
         {
-            var exampleOrig = RgbHsl(_invariantTheme.GetNonEmptyColor(exampleName));
-            var oppositeOrig = RgbHsl(_invariantTheme.GetNonEmptyColor(oppositeName));
-            var example = RgbHsl(_theme.GetNonEmptyColor(exampleName));
-            var opposite = RgbHsl(_theme.GetNonEmptyColor(oppositeName));
+            var exampleOrig = RgbHsl(ThemeSettings.InvariantTheme.GetNonEmptyColor(exampleName));
+            var oppositeOrig = RgbHsl(ThemeSettings.InvariantTheme.GetNonEmptyColor(oppositeName));
+            var example = RgbHsl(ThemeSettings.Theme.GetNonEmptyColor(exampleName));
+            var opposite = RgbHsl(ThemeSettings.Theme.GetNonEmptyColor(oppositeName));
             var original = RgbHsl(originalRgb);
 
             double perceptedL = Transform(

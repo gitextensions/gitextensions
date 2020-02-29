@@ -205,10 +205,8 @@ namespace GitExtensions.UITests.Script
         private void RunFormTest(Func<FormBrowse, Task> testDriverAsync)
         {
             UITest.RunForm(
-                showForm: () => _uiCommands.StartBrowseDialog().Should().BeTrue(),
-                testDriverAsync,
-                joinPendingOperationsAfterwards: true // so the repository is not deleted while operations run in the background
-            );
+                showForm: () => _uiCommands.StartBrowseDialog(owner: null).Should().BeTrue(),
+                testDriverAsync);
         }
     }
 }
