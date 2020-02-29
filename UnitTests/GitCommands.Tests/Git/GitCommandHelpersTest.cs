@@ -721,36 +721,32 @@ namespace GitCommandsTests.Git
         [Test]
         public void MergeBranchCmd()
         {
+            var path = "c:\\test";
+
             Assert.AreEqual(
-                "merge branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, folderPath: null, log: null, strategy: null).Arguments);
+                "merge -F \"c:\\test\\MERGE_MSG\" branch",
+                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, folderPath: path, log: null, strategy: null).Arguments);
             Assert.AreEqual(
-                "merge --no-ff branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: false, squash: false, noCommit: false, allowUnrelatedHistories: false, folderPath: null, log: null, strategy: null).Arguments);
+                "merge --no-ff -F \"c:\\test\\MERGE_MSG\" branch",
+                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: false, squash: false, noCommit: false, allowUnrelatedHistories: false, folderPath: path, log: null, strategy: null).Arguments);
             Assert.AreEqual(
-                "merge --squash branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: true, noCommit: false, allowUnrelatedHistories: false, folderPath: null, log: null, strategy: null).Arguments);
+                "merge --squash -F \"c:\\test\\MERGE_MSG\" branch",
+                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: true, noCommit: false, allowUnrelatedHistories: false, folderPath: path, log: null, strategy: null).Arguments);
             Assert.AreEqual(
-                "merge --no-commit branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: true, allowUnrelatedHistories: false, folderPath: null, log: null, strategy: null).Arguments);
+                "merge --no-commit -F \"c:\\test\\MERGE_MSG\" branch",
+                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: true, allowUnrelatedHistories: false, folderPath: path, log: null, strategy: null).Arguments);
             Assert.AreEqual(
-                "merge --allow-unrelated-histories branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: true, folderPath: null, log: null, strategy: null).Arguments);
+                "merge --allow-unrelated-histories -F \"c:\\test\\MERGE_MSG\" branch",
+                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: true, folderPath: path, log: null, strategy: null).Arguments);
             Assert.AreEqual(
-                "merge -m \"message\" branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, folderPath: "message", log: null, strategy: null).Arguments);
+                "merge --log=0 -F \"c:\\test\\MERGE_MSG\" branch",
+                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, folderPath: path, log: 0, strategy: null).Arguments);
             Assert.AreEqual(
-                "merge -m \"this is \\\"some important\\\" message\" branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, folderPath: "this is \"some important\" message", log: null, strategy: null).Arguments);
+                "merge --strategy=strategy -F \"c:\\test\\MERGE_MSG\" branch",
+                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, folderPath: path, log: null, strategy: "strategy").Arguments);
             Assert.AreEqual(
-                "merge --log=0 branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, folderPath: null, log: 0, strategy: null).Arguments);
-            Assert.AreEqual(
-                "merge --strategy=strategy branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, folderPath: null, log: null, strategy: "strategy").Arguments);
-            Assert.AreEqual(
-                "merge --no-ff --strategy=strategy --squash --no-commit --allow-unrelated-histories -m \"message\" --log=1 branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: false, squash: true, noCommit: true, allowUnrelatedHistories: true, folderPath: "message", log: 1, strategy: "strategy").Arguments);
+                "merge --no-ff --strategy=strategy --squash --no-commit --allow-unrelated-histories --log=1 -F \"c:\\test\\MERGE_MSG\" branch",
+                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: false, squash: true, noCommit: true, allowUnrelatedHistories: true, folderPath: path, log: 1, strategy: "strategy").Arguments);
         }
 
         [Test]
