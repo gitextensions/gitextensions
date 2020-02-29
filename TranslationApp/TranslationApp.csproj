@@ -16,11 +16,4 @@
     <ProjectReference Include="..\ResourceManager\ResourceManager.csproj" />
   </ItemGroup>
 
-  <Target Name="CopyTranslationApp" AfterTargets="AfterBuild">
-    <ItemGroup>
-      <TranslationApp Include="$(TargetDir)\TranslationApp.exe" />
-    </ItemGroup>
-    <Copy SourceFiles="@(TranslationApp)" DestinationFolder="$(ProjectDir)\..\GitExtensions\$(OutDir)" ContinueOnError="false" />
-  </Target>
-
 </Project>

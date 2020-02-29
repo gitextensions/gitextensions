@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Abstractions;
 using System.Text;
+using System.Windows.Forms;
 using JetBrains.Annotations;
 
 namespace GitCommands
@@ -35,6 +37,10 @@ namespace GitCommands
 
     public sealed class CommitMessageManager : ICommitMessageManager
     {
+        private string CannotReadCommitMessage => "Cannot read commit message";
+        private string CannotSaveCommitMessage => "Cannot save commit message";
+        private string CannotAccessFile => "Exception: \"{0}\" when accessing {1}";
+
         private readonly string _amendSaveStatePath;
         private readonly string _commitMessagePath;
         private readonly string _mergeMessagePath;
@@ -100,7 +106,20 @@ namespace GitCommands
                 }
 
                 var (file, exists) = GetMergeOrCommitMessagePath();
-                return exists ? _fileSystem.File.ReadAllText(file, _commitEncoding) : string.Empty;
+                string result;
+                try
+                {
+                    result = exists ? _fileSystem.File.ReadAllText(file, _commitEncoding) : string.Empty;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(null, string.Format(CannotAccessFile, ex.Message, file),
+                        CannotReadCommitMessage, MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation);
+                    result = string.Empty;
+                }
+
+                return result;
             }
             set
             {
@@ -116,7 +135,16 @@ namespace GitCommands
                         return;
                     }
 
-                    _fileSystem.File.WriteAllText(path, content, _commitEncoding);
+                    try
+                    {
+                        _fileSystem.File.WriteAllText(path, content, _commitEncoding);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(null, string.Format(CannotAccessFile, ex.Message, path),
+                            CannotSaveCommitMessage, MessageBoxButtons.OK,
+                            MessageBoxIcon.Exclamation);
+                    }
                 }
             }
         }

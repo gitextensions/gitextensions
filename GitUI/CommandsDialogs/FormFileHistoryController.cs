@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 using GitCommands.Utils;
@@ -35,11 +36,11 @@ namespace GitUI.CommandsDialogs
             {
                 // grab the 8.3 file path
                 var shortPath = new StringBuilder(4096);
-                if (NativeMethods.GetShortPathName(path, shortPath, shortPath.Capacity) > 0)
+                if (NativeMethods.GetShortPathNameW(path, shortPath, shortPath.Capacity) > 0)
                 {
                     // use 8.3 file path to get properly cased full file path
                     var longPath = new StringBuilder(4096);
-                    if (NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity) > 0)
+                    if (NativeMethods.GetLongPathNameW(shortPath.ToString(), longPath, longPath.Capacity) > 0)
                     {
                         exactPath = longPath.ToString();
                         return true;

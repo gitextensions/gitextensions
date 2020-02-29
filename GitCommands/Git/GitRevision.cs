@@ -89,7 +89,7 @@ namespace GitCommands
 
         public string Name { get; set; }
 
-        public override string ToString() => $"{ObjectId.ToShortString(8)}:{Subject}";
+        public override string ToString() => $"{ObjectId.ToShortString()}:{Subject}";
 
         /// <summary>
         /// Indicates whether the commit is an artificial commit.

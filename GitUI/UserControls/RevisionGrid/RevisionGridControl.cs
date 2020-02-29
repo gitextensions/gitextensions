@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.DirectoryServices;
 using System.Drawing;
 using System.Linq;
 using System.Reactive.Concurrency;
@@ -40,6 +39,19 @@ namespace GitUI
         Normal,
         DrawNonRelativesGray,
         HighlightSelected
+    }
+
+    public enum SortDirection
+    {
+        /// <summary>
+        /// Sort from smallest to largest. For example, A to Z.
+        /// </summary>
+        Ascending,
+
+        /// <summary>
+        /// Sort from largest to smallest. For example, Z to A.
+        /// </summary>
+        Descending
     }
 
     [DefaultEvent("DoubleClick")]
@@ -632,20 +644,19 @@ namespace GitUI
 
         public string DescribeRevision(GitRevision revision, int maxLength = 0)
         {
+            var description = revision.IsArtificial
+                ? string.Empty
+                : revision.ObjectId.ToShortString() + ": ";
+
             var gitRefListsForRevision = new GitRefListsForRevision(revision);
 
             var descriptiveRef = gitRefListsForRevision.AllBranches
                 .Concat(gitRefListsForRevision.AllTags)
                 .FirstOrDefault();
 
-            var description = descriptiveRef != null
+            description += descriptiveRef != null
                 ? GetRefUnambiguousName(descriptiveRef)
                 : revision.Subject;
-
-            if (!revision.IsArtificial)
-            {
-                description += " @" + revision.ObjectId.ToShortString(4);
-            }
 
             if (maxLength > 0)
             {

@@ -29,6 +29,7 @@ using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUI.SpellChecker;
+using GitUI.Theming;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
@@ -305,7 +306,7 @@ namespace GitUI.CommandsDialogs
 
             SelectedDiff.EscapePressed += () => DialogResult = DialogResult.Cancel;
 
-            SolveMergeconflicts.BackColor = AppSettings.BranchColor;
+            SolveMergeconflicts.BackColor = AppColor.Branch.GetThemeColor();
             SolveMergeconflicts.SetForeColorForBackColor();
 
             toolStripStatusBranchIcon.AdaptImageLightness();
@@ -1236,7 +1237,7 @@ namespace GitUI.CommandsDialogs
             if (FileHelper.IsImage(item.Name))
             {
                 var guid = staged ? ObjectId.IndexId : ObjectId.WorkTreeId;
-                await SelectedDiff.ViewGitItemRevisionAsync(item.Name, guid, openWithDiffTool);
+                await SelectedDiff.ViewGitItemRevisionAsync(item, guid, openWithDiffTool);
             }
             else
             {
@@ -3238,7 +3239,7 @@ namespace GitUI.CommandsDialogs
             if (AppSettings.CommitAndPushForcedWhenAmend)
             {
                 CommitAndPush.BackColor = Amend.Checked
-                    ? AppSettings.BranchColor
+                    ? AppColor.Branch.GetThemeColor()
                     : SystemColors.ButtonFace;
 
                 CommitAndPush.SetForeColorForBackColor();
@@ -3338,6 +3339,8 @@ namespace GitUI.CommandsDialogs
             internal ToolStripStatusLabel RemoteNameLabelStatus => _formCommit.remoteNameLabel;
 
             internal CommandStatus ExecuteCommand(Command command) => _formCommit.ExecuteCommand((int)command);
+
+            internal Rectangle Bounds => _formCommit.Bounds;
 
             internal static string FormatCommitMessageFromTextBox(
                 string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty)

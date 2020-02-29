@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Settings;
 using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
             EnableButtons();
 
-            SolveMergeConflicts.BackColor = AppSettings.BranchColor;
+            SolveMergeConflicts.BackColor = AppColor.Branch.GetThemeColor();
             SolveMergeConflicts.SetForeColorForBackColor();
         }
 

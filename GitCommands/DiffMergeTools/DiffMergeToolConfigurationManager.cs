@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using GitCommands.Config;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.DiffMergeTools
 {
     public sealed class DiffMergeToolConfigurationManager
     {
-        private const string DiffToolKey = "diff.guitool";
-        private const string MergeToolKey = "merge.tool";
-
         private readonly Func<IConfigValueStore> _getFileSettings;
         private readonly Func<string, IEnumerable<string>, string> _findFileInFolders;
 
@@ -29,12 +27,30 @@ namespace GitCommands.DiffMergeTools
         /// <summary>
         /// Gets the diff tool configured in the effective config under 'diff.guitool'.
         /// </summary>
-        public string ConfiguredDiffTool => _getFileSettings()?.GetValue(DiffToolKey);
+        public string ConfiguredDiffTool => _getFileSettings()?.GetValue(SettingKeyString.DiffToolKey);
 
         /// <summary>
-        /// Gets the merge tool configured in the effective config under 'merge.tool'.
+        /// Gets the merge tool configured in the effective config under 'merge.guitool' or 'merge.tool'.
         /// </summary>
-        public string ConfiguredMergeTool => _getFileSettings()?.GetValue(MergeToolKey);
+        public string ConfiguredMergeTool
+        {
+            get
+            {
+                string mergetool = "";
+                if (GitVersion.Current.SupportGuiMergeTool)
+                {
+                    mergetool = _getFileSettings()?.GetValue(SettingKeyString.MergeToolKey);
+                }
+
+                // Fallback and older Git
+                if (mergetool.IsNullOrEmpty())
+                {
+                    mergetool = _getFileSettings()?.GetValue(SettingKeyString.MergeToolNoGuiKey);
+                }
+
+                return mergetool;
+            }
+        }
 
         /// <summary>
         /// Configures diff/merge tool.
@@ -173,10 +189,10 @@ namespace GitCommands.DiffMergeTools
             switch (toolType)
             {
                 case DiffMergeToolType.Diff:
-                    return (DiffToolKey, "difftool");
+                    return (SettingKeyString.DiffToolKey, "difftool");
 
                 case DiffMergeToolType.Merge:
-                    return (MergeToolKey, "mergetool");
+                    return (SettingKeyString.MergeToolKey, "mergetool");
 
                 default: throw new NotSupportedException();
             }
@@ -223,9 +239,6 @@ namespace GitCommands.DiffMergeTools
             {
                 _manager = manager;
             }
-
-            public string DiffToolKey => DiffMergeToolConfigurationManager.DiffToolKey;
-            public string MergeToolKey => DiffMergeToolConfigurationManager.MergeToolKey;
 
             public (string toolKey, string prefix) GetInfo(DiffMergeToolType toolType)
                 => _manager.GetInfo(toolType);

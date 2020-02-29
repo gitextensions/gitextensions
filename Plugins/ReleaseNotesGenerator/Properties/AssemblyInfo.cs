@@ -3,4 +3,4 @@ using System.Runtime.CompilerServices;
 
 [assembly: AssemblyDescription("GitExtensions plugin for generating release notes")]
 
-[assembly: InternalsVisibleTo("ReleaseNotesGeneratorTests")]
+[assembly: InternalsVisibleTo("ReleaseNotesGenerator.Tests")]

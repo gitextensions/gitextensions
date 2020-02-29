@@ -113,4 +113,12 @@ YYYY/MM/DD, github id, Full name, email
 2020/01/02, c3er, Christian Dreier, flipper.x3r(at)googlemail.com
 2020/01/04, MarkJ74, Mark Jackson, markj74(at)outlook.com
 2020/01/07, asherber, Aaron Sherber, aaron(at)sherber.com
-2020/02/29, itsho, Itamar Shoham, Itamar.Shoham@gmx.com
+2020/02/05, azarkevich, Sergey Azarkevich, azarkevich/at/gmail.com
+2020/02/05, FallenGameR, Aleksandr Kostikov, alexko|at|microsoft.com
+2020/02/09, alexeiskachykhin, Alexei Skachykhin, alexei.skachykhin(at)live.com
+2020/02/10, ierof, Irina Erofeeva, babasya(at)gmail.com
+2020/02/10, Quppa, David Warner, david.p.warner(at)gmail.com
+2020/02/10, gpongelli, Gabriele Pongelli, gabriele.pongelli(at)gmail.com
+2020/02/10, EbenZhang, Eben Zhang, zhangyingneng(at)gmail.com
+2020/02/11, mwerle, Michael Werle, micha(at)michaelwerle.com
+2020/02/29, itsho, Itamar Shoham, Itamar.Shoham(at)gmx.com

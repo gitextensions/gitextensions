@@ -897,9 +897,15 @@ namespace GitCommands
             }
         }
 
-        public void RunMergeTool()
+        public void RunMergeTool([CanBeNull] string fileName = "")
         {
-            using (var process = _gitExecutable.Start("mergetool", createWindow: true))
+            var args = new GitArgumentBuilder("mergetool")
+            {
+                { GitVersion.Current.SupportGuiMergeTool, "--gui" },
+                { fileName.IsNotNullOrWhitespace(), "--" },
+                fileName.ToPosixPath().QuoteNE()
+            };
+            using (var process = _gitExecutable.Start(args, createWindow: true))
             {
                 process.WaitForExit();
             }
@@ -1044,7 +1050,7 @@ namespace GitCommands
             if (loadRefs)
             {
                 revision.Refs = GetRefs()
-                    .Where(r => r.Guid == revision.Guid)
+                    .Where(r => r.ObjectId == revision.ObjectId)
                     .ToList();
             }
 
@@ -1948,6 +1954,11 @@ namespace GitCommands
         public bool InTheMiddleOfPatch()
         {
             return !File.Exists(GetRebaseDir() + "rebasing") && Directory.Exists(GetRebaseDir());
+        }
+
+        public bool InTheMiddleOfMerge()
+        {
+            return File.Exists(Path.Combine(GetGitDirectory(), "MERGE_HEAD"));
         }
 
         public bool InTheMiddleOfAction()
@@ -3004,7 +3015,7 @@ namespace GitCommands
             foreach (var gitRef in gitRefs)
             {
                 if (headByRemote.TryGetValue(gitRef.Remote, out var defaultHead) &&
-                    gitRef.Guid == defaultHead.Guid)
+                    gitRef.ObjectId == defaultHead.ObjectId)
                 {
                     headByRemote.Remove(gitRef.Remote);
                 }
@@ -3615,6 +3626,7 @@ namespace GitCommands
 
         public SubmoduleStatus CheckSubmoduleStatus([CanBeNull] ObjectId commit, [CanBeNull] ObjectId oldCommit, CommitData data, CommitData oldData, bool loadData = false)
         {
+            // TODO File access for Git revision access
             if (!IsValidGitWorkingDir() || oldCommit == null)
             {
                 return SubmoduleStatus.NewSubmodule;

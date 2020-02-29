@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Threading;
@@ -15,13 +16,19 @@ namespace CommonTestUtils
     public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestAction
     {
         private DenyExecutionSynchronizationContext _denyExecutionSynchronizationContext;
+        private HangReporter _hangReporter;
         private ExceptionDispatchInfo _threadException;
 
         public ActionTargets Targets => ActionTargets.Test;
 
-        public void BeforeTest(ITest test)
+        public ConfigureJoinableTaskFactoryAttribute()
         {
             Application.ThreadException += HandleApplicationThreadException;
+        }
+
+        public void BeforeTest(ITest test)
+        {
+            Assert.IsNull(ThreadHelper.JoinableTaskContext, "Tests with joinable tasks must not be run in parallel!");
 
             IList apartmentState = null;
             for (var scope = test; scope != null; scope = scope.Parent)
@@ -42,11 +49,12 @@ namespace CommonTestUtils
 
             Assert.AreEqual(ApartmentState.STA, Thread.CurrentThread.GetApartmentState());
 
-            // This form created for obtain UI synchronization context only
+            // This form is created to obtain a UI synchronization context only.
             using (new Form())
             {
                 // Store the shared JoinableTaskContext
                 ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+                _hangReporter = new HangReporter(ThreadHelper.JoinableTaskContext);
             }
         }
 
@@ -56,9 +64,23 @@ namespace CommonTestUtils
             {
                 try
                 {
-                    using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
+                    // Wait for eventual pending operations triggered by the test.
+                    using var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout);
+                    try
                     {
-                        ThreadHelper.JoinableTaskContext?.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cts.Token));
+                        // Note that ThreadHelper.JoinableTaskContext.Factory must be used to bypass the default behavior of
+                        // ThreadHelper.JoinableTaskFactory since the latter adds new tasks to the collection and would therefore
+                        // never complete.
+                        ThreadHelper.JoinableTaskContext.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cts.Token));
+                    }
+                    catch (OperationCanceledException) when (cts.IsCancellationRequested)
+                    {
+                        if (int.TryParse(Environment.GetEnvironmentVariable("GE_TEST_SLEEP_SECONDS_ON_HANG"), out var sleepSeconds) && sleepSeconds > 0)
+                        {
+                            Thread.Sleep(TimeSpan.FromSeconds(sleepSeconds));
+                        }
+
+                        throw;
                     }
                 }
                 finally
@@ -72,19 +94,28 @@ namespace CommonTestUtils
 
                 _denyExecutionSynchronizationContext?.ThrowIfSwitchOccurred();
             }
+            catch (Exception ex) when (_threadException != null)
+            {
+                StoreThreadException(ex);
+            }
             finally
             {
-                Application.ThreadException -= HandleApplicationThreadException;
-                _threadException?.Throw();
+                // Reset _threadException to null, and throw if it was set during the current test.
+                Interlocked.Exchange(ref _threadException, null)?.Throw();
             }
         }
 
         private void HandleApplicationThreadException(object sender, ThreadExceptionEventArgs e)
+            => StoreThreadException(e.Exception);
+
+        private void StoreThreadException(Exception ex)
         {
-            if (_threadException == null)
+            if (_threadException != null)
             {
-                _threadException = ExceptionDispatchInfo.Capture(e.Exception);
+                ex = new AggregateException(new Exception[] { _threadException.SourceException, ex });
             }
+
+            _threadException = ExceptionDispatchInfo.Capture(ex);
         }
 
         private class DenyExecutionSynchronizationContext : SynchronizationContext
@@ -167,6 +198,37 @@ namespace CommonTestUtils
             private static void ThrowFailedTransferExceptionForCapture()
             {
                 throw new InvalidOperationException("Tests cannot use SwitchToMainThreadAsync unless they are marked with ApartmentState.STA.");
+            }
+        }
+
+        private sealed class HangReporter : JoinableTaskContextNode
+        {
+            public HangReporter(JoinableTaskContext context)
+                : base(context)
+            {
+                RegisterOnHangDetected();
+            }
+
+            protected override void OnHangDetected(TimeSpan hangDuration, int notificationCount, Guid hangId)
+            {
+                if (notificationCount > 1)
+                {
+                    return;
+                }
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"{Environment.NewLine}HANG DETECTED: guid {hangId}{Environment.NewLine}");
+                Console.ResetColor();
+
+                if (Environment.GetEnvironmentVariable("GE_TEST_LAUNCH_DEBUGGER_ON_HANG") != "1")
+                {
+                    return;
+                }
+
+                Console.WriteLine("launching debugger...");
+
+                Debugger.Launch();
+                Debugger.Break();
             }
         }
     }

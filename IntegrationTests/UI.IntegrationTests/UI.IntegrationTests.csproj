@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+    <CodeAnalysisRuleSet>..\..\GitExtensionsTest.ruleset</CodeAnalysisRuleSet>
+    
+    <!-- TODO once all project migrated to SDK-style, remove this and move properties to Directory.Build.props -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Externals\ICSharpCode.TextEditor\Project\ICSharpCode.TextEditor.csproj" />
+    <ProjectReference Include="..\..\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\..\GitUI\GitUI.csproj" />
+    <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
+    <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\..\UnitTests\CommonTestUtils\CommonTestUtils.csproj" />
+  </ItemGroup>
+
+</Project>
+

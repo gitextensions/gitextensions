@@ -484,9 +484,9 @@ xcopy /y /i ..\GitExtensions\bin\%Configuration%\EasyHook32.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\EasyHook64.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\Themes\dark.colors GitExtensions\Themes\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\Themes\dark.css GitExtensions\Themes\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\Themes\win10default.colors GitExtensions\Themes\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\Themes\win10default.css GitExtensions\Themes\
 IF ERRORLEVEL 1 EXIT /B 1
 
 REM Plugins

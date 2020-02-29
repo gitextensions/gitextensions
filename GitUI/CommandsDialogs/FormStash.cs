@@ -197,17 +197,7 @@ namespace GitUI.CommandsDialogs
                 {
                     if (stashedItem.IsNew)
                     {
-                        if (!stashedItem.IsSubmodule)
-                        {
-                            View.ViewGitItemAsync(stashedItem.Name, stashedItem.TreeGuid);
-                        }
-                        else
-                        {
-                            ThreadHelper.JoinableTaskFactory.RunAsync(
-                                () => View.ViewTextAsync(
-                                    stashedItem.Name,
-                                    LocalizationHelpers.GetSubmoduleText(Module, stashedItem.Name, stashedItem.TreeGuid?.ToString())));
-                        }
+                        View.ViewGitItemAsync(stashedItem);
                     }
                     else
                     {
@@ -231,7 +221,7 @@ namespace GitUI.CommandsDialogs
 
                                 if (stashedItem.IsSubmodule)
                                 {
-                                    return View.ViewPatchAsync(fileName: null, text: LocalizationHelpers.ProcessSubmodulePatch(Module, stashedItem.Name, patch),
+                                    return View.ViewPatchAsync(fileName: stashedItem.Name, text: LocalizationHelpers.ProcessSubmodulePatch(Module, stashedItem.Name, patch),
                                             openWithDifftool: null /* not implemented */, isText: stashedItem.IsSubmodule);
                                 }
 

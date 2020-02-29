@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs
         [ItemCanBeNull]
         public async Task<GpgInfo> LoadGpgInfoAsync(GitRevision revision)
         {
-            if (!AppSettings.ShowGpgInformation.ValueOrDefault || string.IsNullOrWhiteSpace(revision?.Guid))
+            if (!AppSettings.ShowGpgInformation.ValueOrDefault || revision?.ObjectId == null)
             {
                 return null;
             }

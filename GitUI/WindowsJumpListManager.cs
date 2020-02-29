@@ -52,7 +52,7 @@ namespace GitUI
             }
         }
 
-        private static bool IsSupported => EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported;
+        private static bool IsSupported => EnvUtils.RunningOnWindowsWithMainWindow() && TaskbarManager.IsPlatformSupported;
 
         /// <summary>
         /// Adds the given working directory to the list of Recent for future quick access.

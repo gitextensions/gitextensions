@@ -11,6 +11,7 @@ using GitCommands;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
@@ -264,7 +265,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (AppSettings.HighlightAuthoredRevisions && revision != null && !revision.IsArtificial && AuthorHighlighting.IsHighlighted(revision))
             {
-                return new SolidBrush(AppSettings.AuthoredRevisionsHighlightColor);
+                return new SolidBrush(AppColor.AuthoredHighlight.GetThemeColor());
             }
 
             if (rowIndex % 2 == 0 && AppSettings.RevisionGraphDrawAlternateBackColor)
@@ -472,12 +473,13 @@ namespace GitUI.UserControls.RevisionGrid
                     try
                     {
                         using (var timeoutTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(200)))
+                        using (var linkedCancellation = timeoutTokenSource.Token.CombineWith(cancellationToken))
                         {
                             timeoutToken = timeoutTokenSource.Token;
-                            (backgroundOperation, backgroundOperationCancellation) = await _backgroundQueue.DequeueAsync(timeoutToken);
+                            (backgroundOperation, backgroundOperationCancellation) = await _backgroundQueue.DequeueAsync(linkedCancellation.Token);
                         }
                     }
-                    catch (OperationCanceledException) when (timeoutToken.IsCancellationRequested)
+                    catch (OperationCanceledException) when (timeoutToken.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
                     {
                         // No work was received from the queue within the timeout.
                         if (RowCount < _revisionGraph.Count)

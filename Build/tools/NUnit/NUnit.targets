@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
+<Project>
+  <ItemGroup>
+    <PackageReference Include="ApprovalTests" Version="$(ApprovalTestsVersion)" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="FluentAssertions" Version="$(FluentAssertionsVersion)" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="NSubstitute" Version="$(NSubstituteVersion)" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="NUnit" Version="$(NUnitVersion)" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="NUnit3TestAdapter" Version="$(NUnitTestAdapterVersion)" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+
+    <PackageReference Include="Codecov" Version="1.0.1" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="NUnit.ConsoleRunner" Version="$(NUnitConsoleRunnerVersion)" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="OpenCover" Version="4.7.922" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+  </ItemGroup>
+
+
+  <!-- 
+    Include '*' target to force running tests even if the input assemblies haven't changed and the outputs are present.
+    This matches the common expectations that test command always runs all tests in scope.
+  -->
+  <Target Name="RunTests">
+
+    <PropertyGroup>
+      <_UseOpenCover>true</_UseOpenCover>
+      <_NUnitConsoleExe>nunit3-console.exe</_NUnitConsoleExe>
+      <_NUnitRunnerCommand Condition="$(ContinuousIntegrationBuild) != 'true'">$(PkgNUnit_ConsoleRunner)\tools\$(_NUnitConsoleExe)</_NUnitRunnerCommand>
+      <_NUnitRunnerCommand Condition="$(ContinuousIntegrationBuild) == 'true'">$(_NUnitConsoleExe)</_NUnitRunnerCommand>
+      <_NUnitRunnerCommandArgs>"@(TestToRun)"</_NUnitRunnerCommandArgs>
+
+      <_TestArchitecture>%(_TestArchitectureItems.Identity)</_TestArchitecture>
+      <_TestEnvironment>$(TargetFramework)|$(_TestArchitecture)</_TestEnvironment>
+      <_TestOutPathNoExt>$(ArtifactsTestResultsDir)$(MSBuildProjectName)_$(TargetFramework)_$(_TestArchitecture)</_TestOutPathNoExt>
+      <_TestStdOutPath>$(_TestOutPathNoExt).log</_TestStdOutPath>
+      <_TestResultsOpenCoverPath>$(_TestOutPathNoExt).xml</_TestResultsOpenCoverPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(_UseOpenCover)' == 'true'">
+      <_OpenCoverConsoleExe>OpenCover.Console.exe</_OpenCoverConsoleExe>
+      <_OpenCoverCommand>$(PkgOpenCover)\tools\$(_OpenCoverConsoleExe)</_OpenCoverCommand>
+      <_OpenCoverRegister>user</_OpenCoverRegister>
+      <_OpenCoverRegister Condition="'$(_TestArchitecture)' == 'x86'">path32</_OpenCoverRegister>
+      <_OpenCoverRegister Condition="'$(_TestArchitecture)' == 'x64'">path64</_OpenCoverRegister>
+      <_OpenCoverCommandArgs>-register:$(_OpenCoverRegister) -returntargetcode -hideskipped:All -filter:"+[*]* -[FluentAssertions*]* -[SmartFormat*]* -[nunit*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -excludebyfile:*\*Designer.cs -output:"$(_TestResultsOpenCoverPath)"</_OpenCoverCommandArgs>
+      <_TestTargetArgs>$(_NUnitRunnerCommandArgs.Replace(`"`, `\"`)) --timeout=90000</_TestTargetArgs>
+      <_TestTargetArgs Condition="$(IsIntegrationTestProject) == true">$(_TestTargetArgs) --agents=1 --workers=1</_TestTargetArgs>
+      <_TestTargetArgs Condition="$(IsIntegrationTestProject) == false">$(_TestTargetArgs) --agents=1 --workers=1</_TestTargetArgs>
+      <_TestRunnerCommand>"$(_OpenCoverCommand)" $(_OpenCoverCommandArgs) -target:"$(_NUnitRunnerCommand)" -targetargs:"$(_TestTargetArgs)"</_TestRunnerCommand>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(ArtifactsTestResultsDir)"/>
+    <Delete Files="$(_TestOutPathNoExt).*" />
+
+    <Message Text="Running tests: $(TargetPath) [$(_TestEnvironment)]" Importance="high"/>
+
+    <!-- Note that xUnit outputs failure info to both STDOUT (stack trace, message) and STDERR (failed test name) -->
+    <Exec Command='$(_TestRunnerCommand) > "$(_TestStdOutPath)" 2>&amp;1'
+          LogStandardErrorAsError="false"
+          WorkingDirectory="$(OutDir)"
+          IgnoreExitCode="true">
+      <Output TaskParameter="ExitCode" PropertyName="_TestErrorCode" />
+    </Exec>
+
+    <WriteLinesToFile File="$(_TestStdOutPath)" Overwrite="false" Lines=";=== COMMAND LINE ===;$(_TestRunnerCommand)" />
+
+    <ItemGroup>
+      <_FailedTestRuns Include="$(_TestEnvironment)" Condition="'$(_TestErrorCode)' != '0'" />
+    </ItemGroup>
+
+    <Message Text="Tests succeeded: $(TargetPath) [$(_TestEnvironment)]" Condition="'$(_TestErrorCode)' == '0'" Importance="high" />
+    <Warning Text="$(_TestResultsDisplayPath) [$(_TestEnvironment)]" Condition="'$(_TestErrorCode)' != '0' and '$(TargetFrameworks)' != ''" File="NUnit" />
+    <Error Text="$(_TestResultsDisplayPath) [$(_TestEnvironment)]" Condition="'$(_TestErrorCode)' != '0' and '$(TargetFrameworks)' == ''" File="NUnit" />
+
+  </Target>
+
+</Project>

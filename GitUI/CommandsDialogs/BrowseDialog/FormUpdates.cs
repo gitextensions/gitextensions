@@ -172,42 +172,45 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             LaunchUrl(LaunchType.ChangeLog);
         }
 
-        private async void btnUpdateNow_Click(object sender, EventArgs e)
+        private void btnUpdateNow_Click(object sender, EventArgs e)
         {
-            linkChangeLog.Visible = false;
-            progressBar1.Visible = true;
-            btnUpdateNow.Enabled = false;
-            UpdateLabel.Text = _downloadingUpdate.Text;
-            string fileName = Path.GetFileName(UpdateUrl);
-
-            try
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                using (WebClient webClient = new WebClient())
+                linkChangeLog.Visible = false;
+                progressBar1.Visible = true;
+                btnUpdateNow.Enabled = false;
+                UpdateLabel.Text = _downloadingUpdate.Text;
+                string fileName = Path.GetFileName(UpdateUrl);
+
+                try
                 {
-                    await webClient.DownloadFileTaskAsync(new Uri(UpdateUrl), Environment.GetEnvironmentVariable("TEMP") + "\\" + fileName);
+                    using (WebClient webClient = new WebClient())
+                    {
+                        await webClient.DownloadFileTaskAsync(new Uri(UpdateUrl), Environment.GetEnvironmentVariable("TEMP") + "\\" + fileName);
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, _errorMessage.Text + Environment.NewLine + ex.Message, _errorHeading.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, _errorMessage.Text + Environment.NewLine + ex.Message, _errorHeading.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
-            try
-            {
-                Process process = new Process();
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.FileName = "msiexec.exe";
-                process.StartInfo.Arguments = string.Format("/i \"{0}\\{1}\" /qb LAUNCH=1", Environment.GetEnvironmentVariable("TEMP"), fileName);
-                process.Start();
+                try
+                {
+                    Process process = new Process();
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.FileName = "msiexec.exe";
+                    process.StartInfo.Arguments = string.Format("/i \"{0}\\{1}\" /qb LAUNCH=1", Environment.GetEnvironmentVariable("TEMP"), fileName);
+                    process.Start();
 
-                progressBar1.Visible = false;
-                Close();
-                Application.Exit();
-            }
-            catch (Win32Exception)
-            {
-            }
+                    progressBar1.Visible = false;
+                    Close();
+                    Application.Exit();
+                }
+                catch (Win32Exception)
+                {
+                }
+            }).FileAndForget();
         }
 
         private void linkDirectDownload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

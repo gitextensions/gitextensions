@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Utils;
 using GitExtUtils;
@@ -483,13 +484,22 @@ namespace GitUI.CommandsDialogs
                         }
                     }
 
+                    if (string.IsNullOrWhiteSpace(_mergetoolCmd) || string.IsNullOrWhiteSpace(_mergetoolPath))
+                    {
+                        // mergetool is set, but arguments cannot be manipulated
+                        Module.RunMergeTool(item.Filename);
+
+                        // git-mergetool does not provide exit status, do not stage
+                        return;
+                    }
+
                     string arguments = _mergetoolCmd;
 
                     // Check if there is a base file. If not, ask user to fall back to 2-way merge.
                     // git doesn't support 2-way merge, but we can try to adjust attributes to fix this.
                     // For kdiff3 this is easy; just remove the 3rd file from the arguments. Since the
                     // filenames are quoted, this takes a little extra effort. We need to remove these
-                    // quotes also. For tortoise and araxis a little bit more magic is needed.
+                    // quotes also. For other tools a little bit more magic is needed.
                     if (item.Base.Filename == null)
                     {
                         var text = string.Format(_noBaseRevision.Text, item.Filename);
@@ -577,7 +587,17 @@ namespace GitUI.CommandsDialogs
 
         private bool InitMergetool()
         {
-            _mergetool = Module.GetEffectiveSetting("merge.tool");
+            if (GitVersion.Current.SupportGuiMergeTool)
+            {
+                _mergetool = Module.GetEffectiveSetting(SettingKeyString.MergeToolKey);
+            }
+
+            // Fallback and older Git
+            if (string.IsNullOrEmpty(_mergetool))
+            {
+                _mergetool = Module.GetEffectiveSetting(SettingKeyString.MergeToolNoGuiKey);
+            }
+
             if (string.IsNullOrEmpty(_mergetool))
             {
                 MessageBox.Show(this, _noMergeTool.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -588,12 +608,6 @@ namespace GitUI.CommandsDialogs
             {
                 _mergetoolCmd = Module.GetEffectiveSetting($"mergetool.{_mergetool}.cmd");
                 _mergetoolPath = Module.GetEffectiveSetting($"mergetool.{_mergetool}.path");
-
-                if (string.IsNullOrWhiteSpace(_mergetoolCmd) && string.IsNullOrWhiteSpace(_mergetoolPath))
-                {
-                    MessageBox.Show(this, _noMergeToolConfigured.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
 
                 // Temporary compatibility with GE <3.3
                 if (_mergetool == "kdiff3")
@@ -680,7 +694,7 @@ namespace GitUI.CommandsDialogs
                 return "@" + _deleted.Text;
             }
 
-            return '@' + item.ObjectId.ToShortString(8);
+            return '@' + item.ObjectId.ToShortString();
         }
 
         private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)

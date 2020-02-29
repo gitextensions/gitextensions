@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,33 +20,10 @@ namespace CommonTestUtils
             }
         }
 
-        public static void RunAndWaitForPendingOperations(Func<Task> asyncMethod, CancellationToken cancellationToken)
+        public static async Task JoinPendingOperationsAsync(TimeSpan timeout)
         {
-            ThreadHelper.JoinableTaskFactory.Run(asyncMethod);
-
-            WaitForPendingOperations(cancellationToken);
-        }
-
-        public static T RunAndWaitForPendingOperations<T>(Func<Task<T>> asyncMethod, CancellationToken cancellationToken)
-        {
-            var result = ThreadHelper.JoinableTaskFactory.Run(asyncMethod);
-
-            WaitForPendingOperations(cancellationToken);
-
-            return result;
-        }
-
-        public static void WaitForPendingOperations(TimeSpan timeout)
-        {
-            using (var cts = new CancellationTokenSource(timeout))
-            {
-                WaitForPendingOperations(cts.Token);
-            }
-        }
-
-        public static void WaitForPendingOperations(CancellationToken cancellationToken)
-        {
-            ThreadHelper.JoinableTaskContext?.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cancellationToken));
+            using var cancellationTokenSource = new CancellationTokenSource(timeout);
+            await ThreadHelper.JoinPendingOperationsAsync(cancellationTokenSource.Token);
         }
     }
 }

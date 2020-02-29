@@ -65,7 +65,7 @@ namespace GitCommands
                 _extraInfo = $" @{objectId.ToShortString()}";
                 if (!string.IsNullOrWhiteSpace(buildBranch))
                 {
-                    _extraInfo += $" ({buildBranch})";
+                    _extraInfo += $" [{buildBranch}]";
                 }
             }
             else

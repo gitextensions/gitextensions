@@ -6,8 +6,10 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AzureDevOpsIntegration.Settings;
+using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using Microsoft.VisualStudio.Threading;
 
 namespace AzureDevOpsIntegration
 {
@@ -36,7 +38,7 @@ namespace AzureDevOpsIntegration
         private IntegrationSettings _settings;
         private ApiClient _apiClient;
         private static readonly IBuildDurationFormatter _buildDurationFormatter = new BuildDurationFormatter();
-        private Task<string> _buildDefinitionsTask;
+        private JoinableTask<string> _buildDefinitionsTask;
         private string _projectUrl;
         private string _buildDefinitions;
 
@@ -72,7 +74,7 @@ namespace AzureDevOpsIntegration
             if (CacheAzureDevOps == null || CacheAzureDevOps.Id != CacheKey)
             {
                 CacheAzureDevOps = null;
-                _buildDefinitionsTask = _apiClient.GetBuildDefinitionsAsync(_settings.BuildDefinitionFilter);
+                _buildDefinitionsTask = ThreadHelper.JoinableTaskFactory.RunAsync(() => _apiClient.GetBuildDefinitionsAsync(_settings.BuildDefinitionFilter));
             }
             else
             {
@@ -118,7 +120,7 @@ namespace AzureDevOpsIntegration
             {
                 if (_buildDefinitions == null)
                 {
-                    _buildDefinitions = await _buildDefinitionsTask;
+                    _buildDefinitions = await _buildDefinitionsTask.JoinAsync();
 
                     if (_buildDefinitions == null)
                     {

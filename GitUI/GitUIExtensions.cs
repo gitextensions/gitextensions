@@ -104,7 +104,7 @@ namespace GitUI
                 if (file.TreeGuid != null)
                 {
                     // blob guid exists
-                    return diffViewer.ViewGitItemAsync(file.Name, file.TreeGuid, openWithDifftool);
+                    return diffViewer.ViewGitItemAsync(file, openWithDifftool);
                 }
 
                 if (secondRevision == null)
@@ -113,7 +113,7 @@ namespace GitUI
                 }
 
                 // Get blob guid from revision
-                return diffViewer.ViewGitItemRevisionAsync(file.Name, secondRevision, openWithDifftool);
+                return diffViewer.ViewGitItemRevisionAsync(file, secondRevision, openWithDifftool);
             }
 
             string selectedPatch = diffViewer.GetSelectedPatch(firstRevision, secondRevision, file);

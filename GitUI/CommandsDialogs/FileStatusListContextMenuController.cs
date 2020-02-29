@@ -74,7 +74,7 @@ namespace GitUI.CommandsDialogs
                 && !selectionInfo.AllAreDeleted
 
                 // Selected (B) is not local
-                && selectionInfo.SelectedRevision.Guid != GitRevision.WorkTreeGuid;
+                && selectionInfo.SelectedRevision.ObjectId != ObjectId.WorkTreeId;
         }
 
         public bool ShouldShowMenuFirstParentToLocal(ContextMenuDiffToolInfo selectionInfo)

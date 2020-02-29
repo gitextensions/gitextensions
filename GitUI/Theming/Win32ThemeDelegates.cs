@@ -13,7 +13,7 @@ namespace GitUI.Theming
     internal delegate int DrawThemeBackgroundDelegate(
         IntPtr htheme, IntPtr hdc,
         int partId, int stateId,
-        NativeMethods.RECT prect, NativeMethods.RECT pcliprect);
+        NativeMethods.RECTCLS prect, NativeMethods.RECTCLS pcliprect);
 
     [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
     internal delegate int GetThemeColorDelegate(

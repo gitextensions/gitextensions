@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
+<Project>
+
+  <!--
+    Specification: https://github.com/dotnet/arcade/blob/master/Documentation/CorePackages/Versioning.md
+  -->
+
+  <UsingTask TaskName="Microsoft.DotNet.Arcade.Sdk.CalculateAssemblyAndFileVersions" AssemblyFile="$(ArcadeSdkBuildTasksAssembly)" />
+  
+  <Target Name="_InitializeAssemblyVersion" BeforeTargets="GetAssemblyVersion">
+    <Warning Text="AssemblyVersion '$(AssemblyVersion)' overridden by auto-generated version" Condition="'$(AssemblyVersion)' != '' and '$(AutoGenerateAssemblyVersion)' == 'true'"/>
+    
+    <Microsoft.DotNet.Arcade.Sdk.CalculateAssemblyAndFileVersions
+      VersionPrefix="$(_OriginalVersionPrefix)"
+      BuildNumber="$(_BuildNumber)"
+      PatchNumber="$(_PatchNumber)"
+      AutoGenerateAssemblyVersion="$(AutoGenerateAssemblyVersion)"
+      Condition="'$(VersionSuffixDateStamp)' != ''">
+
+      <Output TaskParameter="AssemblyVersion" PropertyName="AssemblyVersion" Condition="'$(AssemblyVersion)' == '' or '$(AutoGenerateAssemblyVersion)' == 'true'"/>
+      <Output TaskParameter="FileVersion" PropertyName="FileVersion"/>
+    </Microsoft.DotNet.Arcade.Sdk.CalculateAssemblyAndFileVersions>
+
+    <PropertyGroup Condition="'$(VersionSuffixDateStamp)' == ''">
+      <!--
+        Set FileVersion to a distinct version that's greater than any shipping version.
+        This makes it possible to install binaries produced by a dev build over product binaries,
+        provided that the installer only requires higher version.
+      -->
+      <FileVersion>42.42.42.42424</FileVersion>
+
+      <!--
+        Respect version explicitly set by the project.
+        The default .NET Core SDK implementation sets AssemblyVersion from NuGet package version,
+        which we want to override in dev builds.
+      -->
+      <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">42.42.42.42</AssemblyVersion>
+    </PropertyGroup>
+  </Target>
+
+  <!--
+    GenerateNativeVersionFile target is a standalone target intended to be pulled into a build once as
+    a pre-step before kicking off a native build. It will generate a _version.h or _version.c depending
+    on the OS it is targeting.
+  -->
+  <Target Name="GenerateNativeVersionFile"
+          DependsOnTargets="_InitializeAssemblyVersion;InitializeSourceControlInformationFromSourceControlManager">
+
+    <Error Condition="'$(SourceRevisionId)' == ''" Text="SourceRevisionId is not set, which means the SourceLink targets are not included in the build. Those are needed to produce a correct sha for our build outputs." />
+
+    <PropertyGroup>
+      <_SourceBuildInfo> %40Commit: $(SourceRevisionId)</_SourceBuildInfo>
+    </PropertyGroup>
+
+   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+      <NativeVersionFile Condition="'$(NativeVersionFile)' == ''">$(IntermediateOutputPath)_version.h</NativeVersionFile>
+      <_WindowsFileVersion>$(FileVersion.Replace('.', ','))</_WindowsFileVersion>
+      <_Windows_VER_DEBUG>0</_Windows_VER_DEBUG>
+      <_Windows_VER_DEBUG Condition="'$(Configuration)'=='Debug'">VS_FF_DEBUG</_Windows_VER_DEBUG>
+
+      <_NativeVersionFileContents>
+<![CDATA[
+#ifndef VER_COMPANYNAME_STR
+#define VER_COMPANYNAME_STR         "Microsoft Corporation"
+#endif
+#ifndef VER_FILEDESCRIPTION_STR
+#define VER_FILEDESCRIPTION_STR     "$(AssemblyName)"
+#endif
+#ifndef VER_INTERNALNAME_STR
+#define VER_INTERNALNAME_STR        VER_FILEDESCRIPTION_STR
+#endif
+#ifndef VER_ORIGINALFILENAME_STR
+#define VER_ORIGINALFILENAME_STR    VER_FILEDESCRIPTION_STR
+#endif
+#ifndef VER_PRODUCTNAME_STR
+#define VER_PRODUCTNAME_STR         "Microsoft\xae .NET Framework"
+#endif
+#undef VER_PRODUCTVERSION
+#define VER_PRODUCTVERSION          $(_WindowsFileVersion)
+#undef VER_PRODUCTVERSION_STR
+#define VER_PRODUCTVERSION_STR      "$(_WindowsFileVersion)$(_SourceBuildInfo)"
+#undef VER_FILEVERSION
+#define VER_FILEVERSION             $(_WindowsFileVersion)
+#undef VER_FILEVERSION_STR
+#define VER_FILEVERSION_STR         "$(_WindowsFileVersion)$(_SourceBuildInfo)"
+#ifndef VER_LEGALCOPYRIGHT_STR
+#define VER_LEGALCOPYRIGHT_STR      "\xa9 Microsoft Corporation. All rights reserved."
+#endif
+#ifndef VER_DEBUG
+#define VER_DEBUG                   $(_Windows_VER_DEBUG)
+#endif
+]]>
+      </_NativeVersionFileContents>
+    </PropertyGroup>
+
+    <!--
+      Copy the NativeVersion.rc file next to the version header so that it can be picked
+      up and used in the native build along with the version.h file.
+    -->
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)NativeVersion.rc"
+          DestinationFolder="$([System.IO.Path]::GetDirectoryName($(NativeVersionFile)))"
+          Condition="'$(OS)' == 'Windows_NT'" />
+
+    <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+      <NativeVersionFile Condition="'$(NativeVersionFile)' == ''">$(ArtifactsObjDir)_version.c</NativeVersionFile>
+
+      <!--
+        There isn't a defacto standard for including version information in a native binary on unix so we defined a static
+        variable which contains the version information we want which can be retrieved by using What(1) or strings+grep.
+        See https://github.com/dotnet/coreclr/issues/3133 for further discussion on this approach.
+      -->
+      <_NativeVersionFileContents>
+<![CDATA[
+static char sccsid[] __attribute__((used)) = "@(#)Version $(FileVersion)$(_SourceBuildInfo)";
+ ]]>
+      </_NativeVersionFileContents>
+    </PropertyGroup>
+
+    <MakeDir Directories="$([System.IO.Path]::GetDirectoryName($(NativeVersionFile)))" />
+
+    <WriteLinesToFile
+      File="$(NativeVersionFile)"
+      Lines="$(_NativeVersionFileContents.Replace(';', '%3B'))"
+      Overwrite="true"
+      WriteOnlyWhenDifferent="true" />
+
+    <ItemGroup>
+      <FileWrites Include="$(NativeVersionFile)" />
+    </ItemGroup>
+  </Target>
+
+</Project>

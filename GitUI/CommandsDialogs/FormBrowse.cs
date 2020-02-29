@@ -43,12 +43,6 @@ namespace GitUI.CommandsDialogs
     {
         #region Translation
 
-        private readonly TranslationString _warningMiddleOfBisect = new TranslationString("You are in the middle of a bisect. C&ontinue...");
-        private readonly TranslationString _warningMiddleOfRebase = new TranslationString("You are in the middle of a rebase. C&ontinue...");
-        private readonly TranslationString _warningMiddleOfPatchApply = new TranslationString("You are in the middle of a patch apply. C&ontinue...");
-
-        private readonly TranslationString _hintUnresolvedMergeConflicts = new TranslationString("There are unresolved merge conflicts. Res&olve...");
-
         private readonly TranslationString _noBranchTitle = new TranslationString("no branch");
         private readonly TranslationString _noSubmodulesPresent = new TranslationString("No submodules");
         private readonly TranslationString _topProjectModuleFormat = new TranslationString("Top project: {0}");
@@ -106,9 +100,6 @@ namespace GitUI.CommandsDialogs
         [CanBeNull] private BuildReportTabPageExtension _buildReportTabPageExtension;
         private ConEmuControl _terminal;
         private Dashboard _dashboard;
-        private ToolStripItem _rebase;
-        private ToolStripItem _bisect;
-        private ToolStripItem _warning;
 
         [CanBeNull] private TabPage _consoleTabPage;
 
@@ -285,8 +276,6 @@ namespace GitUI.CommandsDialogs
             menuStrip1.ForeColor = toolForeColor;
             toolPanel.TopToolStripPanel.BackColor = toolBackColor;
             toolPanel.TopToolStripPanel.ForeColor = toolForeColor;
-            statusStrip.BackColor = toolBackColor;
-            statusStrip.ForeColor = toolForeColor;
 
             var toolTextBoxBackColor = SystemColors.Window;
             toolStripBranchFilterComboBox.BackColor = toolTextBoxBackColor;
@@ -350,7 +339,11 @@ namespace GitUI.CommandsDialogs
                         // fall back to operation without info in the button
                         UpdateCommitButtonAndGetBrush(null, showCount: false);
                         RevisionGrid.UpdateArtificialCommitCount(null);
-                        TaskbarManager.Instance.SetOverlayIcon(null, "");
+                        if (EnvUtils.RunningOnWindowsWithMainWindow())
+                        {
+                            TaskbarManager.Instance.SetOverlayIcon(null, "");
+                        }
+
                         lastBrush = null;
                     }
                 };
@@ -365,13 +358,15 @@ namespace GitUI.CommandsDialogs
                     var brush = UpdateCommitButtonAndGetBrush(status, countToolbar);
 
                     RevisionGrid.UpdateArtificialCommitCount(countArtificial ? status : null);
+                    toolStripButtonLevelUp.Image = Module.SuperprojectModule != null ? Images.NavigateUp : Images.SubmodulesManage;
 
                     // The diff filelist is not updated, as the selected diff is unset
                     ////_revisionDiff.RefreshArtificial();
 
                     if (countToolbar || countArtificial)
                     {
-                        if (!ReferenceEquals(brush, lastBrush))
+                        if (!ReferenceEquals(brush, lastBrush)
+                            && EnvUtils.RunningOnWindowsWithMainWindow())
                         {
                             lastBrush = brush;
 
@@ -974,101 +969,8 @@ namespace GitUI.CommandsDialogs
 
         private void OnActivate()
         {
-            CheckForMergeConflicts();
-            return;
-
-            void CheckForMergeConflicts()
-            {
-                ThreadHelper.ThrowIfNotOnUIThread();
-
-                bool validWorkingDir = Module.IsValidGitWorkingDir();
-
-                if (validWorkingDir && Module.InTheMiddleOfBisect())
-                {
-                    if (_bisect == null)
-                    {
-                        _bisect = new WarningToolStripItem { Text = _warningMiddleOfBisect.Text };
-                        _bisect.Click += BisectClick;
-                        statusStrip.Items.Add(_bisect);
-                    }
-                }
-                else
-                {
-                    if (_bisect != null)
-                    {
-                        _bisect.Click -= BisectClick;
-                        statusStrip.Items.Remove(_bisect);
-                        _bisect = null;
-                    }
-                }
-
-                if (validWorkingDir &&
-                    (Module.InTheMiddleOfRebase() || Module.InTheMiddleOfPatch()))
-                {
-                    if (_rebase == null)
-                    {
-                        _rebase = new WarningToolStripItem
-                        {
-                            Text = Module.InTheMiddleOfRebase()
-                                ? _warningMiddleOfRebase.Text
-                                : _warningMiddleOfPatchApply.Text
-                        };
-
-                        _rebase.Click += RebaseClick;
-                        statusStrip.Items.Add(_rebase);
-                    }
-                }
-                else
-                {
-                    if (_rebase != null)
-                    {
-                        _rebase.Click -= RebaseClick;
-                        statusStrip.Items.Remove(_rebase);
-                        _rebase = null;
-                    }
-                }
-
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    await TaskScheduler.Default;
-
-                    var result = validWorkingDir
-                        && Module.InTheMiddleOfConflictedMerge()
-                        && !Directory.Exists(Module.WorkingDirGitDir + "rebase-apply\\");
-
-                    await this.SwitchToMainThreadAsync();
-
-                    if (result)
-                    {
-                        if (_warning == null)
-                        {
-                            _warning = new WarningToolStripItem { Text = _hintUnresolvedMergeConflicts.Text };
-                            _warning.Click += WarningClick;
-                            statusStrip.Items.Add(_warning);
-                        }
-                    }
-                    else
-                    {
-                        if (_warning != null)
-                        {
-                            _warning.Click -= WarningClick;
-                            statusStrip.Items.Remove(_warning);
-                            _warning = null;
-                        }
-                    }
-
-                    // Only show status strip when there are status items on it.
-                    // There is always a close (x) button, do not count first item.
-                    if (statusStrip.Items.Count > 1)
-                    {
-                        statusStrip.Show();
-                    }
-                    else
-                    {
-                        statusStrip.Hide();
-                    }
-                }).FileAndForget();
-            }
+            // check if we are in the middle of an action (merge/rebase/bisect)
+            RevisionHeader.RefreshGitAction();
         }
 
         private void UpdateStashCount()
@@ -1189,18 +1091,6 @@ namespace GitUI.CommandsDialogs
         }
 
         #endregion
-
-        private void RebaseClick(object sender, EventArgs e)
-        {
-            if (Module.InTheMiddleOfRebase())
-            {
-                UICommands.StartTheContinueRebaseDialog(this);
-            }
-            else
-            {
-                UICommands.StartApplyPatchDialog(this);
-            }
-        }
 
         private void FillFileTree()
         {
@@ -1417,11 +1307,6 @@ namespace GitUI.CommandsDialogs
             UICommands.StartResolveConflictsDialog(this);
         }
 
-        private void WarningClick(object sender, EventArgs e)
-        {
-            UICommands.StartResolveConflictsDialog(this);
-        }
-
         private void CurrentBranchClick(object sender, EventArgs e)
         {
             branchSelect.ShowDropDown();
@@ -1439,7 +1324,7 @@ namespace GitUI.CommandsDialogs
 
         private void CherryPickToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var revisions = RevisionGrid.GetSelectedRevisions(System.DirectoryServices.SortDirection.Descending);
+            var revisions = RevisionGrid.GetSelectedRevisions(SortDirection.Descending);
 
             UICommands.StartCherryPickDialog(this, revisions);
         }
@@ -1578,12 +1463,12 @@ namespace GitUI.CommandsDialogs
 
                 if (revisions[0].ObjectId == currentCheckout)
                 {
-                    from = revisions[1].ObjectId.ToShortString(8);
+                    from = revisions[1].ObjectId.ToShortString();
                     to = currentBranch;
                 }
                 else if (revisions[1].ObjectId == currentCheckout)
                 {
-                    from = revisions[0].ObjectId.ToShortString(8);
+                    from = revisions[0].ObjectId.ToShortString();
                     to = currentBranch;
                 }
 
@@ -1855,7 +1740,10 @@ namespace GitUI.CommandsDialogs
 
                     menuItemCategory.DropDownItems.Add(item);
 
-                    item.Click += delegate { ChangeWorkingDir(r.Repo.Path); };
+                    item.Click += (obj, args) =>
+                    {
+                        OpenRepo(r.Repo.Path);
+                    };
 
                     if (r.Repo.Path != r.Caption)
                     {
@@ -1919,13 +1807,37 @@ namespace GitUI.CommandsDialogs
 
                 container.DropDownItems.Add(item);
 
-                item.Click += (hs, he) => ChangeWorkingDir(repo.Path);
+                item.Click += (obj, args) =>
+                {
+                    OpenRepo(repo.Path);
+                };
 
                 if (repo.Path != caption)
                 {
                     item.ToolTipText = repo.Path;
                 }
             }
+        }
+
+        private void OpenRepo(string repoPath)
+        {
+            if (ModifierKeys != Keys.Control)
+            {
+                ChangeWorkingDir(repoPath);
+                return;
+            }
+
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = AppSettings.GetGitExtensionsFullPath(),
+                    Arguments = "browse",
+                    WorkingDirectory = repoPath,
+                    UseShellExecute = false
+                }
+            };
+            process.Start();
         }
 
         public void SetWorkingDir(string path)
@@ -2044,11 +1956,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
-        {
-            statusStrip.Hide();
-        }
-
         private void BisectClick(object sender, EventArgs e)
         {
             using (var frm = new FormBisect(RevisionGrid))
@@ -2135,18 +2042,21 @@ namespace GitUI.CommandsDialogs
             UICommands.StartCreatePullRequest(this, repoHost);
         }
 
-        private async void _addUpstreamRemoteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void _addUpstreamRemoteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!TryGetRepositoryHost(out var repoHost))
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                return;
-            }
+                if (!TryGetRepositoryHost(out var repoHost))
+                {
+                    return;
+                }
 
-            var remoteName = await repoHost.AddUpstreamRemoteAsync();
-            if (!string.IsNullOrEmpty(remoteName))
-            {
-                UICommands.StartPullDialogAndPullImmediately(this, null, remoteName, AppSettings.PullAction.Fetch);
-            }
+                var remoteName = await repoHost.AddUpstreamRemoteAsync();
+                if (!string.IsNullOrEmpty(remoteName))
+                {
+                    UICommands.StartPullDialogAndPullImmediately(this, null, remoteName, AppSettings.PullAction.Fetch);
+                }
+            }).FileAndForget();
         }
 
         private bool TryGetRepositoryHost(out IRepositoryHostPlugin repoHost)
@@ -2419,8 +2329,6 @@ namespace GitUI.CommandsDialogs
             revisionDiff.InitSplitterManager(_splitterManager);
             fileTree.InitSplitterManager(_splitterManager);
 
-            // hide status in order to restore splitters against the full height (the most common case)
-            statusStrip.Hide();
             _splitterManager.RestoreSplitters();
             RefreshLayoutToggleButtonStates();
         }
@@ -3161,7 +3069,7 @@ namespace GitUI.CommandsDialogs
 
                 RevisionsSplitContainer.FixedPanel = FixedPanel.Panel2;
                 RevisionInfo.Parent = CommitInfoTabPage;
-                RevisionGrid.Parent = RevisionsSplitContainer.Panel1;
+                RevisionGridContainer.Parent = RevisionsSplitContainer.Panel1;
                 RevisionsSplitContainer.Panel2Collapsed = true;
             }
             else
@@ -3175,14 +3083,14 @@ namespace GitUI.CommandsDialogs
                     RevisionsSplitContainer.FixedPanel = FixedPanel.Panel2;
                     RevisionsSplitContainer.SplitterDistance = Math.Max(0, RevisionsSplitContainer.Width - width);
                     RevisionInfo.Parent = RevisionsSplitContainer.Panel2;
-                    RevisionGrid.Parent = RevisionsSplitContainer.Panel1;
+                    RevisionGridContainer.Parent = RevisionsSplitContainer.Panel1;
                 }
                 else if (commitInfoPosition == CommitInfoPosition.LeftwardFromList)
                 {
                     RevisionsSplitContainer.FixedPanel = FixedPanel.Panel1;
                     RevisionsSplitContainer.SplitterDistance = width;
                     RevisionInfo.Parent = RevisionsSplitContainer.Panel1;
-                    RevisionGrid.Parent = RevisionsSplitContainer.Panel2;
+                    RevisionGridContainer.Parent = RevisionsSplitContainer.Panel2;
                 }
                 else
                 {

@@ -7,6 +7,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
+using GitUI.Theming;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -83,8 +84,8 @@ namespace GitUI.CommandsDialogs
             _revisionTester = new GitRevisionTester(_fullPathResolver);
             _revisionDiffContextMenuController = new FileStatusListContextMenuController();
 
-            lblBaseCommit.BackColor = AppSettings.DiffRemovedColor;
-            lblHeadCommit.BackColor = AppSettings.DiffAddedColor;
+            lblBaseCommit.BackColor = AppColor.DiffRemoved.GetThemeColor();
+            lblHeadCommit.BackColor = AppColor.DiffAdded.GetThemeColor();
 
             DiffFiles.ContextMenuStrip = DiffContextMenu;
             DiffFiles.SelectedIndexChanged += delegate { ShowSelectedFileDiff(); };
@@ -105,7 +106,7 @@ namespace GitUI.CommandsDialogs
             // I.e., git difftool --gui --no-prompt --dir-diff -R HEAD fails, but
             // git difftool --gui --no-prompt --dir-diff HEAD succeeds
             // Thus, we disable comparing "from" working directory.
-            var enableDifftoolDirDiff = _baseRevision?.Guid != GitRevision.WorkTreeGuid;
+            var enableDifftoolDirDiff = _baseRevision?.ObjectId != ObjectId.WorkTreeId;
             btnCompareDirectoriesWithDiffTool.Enabled = enableDifftoolDirDiff;
         }
 

@@ -57,6 +57,7 @@ namespace GitCommands
         public static string ProductVersion => Application.ProductVersion;
         public static readonly string SettingsFileName = "GitExtensions.settings";
         public static readonly string UserPluginsDirectoryName = "UserPlugins";
+        private static string _applicationExecutablePath = Application.ExecutablePath;
         private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
 
         public static readonly Lazy<string> ApplicationDataPath;
@@ -1223,87 +1224,20 @@ namespace GitCommands
             set => SetBool("systemvisualstyle", value);
         }
 
-        public static string UIThemeName
+        public static ThemeId ThemeId
         {
-            get => GetString("uitheme", string.Empty);
-            set => SetString("uitheme", value ?? string.Empty);
+            get
+            {
+                return new ThemeId(
+                    GetString("uitheme", string.Empty),
+                    GetBool("uithemeisbuiltin", true));
+            }
+            set
+            {
+                SetString("uitheme", value.Name ?? string.Empty);
+                SetBool("uithemeisbuiltin", value.IsBuiltin);
+            }
         }
-
-        #region Colors
-
-        public static Color OtherTagColor
-        {
-            get => GetColor(AppColor.OtherTag);
-            set => SetColor(AppColor.OtherTag, value);
-        }
-
-        public static Color AuthoredRevisionsHighlightColor
-        {
-            get => GetColor(AppColor.AuthoredHighlight);
-            set => SetColor(AppColor.AuthoredHighlight, value);
-        }
-
-        public static Color TagColor
-        {
-            get => GetColor(AppColor.Tag);
-            set => SetColor(AppColor.Tag, value);
-        }
-
-        public static Color GraphColor
-        {
-            get => GetColor(AppColor.Graph);
-            set => SetColor(AppColor.Graph, value);
-        }
-
-        public static Color BranchColor
-        {
-            get => GetColor(AppColor.Branch);
-            set => SetColor(AppColor.Branch, value);
-        }
-
-        public static Color RemoteBranchColor
-        {
-            get => GetColor(AppColor.RemoteBranch);
-            set => SetColor(AppColor.RemoteBranch, value);
-        }
-
-        public static Color DiffSectionColor
-        {
-            get => GetColor(AppColor.DiffSection);
-            set => SetColor(AppColor.DiffSection, value);
-        }
-
-        public static Color DiffRemovedColor
-        {
-            get => GetColor(AppColor.DiffRemoved);
-            set => SetColor(AppColor.DiffRemoved, value);
-        }
-
-        public static Color DiffRemovedExtraColor
-        {
-            get => GetColor(AppColor.DiffRemovedExtra);
-            set => SetColor(AppColor.DiffRemovedExtra, value);
-        }
-
-        public static Color DiffAddedColor
-        {
-            get => GetColor(AppColor.DiffAdded);
-            set => SetColor(AppColor.DiffAdded, value);
-        }
-
-        public static Color DiffAddedExtraColor
-        {
-            get => GetColor(AppColor.DiffAddedExtra);
-            set => SetColor(AppColor.DiffAddedExtra, value);
-        }
-
-        public static Color HighlightAllOccurencesColor
-        {
-            get => GetColor(AppColor.HighlightAllOccurences);
-            set => SetColor(AppColor.HighlightAllOccurences, value);
-        }
-
-        #endregion
 
         #region Fonts
 
@@ -1645,16 +1579,13 @@ namespace GitCommands
 
         public static string GetGitExtensionsFullPath()
         {
-            return Application.ExecutablePath;
+            return _applicationExecutablePath;
         }
 
         [CanBeNull]
         public static string GetGitExtensionsDirectory()
         {
-            var assembly = Assembly.GetEntryAssembly() ?? // common case, GitExtensions.exe
-                           Assembly.GetExecutingAssembly(); // unit test, GitCommands.dll
-            var path = assembly.Location;
-            return Path.GetDirectoryName(path);
+            return Path.GetDirectoryName(GetGitExtensionsFullPath());
         }
 
         private static RegistryKey _versionIndependentRegKey;
@@ -1842,26 +1773,7 @@ namespace GitCommands
             return SettingsContainer.GetFont(name, defaultValue);
         }
 
-        public static void SetColor(string name, Color? value)
-        {
-            SettingsContainer.SetColor(name, value);
-        }
-
-        public static void SetColor(AppColor name, Color? value)
-        {
-            SettingsContainer.SetColor(name.ToString().ToLowerInvariant() + "color", value);
-        }
-
-        public static Color? GetColor(string name)
-        {
-            return SettingsContainer.GetColor(name);
-        }
-
-        public static Color GetColor(string name, Color defaultValue)
-        {
-            return SettingsContainer.GetColor(name, defaultValue);
-        }
-
+        [Obsolete("AppSettings is no longer responsible for colors, ThemeModule is")]
         public static Color GetColor(AppColor name)
         {
             return SettingsContainer.GetColor(name.ToString().ToLowerInvariant() + "color", AppColorDefaults.GetBy(name));
@@ -1964,6 +1876,17 @@ namespace GitCommands
             string availableEncodings = AvailableEncodings.Values.Select(e => e.HeaderName).Join(";");
             availableEncodings = availableEncodings.Replace(Encoding.Default.HeaderName, "Default");
             SetString("AvailableEncodings", availableEncodings);
+        }
+
+        internal static TestAccessor GetTestAccessor() => new TestAccessor();
+
+        internal struct TestAccessor
+        {
+            public string ApplicationExecutablePath
+            {
+                get => _applicationExecutablePath;
+                set => _applicationExecutablePath = value;
+            }
         }
     }
 

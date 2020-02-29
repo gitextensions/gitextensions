@@ -8,10 +8,16 @@ branches:
     - gh-pages
 
 environment:
+  # The following entries define the default values of the environment variables.
+  # They can be overridden in AppVeyor | Settings | Environment.
   matrix:
   - IdeVersion: VS2019
   SKIP_PAUSE: TRUE
   ARCHIVE_WITH_PDB: TRUE
+  GE_TEST_SLEEP_SECONDS_ON_HANG: 0
+  GE_TEST_LAUNCH_DEBUGGER_ON_HANG: 0
+  TEST_RUN_COUNT: 1
+  IGNORE_TEST_RESULT: FALSE
 
 init:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -48,27 +54,8 @@ build_script:
     }
 
     # build
-    & .\Setup\Build.cmd
+    & .\cibuild.cmd -restore -build -buildNative
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-
-    # for pull-reqests enforce updated translations
-    # if any strings have changed and the author hasn't updated translations,
-    # we will get changes to either English.xlf and/or English.Plugins.xlf - if so, fail the build
-    if ($env:APPVEYOR_PULL_REQUEST_TITLE) {
-      & .\Build\transifex\UpdateLocalEnglishTranslations.ps1
-
-      # stage all modified files, as some translations yield no content change, but are seeing as file changed until stages
-      git add *.xlf --ignore-errors
-
-      # look for any modified xlf files, and if any - fail the build
-      if ( $( git status --porcelain ) | ?{ $_.EndsWith('.xlf') } ) {
-        & git diff --cached > git-diff-xlf.txt
-        Push-AppveyorArtifact ./git-diff-xlf.txt
-
-        throw "Please update English translations and re-submit the pull-request.`r`nFor more information please refer to https://github.com/gitextensions/gitextensions/wiki/Translations";
-        $host.SetShouldExit(-10);
-      }
-    }
 
 
 # to run your custom scripts instead of automatic tests
@@ -76,18 +63,59 @@ test_script:
 - ps: |
     Write-Host "Tests are running..."
     Write-Host $pwd
-    & .\Build\Run-Tests.ps1
+    $testErrorsTotal = 0
+    $testRunCount = $env:TEST_RUN_COUNT
+    for ($testRun=1; $testRun -le $testRunCount; $testRun++)
+    {
+        Write-Host ""
+        Write-Host "[INFO]: Test Run ${testRun}/${testRunCount}, ${testErrorsTotal} test(s) failed before"
+
+        & .\cibuild.cmd -integrationTest
+        & .\cibuild.cmd -test
+
+        Get-ChildItem -recurse artifacts\bin\tests\TestResult.xml `
+        | ForEach-Object {
+            $resultFilePath = "$_"
+            Get-Content $resultFilePath `
+            | Select-String -Pattern '<test-run id="[^"]*"\s+testcasecount="(\d+)"\s+result="([^"]*)"\s+total="(\d+)"\s+passed="(\d+)"\s+failed="(\d+)".*' `
+            | foreach {
+                $result = $_.Matches.Groups
+                #$result[0].Value
+                $total  = $result[1].Value
+                $passed = $result[4].Value
+                $failed = $result[5].Value
+                $notPassed = $total - $passed
+                $testErrors = $failed
+                $testName = $resultFilePath.Split('\\')[-3]
+                $artifactName = "TestResult#${testRun}.${testErrors}err.${testName}"
+                Push-AppveyorArtifact $resultFilePath -FileName "${artifactName}.xml"
+                if ($notPassed -ne 0) {
+                    $logFile = Get-ChildItem -recurse artifacts\$testname*.log
+                    Get-Content $logFile
+                    if ($testErrors -ne 0) { Push-AppveyorArtifact $logFile -FileName "${artifactName}.log" }
+                }
+                $testErrorsTotal += $testErrors
+            }
+        }
+    }
+    if ($testErrorsTotal -ne 0  -and  $env:IGNORE_TEST_RESULT -ne "true") { $host.SetShouldExit($testErrorsTotal) }
 
 
 # scripts to run after tests
-#after_test:
-#- ps: |
-#    Write-Host "Preparing build artifacts..."
-#    & .\Build\Prepare-Artifacts.ps1
-#
-#
-#artifacts:
+after_test:
+- ps: |
+    Write-Host "Preparing build artifacts..."
+    & .\cibuild.cmd -publish
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+
+
+artifacts:
+  - path: artifacts\log\**\*.binlog
+  - path: artifacts\publish\*.zip
 #  # upload the generated portable archive only
 #  - path: 'Setup/GitExtensions-Portable-*.zip'
 #  - path: 'Setup/GitExtensions-pdbs-*.zip'
 #  - path: 'GitExtensionsVSIX/bin/Release/GitExtensionsVSIX.vsix'
+
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

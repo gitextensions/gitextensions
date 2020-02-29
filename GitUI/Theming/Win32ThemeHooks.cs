@@ -33,8 +33,10 @@ namespace GitUI.Theming
 
         public static event Action<IntPtr> WindowCreated;
 
+        internal static ThemeSettings ThemeSettings { private get; set; } = ThemeSettings.Default;
+
         private static bool BypassThemeRenderers =>
-            ThemeModule.Controller.UseSystemVisualStyle || BypassAnyHook;
+            ThemeSettings.UseSystemVisualStyle || BypassAnyHook;
 
         private static bool BypassAnyHook =>
             _systemDialogDetector?.IsSystemDialogOpen == true;
@@ -192,7 +194,7 @@ namespace GitUI.Theming
         private static int DrawThemeBackgroundHook(
             IntPtr htheme, IntPtr hdc,
             int partid, int stateid,
-            NativeMethods.RECT prect, NativeMethods.RECT pcliprect)
+            NativeMethods.RECTCLS prect, NativeMethods.RECTCLS pcliprect)
         {
             if (!BypassThemeRenderers)
             {

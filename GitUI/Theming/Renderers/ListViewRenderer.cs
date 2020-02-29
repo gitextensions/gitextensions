@@ -38,7 +38,7 @@ namespace GitUI.Theming
         }
 
         public override int RenderBackground(IntPtr hdc, int partid, int stateid, Rectangle prect,
-            NativeMethods.RECT pcliprect)
+            NativeMethods.RECTCLS pcliprect)
         {
             using (var ctx = CreateRenderContext(hdc, pcliprect))
             {

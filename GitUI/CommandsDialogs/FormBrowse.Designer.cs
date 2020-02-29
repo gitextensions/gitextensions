@@ -70,7 +70,9 @@ namespace GitUI.CommandsDialogs
             this.repoObjectsTree = new GitUI.BranchTreePanel.RepoObjectsTree();
             this.RightSplitContainer = new System.Windows.Forms.SplitContainer();
             this.RevisionsSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.RevisionGridContainer = new System.Windows.Forms.Panel();
             this.RevisionGrid = new GitUI.RevisionGridControl();
+            this.RevisionHeader = new GitUI.UserControls.InteractiveGitActionControl();
             this.CommitInfoTabControl = new GitUI.CommandsDialogs.FullBleedTabControl();
             this.CommitInfoTabPage = new System.Windows.Forms.TabPage();
             this.RevisionInfo = new GitUI.CommitInfo.CommitInfo();
@@ -81,8 +83,6 @@ namespace GitUI.CommandsDialogs
             this.GpgInfoTabPage = new System.Windows.Forms.TabPage();
             this.revisionGpgInfo1 = new GitUI.CommandsDialogs.RevisionGpgInfoControl();
             this.FilterToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.closeStatusBarItem = new System.Windows.Forms.ToolStripStatusLabel();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.initNewRepositoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -206,12 +206,12 @@ namespace GitUI.CommandsDialogs
             ((System.ComponentModel.ISupportInitialize)(this.RevisionsSplitContainer)).BeginInit();
             this.RevisionsSplitContainer.Panel1.SuspendLayout();
             this.RevisionsSplitContainer.SuspendLayout();
+            this.RevisionGridContainer.SuspendLayout();
             this.CommitInfoTabControl.SuspendLayout();
             this.CommitInfoTabPage.SuspendLayout();
             this.TreeTabPage.SuspendLayout();
             this.DiffTabPage.SuspendLayout();
             this.GpgInfoTabPage.SuspendLayout();
-            this.statusStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
@@ -358,11 +358,11 @@ namespace GitUI.CommandsDialogs
             // 
             this.toolStripButtonLevelUp.AutoToolTip = false;
             this.toolStripButtonLevelUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonLevelUp.Image = global::GitUI.Properties.Images.FolderSubmodule;
+            this.toolStripButtonLevelUp.Image = global::GitUI.Properties.Images.SubmodulesManage;
             this.toolStripButtonLevelUp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLevelUp.Name = "toolStripButtonLevelUp";
             this.toolStripButtonLevelUp.Size = new System.Drawing.Size(32, 22);
-            this.toolStripButtonLevelUp.Text = "Go to superproject";
+            this.toolStripButtonLevelUp.Text = "";
             this.toolStripButtonLevelUp.ToolTipText = "";
             this.toolStripButtonLevelUp.ButtonClick += new System.EventHandler(this.toolStripButtonLevelUp_ButtonClick);
             this.toolStripButtonLevelUp.DropDownOpening += new System.EventHandler(this.toolStripButtonLevelUp_DropDownOpening);
@@ -712,11 +712,21 @@ namespace GitUI.CommandsDialogs
             // 
             // RevisionsSplitContainer.Panel1
             // 
-            this.RevisionsSplitContainer.Panel1.Controls.Add(this.RevisionGrid);
             this.RevisionsSplitContainer.Size = new System.Drawing.Size(650, 209);
             this.RevisionsSplitContainer.SplitterDistance = 350;
             this.RevisionsSplitContainer.SplitterWidth = 6;
+            this.RevisionsSplitContainer.Panel1.Controls.Add(this.RevisionGridContainer);
             this.RevisionsSplitContainer.TabIndex = 0;
+            // 
+            // RevisionGridContainer
+            // 
+            this.RevisionGridContainer.Controls.Add(this.RevisionGrid);
+            this.RevisionGridContainer.Controls.Add(this.RevisionHeader);
+            this.RevisionGridContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGridContainer.Location = new System.Drawing.Point(0, 0);
+            this.RevisionGridContainer.Name = "RevisionGridContainer";
+            this.RevisionGridContainer.Size = new System.Drawing.Size(606, 205);
+            this.RevisionGridContainer.TabIndex = 2;
             // 
             // RevisionGrid
             // 
@@ -726,6 +736,16 @@ namespace GitUI.CommandsDialogs
             this.RevisionGrid.Name = "RevisionGrid";
             this.RevisionGrid.Size = new System.Drawing.Size(350, 209);
             this.RevisionGrid.TabIndex = 0;
+            // 
+            // RevisionHeader
+            // 
+            this.RevisionHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.RevisionHeader.Location = new System.Drawing.Point(0, 0);
+            this.RevisionHeader.MinimumSize = new System.Drawing.Size(0, 33);
+            this.RevisionHeader.Name = "RevisionHeader";
+            this.RevisionHeader.Size = new System.Drawing.Size(561, 33);
+            this.RevisionHeader.TabIndex = 1;
+            this.RevisionHeader.Visible = false;
             // 
             // CommitInfoTabControl
             // 
@@ -836,25 +856,6 @@ namespace GitUI.CommandsDialogs
             this.FilterToolTip.ToolTipTitle = "RegEx";
             this.FilterToolTip.UseAnimation = false;
             this.FilterToolTip.UseFading = false;
-            // 
-            // statusStrip
-            // 
-            this.statusStrip.BackColor = System.Drawing.SystemColors.Control;
-            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.closeStatusBarItem});
-            this.statusStrip.Location = new System.Drawing.Point(0, 551);
-            this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Padding = new System.Windows.Forms.Padding(0);
-            this.statusStrip.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.statusStrip.Size = new System.Drawing.Size(923, 22);
-            this.statusStrip.TabIndex = 4;
-            // 
-            // closeStatusBarItem
-            // 
-            this.closeStatusBarItem.Name = "closeStatusBarItem";
-            this.closeStatusBarItem.Size = new System.Drawing.Size(14, 17);
-            this.closeStatusBarItem.Image = global::GitUI.Properties.Images.CloseStatusBar;
-            this.closeStatusBarItem.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
             // 
             // fileToolStripMenuItem
             // 
@@ -1759,7 +1760,6 @@ namespace GitUI.CommandsDialogs
             this.ClientSize = new System.Drawing.Size(923, 573);
             this.Controls.Add(this.toolPanel);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.statusStrip);
             this.Name = "FormBrowse";
             this.Text = "Git Extensions";
             this.ToolStrip.ResumeLayout(false);
@@ -1775,13 +1775,12 @@ namespace GitUI.CommandsDialogs
             this.RevisionsSplitContainer.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.RevisionsSplitContainer)).EndInit();
             this.RevisionsSplitContainer.ResumeLayout(false);
+            this.RevisionGridContainer.ResumeLayout(false);
             this.CommitInfoTabControl.ResumeLayout(false);
             this.CommitInfoTabPage.ResumeLayout(false);
             this.TreeTabPage.ResumeLayout(false);
             this.DiffTabPage.ResumeLayout(false);
             this.GpgInfoTabPage.ResumeLayout(false);
-            this.statusStrip.ResumeLayout(false);
-            this.statusStrip.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
@@ -1812,7 +1811,6 @@ namespace GitUI.CommandsDialogs
         private GitUI.RevisionGridControl RevisionGrid;
         private ToolStripEx ToolStrip;
         private CommitInfo.CommitInfo RevisionInfo;
-        private StatusStrip statusStrip;
         private MenuStripEx menuStrip1;
         private GitUI.BranchTreePanel.RepoObjectsTree repoObjectsTree;
         private ToolTip FilterToolTip;
@@ -1844,7 +1842,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripComboBox toolStripBranchFilterComboBox;
         private ToolStripDropDownButton toolStripBranchFilterDropDownButton;
         private ToolStripDropDownButton toolStripRevisionFilterDropDownButton;
-        private ToolStripStatusLabel closeStatusBarItem;
         private ToolStripSplitButton branchSelect;
         private ToolStripButton toggleBranchTreePanel;
         private ToolStripButton toggleSplitViewLayout;
@@ -1967,5 +1964,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem commitInfoLeftwardMenuItem;
         private ToolStripMenuItem commitInfoRightwardMenuItem;
         private ToolStripMenuItem tsmiTelemetryEnabled;
+        private Panel RevisionGridContainer;
+        private UserControls.InteractiveGitActionControl RevisionHeader;
     }
 }

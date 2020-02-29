@@ -54,26 +54,20 @@ namespace GitUI.UserControls
             }
         }
 
-        private async void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
+        private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
-            try
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await ViewSelectedDiffAsync();
-            }
-            catch (OperationCanceledException)
-            {
-            }
+            }).FileAndForget();
         }
 
-        private async void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
+        private void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
-            try
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await ViewSelectedDiffAsync();
-            }
-            catch (OperationCanceledException)
-            {
-            }
+            }).FileAndForget();
         }
 
         // Partly the same as RevisionDiffControl.cs ShowSelectedFileDiffAsync()
@@ -85,7 +79,7 @@ namespace GitUI.UserControls
                 return;
             }
 
-            if (DiffFiles.SelectedItemParent?.Guid == GitRevision.CombinedDiffGuid)
+            if (DiffFiles.SelectedItemParent?.ObjectId == ObjectId.CombinedDiffId)
             {
                 var diffOfConflict = Module.GetCombinedDiffContent(DiffFiles.Revision, DiffFiles.SelectedItem.Name,
                     DiffText.GetExtraDiffArguments(), DiffText.Encoding);
@@ -95,7 +89,7 @@ namespace GitUI.UserControls
                     diffOfConflict = Strings.UninterestingDiffOmitted;
                 }
 
-                DiffText.ViewPatch(DiffFiles.SelectedItem.Name,
+                await DiffText.ViewPatchAsync(DiffFiles.SelectedItem.Name,
                     text: diffOfConflict,
                     openWithDifftool: null,
                     isText: DiffFiles.SelectedItem.IsSubmodule);

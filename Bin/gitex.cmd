@@ -3,5 +3,5 @@
 @set PATH=%gitex_folder%;%PATH%
 @REM If no arguments, try open current working directory
 @set arg=%*
-@if "%arg%"=="" SET arg=browse .
+@if not defined arg SET arg=browse .
 @start /B GitExtensions.exe %arg%

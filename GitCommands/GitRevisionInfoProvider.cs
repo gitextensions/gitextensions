@@ -37,7 +37,7 @@ namespace GitCommands
                 throw new ArgumentNullException(nameof(item));
             }
 
-            if (string.IsNullOrWhiteSpace(item.Guid))
+            if (item.ObjectId == null)
             {
                 throw new ArgumentException("Item must have a valid identifier", nameof(item.Guid));
             }

@@ -27,10 +27,10 @@ namespace GitUI
             base.WndProc(ref m);
 
             if (ClickThrough &&
-                m.Msg == NativeConstants.WM_MOUSEACTIVATE &&
-                m.Result == (IntPtr)NativeConstants.MA_ACTIVATEANDEAT)
+                m.Msg == NativeMethods.WM_MOUSEACTIVATE &&
+                m.Result == (IntPtr)NativeMethods.MA_ACTIVATEANDEAT)
             {
-                m.Result = (IntPtr)NativeConstants.MA_ACTIVATE;
+                m.Result = (IntPtr)NativeMethods.MA_ACTIVATE;
             }
         }
 

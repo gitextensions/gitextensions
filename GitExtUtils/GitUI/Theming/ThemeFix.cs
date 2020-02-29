@@ -16,11 +16,11 @@ namespace GitExtUtils.GitUI.Theming
         private static readonly ConditionalWeakTable<IWin32Window, IWin32Window> AlreadyFixedContextMenuOwners =
             new ConditionalWeakTable<IWin32Window, IWin32Window>();
 
-        public static bool UseSystemVisualStyle { private get; set; } = true;
+        public static ThemeSettings ThemeSettings { private get; set; } = ThemeSettings.Default;
 
         public static void FixVisualStyle(this Control container)
         {
-            if (UseSystemVisualStyle)
+            if (ThemeSettings.UseSystemVisualStyle)
             {
                 return;
             }

@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
+using GitUI.Theming;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -40,7 +41,7 @@ namespace GitUI.CommandsDialogs
         {
             _defaultBranch = defaultBranch;
             InitializeComponent();
-            SolveMergeconflicts.BackColor = AppSettings.BranchColor;
+            SolveMergeconflicts.BackColor = AppColor.Branch.GetThemeColor();
             SolveMergeconflicts.SetForeColorForBackColor();
             helpImageDisplayUserControl1.Image1 = Properties.Images.HelpCommandRebase.AdaptLightness();
             InitializeComplete();
@@ -308,7 +309,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
                 {
-                    txtFrom.Text = chooseForm.SelectedRevision.ObjectId.ToShortString(8);
+                    txtFrom.Text = chooseForm.SelectedRevision.ObjectId.ToShortString();
                 }
             }
         }
