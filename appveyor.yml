@@ -54,7 +54,7 @@ build_script:
     }
 
     # build
-    & .\cibuild.cmd -restore -build -buildNative
+    & .\cibuild.cmd -restore -build -buildNative -loc
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
+<Project>
+
+  <PropertyGroup>
+    <RunTranslationApp>$(Localise)</RunTranslationApp>
+  </PropertyGroup>
+
+  <!--
+    ============================================================
+                       _UpdateEnglishTranslations
+
+    Ensure English translations are the same as defined in the the source.
+    To do that we need to perform the following steps:
+    1. Copy TranslationApp.exe to the GitExtensions folder
+    2. Invoke TranslationApp.exe
+    3. Delete TranslationApp.exe so it doesn't get bundled up
+    4. Copy updated English*.xlf to the source folder, so we can check whether these changed
+    5. Confirm the translations unchanged, if not - fail the build
+    ============================================================
+    -->
+  <Target Name="_UpdateEnglishTranslations" AfterTargets="_CopyTranslations" Condition="'$(RunTranslationApp)' == 'true'">
+    <PropertyGroup>
+      <_GitExtensionsOutputDir Condition="'$(TranslationsPath)' == ''">$([MSBuild]::NormalizeDirectory('$(GitExtensionsOutputPath)', '$(TargetFramework)'))</_GitExtensionsOutputDir>
+
+      <_TranslationAppDir>$([System.IO.Path]::GetFullPath('$(ArtifactsBinDir)TranslationApp\$(Configuration)\$(TargetFramework)'))</_TranslationAppDir>
+      <_TranslationAppOutputPath>$([MSBuild]::NormalizePath('$(_TranslationAppDir)', 'TranslationApp.exe'))</_TranslationAppOutputPath>
+      <_TranslationAppTempPath>$([MSBuild]::NormalizePath('$(_GitExtensionsOutputDir)', 'TranslationApp.exe'))</_TranslationAppTempPath>
+      <_TranslationCommand>$(_TranslationAppTempPath) update</_TranslationCommand>
+    </PropertyGroup>
+
+    <!-- 1. Copy TranslationApp.exe from its output folder to GitExtensions folder -->
+    <ItemGroup>
+      <TranslationAppPaths Include="$(_TranslationAppOutputPath)"/>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(TranslationAppPaths)"
+          DestinationFolder="$(_GitExtensionsOutputDir)"
+          OverwriteReadOnlyFiles="true"
+          ContinueOnError="false" />
+
+    <!-- 2. Run TranslationApp.exe to update English*.xlf -->
+    <Exec Command="$(_TranslationCommand)"
+          LogStandardErrorAsError="false"
+          WorkingDirectory="$(GitExtensionsOutputPath)"
+          IgnoreExitCode="true">
+      <Output TaskParameter="ExitCode" PropertyName="_TestErrorCode" />
+    </Exec>
+
+    <!-- 3. Delete TranslationApp.exe so it doesn't get bundled up -->
+    <Delete Files="$(_TranslationAppTempPath)" />
+
+    <!-- 4. Copy updated English*.xlf to the source folder -->
+    <PropertyGroup>
+      <_TranslationsOutputDir>$([MSBuild]::NormalizeDirectory('$(_GitExtensionsOutputDir)', 'Translation'))</_TranslationsOutputDir>
+      <_TranslationsSourceDir>$([MSBuild]::NormalizeDirectory('$(ProjectDir)\..\GitUI\Translation'))</_TranslationsSourceDir>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_TranslationsOutputPaths Include="$(_TranslationsOutputDir)English*.xlf"/>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(_TranslationsOutputPaths)"
+          DestinationFolder="$(_TranslationsSourceDir)"
+          OverwriteReadOnlyFiles="true"
+          ContinueOnError="false" />
+
+    <!-- 5. Verify no changes to English*.xlf -->
+    <Exec Command="git add *.xlf --ignore-errors"
+          IgnoreStandardErrorWarningFormat="true"
+          WorkingDirectory="$(RepoRoot)"
+          IgnoreExitCode="true">
+    </Exec>
+
+    <Message Text="
+Verifying English translations are up-to date
+-------------------------------------------------------" Importance="High" />
+    <Exec Command="git status --porcelain | findstr /i /r &quot;English.xlf English.Plugins.xlf&quot; "
+          WorkingDirectory="$(RepoRoot)"
+          IgnoreExitCode="true"
+          ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
+
+    <Message Text="English translations are up-to date" Importance="High"
+           Condition="'$(OutputOfExec)' == ''" />
+    <Error Text="Please update English translations and re-submit the pull-request. Refer to https://github.com/gitextensions/gitextensions/wiki/Translations"
+           Condition="'$(OutputOfExec)' != ''" />
+  </Target>
+
+</Project>
