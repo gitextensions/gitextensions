@@ -118,16 +118,9 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var baseCommit = ckCompareToMergeBase.Checked ? _mergeBase : _baseRevision;
+            var baseCommit = (ckCompareToMergeBase.Checked ? _mergeBase : _baseRevision) ?? DiffFiles.SelectedItemParent;
 
-            var items = new List<GitRevision> { _headRevision, baseCommit };
-            if (baseCommit == null)
-            {
-                // This should not happen
-                items = new List<GitRevision> { _headRevision, DiffFiles.SelectedItemParent };
-            }
-
-            DiffText.ViewChangesAsync(items, DiffFiles.SelectedItem, string.Empty);
+            DiffText.ViewChangesAsync(baseCommit?.ObjectId, _headRevision, DiffFiles.SelectedItem, string.Empty);
         }
 
         private void btnSwap_Click(object sender, EventArgs e)

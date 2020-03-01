@@ -348,7 +348,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.ObjectId, DiffFiles.Revision?.ObjectId, DiffFiles.SelectedItem, string.Empty,
+            await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.ObjectId, DiffFiles.Revision, DiffFiles.SelectedItem, string.Empty,
                 openWithDifftool: () => firstToSelectedToolStripMenuItem.PerformClick());
         }
 
