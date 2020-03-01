@@ -91,30 +91,30 @@ namespace GitCommands.Patches
         }
 
         [CanBeNull]
-        public static byte[] GetSelectedLinesAsNewPatch([NotNull] GitModule module, [NotNull] string newFileName, [NotNull] string text, int selectionPosition, int selectionLength, [NotNull] Encoding fileContentEncoding, bool reset, byte[] filePreamble)
+        public static byte[] GetSelectedLinesAsNewPatch([NotNull] GitModule module, [NotNull] string newFileName, [NotNull] string text, int selectionPosition, int selectionLength, [NotNull] Encoding fileContentEncoding, bool reset, byte[] filePreamble, string treeGuid)
         {
             var selectedChunks = FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreamble, fileContentEncoding);
-
-            string body = ToIndexPatch(selectedChunks, isIndex: false, isWholeFile: true);
+            var isTracked = treeGuid != null;
+            string body = ToIndexPatch(selectedChunks, isIndex: isTracked, isWholeFile: true);
 
             if (body == null)
             {
                 return null;
             }
 
-            const string fileMode = "100000"; // given fake mode to satisfy patch format, git will override this
+            const string fileMode = "100644"; // given fake mode to satisfy patch format, git will override this
             var header = new StringBuilder();
 
             header.Append("diff --git a/").Append(newFileName).Append(" b/").Append(newFileName).Append('\n');
 
-            if (!reset)
+            if (!reset && !isTracked)
             {
                 header.Append("new file mode ").Append(fileMode).Append('\n');
             }
 
-            header.Append("index 0000000..0000000\n");
+            header.Append($"index 0000000..{treeGuid ?? "0000000"}\n");
 
-            if (reset)
+            if (reset || isTracked)
             {
                 header.Append("--- a/").Append(newFileName).Append('\n');
             }

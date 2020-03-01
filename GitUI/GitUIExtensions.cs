@@ -84,39 +84,22 @@ namespace GitUI
                 firstId = selectedRevision.FirstParentGuid;
             }
 
-            openWithDifftool = openWithDifftool ?? OpenWithDifftool;
-            if (file.IsNew && selectedRevision?.ObjectId == ObjectId.WorkTreeId)
-            {
-                return diffViewer.ViewFileAsync(file.Name, openWithDifftool: openWithDifftool);
-            }
-
-            if (firstId == null || FileHelper.IsImage(file.Name))
+            openWithDifftool ??= OpenWithDifftool;
+            if (file.IsNew || firstId == null || FileHelper.IsImage(file.Name))
             {
                 // The previous commit does not exist, nothing to compare with
-                if (file.TreeGuid != null)
-                {
-                    // blob guid exists
-                    return diffViewer.ViewGitItemAsync(file, openWithDifftool);
-                }
-
                 if (selectedRevision == null)
                 {
                     throw new ArgumentNullException(nameof(selectedRevision));
                 }
 
-                // Get blob guid from revision
+                // View blob guid from revision, or file for worktree
                 return diffViewer.ViewGitItemRevisionAsync(file, selectedRevision.ObjectId, openWithDifftool);
             }
 
             string selectedPatch = diffViewer.GetSelectedPatch(firstId, selectedRevision.ObjectId, file);
-            if (selectedPatch == null)
-            {
-                return diffViewer.ViewPatchAsync(file.Name, text: defaultText,
-                    openWithDifftool: null /* not applicable */, isText: true);
-            }
-
-            return diffViewer.ViewPatchAsync(file.Name, text: selectedPatch,
-                openWithDifftool: openWithDifftool, isText: file.IsSubmodule);
+            return diffViewer.ViewPatchAsync(file.Name, text: selectedPatch ?? defaultText,
+                openWithDifftool: openWithDifftool, isText: file.IsSubmodule || selectedPatch == null);
 
             void OpenWithDifftool()
             {
