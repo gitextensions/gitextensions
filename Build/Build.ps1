@@ -9,6 +9,7 @@ Param(
   [switch] $buildNative,
   [switch] $clean,
   [switch] $publish,
+  [switch] $loc,
   [switch] $ci,
   [switch][Alias('t')] $test,
   [switch][Alias('it')] $integrationTest,
@@ -82,7 +83,12 @@ function Build {
     /p:Test=$test `
     /p:Publish=$publish `
     /p:IntegrationTest=$integrationTest `
+    /p:Localise=$loc `
+    /p:ContinuousIntegrationBuild=$ci `
     @properties;
+
+  $exitCode = $LastExitCode;
+  Exit $exitCode;
 }
 
 try {
@@ -99,14 +105,14 @@ try {
       /p:Clean=$clean `
       @properties;
 
-    exit 0
+    Exit 0
   }
 
   Build
 }
 catch {
-  Write-Host $_.Exception -ForegroundColor Red
-  return -1
+  Write-Error $_.Exception
+  Exit -1
 }
 finally {
   Pop-Location

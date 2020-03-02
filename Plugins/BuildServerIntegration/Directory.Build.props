@@ -16,7 +16,7 @@
       Direct plugins artifacts to be placed under GitExtensions/Plugins folder
     -->
   <PropertyGroup>
-    <BaseOutputPath>$([System.IO.Path]::GetFullPath('$(ArtifactsBinDir)GitExtensions\$(Configuration)\$(TargetFramework)\Plugins\$(OutDirName)'))</BaseOutputPath>
+    <BaseOutputPath>$([System.IO.Path]::GetFullPath('$(GitExtensionsOutputPath)$(TargetFramework)\Plugins\$(OutDirName)'))</BaseOutputPath>
     <OutputPath>$(BaseOutputPath)</OutputPath>
     <OutDir>$(BaseOutputPath)</OutDir>
   </PropertyGroup>

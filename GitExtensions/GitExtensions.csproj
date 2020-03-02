@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="Project.Build.targets" />
   <Import Project="Project.Publish.targets" />
+  <Import Project="Project.Loc.targets" />
 
   <PropertyGroup>
     <ApplicationIcon>..\Logo\git-extensions-logo.ico</ApplicationIcon>

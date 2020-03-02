@@ -18,6 +18,7 @@
     Test                            "true" to run tests
     IntegrationTest                 "true" to run integration tests
     Pack                            "true" to build artifacts
+    Localise                        "true" to update English translations sources
   -->
 
   <PropertyGroup>
@@ -86,6 +87,7 @@
     <ItemGroup>
       <_CommonProps Include="Configuration=$(Configuration)"/>
       <_CommonProps Include="ContinuousIntegrationBuild=$(ContinuousIntegrationBuild)"/>
+      <_CommonProps Include="Localise=$(Localise)"/>
       <_CommonProps Include="RepoRoot=$(RepoRoot)"/>
       <_CommonProps Include="VersionsPropsPath=$(VersionsPropsPath)"/>
 
