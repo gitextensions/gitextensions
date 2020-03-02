@@ -238,12 +238,11 @@ namespace GitExtensions
                     {
                         string messageContent = string.Format("There is a problem with the user.xml configuration file.{0}{0}The error message was: {1}{0}{0}The configuration file is usually found in: {2}{0}{0}Problems with configuration can usually be solved by deleting the configuration file. Would you like to delete the file?", Environment.NewLine, in3.Message, localSettingsPath);
 
-                        if (DialogResult.Yes.Equals(MessageBox.Show(messageContent, "Configuration Error", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2)))
+                        if (MessageBox.Show(messageContent, "Configuration Error",
+                                            MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
                         {
-                            try
+                            if (localSettingsPath.TryDeleteDirectory(out string errorMessage))
                             {
-                                Directory.Delete(localSettingsPath, true); // deletes all application settings not just for this instance - but should work
-
                                 // Restart Git Extensions with the same arguments after old config is deleted?
                                 if (DialogResult.OK.Equals(MessageBox.Show(string.Format("Files have been deleted.{0}{0}Would you like to attempt to restart Git Extensions?", Environment.NewLine), "Configuration Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)))
                                 {
@@ -258,7 +257,7 @@ namespace GitExtensions
                                     p.Start();
                                 }
                             }
-                            catch (IOException)
+                            else
                             {
                                 MessageBox.Show(string.Format("Could not delete all files and folders in {0}!", localSettingsPath), "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
