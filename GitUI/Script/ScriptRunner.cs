@@ -103,12 +103,16 @@ namespace GitUI.Script
             if (command.StartsWith(PluginPrefix))
             {
                 command = command.Replace(PluginPrefix, "");
-                foreach (var plugin in PluginRegistry.Plugins)
+
+                lock (PluginRegistry.Plugins)
                 {
-                    if (plugin.Description.ToLower().Equals(command, StringComparison.CurrentCultureIgnoreCase))
+                    foreach (var plugin in PluginRegistry.Plugins)
                     {
-                        var eventArgs = new GitUIEventArgs(owner, uiCommands);
-                        return new CommandStatus(executed: true, needsGridRefresh: plugin.Execute(eventArgs));
+                        if (plugin.Description.ToLower().Equals(command, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            var eventArgs = new GitUIEventArgs(owner, uiCommands);
+                            return new CommandStatus(executed: true, needsGridRefresh: plugin.Execute(eventArgs));
+                        }
                     }
                 }
 
