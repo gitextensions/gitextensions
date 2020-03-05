@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Globalization;
+using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
@@ -103,12 +105,12 @@ namespace AzureDevOpsIntegration
             return GetBuilds(scheduler, null, true);
         }
 
-        private IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
+        private IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool running = false)
         {
             return Observable.Create<BuildInfo>((observer, cancellationToken) => ObserveBuildsAsync(sinceDate, running, observer, cancellationToken));
         }
 
-        private async Task ObserveBuildsAsync(DateTime? sinceDate, bool? running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
+        private async Task ObserveBuildsAsync(DateTime? sinceDate, bool running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
         {
             if (_apiClient == null)
             {
@@ -131,7 +133,15 @@ namespace AzureDevOpsIntegration
                     CacheAzureDevOps = new CacheAzureDevOps { Id = CacheKey, BuildDefinitions = _buildDefinitions };
                 }
 
-                var builds = await _apiClient.QueryBuildsAsync(_buildDefinitions, sinceDate, running);
+                if (_buildDefinitions == null)
+                {
+                    observer.OnCompleted();
+                    return;
+                }
+
+                var builds = running ?
+                    FilterRunningBuilds(await _apiClient.QueryRunningBuildsAsync(_buildDefinitions)) :
+                    await _apiClient.QueryFinishedBuildsAsync(_buildDefinitions, sinceDate);
 
                 foreach (var build in builds)
                 {
@@ -146,6 +156,28 @@ namespace AzureDevOpsIntegration
             {
                 observer.OnError(ex);
             }
+        }
+
+        private IEnumerable<Build> FilterRunningBuilds(IList<Build> runningBuilds)
+        {
+            if (runningBuilds.Count < 2)
+            {
+                return runningBuilds;
+            }
+
+            var byCommitBuilds = runningBuilds.GroupBy(b => b.SourceVersion);
+            runningBuilds = new List<Build>();
+
+            // Filter running builds to display the best build as we can only display one build for a commit
+            // by selecting the first started or if none, one that is waiting to start
+            foreach (var commitBuilds in byCommitBuilds)
+            {
+                var buildSelected = commitBuilds.Where(b => b.StartTime.HasValue).OrderBy(b => b.StartTime).FirstOrDefault()
+                                    ?? commitBuilds.First();
+                runningBuilds.Add(buildSelected);
+            }
+
+            return runningBuilds;
         }
 
         private static BuildInfo CreateBuildInfo(Build buildDetail)
@@ -171,7 +203,7 @@ namespace AzureDevOpsIntegration
             var buildInfo = new BuildInfo
             {
                 Id = buildDetail.BuildNumber,
-                StartDate = buildDetail.StartTime ?? DateTime.Now.AddHours(1),
+                StartDate = buildDetail.StartTime ?? DateTime.MinValue,
                 Status = buildDetail.IsInProgress ? BuildInfo.BuildStatus.InProgress : MapResult(buildDetail.Result),
                 Description = duration + " " + buildDetail.BuildNumber,
                 Tooltip = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(buildDetail.IsInProgress ? buildDetail.Status : buildDetail.Result) + Environment.NewLine + duration + Environment.NewLine + buildDetail.BuildNumber,
@@ -205,5 +237,22 @@ namespace AzureDevOpsIntegration
             _apiClient?.Dispose();
             GC.SuppressFinalize(this);
         }
+
+        #region TestAccessor
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            public AzureDevOpsAdapter AzureDevOpsAdapter { get; }
+
+            public TestAccessor(AzureDevOpsAdapter azureDevOpsAdapter)
+            {
+                AzureDevOpsAdapter = azureDevOpsAdapter;
+            }
+
+            public IEnumerable<Build> FilterRunningBuilds(IList<Build> runningBuilds) => AzureDevOpsAdapter.FilterRunningBuilds(runningBuilds);
+        }
+        #endregion
+
     }
 }

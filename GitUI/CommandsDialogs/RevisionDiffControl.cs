@@ -33,8 +33,6 @@ namespace GitUI.CommandsDialogs
 
         private RevisionGridControl _revisionGrid;
         private RevisionFileTreeControl _revisionFileTree;
-        private string _oldRevision;
-        private GitItemStatus _oldDiffItem;
         private IRevisionDiffController _revisionDiffController;
         private readonly IFileStatusListContextMenuController _revisionDiffContextMenuController;
         private readonly IFullPathResolver _fullPathResolver;
@@ -53,33 +51,24 @@ namespace GitUI.CommandsDialogs
             _revisionDiffContextMenuController = new FileStatusListContextMenuController();
         }
 
-        public void ForceRefreshRevisions()
-        {
-            var revisions = _revisionGrid.GetSelectedRevisions();
-            if (revisions.Count != 0)
-            {
-                _oldRevision = revisions[0].Guid;
-                _oldDiffItem = DiffFiles.SelectedItem;
-            }
-            else
-            {
-                _oldRevision = null;
-                _oldDiffItem = null;
-            }
-
-            RefreshArtificial();
-        }
-
         public void RefreshArtificial()
         {
-            if (Visible)
+            if (!Visible)
             {
-                var revisions = _revisionGrid.GetSelectedRevisions();
+                return;
+            }
 
-                if (revisions.Count > 0 && revisions[0].IsArtificial)
-                {
-                    DiffFiles.SetDiffs(revisions);
-                }
+            var revisions = _revisionGrid.GetSelectedRevisions();
+            if (!revisions.Any(r => r.IsArtificial))
+            {
+                return;
+            }
+
+            DiffFiles.StoreNextIndexToSelect();
+            SetDiffs(revisions);
+            if (DiffFiles.SelectedItem == null)
+            {
+                DiffFiles.SelectStoredNextIndex();
             }
         }
 
@@ -156,12 +145,22 @@ namespace GitUI.CommandsDialogs
         public void DisplayDiffTab()
         {
             var revisions = _revisionGrid.GetSelectedRevisions();
-            DiffFiles.SetDiffs(revisions);
-            if (_oldDiffItem != null && DiffFiles.Revision?.Guid == _oldRevision)
+            SetDiffs(revisions);
+            if (DiffFiles.SelectedItem == null)
             {
-                DiffFiles.SelectedItem = _oldDiffItem;
-                _oldDiffItem = null;
-                _oldRevision = null;
+                DiffFiles.SelectFirstVisibleItem();
+            }
+        }
+
+        private void SetDiffs(IReadOnlyList<GitRevision> revisions)
+        {
+            GitItemStatus oldDiffItem = DiffFiles.SelectedItem;
+            DiffFiles.SetDiffs(revisions, _revisionGrid.GetRevision);
+
+            // Try to restore previous item
+            if (oldDiffItem != null && DiffFiles.GitItemStatuses.Any(i => i.Name.Equals(oldDiffItem.Name)))
+            {
+                DiffFiles.SelectedItem = oldDiffItem;
             }
         }
 
@@ -349,7 +348,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.ObjectId, DiffFiles.Revision?.ObjectId, DiffFiles.SelectedItem, string.Empty,
+            await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.ObjectId, DiffFiles.Revision, DiffFiles.SelectedItem, string.Empty,
                 openWithDifftool: () => firstToSelectedToolStripMenuItem.PerformClick());
         }
 

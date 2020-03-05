@@ -377,7 +377,11 @@ namespace GitUI.CommandsDialogs
                     Name = fileName,
                     IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName))
                 };
-                Diff.ViewChangesAsync(FileChanges.GetSelectedRevisions(), file, "You need to select at least one revision to view diff.");
+                var revisions = FileChanges.GetSelectedRevisions();
+                var selectedRev = revisions.FirstOrDefault();
+                var firstId = revisions.Skip(1).LastOrDefault()?.ObjectId;
+                Diff.ViewChangesAsync(firstId, selectedRev, file,
+                    "You need to select at least one revision to view diff.");
             }
             else if (tabControl1.SelectedTab == CommitInfoTabPage)
             {

@@ -8,6 +8,8 @@ Param(
   [switch] $rebuild,
   [switch] $buildNative,
   [switch] $clean,
+  [switch] $publish,
+  [switch] $loc,
   [switch] $ci,
   [switch][Alias('t')] $test,
   [switch][Alias('it')] $integrationTest,
@@ -25,7 +27,6 @@ $ErrorActionPreference = "Stop"
 $PSDefaultParameterValues['*:ErrorAction'] = 'Stop'
 
 $env:SKIP_PAUSE=1
-$TfmConfiguration = "$Configuration\net461";
 $toolsetBuildProj = Resolve-Path 'Build\tools\Build.proj'
  
 function Build {
@@ -80,8 +81,14 @@ function Build {
     /p:Build=$build `
     /p:Rebuild=$rebuild `
     /p:Test=$test `
+    /p:Publish=$publish `
     /p:IntegrationTest=$integrationTest `
+    /p:Localise=$loc `
+    /p:ContinuousIntegrationBuild=$ci `
     @properties;
+
+  $exitCode = $LastExitCode;
+  Exit $exitCode;
 }
 
 try {
@@ -98,14 +105,14 @@ try {
       /p:Clean=$clean `
       @properties;
 
-    exit 0
+    Exit 0
   }
 
   Build
 }
 catch {
-  Write-Host $_.Exception -ForegroundColor Red
-  return -1
+  Write-Error $_.Exception
+  Exit -1
 }
 finally {
   Pop-Location

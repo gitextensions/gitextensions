@@ -630,7 +630,7 @@ namespace GitUI.CommandsDialogs
 
             if (_dashboard == null || !_dashboard.Visible)
             {
-                revisionDiff.ForceRefreshRevisions();
+                revisionDiff.RefreshArtificial();
                 RevisionGrid.ForceRefreshRevisions();
                 InternalInitialize(true);
             }
@@ -707,24 +707,32 @@ namespace GitUI.CommandsDialogs
         private void RegisterPlugins()
         {
             var existingPluginMenus = pluginsToolStripMenuItem.DropDownItems.OfType<ToolStripMenuItem>().ToLookup(c => c.Tag);
-            var pluginEntries = PluginRegistry.Plugins
-                .OrderBy(entry => entry.Name, StringComparer.CurrentCultureIgnoreCase);
 
-            foreach (var plugin in pluginEntries)
+            lock (PluginRegistry.Plugins)
             {
-                // Add the plugin to the Plugins menu, if not already added
-                if (!existingPluginMenus.Contains(plugin))
-                {
-                    var item = new ToolStripMenuItem { Text = plugin.Description, Image = plugin.Icon, Tag = plugin };
-                    item.Click += delegate
-                    {
-                        if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
-                        {
-                            RefreshRevisions();
-                        }
-                    };
+                var pluginEntries = PluginRegistry.Plugins
+                    .OrderBy(entry => entry.Name, StringComparer.CurrentCultureIgnoreCase);
 
-                    pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2, item);
+                foreach (var plugin in pluginEntries)
+                {
+                    // Add the plugin to the Plugins menu, if not already added
+                    if (!existingPluginMenus.Contains(plugin))
+                    {
+                        var item = new ToolStripMenuItem
+                        {
+                            Text = plugin.Description, Image = plugin.Icon, Tag = plugin
+                        };
+                        item.Click += delegate
+                        {
+                            if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
+                            {
+                                RefreshRevisions();
+                            }
+                        };
+
+                        pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2,
+                            item);
+                    }
                 }
             }
 

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using FluentAssertions;
 using GitUI.CommitInfo;
 using NUnit.Framework;
 using ResourceManager;
 
-namespace GitUITests.CommitInfo
+namespace GitUITests.UserControls.CommitInfo
 {
     public class RefsFormatterTests
     {

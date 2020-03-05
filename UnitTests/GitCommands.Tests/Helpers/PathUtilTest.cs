@@ -229,5 +229,34 @@ namespace GitCommandsTests.Helpers
         {
             Assert.AreEqual(expected, PathUtil.FindAncestors(path).ToArray());
         }
+
+        private static IEnumerable<TestCaseData> InvalidFolders
+        {
+            get
+            {
+                yield return new TestCaseData(null);
+                yield return new TestCaseData("");
+                yield return new TestCaseData(@"A:\does\not\exist");
+            }
+        }
+
+        [Test, TestCaseSource(nameof(InvalidFolders))]
+        public void DeleteWithExtremePrejudice_should_return_true_for_empty_input_or_absent_folders(string path)
+        {
+            path.TryDeleteDirectory(out string errorMessage).Should().BeTrue();
+            errorMessage.Should().BeNull();
+        }
+
+        [Test]
+        public void DeleteWithExtremePrejudice_should_return_true_if_delete_successful()
+        {
+            var tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempPath);
+            Directory.Exists(tempPath).Should().BeTrue();
+
+            tempPath.TryDeleteDirectory(out string errorMessage).Should().BeTrue();
+            errorMessage.Should().BeNull();
+            Directory.Exists(tempPath).Should().BeFalse();
+        }
     }
 }

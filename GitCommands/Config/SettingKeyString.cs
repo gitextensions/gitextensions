@@ -45,5 +45,20 @@
         /// user.email
         /// </summary>
         public static string UserEmail = "user.email";
+
+        /// <summary>
+        /// diff.guitool
+        /// </summary>
+        public static string DiffToolKey = "diff.guitool";
+
+        /// <summary>
+        /// merge.guitool, requires Git 2.20.0
+        /// </summary>
+        public static string MergeToolKey = "merge.guitool";
+
+        /// <summary>
+        /// merge.tool
+        /// </summary>
+        public static string MergeToolNoGuiKey = "merge.tool";
     }
 }

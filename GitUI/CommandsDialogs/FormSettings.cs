@@ -112,14 +112,17 @@ namespace GitUI.CommandsDialogs
             SettingsPageReference pluginsPageRef = PluginsSettingsGroup.GetPageReference();
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<PluginRootIntroductionPage>(this), pluginsPageRef, icon: null, asRoot: true);
 
-            var pluginEntries = PluginRegistry.Plugins
-                .Where(p => p.HasSettings)
-                .Select(plugin => (Plugin: plugin, Page: PluginSettingsPage.CreateSettingsPageFromPlugin(this, plugin)))
-                .OrderBy(entry => entry.Page.GetTitle(), StringComparer.CurrentCultureIgnoreCase);
-
-            foreach (var entry in pluginEntries)
+            lock (PluginRegistry.Plugins)
             {
-                settingsTreeView.AddSettingsPage(entry.Page, pluginsPageRef, entry.Plugin.Icon as Bitmap);
+                var pluginEntries = PluginRegistry.Plugins
+                    .Where(p => p.HasSettings)
+                    .Select(plugin => (Plugin: plugin, Page: PluginSettingsPage.CreateSettingsPageFromPlugin(this, plugin)))
+                    .OrderBy(entry => entry.Page.GetTitle(), StringComparer.CurrentCultureIgnoreCase);
+
+                foreach (var entry in pluginEntries)
+                {
+                    settingsTreeView.AddSettingsPage(entry.Page, pluginsPageRef, entry.Plugin.Icon as Bitmap);
+                }
             }
 
             if (initialPage == null && _lastSelectedSettingsPageType != null)

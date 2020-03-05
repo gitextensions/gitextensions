@@ -14,10 +14,10 @@ namespace GitUI.Theming
     public class ThemePersistence
     {
         private static readonly Regex Pattern = new Regex(
-            @"^(?<name>\w+): (?<argb>[\da-f]{6})$",
+            @"^\s*\.\s*(?<name>\w+)\s*\{\s*color\s*:\s*#(?<argb>[\da-f]{6})\s*\}\s*$",
             RegexOptions.IgnoreCase);
 
-        private const string Format = "{0}: {1:x6}";
+        private const string Format = ".{0} {{ color: #{1:x6} }}";
 
         private readonly TranslationString _failedToLoadThemeFrom =
             new TranslationString("Failed to read theme from {0}");

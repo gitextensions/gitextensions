@@ -72,33 +72,25 @@ namespace GitUI
             return patch.Text;
         }
 
-        public static Task ViewChangesAsync(this FileViewer diffViewer, IReadOnlyList<GitRevision> revisions, GitItemStatus file, string defaultText)
-        {
-            if (revisions.Count == 0)
-            {
-                return Task.CompletedTask;
-            }
-
-            var selectedRevision = revisions[0];
-            var secondRevision = selectedRevision?.ObjectId;
-            var firstRevision = revisions.Count >= 2 ? revisions[1].ObjectId : null;
-            if (firstRevision == null && selectedRevision != null)
-            {
-                firstRevision = selectedRevision.FirstParentGuid;
-            }
-
-            return ViewChangesAsync(diffViewer, firstRevision, secondRevision, file, defaultText, openWithDifftool: null /* use default */);
-        }
-
-        public static Task ViewChangesAsync(
-            this FileViewer diffViewer,
-            [CanBeNull] ObjectId firstRevision,
-            ObjectId secondRevision,
+        public static Task ViewChangesAsync(this FileViewer diffViewer,
+            [CanBeNull] ObjectId firstId,
+            [CanBeNull] GitRevision selectedRevision,
             [NotNull] GitItemStatus file,
             [NotNull] string defaultText,
-            [CanBeNull] Action openWithDifftool)
+            [CanBeNull] Action openWithDifftool = null)
         {
-            if (firstRevision == null || FileHelper.IsImage(file.Name))
+            if (firstId == null && selectedRevision != null)
+            {
+                firstId = selectedRevision.FirstParentGuid;
+            }
+
+            openWithDifftool = openWithDifftool ?? OpenWithDifftool;
+            if (file.IsNew && selectedRevision?.ObjectId == ObjectId.WorkTreeId)
+            {
+                return diffViewer.ViewFileAsync(file.Name, openWithDifftool: openWithDifftool);
+            }
+
+            if (firstId == null || FileHelper.IsImage(file.Name))
             {
                 // The previous commit does not exist, nothing to compare with
                 if (file.TreeGuid != null)
@@ -107,16 +99,16 @@ namespace GitUI
                     return diffViewer.ViewGitItemAsync(file, openWithDifftool);
                 }
 
-                if (secondRevision == null)
+                if (selectedRevision == null)
                 {
-                    throw new ArgumentNullException(nameof(secondRevision));
+                    throw new ArgumentNullException(nameof(selectedRevision));
                 }
 
                 // Get blob guid from revision
-                return diffViewer.ViewGitItemRevisionAsync(file, secondRevision, openWithDifftool);
+                return diffViewer.ViewGitItemRevisionAsync(file, selectedRevision.ObjectId, openWithDifftool);
             }
 
-            string selectedPatch = diffViewer.GetSelectedPatch(firstRevision, secondRevision, file);
+            string selectedPatch = diffViewer.GetSelectedPatch(firstId, selectedRevision.ObjectId, file);
             if (selectedPatch == null)
             {
                 return diffViewer.ViewPatchAsync(file.Name, text: defaultText,
@@ -124,15 +116,15 @@ namespace GitUI
             }
 
             return diffViewer.ViewPatchAsync(file.Name, text: selectedPatch,
-                openWithDifftool: openWithDifftool ?? OpenWithDifftool, isText: file.IsSubmodule);
+                openWithDifftool: openWithDifftool, isText: file.IsSubmodule);
 
             void OpenWithDifftool()
             {
                 diffViewer.Module.OpenWithDifftool(
                     file.Name,
-                    null,
-                    firstRevision.ToString(),
-                    firstRevision.ToString(),
+                    file.OldName,
+                    firstId?.ToString(),
+                    selectedRevision?.ToString(),
                     "",
                     file.IsTracked);
             }

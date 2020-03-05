@@ -589,11 +589,11 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="ThemesDir">
-      <Component Id="win10default.colors" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Themes\win10default.colors" />
+      <Component Id="win10default.css" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Themes\win10default.css" />
       </Component>
-      <Component Id="dark.colors" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Themes\dark.colors" />
+      <Component Id="dark.css" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Themes\dark.css" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="PluginsDir">
@@ -1602,8 +1602,8 @@
       <ComponentRef Id="EasyHook.dll" />
       <ComponentRef Id="EasyHook32.dll" />
       <ComponentRef Id="EasyHook64.dll" />
-      <ComponentRef Id="win10default.colors" />
-      <ComponentRef Id="dark.colors" />
+      <ComponentRef Id="win10default.css" />
+      <ComponentRef Id="dark.css" />
       <!--Remove unused dll, installed in versions <= 2.31-->
       <ComponentRef Id="GithubSharp.Core.dll" />
       <!--Remove unused dll, installed in versions <= 2.31-->

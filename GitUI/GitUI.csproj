@@ -75,10 +75,10 @@
     <None Include="gituikey.snk.pfx" />
     <None Include="Resources\ChangeLog.md" />
 
-    <Content Include="Themes\dark.colors">
+    <Content Include="Themes\dark.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Themes\win10default.colors">
+    <Content Include="Themes\win10default.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
