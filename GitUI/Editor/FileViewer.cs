@@ -560,7 +560,7 @@ namespace GitUI.Editor
                     {
                         var patch = await Module.GetCurrentChangesAsync(
                             item.Name, item.OldName, isStaged, GetExtraDiffArguments(), Encoding);
-                        await ViewPatchAsync(item.Name, patch?.Text ?? "", openWithDifftool, isText: false);
+                        await ViewPatchAsync(item.Name, patch?.Text ?? "", openWithDifftool);
                     }
 
                     SetVisibilityDiffContextMenuStaging();
@@ -573,40 +573,37 @@ namespace GitUI.Editor
         /// <param name="fileName">The fileName to present</param>
         /// <param name="text">The patch text</param>
         /// <param name="openWithDifftool">The action to open the difftool</param>
-        /// <param name="isText">Handle as 'text' rather than diff/patch</param>
         public void ViewPatch([CanBeNull] string fileName,
             [NotNull] string text,
-            [CanBeNull] Action openWithDifftool = null,
-            bool isText = false)
+            [CanBeNull] Action openWithDifftool = null)
         {
             ThreadHelper.JoinableTaskFactory.Run(
-                () => ViewPatchAsync(fileName, text, openWithDifftool, isText));
+                () => ViewPatchAsync(fileName, text, openWithDifftool));
         }
 
-        public async Task ViewPatchAsync(string fileName, string text, Action openWithDifftool, bool isText)
+        public async Task ViewPatchAsync(string fileName, string text, Action openWithDifftool)
         {
             await ShowOrDeferAsync(
                 text.Length,
                 () =>
                 {
-                    if (isText)
-                    {
-                        // A submodule 'patch' is handled as text
-                        ResetForText(fileName);
-                        internalFileViewer.SetText(text, openWithDifftool, isDiff: false);
-                    }
-                    else
-                    {
-                        ResetForDiff(fileName);
-                        internalFileViewer.SetText(text, openWithDifftool, isDiff: true);
-                    }
+                    ResetForDiff(fileName);
+                    internalFileViewer.SetText(text, openWithDifftool, isDiff: true);
 
                     TextLoaded?.Invoke(this, null);
                     return Task.CompletedTask;
                 });
         }
 
-        public async Task ViewTextAsync([NotNull] string fileName, [NotNull] string text,
+        public void ViewText([CanBeNull] string fileName,
+            [NotNull] string text,
+            [CanBeNull] Action openWithDifftool = null)
+        {
+            ThreadHelper.JoinableTaskFactory.Run(
+                () => ViewTextAsync(fileName, text, openWithDifftool));
+        }
+
+        public async Task ViewTextAsync([CanBeNull] string fileName, [NotNull] string text,
             [CanBeNull] Action openWithDifftool = null, bool checkGitAttributes = false)
         {
             await ShowOrDeferAsync(

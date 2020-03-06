@@ -463,7 +463,15 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
 
             var data = _diffCache[gis.Name];
-            _diffViewer.ViewPatch(gis.Name, text: data, openWithDifftool: null, isText: gis.IsSubmodule);
+
+            if (gis.IsSubmodule)
+            {
+                _diffViewer.ViewText(gis.Name, text: data);
+            }
+            else
+            {
+                _diffViewer.ViewPatch(gis.Name, text: data);
+            }
         }
 
         private void _closePullRequestBtn_Click(object sender, EventArgs e)

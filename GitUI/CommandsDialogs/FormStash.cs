@@ -8,6 +8,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Patches;
 using GitExtUtils.GitUI;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -187,52 +188,22 @@ namespace GitUI.CommandsDialogs
 
             using (WaitCursorScope.Enter())
             {
-                if (stashedItem != null &&
-                    gitStash == _currentWorkingDirStashItem)
+                ObjectId first;
+                ObjectId selected;
+                if (gitStash == _currentWorkingDirStashItem)
                 {
                     // current working directory
-                    View.ViewCurrentChanges(stashedItem, isStaged: false, openWithDifftool: null);
-                }
-                else if (stashedItem != null)
-                {
-                    if (stashedItem.IsNew)
-                    {
-                        View.ViewGitItemAsync(stashedItem);
-                    }
-                    else
-                    {
-                        string extraDiffArguments = View.GetExtraDiffArguments();
-                        Encoding encoding = View.Encoding;
-                        ThreadHelper.JoinableTaskFactory.Run(
-                            () =>
-                            {
-                                Patch patch = Module.GetSingleDiff(gitStash.Name + "^",
-                                    gitStash.Name,
-                                    stashedItem.Name,
-                                    stashedItem.OldName,
-                                    extraDiffArguments,
-                                    encoding,
-                                    true,
-                                    stashedItem.IsTracked);
-                                if (patch == null)
-                                {
-                                    return View.ViewPatchAsync(fileName: null, text: string.Empty, openWithDifftool: null /* not applicable */, isText: true);
-                                }
-
-                                if (stashedItem.IsSubmodule)
-                                {
-                                    return View.ViewPatchAsync(fileName: stashedItem.Name, text: LocalizationHelpers.ProcessSubmodulePatch(Module, stashedItem.Name, patch),
-                                            openWithDifftool: null /* not implemented */, isText: stashedItem.IsSubmodule);
-                                }
-
-                                return View.ViewPatchAsync(fileName: stashedItem.Name, text: patch.Text, openWithDifftool: null /* not implemented */, isText: stashedItem.IsSubmodule);
-                            });
-                    }
+                    first = ObjectId.IndexId;
+                    selected = ObjectId.WorkTreeId;
                 }
                 else
                 {
-                    View.Clear();
+                    first = Module.RevParse(gitStash.Name + "^");
+                    selected = Module.RevParse(gitStash.Name);
                 }
+
+                var selectedRev = selected != null ? new GitRevision(selected) : null;
+                View.ViewChangesAsync(first, selectedRev, stashedItem);
             }
         }
 
