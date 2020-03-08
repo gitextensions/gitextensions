@@ -60,15 +60,31 @@
       <Output TaskParameter="ExitCode" PropertyName="_TestErrorCode" />
     </Exec>
 
+    <!--
+      Add command line to the log.
+    -->
     <WriteLinesToFile File="$(_TestStdOutPath)" Overwrite="false" Lines=";=== COMMAND LINE ===;$(_TestRunnerCommand)" />
 
     <ItemGroup>
       <_FailedTestRuns Include="$(_TestEnvironment)" Condition="'$(_TestErrorCode)' != '0'" />
     </ItemGroup>
 
+    <ReadLinesFromFile File="$(_TestStdOutPath)" Condition="'$(_TestErrorCode)' != '0' and '$(TargetFrameworks)' == ''">
+      <Output TaskParameter="Lines" ItemName="TestLogs"/>
+    </ReadLinesFromFile>
+
+    <!--
+      Report test status.
+    -->
+    <!-- All good -->
     <Message Text="Tests succeeded: $(TargetPath) [$(_TestEnvironment)]" Condition="'$(_TestErrorCode)' == '0'" Importance="high" />
-    <Warning Text="$(_TestResultsDisplayPath) [$(_TestEnvironment)]" Condition="'$(_TestErrorCode)' != '0' and '$(TargetFrameworks)' != ''" File="NUnit" />
-    <Error Text="$(_TestResultsDisplayPath) [$(_TestEnvironment)]" Condition="'$(_TestErrorCode)' != '0' and '$(TargetFrameworks)' == ''" File="NUnit" />
+
+    <!-- Report the failure -->
+    <PropertyGroup Condition="'$(_TestErrorCode)' != '0'">
+      <_FailedTestsLog>$([System.IO.File]::ReadAllText($(_TestStdOutPath)))</_FailedTestsLog>
+    </PropertyGroup>
+    <Message Text="%0a%0d[ERROR] Tests failed: $(_TestStdOutPath)%0a%0d----------------------------------------------------------------%0a%0d$(_FailedTestsLog)" Condition="'$(_TestErrorCode)' != '0'" Importance="High" />
+    <Error Text="Tests failed: $(MSBuildProjectFullPath) [$(_TestEnvironment)]" Condition="'$(_TestErrorCode)' != '0'" File="NUnit" />
 
   </Target>
 
