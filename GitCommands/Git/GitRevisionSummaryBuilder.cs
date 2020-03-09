@@ -21,6 +21,11 @@ namespace GitCommands
 
         public string BuildSummary(string body)
         {
+            if (body == null)
+            {
+                return null;
+            }
+
             var s = new StringBuilder(Math.Min(body.Length, CommitSummaryWorstCaseLength));
 
             int lineCount = 0;

@@ -10,6 +10,14 @@ namespace GitCommandsTests
 {
     public sealed class GitRevisionSummaryBuilderTests
     {
+        [Test]
+        public void Should_return_null_When_body_is_null()
+        {
+            Assert.AreEqual(null, new GitRevisionSummaryBuilder().BuildSummary(null));
+        }
+
+        [TestCase("")]
+        [TestCase("  ")]
         [TestCase("toto")]
         [TestCase("toto\ntata\ntiti")]
         public void Should_have_same_content_When_no_ellipsis(string bodyContent)
