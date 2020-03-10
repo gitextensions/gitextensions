@@ -21,6 +21,8 @@ namespace CommonTestUtils
 
         public ActionTargets Targets => ActionTargets.Test;
 
+        public static readonly LoggingService LoggingService = new LoggingService() { AutoFlush = true };
+
         public ConfigureJoinableTaskFactoryAttribute()
         {
             Application.ThreadException += HandleApplicationThreadException;
@@ -28,6 +30,7 @@ namespace CommonTestUtils
 
         public void BeforeTest(ITest test)
         {
+            Log($"{nameof(BeforeTest)} entry");
             Assert.IsNull(ThreadHelper.JoinableTaskContext, "Tests with joinable tasks must not be run in parallel!");
 
             IList apartmentState = null;
@@ -68,13 +71,17 @@ namespace CommonTestUtils
                     using var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout);
                     try
                     {
+                        Log($"{nameof(AfterTest)} entry");
+
                         // Note that ThreadHelper.JoinableTaskContext.Factory must be used to bypass the default behavior of
                         // ThreadHelper.JoinableTaskFactory since the latter adds new tasks to the collection and would therefore
                         // never complete.
                         ThreadHelper.JoinableTaskContext.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cts.Token));
+                        Log($"{nameof(AfterTest)} wait async succeeded");
                     }
-                    catch (OperationCanceledException) when (cts.IsCancellationRequested)
+                    catch (OperationCanceledException ex) when (cts.IsCancellationRequested)
                     {
+                        Log($"{nameof(AfterTest)} cts timed out", ex);
                         if (int.TryParse(Environment.GetEnvironmentVariable("GE_TEST_SLEEP_SECONDS_ON_HANG"), out var sleepSeconds) && sleepSeconds > 0)
                         {
                             Thread.Sleep(TimeSpan.FromSeconds(sleepSeconds));
@@ -83,8 +90,13 @@ namespace CommonTestUtils
                         throw;
                     }
                 }
+                catch (Exception ex)
+                {
+                    Log($"{nameof(AfterTest)}", ex);
+                }
                 finally
                 {
+                    Log($"{nameof(AfterTest)} finally");
                     ThreadHelper.JoinableTaskContext = null;
                     if (_denyExecutionSynchronizationContext != null)
                     {
@@ -100,16 +112,25 @@ namespace CommonTestUtils
             }
             finally
             {
+                Log($"{nameof(AfterTest)} exit").Flush();
+
                 // Reset _threadException to null, and throw if it was set during the current test.
                 Interlocked.Exchange(ref _threadException, null)?.Throw();
             }
         }
+
+        public static LoggingService Log(string message)
+            => LoggingService?.Log(message, debugOnly: false);
+
+        public static LoggingService Log(string message, Exception ex)
+            => LoggingService?.Log(message, ex);
 
         private void HandleApplicationThreadException(object sender, ThreadExceptionEventArgs e)
             => StoreThreadException(e.Exception);
 
         private void StoreThreadException(Exception ex)
         {
+            Log($"{nameof(StoreThreadException)}", ex);
             if (_threadException != null)
             {
                 ex = new AggregateException(new Exception[] { _threadException.SourceException, ex });
@@ -216,16 +237,14 @@ namespace CommonTestUtils
                     return;
                 }
 
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"{Environment.NewLine}HANG DETECTED: guid {hangId}{Environment.NewLine}");
-                Console.ResetColor();
+                LoggingService?.Log($"{Environment.NewLine}HANG DETECTED: guid {hangId}{Environment.NewLine}", debugOnly: false).Flush();
 
                 if (Environment.GetEnvironmentVariable("GE_TEST_LAUNCH_DEBUGGER_ON_HANG") != "1")
                 {
                     return;
                 }
 
-                Console.WriteLine("launching debugger...");
+                LoggingService?.Log("launching debugger...", debugOnly: false).Flush();
 
                 Debugger.Launch();
                 Debugger.Break();
