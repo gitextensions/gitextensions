@@ -21,7 +21,7 @@ namespace GitCommands
 
         public string BuildSummary(string body)
         {
-            if (body == null)
+            if (string.IsNullOrWhiteSpace(body))
             {
                 return null;
             }
