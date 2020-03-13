@@ -94,7 +94,7 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</OutDir>
   </PropertyGroup>
 
-  <Import Project="..\Build\tools\Settings.props" />
+  <Import Project="..\scripts\tools\Settings.props" />
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>$(ProjectName)32</TargetName>

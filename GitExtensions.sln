@@ -170,15 +170,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{472B72D9-9336-4C8B-A199-300F0CA7669E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{472B72D9-9336-4C8B-A199-300F0CA7669E}"
 	ProjectSection(SolutionItems) = preProject
-		Build\build.ps1 = Build\build.ps1
-		Build\Download-PluginManager.ps1 = Build\Download-PluginManager.ps1
-		Build\Mark-RepoClean.ps1 = Build\Mark-RepoClean.ps1
-		Build\stylecop.json = Build\stylecop.json
-		Build\vs-threading.MainThreadAssertingMethods.txt = Build\vs-threading.MainThreadAssertingMethods.txt
-		Build\vs-threading.MainThreadSwitchingMethods.txt = Build\vs-threading.MainThreadSwitchingMethods.txt
-		Build\vs-threading.TypesRequiringMainThread.txt = Build\vs-threading.TypesRequiringMainThread.txt
+		scripts\build.ps1 = scripts\build.ps1
+		scripts\Download-PluginManager.ps1 = scripts\Download-PluginManager.ps1
+		scripts\Mark-RepoClean.ps1 = scripts\Mark-RepoClean.ps1
+		scripts\stylecop.json = scripts\stylecop.json
+		scripts\vs-threading.MainThreadAssertingMethods.txt = scripts\vs-threading.MainThreadAssertingMethods.txt
+		scripts\vs-threading.MainThreadSwitchingMethods.txt = scripts\vs-threading.MainThreadSwitchingMethods.txt
+		scripts\vs-threading.TypesRequiringMainThread.txt = scripts\vs-threading.TypesRequiringMainThread.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{17FD2A6B-4005-41DC-BFAC-59F936DF33AA}"
@@ -206,13 +206,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISSUE_TEMPLATE", "ISSUE_TEM
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "transifex", "transifex", "{D017F26A-694F-4127-B917-9B1BD3F01E2F}"
 	ProjectSection(SolutionItems) = preProject
-		Build\transifex\DownloadTransifexTranslations.ps1 = Build\transifex\DownloadTransifexTranslations.ps1
-		Build\transifex\UpdateLocalEnglishTranslations.ps1 = Build\transifex\UpdateLocalEnglishTranslations.ps1
+		scripts\transifex\DownloadTransifexTranslations.ps1 = scripts\transifex\DownloadTransifexTranslations.ps1
+		scripts\transifex\UpdateLocalEnglishTranslations.ps1 = scripts\transifex\UpdateLocalEnglishTranslations.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".tx", ".tx", "{EFBCA0B9-9E08-4464-BEAA-DAF2FF85C6AB}"
 	ProjectSection(SolutionItems) = preProject
-		Build\transifex\.tx\config = Build\transifex\.tx\config
+		scripts\transifex\.tx\config = scripts\transifex\.tx\config
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeleteUnusedBranches.Tests", "UnitTests\Plugins\DeleteUnusedBranches.Tests\DeleteUnusedBranches.Tests.csproj", "{3FD5B353-17C0-4122-A693-27B707D06EFF}"
