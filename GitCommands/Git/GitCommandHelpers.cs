@@ -773,9 +773,7 @@ namespace GitCommands
                         // Slight modification on how the following flags are used
                         // Changed commit
                         gitItemStatus.IsChanged = subm[1] == 'C';
-
-                        // Is dirty
-                        gitItemStatus.IsTracked = subm[2] != 'M' && subm[3] != 'U';
+                        gitItemStatus.IsDirty = subm[2] == 'M' || subm[3] == 'U';
                     }
                 }
 

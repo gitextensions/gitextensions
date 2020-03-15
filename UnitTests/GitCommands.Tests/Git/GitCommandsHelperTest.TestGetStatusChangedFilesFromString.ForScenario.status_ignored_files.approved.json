@@ -5,7 +5,7 @@
         "TreeGuid": null,
         "RenameCopyPercentage": null,
         "Staged": 2,
-        "IsTracked": false,
+        "IsTracked": true,
         "IsDeleted": false,
         "IsChanged": false,
         "IsNew": false,
@@ -15,7 +15,8 @@
         "IsConflict": false,
         "IsAssumeUnchanged": false,
         "IsSkipWorktree": false,
-        "IsSubmodule": true
+        "IsSubmodule": true,
+        "IsDirty": true
     },
     {
         "Name": "untracked_file",
@@ -33,6 +34,7 @@
         "IsConflict": false,
         "IsAssumeUnchanged": false,
         "IsSkipWorktree": false,
-        "IsSubmodule": false
+        "IsSubmodule": false,
+        "IsDirty": false
     }
 ]
