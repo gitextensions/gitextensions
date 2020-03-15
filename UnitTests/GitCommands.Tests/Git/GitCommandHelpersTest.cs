@@ -1,8 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.CompilerServices;
+using ApprovalTests;
+using ApprovalTests.Namers;
 using GitCommands;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using ResourceManager;
 
@@ -118,131 +122,67 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void TestGetDiffChangedFilesFromString()
+        [TestCase("WorkTree1", "HEAD", GitRevision.IndexGuid, "HEAD",
+            "\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0")]
+        [TestCase("WorkTree2", "HEAD", GitRevision.IndexGuid, "HEAD",
+            "\0\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0")]
+        [TestCase("WorkTree3", "HEAD", GitRevision.IndexGuid, "HEAD",
+            "\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\nM\0testfile.txt\0")]
+        [TestCase("WorkTree4", "HEAD", GitRevision.IndexGuid, "HEAD",
+            "M\0testfile.txt\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\n")]
+
+        [TestCase("Ignore_unmerged_in_conflict_if_revision_is_work_tree", GitRevision.IndexGuid, GitRevision.WorkTreeGuid, GitRevision.IndexGuid,
+            "M\0testfile.txt\0U\0testfile.txt\0")]
+        [TestCase("Include_unmerged_in_conflict_if_revision_is_index", "HEAD", GitRevision.IndexGuid, "HEAD",
+            "M\0testfile.txt\0U\0testfile2.txt\0")]
+        [TestCase("Check_that_the_staged_status_is_None_if_not_IndexWorkTree1", GitRevision.IndexGuid, "456", "678",
+            "M\0testfile.txt\0U\0testfile2.txt\0")]
+        [TestCase("Check_that_the_staged_status_is_None_if_not_IndexWorkTree2", "123", "456", null,
+            "M\0testfile.txt\0U\0testfile2.txt\0")]
+
+        [TestCase("Check that spaces are not trimmed in file names", "123", "456", null,
+            "M\0 no trim space0 \0U\0 no trim space1 \0A\0 no trim space2 \0")]
+        [TestCase("Rename_with_spaces", "123", "456", null,
+            "R100\0CONTRIBUTING.md\0 CONTRIBUTI NG.md\0C70\0apa.md\0 apa.md\0A\0 co decov.yml\0D\0CODE_OF_CONDUCT.md\0")]
+#if !DEBUG && false
+            // This test is for documentation, but as the throw is in a called function, it will not test cleanly
+                // Check that the staged status is None if not Index/WorkTree
+                // Assertion in Debug, throws in Release
+        [TestCase("Check_that_the_staged_status_is_None_if_not_IndexWorkTree3", null, null, null,
+            "M\0testfile.txt\0U\0testfile2.txt\0")]
+#endif
+        public void TestGetDiffChangedFilesFromString(string testName, string firstRevision, string secondRevision, string parentToSecond, string statusString)
         {
             // TODO produce a valid working directory
             var module = new GitModule(Path.GetTempPath());
+            using (ApprovalResults.ForScenario(testName.Replace(' ', '_')))
             {
-                // git diff -M -C -z --cached --name-status
-                string statusString = "\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0";
-                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, "HEAD", GitRevision.IndexGuid, "HEAD");
-                Assert.IsTrue(status.Count == 1);
-                Assert.IsTrue(status[0].Name == "testfile.txt");
+                // git diff -M -C -z --name-status
+                var statuses = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, firstRevision, secondRevision, parentToSecond);
+                Approvals.VerifyJson(JsonConvert.SerializeObject(statuses));
             }
-
-            {
-                // git diff -M -C -z --cached --name-status
-                string statusString = "\0\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0";
-                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, "HEAD", GitRevision.IndexGuid, "HEAD");
-                Assert.IsTrue(status.Count == 1);
-                Assert.IsTrue(status[0].Name == "testfile.txt");
-            }
-
-            {
-                // git diff -M -C -z --cached --name-status
-                string statusString = "\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\nM\0testfile.txt\0";
-                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, "HEAD", GitRevision.IndexGuid, "HEAD");
-                Assert.IsTrue(status.Count == 1);
-                Assert.IsTrue(status[0].Name == "testfile.txt");
-            }
-
-            {
-                // git diff -M -C -z --cached --name-status
-                string statusString = "M  testfile.txt\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\n";
-                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, "HEAD", GitRevision.IndexGuid, "HEAD");
-                Assert.IsTrue(status.Count == 1);
-                Assert.IsTrue(status[0].Name == "testfile.txt");
-            }
-
-            {
-                // git diff -M -C -z --cached --name-status
-                // Ignore unmerged (in conflict) if revision is work tree
-                string statusString = "M  testfile.txt\0U  testfile.txt\0";
-                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, GitRevision.IndexGuid, GitRevision.WorkTreeGuid, GitRevision.IndexGuid);
-                Assert.IsTrue(status.Count == 1);
-                Assert.IsTrue(status[0].Name == "testfile.txt");
-                Assert.IsTrue(status[0].Staged == StagedStatus.WorkTree);
-            }
-
-            {
-                // git diff -M -C -z --cached --name-status
-                // Include unmerged (in conflict) if revision is index
-                string statusString = "M  testfile.txt\0U  testfile2.txt\0";
-                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, "HEAD", GitRevision.IndexGuid, "HEAD");
-                Assert.IsTrue(status.Count == 2);
-                Assert.IsTrue(status[0].Name == "testfile.txt");
-                Assert.IsTrue(status[0].Staged == StagedStatus.Index);
-            }
-
-            {
-                // git diff -M -C -z --name-status 123 456
-                // Check that the staged status is None if not Index/WorkTree
-                string statusString = "M  testfile.txt\0U  testfile2.txt\0";
-                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, GitRevision.IndexGuid, "456", "678");
-                Assert.IsTrue(status.Count == 2);
-                Assert.IsTrue(status[0].Name == "testfile.txt");
-                Assert.IsTrue(status[0].Staged == StagedStatus.None);
-            }
-
-            {
-                // git diff -M -C -z --name-status 123 456
-                // Check that the staged status is None if not Index/WorkTree
-                string statusString = "M  testfile.txt\0U  testfile2.txt\0";
-                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, "123", "456", null);
-                Assert.IsTrue(status.Count == 2);
-                Assert.IsTrue(status[0].Name == "testfile.txt");
-                Assert.IsTrue(status[0].Staged == StagedStatus.None);
-            }
-
-#if !DEBUG && false
-            // This test is for documentation, but as the throw is in a called function, it will not test cleanly
-            {
-                // git diff -M -C -z --name-status 123 456
-                // Check that the staged status is None if not Index/WorkTree
-                // Assertion in Debug, throws in Release
-                string statusString = "M  testfile.txt\0U  testfile2.txt\0";
-
-                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, null, null, null);
-                Assert.IsTrue(status.Count == 2);
-                Assert.IsTrue(status[0].Name == "testfile.txt");
-                Assert.IsTrue(status[0].Staged == StagedStatus.Unknown);
-             }
-#endif
         }
 
         [Test]
-        public void TestGetStatusChangedFilesFromString()
+
+        // porcelain v1: string statusString = "M  adfs.h\0M  dir.c\0";
+        [TestCase("status modified files", "#Header\03 unknown info\01 .M S..U 160000 160000 160000 cbca134e29be13b35f21ca4553ba04f796324b1c cbca134e29be13b35f21ca4553ba04f796324b1c adfs.h\01 .M SCM. 160000 160000 160000 6bd3b036fc5718a51a0d27cde134c7019798c3ce 6bd3b036fc5718a51a0d27cde134c7019798c3ce dir.c\0\r\nwarning: LF will be replaced by CRLF in adfs.h.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in dir.c.\nThe file will have its original line endings in your working directory.")]
+
+        // porcelain v1: string statusString = "M  adfs.h\0?? untracked_file\0";
+        [TestCase("status ignored files", "1 .M S..U 160000 160000 160000 cbca134e29be13b35f21ca4553ba04f796324b1c cbca134e29be13b35f21ca4553ba04f796324b1c adfs.h\0? untracked_file\0")]
+
+        // porcelain v1: string statusString = ".M  adfs.h\0!! ignored_file\0";
+        [TestCase("status untracked files", "1 .M S..U 160000 160000 160000 cbca134e29be13b35f21ca4553ba04f796324b1c cbca134e29be13b35f21ca4553ba04f796324b1c adfs.h\0! ignored_file\0")]
+        [TestCase("status with_spaces", "#Header\03 unknown info\01 .M S..U 160000 160000 160000 cbca134e29be13b35f21ca4553ba04f796324b1c cbca134e29be13b35f21ca4553ba04f796324b1c  no trim space0 \01 .M SCM. 160000 160000 160000 6bd3b036fc5718a51a0d27cde134c7019798c3ce 6bd3b036fc5718a51a0d27cde134c7019798c3ce  no trim space1 \0\r\nwarning: LF will be replaced by CRLF in adfs.h.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in dir.c.\nThe file will have its original line endings in your working directory.")]
+        public void TestGetStatusChangedFilesFromString(string testName, string statusString)
         {
             // TODO produce a valid working directory
             var module = new GitModule(Path.GetTempPath());
+            using (ApprovalResults.ForScenario(testName.Replace(' ', '_')))
             {
                 // git status --porcelain=2 --untracked-files=no -z
-                // porcelain v1: string statusString = "M  adfs.h\0M  dir.c\0";
-                string statusString = "#Header\03 unknown info\01 .M S..U 160000 160000 160000 cbca134e29be13b35f21ca4553ba04f796324b1c cbca134e29be13b35f21ca4553ba04f796324b1c adfs.h\01 .M SCM. 160000 160000 160000 6bd3b036fc5718a51a0d27cde134c7019798c3ce 6bd3b036fc5718a51a0d27cde134c7019798c3ce dir.c\0\r\nwarning: LF will be replaced by CRLF in adfs.h.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in dir.c.\nThe file will have its original line endings in your working directory.";
-                var status = GitCommandHelpers.GetStatusChangedFilesFromString(module, statusString);
-                Assert.IsTrue(status.Count == 2);
-                Assert.IsTrue(status[0].Name == "adfs.h");
-                Assert.IsTrue(status[1].Name == "dir.c");
-            }
-
-            {
-                // git status --porcelain=2 --untracked-files -z
-                // porcelain v1: string statusString = "M  adfs.h\0?? untracked_file\0";
-                string statusString = "1 .M S..U 160000 160000 160000 cbca134e29be13b35f21ca4553ba04f796324b1c cbca134e29be13b35f21ca4553ba04f796324b1c adfs.h\0? untracked_file\0";
-                var status = GitCommandHelpers.GetStatusChangedFilesFromString(module, statusString);
-                Assert.IsTrue(status.Count == 2);
-                Assert.IsTrue(status[0].Name == "adfs.h");
-                Assert.IsTrue(status[1].Name == "untracked_file");
-            }
-
-            {
-                // git status --porcelain=2 --ignored-files -z
-                // porcelain v1: string statusString = ".M  adfs.h\0!! ignored_file\0";
-                string statusString = "1 .M S..U 160000 160000 160000 cbca134e29be13b35f21ca4553ba04f796324b1c cbca134e29be13b35f21ca4553ba04f796324b1c adfs.h\0! ignored_file\0";
-                var status = GitCommandHelpers.GetStatusChangedFilesFromString(module, statusString);
-                Assert.IsTrue(status.Count == 2);
-                Assert.IsTrue(status[0].Name == "adfs.h");
-                Assert.IsTrue(status[1].Name == "ignored_file");
+                var statuses = GitCommandHelpers.GetStatusChangedFilesFromString(module, statusString);
+                Approvals.VerifyJson(JsonConvert.SerializeObject(statuses));
             }
         }
 

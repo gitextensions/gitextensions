@@ -455,7 +455,7 @@ namespace GitUI.Editor
 
                 if (!File.Exists(path))
                 {
-                    return null;
+                    return $"File {path} does not exist";
                 }
 
                 using (var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))

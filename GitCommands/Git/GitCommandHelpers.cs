@@ -955,13 +955,13 @@ namespace GitCommands
             // Find renamed files...
             if (fromDiff)
             {
-                gitItemStatus.OldName = fileName.Trim();
-                gitItemStatus.Name = nextFile.Trim();
+                gitItemStatus.OldName = fileName;
+                gitItemStatus.Name = nextFile;
             }
             else
             {
-                gitItemStatus.Name = fileName.Trim();
-                gitItemStatus.OldName = nextFile.Trim();
+                gitItemStatus.Name = fileName;
+                gitItemStatus.OldName = nextFile;
             }
 
             gitItemStatus.IsNew = false;
@@ -993,7 +993,7 @@ namespace GitCommands
 
             return new GitItemStatus
             {
-                Name = fileName.Trim(),
+                Name = fileName,
                 IsNew = isNew,
                 IsChanged = x == 'M',
                 IsDeleted = x == 'D',
