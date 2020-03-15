@@ -33,6 +33,7 @@ namespace GitUI.Editor
 
         private readonly TranslationString _error = new TranslationString("Error");
         private readonly TranslationString _largeFileSizeWarning = new TranslationString("This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.");
+        private readonly TranslationString _cannotViewImage = new TranslationString("Cannot view image {0}");
 
         public event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
         public event EventHandler HScrollPositionChanged;
@@ -813,21 +814,25 @@ namespace GitUI.Editor
                 return _async.LoadAsync(getImage,
                             image =>
                             {
-                                ResetForImage(fileName);
-                                if (image != null)
+                                if (image == null)
                                 {
-                                    var size = DpiUtil.Scale(image.Size);
-                                    if (size.Height > PictureBox.Size.Height || size.Width > PictureBox.Size.Width)
-                                    {
-                                        PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        PictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
-                                    }
+                                    ResetForText(null);
+                                    internalFileViewer.SetText(string.Format(_cannotViewImage.Text, fileName), openWithDifftool);
+                                    return;
                                 }
 
-                                PictureBox.Image = image == null ? null : DpiUtil.Scale(image);
+                                ResetForImage(fileName);
+                                var size = DpiUtil.Scale(image.Size);
+                                if (size.Height > PictureBox.Size.Height || size.Width > PictureBox.Size.Width)
+                                {
+                                    PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                                }
+                                else
+                                {
+                                    PictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
+                                }
+
+                                PictureBox.Image = DpiUtil.Scale(image);
                                 internalFileViewer.SetText("", openWithDifftool);
                             });
             }

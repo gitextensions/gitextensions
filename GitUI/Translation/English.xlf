@@ -1306,6 +1306,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
   </file>
   <file datatype="plaintext" original="FileViewer" source-language="en">
     <body>
+      <trans-unit id="_cannotViewImage.Text">
+        <source>Cannot view image {0}</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
         <target />
