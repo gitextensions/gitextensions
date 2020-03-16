@@ -867,11 +867,12 @@ namespace GitUI.CommandsDialogs
             }
 
             byte[] patch;
-            if (!_currentItemStaged && _currentItem.IsNew)
+            if (_currentItem.IsNew)
             {
+                var treeGuid = _currentItemStaged ? _currentItem.TreeGuid?.ToString() : null;
                 patch = PatchManager.GetSelectedLinesAsNewPatch(Module, _currentItem.Name,
                     SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(),
-                    SelectedDiff.GetSelectionLength(), SelectedDiff.Encoding, false, SelectedDiff.FilePreamble);
+                    SelectedDiff.GetSelectionLength(), SelectedDiff.Encoding, false, SelectedDiff.FilePreamble, treeGuid);
             }
             else
             {
@@ -937,18 +938,19 @@ namespace GitUI.CommandsDialogs
             }
 
             byte[] patch;
-            if (_currentItemStaged)
+            if (_currentItem.IsNew)
+            {
+                var treeGuid = _currentItemStaged ? _currentItem.TreeGuid?.ToString() : null;
+                patch = PatchManager.GetSelectedLinesAsNewPatch(Module, _currentItem.Name,
+                    SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(),
+                    SelectedDiff.Encoding, !_currentItemStaged, SelectedDiff.FilePreamble, treeGuid);
+            }
+            else if (_currentItemStaged)
             {
                 patch = PatchManager.GetSelectedLinesAsPatch(
                     SelectedDiff.GetText(),
                     SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(),
                     _currentItemStaged, SelectedDiff.Encoding, _currentItem.IsNew);
-            }
-            else if (_currentItem.IsNew)
-            {
-                patch = PatchManager.GetSelectedLinesAsNewPatch(Module, _currentItem.Name,
-                    SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(),
-                    SelectedDiff.Encoding, true, SelectedDiff.FilePreamble);
             }
             else
             {

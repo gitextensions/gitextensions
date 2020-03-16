@@ -530,21 +530,7 @@ namespace GitUI.Editor
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
-                    if (!item.IsTracked)
-                    {
-                        await ViewFileAsync(item.Name, item.IsSubmodule, openWithDifftool);
-                        SetVisibilityDiffContextMenuStaging();
-                    }
-                    else if (!item.IsSubmodule)
-                    {
-                        var patch = await Module.GetCurrentChangesAsync(
-                            item.Name, item.OldName, isStaged, GetExtraDiffArguments(), Encoding);
-                        await ViewPatchAsync(item.Name, patch?.Text ?? "", openWithDifftool, isText: false);
-
-                        // For staged/unstaged, separate stage/reset menus are shown
-                        SetVisibilityDiffContextMenuStaging();
-                    }
-                    else
+                    if (item.IsSubmodule)
                     {
                         var getStatusTask = item.GetSubmoduleStatusAsync();
                         if (getStatusTask != null)
@@ -559,15 +545,27 @@ namespace GitUI.Editor
                             await ViewTextAsync(item.Name, LocalizationHelpers.ProcessSubmoduleStatus(Module, status));
                             return;
                         }
-                        else
-                        {
-                            var changes = await Module.GetCurrentChangesAsync(item.Name, item.OldName, isStaged,
-                                GetExtraDiffArguments(), Encoding);
-                            var text = LocalizationHelpers.ProcessSubmodulePatch(Module, item.Name, changes);
-                            await ViewTextAsync(item.Name, text);
-                            return;
-                        }
+
+                        var changes = await Module.GetCurrentChangesAsync(item.Name, item.OldName, isStaged,
+                            GetExtraDiffArguments(), Encoding);
+                        var text = LocalizationHelpers.ProcessSubmodulePatch(Module, item.Name, changes);
+                        await ViewTextAsync(item.Name, text);
+                        return;
                     }
+
+                    if (!item.IsTracked || item.IsNew)
+                    {
+                        var id = isStaged ? ObjectId.IndexId : ObjectId.WorkTreeId;
+                        await ViewGitItemRevisionAsync(item, id, openWithDifftool);
+                    }
+                    else
+                    {
+                        var patch = await Module.GetCurrentChangesAsync(
+                            item.Name, item.OldName, isStaged, GetExtraDiffArguments(), Encoding);
+                        await ViewPatchAsync(item.Name, patch?.Text ?? "", openWithDifftool, isText: false);
+                    }
+
+                    SetVisibilityDiffContextMenuStaging();
                 });
         }
 
@@ -777,7 +775,11 @@ namespace GitUI.Editor
                 getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, file.Name.TrimEnd('/'), sha),
                 openWithDifftool: openWithDifftool);
 
-            string GetFileTextIfBlobExists() => file.TreeGuid != null ? Module.GetFileText(file.TreeGuid, Encoding) : "";
+            string GetFileTextIfBlobExists()
+            {
+                FilePreamble = new byte[] { };
+                return file.TreeGuid != null ? Module.GetFileText(file.TreeGuid, Encoding) : string.Empty;
+            }
 
             Image GetImage()
             {
