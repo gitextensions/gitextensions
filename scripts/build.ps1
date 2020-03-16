@@ -27,7 +27,7 @@ $ErrorActionPreference = "Stop"
 $PSDefaultParameterValues['*:ErrorAction'] = 'Stop'
 
 $env:SKIP_PAUSE=1
-$toolsetBuildProj = Resolve-Path 'Build\tools\Build.proj'
+$toolsetBuildProj = Resolve-Path 'scripts\tools\Build.proj'
  
 function Build {
 

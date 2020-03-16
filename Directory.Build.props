@@ -1,5 +1,5 @@
 <Project>
-  <Import Project=".\Build\sdk\Sdk.props" />
+  <Import Project=".\scripts\sdk\Sdk.props" />
 
   <PropertyGroup>
     <LangVersion>8</LangVersion>
@@ -37,16 +37,16 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="netstandard" />
 
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)Build\stylecop.json">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)scripts\stylecop.json">
       <Link>stylecop.json</Link>
     </AdditionalFiles>
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)Build\vs-threading.MainThreadAssertingMethods.txt">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)scripts\vs-threading.MainThreadAssertingMethods.txt">
       <Visible>False</Visible>
     </AdditionalFiles>
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)Build\vs-threading.MainThreadSwitchingMethods.txt">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)scripts\vs-threading.MainThreadSwitchingMethods.txt">
       <Visible>False</Visible>
     </AdditionalFiles>
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)Build\vs-threading.TypesRequiringMainThread.txt">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)scripts\vs-threading.TypesRequiringMainThread.txt">
       <Visible>False</Visible>
     </AdditionalFiles>
   </ItemGroup>
