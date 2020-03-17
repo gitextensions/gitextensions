@@ -81,7 +81,7 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
 
-            if (CanBeGitURL(_url) || GitModule.IsValidGitWorkingDir(_url))
+            if (CanBeGitURL(_url))
             {
                 _NO_TRANSLATE_From.Text = _url;
             }
@@ -183,16 +183,20 @@ namespace GitUI.CommandsDialogs
 
         private static bool CanBeGitURL(string url)
         {
-            if (url == null)
+            if (url.IsNotNullOrWhitespace())
             {
                 return false;
             }
 
             string urlLowered = url.ToLowerInvariant();
 
-            return urlLowered.StartsWith("http") ||
-                urlLowered.StartsWith("git") ||
-                urlLowered.StartsWith("ssh");
+            return urlLowered.StartsWith("http:")
+                || urlLowered.StartsWith("https:")
+                || urlLowered.StartsWith("git:")
+                || urlLowered.StartsWith("ssh:")
+                || urlLowered.StartsWith("file:")
+                || urlLowered.EndsWith(".git")
+                || GitModule.IsValidGitWorkingDir(url);
         }
 
         private void OkClick(object sender, EventArgs e)
