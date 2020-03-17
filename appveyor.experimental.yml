@@ -1,0 +1,105 @@
+version: 66.66.66.{build}
+
+# Do not build on tags (GitHub, Bitbucket, GitLab, Gitea)
+skip_tags: true
+
+# set clone depth
+clone_depth: 1                     # clone entire repository history if not defined
+
+matrix:
+  fast_finish: false
+
+# https://www.appveyor.com/docs/build-environment/#build-worker-images
+image: Visual Studio 2019
+
+environment:
+  # The following entries define the default values of the environment variables.
+  # They can be overridden in AppVeyor | Settings | Environment.
+  GE_TEST_SLEEP_SECONDS_ON_HANG: 0
+  GE_TEST_LAUNCH_DEBUGGER_ON_HANG: 0
+
+init:
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+# Build settings, not to be confused with "before_build" and "after_build".
+# "project" is relative to the original build directory and not influenced by directory changes in "before_build".
+build:
+  # enable MSBuild parallel builds
+  parallel: true
+  # MSBuild verbosity level
+  verbosity: minimal
+
+cache:
+  #- packages -> **\packages.config      # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+  - packages\WiX.3.11.0 -> Setup\packages.config
+
+install:
+- cmd: git submodule update --init --recursive
+- cmd: echo /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll">> Directory.Build.rsp
+- cmd: |-
+    cd scripts
+    C:\\Python35\\python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%
+    cd ..
+
+
+# to run your custom scripts instead of automatic MSBuild
+build_script:
+- ps: |
+    # for release branches mark the repo as clean
+    if (!$env:APPVEYOR_PULL_REQUEST_TITLE -and $env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
+      & .\scripts\Mark-RepoClean.ps1
+    }
+
+    # build
+    & .\cibuild.cmd -restore -build -buildNative
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+
+
+# to run your custom scripts instead of automatic tests
+test_script:
+- ps: |
+    & .\cibuild.cmd -test
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode);  }
+    & .\cibuild.cmd -integrationTest
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+
+
+# scripts to run after tests
+after_test:
+- ps: |
+    Write-Host "Preparing build artifacts..."
+    & .\cibuild.cmd -publish
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+
+
+artifacts:
+  - path: artifacts\log\**\*.binlog
+  - path: artifacts\publish\*.zip
+
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+# on build failure
+on_failure:
+- ps: |
+    Get-ChildItem -recurse artifacts\bin\tests\TestResult.xml `
+    | ForEach-Object {
+        $resultFilePath = "$_"
+        Get-Content $resultFilePath `
+        | Select-String -Pattern '<test-run id="[^"]*"\s+testcasecount="(\d+)"\s+result="([^"]*)"\s+total="(\d+)"\s+passed="(\d+)"\s+failed="(\d+)".*' `
+        | foreach {
+            $result = $_.Matches.Groups
+
+            $total  = $result[1].Value
+            $passed = $result[4].Value
+            $failed = $result[5].Value
+            $notPassed = $total - $passed
+            $testErrors = $failed
+            $testName = $resultFilePath.Split('\\')[-3]
+
+            if ($notPassed -ne 0) {
+                $logFile = Get-ChildItem -recurse artifacts\$testName*.log
+                if ($testErrors -ne 0) { Push-AppveyorArtifact $logFile }
+            }
+        }
+    }
