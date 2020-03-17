@@ -842,6 +842,14 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="CommitInfoHeader" source-language="en">
+    <body>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="CommitSummaryUserControl" source-language="en">
     <body>
       <trans-unit id="_noRevision.Text">
