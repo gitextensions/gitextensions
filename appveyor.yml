@@ -6,6 +6,7 @@ branches:
   except:
     - configdata
     - gh-pages
+    - /experimental\/*/
 
 environment:
   # The following entries define the default values of the environment variables.
