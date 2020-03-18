@@ -8,10 +8,10 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AdysTech.CredentialManager" Version="1.7.0" />
-    <PackageReference Include="Ben.Demystifier" Version="0.1.4" />
-    <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" />
-    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="AdysTech.CredentialManager" Version="$(AdysTechCredentialManagerVersion)" />
+    <PackageReference Include="Ben.Demystifier" Version="$(BenDemystifierVersion)" />
+    <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsAnnotationsVersion)" />
+    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
+    <PackageReference Include="System.ValueTuple" Version="$(SystemValueTupleVersion)" />
   </ItemGroup>
 </Project>

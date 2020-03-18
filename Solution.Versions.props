@@ -1,0 +1,24 @@
+<Project>
+  <PropertyGroup>
+    <AdysTechCredentialManagerVersion>1.7.0</AdysTechCredentialManagerVersion>
+    <AppInsightsWindowsDesktopVersion>2.10.42-preview</AppInsightsWindowsDesktopVersion>
+    <BenDemystifierVersion>0.1.4</BenDemystifierVersion>
+    <JetBrainsAnnotationsVersion>2018.2.1</JetBrainsAnnotationsVersion>
+    <LibGit2SharpVersion>0.25.0</LibGit2SharpVersion>
+    <MicrosoftVisualStudioCompositionVersion>15.6.36</MicrosoftVisualStudioCompositionVersion>
+    <MicrosoftVisualStudioThreadingVersion>16.5.132</MicrosoftVisualStudioThreadingVersion>
+    <NewtonsoftJsonVersion>10.0.3</NewtonsoftJsonVersion>
+    <RestSharpVersion>106.6.10</RestSharpVersion>
+    <SmartFormatNETVersion>2.0.0</SmartFormatNETVersion>
+    <StyleCopAnalyzersVersion>1.2.0-beta.113</StyleCopAnalyzersVersion>
+    <SystemCollectionsImmutableVersion>1.5.0</SystemCollectionsImmutableVersion>
+    <SystemIOAbstractionsVersion>2.0.0.144</SystemIOAbstractionsVersion>
+    <SystemIOAbstractionsTestingHelpersVersion>2.0.0.143</SystemIOAbstractionsTestingHelpersVersion>
+    <SystemReactiveVersion>4.2.0</SystemReactiveVersion>
+    <SystemRuntimeInteropServicesRuntimeInformationVersion>4.3.0</SystemRuntimeInteropServicesRuntimeInformationVersion>
+    <SystemValueTupleVersion>4.5.0</SystemValueTupleVersion>
+
+  </PropertyGroup>
+
+
+</Project>

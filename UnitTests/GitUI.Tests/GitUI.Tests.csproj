@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <PackageReference Include="LibGit2Sharp" Version="0.25.0" />
-    <PackageReference Include="System.IO.Abstractions" Version="2.0.0.144" />
-    <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="2.0.0.143" />
+    <PackageReference Include="System.IO.Abstractions" Version="$(SystemIOAbstractionsVersion)" />
+    <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="$(SystemIOAbstractionsTestingHelpersVersion)" />
   </ItemGroup>
 
   <ItemGroup>
