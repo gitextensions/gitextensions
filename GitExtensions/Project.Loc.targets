@@ -42,7 +42,7 @@
     <!-- 2. Run TranslationApp.exe to update English*.xlf -->
     <Exec Command="$(_TranslationCommand)"
           LogStandardErrorAsError="false"
-          WorkingDirectory="$(GitExtensionsOutputPath)"
+          WorkingDirectory="$(_GitExtensionsOutputDir)"
           IgnoreExitCode="true">
       <Output TaskParameter="ExitCode" PropertyName="_TestErrorCode" />
     </Exec>
