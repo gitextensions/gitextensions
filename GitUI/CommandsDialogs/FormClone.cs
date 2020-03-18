@@ -188,14 +188,8 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            string urlLowered = url.ToLowerInvariant();
-
-            return urlLowered.StartsWith("http:")
-                || urlLowered.StartsWith("https:")
-                || urlLowered.StartsWith("git:")
-                || urlLowered.StartsWith("ssh:")
-                || urlLowered.StartsWith("file:")
-                || urlLowered.EndsWith(".git")
+            return PathUtil.IsUrl(url)
+                || url.EndsWith(".git", StringComparison.CurrentCultureIgnoreCase)
                 || GitModule.IsValidGitWorkingDir(url);
         }
 

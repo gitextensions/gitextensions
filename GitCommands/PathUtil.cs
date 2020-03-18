@@ -81,10 +81,12 @@ namespace GitCommands
         [Pure]
         public static bool IsUrl(string path)
         {
-            return !string.IsNullOrEmpty(path) &&
-                   (path.StartsWith("http", StringComparison.CurrentCultureIgnoreCase) ||
-                    path.StartsWith("git", StringComparison.CurrentCultureIgnoreCase) ||
-                    path.StartsWith("ssh", StringComparison.CurrentCultureIgnoreCase));
+            return !string.IsNullOrEmpty(path)
+                && (path.StartsWith("http:", StringComparison.CurrentCultureIgnoreCase)
+                 || path.StartsWith("https:", StringComparison.CurrentCultureIgnoreCase)
+                 || path.StartsWith("git:", StringComparison.CurrentCultureIgnoreCase)
+                 || path.StartsWith("ssh:", StringComparison.CurrentCultureIgnoreCase)
+                 || path.StartsWith("file:", StringComparison.CurrentCultureIgnoreCase));
         }
 
         [NotNull]
