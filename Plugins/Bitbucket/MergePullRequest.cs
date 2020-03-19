@@ -21,7 +21,7 @@ namespace Bitbucket
             _info = info;
         }
 
-        protected override object RequestBody => "";
+        protected override object RequestBody => null;
 
         protected override Method RequestMethod => Method.POST;
 

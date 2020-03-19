@@ -2,7 +2,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
-    <PackageReference Include="RestSharp" Version="106.2.1" />
+    <PackageReference Include="RestSharp" Version="$(RestSharpVersion)" />
   </ItemGroup>
 
   <ItemGroup>
