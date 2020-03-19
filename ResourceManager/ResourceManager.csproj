@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SmartFormat.NET" Version="2.0.0" />
+    <PackageReference Include="SmartFormat.NET" Version="$(SmartFormatNETVersion)" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Include="System.Reactive.Linq" Version="4.2.0" />
+    <PackageReference Include="System.Reactive.Linq" Version="$(SystemReactiveVersion)" />
   </ItemGroup>
 
   <ItemGroup>
