@@ -55,31 +55,23 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       <a target="_blank" style="text-decoration:none; color:black; font-size:66%" href="https://github.com/gitextensions/gitextensions/wiki/Translations" title="More information in the wiki"><img src="https://ds0k0en9abmn1.cloudfront.net/static/charts/images/tx-logo-micro.646b0065fce6.png" ></a>
     </td>
   </tr>
-  <tr>
-    <td>
-     Build instructions
-    </td>
-    <td>
-      <p>The solution can be build from Visual Studio or from a command line. You will still need Visual Studio for the UI work, but for everything else you can use your favourite IDE (such as Visual Studio Code).</p>
-      <ul>
-        <li>From Visual Studio simply set "GitExtensions" as a start project and <kbd>F5</kbd>.
-        <li>From command line run
-          <ul>
-            <li>`build.cmd` to build the solution
-            <li>`build.cmd -test -integrationTest` to build the solution and run tests
-            <li>`build.cmd -loc` to update English translations, if you have changed those
-          </ul>
-      </ul>
-      <p>For more switches refer to the <a href="https://github.com/gitextensions/gitextensions/blob/master/scripts/build.ps1">build script</a>.
-    </td>
-  </tr>
 </table>
+
+### Build instructions
+The solution can be build from Visual Studio or from a command line. You will still need Visual Studio for the UI work, but for everything else you can use your favourite IDE (such as Visual Studio Code).
+* From Visual Studio simply set "GitExtensions" as a start project and <kbd>F5</kbd>.
+* From command line:
+  *  `build.cmd` to build the solution
+  *  `build.cmd -test -integrationTest` to build the solution and run tests
+  *  `build.cmd -loc` to update English translations, if you have changed those
+
+  For more switches refer to the [build script](https://github.com/gitextensions/gitextensions/blob/master/scripts/build.ps1).
 
 
 ### Version 2.5x
 
 <details>
-<summary>This stream contains the last cross-platform version running both on Windows (MS .NET Framework) and on Linux/Mac (Mono).</summary>
+<summary>This stream contains the last cross-platform version running both on Windows (MS .NET Framework) and on Linux/Mac (Mono). [More...]</summary>
 This stream contains the last cross-platform version running both on Windows (MS .NET Framework) and on Linux/Mac (Mono).
 The code is in maintenance mode with no significant active development planned. Only certain bug fixes are currently ported across, however there may be consideration given for certain features to be ported across from the v3.x stream.
 
