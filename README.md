@@ -14,13 +14,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
 
 
 
-<table border="0">
-  <tr><td width="50%">
-
-### Version 3.x
-
-This stream contains the code for the new major version with a number of significant changes&mdash;both to the app and the codebase.
-For more details please refer to [versions comparison](https://github.com/gitextensions/gitextensions/wiki/Compare-versions).
+## Version 3.x
 
 <table>
   <tr>
@@ -61,16 +55,35 @@ For more details please refer to [versions comparison](https://github.com/gitext
       <a target="_blank" style="text-decoration:none; color:black; font-size:66%" href="https://github.com/gitextensions/gitextensions/wiki/Translations" title="More information in the wiki"><img src="https://ds0k0en9abmn1.cloudfront.net/static/charts/images/tx-logo-micro.646b0065fce6.png" ></a>
     </td>
   </tr>
+  <tr>
+    <td>
+     Build instructions
+    </td>
+    <td>
+      <p>The solution can be build from Visual Studio or from a command line. You will still need Visual Studio for the UI work, but for everything else you can use your favourite IDE (such as Visual Studio Code).</p>
+      <ul>
+        <li>From Visual Studio simply set "GitExtensions" as a start project and <kbd>F5</kbd>.
+        <li>From command line run
+          <ul>
+            <li>`build.cmd` to build the solution
+            <li>`build.cmd -test -integrationTest` to build the solution and run tests
+            <li>`build.cmd -loc` to update English translations, if you have changed those
+          </ul>
+      </ul>
+      <p>For more switches refer to the <a href="https://github.com/gitextensions/gitextensions/blob/master/scripts/build.ps1">build script</a>.
+    </td>
+  </tr>
 </table>
-
-</td>
-<td width="50%">
 
 
 ### Version 2.5x
 
+<details>
+<summary>This stream contains the last cross-platform version running both on Windows (MS .NET Framework) and on Linux/Mac (Mono).</summary>
 This stream contains the last cross-platform version running both on Windows (MS .NET Framework) and on Linux/Mac (Mono).
 The code is in maintenance mode with no significant active development planned. Only certain bug fixes are currently ported across, however there may be consideration given for certain features to be ported across from the v3.x stream.
+
+For more details please refer to [versions comparison](https://github.com/gitextensions/gitextensions/wiki/Compare-versions).
 
 <table>
   <tr>
@@ -119,27 +132,14 @@ The code is in maintenance mode with no significant active development planned. 
     </td>
   </tr>
 </table>
+>
 
-</td>
-</tr>
-</table>
-
-## How to build
-
-### Version 3.x
-
-The solution can be build from Visual Studio or from a command line. You will still need Visual Studio for the UI work, but for everything else you can use your favourite IDE (such as Visual Studio Code).
-* From Visual Studio simply set "GitExtensions" as a start project and <kbd>F5</kbd>.
-* From command line run
-  *  `build.cmd` to build the solution
-  *  `build.cmd -test -integrationTest` to build the solution and run tests
-  *  `build.cmd -loc` to update English translations, if you have changed those
-
-  For more switches refer to the [build script](https://github.com/gitextensions/gitextensions/blob/master/scripts/build.ps1).
-
-### Version 2.x
+### How to build
 
 The solution can be build from Visual Studio. It is technically possible to build from a command line using `MSBuild` but it is not as refined as v3.
+
+</details>
+
 
 
 ## Downloads
