@@ -11,9 +11,11 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
 
 <a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/sponsors/badge.svg" /></a>
 
-The work has been [split into two streams](https://github.com/gitextensions/gitextensions/wiki/Compare-versions):
- * version 3.x - **[Download it now](https://github.com/gitextensions/gitextensions/releases/latest)** or install it with [Chocolatey](https://chocolatey.org/packages/gitextensions) or [AppGet](https://appget.net/packages/i/gitextensions).
- * version 2.5x
+
+
+
+<table border="0">
+  <tr><td width="50%">
 
 ### Version 3.x
 
@@ -39,7 +41,7 @@ For more details please refer to [versions comparison](https://github.com/gitext
       Development
     </td>
     <td>
-      MS VS 2017 v15.7+, C#7.3<br />
+      MS VS 2019, C# 8<br />
       VC++ (inc. ATL for x86/x64 for installer)
     </td>
   </tr>
@@ -60,6 +62,9 @@ For more details please refer to [versions comparison](https://github.com/gitext
     </td>
   </tr>
 </table>
+
+</td>
+<td width="50%">
 
 
 ### Version 2.5x
@@ -115,9 +120,32 @@ The code is in maintenance mode with no significant active development planned. 
   </tr>
 </table>
 
+</td>
+</tr>
+</table>
+
+## How to build
+
+### Version 3.x
+
+The solution can be build from Visual Studio or from a command line. You will still need Visual Studio for the UI work, but for everything else you can use your favourite IDE (such as Visual Studio Code).
+* From Visual Studio simply set "GitExtensions" as a start project and <kbd>F5</kbd>.
+* From command line run
+  *  `build.cmd` to build the solution
+  *  `build.cmd -test -integrationTest` to build the solution and run tests
+  *  `build.cmd -loc` to update English translations, if you have changed those
+
+  For more switches refer to the [build script](https://github.com/gitextensions/gitextensions/blob/master/scripts/build.ps1).
+
+### Version 2.x
+
+The solution can be build from Visual Studio. It is technically possible to build from a command line using `MSBuild` but it is not as refined as v3.
+
 
 ## Downloads
 <a href="https://github.com/gitextensions/gitextensions/releases" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/total.svg?label=GitHub%20downloads%20(total)&cacheSeconds=86400"></a> <a href="https://sourceforge.net/projects/gitextensions/files" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dt/gitextensions.svg?label=SourceForge%20downloads%20(total)&cacheSeconds=86400"></a> <a href="https://chocolatey.org/packages/gitextensions" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/chocolatey/dt/gitextensions.svg?label=Chocolatey%20downloads%20(total)&cacheSeconds=86400"></a>
+
+**[Download it now](https://github.com/gitextensions/gitextensions/releases/latest)** or install it with [Chocolatey](https://chocolatey.org/packages/gitextensions) or [AppGet](https://appget.net/packages/i/gitextensions).
 
 <table>
   <tr>

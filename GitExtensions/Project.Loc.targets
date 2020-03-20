@@ -26,7 +26,6 @@
       <_TranslationAppDir>$([System.IO.Path]::GetFullPath('$(ArtifactsBinDir)TranslationApp\$(Configuration)\$(TargetFramework)'))</_TranslationAppDir>
       <_TranslationAppOutputPath>$([MSBuild]::NormalizePath('$(_TranslationAppDir)', 'TranslationApp.exe'))</_TranslationAppOutputPath>
       <_TranslationAppTempPath>$([MSBuild]::NormalizePath('$(_GitExtensionsOutputDir)', 'TranslationApp.exe'))</_TranslationAppTempPath>
-      <_TranslationCommand>$(_TranslationAppTempPath) update</_TranslationCommand>
     </PropertyGroup>
 
     <!-- 1. Copy TranslationApp.exe from its output folder to GitExtensions folder -->
@@ -40,7 +39,7 @@
           ContinueOnError="false" />
 
     <!-- 2. Run TranslationApp.exe to update English*.xlf -->
-    <Exec Command="$(_TranslationCommand)"
+    <Exec Command="$(_TranslationAppTempPath)"
           LogStandardErrorAsError="false"
           WorkingDirectory="$(_GitExtensionsOutputDir)"
           IgnoreExitCode="true">
