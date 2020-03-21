@@ -57,13 +57,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
   </tr>
 </table>
 
-### Build instructions
-The solution can be built from Visual Studio or from a command line. You will still need Visual Studio for the UI work, but for everything else you can use your favourite IDE (such as Visual Studio Code).
-* From Visual Studio simply set "GitExtensions" as a start project and hit <kbd>F5</kbd> after the solution has finished loading.
-* From command line run one of the following commands. For more switches refer to the [build script](https://github.com/gitextensions/gitextensions/blob/master/scripts/build.ps1).
-  *  `build.cmd` to build the solution
-  *  `build.cmd -test -integrationTest` to build the solution and run tests
-  *  `build.cmd -loc` to update English translations if you have changed those
+### [Build instructions](https://github.com/gitextensions/gitextensions/wiki/How-To%3A-build-instructions)
 
 ### Version 2.5x
 
@@ -124,7 +118,8 @@ For more details please refer to [versions comparison](https://github.com/gitext
 
 ### Build instructions
 
-The solution can be built from Visual Studio. It is technically possible to build from a command line using `MSBuild` but it is not as refined as v3.
+### [Build instructions](https://github.com/gitextensions/gitextensions/wiki/How-To:-build-instructions#v3x-and-older)
+
 
 </details>
 
