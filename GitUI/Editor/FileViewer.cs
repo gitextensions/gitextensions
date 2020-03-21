@@ -406,14 +406,12 @@ namespace GitUI.Editor
 
             if (!isSubmodule && (fileName.EndsWith("/") || Directory.Exists(fullPath)))
             {
-                if (GitModule.IsValidGitWorkingDir(fullPath))
-                {
-                    return ViewTextAsync(fileName, "Submodule: " + fileName);
-                }
-                else
+                if (!GitModule.IsValidGitWorkingDir(fullPath))
                 {
                     return ViewTextAsync(fileName, "Directory: " + fileName);
                 }
+
+                isSubmodule = true;
             }
 
             return ShowOrDeferAsync(
@@ -753,24 +751,40 @@ namespace GitUI.Editor
                 // No blob exists for worktree, present contents from file system
                 return ViewFileAsync(file.Name, file.IsSubmodule, openWithDifftool);
             }
-            else
-            {
-                if (file.TreeGuid == null)
-                {
-                    file.TreeGuid = Module.GetFileBlobHash(file.Name, revision);
-                }
 
-                return ViewGitItemAsync(file, openWithDifftool);
+            if (file.TreeGuid == null)
+            {
+                file.TreeGuid = Module.GetFileBlobHash(file.Name, revision);
             }
+
+            return ViewGitItemAsync(file, openWithDifftool);
         }
 
+        /// <summary>
+        /// View the git item with the TreeGuid
+        /// </summary>
+        /// <param name="file">GitItem file, with TreeGuid</param>
+        /// <param name="openWithDifftool">difftool command</param>
+        /// <returns>Task to view the item</returns>
         public Task ViewGitItemAsync(GitItemStatus file, [CanBeNull] Action openWithDifftool = null)
         {
             var sha = file.TreeGuid?.ToString();
+            var isSubmodule = file.IsSubmodule;
+
+            if (!isSubmodule && file.IsNew && file.Staged == StagedStatus.Index)
+            {
+                // File system access for other than Worktree,
+                // to handle that git-status does not detect details for untracked (git-diff --no-index will not give info)
+                var fullPath = Path.Combine(Module.WorkingDir, file.Name);
+                if (Directory.Exists(fullPath) && GitModule.IsValidGitWorkingDir(fullPath))
+                {
+                    isSubmodule = true;
+                }
+            }
 
             return ViewItemAsync(
                 file.Name,
-                file.IsSubmodule,
+                isSubmodule,
                 getImage: GetImage,
                 getFileText: GetFileTextIfBlobExists,
                 getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, file.Name.TrimEnd('/'), sha),
