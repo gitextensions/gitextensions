@@ -107,7 +107,9 @@ namespace GitCommandsTests.Helpers
         [TestCase("http://", true)]
         [TestCase("HTTPS://www", true)]
         [TestCase("git://", true)]
-        [TestCase("SSH", true)]
+        [TestCase("file:", true)]
+        [TestCase("SSH:", true)]
+        [TestCase("SSH", false)]
         public void IsUrl(string path, bool expected)
         {
             PathUtil.IsUrl(path).Should().Be(expected);
