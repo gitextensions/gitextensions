@@ -63,7 +63,7 @@ The solution can be built from Visual Studio or from a command line. You will st
 * From command line run one of the following commands. For more switches refer to the [build script](https://github.com/gitextensions/gitextensions/blob/master/scripts/build.ps1).
   *  `build.cmd` to build the solution
   *  `build.cmd -test -integrationTest` to build the solution and run tests
-  *  `build.cmd -loc` to update English translations, if you have changed those
+  *  `build.cmd -loc` to update English translations if you have changed those
 
 ### Version 2.5x
 
