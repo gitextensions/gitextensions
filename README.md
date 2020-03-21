@@ -58,8 +58,8 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
 </table>
 
 ### Build instructions
-The solution can be build from Visual Studio or from a command line. You will still need Visual Studio for the UI work, but for everything else you can use your favourite IDE (such as Visual Studio Code).
-* From Visual Studio simply set "GitExtensions" as a start project and <kbd>F5</kbd>.
+The solution can be built from Visual Studio or from a command line. You will still need Visual Studio for the UI work, but for everything else you can use your favourite IDE (such as Visual Studio Code).
+* From Visual Studio simply set "GitExtensions" as a start project and hit <kbd>F5</kbd> after the solution has finished loading.
 * From command line run one of the following commands. For more switches refer to the [build script](https://github.com/gitextensions/gitextensions/blob/master/scripts/build.ps1).
   *  `build.cmd` to build the solution
   *  `build.cmd -test -integrationTest` to build the solution and run tests
