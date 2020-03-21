@@ -122,9 +122,9 @@ For more details please refer to [versions comparison](https://github.com/gitext
   </tr>
 </table>
 
-### How to build
+### Build instructions
 
-The solution can be build from Visual Studio. It is technically possible to build from a command line using `MSBuild` but it is not as refined as v3.
+The solution can be built from Visual Studio. It is technically possible to build from a command line using `MSBuild` but it is not as refined as v3.
 
 </details>
 
