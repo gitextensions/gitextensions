@@ -6,6 +6,10 @@ skip_tags: true
 # set clone depth
 clone_depth: 1                     # clone entire repository history if not defined
 
+branches:
+  only:
+  - /experimental\/*/
+
 matrix:
   fast_finish: false
 
