@@ -57,7 +57,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
   </tr>
 </table>
 
-### [Build instructions](https://github.com/gitextensions/gitextensions/wiki/How-To%3A-build-instructions)
+#### [Build instructions](https://github.com/gitextensions/gitextensions/wiki/How-To%3A-build-instructions)
 
 ### Version 2.5x
 
@@ -116,9 +116,7 @@ For more details please refer to [versions comparison](https://github.com/gitext
   </tr>
 </table>
 
-### Build instructions
-
-### [Build instructions](https://github.com/gitextensions/gitextensions/wiki/How-To:-build-instructions#v3x-and-older)
+#### [Build instructions](https://github.com/gitextensions/gitextensions/wiki/How-To:-build-instructions#v3x-and-older)
 
 
 </details>
