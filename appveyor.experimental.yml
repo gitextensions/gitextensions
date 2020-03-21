@@ -1,16 +1,30 @@
-version: 4.0.0.{build}
+version: 66.66.66.{build}
 
-branches:
-  except:
-    - configdata
-    - gh-pages
-    - /experimental\/*/
+# Do not build on tags (GitHub, Bitbucket, GitLab, Gitea)
+skip_tags: true
+
+# set clone depth
+clone_depth: 1                     # clone entire repository history if not defined
 
 matrix:
-  fast_finish: true
+  fast_finish: false
 
 # https://www.appveyor.com/docs/build-environment/#build-worker-images
 image: Visual Studio 2019
+
+environment:
+  # The following entries define the default values of the environment variables.
+  # They can be overridden in AppVeyor | Settings | Environment.
+  GE_TEST_SLEEP_SECONDS_ON_HANG: 0
+  GE_TEST_LAUNCH_DEBUGGER_ON_HANG: 0
+  # How many times to execute tests
+  TEST_RUN_COUNT: 1
+  # Execute unit tests
+  RUN_UNIT_TESTS: TRUE
+  # Execute integation tests
+  RUN_INTEGRATION_TESTS: TRUE
+  # Fail the build if any of the tests fail
+  FAIL_IF_TEST_FAIL: TRUE
 
 init:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -45,17 +59,26 @@ build_script:
     }
 
     # build
-    & .\cibuild.cmd -restore -build -buildNative -loc
+    & .\cibuild.cmd -restore -build -buildNative
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 
 # to run your custom scripts instead of automatic tests
 test_script:
 - ps: |
-    & .\cibuild.cmd -test
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode);  }
-    & .\cibuild.cmd -integrationTest
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    $testRunCount = $env:TEST_RUN_COUNT
+    for ($testRun = 1; $testRun -le $testRunCount; $testRun++)
+    {
+      if (!$env:RUN_UNIT_TESTS) {
+        & .\cibuild.cmd -test
+        if ($LastExitCode -ne 0  -and !$env:FAIL_IF_TEST_FAIL) { $host.SetShouldExit($LastExitCode);  }
+      }
+
+      if (!$env:RUN_INTEGRATION_TESTS) {
+        & .\cibuild.cmd -integrationTest
+        if ($LastExitCode -ne 0  -and !$env:FAIL_IF_TEST_FAIL) { $host.SetShouldExit($LastExitCode);  }
+      }
+    }
 
 
 # scripts to run after tests
@@ -69,10 +92,6 @@ after_test:
 artifacts:
   - path: artifacts\log\**\*.binlog
   - path: artifacts\publish\*.zip
-#  # upload the generated portable archive only
-#  - path: 'Setup/GitExtensions-Portable-*.zip'
-#  - path: 'Setup/GitExtensions-pdbs-*.zip'
-#  - path: 'GitExtensionsVSIX/bin/Release/GitExtensionsVSIX.vsix'
 
 #on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -93,11 +112,13 @@ on_failure:
             $failed = $result[5].Value
             $notPassed = $total - $passed
             $testErrors = $failed
-            $testName = $resultFilePath.Split('\\')[-3]
+            $testProjectName = $resultFilePath.Split('\\')[-3]
 
             if ($testErrors -ne 0) {
-              $logFile = Get-ChildItem -recurse artifacts\$testName*.log
-              Push-AppveyorArtifact $logFile
+              $artifactName = "${testProjectName}.err${testErrors}"
+              $logFile = Get-ChildItem -recurse artifacts\$testProjectName*.log
+              Push-AppveyorArtifact $logFile -FileName "${artifactName}.log"
+              Push-AppveyorArtifact $resultFilePath -FileName "${artifactName}.xml"
             }
         }
     }
