@@ -42,14 +42,7 @@ namespace Bitbucket
             var request = new RestRequest(ApiUrl, RequestMethod);
             if (RequestBody != null)
             {
-                if (RequestBody is string)
-                {
-                    request.AddParameter("application/json", RequestBody, ParameterType.RequestBody);
-                }
-                else
-                {
-                    request.AddBody(RequestBody);
-                }
+                request.AddJsonBody(RequestBody);
             }
 
             // XSRF check fails when approving/creating
