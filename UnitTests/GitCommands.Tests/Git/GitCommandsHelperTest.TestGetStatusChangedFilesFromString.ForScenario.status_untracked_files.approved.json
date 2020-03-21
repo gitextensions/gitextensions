@@ -1,6 +1,6 @@
 ﻿[
     {
-        "Name": "adfs.h",
+        "Name": "subm1",
         "OldName": null,
         "TreeGuid": null,
         "RenameCopyPercentage": null,
@@ -16,7 +16,7 @@
         "IsAssumeUnchanged": false,
         "IsSkipWorktree": false,
         "IsSubmodule": true,
-        "IsDirty": true
+        "IsDirty": false
     },
     {
         "Name": "ignored_file",
