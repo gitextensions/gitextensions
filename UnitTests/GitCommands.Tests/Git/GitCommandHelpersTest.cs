@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
 using ApprovalTests;
 using ApprovalTests.Namers;
 using GitCommands;
@@ -122,43 +122,89 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        [TestCase("WorkTree1", "HEAD", GitRevision.IndexGuid, "HEAD",
+        public void TestUnsetStagedStatus()
+        {
+            var item = new GitItemStatus();
+            Assert.AreEqual(item.Staged, StagedStatus.Unset);
+        }
+
+        private static IEnumerable<TestCaseData> StagedStatuses
+        {
+            get
+            {
+                var headObjectId = ObjectId.Random();
+
+                yield return new TestCaseData(ObjectId.IndexId, ObjectId.WorkTreeId, ObjectId.IndexId, StagedStatus.WorkTree);
+
+                yield return new TestCaseData(headObjectId, ObjectId.IndexId, headObjectId, StagedStatus.Index);
+
+                yield return new TestCaseData(ObjectId.Random(), ObjectId.Random(), ObjectId.Random(), StagedStatus.None);
+                yield return new TestCaseData(ObjectId.Random(), ObjectId.Random(), null, StagedStatus.None);
+
+                // Situations where staged status is unknown
+                yield return new TestCaseData(ObjectId.WorkTreeId, ObjectId.Random(), ObjectId.Random(), StagedStatus.Unknown);
+                yield return new TestCaseData(ObjectId.Random(), ObjectId.WorkTreeId, ObjectId.IndexId, StagedStatus.Unknown);
+                yield return new TestCaseData(ObjectId.IndexId, ObjectId.Random(), ObjectId.Random(), StagedStatus.Unknown);
+                yield return new TestCaseData(ObjectId.Random(), ObjectId.IndexId, ObjectId.Random(), StagedStatus.Unknown);
+                yield return new TestCaseData(ObjectId.IndexId, ObjectId.Random(), null, StagedStatus.Unknown);
+                yield return new TestCaseData(ObjectId.Random(), ObjectId.IndexId, null, StagedStatus.Unknown);
+                yield return new TestCaseData(ObjectId.Random(), null, ObjectId.Random(), StagedStatus.Unknown);
+                yield return new TestCaseData(null, ObjectId.Random(), ObjectId.Random(), StagedStatus.Unknown);
+
+                // Impossible combinations
+                yield return new TestCaseData(ObjectId.Random(), ObjectId.WorkTreeId, ObjectId.Random(), StagedStatus.Unknown);
+                yield return new TestCaseData(ObjectId.Random(), ObjectId.Random(), ObjectId.WorkTreeId, StagedStatus.None);
+                yield return new TestCaseData(ObjectId.Random(), ObjectId.IndexId, ObjectId.WorkTreeId, StagedStatus.Unknown);
+                yield return new TestCaseData(headObjectId, ObjectId.WorkTreeId, headObjectId, StagedStatus.Unknown);
+                yield return new TestCaseData(ObjectId.Random(), ObjectId.Random(), ObjectId.IndexId, StagedStatus.None);
+            }
+        }
+
+        [Test, TestCaseSource(nameof(StagedStatuses))]
+        public void TestGetStagedStatus(ObjectId firstRevision, ObjectId secondRevision, ObjectId parentToSecond, StagedStatus status)
+        {
+            var stagedStatus = GitCommandHelpers.GetStagedStatus(firstRevision, secondRevision, parentToSecond);
+            Assert.AreEqual(status, stagedStatus);
+        }
+
+        [Test]
+        [TestCase("WorkTree1", StagedStatus.Index,
             "\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0")]
-        [TestCase("WorkTree2", "HEAD", GitRevision.IndexGuid, "HEAD",
+        [TestCase("WorkTree2", StagedStatus.Index,
             "\0\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0")]
-        [TestCase("WorkTree3", "HEAD", GitRevision.IndexGuid, "HEAD",
+        [TestCase("WorkTree3", StagedStatus.Index,
             "\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\nM\0testfile.txt\0")]
-        [TestCase("WorkTree4", "HEAD", GitRevision.IndexGuid, "HEAD",
+        [TestCase("WorkTree4", StagedStatus.Index,
             "M\0testfile.txt\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\n")]
 
-        [TestCase("Ignore_unmerged_in_conflict_if_revision_is_work_tree", GitRevision.IndexGuid, GitRevision.WorkTreeGuid, GitRevision.IndexGuid,
+        [TestCase("Ignore_unmerged_in_conflict_if_revision_is_work_tree", StagedStatus.WorkTree,
             "M\0testfile.txt\0U\0testfile.txt\0")]
-        [TestCase("Include_unmerged_in_conflict_if_revision_is_index", "HEAD", GitRevision.IndexGuid, "HEAD",
+        [TestCase("Include_unmerged_in_conflict_if_revision_is_index", StagedStatus.Index,
             "M\0testfile.txt\0U\0testfile2.txt\0")]
-        [TestCase("Check_that_the_staged_status_is_None_if_not_IndexWorkTree1", GitRevision.IndexGuid, "456", "678",
+        [TestCase("Check_that_the_staged_status_is_None_if_not_IndexWorkTree1", StagedStatus.None,
             "M\0testfile.txt\0U\0testfile2.txt\0")]
-        [TestCase("Check_that_the_staged_status_is_None_if_not_IndexWorkTree2", "123", "456", null,
+        [TestCase("Check_that_the_staged_status_is_None_if_not_IndexWorkTree2", StagedStatus.None,
             "M\0testfile.txt\0U\0testfile2.txt\0")]
 
-        [TestCase("Check that spaces are not trimmed in file names", "123", "456", null,
+        [TestCase("Check that spaces are not trimmed in file names", StagedStatus.None,
             "M\0 no trim space0 \0U\0 no trim space1 \0A\0 no trim space2 \0")]
-        [TestCase("Rename_with_spaces", "123", "456", null,
+        [TestCase("Rename_with_spaces", StagedStatus.None,
             "R100\0CONTRIBUTING.md\0 CONTRIBUTI NG.md\0C70\0apa.md\0 apa.md\0A\0 co decov.yml\0D\0CODE_OF_CONDUCT.md\0")]
 #if !DEBUG && false
             // This test is for documentation, but as the throw is in a called function, it will not test cleanly
                 // Check that the staged status is None if not Index/WorkTree
                 // Assertion in Debug, throws in Release
-        [TestCase("Check_that_the_staged_status_is_None_if_not_IndexWorkTree3", null, null, null,
+        [TestCase("Check_that_the_staged_status_is_None_if_not_IndexWorkTree3", StagedStatus.None,
             "M\0testfile.txt\0U\0testfile2.txt\0")]
 #endif
-        public void TestGetDiffChangedFilesFromString(string testName, string firstRevision, string secondRevision, string parentToSecond, string statusString)
+        public void TestGetDiffChangedFilesFromString(string testName, StagedStatus stagedStatus, string statusString)
         {
             // TODO produce a valid working directory
             var module = new GitModule(Path.GetTempPath());
             using (ApprovalResults.ForScenario(testName.Replace(' ', '_')))
             {
                 // git diff -M -C -z --name-status
-                var statuses = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, firstRevision, secondRevision, parentToSecond);
+                var statuses = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, stagedStatus);
                 Approvals.VerifyJson(JsonConvert.SerializeObject(statuses));
             }
         }

@@ -23,15 +23,15 @@ namespace GitUI
         private static Patch GetItemPatch(
             [NotNull] GitModule module,
             [NotNull] GitItemStatus file,
-            [CanBeNull] ObjectId firstRevision,
-            [CanBeNull] ObjectId secondRevision,
+            [CanBeNull] ObjectId firstId,
+            [CanBeNull] ObjectId secondId,
             [NotNull] string diffArgs,
             [NotNull] Encoding encoding)
         {
             // Files with tree guid should be presented with normal diff
-            var isTracked = file.IsTracked || (file.TreeGuid != null && secondRevision != null);
+            var isTracked = file.IsTracked || (file.TreeGuid != null && secondId != null);
 
-            return module.GetSingleDiff(firstRevision?.ToString(), secondRevision?.ToString(), file.Name, file.OldName, diffArgs, encoding, true, isTracked);
+            return module.GetSingleDiff(firstId, secondId, file.Name, file.OldName, diffArgs, encoding, true, isTracked);
         }
 
         /// <summary>
