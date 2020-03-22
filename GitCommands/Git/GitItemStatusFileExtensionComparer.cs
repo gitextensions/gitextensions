@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GitCommands.Git
 {
     /// <summary>
-    /// Compares the file extension of <see cref="GitItemStatus.Name"/> and then by <see cref="GitItemStatus.CompareTo(GitItemStatus)"/>.
+    /// Compares the file extension of <see cref="GitItemStatus.Name"/> and then by path/>.
     /// </summary>
     public class GitItemStatusFileExtensionComparer : Comparer<GitItemStatus>
     {
