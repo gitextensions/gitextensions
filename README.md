@@ -14,7 +14,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
 
 
 
-## Version 3.x
+### Version 3.x
 
 <table>
   <tr>
