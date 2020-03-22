@@ -37,7 +37,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void AllFirstAreParentsToSelected_should_return_false_if_no_parents_contains_any_of_selected_items()
         {
-            var firstSelected = new[] { new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.Random()) };
+            var firstSelected = new[] { ObjectId.IndexId, ObjectId.Random() };
 
             var selectedRevision = new GitRevision(ObjectId.WorkTreeId)
             {
@@ -55,8 +55,8 @@ namespace GitCommandsTests.Git
 
             var firstSelected2 = new[]
             {
-                new GitRevision(parent1),
-                new GitRevision(parent2)
+                parent1,
+                parent2
             };
 
             var selectedRevision2 = new GitRevision(ObjectId.Random())

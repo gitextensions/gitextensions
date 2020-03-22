@@ -678,7 +678,7 @@ namespace GitUI
                     {
                         var desc = (rev.ObjectId != baseRevGuid ? _diffWithParent.Text : _diffWithBase.Text)
                                    + GetDescriptionForRevision(rev.ObjectId);
-                        var status = Module.GetDiffFilesWithSubmodulesStatus(rev.Guid, Revision.Guid, Revision.ParentIds?.FirstOrDefault()?.ToString());
+                        var status = Module.GetDiffFilesWithSubmodulesStatus(rev.ObjectId, Revision.ObjectId, Revision.FirstParentGuid);
                         tuples.Add((rev, desc, status));
                     }
 
@@ -686,7 +686,7 @@ namespace GitUI
                     // (a single merge commit is selected with parents explicit or implicit selected)
                     var isMergeCommit = AppSettings.ShowDiffForAllParents &&
                                         Revision.ParentIds != null && Revision.ParentIds.Count > 1 &&
-                                        _revisionTester.AllFirstAreParentsToSelected(parentRevs, Revision);
+                                        _revisionTester.AllFirstAreParentsToSelected(parentRevs.Select(item => item.ObjectId), Revision);
                     if (isMergeCommit)
                     {
                         var conflicts = Module.GetCombinedDiffFileList(Revision.Guid);

@@ -2420,10 +2420,10 @@ namespace GitCommands
                 cache: noCache ? null : GitCommandCache);
         }
 
-        public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(string firstRevision, string secondRevision, string parentToSecond)
+        public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId firstId, ObjectId secondId, ObjectId parentToSecond)
         {
-            var status = GetDiffFiles(firstRevision, secondRevision, parentToSecond);
-            GetSubmoduleStatus(status, firstRevision, secondRevision);
+            var status = GetDiffFiles(firstId?.ToString(), secondId?.ToString(), parentToSecond?.ToString());
+            GetSubmoduleStatus(status, firstId?.ToString(), secondId?.ToString());
             return status;
         }
 
