@@ -575,6 +575,13 @@ namespace GitUI
             {
                 if (_gridView.Rows[index].Selected)
                 {
+                    int countVisible = _gridView.DisplayedRowCount(includePartialRow: false);
+                    int firstVisible = _gridView.FirstDisplayedScrollingRowIndex;
+                    if (index < firstVisible || firstVisible + countVisible < index)
+                    {
+                        _gridView.FirstDisplayedScrollingRowIndex = index;
+                    }
+
                     return;
                 }
 
