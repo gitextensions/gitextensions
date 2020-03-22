@@ -17,7 +17,7 @@ namespace ResourceManager.Xliff
         public TranslationFile(string gitExVersion, string sourceLanguage, string targetLanguage)
             : this()
         {
-            GitExVersion = new Version(gitExVersion).ToString(3);
+            GitExVersion = "";
             SourceLanguage = sourceLanguage;
             TargetLanguage = targetLanguage;
         }
