@@ -15,4 +15,8 @@
     <ProjectReference Include="..\..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Newtonsoft.Json.dll'))" />
+  </ItemGroup>
+
 </Project>

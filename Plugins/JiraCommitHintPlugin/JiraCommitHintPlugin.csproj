@@ -1,4 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Atlassian.Jira.dll'))" />
+    <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'NString.dll'))" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Atlassian.SDK" Version="10.0.2" />
