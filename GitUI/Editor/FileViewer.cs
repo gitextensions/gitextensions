@@ -423,7 +423,8 @@ namespace GitUI.Editor
                     getImage: GetImage,
                     getFileText: GetFileText,
                     getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""),
-                    openWithDifftool));
+                    openWithDifftool),
+                openWithDifftool);
 
             Image GetImage()
             {
@@ -470,9 +471,9 @@ namespace GitUI.Editor
             }
         }
 
-        private Task ShowOrDeferAsync(string fileName, Func<Task> showFunc)
+        private Task ShowOrDeferAsync(string fileName, Func<Task> showFunc, Action openWithDifftool)
         {
-            return ShowOrDeferAsync(GetFileLength(), showFunc);
+            return ShowOrDeferAsync(GetFileLength(), showFunc, openWithDifftool);
 
             long GetFileLength()
             {
@@ -496,13 +497,13 @@ namespace GitUI.Editor
             }
         }
 
-        private Task ShowOrDeferAsync(long contentLength, Func<Task> showFunc)
+        private Task ShowOrDeferAsync(long contentLength, Func<Task> showFunc, Action openWithDifftool)
         {
             const long maxLength = 5 * 1024 * 1024;
 
             if (contentLength > maxLength)
             {
-                Clear();
+                internalFileViewer.SetText("", openWithDifftool, isDiff: false);
                 Refresh();
                 _NO_TRANSLATE_lblShowPreview.Text = string.Format(_largeFileSizeWarning.Text, contentLength / (1024d * 1024));
                 _NO_TRANSLATE_lblShowPreview.Show();
@@ -605,7 +606,8 @@ namespace GitUI.Editor
 
                     TextLoaded?.Invoke(this, null);
                     return Task.CompletedTask;
-                });
+                },
+                openWithDifftool);
         }
 
         public async Task ViewTextAsync([NotNull] string fileName, [NotNull] string text,
@@ -650,7 +652,8 @@ namespace GitUI.Editor
 
                     TextLoaded?.Invoke(this, null);
                     return Task.CompletedTask;
-                });
+                },
+                openWithDifftool);
         }
 
         private FileInfo GetFileInfo(string fileName)
