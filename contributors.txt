@@ -122,3 +122,4 @@ YYYY/MM/DD, github id, Full name, email
 2020/02/10, EbenZhang, Eben Zhang, zhangyingneng(at)gmail.com
 2020/02/11, mwerle, Michael Werle, micha(at)michaelwerle.com
 2020/02/29, itsho, Itamar Shoham, Itamar.Shoham(at)gmx.com
+2020/03/22, joergpichler, Jörg Pichler, joerg.pichler(at)gmail.com
