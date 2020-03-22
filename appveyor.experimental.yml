@@ -73,14 +73,14 @@ test_script:
     $testRunCount = $env:TEST_RUN_COUNT
     for ($testRun = 1; $testRun -le $testRunCount; $testRun++)
     {
-      if (!$env:RUN_UNIT_TESTS) {
+      if ($env:RUN_UNIT_TESTS) {
         & .\cibuild.cmd -test
-        if ($LastExitCode -ne 0  -and !$env:FAIL_IF_TEST_FAIL) { $host.SetShouldExit($LastExitCode);  }
+        if ($LastExitCode -ne 0  -and $env:FAIL_IF_TEST_FAIL) { $host.SetShouldExit($LastExitCode);  }
       }
 
-      if (!$env:RUN_INTEGRATION_TESTS) {
+      if ($env:RUN_INTEGRATION_TESTS) {
         & .\cibuild.cmd -integrationTest
-        if ($LastExitCode -ne 0  -and !$env:FAIL_IF_TEST_FAIL) { $host.SetShouldExit($LastExitCode);  }
+        if ($LastExitCode -ne 0  -and $env:FAIL_IF_TEST_FAIL) { $host.SetShouldExit($LastExitCode);  }
       }
     }
 
