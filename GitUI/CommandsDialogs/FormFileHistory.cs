@@ -11,6 +11,7 @@ using GitCommands;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -379,10 +380,8 @@ namespace GitUI.CommandsDialogs
                     IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName))
                 };
                 var revisions = FileChanges.GetSelectedRevisions();
-                var selectedRev = revisions.FirstOrDefault();
-                var firstId = revisions.Skip(1).LastOrDefault()?.ObjectId ?? selectedRev?.FirstParentGuid;
-                Diff.ViewChangesAsync(firstId, selectedRev, file,
-                    defaultText: "You need to select at least one revision to view diff.");
+                var item = new FileStatusItem(firstRev: revisions.Skip(1).LastOrDefault(), secondRev: revisions.FirstOrDefault(), file);
+                Diff.ViewChangesAsync(item, defaultText: "You need to select at least one revision to view diff.");
             }
             else if (tabControl1.SelectedTab == CommitInfoTabPage)
             {

@@ -57,10 +57,10 @@ namespace GitUI.UserControls
                 DiffFiles.SetDiffs(new[] { revision });
                 if (fileToSelect != null)
                 {
-                    var itemToSelect = DiffFiles.AllItems.FirstOrDefault(i => i.Name == fileToSelect);
+                    var itemToSelect = DiffFiles.AllItems.FirstOrDefault(i => i.Item.Name == fileToSelect);
                     if (itemToSelect != null)
                     {
-                        DiffFiles.SelectedItem = itemToSelect;
+                        DiffFiles.SelectedGitItem = itemToSelect.Item;
                     }
                 }
 
@@ -88,7 +88,7 @@ namespace GitUI.UserControls
 
         private async Task ViewSelectedDiffAsync()
         {
-            await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.ObjectId, DiffFiles.Revision, DiffFiles.SelectedItem);
+            await DiffText.ViewChangesAsync(DiffFiles.SelectedItem);
         }
     }
 }

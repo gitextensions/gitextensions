@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Patches;
 using GitUI.Editor;
+using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -38,61 +39,57 @@ namespace GitUI
         /// View the changes between the revisions, if possible as a diff
         /// </summary>
         /// <param name="fileViewer">Current FileViewer</param>
-        /// <param name="firstId">The first (A) commit</param>
-        /// <param name="selectedRev">The selected (B) commit</param>
-        /// <param name="file">The git item to view</param>
+        /// <param name="item">The FileStatusItem to present changes for</param>
         /// <param name="defaultText">default text if no diff is possible</param>
         /// <param name="openWithDiffTool">The difftool command to open with</param>
         /// <returns>Task to view</returns>
         public static Task ViewChangesAsync(this FileViewer fileViewer,
-            [CanBeNull] ObjectId firstId,
-            [CanBeNull] GitRevision selectedRev,
-            [CanBeNull] GitItemStatus file,
+            [CanBeNull] FileStatusItem item,
             [NotNull] string defaultText = "",
             [CanBeNull] Action openWithDiffTool = null)
         {
-            if (!string.IsNullOrWhiteSpace(file?.ErrorMessage))
+            if (!string.IsNullOrWhiteSpace(item?.Item?.ErrorMessage))
             {
                 // Present error (e.g. parsing Git)
-                return fileViewer.ViewTextAsync(file.Name, file.ErrorMessage);
+                return fileViewer.ViewTextAsync(item.Item.Name, item.Item.ErrorMessage);
             }
 
-            if (file == null || selectedRev?.ObjectId == null)
+            if (item?.Item == null || item.SecondRevision?.ObjectId == null)
             {
                 if (!string.IsNullOrWhiteSpace(defaultText))
                 {
-                    return fileViewer.ViewTextAsync(file?.Name, defaultText, openWithDiffTool);
+                    return fileViewer.ViewTextAsync(item?.Item?.Name, defaultText);
                 }
 
                 fileViewer.Clear();
                 return Task.CompletedTask;
             }
 
-            firstId ??= selectedRev.FirstParentGuid;
+            var firstId = item.FirstRevision?.ObjectId ?? item.SecondRevision.FirstParentGuid;
 
             openWithDiffTool ??= OpenWithDiffTool;
 
-            if (file.IsNew || firstId == null || FileHelper.IsImage(file.Name))
+            if (item.Item.IsNew || firstId == null || FileHelper.IsImage(item.Item.Name))
             {
                 // View blob guid from revision, or file for worktree
-                return fileViewer.ViewGitItemRevisionAsync(file, selectedRev.ObjectId, openWithDiffTool);
+                return fileViewer.ViewGitItemRevisionAsync(item.Item, item.SecondRevision.ObjectId, openWithDiffTool);
             }
 
-            string selectedPatch = GetSelectedPatch(fileViewer, firstId, selectedRev.ObjectId, file);
+            string selectedPatch = GetSelectedPatch(fileViewer, firstId, item.SecondRevision.ObjectId, item.Item);
 
-            return file.IsSubmodule || selectedPatch == null
-                ? fileViewer.ViewTextAsync(file.Name, text: selectedPatch ?? defaultText, openWithDifftool: openWithDiffTool)
-                : fileViewer.ViewPatchAsync(file.Name, text: selectedPatch, openWithDifftool: openWithDiffTool);
+            return item.Item.IsSubmodule || selectedPatch == null
+                ? fileViewer.ViewTextAsync(item.Item.Name, text: selectedPatch ?? defaultText, openWithDifftool: openWithDiffTool)
+                : fileViewer.ViewPatchAsync(item.Item.Name, text: selectedPatch, openWithDifftool: openWithDiffTool);
 
             void OpenWithDiffTool()
             {
                 fileViewer.Module.OpenWithDifftool(
-                    file.Name,
-                    file.OldName,
+                    item.Item.Name,
+                    item.Item.OldName,
                     firstId?.ToString(),
-                    selectedRev?.ToString(),
+                    item.SecondRevision.ToString(),
                     "",
-                    file.IsTracked);
+                    item.Item.IsTracked);
             }
 
             static string GetSelectedPatch(

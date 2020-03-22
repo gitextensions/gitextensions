@@ -23,7 +23,6 @@ namespace GitUITests.CommandsDialogs
         }
 
         private ContextMenuSelectionInfo CreateContextMenuSelectionInfo(GitRevision selectedRevision = null,
-            bool firstIsParent = false,
             bool isAnyCombinedDiff = false,
             int selectedGitItemCount = 1,
             bool isAnyItemIndex = false,
@@ -35,7 +34,6 @@ namespace GitUITests.CommandsDialogs
             bool isAnySubmodule = false)
         {
             return new ContextMenuSelectionInfo(selectedRevision,
-                firstIsParent,
                 isAnyCombinedDiff,
                 selectedGitItemCount,
                 isAnyItemIndex,
@@ -124,6 +122,24 @@ namespace GitUITests.CommandsDialogs
         #endregion
 
         #region main menu
+
+        [Test]
+        public void BrowseDiff_MainMenus_NoSelection()
+        {
+            var selectionInfo = CreateContextMenuSelectionInfo(selectedGitItemCount: 0, allFilesExist: false, isAnyTracked: false);
+            _controller.ShouldShowMenuSaveAs(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuCherryPick(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuStage(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuUnstage(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowSubmoduleMenus(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuOpenRevision(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuDeleteFile(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuCopyFileName(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuShowInFileTree(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuFileHistory(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuBlame(selectionInfo).Should().BeFalse();
+        }
 
         [Test]
         public void BrowseDiff_MainMenus_Default()

@@ -126,7 +126,7 @@ namespace GitUI.CommandsDialogs
 
         private void ShowSelectedFileDiff()
         {
-            DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.ObjectId, _headRevision, DiffFiles.SelectedItem);
+            DiffText.ViewChangesAsync(DiffFiles.SelectedItem);
         }
 
         private void btnSwap_Click(object sender, EventArgs e)
@@ -143,17 +143,17 @@ namespace GitUI.CommandsDialogs
 
         private void openWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (DiffFiles.SelectedItem == null)
+            if (DiffFiles.SelectedGitItem == null)
             {
                 return;
             }
 
             var diffKind = GetDiffKind();
 
-            foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
+            foreach (var item in DiffFiles.SelectedItems)
             {
-                var revs = new[] { DiffFiles.Revision, itemWithParent.ParentRevision };
-                UICommands.OpenWithDifftool(this, revs, itemWithParent.Item.Name, itemWithParent.Item.OldName, diffKind, itemWithParent.Item.IsTracked);
+                var revs = new[] { item.SecondRevision, item.FirstRevision };
+                UICommands.OpenWithDifftool(this, revs, item.Item.Name, item.Item.OldName, diffKind, item.Item.IsTracked);
             }
 
             RevisionDiffKind GetDiffKind()
@@ -194,7 +194,7 @@ namespace GitUI.CommandsDialogs
 
         private void fileHistoryDiffToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GitItemStatus item = DiffFiles.SelectedItem;
+            GitItemStatus item = DiffFiles.SelectedGitItem;
 
             if (item.IsTracked)
             {
@@ -204,7 +204,7 @@ namespace GitUI.CommandsDialogs
 
         private void blameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GitItemStatus item = DiffFiles.SelectedItem;
+            GitItemStatus item = DiffFiles.SelectedGitItem;
 
             if (item.IsTracked)
             {
@@ -234,7 +234,7 @@ namespace GitUI.CommandsDialogs
 
             if (selectedItem != null)
             {
-                DiffFiles.SelectedItem = selectedItem;
+                DiffFiles.SelectedGitItem = selectedItem;
             }
         }
 
@@ -270,26 +270,26 @@ namespace GitUI.CommandsDialogs
 
         private void diffContextToolStripMenuItem_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            bool isAnyTracked = DiffFiles.SelectedItems.Any(item => item.IsTracked);
+            bool isAnyTracked = DiffFiles.SelectedItems.Any(item => item.Item.IsTracked);
             bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
 
             openWithDifftoolToolStripMenuItem.Enabled = isAnyTracked;
             fileHistoryDiffToolstripMenuItem.Enabled = isAnyTracked && isExactlyOneItemSelected;
-            blameToolStripMenuItem.Enabled = fileHistoryDiffToolstripMenuItem.Enabled && !DiffFiles.SelectedItem.IsSubmodule;
+            blameToolStripMenuItem.Enabled = fileHistoryDiffToolstripMenuItem.Enabled && !DiffFiles.SelectedGitItem.IsSubmodule;
         }
 
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
-            bool firstIsParent = _revisionTester.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents.Select(item => item.ObjectId), DiffFiles.Revision);
-            bool localExists = _revisionTester.AnyLocalFileExists(DiffFiles.SelectedItemsWithParent.Select(i => i.Item));
+            var parentIds = DiffFiles.SelectedItems.Select(i => i.FirstRevision.ObjectId).Distinct().ToList();
+            bool firstIsParent = _revisionTester.AllFirstAreParentsToSelected(parentIds, _headRevision);
+            bool localExists = _revisionTester.AnyLocalFileExists(DiffFiles.SelectedItems.Select(i => i.Item));
 
-            var selectedItemParentRevs = DiffFiles.SelectedItemParents.Select(i => i.ObjectId).ToList();
-            bool allAreNew = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsNew);
-            bool allAreDeleted = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsDeleted);
+            bool allAreNew = DiffFiles.SelectedItems.All(i => i.Item.IsNew);
+            bool allAreDeleted = DiffFiles.SelectedItems.All(i => i.Item.IsDeleted);
 
             return new ContextMenuDiffToolInfo(
                 _headRevision,
-                selectedItemParentRevs,
+                parentIds,
                 allAreNew: allAreNew,
                 allAreDeleted: allAreDeleted,
                 firstIsParent: firstIsParent,
