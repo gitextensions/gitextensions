@@ -7,6 +7,7 @@ namespace Gerrit
 {
     public class FormGerritBase : GitExtensionsForm
     {
+        protected static readonly Version GerritVersionWithPrivateWorkflow = Version.Parse("2.15");
         protected GerritSettings Settings { get; private set; }
         protected Version Version { get; private set; }
         protected readonly RestClient client = new RestClient();
@@ -66,7 +67,9 @@ namespace Gerrit
         {
             RestRequest request = new RestRequest("/config/server/version");
             IRestResponse response = client.Execute(request);
-            return Version.Parse(response.Content.Replace(")]}'", "").Replace("\n", "").Replace("\"", "").Split('-')[0]);
+
+            string versionString = response.Content.Replace(")]}'", "").Replace("\n", "").Replace("\"", "").Split('-')[0];
+            return Version.TryParse(versionString, out Version finalVersion) ? finalVersion : GerritVersionWithPrivateWorkflow;
         }
     }
 }

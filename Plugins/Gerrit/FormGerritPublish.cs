@@ -46,7 +46,7 @@ namespace Gerrit
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            if (Version >= Version.Parse("2.15"))
+            if (Version >= GerritVersionWithPrivateWorkflow)
             {
                 PublishType.Items.Add(new KeyValuePair<string, string>(_publishTypePrivate.Text, "private"));
             }
@@ -122,7 +122,7 @@ namespace Gerrit
 
             string publishType = ((KeyValuePair<string, string>)PublishType.SelectedItem).Value;
             string targetRef = "for";
-            if (Version >= Version.Parse("2.15"))
+            if (Version >= GerritVersionWithPrivateWorkflow)
             {
                 additionalOptions.Add(publishType);
             }
