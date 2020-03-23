@@ -583,7 +583,7 @@ See the changes in the commit form.");
             openWithToolStripMenuItem.Visible = isFile;
             openWithToolStripMenuItem.Enabled = isExistingFileOrDirectory;
             openWithDifftoolToolStripMenuItem.Visible = isFile;
-            openWithDifftoolToolStripMenuItem.Enabled = FileText.OpenWithDifftool != null;
+            openWithDifftoolToolStripMenuItem.Enabled = isExistingFileOrDirectory;
             openFileToolStripMenuItem.Visible = isFile;
             openFileWithToolStripMenuItem.Visible = isFile;
 
@@ -650,7 +650,10 @@ See the changes in the commit form.");
 
         private void openWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FileText.OpenWithDifftool?.Invoke();
+            if (tvGitTree.SelectedNode?.Tag is GitItem gitItem)
+            {
+                Module.OpenWithDifftool(gitItem.Name, null, _revision?.ObjectId?.ToString());
+            }
         }
 
         private void resetToThisRevisionToolStripMenuItem_Click(object sender, EventArgs e)
