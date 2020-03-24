@@ -2024,7 +2024,7 @@ namespace GitUI
                     changeCount.New = items.Where(item => item.IsNew && !item.IsSubmodule).ToList();
                     changeCount.Deleted = items.Where(item => item.IsDeleted && !item.IsSubmodule).ToList();
                     changeCount.SubmodulesChanged = items.Where(item => item.IsSubmodule && item.IsChanged).ToList();
-                    changeCount.SubmodulesDirty = items.Where(item => item.IsSubmodule && !item.IsTracked).ToList();
+                    changeCount.SubmodulesDirty = items.Where(item => item.IsSubmodule && item.IsDirty).ToList();
                 }
             }
         }

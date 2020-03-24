@@ -1,11 +1,11 @@
 ﻿[
     {
-        "Name": "adfs.h",
+        "Name": "subm1",
         "OldName": null,
         "TreeGuid": null,
         "RenameCopyPercentage": null,
         "Staged": 2,
-        "IsTracked": false,
+        "IsTracked": true,
         "IsDeleted": false,
         "IsChanged": false,
         "IsNew": false,
@@ -15,15 +15,16 @@
         "IsConflict": false,
         "IsAssumeUnchanged": false,
         "IsSkipWorktree": false,
-        "IsSubmodule": true
+        "IsSubmodule": true,
+        "IsDirty": true
     },
     {
-        "Name": "dir.c",
+        "Name": "subm2",
         "OldName": null,
         "TreeGuid": null,
         "RenameCopyPercentage": null,
         "Staged": 2,
-        "IsTracked": false,
+        "IsTracked": true,
         "IsDeleted": false,
         "IsChanged": true,
         "IsNew": false,
@@ -33,6 +34,7 @@
         "IsConflict": false,
         "IsAssumeUnchanged": false,
         "IsSkipWorktree": false,
-        "IsSubmodule": true
+        "IsSubmodule": true,
+        "IsDirty": true
     }
 ]

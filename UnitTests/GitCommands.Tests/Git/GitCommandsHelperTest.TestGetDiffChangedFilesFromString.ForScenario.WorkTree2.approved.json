@@ -15,6 +15,7 @@
         "IsConflict": false,
         "IsAssumeUnchanged": false,
         "IsSkipWorktree": false,
-        "IsSubmodule": false
+        "IsSubmodule": false,
+        "IsDirty": false
     }
 ]
