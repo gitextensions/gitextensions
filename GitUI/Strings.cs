@@ -33,6 +33,7 @@ namespace GitUI
         private readonly TranslationString _tag = new TranslationString("Tag");
         private readonly TranslationString _remote = new TranslationString("Remote");
         private readonly TranslationString _openWithGitExtensions = new TranslationString("Open with Git Extensions");
+        private readonly TranslationString _contScrollToNextFileOnlyWithAlt = new TranslationString("Enable automatic continuous scroll (without ALT button)");
 
         private readonly TranslationString _authored = new TranslationString("authored");
         private readonly TranslationString _committed = new TranslationString("committed");
@@ -89,6 +90,7 @@ namespace GitUI
         public static string Tag => _instance.Value._tag.Text;
         public static string Remote => _instance.Value._remote.Text;
         public static string OpenWithGitExtensions => _instance.Value._openWithGitExtensions.Text;
+        public static string ContScrollToNextFileOnlyWithAlt => _instance.Value._contScrollToNextFileOnlyWithAlt.Text;
 
         public static string OpenReport => _instance.Value._openReport.Text;
 

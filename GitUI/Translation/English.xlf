@@ -1154,6 +1154,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
 - For more than four selected commits, show the difference as if the first and the last selected commit were selected.</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkContScrollToNextFileOnlyWithAlt.Text">
+        <source>Enable automatic continuous scroll (without ALT button)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkOmitUninterestingDiff.Text">
         <source>Omit uninteresting changes from combined diff</source>
         <target />
@@ -1304,6 +1308,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="_largeFileSizeWarning.Text">
         <source>This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="automaticContinuousScrollToolStripMenuItem.Text">
+        <source>Enable automatic continuous scroll (without ALT button)</source>
         <target />
       </trans-unit>
       <trans-unit id="cherrypickSelectedLinesToolStripMenuItem.Text">
@@ -9203,6 +9211,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_committerText.Text">
         <source>Committer</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_contScrollToNextFileOnlyWithAlt.Text">
+        <source>Enable automatic continuous scroll (without ALT button)</source>
         <target />
       </trans-unit>
       <trans-unit id="_containedInBranchesText.Text">
