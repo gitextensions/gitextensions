@@ -20,7 +20,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private readonly TranslationString _strFailedToClosePullRequest = new TranslationString("Failed to close pull request!");
         private readonly TranslationString _strFailedToLoadDiffData = new TranslationString("Failed to load diff data!");
         private readonly TranslationString _strCouldNotLoadDiscussion = new TranslationString("Could not load discussion!");
-        private readonly TranslationString _strError = new TranslationString("Error");
         private readonly TranslationString _strLoading = new TranslationString(" : LOADING : ");
         private readonly TranslationString _strUnableUnderstandPatch = new TranslationString("Error: Unable to understand patch");
         private readonly TranslationString _strRemoteAlreadyExist = new TranslationString("ERROR: Remote with name {0} already exists but it points to a different repository!\r\nDetails: Is {1} expected {2}");
@@ -49,7 +48,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _selectHostedRepoCB.DisplayMember = nameof(IHostedRemote.DisplayData);
             _loader.LoadingError += (sender, ex) =>
                 {
-                    MessageBox.Show(this, ex.Exception.ToString(), _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, ex.Exception.ToString(), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.UnMask();
                 };
             InitializeComplete();
@@ -123,7 +122,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     }
                     catch (Exception ex) when (!(ex is OperationCanceledException))
                     {
-                        MessageBox.Show(this, _strFailedToFetchPullData.Text + Environment.NewLine + ex.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(this, _strFailedToFetchPullData.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 })
                 .FileAndForget();
@@ -293,7 +292,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     }
                     catch (Exception ex) when (!(ex is OperationCanceledException))
                     {
-                        MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + Environment.NewLine + ex.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         LoadDiscussion(null);
                     }
                 })
@@ -332,7 +331,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     }
                     catch (Exception ex) when (!(ex is OperationCanceledException))
                     {
-                        MessageBox.Show(this, _strFailedToLoadDiffData.Text + Environment.NewLine + ex.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(this, _strFailedToLoadDiffData.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 })
                 .FileAndForget();
@@ -350,7 +349,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 var match = Regex.Match(part, @"^a/([^\n]+) b/([^\n]+)\s*(.*)$", RegexOptions.Singleline);
                 if (!match.Success)
                 {
-                    MessageBox.Show(this, _strUnableUnderstandPatch.Text, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, _strUnableUnderstandPatch.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -415,7 +414,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     {
                         MessageBox.Show(this, string.Format(_strRemoteAlreadyExist.Text,
                                             remoteName, hostedRepository.CloneReadOnlyUrl, remoteUrl),
-                                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                 }
@@ -481,7 +480,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _strFailedToClosePullRequest.Text + Environment.NewLine + ex.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _strFailedToClosePullRequest.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

@@ -62,9 +62,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _updateTrackingReference =
             new TranslationString("The branch {0} does not have a tracking reference. Do you want to add a tracking reference to {1}?");
 
-        private readonly TranslationString _yes = new TranslationString("Yes");
-        private readonly TranslationString _no = new TranslationString("No");
-
         private readonly TranslationString _pullRepositoryMainInstruction = new TranslationString("Pull latest changes from remote repository");
         private readonly TranslationString _pullRepository =
             new TranslationString("The push was rejected because the tip of your current branch is behind its remote counterpart. " +
@@ -268,7 +265,7 @@ namespace GitUI.CommandsDialogs
             ErrorOccurred = false;
             if (PushToUrl.Checked && !PathUtil.IsUrl(PushDestination.Text))
             {
-                MessageBox.Show(owner, _selectDestinationDirectory.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(owner, _selectDestinationDirectory.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -280,7 +277,7 @@ namespace GitUI.CommandsDialogs
             var selectedRemoteName = _selectedRemote.Name;
             if (TabControlTagBranch.SelectedTab == TagTab && string.IsNullOrEmpty(TagComboBox.Text))
             {
-                MessageBox.Show(owner, _selectTag.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(owner, _selectTag.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -995,7 +992,7 @@ namespace GitUI.CommandsDialogs
                     row[DeleteColumnName] = false;
                     row[LocalColumnName] = head.Name;
                     row[RemoteColumnName] = remoteName;
-                    row[NewColumnName] = isKnownAtRemote ? _no.Text : _yes.Text;
+                    row[NewColumnName] = isKnownAtRemote ? Strings.No : Strings.Yes;
                     row[PushColumnName] = isKnownAtRemote;
 
                     _branchTable.Rows.Add(row);
@@ -1010,7 +1007,7 @@ namespace GitUI.CommandsDialogs
 
                         row[LocalColumnName] = null;
                         row[RemoteColumnName] = remoteHead.LocalName;
-                        row[NewColumnName] = _no.Text;
+                        row[NewColumnName] = Strings.No;
                         row[PushColumnName] = false;
                         row[ForceColumnName] = false;
                         row[DeleteColumnName] = false;

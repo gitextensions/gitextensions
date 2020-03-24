@@ -7,7 +7,6 @@ namespace GitUI
 {
     public class MessageBoxes : Translate
     {
-        private readonly TranslationString _error = new TranslationString("Error");
         private readonly TranslationString _notValidGitDirectory = new TranslationString("The current directory is not a valid git repository.");
 
         private readonly TranslationString _unresolvedMergeConflictsCaption = new TranslationString("Merge conflicts");
@@ -43,7 +42,7 @@ namespace GitUI
 
         public static void NotValidGitDirectory([CanBeNull] IWin32Window owner)
         {
-            MessageBox.Show(owner, Instance._notValidGitDirectory.Text, Instance._error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(owner, Instance._notValidGitDirectory.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public static bool UnresolvedMergeConflicts(IWin32Window owner)

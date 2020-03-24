@@ -17,7 +17,6 @@ namespace GitUI.CommitInfo
 {
     public partial class CommitInfoHeader : GitModuleControl
     {
-        private readonly TranslationString _error = new TranslationString("Error");
         private readonly IDateFormatter _dateFormatter = new DateFormatter();
         private readonly ILinkFactory _linkFactory = new LinkFactory();
         private readonly ICommitDataManager _commitDataManager;
@@ -147,7 +146,7 @@ namespace GitUI.CommitInfo
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message, _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

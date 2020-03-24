@@ -32,7 +32,7 @@ namespace GitUI.Script
         public static CommandStatus RunScript(IWin32Window owner, IGitModule module, string scriptKey, IGitUICommands uiCommands, RevisionGridControl revisionGrid)
         {
             return RunScript(owner, module, scriptKey, uiCommands, revisionGrid,
-                msg => MessageBox.Show(owner, msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error));
+                msg => MessageBox.Show(owner, msg, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error));
         }
 
         public static CommandStatus RunScript(IWin32Window owner, IGitModule module, string scriptKey, IGitUICommands uiCommands,

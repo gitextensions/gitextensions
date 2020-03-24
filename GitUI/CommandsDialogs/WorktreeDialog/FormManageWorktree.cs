@@ -17,7 +17,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         private readonly TranslationString _switchWorktreeTitle = new TranslationString("Open a worktree");
         private readonly TranslationString _deleteWorktreeText = new TranslationString("Are you sure you want to delete this worktree?");
         private readonly TranslationString _deleteWorktreeTitle = new TranslationString("Delete a worktree");
-        private readonly TranslationString _deleteWorktreeFailedTitle = new TranslationString("Error");
         private readonly TranslationString _deleteWorktreeFailedText = new TranslationString("Failed to delete a worktree");
 
         private List<WorkTree> _worktrees;
@@ -243,7 +242,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                     }
                     else
                     {
-                        MessageBox.Show(this, $@"{_deleteWorktreeFailedText.Text}: {workTree.Path}{Environment.NewLine}{errorMessage}", _deleteWorktreeFailedTitle.Text,
+                        MessageBox.Show(this, $@"{_deleteWorktreeFailedText.Text}: {workTree.Path}{Environment.NewLine}{errorMessage}", Strings.Error,
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }

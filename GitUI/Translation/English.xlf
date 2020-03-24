@@ -842,14 +842,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CommitInfoHeader" source-language="en">
-    <body>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target />
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="CommitSummaryUserControl" source-language="en">
     <body>
       <trans-unit id="_noRevision.Text">
@@ -1010,10 +1002,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="_strDone.Text">
         <source>Done</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_strError.Text">
-        <source>Error</source>
         <target />
       </trans-unit>
       <trans-unit id="_strFailedToCreatePullRequest.Text">
@@ -1310,10 +1298,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Cannot view image {0}</source>
         <target />
       </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_largeFileSizeWarning.Text">
         <source>This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.</source>
         <target />
@@ -1550,10 +1534,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Could not fetch repositories of user!</source>
         <target />
       </trans-unit>
-      <trans-unit id="_strError.Text">
-        <source>Error</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_strFailedToFork.Text">
         <source>Failed to fork:</source>
         <target />
@@ -1564,10 +1544,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="_strLoading.Text">
         <source> : LOADING : </source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_strNo.Text">
-        <source>No</source>
         <target />
       </trans-unit>
       <trans-unit id="_strNoHomepageDefined.Text">
@@ -1602,10 +1578,6 @@ You can not push unless you are a collaborator. {2}</source>
       <trans-unit id="_strWillCloneWithPushAccess.Text">
         <source>Will clone {0} into {1}.
 You will have push access. {2}</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_strYes.Text">
-        <source>Yes</source>
         <target />
       </trans-unit>
       <trans-unit id="browseForCloneToDirbtn.Text">
@@ -1925,10 +1897,6 @@ You will have push access. {2}</source>
         <source>You need to choose a target revision.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_noRevisionSelectedCaption.Text">
-        <source>Error</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_saveFileDialogCaption.Text">
         <source>Save archive as</source>
         <target />
@@ -2133,10 +2101,6 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_directoryIsNotAValidRepositoryRemoveSelectedRepoCommand.Text">
         <source>Remove the selected invalid repository</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_errorCaption.Text">
-        <source>Error</source>
         <target />
       </trans-unit>
       <trans-unit id="_forkCloneRepositoryToolStripMenuItem.Text">
@@ -2849,10 +2813,6 @@ Are you sure?</source>
         <source>None parent is selected!</source>
         <target />
       </trans-unit>
-      <trans-unit id="_noneParentSelectedTextCaption.Text">
-        <source>Error</source>
-        <target />
-      </trans-unit>
       <trans-unit id="checkAddReference.Text">
         <source>Add commit reference to commit message</source>
         <target />
@@ -3264,10 +3224,6 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_enterCommitMessageHint.Text">
         <source>Enter commit message</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
         <target />
       </trans-unit>
       <trans-unit id="_formTitle.Text">
@@ -4198,10 +4154,6 @@ Click on the button below to get more information about making a donation.</sour
         <source>Cannot save file:</source>
         <target />
       </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_saveChanges.Text">
         <source>Do you want to save changes?</source>
         <target />
@@ -4810,10 +4762,6 @@ _ReSharper*/</source>
 Please choose a directory.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_chooseDirectoryNotFileCaption.Text">
-        <source>Error</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_initMsgBoxCaption.Text">
         <source>Create new repository</source>
         <target />
@@ -4913,10 +4861,6 @@ command "git help shortlog"</source>
       </trans-unit>
       <trans-unit id="_deleteWorktreeFailedText.Text">
         <source>Failed to delete a worktree</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_deleteWorktreeFailedTitle.Text">
-        <source>Error</source>
         <target />
       </trans-unit>
       <trans-unit id="_deleteWorktreeText.Text">
@@ -5115,10 +5059,6 @@ ancestor tree.</source>
       </trans-unit>
       <trans-unit id="_warningOpenFailed.Text">
         <source>The selected directory is not a valid git repository.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_warningOpenFailedCaption.Text">
-        <source>Error</source>
         <target />
       </trans-unit>
       <trans-unit id="folderBrowserButton.Text">
@@ -5487,10 +5427,6 @@ Would you like to do it now?</source>
         <source>Force with lease is a safer way to force push. It ensures you only overwrite work that you have seen in your local repository</source>
         <target />
       </trans-unit>
-      <trans-unit id="_no.Text">
-        <source>No</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_pullActionFetch.Text">
         <source>fetch</source>
         <target />
@@ -5545,10 +5481,6 @@ Would you like to do it now?</source>
       </trans-unit>
       <trans-unit id="_useForceWithLeaseInstead.Text">
         <source>Force push may overwrite changes since your last fetch. Do you want to use the safer force with lease instead?</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_yes.Text">
-        <source>Yes</source>
         <target />
       </trans-unit>
       <trans-unit id="ckForceWithLease.Text">
@@ -6311,10 +6243,6 @@ Is the merge conflict solved?</source>
         <source>Conflict solved?</source>
         <target />
       </trans-unit>
-      <trans-unit id="_binaryFileWarningCaption.Text">
-        <source>Warning</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_button1Text.Text">
         <source>Open in</source>
         <target />
@@ -6369,10 +6297,6 @@ Is the merge conflict solved?</source>
       </trans-unit>
       <trans-unit id="_deleted.Text">
         <source>deleted</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_errorCaption.Text">
-        <source>Error</source>
         <target />
       </trans-unit>
       <trans-unit id="_errorStartingMergetool.Text">
@@ -6575,10 +6499,6 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="_noneParentSelectedText.Text">
         <source>None parent is selected!</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_noneParentSelectedTextCaption.Text">
-        <source>Error</source>
         <target />
       </trans-unit>
       <trans-unit id="columnHeader1.Text">
@@ -7739,10 +7659,6 @@ help</source>
         <source>Do you want to delete the branch {0} from {1}?</source>
         <target />
       </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_middleOfPatchApply.Text">
         <source>You are in the middle of a patch apply, continue patch apply?</source>
         <target />
@@ -8277,10 +8193,6 @@ Are you sure to assume this file won't change ?</source>
         <source>File successfully assumed unchanged.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_nodeNotFoundNextAvailableParentSelected.Text">
         <source>Node not found. The next available parent node will be selected.</source>
         <target />
@@ -8634,10 +8546,6 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="_revisionFilter.Text">
         <source>Filter</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_strError.Text">
-        <source>Error</source>
         <target />
       </trans-unit>
       <trans-unit id="_strLoading.Text">
@@ -9305,6 +9213,10 @@ Select this commit to populate the full message.</source>
         <source>{0} {1:day|days} ago</source>
         <target />
       </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_errorCaptionFailedDeleteFile.Text">
         <source>Failed to delete file</source>
         <target />
@@ -9363,6 +9275,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_monthsAgo.Text">
         <source>{0} {1:month|months} ago</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_no.Text">
+        <source>No</source>
         <target />
       </trans-unit>
       <trans-unit id="_noResultsFound.Text">
@@ -9430,6 +9346,10 @@ Yes, I allow telemetry!</source>
         <source>View pull requests</source>
         <target />
       </trans-unit>
+      <trans-unit id="_warning.Text">
+        <source>Warning</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_weeksAgo.Text">
         <source>{0} {1:week|weeks} ago</source>
         <target />
@@ -9440,6 +9360,10 @@ Yes, I allow telemetry!</source>
       </trans-unit>
       <trans-unit id="_yearsAgo.Text">
         <source>{0} {1:year|years} ago</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_yes.Text">
+        <source>Yes</source>
         <target />
       </trans-unit>
     </body>
@@ -9508,10 +9432,6 @@ Yes, I allow telemetry!</source>
       </trans-unit>
       <trans-unit id="_strCouldNotLoadDiscussion.Text">
         <source>Could not load discussion!</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_strError.Text">
-        <source>Error</source>
         <target />
       </trans-unit>
       <trans-unit id="_strFailedToClosePullRequest.Text">

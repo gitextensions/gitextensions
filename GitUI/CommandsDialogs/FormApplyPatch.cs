@@ -160,7 +160,7 @@ namespace GitUI.CommandsDialogs
 
             if (string.IsNullOrEmpty(patchFile) && string.IsNullOrEmpty(dirText))
             {
-                MessageBox.Show(this, _noFileSelectedText.Text, "Error", MessageBoxButtons.OK,  MessageBoxIcon.Error);
+                MessageBox.Show(this, _noFileSelectedText.Text, Strings.Error, MessageBoxButtons.OK,  MessageBoxIcon.Error);
                 return;
             }
 

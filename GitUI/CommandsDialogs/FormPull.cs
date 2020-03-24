@@ -455,19 +455,19 @@ namespace GitUI.CommandsDialogs
             {
                 if (PullFromUrl.Checked && string.IsNullOrEmpty(comboBoxPullSource.Text))
                 {
-                    MessageBox.Show(this, _selectSourceDirectory.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, _selectSourceDirectory.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 
                 if (PullFromRemote.Checked && string.IsNullOrEmpty(_NO_TRANSLATE_Remotes.Text) && !IsPullAll())
                 {
-                    MessageBox.Show(this, _selectRemoteRepository.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, _selectRemoteRepository.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 
                 if (!Fetch.Checked && Branches.Text == "*")
                 {
-                    MessageBox.Show(this, _fetchAllBranchesCanOnlyWithFetch.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, _fetchAllBranchesCanOnlyWithFetch.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 

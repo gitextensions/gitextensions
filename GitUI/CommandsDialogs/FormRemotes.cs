@@ -531,7 +531,7 @@ Inactive remote is completely invisible to git.");
         {
             if (string.IsNullOrEmpty(PuttySshKey.Text))
             {
-                MessageBox.Show(this, _errorNoKeyEntered.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _errorNoKeyEntered.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
@@ -552,7 +552,7 @@ Inactive remote is completely invisible to git.");
         {
             MessageBox.Show(this,
                             string.Format(_remoteBranchDataError.Text, RemoteBranches.Rows[e.RowIndex].Cells[0].Value, RemoteBranches.Columns[e.ColumnIndex].HeaderText),
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             RemoteBranches.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = "";
         }
 

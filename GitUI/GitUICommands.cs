@@ -180,7 +180,7 @@ namespace GitUI
             var objectId = Module.RevParse(branch);
             if (objectId == null)
             {
-                MessageBox.Show($"Branch \"{branch}\" could not be resolved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Branch \"{branch}\" could not be resolved.", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -386,7 +386,7 @@ namespace GitUI
             var objectId = Module.RevParse(branch);
             if (objectId == null)
             {
-                MessageBox.Show($"Branch \"{branch}\" could not be resolved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Branch \"{branch}\" could not be resolved.", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -1190,14 +1190,14 @@ namespace GitUI
 
             if (!RevisionDiffInfoProvider.TryGet(revisions, diffKind, out var extraDiffArgs, out var firstRevision, out var secondRevision, out var error))
             {
-                MessageBox.Show(owner, error, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(owner, error, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
                 string output = Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, extraDiffArgs, isTracked);
                 if (!string.IsNullOrEmpty(output))
                 {
-                    MessageBox.Show(owner, output, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(owner, output, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -1365,7 +1365,7 @@ namespace GitUI
 
             if (relevantHosts.Count == 0)
             {
-                MessageBox.Show(owner, "Could not find any repo hosts for current working directory", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(owner, "Could not find any repo hosts for current working directory", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else if (relevantHosts.Count == 1)
             {
@@ -1373,7 +1373,7 @@ namespace GitUI
             }
             else
             {
-                MessageBox.Show("StartCreatePullRequest:Selection not implemented!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("StartCreatePullRequest:Selection not implemented!", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

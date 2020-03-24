@@ -47,7 +47,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 }
                 else
                 {
-                    MessageBox.Show("No ExecuteAction assigned to this MenuCommand. Please submit a bug report.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("No ExecuteAction assigned to this MenuCommand. Please submit a bug report.", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             };
 

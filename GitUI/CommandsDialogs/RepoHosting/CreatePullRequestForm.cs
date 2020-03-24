@@ -20,7 +20,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private readonly TranslationString _strFailedToCreatePullRequest = new TranslationString("Failed to create pull request.");
         private readonly TranslationString _strPleaseCloneGitHubRep = new TranslationString("Please clone GitHub repository before pull request.");
         private readonly TranslationString _strDone = new TranslationString("Done");
-        private readonly TranslationString _strError = new TranslationString("Error");
         #endregion
 
         private readonly IRepositoryHostPlugin _repoHost;
@@ -183,7 +182,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             var body = _bodyTB.Text.Trim();
             if (title.Length == 0)
             {
-                MessageBox.Show(this, _strYouMustSpecifyATitle.Text, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _strYouMustSpecifyATitle.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -198,7 +197,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             catch (Exception ex)
             {
                 MessageBox.Show(this, _strFailedToCreatePullRequest.Text + Environment.NewLine +
-                    ex.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

@@ -20,9 +20,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _chooseDirectoryNotFile =
             new TranslationString("Cannot initialize a new repository on a file.\nPlease choose a directory.");
 
-        private readonly TranslationString _chooseDirectoryNotFileCaption =
-            new TranslationString("Error");
-
         private readonly TranslationString _initMsgBoxCaption =
             new TranslationString("Create new repository");
 
@@ -59,7 +56,7 @@ namespace GitUI.CommandsDialogs
 
             if (File.Exists(directoryPath))
             {
-                MessageBox.Show(this, _chooseDirectoryNotFile.Text, _chooseDirectoryNotFileCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _chooseDirectoryNotFile.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

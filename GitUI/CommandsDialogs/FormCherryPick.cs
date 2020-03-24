@@ -14,8 +14,6 @@ namespace GitUI.CommandsDialogs
         #region Translation
         private readonly TranslationString _noneParentSelectedText =
             new TranslationString("None parent is selected!");
-        private readonly TranslationString _noneParentSelectedTextCaption =
-            new TranslationString("Error");
         #endregion
 
         private bool _isMerge;
@@ -106,7 +104,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (ParentsList.SelectedItems.Count == 0)
                 {
-                    MessageBox.Show(this, _noneParentSelectedText.Text, _noneParentSelectedTextCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, _noneParentSelectedText.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     canExecute = false;
                 }
                 else
