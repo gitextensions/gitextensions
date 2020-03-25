@@ -306,7 +306,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             string mergeTool = mergeToolText.ToLowerInvariant();
 
-            return AutoConfigMergeToolCmd(mergeToolText, exeFile);
+            return AutoConfigMergeToolCmd(mergeTool, exeFile);
         }
 
         public static string AutoConfigMergeToolCmd(string mergetoolText, string exeFile)
