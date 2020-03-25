@@ -10,6 +10,8 @@ namespace GitUI
         private readonly TranslationString _warning = new TranslationString("Warning");
         private readonly TranslationString _yes = new TranslationString("Yes");
         private readonly TranslationString _no = new TranslationString("No");
+        private readonly TranslationString _okText = new TranslationString("OK");
+        private readonly TranslationString _cancelText = new TranslationString("Cancel");
 
         private readonly TranslationString _containedInBranchesText = new TranslationString("Contained in branches:");
         private readonly TranslationString _containedInNoBranchText = new TranslationString("Contained in no branch");
@@ -34,6 +36,7 @@ namespace GitUI
         private readonly TranslationString _remote = new TranslationString("Remote");
         private readonly TranslationString _openWithGitExtensions = new TranslationString("Open with Git Extensions");
         private readonly TranslationString _contScrollToNextFileOnlyWithAlt = new TranslationString("Enable automatic continuous scroll (without ALT button)");
+        private readonly TranslationString _noRevision = new TranslationString("No revision");
 
         private readonly TranslationString _authored = new TranslationString("authored");
         private readonly TranslationString _committed = new TranslationString("committed");
@@ -82,6 +85,8 @@ namespace GitUI
         public static string Warning => _instance.Value._warning.Text;
         public static string Yes => _instance.Value._yes.Text;
         public static string No => _instance.Value._no.Text;
+        public static string OK => _instance.Value._okText.Text;
+        public static string Cancel => _instance.Value._cancelText.Text;
 
         public static string ContainedInBranches => _instance.Value._containedInBranchesText.Text;
         public static string ContainedInNoBranch => _instance.Value._containedInNoBranchText.Text;
@@ -109,6 +114,7 @@ namespace GitUI
         public static string Remote => _instance.Value._remote.Text;
         public static string OpenWithGitExtensions => _instance.Value._openWithGitExtensions.Text;
         public static string ContScrollToNextFileOnlyWithAlt => _instance.Value._contScrollToNextFileOnlyWithAlt.Text;
+        public static string NoRevision => _instance.Value._noRevision.Text;
 
         public static string OpenReport => _instance.Value._openReport.Text;
 

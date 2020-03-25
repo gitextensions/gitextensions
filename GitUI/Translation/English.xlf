@@ -6039,6 +6039,39 @@ Value has been reset to empty value.</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="FormResetAnotherBranch" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Reset branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="BranchInfo.Text">
+        <source>Reset local &amp;branch:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Cancel.Text">
+        <source>Cancel</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ForceReset.Text">
+        <source>&amp;Force reset for a non-fast-forward reset</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Ok.Text">
+        <source>OK</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_localRefInvalid.Text">
+        <source>The entered value '{0}' is not the name of an existing local branch.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelResetBranchWarning.Text">
+        <source>You can only reset a branch safely if there is a direct path from it to selected revision.
+Forcing a branch to reset if it has not been merged might leave some commits unreachable.</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="FormResetChanges" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -8676,6 +8709,10 @@ See the changes in the commit form.</source>
         <source>Rename branch...</source>
         <target />
       </trans-unit>
+      <trans-unit id="resetAnotherBranchToHereToolStripMenuItem.Text">
+        <source>Reset another branch to here...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="resetCurrentBranchToHereToolStripMenuItem.Text">
         <source>Reset current branch to here...</source>
         <target />
@@ -9105,6 +9142,10 @@ Select this commit to populate the full message.</source>
         <source>Branches</source>
         <target />
       </trans-unit>
+      <trans-unit id="_cancelText.Text">
+        <source>Cancel</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_childrenText.Text">
         <source>{0:Child|Children}</source>
         <target />
@@ -9247,6 +9288,14 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_noResultsFound.Text">
         <source>&lt;No results found&gt;</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_noRevision.Text">
+        <source>No revision</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_okText.Text">
+        <source>OK</source>
         <target />
       </trans-unit>
       <trans-unit id="_open.Text">

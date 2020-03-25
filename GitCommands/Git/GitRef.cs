@@ -124,6 +124,8 @@ namespace GitCommands
 
         public bool IsDereference { get; }
 
+        public bool IsOther => !IsHead && !IsRemote && !IsTag;
+
         public string LocalName => IsRemote ? Name.Substring(Remote.Length + 1) : Name;
 
         public string Remote { get; }
