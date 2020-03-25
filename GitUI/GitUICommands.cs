@@ -184,10 +184,8 @@ namespace GitUI
                 return false;
             }
 
-            using (var form = new FormResetCurrentBranch(this, Module.GetRevision(objectId)))
-            {
-                return form.ShowDialog(owner) == DialogResult.OK;
-            }
+            using var form = FormResetCurrentBranch.Create(this, Module.GetRevision(objectId));
+            return form.ShowDialog(owner) == DialogResult.OK;
         }
 
         public bool StashSave(IWin32Window owner, bool includeUntrackedFiles, bool keepIndex = false, string message = "", IReadOnlyList<string> selectedFiles = null)

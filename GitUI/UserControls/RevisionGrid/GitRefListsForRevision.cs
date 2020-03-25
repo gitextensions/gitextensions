@@ -35,6 +35,8 @@ namespace GitUI.UserControls.RevisionGrid
             _tags = revision.Refs.Where(h => h.IsTag).ToArray();
         }
 
+        public IReadOnlyList<IGitRef> LocalBranches => _localBranches;
+
         public IReadOnlyList<IGitRef> AllBranches => _allBranches;
 
         public IReadOnlyList<IGitRef> AllTags => _tags;
