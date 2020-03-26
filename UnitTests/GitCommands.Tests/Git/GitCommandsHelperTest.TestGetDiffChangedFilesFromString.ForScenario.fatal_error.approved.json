@@ -1,0 +1,40 @@
+﻿[
+    {
+        "Name": "testfile.txt",
+        "OldName": null,
+        "TreeGuid": null,
+        "RenameCopyPercentage": null,
+        "Staged": 1,
+        "IsTracked": true,
+        "IsDeleted": false,
+        "IsChanged": true,
+        "IsNew": false,
+        "IsIgnored": false,
+        "IsRenamed": false,
+        "IsCopied": false,
+        "IsConflict": false,
+        "IsAssumeUnchanged": false,
+        "IsSkipWorktree": false,
+        "IsSubmodule": false,
+        "IsDirty": false
+    },
+    {
+        "Name": "testfile2.txt",
+        "OldName": null,
+        "TreeGuid": null,
+        "RenameCopyPercentage": null,
+        "Staged": 1,
+        "IsTracked": true,
+        "IsDeleted": false,
+        "IsChanged": true,
+        "IsNew": false,
+        "IsIgnored": false,
+        "IsRenamed": false,
+        "IsCopied": false,
+        "IsConflict": false,
+        "IsAssumeUnchanged": false,
+        "IsSkipWorktree": false,
+        "IsSubmodule": false,
+        "IsDirty": false
+    }
+]
