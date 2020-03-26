@@ -31,7 +31,6 @@ namespace GitUI.Editor
         /// </summary>
         public event Action EscapePressed;
 
-        private readonly TranslationString _error = new TranslationString("Error");
         private readonly TranslationString _largeFileSizeWarning = new TranslationString("This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.");
         private readonly TranslationString _cannotViewImage = new TranslationString("Cannot view image {0}");
 
@@ -486,7 +485,7 @@ namespace GitUI.Editor
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(this, $"{ex.Message}{Environment.NewLine}{fileName}", _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, $"{ex.Message}{Environment.NewLine}{fileName}", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 // If the file does not exist, it doesn't matter what size we
@@ -1514,7 +1513,7 @@ namespace GitUI.Editor
                 {
                     if (!MergeConflictHandler.HandleMergeConflicts(UICommands, this, false, false))
                     {
-                        MessageBox.Show(this, output + "\n\n" + Encoding.GetString(patch), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(this, output + "\n\n" + Encoding.GetString(patch), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

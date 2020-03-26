@@ -44,7 +44,6 @@ namespace GitUI.CommandsDialogs
 
         #region Translation
 
-        private readonly TranslationString _error = new TranslationString("Error");
         private readonly TranslationString _amendCommit =
             new TranslationString("You are about to rewrite history." + Environment.NewLine +
                                   "Only use amend if the commit is not published yet!" + Environment.NewLine +
@@ -901,7 +900,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!string.IsNullOrEmpty(output))
             {
-                MessageBox.Show(this, output + "\n\n" + SelectedDiff.Encoding.GetString(patch), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, output + "\n\n" + SelectedDiff.Encoding.GetString(patch), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             if (_currentItemStaged)
@@ -1457,7 +1456,7 @@ namespace GitUI.CommandsDialogs
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(this, $"Exception: {e.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, $"Exception: {e.Message}", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 return;
@@ -2132,7 +2131,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2161,7 +2160,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             Initialize();
@@ -2595,7 +2594,7 @@ namespace GitUI.CommandsDialogs
                 string output = Module.OpenWithDifftool(item.Name, null, firstRevision, secondRevision, "", item.IsTracked);
                 if (!string.IsNullOrEmpty(output))
                 {
-                    MessageBox.Show(this, output, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, output, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -2730,7 +2729,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                MessageBox.Show(this, _selectOnlyOneFile.Text, _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _selectOnlyOneFile.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -3308,7 +3307,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                MessageBox.Show(string.Format(_stopTrackingFail.Text, filename), _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format(_stopTrackingFail.Text, filename), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

@@ -256,7 +256,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                         }
                         else
                         {
-                            MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx64Name), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx64Name), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
@@ -267,7 +267,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             else
             {
-                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx32Name), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx32Name), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             CheckSettings();
@@ -359,7 +359,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show(this, e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(this, e.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
 

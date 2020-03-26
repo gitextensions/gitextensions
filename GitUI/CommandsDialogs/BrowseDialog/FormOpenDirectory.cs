@@ -15,7 +15,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
     public partial class FormOpenDirectory : GitExtensionsForm
     {
         private readonly TranslationString _warningOpenFailed = new TranslationString("The selected directory is not a valid git repository.");
-        private readonly TranslationString _warningOpenFailedCaption = new TranslationString("Error");
 
         [CanBeNull] private GitModule _chosenModule;
 
@@ -103,7 +102,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
             }
 
-            MessageBox.Show(this, _warningOpenFailed.Text, _warningOpenFailedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(this, _warningOpenFailed.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void DirectoryKeyPress(object sender, KeyPressEventArgs e)

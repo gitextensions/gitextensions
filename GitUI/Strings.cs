@@ -6,6 +6,11 @@ namespace GitUI
 {
     internal sealed class Strings : Translate
     {
+        private readonly TranslationString _error = new TranslationString("Error");
+        private readonly TranslationString _warning = new TranslationString("Warning");
+        private readonly TranslationString _yes = new TranslationString("Yes");
+        private readonly TranslationString _no = new TranslationString("No");
+
         private readonly TranslationString _containedInBranchesText = new TranslationString("Contained in branches:");
         private readonly TranslationString _containedInNoBranchText = new TranslationString("Contained in no branch");
         private readonly TranslationString _containedInTagsText = new TranslationString("Contained in tags:");
@@ -52,6 +57,11 @@ namespace GitUI
                 _instance = new Lazy<Strings>();
             }
         }
+
+        public static string Error => _instance.Value._error.Text;
+        public static string Warning => _instance.Value._warning.Text;
+        public static string Yes => _instance.Value._yes.Text;
+        public static string No => _instance.Value._no.Text;
 
         public static string ContainedInBranches => _instance.Value._containedInBranchesText.Text;
         public static string ContainedInNoBranch => _instance.Value._containedInNoBranchText.Text;

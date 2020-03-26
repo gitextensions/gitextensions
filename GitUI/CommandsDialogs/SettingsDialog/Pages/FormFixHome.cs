@@ -211,7 +211,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 if (string.IsNullOrEmpty(otherHomeDir.Text))
                 {
-                    MessageBox.Show(this, _noHomeDirectorySpecified.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, _noHomeDirectorySpecified.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -228,7 +228,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             string path = Environment.GetEnvironmentVariable("HOME");
             if (!Directory.Exists(path) || string.IsNullOrEmpty(path))
             {
-                MessageBox.Show(this, string.Format(_homeNotAccessible.Text, path), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, string.Format(_homeNotAccessible.Text, path), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 return;
             }

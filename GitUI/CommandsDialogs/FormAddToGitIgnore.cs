@@ -96,7 +96,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, ex.ToString(), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             Close();

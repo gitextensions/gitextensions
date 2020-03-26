@@ -45,7 +45,6 @@ Are you sure to assume this file won't change ?");
 See the changes in the commit form.");
 
         private readonly TranslationString _success = new TranslationString("Success");
-        private readonly TranslationString _error = new TranslationString("Error");
 
         // store strings to not keep references to nodes
         private readonly Stack<string> _lastSelectedNodes = new Stack<string>();
@@ -115,7 +114,7 @@ See the changes in the commit form.");
             {
                 if (isIncompleteMatch)
                 {
-                    MessageBox.Show(_nodeNotFoundNextAvailableParentSelected.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(_nodeNotFoundNextAvailableParentSelected.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 tvGitTree.SelectedNode = foundNode;
@@ -123,7 +122,7 @@ See the changes in the commit form.");
             }
             else
             {
-                MessageBox.Show(_nodeNotFoundSelectionNotChanged.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(_nodeNotFoundSelectionNotChanged.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -628,7 +627,7 @@ See the changes in the commit form.");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -726,7 +725,7 @@ See the changes in the commit form.");
 
             if (wereErrors)
             {
-                MessageBox.Show(string.Format(_assumeUnchangedFail.Text, itemStatus.Name), _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format(_assumeUnchangedFail.Text, itemStatus.Name), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
@@ -755,7 +754,7 @@ See the changes in the commit form.");
             }
             else
             {
-                MessageBox.Show(string.Format(_stopTrackingFail.Text, filename), _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format(_stopTrackingFail.Text, filename), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

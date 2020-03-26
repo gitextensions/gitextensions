@@ -51,7 +51,6 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _indexLockCantDelete = new TranslationString("Failed to delete index.lock.");
 
-        private readonly TranslationString _errorCaption = new TranslationString("Error");
         private readonly TranslationString _loading = new TranslationString("Loading...");
 
         private readonly TranslationString _noReposHostPluginLoaded = new TranslationString("No repository host plugin loaded.");
@@ -1910,7 +1909,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1960,7 +1959,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (FileDeleteException ex)
             {
-                MessageBox.Show(this, $@"{_indexLockCantDelete.Text}: {ex.FileName}{Environment.NewLine}{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, $@"{_indexLockCantDelete.Text}: {ex.FileName}{Environment.NewLine}{ex.Message}", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2026,7 +2025,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                MessageBox.Show(this, _noReposHostPluginLoaded.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _noReposHostPluginLoaded.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2072,7 +2071,7 @@ namespace GitUI.CommandsDialogs
             repoHost = PluginRegistry.TryGetGitHosterForModule(Module);
             if (repoHost == null)
             {
-                MessageBox.Show(this, _noReposHostFound.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _noReposHostFound.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -2916,7 +2915,7 @@ namespace GitUI.CommandsDialogs
                 catch (InvalidOperationException)
                 {
 #if DEBUG
-                    MessageBox.Show(@"ConEmu appears to be missing. Please perform a full rebuild and try again.", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(@"ConEmu appears to be missing. Please perform a full rebuild and try again.", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                     throw;
 #endif
