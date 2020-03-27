@@ -106,6 +106,7 @@ namespace GitUI.CommandsDialogs
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitSettingsPage>(this), gitPageRef, Images.FolderOpen);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitConfigSettingsPage>(this), gitPageRef, Images.GeneralSettings);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitConfigAdvancedSettingsPage>(this), gitPageRef, Images.AdvancedSettings);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitRootIntroductionPage>(this), gitPageRef, icon: null, asRoot: true);
 
             // Plugins settings
             settingsTreeView.AddSettingsPage(new PluginsSettingsGroup(), null, Images.Plugin);
