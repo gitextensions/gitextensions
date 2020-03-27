@@ -1409,7 +1409,7 @@ namespace GitCommands
             }
         }
 
-        public static bool DashboardShowCurrentBranch
+        public static bool ShowRepoCurrentBranch
         {
             get => GetBool("dashboardshowcurrentbranch", true);
             set => SetBool("dashboardshowcurrentbranch", value);

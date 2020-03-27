@@ -1802,6 +1802,16 @@ namespace GitUI.CommandsDialogs
 
             void AddRecentRepositories(Repository repo, string caption)
             {
+                if (AppSettings.ShowRepoCurrentBranch)
+                {
+                    var branchName = GitModule.GetSelectedBranchFast(repo.Path);
+
+                    if (!string.IsNullOrEmpty(branchName) && branchName != DetachedHeadParser.DetachedBranch)
+                    {
+                        caption = $"{caption} [{branchName}]";
+                    }
+                }
+
                 if (!string.IsNullOrEmpty(repo.Category))
                 {
                     caption = $"{caption} ({repo.Category})";

@@ -160,6 +160,10 @@ See http://en.gravatar.com/site/implement/images#default-image for more details.
         <source>Show relative date instead of full date</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkShowRepoCurrentBranch.Text">
+        <source>Show current branch names in the dashboard and the recent repositories dropdown menu</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkSortByAuthorDate.Text">
         <source>Sort by author date</source>
         <target />
@@ -1078,10 +1082,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="_openRepository.Text">
         <source>Open repository</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_showCurrentBranch.Text">
-        <source>Show current branch</source>
         <target />
       </trans-unit>
       <trans-unit id="_translate.Text">
