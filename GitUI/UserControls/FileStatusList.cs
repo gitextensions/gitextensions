@@ -633,11 +633,14 @@ namespace GitUI
                     // Get the parents for the selected revision
                     parentRevs = Revision.ParentIds?.Select(item => new GitRevision(item)).ToArray();
                 }
-                else if (revisions.Count == 2 || revisions.Count > 4)
+                else
                 {
-                    // only first -> selected is interesting
-                    parentRevs = new[] { revisions.Last() };
-                    if (AppSettings.ShowDiffForAllParents)
+                    // With more than 4, only first -> selected is interesting
+                    // Limited selections: Show multi selection if more than two selected
+                    var i = revisions.Count <= 4 ? revisions.Count : 2;
+                    parentRevs = revisions.Skip(1).Take(i - 1).ToArray();
+
+                    if (AppSettings.ShowDiffForAllParents && revisions.Count == 2)
                     {
                         // Get base commit, add as parent if unique
                         Lazy<ObjectId> head = getRevision != null
@@ -655,11 +658,6 @@ namespace GitUI
                             parentRevs[1] = new GitRevision(baseRevGuid);
                         }
                     }
-                }
-                else
-                {
-                    // Limited selections: Show multi selection
-                    parentRevs = revisions.Skip(1).ToArray();
                 }
 
                 if (parentRevs == null || parentRevs.Length == 0)
