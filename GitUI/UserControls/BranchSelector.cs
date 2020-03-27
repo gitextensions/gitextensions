@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GitCommands;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -51,6 +52,8 @@ namespace GitUI.UserControls
                 : LocalBranch.Checked
                     ? GetLocalBranches()
                     : GetRemoteBranches());
+
+            Branches.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
 
             if (_containRevisions != null && Branches.Items.Count == 1)
             {
