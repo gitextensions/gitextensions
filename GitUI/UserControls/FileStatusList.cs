@@ -400,6 +400,24 @@ namespace GitUI
                 .Where(i => i.Group?.Tag is GitRevision)
                 .Select(i => new GitItemStatusWithParent(i.Group.Tag<GitRevision>(), i.Tag<GitItemStatus>()));
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
+        public IEnumerable<GitItemStatus> FirstGroupItems
+        {
+            get
+            {
+                if (FileStatusListView.Groups.Count == 0)
+                {
+                    yield break;
+                }
+
+                foreach (ListViewItem item in FileStatusListView.Groups[0].Items)
+                {
+                    yield return item.Tag<GitItemStatus>();
+                }
+            }
+        }
+
         [DefaultValue(true)]
         public bool SelectFirstItemOnSetItems { get; set; }
 
