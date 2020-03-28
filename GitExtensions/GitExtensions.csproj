@@ -31,7 +31,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-  </ItemGroup>
+    <PackageReference Include="WiX" Version="$(WiXVersion)" />
+ </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\GitUI\GitUI.csproj" />
