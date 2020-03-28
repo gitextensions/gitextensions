@@ -18,6 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'ICSharpCode.SharpZipLib.dll'))" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Resources -->
     <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
   </ItemGroup>

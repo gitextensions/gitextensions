@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Microsoft.TeamFoundation.Build2.WebApi.dll'))" />
+    <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Microsoft.TeamFoundation.Common.dll'))" />
     <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Microsoft.TeamFoundation.Core.WebApi.dll'))" />
     <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Microsoft.VisualStudio.Services.Common.dll'))" />
     <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Microsoft.VisualStudio.Services.WebApi.dll'))" />

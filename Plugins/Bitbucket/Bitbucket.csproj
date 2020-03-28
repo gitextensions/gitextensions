@@ -1,9 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Newtonsoft.Json.dll'))" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
     <PackageReference Include="RestSharp" Version="$(RestSharpVersion)" />
   </ItemGroup>
@@ -13,6 +9,10 @@
     <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj" />
     <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj" />
     <ProjectReference Include="..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Newtonsoft.Json.dll'))" />
   </ItemGroup>
 
   <ItemGroup>
