@@ -8652,6 +8652,10 @@ See the changes in the commit form.</source>
         <source>View build report in a browser</source>
         <target />
       </trans-unit>
+      <trans-unit id="openCommitsWithDiffToolMenuItem.Text">
+        <source>Open selected commits with &amp;difftool</source>
+        <target />
+      </trans-unit>
       <trans-unit id="openPullRequestPageStripMenuItem.Text">
         <source>View pull request in a browser</source>
         <target />

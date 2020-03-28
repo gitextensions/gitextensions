@@ -692,6 +692,15 @@ namespace GitUI
                 .ToList();
         }
 
+        private (ObjectId firstId, GitRevision selectedRev) getFirstAndSelected()
+        {
+            var revisions = GetSelectedRevisions();
+            var selectedRev = revisions?.FirstOrDefault();
+            var firstId = revisions != null && revisions.Count > 1 ? revisions.LastOrDefault().ObjectId : selectedRev?.FirstParentGuid;
+
+            return (firstId, selectedRev);
+        }
+
         public bool IsFirstParentValid()
         {
             var revisions = GetSelectedRevisions();
@@ -1236,20 +1245,20 @@ namespace GitUI
             _selectionTimer.Enabled = true;
             _selectionTimer.Start();
 
-            var selectedRevisions = GetSelectedRevisions();
-            var firstSelectedRevision = selectedRevisions.FirstOrDefault();
-            var secondSelectedRevision = selectedRevisions.Skip(1).FirstOrDefault();
+            var (first, selected) = getFirstAndSelected();
 
-            if (selectedRevisions.Count == 1 && firstSelectedRevision != null)
-            {
-                _navigationHistory.Push(firstSelectedRevision.ObjectId);
-            }
-
-            compareToWorkingDirectoryMenuItem.Enabled = firstSelectedRevision != null && firstSelectedRevision.ObjectId != ObjectId.WorkTreeId;
+            compareToWorkingDirectoryMenuItem.Enabled = selected != null && selected.ObjectId != ObjectId.WorkTreeId;
             compareWithCurrentBranchToolStripMenuItem.Enabled = Module.GetSelectedBranch(setDefaultIfEmpty: false).IsNotNullOrWhitespace();
-            compareSelectedCommitsMenuItem.Enabled = firstSelectedRevision != null && secondSelectedRevision != null;
+            compareSelectedCommitsMenuItem.Enabled = first != null && selected != null;
+            openCommitsWithDiffToolMenuItem.Enabled = first != null && selected != null;
 
+            var selectedRevisions = GetSelectedRevisions();
             HighlightRevisionsByAuthor(selectedRevisions);
+
+            if (selectedRevisions.Count == 1 && selected != null)
+            {
+                _navigationHistory.Push(selected.ObjectId);
+            }
         }
 
         private void HighlightRevisionsByAuthor(in IReadOnlyList<GitRevision> selectedRevisions)
@@ -2389,6 +2398,7 @@ namespace GitUI
         {
             SetShortcutString(fixupCommitToolStripMenuItem, Commands.CreateFixupCommit);
             SetShortcutString(selectAsBaseToolStripMenuItem, Commands.SelectAsBaseToCompare);
+            SetShortcutString(openCommitsWithDiffToolMenuItem, Commands.OpenCommitsWithDifftool);
             SetShortcutString(compareToBaseToolStripMenuItem, Commands.CompareToBase);
             SetShortcutString(compareToWorkingDirectoryMenuItem, Commands.CompareToWorkingDirectory);
             SetShortcutString(compareSelectedCommitsMenuItem, Commands.CompareSelectedCommits);
@@ -2485,17 +2495,26 @@ namespace GitUI
 
         private void compareSelectedCommitsMenuItem_Click(object sender, EventArgs e)
         {
-            var revisions = GetSelectedRevisions();
-            var headCommit = revisions.FirstOrDefault();
-            var baseCommit = revisions.Skip(1)
-                .FirstOrDefault();
-            if (headCommit == null || baseCommit == null)
+            var (first, selected) = getFirstAndSelected();
+            var firstRev = GetRevision(first);
+            if (selected == null || first == null || firstRev == null)
             {
                 MessageBox.Show(this, "You must have two commits selected to compare", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            UICommands.ShowFormDiff(IsFirstParentValid(), baseCommit.ObjectId, headCommit.ObjectId, baseCommit.Subject, headCommit.Subject);
+            UICommands.ShowFormDiff(IsFirstParentValid(), first, selected.ObjectId, firstRev.Subject, selected.Subject);
+        }
+
+        private void diffSelectedCommitsMenuItem_Click(object sender, EventArgs e)
+        {
+            DiffSelectedCommitsWithDifftool();
+        }
+
+        public void DiffSelectedCommitsWithDifftool()
+        {
+            var (first, selected) = getFirstAndSelected();
+            Module.OpenWithDifftoolDirDiff(first?.ToString(), selected.ObjectId.ToString());
         }
 
         private void getHelpOnHowToUseTheseFeaturesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2722,6 +2741,7 @@ namespace GitUI
             CompareToBranch = 29,
             CompareSelectedCommits = 30,
             GoToMergeBaseCommit = 31,
+            OpenCommitsWithDifftool = 32
         }
 
         protected override CommandStatus ExecuteCommand(int cmd)
@@ -2760,6 +2780,7 @@ namespace GitUI
                 case Commands.SelectAsBaseToCompare: selectAsBaseToolStripMenuItem_Click(null, null); break;
                 case Commands.CompareToBase: compareToBaseToolStripMenuItem_Click(null, null); break;
                 case Commands.CreateFixupCommit: FixupCommitToolStripMenuItemClick(null, null); break;
+                case Commands.OpenCommitsWithDifftool: DiffSelectedCommitsWithDifftool(); break;
                 case Commands.CompareToWorkingDirectory: compareToWorkingDirectoryMenuItem_Click(null, null); break;
                 case Commands.CompareToCurrentBranch: CompareWithCurrentBranchToolStripMenuItem_Click(null, null); break;
                 case Commands.CompareToBranch: CompareToBranchToolStripMenuItem_Click(null, null); break;
