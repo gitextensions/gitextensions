@@ -71,7 +71,7 @@
       <_PublishedPath>$([MSBuild]::NormalizeDirectory('$(PublishDir)', '..'))</_PublishedPath>
     </PropertyGroup>
 
-    <!-- Determine plugins assemblies and thier necessary references -->
+    <!-- Determine plugins assemblies and their required references -->
     <_GetPluginAssembliesCodeTask
           Solution="$(SolutionPath)"
           IsContinuousIntegrationBuild="$(ContinuousIntegrationBuild)">
