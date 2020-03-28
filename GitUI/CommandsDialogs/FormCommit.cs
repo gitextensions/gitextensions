@@ -796,7 +796,7 @@ namespace GitUI.CommandsDialogs
                 case Command.ShowHistory: return StartFileHistoryDialog();
                 case Command.ToggleSelectionFilter: return ToggleSelectionFilter();
                 case Command.StageAll: return StageAllFiles();
-                case Command.OpenWithDifftool: SelectedDiff.OpenWithDifftool?.Invoke(); return true;
+                case Command.OpenWithDifftool: OpenWithDiffTool(); return true;
                 case Command.OpenFile: openToolStripMenuItem.PerformClick(); return true;
                 case Command.OpenFileWith: openWithToolStripMenuItem.PerformClick(); return true;
                 case Command.EditFile: editFileToolStripMenuItem.PerformClick(); return true;
@@ -1234,15 +1234,14 @@ namespace GitUI.CommandsDialogs
 
         private async Task SetSelectedDiffAsync(GitItemStatus item, bool staged)
         {
-            Action openWithDiffTool = () => (staged ? stagedOpenDifftoolToolStripMenuItem9 : openWithDifftoolToolStripMenuItem).PerformClick();
             if (FileHelper.IsImage(item.Name))
             {
                 var guid = staged ? ObjectId.IndexId : ObjectId.WorkTreeId;
-                await SelectedDiff.ViewGitItemRevisionAsync(item, guid, openWithDiffTool);
+                await SelectedDiff.ViewGitItemRevisionAsync(item, guid, () => OpenWithDiffTool());
             }
             else
             {
-                SelectedDiff.ViewCurrentChanges(item, staged, openWithDiffTool);
+                SelectedDiff.ViewCurrentChanges(item, staged, () => OpenWithDiffTool());
             }
         }
 
@@ -2602,6 +2601,11 @@ namespace GitUI.CommandsDialogs
         private void OpenWithDifftoolToolStripMenuItemClick(object sender, EventArgs e)
         {
             OpenFilesWithDiffTool(Unstaged.SelectedItems, GitRevision.IndexGuid, GitRevision.WorkTreeGuid);
+        }
+
+        private void OpenWithDiffTool()
+        {
+            (_currentItemStaged ? stagedOpenDifftoolToolStripMenuItem9 : openWithDifftoolToolStripMenuItem).PerformClick();
         }
 
         private void ResetPartOfFileToolStripMenuItemClick(object sender, EventArgs e)
