@@ -16,16 +16,16 @@
       Direct plugins artifacts to be placed under GitExtensions/Plugins folder
     -->
   <PropertyGroup>
-    <_BaseOutputPath>$([MSBuild]::NormalizePath('$(GitExtensionsOutputPath)', '$(TargetFramework)', 'Plugins'))</_BaseOutputPath>
-    <AssemblyName>GitExtensions.$(MSBuildProjectName)</AssemblyName>
-    <BaseOutputPath>$([MSBuild]::NormalizePath('$(_BaseOutputPath)', '$(OutDirName)'))</BaseOutputPath>
-    <OutputPath>$(BaseOutputPath)</OutputPath>
-    <OutDir>$(BaseOutputPath)</OutDir>
-
     <_IsTfsInterop>$(MSBuildProjectName.StartsWith('TfsInterop.'))</_IsTfsInterop>
-    <AssemblyName Condition="'$(_IsTfsInterop)' == true">$(MSBuildProjectName)</AssemblyName>
-    <OutDir Condition="'$(_IsTfsInterop)' == true">$([MSBuild]::NormalizePath('$(_BaseOutputPath)', 'TfsIntegration'))</OutDir>
+    <_AssemblyRename>$(ContinuousIntegrationBuild) != true and !$(MSBuildProjectName.StartsWith('GitExtensions.')) and '$(_IsTfsInterop)' != true</_AssemblyRename>
+    <_PluginsBaseOutputPath>$([MSBuild]::NormalizeDirectory('$(GitExtensionsOutputPath)', '$(TargetFramework)', 'Plugins'))</_PluginsBaseOutputPath>
+    <_BaseOutputPath>$([MSBuild]::NormalizeDirectory('$(_PluginsBaseOutputPath)', '$(OutDirName)'))</_BaseOutputPath>
+    <_BaseOutputPath Condition="'$(_IsTfsInterop)' == true">$([MSBuild]::NormalizeDirectory('$(_PluginsBaseOutputPath)', 'TfsIntegration'))</_BaseOutputPath>
 
+    <AssemblyName Condition="$(_AssemblyRename) == true">GitExtensions.$(MSBuildProjectName)</AssemblyName>
+    <BaseOutputPath>$(_BaseOutputPath)</BaseOutputPath>
+    <OutputPath>$(_BaseOutputPath)</OutputPath>
+    <OutDir>$(_BaseOutputPath)</OutDir>
   </PropertyGroup>
 
 </Project>

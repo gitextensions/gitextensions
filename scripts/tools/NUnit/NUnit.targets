@@ -23,8 +23,8 @@
     <PropertyGroup>
       <_UseOpenCover>true</_UseOpenCover>
       <_NUnitConsoleExe>nunit3-console.exe</_NUnitConsoleExe>
-      <_NUnitRunnerCommand Condition="$(ContinuousIntegrationBuild) != 'true'">$(PkgNUnit_ConsoleRunner)\tools\$(_NUnitConsoleExe)</_NUnitRunnerCommand>
-      <_NUnitRunnerCommand Condition="$(ContinuousIntegrationBuild) == 'true'">$(_NUnitConsoleExe)</_NUnitRunnerCommand>
+      <_NUnitRunnerCommand Condition="$(ContinuousIntegrationBuild) != true">$(PkgNUnit_ConsoleRunner)\tools\$(_NUnitConsoleExe)</_NUnitRunnerCommand>
+      <_NUnitRunnerCommand Condition="$(ContinuousIntegrationBuild) == true">$(_NUnitConsoleExe)</_NUnitRunnerCommand>
       <_NUnitRunnerCommandArgs>"@(TestToRun)"</_NUnitRunnerCommandArgs>
 
       <_TestArchitecture>%(_TestArchitectureItems.Identity)</_TestArchitecture>

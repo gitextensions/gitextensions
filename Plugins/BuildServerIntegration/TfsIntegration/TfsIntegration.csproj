@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
     <PackageReference Include="System.Reactive.Linq" Version="$(SystemReactiveVersion)" />
   </ItemGroup>
@@ -8,6 +7,15 @@
     <ProjectReference Include="..\..\..\GitCommands\GitCommands.csproj" />
     <ProjectReference Include="..\..\..\ResourceManager\ResourceManager.csproj" />
     <ProjectReference Include="..\..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Microsoft.TeamFoundation.Build2.WebApi.dll'))" />
+    <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Microsoft.TeamFoundation.Common.dll'))" />
+    <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Microsoft.TeamFoundation.Core.WebApi.dll'))" />
+    <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Microsoft.VisualStudio.Services.Common.dll'))" />
+    <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Microsoft.VisualStudio.Services.WebApi.dll'))" />
+    <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'System.Net.Http.Formatting.dll'))" />
   </ItemGroup>
 
 </Project>

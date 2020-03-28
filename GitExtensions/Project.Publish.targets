@@ -54,6 +54,8 @@
 
   <Target Name="CreatePortable" AfterTargets="Publish" DependsOnTargets="_RetrieveCurrentBuildVersion;_PublishTranslations;_PublishExtraDependecies">
     <PropertyGroup>
+      <_AppPPluginsublishDir>$([MSBuild]::NormalizeDirectory('$(AppPublishDir)', 'Plugins'))</_AppPPluginsublishDir>
+
       <!-- Resolve app.config, so we can set/unset "portable" flag -->
       <_PublishAppConfig>$([System.IO.Path]::GetFileName('$(TargetAppConfig)'))</_PublishAppConfig>
       <_PublishAppConfigPath>$([System.IO.Path]::Combine('$(PublishDir)', '$(_PublishAppConfig)'))</_PublishAppConfigPath>
@@ -68,6 +70,19 @@
       <!-- We want to archive the whole publish folder, so get one level up -->
       <_PublishedPath>$([MSBuild]::NormalizeDirectory('$(PublishDir)', '..'))</_PublishedPath>
     </PropertyGroup>
+
+    <!-- Determine plugins assemblies and their required references -->
+    <_GetPluginAssembliesCodeTask
+          Solution="$(SolutionPath)"
+          IsContinuousIntegrationBuild="$(ContinuousIntegrationBuild)">
+      <Output ItemName="PluginAssemblies" TaskParameter="Output"/>
+    </_GetPluginAssembliesCodeTask>
+
+    <!-- ...and copy them into Plugins folder -->
+    <Copy
+          SourceFiles="@(PluginAssemblies)"
+          DestinationFolder="$(_AppPPluginsublishDir)"
+        />
 
     <!-- Mark the package as "portable" -->
     <XmlPoke XmlInputPath="$(_PublishAppConfigPath)"

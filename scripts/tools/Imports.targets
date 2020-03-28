@@ -4,5 +4,6 @@
 
   <Import Project="ProjectDefaults.targets"/>
   <Import Project="Tests.targets" Condition="'$(DisableArcadeTestFramework)' != 'true'" />
+  <Import Project="Publish.targets"/>
 
 </Project>

@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
     <PackageReference Include="Atlassian.SDK" Version="10.0.2" />
     <PackageReference Include="NString" Version="1.2.0" />
@@ -17,6 +16,11 @@
 
   <ItemGroup>
     <None Include="Resources\IconJira.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Atlassian.Jira.dll'))" />
+    <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'NString.dll'))" />
   </ItemGroup>
 
   <ItemGroup>
