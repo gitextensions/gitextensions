@@ -67,6 +67,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             chkEnableAutoScale.Checked = AppSettings.EnableAutoScale;
 
+            chkShowRepoCurrentBranch.Checked = AppSettings.ShowRepoCurrentBranch;
             chkShowCurrentBranchInVisualStudio.Checked = AppSettings.ShowCurrentBranchInVisualStudio;
             _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AvatarImageCacheDays;
             ShowAuthorAvatarInCommitInfo.Checked = AppSettings.ShowAuthorAvatarInCommitInfo;
@@ -127,6 +128,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             AppSettings.EnableAutoScale = chkEnableAutoScale.Checked;
             AppSettings.TruncatePathMethod = GetTruncatePathMethodString(truncatePathMethod.SelectedIndex);
+            AppSettings.ShowRepoCurrentBranch = chkShowRepoCurrentBranch.Checked;
             AppSettings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
             AppSettings.ShowAuthorAvatarColumn = ShowAuthorAvatarInCommitGraph.Checked;
             AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatarInCommitInfo.Checked;

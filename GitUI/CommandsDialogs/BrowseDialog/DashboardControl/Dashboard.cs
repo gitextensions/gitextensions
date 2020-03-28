@@ -23,7 +23,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private readonly TranslationString _issues = new TranslationString("Issues");
         private readonly TranslationString _openRepository = new TranslationString("Open repository");
         private readonly TranslationString _translate = new TranslationString("Translate");
-        private readonly TranslationString _showCurrentBranch = new TranslationString("Show current branch");
 
         private DashboardTheme _selectedTheme;
 
@@ -208,29 +207,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 return;
             }
 
-            //
-            // create Show current branch menu item and add to Dashboard menu
-            //
-            var showCurrentBranchMenuItem = new ToolStripMenuItem(_showCurrentBranch.Text);
-            showCurrentBranchMenuItem.Click += showCurrentBranchMenuItem_Click;
-            showCurrentBranchMenuItem.Checked = AppSettings.DashboardShowCurrentBranch;
-
-            if (Parent.FindForm() is FormBrowse form)
-            {
-                var menuStrip = form.FindDescendantOfType<MenuStrip>(p => p.Name == "menuStrip1");
-                var dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");
-                dashboardMenu?.DropDownItems.Add(showCurrentBranchMenuItem);
-            }
-
             Visible = true;
-        }
-
-        private void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
-        {
-            bool newValue = !AppSettings.DashboardShowCurrentBranch;
-            AppSettings.DashboardShowCurrentBranch = newValue;
-            ((ToolStripMenuItem)sender).Checked = newValue;
-            RefreshContent();
         }
 
         private static void TranslateItem_Click(object sender, EventArgs e)

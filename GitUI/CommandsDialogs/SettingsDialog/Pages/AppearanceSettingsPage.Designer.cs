@@ -36,6 +36,7 @@
             this.truncatePathMethod = new System.Windows.Forms.ComboBox();
             this.truncateLongFilenames = new System.Windows.Forms.Label();
             this.chkEnableAutoScale = new System.Windows.Forms.CheckBox();
+            this.chkShowRepoCurrentBranch = new System.Windows.Forms.CheckBox();
             this.chkShowCurrentBranchInVisualStudio = new System.Windows.Forms.CheckBox();
             this.gbLanguages = new System.Windows.Forms.GroupBox();
             this.tlpnlLanguage = new System.Windows.Forms.TableLayoutPanel();
@@ -114,15 +115,17 @@
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpnlGeneral.Controls.Add(this.chkShowRelativeDate, 0, 0);
-            this.tlpnlGeneral.Controls.Add(this.chkShowCurrentBranchInVisualStudio, 0, 1);
-            this.tlpnlGeneral.Controls.Add(this.chkEnableAutoScale, 0, 2);
-            this.tlpnlGeneral.Controls.Add(this.chkSortByAuthorDate, 0, 3);
-            this.tlpnlGeneral.Controls.Add(this.truncateLongFilenames, 0, 4);
-            this.tlpnlGeneral.Controls.Add(this.truncatePathMethod, 1, 4);
+            this.tlpnlGeneral.Controls.Add(this.chkShowRepoCurrentBranch, 0, 1);
+            this.tlpnlGeneral.Controls.Add(this.chkShowCurrentBranchInVisualStudio, 0, 2);
+            this.tlpnlGeneral.Controls.Add(this.chkEnableAutoScale, 0, 3);
+            this.tlpnlGeneral.Controls.Add(this.chkSortByAuthorDate, 0, 4);
+            this.tlpnlGeneral.Controls.Add(this.truncateLongFilenames, 0, 5);
+            this.tlpnlGeneral.Controls.Add(this.truncatePathMethod, 1, 5);
             this.tlpnlGeneral.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpnlGeneral.Location = new System.Drawing.Point(8, 21);
             this.tlpnlGeneral.Name = "tlpnlGeneral";
-            this.tlpnlGeneral.RowCount = 5;
+            this.tlpnlGeneral.RowCount = 6;
+            this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -142,6 +145,18 @@
             this.chkShowRelativeDate.TabIndex = 0;
             this.chkShowRelativeDate.Text = "Show relative date instead of full date";
             this.chkShowRelativeDate.UseVisualStyleBackColor = true;
+            // 
+            // chkShowRepoCurrentBranch
+            // 
+            this.chkShowRepoCurrentBranch.AutoSize = true;
+            this.tlpnlGeneral.SetColumnSpan(this.chkShowRepoCurrentBranch, 2);
+            this.chkShowRepoCurrentBranch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chkShowRepoCurrentBranch.Location = new System.Drawing.Point(3, 26);
+            this.chkShowRepoCurrentBranch.Name = "chkShowRepoCurrentBranch";
+            this.chkShowRepoCurrentBranch.Size = new System.Drawing.Size(314, 17);
+            this.chkShowRepoCurrentBranch.TabIndex = 5;
+            this.chkShowRepoCurrentBranch.Text = "Show current branch names in the dashboard and the recent repositories dropdown menu";
+            this.chkShowRepoCurrentBranch.UseVisualStyleBackColor = true;
             // 
             // chkShowCurrentBranchInVisualStudio
             // 
@@ -527,6 +542,7 @@
         private System.Windows.Forms.LinkLabel helpTranslate;
         private System.Windows.Forms.GroupBox gbGeneral;
         private System.Windows.Forms.CheckBox chkShowRelativeDate;
+        private System.Windows.Forms.CheckBox chkShowRepoCurrentBranch;
         private System.Windows.Forms.CheckBox chkShowCurrentBranchInVisualStudio;
         private System.Windows.Forms.CheckBox chkEnableAutoScale;
         private System.Windows.Forms.Label truncateLongFilenames;

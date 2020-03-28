@@ -182,7 +182,7 @@ namespace GitCommands.Submodules
             {
                 var name = submodule;
                 string path = result.Module.GetSubmoduleFullPath(submodule);
-                if (AppSettings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
+                if (AppSettings.ShowRepoCurrentBranch && !GitModule.IsBareRepository(path))
                 {
                     name = name + " " + GetModuleBranch(path, noBranchText);
                 }
@@ -290,7 +290,7 @@ namespace GitCommands.Submodules
 
         private string GetBranchNameSuffix(string repositoryPath, string noBranchText)
         {
-            if (AppSettings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(repositoryPath))
+            if (AppSettings.ShowRepoCurrentBranch && !GitModule.IsBareRepository(repositoryPath))
             {
                 return " " + GetModuleBranch(repositoryPath, noBranchText);
             }

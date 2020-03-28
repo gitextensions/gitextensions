@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public string GetCurrentBranchName(string path)
         {
-            if (!AppSettings.DashboardShowCurrentBranch || GitModule.IsBareRepository(path))
+            if (!AppSettings.ShowRepoCurrentBranch || GitModule.IsBareRepository(path))
             {
                 return string.Empty;
             }
