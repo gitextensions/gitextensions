@@ -2625,6 +2625,10 @@ Do you want to continue?</source>
         <source>powershell</source>
         <target />
       </trans-unit>
+      <trans-unit id="cboTerminal.Item3">
+        <source>pwsh</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkChowConsoleTab.Text">
         <source>Show the Console tab (restart required)</source>
         <target />
@@ -7691,6 +7695,14 @@ help</source>
         <source>The server's host key is not cached in the registry.
 
 Do you want to trust this host key and then try again?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_shellNotFound.Text">
+        <source>The selected shell is not installed, or is not on your path.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_shellNotFoundCaption.Text">
+        <source>Shell not found</source>
         <target />
       </trans-unit>
       <trans-unit id="_theRepositorySubmodules.Text">
