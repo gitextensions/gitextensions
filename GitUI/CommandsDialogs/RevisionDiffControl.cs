@@ -259,7 +259,7 @@ namespace GitUI.CommandsDialogs
         private ContextMenuSelectionInfo GetSelectionInfo()
         {
             // First (A) is parent if one revision selected or if parent, then selected
-            bool firstIsParent = _gitRevisionTester.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents, DiffFiles.Revision);
+            bool firstIsParent = _gitRevisionTester.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents.Select(item => item.ObjectId), DiffFiles.Revision);
 
             // Combined diff is a display only diff, no manipulations
             bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item.ObjectId == ObjectId.CombinedDiffId);
@@ -656,7 +656,7 @@ namespace GitUI.CommandsDialogs
 
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
-            bool firstIsParent = _gitRevisionTester.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents, DiffFiles.Revision);
+            bool firstIsParent = _gitRevisionTester.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents.Select(item => item.ObjectId), DiffFiles.Revision);
             bool localExists = _gitRevisionTester.AnyLocalFileExists(DiffFiles.SelectedItemsWithParent.Select(i => i.Item));
 
             var selectedItemParentRevs = DiffFiles.SelectedItemParents.Select(i => i.ObjectId).ToList();

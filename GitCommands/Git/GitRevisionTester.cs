@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.Git
 {
@@ -15,7 +16,7 @@ namespace GitCommands.Git
         /// <returns>
         /// True if one of the first selected is parent
         /// </returns>
-        bool AllFirstAreParentsToSelected(IEnumerable<GitRevision> firstSelected, GitRevision selectedRevision);
+        bool AllFirstAreParentsToSelected(IEnumerable<ObjectId> firstSelected, GitRevision selectedRevision);
 
         /// <summary>
         /// Finds if any of the git items exists as a file.
@@ -41,14 +42,14 @@ namespace GitCommands.Git
         }
 
         /// <inheritdoc />
-        public bool AllFirstAreParentsToSelected(IEnumerable<GitRevision> firstSelected, GitRevision selectedRevision)
+        public bool AllFirstAreParentsToSelected(IEnumerable<ObjectId> firstSelected, GitRevision selectedRevision)
         {
             if (selectedRevision?.ParentIds == null || firstSelected == null)
             {
                 return false;
             }
 
-            foreach (var item in firstSelected.Select(r => r.ObjectId))
+            foreach (var item in firstSelected)
             {
                 if (!selectedRevision.ParentIds.Contains(item))
                 {
