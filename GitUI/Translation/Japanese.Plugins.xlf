@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="4.0.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="ja">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -1001,6 +1001,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
     <body>
       <trans-unit id="_publishTypeDraft.Text">
         <source>Draft</source>
+        <target>下書き</target>
         
       </trans-unit>
       <trans-unit id="_publishTypePrivate.Text">
@@ -1160,7 +1161,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="cbBasedOn.Text">
         <source>based on:</source>
-        <target>元：</target>
+        <target>元:</target>
         
       </trans-unit>
       <trans-unit id="cbPushAfterFinish.Text">
@@ -1175,12 +1176,12 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
-        <target>既存のブランチをマージ：</target>
+        <target>既存のブランチをマージ:</target>
         
       </trans-unit>
       <trans-unit id="gbStart.Text">
         <source>Start branch:</source>
-        <target>ブランチの開始：</target>
+        <target>ブランチの開始:</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1190,7 +1191,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>Expected name:</source>
-        <target>期待される名前：</target>
+        <target>期待される名前:</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -1246,9 +1247,9 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <target>Github</target>
         
       </trans-unit>
-      <trans-unit id="GitHubApiEndpoint.Caption">
-        <source>GitHub (Enterprise) API endpoint</source>
-        <target>GitHub (Enterprise) API エンドポイント</target>
+      <trans-unit id="GitHubHost.Caption">
+        <source>GitHub (Enterprise) hostname</source>
+        <target>GitHub (Enterprise) ホスト名</target>
         
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
@@ -1259,6 +1260,11 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
         <target>既にOAuthのトークンを取得しています。新たに取得する場合は、まず古いトークンをプラグイン &gt; 設定 で削除してください。</target>
+        
+      </trans-unit>
+      <trans-unit id="_viewInWebSite.Text">
+        <source>View in {0}</source>
+        <target>{0} で閲覧</target>
         
       </trans-unit>
     </body>

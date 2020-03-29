@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="4.0.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AdvancedSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
@@ -192,6 +192,10 @@ See http://en.gravatar.com/site/implement/images#default-image for more details.
         <target>Zobrazovat relativní datum místo úplného</target>
         
       </trans-unit>
+      <trans-unit id="chkShowRepoCurrentBranch.Text">
+        <source>Show current branch names in the dashboard and the recent repositories dropdown menu</source>
+        
+      </trans-unit>
       <trans-unit id="chkSortByAuthorDate.Text">
         <source>Sort by author date</source>
         
@@ -223,6 +227,7 @@ See http://en.gravatar.com/site/implement/images#default-image for more details.
       </trans-unit>
       <trans-unit id="lblAvatarProvider.Text">
         <source>Avatar provider</source>
+        <target>Poskytovatel avataru</target>
         
       </trans-unit>
       <trans-unit id="lblCacheDays.Text">
@@ -274,6 +279,7 @@ See http://en.gravatar.com/site/implement/images#default-image for more details.
     <body>
       <trans-unit id="avatarProviderToolStripMenuItem.Text">
         <source>Avatar provider</source>
+        <target>Poskytovatel avataru</target>
         
       </trans-unit>
       <trans-unit id="clearImagecacheToolStripMenuItem.Text">
@@ -296,6 +302,7 @@ See http://en.gravatar.com/site/implement/images#default-image for more details.
     <body>
       <trans-unit id="allCommitInfoToolStripMenuItem.Text">
         <source>All commit info</source>
+        <target>Informace všech odevzdání</target>
         
       </trans-unit>
       <trans-unit id="blamePreviousRevisionToolStripMenuItem.Text">
@@ -393,6 +400,7 @@ See http://en.gravatar.com/site/implement/images#default-image for more details.
     <body>
       <trans-unit id="_noReproStepsSuppliedErrorMessage.Text">
         <source>Please provide as much as information as possible to help the developers solve this issue.</source>
+        <target>Prosím, poskytněte co nejvíce informací k tomu, aby vývojáři mohli vyřešit tento problém</target>
         
       </trans-unit>
       <trans-unit id="_submitGitHubMessage.Text">
@@ -413,6 +421,7 @@ Send report anyway?</source>
       </trans-unit>
       <trans-unit id="_toolTipQuit.Text">
         <source>Quit application without reporting the issue</source>
+        <target>Ukončit aplikaci bez nahlašování problému</target>
         
       </trans-unit>
       <trans-unit id="_toolTipSendQuit.Text">
@@ -723,6 +732,7 @@ Prosím ujistěte se že jsou linuxové nástroje nainstalovány (buď přes Git
       </trans-unit>
       <trans-unit id="_registryKeyGitExtensionsCorrect.Text">
         <source>Git Extensions is properly registered.</source>
+        <target>Git Extensions je řádně zaregistrována.</target>
         
       </trans-unit>
       <trans-unit id="_registryKeyGitExtensionsFaulty.Text">
@@ -794,9 +804,8 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
   </file>
   <file datatype="plaintext" original="ColorsSettingsPage" source-language="en" target-language="cs">
     <body>
-      <trans-unit id="$this.Text">
-        <source>Colors</source>
-        <target>Barvy</target>
+      <trans-unit id="DefaultThemeName.Text">
+        <source>default</source>
         
       </trans-unit>
       <trans-unit id="DrawNonRelativesGray.Text">
@@ -809,18 +818,13 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target>Vykreslovat ne-relativní text šedivě</target>
         
       </trans-unit>
+      <trans-unit id="FormatUserDefinedThemeName.Text">
+        <source>{0}, user-defined</source>
+        
+      </trans-unit>
       <trans-unit id="MulticolorBranches.Text">
         <source>Multicolor branches</source>
         <target>Vícebarevné větve</target>
-        
-      </trans-unit>
-      <trans-unit id="btnResetTheme.Text">
-        <source>Reset</source>
-        <target>Zahodit</target>
-        
-      </trans-unit>
-      <trans-unit id="btnTheme.Text">
-        <source>Edit...</source>
         
       </trans-unit>
       <trans-unit id="chkDrawAlternateBackColor.Text">
@@ -836,70 +840,12 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Use system-defined visual style (looks bad with dark colors)</source>
         
       </trans-unit>
-      <trans-unit id="gbDiffView.Text">
-        <source>Difference view</source>
-        
-      </trans-unit>
       <trans-unit id="gbRevisionGraph.Text">
         <source>Revision graph</source>
         
       </trans-unit>
       <trans-unit id="gbTheme.Text">
-        <source>Color scheme</source>
-        
-      </trans-unit>
-      <trans-unit id="lblColorBranchLocal.Text">
-        <source>Color branch</source>
-        <target>Barva větve</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorBranchRemote.Text">
-        <source>Color remote branch</source>
-        <target>Barva vzdálené větve</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorHighlightAllOccurrences.Text">
-        <source>Color highlight all occurences</source>
-        
-      </trans-unit>
-      <trans-unit id="lblColorHighlightAuthored.Text">
-        <source>Color authored revisions</source>
-        <target>Obarvit revize jejihž jsem autorem</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorHilghlightLineAdded.Text">
-        <source>Color added line highlighting</source>
-        <target>Barva zvýraznění přidané řádky</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorHilghlightLineRemoved.Text">
-        <source>Color removed line highlighting</source>
-        <target>Barva zvýraznění odstraněné řádky</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorLabel.Text">
-        <source>Color other label</source>
-        <target>Barva jiného nápisu</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorLineAdded.Text">
-        <source>Color added line</source>
-        <target>Barva přidané řádky</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorLineRemoved.Text">
-        <source>Color removed line</source>
-        <target>Barva odstraněné řádky</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorSection.Text">
-        <source>Color section</source>
-        <target>Barva sekce</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorTag.Text">
-        <source>Color tag</source>
-        <target>Barva značky</target>
+        <source>Theme</source>
         
       </trans-unit>
       <trans-unit id="lblRestartNeeded.Text">
@@ -1237,11 +1183,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target>Hotovo</target>
         
       </trans-unit>
-      <trans-unit id="_strError.Text">
-        <source>Error</source>
-        <target>Chyba</target>
-        
-      </trans-unit>
       <trans-unit id="_strFailedToCreatePullRequest.Text">
         <source>Failed to create pull request.</source>
         <target>Nemohu vytvořit žádost o stažení</target>
@@ -1336,11 +1277,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target>Otevřít repozitář</target>
         
       </trans-unit>
-      <trans-unit id="_showCurrentBranch.Text">
-        <source>Show current branch</source>
-        <target>Zobrazit současnou větev</target>
-        
-      </trans-unit>
       <trans-unit id="_translate.Text">
         <source>Translate</source>
         <target>Přeložit</target>
@@ -1404,6 +1340,16 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       <trans-unit id="$this.Text">
         <source>Diff Viewer</source>
         <target>Prohlížeč rozdílů</target>
+        
+      </trans-unit>
+      <trans-unit id="_showDiffForAllParents.Text">
+        <source>Show all differences between the selected commits, not limiting to only one difference.
+
+- For a single selected commit, show the difference with its parent commit.
+- For a single selected merge commit, show the difference with all parents.
+- For two selected commits, show the difference between the commits as well as the difference between a common ancestor (BASE) to the last selected commit.
+- For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
+- For more than four selected commits, show the difference as if the first and the last selected commit were selected.</source>
         
       </trans-unit>
       <trans-unit id="chkOmitUninterestingDiff.Text">
@@ -1542,8 +1488,12 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target>Žádné změny</target>
         
       </trans-unit>
+      <trans-unit id="_diffWithBase.Text">
+        <source>Diff with BASE a/</source>
+        
+      </trans-unit>
       <trans-unit id="_diffWithParent.Text">
-        <source>Diff with:</source>
+        <source>Diff with a/</source>
         
       </trans-unit>
       <trans-unit id="_openSubmoduleMenuItem.Text">
@@ -1564,9 +1514,8 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
   </file>
   <file datatype="plaintext" original="FileViewer" source-language="en" target-language="cs">
     <body>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Chyba</target>
+      <trans-unit id="_cannotViewImage.Text">
+        <source>Cannot view image {0}</source>
         
       </trans-unit>
       <trans-unit id="_largeFileSizeWarning.Text">
@@ -1855,11 +1804,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target>Nemohu přenést uživatelovy repozitáře!</target>
         
       </trans-unit>
-      <trans-unit id="_strError.Text">
-        <source>Error</source>
-        <target>Chyba</target>
-        
-      </trans-unit>
       <trans-unit id="_strFailedToFork.Text">
         <source>Failed to fork:</source>
         <target>Chyba při rozvětvování:</target>
@@ -1873,11 +1817,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       <trans-unit id="_strLoading.Text">
         <source> : LOADING : </source>
         <target> : NAČÍTÁM : </target>
-        
-      </trans-unit>
-      <trans-unit id="_strNo.Text">
-        <source>No</source>
-        <target>Ne</target>
         
       </trans-unit>
       <trans-unit id="_strNoHomepageDefined.Text">
@@ -1922,11 +1861,6 @@ Pokud nejste veden jako přispěvovatel, nebudete moci odesílat. {2}</target>
 You will have push access. {2}</source>
         <target>Naklonuje {0} do {1}.
 Budete moci odesílat. {2}</target>
-        
-      </trans-unit>
-      <trans-unit id="_strYes.Text">
-        <source>Yes</source>
-        <target>Ano</target>
         
       </trans-unit>
       <trans-unit id="browseForCloneToDirbtn.Text">
@@ -2313,11 +2247,6 @@ Budete moci odesílat. {2}</target>
         <target>Musíte vybrat cílovou revizi.</target>
         
       </trans-unit>
-      <trans-unit id="_noRevisionSelectedCaption.Text">
-        <source>Error</source>
-        <target>Chyba</target>
-        
-      </trans-unit>
       <trans-unit id="_saveFileDialogCaption.Text">
         <source>Save archive as</source>
         <target>Uložit archiv jako</target>
@@ -2566,11 +2495,6 @@ compare with first:</source>
         <source>Remove the selected invalid repository</source>
         
       </trans-unit>
-      <trans-unit id="_errorCaption.Text">
-        <source>Error</source>
-        <target>Chyba</target>
-        
-      </trans-unit>
       <trans-unit id="_forkCloneRepositoryToolStripMenuItem.Text">
         <source>Fork/Clone repository...</source>
         <target>Rozvětvit/Klonovat repozitář...</target>
@@ -2579,10 +2503,6 @@ compare with first:</source>
       <trans-unit id="_goToSuperProject.Text">
         <source>Go to superproject</source>
         <target>Přejít k nadřazenému projektu</target>
-        
-      </trans-unit>
-      <trans-unit id="_hintUnresolvedMergeConflicts.Text">
-        <source>There are unresolved merge conflicts. Res&amp;olve...</source>
         
       </trans-unit>
       <trans-unit id="_indexLockCantDelete.Text">
@@ -2682,18 +2602,6 @@ Do you want to continue?</source>
       <trans-unit id="_viewPullRequestsToolStripMenuItem.Text">
         <source>View pull requests...</source>
         <target>Zobrazit žádosti ke stažení...</target>
-        
-      </trans-unit>
-      <trans-unit id="_warningMiddleOfBisect.Text">
-        <source>You are in the middle of a bisect. C&amp;ontinue...</source>
-        
-      </trans-unit>
-      <trans-unit id="_warningMiddleOfPatchApply.Text">
-        <source>You are in the middle of a patch apply. C&amp;ontinue...</source>
-        
-      </trans-unit>
-      <trans-unit id="_warningMiddleOfRebase.Text">
-        <source>You are in the middle of a rebase. C&amp;ontinue...</source>
         
       </trans-unit>
       <trans-unit id="aboutToolStripMenuItem.Text">
@@ -3096,11 +3004,6 @@ Do you want to continue?</source>
         <target>Odevzdání</target>
         
       </trans-unit>
-      <trans-unit id="toolStripButtonLevelUp.Text">
-        <source>Go to superproject</source>
-        <target>Přejít k nadřazenému projektu</target>
-        
-      </trans-unit>
       <trans-unit id="toolStripButtonPull.Text">
         <source>Pull</source>
         <target>Stáhnout</target>
@@ -3436,11 +3339,6 @@ Are you sure?</source>
       <trans-unit id="_noneParentSelectedText.Text">
         <source>None parent is selected!</source>
         <target>Není vybraný žádný rodič!</target>
-        
-      </trans-unit>
-      <trans-unit id="_noneParentSelectedTextCaption.Text">
-        <source>Error</source>
-        <target>Chyba</target>
         
       </trans-unit>
       <trans-unit id="checkAddReference.Text">
@@ -3950,11 +3848,6 @@ Chcete pokračovat?</target>
       <trans-unit id="_enterCommitMessageHint.Text">
         <source>Enter commit message</source>
         <target>Zadejte zprávu o odevzdání</target>
-        
-      </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Chyba</target>
         
       </trans-unit>
       <trans-unit id="_formTitle.Text">
@@ -5059,11 +4952,6 @@ Click on the button below to get more information about making a donation.</sour
         <target>Nemohu uložit soubor:</target>
         
       </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Chyba</target>
-        
-      </trans-unit>
       <trans-unit id="_saveChanges.Text">
         <source>Do you want to save changes?</source>
         <target>Chcete uložit změny?</target>
@@ -5833,11 +5721,6 @@ Please choose a directory.</source>
 Prosím zvolte si složku.</target>
         
       </trans-unit>
-      <trans-unit id="_chooseDirectoryNotFileCaption.Text">
-        <source>Error</source>
-        <target>Chyba</target>
-        
-      </trans-unit>
       <trans-unit id="_initMsgBoxCaption.Text">
         <source>Create new repository</source>
         <target>Vytvořit nový repozitář</target>
@@ -5961,6 +5844,10 @@ Pro více informací spusťte příkaz
       <trans-unit id="Type.HeaderText">
         <source>Type</source>
         <target>Typ</target>
+        
+      </trans-unit>
+      <trans-unit id="_deleteWorktreeFailedText.Text">
+        <source>Failed to delete a worktree</source>
         
       </trans-unit>
       <trans-unit id="_deleteWorktreeText.Text">
@@ -6208,11 +6095,6 @@ Tato úprava je také provedena na stromě společného předka.</target>
       </trans-unit>
       <trans-unit id="_warningOpenFailed.Text">
         <source>The selected directory is not a valid git repository.</source>
-        
-      </trans-unit>
-      <trans-unit id="_warningOpenFailedCaption.Text">
-        <source>Error</source>
-        <target>Chyba</target>
         
       </trans-unit>
       <trans-unit id="folderBrowserButton.Text">
@@ -6670,11 +6552,6 @@ Would you like to do it now?</source>
         <target>Opatrné vynucení je bezpečnější způsob jak vynutit odeslání. Dojde k přepsání pouze té práce, kterou máte v lokálním repozitáři</target>
         
       </trans-unit>
-      <trans-unit id="_no.Text">
-        <source>No</source>
-        <target>Ne</target>
-        
-      </trans-unit>
       <trans-unit id="_pullActionFetch.Text">
         <source>fetch</source>
         <target>stáhnout</target>
@@ -6742,11 +6619,6 @@ Would you like to do it now?</source>
       <trans-unit id="_useForceWithLeaseInstead.Text">
         <source>Force push may overwrite changes since your last fetch. Do you want to use the safer force with lease instead?</source>
         <target>Vynucení odeslání může přepsat změny od posledního přenesení. Chcete místo toho použít bezpečnější opatrné vynucení?</target>
-        
-      </trans-unit>
-      <trans-unit id="_yes.Text">
-        <source>Yes</source>
-        <target>Ano</target>
         
       </trans-unit>
       <trans-unit id="ckForceWithLease.Text">
@@ -7260,6 +7132,11 @@ Inactive remote is completely invisible to git.</source>
         <source>An active remote named &quot;{0}&quot; already exists.</source>
         
       </trans-unit>
+      <trans-unit id="_errorNoKeyEntered.Text">
+        <source>No SSH key file entered</source>
+        <target>Nebyl zadán soubor SSH klíče</target>
+        
+      </trans-unit>
       <trans-unit id="_gbMgtPanelHeaderEdit.Text">
         <source>Edit Remote Details</source>
         <target>Upravit detajly vzdáleného zdroje</target>
@@ -7332,11 +7209,6 @@ Hodnota byla změněna na prázdnou.</target>
       <trans-unit id="_sshKeyOpenFilter.Text">
         <source>Private key (*.ppk)</source>
         <target>Soukromý klíč (*.ppk)</target>
-        
-      </trans-unit>
-      <trans-unit id="_warningNoKeyEntered.Text">
-        <source>No SSH key file entered</source>
-        <target>Nebyl zadán soubor SSH klíče</target>
         
       </trans-unit>
       <trans-unit id="checkBoxSepPushUrl.Text">
@@ -7663,11 +7535,6 @@ Is the merge conflict solved?</source>
         <target>Je konflikt vyřešený?</target>
         
       </trans-unit>
-      <trans-unit id="_binaryFileWarningCaption.Text">
-        <source>Warning</source>
-        <target>Varování</target>
-        
-      </trans-unit>
       <trans-unit id="_button1Text.Text">
         <source>Open in</source>
         <target>Otevřít pomocí</target>
@@ -7736,11 +7603,6 @@ Is the merge conflict solved?</source>
       <trans-unit id="_deleted.Text">
         <source>deleted</source>
         <target>smazáno</target>
-        
-      </trans-unit>
-      <trans-unit id="_errorCaption.Text">
-        <source>Error</source>
-        <target>Chyba</target>
         
       </trans-unit>
       <trans-unit id="_errorStartingMergetool.Text">
@@ -7983,11 +7845,6 @@ Chcete použít skript na sloučení?</target>
       <trans-unit id="_noneParentSelectedText.Text">
         <source>None parent is selected!</source>
         <target>Není vybraný žádný rodič!</target>
-        
-      </trans-unit>
-      <trans-unit id="_noneParentSelectedTextCaption.Text">
-        <source>Error</source>
-        <target>Chyba</target>
         
       </trans-unit>
       <trans-unit id="columnHeader1.Text">
@@ -8396,6 +8253,14 @@ Do you want to register the host's fingerprint and restart the process?</source>
       </trans-unit>
       <trans-unit id="_downloadingUpdate.Text">
         <source>Downloading update...</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorHeading.Text">
+        <source>Download Failed</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorMessage.Text">
+        <source>Failed to download an update.</source>
         
       </trans-unit>
       <trans-unit id="_newVersionAvailable.Text">
@@ -9249,6 +9114,59 @@ nápovědu</target>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="InteractiveGitActionControl" source-language="en" target-language="cs">
+    <body>
+      <trans-unit id="AbortButton.Text">
+        <source>Abort</source>
+        <target>Přerušit</target>
+        
+      </trans-unit>
+      <trans-unit id="ContinueButton.Text">
+        <source>Continue</source>
+        
+      </trans-unit>
+      <trans-unit id="MoreButton.Text">
+        <source>M&amp;ore...</source>
+        
+      </trans-unit>
+      <trans-unit id="ResolveButton.Text">
+        <source>Resolve...</source>
+        
+      </trans-unit>
+      <trans-unit id="_bisect.Text">
+        <source>Bisect</source>
+        <target>Půlení</target>
+        
+      </trans-unit>
+      <trans-unit id="_conflictsMessage.Text">
+        <source>There are unresolved merge conflicts.</source>
+        
+      </trans-unit>
+      <trans-unit id="_merge.Text">
+        <source>Merge</source>
+        <target>Sloučit</target>
+        
+      </trans-unit>
+      <trans-unit id="_patch.Text">
+        <source>Patch</source>
+        <target>Záplata</target>
+        
+      </trans-unit>
+      <trans-unit id="_progressMessage.Text">
+        <source>{0} is currently in progress.</source>
+        
+      </trans-unit>
+      <trans-unit id="_progressWithConflictsMessage.Text">
+        <source>{0} is currently in progress with merge conflicts.</source>
+        
+      </trans-unit>
+      <trans-unit id="_rebase.Text">
+        <source>Rebase</source>
+        <target>Přeskládat</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="LocalBranchMenuItemsStrings" source-language="en" target-language="cs">
     <body>
       <trans-unit id="DeleteTooltip.Text">
@@ -9298,11 +9216,6 @@ nápovědu</target>
       <trans-unit id="_confirmDeleteRemoteBranch.Text">
         <source>Do you want to delete the branch {0} from {1}?</source>
         <target>Chcete smazat větev {0} z {1}?</target>
-        
-      </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Chyba</target>
         
       </trans-unit>
       <trans-unit id="_middleOfPatchApply.Text">
@@ -9738,8 +9651,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
         
       </trans-unit>
       <trans-unit id="_firstRevision.Text">
-        <source>First</source>
-        <target>První</target>
+        <source>First: a/</source>
         
       </trans-unit>
       <trans-unit id="_multipleDescription.Text">
@@ -9758,8 +9670,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
         
       </trans-unit>
       <trans-unit id="_selectedRevision.Text">
-        <source>Selected</source>
-        <target>Vybraný</target>
+        <source>Selected: b/</source>
         
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
@@ -9915,11 +9826,6 @@ Are you sure to assume this file won't change ?</source>
       </trans-unit>
       <trans-unit id="_assumeUnchangedSuccess.Text">
         <source>File successfully assumed unchanged.</source>
-        
-      </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Chyba</target>
         
       </trans-unit>
       <trans-unit id="_nodeNotFoundNextAvailableParentSelected.Text">
@@ -10336,11 +10242,6 @@ See the changes in the commit form.</source>
         <target>Filtrovat</target>
         
       </trans-unit>
-      <trans-unit id="_strError.Text">
-        <source>Error</source>
-        <target>Chyba</target>
-        
-      </trans-unit>
       <trans-unit id="_strLoading.Text">
         <source>Loading</source>
         <target>Načítám</target>
@@ -10362,6 +10263,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="checkoutRevisionToolStripMenuItem.Text">
         <source>Checkout this commit...</source>
+        <target>Získat toto odevzdání</target>
         
       </trans-unit>
       <trans-unit id="cherryPickCommitToolStripMenuItem.Text">
@@ -10460,6 +10362,10 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="openBuildReportToolStripMenuItem.Text">
         <source>View build report in a browser</source>
+        
+      </trans-unit>
+      <trans-unit id="openCommitsWithDiffToolMenuItem.Text">
+        <source>Open selected commits with &amp;difftool</source>
         
       </trans-unit>
       <trans-unit id="openPullRequestPageStripMenuItem.Text">
@@ -10897,7 +10803,7 @@ Current Branch:
       </trans-unit>
       <trans-unit id="chlMenuEntries.Item3">
         <source>Create branch...</source>
-        <target>Vytvořit větev</target>
+        <target>Vytvořit větev...</target>
         
       </trans-unit>
       <trans-unit id="chlMenuEntries.Item4">
@@ -11042,6 +10948,14 @@ Při použití OpenSSH se budou zobrazovat dialogy příkazové řádky!
         <source>{0:Author|Authors}</source>
         
       </trans-unit>
+      <trans-unit id="_authored.Text">
+        <source>authored</source>
+        
+      </trans-unit>
+      <trans-unit id="_authoredAndCommitted.Text">
+        <source>authored and committed</source>
+        
+      </trans-unit>
       <trans-unit id="_bodyNotLoaded.Text">
         <source>
 
@@ -11069,6 +10983,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_commitHashText.Text">
         <source>{0:Commit hash|Commits hashes}</source>
+        
+      </trans-unit>
+      <trans-unit id="_committed.Text">
+        <source>committed</source>
         
       </trans-unit>
       <trans-unit id="_committerText.Text">
@@ -11111,6 +11029,19 @@ Select this commit to populate the full message.</source>
         <target>Před {0} {1:dnem|dny}</target>
         
       </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>Chyba</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorCaptionFailedDeleteFile.Text">
+        <source>Failed to delete file</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorCaptionFailedDeleteFolder.Text">
+        <source>Failed to delete directory</source>
+        
+      </trans-unit>
       <trans-unit id="_findGitExecutable.Text">
         <source>Find git...</source>
         <target>Najít git...</target>
@@ -11149,6 +11080,14 @@ Select this commit to populate the full message.</source>
         <target>Místní</target>
         
       </trans-unit>
+      <trans-unit id="_markBisectAsBad.Text">
+        <source>Marked as bad in bisect</source>
+        
+      </trans-unit>
+      <trans-unit id="_markBisectAsGood.Text">
+        <source>Marked as good in bisect</source>
+        
+      </trans-unit>
       <trans-unit id="_messageText.Text">
         <source>{0:Message|Messages}</source>
         
@@ -11161,6 +11100,11 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_monthsAgo.Text">
         <source>{0} {1:month|months} ago</source>
         <target>Před {0} {1:měsícem|měsíci}</target>
+        
+      </trans-unit>
+      <trans-unit id="_no.Text">
+        <source>No</source>
+        <target>Ne</target>
         
       </trans-unit>
       <trans-unit id="_noResultsFound.Text">
@@ -11235,6 +11179,11 @@ Yes, I allow telemetry!</source>
         <target>Zobrazit žádosti o stažení</target>
         
       </trans-unit>
+      <trans-unit id="_warning.Text">
+        <source>Warning</source>
+        <target>Varování</target>
+        
+      </trans-unit>
       <trans-unit id="_weeksAgo.Text">
         <source>{0} {1:week|weeks} ago</source>
         <target>Před {0} {1:týdnem|týdny} ago</target>
@@ -11248,6 +11197,11 @@ Yes, I allow telemetry!</source>
       <trans-unit id="_yearsAgo.Text">
         <source>{0} {1:year|years} ago</source>
         <target>Před {0} {1:rokem|lety}</target>
+        
+      </trans-unit>
+      <trans-unit id="_yes.Text">
+        <source>Yes</source>
+        <target>Ano</target>
         
       </trans-unit>
     </body>
@@ -11326,11 +11280,6 @@ Yes, I allow telemetry!</source>
       <trans-unit id="_strCouldNotLoadDiscussion.Text">
         <source>Could not load discussion!</source>
         <target>Nemohu načíst diskusi!</target>
-        
-      </trans-unit>
-      <trans-unit id="_strError.Text">
-        <source>Error</source>
-        <target>Chyba</target>
         
       </trans-unit>
       <trans-unit id="_strFailedToClosePullRequest.Text">

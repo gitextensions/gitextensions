@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="4.0.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AdvancedSettingsPage" source-language="en" target-language="de">
     <body>
       <trans-unit id="$this.Text">
@@ -196,6 +196,10 @@ Besuchen Sie http://de.gravatar.com/site/implement/images#default-image für meh
       <trans-unit id="chkShowRelativeDate.Text">
         <source>Show relative date instead of full date</source>
         <target>Relatives Datum statt absolutes Datum anzeigen</target>
+        
+      </trans-unit>
+      <trans-unit id="chkShowRepoCurrentBranch.Text">
+        <source>Show current branch names in the dashboard and the recent repositories dropdown menu</source>
         
       </trans-unit>
       <trans-unit id="chkSortByAuthorDate.Text">
@@ -838,9 +842,8 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
   </file>
   <file datatype="plaintext" original="ColorsSettingsPage" source-language="en" target-language="de">
     <body>
-      <trans-unit id="$this.Text">
-        <source>Colors</source>
-        <target>Farben</target>
+      <trans-unit id="DefaultThemeName.Text">
+        <source>default</source>
         
       </trans-unit>
       <trans-unit id="DrawNonRelativesGray.Text">
@@ -853,19 +856,13 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
         <target>Texte ohne Bezug grau zeichnen</target>
         
       </trans-unit>
+      <trans-unit id="FormatUserDefinedThemeName.Text">
+        <source>{0}, user-defined</source>
+        
+      </trans-unit>
       <trans-unit id="MulticolorBranches.Text">
         <source>Multicolor branches</source>
         <target>Mehrfarbige Branches</target>
-        
-      </trans-unit>
-      <trans-unit id="btnResetTheme.Text">
-        <source>Reset</source>
-        <target>Zurücksetzen</target>
-        
-      </trans-unit>
-      <trans-unit id="btnTheme.Text">
-        <source>Edit...</source>
-        <target>Bearbeiten...</target>
         
       </trans-unit>
       <trans-unit id="chkDrawAlternateBackColor.Text">
@@ -882,73 +879,13 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
         <source>Use system-defined visual style (looks bad with dark colors)</source>
         
       </trans-unit>
-      <trans-unit id="gbDiffView.Text">
-        <source>Difference view</source>
-        <target>Vergleichsansicht</target>
-        
-      </trans-unit>
       <trans-unit id="gbRevisionGraph.Text">
         <source>Revision graph</source>
         <target>Revisionsgraph</target>
         
       </trans-unit>
       <trans-unit id="gbTheme.Text">
-        <source>Color scheme</source>
-        
-      </trans-unit>
-      <trans-unit id="lblColorBranchLocal.Text">
-        <source>Color branch</source>
-        <target>Farbe für Branches</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorBranchRemote.Text">
-        <source>Color remote branch</source>
-        <target>Farbe für Remote Branches</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorHighlightAllOccurrences.Text">
-        <source>Color highlight all occurences</source>
-        <target>Alle Vorkommnisse farbig hervorheben</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorHighlightAuthored.Text">
-        <source>Color authored revisions</source>
-        <target>Färbe autorisierte Revisionen ein</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorHilghlightLineAdded.Text">
-        <source>Color added line highlighting</source>
-        <target>Farbe für hinzugefügte Zeichen in Zeile</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorHilghlightLineRemoved.Text">
-        <source>Color removed line highlighting</source>
-        <target>Farbe für gelöschte Zeichen in Zeile</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorLabel.Text">
-        <source>Color other label</source>
-        <target>Farbe für andere Beschriftungen</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorLineAdded.Text">
-        <source>Color added line</source>
-        <target>Farbe für hinzugefügte Zeile</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorLineRemoved.Text">
-        <source>Color removed line</source>
-        <target>Farbe für gelöschte Zeile</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorSection.Text">
-        <source>Color section</source>
-        <target>Farbe für Bereich</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorTag.Text">
-        <source>Color tag</source>
-        <target>Farbe für Tags</target>
+        <source>Theme</source>
         
       </trans-unit>
       <trans-unit id="lblRestartNeeded.Text">
@@ -1306,11 +1243,6 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
         <target>Abgeschlossen</target>
         
       </trans-unit>
-      <trans-unit id="_strError.Text">
-        <source>Error</source>
-        <target>Fehler</target>
-        
-      </trans-unit>
       <trans-unit id="_strFailedToCreatePullRequest.Text">
         <source>Failed to create pull request.</source>
         <target>Fehler beim Erzeugen des Pull Requests.</target>
@@ -1405,11 +1337,6 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
         <target>Repository öffnen</target>
         
       </trans-unit>
-      <trans-unit id="_showCurrentBranch.Text">
-        <source>Show current branch</source>
-        <target>Aktuellen Branch anzeigen</target>
-        
-      </trans-unit>
       <trans-unit id="_translate.Text">
         <source>Translate</source>
         <target>Übersetzen</target>
@@ -1476,6 +1403,16 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
       <trans-unit id="$this.Text">
         <source>Diff Viewer</source>
         <target>Diff Anzeigeprogramm</target>
+        
+      </trans-unit>
+      <trans-unit id="_showDiffForAllParents.Text">
+        <source>Show all differences between the selected commits, not limiting to only one difference.
+
+- For a single selected commit, show the difference with its parent commit.
+- For a single selected merge commit, show the difference with all parents.
+- For two selected commits, show the difference between the commits as well as the difference between a common ancestor (BASE) to the last selected commit.
+- For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
+- For more than four selected commits, show the difference as if the first and the last selected commit were selected.</source>
         
       </trans-unit>
       <trans-unit id="chkOmitUninterestingDiff.Text">
@@ -1625,9 +1562,12 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
         <target>Keine Änderungen</target>
         
       </trans-unit>
+      <trans-unit id="_diffWithBase.Text">
+        <source>Diff with BASE a/</source>
+        
+      </trans-unit>
       <trans-unit id="_diffWithParent.Text">
-        <source>Diff with:</source>
-        <target>Diff mit:</target>
+        <source>Diff with a/</source>
         
       </trans-unit>
       <trans-unit id="_openSubmoduleMenuItem.Text">
@@ -1649,9 +1589,8 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
   </file>
   <file datatype="plaintext" original="FileViewer" source-language="en" target-language="de">
     <body>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Fehler</target>
+      <trans-unit id="_cannotViewImage.Text">
+        <source>Cannot view image {0}</source>
         
       </trans-unit>
       <trans-unit id="_largeFileSizeWarning.Text">
@@ -1945,11 +1884,6 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
         <target>Fetch der Repositorys des Benutzers fehlgeschlagen!</target>
         
       </trans-unit>
-      <trans-unit id="_strError.Text">
-        <source>Error</source>
-        <target>Fehler</target>
-        
-      </trans-unit>
       <trans-unit id="_strFailedToFork.Text">
         <source>Failed to fork:</source>
         <target>Forken fehlgeschlagen:</target>
@@ -1963,11 +1897,6 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
       <trans-unit id="_strLoading.Text">
         <source> : LOADING : </source>
         <target> : LADE :</target>
-        
-      </trans-unit>
-      <trans-unit id="_strNo.Text">
-        <source>No</source>
-        <target>Nein</target>
         
       </trans-unit>
       <trans-unit id="_strNoHomepageDefined.Text">
@@ -2011,11 +1940,6 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
         <source>Will clone {0} into {1}.
 You will have push access. {2}</source>
         <target>Klone von {0} nach {1}. Sie werden Push-Rechte besitzen. {2}</target>
-        
-      </trans-unit>
-      <trans-unit id="_strYes.Text">
-        <source>Yes</source>
-        <target>Ja</target>
         
       </trans-unit>
       <trans-unit id="browseForCloneToDirbtn.Text">
@@ -2409,11 +2333,6 @@ You will have push access. {2}</source>
         <target>Es muss eine Ziel Revision ausgewählt werden.</target>
         
       </trans-unit>
-      <trans-unit id="_noRevisionSelectedCaption.Text">
-        <source>Error</source>
-        <target>Fehler</target>
-        
-      </trans-unit>
       <trans-unit id="_saveFileDialogCaption.Text">
         <source>Save archive as</source>
         <target>Archiv speichern als</target>
@@ -2669,11 +2588,6 @@ mit erster zu vergleichen:</target>
         <target>Das ausgewählte ungültige Repository entfernen.</target>
         
       </trans-unit>
-      <trans-unit id="_errorCaption.Text">
-        <source>Error</source>
-        <target>Fehler</target>
-        
-      </trans-unit>
       <trans-unit id="_forkCloneRepositoryToolStripMenuItem.Text">
         <source>Fork/Clone repository...</source>
         <target>Repository forken/klonen...</target>
@@ -2682,11 +2596,6 @@ mit erster zu vergleichen:</target>
       <trans-unit id="_goToSuperProject.Text">
         <source>Go to superproject</source>
         <target>Gehe zum Oberprojekt</target>
-        
-      </trans-unit>
-      <trans-unit id="_hintUnresolvedMergeConflicts.Text">
-        <source>There are unresolved merge conflicts. Res&amp;olve...</source>
-        <target>Es gibt ungelöste Mergekonflikte. Lö&amp;sen...</target>
         
       </trans-unit>
       <trans-unit id="_indexLockCantDelete.Text">
@@ -2791,21 +2700,6 @@ Wollen Sie weiter machen?</target>
       <trans-unit id="_viewPullRequestsToolStripMenuItem.Text">
         <source>View pull requests...</source>
         <target>Pull Requests anzeigen...</target>
-        
-      </trans-unit>
-      <trans-unit id="_warningMiddleOfBisect.Text">
-        <source>You are in the middle of a bisect. C&amp;ontinue...</source>
-        <target>Sie sind mitten in einem Bisect. &amp;Weitermachen...</target>
-        
-      </trans-unit>
-      <trans-unit id="_warningMiddleOfPatchApply.Text">
-        <source>You are in the middle of a patch apply. C&amp;ontinue...</source>
-        <target>Sie sind mitten in der Anwendung eines Patches. &amp;Weitermachen...</target>
-        
-      </trans-unit>
-      <trans-unit id="_warningMiddleOfRebase.Text">
-        <source>You are in the middle of a rebase. C&amp;ontinue...</source>
-        <target>Sie sind mitten in einem Rebase. &amp;Weitermachen...</target>
         
       </trans-unit>
       <trans-unit id="aboutToolStripMenuItem.Text">
@@ -3228,11 +3122,6 @@ Wollen Sie weiter machen?</target>
         <target>Committen</target>
         
       </trans-unit>
-      <trans-unit id="toolStripButtonLevelUp.Text">
-        <source>Go to superproject</source>
-        <target>Gehe zum Oberprojekt</target>
-        
-      </trans-unit>
       <trans-unit id="toolStripButtonPull.Text">
         <source>Pull</source>
         <target>Pull</target>
@@ -3584,11 +3473,6 @@ Sind Sie sicher?</target>
       <trans-unit id="_noneParentSelectedText.Text">
         <source>None parent is selected!</source>
         <target>Kein übergeordnetes Element ausgewählt!</target>
-        
-      </trans-unit>
-      <trans-unit id="_noneParentSelectedTextCaption.Text">
-        <source>Error</source>
-        <target>Fehler</target>
         
       </trans-unit>
       <trans-unit id="checkAddReference.Text">
@@ -4119,11 +4003,6 @@ Wollen Sie trotzdem fortfahren?</target>
       <trans-unit id="_enterCommitMessageHint.Text">
         <source>Enter commit message</source>
         <target>Commit-Nachricht eingeben</target>
-        
-      </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Fehler</target>
         
       </trans-unit>
       <trans-unit id="_formTitle.Text">
@@ -5295,11 +5174,6 @@ Klicken Sie auf die Schaltfläche unten, um mehr Informationen über die Abgabe 
         <target>Speichern der Datei fehlgeschlagen:</target>
         
       </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Fehler</target>
-        
-      </trans-unit>
       <trans-unit id="_saveChanges.Text">
         <source>Do you want to save changes?</source>
         <target>Wollen Sie Ihre Änderungen speichern?</target>
@@ -6088,11 +5962,6 @@ Please choose a directory.</source>
 Ein Repository kann nicht in einer Datei initialisiert werden.</target>
         
       </trans-unit>
-      <trans-unit id="_chooseDirectoryNotFileCaption.Text">
-        <source>Error</source>
-        <target>Fehler</target>
-        
-      </trans-unit>
       <trans-unit id="_initMsgBoxCaption.Text">
         <source>Create new repository</source>
         <target>Neues Repository erzeugen</target>
@@ -6214,6 +6083,10 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</target>
       <trans-unit id="Type.HeaderText">
         <source>Type</source>
         <target>Typ</target>
+        
+      </trans-unit>
+      <trans-unit id="_deleteWorktreeFailedText.Text">
+        <source>Failed to delete a worktree</source>
         
       </trans-unit>
       <trans-unit id="_deleteWorktreeText.Text">
@@ -6479,13 +6352,9 @@ auf den gemeinsamen Vorfahrenbaum angewendet.</target>
         <target>Das ausgewählte Verzeichnis ist kein gültiges Git Repositor.y</target>
         
       </trans-unit>
-      <trans-unit id="_warningOpenFailedCaption.Text">
-        <source>Error</source>
-        <target>Fehler</target>
-        
-      </trans-unit>
       <trans-unit id="folderBrowserButton.Text">
         <source>&amp;Browse...</source>
+        <target>&amp;Durchsuchen...</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -6950,11 +6819,6 @@ Wollen Sie das jetzt gleich erledigen?</target>
         <target>Force mit Lease ist eine sicherere Methode Force Push zu nutzen. Es stellt sicher dass Sie nur Arbeit überschreiben die in Ihrem lokalen Repository sichtbar ist.</target>
         
       </trans-unit>
-      <trans-unit id="_no.Text">
-        <source>No</source>
-        <target>Nein</target>
-        
-      </trans-unit>
       <trans-unit id="_pullActionFetch.Text">
         <source>fetch</source>
         <target>hole</target>
@@ -7023,11 +6887,6 @@ Wollen Sie das jetzt gleich erledigen?</target>
       <trans-unit id="_useForceWithLeaseInstead.Text">
         <source>Force push may overwrite changes since your last fetch. Do you want to use the safer force with lease instead?</source>
         <target>Force push kann Änderungen seit Ihrem letzten Fetch überschreiben. Wollen Sie den etwas sichereren Force mit Lease verwenden?</target>
-        
-      </trans-unit>
-      <trans-unit id="_yes.Text">
-        <source>Yes</source>
-        <target>Ja</target>
         
       </trans-unit>
       <trans-unit id="ckForceWithLease.Text">
@@ -7566,6 +7425,11 @@ Inaktiver Remote ist völlig unsichtbar für git.</target>
         <target>Ein aktiver Remote mit dem Namen &quot;{0}&quot; ist bereits vorhanden.</target>
         
       </trans-unit>
+      <trans-unit id="_errorNoKeyEntered.Text">
+        <source>No SSH key file entered</source>
+        <target>Keine SSH-Schlüsseldatei angegeben</target>
+        
+      </trans-unit>
       <trans-unit id="_gbMgtPanelHeaderEdit.Text">
         <source>Edit Remote Details</source>
         <target>Remote Details bearbeiten</target>
@@ -7638,11 +7502,6 @@ Wert wurde mit leerem Wert ersetzt.</target>
       <trans-unit id="_sshKeyOpenFilter.Text">
         <source>Private key (*.ppk)</source>
         <target>Private Schlüsseldatei (*.ppk)</target>
-        
-      </trans-unit>
-      <trans-unit id="_warningNoKeyEntered.Text">
-        <source>No SSH key file entered</source>
-        <target>Keine SSH-Schlüsseldatei angegeben</target>
         
       </trans-unit>
       <trans-unit id="checkBoxSepPushUrl.Text">
@@ -7988,11 +7847,6 @@ Ist der Merge-Konflikt gelöst?</target>
         <target>Konflikt behoben?</target>
         
       </trans-unit>
-      <trans-unit id="_binaryFileWarningCaption.Text">
-        <source>Warning</source>
-        <target>Warnung</target>
-        
-      </trans-unit>
       <trans-unit id="_button1Text.Text">
         <source>Open in</source>
         <target>Öffnen in</target>
@@ -8061,11 +7915,6 @@ Ist der Merge-Konflikt gelöst?</target>
       <trans-unit id="_deleted.Text">
         <source>deleted</source>
         <target>gelöscht</target>
-        
-      </trans-unit>
-      <trans-unit id="_errorCaption.Text">
-        <source>Error</source>
-        <target>Fehler</target>
         
       </trans-unit>
       <trans-unit id="_errorStartingMergetool.Text">
@@ -8331,11 +8180,6 @@ Wollen Sie dieses Skript verwenden?</target>
       <trans-unit id="_noneParentSelectedText.Text">
         <source>None parent is selected!</source>
         <target>Kein übergeordnetes Element ausgewählt!</target>
-        
-      </trans-unit>
-      <trans-unit id="_noneParentSelectedTextCaption.Text">
-        <source>Error</source>
-        <target>Fehler</target>
         
       </trans-unit>
       <trans-unit id="columnHeader1.Text">
@@ -8759,6 +8603,15 @@ Wollen Sie den Fingerprint dieses Hosts registrieren und den Prozess neu starten
       <trans-unit id="_downloadingUpdate.Text">
         <source>Downloading update...</source>
         <target>Update downloaden...</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorHeading.Text">
+        <source>Download Failed</source>
+        <target>Download fehlgeschlagen</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorMessage.Text">
+        <source>Failed to download an update.</source>
         
       </trans-unit>
       <trans-unit id="_newVersionAvailable.Text">
@@ -9670,6 +9523,59 @@ zeigen</target>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="InteractiveGitActionControl" source-language="en" target-language="de">
+    <body>
+      <trans-unit id="AbortButton.Text">
+        <source>Abort</source>
+        <target>Abbrechen</target>
+        
+      </trans-unit>
+      <trans-unit id="ContinueButton.Text">
+        <source>Continue</source>
+        
+      </trans-unit>
+      <trans-unit id="MoreButton.Text">
+        <source>M&amp;ore...</source>
+        
+      </trans-unit>
+      <trans-unit id="ResolveButton.Text">
+        <source>Resolve...</source>
+        
+      </trans-unit>
+      <trans-unit id="_bisect.Text">
+        <source>Bisect</source>
+        <target>Bisect</target>
+        
+      </trans-unit>
+      <trans-unit id="_conflictsMessage.Text">
+        <source>There are unresolved merge conflicts.</source>
+        
+      </trans-unit>
+      <trans-unit id="_merge.Text">
+        <source>Merge</source>
+        <target>Mergen</target>
+        
+      </trans-unit>
+      <trans-unit id="_patch.Text">
+        <source>Patch</source>
+        <target>Patchen</target>
+        
+      </trans-unit>
+      <trans-unit id="_progressMessage.Text">
+        <source>{0} is currently in progress.</source>
+        
+      </trans-unit>
+      <trans-unit id="_progressWithConflictsMessage.Text">
+        <source>{0} is currently in progress with merge conflicts.</source>
+        
+      </trans-unit>
+      <trans-unit id="_rebase.Text">
+        <source>Rebase</source>
+        <target>Rebase</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="LocalBranchMenuItemsStrings" source-language="en" target-language="de">
     <body>
       <trans-unit id="DeleteTooltip.Text">
@@ -9723,11 +9629,6 @@ zeigen</target>
       <trans-unit id="_confirmDeleteRemoteBranch.Text">
         <source>Do you want to delete the branch {0} from {1}?</source>
         <target>Wollen Sie den Branch {0} von {1} löschen?</target>
-        
-      </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Fehler</target>
         
       </trans-unit>
       <trans-unit id="_middleOfPatchApply.Text">
@@ -10205,8 +10106,7 @@ Um alle Branches anzuzeigen, Rechtsklick in der Revisionsliste, Auswahl 'Anzeige
         
       </trans-unit>
       <trans-unit id="_firstRevision.Text">
-        <source>First</source>
-        <target>Erster</target>
+        <source>First: a/</source>
         
       </trans-unit>
       <trans-unit id="_multipleDescription.Text">
@@ -10225,8 +10125,7 @@ Um alle Branches anzuzeigen, Rechtsklick in der Revisionsliste, Auswahl 'Anzeige
         
       </trans-unit>
       <trans-unit id="_selectedRevision.Text">
-        <source>Selected</source>
-        <target>Ausgewählter</target>
+        <source>Selected: b/</source>
         
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
@@ -10397,11 +10296,6 @@ Sind Sie sich sicher mit der Annahme dass diese Datei sich nicht verändern wird
       <trans-unit id="_assumeUnchangedSuccess.Text">
         <source>File successfully assumed unchanged.</source>
         <target>Annahme dass sich diese Datei nicht ändert war erfolgreich.</target>
-        
-      </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Fehler</target>
         
       </trans-unit>
       <trans-unit id="_nodeNotFoundNextAvailableParentSelected.Text">
@@ -10847,11 +10741,6 @@ Die Änderungen sehen Sie im Commit Bereich.</target>
         <target>Filter</target>
         
       </trans-unit>
-      <trans-unit id="_strError.Text">
-        <source>Error</source>
-        <target>Fehler</target>
-        
-      </trans-unit>
       <trans-unit id="_strLoading.Text">
         <source>Loading</source>
         <target>Laden</target>
@@ -10980,6 +10869,10 @@ Die Änderungen sehen Sie im Commit Bereich.</target>
       <trans-unit id="openBuildReportToolStripMenuItem.Text">
         <source>View build report in a browser</source>
         <target>Build Bericht in einem Browser öffnen</target>
+        
+      </trans-unit>
+      <trans-unit id="openCommitsWithDiffToolMenuItem.Text">
+        <source>Open selected commits with &amp;difftool</source>
         
       </trans-unit>
       <trans-unit id="openPullRequestPageStripMenuItem.Text">
@@ -11626,6 +11519,14 @@ Bei der Verwendung von OpenSSH werden Kommandozeilendialoge angezeigt!
         <target>{0:Autor|Autoren}</target>
         
       </trans-unit>
+      <trans-unit id="_authored.Text">
+        <source>authored</source>
+        
+      </trans-unit>
+      <trans-unit id="_authoredAndCommitted.Text">
+        <source>authored and committed</source>
+        
+      </trans-unit>
       <trans-unit id="_bodyNotLoaded.Text">
         <source>
 
@@ -11659,6 +11560,10 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
       <trans-unit id="_commitHashText.Text">
         <source>{0:Commit hash|Commits hashes}</source>
         <target>{0:Commit Hash|Commits Hashes}</target>
+        
+      </trans-unit>
+      <trans-unit id="_committed.Text">
+        <source>committed</source>
         
       </trans-unit>
       <trans-unit id="_committerText.Text">
@@ -11701,6 +11606,19 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
         <target>vor {0} {1:Tag|Tagen}</target>
         
       </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>Fehler</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorCaptionFailedDeleteFile.Text">
+        <source>Failed to delete file</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorCaptionFailedDeleteFolder.Text">
+        <source>Failed to delete directory</source>
+        
+      </trans-unit>
       <trans-unit id="_findGitExecutable.Text">
         <source>Find git...</source>
         <target>Git finden...</target>
@@ -11741,6 +11659,14 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
         <target>Local</target>
         
       </trans-unit>
+      <trans-unit id="_markBisectAsBad.Text">
+        <source>Marked as bad in bisect</source>
+        
+      </trans-unit>
+      <trans-unit id="_markBisectAsGood.Text">
+        <source>Marked as good in bisect</source>
+        
+      </trans-unit>
       <trans-unit id="_messageText.Text">
         <source>{0:Message|Messages}</source>
         <target>{0:Nachricht|Nachrichten}</target>
@@ -11754,6 +11680,11 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
       <trans-unit id="_monthsAgo.Text">
         <source>{0} {1:month|months} ago</source>
         <target>vor {0} {1:Monat|Monaten}</target>
+        
+      </trans-unit>
+      <trans-unit id="_no.Text">
+        <source>No</source>
+        <target>Nein</target>
         
       </trans-unit>
       <trans-unit id="_noResultsFound.Text">
@@ -11841,6 +11772,11 @@ Ja - ich erlaube Telemetrie!</target>
         <target>Pull Requests ansehen</target>
         
       </trans-unit>
+      <trans-unit id="_warning.Text">
+        <source>Warning</source>
+        <target>Warnung</target>
+        
+      </trans-unit>
       <trans-unit id="_weeksAgo.Text">
         <source>{0} {1:week|weeks} ago</source>
         <target>vor {0} {1:Woche|Wochen}</target>
@@ -11854,6 +11790,11 @@ Ja - ich erlaube Telemetrie!</target>
       <trans-unit id="_yearsAgo.Text">
         <source>{0} {1:year|years} ago</source>
         <target>vor {0} {1:Jahr|Jahren}</target>
+        
+      </trans-unit>
+      <trans-unit id="_yes.Text">
+        <source>Yes</source>
+        <target>Ja</target>
         
       </trans-unit>
     </body>
@@ -11937,11 +11878,6 @@ Ja - ich erlaube Telemetrie!</target>
       <trans-unit id="_strCouldNotLoadDiscussion.Text">
         <source>Could not load discussion!</source>
         <target>Laden der Diskussion fehlgeschlagen!</target>
-        
-      </trans-unit>
-      <trans-unit id="_strError.Text">
-        <source>Error</source>
-        <target>Fehler</target>
         
       </trans-unit>
       <trans-unit id="_strFailedToClosePullRequest.Text">

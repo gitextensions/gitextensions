@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="4.0.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="zh-Hans">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -1256,9 +1256,8 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <target>GitHub</target>
         
       </trans-unit>
-      <trans-unit id="GitHubApiEndpoint.Caption">
-        <source>GitHub (Enterprise) API endpoint</source>
-        <target>GitHub（企业版）API 终端</target>
+      <trans-unit id="GitHubHost.Caption">
+        <source>GitHub (Enterprise) hostname</source>
         
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
@@ -1269,6 +1268,10 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
         <target>你已经有一个OAuth令牌.获取一个新的,在插件&gt;设置中删除老的令牌.</target>
+        
+      </trans-unit>
+      <trans-unit id="_viewInWebSite.Text">
+        <source>View in {0}</source>
         
       </trans-unit>
     </body>

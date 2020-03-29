@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="4.0.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AdvancedSettingsPage" source-language="en" target-language="nl">
     <body>
       <trans-unit id="$this.Text">
@@ -188,6 +188,10 @@ See http://en.gravatar.com/site/implement/images#default-image for more details.
       <trans-unit id="chkShowRelativeDate.Text">
         <source>Show relative date instead of full date</source>
         <target>Toon relatieve datum i.p.v. volledige datum</target>
+        
+      </trans-unit>
+      <trans-unit id="chkShowRepoCurrentBranch.Text">
+        <source>Show current branch names in the dashboard and the recent repositories dropdown menu</source>
         
       </trans-unit>
       <trans-unit id="chkSortByAuthorDate.Text">
@@ -793,9 +797,8 @@ Zorg dat git (Git voor Windows of cygwin) is geïnstalleerd of stel het pad hand
   </file>
   <file datatype="plaintext" original="ColorsSettingsPage" source-language="en" target-language="nl">
     <body>
-      <trans-unit id="$this.Text">
-        <source>Colors</source>
-        <target>Kleuren</target>
+      <trans-unit id="DefaultThemeName.Text">
+        <source>default</source>
         
       </trans-unit>
       <trans-unit id="DrawNonRelativesGray.Text">
@@ -808,18 +811,13 @@ Zorg dat git (Git voor Windows of cygwin) is geïnstalleerd of stel het pad hand
         <target>Teken niet gerelateerde teksten grijs</target>
         
       </trans-unit>
+      <trans-unit id="FormatUserDefinedThemeName.Text">
+        <source>{0}, user-defined</source>
+        
+      </trans-unit>
       <trans-unit id="MulticolorBranches.Text">
         <source>Multicolor branches</source>
         <target>Gekleurde vertakkingen</target>
-        
-      </trans-unit>
-      <trans-unit id="btnResetTheme.Text">
-        <source>Reset</source>
-        <target>Resetten</target>
-        
-      </trans-unit>
-      <trans-unit id="btnTheme.Text">
-        <source>Edit...</source>
         
       </trans-unit>
       <trans-unit id="chkDrawAlternateBackColor.Text">
@@ -836,72 +834,13 @@ Zorg dat git (Git voor Windows of cygwin) is geïnstalleerd of stel het pad hand
         <source>Use system-defined visual style (looks bad with dark colors)</source>
         
       </trans-unit>
-      <trans-unit id="gbDiffView.Text">
-        <source>Difference view</source>
-        <target>Verschillen weergave</target>
-        
-      </trans-unit>
       <trans-unit id="gbRevisionGraph.Text">
         <source>Revision graph</source>
         <target>Revisie grafiek</target>
         
       </trans-unit>
       <trans-unit id="gbTheme.Text">
-        <source>Color scheme</source>
-        
-      </trans-unit>
-      <trans-unit id="lblColorBranchLocal.Text">
-        <source>Color branch</source>
-        <target>Kleur vertakking</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorBranchRemote.Text">
-        <source>Color remote branch</source>
-        <target>Kleur externe vertakking</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorHighlightAllOccurrences.Text">
-        <source>Color highlight all occurences</source>
-        
-      </trans-unit>
-      <trans-unit id="lblColorHighlightAuthored.Text">
-        <source>Color authored revisions</source>
-        <target>Geef revisies met auteur een kleur</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorHilghlightLineAdded.Text">
-        <source>Color added line highlighting</source>
-        <target>Kleur toegevoegde regel detail</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorHilghlightLineRemoved.Text">
-        <source>Color removed line highlighting</source>
-        <target>Kleur verwijderde regel detail</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorLabel.Text">
-        <source>Color other label</source>
-        <target>Kleur overige labels</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorLineAdded.Text">
-        <source>Color added line</source>
-        <target>Kleur toegevoegde regel</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorLineRemoved.Text">
-        <source>Color removed line</source>
-        <target>Kleur verwijderde regel</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorSection.Text">
-        <source>Color section</source>
-        <target>Kleur sectie</target>
-        
-      </trans-unit>
-      <trans-unit id="lblColorTag.Text">
-        <source>Color tag</source>
-        <target>Kleur label</target>
+        <source>Theme</source>
         
       </trans-unit>
       <trans-unit id="lblRestartNeeded.Text">
@@ -1250,11 +1189,6 @@ Zorg dat git (Git voor Windows of cygwin) is geïnstalleerd of stel het pad hand
         <target>Klaar</target>
         
       </trans-unit>
-      <trans-unit id="_strError.Text">
-        <source>Error</source>
-        <target>Fout</target>
-        
-      </trans-unit>
       <trans-unit id="_strFailedToCreatePullRequest.Text">
         <source>Failed to create pull request.</source>
         <target>Fout tijdens aanmaken binnenhaal verzoek.</target>
@@ -1349,11 +1283,6 @@ Zorg dat git (Git voor Windows of cygwin) is geïnstalleerd of stel het pad hand
         <target>Open opslagplaats</target>
         
       </trans-unit>
-      <trans-unit id="_showCurrentBranch.Text">
-        <source>Show current branch</source>
-        <target>Toon huidige vertakking</target>
-        
-      </trans-unit>
       <trans-unit id="_translate.Text">
         <source>Translate</source>
         <target>Vertaal</target>
@@ -1420,6 +1349,16 @@ Zorg dat git (Git voor Windows of cygwin) is geïnstalleerd of stel het pad hand
       <trans-unit id="$this.Text">
         <source>Diff Viewer</source>
         <target>Diff Viewer</target>
+        
+      </trans-unit>
+      <trans-unit id="_showDiffForAllParents.Text">
+        <source>Show all differences between the selected commits, not limiting to only one difference.
+
+- For a single selected commit, show the difference with its parent commit.
+- For a single selected merge commit, show the difference with all parents.
+- For two selected commits, show the difference between the commits as well as the difference between a common ancestor (BASE) to the last selected commit.
+- For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
+- For more than four selected commits, show the difference as if the first and the last selected commit were selected.</source>
         
       </trans-unit>
       <trans-unit id="chkOmitUninterestingDiff.Text">
@@ -1565,9 +1504,12 @@ Zorg dat git (Git voor Windows of cygwin) is geïnstalleerd of stel het pad hand
         <target>Geen wijzigingen</target>
         
       </trans-unit>
+      <trans-unit id="_diffWithBase.Text">
+        <source>Diff with BASE a/</source>
+        
+      </trans-unit>
       <trans-unit id="_diffWithParent.Text">
-        <source>Diff with:</source>
-        <target>Diff met:</target>
+        <source>Diff with a/</source>
         
       </trans-unit>
       <trans-unit id="_openSubmoduleMenuItem.Text">
@@ -1588,9 +1530,8 @@ Zorg dat git (Git voor Windows of cygwin) is geïnstalleerd of stel het pad hand
   </file>
   <file datatype="plaintext" original="FileViewer" source-language="en" target-language="nl">
     <body>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Fout</target>
+      <trans-unit id="_cannotViewImage.Text">
+        <source>Cannot view image {0}</source>
         
       </trans-unit>
       <trans-unit id="_largeFileSizeWarning.Text">
@@ -1879,11 +1820,6 @@ Zorg dat git (Git voor Windows of cygwin) is geïnstalleerd of stel het pad hand
         <target>Kan de opslagplaatsen van de gebruiker niet ophalen!</target>
         
       </trans-unit>
-      <trans-unit id="_strError.Text">
-        <source>Error</source>
-        <target>Fout</target>
-        
-      </trans-unit>
       <trans-unit id="_strFailedToFork.Text">
         <source>Failed to fork:</source>
         <target>Fork mislukt:</target>
@@ -1897,11 +1833,6 @@ Zorg dat git (Git voor Windows of cygwin) is geïnstalleerd of stel het pad hand
       <trans-unit id="_strLoading.Text">
         <source> : LOADING : </source>
         <target> : LADEN : </target>
-        
-      </trans-unit>
-      <trans-unit id="_strNo.Text">
-        <source>No</source>
-        <target>Nee</target>
         
       </trans-unit>
       <trans-unit id="_strNoHomepageDefined.Text">
@@ -1948,11 +1879,6 @@ You will have push access. {2}</source>
         <target>{0} zal gekloont worden naar {1}.
 U heeft rechten om commits te verzenden. {2}
 </target>
-        
-      </trans-unit>
-      <trans-unit id="_strYes.Text">
-        <source>Yes</source>
-        <target>Ja</target>
         
       </trans-unit>
       <trans-unit id="browseForCloneToDirbtn.Text">
@@ -2339,11 +2265,6 @@ U heeft rechten om commits te verzenden. {2}
         <target>U moet een revisie selecteren om te archiveren.</target>
         
       </trans-unit>
-      <trans-unit id="_noRevisionSelectedCaption.Text">
-        <source>Error</source>
-        <target>Fout</target>
-        
-      </trans-unit>
       <trans-unit id="_saveFileDialogCaption.Text">
         <source>Save archive as</source>
         <target>Sla archief op als</target>
@@ -2596,11 +2517,6 @@ compare with first:</source>
         <target>Verwijder de geselecteerde ongeldige repositorie</target>
         
       </trans-unit>
-      <trans-unit id="_errorCaption.Text">
-        <source>Error</source>
-        <target>Fout</target>
-        
-      </trans-unit>
       <trans-unit id="_forkCloneRepositoryToolStripMenuItem.Text">
         <source>Fork/Clone repository...</source>
         <target>Kloon/fork opslagplaats...</target>
@@ -2609,10 +2525,6 @@ compare with first:</source>
       <trans-unit id="_goToSuperProject.Text">
         <source>Go to superproject</source>
         <target>Ga naar superproject</target>
-        
-      </trans-unit>
-      <trans-unit id="_hintUnresolvedMergeConflicts.Text">
-        <source>There are unresolved merge conflicts. Res&amp;olve...</source>
         
       </trans-unit>
       <trans-unit id="_indexLockCantDelete.Text">
@@ -2714,18 +2626,6 @@ Do you want to continue?</source>
       <trans-unit id="_viewPullRequestsToolStripMenuItem.Text">
         <source>View pull requests...</source>
         <target>Bekijk binnenhaal verzoeken</target>
-        
-      </trans-unit>
-      <trans-unit id="_warningMiddleOfBisect.Text">
-        <source>You are in the middle of a bisect. C&amp;ontinue...</source>
-        
-      </trans-unit>
-      <trans-unit id="_warningMiddleOfPatchApply.Text">
-        <source>You are in the middle of a patch apply. C&amp;ontinue...</source>
-        
-      </trans-unit>
-      <trans-unit id="_warningMiddleOfRebase.Text">
-        <source>You are in the middle of a rebase. C&amp;ontinue...</source>
         
       </trans-unit>
       <trans-unit id="aboutToolStripMenuItem.Text">
@@ -3147,11 +3047,6 @@ Do you want to continue?</source>
         <target>Commit</target>
         
       </trans-unit>
-      <trans-unit id="toolStripButtonLevelUp.Text">
-        <source>Go to superproject</source>
-        <target>Ga naar superproject</target>
-        
-      </trans-unit>
       <trans-unit id="toolStripButtonPull.Text">
         <source>Pull</source>
         <target>Ophalen</target>
@@ -3495,11 +3390,6 @@ Are you sure?</source>
       <trans-unit id="_noneParentSelectedText.Text">
         <source>None parent is selected!</source>
         <target>Geen ouder geselecteerd!</target>
-        
-      </trans-unit>
-      <trans-unit id="_noneParentSelectedTextCaption.Text">
-        <source>Error</source>
-        <target>Fout</target>
         
       </trans-unit>
       <trans-unit id="checkAddReference.Text">
@@ -4013,11 +3903,6 @@ Weet u zeker dat u wilt doorgaan?</target>
       <trans-unit id="_enterCommitMessageHint.Text">
         <source>Enter commit message</source>
         <target>Voer commit melding in</target>
-        
-      </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Fout</target>
         
       </trans-unit>
       <trans-unit id="_formTitle.Text">
@@ -5166,11 +5051,6 @@ Click on the button below to get more information about making a donation.</sour
         <target>Het bestand kan niet worden opgeslagen:</target>
         
       </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Fout</target>
-        
-      </trans-unit>
       <trans-unit id="_saveChanges.Text">
         <source>Do you want to save changes?</source>
         <target>Wilt u de wijzigingen opslaan?</target>
@@ -5950,11 +5830,6 @@ Please choose a directory.</source>
 Kies een directory.</target>
         
       </trans-unit>
-      <trans-unit id="_chooseDirectoryNotFileCaption.Text">
-        <source>Error</source>
-        <target>Fout</target>
-        
-      </trans-unit>
       <trans-unit id="_initMsgBoxCaption.Text">
         <source>Create new repository</source>
         <target>Maak een nieuwe opslagplaats</target>
@@ -6077,6 +5952,10 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
       <trans-unit id="Type.HeaderText">
         <source>Type</source>
         <target>Type</target>
+        
+      </trans-unit>
+      <trans-unit id="_deleteWorktreeFailedText.Text">
+        <source>Failed to delete a worktree</source>
         
       </trans-unit>
       <trans-unit id="_deleteWorktreeText.Text">
@@ -6334,11 +6213,6 @@ De aanpassingen worden ook in gemeenschappelijke oorspronkelijke vertakking uitg
       </trans-unit>
       <trans-unit id="_warningOpenFailed.Text">
         <source>The selected directory is not a valid git repository.</source>
-        
-      </trans-unit>
-      <trans-unit id="_warningOpenFailedCaption.Text">
-        <source>Error</source>
-        <target>Fout</target>
         
       </trans-unit>
       <trans-unit id="folderBrowserButton.Text">
@@ -6806,11 +6680,6 @@ Wilt u dat nu doen?</target>
         <target>&quot;Forceer met lease&quot; is een veiligere manier om te pushen. Het zorgt ervoor dat je alleen werk kunt overschrijven wat je in je lokale repository ziet</target>
         
       </trans-unit>
-      <trans-unit id="_no.Text">
-        <source>No</source>
-        <target>Nee</target>
-        
-      </trans-unit>
       <trans-unit id="_pullActionFetch.Text">
         <source>fetch</source>
         <target>fetch</target>
@@ -6878,11 +6747,6 @@ Wilt u dat nu doen?</target>
       <trans-unit id="_useForceWithLeaseInstead.Text">
         <source>Force push may overwrite changes since your last fetch. Do you want to use the safer force with lease instead?</source>
         <target>Forceer push kan de wijzigingen overschrijven sinds de laatste fetch. Wilt u het veiligere &quot;forceer met lease&quot; gebruiken?</target>
-        
-      </trans-unit>
-      <trans-unit id="_yes.Text">
-        <source>Yes</source>
-        <target>Ja</target>
         
       </trans-unit>
       <trans-unit id="ckForceWithLease.Text">
@@ -7418,6 +7282,11 @@ De inactieve remote is onzichtbaar voor git.</target>
         <source>An active remote named &quot;{0}&quot; already exists.</source>
         
       </trans-unit>
+      <trans-unit id="_errorNoKeyEntered.Text">
+        <source>No SSH key file entered</source>
+        <target>Geen SSH sleutel bestand opgegeven</target>
+        
+      </trans-unit>
       <trans-unit id="_gbMgtPanelHeaderEdit.Text">
         <source>Edit Remote Details</source>
         <target>Bewerk Details Remote</target>
@@ -7490,11 +7359,6 @@ De waarde is teruggezet naar een lege waarde.</target>
       <trans-unit id="_sshKeyOpenFilter.Text">
         <source>Private key (*.ppk)</source>
         <target>Private key (*.ppk)</target>
-        
-      </trans-unit>
-      <trans-unit id="_warningNoKeyEntered.Text">
-        <source>No SSH key file entered</source>
-        <target>Geen SSH sleutel bestand opgegeven</target>
         
       </trans-unit>
       <trans-unit id="checkBoxSepPushUrl.Text">
@@ -7828,11 +7692,6 @@ Is het merge conflict opgelost?</target>
         <target>Conflict opgelost?</target>
         
       </trans-unit>
-      <trans-unit id="_binaryFileWarningCaption.Text">
-        <source>Warning</source>
-        <target>Waarschuwing</target>
-        
-      </trans-unit>
       <trans-unit id="_button1Text.Text">
         <source>Open in</source>
         <target>Openen in</target>
@@ -7901,11 +7760,6 @@ Is het merge conflict opgelost?</target>
       <trans-unit id="_deleted.Text">
         <source>deleted</source>
         <target>verwijderd</target>
-        
-      </trans-unit>
-      <trans-unit id="_errorCaption.Text">
-        <source>Error</source>
-        <target>Fout</target>
         
       </trans-unit>
       <trans-unit id="_errorStartingMergetool.Text">
@@ -8148,11 +8002,6 @@ Wilt u dit script gebruiken om samen te voegen?</target>
       <trans-unit id="_noneParentSelectedText.Text">
         <source>None parent is selected!</source>
         <target>Geen ouder geselecteerd!</target>
-        
-      </trans-unit>
-      <trans-unit id="_noneParentSelectedTextCaption.Text">
-        <source>Error</source>
-        <target>Fout</target>
         
       </trans-unit>
       <trans-unit id="columnHeader1.Text">
@@ -8563,6 +8412,14 @@ Do you want to register the host's fingerprint and restart the process?</source>
       </trans-unit>
       <trans-unit id="_downloadingUpdate.Text">
         <source>Downloading update...</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorHeading.Text">
+        <source>Download Failed</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorMessage.Text">
+        <source>Failed to download an update.</source>
         
       </trans-unit>
       <trans-unit id="_newVersionAvailable.Text">
@@ -9453,6 +9310,59 @@ help</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="InteractiveGitActionControl" source-language="en" target-language="nl">
+    <body>
+      <trans-unit id="AbortButton.Text">
+        <source>Abort</source>
+        <target>Annuleren</target>
+        
+      </trans-unit>
+      <trans-unit id="ContinueButton.Text">
+        <source>Continue</source>
+        
+      </trans-unit>
+      <trans-unit id="MoreButton.Text">
+        <source>M&amp;ore...</source>
+        
+      </trans-unit>
+      <trans-unit id="ResolveButton.Text">
+        <source>Resolve...</source>
+        
+      </trans-unit>
+      <trans-unit id="_bisect.Text">
+        <source>Bisect</source>
+        <target>Verdeel en heers</target>
+        
+      </trans-unit>
+      <trans-unit id="_conflictsMessage.Text">
+        <source>There are unresolved merge conflicts.</source>
+        
+      </trans-unit>
+      <trans-unit id="_merge.Text">
+        <source>Merge</source>
+        <target>Samenvoegen</target>
+        
+      </trans-unit>
+      <trans-unit id="_patch.Text">
+        <source>Patch</source>
+        <target>Patch</target>
+        
+      </trans-unit>
+      <trans-unit id="_progressMessage.Text">
+        <source>{0} is currently in progress.</source>
+        
+      </trans-unit>
+      <trans-unit id="_progressWithConflictsMessage.Text">
+        <source>{0} is currently in progress with merge conflicts.</source>
+        
+      </trans-unit>
+      <trans-unit id="_rebase.Text">
+        <source>Rebase</source>
+        <target>Rebase</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="LocalBranchMenuItemsStrings" source-language="en" target-language="nl">
     <body>
       <trans-unit id="DeleteTooltip.Text">
@@ -9505,11 +9415,6 @@ help</source>
       <trans-unit id="_confirmDeleteRemoteBranch.Text">
         <source>Do you want to delete the branch {0} from {1}?</source>
         <target>Wilt u de branch {0} verwijderen van {1}?</target>
-        
-      </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Fout</target>
         
       </trans-unit>
       <trans-unit id="_middleOfPatchApply.Text">
@@ -9950,8 +9855,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
         
       </trans-unit>
       <trans-unit id="_firstRevision.Text">
-        <source>First</source>
-        <target>Eerste</target>
+        <source>First: a/</source>
         
       </trans-unit>
       <trans-unit id="_multipleDescription.Text">
@@ -9969,8 +9873,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
         
       </trans-unit>
       <trans-unit id="_selectedRevision.Text">
-        <source>Selected</source>
-        <target>Geselecteerde</target>
+        <source>Selected: b/</source>
         
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
@@ -10135,11 +10038,6 @@ Weet u zeker dat verondersteld moet worden dat dit bestand niet meer zal wijzige
       <trans-unit id="_assumeUnchangedSuccess.Text">
         <source>File successfully assumed unchanged.</source>
         <target>Verondersteld dat bestand niet meer zal wijzigen</target>
-        
-      </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Fout</target>
         
       </trans-unit>
       <trans-unit id="_nodeNotFoundNextAvailableParentSelected.Text">
@@ -10571,11 +10469,6 @@ Zie de wijzigingen in het commit form.</target>
         <target>Filter</target>
         
       </trans-unit>
-      <trans-unit id="_strError.Text">
-        <source>Error</source>
-        <target>Fout</target>
-        
-      </trans-unit>
       <trans-unit id="_strLoading.Text">
         <source>Loading</source>
         <target>Bezig</target>
@@ -10698,6 +10591,10 @@ Zie de wijzigingen in het commit form.</target>
       </trans-unit>
       <trans-unit id="openBuildReportToolStripMenuItem.Text">
         <source>View build report in a browser</source>
+        
+      </trans-unit>
+      <trans-unit id="openCommitsWithDiffToolMenuItem.Text">
+        <source>Open selected commits with &amp;difftool</source>
         
       </trans-unit>
       <trans-unit id="openPullRequestPageStripMenuItem.Text">
@@ -11288,6 +11185,14 @@ Als OpenSSH wordt gebruikt worden command line schermen getoond!
         <source>{0:Author|Authors}</source>
         
       </trans-unit>
+      <trans-unit id="_authored.Text">
+        <source>authored</source>
+        
+      </trans-unit>
+      <trans-unit id="_authoredAndCommitted.Text">
+        <source>authored and committed</source>
+        
+      </trans-unit>
       <trans-unit id="_bodyNotLoaded.Text">
         <source>
 
@@ -11315,6 +11220,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_commitHashText.Text">
         <source>{0:Commit hash|Commits hashes}</source>
+        
+      </trans-unit>
+      <trans-unit id="_committed.Text">
+        <source>committed</source>
         
       </trans-unit>
       <trans-unit id="_committerText.Text">
@@ -11356,6 +11265,19 @@ Select this commit to populate the full message.</source>
         <target>{0} {1:dag|dagen} geleden</target>
         
       </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>Fout</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorCaptionFailedDeleteFile.Text">
+        <source>Failed to delete file</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorCaptionFailedDeleteFolder.Text">
+        <source>Failed to delete directory</source>
+        
+      </trans-unit>
       <trans-unit id="_findGitExecutable.Text">
         <source>Find git...</source>
         
@@ -11393,6 +11315,14 @@ Select this commit to populate the full message.</source>
         <target>Lokaal</target>
         
       </trans-unit>
+      <trans-unit id="_markBisectAsBad.Text">
+        <source>Marked as bad in bisect</source>
+        
+      </trans-unit>
+      <trans-unit id="_markBisectAsGood.Text">
+        <source>Marked as good in bisect</source>
+        
+      </trans-unit>
       <trans-unit id="_messageText.Text">
         <source>{0:Message|Messages}</source>
         
@@ -11405,6 +11335,11 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_monthsAgo.Text">
         <source>{0} {1:month|months} ago</source>
         <target>{0} {1:maand|maanden} geleden</target>
+        
+      </trans-unit>
+      <trans-unit id="_no.Text">
+        <source>No</source>
+        <target>Nee</target>
         
       </trans-unit>
       <trans-unit id="_noResultsFound.Text">
@@ -11479,6 +11414,11 @@ Yes, I allow telemetry!</source>
         <source>View pull requests</source>
         
       </trans-unit>
+      <trans-unit id="_warning.Text">
+        <source>Warning</source>
+        <target>Waarschuwing</target>
+        
+      </trans-unit>
       <trans-unit id="_weeksAgo.Text">
         <source>{0} {1:week|weeks} ago</source>
         <target>{0} {1:week|weken} geleden</target>
@@ -11492,6 +11432,11 @@ Yes, I allow telemetry!</source>
       <trans-unit id="_yearsAgo.Text">
         <source>{0} {1:year|years} ago</source>
         <target>{0} jaar geleden</target>
+        
+      </trans-unit>
+      <trans-unit id="_yes.Text">
+        <source>Yes</source>
+        <target>Ja</target>
         
       </trans-unit>
     </body>
@@ -11572,11 +11517,6 @@ Yes, I allow telemetry!</source>
       <trans-unit id="_strCouldNotLoadDiscussion.Text">
         <source>Could not load discussion!</source>
         <target>Kan de discussie niet laden!</target>
-        
-      </trans-unit>
-      <trans-unit id="_strError.Text">
-        <source>Error</source>
-        <target>Fout</target>
         
       </trans-unit>
       <trans-unit id="_strFailedToClosePullRequest.Text">

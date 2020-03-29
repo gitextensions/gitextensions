@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="4.0.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="de">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -1009,6 +1009,7 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
     <body>
       <trans-unit id="_publishTypeDraft.Text">
         <source>Draft</source>
+        <target>Entwurf</target>
         
       </trans-unit>
       <trans-unit id="_publishTypePrivate.Text">
@@ -1072,6 +1073,7 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
       </trans-unit>
       <trans-unit id="_predefinedGerritVersion.Caption">
         <source>Treat Gerrit as having version</source>
+        <target>Behandle Gerrit wie eine Version</target>
         
       </trans-unit>
       <trans-unit id="_publishGerritChange.Text">
@@ -1255,9 +1257,9 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
         <target>GitHub</target>
         
       </trans-unit>
-      <trans-unit id="GitHubApiEndpoint.Caption">
-        <source>GitHub (Enterprise) API endpoint</source>
-        <target>GitHub (Enterprise) API Endpunkt</target>
+      <trans-unit id="GitHubHost.Caption">
+        <source>GitHub (Enterprise) hostname</source>
+        <target>GitHub (Enterprise) Hostname</target>
         
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
@@ -1268,6 +1270,11 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
         <target>Sie haben schon ein OAuth Token. Um ein neues anzufordern, löschen Sie das alte zuerst unter Plugins &gt; Einstellungen.</target>
+        
+      </trans-unit>
+      <trans-unit id="_viewInWebSite.Text">
+        <source>View in {0}</source>
+        <target>Anzeigen in {0}</target>
         
       </trans-unit>
     </body>

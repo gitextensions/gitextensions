@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="4.0.0" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="pt-BR">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -98,10 +98,12 @@
       </trans-unit>
       <trans-unit id="Description.Text">
         <source>Bitbucket Server</source>
+        <target>Servidor Bitbucket</target>
         
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
         <source>Your repository is not hosted in BitBucket Server.</source>
+        <target>Seu repositório não está hospedado no Servidor BitBucket.</target>
         
       </trans-unit>
     </body>
@@ -110,6 +112,7 @@
     <body>
       <trans-unit id="$this.Text">
         <source>Bitbucket Server</source>
+        <target>Servidor Bitbucket</target>
         
       </trans-unit>
       <trans-unit id="_committed.Text">
@@ -151,6 +154,7 @@
       </trans-unit>
       <trans-unit id="groupBoxCreatePullRequest.Text">
         <source>Pull Request Info</source>
+        <target>Info de Pull Request</target>
         
       </trans-unit>
       <trans-unit id="groupBoxInformation.Text">
@@ -160,6 +164,7 @@
       </trans-unit>
       <trans-unit id="groupBoxPullRequestInfo.Text">
         <source>Pull Request Info</source>
+        <target>Info de Pull Request</target>
         
       </trans-unit>
       <trans-unit id="groupBoxSource.Text">
@@ -709,14 +714,17 @@ Escolha os arquivos a remover. &quot;Force push&quot; para substituir os dados n
       </trans-unit>
       <trans-unit id="labelCc.Text">
         <source>CC:</source>
+        <target>CC:</target>
         
       </trans-unit>
       <trans-unit id="labelHashtag.Text">
         <source>Hashtag:</source>
+        <target>Hashtag:</target>
         
       </trans-unit>
       <trans-unit id="labelPublishType.Text">
         <source>Publish Type:</source>
+        <target>Tipo de Publicação:</target>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">
@@ -988,10 +996,12 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_publishTypeReview.Text">
         <source>For Review</source>
+        <target>Para Revisão</target>
         
       </trans-unit>
       <trans-unit id="_publishTypeWip.Text">
         <source>Work-in-Progress</source>
+        <target>Trabalho em progresso</target>
         
       </trans-unit>
     </body>
@@ -1215,8 +1225,8 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <target>GitHub</target>
         
       </trans-unit>
-      <trans-unit id="GitHubApiEndpoint.Caption">
-        <source>GitHub (Enterprise) API endpoint</source>
+      <trans-unit id="GitHubHost.Caption">
+        <source>GitHub (Enterprise) hostname</source>
         
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
@@ -1226,6 +1236,11 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
+        
+      </trans-unit>
+      <trans-unit id="_viewInWebSite.Text">
+        <source>View in {0}</source>
+        <target>Ver em {0}</target>
         
       </trans-unit>
     </body>
@@ -1462,6 +1477,7 @@ Quer redefinir o caminho configurado?</target>
       </trans-unit>
       <trans-unit id="_jqlQuerySettings.Caption">
         <source>JQL Query</source>
+        <target>Consulta JQL</target>
         
       </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
