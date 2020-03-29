@@ -679,6 +679,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
   </file>
   <file datatype="plaintext" original="ColorsSettingsPage" source-language="en">
     <body>
+      <trans-unit id="$this.Text">
+        <source>Colors</source>
+        <target />
+      </trans-unit>
       <trans-unit id="DefaultThemeName.Text">
         <source>default</source>
         <target />
