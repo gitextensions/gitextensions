@@ -7358,6 +7358,18 @@ Check if file is accessible.</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GitRootIntroductionPage" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Git Settings</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Select one of the subnodes to view or edit the Git settings</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GitSettingsGroup" source-language="en">
     <body>
       <trans-unit id="$this.Title">
