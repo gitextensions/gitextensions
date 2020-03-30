@@ -1120,9 +1120,14 @@ namespace GitUI
         {
             if (DoubleClick == null)
             {
+                if (SelectedItem == null)
+                {
+                    return;
+                }
+
                 if (AppSettings.OpenSubmoduleDiffInSeparateWindow && SelectedItem.IsSubmodule)
                 {
-                    ThreadHelper.JoinableTaskFactory.RunAsync(() => OpenSubmoduleAsync());
+                    ThreadHelper.JoinableTaskFactory.RunAsync(OpenSubmoduleAsync);
                 }
                 else
                 {
