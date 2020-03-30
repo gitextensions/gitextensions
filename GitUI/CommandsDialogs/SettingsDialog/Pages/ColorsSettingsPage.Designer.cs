@@ -231,6 +231,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(tlpnlMain);
             this.Name = "ColorsSettingsPage";
+            this.Text = "Colors";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(1020, 628);
             tlpnlMain.ResumeLayout(false);
