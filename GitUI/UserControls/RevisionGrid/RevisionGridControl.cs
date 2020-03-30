@@ -1398,7 +1398,9 @@ namespace GitUI
             var pt = _gridView.PointToClient(Cursor.Position);
             var hti = _gridView.HitTest(pt.X, pt.Y);
 
-            if (_latestSelectedRowIndex == hti.RowIndex && _gridView.Rows[_latestSelectedRowIndex].Selected)
+            if (_latestSelectedRowIndex == hti.RowIndex
+                && _latestSelectedRowIndex < _gridView.Rows.Count
+                && _gridView.Rows[_latestSelectedRowIndex].Selected)
             {
                 return;
             }
