@@ -744,9 +744,9 @@ namespace GitCommandsTests
             Assert.AreEqual(expected, _gitModule.GetStashesCmd(noLocks).ToString());
         }
 
-        [TestCase(@"-c diff.submodule=short -c diff.noprefix=false diff --no-color -M -C --cached extra -- ""new"" ""old""", "new", "old", true, "extra", false)]
-        [TestCase(@"-c diff.submodule=short -c diff.noprefix=false diff --no-color extra -- ""new""", "new", "old", false, "extra", false)]
-        [TestCase(@"--no-optional-locks -c diff.submodule=short -c diff.noprefix=false diff --no-color -M -C --cached extra -- ""new"" ""old""", "new", "old", true, "extra", true)]
+        [TestCase(@"-c diff.submodule=short -c diff.noprefix=false -c diff.ignoreSubmodules=none diff --no-color -M -C --cached extra -- ""new"" ""old""", "new", "old", true, "extra", false)]
+        [TestCase(@"-c diff.submodule=short -c diff.noprefix=false -c diff.ignoreSubmodules=none diff --no-color extra -- ""new""", "new", "old", false, "extra", false)]
+        [TestCase(@"--no-optional-locks -c diff.submodule=short -c diff.noprefix=false -c diff.ignoreSubmodules=none diff --no-color -M -C --cached extra -- ""new"" ""old""", "new", "old", true, "extra", true)]
         public void GetCurrentChangesCmd(string expected, string fileName, [CanBeNull] string oldFileName, bool staged,
             string extraDiffArguments, bool noLocks)
         {

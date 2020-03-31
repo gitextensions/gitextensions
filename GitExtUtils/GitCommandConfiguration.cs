@@ -24,6 +24,7 @@ namespace GitCommands
 
             Default.Add(new GitConfigItem("diff.submodule", "short"), "diff");
             Default.Add(new GitConfigItem("diff.noprefix", "false"), "diff");
+            Default.Add(new GitConfigItem("diff.ignoreSubmodules", "none"), "diff", "status");
         }
 
         /// <summary>

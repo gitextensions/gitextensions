@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitCommands.Git;
@@ -500,16 +501,23 @@ namespace GitCommands
 
         public static ArgumentString GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = IgnoreSubmodulesMode.None, bool noLocks = false)
         {
-            return new GitArgumentBuilder("status", gitOptions:
+            var args = new GitArgumentBuilder("status", gitOptions:
                 noLocks && GitVersion.Current.SupportNoOptionalLocks
                     ? (ArgumentString)"--no-optional-locks"
                     : default)
             {
                 $"--porcelain{(GitVersion.Current.SupportStatusPorcelainV2 ? "=2" : "")} -z",
                 untrackedFiles,
-                ignoreSubmodules,
                 { !excludeIgnoredFiles, "--ignored" }
             };
+
+            // git-config is set to None, to allow overrides for specific submodules (in .gitconfig or .gitmodules)
+            if (ignoreSubmodules != IgnoreSubmodulesMode.None)
+            {
+                args.Add(ignoreSubmodules);
+            }
+
+            return args;
         }
 
         [CanBeNull]

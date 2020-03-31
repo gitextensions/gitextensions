@@ -619,37 +619,37 @@ namespace GitCommandsTests.Git
         public void GetAllChangedFilesCmd()
         {
             Assert.AreEqual(
-                "status --porcelain=2 -z --untracked-files --ignore-submodules",
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default).Arguments);
             Assert.AreEqual(
-                "status --porcelain=2 -z --untracked-files --ignore-submodules --ignored",
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignored --ignore-submodules",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: false, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default).Arguments);
             Assert.AreEqual(
-                "status --porcelain=2 -z --untracked-files=no --ignore-submodules",
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files=no --ignore-submodules",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Arguments);
             Assert.AreEqual(
-                "status --porcelain=2 -z --untracked-files=normal --ignore-submodules",
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files=normal --ignore-submodules",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Normal, IgnoreSubmodulesMode.Default).Arguments);
             Assert.AreEqual(
-                "status --porcelain=2 -z --untracked-files=all --ignore-submodules",
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files=all --ignore-submodules",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Arguments);
             Assert.AreEqual(
-                "status --porcelain=2 -z --untracked-files --ignore-submodules=none",
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.None).Arguments);
             Assert.AreEqual(
-                "status --porcelain=2 -z --untracked-files --ignore-submodules=none",
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default).Arguments);
             Assert.AreEqual(
-                "status --porcelain=2 -z --untracked-files --ignore-submodules=untracked",
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=untracked",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Untracked).Arguments);
             Assert.AreEqual(
-                "status --porcelain=2 -z --untracked-files --ignore-submodules=dirty",
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=dirty",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Dirty).Arguments);
             Assert.AreEqual(
-                "status --porcelain=2 -z --untracked-files --ignore-submodules=all",
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=all",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.All).Arguments);
             Assert.AreEqual(
-                "--no-optional-locks status --porcelain=2 -z --untracked-files --ignore-submodules",
+                "--no-optional-locks -c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default, noLocks: true).Arguments);
         }
 
