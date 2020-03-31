@@ -16,6 +16,22 @@
     <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Microsoft.VisualStudio.Services.Common.dll'))" />
     <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Microsoft.VisualStudio.Services.WebApi.dll'))" />
     <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'System.Net.Http.Formatting.dll'))" />
+
+    <PluginAssembly Include="$(TargetDir)\**\Microsoft.TeamFoundation.Common.resources.dll">
+      <BasePath>$(TargetDir)</BasePath>
+    </PluginAssembly>
+    <PluginAssembly Include="$(TargetDir)\**\Microsoft.TeamFoundation.Core.WebApi.resources.dll">
+      <BasePath>$(TargetDir)</BasePath>
+    </PluginAssembly>
+    <PluginAssembly Include="$(TargetDir)\**\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll">
+      <BasePath>$(TargetDir)</BasePath>
+    </PluginAssembly>
+    <PluginAssembly Include="$(TargetDir)\**\Microsoft.VisualStudio.Services.Common.resources.dll">
+      <BasePath>$(TargetDir)</BasePath>
+    </PluginAssembly>
+    <PluginAssembly Include="$(TargetDir)\**\Microsoft.VisualStudio.Services.WebApi.resources.dll">
+      <BasePath>$(TargetDir)</BasePath>
+    </PluginAssembly>
   </ItemGroup>
 
 </Project>

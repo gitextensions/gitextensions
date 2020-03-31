@@ -8,6 +8,11 @@
     ============================================================
     -->
   <Target Name="_PublishTranslations">
+    <_GetAvailableTranslationsCodeTask
+          TranslationFolder="$(TargetDir)Translation\">
+      <Output ItemName="Translations" TaskParameter="Output"/>
+    </_GetAvailableTranslationsCodeTask>
+
     <Copy SourceFiles="@(Translations)" DestinationFolder="$(PublishDir)Translation" ContinueOnError="false" />
   </Target>
 
@@ -51,10 +56,9 @@
     Creates a portable archive.
     ============================================================
     -->
-
   <Target Name="CreatePortable" AfterTargets="Publish" DependsOnTargets="_RetrieveCurrentBuildVersion;_PublishTranslations;_PublishExtraDependecies">
     <PropertyGroup>
-      <_AppPPluginsublishDir>$([MSBuild]::NormalizeDirectory('$(AppPublishDir)', 'Plugins'))</_AppPPluginsublishDir>
+      <_AppPluginsPublishDir>$([MSBuild]::NormalizeDirectory('$(AppPublishDir)', 'Plugins'))</_AppPluginsPublishDir>
 
       <!-- Resolve app.config, so we can set/unset "portable" flag -->
       <_PublishAppConfig>$([System.IO.Path]::GetFileName('$(TargetAppConfig)'))</_PublishAppConfig>
@@ -73,15 +77,35 @@
 
     <!-- Determine plugins assemblies and their required references -->
     <_GetPluginAssembliesCodeTask
-          Solution="$(SolutionPath)"
+          SolutionPath="$(SolutionPath)"
+          BuildConfiguration="$(Configuration)"
           IsContinuousIntegrationBuild="$(ContinuousIntegrationBuild)">
-      <Output ItemName="PluginAssemblies" TaskParameter="Output"/>
+      <Output ItemName="CollectedPluginAssemblies" TaskParameter="Output"/>
     </_GetPluginAssembliesCodeTask>
 
-    <!-- ...and copy them into Plugins folder -->
+    <ItemGroup>
+      <!-- Collect plugin and their direct reference -->
+      <PluginAssemblies Include="@(CollectedPluginAssemblies)" />
+      <PluginAssemblies Remove="@(PluginAssemblies)" Condition="$([System.String]::Copy('%(Filename)').EndsWith('.resources'))" />
+
+      <!-- Collect resources for plugins -->
+      <PluginResourcesAssemblies Include="@(CollectedPluginAssemblies)" />
+      <PluginResourcesAssemblies Remove="@(PluginResourcesAssemblies)" Condition="!$([System.String]::Copy('%(Filename)').EndsWith('.resources'))" />
+      <!-- Resources must leave in own folders, so replace the base path with the plugins target folder -->
+      <PluginResourcesAssemblies>
+        <DestinationFiles>$([System.String]::Copy('%(Identity)').Replace('%(BasePath)', '$(_AppPluginsPublishDir)'))</DestinationFiles>
+      </PluginResourcesAssemblies>
+    </ItemGroup>
+
+    <!-- Copy the plugins to the Plugins folder -->
     <Copy
           SourceFiles="@(PluginAssemblies)"
-          DestinationFolder="$(_AppPPluginsublishDir)"
+          DestinationFolder="$(_AppPluginsPublishDir)"
+        />
+    <!-- Copy the plugins' resources to the Plugins folder -->
+    <Copy
+          SourceFiles="@(PluginResourcesAssemblies)"
+          DestinationFiles="@(PluginResourcesAssemblies->'%(DestinationFiles)')"
         />
 
     <!-- Mark the package as "portable" -->

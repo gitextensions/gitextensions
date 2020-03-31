@@ -75,10 +75,11 @@ try {
     Get-ChildItem -Path ../GitUI/Translation/* -Include *.xlf -Exclude English.*,*.Plugins.xlf,*pseudo* | `
         ForEach-Object {
 
-            $componentId = $_.Name.Replace($_.Extension, '').Replace(' ', '');
+            $componentTitle = $_.Name.Replace($_.Extension, '');
+            $componentId = $componentTitle.Replace(' ', '').Replace(')', '').Replace('(', '_');
 
             [xml]$featureXml = @"
-            <Feature Id="$componentId" Title="$componentId" Level="1">
+            <Feature Id="$componentId" Title="$componentTitle" Level="1">
               <ComponentRef Id="$componentId.xlf" />
               <ComponentRef Id="$componentId.Plugins.xlf" />
               <ComponentRef Id="$componentId.gif" />
@@ -110,11 +111,11 @@ try {
             @( "$language.gif", "$language.xlf", "$language.Plugins.xlf" ) | `
                 ForEach-Object {
                     $fileName = $_;
-                    $componentId = $fileName.Replace(' ', '');
+                    $componentId = $fileName.Replace(' ', '').Replace(')', '').Replace('(', '_');
 
                     [xml]$componentXml = @"
                         <Component Id="$componentId" Guid="*">
-                          <File Source="..\GitExtensions\bin\`$(var.Configuration)\Translation\$fileName" />
+                          <File Source="`$(var.ArtifactsPublishPath)\Translation\$fileName" />
                         </Component>
 "@
 
@@ -136,43 +137,6 @@ try {
     $currentFolder = $(pwd).Path;
     $productWxs1.Save("$currentFolder\Product.wxs")
 
-
-    [string[]]$content = Get-Content 'MakePortableArchive.cmd'
-    
-    $start = $content.IndexOf("REM --## DO NOT MODIFY --")
-    $end = $content.IndexOf("REM --## DO NOT MODIFY END --")
-    if ($start -lt 1 -and $end -lt $start) {
-        throw 'Malformed MakePortableArchive.cmd';
-    }
-    
-    $content1 = @();
-    for ($i = 0; $i -lt $start + 1; $i++) {
-        $content1 += $content[$i];
-    }
-
-    Get-ChildItem -Path ../GitUI/Translation/* -Include *.xlf -Exclude *.Plugins.xlf,*pseudo* | `
-        ForEach-Object {
-
-            $language = $_.Name.Replace($_.Extension, '')
-
-            @( "$language.gif", "$language.xlf", "$language.Plugins.xlf" ) | `
-                ForEach-Object {
-                    $fileName = $_;
-
-                    $content1 += @"
-xcopy /y /i "..\GitUI\Translation\$fileName" GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
-"@
-
-                }
-        }
-
-    for ($i = $end; $i -lt $content.Length; $i++) {
-        $content1 += $content[$i];
-    }
-    
-    $currentFolder = $(pwd).Path;
-    $content1 | Out-File "$currentFolder\MakePortableArchive.cmd" -Encoding ascii
 }
 finally {
     Pop-Location
