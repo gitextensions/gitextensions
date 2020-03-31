@@ -1,9 +1,5 @@
 <Project>
 
-  <ItemGroup>
-    <Translations Include="$(ProjectDir)\..\GitUI\Translation\*.xlf;$(ProjectDir)\..\GitUI\Translation\*.gif" />
-  </ItemGroup>
-
   <!--
     ============================================================
                        _CopyTranslations
@@ -12,9 +8,13 @@
     ============================================================
     -->
   <Target Name="_CopyTranslations" AfterTargets="AfterBuild">
+    <_GetAvailableTranslationsCodeTask
+          TranslationFolder="$(ProjectDir)\..\GitUI\Translation\">
+      <Output ItemName="Translations" TaskParameter="Output"/>
+    </_GetAvailableTranslationsCodeTask>
+
     <Copy SourceFiles="@(Translations)" DestinationFolder="$(TargetDir)Translation" ContinueOnError="false" />
   </Target>
-
 
   <!--
     ============================================================
