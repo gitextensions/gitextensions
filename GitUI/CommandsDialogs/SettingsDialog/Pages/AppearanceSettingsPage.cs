@@ -21,6 +21,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public AppearanceSettingsPage()
         {
             InitializeComponent();
+            Text = "Appearance";
             InitializeComplete();
 
             FillComboBoxWithEnumValues<AvatarProvider>(AvatarProvider);

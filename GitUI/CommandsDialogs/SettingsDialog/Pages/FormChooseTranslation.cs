@@ -16,6 +16,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComponent();
             label1.Font = FontUtil.MainInstructionFont;
             label1.ForeColor = FontUtil.MainInstructionColor;
+            Text = "Choose language";
             InitializeComplete();
         }
 

@@ -24,6 +24,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public ColorsSettingsPage()
         {
             InitializeComponent();
+            Text = "Colors";
             InitializeComplete();
         }
 
