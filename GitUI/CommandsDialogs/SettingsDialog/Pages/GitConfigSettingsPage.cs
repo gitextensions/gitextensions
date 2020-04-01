@@ -1,31 +1,38 @@
 ﻿using System;
-using System.IO;
+using System.Linq;
 using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Config;
+using GitCommands.DiffMergeTools;
 using GitCommands.Settings;
-using GitCommands.Utils;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class GitConfigSettingsPage : ConfigFileSettingsPage
     {
-        private readonly TranslationString _toolSuggestPathText =
-            new TranslationString("Please enter the path to {0} and press suggest.");
-
-        private readonly TranslationString _diffToolSuggestCaption = new TranslationString("Suggest difftool cmd");
-        private readonly TranslationString _mergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
+        private readonly TranslationString _selectFile = new TranslationString("Select file");
+        private readonly GitConfigSettingsPageController _controller;
+        private DiffMergeToolConfigurationManager _diffMergeToolConfigurationManager;
 
         public GitConfigSettingsPage()
         {
             InitializeComponent();
             Text = "Config";
+
+            _NO_TRANSLATE_cboMergeTool.Items.AddRange(RegisteredDiffMergeTools.All(DiffMergeToolType.Merge).ToArray());
+            _NO_TRANSLATE_cboDiffTool.Items.AddRange(RegisteredDiffMergeTools.All(DiffMergeToolType.Diff).ToArray());
+
             InitializeComplete();
+
+            _controller = new GitConfigSettingsPageController();
         }
 
         protected override void Init(ISettingsPageHost pageHost)
         {
             base.Init(pageHost);
+
+            _diffMergeToolConfigurationManager = new DiffMergeToolConfigurationManager(() => CurrentSettings);
 
             CommonLogic.FillEncodings(Global_FilesEncoding);
 
@@ -44,37 +51,32 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             GlobalUserName.Enabled = canFindGitCmd;
             GlobalUserEmail.Enabled = canFindGitCmd;
             GlobalEditor.Enabled = canFindGitCmd;
-            CommitTemplatePath.Enabled = canFindGitCmd;
-            _NO_TRANSLATE_GlobalMergeTool.Enabled = canFindGitCmd;
-            MergetoolPath.Enabled = canFindGitCmd;
-            MergeToolCmd.Enabled = canFindGitCmd;
-            GlobalKeepMergeBackup.Enabled = canFindGitCmd;
+            txtCommitTemplatePath.Enabled = canFindGitCmd;
+            _NO_TRANSLATE_cboMergeTool.Enabled = canFindGitCmd;
+            txtMergeToolPath.Enabled = canFindGitCmd;
+            txtMergeToolCommand.Enabled = canFindGitCmd;
             InvalidGitPathGlobal.Visible = !canFindGitCmd;
-
-            MergeToolCmd.Enabled = !string.IsNullOrEmpty(MergeToolCmd.Text);
         }
 
         protected override void SettingsToPage()
         {
-            var mergeTool = CurrentSettings.GetValue("merge.tool");
-            var diffTool = CheckSettingsLogic.GetDiffToolFromConfig(CurrentSettings);
+            var mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
+            var diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
 
             Global_FilesEncoding.Text = CurrentSettings.FilesEncoding?.EncodingName ?? "";
 
             GlobalUserName.Text = CurrentSettings.GetValue(SettingKeyString.UserName);
             GlobalUserEmail.Text = CurrentSettings.GetValue(SettingKeyString.UserEmail);
             GlobalEditor.Text = CurrentSettings.GetValue("core.editor");
-            CommitTemplatePath.Text = CurrentSettings.GetValue("commit.template");
+            txtCommitTemplatePath.Text = CurrentSettings.GetValue("commit.template");
 
-            _NO_TRANSLATE_GlobalMergeTool.Text = mergeTool;
-            MergetoolPath.Text = CurrentSettings.GetValue($"mergetool.{mergeTool}.path");
-            MergeToolCmd.Text = CurrentSettings.GetValue($"mergetool.{mergeTool}.cmd");
+            _NO_TRANSLATE_cboMergeTool.Text = mergeTool;
+            txtMergeToolPath.Text = _diffMergeToolConfigurationManager.GetToolPath(mergeTool, DiffMergeToolType.Merge);
+            txtMergeToolCommand.Text = _diffMergeToolConfigurationManager.GetToolCommand(mergeTool, DiffMergeToolType.Merge);
 
-            _NO_TRANSLATE_GlobalDiffTool.Text = diffTool;
-            DifftoolPath.Text = CurrentSettings.GetValue($"difftool.{diffTool}.path");
-            DifftoolCmd.Text = CurrentSettings.GetValue($"difftool.{diffTool}.cmd");
-
-            GlobalKeepMergeBackup.SetNullableChecked(CurrentSettings.mergetool.keepBackup.Value);
+            _NO_TRANSLATE_cboDiffTool.Text = diffTool;
+            txtDiffToolPath.Text = _diffMergeToolConfigurationManager.GetToolPath(diffTool, DiffMergeToolType.Diff);
+            txtDiffToolCommand.Text = _diffMergeToolConfigurationManager.GetToolCommand(diffTool, DiffMergeToolType.Diff);
 
             globalAutoCrlfFalse.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.@false;
             globalAutoCrlfInput.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.input;
@@ -97,20 +99,30 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             CurrentSettings.SetValue(SettingKeyString.UserName, GlobalUserName.Text);
             CurrentSettings.SetValue(SettingKeyString.UserEmail, GlobalUserEmail.Text);
-            CurrentSettings.SetValue("commit.template", CommitTemplatePath.Text);
+            CurrentSettings.SetValue("commit.template", txtCommitTemplatePath.Text);
             CurrentSettings.SetPathValue("core.editor", GlobalEditor.Text);
 
-            var diffTool = _NO_TRANSLATE_GlobalDiffTool.Text;
-            CheckSettingsLogic.SetDiffToolToConfig(CurrentSettings, diffTool);
-            CurrentSettings.SetPathValue($"difftool.{diffTool}.path", DifftoolPath.Text);
-            CurrentSettings.SetPathValue($"difftool.{diffTool}.cmd", DifftoolCmd.Text);
+            // TODO: why use GUI???
+            var diffTool = _NO_TRANSLATE_cboDiffTool.Text;
+            if (!string.IsNullOrWhiteSpace(diffTool))
+            {
+                _diffMergeToolConfigurationManager.ConfigureDiffMergeTool(diffTool, DiffMergeToolType.Diff, txtDiffToolPath.Text, txtDiffToolCommand.Text);
+            }
+            else
+            {
+                _diffMergeToolConfigurationManager.UnsetCurrentTool(DiffMergeToolType.Diff);
+            }
 
-            var mergeTool = _NO_TRANSLATE_GlobalMergeTool.Text;
-            CurrentSettings.SetValue("merge.tool", mergeTool);
-            CurrentSettings.SetPathValue($"mergetool.{mergeTool}.path", MergetoolPath.Text);
-            CurrentSettings.SetPathValue($"mergetool.{mergeTool}.cmd", MergeToolCmd.Text);
-
-            CurrentSettings.mergetool.keepBackup.Value = GlobalKeepMergeBackup.GetNullableChecked();
+            // TODO: merge.guitool???
+            var mergeTool = _NO_TRANSLATE_cboMergeTool.Text;
+            if (!string.IsNullOrWhiteSpace(mergeTool))
+            {
+                _diffMergeToolConfigurationManager.ConfigureDiffMergeTool(mergeTool, DiffMergeToolType.Merge, txtMergeToolPath.Text, txtMergeToolCommand.Text);
+            }
+            else
+            {
+                _diffMergeToolConfigurationManager.UnsetCurrentTool(DiffMergeToolType.Merge);
+            }
 
             if (globalAutoCrlfFalse.Checked)
             {
@@ -133,149 +145,150 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
-        private void GlobalMergeTool_TextChanged(object sender, EventArgs e)
+        private string BrowseDiffMergeTool(string toolName, string path)
+        {
+            DiffMergeToolConfiguration diffMergeToolConfig = default;
+            if (_NO_TRANSLATE_cboDiffTool.SelectedIndex > -1)
+            {
+                diffMergeToolConfig = _diffMergeToolConfigurationManager.LoadDiffMergeToolConfig(toolName, null);
+            }
+
+            string initialDirectory = _controller.GetInitialDirectory(path, diffMergeToolConfig.Path);
+
+            var filter = !string.IsNullOrWhiteSpace(diffMergeToolConfig.ExeFileName)
+                ? $"{toolName}|{diffMergeToolConfig.ExeFileName}"
+                : "*.exe;*.cmd;*.bat|*.exe;*.cmd;*.bat";
+
+            using (var dialog = new OpenFileDialog
+            {
+                Filter = filter,
+                InitialDirectory = initialDirectory,
+                Title = _selectFile.Text
+            })
+            {
+                return dialog.ShowDialog() == DialogResult.OK ? dialog.FileName : path;
+            }
+        }
+
+        private void SuggestDiffToolCommand()
+        {
+            var toolName = _NO_TRANSLATE_cboDiffTool.Text;
+            if (string.IsNullOrWhiteSpace(toolName))
+            {
+                txtDiffToolCommand.Text = string.Empty;
+                return;
+            }
+
+            var diffMergeToolConfig = _diffMergeToolConfigurationManager.LoadDiffMergeToolConfig(toolName, txtDiffToolPath.Text);
+            txtDiffToolCommand.Text = diffMergeToolConfig.FullDiffCommand;
+        }
+
+        private void SuggestMergeToolCommand()
+        {
+            var toolName = _NO_TRANSLATE_cboMergeTool.Text;
+            if (string.IsNullOrWhiteSpace(toolName))
+            {
+                txtMergeToolCommand.Text = string.Empty;
+                return;
+            }
+
+            var diffMergeToolConfig = _diffMergeToolConfigurationManager.LoadDiffMergeToolConfig(toolName, txtMergeToolPath.Text);
+            txtMergeToolCommand.Text = diffMergeToolConfig.FullMergeCommand;
+        }
+
+        private void btnMergeToolCommandSuggest_Click(object sender, EventArgs e)
+            => SuggestMergeToolCommand();
+
+        private void btnDiffToolCommandSuggest_Click(object sender, EventArgs e)
+            => SuggestDiffToolCommand();
+
+        private void txtDiffMergeToolPath_LostFocus(object sender, EventArgs e)
         {
             if (IsLoadingSettings)
             {
                 return;
             }
 
-            var mergeTool = _NO_TRANSLATE_GlobalMergeTool.Text.Trim();
-            MergetoolPath.Text = CurrentSettings.GetValue($"mergetool.{mergeTool}.path");
-            MergeToolCmd.Text = CurrentSettings.GetValue($"mergetool.{mergeTool}.cmd");
+            if (sender == txtDiffToolPath)
+            {
+                txtDiffToolPath.Text = txtDiffToolPath.Text.ToPosixPath();
+                return;
+            }
 
-            MergeToolCmd.Enabled = !string.IsNullOrEmpty(MergeToolCmd.Text);
-
-            MergeToolCmdSuggest_Click(null, null);
+            if (sender == txtMergeToolPath)
+            {
+                txtMergeToolPath.Text = txtMergeToolPath.Text.ToPosixPath();
+                return;
+            }
         }
 
-        private void MergeToolCmdSuggest_Click(object sender, EventArgs e)
+        private void btnMergeToolBrowse_Click(object sender, EventArgs e)
         {
-            if (!EnvUtils.RunningOnWindows())
-            {
-                return;
-            }
-
-            var mergeToolPath = MergetoolPath.Text.Trim().Trim('"', '\'');
-
-            CurrentSettings.SetPathValue(string.Format("mergetool.{0}.path", _NO_TRANSLATE_GlobalMergeTool.Text.Trim()), mergeToolPath ?? "");
-            string exeName;
-            string exeFile;
-            if (!string.IsNullOrEmpty(mergeToolPath))
-            {
-                exeFile = mergeToolPath;
-                exeName = Path.GetFileName(exeFile);
-            }
-            else
-            {
-                exeFile = MergeToolsHelper.FindMergeToolFullPath(ConfigFileSettingsSet, _NO_TRANSLATE_GlobalMergeTool.Text, out exeName);
-            }
-
-            if (string.IsNullOrEmpty(exeFile))
-            {
-                MergetoolPath.SelectAll();
-                MergetoolPath.SelectedText = "";
-                MergeToolCmd.SelectAll();
-                MergeToolCmd.SelectedText = "";
-                if (sender != null)
-                {
-                    MessageBox.Show(this, string.Format(_toolSuggestPathText.Text, exeName),
-                        _mergeToolSuggestCaption.Text);
-                }
-
-                return;
-            }
-
-            MergetoolPath.SelectAll(); // allow Undo action
-            MergetoolPath.SelectedText = exeFile;
-            MergeToolCmd.SelectAll();
-            MergeToolCmd.SelectedText = MergeToolsHelper.MergeToolcmdSuggest(_NO_TRANSLATE_GlobalMergeTool.Text, exeFile);
+            txtMergeToolPath.Text = BrowseDiffMergeTool(_NO_TRANSLATE_cboMergeTool.Text, txtMergeToolPath.Text).ToPosixPath();
+            SuggestMergeToolCommand();
         }
 
-        private void DiffToolCmdSuggest_Click(object sender, EventArgs e)
-        {
-            if (!EnvUtils.RunningOnWindows())
-            {
-                return;
-            }
-
-            var diffToolPath = DifftoolPath.Text.Trim().Trim('"', '\'');
-
-            CurrentSettings.SetPathValue(string.Format("difftool.{0}.path", _NO_TRANSLATE_GlobalDiffTool.Text.Trim()), diffToolPath ?? "");
-            string exeName;
-            string exeFile;
-            if (!string.IsNullOrEmpty(diffToolPath))
-            {
-                exeFile = diffToolPath;
-                exeName = Path.GetFileName(exeFile);
-            }
-            else
-            {
-                exeFile = MergeToolsHelper.FindDiffToolFullPath(ConfigFileSettingsSet, _NO_TRANSLATE_GlobalDiffTool.Text, out exeName);
-            }
-
-            if (string.IsNullOrEmpty(exeFile))
-            {
-                DifftoolPath.SelectAll();
-                DifftoolPath.SelectedText = "";
-                DifftoolCmd.SelectAll();
-                DifftoolCmd.SelectedText = "";
-                if (sender != null)
-                {
-                    MessageBox.Show(this, string.Format(_toolSuggestPathText.Text, exeName),
-                        _diffToolSuggestCaption.Text);
-                }
-
-                return;
-            }
-
-            DifftoolPath.SelectAll(); // allow Undo action
-            DifftoolPath.SelectedText = exeFile;
-            DifftoolCmd.SelectAll();
-            DifftoolCmd.SelectedText = MergeToolsHelper.DiffToolCmdSuggest(_NO_TRANSLATE_GlobalDiffTool.Text, exeFile);
-        }
-
-        private void BrowseMergeTool_Click(object sender, EventArgs e)
-        {
-            string mergeTool = _NO_TRANSLATE_GlobalMergeTool.Text.ToLowerInvariant();
-            string exeFile = MergeToolsHelper.GetMergeToolExeFile(mergeTool);
-
-            var filter = exeFile != null
-                ? string.Format("{0} ({1})|{1}", _NO_TRANSLATE_GlobalMergeTool.Text, exeFile)
-                : string.Format("{0} (*.exe)|*.exe", _NO_TRANSLATE_GlobalMergeTool.Text);
-
-            MergetoolPath.Text = CommonLogic.SelectFile(".", filter, MergetoolPath.Text);
-        }
-
-        private void GlobalDiffTool_TextChanged(object sender, EventArgs e)
+        private void cboDiffTool_TextChanged(object sender, EventArgs e)
         {
             if (IsLoadingSettings)
             {
                 return;
             }
 
-            string diffTool = _NO_TRANSLATE_GlobalDiffTool.Text.Trim();
-            DifftoolPath.Text = CurrentSettings.GetValue($"difftool.{diffTool}.path");
-            DifftoolCmd.Text = CurrentSettings.GetValue($"difftool.{diffTool}.cmd");
+            var toolName = _NO_TRANSLATE_cboDiffTool.Text;
 
-            DiffToolCmdSuggest_Click(null, null);
+            txtDiffToolPath.Enabled =
+                btnDiffToolBrowse.Enabled =
+                    txtDiffToolCommand.Enabled =
+                        btnDiffToolCommandSuggest.Enabled = !string.IsNullOrEmpty(toolName);
+
+            string toolPath;
+            if (string.IsNullOrWhiteSpace(toolName) || string.IsNullOrWhiteSpace(toolPath = _diffMergeToolConfigurationManager.GetToolPath(toolName, DiffMergeToolType.Diff)))
+            {
+                txtDiffToolPath.Text =
+                    txtDiffToolCommand.Text = string.Empty;
+                return;
+            }
+
+            txtDiffToolPath.Text = toolPath;
+            txtDiffToolCommand.Text = _diffMergeToolConfigurationManager.GetToolCommand(toolName, DiffMergeToolType.Diff);
         }
 
-        private void BrowseDiffTool_Click(object sender, EventArgs e)
+        private void cboMergeTool_TextChanged(object sender, EventArgs e)
         {
-            string diffTool = _NO_TRANSLATE_GlobalDiffTool.Text.ToLowerInvariant();
-            string exeFile = MergeToolsHelper.GetDiffToolExeFile(diffTool);
+            if (IsLoadingSettings)
+            {
+                return;
+            }
 
-            var filter = exeFile != null
-                ? string.Format("{0} ({1})|{1}", _NO_TRANSLATE_GlobalDiffTool.Text, exeFile)
-                : string.Format("{0} (*.exe)|*.exe", _NO_TRANSLATE_GlobalDiffTool.Text);
+            var toolName = _NO_TRANSLATE_cboMergeTool.Text;
 
-            DifftoolPath.Text = CommonLogic.SelectFile(".", filter, DifftoolPath.Text);
+            txtMergeToolPath.Enabled =
+                btnMergeToolBrowse.Enabled =
+                    txtMergeToolCommand.Enabled =
+                        btnMergeToolCommandSuggest.Enabled = !string.IsNullOrEmpty(toolName);
+
+            string toolPath;
+            if (string.IsNullOrWhiteSpace(toolName) || string.IsNullOrWhiteSpace(toolPath = _diffMergeToolConfigurationManager.GetToolPath(toolName, DiffMergeToolType.Merge)))
+            {
+                txtMergeToolPath.Text =
+                    txtMergeToolCommand.Text = string.Empty;
+                return;
+            }
+
+            txtMergeToolPath.Text = toolPath;
+            txtMergeToolCommand.Text = _diffMergeToolConfigurationManager.GetToolCommand(toolName, DiffMergeToolType.Merge);
         }
 
-        private void BrowseCommitTemplate_Click(object sender, EventArgs e)
+        private void btnDiffToolBrowse_Click(object sender, EventArgs e)
         {
-            CommitTemplatePath.Text = CommonLogic.SelectFile(".", "*.txt (*.txt)|*.txt", CommitTemplatePath.Text);
+            txtDiffToolPath.Text = BrowseDiffMergeTool(_NO_TRANSLATE_cboDiffTool.Text, txtDiffToolPath.Text).ToPosixPath();
+            SuggestDiffToolCommand();
+        }
+
+        private void btnCommitTemplateBrowse_Click(object sender, EventArgs e)
+        {
+            txtCommitTemplatePath.Text = CommonLogic.SelectFile(".", "*.txt (*.txt)|*.txt", txtCommitTemplatePath.Text);
         }
 
         private void ConfigureEncoding_Click(object sender, EventArgs e)

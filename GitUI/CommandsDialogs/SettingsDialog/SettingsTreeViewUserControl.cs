@@ -31,8 +31,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             _origTextBoxFont = textBoxFind.Font;
             SetFindPrompt(true);
 
-            treeView1.ImageList = new ImageList();
-            treeView1.ImageList.ImageSize = DpiUtil.Scale(new Size(16, 16)); // Scale ImageSize and images scale automatically
+            treeView1.ImageList = new ImageList
+            {
+                ColorDepth = ColorDepth.Depth32Bit,
+                ImageSize = DpiUtil.Scale(new Size(16, 16))
+            };
+
+            // Scale ImageSize and images scale automatically
             treeView1.ImageList.Images.Add(Images.Blank);
             this.AdjustForDpiScaling();
         }
@@ -195,7 +200,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 ////textBoxFind.Font = new Font("Calibri", textBoxFind.Font.Size, FontStyle.Italic);
                 textBoxFind.Font = new Font(textBoxFind.Font, FontStyle.Italic);
                 textBoxFind.Text = FindPrompt;
-                textBoxFind.ForeColor = Color.Gray;
+                textBoxFind.ForeColor = SystemColors.GrayText;
             }
             else
             {

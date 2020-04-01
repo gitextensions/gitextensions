@@ -1,0 +1,72 @@
+<Project>
+
+  <!--
+    ============================================================
+                       _CopyTranslations
+
+    Copies all available translations to the target directory.
+    ============================================================
+    -->
+  <Target Name="_CopyTranslations" AfterTargets="AfterBuild">
+    <_GetAvailableTranslationsCodeTask
+          TranslationFolder="$(ProjectDir)\..\GitUI\Translation\">
+      <Output ItemName="Translations" TaskParameter="Output"/>
+    </_GetAvailableTranslationsCodeTask>
+
+    <Copy SourceFiles="@(Translations)" DestinationFolder="$(TargetDir)Translation" ContinueOnError="false" />
+  </Target>
+
+  <!--
+    ============================================================
+                       _EnumeratePlugins
+
+    Enumerates all avaialble plugins $(TargetDir)\Plugins\$(PluginName) and updates
+    app.config with the list of available plugins.
+
+    For the development build all plugins are copied to $(TargetDir)\Plugins\$(PluginName).
+    However we need to update probingPath. i.e. where to look for plugins' references.
+
+    ============================================================
+    -->
+  <Target Name="_EnumeratePlugins" AfterTargets="AfterBuild">
+    <PropertyGroup>
+      <PluginsFolder>$(TargetDir)Plugins</PluginsFolder>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folders Include="$([System.IO.Directory]::GetDirectories(&quot;$(PluginsFolder)&quot;))" />
+      <OnlyDirs Include="@(Folders->Replace($(TargetDir), ''))"/>
+    </ItemGroup>
+
+    <PropertyGroup>
+      <ProbingPrivatePath>Plugins;@(OnlyDirs)</ProbingPrivatePath>
+      <TargetAppConfig>@(AppConfigFileDestination)</TargetAppConfig>
+
+      <Namespace>
+        <Namespace Prefix="ns" Uri="urn:schemas-microsoft-com:asm.v1" />
+      </Namespace>
+    </PropertyGroup>
+
+    <XmlPoke XmlInputPath="$(TargetAppConfig.ToString())"
+            Namespaces="$(Namespace)"
+            Query="configuration/runtime/ns:assemblyBinding/ns:probing/@privatePath" 
+            Value="$(ProbingPrivatePath.ToString())" />
+  </Target>
+
+  <!--
+    ============================================================
+                       _BuildEasyHookDll
+
+    Builds EasyHook C++ project in x86 and x64 and copies the outputs to the app's target folder.
+    ============================================================
+    -->
+  <Target Name="_BuildEasyHookDll" Condition="Exists('$(VCTargetsPath)\Microsoft.Cpp.Default.props')" AfterTargets="AfterBuild">
+    <!-- Build x64 version -->
+    <MSBuild Projects="$(SolutionDir)\Externals\EasyHook\EasyHookDll\EasyHookDll.vcxproj" Properties="Configuration=Release;Platform=x64" />
+    <Copy SourceFiles="$(SolutionDir)\Externals\EasyHook\EasyHookDll\Build\Release\x64\EasyHook64.dll" DestinationFolder="$(TargetDir)" />
+    <!-- Build x86 version -->
+    <MSBuild Projects="$(SolutionDir)\Externals\EasyHook\EasyHookDll\EasyHookDll.vcxproj" Properties="Configuration=Release;Platform=Win32" />
+    <Copy SourceFiles="$(SolutionDir)\Externals\EasyHook\EasyHookDll\Build\Release\x86\EasyHook32.dll" DestinationFolder="$(TargetDir)" />
+  </Target>
+
+</Project>

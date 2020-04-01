@@ -9,7 +9,6 @@ namespace GitUI.CommandsDialogs
     public partial class FormRevertCommit : GitModuleForm
     {
         private readonly TranslationString _noneParentSelectedText = new TranslationString("None parent is selected!");
-        private readonly TranslationString _noneParentSelectedTextCaption = new TranslationString("Error");
 
         private bool _isMerge;
 
@@ -69,7 +68,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (ParentsList.SelectedItems.Count != 1)
                 {
-                    MessageBox.Show(this, _noneParentSelectedText.Text, _noneParentSelectedTextCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, _noneParentSelectedText.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 else

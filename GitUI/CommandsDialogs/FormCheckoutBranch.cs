@@ -294,14 +294,14 @@ namespace GitUI.CommandsDialogs
                     newBranchMode = CheckoutNewBranchMode.Create;
                     if (newBranchName.IsNullOrWhiteSpace())
                     {
-                        MessageBox.Show(_customBranchNameIsEmpty.Text, Text);
+                        MessageBox.Show(_customBranchNameIsEmpty.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         DialogResult = DialogResult.None;
                         return DialogResult.None;
                     }
 
                     if (!Module.CheckBranchFormat(newBranchName))
                     {
-                        MessageBox.Show(string.Format(_customBranchNameIsNotValid.Text, newBranchName), Text);
+                        MessageBox.Show(string.Format(_customBranchNameIsNotValid.Text, newBranchName), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         DialogResult = DialogResult.None;
                         return DialogResult.None;
                     }
@@ -313,7 +313,7 @@ namespace GitUI.CommandsDialogs
                     if (localBranchRef != null && remoteBranchRef != null)
                     {
                         var mergeBaseGuid = Module.GetMergeBase(localBranchRef.ObjectId, remoteBranchRef.ObjectId);
-                        var isResetFastForward = localBranchRef.Guid == mergeBaseGuid?.ToString();
+                        var isResetFastForward = localBranchRef.ObjectId == mergeBaseGuid;
 
                         if (!isResetFastForward)
                         {

@@ -66,6 +66,7 @@
             this.Controls.Add(this.btnCompare);
             this.Controls.Add(this.branchSelector);
             this.Name = "FormCompareToBranch";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Compare to branch";
             this.ResumeLayout(false);
             this.PerformLayout();

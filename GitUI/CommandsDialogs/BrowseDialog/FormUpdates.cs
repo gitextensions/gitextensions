@@ -19,12 +19,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
     public partial class FormUpdates : GitExtensionsForm
     {
         #region Translation
-        private readonly TranslationString _newVersionAvailable =
-            new TranslationString("There is a new version {0} of Git Extensions available");
-        private readonly TranslationString _noUpdatesFound =
-            new TranslationString("No updates found");
-        private readonly TranslationString _downloadingUpdate =
-            new TranslationString("Downloading update...");
+        private readonly TranslationString _newVersionAvailable = new TranslationString("There is a new version {0} of Git Extensions available");
+        private readonly TranslationString _noUpdatesFound = new TranslationString("No updates found");
+        private readonly TranslationString _downloadingUpdate = new TranslationString("Downloading update...");
+        private readonly TranslationString _errorHeading = new TranslationString("Download Failed");
+        private readonly TranslationString _errorMessage = new TranslationString("Failed to download an update.");
         #endregion
 
         public IWin32Window OwnerWindow;
@@ -173,9 +172,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             LaunchUrl(LaunchType.ChangeLog);
         }
 
-        private async void btnUpdateNow_Click(object sender, EventArgs e)
+        private void btnUpdateNow_Click(object sender, EventArgs e)
         {
-            try
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 linkChangeLog.Visible = false;
                 progressBar1.Visible = true;
@@ -183,24 +182,35 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 UpdateLabel.Text = _downloadingUpdate.Text;
                 string fileName = Path.GetFileName(UpdateUrl);
 
-                using (WebClient webClient = new WebClient())
+                try
                 {
-                    await webClient.DownloadFileTaskAsync(new Uri(UpdateUrl), Environment.GetEnvironmentVariable("TEMP") + "\\" + fileName);
+                    using (WebClient webClient = new WebClient())
+                    {
+                        await webClient.DownloadFileTaskAsync(new Uri(UpdateUrl), Environment.GetEnvironmentVariable("TEMP") + "\\" + fileName);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, _errorMessage.Text + Environment.NewLine + ex.Message, _errorHeading.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
                 }
 
-                Process process = new Process();
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.FileName = "msiexec.exe";
-                process.StartInfo.Arguments = string.Format("/i \"{0}\\{1}\" /qb LAUNCH=1", Environment.GetEnvironmentVariable("TEMP"), fileName);
-                process.Start();
+                try
+                {
+                    Process process = new Process();
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.FileName = "msiexec.exe";
+                    process.StartInfo.Arguments = string.Format("/i \"{0}\\{1}\" /qb LAUNCH=1", Environment.GetEnvironmentVariable("TEMP"), fileName);
+                    process.Start();
 
-                progressBar1.Visible = false;
-                Close();
-                Application.Exit();
-            }
-            catch (Win32Exception)
-            {
-            }
+                    progressBar1.Visible = false;
+                    Close();
+                    Application.Exit();
+                }
+                catch (Win32Exception)
+                {
+                }
+            }).FileAndForget();
         }
 
         private void linkDirectDownload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

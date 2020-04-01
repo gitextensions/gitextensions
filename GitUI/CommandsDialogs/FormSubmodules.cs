@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SubmodulesDialog;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -33,7 +34,7 @@ namespace GitUI.CommandsDialogs
             Status.DataPropertyName = nameof(GitSubmoduleInfo.Status);
             gitSubmoduleBindingSource.DataSource = _modules;
             splitContainer1.SplitterDistance = DpiUtil.Scale(222);
-
+            Pull.AdaptImageLightness();
             InitializeComplete();
         }
 
@@ -135,7 +136,7 @@ namespace GitUI.CommandsDialogs
         {
             if (Submodules.SelectedRows.Count != 1 ||
                 MessageBox.Show(this, _removeSelectedSubmodule.Text, _removeSelectedSubmoduleCaption.Text,
-                                MessageBoxButtons.YesNo) !=
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) !=
                 DialogResult.Yes)
             {
                 return;

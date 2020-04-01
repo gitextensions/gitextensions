@@ -97,7 +97,7 @@ namespace GitFlow
                 cbBaseBranch.Enabled = false;
 
                 cbPushAfterFinish.Enabled = false;
-                cbSquashFeature.Enabled = false;
+                cbSquash.Enabled = false;
 
                 LoadBaseBranches();
 
@@ -175,7 +175,7 @@ namespace GitFlow
 
             btnFinish.Enabled = isThereABranch && (branchType != Branch.support.ToString("G"));
             cbPushAfterFinish.Enabled = isThereABranch && (branchType == Branch.hotfix.ToString("G") || branchType == Branch.release.ToString("G"));
-            cbSquashFeature.Enabled = isThereABranch && branchType == Branch.feature.ToString("G");
+            cbSquash.Enabled = isThereABranch && branchType != Branch.support.ToString("G");
             btnPublish.Enabled = isThereABranch && (branchType != Branch.support.ToString("G"));
             btnPull.Enabled = isThereABranch && (branchType != Branch.support.ToString("G"));
             pnlPull.Enabled = branchType != Branch.support.ToString("G");
@@ -294,7 +294,7 @@ namespace GitFlow
                 cbManageType.SelectedValue.ToString(),
                 "finish",
                 { cbPushAfterFinish.Checked, "-p" },
-                { cbSquashFeature.Checked, "-S" },
+                { cbSquash.Checked, "-S" },
                 cbBranches.SelectedValue.ToString()
             };
             RunCommand(args);

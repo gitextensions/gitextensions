@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.Directory = new System.Windows.Forms.ComboBox();
+            this._NO_TRANSLATE_Directory = new System.Windows.Forms.ComboBox();
             this.Browse = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Central = new System.Windows.Forms.RadioButton();
@@ -50,14 +50,14 @@
             // 
             // Directory
             // 
-            this.Directory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.Directory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this.Directory.FormattingEnabled = true;
-            this.Directory.Location = new System.Drawing.Point(122, 8);
-            this.Directory.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.Directory.Name = "Directory";
-            this.Directory.Size = new System.Drawing.Size(422, 31);
-            this.Directory.TabIndex = 1;
+            this._NO_TRANSLATE_Directory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this._NO_TRANSLATE_Directory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
+            this._NO_TRANSLATE_Directory.FormattingEnabled = true;
+            this._NO_TRANSLATE_Directory.Location = new System.Drawing.Point(122, 8);
+            this._NO_TRANSLATE_Directory.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._NO_TRANSLATE_Directory.Name = "_NO_TRANSLATE_Directory";
+            this._NO_TRANSLATE_Directory.Size = new System.Drawing.Size(422, 31);
+            this._NO_TRANSLATE_Directory.TabIndex = 1;
             // 
             // Browse
             // 
@@ -127,7 +127,7 @@
             this.Controls.Add(this.Init);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.Browse);
-            this.Controls.Add(this.Directory);
+            this.Controls.Add(this._NO_TRANSLATE_Directory);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -146,7 +146,7 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox Directory;
+        private System.Windows.Forms.ComboBox _NO_TRANSLATE_Directory;
         private System.Windows.Forms.Button Browse;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton Central;

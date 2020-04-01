@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Utils;
 using GitExtUtils;
@@ -18,7 +19,6 @@ namespace GitUI.CommandsDialogs
     public partial class FormResolveConflicts : GitModuleForm
     {
         #region Translation
-        private readonly TranslationString _errorCaption = new TranslationString("Error");
         private readonly TranslationString _uskUseCustomMergeScript = new TranslationString("There is a custom merge script ({0}) for this file type." + Environment.NewLine + Environment.NewLine + "Do you want to use this custom merge script?");
         private readonly TranslationString _uskUseCustomMergeScriptCaption = new TranslationString("Custom merge script");
         private readonly TranslationString _fileUnchangedAfterMerge = new TranslationString("The file has not been modified by the merge. Usually this means that the file has been saved to the wrong location." + Environment.NewLine + Environment.NewLine + "The merge conflict will not be marked as solved. Please try again.");
@@ -63,8 +63,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _resetItemMergeText = new TranslationString("Abort merge");
         private readonly TranslationString _contextChooseLocalMergeText = new TranslationString("Choose local (ours)");
         private readonly TranslationString _contextChooseRemoteMergeText = new TranslationString("Choose remote (theirs)");
-
-        private readonly TranslationString _binaryFileWarningCaption = new TranslationString("Warning");
 
         private readonly TranslationString _noBaseFileMergeCaption = new TranslationString("Merge");
 
@@ -148,16 +146,39 @@ namespace GitUI.CommandsDialogs
             using (WaitCursorScope.Enter())
             {
                 int oldSelectedRow = 0;
+                bool isLastRow = false;
                 if (ConflictedFiles.SelectedRows.Count > 0)
                 {
                     oldSelectedRow = ConflictedFiles.SelectedRows[0].Index;
+                    isLastRow = ConflictedFiles.Rows.Count - 1 == oldSelectedRow;
                 }
 
                 ConflictedFiles.DataSource = ThreadHelper.JoinableTaskFactory.Run(() => Module.GetConflictsAsync());
                 ConflictedFiles.Columns[0].DataPropertyName = nameof(ConflictData.Filename);
+
+                // if the last row was previously selected, select the last row again
+                if (isLastRow && oldSelectedRow >= ConflictedFiles.Rows.Count)
+                {
+                    oldSelectedRow = Math.Max(0, ConflictedFiles.Rows.Count - 1);
+                }
+
                 if (ConflictedFiles.Rows.Count > oldSelectedRow)
                 {
-                    ConflictedFiles.Rows[oldSelectedRow].Selected = true;
+                    // as part of the databinding event, the fist row is selected automatically
+                    // if previously another row was selected, we need to reset the selection,
+                    // and select the desired row
+                    if (oldSelectedRow > 0)
+                    {
+                        if (ConflictedFiles.SelectedRows.Count > 0)
+                        {
+                            ConflictedFiles.SelectionChanged -= ConflictedFiles_SelectionChanged;
+                            ConflictedFiles.SelectedRows[0].Selected = false;
+                            ConflictedFiles.SelectionChanged += ConflictedFiles_SelectionChanged;
+                        }
+
+                        // select the desired row
+                        ConflictedFiles.Rows[oldSelectedRow].Selected = true;
+                    }
 
                     if (oldSelectedRow < ConflictedFiles.FirstDisplayedScrollingRowIndex ||
                         oldSelectedRow > (ConflictedFiles.FirstDisplayedScrollingRowIndex + ConflictedFiles.DisplayedRowCount(false)))
@@ -291,7 +312,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "Merge using script failed.\n" + ex);
+                MessageBox.Show(this, "Merge using script failed.\n" + ex, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return false;
@@ -330,7 +351,7 @@ namespace GitUI.CommandsDialogs
                 // The file is not modified, do not stage file and present warning
                 if (lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge)
                 {
-                    MessageBox.Show(this, _fileUnchangedAfterMerge.Text);
+                    MessageBox.Show(this, _fileUnchangedAfterMerge.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
@@ -362,11 +383,6 @@ namespace GitUI.CommandsDialogs
             {
                 case "kdiff3":
                 case "diffmerge":
-                case "beyondcompare3":
-                    arguments = arguments.Replace("\"$BASE\"", "");
-                    break;
-                case "araxis":
-                    arguments = arguments.Replace("-merge -3", "-merge");
                     arguments = arguments.Replace("\"$BASE\"", "");
                     break;
                 case "tortoisemerge":
@@ -457,12 +473,21 @@ namespace GitUI.CommandsDialogs
                     if (FileHelper.IsBinaryFileName(Module, item.Local.Filename))
                     {
                         if (MessageBox.Show(this, string.Format(_fileIsBinary.Text, _mergetool),
-                            _binaryFileWarningCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
-                            MessageBoxDefaultButton.Button2) == DialogResult.No)
+                                Strings.Warning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
+                                MessageBoxDefaultButton.Button2) == DialogResult.No)
                         {
                             BinaryFilesChooseLocalBaseRemote(item);
                             return;
                         }
+                    }
+
+                    if (string.IsNullOrWhiteSpace(_mergetoolCmd) || string.IsNullOrWhiteSpace(_mergetoolPath))
+                    {
+                        // mergetool is set, but arguments cannot be manipulated
+                        Module.RunMergeTool(item.Filename);
+
+                        // git-mergetool does not provide exit status, do not stage
+                        return;
                     }
 
                     string arguments = _mergetoolCmd;
@@ -471,12 +496,12 @@ namespace GitUI.CommandsDialogs
                     // git doesn't support 2-way merge, but we can try to adjust attributes to fix this.
                     // For kdiff3 this is easy; just remove the 3rd file from the arguments. Since the
                     // filenames are quoted, this takes a little extra effort. We need to remove these
-                    // quotes also. For tortoise and araxis a little bit more magic is needed.
+                    // quotes also. For other tools a little bit more magic is needed.
                     if (item.Base.Filename == null)
                     {
                         var text = string.Format(_noBaseRevision.Text, item.Filename);
                         DialogResult result = MessageBox.Show(this, text, _noBaseFileMergeCaption.Text,
-                            MessageBoxButtons.YesNoCancel);
+                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                         if (result == DialogResult.Yes)
                         {
                             Use2WayMerge(ref arguments);
@@ -509,7 +534,7 @@ namespace GitUI.CommandsDialogs
                     {
                         var text = string.Format(_errorStartingMergetool.Text, _mergetoolPath);
                         MessageBox.Show(this, text, _noBaseFileMergeCaption.Text,
-                            MessageBoxButtons.OK);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
@@ -559,10 +584,20 @@ namespace GitUI.CommandsDialogs
 
         private bool InitMergetool()
         {
-            _mergetool = Module.GetEffectiveSetting("merge.tool");
+            if (GitVersion.Current.SupportGuiMergeTool)
+            {
+                _mergetool = Module.GetEffectiveSetting(SettingKeyString.MergeToolKey);
+            }
+
+            // Fallback and older Git
             if (string.IsNullOrEmpty(_mergetool))
             {
-                MessageBox.Show(this, _noMergeTool.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _mergetool = Module.GetEffectiveSetting(SettingKeyString.MergeToolNoGuiKey);
+            }
+
+            if (string.IsNullOrEmpty(_mergetool))
+            {
+                MessageBox.Show(this, _noMergeTool.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -571,10 +606,18 @@ namespace GitUI.CommandsDialogs
                 _mergetoolCmd = Module.GetEffectiveSetting($"mergetool.{_mergetool}.cmd");
                 _mergetoolPath = Module.GetEffectiveSetting($"mergetool.{_mergetool}.path");
 
-                if (string.IsNullOrWhiteSpace(_mergetoolCmd) && string.IsNullOrWhiteSpace(_mergetoolPath))
+                // Temporary compatibility with GE <3.3
+                if (_mergetool == "kdiff3")
                 {
-                    MessageBox.Show(this, _noMergeToolConfigured.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
+                    if (string.IsNullOrEmpty(_mergetoolPath))
+                    {
+                        _mergetoolPath = "kdiff3";
+                    }
+
+                    if (string.IsNullOrEmpty(_mergetoolCmd))
+                    {
+                        _mergetoolCmd = "\"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
+                    }
                 }
 
                 if (EnvUtils.RunningOnWindows())
@@ -591,7 +634,7 @@ namespace GitUI.CommandsDialogs
 
                 if (!PathUtil.TryFindFullPath(_mergetoolPath, out string fullPath))
                 {
-                    MessageBox.Show(this, _noMergeToolConfigured.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, _noMergeToolConfigured.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 
@@ -648,7 +691,7 @@ namespace GitUI.CommandsDialogs
                 return "@" + _deleted.Text;
             }
 
-            return '@' + item.ObjectId.ToShortString(8);
+            return '@' + item.ObjectId.ToShortString();
         }
 
         private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)
@@ -768,7 +811,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!Module.HandleConflictSelectSide(fileName, "BASE"))
             {
-                MessageBox.Show(this, _chooseBaseFileFailedText.Text);
+                MessageBox.Show(this, _chooseBaseFileFailedText.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -797,7 +840,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!Module.HandleConflictSelectSide(fileName, "LOCAL"))
             {
-                MessageBox.Show(this, _chooseLocalFileFailedText.Text);
+                MessageBox.Show(this, _chooseLocalFileFailedText.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -826,7 +869,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!Module.HandleConflictSelectSide(fileName, "REMOTE"))
             {
-                MessageBox.Show(this, _chooseRemoteFileFailedText.Text);
+                MessageBox.Show(this, _chooseRemoteFileFailedText.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1052,7 +1095,7 @@ namespace GitUI.CommandsDialogs
 
                 if (!Module.HandleConflictsSaveSide(conflictData.Filename, fileName, side))
                 {
-                    MessageBox.Show(this, _failureWhileOpenFile.Text);
+                    MessageBox.Show(this, _failureWhileOpenFile.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 OsShellUtil.OpenAs(fileName);
@@ -1110,7 +1153,7 @@ namespace GitUI.CommandsDialogs
                     {
                         if (!Module.HandleConflictsSaveSide(conflictData.Filename, fileDialog.FileName, side))
                         {
-                            MessageBox.Show(this, _failureWhileSaveFile.Text);
+                            MessageBox.Show(this, _failureWhileSaveFile.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }

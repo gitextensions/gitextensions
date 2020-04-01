@@ -36,13 +36,7 @@ namespace GitCommands
         public ObjectId ObjectId { get; }
 
         [NotNull]
-        public string Guid
-        {
-            get
-            {
-                return ObjectId.ToString();
-            }
-        }
+        public string Guid => ObjectId.ToString();
 
         // TODO this should probably be null when not yet populated, similar to how ParentIds works
         [NotNull, ItemNotNull]
@@ -86,6 +80,7 @@ namespace GitCommands
         public string Subject { get; set; } = "";
         [CanBeNull]
         public string Body { get; set; }
+
         public bool HasMultiLineMessage { get; set; }
         public bool HasNotes { get; set; }
 
@@ -94,7 +89,7 @@ namespace GitCommands
 
         public string Name { get; set; }
 
-        public override string ToString() => $"{ObjectId.ToShortString(8)}:{Subject}";
+        public override string ToString() => $"{ObjectId.ToShortString()}:{Subject}";
 
         /// <summary>
         /// Indicates whether the commit is an artificial commit.

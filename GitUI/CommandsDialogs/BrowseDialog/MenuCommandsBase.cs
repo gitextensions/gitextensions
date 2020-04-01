@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GitCommands;
 using ResourceManager;
@@ -9,6 +10,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
     {
         // for translation category
         protected string TranslationCategoryName { get; set; }
+
+        void IDisposable.Dispose()
+        {
+        }
 
         public void Translate()
         {

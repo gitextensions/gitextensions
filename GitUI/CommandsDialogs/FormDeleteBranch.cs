@@ -72,7 +72,7 @@ namespace GitUI.CommandsDialogs
 
                 if (_currentBranch != null && selectedBranches.Any(branch => branch.Name == _currentBranch))
                 {
-                    MessageBox.Show(this, string.Format(_cannotDeleteCurrentBranchMessage.Text, _currentBranch), _deleteBranchCaption.Text);
+                    MessageBox.Show(this, string.Format(_cannotDeleteCurrentBranchMessage.Text, _currentBranch), _deleteBranchCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -82,14 +82,14 @@ namespace GitUI.CommandsDialogs
                 // we could show yes/no dialog and set forcing checkbox automatically, but more safe way is asking user to do it himself
                 if (hasUnmergedBranches && !ForceDelete.Checked)
                 {
-                    MessageBox.Show(this, _deleteUnmergedBranchForcingSuggestion.Text, _deleteBranchCaption.Text);
+                    MessageBox.Show(this, _deleteUnmergedBranchForcingSuggestion.Text, _deleteBranchCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // ask for confirmation to delete unmerged branch that may cause loosing commits
                 // (actually we could check if there are another branches pointing to that commit)
                 if (hasUnmergedBranches
-                    && MessageBox.Show(this, _deleteBranchQuestion.Text, _deleteBranchCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    && MessageBox.Show(this, _deleteBranchQuestion.Text, _deleteBranchCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 {
                     return;
                 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Windows.Forms;
 using GitCommands.Utils;
 
 namespace GitCommands.Settings
@@ -141,12 +142,6 @@ namespace GitCommands.Settings
                     return;
                 }
 
-                int currentProcessId;
-                using (var currentProcess = Process.GetCurrentProcess())
-                {
-                    currentProcessId = currentProcess.Id;
-                }
-
                 var tmpFile = Path.GetTempFileName();
                 WriteSettings(tmpFile);
 
@@ -157,14 +152,28 @@ namespace GitCommands.Settings
                     {
                         File.Copy(SettingsFilePath, backupName, true);
                     }
-                    catch (IOException)
+                    catch (Exception)
                     {
                         // Ignore errors for the backup file
                     }
                 }
 
-                File.Copy(tmpFile, SettingsFilePath, true);
-                File.Delete(tmpFile);
+                try
+                {
+                    // ensure the directory structure exists
+                    var parentFolder = Path.GetDirectoryName(SettingsFilePath);
+                    if (!Directory.Exists(parentFolder))
+                    {
+                        Directory.CreateDirectory(parentFolder);
+                    }
+
+                    File.Copy(tmpFile, SettingsFilePath, true);
+                    File.Delete(tmpFile);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Cannot save settings", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
 
                 _lastFileModificationDate = GetLastFileModificationUtc();
                 _lastFileRead = DateTime.UtcNow;

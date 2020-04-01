@@ -1,4 +1,5 @@
 using System;
+using GitCommands.Utils;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI
@@ -7,7 +8,7 @@ namespace GitUI
     {
         private static void Try(Action<TaskbarManager> action)
         {
-            if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            if (EnvUtils.RunningOnWindowsWithMainWindow() && TaskbarManager.IsPlatformSupported)
             {
                 try
                 {

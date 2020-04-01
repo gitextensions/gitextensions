@@ -308,7 +308,6 @@ namespace GitUI.Script
                     if (!string.IsNullOrEmpty(newString))
                     {
                         remote = newString;
-                        newString = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                         url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                         newString = GetRemotePath(url);
                     }
@@ -510,7 +509,7 @@ namespace GitUI.Script
 
         internal static TestAccessor GetTestAccessor() => new TestAccessor();
 
-        public readonly struct TestAccessor
+        internal readonly struct TestAccessor
         {
             public string ParseScriptArguments(string arguments, string option, IWin32Window owner, RevisionGridControl revisionGrid, IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions, List<IGitRef> selectedTags, List<IGitRef> selectedBranches, List<IGitRef> selectedLocalBranches, List<IGitRef> selectedRemoteBranches, List<string> selectedRemotes, GitRevision selectedRevision, List<IGitRef> currentTags, List<IGitRef> currentBranches, List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches, GitRevision currentRevision, string currentRemote) =>
                 ScriptOptionsParser.ParseScriptArguments(arguments, option, owner, revisionGrid, module, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision, currentRemote);

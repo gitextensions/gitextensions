@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsAnnotationsVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Externals\ICSharpCode.TextEditor\Project\ICSharpCode.TextEditor.csproj" />
+    <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\CommonTestUtils\CommonTestUtils.csproj" />
+  </ItemGroup>
+
+</Project>
+

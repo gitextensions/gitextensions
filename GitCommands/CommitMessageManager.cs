@@ -1,5 +1,8 @@
-﻿using System.IO.Abstractions;
+﻿using System;
+using System.IO;
+using System.IO.Abstractions;
 using System.Text;
+using System.Windows.Forms;
 using JetBrains.Annotations;
 
 namespace GitCommands
@@ -34,6 +37,10 @@ namespace GitCommands
 
     public sealed class CommitMessageManager : ICommitMessageManager
     {
+        private string CannotReadCommitMessage => "Cannot read commit message";
+        private string CannotSaveCommitMessage => "Cannot save commit message";
+        private string CannotAccessFile => "Exception: \"{0}\" when accessing {1}";
+
         private readonly string _amendSaveStatePath;
         private readonly string _commitMessagePath;
         private readonly string _mergeMessagePath;
@@ -49,7 +56,7 @@ namespace GitCommands
         {
         }
 
-        private CommitMessageManager(string workingDirGitDir, Encoding commitEncoding, IFileSystem fileSystem, string overriddenCommitMessage = null)
+        internal CommitMessageManager(string workingDirGitDir, Encoding commitEncoding, IFileSystem fileSystem, string overriddenCommitMessage = null)
         {
             _fileSystem = fileSystem;
             _commitEncoding = commitEncoding;
@@ -99,7 +106,20 @@ namespace GitCommands
                 }
 
                 var (file, exists) = GetMergeOrCommitMessagePath();
-                return exists ? _fileSystem.File.ReadAllText(file, _commitEncoding) : string.Empty;
+                string result;
+                try
+                {
+                    result = exists ? _fileSystem.File.ReadAllText(file, _commitEncoding) : string.Empty;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(null, string.Format(CannotAccessFile, ex.Message, file),
+                        CannotReadCommitMessage, MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation);
+                    result = string.Empty;
+                }
+
+                return result;
             }
             set
             {
@@ -108,7 +128,23 @@ namespace GitCommands
                 // do not remember commit message when they have been specified by the command line
                 if (content != _overriddenCommitMessage)
                 {
-                    _fileSystem.File.WriteAllText(GetMergeOrCommitMessagePath().FilePath, content, _commitEncoding);
+                    var path = GetMergeOrCommitMessagePath().filePath;
+                    if (!_fileSystem.Directory.Exists(Path.GetDirectoryName(path)))
+                    {
+                        // The repo no longer exists
+                        return;
+                    }
+
+                    try
+                    {
+                        _fileSystem.File.WriteAllText(path, content, _commitEncoding);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(null, string.Format(CannotAccessFile, ex.Message, path),
+                            CannotSaveCommitMessage, MessageBoxButtons.OK,
+                            MessageBoxIcon.Exclamation);
+                    }
                 }
             }
         }
@@ -122,20 +158,14 @@ namespace GitCommands
 
         private string GetFilePath(string workingDirGitDir, string fileName) => _fileSystem.Path.Combine(workingDirGitDir, fileName);
 
-        private (string FilePath, bool FileExists) GetMergeOrCommitMessagePath()
+        private (string filePath, bool fileExists) GetMergeOrCommitMessagePath()
         {
             if (IsMergeCommit)
             {
-                return (_mergeMessagePath, FileExists: true);
+                return (_mergeMessagePath, fileExists: true);
             }
 
             return (_commitMessagePath, _fileSystem.File.Exists(_commitMessagePath));
-        }
-
-        internal class TestAccessor
-        {
-            internal static CommitMessageManager Construct(string workingDirGitDir, Encoding commitEncoding, IFileSystem fileSystem, string overriddenCommitMessage)
-                => new CommitMessageManager(workingDirGitDir, commitEncoding, fileSystem, overriddenCommitMessage);
         }
     }
 }

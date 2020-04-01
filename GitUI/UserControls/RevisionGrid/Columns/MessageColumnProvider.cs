@@ -6,7 +6,9 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
+using GitUI.Theming;
 using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Columns
@@ -14,13 +16,20 @@ namespace GitUI.UserControls.RevisionGrid.Columns
     internal sealed class MessageColumnProvider : ColumnProvider
     {
         public const int MaxSuperprojectRefs = 4;
+        private readonly StringBuilder _toolTipBuilder = new StringBuilder(200);
+
+        private readonly Image _bisectGoodImage = DpiUtil.Scale(Images.BisectGood);
+        private readonly Image _bisectBadImage = DpiUtil.Scale(Images.BisectBad);
+        private readonly Image _fixupAndSquashImage = DpiUtil.Scale(Images.FixupAndSquashMessageMarker);
 
         private readonly RevisionGridControl _grid;
+        private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
 
-        public MessageColumnProvider(RevisionGridControl grid)
+        public MessageColumnProvider(RevisionGridControl grid, IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
             : base("Message")
         {
             _grid = grid;
+            _gitRevisionSummaryBuilder = gitRevisionSummaryBuilder;
 
             Column = new DataGridViewTextBoxColumn
             {
@@ -33,23 +42,15 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             };
         }
 
-        private readonly Image _bisectGoodImage = DpiUtil.Scale(Images.BisectGood);
-        private readonly Image _bisectBadImage = DpiUtil.Scale(Images.BisectBad);
-        private readonly Image _fixupAndSquashImage = DpiUtil.Scale(Images.FixupAndSquashMessageMarker);
-
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
         {
             var isRowSelected = e.State.HasFlag(DataGridViewElementStates.Selected);
-
             var indicator = new MultilineIndicator(e, revision);
-
             var messageBounds = indicator.RemainingCellBounds;
-
             var superprojectRefs = new List<IGitRef>();
-
             var offset = ColumnLeftMargin;
-
             var normalFont = style.NormalFont;
+            var hasSelectedRef = false;
 
             #region Draw super project references (for submodules)
 
@@ -93,13 +94,10 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             #endregion
 
-            var hasSelectedRef = false;
-
             if (revision.Refs.Count != 0)
             {
-                var gitRefs = SortRefs(revision.Refs);
-
-                foreach (var gitRef in gitRefs.Where(FilterRef))
+                var gitRefs = SortRefs(revision.Refs.Where(FilterRef));
+                foreach (var gitRef in gitRefs)
                 {
                     if (offset > indicator.RemainingCellBounds.Width)
                     {
@@ -180,7 +178,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 var baseOffset = offset;
 
                 // Add fake "refs" for artificial commits
-                RevisionGridRefRenderer.DrawRef(isRowSelected, normalFont, ref offset, revision.Subject, AppSettings.OtherTagColor, RefArrowType.None, messageBounds, e.Graphics, dashedLine: false, fill: true);
+                RevisionGridRefRenderer.DrawRef(isRowSelected, normalFont, ref offset, revision.Subject, AppColor.OtherTag.GetThemeColor(), RefArrowType.None, messageBounds, e.Graphics, dashedLine: false, fill: true);
 
                 var max = Math.Max(
                     TextRenderer.MeasureText(ResourceManager.Strings.Workspace, normalFont).Width,
@@ -289,38 +287,42 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
         {
+            _toolTipBuilder.Clear();
+
             if (!revision.IsArtificial && (revision.HasMultiLineMessage || revision.Refs.Count != 0))
             {
-                var s = new StringBuilder();
+                var bodySummary = _gitRevisionSummaryBuilder.BuildSummary(revision.Body);
+                var initialLength = (bodySummary?.Length ?? 50) + 10;
+                _toolTipBuilder.EnsureCapacity(initialLength);
 
-                s.Append(revision.Body?.TrimEnd() ?? revision.Subject + Strings.BodyNotLoaded);
+                _toolTipBuilder.Append(bodySummary ?? revision.Subject + Strings.BodyNotLoaded);
 
                 if (revision.Refs.Count != 0)
                 {
-                    if (s.Length != 0)
+                    if (_toolTipBuilder.Length != 0)
                     {
-                        s.AppendLine();
-                        s.AppendLine();
+                        _toolTipBuilder.AppendLine();
+                        _toolTipBuilder.AppendLine();
                     }
 
                     foreach (var gitRef in SortRefs(revision.Refs))
                     {
                         if (gitRef.IsBisectGood)
                         {
-                            s.AppendLine("Marked as good in bisect");
+                            _toolTipBuilder.AppendLine(Strings.MarkBisectAsGood);
                         }
                         else if (gitRef.IsBisectBad)
                         {
-                            s.AppendLine("Marked as bad in bisect");
+                            _toolTipBuilder.AppendLine(Strings.MarkBisectAsBad);
                         }
                         else
                         {
-                            s.Append('[').Append(gitRef.Name).Append(']').AppendLine();
+                            _toolTipBuilder.Append('[').Append(gitRef.Name).Append(']').AppendLine();
                         }
                     }
                 }
 
-                toolTip = s.ToString();
+                toolTip = _toolTipBuilder.ToString();
                 return true;
             }
 
@@ -330,8 +332,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                 if (stats != null)
                 {
-                    var str = new StringBuilder();
-
                     void Append(IReadOnlyList<GitItemStatus> items, string singular)
                     {
                         if (items == null || items.Count == 0)
@@ -339,39 +339,39 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             return;
                         }
 
-                        if (str.Length != 0)
+                        if (_toolTipBuilder.Length != 0)
                         {
-                            str.AppendLine();
+                            _toolTipBuilder.AppendLine();
                         }
 
-                        str.Append(items.Count).Append(' ');
+                        _toolTipBuilder.Append(items.Count).Append(' ');
 
                         if (items.Count == 1)
                         {
-                            str.AppendLine(singular);
+                            _toolTipBuilder.AppendLine(singular);
                         }
                         else
                         {
-                            str.Append(singular).AppendLine("s");
+                            _toolTipBuilder.Append(singular).AppendLine("s");
                         }
 
                         const int maxItems = 5;
 
                         for (var i = 0; i < maxItems && i < items.Count; i++)
                         {
-                            str.Append("- ").AppendLine(items[i].Name);
+                            _toolTipBuilder.Append("- ").AppendLine(items[i].Name);
                         }
 
                         if (items.Count > maxItems)
                         {
                             var unlistedCount = items.Count - maxItems;
-                            str.Append("- (").Append(unlistedCount).Append(" more file");
+                            _toolTipBuilder.Append("- (").Append(unlistedCount).Append(" more file");
                             if (unlistedCount != 1)
                             {
-                                str.Append('s');
+                                _toolTipBuilder.Append('s');
                             }
 
-                            str.Append(')').AppendLine();
+                            _toolTipBuilder.Append(')').AppendLine();
                         }
                     }
 
@@ -382,7 +382,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     Append(stats.SubmodulesChanged, "changed submodule");
                     Append(stats.SubmodulesDirty, "dirty submodule");
 
-                    toolTip = str.ToString();
+                    toolTip = _toolTipBuilder.ToString();
                     return true;
                 }
             }

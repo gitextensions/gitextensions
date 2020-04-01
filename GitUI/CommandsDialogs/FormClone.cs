@@ -10,6 +10,7 @@ using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -80,7 +81,7 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
 
-            if (CanBeGitURL(_url) || GitModule.IsValidGitWorkingDir(_url))
+            if (CanBeGitURL(_url))
             {
                 _NO_TRANSLATE_From.Text = _url;
             }
@@ -182,16 +183,14 @@ namespace GitUI.CommandsDialogs
 
         private static bool CanBeGitURL(string url)
         {
-            if (url == null)
+            if (url.IsNotNullOrWhitespace())
             {
                 return false;
             }
 
-            string urlLowered = url.ToLowerInvariant();
-
-            return urlLowered.StartsWith("http") ||
-                urlLowered.StartsWith("git") ||
-                urlLowered.StartsWith("ssh");
+            return PathUtil.IsUrl(url)
+                || url.EndsWith(".git", StringComparison.CurrentCultureIgnoreCase)
+                || GitModule.IsValidGitWorkingDir(url);
         }
 
         private void OkClick(object sender, EventArgs e)
@@ -368,53 +367,32 @@ namespace GitUI.CommandsDialogs
 
         private void ToTextUpdate(object sender, EventArgs e)
         {
-            string destinationPath = string.Empty;
+            bool destinationUnfilled = string.IsNullOrEmpty(_NO_TRANSLATE_To.Text) || _NO_TRANSLATE_To.Text.IndexOfAny(System.IO.Path.GetInvalidPathChars()) >= 0;
+            bool subDirectoryUnfilled = string.IsNullOrEmpty(_NO_TRANSLATE_NewDirectory.Text) || _NO_TRANSLATE_NewDirectory.Text.IndexOfAny(System.IO.Path.GetInvalidPathChars()) >= 0;
 
-            if (string.IsNullOrEmpty(_NO_TRANSLATE_To.Text))
-            {
-                destinationPath += "[" + label2.Text + "]";
-            }
-            else
-            {
-                destinationPath += _NO_TRANSLATE_To.Text.TrimEnd('\\', '/');
-            }
+            string destinationDirectory = destinationUnfilled ? $@"[{destinationLabel.Text}]" : _NO_TRANSLATE_To.Text;
+            string destinationSubDirectory = subDirectoryUnfilled ? $@"[{subdirectoryLabel.Text}]" : _NO_TRANSLATE_NewDirectory.Text;
 
-            destinationPath += "\\";
+            string destinationPath = Path.Combine(destinationDirectory, destinationSubDirectory);
 
-            if (string.IsNullOrEmpty(_NO_TRANSLATE_NewDirectory.Text))
-            {
-                destinationPath += "[" + label3.Text + "]";
-            }
-            else
-            {
-                destinationPath += _NO_TRANSLATE_NewDirectory.Text;
-            }
+            string newRepositoryLocationInfo = string.Format(_infoNewRepositoryLocation.Text, destinationPath);
 
-            Info.Text = string.Format(_infoNewRepositoryLocation.Text, destinationPath);
-
-            if (destinationPath.Contains("[") || destinationPath.Contains("]"))
+            if (destinationUnfilled || subDirectoryUnfilled)
             {
-                Info.ForeColor = Color.Red;
+                Info.Text = newRepositoryLocationInfo;
+                Info.ForeColor = Color.Red.AdaptTextColor();
                 return;
             }
 
-            if (Directory.Exists(destinationPath))
+            if (Directory.Exists(destinationPath) && Directory.EnumerateFileSystemEntries(destinationPath).Any())
             {
-                if (Directory.GetDirectories(destinationPath).Length > 0 || Directory.GetFiles(destinationPath).Length > 0)
-                {
-                    Info.Text += " " + _infoDirectoryExists.Text;
-                    Info.ForeColor = Color.Red;
-                }
-                else
-                {
-                    Info.ForeColor = SystemColors.ControlText;
-                }
+                Info.Text = $@"{newRepositoryLocationInfo} {_infoDirectoryExists.Text}";
+                Info.ForeColor = Color.Red.AdaptTextColor();
+                return;
             }
-            else
-            {
-                Info.Text += " " + _infoDirectoryNew.Text;
-                Info.ForeColor = SystemColors.ControlText;
-            }
+
+            Info.Text = $@"{newRepositoryLocationInfo} {_infoDirectoryNew.Text}";
+            Info.ForeColor = SystemColors.ControlText;
         }
 
         private void NewDirectoryTextChanged(object sender, EventArgs e)

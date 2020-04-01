@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
+using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SettingsDialog.Plugins;
@@ -72,10 +73,9 @@ namespace GitUI.CommandsDialogs
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AppearanceSettingsPage>(this), gitExtPageRef, Images.Appearance);
             var appearanceSettingsPage = AppearanceSettingsPage.GetPageReference();
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ColorsSettingsPage>(this), appearanceSettingsPage, Images.Colors);
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AppearanceFontsSettingsPage>(this), appearanceSettingsPage, Images.Font);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AppearanceFontsSettingsPage>(this), appearanceSettingsPage, Images.Font.AdaptLightness());
 
-            bool light = ColorHelper.IsLightTheme();
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<RevisionLinksSettingsPage>(this), gitExtPageRef, light ? Images.Link : Images.Link_inv);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<RevisionLinksSettingsPage>(this), gitExtPageRef, Images.Link.AdaptLightness());
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<BuildServerIntegrationSettingsPage>(this), gitExtPageRef, Images.Integration);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ScriptsSettingsPage>(this), gitExtPageRef, Images.Console);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<HotkeysSettingsPage>(this), gitExtPageRef, Images.Hotkey);
@@ -106,20 +106,24 @@ namespace GitUI.CommandsDialogs
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitSettingsPage>(this), gitPageRef, Images.FolderOpen);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitConfigSettingsPage>(this), gitPageRef, Images.GeneralSettings);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitConfigAdvancedSettingsPage>(this), gitPageRef, Images.AdvancedSettings);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitRootIntroductionPage>(this), gitPageRef, icon: null, asRoot: true);
 
             // Plugins settings
             settingsTreeView.AddSettingsPage(new PluginsSettingsGroup(), null, Images.Plugin);
             SettingsPageReference pluginsPageRef = PluginsSettingsGroup.GetPageReference();
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<PluginRootIntroductionPage>(this), pluginsPageRef, icon: null, asRoot: true);
 
-            var pluginEntries = PluginRegistry.Plugins
-                .Where(p => p.HasSettings)
-                .Select(plugin => (Plugin: plugin, Page: PluginSettingsPage.CreateSettingsPageFromPlugin(this, plugin)))
-                .OrderBy(entry => entry.Page.GetTitle(), StringComparer.CurrentCultureIgnoreCase);
-
-            foreach (var entry in pluginEntries)
+            lock (PluginRegistry.Plugins)
             {
-                settingsTreeView.AddSettingsPage(entry.Page, pluginsPageRef, entry.Plugin.Icon as Bitmap);
+                var pluginEntries = PluginRegistry.Plugins
+                    .Where(p => p.HasSettings)
+                    .Select(plugin => (Plugin: plugin, Page: PluginSettingsPage.CreateSettingsPageFromPlugin(this, plugin)))
+                    .OrderBy(entry => entry.Page.GetTitle(), StringComparer.CurrentCultureIgnoreCase);
+
+                foreach (var entry in pluginEntries)
+                {
+                    settingsTreeView.AddSettingsPage(entry.Page, pluginsPageRef, entry.Plugin.Icon as Bitmap);
+                }
             }
 
             if (initialPage == null && _lastSelectedSettingsPageType != null)
@@ -156,6 +160,74 @@ namespace GitUI.CommandsDialogs
             }
 
             WindowState = FormWindowState.Normal;
+
+            if (HasClippedControl())
+            {
+                var appFont = AppSettings.Font;
+                var smallFont = new Font(appFont.FontFamily, emSize: 8);
+                ReplaceFont(Controls, appFont, smallFont);
+                foreach (var page in settingsTreeView.SettingsPages)
+                {
+                    ReplaceFont(page?.GuiControl?.Controls, appFont, smallFont);
+                }
+            }
+
+            return;
+
+            // TODO: C#8 static
+            void ReplaceFont(Control.ControlCollection controls, Font oldFont, Font newFont)
+            {
+                if (controls == null)
+                {
+                    return;
+                }
+
+                foreach (Control control in controls)
+                {
+                    if (control.Font.Equals(oldFont))
+                    {
+                        control.Font = newFont;
+                    }
+
+                    ReplaceFont(control.Controls, oldFont, newFont);
+                }
+            }
+
+            bool HasClippedControl()
+            {
+                foreach (var page in settingsTreeView.SettingsPages)
+                {
+                    if (ContainsClippedControl(page?.GuiControl?.Controls))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+
+                bool ContainsClippedControl(Control.ControlCollection controls)
+                {
+                    if (controls == null)
+                    {
+                        return false;
+                    }
+
+                    foreach (Control control in controls)
+                    {
+                        if (control.Bottom > panelCurrentSettingsPage.Bottom && control.Visible && control.GetType() != typeof(TableLayoutPanel))
+                        {
+                            return true;
+                        }
+
+                        if (ContainsClippedControl(control.Controls))
+                        {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+            }
         }
 
         private void FormSettings_Shown(object sender, EventArgs e)

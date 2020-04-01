@@ -2,8 +2,9 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using GitCommands;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -63,7 +64,6 @@ namespace GitUI
         {
             var oldMode = graphics.SmoothingMode;
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            bool light = ColorHelper.IsLightTheme();
 
             try
             {
@@ -71,8 +71,8 @@ namespace GitUI
                 {
                     if (fill)
                     {
-                        var color1 = Lerp(color, light ? Color.White : Color.Black, 0.92F);
-                        var color2 = Lerp(color1, light ? Color.White : Color.DarkSlateBlue, light ? 0.9F : 0.3F);
+                        var color1 = Lerp(color, SystemColors.Window, 0.92F);
+                        var color2 = Lerp(color1, SystemColors.Window, 0.9f);
                         using (var brush = new LinearGradientBrush(bounds, color1, color2, angle: 90))
                         {
                             graphics.FillPath(brush, path);
@@ -80,11 +80,11 @@ namespace GitUI
                     }
                     else if (isRowSelected)
                     {
-                        graphics.FillPath(light ? Brushes.White : Brushes.Black, path);
+                        graphics.FillPath(SystemBrushes.Window, path);
                     }
 
                     // frame
-                    using (var pen = new Pen(Lerp(color, light ? Color.White : Color.Black, light ? 0.83F : 0.7F)))
+                    using (var pen = new Pen(Lerp(color, SystemColors.Window, 0.83F)))
                     {
                         if (dashedLine)
                         {
@@ -131,20 +131,20 @@ namespace GitUI
         {
             if (gitRef.IsTag)
             {
-                return AppSettings.TagColor;
+                return AppColor.Tag.GetThemeColor();
             }
 
             if (gitRef.IsHead)
             {
-                return AppSettings.BranchColor;
+                return AppColor.Branch.GetThemeColor();
             }
 
             if (gitRef.IsRemote)
             {
-                return AppSettings.RemoteBranchColor;
+                return AppColor.RemoteBranch.GetThemeColor();
             }
 
-            return AppSettings.OtherTagColor;
+            return AppColor.OtherTag.GetThemeColor();
         }
 
         private static void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color, bool filled)

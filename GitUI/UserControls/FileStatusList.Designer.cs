@@ -36,12 +36,13 @@
             this.FilterWatermarkLabel = new System.Windows.Forms.Label();
             this.FilterToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.lblSplitter = new System.Windows.Forms.Label();
+            this.DeleteFilterButton = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // FileStatusListView
             // 
-            this.FileStatusListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.FileStatusListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.FileStatusListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.FileStatusListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -57,18 +58,18 @@
             this.FileStatusListView.ShowItemToolTips = true;
             this.FileStatusListView.Size = new System.Drawing.Size(682, 464);
             this.FileStatusListView.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.FileStatusListView.TabIndex = 2;
+            this.FileStatusListView.TabIndex = 4;
             this.FileStatusListView.UseCompatibleStateImageBehavior = false;
             this.FileStatusListView.View = System.Windows.Forms.View.Details;
+            this.FileStatusListView.GroupMouseDown += new System.EventHandler<GitUI.UserControls.ListViewGroupMouseEventArgs>(this.FileStatusListView_GroupMouseDown);
             this.FileStatusListView.DrawSubItem += new System.Windows.Forms.DrawListViewSubItemEventHandler(this.FileStatusListView_DrawSubItem);
+            this.FileStatusListView.ClientSizeChanged += new System.EventHandler(this.FileStatusListView_ClientSizeChanged);
             this.FileStatusListView.DoubleClick += new System.EventHandler(this.FileStatusListView_DoubleClick);
             this.FileStatusListView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FileStatusListView_KeyDown);
             this.FileStatusListView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FileStatusListView_MouseDown);
             this.FileStatusListView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FileStatusListView_MouseMove);
-            this.FileStatusListView.GroupMouseDown += new System.EventHandler<GitUI.UserControls.ListViewGroupMouseEventArgs>(this.FileStatusListView_GroupMouseDown);
-            this.FileStatusListView.ClientSizeChanged += new System.EventHandler(this.FileStatusListView_ClientSizeChanged);
             // 
-            // columnHeader1
+            // columnHeader
             // 
             this.columnHeader.Text = "Files";
             this.columnHeader.Width = 678;
@@ -77,12 +78,12 @@
             // 
             this.NoFiles.AutoSize = true;
             this.NoFiles.BackColor = System.Drawing.SystemColors.Window;
-            this.NoFiles.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.NoFiles.ForeColor = System.Drawing.SystemColors.GrayText;
             this.NoFiles.Location = new System.Drawing.Point(4, 4);
             this.NoFiles.Margin = new System.Windows.Forms.Padding(0);
             this.NoFiles.Name = "NoFiles";
-            this.NoFiles.Size = new System.Drawing.Size(63, 13);
-            this.NoFiles.TabIndex = 1;
+            this.NoFiles.Size = new System.Drawing.Size(65, 13);
+            this.NoFiles.TabIndex = 5;
             this.NoFiles.Text = "No changes";
             // 
             // FilterComboBox
@@ -94,25 +95,24 @@
             this.FilterComboBox.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
             this.FilterComboBox.Name = "FilterComboBox";
             this.FilterComboBox.Size = new System.Drawing.Size(682, 21);
-            this.FilterComboBox.TabIndex = 0;
+            this.FilterComboBox.TabIndex = 2;
             this.FilterComboBox.SelectedIndexChanged += new System.EventHandler(this.FilterComboBox_SelectedIndexChanged);
             this.FilterComboBox.TextUpdate += new System.EventHandler(this.FilterComboBox_TextUpdate);
+            this.FilterComboBox.SizeChanged += new System.EventHandler(this.FilterComboBox_SizeChanged);
             this.FilterComboBox.GotFocus += new System.EventHandler(this.FilterComboBox_GotFocus);
             this.FilterComboBox.LostFocus += new System.EventHandler(this.FilterComboBox_LostFocus);
             this.FilterComboBox.MouseEnter += new System.EventHandler(this.FilterComboBox_MouseEnter);
-            this.FilterComboBox.SizeChanged += new System.EventHandler(this.FilterComboBox_SizeChanged);
             // 
             // FilterWatermarkLabel
             // 
             this.FilterWatermarkLabel.AutoSize = true;
             this.FilterWatermarkLabel.BackColor = System.Drawing.SystemColors.Window;
-            this.FilterWatermarkLabel.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.FilterWatermarkLabel.ForeColor = System.Drawing.SystemColors.GrayText;
             this.FilterWatermarkLabel.Location = new System.Drawing.Point(4, 4);
             this.FilterWatermarkLabel.Name = "FilterWatermarkLabel";
-            this.FilterWatermarkLabel.Size = new System.Drawing.Size(65, 13);
+            this.FilterWatermarkLabel.Size = new System.Drawing.Size(184, 13);
             this.FilterWatermarkLabel.TabIndex = 0;
             this.FilterWatermarkLabel.Text = "Filter files using a regular expression...";
-            //this.FilterWatermarkLabel.Font.Size = 7.0F;
             this.FilterWatermarkLabel.Click += new System.EventHandler(this.FilterWatermarkLabel_Click);
             // 
             // FilterToolTip
@@ -127,14 +127,27 @@
             // lblSplitter
             // 
             this.lblSplitter.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblSplitter.Location = new System.Drawing.Point(0, 22);
+            this.lblSplitter.Location = new System.Drawing.Point(0, 21);
             this.lblSplitter.Name = "lblSplitter";
             this.lblSplitter.Size = new System.Drawing.Size(682, 2);
-            this.lblSplitter.TabIndex = 1;
+            this.lblSplitter.TabIndex = 3;
+            // 
+            // DeleteFilterButton
+            // 
+            this.DeleteFilterButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.DeleteFilterButton.BackColor = System.Drawing.SystemColors.Window;
+            this.DeleteFilterButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.DeleteFilterButton.Image = global::GitUI.Properties.Resources.DeleteText;
+            this.DeleteFilterButton.Location = new System.Drawing.Point(646, 1);
+            this.DeleteFilterButton.Name = "DeleteFilterButton";
+            this.DeleteFilterButton.Size = new System.Drawing.Size(18, 19);
+            this.DeleteFilterButton.TabIndex = 1;
+            this.DeleteFilterButton.Click += new System.EventHandler(this.DeleteFilterButton_Click);
             // 
             // FileStatusList
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.Controls.Add(this.DeleteFilterButton);
             this.Controls.Add(this.FilterWatermarkLabel);
             this.Controls.Add(this.NoFiles);
             this.Controls.Add(this.FileStatusListView);
@@ -157,5 +170,6 @@
         private System.Windows.Forms.Label FilterWatermarkLabel;
         private System.Windows.Forms.ToolTip FilterToolTip;
         private System.Windows.Forms.Label lblSplitter;
+        private System.Windows.Forms.Label DeleteFilterButton;
     }
 }

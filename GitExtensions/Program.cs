@@ -10,6 +10,7 @@ using GitUI;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Infrastructure.Telemetry;
+using GitUI.Theming;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
@@ -18,14 +19,25 @@ namespace GitExtensions
 {
     internal static class Program
     {
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool SetProcessDPIAware();
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         private static void Main()
         {
+            if (Environment.OSVersion.Version.Major >= 6)
+            {
+                SetProcessDPIAware();
+            }
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            ThemeModule.Load();
+            Application.ApplicationExit += (s, e) => ThemeModule.Unload();
 
             HighDpiMouseCursors.Enable();
 
@@ -52,6 +64,7 @@ namespace GitExtensions
 
             // This is done here so these values can be used in the GitGui project but this project is the authority of the values.
             UserEnvironmentInformation.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty);
+            AppTitleGenerator.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.Branch);
 
             // NOTE we perform the rest of the application's startup in another method to defer
             // the JIT processing more types than required to configure NBug.
@@ -164,23 +177,25 @@ namespace GitExtensions
                 // while parsing command line arguments, it unescapes " incorrectly
                 // https://github.com/gitextensions/gitextensions/issues/3489
                 string dirArg = args[2].TrimEnd('"');
-
-                if (!Directory.Exists(dirArg))
+                if (!string.IsNullOrWhiteSpace(dirArg))
                 {
-                    dirArg = Path.GetDirectoryName(dirArg);
+                    if (!Directory.Exists(dirArg))
+                    {
+                        dirArg = Path.GetDirectoryName(dirArg);
+                    }
+
+                    workingDir = GitModule.TryFindGitWorkingDir(dirArg);
+
+                    if (Directory.Exists(workingDir))
+                    {
+                        workingDir = Path.GetFullPath(workingDir);
+                    }
+
+                    // Do not add this working directory to the recent repositories. It is a nice feature, but it
+                    // also increases the startup time
+                    ////if (Module.ValidWorkingDir())
+                    ////   Repositories.RepositoryHistory.AddMostRecentRepository(Module.WorkingDir);
                 }
-
-                workingDir = GitModule.TryFindGitWorkingDir(dirArg);
-
-                if (Directory.Exists(workingDir))
-                {
-                    workingDir = Path.GetFullPath(workingDir);
-                }
-
-                // Do not add this working directory to the recent repositories. It is a nice feature, but it
-                // also increases the startup time
-                ////if (Module.ValidWorkingDir())
-                ////   Repositories.RepositoryHistory.AddMostRecentRepository(Module.WorkingDir);
             }
 
             if (args.Length <= 1 && workingDir == null && AppSettings.StartWithRecentWorkingDir)
@@ -223,14 +238,13 @@ namespace GitExtensions
                     {
                         string messageContent = string.Format("There is a problem with the user.xml configuration file.{0}{0}The error message was: {1}{0}{0}The configuration file is usually found in: {2}{0}{0}Problems with configuration can usually be solved by deleting the configuration file. Would you like to delete the file?", Environment.NewLine, in3.Message, localSettingsPath);
 
-                        if (DialogResult.Yes.Equals(MessageBox.Show(messageContent, "Configuration Error", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2)))
+                        if (MessageBox.Show(messageContent, "Configuration Error",
+                                            MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
                         {
-                            try
+                            if (localSettingsPath.TryDeleteDirectory(out string errorMessage))
                             {
-                                Directory.Delete(localSettingsPath, true); // deletes all application settings not just for this instance - but should work
-
                                 // Restart Git Extensions with the same arguments after old config is deleted?
-                                if (DialogResult.OK.Equals(MessageBox.Show(string.Format("Files have been deleted.{0}{0}Would you like to attempt to restart Git Extensions?", Environment.NewLine), "Configuration Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Information)))
+                                if (DialogResult.OK.Equals(MessageBox.Show(string.Format("Files have been deleted.{0}{0}Would you like to attempt to restart Git Extensions?", Environment.NewLine), "Configuration Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)))
                                 {
                                     var args = Environment.GetCommandLineArgs();
                                     var p = new System.Diagnostics.Process { StartInfo = { FileName = args[0] } };
@@ -243,7 +257,7 @@ namespace GitExtensions
                                     p.Start();
                                 }
                             }
-                            catch (IOException)
+                            else
                             {
                                 MessageBox.Show(string.Format("Could not delete all files and folders in {0}!", localSettingsPath), "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }

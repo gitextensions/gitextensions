@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
+using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -55,9 +56,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             result.AdjustForDpiScaling();
             result.EnableRemoveWordHotkey();
+            result.FixVisualStyle();
 
             result.Init(pageHost);
-
             return result;
         }
 

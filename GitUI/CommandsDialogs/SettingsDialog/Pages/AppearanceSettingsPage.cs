@@ -21,6 +21,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public AppearanceSettingsPage()
         {
             InitializeComponent();
+            Text = "Appearance";
             InitializeComplete();
 
             FillComboBoxWithEnumValues<AvatarProvider>(AvatarProvider);
@@ -67,6 +68,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             chkEnableAutoScale.Checked = AppSettings.EnableAutoScale;
 
+            chkShowRepoCurrentBranch.Checked = AppSettings.ShowRepoCurrentBranch;
             chkShowCurrentBranchInVisualStudio.Checked = AppSettings.ShowCurrentBranchInVisualStudio;
             _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AvatarImageCacheDays;
             ShowAuthorAvatarInCommitInfo.Checked = AppSettings.ShowAuthorAvatarInCommitInfo;
@@ -127,6 +129,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             AppSettings.EnableAutoScale = chkEnableAutoScale.Checked;
             AppSettings.TruncatePathMethod = GetTruncatePathMethodString(truncatePathMethod.SelectedIndex);
+            AppSettings.ShowRepoCurrentBranch = chkShowRepoCurrentBranch.Checked;
             AppSettings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
             AppSettings.ShowAuthorAvatarColumn = ShowAuthorAvatarInCommitGraph.Checked;
             AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatarInCommitInfo.Checked;
@@ -195,7 +198,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             catch
             {
-                MessageBox.Show(this, string.Format(_noDictFilesFound.Text, AppSettings.GetDictionaryDir()));
+                MessageBox.Show(this, string.Format(_noDictFilesFound.Text, AppSettings.GetDictionaryDir()), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

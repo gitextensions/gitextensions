@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Windows.Forms;
+using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using ResourceManager;
@@ -125,42 +126,45 @@ namespace AzureDevOpsIntegration.Settings
             Process.Start(TokenManagementUrl);
         }
 
-        private async void ExtractLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void ExtractLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            var buildUrl = Clipboard.ContainsText() ? Clipboard.GetText() : "";
-            var (success, projectUrl, buildId) = ProjectUrlHelper.TryParseBuildUrl(buildUrl);
-            if (success)
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                string buildDefinitionName;
-                if (!string.IsNullOrWhiteSpace(_currentSettings.ApiToken))
+                var buildUrl = Clipboard.ContainsText() ? Clipboard.GetText() : "";
+                var (success, projectUrl, buildId) = ProjectUrlHelper.TryParseBuildUrl(buildUrl);
+                if (success)
                 {
-                    try
+                    string buildDefinitionName;
+                    if (!string.IsNullOrWhiteSpace(_currentSettings.ApiToken))
                     {
-                        using (var apiClient = new ApiClient(projectUrl, _currentSettings.ApiToken))
+                        try
                         {
-                            buildDefinitionName = await apiClient.GetBuildDefinitionNameFromIdAsync(buildId) ?? "";
+                            using (var apiClient = new ApiClient(projectUrl, _currentSettings.ApiToken))
+                            {
+                                buildDefinitionName = await apiClient.GetBuildDefinitionNameFromIdAsync(buildId) ?? "";
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show(_failToLoadBuildDefinitionInfoMessage.Text, _failToExtractDataFromClipboardCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
                         }
                     }
-                    catch (Exception)
+                    else
                     {
-                        MessageBox.Show(_failToLoadBuildDefinitionInfoMessage.Text, _failToExtractDataFromClipboardCaption.Text);
-                        return;
+                        buildDefinitionName = "";
+                        MessageBox.Show(_infoNoApiTokenMessage.Text, _failToExtractDataFromClipboardCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
+
+                    _currentSettings.ProjectUrl = projectUrl;
+                    _currentSettings.BuildDefinitionFilter = buildDefinitionName;
+                    UpdateView();
                 }
                 else
                 {
-                    buildDefinitionName = "";
-                    MessageBox.Show(_infoNoApiTokenMessage.Text, _failToExtractDataFromClipboardCaption.Text);
+                    MessageBox.Show(_failToExtractDataFromClipboardMessage.Text, _failToExtractDataFromClipboardCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
-                _currentSettings.ProjectUrl = projectUrl;
-                _currentSettings.BuildDefinitionFilter = buildDefinitionName;
-                UpdateView();
-            }
-            else
-            {
-                MessageBox.Show(_failToExtractDataFromClipboardMessage.Text, _failToExtractDataFromClipboardCaption.Text);
-            }
+            }).FileAndForget();
         }
     }
 }

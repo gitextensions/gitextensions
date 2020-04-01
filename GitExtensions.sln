@@ -1,12 +1,19 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28917.182
 MinimumVisualStudioVersion = 15.0.27130.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}"
+	ProjectSection(SolutionItems) = preProject
+		Plugins\Directory.Build.props = Plugins\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Statistics", "Statistics", "{AF6D7B1B-FAF6-4793-AC05-00C63A5BC0F5}"
+	ProjectSection(SolutionItems) = preProject
+		Plugins\Statistics\Directory.Build.props = Plugins\Statistics\Directory.Build.props
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensions", "GitExtensions\GitExtensions.csproj", "{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions", "GitExtensions\GitExtensions.csproj", "{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1DC7D403-484B-43B4-B017-1356397A32CB} = {1DC7D403-484B-43B4-B017-1356397A32CB}
 		{A426EE0B-E52E-4D74-AF24-06797142D7B2} = {A426EE0B-E52E-4D74-AF24-06797142D7B2}
@@ -25,6 +32,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensions", "GitExtensi
 		{0B131F9D-BB10-4C3E-9656-5AB858158DE5} = {0B131F9D-BB10-4C3E-9656-5AB858158DE5}
 		{274F449F-7472-4248-9A57-8CA665A75B5D} = {274F449F-7472-4248-9A57-8CA665A75B5D}
 		{452CBBA1-8AF0-4F3B-8BEB-B8B31DC2B749} = {452CBBA1-8AF0-4F3B-8BEB-B8B31DC2B749}
+		{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143} = {7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}
 		{687A73BB-12A0-4AF7-B420-4A9C47DB75CB} = {687A73BB-12A0-4AF7-B420-4A9C47DB75CB}
 		{F50B1DBF-1C9F-4437-87EC-7ABA805CC446} = {F50B1DBF-1C9F-4437-87EC-7ABA805CC446}
 		{121965D1-4399-4538-B8BF-403EB5B847C3} = {121965D1-4399-4538-B8BF-403EB5B847C3}
@@ -33,16 +41,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensions", "GitExtensi
 		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57} = {626CA9EB-DB83-4BEB-87D5-15E3B397EF57}
 		{8B3778F2-6049-4D4C-B94F-D5FF3A5DC7F8} = {8B3778F2-6049-4D4C-B94F-D5FF3A5DC7F8}
 		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636} = {7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}
-		{EC6988F6-0E8E-42D2-8E41-E562C5FB65BC} = {EC6988F6-0E8E-42D2-8E41-E562C5FB65BC}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitUI", "GitUI\GitUI.csproj", "{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitUI", "GitUI\GitUI.csproj", "{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitCommands", "GitCommands\GitCommands.csproj", "{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitCommands", "GitCommands\GitCommands.csproj", "{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitUIPluginInterfaces", "Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj", "{27559302-F35E-4B62-A6EC-11FF21A5FA6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitUIPluginInterfaces", "Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj", "{27559302-F35E-4B62-A6EC-11FF21A5FA6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitStatistics", "Plugins\Statistics\GitStatistics\GitStatistics.csproj", "{92B57383-233E-46AE-8A86-6E98BF349A72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitStatistics", "Plugins\Statistics\GitStatistics\GitStatistics.csproj", "{92B57383-233E-46AE-8A86-6E98BF349A72}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Setup", "Setup\Setup.wixproj", "{9380C29C-3C7F-47A8-A4C9-A5EE9D7B386A}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -50,95 +57,93 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Setup", "Setup\Setup.wixpro
 		{F01BB9F8-40F5-4D19-A8C1-9ED8E30107B6} = {F01BB9F8-40F5-4D19-A8C1-9ED8E30107B6}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceManager", "ResourceManager\ResourceManager.csproj", "{D3440FD7-AFC5-4351-8741-6CDBF15CE944}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceManager", "ResourceManager\ResourceManager.csproj", "{D3440FD7-AFC5-4351-8741-6CDBF15CE944}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gource", "Plugins\Gource\Gource.csproj", "{687A73BB-12A0-4AF7-B420-4A9C47DB75CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gource", "Plugins\Gource\Gource.csproj", "{687A73BB-12A0-4AF7-B420-4A9C47DB75CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeleteUnusedBranches", "Plugins\DeleteUnusedBranches\DeleteUnusedBranches.csproj", "{921F0443-C3A1-4A09-82E8-C4AFB9654943}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeleteUnusedBranches", "Plugins\DeleteUnusedBranches\DeleteUnusedBranches.csproj", "{921F0443-C3A1-4A09-82E8-C4AFB9654943}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpellChecker", "NetSpell.SpellChecker\SpellChecker.csproj", "{A426EE0B-E52E-4D74-AF24-06797142D7B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpellChecker", "NetSpell.SpellChecker\SpellChecker.csproj", "{A426EE0B-E52E-4D74-AF24-06797142D7B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitImpact", "Plugins\Statistics\GitImpact\GitImpact.csproj", "{0B131F9D-BB10-4C3E-9656-5AB858158DE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitImpact", "Plugins\Statistics\GitImpact\GitImpact.csproj", "{0B131F9D-BB10-4C3E-9656-5AB858158DE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateLocalBranches", "Plugins\CreateLocalBranches\CreateLocalBranches.csproj", "{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreateLocalBranches", "Plugins\CreateLocalBranches\CreateLocalBranches.csproj", "{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindLargeFiles", "Plugins\FindLargeFiles\FindLargeFiles.csproj", "{F261BCD1-F5F7-4664-A229-E52032E6E9FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FindLargeFiles", "Plugins\FindLargeFiles\FindLargeFiles.csproj", "{F261BCD1-F5F7-4664-A229-E52032E6E9FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHub3", "Plugins\GitHub3\GitHub3.csproj", "{B1B0C273-AB3F-48BF-92C7-DE0BE90D5870}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHub3", "Plugins\GitHub3\GitHub3.csproj", "{B1B0C273-AB3F-48BF-92C7-DE0BE90D5870}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gerrit", "Plugins\Gerrit\Gerrit.csproj", "{EC6988F6-0E8E-42D2-8E41-E562C5FB65BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProxySwitcher", "Plugins\ProxySwitcher\ProxySwitcher.csproj", "{274F449F-7472-4248-9A57-8CA665A75B5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProxySwitcher", "Plugins\ProxySwitcher\ProxySwitcher.csproj", "{274F449F-7472-4248-9A57-8CA665A75B5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReleaseNotesGenerator", "Plugins\ReleaseNotesGenerator\ReleaseNotesGenerator.csproj", "{8B3778F2-6049-4D4C-B94F-D5FF3A5DC7F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReleaseNotesGenerator", "Plugins\ReleaseNotesGenerator\ReleaseNotesGenerator.csproj", "{8B3778F2-6049-4D4C-B94F-D5FF3A5DC7F8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranslationApp", "TranslationApp\TranslationApp.csproj", "{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B} = {F15A69AF-7EBD-4F69-A026-5071FA3EC61B}
-		{F01BB9F8-40F5-4D19-A8C1-9ED8E30107B6} = {F01BB9F8-40F5-4D19-A8C1-9ED8E30107B6}
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationApp", "TranslationApp\TranslationApp.csproj", "{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{BB46D906-E5AC-4CAB-B53E-BCC26AA74146}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundFetch", "Plugins\BackgroundFetch\BackgroundFetch.csproj", "{F261BCD1-F5F7-4664-A230-E52032E6E9FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackgroundFetch", "Plugins\BackgroundFetch\BackgroundFetch.csproj", "{F261BCD1-F5F7-4664-A230-E52032E6E9FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoCompileSubmodules", "Plugins\AutoCompileSubmodules\AutoCompileSubmodules.csproj", "{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCompileSubmodules", "Plugins\AutoCompileSubmodules\AutoCompileSubmodules.csproj", "{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitFlow", "Plugins\GitFlow\GitFlow.csproj", "{D4628A13-CD53-401F-A645-CB16FD15ABBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitFlow", "Plugins\GitFlow\GitFlow.csproj", "{D4628A13-CD53-401F-A645-CB16FD15ABBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamCityIntegration", "Plugins\BuildServerIntegration\TeamCityIntegration\TeamCityIntegration.csproj", "{121965D1-4399-4538-B8BF-403EB5B847C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamCityIntegration", "Plugins\BuildServerIntegration\TeamCityIntegration\TeamCityIntegration.csproj", "{121965D1-4399-4538-B8BF-403EB5B847C3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildServerIntegration", "BuildServerIntegration", "{F1B97F5D-CA42-4280-94A1-CE412BEA20DF}"
+	ProjectSection(SolutionItems) = preProject
+		Plugins\BuildServerIntegration\Directory.Build.props = Plugins\BuildServerIntegration\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Externals", "Externals", "{0E859634-B3DF-46AC-A73C-D49734F19D6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Git.hub", "Externals\Git.hub\Git.hub\Git.hub.csproj", "{F50B1DBF-1C9F-4437-87EC-7ABA805CC446}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Git.hub", "Externals\Git.hub\Git.hub\Git.hub.csproj", "{F50B1DBF-1C9F-4437-87EC-7ABA805CC446}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bitbucket", "Plugins\Bitbucket\Bitbucket.csproj", "{50AEAB6C-83C4-45F8-AA01-90E1405C48AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bitbucket", "Plugins\Bitbucket\Bitbucket.csproj", "{50AEAB6C-83C4-45F8-AA01-90E1405C48AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JenkinsIntegration", "Plugins\BuildServerIntegration\JenkinsIntegration\JenkinsIntegration.csproj", "{E6AAC693-815B-4D1A-83D7-F4DE36072793}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JenkinsIntegration", "Plugins\BuildServerIntegration\JenkinsIntegration\JenkinsIntegration.csproj", "{E6AAC693-815B-4D1A-83D7-F4DE36072793}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsIntegration", "Plugins\BuildServerIntegration\TfsIntegration\TfsIntegration.csproj", "{452CBBA1-8AF0-4F3B-8BEB-B8B31DC2B749}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TfsIntegration", "Plugins\BuildServerIntegration\TfsIntegration\TfsIntegration.csproj", "{452CBBA1-8AF0-4F3B-8BEB-B8B31DC2B749}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsInterop.Vs2012", "Plugins\BuildServerIntegration\TfsInterop.Vs2012\TfsInterop.Vs2012.csproj", "{699CE23D-8BBD-4C15-82E9-7A628ACCA4C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TfsInterop.Vs2012", "Plugins\BuildServerIntegration\TfsInterop.Vs2012\TfsInterop.Vs2012.csproj", "{699CE23D-8BBD-4C15-82E9-7A628ACCA4C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsInterop.Vs2013", "Plugins\BuildServerIntegration\TfsInterop.Vs2013\TfsInterop.Vs2013.csproj", "{101D3C78-27CC-446A-98EC-E2DE88BF0641}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TfsInterop.Vs2013", "Plugins\BuildServerIntegration\TfsInterop.Vs2013\TfsInterop.Vs2013.csproj", "{101D3C78-27CC-446A-98EC-E2DE88BF0641}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtUtils", "GitExtUtils\GitExtUtils.csproj", "{0F1F1168-A4B2-4FA2-B17B-735140D17F39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtUtils", "GitExtUtils\GitExtUtils.csproj", "{0F1F1168-A4B2-4FA2-B17B-735140D17F39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsInterop.Vs2015", "Plugins\BuildServerIntegration\TfsInterop.Vs2015\TfsInterop.Vs2015.csproj", "{6D468574-C232-4FA8-B1CB-F559579F800D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TfsInterop.Vs2015", "Plugins\BuildServerIntegration\TfsInterop.Vs2015\TfsInterop.Vs2015.csproj", "{6D468574-C232-4FA8-B1CB-F559579F800D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VS", "VS", "{D3E0C080-5AC9-45DD-91A5-4933956C3560}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensionsVSIX", "GitExtensionsVSIX\GitExtensionsVSIX.csproj", "{F01BB9F8-40F5-4D19-A8C1-9ED8E30107B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensionsVSIX", "GitExtensionsVSIX\GitExtensionsVSIX.csproj", "{F01BB9F8-40F5-4D19-A8C1-9ED8E30107B6}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B} = {F15A69AF-7EBD-4F69-A026-5071FA3EC61B}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConEmuWinForms", "Externals\conemu-inside\ConEmuWinForms\ConEmuWinForms.csproj", "{1DC7D403-484B-43B4-B017-1356397A32CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConEmuWinForms", "Externals\conemu-inside\ConEmuWinForms\ConEmuWinForms.csproj", "{1DC7D403-484B-43B4-B017-1356397A32CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppVeyorIntegration", "Plugins\BuildServerIntegration\AppVeyorIntegration\AppVeyorIntegration.csproj", "{39228D7F-9239-4A2D-8A6F-4D0F7DEB9178}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppVeyorIntegration", "Plugins\BuildServerIntegration\AppVeyorIntegration\AppVeyorIntegration.csproj", "{39228D7F-9239-4A2D-8A6F-4D0F7DEB9178}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{020F800B-9170-4BB3-83C9-FCF83596D83C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitCommandsTests", "UnitTests\GitCommandsTests\GitCommandsTests.csproj", "{E0BC2504-6BBB-4197-95EA-A2F7542BC15F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitCommands.Tests", "UnitTests\GitCommands.Tests\GitCommands.Tests.csproj", "{E0BC2504-6BBB-4197-95EA-A2F7542BC15F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitUITests", "UnitTests\GitUITests\GitUITests.csproj", "{1CD494C1-0BBA-44C3-BDAD-EE241975B223}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitUI.Tests", "UnitTests\GitUI.Tests\GitUI.Tests.csproj", "{1CD494C1-0BBA-44C3-BDAD-EE241975B223}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{C2276A26-13DF-485A-8B2C-414CF507798F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReleaseNotesGeneratorTests", "UnitTests\Plugins\ReleaseNotesGeneratorTests\ReleaseNotesGeneratorTests.csproj", "{304AA3FB-3F0D-45DA-9C91-3C6575EF0F8B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReleaseNotesGenerator.Tests", "UnitTests\Plugins\ReleaseNotesGenerator.Tests\ReleaseNotesGenerator.Tests.csproj", "{304AA3FB-3F0D-45DA-9C91-3C6575EF0F8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceManagerTests", "UnitTests\ResourceManagerTests\ResourceManagerTests.csproj", "{D9C9D8EF-E0BC-4CCD-829D-3523E750D0FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceManager.Tests", "UnitTests\ResourceManager.Tests\ResourceManager.Tests.csproj", "{D9C9D8EF-E0BC-4CCD-829D-3523E750D0FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraCommitHintPlugin", "Plugins\JiraCommitHintPlugin\JiraCommitHintPlugin.csproj", "{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JiraCommitHintPlugin", "Plugins\JiraCommitHintPlugin\JiraCommitHintPlugin.csproj", "{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonTestUtils", "UnitTests\CommonTestUtils\CommonTestUtils.csproj", "{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonTestUtils", "UnitTests\CommonTestUtils\CommonTestUtils.csproj", "{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDevOpsIntegration", "Plugins\BuildServerIntegration\AzureDevOpsIntegration\AzureDevOpsIntegration.csproj", "{92615565-CF33-4539-A0E6-610CE0734B8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDevOpsIntegration", "Plugins\BuildServerIntegration\AzureDevOpsIntegration\AzureDevOpsIntegration.csproj", "{92615565-CF33-4539-A0E6-610CE0734B8C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C5855184-8571-4AD0-A373-B98215BA56CA}"
 	ProjectSection(SolutionItems) = preProject
@@ -162,15 +167,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{472B72D9-9336-4C8B-A199-300F0CA7669E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{472B72D9-9336-4C8B-A199-300F0CA7669E}"
 	ProjectSection(SolutionItems) = preProject
-		Build\Mark-RepoClean.ps1 = Build\Mark-RepoClean.ps1
-		Build\Prepare-Artifacts.ps1 = Build\Prepare-Artifacts.ps1
-		Build\Run-Tests.ps1 = Build\Run-Tests.ps1
-		Build\stylecop.json = Build\stylecop.json
-		Build\vs-threading.MainThreadAssertingMethods.txt = Build\vs-threading.MainThreadAssertingMethods.txt
-		Build\vs-threading.MainThreadSwitchingMethods.txt = Build\vs-threading.MainThreadSwitchingMethods.txt
-		Build\vs-threading.TypesRequiringMainThread.txt = Build\vs-threading.TypesRequiringMainThread.txt
+		scripts\build.ps1 = scripts\build.ps1
+		scripts\Download-PluginManager.ps1 = scripts\Download-PluginManager.ps1
+		scripts\Mark-RepoClean.ps1 = scripts\Mark-RepoClean.ps1
+		scripts\stylecop.json = scripts\stylecop.json
+		scripts\vs-threading.MainThreadAssertingMethods.txt = scripts\vs-threading.MainThreadAssertingMethods.txt
+		scripts\vs-threading.MainThreadSwitchingMethods.txt = scripts\vs-threading.MainThreadSwitchingMethods.txt
+		scripts\vs-threading.TypesRequiringMainThread.txt = scripts\vs-threading.TypesRequiringMainThread.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{17FD2A6B-4005-41DC-BFAC-59F936DF33AA}"
@@ -178,17 +183,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{17FD2A
 		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtUtilsTests", "UnitTests\GitExtUtils\GitExtUtilsTests.csproj", "{2B9B62FA-3E0C-45C5-9287-68B69413C5DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtUtils.Tests", "UnitTests\GitExtUtils.Tests\GitExtUtils.Tests.csproj", "{2B9B62FA-3E0C-45C5-9287-68B69413C5DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.TextEditor", "Externals\ICSharpCode.TextEditor\Project\ICSharpCode.TextEditor.csproj", "{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICSharpCode.TextEditor", "Externals\ICSharpCode.TextEditor\Project\ICSharpCode.TextEditor.csproj", "{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitUIPluginInterfacesTests", "UnitTests\Plugins\GitUIPluginInterfacesTests\GitUIPluginInterfacesTests.csproj", "{4DBDE0EB-9E03-48E0-8B1A-338850111373}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitUIPluginInterfaces.Tests", "UnitTests\Plugins\GitUIPluginInterfaces.Tests\GitUIPluginInterfaces.Tests.csproj", "{4DBDE0EB-9E03-48E0-8B1A-338850111373}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildServerIntegration", "BuildServerIntegration", "{BC90FFE0-7770-4979-884E-9F9F294C58C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDevOpsIntegrationTests", "UnitTests\Plugins\BuildServerIntegration\AzureDevOpsIntegrationTests\AzureDevOpsIntegrationTests.csproj", "{6E2BE70D-0B5C-45D6-9D42-4497A46C370D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDevOpsIntegration.Tests", "UnitTests\Plugins\BuildServerIntegration\AzureDevOpsIntegration.Tests\AzureDevOpsIntegration.Tests.csproj", "{6E2BE70D-0B5C-45D6-9D42-4497A46C370D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppVeyorIntegrationTests", "UnitTests\Plugins\BuildServerIntegration\AppVeyorIntegrationTests\AppVeyorIntegrationTests.csproj", "{2828E531-7EB3-4A52-A71E-DCE73B9907FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppVeyorIntegration.Tests", "UnitTests\Plugins\BuildServerIntegration\AppVeyorIntegration.Tests\AppVeyorIntegration.Tests.csproj", "{2828E531-7EB3-4A52-A71E-DCE73B9907FC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISSUE_TEMPLATE", "ISSUE_TEMPLATE", "{95A371C3-77B9-437A-892E-17CA0097106B}"
 	ProjectSection(SolutionItems) = preProject
@@ -198,16 +203,28 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISSUE_TEMPLATE", "ISSUE_TEM
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "transifex", "transifex", "{D017F26A-694F-4127-B917-9B1BD3F01E2F}"
 	ProjectSection(SolutionItems) = preProject
-		Build\transifex\DownloadTransifexTranslations.ps1 = Build\transifex\DownloadTransifexTranslations.ps1
-		Build\transifex\UpdateLocalEnglishTranslations.ps1 = Build\transifex\UpdateLocalEnglishTranslations.ps1
+		scripts\transifex\DownloadTransifexTranslations.ps1 = scripts\transifex\DownloadTransifexTranslations.ps1
+		scripts\transifex\UpdateLocalEnglishTranslations.ps1 = scripts\transifex\UpdateLocalEnglishTranslations.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".tx", ".tx", "{EFBCA0B9-9E08-4464-BEAA-DAF2FF85C6AB}"
 	ProjectSection(SolutionItems) = preProject
-		Build\transifex\.tx\config = Build\transifex\.tx\config
+		scripts\transifex\.tx\config = scripts\transifex\.tx\config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeleteUnusedBranchesTests", "UnitTests\Plugins\DeleteUnusedBranchesTests\DeleteUnusedBranchesTests.csproj", "{3FD5B353-17C0-4122-A693-27B707D06EFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeleteUnusedBranches.Tests", "UnitTests\Plugins\DeleteUnusedBranches.Tests\DeleteUnusedBranches.Tests.csproj", "{3FD5B353-17C0-4122-A693-27B707D06EFF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyHook", "Externals\EasyHook\EasyHook\EasyHook.csproj", "{26B8A7CB-F911-4ADE-85F6-FF3FE95BE0AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{34B9B39D-2C8D-42AF-B4B7-FA4F054D2721}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{449DD87E-63E9-4C61-B797-A94F8CBE8837}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "IntegrationTests", "{958D7C09-1FA5-4438-A6A0-B3E8BD96E291}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI.IntegrationTests", "IntegrationTests\UI.IntegrationTests\UI.IntegrationTests.csproj", "{AA58470E-24F7-4CED-8C76-06F05B09F1B1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "setup", "setup", "{2786EE4D-2C03-4622-8800-8A66ECEF2AA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -269,10 +286,6 @@ Global
 		{B1B0C273-AB3F-48BF-92C7-DE0BE90D5870}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1B0C273-AB3F-48BF-92C7-DE0BE90D5870}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1B0C273-AB3F-48BF-92C7-DE0BE90D5870}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EC6988F6-0E8E-42D2-8E41-E562C5FB65BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EC6988F6-0E8E-42D2-8E41-E562C5FB65BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EC6988F6-0E8E-42D2-8E41-E562C5FB65BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EC6988F6-0E8E-42D2-8E41-E562C5FB65BC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{274F449F-7472-4248-9A57-8CA665A75B5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{274F449F-7472-4248-9A57-8CA665A75B5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{274F449F-7472-4248-9A57-8CA665A75B5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -337,10 +350,10 @@ Global
 		{F01BB9F8-40F5-4D19-A8C1-9ED8E30107B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F01BB9F8-40F5-4D19-A8C1-9ED8E30107B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F01BB9F8-40F5-4D19-A8C1-9ED8E30107B6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1DC7D403-484B-43B4-B017-1356397A32CB}.Debug|Any CPU.ActiveCfg = Default|Any CPU
-		{1DC7D403-484B-43B4-B017-1356397A32CB}.Debug|Any CPU.Build.0 = Default|Any CPU
-		{1DC7D403-484B-43B4-B017-1356397A32CB}.Release|Any CPU.ActiveCfg = Default|Any CPU
-		{1DC7D403-484B-43B4-B017-1356397A32CB}.Release|Any CPU.Build.0 = Default|Any CPU
+		{1DC7D403-484B-43B4-B017-1356397A32CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DC7D403-484B-43B4-B017-1356397A32CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DC7D403-484B-43B4-B017-1356397A32CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DC7D403-484B-43B4-B017-1356397A32CB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{39228D7F-9239-4A2D-8A6F-4D0F7DEB9178}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{39228D7F-9239-4A2D-8A6F-4D0F7DEB9178}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39228D7F-9239-4A2D-8A6F-4D0F7DEB9178}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -397,23 +410,38 @@ Global
 		{3FD5B353-17C0-4122-A693-27B707D06EFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FD5B353-17C0-4122-A693-27B707D06EFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FD5B353-17C0-4122-A693-27B707D06EFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26B8A7CB-F911-4ADE-85F6-FF3FE95BE0AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26B8A7CB-F911-4ADE-85F6-FF3FE95BE0AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26B8A7CB-F911-4ADE-85F6-FF3FE95BE0AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26B8A7CB-F911-4ADE-85F6-FF3FE95BE0AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA58470E-24F7-4CED-8C76-06F05B09F1B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA58470E-24F7-4CED-8C76-06F05B09F1B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA58470E-24F7-4CED-8C76-06F05B09F1B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA58470E-24F7-4CED-8C76-06F05B09F1B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8} = {34B9B39D-2C8D-42AF-B4B7-FA4F054D2721}
 		{AF6D7B1B-FAF6-4793-AC05-00C63A5BC0F5} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
+		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B} = {34B9B39D-2C8D-42AF-B4B7-FA4F054D2721}
+		{CF5B22E7-230F-4E50-BE88-C4F7023CED2C} = {34B9B39D-2C8D-42AF-B4B7-FA4F054D2721}
+		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181} = {34B9B39D-2C8D-42AF-B4B7-FA4F054D2721}
 		{27559302-F35E-4B62-A6EC-11FF21A5FA6F} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
 		{92B57383-233E-46AE-8A86-6E98BF349A72} = {AF6D7B1B-FAF6-4793-AC05-00C63A5BC0F5}
+		{9380C29C-3C7F-47A8-A4C9-A5EE9D7B386A} = {2786EE4D-2C03-4622-8800-8A66ECEF2AA5}
+		{D3440FD7-AFC5-4351-8741-6CDBF15CE944} = {34B9B39D-2C8D-42AF-B4B7-FA4F054D2721}
 		{687A73BB-12A0-4AF7-B420-4A9C47DB75CB} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
 		{921F0443-C3A1-4A09-82E8-C4AFB9654943} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
+		{A426EE0B-E52E-4D74-AF24-06797142D7B2} = {34B9B39D-2C8D-42AF-B4B7-FA4F054D2721}
 		{0B131F9D-BB10-4C3E-9656-5AB858158DE5} = {AF6D7B1B-FAF6-4793-AC05-00C63A5BC0F5}
 		{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
 		{F261BCD1-F5F7-4664-A229-E52032E6E9FD} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
 		{B1B0C273-AB3F-48BF-92C7-DE0BE90D5870} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
-		{EC6988F6-0E8E-42D2-8E41-E562C5FB65BC} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
 		{274F449F-7472-4248-9A57-8CA665A75B5D} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
 		{8B3778F2-6049-4D4C-B94F-D5FF3A5DC7F8} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
+		{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143} = {2786EE4D-2C03-4622-8800-8A66ECEF2AA5}
 		{F261BCD1-F5F7-4664-A230-E52032E6E9FD} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
 		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
 		{D4628A13-CD53-401F-A645-CB16FD15ABBB} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
@@ -425,10 +453,12 @@ Global
 		{452CBBA1-8AF0-4F3B-8BEB-B8B31DC2B749} = {F1B97F5D-CA42-4280-94A1-CE412BEA20DF}
 		{699CE23D-8BBD-4C15-82E9-7A628ACCA4C6} = {F1B97F5D-CA42-4280-94A1-CE412BEA20DF}
 		{101D3C78-27CC-446A-98EC-E2DE88BF0641} = {F1B97F5D-CA42-4280-94A1-CE412BEA20DF}
+		{0F1F1168-A4B2-4FA2-B17B-735140D17F39} = {34B9B39D-2C8D-42AF-B4B7-FA4F054D2721}
 		{6D468574-C232-4FA8-B1CB-F559579F800D} = {F1B97F5D-CA42-4280-94A1-CE412BEA20DF}
 		{F01BB9F8-40F5-4D19-A8C1-9ED8E30107B6} = {D3E0C080-5AC9-45DD-91A5-4933956C3560}
 		{1DC7D403-484B-43B4-B017-1356397A32CB} = {0E859634-B3DF-46AC-A73C-D49734F19D6A}
 		{39228D7F-9239-4A2D-8A6F-4D0F7DEB9178} = {F1B97F5D-CA42-4280-94A1-CE412BEA20DF}
+		{020F800B-9170-4BB3-83C9-FCF83596D83C} = {449DD87E-63E9-4C61-B797-A94F8CBE8837}
 		{E0BC2504-6BBB-4197-95EA-A2F7542BC15F} = {020F800B-9170-4BB3-83C9-FCF83596D83C}
 		{1CD494C1-0BBA-44C3-BDAD-EE241975B223} = {020F800B-9170-4BB3-83C9-FCF83596D83C}
 		{C2276A26-13DF-485A-8B2C-414CF507798F} = {020F800B-9170-4BB3-83C9-FCF83596D83C}
@@ -449,6 +479,9 @@ Global
 		{D017F26A-694F-4127-B917-9B1BD3F01E2F} = {472B72D9-9336-4C8B-A199-300F0CA7669E}
 		{EFBCA0B9-9E08-4464-BEAA-DAF2FF85C6AB} = {D017F26A-694F-4127-B917-9B1BD3F01E2F}
 		{3FD5B353-17C0-4122-A693-27B707D06EFF} = {C2276A26-13DF-485A-8B2C-414CF507798F}
+		{26B8A7CB-F911-4ADE-85F6-FF3FE95BE0AC} = {0E859634-B3DF-46AC-A73C-D49734F19D6A}
+		{958D7C09-1FA5-4438-A6A0-B3E8BD96E291} = {449DD87E-63E9-4C61-B797-A94F8CBE8837}
+		{AA58470E-24F7-4CED-8C76-06F05B09F1B1} = {958D7C09-1FA5-4438-A6A0-B3E8BD96E291}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}

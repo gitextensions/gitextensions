@@ -1,4 +1,6 @@
-﻿namespace GitUI.UserControls
+﻿using System;
+
+namespace GitUI.UserControls
 {
     public class NativeTreeView : System.Windows.Forms.TreeView
     {

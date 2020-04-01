@@ -32,7 +32,7 @@ namespace GitUI.Script
         public static CommandStatus RunScript(IWin32Window owner, IGitModule module, string scriptKey, IGitUICommands uiCommands, RevisionGridControl revisionGrid)
         {
             return RunScript(owner, module, scriptKey, uiCommands, revisionGrid,
-                msg => MessageBox.Show(owner, msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error));
+                msg => MessageBox.Show(owner, msg, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error));
         }
 
         public static CommandStatus RunScript(IWin32Window owner, IGitModule module, string scriptKey, IGitUICommands uiCommands,
@@ -94,18 +94,25 @@ namespace GitUI.Script
             if (scriptInfo.IsPowerShell)
             {
                 PowerShellHelper.RunPowerShell(command, argument, module.WorkingDir, scriptInfo.RunInBackground);
-                return new CommandStatus(true, false);
+
+                // 'RunPowerShell' always runs the script detached (yet).
+                // Hence currently, it does not make sense to set 'needsGridRefresh' to '!scriptInfo.RunInBackground'.
+                return new CommandStatus(executed: true, needsGridRefresh: false);
             }
 
             if (command.StartsWith(PluginPrefix))
             {
                 command = command.Replace(PluginPrefix, "");
-                foreach (var plugin in PluginRegistry.Plugins)
+
+                lock (PluginRegistry.Plugins)
                 {
-                    if (plugin.Description.ToLower().Equals(command, StringComparison.CurrentCultureIgnoreCase))
+                    foreach (var plugin in PluginRegistry.Plugins)
                     {
-                        var eventArgs = new GitUIEventArgs(owner, uiCommands);
-                        return new CommandStatus(true, plugin.Execute(eventArgs));
+                        if (plugin.Description.ToLower().Equals(command, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            var eventArgs = new GitUIEventArgs(owner, uiCommands);
+                            return new CommandStatus(executed: true, needsGridRefresh: plugin.Execute(eventArgs));
+                        }
                     }
                 }
 
@@ -130,7 +137,7 @@ namespace GitUI.Script
                     }
                 }
 
-                return new CommandStatus(true, false);
+                return new CommandStatus(executed: true, needsGridRefresh: false);
             }
 
             if (!scriptInfo.RunInBackground)
@@ -149,7 +156,7 @@ namespace GitUI.Script
                 }
             }
 
-            return new CommandStatus(true, !scriptInfo.RunInBackground);
+            return new CommandStatus(executed: true, needsGridRefresh: !scriptInfo.RunInBackground);
         }
 
         private static string ExpandCommandVariables(string originalCommand, IGitModule module)

@@ -2,7 +2,9 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Editor;
+using GitUI.Theming;
 using JetBrains.Annotations;
 using ResourceManager;
 
@@ -14,7 +16,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _saveChangesCaption = new TranslationString("Save changes");
         private readonly TranslationString _cannotOpenFile = new TranslationString("Cannot open file:");
         private readonly TranslationString _cannotSaveFile = new TranslationString("Cannot save file:");
-        private readonly TranslationString _error = new TranslationString("Error");
 
         [CanBeNull] private readonly string _fileName;
 
@@ -31,6 +32,8 @@ namespace GitUI.CommandsDialogs
         {
             _fileName = fileName;
             InitializeComponent();
+            panelMessage.BackColor = AppColor.Branch.GetThemeColor();
+            panelMessage.SetForeColorForBackColor();
             InitializeComplete();
 
             // for translation form
@@ -60,7 +63,6 @@ namespace GitUI.CommandsDialogs
             {
                 fileViewer.ViewFileAsync(_fileName);
                 fileViewer.IsReadOnly = false;
-                fileViewer.SetVisibilityDiffContextMenu(false, false);
                 Text = _fileName;
 
                 // loading a new file from disk, the text hasn't been changed yet.
@@ -68,7 +70,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _cannotOpenFile.Text + Environment.NewLine + ex.Message, _error.Text);
+                MessageBox.Show(this, _cannotOpenFile.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
             }
         }
@@ -89,7 +91,7 @@ namespace GitUI.CommandsDialogs
                         }
                         catch (Exception ex)
                         {
-                            if (MessageBox.Show(this, _cannotSaveFile.Text + Environment.NewLine + ex.Message, _error.Text, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
+                            if (MessageBox.Show(this, _cannotSaveFile.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
                             {
                                 e.Cancel = true;
                                 return;
@@ -120,7 +122,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _cannotSaveFile.Text + Environment.NewLine + ex.Message, _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _cannotSaveFile.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

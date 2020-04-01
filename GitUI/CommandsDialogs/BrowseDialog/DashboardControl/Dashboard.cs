@@ -6,11 +6,13 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
+    [ThemeAware]
     public partial class Dashboard : GitModuleControl
     {
         private readonly TranslationString _cloneFork = new TranslationString("Clone {0} repository");
@@ -21,7 +23,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private readonly TranslationString _issues = new TranslationString("Issues");
         private readonly TranslationString _openRepository = new TranslationString("Open repository");
         private readonly TranslationString _translate = new TranslationString("Translate");
-        private readonly TranslationString _showCurrentBranch = new TranslationString("Show current branch");
 
         private DashboardTheme _selectedTheme;
 
@@ -70,6 +71,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             void ApplyTheme()
             {
                 _selectedTheme = ColorHelper.IsLightTheme() ? DashboardTheme.Light : DashboardTheme.Dark;
+                BackgroundImage = _selectedTheme.BackgroundImage;
 
                 BackColor = _selectedTheme.Primary;
                 pnlLogo.BackColor = _selectedTheme.PrimaryVeryDark;
@@ -83,12 +85,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 userRepositoriesList.HeaderBackColor = _selectedTheme.PrimaryDark;
                 userRepositoriesList.HoverColor = _selectedTheme.PrimaryLight;
                 userRepositoriesList.MainBackColor = _selectedTheme.Primary;
-                BackgroundImage = _selectedTheme.BackgroundImage;
 
                 foreach (var item in flpnlContribute.Controls.OfType<LinkLabel>().Union(flpnlStart.Controls.OfType<LinkLabel>()))
                 {
                     item.LinkColor = _selectedTheme.PrimaryText;
                 }
+
+                Invalidate(true);
             }
 
             void InitDashboardLayout()
@@ -96,7 +99,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 try
                 {
                     pnlLeft.SuspendLayout();
-                    bool light = ColorHelper.IsLightTheme();
 
                     AddLinks(flpnlContribute,
                         panel =>
@@ -104,9 +106,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                             panel.Controls.Add(lblContribute);
                             lblContribute.Font = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints + 5.5f);
 
-                            CreateLink(panel, _develop.Text, light ? Images.Develop : Images.Develop_inv, GitHubItem_Click);
+                            CreateLink(panel, _develop.Text, Images.Develop.AdaptLightness(), GitHubItem_Click);
                             CreateLink(panel, _donate.Text, Images.DollarSign, DonateItem_Click);
-                            CreateLink(panel, _translate.Text, light ? Images.Translate : Images.Translate_inv, TranslateItem_Click);
+                            CreateLink(panel, _translate.Text, Images.Translate.AdaptLightness(), TranslateItem_Click);
                             var lastControl = CreateLink(panel, _issues.Text, Images.Bug, IssuesItem_Click);
                             return lastControl;
                         },
@@ -205,29 +207,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 return;
             }
 
-            //
-            // create Show current branch menu item and add to Dashboard menu
-            //
-            var showCurrentBranchMenuItem = new ToolStripMenuItem(_showCurrentBranch.Text);
-            showCurrentBranchMenuItem.Click += showCurrentBranchMenuItem_Click;
-            showCurrentBranchMenuItem.Checked = AppSettings.DashboardShowCurrentBranch;
-
-            if (Parent.FindForm() is FormBrowse form)
-            {
-                var menuStrip = form.FindDescendantOfType<MenuStrip>(p => p.Name == "menuStrip1");
-                var dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");
-                dashboardMenu?.DropDownItems.Add(showCurrentBranchMenuItem);
-            }
-
             Visible = true;
-        }
-
-        private void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
-        {
-            bool newValue = !AppSettings.DashboardShowCurrentBranch;
-            AppSettings.DashboardShowCurrentBranch = newValue;
-            ((ToolStripMenuItem)sender).Checked = newValue;
-            RefreshContent();
         }
 
         private static void TranslateItem_Click(object sender, EventArgs e)

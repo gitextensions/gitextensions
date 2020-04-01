@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitCommands.Git;
@@ -83,9 +84,15 @@ namespace GitCommands
         Mixed,
 
         /// <summary>--hard</summary>
-        Hard
+        Hard,
 
-        // All options are not implemented, like --merge, --keep, --patch
+        /// <summary>--merge</summary>
+        Merge,
+
+        /// <summary>--keep</summary>
+        Keep
+
+        // All options are not implemented, like --patch
     }
 
     public static class GitCommandHelpers
@@ -373,6 +380,16 @@ namespace GitCommands
             return new GitArgumentBuilder("rebase") { "--skip" };
         }
 
+        public static ArgumentString ContinueMergeCmd()
+        {
+            return new GitArgumentBuilder("merge") { "--continue" };
+        }
+
+        public static ArgumentString AbortMergeCmd()
+        {
+            return new GitArgumentBuilder("merge") { "--abort" };
+        }
+
         public static ArgumentString StartBisectCmd()
         {
             return new GitArgumentBuilder("bisect") { "start" };
@@ -484,16 +501,23 @@ namespace GitCommands
 
         public static ArgumentString GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = IgnoreSubmodulesMode.None, bool noLocks = false)
         {
-            return new GitArgumentBuilder("status", gitOptions:
+            var args = new GitArgumentBuilder("status", gitOptions:
                 noLocks && GitVersion.Current.SupportNoOptionalLocks
                     ? (ArgumentString)"--no-optional-locks"
                     : default)
             {
                 $"--porcelain{(GitVersion.Current.SupportStatusPorcelainV2 ? "=2" : "")} -z",
                 untrackedFiles,
-                ignoreSubmodules,
                 { !excludeIgnoredFiles, "--ignored" }
             };
+
+            // git-config is set to None, to allow overrides for specific submodules (in .gitconfig or .gitmodules)
+            if (ignoreSubmodules != IgnoreSubmodulesMode.None)
+            {
+                args.Add(ignoreSubmodules);
+            }
+
+            return args;
         }
 
         [CanBeNull]
@@ -757,9 +781,7 @@ namespace GitCommands
                         // Slight modification on how the following flags are used
                         // Changed commit
                         gitItemStatus.IsChanged = subm[1] == 'C';
-
-                        // Is dirty
-                        gitItemStatus.IsTracked = subm[2] != 'M' && subm[3] != 'U';
+                        gitItemStatus.IsDirty = subm[2] == 'M' || subm[3] == 'U';
                     }
                 }
 
@@ -939,13 +961,13 @@ namespace GitCommands
             // Find renamed files...
             if (fromDiff)
             {
-                gitItemStatus.OldName = fileName.Trim();
-                gitItemStatus.Name = nextFile.Trim();
+                gitItemStatus.OldName = fileName;
+                gitItemStatus.Name = nextFile;
             }
             else
             {
-                gitItemStatus.Name = fileName.Trim();
-                gitItemStatus.OldName = nextFile.Trim();
+                gitItemStatus.Name = fileName;
+                gitItemStatus.OldName = nextFile;
             }
 
             gitItemStatus.IsNew = false;
@@ -977,7 +999,7 @@ namespace GitCommands
 
             return new GitItemStatus
             {
-                Name = fileName.Trim(),
+                Name = fileName,
                 IsNew = isNew,
                 IsChanged = x == 'M',
                 IsDeleted = x == 'D',

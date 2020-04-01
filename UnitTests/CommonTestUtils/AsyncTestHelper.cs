@@ -1,7 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
+using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using GitUI;
 
@@ -9,31 +12,18 @@ namespace CommonTestUtils
 {
     public static class AsyncTestHelper
     {
-        public static void RunAndWaitForPendingOperations(Func<Task> asyncMethod)
+        public static TimeSpan UnexpectedTimeout
         {
-            ThreadHelper.JoinableTaskFactory.Run(asyncMethod);
-
-            WaitForPendingOperations();
+            get
+            {
+                return Debugger.IsAttached ? TimeSpan.FromHours(1) : TimeSpan.FromMinutes(1);
+            }
         }
 
-        public static T RunAndWaitForPendingOperations<T>(Func<Task<T>> asyncMethod)
+        public static async Task JoinPendingOperationsAsync(TimeSpan timeout)
         {
-            var result = ThreadHelper.JoinableTaskFactory.Run(asyncMethod);
-
-            WaitForPendingOperations();
-
-            return result;
-        }
-
-        public static void WaitForPendingOperations()
-        {
-            try
-            {
-                ThreadHelper.JoinableTaskContext?.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync());
-            }
-            catch (OperationCanceledException)
-            {
-            }
+            using var cancellationTokenSource = new CancellationTokenSource(timeout);
+            await ThreadHelper.JoinPendingOperationsAsync(cancellationTokenSource.Token);
         }
     }
 }

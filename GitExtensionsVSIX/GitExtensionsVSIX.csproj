@@ -1,19 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project>
+
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{F01BB9F8-40F5-4D19-A8C1-9ED8E30107B6}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GitExtensionsVSIX</RootNamespace>
-    <AssemblyName>GitExtensionsVSIX</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <RuntimeIdentifier>win</RuntimeIdentifier>
-    <TargetFrameworkProfile />
+    <TargetFramework>net461</TargetFramework>
+    <NoWarn>$(NoWarn);1696;1573;1591</NoWarn>
     <UseCodebase>true</UseCodebase>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
@@ -21,50 +13,44 @@
     <IncludeDebugSymbolsInLocalVSIXDeployment>true</IncludeDebugSymbolsInLocalVSIXDeployment>
     <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
     <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
     <!-- Disable the automatic inclusion of Microsoft.VisualStudio.Threading since Visual Studio has a specific version. -->
     <EnableVisualStudioThreading>false</EnableVisualStudioThreading>
-  </PropertyGroup>
-  <PropertyGroup>
+
+    <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
+
     <!-- Common debugging support -->
     <StartAction>Program</StartAction>
     <StartProgram>$(DevEnvDir)\devenv.exe</StartProgram>
     <StartArguments>/rootSuffix Exp</StartArguments>
+
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultItems>false</EnableDefaultItems>
   </PropertyGroup>
+
   <PropertyGroup Condition="'$(VisualStudioVersion)' != ''">
     <!-- This is added to prevent forced migrations in Visual Studio 2012 and newer -->
     <MinimumVisualStudioVersion>$(VisualStudioVersion)</MinimumVisualStudioVersion>
   </PropertyGroup>
+
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' != 'true'">
     <!-- This property disables extension deployment for command line builds; required for some automated builds -->
     <DeployExtension>False</DeployExtension>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\GitExtensionsVSIX.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Release\GitExtensionsVSIX.xml</DocumentationFile>
-  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Windows.Forms" />
+    <PackageReference Include="EnvDTE" Version="8.0.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.14.0" Version="14.0.23205" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.10.0" Version="10.0.30319" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers" Version="15.7.7" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.1.192" PrivateAssets="all" />
+  </ItemGroup>
+
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
@@ -112,8 +98,6 @@
     <Compile Include="source.extension.cs">
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="..\LICENSE.md">
       <Link>Resources\LICENSE.md</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -125,8 +109,6 @@
       <Generator>VsixManifestGenerator</Generator>
       <LastGenOutput>source.extension.resx</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="..\Logo\git-extensions-logo-256px.png">
       <Link>Resources\git-extensions-logo-256px.png</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -138,25 +120,16 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\Commands.png" />
+  
     <VSCTCompile Include="GitExtCommandTable.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
       <Generator>VsctGenerator</Generator>
       <LastGenOutput>GitExtCommandTable.cs</LastGenOutput>
     </VSCTCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Design" />
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="EnvDTE" Version="8.0.2" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.14.0" Version="14.0.23205" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.10.0" Version="10.0.30319" />
-    <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers" Version="15.7.7" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.1.192" PrivateAssets="all" />
-  </ItemGroup>
+
+    </ItemGroup>
+  
   <ItemGroup>
     <COMReference Include="Microsoft.VisualStudio.CommandBars">
       <Guid>{1CBA492E-7263-47BB-87FE-639000619B15}</Guid>
@@ -167,8 +140,6 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="source.extension.resx">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -177,6 +148,8 @@
       <ManifestResourceName>VSPackage</ManifestResourceName>
     </EmbeddedResource>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="Exists('$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets')" />
+
 </Project>

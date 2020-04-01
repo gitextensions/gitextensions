@@ -1,0 +1,195 @@
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
+<Project DefaultTargets="Execute" TreatAsLocalProperty="RepoRoot">
+  <!--
+
+  Required parameters:
+    RepoRoot                        Repository root.
+    Projects                        List of projects to build. Semicolon separated, may include globs.
+
+  Optional parameters:
+    Configuration                   Build configuration: "Debug", "Release", etc.
+
+    ContinuousIntegrationBuild      "true" when building on a CI server (PR build or official build)
+    Restore                         "true" to restore toolset and solution
+    Clean                           "true" to clean solution
+    Build                           "true" to build solution
+    Rebuild                         "true" to rebuild solution
+    Publish                         "true" to publish the application
+    Test                            "true" to run tests
+    IntegrationTest                 "true" to run integration tests
+    Pack                            "true" to build artifacts
+    Localise                        "true" to update English translations sources
+  -->
+
+  <PropertyGroup>
+    <_RepoRootOriginal>$(RepoRoot)</_RepoRootOriginal>
+    <RepoRoot>$([System.IO.Path]::GetFullPath('$(RepoRoot)/'))</RepoRoot>
+
+    <_OriginalProjectsValue>$(Projects)</_OriginalProjectsValue>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ProjectToBuild>
+      <RestoreInParallel>true</RestoreInParallel>
+    </ProjectToBuild>
+  </ItemDefinitionGroup>
+
+  <Import Project="Settings.props" />
+
+  <!-- Allow for repo specific Build properties such as the list of Projects to build -->
+  <Import Project="$(RepositoryEngineeringDir)Build.props" Condition="Exists('$(RepositoryEngineeringDir)Build.props')" />
+
+  <PropertyGroup>
+    <_ProjectsPropertyWasUpdatedInBuildProps Condition="'$(_OriginalProjectsValue)' != '$(Projects)'">true</_ProjectsPropertyWasUpdatedInBuildProps>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(Projects)' != ''">
+    <!-- Copy the original list so we can log diagnostics later. -->
+    <_OriginalProjectToBuild Include="@(ProjectToBuild)" />
+    <!-- Setting 'Projects' overrides the ProjectToBuild list. -->
+    <ProjectToBuild Remove="@(ProjectToBuild)" />
+    <ProjectToBuild Include="$(Projects)" />
+  </ItemGroup>
+
+  <!--
+    Default values.
+  -->
+  <!-- If Projects is unspecified and ProjectToBuild was not set via Build.props, fallback to building .sln files in the repo root. -->
+  <ItemGroup Condition="'@(ProjectToBuild)' == ''">
+    <ProjectToBuild Include="$(RepoRoot)*.sln" />
+  </ItemGroup>
+
+  <Target Name="Execute">
+    <Error Text="No projects were found to build. Either the 'Projects' property or 'ProjectToBuild' item group must be specified." Condition="'@(ProjectToBuild)' == ''"/>
+    <Error Text="Property 'RepoRoot' must be specified" Condition="'$(_RepoRootOriginal)' == ''"/>
+    <Error Text="File 'global.json' must exist in directory specified by RepoRoot: '$(_RepoRootOriginal)'" Condition="'$(_RepoRootOriginal)' != '' and !Exists('$(RepoRoot)global.json')"/>
+
+    <ItemGroup>
+      <!-- Remove bin/obj folders -->
+      <_SolutionBuildTargets Include="LegacyClean" Condition="'$(Clean)' == 'true'" />
+      <_SolutionBuildTargets Include="Rebuild" Condition="'$(Rebuild)' == 'true'" />
+      <_SolutionBuildTargets Include="Build" Condition="'$(Build)' == 'true' and '$(Rebuild)' != 'true'" />
+      <_SolutionBuildTargets Include="Publish" Condition="'$(Publish)' == 'true'" />
+      <!-- Extensibility point to run addition build targets after build. -->
+      <_SolutionBuildTargets Include="@(SolutionBuildTargets)" />
+      <!-- Deploy target is set up to chain after Build so that F5 in VS works. -->
+      <_SolutionBuildTargets Include="Test" Condition="'$(Test)' == 'true'" />
+      <!-- Pack before running integration and performance tests so that these tests can test packages produced by the repo. -->
+      <_SolutionBuildTargets Include="Pack" Condition="'$(Pack)' == 'true'" />
+      <_SolutionBuildTargets Include="IntegrationTest" Condition="'$(IntegrationTest)' == 'true'" />
+      <_SolutionBuildTargets Include="PerformanceTest" Condition="'$(PerformanceTest)' == 'true'" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <_RemoveProps>Projects;Restore;Publish;@(_SolutionBuildTargets)</_RemoveProps>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_CommonProps Include="Configuration=$(Configuration)"/>
+      <_CommonProps Include="ContinuousIntegrationBuild=$(ContinuousIntegrationBuild)"/>
+      <_CommonProps Include="Localise=$(Localise)"/>
+      <_CommonProps Include="RepoRoot=$(RepoRoot)"/>
+      <_CommonProps Include="VersionsPropsPath=$(VersionsPropsPath)"/>
+
+      <!--
+        When building from source we suppress restore for projects that set ExcludeFromSourceBuild=true.
+        NuGet Restore task reports a warning for such projects, which we suppress here.
+      -->
+      <_CommonProps Include="DisableWarnForInvalidRestoreProjects=true" Condition="'$(DotNetBuildFromSource)' == 'true'"/>
+
+      <!--
+        C++ projects expect VCTargetsPath property to be set. MSBuild generates this property to solution
+        metaproject when solution is build directly, but doesn't do so when the solution is built using MSBuild task.
+      -->
+      <_CommonProps Include="VCTargetsPath=$([MSBuild]::ValueOrDefault('$(VCTargetsPath)', '$([MSBuild]::GetVsInstallRoot())\Common7\IDE\VC\VCTargets\'))" Condition="'$(MSBuildRuntimeType)' != 'Core'"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Restore)' == 'true'">
+      <_RestoreToolsProps Include="@(_CommonProps)"/>
+      <_RestoreToolsProps Include="BaseIntermediateOutputPath=$(ArtifactsToolsetDir)Common"/>
+      <_RestoreToolsProps Include="ExcludeRestorePackageImports=true"/>
+    </ItemGroup>
+
+    <!--
+      Restore solutions and projects.
+
+      Run solution restore separately from the other targets, in a different build phase.
+      Since restore brings in new .props and .targets files we need to rerun evaluation.
+
+      Workarounds:
+      - Invoke restore using NuGet.targets directly (see https://github.com/NuGet/Home/issues/7648).
+        This avoids duplicate calls to RestoreTask and race conditions on writing restore results to disk.
+
+      - msbuild caches the metaproject for the solution (see https://github.com/Microsoft/msbuild/issues/1695)
+        We invalidate the cache by changing the value of __BuildPhase property.
+    -->
+
+    <PropertyGroup>
+      <!-- This can be set to false as an optimization for repos that don't use NuGet. -->
+      <RestoreUsingNuGetTargets Condition="'$(RestoreUsingNuGetTargets)' == ''">true</RestoreUsingNuGetTargets>
+
+      <!-- IsRunningFromVisualStudio may be true even when running msbuild.exe from command line. This generally means that MSBUild is Visual Studio installation and therefore we need to find NuGet.targets in a different location.  -->
+      <_NuGetRestoreTargets>$(MSBuildToolsPath)\NuGet.targets</_NuGetRestoreTargets>
+      <_NuGetRestoreTargets Condition="'$([MSBuild]::IsRunningFromVisualStudio())' == 'true'">$(MSBuildToolsPath32)\..\..\..\Common7\IDE\CommonExtensions\Microsoft\NuGet\NuGet.targets</_NuGetRestoreTargets>
+    </PropertyGroup>
+
+    <!--
+      Detect which projects support restoring with NuGet targets.
+      As a perf optimization, the Properties list here should match exactly with
+      the properties passed to the "Restore" target a few lines below.
+      This helps MSBuild cache the result of _IsProjectRestoreSupported.
+    -->
+    <MSBuild Projects="@(ProjectToBuild)"
+             Properties="@(_SolutionBuildProps);__BuildPhase=SolutionRestore;"
+             RemoveProperties="$(_RemoveProps)"
+             Targets="_IsProjectRestoreSupported"
+             SkipNonexistentTargets="true"
+             BuildInParallel="true"
+             Condition="'$(RestoreUsingNuGetTargets)' != 'false' and '%(ProjectToBuild.Extension)' != '.sln' and '$(Restore)' == 'true'">
+
+      <Output TaskParameter="TargetOutputs" ItemName="_ProjectToRestoreWithNuGet" />
+    </MSBuild>
+
+    <PropertyGroup>
+      <!-- Normalize paths to avoid false warnings by NuGet about missing project references. -->
+      <_ProjectToRestoreWithNuGetList>@(_ProjectToRestoreWithNuGet->'%(FullPath)')</_ProjectToRestoreWithNuGetList>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_ProjectToRestore Include="$(_NuGetRestoreTargets)" Condition="'$(_ProjectToRestoreWithNuGetList)' != '' and '$(RestoreUsingNuGetTargets)' != 'false'">
+        <AdditionalProperties>RestoreGraphProjectInput=$(_ProjectToRestoreWithNuGetList)</AdditionalProperties>
+        <RestoreInParallel>true</RestoreInParallel>
+      </_ProjectToRestore>
+
+      <!-- Invoke the 'Restore' target on solutions and projects which do not support NuGet. -->
+      <_ProjectToRestore Include="@(ProjectToBuild)" Exclude="@(_ProjectToRestoreWithNuGet)" />
+    </ItemGroup>
+
+    <MSBuild Projects="@(_ProjectToRestore)"
+             Properties="@(_SolutionBuildProps);__BuildPhase=SolutionRestore;"
+             RemoveProperties="$(_RemoveProps)"
+             Targets="Restore"
+             SkipNonexistentTargets="true"
+             BuildInParallel="%(_ProjectToRestore.RestoreInParallel)"
+             Condition="'$(Restore)' == 'true'"/>
+
+    <!--
+      Build solution.
+    -->
+    <MSBuild Projects="@(ProjectToBuild)"
+             Properties="@(_SolutionBuildProps);__BuildPhase=SolutionBuild;"
+             RemoveProperties="$(_RemoveProps)"
+             Targets="@(_SolutionBuildTargets)"
+             BuildInParallel="true"
+             Condition="'@(_SolutionBuildTargets)' != ''" />
+
+    <MSBuild Projects="AfterSolutionBuild.proj"
+             Properties="@(_CommonProps);"
+             Targets="@(_SolutionBuildTargets)"
+             SkipNonexistentTargets="true"
+             Condition="'@(_SolutionBuildTargets)' != ''" />
+
+
+  </Target>
+
+</Project>

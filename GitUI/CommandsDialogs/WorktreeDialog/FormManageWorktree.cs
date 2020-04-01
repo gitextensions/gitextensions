@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using ResourceManager;
 
@@ -16,6 +17,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         private readonly TranslationString _switchWorktreeTitle = new TranslationString("Open a worktree");
         private readonly TranslationString _deleteWorktreeText = new TranslationString("Are you sure you want to delete this worktree?");
         private readonly TranslationString _deleteWorktreeTitle = new TranslationString("Delete a worktree");
+        private readonly TranslationString _deleteWorktreeFailedText = new TranslationString("Failed to delete a worktree");
 
         private List<WorkTree> _worktrees;
 
@@ -37,6 +39,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             Open.Width = DpiUtil.Scale(39);
             Delete.Width = DpiUtil.Scale(44);
             Worktrees.AutoGenerateColumns = false;
+            Delete.Image = Images.Delete.AdaptLightness();
             InitializeComplete();
 
             Path.DataPropertyName = nameof(WorkTree.Path);
@@ -44,9 +47,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             Branch.DataPropertyName = nameof(WorkTree.Branch);
             Sha1.DataPropertyName = nameof(WorkTree.Sha1);
             IsDeleted.DataPropertyName = nameof(WorkTree.IsDeleted);
-
-            bool light = ColorHelper.IsLightTheme();
-            Delete.Image = light ? Images.Delete : Images.Delete_inv;
         }
 
         private void FormManageWorktree_Load(object sender, EventArgs e)
@@ -214,7 +214,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             if (e.ColumnIndex == 5)
             {
                 if (AppSettings.DontConfirmSwitchWorktree || MessageBox.Show(this,
-                        _switchWorktreeText.Text, _switchWorktreeTitle.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        _switchWorktreeText.Text, _switchWorktreeTitle.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     if (Directory.Exists(workTree.Path))
                     {
@@ -234,14 +234,17 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 }
 
                 if (MessageBox.Show(this, _deleteWorktreeText.Text, _deleteWorktreeTitle.Text,
-                        MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
-                    if (Directory.Exists(workTree.Path))
+                    if (workTree.Path.TryDeleteDirectory(out string errorMessage))
                     {
-                        Directory.Delete(workTree.Path, true);
+                        PruneWorktrees();
                     }
-
-                    PruneWorktrees();
+                    else
+                    {
+                        MessageBox.Show(this, $@"{_deleteWorktreeFailedText.Text}: {workTree.Path}{Environment.NewLine}{errorMessage}", Strings.Error,
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }

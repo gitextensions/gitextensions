@@ -15,7 +15,7 @@ namespace GitUIPluginInterfaces
     /// </remarks>
     public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
     {
-        private static readonly ThreadLocal<byte[]> _buffer = new ThreadLocal<byte[]>(() => new byte[20], trackAllValues: false);
+        private static readonly ThreadLocal<byte[]> _buffer = new ThreadLocal<byte[]>(() => new byte[Sha1ByteCount], trackAllValues: false);
         private static readonly Random _random = new Random();
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace GitUIPluginInterfaces
         {
             var buffer = _buffer.Value;
 
-            stream.ReadBytes(buffer, offset: 0, count: 20);
+            stream.ReadBytes(buffer, offset: 0, count: Sha1ByteCount);
 
             return Parse(buffer, index: 0);
         }
@@ -480,7 +480,7 @@ namespace GitUIPluginInterfaces
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="length"/> is less than zero, or more than 40.</exception>
         [Pure]
         [NotNull]
-        public unsafe string ToShortString(int length = 10)
+        public unsafe string ToShortString(int length = 8)
         {
             if (length < 0)
             {

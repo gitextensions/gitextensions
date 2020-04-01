@@ -73,7 +73,7 @@ namespace GitUI
             get
             {
                 CreateParams mdiCp = base.CreateParams;
-                mdiCp.ClassStyle = mdiCp.ClassStyle | NativeConstants.CP_NOCLOSE_BUTTON;
+                mdiCp.ClassStyle = mdiCp.ClassStyle | NativeMethods.CP_NOCLOSE_BUTTON;
                 return mdiCp;
             }
         }

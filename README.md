@@ -11,14 +11,10 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
 
 <a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/sponsors/badge.svg" /></a>
 
-The work has been [split into two streams](https://github.com/gitextensions/gitextensions/wiki/Compare-versions):
- * version 3.x - **[Download it now](https://github.com/gitextensions/gitextensions/releases/latest)** or [install it with Chocolatey](https://chocolatey.org/packages/gitextensions).
- * version 2.5x
+
+
 
 ### Version 3.x
-
-This stream contains the code for the new major version with a number of significant changes&mdash;both to the app and the codebase.
-For more details please refer to [versions comparison](https://github.com/gitextensions/gitextensions/wiki/Compare-versions).
 
 <table>
   <tr>
@@ -39,7 +35,7 @@ For more details please refer to [versions comparison](https://github.com/gitext
       Development
     </td>
     <td>
-      MS VS 2017 v15.7+, C#7.3<br />
+      MS VS 2019, C# 8<br />
       VC++ (inc. ATL for x86/x64 for installer)
     </td>
   </tr>
@@ -61,11 +57,16 @@ For more details please refer to [versions comparison](https://github.com/gitext
   </tr>
 </table>
 
+#### [Build instructions](https://github.com/gitextensions/gitextensions/wiki/How-To%3A-build-instructions)
 
 ### Version 2.5x
 
+<details>
+<summary>This stream contains the last cross-platform version running both on Windows (MS .NET Framework) and on Linux/Mac (Mono). [More...]</summary>
 This stream contains the last cross-platform version running both on Windows (MS .NET Framework) and on Linux/Mac (Mono).
 The code is in maintenance mode with no significant active development planned. Only certain bug fixes are currently ported across, however there may be consideration given for certain features to be ported across from the v3.x stream.
+
+For more details please refer to [versions comparison](https://github.com/gitextensions/gitextensions/wiki/Compare-versions).
 
 <table>
   <tr>
@@ -115,18 +116,26 @@ The code is in maintenance mode with no significant active development planned. 
   </tr>
 </table>
 
+#### [Build instructions](https://github.com/gitextensions/gitextensions/wiki/How-To:-build-instructions#v3x-and-older)
+
+
+</details>
+
+
 
 ## Downloads
 <a href="https://github.com/gitextensions/gitextensions/releases" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/total.svg?label=GitHub%20downloads%20(total)&cacheSeconds=86400"></a> <a href="https://sourceforge.net/projects/gitextensions/files" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dt/gitextensions.svg?label=SourceForge%20downloads%20(total)&cacheSeconds=86400"></a> <a href="https://chocolatey.org/packages/gitextensions" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/chocolatey/dt/gitextensions.svg?label=Chocolatey%20downloads%20(total)&cacheSeconds=86400"></a>
 
+**[Download it now](https://github.com/gitextensions/gitextensions/releases/latest)** or install it with [Chocolatey](https://chocolatey.org/packages/gitextensions) or [AppGet](https://appget.net/packages/i/gitextensions).
+
 <table>
   <tr>
     <td>
-      <strong>v3.2.1</strong>
+      <strong>v3.3.1</strong>
     </td>
     <td>
       <a href="https://github.com/gitextensions/gitextensions/releases/latest">[ Download ]</a><br />
-      <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?label=GitHub%20downloads%20(latest)&cacheSeconds=3600"></a> <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dt/gitextensions/v3.2.1.svg?label=SourceForge%20downloads%20(latest)&cacheSeconds=3600"></a>
+      <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?label=GitHub%20downloads%20(latest)&cacheSeconds=3600"></a> <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dt/gitextensions/v3.3.1.svg?label=SourceForge%20downloads%20(latest)&cacheSeconds=3600"></a>
     </td>
   </tr>
   <tr>

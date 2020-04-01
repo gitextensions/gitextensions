@@ -56,6 +56,11 @@ namespace GitUI
 
         public void Initialize()
         {
+            if (DesignMode)
+            {
+                return;
+            }
+
             DisplayPatches(GetPatches());
         }
 
@@ -85,7 +90,7 @@ namespace GitUI
 
             if (string.IsNullOrEmpty(patchFile.FullName))
             {
-                MessageBox.Show(_unableToShowPatchDetails.Text);
+                MessageBox.Show(_unableToShowPatchDetails.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

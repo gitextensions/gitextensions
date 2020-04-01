@@ -115,19 +115,9 @@ namespace GitUIPluginInterfaces
             return GetValue(name, defaultValue, x => x.Parse(defaultValue));
         }
 
-        public void SetColor([NotNull] string name, Color? value)
-        {
-            SetValue(name, value, x => x.HasValue ? ColorTranslator.ToHtml(x.Value) : null);
-        }
-
-        public Color? GetColor([NotNull] string name)
-        {
-            return GetValue<Color?>(name, null, x => ColorTranslator.FromHtml(x));
-        }
-
         public Color GetColor([NotNull] string name, Color defaultValue)
         {
-            return GetColor(name) ?? defaultValue;
+            return GetValue<Color?>(name, null, x => ColorTranslator.FromHtml(x)) ?? defaultValue;
         }
 
         public void SetEnum<T>([NotNull] string name, T value)

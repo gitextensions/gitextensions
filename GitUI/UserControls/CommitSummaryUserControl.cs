@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using GitCommands;
+using GitExtUtils.GitUI.Theming;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
 
@@ -68,7 +69,7 @@ namespace GitUI.UserControls
                     if (tagList.Any())
                     {
                         labelTags.BackColor = _tagsBackColor;
-                        labelTags.ForeColor = ColorHelper.GetForeColorForBackColor(_tagsBackColor);
+                        labelTags.SetForeColorForBackColor();
                         labelTags.Font = new Font(labelTags.Font, FontStyle.Bold);
                         string tagListStr = string.Join(", ", tagList.Select(h => h.LocalName)).ShortenTo(MaxBranchTagLength);
                         labelTags.Text = tagListStr;
@@ -82,7 +83,7 @@ namespace GitUI.UserControls
                     if (branchesList.Any())
                     {
                         labelBranches.BackColor = _branchesBackColor;
-                        labelBranches.ForeColor = ColorHelper.GetForeColorForBackColor(_branchesBackColor);
+                        labelBranches.SetForeColorForBackColor();
                         labelBranches.Font = new Font(labelBranches.Font, FontStyle.Bold);
                         string branchesListStr = string.Join(", ", branchesList.Select(h => h.LocalName)).ShortenTo(MaxBranchTagLength);
                         labelBranches.Text = branchesListStr;

@@ -22,8 +22,8 @@
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
+        /// <summary>
+        /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
@@ -49,7 +49,6 @@
             this.Name = "FileViewerInternal";
             this.Size = new System.Drawing.Size(757, 519);
             this.ResumeLayout(false);
-
         }
 
         #endregion

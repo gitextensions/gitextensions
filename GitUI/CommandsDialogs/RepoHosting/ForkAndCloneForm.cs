@@ -21,10 +21,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
     {
         #region Translation
 
-        private readonly TranslationString _strError = new TranslationString("Error");
         private readonly TranslationString _strLoading = new TranslationString(" : LOADING : ");
-        private readonly TranslationString _strYes = new TranslationString("Yes");
-        private readonly TranslationString _strNo = new TranslationString("No");
         private readonly TranslationString _strFailedToGetRepos = new TranslationString("Failed to get repositories. This most likely means you didn't configure {0}, please do so via the menu \"Plugins/{0}\".");
         private readonly TranslationString _strWillCloneWithPushAccess = new TranslationString("Will clone {0} into {1}.\r\nYou will have push access. {2}");
         private readonly TranslationString _strWillCloneInfo = new TranslationString("Will clone {0} into {1}.\r\nYou can not push unless you are a collaborator. {2}");
@@ -122,9 +119,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
                                 Text = repo.Name,
                                 SubItems =
                                 {
-                                    repo.IsAFork ? _strYes.Text : _strNo.Text,
+                                    repo.IsAFork ? Strings.Yes : Strings.No,
                                     repo.Forks.ToString(),
-                                    repo.IsPrivate ? _strYes.Text : _strNo.Text
+                                    repo.IsPrivate ? Strings.Yes : Strings.No
                                 }
                             });
                         }
@@ -181,7 +178,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     {
                         await this.SwitchToMainThreadAsync();
 
-                        MessageBox.Show(this, _strSearchFailed.Text + Environment.NewLine + ex.Message, _strError.Text);
+                        MessageBox.Show(this, _strSearchFailed.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         searchBtn.Enabled = true;
                     }
                 })
@@ -217,12 +214,12 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                         if (ex.Message.Contains("404"))
                         {
-                            MessageBox.Show(this, _strUserNotFound.Text, _strError.Text);
+                            MessageBox.Show(this, _strUserNotFound.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         else
                         {
                             MessageBox.Show(this, _strCouldNotFetchReposOfUser.Text + Environment.NewLine +
-                                                  ex.Message, _strError.Text);
+                                                  ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
 
                         searchBtn.Enabled = true;
@@ -252,7 +249,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     SubItems =
                     {
                         repo.Owner,
-                        repo.IsAFork ? _strYes.Text : _strNo.Text,
+                        repo.IsAFork ? Strings.Yes : Strings.No,
                         repo.Forks.ToString()
                     }
                 });
@@ -268,7 +265,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             if (searchResultsLV.SelectedItems.Count != 1)
             {
-                MessageBox.Show(this, _strSelectOneItem.Text, _strError.Text);
+                MessageBox.Show(this, _strSelectOneItem.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -279,7 +276,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _strFailedToFork.Text + Environment.NewLine + ex.Message, _strError.Text);
+                MessageBox.Show(this, _strFailedToFork.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             tabControl.SelectedTab = myReposPage;
@@ -338,7 +335,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             string hp = CurrentySelectedGitRepo.Homepage;
             if (string.IsNullOrEmpty(hp) || (!hp.StartsWith("http://") && !hp.StartsWith("https://")))
             {
-                MessageBox.Show(this, _strNoHomepageDefined.Text, _strError.Text);
+                MessageBox.Show(this, _strNoHomepageDefined.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
@@ -412,7 +409,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 var error = module.AddRemote(addUpstreamRemoteAsCB.Text.Trim(), repo.ParentReadOnlyUrl);
                 if (!string.IsNullOrEmpty(error))
                 {
-                    MessageBox.Show(this, error, _strCouldNotAddRemote.Text);
+                    MessageBox.Show(this, error, _strCouldNotAddRemote.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
@@ -523,7 +520,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             string targetDir = destinationTB.Text.Trim();
             if (targetDir.Length == 0)
             {
-                MessageBox.Show(this, _strCloneFolderCanNotBeEmpty.Text, _strError.Text);
+                MessageBox.Show(this, _strCloneFolderCanNotBeEmpty.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
 

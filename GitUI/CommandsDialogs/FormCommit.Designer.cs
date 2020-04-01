@@ -696,7 +696,6 @@ namespace GitUI.CommandsDialogs
             // Unstaged
             //
             this.Unstaged.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Unstaged.FilterVisible = false;
             this.Unstaged.Location = new System.Drawing.Point(0, 0);
             this.Unstaged.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Unstaged.Name = "Unstaged";
@@ -924,7 +923,6 @@ namespace GitUI.CommandsDialogs
             //
             this.Staged.ContextMenuStrip = this.StagedFileContext;
             this.Staged.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Staged.FilterVisible = false;
             this.Staged.Location = new System.Drawing.Point(0, 28);
             this.Staged.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Staged.Name = "Staged";

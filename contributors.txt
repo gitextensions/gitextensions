@@ -106,3 +106,21 @@ YYYY/MM/DD, github id, Full name, email
 2019/10/18, lhiginbotham, Logan Higinbotham, logan.higinbotham(at)gmail.com
 2019/10/18, RalphJSmart, Ralph J Smart, id1508-gitextensions_github(at)yahoo.com
 2019/10/24, jvitkauskas, Julius Vitkauskas, zadintuvas(at)gmail.com
+2019/10/31, rickaas, Ricky Lindeman, saakcir(at)gmail.com
+2019/11/27, andrewcartwright1, Andrew Cartwright, kickme93(at)hotmail.co.uk
+2019/12/02, nick-bulleid, Nick Bulleid, nickedb(at)gmail.com
+2019/12/25, dfev77, Florin Daneliuc, florin.daneliuc@gmail.com
+2020/01/02, c3er, Christian Dreier, flipper.x3r(at)googlemail.com
+2020/01/04, MarkJ74, Mark Jackson, markj74(at)outlook.com
+2020/01/07, asherber, Aaron Sherber, aaron(at)sherber.com
+2020/02/05, azarkevich, Sergey Azarkevich, azarkevich/at/gmail.com
+2020/02/05, FallenGameR, Aleksandr Kostikov, alexko|at|microsoft.com
+2020/02/09, alexeiskachykhin, Alexei Skachykhin, alexei.skachykhin(at)live.com
+2020/02/10, ierof, Irina Erofeeva, babasya(at)gmail.com
+2020/02/10, Quppa, David Warner, david.p.warner(at)gmail.com
+2020/02/10, gpongelli, Gabriele Pongelli, gabriele.pongelli(at)gmail.com
+2020/02/10, EbenZhang, Eben Zhang, zhangyingneng(at)gmail.com
+2020/02/11, mwerle, Michael Werle, micha(at)michaelwerle.com
+2020/02/29, itsho, Itamar Shoham, Itamar.Shoham(at)gmx.com
+2020/03/22, joergpichler, Jörg Pichler, joerg.pichler(at)gmail.com
+2020/03/27, cado1982, Chris Oliver, cado82(at)gmail.com

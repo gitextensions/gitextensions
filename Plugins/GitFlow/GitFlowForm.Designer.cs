@@ -36,6 +36,7 @@
             this.btnFinish = new System.Windows.Forms.Button();
             this.gbManage = new System.Windows.Forms.GroupBox();
             this.pnlManageBranch = new System.Windows.Forms.Panel();
+            this.cbSquash = new System.Windows.Forms.CheckBox();
             this.cbPushAfterFinish = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.pnlPull = new System.Windows.Forms.Panel();
@@ -67,7 +68,6 @@
             this.panel3 = new System.Windows.Forms.GroupBox();
             this.txtResult = new System.Windows.Forms.TextBox();
             this.lblRunCommand = new System.Windows.Forms.Label();
-            this.cbSquashFeature = new System.Windows.Forms.CheckBox();
             this.gbManage.SuspendLayout();
             this.pnlManageBranch.SuspendLayout();
             this.pnlPull.SuspendLayout();
@@ -136,7 +136,7 @@
             // 
             // pnlManageBranch
             // 
-            this.pnlManageBranch.Controls.Add(this.cbSquashFeature);
+            this.pnlManageBranch.Controls.Add(this.cbSquash);
             this.pnlManageBranch.Controls.Add(this.cbPushAfterFinish);
             this.pnlManageBranch.Controls.Add(this.panel2);
             this.pnlManageBranch.Controls.Add(this.pnlPull);
@@ -150,6 +150,16 @@
             this.pnlManageBranch.Name = "pnlManageBranch";
             this.pnlManageBranch.Size = new System.Drawing.Size(610, 131);
             this.pnlManageBranch.TabIndex = 7;
+            // 
+            // cbSquash
+            // 
+            this.cbSquash.AutoSize = true;
+            this.cbSquash.Location = new System.Drawing.Point(492, 113);
+            this.cbSquash.Name = "cbSquash";
+            this.cbSquash.Size = new System.Drawing.Size(62, 17);
+            this.cbSquash.TabIndex = 9;
+            this.cbSquash.Text = "Squash";
+            this.cbSquash.UseVisualStyleBackColor = true;
             // 
             // cbPushAfterFinish
             // 
@@ -449,16 +459,6 @@
             this.lblRunCommand.TabIndex = 1;
             this.lblRunCommand.Text = "-";
             // 
-            // cbSquashFeature
-            // 
-            this.cbSquashFeature.AutoSize = true;
-            this.cbSquashFeature.Location = new System.Drawing.Point(492, 113);
-            this.cbSquashFeature.Name = "cbSquashFeature";
-            this.cbSquashFeature.Size = new System.Drawing.Size(98, 17);
-            this.cbSquashFeature.TabIndex = 9;
-            this.cbSquashFeature.Text = "Squash feature";
-            this.cbSquashFeature.UseVisualStyleBackColor = true;
-            // 
             // GitFlowForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -535,6 +535,6 @@
         private System.Windows.Forms.Label lblRunCommand;
         private System.Windows.Forms.TextBox txtResult;
         private System.Windows.Forms.CheckBox cbPushAfterFinish;
-        private System.Windows.Forms.CheckBox cbSquashFeature;
+        private System.Windows.Forms.CheckBox cbSquash;
     }
 }

@@ -92,10 +92,10 @@ namespace GitUI
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing)
             {
                 _cancellationTokenSequence.Dispose();
-                components.Dispose();
+                components?.Dispose();
             }
 
             base.Dispose(disposing);
@@ -185,7 +185,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message);
+                MessageBox.Show(this, ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

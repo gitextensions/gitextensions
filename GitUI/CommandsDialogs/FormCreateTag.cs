@@ -79,7 +79,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message);
+                MessageBox.Show(this, ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -89,7 +89,7 @@ namespace GitUI.CommandsDialogs
 
             if (objectId == null)
             {
-                MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text);
+                MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return "";
             }
 
@@ -135,7 +135,9 @@ namespace GitUI.CommandsDialogs
             TagOperation tagOperation = GetSelectedOperation(annotate.SelectedIndex);
             textBoxGpgKey.Enabled = tagOperation == TagOperation.SignWithSpecificKey;
             keyIdLbl.Enabled = tagOperation == TagOperation.SignWithSpecificKey;
-            tagMessage.Enabled = tagOperation.CanProvideMessage();
+            bool providesMessage = tagOperation.CanProvideMessage();
+            tagMessage.Enabled = providesMessage;
+            tagMessage.BorderStyle = providesMessage ? BorderStyle.FixedSingle : BorderStyle.None;
         }
 
         private static TagOperation GetSelectedOperation(int dropdownSelection)

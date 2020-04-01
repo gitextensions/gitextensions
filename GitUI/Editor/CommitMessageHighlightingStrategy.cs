@@ -8,7 +8,7 @@ namespace GitUI.Editor
 {
     internal sealed class CommitMessageHighlightingStrategy : GitHighlightingStrategyBase
     {
-        private static HighlightColor ColorSummary { get; } = new HighlightColor(Color.Black, bold: true, italic: false);
+        private static HighlightColor ColorSummary { get; } = new HighlightColor(SystemColors.WindowText, bold: true, italic: false);
 
         private readonly List<TextMarker> _overlengthDescriptionMarkers = new List<TextMarker>();
 

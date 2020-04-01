@@ -22,9 +22,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noRevisionSelected =
             new TranslationString("You need to choose a target revision.");
 
-        private readonly TranslationString _noRevisionSelectedCaption =
-                    new TranslationString("Error");
-
         private GitRevision _selectedRevision;
         public GitRevision SelectedRevision
         {
@@ -115,7 +112,7 @@ namespace GitUI.CommandsDialogs
         {
             if (checkboxRevisionFilter.Checked && DiffSelectedRevision == null)
             {
-                MessageBox.Show(this, _noRevisionSelected.Text, _noRevisionSelectedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, _noRevisionSelected.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 

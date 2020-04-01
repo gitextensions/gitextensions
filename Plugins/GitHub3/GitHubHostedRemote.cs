@@ -52,5 +52,10 @@ namespace GitHub3
         public string Data => Owner + "/" + RemoteRepositoryName;
         public string DisplayData => Data;
         public bool IsOwnedByMe => GitHubLoginInfo.Username == Owner;
+
+        public string GetBlameUrl(string commitHash, string fileName, int lineIndex)
+        {
+            return $"{GitHub3Plugin.Instance.GitHubEndpoint}/{Data}/blame/{commitHash}/{fileName}#L{lineIndex}";
+        }
     }
 }

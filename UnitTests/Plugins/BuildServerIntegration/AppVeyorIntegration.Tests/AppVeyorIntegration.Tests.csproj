@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="YamlDotNet" Version="5.0.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\..\..\..\Plugins\BuildServerIntegration\AppVeyorIntegration\AppVeyorIntegration.csproj" />
+    <ProjectReference Include="..\..\..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
+    <ProjectReference Include="..\..\..\CommonTestUtils\CommonTestUtils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ApprovedFiles\AppVeyorAdapterTests.Should_return_a_build_Info_When_Json_content_is_the_one_of_a_master_build.approved.txt" />
+    <Content Include="ApprovedFiles\AppVeyorAdapterTests.Should_return_a_build_Info_When_Json_content_is_the_one_of_a_pull_request_build.approved.txt" />
+    <EmbeddedResource Include="MockData\AppVeyorResult_master.json" />
+    <EmbeddedResource Include="MockData\AppVeyorResult_pull_request_build.json" />
+  </ItemGroup>
+
+</Project>

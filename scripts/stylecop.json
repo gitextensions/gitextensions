@@ -1,0 +1,11 @@
+{
+    "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
+    "settings": {
+        "namingRules": {
+            "allowedHungarianPrefixes": [
+                "ui", "x", "y", "my", "ls", "am", "id", "ie", "vs", "up"
+            ],
+            "tupleElementNameCasing": "camelCase"
+        }
+    }
+}

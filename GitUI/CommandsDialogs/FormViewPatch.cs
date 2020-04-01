@@ -55,7 +55,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            ChangesList.ViewPatch(patch);
+            ChangesList.ViewPatch(patch.FileNameB, patch.Text ?? "");
         }
 
         private void BrowsePatch_Click(object sender, EventArgs e)

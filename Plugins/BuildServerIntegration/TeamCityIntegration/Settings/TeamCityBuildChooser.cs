@@ -94,7 +94,7 @@ namespace TeamCityIntegration.Settings
                 var buildNodes = project.Builds.Select(b => new TreeNode(b.DisplayName)
                 {
                     Name = b.Id,
-                    ForeColor = Color.Blue,
+                    ForeColor = SystemColors.Highlight,
                     Tag = b
                 }).OrderBy(b => b.Name).ToArray();
                 treeNode.Nodes.AddRange(buildNodes);

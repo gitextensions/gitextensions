@@ -191,51 +191,47 @@ namespace GitUI.CommandsDialogs
                     gitStash == _currentWorkingDirStashItem)
                 {
                     // current working directory
-                    View.ViewCurrentChanges(stashedItem);
+                    View.ViewCurrentChanges(stashedItem, isStaged: false, openWithDifftool: null);
                 }
                 else if (stashedItem != null)
                 {
                     if (stashedItem.IsNew)
                     {
-                        if (!stashedItem.IsSubmodule)
-                        {
-                            View.ViewGitItemAsync(stashedItem.Name, stashedItem.TreeGuid);
-                        }
-                        else
-                        {
-                            ThreadHelper.JoinableTaskFactory.RunAsync(
-                                () => View.ViewTextAsync(
-                                    stashedItem.Name,
-                                    LocalizationHelpers.GetSubmoduleText(Module, stashedItem.Name, stashedItem.TreeGuid?.ToString())));
-                        }
+                        View.ViewGitItemAsync(stashedItem);
                     }
                     else
                     {
                         string extraDiffArguments = View.GetExtraDiffArguments();
                         Encoding encoding = View.Encoding;
-                        View.ViewPatchAsync(
+                        ThreadHelper.JoinableTaskFactory.Run(
                             () =>
                             {
-                                Patch patch = Module.GetSingleDiff(gitStash.Name + "^", gitStash.Name, stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding, true, stashedItem.IsTracked);
+                                Patch patch = Module.GetSingleDiff(gitStash.Name + "^",
+                                    gitStash.Name,
+                                    stashedItem.Name,
+                                    stashedItem.OldName,
+                                    extraDiffArguments,
+                                    encoding,
+                                    true,
+                                    stashedItem.IsTracked);
                                 if (patch == null)
                                 {
-                                    return (text: string.Empty, openWithDifftool: null /* not applicable */);
+                                    return View.ViewPatchAsync(fileName: null, text: string.Empty, openWithDifftool: null /* not applicable */, isText: true);
                                 }
 
                                 if (stashedItem.IsSubmodule)
                                 {
-                                    return (text: LocalizationHelpers.ProcessSubmodulePatch(Module, stashedItem.Name, patch),
-                                            openWithDifftool: null /* not implemented */);
+                                    return View.ViewPatchAsync(fileName: stashedItem.Name, text: LocalizationHelpers.ProcessSubmodulePatch(Module, stashedItem.Name, patch),
+                                            openWithDifftool: null /* not implemented */, isText: stashedItem.IsSubmodule);
                                 }
 
-                                return (text: patch.Text, openWithDifftool: null /* not implemented */);
+                                return View.ViewPatchAsync(fileName: stashedItem.Name, text: patch.Text, openWithDifftool: null /* not implemented */, isText: stashedItem.IsSubmodule);
                             });
                     }
                 }
                 else
                 {
-                    ThreadHelper.JoinableTaskFactory.RunAsync(
-                        () => View.ViewTextAsync("", ""));
+                    View.Clear();
                 }
             }
         }
@@ -244,10 +240,8 @@ namespace GitUI.CommandsDialogs
         {
             if (chkIncludeUntrackedFiles.Checked && !GitVersion.Current.StashUntrackedFilesSupported)
             {
-                if (MessageBox.Show(_stashUntrackedFilesNotSupported.Text, _stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-                {
-                    return;
-                }
+                MessageBox.Show(_stashUntrackedFilesNotSupported.Text, _stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
 
             using (WaitCursorScope.Enter())
@@ -262,10 +256,8 @@ namespace GitUI.CommandsDialogs
         {
             if (chkIncludeUntrackedFiles.Checked && !GitVersion.Current.StashUntrackedFilesSupported)
             {
-                if (MessageBox.Show(_stashUntrackedFilesNotSupported.Text, _stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-                {
-                    return;
-                }
+                MessageBox.Show(_stashUntrackedFilesNotSupported.Text, _stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
 
             using (WaitCursorScope.Enter())

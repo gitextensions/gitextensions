@@ -127,7 +127,7 @@ namespace GitUI
             }
             catch (InvalidOperationException ex)
             {
-                MessageBox.Show(_NO_TRANSLATE_form, ex.Message, "Filter error");
+                MessageBox.Show(_NO_TRANSLATE_form, ex.Message, "Filter error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 _NO_TRANSLATE_textBox.Text = "";
                 return;
             }

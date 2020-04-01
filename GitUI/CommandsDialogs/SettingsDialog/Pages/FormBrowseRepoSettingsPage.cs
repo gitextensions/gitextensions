@@ -4,6 +4,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
     {
+        private int _cboTerminalPreviousIndex = -1;
+
         public FormBrowseRepoSettingsPage()
         {
             InitializeComponent();
@@ -31,6 +33,22 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public static SettingsPageReference GetPageReference()
         {
             return new SettingsPageReferenceByType(typeof(FormBrowseRepoSettingsPage));
+        }
+
+        private void cboTerminal_SelectionChangeCommitted(object sender, System.EventArgs e)
+        {
+            if (ShellHelper.ShellIsOnPath((string)cboTerminal.SelectedItem))
+            {
+                return;
+            }
+
+            MessageBoxes.ShellNotFound(this);
+            cboTerminal.SelectedIndex = _cboTerminalPreviousIndex;
+        }
+
+        private void cboTerminal_Enter(object sender, System.EventArgs e)
+        {
+            _cboTerminalPreviousIndex = cboTerminal.SelectedIndex;
         }
     }
 }

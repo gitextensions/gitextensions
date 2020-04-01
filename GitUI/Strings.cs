@@ -6,6 +6,15 @@ namespace GitUI
 {
     internal sealed class Strings : Translate
     {
+        private readonly TranslationString _error = new TranslationString("Error");
+        private readonly TranslationString _warning = new TranslationString("Warning");
+        private readonly TranslationString _yes = new TranslationString("Yes");
+        private readonly TranslationString _no = new TranslationString("No");
+
+        private readonly TranslationString _containedInBranchesText = new TranslationString("Contained in branches:");
+        private readonly TranslationString _containedInNoBranchText = new TranslationString("Contained in no branch");
+        private readonly TranslationString _containedInTagsText = new TranslationString("Contained in tags:");
+        private readonly TranslationString _containedInNoTagText = new TranslationString("Contained in no tag");
         private readonly TranslationString _viewPullRequest = new TranslationString("View pull requests");
         private readonly TranslationString _createPullRequest = new TranslationString("Create pull request");
         private readonly TranslationString _forkCloneRepo = new TranslationString("Fork or clone a repository");
@@ -24,6 +33,15 @@ namespace GitUI
         private readonly TranslationString _tag = new TranslationString("Tag");
         private readonly TranslationString _remote = new TranslationString("Remote");
 
+        private readonly TranslationString _authored = new TranslationString("authored");
+        private readonly TranslationString _committed = new TranslationString("committed");
+        private readonly TranslationString _authoredAndCommitted = new TranslationString("authored and committed");
+        private readonly TranslationString _markBisectAsGood = new TranslationString("Marked as good in bisect");
+        private readonly TranslationString _markBisectAsBad = new TranslationString("Marked as bad in bisect");
+
+        private readonly TranslationString _errorCaptionFailedDeleteFile = new TranslationString("Failed to delete file");
+        private readonly TranslationString _errorCaptionFailedDeleteFolder = new TranslationString("Failed to delete directory");
+
         // public only because of FormTranslate
         public Strings()
         {
@@ -39,6 +57,16 @@ namespace GitUI
                 _instance = new Lazy<Strings>();
             }
         }
+
+        public static string Error => _instance.Value._error.Text;
+        public static string Warning => _instance.Value._warning.Text;
+        public static string Yes => _instance.Value._yes.Text;
+        public static string No => _instance.Value._no.Text;
+
+        public static string ContainedInBranches => _instance.Value._containedInBranchesText.Text;
+        public static string ContainedInNoBranch => _instance.Value._containedInNoBranchText.Text;
+        public static string ContainedInTags => _instance.Value._containedInTagsText.Text;
+        public static string ContainedInNoTag => _instance.Value._containedInNoTagText.Text;
 
         public static string CreatePullRequest => _instance.Value._createPullRequest.Text;
         public static string ForkCloneRepo => _instance.Value._forkCloneRepo.Text;
@@ -61,5 +89,15 @@ namespace GitUI
         public static string Remote => _instance.Value._remote.Text;
 
         public static string OpenReport => _instance.Value._openReport.Text;
+
+        public static string Authored => _instance.Value._authored.Text;
+        public static string Committed => _instance.Value._committed.Text;
+        public static string AuthoredAndCommitted => _instance.Value._authoredAndCommitted.Text;
+
+        public static string MarkBisectAsGood => _instance.Value._markBisectAsGood.Text;
+        public static string MarkBisectAsBad => _instance.Value._markBisectAsBad.Text;
+
+        public static string ErrorCaptionFailedDeleteFile => _instance.Value._errorCaptionFailedDeleteFile.Text;
+        public static string ErrorCaptionFailedDeleteFolder => _instance.Value._errorCaptionFailedDeleteFolder.Text;
     }
 }

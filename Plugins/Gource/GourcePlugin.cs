@@ -56,7 +56,7 @@ namespace Gource
         {
             if (!args.GitModule.IsValidGitWorkingDir())
             {
-                MessageBox.Show(args.OwnerForm, _currentDirectoryIsNotValidGit.Text);
+                MessageBox.Show(args.OwnerForm, _currentDirectoryIsNotValidGit.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -66,7 +66,7 @@ namespace Gource
             {
                 var result = MessageBox.Show(
                     args.OwnerForm,
-                    string.Format(_resetConfigPath.Text, pathToGource), _gource.Text, MessageBoxButtons.YesNo);
+                    string.Format(_resetConfigPath.Text, pathToGource), _gource.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (result == DialogResult.Yes)
                 {
@@ -79,13 +79,13 @@ namespace Gource
             {
                 if (MessageBox.Show(
                         args.OwnerForm, _doYouWantDownloadGource.Text, _download.Text,
-                        MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     var gourceUrl = SearchForGourceUrl();
 
                     if (string.IsNullOrEmpty(gourceUrl))
                     {
-                        MessageBox.Show(args.OwnerForm, _cannotFindGource.Text);
+                        MessageBox.Show(args.OwnerForm, _cannotFindGource.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return false;
                     }
 
@@ -94,20 +94,20 @@ namespace Gource
                     var downloadSize = DownloadFile(gourceUrl, fileName);
                     if (downloadSize > 0)
                     {
-                        MessageBox.Show(string.Format(_bytesDownloaded.Text, downloadSize));
+                        MessageBox.Show(string.Format(_bytesDownloaded.Text, downloadSize), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         Directory.CreateDirectory(Path.Combine(downloadDir, "gource"));
                         UnZipFiles(fileName, Path.Combine(downloadDir, "gource"), true);
 
                         var newGourcePath = Path.Combine(downloadDir, "gource\\gource.exe");
                         if (File.Exists(newGourcePath))
                         {
-                            MessageBox.Show(args.OwnerForm, _gourceDownloadedAndUnzipped.Text);
+                            MessageBox.Show(args.OwnerForm, _gourceDownloadedAndUnzipped.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             pathToGource = newGourcePath;
                         }
                     }
                     else
                     {
-                        MessageBox.Show(args.OwnerForm, _downloadingFailed.Text);
+                        MessageBox.Show(args.OwnerForm, _downloadingFailed.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -173,7 +173,7 @@ namespace Gource
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -222,7 +222,7 @@ namespace Gource
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -272,7 +272,7 @@ namespace Gource
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Exception");
+                MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return string.Empty;
             }
         }

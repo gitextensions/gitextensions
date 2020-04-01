@@ -10,3 +10,6 @@
 [submodule "Externals/ICSharpCode.TextEditor"]
 	path = Externals/ICSharpCode.TextEditor
 	url = ../../gitextensions/ICSharpCode.TextEditor.git
+[submodule "Externals/EasyHook"]
+	path = Externals/EasyHook
+	url = ../../gitextensions/EasyHook.git

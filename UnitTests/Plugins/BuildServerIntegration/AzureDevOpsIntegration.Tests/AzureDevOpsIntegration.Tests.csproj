@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Plugins\BuildServerIntegration\AzureDevOpsIntegration\AzureDevOpsIntegration.csproj" />
+    <ProjectReference Include="..\..\..\CommonTestUtils\CommonTestUtils.csproj" />
+  </ItemGroup>
+
+</Project>

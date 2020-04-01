@@ -236,6 +236,7 @@ namespace GitUI.CommitInfo
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.Window;
+            this.ContextMenuStrip = this.commitInfoContextMenuStrip;
             this.Controls.Add(this.tableLayout);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "CommitInfo";

@@ -5,7 +5,9 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
+using GitUI.Theming;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -49,6 +51,9 @@ namespace GitUI.CommandsDialogs
             _firstParentIsValid = firstParentIsValid;
 
             InitializeComponent();
+
+            btnSwap.AdaptImageLightness();
+
             InitializeComplete();
 
             _toolTipControl.SetToolTip(btnAnotherBaseBranch, _anotherBranchTooltip.Text);
@@ -79,8 +84,8 @@ namespace GitUI.CommandsDialogs
             _revisionTester = new GitRevisionTester(_fullPathResolver);
             _revisionDiffContextMenuController = new FileStatusListContextMenuController();
 
-            lblBaseCommit.BackColor = AppSettings.DiffRemovedColor;
-            lblHeadCommit.BackColor = AppSettings.DiffAddedColor;
+            lblBaseCommit.BackColor = AppColor.DiffRemoved.GetThemeColor();
+            lblHeadCommit.BackColor = AppColor.DiffAdded.GetThemeColor();
 
             DiffFiles.ContextMenuStrip = DiffContextMenu;
             DiffFiles.SelectedIndexChanged += delegate { ShowSelectedFileDiff(); };
@@ -101,7 +106,7 @@ namespace GitUI.CommandsDialogs
             // I.e., git difftool --gui --no-prompt --dir-diff -R HEAD fails, but
             // git difftool --gui --no-prompt --dir-diff HEAD succeeds
             // Thus, we disable comparing "from" working directory.
-            var enableDifftoolDirDiff = _baseRevision?.Guid != GitRevision.WorkTreeGuid;
+            var enableDifftoolDirDiff = _baseRevision?.ObjectId != ObjectId.WorkTreeId;
             btnCompareDirectoriesWithDiffTool.Enabled = enableDifftoolDirDiff;
         }
 
@@ -109,20 +114,13 @@ namespace GitUI.CommandsDialogs
         {
             if (DiffFiles.SelectedItem == null)
             {
-                DiffText.ViewPatch(null);
+                DiffText.Clear();
                 return;
             }
 
-            var baseCommit = ckCompareToMergeBase.Checked ? _mergeBase : _baseRevision;
+            var baseCommit = (ckCompareToMergeBase.Checked ? _mergeBase : _baseRevision) ?? DiffFiles.SelectedItemParent;
 
-            var items = new List<GitRevision> { _headRevision, baseCommit };
-            if (baseCommit == null)
-            {
-                // This should not happen
-                items = new List<GitRevision> { _headRevision, DiffFiles.SelectedItemParent };
-            }
-
-            DiffText.ViewChangesAsync(items, DiffFiles.SelectedItem, string.Empty);
+            DiffText.ViewChangesAsync(baseCommit?.ObjectId, _headRevision, DiffFiles.SelectedItem, string.Empty);
         }
 
         private void btnSwap_Click(object sender, EventArgs e)
@@ -276,7 +274,7 @@ namespace GitUI.CommandsDialogs
 
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
-            bool firstIsParent = _revisionTester.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents, DiffFiles.Revision);
+            bool firstIsParent = _revisionTester.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents.Select(item => item.ObjectId), DiffFiles.Revision);
             bool localExists = _revisionTester.AnyLocalFileExists(DiffFiles.SelectedItemsWithParent.Select(i => i.Item));
 
             var selectedItemParentRevs = DiffFiles.SelectedItemParents.Select(i => i.ObjectId).ToList();

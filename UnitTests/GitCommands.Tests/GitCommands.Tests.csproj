@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsAnnotationsVersion)" />
+    <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
+    <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\CommonTestUtils\CommonTestUtils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="ExternalLinks\MockData\level3_roaming_GitExtensions.settings.xml" />
+    <EmbeddedResource Include="ExternalLinks\MockData\level1_repogit_GitExtensions.settings.xml" />
+    <EmbeddedResource Include="ExternalLinks\MockData\level2_repodist_GitExtensions.settings.xml" />
+    <EmbeddedResource Include="MockData\Too_long_lines.txt" />
+    <EmbeddedResource Include="MockData\Too_many_lines.txt" />
+    <None Include="Patches\testdata\big.patch">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Patches\testdata\bigBin.patch">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Patches\testdata\rebase.diff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\README.blame">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <EmbeddedResource Include="UserRepositoryHistory\Legacy\MockData\CategorisedRepositories01.xml" />
+    <EmbeddedResource Include="UserRepositoryHistory\Legacy\MockData\CategorisedRepositories02.xml" />
+    <None Include="**\*.approved.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="**\*.approved.*">
+      <DependentUpon>$(
+        [System.String]::Copy('%(FileName)')
+            .SubString(
+              0,
+              $([System.String]::Copy('%(FileName)').IndexOf('.'))
+            )
+        )$(ProjectExt.Replace('proj', ''))</DependentUpon>
+    </None>
+  </ItemGroup>
+</Project>

@@ -158,7 +158,7 @@ namespace Bitbucket
                 await this.SwitchToMainThreadAsync();
                 if (response.Success)
                 {
-                    MessageBox.Show(_success.Text);
+                    MessageBox.Show(_success.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     ReloadPullRequests();
                 }
                 else
@@ -355,7 +355,7 @@ namespace Bitbucket
                 var response = ThreadHelper.JoinableTaskFactory.Run(() => mergeRequest.SendAsync());
                 if (response.Success)
                 {
-                    MessageBox.Show(_success.Text);
+                    MessageBox.Show(_success.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     ReloadPullRequests();
                 }
                 else
@@ -384,7 +384,7 @@ namespace Bitbucket
                 var response = ThreadHelper.JoinableTaskFactory.Run(() => approveRequest.SendAsync());
                 if (response.Success)
                 {
-                    MessageBox.Show(_success.Text);
+                    MessageBox.Show(_success.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     ReloadPullRequests();
                 }
                 else

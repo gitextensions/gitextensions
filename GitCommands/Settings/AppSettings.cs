@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands.Settings;
+using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.Win32;
@@ -56,6 +57,7 @@ namespace GitCommands
         public static string ProductVersion => Application.ProductVersion;
         public static readonly string SettingsFileName = "GitExtensions.settings";
         public static readonly string UserPluginsDirectoryName = "UserPlugins";
+        private static string _applicationExecutablePath = Application.ExecutablePath;
         private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
 
         public static readonly Lazy<string> ApplicationDataPath;
@@ -69,6 +71,8 @@ namespace GitCommands
 
         public static readonly int BranchDropDownMinWidth = 300;
         public static readonly int BranchDropDownMaxWidth = 600;
+
+        public static event Action Saved;
 
         static AppSettings()
         {
@@ -944,6 +948,12 @@ namespace GitCommands
             set => SetBool("updateSubmodulesOnCheckout", value);
         }
 
+        public static bool? DontConfirmUpdateSubmodulesOnCheckout
+        {
+            get => GetBool("dontConfirmUpdateSubmodulesOnCheckout");
+            set => SetBool("dontConfirmUpdateSubmodulesOnCheckout", value);
+        }
+
         public static string Dictionary
         {
             get => SettingsContainer.Dictionary;
@@ -1208,81 +1218,26 @@ namespace GitCommands
             set => SetBool("markillformedlinesincommitmsg", value);
         }
 
-        #region Colors
-
-        public static Color OtherTagColor
+        public static bool UseSystemVisualStyle
         {
-            get => GetColor("othertagcolor", Color.Gray);
-            set => SetColor("othertagcolor", value);
+            get => GetBool("systemvisualstyle", true);
+            set => SetBool("systemvisualstyle", value);
         }
 
-        public static Color AuthoredRevisionsHighlightColor
+        public static ThemeId ThemeId
         {
-            get => GetColor("authoredhighlightcolor", Color.LightYellow);
-            set => SetColor("authoredhighlightcolor", value);
+            get
+            {
+                return new ThemeId(
+                    GetString("uitheme", string.Empty),
+                    GetBool("uithemeisbuiltin", true));
+            }
+            set
+            {
+                SetString("uitheme", value.Name ?? string.Empty);
+                SetBool("uithemeisbuiltin", value.IsBuiltin);
+            }
         }
-
-        public static Color TagColor
-        {
-            get => GetColor("tagcolor", Color.DarkBlue);
-            set => SetColor("tagcolor", value);
-        }
-
-        public static Color GraphColor
-        {
-            get => GetColor("graphcolor", Color.DarkRed);
-            set => SetColor("graphcolor", value);
-        }
-
-        public static Color BranchColor
-        {
-            get => GetColor("branchcolor", Color.DarkRed);
-            set => SetColor("branchcolor", value);
-        }
-
-        public static Color RemoteBranchColor
-        {
-            get => GetColor("remotebranchcolor", Color.Green);
-            set => SetColor("remotebranchcolor", value);
-        }
-
-        public static Color DiffSectionColor
-        {
-            get => GetColor("diffsectioncolor", Color.FromArgb(230, 230, 230));
-            set => SetColor("diffsectioncolor", value);
-        }
-
-        public static Color DiffRemovedColor
-        {
-            get => GetColor("diffremovedcolor", Color.FromArgb(255, 200, 200));
-            set => SetColor("diffremovedcolor", value);
-        }
-
-        public static Color DiffRemovedExtraColor
-        {
-            get => GetColor("diffremovedextracolor", Color.FromArgb(255, 150, 150));
-            set => SetColor("diffremovedextracolor", value);
-        }
-
-        public static Color DiffAddedColor
-        {
-            get => GetColor("diffaddedcolor", Color.FromArgb(200, 255, 200));
-            set => SetColor("diffaddedcolor", value);
-        }
-
-        public static Color DiffAddedExtraColor
-        {
-            get => GetColor("diffaddedextracolor", Color.FromArgb(135, 255, 135));
-            set => SetColor("diffaddedextracolor", value);
-        }
-
-        public static Color HighlightAllOccurencesColor
-        {
-            get { return GetColor("highlightalloccurencesncolor", Color.LightYellow); }
-            set { SetColor("highlightalloccurencesncolor", value); }
-        }
-
-        #endregion
 
         #region Fonts
 
@@ -1400,6 +1355,24 @@ namespace GitCommands
             set => SetBool("RememberNumberOfContextLines", value);
         }
 
+        public static bool ShowSyntaxHighlightingInDiff
+        {
+            get => RememberShowSyntaxHighlightingInDiff && GetBool("ShowSyntaxHighlightingInDiff", true);
+            set
+            {
+                if (RememberShowSyntaxHighlightingInDiff)
+                {
+                    SetBool("ShowSyntaxHighlightingInDiff", value);
+                }
+            }
+        }
+
+        public static bool RememberShowSyntaxHighlightingInDiff
+        {
+            get => GetBool("RememberShowSyntaxHighlightingInDiff", true);
+            set => SetBool("RememberShowSyntaxHighlightingInDiff", value);
+        }
+
         public static string GetDictionaryDir()
         {
             return Path.Combine(GetResourceDir(), "Dictionaries");
@@ -1415,6 +1388,8 @@ namespace GitCommands
                     SshPath = SshPathLocatorInstance.Find(GitBinDir);
                     SettingsContainer.Save();
                 });
+
+                Saved?.Invoke();
             }
             catch
             {
@@ -1434,7 +1409,7 @@ namespace GitCommands
             }
         }
 
-        public static bool DashboardShowCurrentBranch
+        public static bool ShowRepoCurrentBranch
         {
             get => GetBool("dashboardshowcurrentbranch", true);
             set => SetBool("dashboardshowcurrentbranch", value);
@@ -1604,7 +1579,7 @@ namespace GitCommands
 
         public static string GetGitExtensionsFullPath()
         {
-            return Application.ExecutablePath;
+            return _applicationExecutablePath;
         }
 
         [CanBeNull]
@@ -1798,19 +1773,10 @@ namespace GitCommands
             return SettingsContainer.GetFont(name, defaultValue);
         }
 
-        public static void SetColor(string name, Color? value)
+        [Obsolete("AppSettings is no longer responsible for colors, ThemeModule is")]
+        public static Color GetColor(AppColor name)
         {
-            SettingsContainer.SetColor(name, value);
-        }
-
-        public static Color? GetColor(string name)
-        {
-            return SettingsContainer.GetColor(name);
-        }
-
-        public static Color GetColor(string name, Color defaultValue)
-        {
-            return SettingsContainer.GetColor(name, defaultValue);
+            return SettingsContainer.GetColor(name.ToString().ToLowerInvariant() + "color", AppColorDefaults.GetBy(name));
         }
 
         public static void SetEnum<T>(string name, T value)
@@ -1910,6 +1876,17 @@ namespace GitCommands
             string availableEncodings = AvailableEncodings.Values.Select(e => e.HeaderName).Join(";");
             availableEncodings = availableEncodings.Replace(Encoding.Default.HeaderName, "Default");
             SetString("AvailableEncodings", availableEncodings);
+        }
+
+        internal static TestAccessor GetTestAccessor() => new TestAccessor();
+
+        internal struct TestAccessor
+        {
+            public string ApplicationExecutablePath
+            {
+                get => _applicationExecutablePath;
+                set => _applicationExecutablePath = value;
+            }
         }
     }
 

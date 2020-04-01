@@ -80,6 +80,7 @@ namespace GitUI.CommandsDialogs
                 var output = UICommands.GitModule.GitExecutable.GetOutput(arguments);
                 var refLines = ConvertReflogOutput().ToList();
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                _lastHitRowIndex = 0;
                 gridReflog.DataSource = refLines;
 
                 IEnumerable<RefLine> ConvertReflogOutput()
@@ -136,7 +137,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (MessageBox.Show(this, _continueResetCurrentBranchEvenWithChangesText.Text,
                         _continueResetCurrentBranchCaptionText.Text,
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
                 {
                     return;
                 }
@@ -174,7 +175,11 @@ namespace GitUI.CommandsDialogs
 
             if (hit.Type == DataGridViewHitTestType.Cell && _lastHitRowIndex != hit.RowIndex)
             {
-                gridReflog.Rows[_lastHitRowIndex].Selected = false;
+                if (_lastHitRowIndex < gridReflog.Rows.Count)
+                {
+                    gridReflog.Rows[_lastHitRowIndex].Selected = false;
+                }
+
                 _lastHitRowIndex = hit.RowIndex;
                 gridReflog.Rows[_lastHitRowIndex].Selected = true;
             }

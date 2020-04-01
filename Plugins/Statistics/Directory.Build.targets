@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <Import Project="..\..\Directory.Build.targets" />
+
+  <!--
+      List of plugin files to be included into the installer
+    -->
+  <ItemGroup>
+    <PluginAssembly Include="$(TargetPath)" />
+  </ItemGroup>
+
+
+</Project>

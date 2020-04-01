@@ -24,7 +24,14 @@ namespace GitUI
 
             if (TryGetBrowserEmulationMode(out var emulationMode))
             {
-                Registry.SetValue(featureControlRegKey + "FEATURE_BROWSER_EMULATION", appName, emulationMode, RegistryValueKind.DWord);
+                try
+                {
+                    Registry.SetValue(featureControlRegKey + "FEATURE_BROWSER_EMULATION", appName, emulationMode, RegistryValueKind.DWord);
+                }
+                catch (System.UnauthorizedAccessException)
+                {
+                    // Don't fail when user have no rights to update the registry...
+                }
             }
         }
 

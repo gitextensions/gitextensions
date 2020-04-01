@@ -54,6 +54,7 @@ namespace GitUI.Editor
             this.revertSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._NO_TRANSLATE_lblShowPreview = new System.Windows.Forms.LinkLabel();
             this.internalFileViewer = new GitUI.Editor.FileViewerInternal();
+            this.showSyntaxHighlighting = new System.Windows.Forms.ToolStripButton();
             this.contextMenu.SuspendLayout();
             this.fileviewerToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
@@ -68,7 +69,6 @@ namespace GitUI.Editor
             this.copyPatchToolStripMenuItem,
             this.copyNewVersionToolStripMenuItem,
             this.copyOldVersionToolStripMenuItem,
-            this.findToolStripMenuItem,
             this.toolStripSeparator1,
             this.ignoreWhitespaceAtEolToolStripMenuItem,
             this.ignoreWhitespaceChangesToolStripMenuItem,
@@ -79,6 +79,7 @@ namespace GitUI.Editor
             this.toolStripSeparator2,
             this.treatAllFilesAsTextToolStripMenuItem,
             this.showNonprintableCharactersToolStripMenuItem,
+            this.findToolStripMenuItem,
             this.goToLineToolStripMenuItem});
             this.contextMenu.Name = "ContextMenu";
             this.contextMenu.Size = new System.Drawing.Size(244, 346);
@@ -220,6 +221,7 @@ namespace GitUI.Editor
             this.toolStripSeparator4,
             this.showEntireFileButton,
             this.showNonPrintChars,
+            this.showSyntaxHighlighting,
             this.ignoreWhitespaceAtEol,
             this.ignoreWhiteSpaces,
             this.ignoreAllWhitespaces,
@@ -399,6 +401,16 @@ namespace GitUI.Editor
             this.internalFileViewer.Size = new System.Drawing.Size(757, 518);
             this.internalFileViewer.TabIndex = 1;
             // 
+            // showSyntaxHighlighting
+            // 
+            this.showSyntaxHighlighting.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.showSyntaxHighlighting.Image = global::GitUI.Properties.Resources.SyntaxHighlighting;
+            this.showSyntaxHighlighting.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.showSyntaxHighlighting.Name = "showSyntaxHighlighting";
+            this.showSyntaxHighlighting.Size = new System.Drawing.Size(23, 22);
+            this.showSyntaxHighlighting.ToolTipText = "Show syntax highlighting";
+            this.showSyntaxHighlighting.Click += ShowSyntaxHighlighting_Click;
+            // 
             // FileViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -457,5 +469,6 @@ namespace GitUI.Editor
         private System.Windows.Forms.ToolStripButton ignoreAllWhitespaces;
         private System.Windows.Forms.ToolStripMenuItem ignoreAllWhitespaceChangesToolStripMenuItem;
         private LinkLabel _NO_TRANSLATE_lblShowPreview;
+        private ToolStripButton showSyntaxHighlighting;
     }
 }

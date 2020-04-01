@@ -28,12 +28,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyleCache;
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyle;
 
-        public RevisionGraphColumnProvider(RevisionGridControl grid, RevisionGraph revisionGraph)
+        public RevisionGraphColumnProvider(RevisionGridControl grid, RevisionGraph revisionGraph, IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
             : base("Graph")
         {
             _grid = grid;
             _revisionGraph = revisionGraph;
-            _laneInfoProvider = new LaneInfoProvider(new LaneNodeLocator(_revisionGraph));
+            _laneInfoProvider = new LaneInfoProvider(new LaneNodeLocator(_revisionGraph), gitRevisionSummaryBuilder);
 
             // TODO is it worth creating a lighter-weight column type?
 
@@ -326,7 +326,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             {
                                 nodeRect.Inflate(1, 1);
 
-                                var outlineColor = Color.Black;
+                                var outlineColor = SystemColors.WindowText;
 
                                 using (var pen = new Pen(outlineColor, 2))
                                 {

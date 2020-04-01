@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands.Config
 {
@@ -65,18 +64,6 @@ namespace GitCommands.Config
         public string SubSection { get; set; }
         public bool SubSectionCaseSensitive { get; set; }
 
-        [NotNull]
-        public static string FixPath([NotNull] string path)
-        {
-            // for using unc paths -> these need to be backward slashes
-            if (path.StartsWith("\\\\"))
-            {
-                return path;
-            }
-
-            return path.ToPosixPath();
-        }
-
         public IDictionary<string, IReadOnlyList<string>> AsDictionary()
         {
             return _configKeys.ToDictionary(kv => kv.Key, kv => (IReadOnlyList<string>)kv.Value, StringComparer.OrdinalIgnoreCase);
@@ -99,11 +86,6 @@ namespace GitCommands.Config
             }
         }
 
-        public void SetPathValue(string setting, string value)
-        {
-            SetValue(setting, FixPath(value));
-        }
-
         public void AddValue(string key, string value)
         {
             if (!_configKeys.ContainsKey(key))
@@ -112,11 +94,6 @@ namespace GitCommands.Config
             }
 
             _configKeys[key].Add(value);
-        }
-
-        public string GetValue(string key)
-        {
-            return GetValue(key, string.Empty);
         }
 
         public string GetValue(string key, string defaultValue)

@@ -92,7 +92,6 @@
             // 
             this.Mergetool.BackColor = System.Drawing.SystemColors.ControlDark;
             this.Mergetool.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.Mergetool.FlatAppearance.BorderColor = System.Drawing.Color.Black;
             this.Mergetool.FlatAppearance.BorderSize = 0;
             this.Mergetool.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Mergetool.Location = new System.Drawing.Point(3, 3);

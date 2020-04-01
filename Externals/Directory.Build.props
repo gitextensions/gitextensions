@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <Import Project="..\Solution.Versions.props" />
+
+  <PropertyGroup>
+    <_SuppressSdkImports>true</_SuppressSdkImports>
+    <DeterministicSourcePaths>false</DeterministicSourcePaths>
+    <IsPublishable>false</IsPublishable>
+  </PropertyGroup>
+</Project>

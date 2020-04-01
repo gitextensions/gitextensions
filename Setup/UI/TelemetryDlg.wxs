@@ -19,7 +19,7 @@
         Sequence="execute"
         Value="&quot;[POWERSHELLEXE]&quot; -NoProfile -NonInteractive -InputFormat None -ExecutionPolicy Bypass -Command &quot;&amp; '[INSTALLDIR]set-telemetry.ps1' [TELEMETRY_ENABLED]; exit $$($Error.Count)&quot;" />
 
-    <CustomAction Id="ConfigureTelemetry" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="check" Impersonate="yes" />
+    <CustomAction Id="ConfigureTelemetry" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="yes" />
 
     <InstallExecuteSequence>
       <Custom Action="ConfigureTelemetry" Before="InstallFinalize"><![CDATA[NOT Installed]]></Custom>

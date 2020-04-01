@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -42,6 +44,9 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             InitializeComplete();
             EnableButtons();
+
+            SolveMergeConflicts.BackColor = AppColor.Branch.GetThemeColor();
+            SolveMergeConflicts.SetForeColorForBackColor();
         }
 
         public void SetPatchFile(string name)
@@ -118,14 +123,14 @@ namespace GitUI.CommandsDialogs
                 Mergetool.Text = ">" + _conflictMergetoolText.Text + "<";
                 Mergetool.Focus();
                 AcceptButton = Mergetool;
-                MergeToolPanel.BackColor = Color.Black;
+                MergeToolPanel.BackColor = SystemColors.ControlText;
             }
             else if (Module.InTheMiddleOfPatch())
             {
                 Resolved.Text = ">" + _conflictResolvedText.Text + "<";
                 Resolved.Focus();
                 AcceptButton = Resolved;
-                ContinuePanel.BackColor = Color.Black;
+                ContinuePanel.BackColor = SystemColors.ControlText;
             }
         }
 
@@ -155,7 +160,7 @@ namespace GitUI.CommandsDialogs
 
             if (string.IsNullOrEmpty(patchFile) && string.IsNullOrEmpty(dirText))
             {
-                MessageBox.Show(this, _noFileSelectedText.Text);
+                MessageBox.Show(this, _noFileSelectedText.Text, Strings.Error, MessageBoxButtons.OK,  MessageBoxIcon.Error);
                 return;
             }
 

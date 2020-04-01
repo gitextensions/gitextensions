@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
+using GitUI.Theming;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using JetBrains.Annotations;
@@ -36,6 +38,14 @@ namespace GitUI.Editor
         {
             InitializeComponent();
             InitializeComplete();
+
+            Disposed += (sender, e) =>
+            {
+                //// _diffHighlightService not disposable
+                //// _lineNumbersControl not disposable
+                //// _currentViewPositionCache not disposable
+                _findAndReplaceForm.Dispose();
+            };
 
             _currentViewPositionCache = new CurrentViewPositionCache(this);
             TextEditor.ActiveTextAreaControl.TextArea.SelectionManager.SelectionChanged += SelectionManagerSelectionChanged;
@@ -110,7 +120,7 @@ namespace GitUI.Editor
                 indexMatch = textContent.IndexOf(word, indexMatch + 1, StringComparison.OrdinalIgnoreCase);
                 if (indexMatch >= 0)
                 {
-                    Color highlightColor = AppSettings.HighlightAllOccurencesColor;
+                    Color highlightColor = AppColor.HighlightAllOccurences.GetThemeColor();
 
                     var textMarker = new TextMarker(indexMatch,
                         word.Length, TextMarkerType.SolidBlock, highlightColor,
@@ -133,7 +143,7 @@ namespace GitUI.Editor
         public Action OpenWithDifftool { get; private set; }
 
         /// <summary>
-        /// Move the file viewer cursor position to the next TextMarker found in the document that matches the AppSettings.HighlightAllOccurencesColor/>
+        /// Move the file viewer cursor position to the next TextMarker found in the document that matches the AppColor.HighlightAllOccurences/>
         /// </summary>
         public void GoToNextOccurrence()
         {
@@ -143,7 +153,7 @@ namespace GitUI.Editor
                 TextEditor.Document.TextLength - offset);
 
             TextMarker marker =
-                markers.FirstOrDefault(x => x.Offset > offset && x.Color == AppSettings.HighlightAllOccurencesColor);
+                markers.FirstOrDefault(x => x.Offset > offset && x.Color == AppColor.HighlightAllOccurences.GetThemeColor());
             if (marker != null)
             {
                 TextLocation position = TextEditor.ActiveTextAreaControl.TextArea.Document.OffsetToPosition(marker.Offset);
@@ -152,7 +162,7 @@ namespace GitUI.Editor
         }
 
         /// <summary>
-        /// Move the file viewer cursor position to the previous TextMarker found in the document that matches the AppSettings.HighlightAllOccurencesColor/>
+        /// Move the file viewer cursor position to the previous TextMarker found in the document that matches the AppColor.HighlightAllOccurences/>
         /// </summary>
         public void GoToPreviousOccurrence()
         {
@@ -161,7 +171,7 @@ namespace GitUI.Editor
             List<TextMarker> markers = TextEditor.Document.MarkerStrategy.GetMarkers(0, offset);
 
             TextMarker marker =
-                markers.LastOrDefault(x => x.Offset < offset && x.Color == AppSettings.HighlightAllOccurencesColor);
+                markers.LastOrDefault(x => x.Offset < offset && x.Color == AppColor.HighlightAllOccurences.GetThemeColor());
             if (marker != null)
             {
                 TextLocation position = TextEditor.ActiveTextAreaControl.TextArea.Document.OffsetToPosition(marker.Offset);
@@ -250,16 +260,12 @@ namespace GitUI.Editor
             }
         }
 
-        public void SetHighlighting(string syntax)
-        {
-            TextEditor.SetHighlighting(syntax);
-            TextEditor.Refresh();
-        }
+        public void SetHighlighting(string syntax) =>
+            SetHighlightingStrategy(HighlightingStrategyFactory.CreateHighlightingStrategy(syntax));
 
         public void SetHighlightingForFile(string filename)
         {
             IHighlightingStrategy highlightingStrategy;
-
             if (filename.EndsWith("git-rebase-todo"))
             {
                 highlightingStrategy = new RebaseTodoHighlightingStrategy(Module);
@@ -273,15 +279,15 @@ namespace GitUI.Editor
                 highlightingStrategy = HighlightingManager.Manager.FindHighlighterForFile(filename);
             }
 
-            if (highlightingStrategy != null)
-            {
-                TextEditor.Document.HighlightingStrategy = highlightingStrategy;
-            }
-            else
-            {
-                TextEditor.SetHighlighting("XML");
-            }
+            SetHighlightingStrategy(highlightingStrategy);
+        }
 
+        private void SetHighlightingStrategy(IHighlightingStrategy highlightingStrategy)
+        {
+            TextEditor.Document.HighlightingStrategy =
+                ThemeModule.Settings.UseSystemVisualStyle
+                    ? highlightingStrategy
+                    : new ThemeBasedHighlighting(highlightingStrategy);
             TextEditor.Refresh();
         }
 
@@ -592,7 +598,7 @@ namespace GitUI.Editor
                 }
             }
 
-            public readonly struct TestAccessor
+            internal readonly struct TestAccessor
             {
                 private readonly CurrentViewPositionCache _viewPositionCache;
 

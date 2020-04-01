@@ -97,5 +97,17 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             e.Graphics.FillRectangle(style.BackBrush, rect.Right - 2, rect.Bottom - 1, 2, 1);
             e.Graphics.FillRectangle(style.BackBrush, rect.Right - 1, rect.Bottom - 2, 1, 2);
         }
+
+        public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
+        {
+            if (revision.ObjectId.IsArtificial)
+            {
+                toolTip = default;
+                return false;
+            }
+
+            toolTip = AuthorNameColumnProvider.GetAuthorAndCommiterToolTip(revision);
+            return true;
+        }
     }
 }

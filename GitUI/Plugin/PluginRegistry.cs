@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using GitCommands;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
@@ -70,8 +68,12 @@ namespace GitUI
                 return;
             }
 
-            Plugins.ForEach(p => p.Register(gitUiCommands));
             PluginsRegistered = true;
+
+            lock (Plugins)
+            {
+                Plugins.ForEach(p => p.Register(gitUiCommands));
+            }
         }
 
         public static void Unregister(IGitUICommands gitUiCommands)
@@ -81,7 +83,11 @@ namespace GitUI
                 return;
             }
 
-            Plugins.ForEach(p => p.Unregister(gitUiCommands));
+            lock (Plugins)
+            {
+                Plugins.ForEach(p => p.Unregister(gitUiCommands));
+            }
+
             PluginsRegistered = false;
         }
     }

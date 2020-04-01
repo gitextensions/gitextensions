@@ -72,72 +72,45 @@ namespace GitUI
             return patch.Text;
         }
 
-        public static Task ViewChangesAsync(this FileViewer diffViewer, IReadOnlyList<GitRevision> revisions, GitItemStatus file, string defaultText)
-        {
-            if (revisions.Count == 0)
-            {
-                return Task.CompletedTask;
-            }
-
-            var selectedRevision = revisions[0];
-            var secondRevision = selectedRevision?.ObjectId;
-            var firstRevision = revisions.Count >= 2 ? revisions[1].ObjectId : null;
-            if (firstRevision == null && selectedRevision != null)
-            {
-                firstRevision = selectedRevision.FirstParentGuid;
-            }
-
-            return ViewChangesAsync(diffViewer, firstRevision, secondRevision, file, defaultText, openWithDifftool: null /* use default */);
-        }
-
-        public static Task ViewChangesAsync(
-            this FileViewer diffViewer,
-            [CanBeNull] ObjectId firstRevision,
-            ObjectId secondRevision,
+        public static Task ViewChangesAsync(this FileViewer diffViewer,
+            [CanBeNull] ObjectId firstId,
+            [CanBeNull] GitRevision selectedRevision,
             [NotNull] GitItemStatus file,
             [NotNull] string defaultText,
-            [CanBeNull] Action openWithDifftool)
+            [CanBeNull] Action openWithDifftool = null)
         {
-            if (firstRevision == null || FileHelper.IsImage(file.Name))
+            if (firstId == null && selectedRevision != null)
             {
-                // The previous commit does not exist, nothing to compare with
-                if (file.TreeGuid != null)
-                {
-                    // blob guid exists
-                    return diffViewer.ViewGitItemAsync(file.Name, file.TreeGuid, openWithDifftool);
-                }
-
-                if (secondRevision == null)
-                {
-                    throw new ArgumentNullException(nameof(secondRevision));
-                }
-
-                // Get blob guid from revision
-                return diffViewer.ViewGitItemRevisionAsync(file.Name, secondRevision, openWithDifftool);
+                firstId = selectedRevision.FirstParentGuid;
             }
 
-            return diffViewer.ViewPatchAsync(() =>
+            openWithDifftool ??= OpenWithDifftool;
+            if (file.IsNew || firstId == null || FileHelper.IsImage(file.Name))
             {
-                string selectedPatch = diffViewer.GetSelectedPatch(firstRevision, secondRevision, file);
-                if (selectedPatch == null)
+                // The previous commit does not exist, nothing to compare with
+                if (selectedRevision == null)
                 {
-                    return (text: defaultText, openWithDifftool: null /* not applicable */);
+                    throw new ArgumentNullException(nameof(selectedRevision));
                 }
 
-                return (text: selectedPatch,
-                    openWithDifftool: openWithDifftool ?? OpenWithDifftool);
+                // View blob guid from revision, or file for worktree
+                return diffViewer.ViewGitItemRevisionAsync(file, selectedRevision.ObjectId, openWithDifftool);
+            }
 
-                void OpenWithDifftool()
-                {
-                    diffViewer.Module.OpenWithDifftool(
-                        file.Name,
-                        null,
-                        firstRevision.ToString(),
-                        firstRevision.ToString(),
-                        "",
-                        file.IsTracked);
-                }
-            });
+            string selectedPatch = diffViewer.GetSelectedPatch(firstId, selectedRevision.ObjectId, file);
+            return diffViewer.ViewPatchAsync(file.Name, text: selectedPatch ?? defaultText,
+                openWithDifftool: openWithDifftool, isText: file.IsSubmodule || selectedPatch == null);
+
+            void OpenWithDifftool()
+            {
+                diffViewer.Module.OpenWithDifftool(
+                    file.Name,
+                    file.OldName,
+                    firstId?.ToString(),
+                    selectedRevision?.ToString(),
+                    "",
+                    file.IsTracked);
+            }
         }
 
         public static void RemoveIfExists(this TabControl tabControl, TabPage page)

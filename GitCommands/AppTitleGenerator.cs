@@ -1,4 +1,5 @@
 using GitCommands.UserRepositoryHistory;
+using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
@@ -21,6 +22,10 @@ namespace GitCommands
     /// </summary>
     public sealed class AppTitleGenerator : IAppTitleGenerator
     {
+#if DEBUG
+        private static string _extraInfo;
+#endif
+
         private readonly IRepositoryDescriptionProvider _description;
 
         public AppTitleGenerator(IRepositoryDescriptionProvider description)
@@ -46,9 +51,27 @@ namespace GitCommands
             var description = _description.Get(workingDir);
 
 #if DEBUG
-            return $"{description} ({branchName}) - Git Extensions [DEBUG]";
+            return $"{description} ({branchName}) - Git Extensions{_extraInfo}";
 #else
             return $"{description} ({branchName}) - Git Extensions";
+#endif
+        }
+
+        public static void Initialise(string sha, string buildBranch)
+        {
+#if DEBUG
+            if (ObjectId.TryParse(sha, out var objectId))
+            {
+                _extraInfo = $" @{objectId.ToShortString()}";
+                if (!string.IsNullOrWhiteSpace(buildBranch))
+                {
+                    _extraInfo += $" [{buildBranch}]";
+                }
+            }
+            else
+            {
+                _extraInfo = " [DEBUG]";
+            }
 #endif
         }
     }
