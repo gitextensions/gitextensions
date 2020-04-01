@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Management;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -143,7 +144,8 @@ namespace GitUI.CommandsDialogs
         {
             GitStash gitStash = Stashes.SelectedItem as GitStash;
 
-            Stashed.SetDiffs();
+            Stashed.GroupByRevision = false;
+            Stashed.ClearDiffs();
 
             Loading.Visible = true;
             Loading.IsAnimating = true;
@@ -167,7 +169,36 @@ namespace GitUI.CommandsDialogs
 
         private void LoadGitItemStatuses(IReadOnlyList<GitItemStatus> gitItemStatuses)
         {
-            Stashed.SetDiffs(items: gitItemStatuses);
+            GitStash gitStash = Stashes.SelectedItem as GitStash;
+            if (gitStash == _currentWorkingDirStashItem)
+            {
+                // FileStatusList has no interface for both worktree<-index, index<-HEAD at the same time
+                // Must be handled when displaying
+                var headId = Module.RevParse("HEAD");
+                var indexRev = new GitRevision(ObjectId.IndexId)
+                {
+                    ParentIds = new[] { headId }
+                };
+                var worktreeRev = new GitRevision(ObjectId.WorkTreeId)
+                {
+                    ParentIds = new[] { ObjectId.IndexId }
+                };
+                var indexItems = gitItemStatuses.Where(item => item.Staged == StagedStatus.Index).ToList();
+                var workTreeItems = gitItemStatuses.Where(item => item.Staged != StagedStatus.Index).ToList();
+                Stashed.SetStashDiffs(worktreeRev, ResourceManager.Strings.Workspace, workTreeItems,
+                    indexRev, ResourceManager.Strings.Index, indexItems);
+            }
+            else
+            {
+                var firstId = Module.RevParse(gitStash.Name + "^");
+                var selectedId = Module.RevParse(gitStash.Name);
+                var selectedRev = selectedId == null ? null : new GitRevision(selectedId)
+                {
+                    ParentIds = new[] { firstId }
+                };
+                Stashed.SetStashDiffs(selectedRev, gitItemStatuses);
+            }
+
             Loading.Visible = false;
             Loading.IsAnimating = false;
             Stashes.Enabled = true;
@@ -181,29 +212,14 @@ namespace GitUI.CommandsDialogs
 
         private void StashedSelectedIndexChanged(object sender, EventArgs e)
         {
-            GitStash gitStash = Stashes.SelectedItem as GitStash;
             GitItemStatus stashedItem = Stashed.SelectedItem;
 
             EnablePartialStash();
 
             using (WaitCursorScope.Enter())
             {
-                ObjectId first;
-                ObjectId selected;
-                if (gitStash == _currentWorkingDirStashItem)
-                {
-                    // current working directory
-                    first = ObjectId.IndexId;
-                    selected = ObjectId.WorkTreeId;
-                }
-                else
-                {
-                    first = Module.RevParse(gitStash.Name + "^");
-                    selected = Module.RevParse(gitStash.Name);
-                }
-
-                var selectedRev = selected != null ? new GitRevision(selected) : null;
-                View.ViewChangesAsync(first, selectedRev, stashedItem);
+                // Special revision handling, see LoadGitItemStatuses()
+                View.ViewChangesAsync(null, Stashed.SelectedItemParent, stashedItem);
             }
         }
 
