@@ -56,7 +56,10 @@
     Creates a portable archive.
     ============================================================
     -->
-  <Target Name="CreatePortable" AfterTargets="Publish" DependsOnTargets="_RetrieveCurrentBuildVersion;_PublishTranslations;_PublishExtraDependecies">
+  <!-- Any errors in targets that executed as 'AfterTargets' don't break the build: https://github.com/microsoft/msbuild/issues/3345
+       A fix is going out in VS16.6p3, but it is way too long for us to wait.
+    -->
+  <Target Name="CreatePortable" BeforeTargets="Publish" DependsOnTargets="_RetrieveCurrentBuildVersion;_PublishTranslations;_PublishExtraDependecies">
     <PropertyGroup>
       <_AppPluginsPublishDir>$([MSBuild]::NormalizeDirectory('$(AppPublishDir)', 'Plugins'))</_AppPluginsPublishDir>
 
@@ -99,29 +102,37 @@
 
     <!-- Copy the plugins to the Plugins folder -->
     <Copy
-          SourceFiles="@(PluginAssemblies)"
-          DestinationFolder="$(_AppPluginsPublishDir)"
-        />
+            SourceFiles="@(PluginAssemblies)"
+            DestinationFolder="$(_AppPluginsPublishDir)"
+            ContinueOnError="ErrorAndStop"
+          />
     <!-- Copy the plugins' resources to the Plugins folder -->
     <Copy
-          SourceFiles="@(PluginResourcesAssemblies)"
-          DestinationFiles="@(PluginResourcesAssemblies->'%(DestinationFiles)')"
-        />
+            SourceFiles="@(PluginResourcesAssemblies)"
+            DestinationFiles="@(PluginResourcesAssemblies->'%(DestinationFiles)')"
+            ContinueOnError="ErrorAndStop"
+          />
 
     <!-- Mark the package as "portable" -->
     <XmlPoke XmlInputPath="$(_PublishAppConfigPath)"
             Query="configuration/applicationSettings/GitCommands.Properties.Settings/setting[@name='IsPortable']/value" 
-            Value="True" />
+            Value="True"
+            ContinueOnError="ErrorAndStop"
+          />
 
     <ZipDirectory
             SourceDirectory="$(_PublishedPath)"
             DestinationFile="$(_PublishPortablePath)"
-            Overwrite="true" />
+            Overwrite="true"
+            ContinueOnError="ErrorAndStop"
+          />
 
     <!-- Reset the "portable" flag -->
     <XmlPoke XmlInputPath="$(_PublishAppConfigPath)"
             Query="configuration/applicationSettings/GitCommands.Properties.Settings/setting[@name='IsPortable']/value" 
-            Value="False" />
+            Value="False"
+            ContinueOnError="ErrorAndStop"
+          />
   </Target>
 
 </Project>
