@@ -32,6 +32,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public FormFixHome()
         {
             InitializeComponent();
+            Text = "Home";
             InitializeComplete();
         }
 

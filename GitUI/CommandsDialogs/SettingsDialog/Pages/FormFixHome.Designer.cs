@@ -155,7 +155,6 @@
             this.Name = "FormFixHome";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Home";
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
