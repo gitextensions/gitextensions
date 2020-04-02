@@ -260,5 +260,18 @@ namespace GitCommandsTests.Helpers
             errorMessage.Should().BeNull();
             Directory.Exists(tempPath).Should().BeFalse();
         }
+
+
+        [TestCase(null, false)]
+        [TestCase("", false)]
+        [TestCase(" ", false)]
+        [TestCase("blah", false)]
+        [TestCase("https://github.com/gitextensions/gitextensions", true)]
+        [TestCase("https://github.com/gitextensions/gitextensions.git", true)]
+        [TestCase("github.com/gitextensions/gitextensions.git", true)]
+        public void CanBeGitURL(string url, bool expected)
+        {
+            Assert.AreEqual(expected, PathUtil.CanBeGitURL(url));
+        }
     }
 }
