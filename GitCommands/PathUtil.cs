@@ -89,6 +89,18 @@ namespace GitCommands
                  || path.StartsWith("file:", StringComparison.CurrentCultureIgnoreCase));
         }
 
+        public static bool CanBeGitURL(string url)
+        {
+            if (url.IsNullOrWhiteSpace())
+            {
+                return false;
+            }
+
+            return IsUrl(url)
+                   || url.EndsWith(".git", StringComparison.CurrentCultureIgnoreCase)
+                   || GitModule.IsValidGitWorkingDir(url);
+        }
+
         [NotNull]
         public static string GetFileName([NotNull] string fileName)
         {

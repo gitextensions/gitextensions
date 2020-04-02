@@ -81,7 +81,7 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
 
-            if (CanBeGitURL(_url))
+            if (PathUtil.CanBeGitURL(_url))
             {
                 _NO_TRANSLATE_From.Text = _url;
             }
@@ -101,7 +101,7 @@ namespace GitUI.CommandsDialogs
                         string text = Clipboard.GetText(TextDataFormat.Text) ?? string.Empty;
 
                         // See if it's a valid URL.
-                        if (CanBeGitURL(text))
+                        if (PathUtil.CanBeGitURL(text))
                         {
                             _NO_TRANSLATE_From.Text = text;
                         }
@@ -179,18 +179,6 @@ namespace GitUI.CommandsDialogs
             {
                 cbLfs.Checked = false;
             }
-        }
-
-        private static bool CanBeGitURL(string url)
-        {
-            if (url.IsNotNullOrWhitespace())
-            {
-                return false;
-            }
-
-            return PathUtil.IsUrl(url)
-                || url.EndsWith(".git", StringComparison.CurrentCultureIgnoreCase)
-                || GitModule.IsValidGitWorkingDir(url);
         }
 
         private void OkClick(object sender, EventArgs e)
