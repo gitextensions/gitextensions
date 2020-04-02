@@ -96,7 +96,7 @@ namespace GitCommands
                 return false;
             }
 
-            return PathUtil.IsUrl(url)
+            return IsUrl(url)
                    || url.EndsWith(".git", StringComparison.CurrentCultureIgnoreCase)
                    || GitModule.IsValidGitWorkingDir(url);
         }

@@ -261,7 +261,6 @@ namespace GitCommandsTests.Helpers
             Directory.Exists(tempPath).Should().BeFalse();
         }
 
-
         [TestCase(null, false)]
         [TestCase("", false)]
         [TestCase(" ", false)]
