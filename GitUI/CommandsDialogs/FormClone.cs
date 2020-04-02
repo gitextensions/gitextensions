@@ -183,7 +183,7 @@ namespace GitUI.CommandsDialogs
 
         private static bool CanBeGitURL(string url)
         {
-            if (url.IsNotNullOrWhitespace())
+            if (string.IsNullOrWhiteSpace(url))
             {
                 return false;
             }
