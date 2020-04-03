@@ -55,6 +55,7 @@ namespace GitCommands
         // semi-constants
         public static Version AppVersion => Assembly.GetCallingAssembly().GetName().Version;
         public static string ProductVersion => Application.ProductVersion;
+        public static readonly string ApplicationId = "GitExtensions";
         public static readonly string SettingsFileName = "GitExtensions.settings";
         public static readonly string UserPluginsDirectoryName = "UserPlugins";
         private static string _applicationExecutablePath = Application.ExecutablePath;
