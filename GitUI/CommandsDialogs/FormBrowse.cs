@@ -1802,13 +1802,14 @@ namespace GitUI.CommandsDialogs
 
             void AddRecentRepositories(Repository repo, string caption)
             {
+                string branchDisplay = string.Empty;
                 if (AppSettings.ShowRepoCurrentBranch)
                 {
                     var branchName = GitModule.GetSelectedBranchFast(repo.Path);
 
                     if (!string.IsNullOrEmpty(branchName) && branchName != DetachedHeadParser.DetachedBranch)
                     {
-                        caption = $"{caption} [{branchName}]";
+                        branchDisplay = $"[{branchName}]";
                     }
                 }
 
@@ -1820,6 +1821,7 @@ namespace GitUI.CommandsDialogs
                 var item = new ToolStripMenuItem(caption)
                 {
                     DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
+                    ShortcutKeyDisplayString = branchDisplay
                 };
 
                 container.DropDownItems.Add(item);
