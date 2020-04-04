@@ -135,4 +135,28 @@
           />
   </Target>
 
+  <!--
+    ============================================================
+                       CreateMsi
+
+    Creates an MSI.
+    ============================================================
+    -->
+  <Target Name="CreateMsi" AfterTargets="CreatePortable">
+    <PropertyGroup>
+      <_PublishMsiVersionSuffix>-$(CurrentBuildVersion.ToString())</_PublishMsiVersionSuffix>
+      <_PublishMsiCommitHashSuffix Condition="'$(GitCommit)' != ''">-$(GitCommit)</_PublishMsiCommitHashSuffix>
+      <_PublishMsiCommitHashSuffix Condition="'$(env:APPVEYOR_REPO_COMMIT)' != ''">-$(env:APPVEYOR_REPO_COMMIT)</_PublishMsiCommitHashSuffix>
+      <_PublishMsiFileName>GitExtensions$(_PublishPortableVersionSuffix)$(_PublishPortableCommitHashSuffix)</_PublishMsiFileName>
+      <_PublishMsiPath>$([MSBuild]::NormalizePath('$(ArtifactsPublishDir)'))</_PublishMsiPath>
+    </PropertyGroup>
+
+    <MSBuild 
+        Projects="$(ProjectDir)\..\Setup\Setup.wixproj"
+        Targets="Build"
+        Properties="Configuration=$(Configuration);Platform=x86;Version=$(CurrentBuildVersion);ArtifactsBinPath=$(ArtifactsBinDir);ArtifactsPublishPath=$(AppPublishDir);OutputPath=$(_PublishMsiPath.TrimEnd('\'));TargetName=$(_PublishMsiFileName)"
+        StopOnFirstFailure="true"
+        />
+  </Target>
+
 </Project>

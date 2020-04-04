@@ -112,7 +112,7 @@
         <File Source="..\Bin\set-telemetry.ps1" />
       </Component>
       <Component Id="GitExtensions.exe" Guid="5530254F-DCAC-4C82-BD4B-F54D76024929">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\GitExtensions.exe" KeyPath="yes">
+        <File Source="$(var.ArtifactsPublishPath)\GitExtensions.exe" KeyPath="yes">
           <netfx:NativeImage Id="ngen_GitExtensions.exe" Platform="all" Priority="1" />
         </File>
         <ProgId Id="GitExtensions" Description="Git Extentions Shortcut" Advertise="no">
@@ -120,424 +120,424 @@
             <Verb Id="open" Command="Open Git Extentions Repository" TargetFile="GitExtensions.exe" Argument="openrepo &quot;%1&quot;" />
           </Extension>
         </ProgId>
-        <File Id="ICSharpCode.TextEditor.dll" Name="ICSharpCode.TextEditor.dll" Source="..\GitExtensions\bin\$(var.Configuration)\ICSharpCode.TextEditor.dll" />
+        <File Id="ICSharpCode.TextEditor.dll" Name="ICSharpCode.TextEditor.dll" Source="$(var.ArtifactsPublishPath)\ICSharpCode.TextEditor.dll" />
       </Component>
       <Component Id="GitExtensions.exe.config" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\GitExtensions.exe.config" />
+        <File Source="$(var.ArtifactsPublishPath)\GitExtensions.exe.config" />
       </Component>
       <Component Id="System.IO.Abstractions.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.Abstractions.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.IO.Abstractions.dll" />
       </Component>
       <Component Id="GitCommands.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\GitCommands.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\GitCommands.dll" />
       </Component>
       <Component Id="GitExtUtils.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\GitExtUtils.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\GitExtUtils.dll" />
       </Component>
       <Component Id="AdysTech.CredentialManager.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\AdysTech.CredentialManager.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\AdysTech.CredentialManager.dll" />
       </Component>
       <Component Id="GitUI.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\GitUI.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\GitUI.dll" />
       </Component>
       <Component Id="ConEmu.WinForms.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\ConEmu.WinForms.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\ConEmu.WinForms.dll" />
       </Component>
       <Component Id="NetSpell.SpellChecker.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\NetSpell.SpellChecker.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\NetSpell.SpellChecker.dll" />
       </Component>
       <Component Id="ResourceManager.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\ResourceManager.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\ResourceManager.dll" />
       </Component>
       <Component Id="GitUIPluginInterfaces.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\GitUIPluginInterfaces.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\GitUIPluginInterfaces.dll" />
       </Component>
       <Component Id="ICSharpCode.SharpZipLib.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ICSharpCode.SharpZipLib.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\ICSharpCode.SharpZipLib.dll" />
       </Component>
       <Component Id="Git.hub.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Git.hub.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Git.hub.dll" />
       </Component>
       <Component Id="PSTaskDialog.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\PSTaskDialog.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\PSTaskDialog.dll" />
       </Component>
       <Component Id="RestSharp.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\RestSharp.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\RestSharp.dll" />
       </Component>
       <Component Id="Microsoft.VisualStudio.Composition.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.VisualStudio.Composition.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Microsoft.VisualStudio.Composition.dll" />
       </Component>
       <Component Id="Microsoft.VisualStudio.Threading.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.VisualStudio.Threading.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Microsoft.VisualStudio.Threading.dll" />
       </Component>
       <Component Id="Microsoft.VisualStudio.Validation.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.VisualStudio.Validation.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Microsoft.VisualStudio.Validation.dll" />
       </Component>
       <Component Id="AppInsights.WindowsDesktop.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\AppInsights.WindowsDesktop.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\AppInsights.WindowsDesktop.dll" />
       </Component>
       <Component Id="Microsoft.ApplicationInsights.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.ApplicationInsights.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Microsoft.ApplicationInsights.dll" />
       </Component>
       <Component Id="Microsoft.WindowsAPICodePack.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.WindowsAPICodePack.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Microsoft.WindowsAPICodePack.dll" />
       </Component>
       <Component Id="Microsoft.WindowsAPICodePack.Shell.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.WindowsAPICodePack.Shell.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Microsoft.WindowsAPICodePack.Shell.dll" />
       </Component>
       <Component Id="SmartFormat.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\SmartFormat.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\SmartFormat.dll" />
       </Component>
       <Component Id="Ben.Demystifier.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Ben.Demystifier.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Ben.Demystifier.dll" />
       </Component>
       <Component Id="System.Reactive.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reactive.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Reactive.dll" />
       </Component>
       <Component Id="System.Reactive.Interfaces.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reactive.Interfaces.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Reactive.Interfaces.dll" />
       </Component>
       <Component Id="System.Reactive.Linq.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reactive.Linq.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Reactive.Linq.dll" />
       </Component>
       <Component Id="System.ValueTuple.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.ValueTuple.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.ValueTuple.dll" />
       </Component>
       <Component Id="System.Runtime.InteropServices.RuntimeInformation.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.InteropServices.RuntimeInformation.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Runtime.InteropServices.RuntimeInformation.dll" />
       </Component>
       <Component Id="EasyHook.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\EasyHook.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\EasyHook.dll" />
       </Component>
       <Component Id="EasyHook32.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\EasyHook32.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\EasyHook32.dll" />
       </Component>
       <Component Id="EasyHook64.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\EasyHook64.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\EasyHook64.dll" />
       </Component>
       <Component Id="Microsoft.Win32.Primitives.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.Win32.Primitives.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Microsoft.Win32.Primitives.dll" />
       </Component>
       <Component Id="netstandard.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\netstandard.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\netstandard.dll" />
       </Component>
       <Component Id="System.AppContext.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.AppContext.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.AppContext.dll" />
       </Component>
       <Component Id="System.Collections.Concurrent.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Collections.Concurrent.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Collections.Concurrent.dll" />
       </Component>
       <Component Id="System.Collections.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Collections.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Collections.dll" />
       </Component>
       <Component Id="System.Collections.Immutable.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Collections.Immutable.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Collections.Immutable.dll" />
       </Component>
       <Component Id="System.Collections.NonGeneric.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Collections.NonGeneric.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Collections.NonGeneric.dll" />
       </Component>
       <Component Id="System.Collections.Specialized.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Collections.Specialized.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Collections.Specialized.dll" />
       </Component>
       <Component Id="System.ComponentModel.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.ComponentModel.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.ComponentModel.dll" />
       </Component>
       <Component Id="System.ComponentModel.EventBasedAsync.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.ComponentModel.EventBasedAsync.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.ComponentModel.EventBasedAsync.dll" />
       </Component>
       <Component Id="System.ComponentModel.Primitives.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.ComponentModel.Primitives.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.ComponentModel.Primitives.dll" />
       </Component>
       <Component Id="System.ComponentModel.TypeConverter.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.ComponentModel.TypeConverter.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.ComponentModel.TypeConverter.dll" />
       </Component>
       <Component Id="System.Composition.AttributedModel.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Composition.AttributedModel.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Composition.AttributedModel.dll" />
       </Component>
       <Component Id="System.Composition.Convention.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Composition.Convention.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Composition.Convention.dll" />
       </Component>
       <Component Id="System.Composition.Hosting.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Composition.Hosting.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Composition.Hosting.dll" />
       </Component>
       <Component Id="System.Composition.Runtime.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Composition.Runtime.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Composition.Runtime.dll" />
       </Component>
       <Component Id="System.Composition.TypedParts.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Composition.TypedParts.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Composition.TypedParts.dll" />
       </Component>
       <Component Id="System.Console.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Console.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Console.dll" />
       </Component>
       <Component Id="System.Data.Common.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Data.Common.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Data.Common.dll" />
       </Component>
       <Component Id="System.Diagnostics.Contracts.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Diagnostics.Contracts.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Diagnostics.Contracts.dll" />
       </Component>
       <Component Id="System.Diagnostics.Debug.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Diagnostics.Debug.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Diagnostics.Debug.dll" />
       </Component>
       <Component Id="System.Diagnostics.FileVersionInfo.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Diagnostics.FileVersionInfo.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Diagnostics.FileVersionInfo.dll" />
       </Component>
       <Component Id="System.Diagnostics.Process.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Diagnostics.Process.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Diagnostics.Process.dll" />
       </Component>
       <Component Id="System.Diagnostics.StackTrace.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Diagnostics.StackTrace.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Diagnostics.StackTrace.dll" />
       </Component>
       <Component Id="System.Diagnostics.TextWriterTraceListener.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Diagnostics.TextWriterTraceListener.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Diagnostics.TextWriterTraceListener.dll" />
       </Component>
       <Component Id="System.Diagnostics.Tools.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Diagnostics.Tools.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Diagnostics.Tools.dll" />
       </Component>
       <Component Id="System.Diagnostics.TraceSource.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Diagnostics.TraceSource.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Diagnostics.TraceSource.dll" />
       </Component>
       <Component Id="System.Diagnostics.Tracing.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Diagnostics.Tracing.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Diagnostics.Tracing.dll" />
       </Component>
       <Component Id="System.Drawing.Primitives.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Drawing.Primitives.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Drawing.Primitives.dll" />
       </Component>
       <Component Id="System.Dynamic.Runtime.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Dynamic.Runtime.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Dynamic.Runtime.dll" />
       </Component>
       <Component Id="System.Globalization.Calendars.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Globalization.Calendars.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Globalization.Calendars.dll" />
       </Component>
       <Component Id="System.Globalization.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Globalization.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Globalization.dll" />
       </Component>
       <Component Id="System.Globalization.Extensions.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Globalization.Extensions.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Globalization.Extensions.dll" />
       </Component>
       <Component Id="System.IO.Compression.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.Compression.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.IO.Compression.dll" />
       </Component>
       <Component Id="System.IO.Compression.ZipFile.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.Compression.ZipFile.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.IO.Compression.ZipFile.dll" />
       </Component>
       <Component Id="System.IO.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.IO.dll" />
       </Component>
       <Component Id="System.IO.FileSystem.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.FileSystem.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.IO.FileSystem.dll" />
       </Component>
       <Component Id="System.IO.FileSystem.DriveInfo.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.FileSystem.DriveInfo.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.IO.FileSystem.DriveInfo.dll" />
       </Component>
       <Component Id="System.IO.FileSystem.Primitives.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.FileSystem.Primitives.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.IO.FileSystem.Primitives.dll" />
       </Component>
       <Component Id="System.IO.FileSystem.Watcher.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.FileSystem.Watcher.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.IO.FileSystem.Watcher.dll" />
       </Component>
       <Component Id="System.IO.IsolatedStorage.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.IsolatedStorage.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.IO.IsolatedStorage.dll" />
       </Component>
       <Component Id="System.IO.MemoryMappedFiles.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.MemoryMappedFiles.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.IO.MemoryMappedFiles.dll" />
       </Component>
       <Component Id="System.IO.Pipes.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.Pipes.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.IO.Pipes.dll" />
       </Component>
       <Component Id="System.IO.UnmanagedMemoryStream.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.UnmanagedMemoryStream.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.IO.UnmanagedMemoryStream.dll" />
       </Component>
       <Component Id="System.Linq.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Linq.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Linq.dll" />
       </Component>
       <Component Id="System.Linq.Expressions.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Linq.Expressions.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Linq.Expressions.dll" />
       </Component>
       <Component Id="System.Linq.Parallel.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Linq.Parallel.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Linq.Parallel.dll" />
       </Component>
       <Component Id="System.Linq.Queryable.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Linq.Queryable.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Linq.Queryable.dll" />
       </Component>
       <Component Id="System.Net.Http.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.Http.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Net.Http.dll" />
       </Component>
       <Component Id="System.Net.NameResolution.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.NameResolution.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Net.NameResolution.dll" />
       </Component>
       <Component Id="System.Net.NetworkInformation.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.NetworkInformation.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Net.NetworkInformation.dll" />
       </Component>
       <Component Id="System.Net.Ping.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.Ping.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Net.Ping.dll" />
       </Component>
       <Component Id="System.Net.Primitives.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.Primitives.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Net.Primitives.dll" />
       </Component>
       <Component Id="System.Net.Requests.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.Requests.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Net.Requests.dll" />
       </Component>
       <Component Id="System.Net.Security.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.Security.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Net.Security.dll" />
       </Component>
       <Component Id="System.Net.Sockets.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.Sockets.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Net.Sockets.dll" />
       </Component>
       <Component Id="System.Net.WebHeaderCollection.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.WebHeaderCollection.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Net.WebHeaderCollection.dll" />
       </Component>
       <Component Id="System.Net.WebSockets.Client.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.WebSockets.Client.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Net.WebSockets.Client.dll" />
       </Component>
       <Component Id="System.Net.WebSockets.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.WebSockets.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Net.WebSockets.dll" />
       </Component>
       <Component Id="System.ObjectModel.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.ObjectModel.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.ObjectModel.dll" />
       </Component>
       <Component Id="System.Reflection.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reflection.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Reflection.dll" />
       </Component>
       <Component Id="System.Reflection.Extensions.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reflection.Extensions.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Reflection.Extensions.dll" />
       </Component>
       <Component Id="System.Reflection.Primitives.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reflection.Primitives.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Reflection.Primitives.dll" />
       </Component>
       <Component Id="System.Resources.Reader.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Resources.Reader.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Resources.Reader.dll" />
       </Component>
       <Component Id="System.Resources.ResourceManager.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Resources.ResourceManager.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Resources.ResourceManager.dll" />
       </Component>
       <Component Id="System.Resources.Writer.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Resources.Writer.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Resources.Writer.dll" />
       </Component>
       <Component Id="System.Runtime.CompilerServices.VisualC.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.CompilerServices.VisualC.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Runtime.CompilerServices.VisualC.dll" />
       </Component>
       <Component Id="System.Runtime.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Runtime.dll" />
       </Component>
       <Component Id="System.Runtime.Extensions.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.Extensions.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Runtime.Extensions.dll" />
       </Component>
       <Component Id="System.Runtime.Handles.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.Handles.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Runtime.Handles.dll" />
       </Component>
       <Component Id="System.Runtime.InteropServices.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.InteropServices.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Runtime.InteropServices.dll" />
       </Component>
       <Component Id="System.Runtime.Numerics.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.Numerics.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Runtime.Numerics.dll" />
       </Component>
       <Component Id="System.Runtime.Serialization.Formatters.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.Serialization.Formatters.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Runtime.Serialization.Formatters.dll" />
       </Component>
       <Component Id="System.Runtime.Serialization.Json.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.Serialization.Json.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Runtime.Serialization.Json.dll" />
       </Component>
       <Component Id="System.Runtime.Serialization.Primitives.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.Serialization.Primitives.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Runtime.Serialization.Primitives.dll" />
       </Component>
       <Component Id="System.Runtime.Serialization.Xml.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.Serialization.Xml.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Runtime.Serialization.Xml.dll" />
       </Component>
       <Component Id="System.Security.Claims.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Security.Claims.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Security.Claims.dll" />
       </Component>
       <Component Id="System.Security.Cryptography.Algorithms.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Security.Cryptography.Algorithms.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Security.Cryptography.Algorithms.dll" />
       </Component>
       <Component Id="System.Security.Cryptography.Csp.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Security.Cryptography.Csp.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Security.Cryptography.Csp.dll" />
       </Component>
       <Component Id="System.Security.Cryptography.Encoding.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Security.Cryptography.Encoding.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Security.Cryptography.Encoding.dll" />
       </Component>
       <Component Id="System.Security.Cryptography.Primitives.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Security.Cryptography.Primitives.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Security.Cryptography.Primitives.dll" />
       </Component>
       <Component Id="System.Security.Cryptography.X509Certificates.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Security.Cryptography.X509Certificates.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Security.Cryptography.X509Certificates.dll" />
       </Component>
       <Component Id="System.Security.Principal.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Security.Principal.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Security.Principal.dll" />
       </Component>
       <Component Id="System.Security.SecureString.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Security.SecureString.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Security.SecureString.dll" />
       </Component>
       <Component Id="System.Text.Encoding.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Text.Encoding.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Text.Encoding.dll" />
       </Component>
       <Component Id="System.Text.Encoding.Extensions.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Text.Encoding.Extensions.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Text.Encoding.Extensions.dll" />
       </Component>
       <Component Id="System.Text.RegularExpressions.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Text.RegularExpressions.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Text.RegularExpressions.dll" />
       </Component>
       <Component Id="System.Threading.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Threading.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Threading.dll" />
       </Component>
       <Component Id="System.Threading.Overlapped.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Threading.Overlapped.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Threading.Overlapped.dll" />
       </Component>
       <Component Id="System.Threading.Tasks.Dataflow.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Threading.Tasks.Dataflow.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Threading.Tasks.Dataflow.dll" />
       </Component>
       <Component Id="System.Threading.Tasks.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Threading.Tasks.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Threading.Tasks.dll" />
       </Component>
       <Component Id="System.Threading.Tasks.Parallel.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Threading.Tasks.Parallel.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Threading.Tasks.Parallel.dll" />
       </Component>
       <Component Id="System.Threading.Thread.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Threading.Thread.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Threading.Thread.dll" />
       </Component>
       <Component Id="System.Threading.ThreadPool.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Threading.ThreadPool.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Threading.ThreadPool.dll" />
       </Component>
       <Component Id="System.Threading.Timer.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Threading.Timer.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Threading.Timer.dll" />
       </Component>
       <Component Id="System.Xml.ReaderWriter.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Xml.ReaderWriter.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Xml.ReaderWriter.dll" />
       </Component>
       <Component Id="System.Xml.XDocument.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Xml.XDocument.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Xml.XDocument.dll" />
       </Component>
       <Component Id="System.Xml.XmlDocument.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Xml.XmlDocument.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Xml.XmlDocument.dll" />
       </Component>
       <Component Id="System.Xml.XmlSerializer.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Xml.XmlSerializer.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Xml.XmlSerializer.dll" />
       </Component>
       <Component Id="System.Xml.XPath.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Xml.XPath.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Xml.XPath.dll" />
       </Component>
       <Component Id="System.Xml.XPath.XDocument.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Xml.XPath.XDocument.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\System.Xml.XPath.XDocument.dll" />
       </Component>
-      <!--Remove unused dll, installed in versions <= 2.31-->
+      <!-- Remove unused dll, installed in versions <= 2.31 -->
       <Component Id="GithubSharp.Core.dll" Guid="08F2D539-54CE-4895-ACA5-A7FBA73CA172">
         <RemoveFile Name="GithubSharp.Core.dll" Id="GithubSharp.Core.dll" On="both" />
       </Component>
       <?define ShellExCLSID = "{3C16B20A-BA16-4156-916F-0A375ECFFE24}"?>
       <Component Id="GitExtensionsShellEx32.dll" Guid="*">
-        <File Name="GitExtensionsShellEx32.dll" Source="..\GitExtensionsShellEx\$(var.Configuration)\GitExtensionsShellEx32.dll" KeyPath="yes" />
+        <File Name="GitExtensionsShellEx32.dll" Source="$(var.ArtifactsBinPath)\GitExtensionsShellEx\Win32\$(var.Configuration)\GitExtensionsShellEx32.dll" KeyPath="yes" />
         <?foreach ShellExFileName in GitExtensionsShellEx32.dll?>
         <?include RegisterShellExtension.wxi?>
         <?endforeach ?>
       </Component>
       <Component Id="GitExtensionsShellEx64.dll" Guid="*" Win64="yes">
         <Condition>VersionNT64</Condition>
-        <File Name="GitExtensionsShellEx64.dll" Source="..\GitExtensionsShellEx\$(var.Configuration)-x64\GitExtensionsShellEx64.dll" KeyPath="yes" />
+        <File Name="GitExtensionsShellEx64.dll" Source="$(var.ArtifactsBinPath)\GitExtensionsShellEx\x64\$(var.Configuration)\GitExtensionsShellEx64.dll" KeyPath="yes" />
         <?foreach ShellExFileName in GitExtensionsShellEx64.dll?>
         <?include RegisterShellExtension.wxi?>
         <?endforeach ?>
       </Component>
       <Component Id="GitExtSshAskPass.exe" Guid="*">
-        <File Source="..\GitExtSshAskPass\$(var.Configuration)\GitExtSshAskPass.exe" />
+        <File Source="$(var.ArtifactsBinPath)\SshAskPass\Win32\$(var.Configuration)\GitExtSshAskPass.exe" />
       </Component>
       <Component Id="checksettings.reg" Guid="*">
         <RegistryValue Name="CheckSettings" Value="true" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
@@ -590,59 +590,56 @@
     </DirectoryRef>
     <DirectoryRef Id="ThemesDir">
       <Component Id="win10default.css" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Themes\win10default.css" />
+        <File Source="$(var.ArtifactsPublishPath)\Themes\win10default.css" />
       </Component>
       <Component Id="dark.css" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Themes\dark.css" />
+        <File Source="$(var.ArtifactsPublishPath)\Themes\dark.css" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="PluginsDir">
       <Component Id="DeleteUnusedBranches.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\DeleteUnusedBranches.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\DeleteUnusedBranches.dll" />
       </Component>
       <Component Id="AutoCompileSubmodules.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\AutoCompileSubmodules.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\AutoCompileSubmodules.dll" />
       </Component>
       <Component Id="BackgroundFetch.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\BackgroundFetch.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\BackgroundFetch.dll" />
       </Component>
       <Component Id="CreateLocalBranches.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\CreateLocalBranches.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\CreateLocalBranches.dll" />
       </Component>
       <Component Id="GitStatistics.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\GitStatistics.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitStatistics.dll" />
       </Component>
       <Component Id="GitImpact.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\GitImpact.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitImpact.dll" />
       </Component>
       <Component Id="Gource.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\Gource.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\Gource.dll" />
       </Component>
       <Component Id="Github3.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\GitHub3.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitHub3.dll" />
       </Component>
       <Component Id="GitFlow.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\GitFlow.dll" />
-      </Component>
-      <Component Id="Gerrit.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\Gerrit.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitFlow.dll" />
       </Component>
       <Component Id="ReleaseNotesGenerator.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ReleaseNotesGenerator.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\ReleaseNotesGenerator.dll" />
       </Component>
       <Component Id="Newtonsoft.Json.dll" Guid="*">
-        <File Source="..\Plugins\Gerrit\bin\$(var.Configuration)\Newtonsoft.Json.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\Newtonsoft.Json.dll" />
       </Component>
       <Component Id="JiraCommitHintPlugin.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\JiraCommitHintPlugin.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\JiraCommitHintPlugin.dll" />
       </Component>
       <Component Id="Atlassian.Jira.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\Atlassian.Jira.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\Atlassian.Jira.dll" />
       </Component>
       <Component Id="NString.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\NString.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\NString.dll" />
       </Component>
-      <!--Remove unused dll, installed in versions <= 2.31-->
+      <!-- Remove unused dll, installed in versions <= 2.31 -->
       <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
         <RemoveFile Name="Github.dll" Id="Github.dll" On="both" />
         <RemoveFile Name="System.Net.Http.dll" Id="System.Net.Http.dll" On="both" />
@@ -654,58 +651,62 @@
         <RemoveRegistryValue Id="GithubPassword" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubpassword" />
         <RemoveRegistryValue Id="GithubAccess" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubpreferred access method" />
       </Component>
+      <!-- Remove unused dll, installed in versions < 4.0 -->
+      <Component Id="Gerrit.dll" Guid="8890FF91-05DA-5F64-91BC-C22112C7EC0F">
+        <RemoveFile Name="Gerrit.dll" Id="Gerrit.dll" On="both" />
+      </Component>
       <Component Id="FindLargeFiles.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\FindLargeFiles.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\FindLargeFiles.dll" />
       </Component>
       <Component Id="ProxySwitcher.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ProxySwitcher.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\ProxySwitcher.dll" />
       </Component>
       <Component Id="Bitbucket.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\Bitbucket.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\Bitbucket.dll" />
         <!--Renamed dll, installed in versions <= 2.50.02-->
         <RemoveFile Name="Stash.dll" Id="Stash.dll" On="both" />
       </Component>
       <Component Id="TeamCityIntegration.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\TeamCityIntegration.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\TeamCityIntegration.dll" />
       </Component>
       <Component Id="AppVeyorIntegration.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\AppVeyorIntegration.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\AppVeyorIntegration.dll" />
       </Component>
       <Component Id="JenkinsIntegration.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\JenkinsIntegration.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\JenkinsIntegration.dll" />
       </Component>
       <Component Id="TfsIntegration.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\TfsIntegration.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\TfsIntegration.dll" />
       </Component>
       <Component Id="TfsInterop.Vs2012.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\TfsInterop.Vs2012.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\TfsInterop.Vs2012.dll" />
       </Component>
       <!-- Component Id="TfsInterop.Vs2013.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2013\bin\$(var.Configuration)\TfsInterop.Vs2013.dll" />
             </Component -->
       <Component Id="TfsInterop.Vs2015.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\TfsInterop.Vs2015.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\TfsInterop.Vs2015.dll" />
       </Component>
       <Component Id="AzureDevOpsIntegration.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\AzureDevOpsIntegration.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\AzureDevOpsIntegration.dll" />
       </Component>
       <Component Id="Microsoft.VisualStudio.Services.WebApi.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\Microsoft.VisualStudio.Services.WebApi.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\Microsoft.VisualStudio.Services.WebApi.dll" />
       </Component>
       <Component Id="Microsoft.TeamFoundation.Build2.WebApi.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\Microsoft.TeamFoundation.Build2.WebApi.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\Microsoft.TeamFoundation.Build2.WebApi.dll" />
       </Component>
       <Component Id="Microsoft.TeamFoundation.Common.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\Microsoft.TeamFoundation.Common.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\Microsoft.TeamFoundation.Common.dll" />
       </Component>
       <Component Id="Microsoft.TeamFoundation.Core.WebApi.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\Microsoft.TeamFoundation.Core.WebApi.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\Microsoft.TeamFoundation.Core.WebApi.dll" />
       </Component>
       <Component Id="Microsoft.VisualStudio.Services.Common.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\Microsoft.VisualStudio.Services.Common.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\Microsoft.VisualStudio.Services.Common.dll" />
       </Component>
       <Component Id="System.Net.Http.Formatting.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\System.Net.Http.Formatting.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\System.Net.Http.Formatting.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="PluginManagerDir">
@@ -772,121 +773,103 @@
     </DirectoryRef>
     <DirectoryRef Id="TranslationsDir">
       <Component Id="Czech.gif" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Czech.gif" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Czech.gif" />
       </Component>
       <Component Id="Czech.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Czech.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Czech.xlf" />
       </Component>
       <Component Id="Czech.Plugins.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Czech.Plugins.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Czech.Plugins.xlf" />
       </Component>
       <Component Id="Dutch.gif" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Dutch.gif" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Dutch.gif" />
       </Component>
       <Component Id="Dutch.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Dutch.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Dutch.xlf" />
       </Component>
       <Component Id="Dutch.Plugins.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Dutch.Plugins.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Dutch.Plugins.xlf" />
       </Component>
       <Component Id="English.gif" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\English.gif" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\English.gif" />
       </Component>
       <Component Id="English.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\English.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\English.xlf" />
       </Component>
       <Component Id="English.Plugins.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\English.Plugins.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\English.Plugins.xlf" />
       </Component>
       <Component Id="French.gif" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\French.gif" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\French.gif" />
       </Component>
       <Component Id="French.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\French.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\French.xlf" />
       </Component>
       <Component Id="French.Plugins.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\French.Plugins.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\French.Plugins.xlf" />
       </Component>
       <Component Id="German.gif" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\German.gif" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\German.gif" />
       </Component>
       <Component Id="German.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\German.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\German.xlf" />
       </Component>
       <Component Id="German.Plugins.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\German.Plugins.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\German.Plugins.xlf" />
       </Component>
       <Component Id="Japanese.gif" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Japanese.gif" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Japanese.gif" />
       </Component>
       <Component Id="Japanese.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Japanese.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Japanese.xlf" />
       </Component>
       <Component Id="Japanese.Plugins.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Japanese.Plugins.xlf" />
-      </Component>
-      <Component Id="Latvian.gif" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Latvian.gif" />
-      </Component>
-      <Component Id="Latvian.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Latvian.xlf" />
-      </Component>
-      <Component Id="Latvian.Plugins.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Latvian.Plugins.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Japanese.Plugins.xlf" />
       </Component>
       <Component Id="Polish.gif" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Polish.gif" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Polish.gif" />
       </Component>
       <Component Id="Polish.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Polish.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Polish.xlf" />
       </Component>
       <Component Id="Polish.Plugins.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Polish.Plugins.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Polish.Plugins.xlf" />
       </Component>
-      <Component Id="Portuguese(Brazil).gif" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Portuguese (Brazil).gif" />
+      <Component Id="Portuguese_Brazil.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Portuguese (Brazil).gif" />
       </Component>
-      <Component Id="Portuguese(Brazil).xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Portuguese (Brazil).xlf" />
+      <Component Id="Portuguese_Brazil.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Portuguese (Brazil).xlf" />
       </Component>
-      <Component Id="Portuguese(Brazil).Plugins.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Portuguese (Brazil).Plugins.xlf" />
+      <Component Id="Portuguese_Brazil.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Portuguese (Brazil).Plugins.xlf" />
       </Component>
       <Component Id="Russian.gif" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Russian.gif" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.gif" />
       </Component>
       <Component Id="Russian.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Russian.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.xlf" />
       </Component>
       <Component Id="Russian.Plugins.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Russian.Plugins.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.Plugins.xlf" />
       </Component>
       <Component Id="SimplifiedChinese.gif" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Simplified Chinese.gif" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.gif" />
       </Component>
       <Component Id="SimplifiedChinese.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Simplified Chinese.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.xlf" />
       </Component>
       <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Simplified Chinese.Plugins.xlf" />
-      </Component>
-      <Component Id="Spanish(Argentina).gif" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Spanish (Argentina).gif" />
-      </Component>
-      <Component Id="Spanish(Argentina).xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Spanish (Argentina).xlf" />
-      </Component>
-      <Component Id="Spanish(Argentina).Plugins.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Spanish (Argentina).Plugins.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.Plugins.xlf" />
       </Component>
       <Component Id="Spanish.gif" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Spanish.gif" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish.gif" />
       </Component>
       <Component Id="Spanish.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Spanish.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish.xlf" />
       </Component>
       <Component Id="Spanish.Plugins.xlf" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\Spanish.Plugins.xlf" />
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish.Plugins.xlf" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="PuttyDir">
@@ -923,34 +906,34 @@
     </DirectoryRef>
     <DirectoryRef Id="DirConEmu">
       <Component Id="File.CER00" Guid="*">
-        <File Source="..\GitExtensions\Bin\$(var.Configuration)\ConEmu\CmdInit.cmd" />
+        <File Source="$(var.ArtifactsPublishPath)\ConEmu\CmdInit.cmd" />
       </Component>
       <Component Id="File.CER01" Guid="*">
-        <File Source="..\GitExtensions\Bin\$(var.Configuration)\ConEmu\ConEmu.exe" />
+        <File Source="$(var.ArtifactsPublishPath)\ConEmu\ConEmu.exe" />
       </Component>
       <Component Id="File.CER03" Guid="*">
-        <File Source="..\GitExtensions\Bin\$(var.Configuration)\ConEmu\ConEmu64.exe" />
+        <File Source="$(var.ArtifactsPublishPath)\ConEmu\ConEmu64.exe" />
       </Component>
       <Component Id="File.CER04" Guid="*">
-        <File Source="..\GitExtensions\Bin\$(var.Configuration)\ConEmu\ConEmuC.exe" />
+        <File Source="$(var.ArtifactsPublishPath)\ConEmu\ConEmuC.exe" />
       </Component>
       <Component Id="File.CER05" Guid="*">
-        <File Source="..\GitExtensions\Bin\$(var.Configuration)\ConEmu\ConEmuC64.exe" />
+        <File Source="$(var.ArtifactsPublishPath)\ConEmu\ConEmuC64.exe" />
       </Component>
       <Component Id="File.CER06" Guid="*">
-        <File Source="..\GitExtensions\Bin\$(var.Configuration)\ConEmu\ConEmuCD.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\ConEmu\ConEmuCD.dll" />
       </Component>
       <Component Id="File.CER07" Guid="*">
-        <File Source="..\GitExtensions\Bin\$(var.Configuration)\ConEmu\ConEmuCD64.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\ConEmu\ConEmuCD64.dll" />
       </Component>
       <Component Id="File.CER08" Guid="*">
-        <File Source="..\GitExtensions\Bin\$(var.Configuration)\ConEmu\ConEmuHk.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\ConEmu\ConEmuHk.dll" />
       </Component>
       <Component Id="File.CER09" Guid="*">
-        <File Source="..\GitExtensions\Bin\$(var.Configuration)\ConEmu\ConEmuHk64.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\ConEmu\ConEmuHk64.dll" />
       </Component>
       <Component Id="File.CER10" Guid="*">
-        <File Source="..\GitExtensions\Bin\$(var.Configuration)\ConEmu\GitShowBranch.cmd" />
+        <File Source="$(var.ArtifactsPublishPath)\ConEmu\GitShowBranch.cmd" />
       </Component>
     </DirectoryRef>
     <ComponentGroup Id="Component.ConEmuFiles">
@@ -1175,357 +1158,357 @@
     </ComponentGroup>
     <DirectoryRef Id="cs">
       <Component Id="cs_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\cs\Microsoft.VisualStudio.Composition.resources.dll" Id="cs_Microsoft.VisualStudio.Composition.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\cs\Microsoft.VisualStudio.Composition.resources.dll" Id="cs_Microsoft.VisualStudio.Composition.resources.dll" />
       </Component>
       <Component Id="cs_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\cs\Microsoft.VisualStudio.Threading.resources.dll" Id="cs_Microsoft.VisualStudio.Threading.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\cs\Microsoft.VisualStudio.Threading.resources.dll" Id="cs_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
       <Component Id="cs_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\cs\Microsoft.VisualStudio.Validation.resources.dll" Id="cs_Microsoft.VisualStudio.Validation.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\cs\Microsoft.VisualStudio.Validation.resources.dll" Id="cs_Microsoft.VisualStudio.Validation.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="de">
       <Component Id="de_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\de\Microsoft.VisualStudio.Composition.resources.dll" Id="de_Microsoft.VisualStudio.Composition.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\de\Microsoft.VisualStudio.Composition.resources.dll" Id="de_Microsoft.VisualStudio.Composition.resources.dll" />
       </Component>
       <Component Id="de_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\de\Microsoft.VisualStudio.Threading.resources.dll" Id="de_Microsoft.VisualStudio.Threading.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\de\Microsoft.VisualStudio.Threading.resources.dll" Id="de_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
       <Component Id="de_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\de\Microsoft.VisualStudio.Validation.resources.dll" Id="de_Microsoft.VisualStudio.Validation.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\de\Microsoft.VisualStudio.Validation.resources.dll" Id="de_Microsoft.VisualStudio.Validation.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="es">
       <Component Id="es_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\es\Microsoft.VisualStudio.Composition.resources.dll" Id="es_Microsoft.VisualStudio.Composition.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\es\Microsoft.VisualStudio.Composition.resources.dll" Id="es_Microsoft.VisualStudio.Composition.resources.dll" />
       </Component>
       <Component Id="es_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\es\Microsoft.VisualStudio.Threading.resources.dll" Id="es_Microsoft.VisualStudio.Threading.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\es\Microsoft.VisualStudio.Threading.resources.dll" Id="es_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
       <Component Id="es_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\es\Microsoft.VisualStudio.Validation.resources.dll" Id="es_Microsoft.VisualStudio.Validation.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\es\Microsoft.VisualStudio.Validation.resources.dll" Id="es_Microsoft.VisualStudio.Validation.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="fr">
       <Component Id="fr_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\fr\Microsoft.VisualStudio.Composition.resources.dll" Id="fr_Microsoft.VisualStudio.Composition.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\fr\Microsoft.VisualStudio.Composition.resources.dll" Id="fr_Microsoft.VisualStudio.Composition.resources.dll" />
       </Component>
       <Component Id="fr_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\fr\Microsoft.VisualStudio.Threading.resources.dll" Id="fr_Microsoft.VisualStudio.Threading.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\fr\Microsoft.VisualStudio.Threading.resources.dll" Id="fr_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
       <Component Id="fr_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\fr\Microsoft.VisualStudio.Validation.resources.dll" Id="fr_Microsoft.VisualStudio.Validation.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\fr\Microsoft.VisualStudio.Validation.resources.dll" Id="fr_Microsoft.VisualStudio.Validation.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="it">
       <Component Id="it_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\it\Microsoft.VisualStudio.Composition.resources.dll" Id="it_Microsoft.VisualStudio.Composition.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\it\Microsoft.VisualStudio.Composition.resources.dll" Id="it_Microsoft.VisualStudio.Composition.resources.dll" />
       </Component>
       <Component Id="it_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\it\Microsoft.VisualStudio.Threading.resources.dll" Id="it_Microsoft.VisualStudio.Threading.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\it\Microsoft.VisualStudio.Threading.resources.dll" Id="it_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
       <Component Id="it_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\it\Microsoft.VisualStudio.Validation.resources.dll" Id="it_Microsoft.VisualStudio.Validation.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\it\Microsoft.VisualStudio.Validation.resources.dll" Id="it_Microsoft.VisualStudio.Validation.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="ja">
       <Component Id="ja_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\ja\Microsoft.VisualStudio.Composition.resources.dll" Id="ja_Microsoft.VisualStudio.Composition.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\ja\Microsoft.VisualStudio.Composition.resources.dll" Id="ja_Microsoft.VisualStudio.Composition.resources.dll" />
       </Component>
       <Component Id="ja_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\ja\Microsoft.VisualStudio.Threading.resources.dll" Id="ja_Microsoft.VisualStudio.Threading.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\ja\Microsoft.VisualStudio.Threading.resources.dll" Id="ja_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
       <Component Id="ja_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\ja\Microsoft.VisualStudio.Validation.resources.dll" Id="ja_Microsoft.VisualStudio.Validation.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\ja\Microsoft.VisualStudio.Validation.resources.dll" Id="ja_Microsoft.VisualStudio.Validation.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="ko">
       <Component Id="ko_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\ko\Microsoft.VisualStudio.Composition.resources.dll" Id="ko_Microsoft.VisualStudio.Composition.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\ko\Microsoft.VisualStudio.Composition.resources.dll" Id="ko_Microsoft.VisualStudio.Composition.resources.dll" />
       </Component>
       <Component Id="ko_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\ko\Microsoft.VisualStudio.Threading.resources.dll" Id="ko_Microsoft.VisualStudio.Threading.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\ko\Microsoft.VisualStudio.Threading.resources.dll" Id="ko_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
       <Component Id="ko_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\ko\Microsoft.VisualStudio.Validation.resources.dll" Id="ko_Microsoft.VisualStudio.Validation.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\ko\Microsoft.VisualStudio.Validation.resources.dll" Id="ko_Microsoft.VisualStudio.Validation.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="pl">
       <Component Id="pl_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\pl\Microsoft.VisualStudio.Composition.resources.dll" Id="pl_Microsoft.VisualStudio.Composition.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\pl\Microsoft.VisualStudio.Composition.resources.dll" Id="pl_Microsoft.VisualStudio.Composition.resources.dll" />
       </Component>
       <Component Id="pl_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\pl\Microsoft.VisualStudio.Threading.resources.dll" Id="pl_Microsoft.VisualStudio.Threading.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\pl\Microsoft.VisualStudio.Threading.resources.dll" Id="pl_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
       <Component Id="pl_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\pl\Microsoft.VisualStudio.Validation.resources.dll" Id="pl_Microsoft.VisualStudio.Validation.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\pl\Microsoft.VisualStudio.Validation.resources.dll" Id="pl_Microsoft.VisualStudio.Validation.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="Plugins_cs">
       <Component Id="Plugins_cs_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\cs\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_cs_Microsoft.TeamFoundation.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\cs\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_cs_Microsoft.TeamFoundation.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_cs_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\cs\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_cs_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\cs\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_cs_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_cs_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\cs\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_cs_Microsoft.VisualStudio.Services.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\cs\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_cs_Microsoft.VisualStudio.Services.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_cs_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\cs\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_cs_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\cs\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_cs_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="Plugins_de">
       <Component Id="Plugins_de_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\de\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_de_Microsoft.TeamFoundation.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\de\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_de_Microsoft.TeamFoundation.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_de_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\de\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_de_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\de\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_de_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_de_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\de\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_de_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\de\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_de_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_de_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\de\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_de_Microsoft.VisualStudio.Services.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\de\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_de_Microsoft.VisualStudio.Services.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_de_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\de\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_de_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\de\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_de_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="Plugins_es">
       <Component Id="Plugins_es_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\es\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_es_Microsoft.TeamFoundation.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\es\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_es_Microsoft.TeamFoundation.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_es_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\es\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_es_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\es\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_es_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_es_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\es\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_es_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\es\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_es_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_es_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\es\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_es_Microsoft.VisualStudio.Services.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\es\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_es_Microsoft.VisualStudio.Services.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_es_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\es\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_es_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\es\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_es_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="Plugins_fr">
       <Component Id="Plugins_fr_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\fr\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_fr_Microsoft.TeamFoundation.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\fr\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_fr_Microsoft.TeamFoundation.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_fr_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\fr\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_fr_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\fr\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_fr_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_fr_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\fr\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_fr_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\fr\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_fr_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_fr_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\fr\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_fr_Microsoft.VisualStudio.Services.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\fr\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_fr_Microsoft.VisualStudio.Services.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_fr_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\fr\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_fr_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\fr\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_fr_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="Plugins_it">
       <Component Id="Plugins_it_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\it\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_it_Microsoft.TeamFoundation.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\it\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_it_Microsoft.TeamFoundation.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_it_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\it\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_it_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\it\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_it_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_it_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\it\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_it_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\it\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_it_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_it_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\it\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_it_Microsoft.VisualStudio.Services.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\it\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_it_Microsoft.VisualStudio.Services.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_it_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\it\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_it_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\it\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_it_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="Plugins_ja">
       <Component Id="Plugins_ja_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ja\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_ja_Microsoft.TeamFoundation.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\ja\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_ja_Microsoft.TeamFoundation.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_ja_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ja\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_ja_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\ja\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_ja_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_ja_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ja\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_ja_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\ja\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_ja_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_ja_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ja\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_ja_Microsoft.VisualStudio.Services.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\ja\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_ja_Microsoft.VisualStudio.Services.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_ja_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ja\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_ja_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\ja\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_ja_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="Plugins_ko">
       <Component Id="Plugins_ko_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ko\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_ko_Microsoft.TeamFoundation.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\ko\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_ko_Microsoft.TeamFoundation.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_ko_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ko\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_ko_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\ko\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_ko_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_ko_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ko\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_ko_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\ko\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_ko_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_ko_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ko\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_ko_Microsoft.VisualStudio.Services.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\ko\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_ko_Microsoft.VisualStudio.Services.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_ko_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ko\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_ko_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\ko\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_ko_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="Plugins_pl">
       <Component Id="Plugins_pl_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\pl\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_pl_Microsoft.TeamFoundation.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\pl\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_pl_Microsoft.TeamFoundation.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_pl_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\pl\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_pl_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\pl\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_pl_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_pl_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\pl\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_pl_Microsoft.VisualStudio.Services.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\pl\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_pl_Microsoft.VisualStudio.Services.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_pl_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\pl\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_pl_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\pl\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_pl_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="Plugins_pt_BR">
       <Component Id="Plugins_pt_BR_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\pt-BR\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_pt_BR_Microsoft.TeamFoundation.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\pt-BR\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_pt_BR_Microsoft.TeamFoundation.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_pt_BR_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\pt-BR\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_pt_BR_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\pt-BR\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_pt_BR_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_pt_BR_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\pt-BR\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_pt_BR_Microsoft.VisualStudio.Services.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\pt-BR\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_pt_BR_Microsoft.VisualStudio.Services.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_pt_BR_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\pt-BR\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_pt_BR_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\pt-BR\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_pt_BR_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="pt_BR">
       <Component Id="pt_BR_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\pt-BR\Microsoft.VisualStudio.Composition.resources.dll" Id="pt_BR_Microsoft.VisualStudio.Composition.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\pt-BR\Microsoft.VisualStudio.Composition.resources.dll" Id="pt_BR_Microsoft.VisualStudio.Composition.resources.dll" />
       </Component>
       <Component Id="pt_BR_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\pt-BR\Microsoft.VisualStudio.Threading.resources.dll" Id="pt_BR_Microsoft.VisualStudio.Threading.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\pt-BR\Microsoft.VisualStudio.Threading.resources.dll" Id="pt_BR_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
       <Component Id="pt_BR_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\pt-BR\Microsoft.VisualStudio.Validation.resources.dll" Id="pt_BR_Microsoft.VisualStudio.Validation.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\pt-BR\Microsoft.VisualStudio.Validation.resources.dll" Id="pt_BR_Microsoft.VisualStudio.Validation.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="Plugins_ru">
       <Component Id="Plugins_ru_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ru\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_ru_Microsoft.TeamFoundation.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\ru\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_ru_Microsoft.TeamFoundation.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_ru_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ru\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_ru_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\ru\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_ru_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_ru_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ru\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_ru_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\ru\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_ru_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_ru_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ru\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_ru_Microsoft.VisualStudio.Services.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\ru\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_ru_Microsoft.VisualStudio.Services.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_ru_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ru\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_ru_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\ru\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_ru_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="ru">
       <Component Id="ru_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\ru\Microsoft.VisualStudio.Composition.resources.dll" Id="ru_Microsoft.VisualStudio.Composition.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\ru\Microsoft.VisualStudio.Composition.resources.dll" Id="ru_Microsoft.VisualStudio.Composition.resources.dll" />
       </Component>
       <Component Id="ru_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\ru\Microsoft.VisualStudio.Threading.resources.dll" Id="ru_Microsoft.VisualStudio.Threading.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\ru\Microsoft.VisualStudio.Threading.resources.dll" Id="ru_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
       <Component Id="ru_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\ru\Microsoft.VisualStudio.Validation.resources.dll" Id="ru_Microsoft.VisualStudio.Validation.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\ru\Microsoft.VisualStudio.Validation.resources.dll" Id="ru_Microsoft.VisualStudio.Validation.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="Plugins_tr">
       <Component Id="Plugins_tr_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\tr\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_tr_Microsoft.TeamFoundation.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\tr\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_tr_Microsoft.TeamFoundation.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_tr_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\tr\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_tr_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\tr\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_tr_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_tr_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\tr\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_tr_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\tr\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_tr_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_tr_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\tr\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_tr_Microsoft.VisualStudio.Services.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\tr\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_tr_Microsoft.VisualStudio.Services.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_tr_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\tr\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_tr_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\tr\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_tr_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="tr">
       <Component Id="tr_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\tr\Microsoft.VisualStudio.Composition.resources.dll" Id="tr_Microsoft.VisualStudio.Composition.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\tr\Microsoft.VisualStudio.Composition.resources.dll" Id="tr_Microsoft.VisualStudio.Composition.resources.dll" />
       </Component>
       <Component Id="tr_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\tr\Microsoft.VisualStudio.Threading.resources.dll" Id="tr_Microsoft.VisualStudio.Threading.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\tr\Microsoft.VisualStudio.Threading.resources.dll" Id="tr_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
       <Component Id="tr_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\tr\Microsoft.VisualStudio.Validation.resources.dll" Id="tr_Microsoft.VisualStudio.Validation.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\tr\Microsoft.VisualStudio.Validation.resources.dll" Id="tr_Microsoft.VisualStudio.Validation.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="Plugins_zh_Hans">
       <Component Id="Plugins_zh_Hans_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hans\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_zh_Hans_Microsoft.TeamFoundation.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\zh-Hans\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_zh_Hans_Microsoft.TeamFoundation.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_zh_Hans_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hans\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_zh_Hans_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\zh-Hans\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_zh_Hans_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_zh_Hans_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hans\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_zh_Hans_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\zh-Hans\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_zh_Hans_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_zh_Hans_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hans\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_zh_Hans_Microsoft.VisualStudio.Services.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\zh-Hans\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_zh_Hans_Microsoft.VisualStudio.Services.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_zh_Hans_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hans\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_zh_Hans_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\zh-Hans\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_zh_Hans_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="zh_Hans">
       <Component Id="zh_Hans_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\zh-Hans\Microsoft.VisualStudio.Composition.resources.dll" Id="zh_Hans_Microsoft.VisualStudio.Composition.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\zh-Hans\Microsoft.VisualStudio.Composition.resources.dll" Id="zh_Hans_Microsoft.VisualStudio.Composition.resources.dll" />
       </Component>
       <Component Id="zh_Hans_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\zh-Hans\Microsoft.VisualStudio.Threading.resources.dll" Id="zh_Hans_Microsoft.VisualStudio.Threading.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\zh-Hans\Microsoft.VisualStudio.Threading.resources.dll" Id="zh_Hans_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
       <Component Id="zh_Hans_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\zh-Hans\Microsoft.VisualStudio.Validation.resources.dll" Id="zh_Hans_Microsoft.VisualStudio.Validation.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\zh-Hans\Microsoft.VisualStudio.Validation.resources.dll" Id="zh_Hans_Microsoft.VisualStudio.Validation.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="Plugins_zh_Hant">
       <Component Id="Plugins_zh_Hant_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hant\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_zh_Hant_Microsoft.TeamFoundation.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\zh-Hant\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_zh_Hant_Microsoft.TeamFoundation.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_zh_Hant_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hant\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_zh_Hant_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\zh-Hant\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_zh_Hant_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_zh_Hant_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hant\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_zh_Hant_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\zh-Hant\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_zh_Hant_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
       </Component>
       <Component Id="Plugins_zh_Hant_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hant\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_zh_Hant_Microsoft.VisualStudio.Services.Common.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\zh-Hant\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_zh_Hant_Microsoft.VisualStudio.Services.Common.resources.dll" />
       </Component>
       <Component Id="Plugins_zh_Hant_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hant\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_zh_Hant_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\zh-Hant\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_zh_Hant_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="zh_Hant">
       <Component Id="zh_Hant_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\zh-Hant\Microsoft.VisualStudio.Composition.resources.dll" Id="zh_Hant_Microsoft.VisualStudio.Composition.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\zh-Hant\Microsoft.VisualStudio.Composition.resources.dll" Id="zh_Hant_Microsoft.VisualStudio.Composition.resources.dll" />
       </Component>
       <Component Id="zh_Hant_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\zh-Hant\Microsoft.VisualStudio.Threading.resources.dll" Id="zh_Hant_Microsoft.VisualStudio.Threading.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\zh-Hant\Microsoft.VisualStudio.Threading.resources.dll" Id="zh_Hant_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
       <Component Id="zh_Hant_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\zh-Hant\Microsoft.VisualStudio.Validation.resources.dll" Id="zh_Hant_Microsoft.VisualStudio.Validation.resources.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\zh-Hant\Microsoft.VisualStudio.Validation.resources.dll" Id="zh_Hant_Microsoft.VisualStudio.Validation.resources.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="ProgramMenuFolder">
@@ -1604,10 +1587,12 @@
       <ComponentRef Id="EasyHook64.dll" />
       <ComponentRef Id="win10default.css" />
       <ComponentRef Id="dark.css" />
-      <!--Remove unused dll, installed in versions <= 2.31-->
+      <!-- Remove unused dll, installed in versions <= 2.31 -->
       <ComponentRef Id="GithubSharp.Core.dll" />
-      <!--Remove unused dll, installed in versions <= 2.31-->
+      <!-- Remove unused dll, installed in versions <= 2.31 -->
       <ComponentRef Id="Github.dll" />
+      <!-- Remove unused dll, installed in versions < 4.0 -->
+      <ComponentRef Id="Gerrit.dll" />
       <!-- PluginManager -->
       <ComponentRef Id="GitExtensions.PluginManager.dll" />
       <ComponentRef Id="PackageManager" />
@@ -1628,10 +1613,6 @@
         </Feature>
         <Feature Id="FindLargeFiles" Title="Find large files" Level="1">
           <ComponentRef Id="FindLargeFiles.dll" />
-        </Feature>
-        <Feature Id="Gerrit" Title="Gerrit code review" Level="1">
-          <ComponentRef Id="Gerrit.dll" />
-          <ComponentRef Id="Newtonsoft.Json.dll" />
         </Feature>
         <Feature Id="Github" Title="Github integration" Level="1">
           <ComponentRef Id="Github3.dll" />
@@ -1771,35 +1752,25 @@
           <ComponentRef Id="Japanese.Plugins.xlf" />
           <ComponentRef Id="Japanese.gif" />
         </Feature>
-        <Feature Id="Latvian" Title="Latvian" Level="1">
-          <ComponentRef Id="Latvian.xlf" />
-          <ComponentRef Id="Latvian.Plugins.xlf" />
-          <ComponentRef Id="Latvian.gif" />
-        </Feature>
         <Feature Id="Polish" Title="Polish" Level="1">
           <ComponentRef Id="Polish.xlf" />
           <ComponentRef Id="Polish.Plugins.xlf" />
           <ComponentRef Id="Polish.gif" />
         </Feature>
-        <Feature Id="Portuguese(Brazil)" Title="Portuguese(Brazil)" Level="1">
-          <ComponentRef Id="Portuguese(Brazil).xlf" />
-          <ComponentRef Id="Portuguese(Brazil).Plugins.xlf" />
-          <ComponentRef Id="Portuguese(Brazil).gif" />
+        <Feature Id="Portuguese_Brazil" Title="Portuguese (Brazil)" Level="1">
+          <ComponentRef Id="Portuguese_Brazil.xlf" />
+          <ComponentRef Id="Portuguese_Brazil.Plugins.xlf" />
+          <ComponentRef Id="Portuguese_Brazil.gif" />
         </Feature>
         <Feature Id="Russian" Title="Russian" Level="1">
           <ComponentRef Id="Russian.xlf" />
           <ComponentRef Id="Russian.Plugins.xlf" />
           <ComponentRef Id="Russian.gif" />
         </Feature>
-        <Feature Id="SimplifiedChinese" Title="SimplifiedChinese" Level="1">
+        <Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
           <ComponentRef Id="SimplifiedChinese.xlf" />
           <ComponentRef Id="SimplifiedChinese.Plugins.xlf" />
           <ComponentRef Id="SimplifiedChinese.gif" />
-        </Feature>
-        <Feature Id="Spanish(Argentina)" Title="Spanish(Argentina)" Level="1">
-          <ComponentRef Id="Spanish(Argentina).xlf" />
-          <ComponentRef Id="Spanish(Argentina).Plugins.xlf" />
-          <ComponentRef Id="Spanish(Argentina).gif" />
         </Feature>
         <Feature Id="Spanish" Title="Spanish" Level="1">
           <ComponentRef Id="Spanish.xlf" />
