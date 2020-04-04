@@ -56,6 +56,7 @@ namespace GitUI
         public new event EventHandler DoubleClick;
         public new event KeyEventHandler KeyDown;
         public new event EnterEventHandler Enter;
+        private Dictionary<string, int> _stateImageIndexDict;
 
         public FileStatusList()
         {
@@ -71,7 +72,8 @@ namespace GitUI
             SelectFirstItemOnSetItems = true;
 
             FileStatusListView.SmallImageList = CreateImageList();
-            FileStatusListView.LargeImageList = CreateImageList();
+            FileStatusListView.LargeImageList = FileStatusListView.SmallImageList;
+
             FileStatusListView.AllowCollapseGroups = true;
             FileStatusListView.Scroll += FileStatusListView_Scroll;
 
@@ -92,31 +94,44 @@ namespace GitUI
             {
                 const int rowHeight = 18;
 
-                return new ImageList
+                var list = new ImageList
                 {
                     ColorDepth = ColorDepth.Depth32Bit,
                     ImageSize = DpiUtil.Scale(new Size(16, rowHeight)), // Scale ImageSize and images scale automatically
-                    Images =
-                    {
-                        ScaleHeight(Images.FileStatusRemoved), // 0
-                        ScaleHeight(Images.FileStatusAdded), // 1
-                        ScaleHeight(Images.FileStatusModified), // 2
-                        ScaleHeight(Images.FileStatusRenamed.AdaptLightness()), // 3
-                        ScaleHeight(Images.FileStatusCopied), // 4
-                        ScaleHeight(Images.SubmoduleDirty), // 5
-                        ScaleHeight(Images.SubmoduleRevisionUp), // 6
-                        ScaleHeight(Images.SubmoduleRevisionUpDirty), // 7
-                        ScaleHeight(Images.SubmoduleRevisionDown), // 8
-                        ScaleHeight(Images.SubmoduleRevisionDownDirty), // 9
-                        ScaleHeight(Images.SubmoduleRevisionSemiUp), // 10
-                        ScaleHeight(Images.SubmoduleRevisionSemiUpDirty), // 11
-                        ScaleHeight(Images.SubmoduleRevisionSemiDown), // 12
-                        ScaleHeight(Images.SubmoduleRevisionSemiDownDirty), // 13
-                        ScaleHeight(Images.FileStatusUnknown) // 14
-                    }
                 };
 
-                Bitmap ScaleHeight(Bitmap input)
+                _stateImageIndexDict = new Dictionary<string, int>();
+                var images = new (string imageKey, Bitmap icon)[]
+                {
+                    (nameof(Images.FileStatusUnknown), ScaleHeight(Images.FileStatusUnknown)),
+                    (nameof(Images.FileStatusModified), ScaleHeight(Images.FileStatusModified)),
+                    (nameof(Images.FileStatusAdded), ScaleHeight(Images.FileStatusAdded)),
+                    (nameof(Images.FileStatusRemoved), ScaleHeight(Images.FileStatusRemoved)),
+                    (nameof(Images.Conflict), ScaleHeight(Images.Conflict)),
+                    (nameof(Images.FileStatusRenamed), ScaleHeight(Images.FileStatusRenamed.AdaptLightness())),
+                    (nameof(Images.FileStatusCopied), ScaleHeight(Images.FileStatusCopied)),
+                    (nameof(Images.SubmodulesManage), ScaleHeight(Images.SubmodulesManage)),
+                    (nameof(Images.FolderSubmodule), ScaleHeight(Images.FolderSubmodule)),
+                    (nameof(Images.SubmoduleDirty), ScaleHeight(Images.SubmoduleDirty)),
+                    (nameof(Images.SubmoduleRevisionUp), ScaleHeight(Images.SubmoduleRevisionUp)),
+                    (nameof(Images.SubmoduleRevisionUpDirty), ScaleHeight(Images.SubmoduleRevisionUpDirty)),
+                    (nameof(Images.SubmoduleRevisionDown), ScaleHeight(Images.SubmoduleRevisionDown)),
+                    (nameof(Images.SubmoduleRevisionDownDirty), ScaleHeight(Images.SubmoduleRevisionDownDirty)),
+                    (nameof(Images.SubmoduleRevisionSemiUp), ScaleHeight(Images.SubmoduleRevisionSemiUp)),
+                    (nameof(Images.SubmoduleRevisionSemiUpDirty), ScaleHeight(Images.SubmoduleRevisionSemiUpDirty)),
+                    (nameof(Images.SubmoduleRevisionSemiDown), ScaleHeight(Images.SubmoduleRevisionSemiDown)),
+                    (nameof(Images.SubmoduleRevisionSemiDownDirty), ScaleHeight(Images.SubmoduleRevisionSemiDownDirty))
+                };
+
+                for (var i = 0; i < images.Length; i++)
+                {
+                    list.Images.Add(images[i].icon);
+                    _stateImageIndexDict.Add(images[i].imageKey, i);
+                }
+
+                return list;
+
+                static Bitmap ScaleHeight(Bitmap input)
                 {
                     Debug.Assert(input.Height < rowHeight, "Can only increase row height");
                     var scaled = new Bitmap(input.Width, rowHeight, input.PixelFormat);
@@ -998,69 +1013,87 @@ namespace GitUI
 
             int GetItemImageIndex(GitItemStatus gitItemStatus)
             {
+                var imageKey = GetItemImageKey(gitItemStatus);
+                return _stateImageIndexDict.ContainsKey(imageKey)
+                ? _stateImageIndexDict[imageKey]
+                : _stateImageIndexDict[nameof(Images.FileStatusUnknown)];
+            }
+
+            static string GetItemImageKey(GitItemStatus gitItemStatus)
+            {
+                if (!gitItemStatus.IsNew && !gitItemStatus.IsTracked)
+                {
+                    // Illegal combinations, no flags set?
+                    return nameof(Images.FileStatusUnknown);
+                }
+
                 if (gitItemStatus.IsDeleted)
                 {
-                    return 0;
+                    return nameof(Images.FileStatusRemoved);
                 }
 
                 if (gitItemStatus.IsNew || (!gitItemStatus.IsTracked && !gitItemStatus.IsSubmodule))
                 {
-                    return 1;
+                    return nameof(Images.FileStatusAdded);
                 }
 
-                if (gitItemStatus.IsChanged || gitItemStatus.IsConflict || gitItemStatus.IsSubmodule)
+                if (gitItemStatus.IsConflict)
                 {
-                    if (!gitItemStatus.IsSubmodule || gitItemStatus.GetSubmoduleStatusAsync() == null ||
+                    return nameof(Images.Conflict);
+                }
+
+                if (gitItemStatus.IsSubmodule)
+                {
+                    if (gitItemStatus.GetSubmoduleStatusAsync() == null ||
                         !gitItemStatus.GetSubmoduleStatusAsync().IsCompleted)
                     {
-                        return 2;
+                        return gitItemStatus.IsDirty ? nameof(Images.SubmoduleDirty) : nameof(Images.SubmodulesManage);
                     }
 
                     var status = gitItemStatus.GetSubmoduleStatusAsync().CompletedResult();
                     if (status == null)
                     {
-                        return 2;
+                        return gitItemStatus.IsDirty ? nameof(Images.SubmoduleDirty) : nameof(Images.SubmodulesManage);
                     }
 
-                    if (status.Status == SubmoduleStatus.FastForward)
+                    return status.Status switch
                     {
-                        return 6 + (status.IsDirty ? 1 : 0);
-                    }
+                        SubmoduleStatus.FastForward => status.IsDirty
+                            ? nameof(Images.SubmoduleRevisionUpDirty)
+                            : nameof(Images.SubmoduleRevisionUp),
+                        SubmoduleStatus.Rewind => status.IsDirty
+                            ? nameof(Images.SubmoduleRevisionDownDirty)
+                            : nameof(Images.SubmoduleRevisionDown),
+                        SubmoduleStatus.NewerTime => status.IsDirty
+                            ? nameof(Images.SubmoduleRevisionSemiUpDirty)
+                            : nameof(Images.SubmoduleRevisionSemiUp),
+                        SubmoduleStatus.OlderTime => status.IsDirty
+                            ? nameof(Images.SubmoduleRevisionSemiDownDirty)
+                            : nameof(Images.SubmoduleRevisionSemiDown),
+                        _ => status.IsDirty
+                            ? nameof(Images.SubmoduleDirty)
+                            : nameof(Images.FolderSubmodule)
+                    };
+                }
 
-                    if (status.Status == SubmoduleStatus.Rewind)
-                    {
-                        return 8 + (status.IsDirty ? 1 : 0);
-                    }
-
-                    if (status.Status == SubmoduleStatus.NewerTime)
-                    {
-                        return 10 + (status.IsDirty ? 1 : 0);
-                    }
-
-                    if (status.Status == SubmoduleStatus.OlderTime)
-                    {
-                        return 12 + (status.IsDirty ? 1 : 0);
-                    }
-
-                    return !status.IsDirty ? 2 : 5;
+                if (gitItemStatus.IsChanged)
+                {
+                    return nameof(Images.FileStatusModified);
                 }
 
                 if (gitItemStatus.IsRenamed)
                 {
-                    if (gitItemStatus.RenameCopyPercentage == "100")
-                    {
-                        return 3; // Rename icon
-                    }
-
-                    return 2; // Modified icon
+                    return gitItemStatus.RenameCopyPercentage == "100"
+                        ? nameof(Images.FileStatusRenamed)
+                        : nameof(Images.FileStatusModified);
                 }
 
                 if (gitItemStatus.IsCopied)
                 {
-                    return 4;
+                    return nameof(Images.FileStatusCopied);
                 }
 
-                return 14; // icon unknown
+                return nameof(Images.FileStatusUnknown);
             }
         }
 
