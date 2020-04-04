@@ -196,12 +196,6 @@ namespace GitUI.CommandsDialogs
             var repositoryDescriptionProvider = new RepositoryDescriptionProvider(new GitDirectoryResolver());
             _appTitleGenerator = new AppTitleGenerator(repositoryDescriptionProvider);
             _windowsJumpListManager = new WindowsJumpListManager(repositoryDescriptionProvider);
-            _windowsJumpListManager.CreateJumpList(
-                Handle,
-                new WindowsThumbnailToolbarButtons(
-                    new WindowsThumbnailToolbarButton(toolStripButtonCommit.Text, toolStripButtonCommit.Image, CommitToolStripMenuItemClick),
-                    new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
-                    new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick)));
 
             InitCountArtificial(out _gitStatusMonitor);
 
@@ -386,6 +380,10 @@ namespace GitUI.CommandsDialogs
                                     TaskbarManager.Instance.SetOverlayIcon(overlay, "");
                                 }
                             }
+
+                            var repoStateVisualiser = new RepoStateVisualiser();
+                            var (image, _) = repoStateVisualiser.Invoke(status);
+                            _windowsJumpListManager.UpdateCommitIcon(image);
                         }
 
                         if (AppSettings.ShowSubmoduleStatus)
@@ -500,6 +498,12 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnLoad(EventArgs e)
         {
+            _windowsJumpListManager.CreateJumpList(
+                Handle,
+                new WindowsThumbnailToolbarButtons(
+                    new WindowsThumbnailToolbarButton(toolStripButtonCommit.Text, toolStripButtonCommit.Image, CommitToolStripMenuItemClick),
+                    new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
+                    new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick)));
             SetSplitterPositions();
             HideVariableMainMenuItems();
             RefreshSplitViewLayout();
