@@ -128,7 +128,7 @@ namespace GitUI.Script
                 }
                 else if (selectedRevision == null && scriptHostControl != null && DependsOnSelectedRevision(option))
                 {
-                    allSelectedRevisions = scriptHostControl.GetSelectedRevisions();
+                    allSelectedRevisions = scriptHostControl.GetSelectedRevisions() ?? Array.Empty<GitRevision>();
                     selectedRevision = CalculateSelectedRevision(scriptHostControl, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
                     if (selectedRevision == null)
                     {
@@ -172,7 +172,7 @@ namespace GitUI.Script
             List<string> selectedRemotes, List<IGitRef> selectedLocalBranches,
             List<IGitRef> selectedBranches, List<IGitRef> selectedTags)
         {
-            GitRevision selectedRevision = scriptHostControl.GetLatestSelectedRevision();
+            GitRevision selectedRevision = scriptHostControl?.GetLatestSelectedRevision();
             if (selectedRevision == null)
             {
                 return null;
