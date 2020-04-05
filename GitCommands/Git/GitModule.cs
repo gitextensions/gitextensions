@@ -4061,7 +4061,6 @@ namespace GitCommands
                 file => new GitItemStatus
                 {
                     IsChanged = true,
-                    IsConflict = true,
                     IsTracked = true,
                     IsDeleted = false,
                     IsNew = false,
