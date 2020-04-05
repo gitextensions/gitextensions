@@ -306,6 +306,12 @@ namespace GitCommands
                     return fullName;
                 }
 
+                fullName = FindFileInEnvVarFolder("ProgramW6432", location, fileName);
+                if (fullName != null)
+                {
+                    return fullName;
+                }
+
                 if (IntPtr.Size == 8 || (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
                 {
                     fullName = FindFileInEnvVarFolder("ProgramFiles(x86)", location, fileName);
