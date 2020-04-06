@@ -4,17 +4,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Messaging;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitCommands.Git;
-using GitCommands.Git.Extensions;
 using GitCommands.Patches;
 using GitCommands.Utils;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
-using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
@@ -666,7 +663,8 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Parse the output from git-status --porcelain -z
+        /// Parse the output from git-status --porcelain=2 -z
+        /// Note that the caller should check for fatal errors in the Git output
         /// </summary>
         /// <param name="module">The Git module</param>
         /// <param name="statusString">output from the git command</param>

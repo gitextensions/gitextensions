@@ -27,6 +27,7 @@ namespace GitCommands
     [DebuggerDisplay("GitModule ( {" + nameof(WorkingDir) + "} )")]
     public sealed class GitModule : IGitModule
     {
+        private const string GitError = "Git Error";
         private static readonly Regex CpEncodingPattern = new Regex("cp\\d+", RegexOptions.Compiled);
         private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
 
@@ -2441,12 +2442,20 @@ namespace GitCommands
                 },
                 cache: noCache ? null : GitCommandCache);
 
-            var resultCollection = GitCommandHelpers.GetDiffChangedFilesFromString(this, output, stagedStatus).ToList();
+            var result = GitCommandHelpers.GetDiffChangedFilesFromString(this, output, stagedStatus).ToList();
+
+            if (IsGitErrorMessage(output))
+            {
+                // No simple way to pass the error message, create fake file
+                result.Add(createErrorGitItemStatus(output));
+            }
 
             if (firstRevision == GitRevision.WorkTreeGuid || secondRevision == GitRevision.WorkTreeGuid)
             {
                 // For worktree the untracked must be added too
-                var files = GetWorkTreeFilesWithSubmodulesStatus().Where(item => item.IsNew);
+                // Note that this may add a second GitError, this is a separate Git command
+                var files = GetAllChangedFilesWithSubmodulesStatus().Where(x =>
+                    ((x.Staged == StagedStatus.WorkTree && x.IsNew) || !string.IsNullOrWhiteSpace(x.ErrorMessage))).ToArray();
                 if (firstRevision == GitRevision.WorkTreeGuid)
                 {
                     // The file is seen as "deleted" in 'to' revision
@@ -2454,16 +2463,16 @@ namespace GitCommands
                     {
                         item.IsNew = false;
                         item.IsDeleted = true;
-                        resultCollection.Add(item);
+                        result.Add(item);
                     }
                 }
                 else
                 {
-                    resultCollection.AddRange(files);
+                    result.AddRange(files);
                 }
             }
 
-            return resultCollection;
+            return result;
         }
 
         public IReadOnlyList<GitItemStatus> GetStashDiffFiles(string stashName)
@@ -2526,6 +2535,11 @@ namespace GitCommands
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles));
 
             var result = GitCommandHelpers.GetStatusChangedFilesFromString(this, output).ToList();
+            if (IsGitErrorMessage(output))
+            {
+                // No simple way to pass the error message, create fake file
+                result.Add(createErrorGitItemStatus(output));
+            }
 
             if (!excludeAssumeUnchangedFiles || !excludeSkipWorktreeFiles)
             {
@@ -2622,12 +2636,26 @@ namespace GitCommands
 
                 output = _gitExecutable.GetOutput(command);
 
-                return GitCommandHelpers.GetStatusChangedFilesFromString(this, output)
-                    .Where(item => item.Staged == StagedStatus.Index)
+                var res = GitCommandHelpers.GetStatusChangedFilesFromString(this, output)
+                    .Where(item => (item.Staged == StagedStatus.Index || !string.IsNullOrWhiteSpace(item.ErrorMessage)))
                     .ToList();
+                if (IsGitErrorMessage(output))
+                {
+                    // No simple way to pass the error message, create fake file
+                    res.Add(createErrorGitItemStatus(output));
+                }
+
+                return res;
             }
 
-            return GitCommandHelpers.GetDiffChangedFilesFromString(this, output, StagedStatus.Index);
+            var result = GitCommandHelpers.GetDiffChangedFilesFromString(this, output, StagedStatus.Index).ToList();
+            if (IsGitErrorMessage(output))
+            {
+                // No simple way to pass the error message, create fake file
+                result.Add(createErrorGitItemStatus(output));
+            }
+
+            return result;
         }
 
         public IReadOnlyList<GitItemStatus> GetIndexFilesWithSubmodulesStatus()
@@ -2642,16 +2670,18 @@ namespace GitCommands
             return GetAllChangedFiles().Where(x => x.Staged == StagedStatus.WorkTree).ToArray();
         }
 
-        public IReadOnlyList<GitItemStatus> GetWorkTreeFilesWithSubmodulesStatus()
-        {
-            return GetAllChangedFilesWithSubmodulesStatus().Where(x => x.Staged == StagedStatus.WorkTree).ToArray();
-        }
-
         public IReadOnlyList<GitItemStatus> GitStatus(UntrackedFilesMode untrackedFilesMode, IgnoreSubmodulesMode ignoreSubmodulesMode = IgnoreSubmodulesMode.None)
         {
             var args = GitCommandHelpers.GetAllChangedFilesCmd(true, untrackedFilesMode, ignoreSubmodulesMode);
             var output = _gitExecutable.GetOutput(args);
-            return GitCommandHelpers.GetStatusChangedFilesFromString(this, output);
+            var result = GitCommandHelpers.GetStatusChangedFilesFromString(this, output).ToList();
+            if (IsGitErrorMessage(output))
+            {
+                // No simple way to pass the error message, create fake file
+                result.Add(createErrorGitItemStatus(output));
+            }
+
+            return result;
         }
 
         /// <summary>Indicates whether there are any changes to the repository,
@@ -4140,6 +4170,11 @@ namespace GitCommands
         public static bool IsGitErrorMessage(string gitOutput)
         {
             return Regex.IsMatch(gitOutput, @"^\s*(error:|fatal)");
+        }
+
+        private static GitItemStatus createErrorGitItemStatus(string gitOutput)
+        {
+            return new GitItemStatus { Name = GitError, ErrorMessage = gitOutput.Replace('\0', '\t') };
         }
 
         public (int totalCount, Dictionary<string, int> countByName) GetCommitsByContributor(DateTime? since = null, DateTime? until = null)

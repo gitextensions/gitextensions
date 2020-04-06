@@ -2,6 +2,7 @@
     {
         "Name": "unknown info",
         "OldName": null,
+        "ErrorMessage": null,
         "TreeGuid": null,
         "RenameCopyPercentage": null,
         "Staged": 2,
@@ -21,6 +22,7 @@
     {
         "Name": "adfs.h",
         "OldName": null,
+        "ErrorMessage": null,
         "TreeGuid": null,
         "RenameCopyPercentage": null,
         "Staged": 3,
@@ -40,6 +42,7 @@
     {
         "Name": "adfs.h",
         "OldName": null,
+        "ErrorMessage": null,
         "TreeGuid": null,
         "RenameCopyPercentage": null,
         "Staged": 2,

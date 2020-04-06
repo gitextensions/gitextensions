@@ -46,6 +46,7 @@ namespace GitCommands
 
         public string Name { get; set; }
         public string OldName { get; set; }
+        public string ErrorMessage { get; set; }
         [CanBeNull]
         public ObjectId TreeGuid { get; set; }
         public string RenameCopyPercentage { get; set; }
@@ -166,6 +167,11 @@ namespace GitCommands
         public override string ToString()
         {
             var str = new StringBuilder();
+
+            if (!string.IsNullOrWhiteSpace(ErrorMessage))
+            {
+                str.Append(ErrorMessage);
+            }
 
             if (IsRenamed)
             {
