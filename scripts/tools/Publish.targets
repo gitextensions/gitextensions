@@ -21,7 +21,7 @@
             .Where(proj => proj.ProjectType == SolutionProjectType.KnownToBeMSBuildFormat)
             .SelectMany(proj => 
                         {
-                            var project = new Project(proj.AbsolutePath);
+                            var project = new Project(proj.AbsolutePath, null, null, new ProjectCollection());
                             project.SetGlobalProperty("Configuration", BuildConfiguration);
                             project.SetGlobalProperty("ContinuousIntegrationBuild", IsContinuousIntegrationBuild);
                             project.ReevaluateIfNecessary();
