@@ -40,10 +40,17 @@ namespace GitUI.CommandsDialogs
                 objectId = null;
             }
 
-            objectId = objectId ?? Module.GetCurrentCheckout();
+            objectId ??= Module.GetCurrentCheckout();
             if (objectId != null)
             {
                 commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
+
+                if (newBranchNamePrefix.IsNullOrWhiteSpace())
+                {
+                    var refs = Module.GetRevision(objectId, shortFormat: true, loadRefs: true).Refs;
+                    IGitRef firstRef = refs.FirstOrDefault(r => !r.IsTag) ?? refs.FirstOrDefault(r => r.IsTag);
+                    newBranchNamePrefix = firstRef?.LocalName;
+                }
             }
 
             if (newBranchNamePrefix.IsNotNullOrWhitespace())
