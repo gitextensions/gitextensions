@@ -1,8 +1,10 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
 using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
@@ -309,16 +311,29 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
         }
 
+        private static bool IsMinimized()
+        {
+            if (!EnvUtils.RunningOnWindows())
+            {
+                return false;
+            }
+
+            var currentProcess = Process.GetCurrentProcess();
+            if (currentProcess is null)
+            {
+                return false;
+            }
+
+            return NativeMethods.IsIconic(currentProcess.MainWindowHandle).IsTrue();
+        }
+
         private void Update()
         {
             ThreadHelper.AssertOnUIThread();
 
-            if (CurrentStatus != GitStatusMonitorState.Running)
-            {
-                return;
-            }
-
-            if (_nextUpdateTime - Environment.TickCount > 0)
+            if (CurrentStatus != GitStatusMonitorState.Running
+                || _nextUpdateTime - Environment.TickCount > 0
+                || IsMinimized())
             {
                 return;
             }
