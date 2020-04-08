@@ -125,3 +125,4 @@ YYYY/MM/DD, github id, Full name, email
 2020/03/22, joergpichler, Jörg Pichler, joerg.pichler(at)gmail.com
 2020/03/27, cado1982, Chris Oliver, cado82(at)gmail.com
 2020/04/02, NoahLerner, Noah Lerner, noahlerner94(at)gmail.com
+2020/04/07, dimfish, Dmitry I, dimfish(at)gmail.com
