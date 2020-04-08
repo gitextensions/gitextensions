@@ -423,14 +423,13 @@ namespace GitUI.CommandsDialogs
             diffOpenRevisionFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
             diffOpenRevisionFileWithToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
 
-            diffCommitSubmoduleChanges.Visible =
+            diffUpdateSubmoduleMenuItem.Visible =
                 diffResetSubmoduleChanges.Visible =
                 diffStashSubmoduleChangesToolStripMenuItem.Visible =
-                diffSubmoduleSummaryMenuItem.Visible =
-                diffUpdateSubmoduleMenuItem.Visible = _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo);
+                diffCommitSubmoduleChanges.Visible =
+                submoduleStripSeparator.Visible = _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo);
 
             diffToolStripSeparator13.Visible = _revisionDiffController.ShouldShowMenuDeleteFile(selectionInfo) ||
-                                               _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo) ||
                                                _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo) ||
                                                _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
 
@@ -876,22 +875,6 @@ namespace GitUI.CommandsDialogs
             }
 
             RefreshArtificial();
-        }
-
-        private void diffSubmoduleSummaryMenuItem_Click(object sender, EventArgs e)
-        {
-            var submodules = DiffFiles.SelectedItems.Where(it => it.IsSubmodule).Select(it => it.Name).Distinct().ToList();
-
-            string summary = "";
-            foreach (var name in submodules)
-            {
-                summary += Module.GetSubmoduleSummary(name);
-            }
-
-            using (var frm = new FormEdit(UICommands, summary))
-            {
-                frm.ShowDialog(this);
-            }
         }
 
         public void SwitchFocus(bool alreadyContainedFocus)

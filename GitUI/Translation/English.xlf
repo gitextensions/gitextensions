@@ -3500,10 +3500,6 @@ You can unset the template:
         <source>Show in folder</source>
         <target />
       </trans-unit>
-      <trans-unit id="openSubmoduleMenuItem.Text">
-        <source>Open with Git Extensions</source>
-        <target />
-      </trans-unit>
       <trans-unit id="openToolStripMenuItem.Text">
         <source>Open</source>
         <target />
@@ -3614,10 +3610,6 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
         <source>Stop tracking this file</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="submoduleSummaryMenuItem.Text">
-        <source>View summary</source>
         <target />
       </trans-unit>
       <trans-unit id="toolAuthorLabelItem.Text">
@@ -8134,10 +8126,6 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Stash submodule changes</source>
         <target />
       </trans-unit>
-      <trans-unit id="diffSubmoduleSummaryMenuItem.Text">
-        <source>View summary</source>
-        <target />
-      </trans-unit>
       <trans-unit id="diffUpdateSubmoduleMenuItem.Text">
         <source>Update submodule</source>
         <target />
@@ -9319,6 +9307,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_openReport.Text">
         <source>Open report</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_openWithGitExtensions.Text">
+        <source>Open with Git Extensions</source>
         <target />
       </trans-unit>
       <trans-unit id="_parentsText.Text">

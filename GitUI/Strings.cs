@@ -32,6 +32,7 @@ namespace GitUI
         private readonly TranslationString _local = new TranslationString("Local");
         private readonly TranslationString _tag = new TranslationString("Tag");
         private readonly TranslationString _remote = new TranslationString("Remote");
+        private readonly TranslationString _openWithGitExtensions = new TranslationString("Open with Git Extensions");
 
         private readonly TranslationString _authored = new TranslationString("authored");
         private readonly TranslationString _committed = new TranslationString("committed");
@@ -87,6 +88,7 @@ namespace GitUI
         public static string Local => _instance.Value._local.Text;
         public static string Tag => _instance.Value._tag.Text;
         public static string Remote => _instance.Value._remote.Text;
+        public static string OpenWithGitExtensions => _instance.Value._openWithGitExtensions.Text;
 
         public static string OpenReport => _instance.Value._openReport.Text;
 

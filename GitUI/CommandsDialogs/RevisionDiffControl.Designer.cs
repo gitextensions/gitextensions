@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs
             this.diffResetSubmoduleChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.diffStashSubmoduleChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffUpdateSubmoduleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.diffSubmoduleSummaryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.submoduleStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.diffToolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.copyFilenameToClipboardToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -115,23 +115,23 @@ namespace GitUI.CommandsDialogs
             // DiffContextMenu
             // 
             this.DiffContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.diffUpdateSubmoduleMenuItem,
+            this.diffResetSubmoduleChanges,
+            this.diffStashSubmoduleChangesToolStripMenuItem,
+            this.diffCommitSubmoduleChanges,
+            this.submoduleStripSeparator,
             this.openWithDifftoolToolStripMenuItem,
-            this.saveAsToolStripMenuItem1,
             this.resetFileToToolStripMenuItem,
             this.stageFileToolStripMenuItem,
             this.unstageFileToolStripMenuItem,
             this.cherryPickSelectedDiffFileToolStripMenuItem,
             this.toolStripSeparator32,
+            this.saveAsToolStripMenuItem1,
             this.diffEditWorkingDirectoryFileToolStripMenuItem,
             this.diffOpenWorkingDirectoryFileWithToolStripMenuItem,
             this.diffOpenRevisionFileToolStripMenuItem,
             this.diffOpenRevisionFileWithToolStripMenuItem,
             this.diffDeleteFileToolStripMenuItem,
-            this.diffCommitSubmoduleChanges,
-            this.diffResetSubmoduleChanges,
-            this.diffStashSubmoduleChangesToolStripMenuItem,
-            this.diffUpdateSubmoduleMenuItem,
-            this.diffSubmoduleSummaryMenuItem,
             this.diffToolStripSeparator13,
             this.copyFilenameToClipboardToolStripMenuItem1,
             this.openContainingFolderToolStripMenuItem,
@@ -342,12 +342,11 @@ namespace GitUI.CommandsDialogs
             this.diffUpdateSubmoduleMenuItem.Text = "Update submodule";
             this.diffUpdateSubmoduleMenuItem.Click += new System.EventHandler(this.diffUpdateSubmoduleMenuItem_Click);
             // 
-            // diffSubmoduleSummaryMenuItem
+            // submoduleStripSeparator
             // 
-            this.diffSubmoduleSummaryMenuItem.Name = "diffSubmoduleSummaryMenuItem";
-            this.diffSubmoduleSummaryMenuItem.Size = new System.Drawing.Size(296, 22);
-            this.diffSubmoduleSummaryMenuItem.Text = "View summary";
-            this.diffSubmoduleSummaryMenuItem.Click += new System.EventHandler(this.diffSubmoduleSummaryMenuItem_Click);
+            this.submoduleStripSeparator.Name = "submoduleStripSeparator";
+            this.submoduleStripSeparator.Size = new System.Drawing.Size(293, 6);
+            this.submoduleStripSeparator.Tag = "1";
             // 
             // diffToolStripSeparator13
             // 
@@ -467,10 +466,10 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparator32;
         private ToolStripMenuItem diffDeleteFileToolStripMenuItem;
         private ToolStripMenuItem diffUpdateSubmoduleMenuItem;
-        private ToolStripMenuItem diffSubmoduleSummaryMenuItem;
         private ToolStripMenuItem diffResetSubmoduleChanges;
         private ToolStripMenuItem diffCommitSubmoduleChanges;
         private ToolStripMenuItem diffStashSubmoduleChangesToolStripMenuItem;
+        private ToolStripSeparator submoduleStripSeparator;
         private ToolStripSeparator diffToolStripSeparator13;
         private ToolStripMenuItem resetFileToToolStripMenuItem;
         private ToolStripMenuItem saveAsToolStripMenuItem1;
