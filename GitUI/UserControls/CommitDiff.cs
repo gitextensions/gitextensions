@@ -24,7 +24,7 @@ namespace GitUI.UserControls
             DiffText.EscapePressed += () => EscapePressed?.Invoke();
             DiffText.ExtraDiffArgumentsChanged += DiffText_ExtraDiffArgumentsChanged;
             DiffFiles.Focus();
-            DiffFiles.SetDiffs();
+            DiffFiles.ClearDiffs();
 
             splitContainer1.SplitterDistance = DpiUtil.Scale(200);
             splitContainer2.SplitterDistance = DpiUtil.Scale(260);

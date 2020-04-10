@@ -741,12 +741,55 @@ namespace GitUI
             }
         }
 
-        public void SetDiffs(GitRevision selectedRev = null, GitRevision parentRev = null, IReadOnlyList<GitItemStatus> items = null)
+        /// <summary>
+        /// FormStash init for WorkTree and Index
+        /// Special handling, Revision and ParentRev is not used as for e.g. RevisionDiffControl
+        /// </summary>
+        /// <param name="worktreeRev">The GitRevision for WorkTree</param>
+        /// <param name="worktreeDesc">The description for WorkTree</param>
+        /// <param name="worktreeItems">The GitItems for WorkTree</param>
+        /// <param name="indexRev">The GitRevision for Index</param>
+        /// <param name="indexDesc">The description for Index</param>
+        /// <param name="indexItems">The GitItems for Index</param>
+        public void SetStashDiffs(GitRevision worktreeRev, string worktreeDesc, [NotNull] IReadOnlyList<GitItemStatus> worktreeItems,
+            GitRevision indexRev, string indexDesc, [NotNull] IReadOnlyList<GitItemStatus> indexItems)
         {
+            GroupByRevision = true;
+            Revision = worktreeRev;
+            GitItemStatusesWithDescription = new[]
+            {
+                (worktreeRev, worktreeDesc, worktreeItems),
+                (indexRev, indexDesc, indexItems)
+            };
+        }
+
+        /// <summary>
+        /// FormStash init for stashed commits
+        /// Special handling, Revision and ParentRev is not used as for e.g. RevisionDiffControl
+        /// </summary>
+        /// <param name="selectedRev">The GitRevision for the stash</param>
+        /// <param name="selectedItems">The GitItems for the stash</param>
+        public void SetStashDiffs(GitRevision selectedRev, [NotNull] IReadOnlyList<GitItemStatus> selectedItems)
+        {
+            GroupByRevision = false;
             Revision = selectedRev;
-            GitItemStatusesWithDescription = items == null
-                ? Array.Empty<(GitRevision, string, IReadOnlyList<GitItemStatus>)>()
-                : new[] { (parentRev, _diffWithParent.Text + GetDescriptionForRevision(parentRev?.ObjectId), items) };
+            GitItemStatusesWithDescription = new[]
+            {
+                (selectedRev, "", selectedItems)
+            };
+        }
+
+        public void SetDiffs([CanBeNull] GitRevision selectedRev, [CanBeNull] GitRevision parentRev, [NotNull] IReadOnlyList<GitItemStatus> items)
+        {
+            GroupByRevision = false;
+            Revision = selectedRev;
+            GitItemStatusesWithDescription = new[] { (parentRev, _diffWithParent.Text + GetDescriptionForRevision(parentRev?.ObjectId), items) };
+        }
+
+        public void ClearDiffs()
+        {
+            Revision = null;
+            GitItemStatusesWithDescription = Array.Empty<(GitRevision, string, IReadOnlyList<GitItemStatus>)>();
         }
 
         private string GetDescriptionForRevision(ObjectId objectId)

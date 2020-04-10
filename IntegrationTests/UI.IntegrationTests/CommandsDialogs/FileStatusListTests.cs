@@ -48,7 +48,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             var itemAt0 = item1;
             var itemAt1 = item2;
             var itemAt2 = item0;
-            _fileStatusList.SetDiffs(items: items);
+            _fileStatusList.SetDiffs(selectedRev: null, parentRev: null, items: items);
 
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(0);
             _fileStatusList.SelectedIndex.Should().Be(0);
