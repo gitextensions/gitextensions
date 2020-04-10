@@ -56,6 +56,11 @@ namespace GitUI
         public new event EventHandler DoubleClick;
         public new event KeyEventHandler KeyDown;
         public new event EnterEventHandler Enter;
+
+        [Description("Disable showing open submodule menu items as bold")]
+        [DefaultValue(false)]
+        public bool DisableSubmoduleMenuItemBold { get; set; }
+
         private Dictionary<string, int> _stateImageIndexDict;
 
         public FileStatusList()
@@ -868,7 +873,7 @@ namespace GitUI
             {
                 Name = "openSubmoduleMenuItem",
                 Tag = "1",
-                Text = "Open with Git Extensions",
+                Text = Strings.OpenWithGitExtensions,
                 Image = Images.GitExtensionsLogo16
             };
             _openSubmoduleMenuItem.Click += (s, ea) => { ThreadHelper.JoinableTaskFactory.RunAsync(() => OpenSubmoduleAsync()); };
@@ -1187,20 +1192,23 @@ namespace GitUI
         {
             var cm = (ContextMenuStrip)sender;
 
+            // TODO The handling of _openSubmoduleMenuItem need to be revised
+            // This code handles the 'bold' in the menu for submodules. Other default actions are not set to bold.
+            // The actual implementation of the default handling with doubleclick is in each form,
+            // separate from this menu item
+
             if (!cm.Items.Find(_openSubmoduleMenuItem.Name, true).Any())
             {
-                cm.Items.Insert(1, _openSubmoduleMenuItem);
+                cm.Items.Insert(0, _openSubmoduleMenuItem);
             }
 
             bool isSubmoduleSelected = SelectedItem != null && SelectedItem.IsSubmodule;
-
             _openSubmoduleMenuItem.Visible = isSubmoduleSelected;
-
-            if (isSubmoduleSelected)
+            if (isSubmoduleSelected && !DisableSubmoduleMenuItemBold)
             {
-                _openSubmoduleMenuItem.Font = AppSettings.OpenSubmoduleDiffInSeparateWindow ?
-                    new Font(_openSubmoduleMenuItem.Font, FontStyle.Bold) :
-                    new Font(_openSubmoduleMenuItem.Font, FontStyle.Regular);
+                _openSubmoduleMenuItem.Font = AppSettings.OpenSubmoduleDiffInSeparateWindow
+                    ? new Font(_openSubmoduleMenuItem.Font, FontStyle.Bold)
+                    : new Font(_openSubmoduleMenuItem.Font, FontStyle.Regular);
             }
 
             if (!cm.Items.Find(_sortByContextMenu.Name, true).Any())

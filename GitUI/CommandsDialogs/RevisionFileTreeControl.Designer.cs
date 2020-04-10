@@ -106,23 +106,23 @@
             // FileTreeContextMenu
             // 
             this.FileTreeContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openWithDifftoolToolStripMenuItem,
-            this.saveAsToolStripMenuItem,
-            this.resetToThisRevisionToolStripMenuItem,
-            this.toolStripSeparatorFileSystemActions,
             this.openSubmoduleMenuItem,
-            this.copyFilenameToClipboardToolStripMenuItem,
-            this.fileTreeOpenContainingFolderToolStripMenuItem,
-            this.fileTreeArchiveToolStripMenuItem,
-            this.fileTreeCleanWorkingTreeToolStripMenuItem,
-            this.toolStripSeparatorGitHistoryActions,
-            this.fileHistoryToolStripMenuItem,
-            this.blameToolStripMenuItem1,
+            this.openWithDifftoolToolStripMenuItem,
+            this.resetToThisRevisionToolStripMenuItem,
             this.toolStripSeparatorEditFileActions,
+            this.saveAsToolStripMenuItem,
             this.editCheckedOutFileToolStripMenuItem,
             this.openWithToolStripMenuItem,
             this.openFileToolStripMenuItem,
             this.openFileWithToolStripMenuItem,
+            this.toolStripSeparatorFileSystemActions,
+            this.copyFilenameToClipboardToolStripMenuItem,
+            this.fileTreeOpenContainingFolderToolStripMenuItem,
+            this.toolStripSeparatorGitHistoryActions,
+            this.fileHistoryToolStripMenuItem,
+            this.blameToolStripMenuItem1,
+            this.fileTreeArchiveToolStripMenuItem,
+            this.fileTreeCleanWorkingTreeToolStripMenuItem,
             this.toolStripSeparatorGitActions,
             this.stopTrackingThisFileToolStripMenuItem,
             this.assumeUnchangedTheFileToolStripMenuItem,
@@ -169,7 +169,7 @@
             this.openSubmoduleMenuItem.Image = global::GitUI.Properties.Images.GitExtensionsLogo16;
             this.openSubmoduleMenuItem.Name = "openSubmoduleMenuItem";
             this.openSubmoduleMenuItem.Size = new System.Drawing.Size(325, 22);
-            this.openSubmoduleMenuItem.Text = "Open with Git Extensions";
+            this.openSubmoduleMenuItem.Text = Strings.OpenWithGitExtensions;
             this.openSubmoduleMenuItem.Click += new System.EventHandler(this.openSubmoduleMenuItem_Click);
             // 
             // copyFilenameToClipboardToolStripMenuItem
