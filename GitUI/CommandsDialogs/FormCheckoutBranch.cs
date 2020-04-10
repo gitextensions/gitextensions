@@ -228,7 +228,7 @@ namespace GitUI.CommandsDialogs
                 branchNames = GetContainsRevisionBranches();
             }
 
-            Branches.Items.AddRange(branchNames.Where(name => name.IsNotNullOrWhitespace()).ToArray<object>());
+            Branches.Items.AddRange(branchNames.Where(name => !string.IsNullOrWhiteSpace(name)).ToArray<object>());
 
             if (_containRevisions != null && Branches.Items.Count == 1)
             {

@@ -1719,7 +1719,7 @@ namespace GitUI
                 fileHistoryFileName = exactFileName.Substring(Module.WorkingDir.Length);
             }
 
-            if (fileHistoryFileName.IsNotNullOrWhitespace())
+            if (!string.IsNullOrWhiteSpace(fileHistoryFileName))
             {
                 StartFileHistoryDialog(null, fileHistoryFileName);
             }

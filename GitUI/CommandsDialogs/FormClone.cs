@@ -142,7 +142,7 @@ namespace GitUI.CommandsDialogs
                     try
                     {
                         // If the from directory is filled with the pushUrl from current working directory, set the destination directory to the parent
-                        if (pushUrl.IsNotNullOrWhitespace() && _NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && Module.WorkingDir.IsNotNullOrWhitespace())
+                        if (!string.IsNullOrWhiteSpace(pushUrl) && _NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && !string.IsNullOrWhiteSpace(Module.WorkingDir))
                         {
                             _NO_TRANSLATE_To.Text = Path.GetDirectoryName(Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar));
                         }
@@ -156,7 +156,7 @@ namespace GitUI.CommandsDialogs
 
             // if there is no destination directory, then use the parent of the current working directory
             // this would clone the new repo at the same level as the current one by default
-            if (_NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && Module.WorkingDir.IsNotNullOrWhitespace())
+            if (_NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && !string.IsNullOrWhiteSpace(Module.WorkingDir))
             {
                 if (Module.IsValidGitWorkingDir())
                 {

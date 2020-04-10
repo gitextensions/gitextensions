@@ -1248,7 +1248,7 @@ namespace GitUI
             var (first, selected) = getFirstAndSelected();
 
             compareToWorkingDirectoryMenuItem.Enabled = selected != null && selected.ObjectId != ObjectId.WorkTreeId;
-            compareWithCurrentBranchToolStripMenuItem.Enabled = Module.GetSelectedBranch(setDefaultIfEmpty: false).IsNotNullOrWhitespace();
+            compareWithCurrentBranchToolStripMenuItem.Enabled = !string.IsNullOrWhiteSpace(Module.GetSelectedBranch(setDefaultIfEmpty: false));
             compareSelectedCommitsMenuItem.Enabled = first != null && selected != null;
             openCommitsWithDiffToolMenuItem.Enabled = first != null && selected != null;
 

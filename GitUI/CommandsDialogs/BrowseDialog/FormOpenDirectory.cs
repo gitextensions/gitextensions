@@ -48,7 +48,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             var directories = new List<string>();
 
-            if (AppSettings.DefaultCloneDestinationPath.IsNotNullOrWhitespace())
+            if (!string.IsNullOrWhiteSpace(AppSettings.DefaultCloneDestinationPath))
             {
                 directories.Add(AppSettings.DefaultCloneDestinationPath.EnsureTrailingPathSeparator());
             }
@@ -66,13 +66,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             if (directories.Count == 0)
             {
-                if (AppSettings.RecentWorkingDir.IsNotNullOrWhitespace())
+                if (!string.IsNullOrWhiteSpace(AppSettings.RecentWorkingDir))
                 {
                     directories.Add(AppSettings.RecentWorkingDir.EnsureTrailingPathSeparator());
                 }
 
                 string homeDir = EnvironmentConfiguration.GetHomeDir();
-                if (homeDir.IsNotNullOrWhitespace())
+                if (!string.IsNullOrWhiteSpace(homeDir))
                 {
                     directories.Add(homeDir.EnsureTrailingPathSeparator());
                 }

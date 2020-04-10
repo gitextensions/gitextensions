@@ -711,7 +711,7 @@ namespace GitCommands
             {
                 "-z",
                 "--unmerged",
-                { filename.IsNotNullOrWhitespace(), "--" },
+                { !string.IsNullOrWhiteSpace(filename), "--" },
                 filename.QuoteNE()
             };
 
@@ -812,7 +812,7 @@ namespace GitCommands
             var args = new GitArgumentBuilder("ls-tree")
             {
                 refName,
-                { filename.IsNotNullOrWhitespace(), "--" },
+                { !string.IsNullOrWhiteSpace(filename), "--" },
                 filename.QuoteNE()
             };
             var output = _gitExecutable.GetOutput(args);
@@ -902,7 +902,7 @@ namespace GitCommands
             var args = new GitArgumentBuilder("mergetool")
             {
                 { GitVersion.Current.SupportGuiMergeTool, "--gui" },
-                { fileName.IsNotNullOrWhitespace(), "--" },
+                { !string.IsNullOrWhiteSpace(fileName), "--" },
                 fileName.ToPosixPath().QuoteNE()
             };
             using (var process = _gitExecutable.Start(args, createWindow: true))
@@ -3479,7 +3479,7 @@ namespace GitCommands
                 var args = new GitArgumentBuilder("ls-files")
                 {
                     "-s",
-                    { fileName.IsNotNullOrWhitespace(), "--" },
+                    { !string.IsNullOrWhiteSpace(fileName), "--" },
                     fileName.QuoteNE()
                 };
 
@@ -3497,7 +3497,7 @@ namespace GitCommands
                 {
                     "-r",
                     objectId,
-                    { fileName.IsNotNullOrWhitespace(), "--" },
+                    { !string.IsNullOrWhiteSpace(fileName), "--" },
                     fileName.QuoteNE()
                 };
                 var lines = _gitExecutable.GetOutput(args).Split(' ', '\t');

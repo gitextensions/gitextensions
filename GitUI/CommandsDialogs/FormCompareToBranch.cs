@@ -36,7 +36,7 @@ namespace GitUI.CommandsDialogs
 
         private void btnCompare_Click(object sender, EventArgs e)
         {
-            if (branchSelector.SelectedBranchName.IsNotNullOrWhitespace())
+            if (!string.IsNullOrWhiteSpace(branchSelector.SelectedBranchName))
             {
                 BranchName = branchSelector.SelectedBranchName;
                 DialogResult = DialogResult.OK;

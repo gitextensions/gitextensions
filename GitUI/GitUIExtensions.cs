@@ -53,7 +53,7 @@ namespace GitUI
         {
             if (file == null || selectedRev?.ObjectId == null)
             {
-                if (defaultText.IsNotNullOrWhitespace())
+                if (!string.IsNullOrWhiteSpace(defaultText))
                 {
                     return fileViewer.ViewTextAsync(file?.Name, defaultText, openWithDiffTool);
                 }

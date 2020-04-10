@@ -237,14 +237,6 @@ namespace System
             return string.IsNullOrWhiteSpace(value);
         }
 
-        /// <summary>Indicates whether the specified string is neither null, nor empty, nor has only whitespace.</summary>
-        [Pure]
-        [ContractAnnotation("value:null=>false")]
-        public static bool IsNotNullOrWhitespace([CanBeNull] this string value)
-        {
-            return !string.IsNullOrWhiteSpace(value);
-        }
-
         /// <summary>
         /// Determines whether the beginning of this instance matches any of the specified strings.
         /// </summary>

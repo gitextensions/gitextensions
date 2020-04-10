@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (newBranchNamePrefix.IsNotNullOrWhitespace())
+            if (!string.IsNullOrWhiteSpace(newBranchNamePrefix))
             {
                 BranchNameTextBox.Text = newBranchNamePrefix;
             }

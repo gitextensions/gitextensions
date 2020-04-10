@@ -172,7 +172,7 @@ namespace AppVeyorIntegration
                 Timeout = TimeSpan.FromMinutes(2),
                 BaseAddress = new Uri(baseUrl, UriKind.Absolute),
             };
-            if (accountToken.IsNotNullOrWhitespace())
+            if (!string.IsNullOrWhiteSpace(accountToken))
             {
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accountToken);
             }

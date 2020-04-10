@@ -98,7 +98,7 @@ namespace JenkinsIntegration
             }
 
             var ignoreBuilds = config.GetString("IgnoreBuildBranch", string.Empty);
-            _ignoreBuilds = ignoreBuilds.IsNotNullOrWhitespace() ? new Regex(ignoreBuilds) : null;
+            _ignoreBuilds = !string.IsNullOrWhiteSpace(ignoreBuilds) ? new Regex(ignoreBuilds) : null;
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace JenkinsIntegration
                 t = null;
             }
 
-            if (t.IsNotNullOrWhitespace() && !cancellationToken.IsCancellationRequested)
+            if (!string.IsNullOrWhiteSpace(t) && !cancellationToken.IsCancellationRequested)
             {
                 JObject jobDescription = JObject.Parse(t);
                 if (jobDescription["builds"] != null)
@@ -350,7 +350,7 @@ namespace JenkinsIntegration
                             if (name != null)
                             {
                                 var name2 = name.ToObject<string>();
-                                if (name2.IsNotNullOrWhitespace() && _ignoreBuilds.IsMatch(name2))
+                                if (!string.IsNullOrWhiteSpace(name2) && _ignoreBuilds.IsMatch(name2))
                                 {
                                     return null;
                                 }

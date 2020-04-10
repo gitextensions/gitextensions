@@ -62,7 +62,7 @@ namespace GitCommands.ExternalLinks
             {
                 if (definition.RemoteSearchInParts.Contains(ExternalLinkDefinition.RemotePart.URL))
                 {
-                    if (remote.Url.IsNotNullOrWhitespace())
+                    if (!string.IsNullOrWhiteSpace(remote.Url))
                     {
                         remoteUrls.Add(remote.Url);
                     }
@@ -70,7 +70,7 @@ namespace GitCommands.ExternalLinks
 
                 if (definition.RemoteSearchInParts.Contains(ExternalLinkDefinition.RemotePart.PushURL))
                 {
-                    if (remote.PushUrl.IsNotNullOrWhitespace())
+                    if (!string.IsNullOrWhiteSpace(remote.PushUrl))
                     {
                         remoteUrls.Add(remote.PushUrl);
                     }

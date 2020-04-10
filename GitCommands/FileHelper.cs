@@ -57,7 +57,7 @@ namespace GitCommands
 
         public static bool IsBinaryFileName(GitModule module, string fileName)
         {
-            return fileName.IsNotNullOrWhitespace()
+            return !string.IsNullOrWhiteSpace(fileName)
                    && (IsBinaryAccordingToGitAttributes(module, fileName)
                        ?? HasMatchingExtension(BinaryExtensions, fileName));
         }

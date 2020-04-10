@@ -353,7 +353,7 @@ namespace GitUI.BranchTreePanel
 
             if (_searchResult == null || !_searchResult.Any())
             {
-                if (_txtBranchCriterion.Text.IsNotNullOrWhitespace())
+                if (!string.IsNullOrWhiteSpace(_txtBranchCriterion.Text))
                 {
                     _searchResult = SearchTree(_txtBranchCriterion.Text, treeMain.Nodes.Cast<TreeNode>());
                 }
