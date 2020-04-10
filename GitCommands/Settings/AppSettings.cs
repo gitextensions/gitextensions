@@ -1689,6 +1689,18 @@ namespace GitCommands
             set => SetBool("Blame.ShowOriginalFilePath", value);
         }
 
+        public static bool AutomaticContinuousScroll
+        {
+            get => GetBool("DiffViewer.AutomaticContinuousScroll", false);
+            set => SetBool("DiffViewer.AutomaticContinuousScroll", value);
+        }
+
+        public static int AutomaticContinuousScrollDelay
+        {
+            get => GetInt("DiffViewer.AutomaticContinuousScrollDelay", 600);
+            set => SetInt("DiffViewer.AutomaticContinuousScrollDelay", value);
+        }
+
         public static bool IsPortable()
         {
             return Properties.Settings.Default.IsPortable;

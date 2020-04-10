@@ -51,6 +51,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     MessageBox.Show(this, ex.Exception.ToString(), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.UnMask();
                 };
+            _diffViewer.TopScrollReached += FileViewer_TopScrollReached;
+            _diffViewer.BottomScrollReached += FileViewer_BottomScrollReached;
             InitializeComplete();
         }
 
@@ -126,6 +128,18 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     }
                 })
                 .FileAndForget();
+        }
+
+        private void FileViewer_TopScrollReached(object sender, EventArgs e)
+        {
+            _fileStatusList.SelectPreviousVisibleItem();
+            _diffViewer.ScrollToBottom();
+        }
+
+        private void FileViewer_BottomScrollReached(object sender, EventArgs e)
+        {
+            _fileStatusList.SelectNextVisibleItem();
+            _diffViewer.ScrollToTop();
         }
 
         private void SetPullRequestsData(IReadOnlyList<IPullRequestInformation> infos)

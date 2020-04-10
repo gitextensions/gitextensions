@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
@@ -23,11 +24,25 @@ namespace GitUI.UserControls
 
             DiffText.EscapePressed += () => EscapePressed?.Invoke();
             DiffText.ExtraDiffArgumentsChanged += DiffText_ExtraDiffArgumentsChanged;
+            DiffText.TopScrollReached += FileViewer_TopScrollReached;
+            DiffText.BottomScrollReached += FileViewer_BottomScrollReached;
             DiffFiles.Focus();
             DiffFiles.ClearDiffs();
 
             splitContainer1.SplitterDistance = DpiUtil.Scale(200);
             splitContainer2.SplitterDistance = DpiUtil.Scale(260);
+        }
+
+        private void FileViewer_TopScrollReached(object sender, EventArgs e)
+        {
+            DiffFiles.SelectPreviousVisibleItem();
+            DiffText.ScrollToBottom();
+        }
+
+        private void FileViewer_BottomScrollReached(object sender, EventArgs e)
+        {
+            DiffFiles.SelectNextVisibleItem();
+            DiffText.ScrollToTop();
         }
 
         public void SetRevision([CanBeNull] ObjectId objectId, [CanBeNull] string fileToSelect)

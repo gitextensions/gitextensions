@@ -42,6 +42,8 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             View.ExtraDiffArgumentsChanged += delegate { StashedSelectedIndexChanged(null, null); };
+            View.TopScrollReached += FileViewer_TopScrollReached;
+            View.BottomScrollReached += FileViewer_BottomScrollReached;
             CompleteTheInitialization();
         }
 
@@ -165,6 +167,18 @@ namespace GitUI.CommandsDialogs
                 Clear.Enabled = true; // allow Drop
                 Apply.Enabled = true; // allow Apply
             }
+        }
+
+        private void FileViewer_TopScrollReached(object sender, EventArgs e)
+        {
+            Stashed.SelectPreviousVisibleItem();
+            View.ScrollToBottom();
+        }
+
+        private void FileViewer_BottomScrollReached(object sender, EventArgs e)
+        {
+            Stashed.SelectNextVisibleItem();
+            View.ScrollToTop();
         }
 
         private void LoadGitItemStatuses(IReadOnlyList<GitItemStatus> gitItemStatuses)

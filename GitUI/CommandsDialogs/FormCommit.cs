@@ -306,6 +306,8 @@ namespace GitUI.CommandsDialogs
             splitRight.SplitterDistance = Math.Min(splitRight.SplitterDistance, splitRight.Height - splitRight.Panel2MinSize);
 
             SelectedDiff.EscapePressed += () => DialogResult = DialogResult.Cancel;
+            SelectedDiff.TopScrollReached += FileViewer_TopScrollReached;
+            SelectedDiff.BottomScrollReached += FileViewer_BottomScrollReached;
 
             SolveMergeconflicts.BackColor = AppColor.Branch.GetThemeColor();
             SolveMergeconflicts.SetForeColorForBackColor();
@@ -577,6 +579,20 @@ namespace GitUI.CommandsDialogs
         private void SelectedDiff_TextLoaded(object sender, EventArgs e)
         {
             _selectedDiffReloaded = true;
+        }
+
+        private void FileViewer_TopScrollReached(object sender, EventArgs e)
+        {
+            var fileStatus = _currentItemStaged ? Staged : Unstaged;
+            fileStatus.SelectPreviousVisibleItem();
+            SelectedDiff.ScrollToBottom();
+        }
+
+        private void FileViewer_BottomScrollReached(object sender, EventArgs e)
+        {
+            var fileStatus = _currentItemStaged ? Staged : Unstaged;
+            fileStatus.SelectNextVisibleItem();
+            SelectedDiff.ScrollToTop();
         }
 
         #region Hotkey commands
