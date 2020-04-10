@@ -120,7 +120,7 @@
       &lt;RevisionPart&gt;LocalBranches&lt;/RevisionPart&gt;
       &lt;RevisionPart&gt;RemoteBranches&lt;/RevisionPart&gt;
     &lt;/SearchInParts&gt;
-    &lt;SearchPattern&gt;(?i)(?&amp;lt;!pull request |pr[ _]?)(#|(((feat(ure)?)|fix)[/_-]))\d+&lt;/SearchPattern&gt;
+    &lt;SearchPattern&gt;(?i)(?&amp;lt;!pull request |pr[ _]?)(#|(((feat(ure)?)|fix)[/_-]i?))\d+&lt;/SearchPattern&gt;
     &lt;UseOnlyFirstRemote&gt;false&lt;/UseOnlyFirstRemote&gt;
   &lt;/GitExtLinkDef&gt;
   &lt;GitExtLinkDef&gt;
