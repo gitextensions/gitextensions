@@ -29,21 +29,21 @@ namespace GitCommandsTests
         public void Generate_should_return_default_title_if_invalid_working_directory(string path)
         {
             var title = _appTitleGenerator.Generate(path, false, null);
-            title.Should().Be("Git Extensions");
+            title.Should().Be(AppSettings.ApplicationName);
         }
 
         [Test]
         public void Generate_should_return_default_title_if_not_valid_working_directory()
         {
             var title = _appTitleGenerator.Generate("a", false, null);
-            title.Should().Be("Git Extensions");
+            title.Should().Be(AppSettings.ApplicationName);
         }
 
         [Test]
         public void Generate_should_include_no_branch_if_supplied()
         {
             var title = _appTitleGenerator.Generate("a", true, null);
-            title.Should().StartWith($"{ShortName} (no branch) - Git Extensions");
+            title.Should().StartWith($"{ShortName} (no branch) - {AppSettings.ApplicationName}");
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace GitCommandsTests
         {
             string branchName = "feature/my_(test)_branch";
             var title = _appTitleGenerator.Generate("a", true, "(" + branchName + ")");
-            title.Should().StartWith($"{ShortName} ({branchName}) - Git Extensions");
+            title.Should().StartWith($"{ShortName} ({branchName}) - {AppSettings.ApplicationName}");
         }
 
 #if DEBUG
@@ -62,7 +62,7 @@ namespace GitCommandsTests
             AppTitleGenerator.Initialise(buildSha, buildBranch);
             var title = _appTitleGenerator.Generate("a", true, null);
 
-            title.Should().Be($"{ShortName} (no branch) - Git Extensions [DEBUG]");
+            title.Should().Be($"{ShortName} (no branch) - {AppSettings.ApplicationName} [DEBUG]");
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace GitCommandsTests
             AppTitleGenerator.Initialise(buildSha, buildBranch);
             var title = _appTitleGenerator.Generate("a", true, null);
 
-            title.Should().Be($"{ShortName} (no branch) - Git Extensions @{buildSha.Substring(0, 8)} [{buildBranch}]");
+            title.Should().Be($"{ShortName} (no branch) - {AppSettings.ApplicationName} @{buildSha.Substring(0, 8)} [{buildBranch}]");
         }
 #endif
     }

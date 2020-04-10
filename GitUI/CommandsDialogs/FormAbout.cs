@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using GitCommands;
 using GitUI.CommandsDialogs.AboutBoxDialog;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;
@@ -18,6 +19,7 @@ namespace GitUI.CommandsDialogs
         public FormAbout()
         {
             InitializeComponent();
+            _NO_TRANSLATE_labelProductName.Text = AppSettings.ApplicationName;
             InitializeComplete();
 
             environmentInfo.SetCopyButtonTooltip(_copyTooltip.Text);
