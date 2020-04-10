@@ -8,12 +8,17 @@ using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
+    /// <summary>
+    /// Status if the file can be staged (worktree->index), unstaged or None (normal commits)
+    /// The status may not be available or unset for some commands
+    /// </summary>
     public enum StagedStatus
     {
-        Unknown = 0,
+        Unset = 0,
         None,
         WorkTree,
-        Index
+        Index,
+        Unknown
     }
 
     public sealed class GitItemStatus : IComparable<GitItemStatus>
@@ -45,19 +50,7 @@ namespace GitCommands
         public ObjectId TreeGuid { get; set; }
         public string RenameCopyPercentage { get; set; }
 
-        // Staged is three state and has no default status
-        private StagedStatus _staged = StagedStatus.Unknown;
-        public StagedStatus Staged
-        {
-            get
-            {
-                // Catch usage of unset accesses
-                Debug.Assert(_staged != StagedStatus.Unknown, "Staged is used without being set. Continue should generally be OK.");
-
-                return _staged;
-            }
-            set { _staged = value; }
-        }
+        public StagedStatus Staged { get; set; }
 
         #region Flags
 

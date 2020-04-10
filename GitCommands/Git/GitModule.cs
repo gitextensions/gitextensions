@@ -2343,7 +2343,7 @@ namespace GitCommands
 
         [CanBeNull]
         public Patch GetSingleDiff(
-            [CanBeNull] string firstRevision, [CanBeNull] string secondRevision,
+            [CanBeNull] ObjectId firstId, [CanBeNull] ObjectId secondId,
             [CanBeNull] string fileName, [CanBeNull] string oldFileName,
             [NotNull] string extraDiffArguments, [NotNull] Encoding encoding,
             bool cacheResult, bool isTracked = true)
@@ -2351,8 +2351,8 @@ namespace GitCommands
             // fix refs slashes
             fileName = fileName?.ToPosixPath();
             oldFileName = oldFileName?.ToPosixPath();
-            firstRevision = firstRevision?.ToPosixPath();
-            secondRevision = secondRevision?.ToPosixPath();
+            string firstRevision = firstId?.ToString()?.ToPosixPath();
+            string secondRevision = secondId?.ToString()?.ToPosixPath();
 
             string diffOptions = _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked);
 
@@ -2422,12 +2422,13 @@ namespace GitCommands
 
         public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId firstId, ObjectId secondId, ObjectId parentToSecond)
         {
-            var status = GetDiffFiles(firstId?.ToString(), secondId?.ToString(), parentToSecond?.ToString());
-            GetSubmoduleStatus(status, firstId?.ToString(), secondId?.ToString());
+            var stagedStatus = GitCommandHelpers.GetStagedStatus(firstId, secondId, parentToSecond);
+            var status = GetDiffFiles(firstId?.ToString(), secondId?.ToString(), stagedStatus);
+            GetSubmoduleStatus(status, firstId, secondId);
             return status;
         }
 
-        public IReadOnlyList<GitItemStatus> GetDiffFiles(string firstRevision, string secondRevision, string parentToSecond, bool noCache = false)
+        public IReadOnlyList<GitItemStatus> GetDiffFiles(string firstRevision, string secondRevision, StagedStatus stagedStatus, bool noCache = false)
         {
             noCache = noCache || firstRevision.IsArtificial() || secondRevision.IsArtificial();
 
@@ -2440,7 +2441,7 @@ namespace GitCommands
                 },
                 cache: noCache ? null : GitCommandCache);
 
-            var resultCollection = GitCommandHelpers.GetDiffChangedFilesFromString(this, output, firstRevision, secondRevision, parentToSecond).ToList();
+            var resultCollection = GitCommandHelpers.GetDiffChangedFilesFromString(this, output, stagedStatus).ToList();
 
             if (firstRevision == GitRevision.WorkTreeGuid || secondRevision == GitRevision.WorkTreeGuid)
             {
@@ -2467,7 +2468,7 @@ namespace GitCommands
 
         public IReadOnlyList<GitItemStatus> GetStashDiffFiles(string stashName)
         {
-            var resultCollection = GetDiffFiles(stashName + "^", stashName, stashName + "^", true).ToList();
+            var resultCollection = GetDiffFiles(stashName + "^", stashName, StagedStatus.None, true).ToList();
 
             // shows untracked files
             var args = new GitArgumentBuilder("log")
@@ -2577,7 +2578,7 @@ namespace GitCommands
             }
         }
 
-        private void GetSubmoduleStatus(IReadOnlyList<GitItemStatus> status, string firstRevision, string secondRevision)
+        private void GetSubmoduleStatus(IReadOnlyList<GitItemStatus> status, ObjectId firstId, ObjectId secondId)
         {
             foreach (var item in status.Where(i => i.IsSubmodule))
             {
@@ -2587,7 +2588,7 @@ namespace GitCommands
                         {
                             await TaskScheduler.Default.SwitchTo(alwaysYield: true);
 
-                            Patch patch = GetSingleDiff(firstRevision, secondRevision, item.Name, item.OldName, "", SystemEncoding, true);
+                            Patch patch = GetSingleDiff(firstId, secondId, item.Name, item.OldName, "", SystemEncoding, true);
                             string text = patch != null ? patch.Text : "";
                             var submoduleStatus = GitCommandHelpers.ParseSubmoduleStatus(text, this, item.Name);
                             if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
@@ -2626,7 +2627,7 @@ namespace GitCommands
                     .ToList();
             }
 
-            return GitCommandHelpers.GetDiffChangedFilesFromString(this, output, "HEAD", GitRevision.IndexGuid, "HEAD");
+            return GitCommandHelpers.GetDiffChangedFilesFromString(this, output, StagedStatus.Index);
         }
 
         public IReadOnlyList<GitItemStatus> GetIndexFilesWithSubmodulesStatus()
