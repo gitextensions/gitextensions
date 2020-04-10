@@ -490,7 +490,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             string cmd = _diffMergeToolConfigurationManager.GetToolCommand(diffTool, DiffMergeToolType.Diff);
-            if (cmd.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(cmd))
             {
                 RenderSettingUnset(DiffTool, DiffTool_Fix, _adviceDiffToolConfiguration.Text);
                 return false;
@@ -511,7 +511,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             string cmd = _diffMergeToolConfigurationManager.GetToolCommand(mergeTool, DiffMergeToolType.Merge);
-            if (cmd.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(cmd))
             {
                 RenderSettingUnset(MergeTool, MergeTool_Fix, string.Format(_mergeToolXConfiguredNeedsCmd.Text, mergeTool));
                 return false;

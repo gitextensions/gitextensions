@@ -363,7 +363,7 @@ namespace GitUI.CommandsDialogs
                 return dr;
             }
 
-            if (!Fetch.Checked && Branches.Text.IsNullOrWhiteSpace() && Module.IsDetachedHead())
+            if (!Fetch.Checked && string.IsNullOrWhiteSpace(Branches.Text) && Module.IsDetachedHead())
             {
                 int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(
                     owner,
@@ -864,13 +864,13 @@ namespace GitUI.CommandsDialogs
                 {
                     foreach (var remote in (IEnumerable<ConfigFileRemote>)_NO_TRANSLATE_Remotes.DataSource)
                     {
-                        if (!remote.Name.IsNullOrWhiteSpace() && remote.Name != AllRemotes)
+                        if (!string.IsNullOrWhiteSpace(remote.Name) && remote.Name != AllRemotes)
                         {
                             yield return remote.Name;
                         }
                     }
                 }
-                else if (!_NO_TRANSLATE_Remotes.Text.IsNullOrWhiteSpace())
+                else if (!string.IsNullOrWhiteSpace(_NO_TRANSLATE_Remotes.Text))
                 {
                     yield return _NO_TRANSLATE_Remotes.Text;
                 }
@@ -1066,7 +1066,7 @@ namespace GitUI.CommandsDialogs
 
         private void localBranch_Leave(object sender, EventArgs e)
         {
-            if (_branch != localBranch.Text.Trim() && Branches.Text.IsNullOrWhiteSpace())
+            if (_branch != localBranch.Text.Trim() && string.IsNullOrWhiteSpace(Branches.Text))
             {
                 Branches.Text = localBranch.Text;
             }

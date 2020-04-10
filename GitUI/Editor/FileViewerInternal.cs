@@ -116,7 +116,7 @@ namespace GitUI.Editor
         [NotNull]
         private IList<TextMarker> GetTextMarkersMatchingWord(string word)
         {
-            if (word.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(word))
             {
                 return Array.Empty<TextMarker>();
             }

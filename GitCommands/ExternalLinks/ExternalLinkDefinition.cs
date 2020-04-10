@@ -167,7 +167,7 @@ namespace GitCommands.ExternalLinks
 
         public void RemoveEmptyFormats()
         {
-            var toRemove = LinkFormats.Where(f => f.Caption.IsNullOrWhiteSpace() && f.Format.IsNullOrWhiteSpace()).ToArray();
+            var toRemove = LinkFormats.Where(f => string.IsNullOrWhiteSpace(f.Caption) && string.IsNullOrWhiteSpace(f.Format)).ToArray();
 
             foreach (var format in toRemove)
             {

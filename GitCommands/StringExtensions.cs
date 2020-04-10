@@ -221,23 +221,6 @@ namespace System
         }
 
         /// <summary>
-        /// Indicates whether a specified string is null, empty, or consists only of white-space characters.
-        /// </summary>
-        /// <param name="value">The string to test.</param>
-        /// <remarks>
-        /// This method is copied from .Net Framework 4.0 and should be deleted after leaving 3.5.
-        /// </remarks>
-        /// <returns>
-        /// true if the value parameter is null or <see cref="string.Empty"/>, or if value consists exclusively of white-space characters.
-        /// </returns>
-        [Pure]
-        [ContractAnnotation("value:null=>true")]
-        public static bool IsNullOrWhiteSpace([CanBeNull] this string value)
-        {
-            return string.IsNullOrWhiteSpace(value);
-        }
-
-        /// <summary>
         /// Determines whether the beginning of this instance matches any of the specified strings.
         /// </summary>
         /// <param name="starts">array of strings to compare</param>

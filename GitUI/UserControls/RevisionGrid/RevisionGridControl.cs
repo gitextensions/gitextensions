@@ -461,7 +461,7 @@ namespace GitUI
                     }
                 }
 
-                if (filterCommitter && !filter.IsNullOrWhiteSpace())
+                if (filterCommitter && !string.IsNullOrWhiteSpace(filter))
                 {
                     if (cmdLineSafe)
                     {
@@ -473,7 +473,7 @@ namespace GitUI
                     }
                 }
 
-                if (filterAuthor && !filter.IsNullOrWhiteSpace())
+                if (filterAuthor && !string.IsNullOrWhiteSpace(filter))
                 {
                     if (cmdLineSafe)
                     {
@@ -2439,7 +2439,7 @@ namespace GitUI
         private void CompareWithCurrentBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var headBranch = Module.GetSelectedBranch(setDefaultIfEmpty: false);
-            if (headBranch.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(headBranch))
             {
                 MessageBox.Show(this, "No branch is currently selected", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;

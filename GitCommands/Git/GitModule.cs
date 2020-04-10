@@ -3152,7 +3152,7 @@ namespace GitCommands
         public IReadOnlyList<string> GetIgnoredFiles(IEnumerable<string> ignorePatterns)
         {
             var notEmptyPatterns = ignorePatterns
-                .Where(pattern => !pattern.IsNullOrWhiteSpace())
+                .Where(pattern => !string.IsNullOrWhiteSpace(pattern))
                 .ToList();
 
             if (notEmptyPatterns.Count != 0)
@@ -3713,7 +3713,7 @@ namespace GitCommands
                 throw new ArgumentNullException(nameof(branchName));
             }
 
-            if (branchName.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(branchName))
             {
                 return false;
             }

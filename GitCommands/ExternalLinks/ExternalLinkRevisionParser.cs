@@ -28,7 +28,7 @@ namespace GitCommands.ExternalLinks
 
         private static IEnumerable<ConfigFileRemote> GetMatchingRemotes(ExternalLinkDefinition definition, IEnumerable<ConfigFileRemote> remotes)
         {
-            if (definition.UseRemotesPattern.IsNullOrWhiteSpace() || definition.UseRemotesRegex.Value == null)
+            if (string.IsNullOrWhiteSpace(definition.UseRemotesPattern) || definition.UseRemotesRegex.Value == null)
             {
                 return remotes;
             }
@@ -47,7 +47,7 @@ namespace GitCommands.ExternalLinks
         {
             var allMatches = new List<Match>();
 
-            if (definition.RemoteSearchPattern.IsNullOrWhiteSpace() || definition.RemoteSearchPatternRegex.Value == null)
+            if (string.IsNullOrWhiteSpace(definition.RemoteSearchPattern) || definition.RemoteSearchPatternRegex.Value == null)
             {
                 allMatches.Add(null);
                 return allMatches;

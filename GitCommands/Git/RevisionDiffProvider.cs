@@ -100,7 +100,7 @@ namespace GitCommands.Git
                 secondRevision = "";
             }
 
-            if (fileName.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(fileName))
             {
                 extra.Add(firstRevision);
                 extra.Add(secondRevision);

@@ -91,7 +91,7 @@ namespace GitCommands
 
         public static bool CanBeGitURL(string url)
         {
-            if (url.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(url))
             {
                 return false;
             }

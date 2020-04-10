@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs
             {
                 commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
 
-                if (newBranchNamePrefix.IsNullOrWhiteSpace())
+                if (string.IsNullOrWhiteSpace(newBranchNamePrefix))
                 {
                     var refs = Module.GetRevision(objectId, shortFormat: true, loadRefs: true).Refs;
                     IGitRef firstRef = refs.FirstOrDefault(r => !r.IsTag) ?? refs.FirstOrDefault(r => r.IsTag);
@@ -103,7 +103,7 @@ namespace GitUI.CommandsDialogs
             }
 
             var branchName = BranchNameTextBox.Text.Trim();
-            if (branchName.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(branchName))
             {
                 MessageBox.Show(_branchNameIsEmpty.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.None;

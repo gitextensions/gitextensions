@@ -117,7 +117,7 @@ namespace GitUI.UserControls
             lbChanges.Text = "";
             FireSelectionChangedEvent(sender, e);
 
-            if (SelectedBranchName.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(SelectedBranchName))
             {
                 lbChanges.Text = "";
             }

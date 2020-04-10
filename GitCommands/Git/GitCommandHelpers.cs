@@ -216,7 +216,7 @@ namespace GitCommands
         /// <returns>Argument string</returns>
         public static ArgumentString ResetCmd(ResetMode mode, string commit = null, string file = null)
         {
-            if (mode == ResetMode.ResetIndex && commit.IsNullOrWhiteSpace())
+            if (mode == ResetMode.ResetIndex && string.IsNullOrWhiteSpace(commit))
             {
                 throw new ArgumentException("reset to index requires a tree-ish parameter");
             }

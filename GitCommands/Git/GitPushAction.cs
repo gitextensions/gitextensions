@@ -114,7 +114,7 @@ namespace GitCommands
         /// <summary>Creates the push action command part.</summary>
         public override string ToString()
         {
-            if (_localBranch.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(_localBranch))
             {
                 return $":{_remoteBranch}";
             }
