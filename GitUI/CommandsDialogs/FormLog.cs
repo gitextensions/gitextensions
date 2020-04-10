@@ -32,18 +32,12 @@ namespace GitUI.CommandsDialogs
 
         private void ViewSelectedFileDiff()
         {
-            if (DiffFiles.SelectedItem == null)
-            {
-                diffViewer.Clear();
-                return;
-            }
-
             using (WaitCursorScope.Enter())
             {
                 var revisions = RevisionGrid.GetSelectedRevisions();
                 var selectedRev = revisions.FirstOrDefault();
-                var firstId = revisions.Skip(1).LastOrDefault()?.ObjectId;
-                diffViewer.ViewChangesAsync(firstId, selectedRev, DiffFiles.SelectedItem, string.Empty);
+                var firstId = revisions.Skip(1).LastOrDefault()?.ObjectId ?? selectedRev?.FirstParentGuid;
+                diffViewer.ViewChangesAsync(firstId, selectedRev, DiffFiles.SelectedItem);
             }
         }
 

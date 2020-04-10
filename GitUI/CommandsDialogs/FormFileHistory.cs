@@ -379,9 +379,9 @@ namespace GitUI.CommandsDialogs
                 };
                 var revisions = FileChanges.GetSelectedRevisions();
                 var selectedRev = revisions.FirstOrDefault();
-                var firstId = revisions.Skip(1).LastOrDefault()?.ObjectId;
+                var firstId = revisions.Skip(1).LastOrDefault()?.ObjectId ?? selectedRev?.FirstParentGuid;
                 Diff.ViewChangesAsync(firstId, selectedRev, file,
-                    "You need to select at least one revision to view diff.");
+                    defaultText: "You need to select at least one revision to view diff.");
             }
             else if (tabControl1.SelectedTab == CommitInfoTabPage)
             {

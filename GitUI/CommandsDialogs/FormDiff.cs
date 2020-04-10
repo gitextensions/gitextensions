@@ -112,15 +112,7 @@ namespace GitUI.CommandsDialogs
 
         private void ShowSelectedFileDiff()
         {
-            if (DiffFiles.SelectedItem == null)
-            {
-                DiffText.Clear();
-                return;
-            }
-
-            var baseCommit = (ckCompareToMergeBase.Checked ? _mergeBase : _baseRevision) ?? DiffFiles.SelectedItemParent;
-
-            DiffText.ViewChangesAsync(baseCommit?.ObjectId, _headRevision, DiffFiles.SelectedItem, string.Empty);
+            DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.ObjectId, _headRevision, DiffFiles.SelectedItem);
         }
 
         private void btnSwap_Click(object sender, EventArgs e)

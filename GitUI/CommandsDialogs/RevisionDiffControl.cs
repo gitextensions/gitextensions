@@ -325,32 +325,8 @@ namespace GitUI.CommandsDialogs
 
         private async Task ShowSelectedFileDiffAsync()
         {
-            if (DiffFiles.SelectedItem == null || DiffFiles.Revision == null)
-            {
-                DiffText.Clear();
-                return;
-            }
-
-            if (DiffFiles.SelectedItemParent?.ObjectId == ObjectId.CombinedDiffId)
-            {
-                var diffOfConflict = Module.GetCombinedDiffContent(DiffFiles.Revision, DiffFiles.SelectedItem.Name,
-                    DiffText.GetExtraDiffArguments(), DiffText.Encoding);
-
-                if (string.IsNullOrWhiteSpace(diffOfConflict))
-                {
-                    diffOfConflict = Strings.UninterestingDiffOmitted;
-                }
-
-                await DiffText.ViewPatchAsync(DiffFiles.SelectedItem.Name,
-                    text: diffOfConflict,
-                    openWithDifftool: () => firstToSelectedToolStripMenuItem.PerformClick(),
-                    isText: DiffFiles.SelectedItem.IsSubmodule);
-
-                return;
-            }
-
-            await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.ObjectId, DiffFiles.Revision, DiffFiles.SelectedItem, string.Empty,
-                openWithDifftool: () => firstToSelectedToolStripMenuItem.PerformClick());
+            await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.ObjectId, DiffFiles.Revision, DiffFiles.SelectedItem,
+                openWithDiffTool: () => firstToSelectedToolStripMenuItem.PerformClick());
         }
 
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)

@@ -4070,14 +4070,14 @@ namespace GitCommands
         }
 
         [CanBeNull]
-        public string GetCombinedDiffContent(GitRevision revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding)
+        public string GetCombinedDiffContent(ObjectId revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding)
         {
             var args = new GitArgumentBuilder("diff-tree")
             {
                 { AppSettings.OmitUninterestingDiff, "--cc", "-c -p" },
                 "--no-commit-id",
                 extraArgs,
-                revisionOfMergeCommit.Guid,
+                revisionOfMergeCommit,
                 { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
                 "--",
                 filePath.ToPosixPath().Quote()
