@@ -168,7 +168,8 @@ namespace GitUI
 
             // Delay raising the SelectionChanged event for a barely noticeable period to throttle
             // rapid changes, for example by holding the down arrow key in the revision grid.
-            _selectionTimer = new Timer(components) { Interval = 200 };
+            // 75ms is longer than the default keyboard repeat rate of 15 keypresses per second.
+            _selectionTimer = new Timer(components) { Interval = 75 };
             _selectionTimer.Tick += (_, e) =>
             {
                 _selectionTimer.Enabled = false;
