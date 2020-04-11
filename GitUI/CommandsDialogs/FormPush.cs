@@ -216,7 +216,7 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.SelectedIndexChanged += RemotesUpdated;
             _NO_TRANSLATE_Remotes.TextUpdate += RemotesUpdated;
 
-            if (selectedRemoteName.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(selectedRemoteName))
             {
                 selectedRemoteName = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, _currentBranchName));
             }
@@ -727,7 +727,7 @@ namespace GitUI.CommandsDialogs
                         {
                             string defaultRemote = _remotesManager.GetDefaultPushRemote(_selectedRemote,
                                 branch.Name);
-                            if (!defaultRemote.IsNullOrEmpty())
+                            if (!string.IsNullOrEmpty(defaultRemote))
                             {
                                 RemoteBranch.Text = defaultRemote;
                                 return;
@@ -809,7 +809,7 @@ namespace GitUI.CommandsDialogs
 
             // update the text box of the Remote Url combobox to show the URL of selected remote
             string pushUrl = _selectedRemote.PushUrl;
-            if (pushUrl.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(pushUrl))
             {
                 pushUrl = _selectedRemote.Url;
             }

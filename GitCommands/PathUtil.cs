@@ -56,7 +56,7 @@ namespace GitCommands
         [ContractAnnotation("dirPath:notnull=>notnull")]
         public static string EnsureTrailingPathSeparator([CanBeNull] this string dirPath)
         {
-            if (!dirPath.IsNullOrEmpty() &&
+            if (!string.IsNullOrEmpty(dirPath) &&
                 dirPath[dirPath.Length - 1] != NativeDirectorySeparatorChar &&
                 dirPath[dirPath.Length - 1] != PosixDirectorySeparatorChar)
             {

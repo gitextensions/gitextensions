@@ -521,7 +521,7 @@ namespace GitCommands
             };
             var output = _gitExecutable.GetOutput(args);
 
-            if (!output.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(output))
             {
                 return false;
             }
@@ -532,7 +532,7 @@ namespace GitCommands
                 fileName.ToPosixPath().QuoteNE()
             };
             output = _gitExecutable.GetOutput(args);
-            return output.IsNullOrEmpty();
+            return string.IsNullOrEmpty(output);
         }
 
         public bool HandleConflictsSaveSide(string fileName, string saveAsFileName, string side)
@@ -548,7 +548,7 @@ namespace GitCommands
             };
             var output = _gitExecutable.GetOutput(args);
 
-            if (output.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(output))
             {
                 return false;
             }
@@ -1199,7 +1199,7 @@ namespace GitCommands
 
         public bool ExistsMergeCommit(string startRev, string endRev)
         {
-            if (startRev.IsNullOrEmpty() || endRev.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(startRev) || string.IsNullOrEmpty(endRev))
             {
                 return false;
             }
@@ -2366,8 +2366,8 @@ namespace GitCommands
             };
 
             var cache = cacheResult &&
-                        !secondRevision.IsNullOrEmpty() &&
-                        !firstRevision.IsNullOrEmpty() &&
+                        !string.IsNullOrEmpty(secondRevision) &&
+                        !string.IsNullOrEmpty(firstRevision) &&
                         !secondRevision.IsArtificial() &&
                         !firstRevision.IsArtificial()
                 ? GitCommandCache
@@ -3941,7 +3941,7 @@ namespace GitCommands
 
             if (isABug)
             {
-                if (encodingName.IsNullOrEmpty())
+                if (string.IsNullOrEmpty(encodingName))
                 {
                     return Encoding.UTF8;
                 }
@@ -3976,7 +3976,7 @@ namespace GitCommands
         [ContractAnnotation("s:notnull=>notnull")]
         public string ReEncodeShowString(string s)
         {
-            if (s.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(s))
             {
                 return s;
             }

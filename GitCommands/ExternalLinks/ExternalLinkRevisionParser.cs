@@ -123,7 +123,7 @@ namespace GitCommands.ExternalLinks
 
         private static IEnumerable<ExternalLink> ParseRevisionPart(GitRevision revision, ExternalLinkDefinition definition, Match remoteMatch, string part)
         {
-            if (definition.SearchPattern.IsNullOrEmpty() || definition.SearchPatternRegex.Value == null || part == null)
+            if (string.IsNullOrEmpty(definition.SearchPattern) || definition.SearchPatternRegex.Value == null || part == null)
             {
                 yield break;
             }
@@ -136,7 +136,7 @@ namespace GitCommands.ExternalLinks
                 var match = matches[i];
                 if (match.Success)
                 {
-                    if (definition.NestedSearchPattern.IsNullOrEmpty())
+                    if (string.IsNullOrEmpty(definition.NestedSearchPattern))
                     {
                         allMatches.Add(match);
                     }

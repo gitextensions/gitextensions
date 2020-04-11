@@ -117,7 +117,7 @@ namespace GitUI.CommandsDialogs
                 if (string.IsNullOrWhiteSpace(_NO_TRANSLATE_From.Text))
                 {
                     var currentBranchRemote = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, Module.GetSelectedBranch()));
-                    if (currentBranchRemote.IsNullOrEmpty())
+                    if (string.IsNullOrEmpty(currentBranchRemote))
                     {
                         var remotes = Module.GetRemoteNames();
 
@@ -132,7 +132,7 @@ namespace GitUI.CommandsDialogs
                     }
 
                     string pushUrl = Module.GetSetting(string.Format(SettingKeyString.RemotePushUrl, currentBranchRemote));
-                    if (pushUrl.IsNullOrEmpty())
+                    if (string.IsNullOrEmpty(pushUrl))
                     {
                         pushUrl = Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentBranchRemote));
                     }

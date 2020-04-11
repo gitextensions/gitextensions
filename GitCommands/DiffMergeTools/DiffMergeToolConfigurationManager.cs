@@ -43,7 +43,7 @@ namespace GitCommands.DiffMergeTools
                 }
 
                 // Fallback and older Git
-                if (mergetool.IsNullOrEmpty())
+                if (string.IsNullOrEmpty(mergetool))
                 {
                     mergetool = _getFileSettings()?.GetValue(SettingKeyString.MergeToolNoGuiKey);
                 }

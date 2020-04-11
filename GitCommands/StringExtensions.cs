@@ -140,7 +140,7 @@ namespace System
         [NotNull]
         public static string CommonPrefix([CanBeNull] this string s, [CanBeNull] string other)
         {
-            if (s.IsNullOrEmpty() || other.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(s) || string.IsNullOrEmpty(other))
             {
                 return string.Empty;
             }
@@ -161,21 +161,14 @@ namespace System
         }
 
         [Pure]
-        [ContractAnnotation("s:null=>true")]
-        public static bool IsNullOrEmpty([CanBeNull] this string s)
-        {
-            return string.IsNullOrEmpty(s);
-        }
-
-        [Pure]
         [CanBeNull]
         public static string Combine([CanBeNull] this string left, [NotNull] string sep, [CanBeNull] string right)
         {
-            if (left.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(left))
             {
                 return right;
             }
-            else if (right.IsNullOrEmpty())
+            else if (string.IsNullOrEmpty(right))
             {
                 return left;
             }
@@ -207,7 +200,7 @@ namespace System
         [ContractAnnotation("s:null=>null")]
         public static string QuoteNE([CanBeNull] this string s)
         {
-            return s.IsNullOrEmpty() ? s : s.Quote();
+            return string.IsNullOrEmpty(s) ? s : s.Quote();
         }
 
         /// <summary>
@@ -217,7 +210,7 @@ namespace System
         [ContractAnnotation("s:null=>null")]
         public static string AddParenthesesNE([CanBeNull] this string s)
         {
-            return s.IsNullOrEmpty() ? s : "(" + s + ")";
+            return string.IsNullOrEmpty(s) ? s : "(" + s + ")";
         }
 
         /// <summary>
@@ -236,7 +229,7 @@ namespace System
         [ContractAnnotation("value:null=>null")]
         public static string RemoveLines([CanBeNull] this string value, [NotNull] Func<string, bool> shouldRemoveLine)
         {
-            if (value.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(value))
             {
                 return value;
             }
@@ -276,7 +269,7 @@ namespace System
         [NotNull]
         public static string ShortenTo([CanBeNull] this string str, int maxLength)
         {
-            if (str.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(str))
             {
                 return string.Empty;
             }

@@ -53,7 +53,7 @@ namespace Bitbucket
                 var branch = GitCommands.GitRefName.GetFullBranchName(module.GetSelectedBranch());
 
                 _NO_TRANSLATE_lblLinkCreatePull.Text = repoUrl +
-                    ((branch.IsNullOrEmpty() || branch.Equals(DetachedHeadParser.DetachedBranch)) ?
+                    ((string.IsNullOrEmpty(branch) || branch.Equals(DetachedHeadParser.DetachedBranch)) ?
                     _NO_TRANSLATE_LinkCreatePullNoBranch :
                     string.Format(_NO_TRANSLATE_LinkCreatePull, branch));
                 toolTipLink.SetToolTip(_NO_TRANSLATE_lblLinkCreatePull, _linkLabelToolTip.Text);

@@ -293,7 +293,7 @@ namespace GitUI.CommandsDialogs
                 .Append("File History - ")
                 .Append(FileName);
 
-            if (!alternativeFileName.IsNullOrEmpty() && alternativeFileName != FileName)
+            if (!string.IsNullOrEmpty(alternativeFileName) && alternativeFileName != FileName)
             {
                 str.Append(" (").Append(alternativeFileName).Append(')');
             }

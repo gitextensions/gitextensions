@@ -159,7 +159,7 @@ namespace GitUI.CommandsDialogs
                 case AppSettings.PullAction.FetchPruneAll:
                     Fetch.Checked = true;
                     Prune.Checked = true;
-                    if (defaultRemote.IsNullOrEmpty())
+                    if (string.IsNullOrEmpty(defaultRemote))
                     {
                         _NO_TRANSLATE_Remotes.Text = AllRemotes;
                     }
@@ -206,7 +206,7 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.SelectedIndex = -1;
             _NO_TRANSLATE_Remotes.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
 
-            if (selectedRemoteName.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(selectedRemoteName))
             {
                 selectedRemoteName = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, _branch));
             }
@@ -235,7 +235,7 @@ namespace GitUI.CommandsDialogs
             if (pullAction == AppSettings.PullAction.FetchPruneAll)
             {
                 string messageBoxTitle = null;
-                if (remote.IsNullOrEmpty())
+                if (string.IsNullOrEmpty(remote))
                 {
                     messageBoxTitle = string.Format(_pruneFromCaption.Text, AllRemotes);
                 }
@@ -717,9 +717,9 @@ namespace GitUI.CommandsDialogs
 
             if (_branch == localBranch.Text)
             {
-                if (remote == currentBranchRemote.Value || currentBranchRemote.Value.IsNullOrEmpty())
+                if (remote == currentBranchRemote.Value || string.IsNullOrEmpty(currentBranchRemote.Value))
                 {
-                    curLocalBranch = Branches.Text.IsNullOrEmpty() ? null : _branch;
+                    curLocalBranch = string.IsNullOrEmpty(Branches.Text) ? null : _branch;
                 }
                 else
                 {
@@ -731,7 +731,7 @@ namespace GitUI.CommandsDialogs
                 curLocalBranch = localBranch.Text;
             }
 
-            if (Branches.Text.IsNullOrEmpty() && !curLocalBranch.IsNullOrEmpty()
+            if (string.IsNullOrEmpty(Branches.Text) && !string.IsNullOrEmpty(curLocalBranch)
                 && remote != currentBranchRemote.Value && !Fetch.Checked)
             {
                 int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
@@ -750,7 +750,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (Branches.Text.IsNullOrEmpty() && !curLocalBranch.IsNullOrEmpty()
+            if (string.IsNullOrEmpty(Branches.Text) && !string.IsNullOrEmpty(curLocalBranch)
                 && Fetch.Checked)
             {
                 // if local branch eq to current branch and remote branch is not specified
@@ -788,7 +788,7 @@ namespace GitUI.CommandsDialogs
         private string CalculateRemoteBranchName()
         {
             string remoteBranchName = CalculateRemoteBranchNameBasedOnBranchesText();
-            if (remoteBranchName.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(remoteBranchName))
             {
                 return remoteBranchName;
             }
@@ -800,13 +800,13 @@ namespace GitUI.CommandsDialogs
 
         private string CalculateRemoteBranchNameBasedOnBranchesText()
         {
-            if (!Branches.Text.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(Branches.Text))
             {
                 return Branches.Text;
             }
 
             string remoteBranchName = Module.GetSetting(string.Format("branch.{0}.merge", _branch));
-            if (!remoteBranchName.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(remoteBranchName))
             {
                 var args = new GitArgumentBuilder("name-rev")
                 {

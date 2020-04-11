@@ -1213,19 +1213,19 @@ namespace GitUI.CommandsDialogs
         {
             var conflictedFileNames = ThreadHelper.JoinableTaskFactory.Run(() =>
                 Module.GetConflictAsync(fileName));
-            if (conflictedFileNames.Local.Filename.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(conflictedFileNames.Local.Filename))
             {
                 ContextSaveLocalAs.Enabled = false;
                 ContextOpenLocalWith.Enabled = false;
             }
 
-            if (conflictedFileNames.Remote.Filename.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(conflictedFileNames.Remote.Filename))
             {
                 ContextSaveRemoteAs.Enabled = false;
                 ContextOpenRemoteWith.Enabled = false;
             }
 
-            if (conflictedFileNames.Base.Filename.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(conflictedFileNames.Base.Filename))
             {
                 ContextSaveBaseAs.Enabled = false;
                 ContextOpenBaseWith.Enabled = false;

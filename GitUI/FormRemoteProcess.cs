@@ -150,7 +150,7 @@ Do you want to register the host's fingerprint and restart the process?");
 
         public static bool AskForCacheHostkey(IWin32Window owner, GitModule module, string remoteUrl)
         {
-            if (!remoteUrl.IsNullOrEmpty() && MessageBoxes.CacheHostkey(owner))
+            if (!string.IsNullOrEmpty(remoteUrl) && MessageBoxes.CacheHostkey(owner))
             {
                 return new Plink().Connect(remoteUrl);
             }

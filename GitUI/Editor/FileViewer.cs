@@ -1190,7 +1190,7 @@ namespace GitUI.Editor
 
             var text = internalFileViewer.GetText();
 
-            if (!text.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(text))
             {
                 ClipboardUtil.TrySetText(text);
             }

@@ -67,7 +67,7 @@ namespace GitUI.CommandsDialogs
 
         public void SetPathArgument(string path)
         {
-            if (path.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(path))
             {
                 checkBoxPathFilter.Checked = false;
                 textBoxPaths.Text = "";

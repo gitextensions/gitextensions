@@ -116,7 +116,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void folderBrowserButton_Click(object sender, EventArgs e)
         {
             string userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_Directory.Text);
-            if (!userSelectedPath.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(userSelectedPath))
             {
                 _NO_TRANSLATE_Directory.Text = userSelectedPath;
                 Load.PerformClick();

@@ -33,7 +33,7 @@ namespace GitUI.CommandsDialogs
 
         public void SetPathArgument(string path)
         {
-            if (path.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(path))
             {
                 checkBoxPathFilter.Checked = false;
                 textBoxPaths.Text = "";
@@ -93,7 +93,7 @@ namespace GitUI.CommandsDialogs
             // 1. get all lines from text box which are not empty
             // 2. wrap lines with ""
             // 3. join together with space as separator
-            return string.Join(" ", textBoxPaths.Lines.Where(a => !a.IsNullOrEmpty()).Select(a => string.Format("\"{0}\"", a)));
+            return string.Join(" ", textBoxPaths.Lines.Where(a => !string.IsNullOrEmpty(a)).Select(a => string.Format("\"{0}\"", a)));
         }
 
         private void Cancel_Click(object sender, EventArgs e)

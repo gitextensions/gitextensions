@@ -325,7 +325,7 @@ namespace GitUI.BuildServerIntegration
                 try
                 {
                     var canBeLoaded = export.Metadata.CanBeLoaded;
-                    if (!canBeLoaded.IsNullOrEmpty())
+                    if (!string.IsNullOrEmpty(canBeLoaded))
                     {
                         Debug.Write(export.Metadata.BuildServerType + " adapter could not be loaded: " + canBeLoaded);
                         return null;
