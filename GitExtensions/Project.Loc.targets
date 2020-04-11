@@ -84,7 +84,12 @@ Verifying English translations are up-to date
     <Message Text="English translations are up-to date" Importance="High"
            Condition="'$(OutputOfExec)' == ''" />
     <Error Text="Please update English translations and re-submit the pull-request. Refer to https://github.com/gitextensions/gitextensions/wiki/Translations"
-           Condition="'$(OutputOfExec)' != ''" />
+           Condition="$(ContinuousIntegrationBuild) == true and '$(OutputOfExec)' != ''" />
+    <Message Text="
+[!] English translations updated, staged and ready to commit
+"
+           Condition="$(ContinuousIntegrationBuild) != true and '$(OutputOfExec)' != ''"
+           Importance="High" />
   </Target>
 
 </Project>
