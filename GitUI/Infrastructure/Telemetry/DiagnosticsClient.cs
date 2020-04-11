@@ -35,8 +35,8 @@ namespace GitUI.Infrastructure.Telemetry
 
             // override capture of the hostname
             // https://github.com/Microsoft/ApplicationInsights-dotnet/blob/80025b5d79cc52485510d422cfa5a0a8159dac83/src/Microsoft.ApplicationInsights/TelemetryClient.cs#L544
-            _client.Context.Cloud.RoleInstance = "Git Extensions";
-            _client.Context.Cloud.RoleName = "Git Extensions";
+            _client.Context.Cloud.RoleInstance = AppSettings.ApplicationName;
+            _client.Context.Cloud.RoleName = AppSettings.ApplicationName;
         }
 
         public static void TrackEvent(string eventName, IDictionary<string, string> properties = null, IDictionary<string, double> metrics = null)
