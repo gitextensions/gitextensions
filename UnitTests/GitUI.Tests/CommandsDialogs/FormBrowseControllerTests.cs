@@ -15,14 +15,16 @@ namespace GitUITests.CommandsDialogs
         private FormBrowseController _controller;
         private IGitGpgController _gitGpgController;
         private IRepositoryCurrentBranchNameProvider _repositoryCurrentBranchNameProvider;
+        private IInvalidRepositoryRemover _invalidRepositoryRemover;
 
         [SetUp]
         public void Setup()
         {
             _gitGpgController = Substitute.For<IGitGpgController>();
             _repositoryCurrentBranchNameProvider = Substitute.For<IRepositoryCurrentBranchNameProvider>();
+            _invalidRepositoryRemover = Substitute.For<IInvalidRepositoryRemover>();
 
-            _controller = new FormBrowseController(_gitGpgController, _repositoryCurrentBranchNameProvider);
+            _controller = new FormBrowseController(_gitGpgController, _repositoryCurrentBranchNameProvider, _invalidRepositoryRemover);
         }
 
         [Test]
@@ -74,6 +76,23 @@ namespace GitUITests.CommandsDialogs
 
             ToolStripMenuItem item = (ToolStripMenuItem)containerMenu.DropDownItems[0];
             item.ShortcutKeyDisplayString.Should().Be(branch);
+        }
+
+        [Test]
+        public void ChangeWorkingDir_should_promt_user_to_delete_invalid_repo()
+        {
+            var containerMenu = new ToolStripMenuItem();
+
+            const string path = "";
+            const string caption = "CAPTION";
+            var repository = new Repository(path);
+
+            _controller.AddRecentRepositories(containerMenu, repository, caption, (s, e) => { });
+
+            ToolStripMenuItem item = (ToolStripMenuItem)containerMenu.DropDownItems[0];
+            item.PerformClick();
+
+            _invalidRepositoryRemover.Received(1).ShowDeleteInvalidRepositoryDialog(path);
         }
     }
 }
