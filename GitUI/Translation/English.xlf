@@ -2091,22 +2091,6 @@ compare with first:</source>
         <source>Create pull requests...</source>
         <target />
       </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryCaption.Text">
-        <source>Open</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryMainInstruction.Text">
-        <source>The selected item is not a valid git repository.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryRemoveAllCommand.Text">
-        <source>Remove all {0} invalid repositories</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryRemoveSelectedRepoCommand.Text">
-        <source>Remove the selected invalid repository</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_forkCloneRepositoryToolStripMenuItem.Text">
         <source>Fork/Clone repository...</source>
         <target />
@@ -2121,10 +2105,6 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_noBranchTitle.Text">
-        <source>no branch</source>
         <target />
       </trans-unit>
       <trans-unit id="_noReposHostFound.Text">
@@ -9245,6 +9225,10 @@ Select this commit to populate the full message.</source>
         <source>{0} {1:day|days} ago</source>
         <target />
       </trans-unit>
+      <trans-unit id="_directoryIsNotAValidRepository.Text">
+        <source>The selected item is not a valid git repository.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
         <target />
@@ -9313,8 +9297,16 @@ Select this commit to populate the full message.</source>
         <source>No</source>
         <target />
       </trans-unit>
+      <trans-unit id="_noBranch.Text">
+        <source>no branch</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_noResultsFound.Text">
         <source>&lt;No results found&gt;</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_open.Text">
+        <source>Open</source>
         <target />
       </trans-unit>
       <trans-unit id="_openReport.Text">
@@ -9331,6 +9323,14 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_remotesText.Text">
         <source>Remotes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_removeAllInvalidRepositories.Text">
+        <source>Remove all {0} invalid repositories</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_removeSelectedInvalidRepository.Text">
+        <source>Remove the selected invalid repository</source>
         <target />
       </trans-unit>
       <trans-unit id="_searchingFor.Text">

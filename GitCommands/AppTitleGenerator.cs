@@ -62,10 +62,10 @@ namespace GitCommands
 #if DEBUG
             if (ObjectId.TryParse(sha, out var objectId))
             {
-                _extraInfo = $" @{objectId.ToShortString()}";
+                _extraInfo = $" {objectId.ToShortString()}";
                 if (!string.IsNullOrWhiteSpace(buildBranch))
                 {
-                    _extraInfo += $" [{buildBranch}]";
+                    _extraInfo += $" ({buildBranch})";
                 }
             }
             else

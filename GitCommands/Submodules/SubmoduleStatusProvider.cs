@@ -302,7 +302,7 @@ namespace GitCommands.Submodules
         {
             var branch = GitModule.GetSelectedBranchFast(path);
             var text = DetachedHeadParser.IsDetachedHead(branch) ? noBranchText : branch;
-            return $"[{text}]";
+            return $"({text})";
         }
 
         /// <summary>

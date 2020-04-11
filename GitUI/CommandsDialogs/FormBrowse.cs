@@ -43,7 +43,6 @@ namespace GitUI.CommandsDialogs
     {
         #region Translation
 
-        private readonly TranslationString _noBranchTitle = new TranslationString("no branch");
         private readonly TranslationString _noSubmodulesPresent = new TranslationString("No submodules");
         private readonly TranslationString _topProjectModuleFormat = new TranslationString("Top project: {0}");
         private readonly TranslationString _superprojectModuleFormat = new TranslationString("Superproject: {0}");
@@ -57,11 +56,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noReposHostFound = new TranslationString("Could not find any relevant repository hosts for the currently open repository.");
 
         private readonly TranslationString _configureWorkingDirMenu = new TranslationString("Configure this menu");
-
-        private readonly TranslationString _directoryIsNotAValidRepositoryCaption = new TranslationString("Open");
-        private readonly TranslationString _directoryIsNotAValidRepositoryMainInstruction = new TranslationString("The selected item is not a valid git repository.");
-        private readonly TranslationString _directoryIsNotAValidRepositoryRemoveSelectedRepoCommand = new TranslationString("Remove the selected invalid repository");
-        private readonly TranslationString _directoryIsNotAValidRepositoryRemoveAllCommand = new TranslationString("Remove all {0} invalid repositories");
 
         private readonly TranslationString _updateCurrentSubmodule = new TranslationString("Update current submodule");
 
@@ -241,7 +235,7 @@ namespace GitUI.CommandsDialogs
             RefreshDefaultPullAction();
             UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
             UICommands.BrowseRepo = this;
-            _controller = new FormBrowseController(new GitGpgController(() => Module));
+            _controller = new FormBrowseController(new GitGpgController(() => Module), new RepositoryCurrentBranchNameProvider());
             _commitDataManager = new CommitDataManager(() => Module);
 
             _submoduleStatusProvider = SubmoduleStatusProvider.Default;
@@ -671,7 +665,7 @@ namespace GitUI.CommandsDialogs
                 toolPanel.ContentPanel.Controls.Add(_dashboard);
             }
 
-            Text = _appTitleGenerator.Generate();
+            Text = _appTitleGenerator.Generate(branchName: Strings.NoBranch);
 
             _dashboard.RefreshContent();
             _dashboard.Visible = true;
@@ -723,7 +717,9 @@ namespace GitUI.CommandsDialogs
                     {
                         var item = new ToolStripMenuItem
                         {
-                            Text = plugin.Description, Image = plugin.Icon, Tag = plugin
+                            Text = plugin.Description,
+                            Image = plugin.Icon,
+                            Tag = plugin
                         };
                         item.Click += delegate
                         {
@@ -870,7 +866,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 RefreshWorkingDirComboText();
-                var branchName = !string.IsNullOrEmpty(branchSelect.Text) ? branchSelect.Text : _noBranchTitle.Text;
+                var branchName = !string.IsNullOrEmpty(branchSelect.Text) ? branchSelect.Text : Strings.NoBranch;
                 Text = _appTitleGenerator.Generate(Module.WorkingDir, validBrowseDir, branchName);
 
                 OnActivate();
@@ -1593,47 +1589,6 @@ namespace GitUI.CommandsDialogs
             Close();
         }
 
-        private void ChangeWorkingDir(string path)
-        {
-            var module = new GitModule(path);
-            if (module.IsValidGitWorkingDir())
-            {
-                SetGitModule(this, new GitModuleEventArgs(module));
-                return;
-            }
-
-            int invalidPathCount = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadRecentHistoryAsync()).Count(repo => !GitModule.IsValidGitWorkingDir(repo.Path));
-            string commandButtonCaptions = _directoryIsNotAValidRepositoryRemoveSelectedRepoCommand.Text;
-            if (invalidPathCount > 1)
-            {
-                commandButtonCaptions =
-                    string.Format("{0}|{1}", commandButtonCaptions, string.Format(_directoryIsNotAValidRepositoryRemoveAllCommand.Text, invalidPathCount));
-            }
-
-            int dialogResult = PSTaskDialog.cTaskDialog.ShowCommandBox(
-                Title: _directoryIsNotAValidRepositoryCaption.Text,
-                MainInstruction: _directoryIsNotAValidRepositoryMainInstruction.Text,
-                Content: "",
-                CommandButtons: commandButtonCaptions,
-                ShowCancelButton: true);
-
-            if (dialogResult < 0)
-            {
-                /* Cancel */
-                return;
-            }
-            else if (PSTaskDialog.cTaskDialog.CommandButtonResult == 0)
-            {
-                /* Remove selected invalid repo */
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveRecentAsync(path));
-            }
-            else if (PSTaskDialog.cTaskDialog.CommandButtonResult == 1)
-            {
-                /* Remove all invalid repos */
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveInvalidRepositoriesAsync(repoPath => GitModule.IsValidGitWorkingDir(repoPath)));
-            }
-        }
-
         private void tsmiFavouriteRepositories_DropDownOpening(object sender, EventArgs e)
         {
             tsmiFavouriteRepositories.DropDownItems.Clear();
@@ -1744,22 +1699,7 @@ namespace GitUI.CommandsDialogs
 
                 foreach (var r in repos)
                 {
-                    var item = new ToolStripMenuItem(r.Caption ?? "")
-                    {
-                        DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
-                    };
-
-                    menuItemCategory.DropDownItems.Add(item);
-
-                    item.Click += (obj, args) =>
-                    {
-                        OpenRepo(r.Repo.Path);
-                    };
-
-                    if (r.Repo.Path != r.Caption)
-                    {
-                        item.ToolTipText = r.Repo.Path;
-                    }
+                    _controller.AddRecentRepositories(menuItemCategory, r.Repo, r.Caption, SetGitModule);
                 }
             }
         }
@@ -1788,7 +1728,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var repo in mostRecentRepos)
             {
-                AddRecentRepositories(repo.Repo, repo.Caption);
+                _controller.AddRecentRepositories(container, repo.Repo, repo.Caption, SetGitModule);
             }
 
             if (lessRecentRepos.Count > 0)
@@ -1800,67 +1740,9 @@ namespace GitUI.CommandsDialogs
 
                 foreach (var repo in lessRecentRepos)
                 {
-                    AddRecentRepositories(repo.Repo, repo.Caption);
+                    _controller.AddRecentRepositories(container, repo.Repo, repo.Caption, SetGitModule);
                 }
             }
-
-            void AddRecentRepositories(Repository repo, string caption)
-            {
-                string branchDisplay = string.Empty;
-                if (AppSettings.ShowRepoCurrentBranch)
-                {
-                    var branchName = GitModule.GetSelectedBranchFast(repo.Path);
-
-                    if (!string.IsNullOrEmpty(branchName) && branchName != DetachedHeadParser.DetachedBranch)
-                    {
-                        branchDisplay = $"[{branchName}]";
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(repo.Category))
-                {
-                    caption = $"{caption} ({repo.Category})";
-                }
-
-                var item = new ToolStripMenuItem(caption)
-                {
-                    DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
-                    ShortcutKeyDisplayString = branchDisplay
-                };
-
-                container.DropDownItems.Add(item);
-
-                item.Click += (obj, args) =>
-                {
-                    OpenRepo(repo.Path);
-                };
-
-                if (repo.Path != caption)
-                {
-                    item.ToolTipText = repo.Path;
-                }
-            }
-        }
-
-        private void OpenRepo(string repoPath)
-        {
-            if (ModifierKeys != Keys.Control)
-            {
-                ChangeWorkingDir(repoPath);
-                return;
-            }
-
-            var process = new Process
-            {
-                StartInfo =
-                {
-                    FileName = AppSettings.GetGitExtensionsFullPath(),
-                    Arguments = "browse",
-                    WorkingDirectory = repoPath,
-                    UseShellExecute = false
-                }
-            };
-            process.Start();
         }
 
         public void SetWorkingDir(string path)
@@ -2654,7 +2536,7 @@ namespace GitUI.CommandsDialogs
             var updateStatus = AppSettings.ShowSubmoduleStatus && _gitStatusMonitor.Active && (Module.SuperprojectModule != null);
 
             toolStripButtonLevelUp.ToolTipText = "";
-            _submoduleStatusProvider.UpdateSubmodulesStructure(Module.WorkingDir, _noBranchTitle.Text, updateStatus);
+            _submoduleStatusProvider.UpdateSubmodulesStructure(Module.WorkingDir, Strings.NoBranch, updateStatus);
         }
 
         private void SubmoduleStatusProvider_StatusUpdating(object sender, EventArgs e)

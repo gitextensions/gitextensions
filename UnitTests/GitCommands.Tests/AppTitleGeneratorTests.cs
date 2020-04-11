@@ -73,7 +73,7 @@ namespace GitCommandsTests
             AppTitleGenerator.Initialise(buildSha, buildBranch);
             var title = _appTitleGenerator.Generate("a", true, null);
 
-            title.Should().Be($"{ShortName} (no branch) - {AppSettings.ApplicationName} @{buildSha.Substring(0, 8)} [{buildBranch}]");
+            title.Should().Be($"{ShortName} (no branch) - {AppSettings.ApplicationName} {buildSha.Substring(0, 8)} ({buildBranch})");
         }
 #endif
     }
