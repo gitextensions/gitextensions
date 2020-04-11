@@ -29,10 +29,13 @@
     <ArtifactsToolsetDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'toolset'))</ArtifactsToolsetDir>
     <ArtifactsObjDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'obj'))</ArtifactsObjDir>
     <ArtifactsBinDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'bin'))</ArtifactsBinDir>
+    <ArtifactsTestsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'tests'))</ArtifactsTestsDir>
     <ArtifactsLogDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'log', '$(Configuration)'))</ArtifactsLogDir>
     <ArtifactsTmpDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'tmp', '$(Configuration)'))</ArtifactsTmpDir>
     <ArtifactsTestResultsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'TestResults', '$(Configuration)'))</ArtifactsTestResultsDir>
     <ArtifactsPackagesDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'packages', '$(Configuration)'))</ArtifactsPackagesDir>
+    <ArtifactsUnitTestsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsTestsDir)', '$(Configuration)', 'UnitTests'))</ArtifactsUnitTestsDir>
+    <ArtifactsIntegrationTestsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsTestsDir)', '$(Configuration)', 'IntegrationTests'))</ArtifactsIntegrationTestsDir>
 
     <ArtifactsPublishDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'publish'))</ArtifactsPublishDir>
     <AppPublishDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsPublishDir)', '$(Configuration)', 'GitExtensions'))</AppPublishDir>
