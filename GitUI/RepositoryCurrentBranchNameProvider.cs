@@ -8,7 +8,7 @@ namespace GitUI
         string GetCurrentBranchName(string repositoryPath);
     }
 
-    public sealed class RepositoryCurrentBranchNameProvider : IRepositoryCurrentBranchNameProvider
+    internal sealed class RepositoryCurrentBranchNameProvider : IRepositoryCurrentBranchNameProvider
     {
         public string GetCurrentBranchName(string repositoryPath)
         {

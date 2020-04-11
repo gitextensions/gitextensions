@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -24,11 +23,15 @@ namespace GitUI.CommandsDialogs
     {
         private readonly IGitGpgController _gitGpgController;
         private readonly IRepositoryCurrentBranchNameProvider _repositoryCurrentBranchNameProvider;
+        private readonly IInvalidRepositoryRemover _invalidRepositoryRemover;
 
-        public FormBrowseController(IGitGpgController gitGpgController, IRepositoryCurrentBranchNameProvider repositoryCurrentBranchNameProvider)
+        public FormBrowseController(IGitGpgController gitGpgController,
+                                    IRepositoryCurrentBranchNameProvider repositoryCurrentBranchNameProvider,
+                                    IInvalidRepositoryRemover invalidRepositoryRemover)
         {
             _gitGpgController = gitGpgController;
             _repositoryCurrentBranchNameProvider = repositoryCurrentBranchNameProvider;
+            _invalidRepositoryRemover = invalidRepositoryRemover;
         }
 
         public void AddRecentRepositories([NotNull] ToolStripDropDownItem menuItemContainer,
@@ -92,37 +95,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            int invalidPathCount = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadRecentHistoryAsync())
-                                                                   .Count(repo => !GitModule.IsValidGitWorkingDir(repo.Path));
-            string commandButtonCaptions = Strings.RemoveSelectedInvalidRepository;
-            if (invalidPathCount > 1)
-            {
-                commandButtonCaptions =
-                    string.Format("{0}|{1}", commandButtonCaptions, string.Format(Strings.RemoveAllInvalidRepositories, invalidPathCount));
-            }
-
-            int dialogResult = PSTaskDialog.cTaskDialog.ShowCommandBox(
-                Title: Strings.Open,
-                MainInstruction: Strings.DirectoryInvalidRepository,
-                Content: "",
-                CommandButtons: commandButtonCaptions,
-                ShowCancelButton: true);
-
-            if (dialogResult < 0)
-            {
-                /* Cancel */
-                return;
-            }
-            else if (PSTaskDialog.cTaskDialog.CommandButtonResult == 0)
-            {
-                /* Remove selected invalid repo */
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveRecentAsync(path));
-            }
-            else if (PSTaskDialog.cTaskDialog.CommandButtonResult == 1)
-            {
-                /* Remove all invalid repos */
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveInvalidRepositoriesAsync(repoPath => GitModule.IsValidGitWorkingDir(repoPath)));
-            }
+            _invalidRepositoryRemover.ShowDeleteInvalidRepositoryDialog(path);
         }
 
         private void OpenRepo(string repoPath, Action<object, GitModuleEventArgs> setGitModule)
@@ -145,21 +118,5 @@ namespace GitUI.CommandsDialogs
             };
             process.Start();
         }
-    }
-
-    public class GpgInfo
-    {
-        public GpgInfo(CommitStatus commitStatus, string commitVerificationMessage, TagStatus tagStatus, string tagVerificationMessage)
-        {
-            CommitStatus = commitStatus;
-            CommitVerificationMessage = commitVerificationMessage;
-            TagStatus = tagStatus;
-            TagVerificationMessage = tagVerificationMessage;
-        }
-
-        public CommitStatus CommitStatus { get; }
-        public string CommitVerificationMessage { get; }
-        public TagStatus TagStatus { get; }
-        public string TagVerificationMessage { get; }
     }
 }
