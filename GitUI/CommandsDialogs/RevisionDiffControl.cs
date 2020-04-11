@@ -675,7 +675,7 @@ namespace GitUI.CommandsDialogs
 
                 firstDiffCaptionMenuItem.Text = _firstRevision.Text;
                 var parentDesc = DescribeRevision(DiffFiles.SelectedItemParents.ToList());
-                if (parentDesc.IsNotNullOrWhitespace())
+                if (!string.IsNullOrWhiteSpace(parentDesc))
                 {
                     firstDiffCaptionMenuItem.Text += parentDesc;
                 }

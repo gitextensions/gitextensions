@@ -1514,7 +1514,7 @@ namespace GitUI.CommandsDialogs
                         }
                     }
 
-                    if (!AppSettings.CommitValidationRegEx.IsNullOrEmpty())
+                    if (!string.IsNullOrEmpty(AppSettings.CommitValidationRegEx))
                     {
                         try
                         {

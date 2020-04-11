@@ -128,7 +128,7 @@ namespace GitUI.CommitInfo
         private string ToString(IEnumerable<string> formattedRefs, string prefix, string textIfEmpty, string refsType, bool truncated)
         {
             string linksJoined = formattedRefs?.Join(Environment.NewLine);
-            if (linksJoined.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(linksJoined))
             {
                 return WebUtility.HtmlEncode(textIfEmpty);
             }

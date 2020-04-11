@@ -86,7 +86,7 @@ namespace GitCommands.Settings
 
         public void SetValue(string setting, [CanBeNull] string value)
         {
-            if (value.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(value))
             {
                 // to remove setting
                 value = null;

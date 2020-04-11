@@ -109,7 +109,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
                 // For a yet unknown cause randomly, the wait in UITest.RunForm does not suffice.
-                if (!remoteNameLabelStatus.Text.IsNullOrEmpty())
+                if (!string.IsNullOrEmpty(remoteNameLabelStatus.Text))
                 {
                     Console.WriteLine($"{nameof(Should_display_detached_head_info_in_statusbar)} waits again");
                     await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);

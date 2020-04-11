@@ -344,7 +344,7 @@ namespace GitUI.BranchTreePanel
                 }
 
                 _searchResult = null;
-                if (_txtBranchCriterion.Text.IsNullOrWhiteSpace())
+                if (string.IsNullOrWhiteSpace(_txtBranchCriterion.Text))
                 {
                     _txtBranchCriterion.Focus();
                     return;
@@ -353,7 +353,7 @@ namespace GitUI.BranchTreePanel
 
             if (_searchResult == null || !_searchResult.Any())
             {
-                if (_txtBranchCriterion.Text.IsNotNullOrWhitespace())
+                if (!string.IsNullOrWhiteSpace(_txtBranchCriterion.Text))
                 {
                     _searchResult = SearchTree(_txtBranchCriterion.Text, treeMain.Nodes.Cast<TreeNode>());
                 }

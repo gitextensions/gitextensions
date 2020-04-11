@@ -117,7 +117,7 @@ namespace GitCommands.Config
         public override string ToString()
         {
             string result = "[" + SectionName;
-            if (!SubSection.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(SubSection))
             {
                 var escSubSection = SubSection.Replace("\"", "\\\"");
                 escSubSection = escSubSection.Replace("\\", "\\\\");

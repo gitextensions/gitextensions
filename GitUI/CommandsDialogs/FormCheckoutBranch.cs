@@ -164,7 +164,7 @@ namespace GitUI.CommandsDialogs
 
         public DialogResult DoDefaultActionOrShow(IWin32Window owner)
         {
-            bool localBranchSelected = !Branches.Text.IsNullOrWhiteSpace() && !Remotebranch.Checked;
+            bool localBranchSelected = !string.IsNullOrWhiteSpace(Branches.Text) && !Remotebranch.Checked;
             if (!AppSettings.AlwaysShowCheckoutBranchDlg && localBranchSelected &&
                 (!HasUncommittedChanges || AppSettings.UseDefaultCheckoutBranchAction))
             {
@@ -228,7 +228,7 @@ namespace GitUI.CommandsDialogs
                 branchNames = GetContainsRevisionBranches();
             }
 
-            Branches.Items.AddRange(branchNames.Where(name => name.IsNotNullOrWhitespace()).ToArray<object>());
+            Branches.Items.AddRange(branchNames.Where(name => !string.IsNullOrWhiteSpace(name)).ToArray<object>());
 
             if (_containRevisions != null && Branches.Items.Count == 1)
             {
@@ -292,7 +292,7 @@ namespace GitUI.CommandsDialogs
                 {
                     newBranchName = txtCustomBranchName.Text.Trim();
                     newBranchMode = CheckoutNewBranchMode.Create;
-                    if (newBranchName.IsNullOrWhiteSpace())
+                    if (string.IsNullOrWhiteSpace(newBranchName))
                     {
                         MessageBox.Show(_customBranchNameIsEmpty.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         DialogResult = DialogResult.None;
@@ -462,7 +462,7 @@ namespace GitUI.CommandsDialogs
             lbChanges.Text = "";
 
             var branch = Branches.Text;
-            if (branch.IsNullOrWhiteSpace() || !Remotebranch.Checked)
+            if (string.IsNullOrWhiteSpace(branch) || !Remotebranch.Checked)
             {
                 _remoteName = string.Empty;
                 _localBranchName = string.Empty;
@@ -488,7 +488,7 @@ namespace GitUI.CommandsDialogs
             branchName.Text = "'" + _localBranchName + "'";
             txtCustomBranchName.Text = _newLocalBranchName;
 
-            if (branch.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(branch))
             {
                 lbChanges.Text = "";
             }

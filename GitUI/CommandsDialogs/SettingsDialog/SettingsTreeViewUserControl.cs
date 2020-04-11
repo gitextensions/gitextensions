@@ -123,7 +123,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             _nodesFoundByTextBox = new List<TreeNode>();
 
-            if (textBoxFind.Text.IsNullOrEmpty() || textBoxFind.Text == FindPrompt)
+            if (string.IsNullOrEmpty(textBoxFind.Text) || textBoxFind.Text == FindPrompt)
             {
                 ResetAllNodeHighlighting();
                 return;

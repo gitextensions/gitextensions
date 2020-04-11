@@ -521,7 +521,7 @@ namespace GitCommands
             };
             var output = _gitExecutable.GetOutput(args);
 
-            if (!output.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(output))
             {
                 return false;
             }
@@ -532,7 +532,7 @@ namespace GitCommands
                 fileName.ToPosixPath().QuoteNE()
             };
             output = _gitExecutable.GetOutput(args);
-            return output.IsNullOrEmpty();
+            return string.IsNullOrEmpty(output);
         }
 
         public bool HandleConflictsSaveSide(string fileName, string saveAsFileName, string side)
@@ -548,7 +548,7 @@ namespace GitCommands
             };
             var output = _gitExecutable.GetOutput(args);
 
-            if (output.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(output))
             {
                 return false;
             }
@@ -711,7 +711,7 @@ namespace GitCommands
             {
                 "-z",
                 "--unmerged",
-                { filename.IsNotNullOrWhitespace(), "--" },
+                { !string.IsNullOrWhiteSpace(filename), "--" },
                 filename.QuoteNE()
             };
 
@@ -812,7 +812,7 @@ namespace GitCommands
             var args = new GitArgumentBuilder("ls-tree")
             {
                 refName,
-                { filename.IsNotNullOrWhitespace(), "--" },
+                { !string.IsNullOrWhiteSpace(filename), "--" },
                 filename.QuoteNE()
             };
             var output = _gitExecutable.GetOutput(args);
@@ -902,7 +902,7 @@ namespace GitCommands
             var args = new GitArgumentBuilder("mergetool")
             {
                 { GitVersion.Current.SupportGuiMergeTool, "--gui" },
-                { fileName.IsNotNullOrWhitespace(), "--" },
+                { !string.IsNullOrWhiteSpace(fileName), "--" },
                 fileName.ToPosixPath().QuoteNE()
             };
             using (var process = _gitExecutable.Start(args, createWindow: true))
@@ -1199,7 +1199,7 @@ namespace GitCommands
 
         public bool ExistsMergeCommit(string startRev, string endRev)
         {
-            if (startRev.IsNullOrEmpty() || endRev.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(startRev) || string.IsNullOrEmpty(endRev))
             {
                 return false;
             }
@@ -2366,8 +2366,8 @@ namespace GitCommands
             };
 
             var cache = cacheResult &&
-                        !secondRevision.IsNullOrEmpty() &&
-                        !firstRevision.IsNullOrEmpty() &&
+                        !string.IsNullOrEmpty(secondRevision) &&
+                        !string.IsNullOrEmpty(firstRevision) &&
                         !secondRevision.IsArtificial() &&
                         !firstRevision.IsArtificial()
                 ? GitCommandCache
@@ -3152,7 +3152,7 @@ namespace GitCommands
         public IReadOnlyList<string> GetIgnoredFiles(IEnumerable<string> ignorePatterns)
         {
             var notEmptyPatterns = ignorePatterns
-                .Where(pattern => !pattern.IsNullOrWhiteSpace())
+                .Where(pattern => !string.IsNullOrWhiteSpace(pattern))
                 .ToList();
 
             if (notEmptyPatterns.Count != 0)
@@ -3479,7 +3479,7 @@ namespace GitCommands
                 var args = new GitArgumentBuilder("ls-files")
                 {
                     "-s",
-                    { fileName.IsNotNullOrWhitespace(), "--" },
+                    { !string.IsNullOrWhiteSpace(fileName), "--" },
                     fileName.QuoteNE()
                 };
 
@@ -3497,7 +3497,7 @@ namespace GitCommands
                 {
                     "-r",
                     objectId,
-                    { fileName.IsNotNullOrWhitespace(), "--" },
+                    { !string.IsNullOrWhiteSpace(fileName), "--" },
                     fileName.QuoteNE()
                 };
                 var lines = _gitExecutable.GetOutput(args).Split(' ', '\t');
@@ -3713,7 +3713,7 @@ namespace GitCommands
                 throw new ArgumentNullException(nameof(branchName));
             }
 
-            if (branchName.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(branchName))
             {
                 return false;
             }
@@ -3941,7 +3941,7 @@ namespace GitCommands
 
             if (isABug)
             {
-                if (encodingName.IsNullOrEmpty())
+                if (string.IsNullOrEmpty(encodingName))
                 {
                     return Encoding.UTF8;
                 }
@@ -3976,7 +3976,7 @@ namespace GitCommands
         [ContractAnnotation("s:notnull=>notnull")]
         public string ReEncodeShowString(string s)
         {
-            if (s.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(s))
             {
                 return s;
             }

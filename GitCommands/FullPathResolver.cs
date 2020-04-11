@@ -49,7 +49,13 @@ namespace GitCommands
                 return path;
             }
 
-            var basePath = Path.GetFullPath(_getWorkingDir() ?? Environment.CurrentDirectory);
+            var workingDir = _getWorkingDir();
+            if (string.IsNullOrWhiteSpace(workingDir))
+            {
+                workingDir = Environment.CurrentDirectory;
+            }
+
+            var basePath = Path.GetFullPath(workingDir);
             if (!basePath.EndsWith(Path.DirectorySeparatorChar.ToString())
                 && !basePath.EndsWith(Path.AltDirectorySeparatorChar.ToString()))
             {

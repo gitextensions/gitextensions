@@ -387,7 +387,7 @@ namespace GitCommands.Submodules
         /// <returns>the task</returns>
         private async Task GetSubmoduleDetailedStatusAsync(GitModule superModule, string submoduleName, CancellationToken cancelToken)
         {
-            if (superModule == null || submoduleName.IsNullOrWhiteSpace())
+            if (superModule == null || string.IsNullOrWhiteSpace(submoduleName))
             {
                 return;
             }

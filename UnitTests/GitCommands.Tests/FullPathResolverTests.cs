@@ -63,5 +63,14 @@ namespace GitCommandsTests
             var resolver = new FullPathResolver(() => workingDir);
             resolver.Resolve("file.txt").Should().Be(Path.Combine(workingDir, "file.txt").Replace("/", "\\"));
         }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void Resolve_does_not_throw_on_invalid_workingDir(string workingDir)
+        {
+            var resolver = new FullPathResolver(() => workingDir);
+            resolver.Resolve("file.txt").Should().Be(Path.Combine(Environment.CurrentDirectory, "file.txt").Replace("/", "\\"));
+        }
     }
 }

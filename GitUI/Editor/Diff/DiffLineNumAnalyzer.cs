@@ -25,7 +25,7 @@ namespace GitUI.Editor.Diff
             for (int i = 0; i < lines.Length; i++)
             {
                 string line = lines[i];
-                if (i == lines.Length - 1 && line.IsNullOrEmpty())
+                if (i == lines.Length - 1 && string.IsNullOrEmpty(line))
                 {
                     break;
                 }

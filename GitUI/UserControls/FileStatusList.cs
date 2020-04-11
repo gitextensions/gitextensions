@@ -943,7 +943,7 @@ namespace GitUI
 
         private void SetDeleteFilterButtonVisibility()
         {
-            DeleteFilterButton.Visible = FilterVisibleInternal && !FilterComboBox.Text.IsNullOrEmpty();
+            DeleteFilterButton.Visible = FilterVisibleInternal && !string.IsNullOrEmpty(FilterComboBox.Text);
         }
 
         private void SetFilterWatermarkLabelVisibility()

@@ -43,10 +43,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 laneInfoText.AppendLine(node.GitRevision.Guid);
 
                 var branch = new BranchFinder(node);
-                if (branch.CommittedTo.IsNotNullOrWhitespace())
+                if (!string.IsNullOrWhiteSpace(branch.CommittedTo))
                 {
                     laneInfoText.AppendFormat("\n{0}: {1}", Strings.Branch, branch.CommittedTo);
-                    if (branch.MergedWith.IsNotNullOrWhitespace())
+                    if (!string.IsNullOrWhiteSpace(branch.MergedWith))
                     {
                         laneInfoText.AppendFormat(MergedWithText.Text, branch.MergedWith);
                     }

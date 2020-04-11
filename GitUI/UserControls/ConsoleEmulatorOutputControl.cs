@@ -178,7 +178,7 @@ namespace GitUI.UserControls
 
             string[] outputLines = Regex.Split(output, @"(?<=[\n\r])");
             int lineCount = outputLines.Length;
-            if (outputLines[lineCount - 1].IsNullOrEmpty())
+            if (string.IsNullOrEmpty(outputLines[lineCount - 1]))
             {
                 lineCount--;
             }

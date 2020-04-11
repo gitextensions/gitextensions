@@ -231,12 +231,12 @@ namespace GitUI.BuildServerIntegration
         {
             var (repoProject, repoName) = _repoNameExtractor.Get();
 
-            if (repoProject.IsNotNullOrWhitespace())
+            if (!string.IsNullOrWhiteSpace(repoProject))
             {
                 projectNames = projectNames.Replace("{cRepoProject}", repoProject);
             }
 
-            if (repoName.IsNotNullOrWhitespace())
+            if (!string.IsNullOrWhiteSpace(repoName))
             {
                 projectNames = projectNames.Replace("{cRepoShortName}", repoName);
             }
@@ -325,7 +325,7 @@ namespace GitUI.BuildServerIntegration
                 try
                 {
                     var canBeLoaded = export.Metadata.CanBeLoaded;
-                    if (!canBeLoaded.IsNullOrEmpty())
+                    if (!string.IsNullOrEmpty(canBeLoaded))
                     {
                         Debug.Write(export.Metadata.BuildServerType + " adapter could not be loaded: " + canBeLoaded);
                         return null;

@@ -163,14 +163,14 @@ namespace GitCommands.UserRepositoryHistory
             if (shortenPath && repoInfo.DirInfo != null)
             {
                 string s = repoInfo.DirName.Substring(repoInfo.DirInfo.FullName.Length);
-                if (!s.IsNullOrEmpty())
+                if (!string.IsNullOrEmpty(s))
                 {
                     s = s.Trim(Path.DirectorySeparatorChar);
                 }
 
                 // candidate for short name
                 repoInfo.Caption = repoInfo.ShortName;
-                if (!s.IsNullOrEmpty())
+                if (!string.IsNullOrEmpty(s))
                 {
                     repoInfo.Caption += " (" + s + ")";
                 }

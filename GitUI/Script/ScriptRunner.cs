@@ -127,7 +127,7 @@ namespace GitUI.Script
                 }
 
                 command = command.Replace(NavigateToPrefix, string.Empty);
-                if (!command.IsNullOrEmpty())
+                if (!string.IsNullOrEmpty(command))
                 {
                     var revisionRef = new Executable(command, module.WorkingDir).GetOutputLines(argument).FirstOrDefault();
 
