@@ -8418,6 +8418,10 @@ See the changes in the commit form.</source>
         <source>Show superproject tags</source>
         <target />
       </trans-unit>
+      <trans-unit id="ToggleBetweenArtificialAndHeadCommits.Text">
+        <source>Toggle between artificial and HEAD commits</source>
+        <target />
+      </trans-unit>
       <trans-unit id="ToggleHighlightSelectedBranch.Text">
         <source>Highlight selected branch (until refresh)</source>
         <target />

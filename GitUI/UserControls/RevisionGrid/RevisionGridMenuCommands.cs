@@ -6,6 +6,7 @@ using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 
@@ -74,6 +75,14 @@ namespace GitUI.UserControls.RevisionGrid
         {
             return new[]
             {
+                new MenuCommand
+                {
+                    Name = "ToggleBetweenArtificialAndHeadCommits",
+                    Text = "Toggle between artificial and HEAD commits",
+                    Image = Images.WorkingDirChanges,
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.ToggleBetweenArtificialAndHeadCommits),
+                    ExecuteAction = () => _revisionGrid.ToggleBetweenArtificialAndHeadCommits()
+                },
                 new MenuCommand
                 {
                     Name = "GotoCurrentRevision",

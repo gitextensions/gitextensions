@@ -60,6 +60,12 @@ namespace GitUI
         public event EventHandler<EventArgs> ShowFirstParentsToggled;
         public event EventHandler SelectionChanged;
 
+        /// <summary>
+        ///  Occurs whenever a user toggles between the artificial and the HEAD commits
+        ///  via the navigation menu item or the shortcut command.
+        /// </summary>
+        public event EventHandler ToggledBetweenArtificialAndHeadCommits;
+
         public static readonly string HotkeySettingsName = "RevisionGrid";
 
         private readonly TranslationString _droppingFilesBlocked = new TranslationString("For you own protection dropping more than 10 patch files at once is blocked!");
@@ -1988,6 +1994,13 @@ namespace GitUI
             public IReadOnlyList<GitItemStatus> Deleted { get; set; }
             public IReadOnlyList<GitItemStatus> SubmodulesChanged { get; set; }
             public IReadOnlyList<GitItemStatus> SubmodulesDirty { get; set; }
+
+            public bool HasChanges
+                => (Changed?.Count ?? 0) > 0
+                   || (New?.Count ?? 0) > 0
+                   || (Deleted?.Count ?? 0) > 0
+                   || (SubmodulesChanged?.Count ?? 0) > 0
+                   || (SubmodulesDirty?.Count ?? 0) > 0;
         }
 
         [CanBeNull]
@@ -2121,6 +2134,36 @@ namespace GitUI
             ShowFirstParentsToggled?.Invoke(this, EventArgs.Empty);
 
             ForceRefreshRevisions();
+        }
+
+        internal void ToggleBetweenArtificialAndHeadCommits()
+        {
+            GoToRef(GetIdToSelect()?.ToString(), showNoRevisionMsg: false);
+            ToggledBetweenArtificialAndHeadCommits?.Invoke(this, EventArgs.Empty);
+            return;
+
+            ObjectId GetIdToSelect()
+            {
+                // Try the up to 3 next possibilities in the circle: WorkTree -> Index -> Head -> WorkTree.
+                // WorkTree and Index are skipped if and only if we do retrieve the ChangeCount info and HasChanges returns false.
+                ObjectId idToSelect = LatestSelectedRevision?.ObjectId;
+                for (int i = 0; i < 3; ++i)
+                {
+                    idToSelect = GetNextIdToSelect(idToSelect);
+                    if (idToSelect != null
+                        && (!idToSelect.IsArtificial || !AppSettings.ShowGitStatusForArtificialCommits || GetChangeCount(idToSelect).HasChanges))
+                    {
+                        return idToSelect;
+                    }
+                }
+
+                return CurrentCheckout;
+
+                ObjectId GetNextIdToSelect(ObjectId id)
+                    => id == ObjectId.WorkTreeId ? ObjectId.IndexId
+                     : id == ObjectId.IndexId ? CurrentCheckout
+                     : ObjectId.WorkTreeId;
+            }
         }
 
         #region Column visibilities
@@ -2304,6 +2347,11 @@ namespace GitUI
 
         public void GoToRef(string refName, bool showNoRevisionMsg)
         {
+            if (string.IsNullOrEmpty(refName))
+            {
+                return;
+            }
+
             if (DetachedHeadParser.TryParse(refName, out var sha1))
             {
                 refName = sha1;
@@ -2574,13 +2622,8 @@ namespace GitUI
                 case Command.ShowReflogReferences: ToggleShowReflogReferences(); break;
                 case Command.ShowRemoteBranches: ToggleShowRemoteBranches(); break;
                 case Command.ShowFirstParent: ShowFirstParent(); break;
-                case Command.SelectCurrentRevision:
-                    if (CurrentCheckout != null)
-                    {
-                        SetSelectedRevision(new GitRevision(CurrentCheckout));
-                    }
-
-                    break;
+                case Command.ToggleBetweenArtificialAndHeadCommits: ToggleBetweenArtificialAndHeadCommits(); break;
+                case Command.SelectCurrentRevision: SetSelectedRevision(CurrentCheckout); break;
                 case Command.GoToCommit: MenuCommands.GotoCommitExecute(); break;
                 case Command.GoToParent: goToParentToolStripMenuItem_Click(); break;
                 case Command.GoToMergeBaseCommit: goToMergeBaseCommitToolStripMenuItem_Click(null, null); break;
