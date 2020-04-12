@@ -355,10 +355,6 @@ namespace GitUI
             _fixedPathFilter = filter.path;
         }
 
-        #region Quick search
-
-        #endregion
-
         private void InitiateRefAction([CanBeNull] IReadOnlyList<IGitRef> refs, Action<IGitRef> action, FormQuickGitRefSelector.Action actionLabel)
         {
             if (refs == null || refs.Count < 1)
@@ -2200,7 +2196,7 @@ namespace GitUI
             Refresh();
         }
 
-        internal CommandStatus ExecuteCommand(Commands cmd)
+        internal CommandStatus ExecuteCommand(Command cmd)
         {
             return ExecuteCommand((int)cmd);
         }
@@ -2330,21 +2326,21 @@ namespace GitUI
 
         internal void SetShortcutKeys()
         {
-            SetShortcutString(fixupCommitToolStripMenuItem, Commands.CreateFixupCommit);
-            SetShortcutString(selectAsBaseToolStripMenuItem, Commands.SelectAsBaseToCompare);
-            SetShortcutString(openCommitsWithDiffToolMenuItem, Commands.OpenCommitsWithDifftool);
-            SetShortcutString(compareToBaseToolStripMenuItem, Commands.CompareToBase);
-            SetShortcutString(compareToWorkingDirectoryMenuItem, Commands.CompareToWorkingDirectory);
-            SetShortcutString(compareSelectedCommitsMenuItem, Commands.CompareSelectedCommits);
+            SetShortcutString(fixupCommitToolStripMenuItem, Command.CreateFixupCommit);
+            SetShortcutString(selectAsBaseToolStripMenuItem, Command.SelectAsBaseToCompare);
+            SetShortcutString(openCommitsWithDiffToolMenuItem, Command.OpenCommitsWithDifftool);
+            SetShortcutString(compareToBaseToolStripMenuItem, Command.CompareToBase);
+            SetShortcutString(compareToWorkingDirectoryMenuItem, Command.CompareToWorkingDirectory);
+            SetShortcutString(compareSelectedCommitsMenuItem, Command.CompareSelectedCommits);
         }
 
-        private void SetShortcutString(ToolStripMenuItem item, Commands command)
+        private void SetShortcutString(ToolStripMenuItem item, Command command)
         {
             item.ShortcutKeyDisplayString = GetShortcutKeys(command)
                 .ToShortcutKeyDisplayString();
         }
 
-        internal Keys GetShortcutKeys(Commands cmd)
+        internal Keys GetShortcutKeys(Command cmd)
         {
             return GetShortcutKeys((int)cmd);
         }
@@ -2562,45 +2558,46 @@ namespace GitUI
 
         protected override CommandStatus ExecuteCommand(int cmd)
         {
-            switch ((Commands)cmd)
+            switch ((Command)cmd)
             {
-                case Commands.ToggleRevisionGraph: ToggleRevisionGraphColumn(); break;
-                case Commands.RevisionFilter: ShowRevisionFilterDialog(); break;
-                case Commands.ToggleAuthorDateCommitDate: ToggleShowAuthorDate(); break;
-                case Commands.ToggleShowRelativeDate: ToggleShowRelativeDate(null); break;
-                case Commands.ToggleDrawNonRelativesGray: ToggleDrawNonRelativesGray(); break;
-                case Commands.ToggleShowGitNotes: ToggleShowGitNotes(); break;
-                case Commands.ToggleShowMergeCommits: ToggleShowMergeCommits(); break;
-                case Commands.ToggleShowTags: ToggleShowTags(); break;
-                case Commands.ShowAllBranches: ShowAllBranches(); break;
-                case Commands.ShowCurrentBranchOnly: ShowCurrentBranchOnly(); break;
-                case Commands.ShowFilteredBranches: ShowFilteredBranches(); break;
-                case Commands.ShowRemoteBranches: ToggleShowRemoteBranches(); break;
-                case Commands.ShowFirstParent: ShowFirstParent(); break;
-                case Commands.SelectCurrentRevision:
+                case Command.ToggleRevisionGraph: ToggleRevisionGraphColumn(); break;
+                case Command.RevisionFilter: ShowRevisionFilterDialog(); break;
+                case Command.ToggleAuthorDateCommitDate: ToggleShowAuthorDate(); break;
+                case Command.ToggleShowRelativeDate: ToggleShowRelativeDate(null); break;
+                case Command.ToggleDrawNonRelativesGray: ToggleDrawNonRelativesGray(); break;
+                case Command.ToggleShowGitNotes: ToggleShowGitNotes(); break;
+                case Command.ToggleShowMergeCommits: ToggleShowMergeCommits(); break;
+                case Command.ToggleShowTags: ToggleShowTags(); break;
+                case Command.ShowAllBranches: ShowAllBranches(); break;
+                case Command.ShowCurrentBranchOnly: ShowCurrentBranchOnly(); break;
+                case Command.ShowFilteredBranches: ShowFilteredBranches(); break;
+                case Command.ShowReflogReferences: ToggleShowReflogReferences(); break;
+                case Command.ShowRemoteBranches: ToggleShowRemoteBranches(); break;
+                case Command.ShowFirstParent: ShowFirstParent(); break;
+                case Command.SelectCurrentRevision:
                     if (CurrentCheckout != null)
                     {
                         SetSelectedRevision(new GitRevision(CurrentCheckout));
                     }
 
                     break;
-                case Commands.GoToCommit: MenuCommands.GotoCommitExecute(); break;
-                case Commands.GoToParent: goToParentToolStripMenuItem_Click(); break;
-                case Commands.GoToMergeBaseCommit: goToMergeBaseCommitToolStripMenuItem_Click(null, null); break;
-                case Commands.GoToChild: goToChildToolStripMenuItem_Click(); break;
-                case Commands.ToggleHighlightSelectedBranch: ToggleHighlightSelectedBranch(); break;
-                case Commands.NextQuickSearch: _quickSearchProvider.NextResult(down: true); break;
-                case Commands.PrevQuickSearch: _quickSearchProvider.NextResult(down: false); break;
-                case Commands.NavigateBackward: NavigateBackward(); break;
-                case Commands.NavigateForward: NavigateForward(); break;
-                case Commands.SelectAsBaseToCompare: selectAsBaseToolStripMenuItem_Click(null, null); break;
-                case Commands.CompareToBase: compareToBaseToolStripMenuItem_Click(null, null); break;
-                case Commands.CreateFixupCommit: FixupCommitToolStripMenuItemClick(null, null); break;
-                case Commands.OpenCommitsWithDifftool: DiffSelectedCommitsWithDifftool(); break;
-                case Commands.CompareToWorkingDirectory: compareToWorkingDirectoryMenuItem_Click(null, null); break;
-                case Commands.CompareToCurrentBranch: CompareWithCurrentBranchToolStripMenuItem_Click(null, null); break;
-                case Commands.CompareToBranch: CompareToBranchToolStripMenuItem_Click(null, null); break;
-                case Commands.CompareSelectedCommits: compareSelectedCommitsMenuItem_Click(null, null); break;
+                case Command.GoToCommit: MenuCommands.GotoCommitExecute(); break;
+                case Command.GoToParent: goToParentToolStripMenuItem_Click(); break;
+                case Command.GoToMergeBaseCommit: goToMergeBaseCommitToolStripMenuItem_Click(null, null); break;
+                case Command.GoToChild: goToChildToolStripMenuItem_Click(); break;
+                case Command.ToggleHighlightSelectedBranch: ToggleHighlightSelectedBranch(); break;
+                case Command.NextQuickSearch: _quickSearchProvider.NextResult(down: true); break;
+                case Command.PrevQuickSearch: _quickSearchProvider.NextResult(down: false); break;
+                case Command.NavigateBackward: NavigateBackward(); break;
+                case Command.NavigateForward: NavigateForward(); break;
+                case Command.SelectAsBaseToCompare: selectAsBaseToolStripMenuItem_Click(null, null); break;
+                case Command.CompareToBase: compareToBaseToolStripMenuItem_Click(null, null); break;
+                case Command.CreateFixupCommit: FixupCommitToolStripMenuItemClick(null, null); break;
+                case Command.OpenCommitsWithDifftool: DiffSelectedCommitsWithDifftool(); break;
+                case Command.CompareToWorkingDirectory: compareToWorkingDirectoryMenuItem_Click(null, null); break;
+                case Command.CompareToCurrentBranch: CompareWithCurrentBranchToolStripMenuItem_Click(null, null); break;
+                case Command.CompareToBranch: CompareToBranchToolStripMenuItem_Click(null, null); break;
+                case Command.CompareSelectedCommits: compareSelectedCommitsMenuItem_Click(null, null); break;
                 default:
                     {
                         var result = base.ExecuteCommand(cmd);
