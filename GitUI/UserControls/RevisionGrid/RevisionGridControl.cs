@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -55,7 +54,7 @@ namespace GitUI
     }
 
     [DefaultEvent("DoubleClick")]
-    public sealed partial class RevisionGridControl : GitModuleControl
+    public sealed partial class RevisionGridControl : GitModuleControl, IScriptHostControl
     {
         public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
         public event EventHandler<EventArgs> ShowFirstParentsToggled;
@@ -1711,7 +1710,20 @@ namespace GitUI
 
             SetEnabled(openPullRequestPageStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl));
 
-            RefreshOwnScripts();
+            mainContextMenu.AppendUserScripts(runScriptToolStripMenuItem,
+                (s, _) =>
+                {
+                    if (_settingsLoaded == false)
+                    {
+                        new FormSettings(UICommands).LoadSettings();
+                        _settingsLoaded = true;
+                    }
+
+                    if (ScriptRunner.RunScript(this, Module, sender.ToString(), UICommands, this).NeedsGridRefresh)
+                    {
+                        RefreshRevisions();
+                    }
+                });
 
             UpdateSeparators();
 
@@ -2083,87 +2095,6 @@ namespace GitUI
         }
 
         #endregion
-
-        private void RefreshOwnScripts()
-        {
-            RemoveOwnScripts();
-            AddOwnScripts();
-            return;
-
-            void RemoveOwnScripts()
-            {
-                runScriptToolStripMenuItem.DropDown.Items.Clear();
-
-                var list = mainContextMenu.Items.Cast<ToolStripItem>().ToList();
-
-                foreach (var item in list)
-                {
-                    if (item.Name.Contains("_ownScript"))
-                    {
-                        mainContextMenu.Items.RemoveByKey(item.Name);
-                    }
-                }
-
-                if (mainContextMenu.Items[mainContextMenu.Items.Count - 1] is ToolStripSeparator)
-                {
-                    mainContextMenu.Items.RemoveAt(mainContextMenu.Items.Count - 1);
-                }
-            }
-
-            void AddOwnScripts()
-            {
-                var scripts = ScriptManager.GetScripts();
-
-                var lastIndex = mainContextMenu.Items.Count;
-
-                foreach (var script in scripts)
-                {
-                    if (script.Enabled)
-                    {
-                        var item = new ToolStripMenuItem
-                        {
-                            Text = script.Name,
-                            Name = script.Name + "_ownScript",
-                            Image = script.GetIcon()
-                        };
-                        item.Click += RunScript;
-
-                        if (script.AddToRevisionGridContextMenu)
-                        {
-                            mainContextMenu.Items.Add(item);
-                        }
-                        else
-                        {
-                            runScriptToolStripMenuItem.DropDown.Items.Add(item);
-                        }
-                    }
-                }
-
-                if (lastIndex != mainContextMenu.Items.Count)
-                {
-                    mainContextMenu.Items.Insert(lastIndex, new ToolStripSeparator());
-                }
-
-                bool showScriptsMenu = runScriptToolStripMenuItem.DropDown.Items.Count > 0;
-                runScriptToolStripMenuItem.Visible = showScriptsMenu;
-
-                return;
-
-                void RunScript(object sender, EventArgs e)
-                {
-                    if (_settingsLoaded == false)
-                    {
-                        new FormSettings(UICommands).LoadSettings();
-                        _settingsLoaded = true;
-                    }
-
-                    if (ScriptRunner.RunScript(this, Module, sender.ToString(), UICommands, this).NeedsGridRefresh)
-                    {
-                        RefreshRevisions();
-                    }
-                }
-            }
-        }
 
         internal void ToggleShowGitNotes()
         {
@@ -2575,88 +2506,6 @@ namespace GitUI
             RefreshRevisions();
         }
 
-        #region Nested type: RevisionGridInMemFilter
-
-        private sealed class RevisionGridInMemFilter
-        {
-            private readonly string _authorFilter;
-            private readonly Regex _authorFilterRegex;
-            private readonly string _committerFilter;
-            private readonly Regex _committerFilterRegex;
-            private readonly string _messageFilter;
-            private readonly Regex _messageFilterRegex;
-            private readonly string _shaFilter;
-            private readonly Regex _shaFilterRegex;
-
-            private RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
-            {
-                (_authorFilter, _authorFilterRegex) = SetUpVars(authorFilter, ignoreCase);
-                (_committerFilter, _committerFilterRegex) = SetUpVars(committerFilter, ignoreCase);
-                (_messageFilter, _messageFilterRegex) = SetUpVars(messageFilter, ignoreCase);
-
-                if (!string.IsNullOrEmpty(_messageFilter) && ObjectId.IsValidPartial(_messageFilter, minLength: 5))
-                {
-                    (_shaFilter, _shaFilterRegex) = SetUpVars(messageFilter, false);
-                }
-
-                (string filterStr, Regex filterRegex) SetUpVars(string filterValue, bool ignoreKase)
-                {
-                    var filterStr = filterValue?.Trim() ?? string.Empty;
-
-                    try
-                    {
-                        var options = ignoreKase ? RegexOptions.IgnoreCase : RegexOptions.None;
-                        return (filterStr, new Regex(filterStr, options));
-                    }
-                    catch (ArgumentException)
-                    {
-                        return (filterStr, null);
-                    }
-                }
-            }
-
-            public bool Predicate(GitRevision rev)
-            {
-                return CheckCondition(_authorFilter, _authorFilterRegex, rev.Author) &&
-                       CheckCondition(_committerFilter, _committerFilterRegex, rev.Committer) &&
-                       (CheckCondition(_messageFilter, _messageFilterRegex, rev.Body) ||
-                        (_shaFilter != null && CheckCondition(_shaFilter, _shaFilterRegex, rev.Guid)));
-
-                bool CheckCondition(string filter, Regex regex, string value)
-                {
-                    return string.IsNullOrEmpty(filter) ||
-                           (regex != null && value != null && regex.IsMatch(value));
-                }
-            }
-
-            [CanBeNull]
-            public static RevisionGridInMemFilter CreateIfNeeded([CanBeNull] string authorFilter,
-                [CanBeNull] string committerFilter,
-                [CanBeNull] string messageFilter,
-                bool ignoreCase)
-            {
-                if (string.IsNullOrEmpty(authorFilter) &&
-                    string.IsNullOrEmpty(committerFilter) &&
-                    string.IsNullOrEmpty(messageFilter) &&
-                    !ObjectId.IsValidPartial(messageFilter, minLength: 5))
-                {
-                    return null;
-                }
-
-                return new RevisionGridInMemFilter(
-                    authorFilter,
-                    committerFilter,
-                    messageFilter,
-                    ignoreCase);
-            }
-        }
-
-        #endregion
-
-        #region Nested type: SuperProjectInfo
-
-        #endregion
-
         #region Drag/drop patch files on revision grid
 
         private void OnGridViewDragDrop(object sender, DragEventArgs e)
@@ -2705,46 +2554,10 @@ namespace GitUI
                 }
             }
         }
+
         #endregion
 
         #region Hotkey commands
-
-        internal enum Commands
-        {
-            ToggleRevisionGraph = 0,
-            RevisionFilter = 1,
-            ToggleAuthorDateCommitDate = 2,
-            ToggleOrderRevisionsByDate = 3,
-            ToggleShowRelativeDate = 4,
-            ToggleDrawNonRelativesGray = 5,
-            ToggleShowGitNotes = 6,
-            //// <snip>
-            ToggleShowMergeCommits = 8,
-            ShowAllBranches = 9,
-            ShowCurrentBranchOnly = 10,
-            ShowFilteredBranches = 11,
-            ShowRemoteBranches = 12,
-            ShowFirstParent = 13,
-            GoToParent = 14,
-            GoToChild = 15,
-            ToggleHighlightSelectedBranch = 16,
-            NextQuickSearch = 17,
-            PrevQuickSearch = 18,
-            SelectCurrentRevision = 19,
-            GoToCommit = 20,
-            NavigateBackward = 21,
-            NavigateForward = 22,
-            SelectAsBaseToCompare = 23,
-            CompareToBase = 24,
-            CreateFixupCommit = 25,
-            ToggleShowTags = 26,
-            CompareToWorkingDirectory = 27,
-            CompareToCurrentBranch = 28,
-            CompareToBranch = 29,
-            CompareSelectedCommits = 30,
-            GoToMergeBaseCommit = 31,
-            OpenCommitsWithDifftool = 32
-        }
 
         protected override CommandStatus ExecuteCommand(int cmd)
         {
@@ -2801,6 +2614,21 @@ namespace GitUI
 
             return true;
         }
+        #endregion
+
+        #region IScriptHostControl
+
+        GitRevision IScriptHostControl.GetCurrentRevision()
+            => GetCurrentRevision();
+
+        GitRevision IScriptHostControl.GetLatestSelectedRevision()
+            => LatestSelectedRevision;
+
+        IReadOnlyList<GitRevision> IScriptHostControl.GetSelectedRevisions()
+            => GetSelectedRevisions();
+
+        Point IScriptHostControl.GetQuickItemSelectorLocation()
+            => GetQuickItemSelectorLocation();
 
         #endregion
     }
