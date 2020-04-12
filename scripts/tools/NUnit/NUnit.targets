@@ -22,6 +22,7 @@
 
     <PropertyGroup>
       <_UseOpenCover>true</_UseOpenCover>
+      <_UseCodeCov>true</_UseCodeCov>
       <_NUnitConsoleExe>nunit3-console.exe</_NUnitConsoleExe>
       <_NUnitRunnerCommand Condition="$(ContinuousIntegrationBuild) != true">$(PkgNUnit_ConsoleRunner)\tools\$(_NUnitConsoleExe)</_NUnitRunnerCommand>
       <_NUnitRunnerCommand Condition="$(ContinuousIntegrationBuild) == true">$(_NUnitConsoleExe)</_NUnitRunnerCommand>
@@ -47,6 +48,13 @@
       <_TestRunnerCommand>"$(_OpenCoverCommand)" $(_OpenCoverCommandArgs) -target:"$(_NUnitRunnerCommand)" -targetargs:"$(_TestTargetArgs)"</_TestRunnerCommand>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(_UseCodeCov)' == 'true'">
+      <_CodeCovExe>codecov.exe</_CodeCovExe>
+      <_CodeCovCommand>$(PkgCodecov)\tools\$(_CodeCovExe)</_CodeCovCommand>
+      <_CodeCovTestCommand>"$(_CodeCovCommand)" -f "$(_TestResultsOpenCoverPath)" --flag tests</_CodeCovTestCommand>
+      <_CodeCovProdCommand>"$(_CodeCovCommand)" -f "$(_TestResultsOpenCoverPath)" --flag production</_CodeCovProdCommand>
+    </PropertyGroup>
+
     <MakeDir Directories="$(ArtifactsTestResultsDir)"/>
     <Delete Files="$(_TestOutPathNoExt).*" />
 
@@ -58,6 +66,19 @@
           WorkingDirectory="$(OutDir)"
           IgnoreExitCode="true">
       <Output TaskParameter="ExitCode" PropertyName="_TestErrorCode" />
+    </Exec>
+
+    <Exec Command='$(_CodeCovTestCommand)'
+          LogStandardErrorAsError="false"
+          WorkingDirectory="$(OutDir)"
+          IgnoreExitCode="true"
+          Condition="$(ContinuousIntegrationBuild) == true">
+    </Exec>
+    <Exec Command='$(_CodeCovProdCommand)'
+          LogStandardErrorAsError="false"
+          WorkingDirectory="$(OutDir)"
+          IgnoreExitCode="true"
+          Condition="$(ContinuousIntegrationBuild) == true">
     </Exec>
 
     <!--
