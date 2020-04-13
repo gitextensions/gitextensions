@@ -13,6 +13,7 @@ namespace GitUI.Script
 {
     public static class ScriptManager
     {
+        internal const int MinimumUserScriptID = 9000;
         private static readonly XmlSerializer _serializer = new XmlSerializer(typeof(BindingList<ScriptInfo>));
         private static BindingList<ScriptInfo> _scripts;
 
