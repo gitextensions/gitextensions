@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -102,7 +103,7 @@ namespace GitUITests.UserControls
             {
                 AppSettings.BlameShowAuthorTime = true;
 
-                var (gutter, content) = _blameControl.GetTestAccessor().BuildBlameContents("fileName.txt");
+                var (gutter, content, _) = _blameControl.GetTestAccessor().BuildBlameContents("fileName.txt");
 
                 content.Should().Be($"line1{Environment.NewLine}line2{Environment.NewLine}line3{Environment.NewLine}line4{Environment.NewLine}");
                 var gutterLines = gutter.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
@@ -131,7 +132,7 @@ namespace GitUITests.UserControls
                 AppSettings.BlameShowAuthorTime = false;
 
                 // When
-                var (gutter, content) = _blameControl.GetTestAccessor().BuildBlameContents("fileName.txt");
+                var (gutter, content, _) = _blameControl.GetTestAccessor().BuildBlameContents("fileName.txt");
 
                 // Then
                 content.Should().Be($"line1{Environment.NewLine}line2{Environment.NewLine}line3{Environment.NewLine}line4{Environment.NewLine}");
@@ -148,6 +149,107 @@ namespace GitUITests.UserControls
             {
                 AppSettings.BlameShowAuthorTime = originalValue;
             }
+        }
+
+        private IEnumerable<GitBlameLine> CreateBlameLine(params DateTime[] lineDates)
+        {
+            for (var index = 0; index < lineDates.Length; index++)
+            {
+                DateTime lineDate = lineDates[index];
+                yield return new GitBlameLine(
+                    new GitBlameCommit(null, "Author1", "@Author1", lineDate, string.Empty,
+                        "Commiter", "@Committer", lineDate, string.Empty, "Summary1", "file"),
+                    index + 1, index + 1, "text");
+            }
+        }
+
+        [Test]
+        public void CalculateBlameGutterData_When_date_is_older_than_artificial_old_boundary_Then_it_defines_first_age_bucket_and_so_falls_into_it()
+        {
+            // Given
+            var sut = _blameControl.GetTestAccessor();
+            IReadOnlyList<GitBlameLine> blameLines = CreateBlameLine(sut.ArtificialOldBoundary.AddDays(-1)).ToList();
+
+            // When
+            var blameEntries = sut.CalculateBlameGutterData(blameLines);
+
+            // Then
+            blameEntries.Should().HaveCount(1);
+            blameEntries[0].AgeBucketIndex.Should().Be(0);
+        }
+
+        [Test]
+        public void CalculateBlameGutterData_When_date_is_newer_than_artificial_old_boundary_Then_it_falls_in_a_later_age_bucket()
+        {
+            // Given
+            IReadOnlyList<GitBlameLine> blameLines = CreateBlameLine(DateTime.Now.AddMonths(-18)).ToList();
+
+            // When
+            var blameEntries = _blameControl.GetTestAccessor().CalculateBlameGutterData(blameLines);
+
+            // Then
+            blameEntries.Should().HaveCount(1);
+            blameEntries[0].AgeBucketIndex.Should().Be(3);
+        }
+
+        [Test]
+        public void CalculateBlameGutterData_When_date_is_DateMin_Then_it_falls_in_a_first_age_bucket()
+        {
+            // Given
+            IReadOnlyList<GitBlameLine> blameLines = CreateBlameLine(DateTime.Now.AddMonths(-18), DateTime.MinValue).ToList();
+
+            // When
+            var blameEntries = _blameControl.GetTestAccessor().CalculateBlameGutterData(blameLines);
+
+            // Then
+            blameEntries.Should().HaveCount(2);
+            blameEntries[1].AgeBucketIndex.Should().Be(0);
+        }
+
+        [Test]
+        public void CalculateBlameGutterData_When_all_dates_are_DateMin_Then_they_falls_in_a_first_age_bucket()
+        {
+            // Given
+            IReadOnlyList<GitBlameLine> blameLines = CreateBlameLine(DateTime.MinValue, DateTime.MinValue).ToList();
+
+            // When
+            var blameEntries = _blameControl.GetTestAccessor().CalculateBlameGutterData(blameLines);
+
+            // Then
+            blameEntries.Should().HaveCount(2);
+            blameEntries[0].AgeBucketIndex.Should().Be(0);
+            blameEntries[1].AgeBucketIndex.Should().Be(0);
+        }
+
+        [Test]
+        public void CalculateBlameGutterData_When_dates_just_after_age_bucket_limit_Then_One_date_in_each_age_bucket()
+        {
+            // Given
+            var now = DateTime.Now;
+            var marginError = TimeSpan.FromMinutes(10); // Due to the DateTime.Now value which is slightly different
+            IReadOnlyList<GitBlameLine> blameLines = CreateBlameLine(
+                now.AddDays(-7 * 365), // Because there are 7 age buckets (corresponding to the different colors)
+                now.AddDays(-6 * 365).Add(marginError),
+                now.AddDays(-5 * 365).Add(marginError),
+                now.AddDays(-4 * 365).Add(marginError),
+                now.AddDays(-3 * 365).Add(marginError),
+                now.AddDays(-2 * 365).Add(marginError),
+                now.AddDays(-1 * 365).Add(marginError),
+                now.Add(-marginError)).ToList();
+
+            // When
+            var blameEntries = _blameControl.GetTestAccessor().CalculateBlameGutterData(blameLines);
+
+            // Then
+            blameEntries.Should().HaveCount(8);
+            blameEntries[0].AgeBucketIndex.Should().Be(0);
+            blameEntries[1].AgeBucketIndex.Should().Be(1);
+            blameEntries[2].AgeBucketIndex.Should().Be(2);
+            blameEntries[3].AgeBucketIndex.Should().Be(3);
+            blameEntries[4].AgeBucketIndex.Should().Be(4);
+            blameEntries[5].AgeBucketIndex.Should().Be(5);
+            blameEntries[6].AgeBucketIndex.Should().Be(6);
+            blameEntries[7].AgeBucketIndex.Should().Be(6);
         }
     }
 }

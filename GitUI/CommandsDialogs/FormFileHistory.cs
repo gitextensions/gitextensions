@@ -135,6 +135,7 @@ namespace GitUI.CommandsDialogs
                 detectMoveAndCopyInAllFilesToolStripMenuItem.Checked = AppSettings.DetectCopyInAllOnBlame;
                 detectMoveAndCopyInThisFileToolStripMenuItem.Checked = AppSettings.DetectCopyInFileOnBlame;
                 displayAuthorFirstToolStripMenuItem.Checked = AppSettings.BlameDisplayAuthorFirst;
+                showAuthorAvatarToolStripMenuItem.Checked = AppSettings.BlameShowAuthorAvatar;
                 showAuthorToolStripMenuItem.Checked = AppSettings.BlameShowAuthor;
                 showAuthorDateToolStripMenuItem.Checked = AppSettings.BlameShowAuthorDate;
                 showAuthorTimeToolStripMenuItem.Checked = AppSettings.BlameShowAuthorTime;
@@ -702,6 +703,13 @@ namespace GitUI.CommandsDialogs
         {
             AppSettings.BlameShowOriginalFilePath = !AppSettings.BlameShowOriginalFilePath;
             showOriginalFilePathToolStripMenuItem.Checked = AppSettings.BlameShowOriginalFilePath;
+            UpdateSelectedFileViewers(true);
+        }
+
+        private void showAuthorAvatarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.BlameShowAuthorAvatar = !AppSettings.BlameShowAuthorAvatar;
+            showAuthorAvatarToolStripMenuItem.Checked = AppSettings.BlameShowAuthorAvatar;
             UpdateSelectedFileViewers(true);
         }
     }

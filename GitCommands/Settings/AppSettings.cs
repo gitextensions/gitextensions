@@ -1690,6 +1690,12 @@ namespace GitCommands
             set => SetBool("Blame.ShowOriginalFilePath", value);
         }
 
+        public static bool BlameShowAuthorAvatar
+        {
+            get => GetBool("Blame.ShowAuthorAvatar", true);
+            set => SetBool("Blame.ShowAuthorAvatar", value);
+        }
+
         public static bool AutomaticContinuousScroll
         {
             get => GetBool("DiffViewer.AutomaticContinuousScroll", false);
