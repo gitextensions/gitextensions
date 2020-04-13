@@ -14,7 +14,7 @@ namespace GitUI.CommandsDialogs
         /// <param name="contextMenu">The context menu to add user scripts too.</param>
         /// <param name="hostMenuItem">The menu item to which to add user scripts marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.</param>
         /// <param name="scriptInvoker">The handler that handles user script invocation.</param>
-        public static void AppendUserScripts(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem, EventHandler scriptInvoker)
+        public static void AppendUserScripts(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem, Action<string> scriptInvoker)
         {
             contextMenu = contextMenu ?? throw new ArgumentNullException(nameof(contextMenu));
             hostMenuItem = hostMenuItem ?? throw new ArgumentNullException(nameof(hostMenuItem));
@@ -62,7 +62,12 @@ namespace GitUI.CommandsDialogs
                         Name = script.Name + "_ownScript",
                         Image = script.GetIcon()
                     };
-                    item.Click += scriptInvoker;
+
+                    item.Click += (s, e) =>
+                    {
+                        string scriptKey = script.Name;
+                        scriptInvoker(scriptKey);
+                    };
 
                     if (script.AddToRevisionGridContextMenu)
                     {
