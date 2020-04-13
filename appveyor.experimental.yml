@@ -99,7 +99,7 @@ artifacts:
 # on build failure
 on_failure:
 - ps: |
-    Get-ChildItem -recurse artifacts\bin\tests\TestResult.xml -ErrorAction SilentlyContinue `
+    Get-ChildItem -recurse artifacts\tests\TestResult.xml -ErrorAction SilentlyContinue `
     | ForEach-Object {
         $resultFilePath = "$_"
         Get-Content $resultFilePath `
