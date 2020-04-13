@@ -30,8 +30,9 @@ namespace GitUI
     {
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
         private readonly TranslationString _diffWithParent = new TranslationString("Diff with a/");
-        private readonly TranslationString _diffWithBase = new TranslationString("Diff with BASE a/");
-        public readonly TranslationString CombinedDiff = new TranslationString("Combined Diff");
+        private readonly TranslationString _diffBaseToB = new TranslationString("Unique diff BASE with b/");
+        private readonly TranslationString _diffCommonBase = new TranslationString("Common diff with BASE a/");
+        private readonly TranslationString _combinedDiff = new TranslationString("Combined diff");
         private readonly IGitRevisionTester _revisionTester;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly SortDiffListContextMenuItem _sortByContextMenu;
@@ -41,7 +42,8 @@ namespace GitUI
         private bool _mouseEntered;
         private ToolStripItem _openSubmoduleMenuItem;
         private Rectangle _dragBoxFromMouseDown;
-        private IReadOnlyList<(GitRevision revision, IReadOnlyList<GitItemStatus> statuses)> _itemsWithParent = Array.Empty<(GitRevision, IReadOnlyList<GitItemStatus>)>();
+        private IReadOnlyList<(GitRevision revision, IReadOnlyList<GitItemStatus> statuses)> _itemsWithParent
+            = Array.Empty<(GitRevision, IReadOnlyList<GitItemStatus>)>();
         private IReadOnlyList<(GitRevision revision, string description, IReadOnlyList<GitItemStatus> statuses)> _itemsWithDescription = Array.Empty<(GitRevision, string, IReadOnlyList<GitItemStatus>)>();
         [CanBeNull] private IDisposable _selectedIndexChangeSubscription;
         [CanBeNull] private IDisposable _diffListSortSubscription;
@@ -195,8 +197,7 @@ namespace GitUI
         // Properties
 
         [Browsable(false)]
-        public IEnumerable<GitItemStatus> AllItems =>
-            FileStatusListView.ItemTags<GitItemStatus>();
+        public IEnumerable<GitItemStatus> AllItems => FileStatusListView.ItemTags<GitItemStatus>();
 
         public int AllItemsCount => FileStatusListView.Items.Count;
 
@@ -265,8 +266,7 @@ namespace GitUI
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public IReadOnlyList<GitItemStatus> GitItemFilteredStatuses =>
-            AllItems.AsReadOnlyList();
+        public IReadOnlyList<GitItemStatus> GitItemFilteredStatuses => AllItems.AsReadOnlyList();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -364,16 +364,14 @@ namespace GitUI
                     {
                         var gitItemStatus = item.Tag<GitItemStatus>();
 
-                        if (status.CompareTo(gitItemStatus) == 0)
+                        if (gitItemStatus == status)
                         {
-                            if (newSelected == null)
-                            {
-                                newSelected = item;
-                            }
-                            else if (gitItemStatus == status)
-                            {
-                                return item;
-                            }
+                            return item;
+                        }
+
+                        if (status.CompareName(gitItemStatus) == 0 && newSelected == null)
+                        {
+                            newSelected = item;
                         }
                     }
 
@@ -658,92 +656,116 @@ namespace GitUI
 
         public void SetDiffs(IReadOnlyList<GitRevision> revisions, Func<ObjectId, GitRevision> getRevision = null)
         {
-            Revision = revisions.FirstOrDefault();
-
-            var tuples = new List<(GitRevision revision, string summary, IReadOnlyList<GitItemStatus> statuses)>();
-            ObjectId baseRevGuid = null;
-
-            if (Revision != null)
+            var tuples = new List<(GitRevision parentRev, string summary, IReadOnlyList<GitItemStatus> statuses)>();
+            var selectedRev = revisions.FirstOrDefault();
+            Revision = selectedRev;
+            if (selectedRev == null)
             {
-                GitRevision[] parentRevs;
-                if (revisions.Count == 1)
-                {
-                    // Get the parents for the selected revision
-                    parentRevs = Revision.ParentIds?.Select(item => new GitRevision(item)).ToArray();
-                }
-                else
-                {
-                    // With more than 4, only first -> selected is interesting
-                    // Limited selections: Show multi selection if more than two selected
-                    var i = revisions.Count <= 4 ? revisions.Count : 2;
-                    parentRevs = revisions.Skip(1).Take(i - 1).ToArray();
+                GitItemStatusesWithDescription = tuples;
+                return;
+            }
 
-                    if (AppSettings.ShowDiffForAllParents && revisions.Count == 2)
+            if (revisions.Count == 1)
+            {
+                // Get the parents for the selected revision
+                tuples.AddRange(selectedRev.ParentIds?.Select(parentId =>
+                    ((GitRevision, string, IReadOnlyList<GitItemStatus>))(new GitRevision(parentId), "", null)));
+
+                // Show combined (merge conflicts) when a single merge commit is selected
+                var isMergeCommit = tuples.Count > 1;
+                if (AppSettings.ShowDiffForAllParents && isMergeCommit)
+                {
+                    var conflicts = Module.GetCombinedDiffFileList(selectedRev.Guid);
+                    if (conflicts.Count != 0)
                     {
-                        // Get base commit, add as parent if unique
-                        Lazy<ObjectId> head = getRevision != null
-                            ? new Lazy<ObjectId>(() => getRevision(ObjectId.IndexId).FirstParentGuid)
-                            : new Lazy<ObjectId>(() => Module.RevParse("HEAD"));
-                        var revA = parentRevs[0].ObjectId;
-                        var revB = Revision.ObjectId;
-                        baseRevGuid = Module.GetMergeBase(GetRevisionOrHead(revA, head),
-                            GetRevisionOrHead(revB, head));
-                        if (baseRevGuid != null
-                            && baseRevGuid != revA
-                            && baseRevGuid != revB)
-                        {
-                            Array.Resize(ref parentRevs, 2);
-                            parentRevs[1] = new GitRevision(baseRevGuid);
-                        }
+                        // Create an artificial commit
+                        var desc = _combinedDiff.Text;
+                        tuples.Add((new GitRevision(ObjectId.CombinedDiffId), desc, conflicts));
                     }
                 }
+            }
+            else
+            {
+                // With more than 4, only first -> selected is interesting
+                // Limited selections: Show multi selection if more than two selected
+                var multipleParents = revisions.Count <= 4 ? revisions.Count - 1 : 1;
+                tuples.AddRange(revisions
+                    .Skip(1)
+                    .Take(multipleParents)
+                    .Select(parentRev =>
+                        (parentRev, "", Module.GetDiffFilesWithSubmodulesStatus(parentRev.ObjectId, selectedRev.ObjectId, selectedRev.FirstParentGuid))));
 
-                if (parentRevs == null || parentRevs.Length == 0)
+                if (AppSettings.ShowDiffForAllParents && revisions.Count == 2)
                 {
-                    // No parent, will set null as parent
-                    tuples.Add((null, string.Empty, Module.GetTreeFiles(Revision.TreeGuid, full: true)));
+                    var firstRev = revisions.Last();
+                    var allAToB = tuples[0].statuses;
+
+                    // Get base commit, add as parent if unique
+                    Lazy<ObjectId> head = getRevision != null
+                        ? new Lazy<ObjectId>(() => getRevision(ObjectId.IndexId).FirstParentGuid)
+                        : new Lazy<ObjectId>(() => Module.RevParse("HEAD"));
+                    var baseRevGuid = Module.GetMergeBase(GetRevisionOrHead(firstRev, head),
+                        GetRevisionOrHead(selectedRev, head));
+
+                    // Add if separate branches (note that artificial commits both have HEAD as BASE)
+                    if (baseRevGuid != null
+                        && baseRevGuid != GetRevisionOrHead(firstRev, head)
+                        && baseRevGuid != GetRevisionOrHead(selectedRev, head))
+                    {
+                        // Present common files in BASE->B, BASE->A separately
+                        // For the following diff:  A->B a,c,d; BASE->B a,b,c; BASE->A a,b,d
+                        // (the file a has unique changes, b has the same change and c,d is changed in one of the branches)
+                        // The following groups will be shown: A->B a,c,d; BASE->B a,c; BASE->A a,d; Common BASE b
+                        var allBaseToB = Module.GetDiffFilesWithSubmodulesStatus(baseRevGuid, selectedRev.ObjectId, selectedRev.FirstParentGuid);
+                        var allBaseToA = Module.GetDiffFilesWithSubmodulesStatus(baseRevGuid, firstRev.ObjectId, firstRev.FirstParentGuid);
+
+                        var comparer = new GitItemStatusNameEqualityComparer();
+                        var commonBaseToAandB = allBaseToB.Intersect(allBaseToA, comparer).Except(allAToB, comparer).ToList();
+                        var uniqueBaseToB = allBaseToB.Except(commonBaseToAandB, comparer).ToList();
+
+                        var revBase = new GitRevision(baseRevGuid);
+                        tuples.Add((revBase, _diffBaseToB.Text + GetDescriptionForRevision(selectedRev.ObjectId), uniqueBaseToB));
+                        tuples.Add((revBase, _diffCommonBase.Text + GetDescriptionForRevision(baseRevGuid), commonBaseToAandB));
+                    }
                 }
-                else
+            }
+
+            if (tuples.Count == 0)
+            {
+                // No parent, will set null as parent
+                tuples.Add((null, string.Empty, Module.GetTreeFiles(selectedRev.TreeGuid, full: true)));
+                GitItemStatusesWithDescription = tuples;
+                return;
+            }
+
+            if (!AppSettings.ShowDiffForAllParents)
+            {
+                tuples.Capacity = 1;
+            }
+
+            // Set summaries and file statuses, if not calculated
+            for (int i = 0; i < tuples.Count; i++)
+            {
+                var par = tuples[i];
+                if (string.IsNullOrWhiteSpace(par.summary))
                 {
-                    if (!AppSettings.ShowDiffForAllParents)
-                    {
-                        parentRevs = new[] { parentRevs[0] };
-                    }
-
-                    foreach (var rev in parentRevs)
-                    {
-                        var desc = (rev.ObjectId != baseRevGuid ? _diffWithParent.Text : _diffWithBase.Text)
-                                   + GetDescriptionForRevision(rev.ObjectId);
-                        var status = Module.GetDiffFilesWithSubmodulesStatus(rev.ObjectId, Revision.ObjectId, Revision.FirstParentGuid);
-                        tuples.Add((rev, desc, status));
-                    }
-
-                    // Show combined (merge conflicts) only when all first (A) are parents to selected (B)
-                    // (a single merge commit is selected with parents explicit or implicit selected)
-                    var isMergeCommit = AppSettings.ShowDiffForAllParents &&
-                                        Revision.ParentIds != null && Revision.ParentIds.Count > 1 &&
-                                        _revisionTester.AllFirstAreParentsToSelected(parentRevs.Select(item => item.ObjectId), Revision);
-                    if (isMergeCommit)
-                    {
-                        var conflicts = Module.GetCombinedDiffFileList(Revision.Guid);
-                        if (conflicts.Count != 0)
-                        {
-                            // Create an artificial commit
-                            var desc = CombinedDiff.Text;
-                            tuples.Add((new GitRevision(ObjectId.CombinedDiffId), desc, conflicts));
-                        }
-                    }
+                    par.summary = _diffWithParent.Text + GetDescriptionForRevision(par.parentRev.ObjectId);
                 }
+
+                if (par.statuses == null)
+                {
+                    par.statuses = Module.GetDiffFilesWithSubmodulesStatus(par.parentRev.ObjectId, selectedRev.ObjectId, selectedRev.FirstParentGuid);
+                }
+
+                tuples[i] = par;
             }
 
             GitItemStatusesWithDescription = tuples;
 
             return;
 
-            ObjectId GetRevisionOrHead(ObjectId rev, Lazy<ObjectId> head)
-            {
-                return rev.IsArtificial ? head.Value : rev;
-            }
+            static ObjectId GetRevisionOrHead(GitRevision rev, Lazy<ObjectId> head)
+                => rev.IsArtificial ? head.Value : rev.ObjectId;
         }
 
         /// <summary>
@@ -1675,7 +1697,7 @@ namespace GitUI
 
         private void SortByFilePath()
         {
-            FileStatusListView.ListViewItemSorter = new GitStatusListSorter(Comparer<GitItemStatus>.Default);
+            FileStatusListView.ListViewItemSorter = new GitStatusListSorter(new GitItemStatusNameComparer());
             FileStatusListView.Sort();
         }
 
@@ -1715,17 +1737,15 @@ namespace GitUI
 
         private class GitStatusListSorter : Comparer<ListViewItem>
         {
-            public IComparer<GitItemStatus> StatusComparer { get; }
+            private IComparer<GitItemStatus> StatusComparer { get; }
 
-            public GitStatusListSorter(IComparer<GitItemStatus> gitStatusItemSorter = null)
+            public GitStatusListSorter(IComparer<GitItemStatus> gitStatusItemSorter)
             {
-                StatusComparer = gitStatusItemSorter ?? Comparer<GitItemStatus>.Default;
+                StatusComparer = gitStatusItemSorter;
             }
 
             public override int Compare(ListViewItem x, ListViewItem y)
-            {
-                return StatusComparer.Compare(x.Tag as GitItemStatus, y.Tag as GitItemStatus);
-            }
+                => StatusComparer.Compare(x.Tag as GitItemStatus, y.Tag as GitItemStatus);
         }
 
         private class ImageIndexListSorter : Comparer<ListViewItem>
@@ -1733,7 +1753,7 @@ namespace GitUI
             /// <summary>
             /// Secondary sort should be by file path.
             /// </summary>
-            private static readonly GitStatusListSorter ThenBy = new GitStatusListSorter(Comparer<GitItemStatus>.Default);
+            private static readonly GitStatusListSorter ThenBy = new GitStatusListSorter(new GitItemStatusNameComparer());
 
             public override int Compare(ListViewItem x, ListViewItem y)
             {
