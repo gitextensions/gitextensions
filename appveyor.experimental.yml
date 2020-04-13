@@ -24,11 +24,11 @@ environment:
   # How many times to execute tests
   TEST_RUN_COUNT: 1
   # Execute unit tests
-  RUN_UNIT_TESTS: TRUE
+  RUN_UNIT_TESTS: 1
   # Execute integation tests
-  RUN_INTEGRATION_TESTS: TRUE
+  RUN_INTEGRATION_TESTS: 1
   # Fail the build if any of the tests fail
-  FAIL_IF_TEST_FAIL: TRUE
+  FAIL_BUILD_IF_TESTS_FAIL: 1
 
 init:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -66,19 +66,53 @@ build_script:
 # to run your custom scripts instead of automatic tests
 test_script:
 - ps: |
-    $testRunCount = $env:TEST_RUN_COUNT
+    $failBuildIfTestsFail = $env:FAIL_BUILD_IF_TESTS_FAIL
+    $runUnitTests         = $env:RUN_UNIT_TESTS
+    $runIntegrationTests  = $env:RUN_INTEGRATION_TESTS
+    $testRunCount         = $env:TEST_RUN_COUNT
+
+    Write-Host "FAIL_BUILD_IF_TESTS_FAIL:        ${failBuildIfTestsFail}"
+    Write-Host "RUN_UNIT_TESTS:                  ${runUnitTests}"
+    Write-Host "RUN_INTEGRATION_TESTS:           ${runIntegrationTests}"
+    Write-Host "TEST_RUN_COUNT:                  ${testRunCount}"
+    Write-Host "GE_TEST_SLEEP_SECONDS_ON_HANG:   ${env:GE_TEST_SLEEP_SECONDS_ON_HANG}"
+    Write-Host "GE_TEST_LAUNCH_DEBUGGER_ON_HANG: ${env:GE_TEST_LAUNCH_DEBUGGER_ON_HANG}"
+
+    $testErrorsTotal = 0
     for ($testRun = 1; $testRun -le $testRunCount; $testRun++)
     {
-      if ($env:RUN_UNIT_TESTS) {
-        & .\cibuild.cmd -test
-        if ($LastExitCode -ne 0  -and $env:FAIL_IF_TEST_FAIL) { $host.SetShouldExit($LastExitCode);  }
-      }
+        $failedBefore = if ($testRun -ne 1) { ", ${testErrorsTotal} test(s) failed before" }
+        Write-Host ""
+        Write-Host "[INFO]: Test Run ${testRun}/${testRunCount}${failedBefore}"
 
-      if ($env:RUN_INTEGRATION_TESTS) {
-        & .\cibuild.cmd -integrationTest
-        if ($LastExitCode -ne 0  -and $env:FAIL_IF_TEST_FAIL) { $host.SetShouldExit($LastExitCode);  }
-      }
+        if ($runUnitTests        -ne 0) { & .\cibuild.cmd -test }
+        if ($runIntegrationTests -ne 0) { & .\cibuild.cmd -integrationTest }
+
+        Get-ChildItem -recurse artifacts\tests\TestResult.xml -ErrorAction SilentlyContinue `
+        | ForEach-Object {
+            $resultFilePath = "$_"
+            Get-Content $resultFilePath `
+            | Select-String -Pattern '<test-run id="[^"]*"\s+testcasecount="(\d+)"\s+result="([^"]*)"\s+total="(\d+)"\s+passed="(\d+)"\s+failed="(\d+)".*' `
+            | foreach {
+                $result = $_.Matches.Groups
+                #$result[0].Value
+                $total  = $result[1].Value
+                $passed = $result[4].Value
+                $failed = $result[5].Value
+                $notPassed = $total - $passed
+                $testErrors = $failed
+                $testProjectName = $resultFilePath.Split('\\')[-3]
+                $artifactName = "TestResult#${testRun}.${testErrors}err.${testProjectName}"
+                Push-AppveyorArtifact $resultFilePath -FileName "${artifactName}.xml"
+                if ($notPassed -ne 0) {
+                    $logFile = Get-ChildItem -recurse artifacts\$testProjectName*.log
+                    if ($testErrors -ne 0) { Push-AppveyorArtifact $logFile -FileName "${artifactName}.log" }
+                }
+                $testErrorsTotal += $testErrors
+            }
+        }
     }
+    if ($testErrorsTotal -ne 0  -and  $failBuildIfTestsFail -ne 0) { $host.SetShouldExit($testErrorsTotal) }
 
 
 # scripts to run after tests
@@ -95,30 +129,3 @@ artifacts:
 
 #on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-
-# on build failure
-on_failure:
-- ps: |
-    Get-ChildItem -recurse artifacts\tests\TestResult.xml -ErrorAction SilentlyContinue `
-    | ForEach-Object {
-        $resultFilePath = "$_"
-        Get-Content $resultFilePath `
-        | Select-String -Pattern '<test-run id="[^"]*"\s+testcasecount="(\d+)"\s+result="([^"]*)"\s+total="(\d+)"\s+passed="(\d+)"\s+failed="(\d+)".*' `
-        | foreach {
-            $result = $_.Matches.Groups
-
-            $total  = $result[1].Value
-            $passed = $result[4].Value
-            $failed = $result[5].Value
-            $notPassed = $total - $passed
-            $testErrors = $failed
-            $testProjectName = $resultFilePath.Split('\\')[-3]
-
-            if ($testErrors -ne 0) {
-              $artifactName = "${testProjectName}.err${testErrors}"
-              $logFile = Get-ChildItem -recurse artifacts\$testProjectName*.log
-              Push-AppveyorArtifact $logFile -FileName "${artifactName}.log"
-              Push-AppveyorArtifact $resultFilePath -FileName "${artifactName}.xml"
-            }
-        }
-    }
