@@ -16,7 +16,8 @@
       Direct plugins artifacts to be placed under GitExtensions/Plugins folder
     -->
   <PropertyGroup Condition=" '$(MSBuildProjectName)' != 'GitUIPluginInterfaces'">
-    <_AssemblyRename>$(ContinuousIntegrationBuild) != true and !$(MSBuildProjectName.StartsWith('GitExtensions.'))</_AssemblyRename>
+    <_AssemblyRename>false</_AssemblyRename>
+    <_AssemblyRename Condition="$(ContinuousIntegrationBuild) != true and !$(MSBuildProjectName.StartsWith('GitExtensions.'))">true</_AssemblyRename>
 
     <AssemblyName Condition="$(_AssemblyRename) == true">GitExtensions.$(MSBuildProjectName)</AssemblyName>
     <BaseOutputPath>$([MSBuild]::NormalizeDirectory('$(GitExtensionsOutputPath)', '$(TargetFramework)', 'Plugins', '$(OutDirName)'))</BaseOutputPath>
