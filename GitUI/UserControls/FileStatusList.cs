@@ -1091,7 +1091,7 @@ namespace GitUI
 
             static string GetItemImageKey(GitItemStatus gitItemStatus)
             {
-                if (!gitItemStatus.IsNew && !gitItemStatus.IsTracked)
+                if (!gitItemStatus.IsNew && !gitItemStatus.IsDeleted && !gitItemStatus.IsTracked)
                 {
                     // Illegal combinations, no flags set?
                     return nameof(Images.FileStatusUnknown);
