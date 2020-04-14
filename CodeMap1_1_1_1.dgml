@@ -1,0 +1,327 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph DataVirtualized="True" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="396e91c0-f947-425c-a918-4730606dca6b1" Category="Comment" Bounds="-156.09239228531,-359.360748623908,73.44,25.96" Label="REGISTRO">
+      <Category Ref="Category1" />
+    </Node>
+    <Node Id="CuadroDeTrasmicion" Category="CodeMap_Project" Bounds="81.2742743813562,-359.362361168593,131.58,25.96" Label="cuadro de trasmicion">
+      <Category Ref="Category10" />
+      <Category Ref="Category2" />
+      <Category Ref="Category3" />
+      <Category Ref="Category7" />
+    </Node>
+    <Node Id="MIPERFIL" Category="Comment" Bounds="-46.6523922853105,-358.381384303511,91.9266666666667,44" Group="Expanded" Label="MI PERFIL" UseManualLocation="True" />
+    <Node Id="Perfil" Category="CodeMap_Project" Bounds="-52.6523922853105,-384.381484303511,103.926666666667,76.0002" ErrorMessage="El nodo &quot;perfil&quot; tiene un valor de central de 150." Group="Expanded" Hub="150" Label="perfil" LayoutSettings="List" UseManualLocation="True">
+      <Category Ref="Category7" />
+    </Node>
+    <Node Id="afa6b3a0-9b39-4bd8-b3cc-3f7edc29f62b" Bounds="-176.09239228531,-424.381584303511,408.946666666667,136.0004" Group="Expanded" IsHubContainer="True" Label="Nuevo grupo" LayoutSettings="LeftToRight" UseManualLocation="True" />
+  </Nodes>
+  <Links>
+    <Link Source="396e91c0-f947-425c-a918-4730606dca6b1" Target="MIPERFIL" Bounds="-82.6523922853105,-343.286997820552,27.031774095219,2.27749381326879" />
+    <Link Source="396e91c0-f947-425c-a918-4730606dca6b1" Target="Perfil" Bounds="-117.540046691895,-375.624969482422,41.9727249145508,16.2708129882813" />
+    <Link Source="396e91c0-f947-425c-a918-4730606dca6b1" Target="Perfil" Index="1" Bounds="-117.540046691895,-333.392883300781,41.9727249145508,16.2708129882813" />
+    <Link Source="MIPERFIL" Target="396e91c0-f947-425c-a918-4730606dca6b1" Bounds="-73.6841663805295,-342.531402610922,27.031774095219,2.27749381326873" />
+    <Link Source="MIPERFIL" Target="CuadroDeTrasmicion" Bounds="45.2742743813562,-341.321442678255,27.0205462992788,1.82893916722219" />
+    <Link Source="MIPERFIL" Target="Perfil" Bounds="-0.689051508903503,-323.881256103516,12.3222702741623,33.5000915527344" />
+    <Link Source="Perfil" Target="CuadroDeTrasmicion" Bounds="51.2742762421709,-346.382095462113,21.0000000005833,0.000239099007671939" />
+    <Link Source="Perfil" Target="MIPERFIL" Category="Contains" />
+    <Link Source="afa6b3a0-9b39-4bd8-b3cc-3f7edc29f62b" Target="396e91c0-f947-425c-a918-4730606dca6b1" Category="Contains" />
+    <Link Source="afa6b3a0-9b39-4bd8-b3cc-3f7edc29f62b" Target="CuadroDeTrasmicion" Category="Contains" />
+    <Link Source="afa6b3a0-9b39-4bd8-b3cc-3f7edc29f62b" Target="MIPERFIL" Bounds="-0.6890589594841,-305.381378173828,4.49999994039536,21.5001831054688" />
+    <Link Source="afa6b3a0-9b39-4bd8-b3cc-3f7edc29f62b" Target="Perfil" Index="2" Bounds="-0.6890589594841,-299.381286621094,4.49999994039536,15.5000915527344" />
+    <Link Source="afa6b3a0-9b39-4bd8-b3cc-3f7edc29f62b" Target="Perfil" Category="Contains" />
+    <Link Source="afa6b3a0-9b39-4bd8-b3cc-3f7edc29f62b" Target="Perfil" Index="1" Bounds="-0.6890589594841,-299.381286621094,4.49999994039536,15.5000915527344" />
+  </Links>
+  <Categories>
+    <Category Id="Category1" Label="Categoría 1" Background="#FFE51400" IsTag="True" />
+    <Category Id="Category10" Label="Categoría 10" Background="#FF672878" IsTag="True" />
+    <Category Id="Category2" Label="Categoría 2" Background="#FF339933" IsTag="True" />
+    <Category Id="Category3" Label="Categoría 3" Background="#FF3EBCED" IsTag="True" />
+    <Category Id="Category7" Label="Categoría 7" Background="#FF347A30" IsTag="True" />
+    <Category Id="CodeMap_Project" Label="Proyecto de no ensamblado" CanBeDataDriven="True" IsProviderRoot="False" NavigationActionLabel="Proyectos de no ensamblado" />
+    <Category Id="Comment" Label="Comentario" Description="Representa un comentario definido por el usuario en el diagrama" CanBeDataDriven="True" IsProviderRoot="False" NavigationActionLabel="Comentarios" />
+    <Category Id="Contains" Label="Contiene" Description="Indica si el origen del vínculo contiene el objeto de destino." CanBeDataDriven="False" CanLinkedNodesBeDataDriven="True" IncomingActionLabel="Contenido por" IsContainment="True" OutgoingActionLabel="Contiene" />
+  </Categories>
+  <Properties>
+    <Property Id="Background" Label="Fondo" Description="Color de fondo" DataType="System.Windows.Media.Brush" />
+    <Property Id="Bounds" DataType="System.Windows.Rect" />
+    <Property Id="CanBeDataDriven" Label="CanBeDataDriven" Description="CanBeDataDriven" DataType="System.Boolean" />
+    <Property Id="CanLinkedNodesBeDataDriven" Label="CanLinkedNodesBeDataDriven" Description="CanLinkedNodesBeDataDriven" DataType="System.Boolean" />
+    <Property Id="DataVirtualized" Label="Datos virtualizados" Description="Si es true, el gráfico puede contener nodos y vínculos que representan datos de los nodos o vínculos virtualizados (es decir, no creados realmente en el gráfico)." DataType="System.Boolean" />
+    <Property Id="ErrorMessage" Label="Error" Description="Error" DataType="System.String" />
+    <Property Id="Expression" DataType="System.String" />
+    <Property Id="Group" Label="Grupo" Description="Muestra el nodo como grupo" DataType="Microsoft.VisualStudio.GraphModel.GraphGroupStyle" />
+    <Property Id="GroupLabel" DataType="System.String" />
+    <Property Id="Hub" Label="Central" Description="El nodo está entre el primer 10% de nodos fuertemente conectados" DataType="System.Int32" />
+    <Property Id="IncomingActionLabel" Label="IncomingActionLabel" Description="IncomingActionLabel" DataType="System.String" />
+    <Property Id="IsContainment" DataType="System.Boolean" />
+    <Property Id="IsEnabled" DataType="System.Boolean" />
+    <Property Id="IsHubContainer" Label="Contenedor de central" Description="Este grupo contiene un nodo marcado con la propiedad IsHub." DataType="System.Boolean" />
+    <Property Id="IsProviderRoot" Label="IsProviderRoot" Description="IsProviderRoot" DataType="System.Boolean" />
+    <Property Id="IsTag" DataType="System.Boolean" />
+    <Property Id="Label" Label="Etiqueta" Description="Etiqueta Displayable de un objeto Annotatable." DataType="System.String" />
+    <Property Id="LayoutSettings" DataType="Microsoft.VisualStudio.Diagrams.View.GroupLayoutStyle" />
+    <Property Id="NavigationActionLabel" Label="NavigationActionLabel" Description="NavigationActionLabel" DataType="System.String" />
+    <Property Id="OutgoingActionLabel" Label="OutgoingActionLabel" Description="OutgoingActionLabel" DataType="System.String" />
+    <Property Id="TargetType" DataType="System.Type" />
+    <Property Id="ToolTip" DataType="System.String" />
+    <Property Id="UseManualLocation" DataType="System.Boolean" />
+    <Property Id="Value" DataType="System.String" />
+    <Property Id="ValueLabel" DataType="System.String" />
+    <Property Id="Visibility" Label="Visibilidad" Description="Define si un nodo del gráfico está visible o no." DataType="System.Windows.Visibility" />
+  </Properties>
+  <Styles>
+    <Style TargetType="Node" GroupLabel="Categoría 2" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('Category2')" />
+      <Setter Property="Background" Value="#FF339933" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Categoría 3" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('Category3')" />
+      <Setter Property="Background" Value="#FF3EBCED" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Categoría 10" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('Category10')" />
+      <Setter Property="Background" Value="#FF672878" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Categoría 7" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('Category7')" />
+      <Setter Property="Background" Value="#FF347A30" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Categoría 1" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('Category1')" />
+      <Setter Property="Background" Value="#FFE51400" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Central" ToolTip="El nodo está entre el primer 10% de nodos fuertemente conectados" ValueLabel="Central">
+      <Condition Expression="HasValue(&quot;Hub&quot;)" />
+      <Setter Property="Background" Value="#FFFBA8A9" />
+    </Style>
+    <Style TargetType="Group" GroupLabel="Central" ToolTip="El nodo está entre el primer 10% de nodos fuertemente conectados" ValueLabel="Contenedor de central">
+      <Condition Expression="IsHubContainer" />
+      <Setter Property="Stroke" Value="#FFFBA8A9" />
+      <Setter Property="StrokeThickness" Value="6" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Resultados" ValueLabel="Verdadero">
+      <Condition Expression="HasCategory('QueryResult')" />
+      <Setter Property="Background" Value="#FFBCFFBE" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Proyecto de prueba" ValueLabel="Proyecto de prueba">
+      <Condition Expression="HasCategory('CodeMap_TestProject')" />
+      <Setter Property="Icon" Value="CodeMap_TestProject" />
+      <Setter Property="Background" Value="#FF307A69" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Proyecto web" ValueLabel="Proyecto web">
+      <Condition Expression="HasCategory('CodeMap_WebProject')" />
+      <Setter Property="Icon" Value="CodeMap_WebProject" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Proyecto de la Tienda Windows" ValueLabel="Proyecto de la Tienda Windows">
+      <Condition Expression="HasCategory('CodeMap_WindowsStoreProject')" />
+      <Setter Property="Icon" Value="CodeMap_WindowsStoreProject" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Proyecto de teléfono" ValueLabel="Proyecto de teléfono">
+      <Condition Expression="HasCategory('CodeMap_PhoneProject')" />
+      <Setter Property="Icon" Value="CodeMap_PhoneProject" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Biblioteca portátil" ValueLabel="Biblioteca portátil">
+      <Condition Expression="HasCategory('CodeMap_PortableLibraryProject')" />
+      <Setter Property="Icon" Value="CodeMap_PortableLibraryProject" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Proyecto de WPF" ValueLabel="Proyecto de WPF">
+      <Condition Expression="HasCategory('CodeMap_WpfProject')" />
+      <Setter Property="Icon" Value="CodeMap_WpfProject" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Proyecto de VSIX" ValueLabel="Proyecto de VSIX">
+      <Condition Expression="HasCategory('CodeMap_VsixProject')" />
+      <Setter Property="Icon" Value="CodeMap_VsixProject" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Proyecto de modelado" ValueLabel="Proyecto de modelado">
+      <Condition Expression="HasCategory('CodeMap_ModelingProject')" />
+      <Setter Property="Icon" Value="CodeMap_ModelingProject" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Ensamblado" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('CodeSchema_Assembly')" />
+      <Setter Property="Background" Value="#FF094167" />
+      <Setter Property="Stroke" Value="#FF094167" />
+      <Setter Property="Icon" Value="CodeSchema_Assembly" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Espacio de nombres" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('CodeSchema_Namespace')" />
+      <Setter Property="Background" Value="#FF0E619A" />
+      <Setter Property="Stroke" Value="#FF0E619A" />
+      <Setter Property="Icon" Value="CodeSchema_Namespace" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Interfaz" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('CodeSchema_Interface')" />
+      <Setter Property="Background" Value="#FF1382CE" />
+      <Setter Property="Stroke" Value="#FF1382CE" />
+      <Setter Property="Icon" Value="CodeSchema_Interface" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Struct" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('CodeSchema_Struct')" />
+      <Setter Property="Background" Value="#FF1382CE" />
+      <Setter Property="Stroke" Value="#FF1382CE" />
+      <Setter Property="Icon" Value="CodeSchema_Struct" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Enumeración" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('CodeSchema_Enum')" />
+      <Setter Property="Background" Value="#FF1382CE" />
+      <Setter Property="Stroke" Value="#FF1382CE" />
+      <Setter Property="Icon" Value="CodeSchema_Enum" />
+      <Setter Property="LayoutSettings" Value="List" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Delegado" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('CodeSchema_Delegate')" />
+      <Setter Property="Background" Value="#FF1382CE" />
+      <Setter Property="Stroke" Value="#FF1382CE" />
+      <Setter Property="Icon" Value="CodeSchema_Delegate" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Clase" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('CodeSchema_Type')" />
+      <Setter Property="Background" Value="#FF0E70C0" />
+      <Setter Property="Stroke" Value="#FF0E70C0" />
+      <Setter Property="Icon" Value="CodeSchema_Class" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Propiedad" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('CodeSchema_Property')" />
+      <Setter Property="Background" Value="#FFE0E0E0" />
+      <Setter Property="Stroke" Value="#FFE0E0E0" />
+      <Setter Property="Icon" Value="CodeSchema_Property" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Método" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('CodeSchema_Method') Or HasCategory('CodeSchema_CallStackUnresolvedMethod')" />
+      <Setter Property="Background" Value="#FFE0E0E0" />
+      <Setter Property="Stroke" Value="#FFE0E0E0" />
+      <Setter Property="Icon" Value="CodeSchema_Method" />
+      <Setter Property="LayoutSettings" Value="List" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Evento" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('CodeSchema_Event')" />
+      <Setter Property="Background" Value="#FFE0E0E0" />
+      <Setter Property="Stroke" Value="#FFE0E0E0" />
+      <Setter Property="Icon" Value="CodeSchema_Event" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Campo" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('CodeSchema_Field')" />
+      <Setter Property="Background" Value="#FFE0E0E0" />
+      <Setter Property="Stroke" Value="#FFE0E0E0" />
+      <Setter Property="Icon" Value="CodeSchema_Field" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Parámetro out" ValueLabel="Tiene categoría">
+      <Condition Expression="CodeSchemaProperty_IsOut = 'True'" />
+      <Setter Property="Icon" Value="CodeSchema_OutParameter" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Parámetro" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('CodeSchema_Parameter')" />
+      <Setter Property="Icon" Value="CodeSchema_Parameter" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Variable local" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('CodeSchema_LocalExpression')" />
+      <Setter Property="Icon" Value="CodeSchema_LocalExpression" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Externos" ValueLabel="Tiene categoría">
+      <Condition Expression="HasCategory('Externals')" />
+      <Setter Property="Background" Value="#FF424242" />
+      <Setter Property="Stroke" Value="#FF424242" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Se hereda de" ValueLabel="True">
+      <Condition Expression="HasCategory('InheritsFrom')" />
+      <Setter Property="Stroke" Value="#FF00A600" />
+      <Setter Property="StrokeDashArray" Value="2 0" />
+      <Setter Property="DrawArrow" Value="true" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Implementa" ValueLabel="True">
+      <Condition Expression="HasCategory('Implements')" />
+      <Setter Property="Stroke" Value="#8000A600" />
+      <Setter Property="StrokeDashArray" Value="2 2" />
+      <Setter Property="DrawArrow" Value="true" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Llamadas" ValueLabel="True">
+      <Condition Expression="HasCategory('CodeSchema_Calls')" />
+      <Setter Property="Stroke" Value="#FFFF00FF" />
+      <Setter Property="StrokeDashArray" Value="2 0" />
+      <Setter Property="DrawArrow" Value="true" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Puntero de función" ValueLabel="True">
+      <Condition Expression="HasCategory('CodeSchema_FunctionPointer')" />
+      <Setter Property="Stroke" Value="#FFFF00FF" />
+      <Setter Property="StrokeDashArray" Value="2 2" />
+      <Setter Property="DrawArrow" Value="true" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Lectura de campo" ValueLabel="True">
+      <Condition Expression="HasCategory('CodeSchema_FieldRead')" />
+      <Setter Property="Stroke" Value="#FF00AEEF" />
+      <Setter Property="StrokeDashArray" Value="2 2" />
+      <Setter Property="DrawArrow" Value="true" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Escritura de campo" ValueLabel="True">
+      <Condition Expression="HasCategory('CodeSchema_FieldWrite')" />
+      <Setter Property="Stroke" Value="#FF00AEEF" />
+      <Setter Property="DrawArrow" Value="true" />
+      <Setter Property="IsHidden" Value="false" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Inherits From" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="HasCategory('InheritsFrom') And Target.HasCategory('CodeSchema_Class')" />
+      <Setter Property="TargetDecorator" Value="OpenArrow" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Implements" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="HasCategory('Implements') And Target.HasCategory('CodeSchema_Interface')" />
+      <Setter Property="TargetDecorator" Value="OpenArrow" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Comment Link" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="Source.HasCategory('Comment')" />
+      <Setter Property="Stroke" Value="#FFE5C365" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Cursor Location Changed" ValueLabel="Verdadero" Visibility="Hidden">
+      <Condition Expression="IsCursorLocation" />
+      <Setter Property="IndicatorWest" Value="WestIndicator" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Disabled Breakpoint Location Changed" ValueLabel="Verdadero" Visibility="Hidden">
+      <Condition Expression="DisabledBreakpointCount" />
+      <Setter Property="IndicatorWest" Value="WestIndicator" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Enabled Breakpoint Location Changed" ValueLabel="Verdadero" Visibility="Hidden">
+      <Condition Expression="EnabledBreakpointCount" />
+      <Setter Property="IndicatorWest" Value="WestIndicator" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Instruction Pointer Location Changed" ValueLabel="Verdadero" Visibility="Hidden">
+      <Condition Expression="IsInstructionPointerLocation" />
+      <Setter Property="IndicatorWest" Value="WestIndicator" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Current Callstack Changed" ValueLabel="Verdadero" Visibility="Hidden">
+      <Condition Expression="IsCurrentCallstackFrame" />
+      <Setter Property="IndicatorWest" Value="WestIndicator" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Volver" ValueLabel="Verdadero" Visibility="Hidden">
+      <Condition Expression="HasCategory('CodeSchema_ReturnTypeLink')" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Referencias" ValueLabel="Verdadero" Visibility="Hidden">
+      <Condition Expression="HasCategory('References')" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Usa el atributo" ValueLabel="Verdadero" Visibility="Hidden">
+      <Condition Expression="HasCategory('CodeSchema_AttributeUse')" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Carpeta de soluciones" ValueLabel="Verdadero" Visibility="Hidden">
+      <Condition Expression="HasCategory('CodeMap_SolutionFolder')" />
+      <Setter Property="Background" Value="#FFDEBA83" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Referencia de proyecto" ValueLabel="Referencia de proyecto">
+      <Condition Expression="HasCategory('CodeMap_ProjectReference')" />
+      <Setter Property="Stroke" Value="#9A9A9A" />
+      <Setter Property="StrokeDashArray" Value="2 2" />
+      <Setter Property="DrawArrow" Value="true" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Referencia externa" ValueLabel="Referencia externa">
+      <Condition Expression="HasCategory('CodeMap_ExternalReference')" />
+      <Setter Property="Stroke" Value="#9A9A9A" />
+      <Setter Property="StrokeDashArray" Value="2 2" />
+      <Setter Property="DrawArrow" Value="true" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Comentario" ValueLabel="Tiene comentario">
+      <Condition Expression="HasCategory('Comment')" />
+      <Setter Property="Background" Value="#FFFFFACD" />
+      <Setter Property="Stroke" Value="#FFE5C365" />
+      <Setter Property="StrokeThickness" Value="1" />
+      <Setter Property="NodeRadius" Value="2" />
+      <Setter Property="MaxWidth" Value="250" />
+    </Style>
+  </Styles>
+</DirectedGraph>
