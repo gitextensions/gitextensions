@@ -575,6 +575,13 @@ namespace GitUI.Editor
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
+                    if (!string.IsNullOrWhiteSpace(item?.ErrorMessage))
+                    {
+                        // Present error (e.g. parsing Git)
+                        await ViewTextAsync(item.Name, item.ErrorMessage);
+                        return;
+                    }
+
                     if (item.IsSubmodule)
                     {
                         var getStatusTask = item.GetSubmoduleStatusAsync();
