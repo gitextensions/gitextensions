@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GitUI.CommitInfo
+namespace ResourceManager
 {
     public class CommandEventArgs : EventArgs
     {

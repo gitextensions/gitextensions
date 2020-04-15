@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using ResourceManager;
 
 namespace ResourceManagerTests
@@ -72,6 +73,43 @@ namespace ResourceManagerTests
         public void ParseCustomSchemeLinkWithHash()
         {
             TestCreateLink("PR#3471 and Issue#64", "ftp://github.com/gitextensions/gitextensions/pull/3471#end");
+        }
+
+        [Test]
+        public void ParseInternalScheme_Null()
+        {
+            var linkFactory = new LinkFactory();
+            Assert.False(linkFactory.ParseInternalScheme(null, out var actualCommandEventArgs));
+            Assert.That(actualCommandEventArgs, Is.Null);
+        }
+
+        [TestCase("slkldfjdfkj:fkjsd")]
+        [TestCase("slkldfjdfkj://fkjsd")]
+        [TestCase("slkldfjdfkj://")]
+        [TestCase("http://x")]
+        public void ParseInternalScheme_None(string link)
+        {
+            var linkFactory = new LinkFactory();
+            var uri = new Uri(link);
+            Assert.False(linkFactory.ParseInternalScheme(uri, out var actualCommandEventArgs));
+            Assert.That(actualCommandEventArgs, Is.Null);
+        }
+
+        [TestCase("gitext://command/data", "command", "data")]
+        [TestCase("gitext://command/data/more", "command", "data/more")]
+        [TestCase("gitext://", "", "")]
+        [TestCase("gitext://command", "command", "")]
+        [TestCase("gitext://command/", "command", "")]
+        [TestCase("gitext://command/d", "command", "d")]
+        [TestCase("gitext://command/d/", "command", "d/")]
+        [TestCase("gitext:not/an/internal/link", "", "not/an/internal/link")]
+        public void ParseInternalScheme(string link, string expectedCommand, string expectedData)
+        {
+            var linkFactory = new LinkFactory();
+            var uri = new Uri(link);
+            Assert.True(linkFactory.ParseInternalScheme(uri, out var actualCommandEventArgs));
+            Assert.That(actualCommandEventArgs.Command, Is.EqualTo(expectedCommand));
+            Assert.That(actualCommandEventArgs.Data, Is.EqualTo(expectedData));
         }
     }
 }

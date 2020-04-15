@@ -20,6 +20,10 @@ namespace ResourceManager
 
         string CreateShowAllLink(string what);
 
+        [ContractAnnotation("=>false,commandEventArgs:null")]
+        [ContractAnnotation("=>true,commandEventArgs:notnull")]
+        bool ParseInternalScheme(Uri uri, out CommandEventArgs commandEventArgs);
+
         [ContractAnnotation("=>false,uri:null")]
         [ContractAnnotation("=>true,uri:notnull")]
         bool ParseLink(string linkText, out Uri uri);
@@ -27,6 +31,8 @@ namespace ResourceManager
 
     public sealed class LinkFactory : ILinkFactory
     {
+        private const string InternalScheme = "gitext";
+
         private readonly ConcurrentDictionary<string, string> _linksMap = new ConcurrentDictionary<string, string>();
 
         public void Clear()
@@ -53,7 +59,7 @@ namespace ResourceManager
         {
             if (tag != "…")
             {
-                return AddLink(tag, "gitext://gototag/" + tag);
+                return AddLink(tag, $"{InternalScheme}://gototag/" + tag);
             }
 
             return WebUtility.HtmlEncode(tag);
@@ -63,7 +69,7 @@ namespace ResourceManager
         {
             if (noPrefixBranch != "…")
             {
-                return AddLink(noPrefixBranch, "gitext://gotobranch/" + noPrefixBranch);
+                return AddLink(noPrefixBranch, $"{InternalScheme}://gotobranch/" + noPrefixBranch);
             }
 
             return WebUtility.HtmlEncode(noPrefixBranch);
@@ -91,11 +97,23 @@ namespace ResourceManager
                 }
             }
 
-            return AddLink(linkText, "gitext://gotocommit/" + objectId);
+            return AddLink(linkText, $"{InternalScheme}://gotocommit/" + objectId);
         }
 
         public string CreateShowAllLink(string what)
-            => AddLink($"[ {Strings.ShowAll} ]", $"gitext://showall/{what}");
+            => AddLink($"[ {Strings.ShowAll} ]", $"{InternalScheme}://showall/{what}");
+
+        public bool ParseInternalScheme(Uri uri, out CommandEventArgs commandEventArgs)
+        {
+            if (uri?.Scheme == InternalScheme)
+            {
+                commandEventArgs = new CommandEventArgs(uri.Host, uri.AbsolutePath.TrimStart('/'));
+                return true;
+            }
+
+            commandEventArgs = null;
+            return false;
+        }
 
         public bool ParseLink(string linkText, out Uri uri)
         {

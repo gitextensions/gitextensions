@@ -127,9 +127,9 @@ namespace GitUI.CommitInfo
                 return;
             }
 
-            if (uri.Scheme == "gitext")
+            if (_linkFactory.ParseInternalScheme(uri, out var commandEventArgs))
             {
-                CommandClicked?.Invoke(sender, new CommandEventArgs(uri.Host, uri.AbsolutePath.TrimStart('/')));
+                CommandClicked?.Invoke(sender, commandEventArgs);
                 return;
             }
 

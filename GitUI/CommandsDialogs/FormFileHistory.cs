@@ -569,7 +569,7 @@ namespace GitUI.CommandsDialogs
             loadBlameOnShowToolStripMenuItem.Checked = AppSettings.LoadBlameOnShow;
         }
 
-        private void Blame_CommandClick(object sender, CommitInfo.CommandEventArgs e)
+        private void Blame_CommandClick(object sender, ResourceManager.CommandEventArgs e)
         {
             if (e.Command == "gotocommit")
             {

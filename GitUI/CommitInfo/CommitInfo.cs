@@ -164,25 +164,23 @@ namespace GitUI.CommitInfo
 
         private void RevisionInfoLinkClicked(object sender, LinkClickedEventArgs e)
         {
-            if (!_linkFactory.ParseLink(e.LinkText, out var result))
+            if (!_linkFactory.ParseLink(e.LinkText, out var uri))
             {
                 return;
             }
 
-            if (result.Scheme == "gitext")
+            if (_linkFactory.ParseInternalScheme(uri, out var commandEventArgs))
             {
-                CommandClickedEvent?.Invoke(sender, new CommandEventArgs(result.Host, result.AbsolutePath.TrimStart('/')));
+                CommandClickedEvent?.Invoke(sender, commandEventArgs);
                 return;
             }
 
-            using (var process = new Process
+            using var process = new Process
             {
                 EnableRaisingEvents = false,
-                StartInfo = { FileName = result.AbsoluteUri }
-            })
-            {
-                process.Start();
-            }
+                StartInfo = { FileName = uri.AbsoluteUri }
+            };
+            process.Start();
         }
 
         public void SetRevisionWithChildren(GitRevision revision, IReadOnlyList<ObjectId> children)
