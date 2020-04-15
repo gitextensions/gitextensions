@@ -122,9 +122,7 @@ namespace GitUI.CommitInfo
 
         private void rtbRevisionHeader_LinkClicked(object sender, LinkClickedEventArgs e)
         {
-            var link = _linkFactory.ParseLink(e.LinkText);
-
-            if (!Uri.TryCreate(link, UriKind.Absolute, out var uri))
+            if (!_linkFactory.ParseLink(e.LinkText, out var uri))
             {
                 return;
             }

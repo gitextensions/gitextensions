@@ -2,18 +2,27 @@ using System;
 using System.Collections.Concurrent;
 using System.Net;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace ResourceManager
 {
     public interface ILinkFactory
     {
         void Clear();
+
         string CreateLink(string caption, string uri);
+
         string CreateTagLink(string tag);
+
         string CreateBranchLink(string noPrefixBranch);
+
         string CreateCommitLink(ObjectId objectId, string linkText = null, bool preserveGuidInLinkText = false);
+
         string CreateShowAllLink(string what);
-        string ParseLink(string linkText);
+
+        [ContractAnnotation("=>false,uri:null")]
+        [ContractAnnotation("=>true,uri:notnull")]
+        bool ParseLink(string linkText, out Uri uri);
     }
 
     public sealed class LinkFactory : ILinkFactory
@@ -88,20 +97,26 @@ namespace ResourceManager
         public string CreateShowAllLink(string what)
             => AddLink($"[ {Strings.ShowAll} ]", $"gitext://showall/{what}");
 
-        public string ParseLink(string linkText)
+        public bool ParseLink(string linkText, out Uri uri)
         {
+            if (linkText == null)
+            {
+                uri = null;
+                return false;
+            }
+
             if (_linksMap.TryGetValue(linkText, out var linkUri))
             {
-                return linkUri;
+                return Uri.TryCreate(linkUri, UriKind.Absolute, out uri);
             }
 
             var uriCandidate = linkText;
 
             while (true)
             {
-                if (Uri.TryCreate(uriCandidate, UriKind.Absolute, out var uri))
+                if (Uri.TryCreate(uriCandidate, UriKind.Absolute, out uri))
                 {
-                    return uri.AbsoluteUri;
+                    return true;
                 }
 
                 var idx = uriCandidate.IndexOf('#');
@@ -114,7 +129,7 @@ namespace ResourceManager
                 uriCandidate = uriCandidate.Substring(idx + 1);
             }
 
-            return linkText;
+            return false;
         }
     }
 }

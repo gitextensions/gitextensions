@@ -6,14 +6,25 @@ namespace ResourceManagerTests
     [TestFixture]
     internal class LinkFactoryFixture
     {
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        [TestCase("no link")]
+        public void ParseInvalidLink(string link)
+        {
+            var linkFactory = new LinkFactory();
+            Assert.False(linkFactory.ParseLink(link, out var actualUri));
+            Assert.That(actualUri, Is.Null);
+        }
+
         [Test]
         public void ParseGoToBranchLink()
         {
             var linkFactory = new LinkFactory();
             linkFactory.CreateBranchLink("master");
             string expected = "gitext://gotobranch/master";
-            string actual = linkFactory.ParseLink("master#gitext://gotobranch/master");
-            Assert.That(actual, Is.EqualTo(expected));
+            Assert.True(linkFactory.ParseLink("master#gitext://gotobranch/master", out var actualUri));
+            Assert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
         }
 
         [Test]
@@ -22,17 +33,17 @@ namespace ResourceManagerTests
             var linkFactory = new LinkFactory();
             linkFactory.CreateBranchLink("PR#23");
             string expected = "gitext://gotobranch/PR#23";
-            string actual = linkFactory.ParseLink("PR#23#gitext://gotobranch/PR#23");
-            Assert.That(actual, Is.EqualTo(expected));
+            Assert.True(linkFactory.ParseLink("PR#23#gitext://gotobranch/PR#23", out var actualUri));
+            Assert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
         }
 
         private static void TestCreateLink(string caption, string uri)
         {
             var linkFactory = new LinkFactory();
             linkFactory.CreateLink(caption, uri);
-            string actual = linkFactory.ParseLink(caption + "#" + uri);
             string expected = uri;
-            Assert.That(actual, Is.EqualTo(expected));
+            Assert.True(linkFactory.ParseLink(caption + "#" + uri, out var actualUri));
+            Assert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
         }
 
         [Test]
@@ -53,8 +64,8 @@ namespace ResourceManagerTests
             var linkFactory = new LinkFactory();
 
             string expected = "https://github.com/gitextensions/gitextensions/pull/3471#end";
-            string actual = linkFactory.ParseLink("https://github.com/gitextensions/gitextensions/pull/3471#end");
-            Assert.That(actual, Is.EqualTo(expected));
+            Assert.True(linkFactory.ParseLink("https://github.com/gitextensions/gitextensions/pull/3471#end", out var actualUri));
+            Assert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
         }
 
         [Test]
