@@ -2,7 +2,7 @@
 {
     public sealed partial class RevisionGridControl
     {
-        internal enum Commands
+        internal enum Command
         {
             ToggleRevisionGraph = 0,
             RevisionFilter = 1,
@@ -36,7 +36,9 @@
             CompareToBranch = 29,
             CompareSelectedCommits = 30,
             GoToMergeBaseCommit = 31,
-            OpenCommitsWithDifftool = 32
+            OpenCommitsWithDifftool = 32,
+            ToggleBetweenArtificialAndHeadCommits = 33,
+            ShowReflogReferences = 34
         }
     }
 }

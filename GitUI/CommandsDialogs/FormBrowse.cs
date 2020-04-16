@@ -293,7 +293,23 @@ namespace GitUI.CommandsDialogs
             // Populate terminal tab after translation within InitializeComplete
             FillTerminalTab();
 
+            RevisionGrid.ToggledBetweenArtificialAndHeadCommits += (s, e) => FocusRevisionDiffFileStatusList();
+
             return;
+
+            void FocusRevisionDiffFileStatusList()
+            {
+                if (!revisionDiff.Visible)
+                {
+                    CommitInfoTabControl.SelectedTab = DiffTabPage;
+                }
+
+                if (revisionDiff.Visible)
+                {
+                    // force focus of file list
+                    revisionDiff.SwitchFocus(alreadyContainedFocus: false);
+                }
+            }
 
             void ManageWorktreeSupport()
             {
@@ -2018,7 +2034,10 @@ namespace GitUI.CommandsDialogs
             FocusPrevTab = 32,
             OpenWithDifftoolFirstToLocal = 33,
             OpenWithDifftoolSelectedToLocal = 34,
-            OpenCommitsWithDifftool = 35
+            OpenCommitsWithDifftool = 35,
+            ToggleBetweenArtificialAndHeadCommits = 36,
+            GoToChild = 37,
+            GoToParent = 38
         }
 
         internal Keys GetShortcutKeys(Command cmd)
@@ -2107,6 +2126,9 @@ namespace GitUI.CommandsDialogs
                 case Command.OpenAsTempFileWith when fileTree.Visible: fileTree.ExecuteCommand(RevisionFileTreeControl.Command.OpenAsTempFileWith); break;
                 case Command.GoToSuperproject: toolStripButtonLevelUp_ButtonClick(null, null); break;
                 case Command.GoToSubmodule: toolStripButtonLevelUp.ShowDropDown(); break;
+                case Command.ToggleBetweenArtificialAndHeadCommits: RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.ToggleBetweenArtificialAndHeadCommits); break;
+                case Command.GoToChild: RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.GoToChild); break;
+                case Command.GoToParent: RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.GoToParent); break;
                 default: return base.ExecuteCommand(cmd);
             }
 
@@ -2982,6 +3004,14 @@ namespace GitUI.CommandsDialogs
         internal readonly struct TestAccessor
         {
             private readonly FormBrowse _form;
+
+            public FullBleedTabControl CommitInfoTabControl => _form.CommitInfoTabControl;
+
+            public TabPage DiffTabPage => _form.DiffTabPage;
+
+            public RevisionDiffControl RevisionDiffControl => _form.revisionDiff;
+
+            public TabPage TreeTabPage => _form.TreeTabPage;
 
             public TestAccessor(FormBrowse form)
             {
