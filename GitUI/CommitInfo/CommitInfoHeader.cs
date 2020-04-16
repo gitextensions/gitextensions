@@ -122,25 +122,9 @@ namespace GitUI.CommitInfo
 
         private void rtbRevisionHeader_LinkClicked(object sender, LinkClickedEventArgs e)
         {
-            if (!_linkFactory.ParseLink(e.LinkText, out var uri))
-            {
-                return;
-            }
-
-            if (_linkFactory.ParseInternalScheme(uri, out var commandEventArgs))
-            {
-                CommandClicked?.Invoke(sender, commandEventArgs);
-                return;
-            }
-
             try
             {
-                using var process = new Process
-                {
-                    EnableRaisingEvents = false,
-                    StartInfo = { FileName = uri.AbsoluteUri }
-                };
-                process.Start();
+                _linkFactory.ExecuteLink(e.LinkText, commandEventArgs => CommandClicked?.Invoke(sender, commandEventArgs));
             }
             catch (Exception ex)
             {

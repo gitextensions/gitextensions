@@ -2448,9 +2448,8 @@ namespace GitUI.CommandsDialogs
                 case "navigateforward":
                     RevisionGrid.NavigateForward();
                     break;
-                case "showall":
-                    RevisionInfo.ShowAll(e.Data);
-                    break;
+                default:
+                    throw new InvalidOperationException($"unexpected internal link: {e.Command}/{e.Data}");
             }
         }
 

@@ -164,23 +164,14 @@ namespace GitUI.CommitInfo
 
         private void RevisionInfoLinkClicked(object sender, LinkClickedEventArgs e)
         {
-            if (!_linkFactory.ParseLink(e.LinkText, out var uri))
+            try
             {
-                return;
+                _linkFactory.ExecuteLink(e.LinkText, commandEventArgs => CommandClickedEvent?.Invoke(sender, commandEventArgs), ShowAll);
             }
-
-            if (_linkFactory.ParseInternalScheme(uri, out var commandEventArgs))
+            catch (Exception ex)
             {
-                CommandClickedEvent?.Invoke(sender, commandEventArgs);
-                return;
+                MessageBox.Show(this, ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            using var process = new Process
-            {
-                EnableRaisingEvents = false,
-                StartInfo = { FileName = uri.AbsoluteUri }
-            };
-            process.Start();
         }
 
         public void SetRevisionWithChildren(GitRevision revision, IReadOnlyList<ObjectId> children)
@@ -199,7 +190,7 @@ namespace GitUI.CommitInfo
             ReloadCommitInfo();
         }
 
-        public void ShowAll(string what)
+        private void ShowAll(string what)
         {
             switch (what)
             {

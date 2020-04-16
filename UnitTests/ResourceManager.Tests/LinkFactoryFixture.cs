@@ -111,5 +111,50 @@ namespace ResourceManagerTests
             Assert.That(actualCommandEventArgs.Command, Is.EqualTo(expectedCommand));
             Assert.That(actualCommandEventArgs.Data, Is.EqualTo(expectedData));
         }
+
+        [TestCase("gitext://command/data", "command", "data", null, "", false, true)]
+        [TestCase("gitext://command/data", "command", "data", null, "", false, false)]
+        [TestCase("gitext://showall/what", null, null, "what", "", true, false)]
+        [TestCase("gitext://showall/what", null, null, "what", "", false, false)]
+        [TestCase("gitext://command/data", null, null, null, "unexpected internal link: gitext://command/data", true, false)]
+        [TestCase("gitext://showall/what", null, null, null, "unexpected internal link: gitext://showall/what", false, true)]
+        public void ExecuteLink(string link,
+            string expectedCommand,
+            string expectedData,
+            string expectedShowAll,
+            string expectedException,
+            bool omitHandler,
+            bool omitShowAll)
+        {
+            var linkFactory = new LinkFactory();
+            CommandEventArgs actualCommandEventArgs = null;
+            string actualShowAll = null;
+            string actualException = "";
+            Action<CommandEventArgs> handleInternalLink = commandEventArgs => actualCommandEventArgs = commandEventArgs;
+            Action<string> showAll = what => actualShowAll = what;
+            if (omitHandler)
+            {
+                handleInternalLink = null;
+            }
+
+            if (omitShowAll)
+            {
+                showAll = null;
+            }
+
+            try
+            {
+                linkFactory.ExecuteLink(link, handleInternalLink, showAll);
+            }
+            catch (InvalidOperationException ex)
+            {
+                actualException = ex.Message;
+            }
+
+            Assert.That(actualCommandEventArgs?.Command, Is.EqualTo(expectedCommand));
+            Assert.That(actualCommandEventArgs?.Data, Is.EqualTo(expectedData));
+            Assert.That(actualShowAll, Is.EqualTo(expectedShowAll));
+            Assert.That(actualException, Is.EqualTo(expectedException));
+        }
     }
 }

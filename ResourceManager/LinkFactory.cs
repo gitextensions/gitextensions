@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Net;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -20,6 +21,8 @@ namespace ResourceManager
 
         string CreateShowAllLink(string what);
 
+        void ExecuteLink(string linkText, Action<CommandEventArgs> handleInternalLink = null, Action<string> showAll = null);
+
         [ContractAnnotation("=>false,commandEventArgs:null")]
         [ContractAnnotation("=>true,commandEventArgs:notnull")]
         bool ParseInternalScheme(Uri uri, out CommandEventArgs commandEventArgs);
@@ -32,6 +35,7 @@ namespace ResourceManager
     public sealed class LinkFactory : ILinkFactory
     {
         private const string InternalScheme = "gitext";
+        private const string ShowAll = "showall";
 
         private readonly ConcurrentDictionary<string, string> _linksMap = new ConcurrentDictionary<string, string>();
 
@@ -101,7 +105,44 @@ namespace ResourceManager
         }
 
         public string CreateShowAllLink(string what)
-            => AddLink($"[ {Strings.ShowAll} ]", $"{InternalScheme}://showall/{what}");
+            => AddLink($"[ {Strings.ShowAll} ]", $"{InternalScheme}://{ShowAll}/{what}");
+
+        public void ExecuteLink(string linkText, Action<CommandEventArgs> handleInternalLink = null, Action<string> showAll = null)
+        {
+            if (!ParseLink(linkText, out var uri))
+            {
+                return;
+            }
+
+            if (ParseInternalScheme(uri, out var commandEventArgs))
+            {
+                if (commandEventArgs.Command == ShowAll)
+                {
+                    if (showAll == null)
+                    {
+                        throw new InvalidOperationException($"unexpected internal link: {linkText}");
+                    }
+
+                    showAll(commandEventArgs.Data);
+                    return;
+                }
+
+                if (handleInternalLink == null)
+                {
+                    throw new InvalidOperationException($"unexpected internal link: {linkText}");
+                }
+
+                handleInternalLink(commandEventArgs);
+                return;
+            }
+
+            using var process = new Process
+            {
+                EnableRaisingEvents = false,
+                StartInfo = { FileName = uri.AbsoluteUri }
+            };
+            process.Start();
+        }
 
         public bool ParseInternalScheme(Uri uri, out CommandEventArgs commandEventArgs)
         {
