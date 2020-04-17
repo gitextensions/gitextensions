@@ -9176,11 +9176,11 @@ Select this commit to populate the full message.</source>
         <target />
       </trans-unit>
       <trans-unit id="_commitDateText.Text">
-        <source>{0:Commit date|Commits dates}</source>
+        <source>{0:Commit date|Commit dates}</source>
         <target />
       </trans-unit>
       <trans-unit id="_commitHashText.Text">
-        <source>{0:Commit hash|Commits hashes}</source>
+        <source>{0:Commit hash|Commit hashes}</source>
         <target />
       </trans-unit>
       <trans-unit id="_committed.Text">
