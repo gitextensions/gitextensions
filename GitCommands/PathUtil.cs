@@ -124,12 +124,45 @@ namespace GitCommands
 
             try
             {
-                return Path.GetFullPath(new Uri(path).LocalPath);
+                return Path.GetFullPath(PathUtil.SolveUriLocalPath(path));
             }
             catch (UriFormatException)
             {
                 return string.Empty;
             }
+        }
+
+        [NotNull]
+        public static string SolveUriLocalPath([NotNull] string path, [NotNull] string relativePath = "")
+        {
+            // Fix for on purpose invalid machine name of WSL in Windows 10
+            var wslPathReplaced = false;
+            if (path.StartsWith(@"\\wsl$\"))
+            {
+                wslPathReplaced = true;
+
+                // Temporarily replace machine name with a valid name
+                path = Regex.Replace(path, "^" + Regex.Escape(@"\\wsl$\"), @"\\wsl\");
+            }
+
+            string localPath;
+
+            if (relativePath.Length > 0)
+            {
+                localPath = new Uri(new Uri(path), relativePath).LocalPath;
+            }
+            else
+            {
+                localPath = new Uri(path).LocalPath;
+            }
+
+            if (wslPathReplaced)
+            {
+                // Revert temporary replacement of WSL machine name
+                localPath = Regex.Replace(localPath, "^" + Regex.Escape(@"\\wsl\"), @"\\wsl$\");
+            }
+
+            return localPath;
         }
 
         [ContractAnnotation("=>false,posixPath:null")]

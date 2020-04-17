@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using GitUIPluginInterfaces;
 
 namespace GitCommands
@@ -62,8 +63,7 @@ namespace GitCommands
                 basePath += Path.DirectorySeparatorChar;
             }
 
-            var uri = new Uri(new Uri(basePath), path);
-            return uri.LocalPath;
+            return PathUtil.SolveUriLocalPath(basePath, path);
         }
     }
 }
