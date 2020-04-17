@@ -101,6 +101,8 @@ Current Branch:
             }
 
             tableLayoutPanel1.Dock = DockStyle.Fill;
+            var margin = propertyGrid1.Margin.Left;
+            propertyGrid1.Margin = new Padding(margin, margin, panelButtons.Width, margin);
 
             propertyGrid1.SelectedGridItemChanged += (s, e) =>
             {

@@ -84,6 +84,7 @@
             // 
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid1.Location = new System.Drawing.Point(3, 276);
+            this.propertyGrid1.Margin = new System.Windows.Forms.Padding(3, 3, 40, 3);
             this.propertyGrid1.Name = "propertyGrid1";
             this.propertyGrid1.Size = new System.Drawing.Size(394, 259);
             this.propertyGrid1.TabIndex = 2;
@@ -96,7 +97,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(394, 259);
+            this.panel2.Size = new System.Drawing.Size(431, 259);
             this.panel2.TabIndex = 3;
             // 
             // lvScripts
@@ -113,10 +114,11 @@
             this.lvScripts.HideSelection = false;
             this.lvScripts.LabelWrap = false;
             this.lvScripts.Location = new System.Drawing.Point(0, 0);
+            this.lvScripts.Margin = new System.Windows.Forms.Padding(0);
             this.lvScripts.MultiSelect = false;
             this.lvScripts.Name = "lvScripts";
             this.lvScripts.ShowItemToolTips = true;
-            this.lvScripts.Size = new System.Drawing.Size(358, 259);
+            this.lvScripts.Size = new System.Drawing.Size(395, 259);
             this.lvScripts.TabIndex = 1;
             this.lvScripts.TileSize = new System.Drawing.Size(136, 18);
             this.lvScripts.UseCompatibleStateImageBehavior = false;
@@ -147,7 +149,7 @@
             this.panelButtons.Controls.Add(this.btnArgumentsHelp);
             this.panelButtons.Dock = System.Windows.Forms.DockStyle.Right;
             this.panelButtons.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.panelButtons.Location = new System.Drawing.Point(358, 0);
+            this.panelButtons.Location = new System.Drawing.Point(395, 0);
             this.panelButtons.Margin = new System.Windows.Forms.Padding(8);
             this.panelButtons.Name = "panelButtons";
             this.panelButtons.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
@@ -188,7 +190,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(400, 538);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(437, 538);
             this.tableLayoutPanel1.TabIndex = 4;
             // 
             // ScriptsSettingsPage
