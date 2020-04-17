@@ -102,11 +102,12 @@ Current Branch:
 
             tableLayoutPanel1.Dock = DockStyle.Fill;
 
-            propertyGrid1.PropertyValueChanged += (s, e) =>
+            propertyGrid1.SelectedGridItemChanged += (s, e) =>
             {
-                if (WatchedProxyProperties.Contains(e.ChangedItem.PropertyDescriptor.Name))
+                if (WatchedProxyProperties.Contains(e.OldSelection.PropertyDescriptor.Name))
                 {
                     BindScripts(_scripts, SelectedScript);
+                    propertyGrid1.Focus();
                 }
             };
         }
