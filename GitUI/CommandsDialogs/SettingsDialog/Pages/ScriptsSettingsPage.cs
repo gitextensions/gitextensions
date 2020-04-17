@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Script;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -143,7 +144,7 @@ Current Branch:
             {
                 if (icon.Value is Bitmap bitmap)
                 {
-                    EmbeddedIcons.Images.Add(icon.Key.ToString(), bitmap);
+                    EmbeddedIcons.Images.Add(icon.Key.ToString(), bitmap.AdaptLightness());
                 }
             }
 
