@@ -32,6 +32,8 @@ namespace GitUI
         private readonly TranslationString _local = new TranslationString("Local");
         private readonly TranslationString _tag = new TranslationString("Tag");
         private readonly TranslationString _remote = new TranslationString("Remote");
+        private readonly TranslationString _openWithGitExtensions = new TranslationString("Open with Git Extensions");
+        private readonly TranslationString _contScrollToNextFileOnlyWithAlt = new TranslationString("Enable automatic continuous scroll (without ALT button)");
 
         private readonly TranslationString _authored = new TranslationString("authored");
         private readonly TranslationString _committed = new TranslationString("committed");
@@ -41,6 +43,12 @@ namespace GitUI
 
         private readonly TranslationString _errorCaptionFailedDeleteFile = new TranslationString("Failed to delete file");
         private readonly TranslationString _errorCaptionFailedDeleteFolder = new TranslationString("Failed to delete directory");
+
+        private readonly TranslationString _noBranch = new TranslationString("no branch");
+        private readonly TranslationString _removeSelectedInvalidRepository = new TranslationString("Remove the selected invalid repository");
+        private readonly TranslationString _removeAllInvalidRepositories = new TranslationString("Remove all {0} invalid repositories");
+        private readonly TranslationString _open = new TranslationString("Open");
+        private readonly TranslationString _directoryIsNotAValidRepository = new TranslationString("The selected item is not a valid git repository.");
 
         // public only because of FormTranslate
         public Strings()
@@ -87,6 +95,8 @@ namespace GitUI
         public static string Local => _instance.Value._local.Text;
         public static string Tag => _instance.Value._tag.Text;
         public static string Remote => _instance.Value._remote.Text;
+        public static string OpenWithGitExtensions => _instance.Value._openWithGitExtensions.Text;
+        public static string ContScrollToNextFileOnlyWithAlt => _instance.Value._contScrollToNextFileOnlyWithAlt.Text;
 
         public static string OpenReport => _instance.Value._openReport.Text;
 
@@ -99,5 +109,11 @@ namespace GitUI
 
         public static string ErrorCaptionFailedDeleteFile => _instance.Value._errorCaptionFailedDeleteFile.Text;
         public static string ErrorCaptionFailedDeleteFolder => _instance.Value._errorCaptionFailedDeleteFolder.Text;
+
+        public static string NoBranch => _instance.Value._noBranch.Text;
+        public static string RemoveSelectedInvalidRepository => _instance.Value._removeSelectedInvalidRepository.Text;
+        public static string RemoveAllInvalidRepositories => _instance.Value._removeAllInvalidRepositories.Text;
+        public static string Open => _instance.Value._open.Text;
+        public static string DirectoryInvalidRepository => _instance.Value._directoryIsNotAValidRepository.Text;
     }
 }

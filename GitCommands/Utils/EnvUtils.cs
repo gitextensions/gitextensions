@@ -107,7 +107,7 @@ namespace GitCommands.Utils
 
         public static string ReplaceLinuxNewLinesDependingOnPlatform(string s)
         {
-            if (s.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(s))
             {
                 return s;
             }

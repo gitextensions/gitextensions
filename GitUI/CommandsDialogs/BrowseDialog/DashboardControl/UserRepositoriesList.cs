@@ -21,10 +21,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
     public partial class UserRepositoriesList : GitExtensionsControl
     {
         private readonly TranslationString _groupRecentRepositories = new TranslationString("Recent repositories");
-        private readonly TranslationString _directoryIsNotAValidRepositoryCaption = new TranslationString("Open");
-        private readonly TranslationString _directoryIsNotAValidRepository = new TranslationString(
-            "The selected item is not a valid git repository.\n\nDo you want to remove it from the recent repositories list?");
-
         private readonly TranslationString _deleteCategoryCaption = new TranslationString(
             "Delete Category");
         private readonly TranslationString _deleteCategoryQuestion = new TranslationString(
@@ -36,7 +32,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             "Do you want to clear the list of recent repositories?\n\nThe action cannot be undone.");
 
         private readonly TranslationString _cannotOpenTheFolder = new TranslationString("Cannot open the folder");
-        private readonly TranslationString _notAValidRepository = new TranslationString("Not a valid git repository");
 
         private class SelectedRepositoryItem
         {
@@ -59,7 +54,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private Brush _hoverColorBrush = new SolidBrush(SystemColors.InactiveCaption);
         private ListViewItem _hoveredItem;
         private readonly ListViewGroup _lvgRecentRepositories;
-        private readonly IUserRepositoriesListController _controller = new UserRepositoriesListController(RepositoryHistoryManager.Locals);
+        private readonly IUserRepositoriesListController _controller = new UserRepositoriesListController(RepositoryHistoryManager.Locals, new InvalidRepositoryRemover());
         private bool _hasInvalidRepos;
         private ListViewItem _rightClickedItem;
 
@@ -598,21 +593,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     return;
                 }
 
-                if (!_controller.IsValidGitWorkingDir(selected.Path))
+                if (_controller.IsValidGitWorkingDir(selected.Path))
                 {
-                    var dialogResult = MessageBox.Show(this, _directoryIsNotAValidRepository.Text,
-                                                             _directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNo,
-                                                             MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        _controller.RemoveRepository(selected.Path);
-                        ShowRecentRepositories();
-                    }
-
+                    OnModuleChanged(new GitModuleEventArgs(new GitModule(selected.Path)));
                     return;
                 }
 
-                OnModuleChanged(new GitModuleEventArgs(new GitModule(selected.Path)));
+                if (_controller.RemoveInvalidRepository(selected.Path))
+                {
+                    ShowRecentRepositories();
+                    return;
+                }
             }
             else if (e.Button == MouseButtons.Right)
             {
@@ -847,7 +838,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                     if (!module.IsValidGitWorkingDir())
                     {
-                        MessageBox.Show(this, _notAValidRepository.Text,
+                        MessageBox.Show(this, Strings.DirectoryInvalidRepository,
                             _cannotOpenTheFolder.Text, MessageBoxButtons.OK,
                             MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                         return;

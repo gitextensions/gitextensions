@@ -200,7 +200,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void SetCommitExpressionFromClipboard()
         {
             string text = Clipboard.GetText().Trim();
-            if (text.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(text))
             {
                 return;
             }

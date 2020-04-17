@@ -302,7 +302,7 @@ namespace GitCommands.Submodules
         {
             var branch = GitModule.GetSelectedBranchFast(path);
             var text = DetachedHeadParser.IsDetachedHead(branch) ? noBranchText : branch;
-            return $"[{text}]";
+            return $"({text})";
         }
 
         /// <summary>
@@ -387,7 +387,7 @@ namespace GitCommands.Submodules
         /// <returns>the task</returns>
         private async Task GetSubmoduleDetailedStatusAsync(GitModule superModule, string submoduleName, CancellationToken cancelToken)
         {
-            if (superModule == null || submoduleName.IsNullOrWhiteSpace())
+            if (superModule == null || string.IsNullOrWhiteSpace(submoduleName))
             {
                 return;
             }

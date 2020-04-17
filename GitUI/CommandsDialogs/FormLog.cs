@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI.CommandsDialogs
 {
@@ -15,9 +17,10 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            InitializeComplete();
-
             diffViewer.ExtraDiffArgumentsChanged += DiffViewerExtraDiffArgumentsChanged;
+            diffViewer.TopScrollReached += FileViewer_TopScrollReached;
+            diffViewer.BottomScrollReached += FileViewer_BottomScrollReached;
+            InitializeComplete();
         }
 
         private void FormDiffLoad(object sender, EventArgs e)
@@ -32,18 +35,12 @@ namespace GitUI.CommandsDialogs
 
         private void ViewSelectedFileDiff()
         {
-            if (DiffFiles.SelectedItem == null)
-            {
-                diffViewer.Clear();
-                return;
-            }
-
             using (WaitCursorScope.Enter())
             {
                 var revisions = RevisionGrid.GetSelectedRevisions();
                 var selectedRev = revisions.FirstOrDefault();
-                var firstId = revisions.Skip(1).LastOrDefault()?.ObjectId;
-                diffViewer.ViewChangesAsync(firstId, selectedRev, DiffFiles.SelectedItem, string.Empty);
+                var firstId = revisions.Skip(1).LastOrDefault()?.ObjectId ?? selectedRev?.FirstParentGuid;
+                diffViewer.ViewChangesAsync(firstId, selectedRev, DiffFiles.SelectedItem);
             }
         }
 
@@ -58,6 +55,18 @@ namespace GitUI.CommandsDialogs
         private void DiffViewerExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
             ViewSelectedFileDiff();
+        }
+
+        private void FileViewer_TopScrollReached(object sender, EventArgs e)
+        {
+            DiffFiles.SelectPreviousVisibleItem();
+            diffViewer.ScrollToBottom();
+        }
+
+        private void FileViewer_BottomScrollReached(object sender, EventArgs e)
+        {
+            DiffFiles.SelectNextVisibleItem();
+            diffViewer.ScrollToTop();
         }
     }
 }

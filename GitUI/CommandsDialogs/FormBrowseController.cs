@@ -1,22 +1,62 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
 using GitCommands.Gpg;
+using GitCommands.UserRepositoryHistory;
 using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
 {
     public interface IFormBrowseController
     {
+        void AddRecentRepositories([NotNull] ToolStripDropDownItem menuItemContainer,
+                                   [NotNull] Repository repo,
+                                   [NotNull] string caption,
+                                   [NotNull] Action<object, GitModuleEventArgs> setGitModule);
         Task<GpgInfo> LoadGpgInfoAsync(GitRevision revision);
     }
 
     public class FormBrowseController : IFormBrowseController
     {
         private readonly IGitGpgController _gitGpgController;
+        private readonly IRepositoryCurrentBranchNameProvider _repositoryCurrentBranchNameProvider;
+        private readonly IInvalidRepositoryRemover _invalidRepositoryRemover;
 
-        public FormBrowseController(IGitGpgController gitGpgController)
+        public FormBrowseController(IGitGpgController gitGpgController,
+                                    IRepositoryCurrentBranchNameProvider repositoryCurrentBranchNameProvider,
+                                    IInvalidRepositoryRemover invalidRepositoryRemover)
         {
             _gitGpgController = gitGpgController;
+            _repositoryCurrentBranchNameProvider = repositoryCurrentBranchNameProvider;
+            _invalidRepositoryRemover = invalidRepositoryRemover;
+        }
+
+        public void AddRecentRepositories([NotNull] ToolStripDropDownItem menuItemContainer,
+                                          [NotNull] Repository repo,
+                                          [NotNull] string caption,
+                                          [NotNull] Action<object, GitModuleEventArgs> setGitModule)
+        {
+            string branchName = _repositoryCurrentBranchNameProvider.GetCurrentBranchName(repo.Path);
+            var item = new ToolStripMenuItem(caption)
+            {
+                DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
+                ShortcutKeyDisplayString = branchName
+            };
+
+            menuItemContainer.DropDownItems.Add(item);
+
+            item.Click += (obj, args) =>
+            {
+                OpenRepo(repo.Path, setGitModule);
+            };
+
+            if (repo.Path != caption)
+            {
+                item.ToolTipText = repo.Path;
+            }
         }
 
         [ItemCanBeNull]
@@ -45,21 +85,38 @@ namespace GitUI.CommandsDialogs
                                tagStatus,
                                _gitGpgController.GetTagVerifyMessage(revision));
         }
-    }
 
-    public class GpgInfo
-    {
-        public GpgInfo(CommitStatus commitStatus, string commitVerificationMessage, TagStatus tagStatus, string tagVerificationMessage)
+        private void ChangeWorkingDir(string path, Action<object, GitModuleEventArgs> setGitModule)
         {
-            CommitStatus = commitStatus;
-            CommitVerificationMessage = commitVerificationMessage;
-            TagStatus = tagStatus;
-            TagVerificationMessage = tagVerificationMessage;
+            var module = new GitModule(path);
+            if (module.IsValidGitWorkingDir())
+            {
+                setGitModule(this, new GitModuleEventArgs(module));
+                return;
+            }
+
+            _invalidRepositoryRemover.ShowDeleteInvalidRepositoryDialog(path);
         }
 
-        public CommitStatus CommitStatus { get; }
-        public string CommitVerificationMessage { get; }
-        public TagStatus TagStatus { get; }
-        public string TagVerificationMessage { get; }
+        private void OpenRepo(string repoPath, Action<object, GitModuleEventArgs> setGitModule)
+        {
+            if (Control.ModifierKeys != Keys.Control)
+            {
+                ChangeWorkingDir(repoPath, setGitModule);
+                return;
+            }
+
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = AppSettings.GetGitExtensionsFullPath(),
+                    Arguments = "browse",
+                    WorkingDirectory = repoPath,
+                    UseShellExecute = false
+                }
+            };
+            process.Start();
+        }
     }
 }

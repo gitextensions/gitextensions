@@ -76,8 +76,8 @@
             // 
             // flpnlControls
             // 
-            flpnlControls.Controls.Add(this.Ok);
             flpnlControls.Controls.Add(this.Abort);
+            flpnlControls.Controls.Add(this.Ok);
             flpnlControls.Dock = System.Windows.Forms.DockStyle.Bottom;
             flpnlControls.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             flpnlControls.Location = new System.Drawing.Point(0, 327);
@@ -91,9 +91,9 @@
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.Ok.AutoSize = true;
             this.Ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Ok.Location = new System.Drawing.Point(549, 3);
+            this.Ok.Location = new System.Drawing.Point(517, 3);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(124, 25);
+            this.Ok.Size = new System.Drawing.Size(75, 25);
             this.Ok.TabIndex = 0;
             this.Ok.Text = "OK";
             this.Ok.UseCompatibleTextRendering = true;
@@ -105,7 +105,7 @@
             this.Abort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.Abort.AutoSize = true;
             this.Abort.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Abort.Location = new System.Drawing.Point(468, 3);
+            this.Abort.Location = new System.Drawing.Point(598, 3);
             this.Abort.Name = "Abort";
             this.Abort.Size = new System.Drawing.Size(75, 25);
             this.Abort.TabIndex = 1;

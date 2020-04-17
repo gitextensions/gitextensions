@@ -51,6 +51,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     MessageBox.Show(this, ex.Exception.ToString(), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.UnMask();
                 };
+            _diffViewer.TopScrollReached += FileViewer_TopScrollReached;
+            _diffViewer.BottomScrollReached += FileViewer_BottomScrollReached;
             InitializeComplete();
         }
 
@@ -128,6 +130,18 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 .FileAndForget();
         }
 
+        private void FileViewer_TopScrollReached(object sender, EventArgs e)
+        {
+            _fileStatusList.SelectPreviousVisibleItem();
+            _diffViewer.ScrollToBottom();
+        }
+
+        private void FileViewer_BottomScrollReached(object sender, EventArgs e)
+        {
+            _fileStatusList.SelectNextVisibleItem();
+            _diffViewer.ScrollToTop();
+        }
+
         private void SetPullRequestsData(IReadOnlyList<IPullRequestInformation> infos)
         {
             if (_isFirstLoad)
@@ -199,7 +213,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             _discussionWB.DocumentText = "";
             _diffViewer.Clear();
-            _fileStatusList.SetDiffs();
+            _fileStatusList.ClearDiffs();
 
             _pullRequestsList.Items.Clear();
             _pullRequestsList.Items.Add(new ListViewItem("") { SubItems = { _strLoading.Text } });
@@ -268,7 +282,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             _discussionWB.DocumentText = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo);
             _diffViewer.Clear();
-            _fileStatusList.SetDiffs();
+            _fileStatusList.ClearDiffs();
 
             LoadDiffPatch();
             LoadDiscussion();
@@ -367,7 +381,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 _diffCache.Add(gis.Name, match.Groups[3].Value);
             }
 
-            _fileStatusList.SetDiffs(items: giss);
+            // Commits in PR may not exist in the repo so GitRevision in FileStatusList is not used,
+            // patches directly from the cache
+            _fileStatusList.SetDiffs(selectedRev: null, parentRev: null, items: giss);
         }
 
         private void _fetchBtn_Click(object sender, EventArgs e)
@@ -463,7 +479,15 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
 
             var data = _diffCache[gis.Name];
-            _diffViewer.ViewPatch(gis.Name, text: data, openWithDifftool: null, isText: gis.IsSubmodule);
+
+            if (gis.IsSubmodule)
+            {
+                _diffViewer.ViewText(gis.Name, text: data);
+            }
+            else
+            {
+                _diffViewer.ViewPatch(gis.Name, text: data);
+            }
         }
 
         private void _closePullRequestBtn_Click(object sender, EventArgs e)

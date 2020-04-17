@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Management;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Patches;
 using GitExtUtils.GitUI;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -40,6 +42,8 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             View.ExtraDiffArgumentsChanged += delegate { StashedSelectedIndexChanged(null, null); };
+            View.TopScrollReached += FileViewer_TopScrollReached;
+            View.BottomScrollReached += FileViewer_BottomScrollReached;
             CompleteTheInitialization();
         }
 
@@ -142,7 +146,8 @@ namespace GitUI.CommandsDialogs
         {
             GitStash gitStash = Stashes.SelectedItem as GitStash;
 
-            Stashed.SetDiffs();
+            Stashed.GroupByRevision = false;
+            Stashed.ClearDiffs();
 
             Loading.Visible = true;
             Loading.IsAnimating = true;
@@ -164,9 +169,50 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void FileViewer_TopScrollReached(object sender, EventArgs e)
+        {
+            Stashed.SelectPreviousVisibleItem();
+            View.ScrollToBottom();
+        }
+
+        private void FileViewer_BottomScrollReached(object sender, EventArgs e)
+        {
+            Stashed.SelectNextVisibleItem();
+            View.ScrollToTop();
+        }
+
         private void LoadGitItemStatuses(IReadOnlyList<GitItemStatus> gitItemStatuses)
         {
-            Stashed.SetDiffs(items: gitItemStatuses);
+            GitStash gitStash = Stashes.SelectedItem as GitStash;
+            if (gitStash == _currentWorkingDirStashItem)
+            {
+                // FileStatusList has no interface for both worktree<-index, index<-HEAD at the same time
+                // Must be handled when displaying
+                var headId = Module.RevParse("HEAD");
+                var indexRev = new GitRevision(ObjectId.IndexId)
+                {
+                    ParentIds = new[] { headId }
+                };
+                var worktreeRev = new GitRevision(ObjectId.WorkTreeId)
+                {
+                    ParentIds = new[] { ObjectId.IndexId }
+                };
+                var indexItems = gitItemStatuses.Where(item => item.Staged == StagedStatus.Index).ToList();
+                var workTreeItems = gitItemStatuses.Where(item => item.Staged != StagedStatus.Index).ToList();
+                Stashed.SetStashDiffs(worktreeRev, ResourceManager.Strings.Workspace, workTreeItems,
+                    indexRev, ResourceManager.Strings.Index, indexItems);
+            }
+            else
+            {
+                var firstId = Module.RevParse(gitStash.Name + "^");
+                var selectedId = Module.RevParse(gitStash.Name);
+                var selectedRev = selectedId == null ? null : new GitRevision(selectedId)
+                {
+                    ParentIds = new[] { firstId }
+                };
+                Stashed.SetStashDiffs(selectedRev, gitItemStatuses);
+            }
+
             Loading.Visible = false;
             Loading.IsAnimating = false;
             Stashes.Enabled = true;
@@ -180,59 +226,14 @@ namespace GitUI.CommandsDialogs
 
         private void StashedSelectedIndexChanged(object sender, EventArgs e)
         {
-            GitStash gitStash = Stashes.SelectedItem as GitStash;
             GitItemStatus stashedItem = Stashed.SelectedItem;
 
             EnablePartialStash();
 
             using (WaitCursorScope.Enter())
             {
-                if (stashedItem != null &&
-                    gitStash == _currentWorkingDirStashItem)
-                {
-                    // current working directory
-                    View.ViewCurrentChanges(stashedItem, isStaged: false, openWithDifftool: null);
-                }
-                else if (stashedItem != null)
-                {
-                    if (stashedItem.IsNew)
-                    {
-                        View.ViewGitItemAsync(stashedItem);
-                    }
-                    else
-                    {
-                        string extraDiffArguments = View.GetExtraDiffArguments();
-                        Encoding encoding = View.Encoding;
-                        ThreadHelper.JoinableTaskFactory.Run(
-                            () =>
-                            {
-                                Patch patch = Module.GetSingleDiff(gitStash.Name + "^",
-                                    gitStash.Name,
-                                    stashedItem.Name,
-                                    stashedItem.OldName,
-                                    extraDiffArguments,
-                                    encoding,
-                                    true,
-                                    stashedItem.IsTracked);
-                                if (patch == null)
-                                {
-                                    return View.ViewPatchAsync(fileName: null, text: string.Empty, openWithDifftool: null /* not applicable */, isText: true);
-                                }
-
-                                if (stashedItem.IsSubmodule)
-                                {
-                                    return View.ViewPatchAsync(fileName: stashedItem.Name, text: LocalizationHelpers.ProcessSubmodulePatch(Module, stashedItem.Name, patch),
-                                            openWithDifftool: null /* not implemented */, isText: stashedItem.IsSubmodule);
-                                }
-
-                                return View.ViewPatchAsync(fileName: stashedItem.Name, text: patch.Text, openWithDifftool: null /* not implemented */, isText: stashedItem.IsSubmodule);
-                            });
-                    }
-                }
-                else
-                {
-                    View.Clear();
-                }
+                // Special revision handling, see LoadGitItemStatuses()
+                View.ViewChangesAsync(null, Stashed.SelectedItemParent, stashedItem);
             }
         }
 

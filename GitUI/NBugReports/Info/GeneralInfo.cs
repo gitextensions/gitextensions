@@ -25,7 +25,7 @@ namespace GitUI.NBugReports.Info
         internal GeneralInfo(SerializableException serializableException)
         {
             // this.HostApplication = Settings.EntryAssembly.GetName().Name; // Does not get the extensions of the file!
-            HostApplication = "Git Extensions";
+            HostApplication = AppSettings.ApplicationName;
 
             // this.HostApplicationVersion = Settings.EntryAssembly.GetName().Version.ToString(); // Gets AssemblyVersion not AssemblyFileVersion
             HostApplicationVersion = AppSettings.ProductVersion;

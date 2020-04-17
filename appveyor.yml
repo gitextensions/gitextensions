@@ -23,10 +23,6 @@ build:
   # MSBuild verbosity level
   verbosity: minimal
 
-cache:
-  #- packages -> **\packages.config      # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
-  - packages\WiX.3.11.0 -> Setup\packages.config
-
 install:
 - cmd: git submodule update --init --recursive
 - cmd: echo /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll">> Directory.Build.rsp
@@ -69,10 +65,6 @@ after_test:
 artifacts:
   - path: artifacts\log\**\*.binlog
   - path: artifacts\publish\*.zip
-#  # upload the generated portable archive only
-#  - path: 'Setup/GitExtensions-Portable-*.zip'
-#  - path: 'Setup/GitExtensions-pdbs-*.zip'
-#  - path: 'GitExtensionsVSIX/bin/Release/GitExtensionsVSIX.vsix'
 
 #on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -80,7 +72,7 @@ artifacts:
 # on build failure
 on_failure:
 - ps: |
-    Get-ChildItem -recurse artifacts\bin\tests\TestResult.xml -ErrorAction SilentlyContinue `
+    Get-ChildItem -recurse artifacts\tests\TestResult.xml -ErrorAction SilentlyContinue `
     | ForEach-Object {
         $resultFilePath = "$_"
         Get-Content $resultFilePath `
@@ -93,10 +85,10 @@ on_failure:
             $failed = $result[5].Value
             $notPassed = $total - $passed
             $testErrors = $failed
-            $testName = $resultFilePath.Split('\\')[-3]
+            $testProjectName = $resultFilePath.Split('\\')[-3]
 
             if ($testErrors -ne 0) {
-              $logFile = Get-ChildItem -recurse artifacts\$testName*.log
+              $logFile = Get-ChildItem -recurse artifacts\$testProjectName*.log
               Push-AppveyorArtifact $logFile
             }
         }

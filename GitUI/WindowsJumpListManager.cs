@@ -23,12 +23,16 @@ namespace GitUI
         private ThumbnailToolBarButton _commitButton;
         private ThumbnailToolBarButton _pushButton;
         private ThumbnailToolBarButton _pullButton;
-        private bool _toolbarButtonsCreated;
+        private bool ToolbarButtonsCreated => _commitButton != null;
         private readonly IRepositoryDescriptionProvider _repositoryDescriptionProvider;
 
         public WindowsJumpListManager(IRepositoryDescriptionProvider repositoryDescriptionProvider)
         {
             _repositoryDescriptionProvider = repositoryDescriptionProvider;
+            if (TaskbarManager.IsPlatformSupported)
+            {
+                TaskbarManager.Instance.ApplicationId = AppSettings.ApplicationId;
+            }
         }
 
         ~WindowsJumpListManager()
@@ -52,7 +56,8 @@ namespace GitUI
             }
         }
 
-        private static bool IsSupported => EnvUtils.RunningOnWindowsWithMainWindow() && TaskbarManager.IsPlatformSupported;
+        private static bool IsSupported => EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported;
+        private static bool IsSupportedAndVisible => EnvUtils.RunningOnWindowsWithMainWindow() && TaskbarManager.IsPlatformSupported;
 
         /// <summary>
         /// Adds the given working directory to the list of Recent for future quick access.
@@ -60,7 +65,7 @@ namespace GitUI
         [ContractAnnotation("workingDir:null=>halt")]
         public void AddToRecent([NotNull] string workingDir)
         {
-            if (!IsSupported)
+            if (!ToolbarButtonsCreated || !IsSupported)
             {
                 return;
             }
@@ -94,6 +99,15 @@ namespace GitUI
                 string path = Path.Combine(baseFolder, $"{sb}.gitext");
                 File.WriteAllText(path, workingDir);
                 JumpList.AddToRecent(path);
+
+                if (!ToolbarButtonsCreated)
+                {
+                    return;
+                }
+
+                _commitButton.Enabled = true;
+                _pushButton.Enabled = true;
+                _pullButton.Enabled = true;
             }
             catch (Exception ex)
                 when (
@@ -112,6 +126,14 @@ namespace GitUI
             }
         }
 
+        public void UpdateCommitIcon(Image image)
+        {
+            if (ToolbarButtonsCreated && IsSupportedAndVisible)
+            {
+                _commitButton.Icon = MakeIcon(image, 48, true);
+            }
+        }
+
         /// <summary>
         /// Creates a JumpList for the given application instance.
         /// It also adds thumbnail toolbars, which are a set of up to seven buttons at the bottom of the taskbar’s icon thumbnail preview.
@@ -120,7 +142,7 @@ namespace GitUI
         /// <param name="buttons">The thumbnail toolbar buttons to be added.</param>
         public void CreateJumpList(IntPtr windowHandle, WindowsThumbnailToolbarButtons buttons)
         {
-            if (!IsSupported)
+            if (ToolbarButtonsCreated || !IsSupported || windowHandle == IntPtr.Zero)
             {
                 return;
             }
@@ -135,40 +157,32 @@ namespace GitUI
             {
                 try
                 {
-                    var jumpList = JumpList.CreateJumpListForIndividualWindow(TaskbarManager.Instance.ApplicationId, windowHandle);
+                    // One ApplicationId, so all windows must share the same jumplist
+                    var jumpList = JumpList.CreateJumpList();
                     jumpList.ClearAllUserTasks();
                     jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
                     jumpList.Refresh();
                 }
-                catch
+                catch (Exception ex)
                 {
                     // have seen a COM exception here that caused the UI to stop loading
+                    Trace.WriteLine(ex.Message, "CreateJumpList");
                 }
             }
 
             void CreateTaskbarButtons(IntPtr handle, WindowsThumbnailToolbarButtons thumbButtons)
             {
-                if (!_toolbarButtonsCreated)
-                {
-                    _commitButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Commit.Image, 48, true), thumbButtons.Commit.Text);
-                    _commitButton.Click += thumbButtons.Commit.Click;
+                _commitButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Commit.Image, 48, true), thumbButtons.Commit.Text);
+                _commitButton.Click += thumbButtons.Commit.Click;
 
-                    _pushButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Push.Image, 48, true), thumbButtons.Push.Text);
-                    _pushButton.Click += thumbButtons.Push.Click;
+                _pushButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Push.Image, 48, true), thumbButtons.Push.Text);
+                _pushButton.Click += thumbButtons.Push.Click;
 
-                    _pullButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Pull.Image, 48, true), thumbButtons.Pull.Text);
-                    _pullButton.Click += thumbButtons.Pull.Click;
+                _pullButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Pull.Image, 48, true), thumbButtons.Pull.Text);
+                _pullButton.Click += thumbButtons.Pull.Click;
 
-                    _toolbarButtonsCreated = true;
-
-                    // Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.
-                    TaskbarManager.Instance.ThumbnailToolBars.AddButtons(handle, _commitButton, _pullButton, _pushButton);
-                    TaskbarManager.Instance.ApplicationId = "GitExtensions";
-                }
-
-                _commitButton.Enabled = true;
-                _pushButton.Enabled = true;
-                _pullButton.Enabled = true;
+                // Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.
+                TaskbarManager.Instance.ThumbnailToolBars.AddButtons(handle, _commitButton, _pullButton, _pushButton);
             }
         }
 
@@ -177,7 +191,7 @@ namespace GitUI
         /// </summary>
         public void DisableThumbnailToolbar()
         {
-            if (!IsSupported || !_toolbarButtonsCreated)
+            if (!ToolbarButtonsCreated)
             {
                 return;
             }

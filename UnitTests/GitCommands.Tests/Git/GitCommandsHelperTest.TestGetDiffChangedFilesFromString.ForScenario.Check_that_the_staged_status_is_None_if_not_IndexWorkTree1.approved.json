@@ -2,6 +2,7 @@
     {
         "Name": "testfile.txt",
         "OldName": null,
+        "ErrorMessage": null,
         "TreeGuid": null,
         "RenameCopyPercentage": null,
         "Staged": 1,
@@ -21,6 +22,7 @@
     {
         "Name": "testfile2.txt",
         "OldName": null,
+        "ErrorMessage": null,
         "TreeGuid": null,
         "RenameCopyPercentage": null,
         "Staged": 1,

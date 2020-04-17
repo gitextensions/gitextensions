@@ -1154,6 +1154,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
 - For more than four selected commits, show the difference as if the first and the last selected commit were selected.</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkContScrollToNextFileOnlyWithAlt.Text">
+        <source>Enable automatic continuous scroll (without ALT button)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkOmitUninterestingDiff.Text">
         <source>Omit uninteresting changes from combined diff</source>
         <target />
@@ -1262,10 +1266,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
   </file>
   <file datatype="plaintext" original="FileStatusList" source-language="en">
     <body>
-      <trans-unit id="CombinedDiff.Text">
-        <source>Combined Diff</source>
-        <target />
-      </trans-unit>
       <trans-unit id="FilterWatermarkLabel.Text">
         <source>Filter files using a regular expression...</source>
         <target />
@@ -1274,8 +1274,16 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>No changes</source>
         <target />
       </trans-unit>
-      <trans-unit id="_diffWithBase.Text">
-        <source>Diff with BASE a/</source>
+      <trans-unit id="_combinedDiff.Text">
+        <source>Combined diff</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_diffBaseToB.Text">
+        <source>Unique diff BASE with b/</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_diffCommonBase.Text">
+        <source>Common diff with BASE a/</source>
         <target />
       </trans-unit>
       <trans-unit id="_diffWithParent.Text">
@@ -1304,6 +1312,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="_largeFileSizeWarning.Text">
         <source>This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="automaticContinuousScrollToolStripMenuItem.Text">
+        <source>Enable automatic continuous scroll (without ALT button)</source>
         <target />
       </trans-unit>
       <trans-unit id="cherrypickSelectedLinesToolStripMenuItem.Text">
@@ -2091,22 +2103,6 @@ compare with first:</source>
         <source>Create pull requests...</source>
         <target />
       </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryCaption.Text">
-        <source>Open</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryMainInstruction.Text">
-        <source>The selected item is not a valid git repository.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryRemoveAllCommand.Text">
-        <source>Remove all {0} invalid repositories</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryRemoveSelectedRepoCommand.Text">
-        <source>Remove the selected invalid repository</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_forkCloneRepositoryToolStripMenuItem.Text">
         <source>Fork/Clone repository...</source>
         <target />
@@ -2121,10 +2117,6 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_noBranchTitle.Text">
-        <source>no branch</source>
         <target />
       </trans-unit>
       <trans-unit id="_noReposHostFound.Text">
@@ -3500,10 +3492,6 @@ You can unset the template:
         <source>Show in folder</source>
         <target />
       </trans-unit>
-      <trans-unit id="openSubmoduleMenuItem.Text">
-        <source>Open with Git Extensions</source>
-        <target />
-      </trans-unit>
       <trans-unit id="openToolStripMenuItem.Text">
         <source>Open</source>
         <target />
@@ -3614,10 +3602,6 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
         <source>Stop tracking this file</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="submoduleSummaryMenuItem.Text">
-        <source>View summary</source>
         <target />
       </trans-unit>
       <trans-unit id="toolAuthorLabelItem.Text">
@@ -4286,6 +4270,10 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="saveAsToolStripMenuItem.Text">
         <source>Save as</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="showAuthorAvatarToolStripMenuItem.Text">
+        <source>Show author avatar</source>
         <target />
       </trans-unit>
       <trans-unit id="showAuthorDateToolStripMenuItem.Text">
@@ -7827,22 +7815,8 @@ The action cannot be undone.</source>
 The action cannot be undone.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepository.Text">
-        <source>The selected item is not a valid git repository.
-
-Do you want to remove it from the recent repositories list?</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryCaption.Text">
-        <source>Open</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_groupRecentRepositories.Text">
         <source>Recent repositories</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_notAValidRepository.Text">
-        <source>Not a valid git repository</source>
         <target />
       </trans-unit>
       <trans-unit id="clmhdrBranch.Text">
@@ -8132,10 +8106,6 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="diffStashSubmoduleChangesToolStripMenuItem.Text">
         <source>Stash submodule changes</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="diffSubmoduleSummaryMenuItem.Text">
-        <source>View summary</source>
         <target />
       </trans-unit>
       <trans-unit id="diffUpdateSubmoduleMenuItem.Text">
@@ -8446,6 +8416,10 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="ShowSuperprojectTags.Text">
         <source>Show superproject tags</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ToggleBetweenArtificialAndHeadCommits.Text">
+        <source>Toggle between artificial and HEAD commits</source>
         <target />
       </trans-unit>
       <trans-unit id="ToggleHighlightSelectedBranch.Text">
@@ -9202,11 +9176,11 @@ Select this commit to populate the full message.</source>
         <target />
       </trans-unit>
       <trans-unit id="_commitDateText.Text">
-        <source>{0:Commit date|Commits dates}</source>
+        <source>{0:Commit date|Commit dates}</source>
         <target />
       </trans-unit>
       <trans-unit id="_commitHashText.Text">
-        <source>{0:Commit hash|Commits hashes}</source>
+        <source>{0:Commit hash|Commit hashes}</source>
         <target />
       </trans-unit>
       <trans-unit id="_committed.Text">
@@ -9215,6 +9189,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_committerText.Text">
         <source>Committer</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_contScrollToNextFileOnlyWithAlt.Text">
+        <source>Enable automatic continuous scroll (without ALT button)</source>
         <target />
       </trans-unit>
       <trans-unit id="_containedInBranchesText.Text">
@@ -9243,6 +9221,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_daysAgo.Text">
         <source>{0} {1:day|days} ago</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_directoryIsNotAValidRepository.Text">
+        <source>The selected item is not a valid git repository.</source>
         <target />
       </trans-unit>
       <trans-unit id="_error.Text">
@@ -9313,12 +9295,24 @@ Select this commit to populate the full message.</source>
         <source>No</source>
         <target />
       </trans-unit>
+      <trans-unit id="_noBranch.Text">
+        <source>no branch</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_noResultsFound.Text">
         <source>&lt;No results found&gt;</source>
         <target />
       </trans-unit>
+      <trans-unit id="_open.Text">
+        <source>Open</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_openReport.Text">
         <source>Open report</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_openWithGitExtensions.Text">
+        <source>Open with Git Extensions</source>
         <target />
       </trans-unit>
       <trans-unit id="_parentsText.Text">
@@ -9331,6 +9325,14 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_remotesText.Text">
         <source>Remotes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_removeAllInvalidRepositories.Text">
+        <source>Remove all {0} invalid repositories</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_removeSelectedInvalidRepository.Text">
+        <source>Remove the selected invalid repository</source>
         <target />
       </trans-unit>
       <trans-unit id="_searchingFor.Text">

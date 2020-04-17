@@ -55,7 +55,9 @@ namespace GitCommands
         // semi-constants
         public static Version AppVersion => Assembly.GetCallingAssembly().GetName().Version;
         public static string ProductVersion => Application.ProductVersion;
-        public static readonly string SettingsFileName = "GitExtensions.settings";
+        public static readonly string ApplicationName = "Git Extensions";
+        public static readonly string ApplicationId = ApplicationName.Replace(" ", "");
+        public static readonly string SettingsFileName = ApplicationId + ".settings";
         public static readonly string UserPluginsDirectoryName = "UserPlugins";
         private static string _applicationExecutablePath = Application.ExecutablePath;
         private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
@@ -85,7 +87,7 @@ namespace GitCommands
 
                 // Make ApplicationDataPath version independent
                 return Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty)
-                                                  .Replace("Git Extensions", "GitExtensions"); // 'GitExtensions' has been changed to 'Git Extensions' in v3.0
+                                                  .Replace(ApplicationName, ApplicationId); // 'GitExtensions' has been changed to 'Git Extensions' in v3.0
             });
 
             LocalApplicationDataPath = new Lazy<string>(() =>
@@ -95,7 +97,7 @@ namespace GitCommands
                     return GetGitExtensionsDirectory();
                 }
 
-                string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GitExtensions");
+                string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ApplicationId);
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
@@ -1686,6 +1688,24 @@ namespace GitCommands
         {
             get => GetBool("Blame.ShowOriginalFilePath", true);
             set => SetBool("Blame.ShowOriginalFilePath", value);
+        }
+
+        public static bool BlameShowAuthorAvatar
+        {
+            get => GetBool("Blame.ShowAuthorAvatar", true);
+            set => SetBool("Blame.ShowAuthorAvatar", value);
+        }
+
+        public static bool AutomaticContinuousScroll
+        {
+            get => GetBool("DiffViewer.AutomaticContinuousScroll", false);
+            set => SetBool("DiffViewer.AutomaticContinuousScroll", value);
+        }
+
+        public static int AutomaticContinuousScrollDelay
+        {
+            get => GetInt("DiffViewer.AutomaticContinuousScrollDelay", 600);
+            set => SetInt("DiffViewer.AutomaticContinuousScrollDelay", value);
         }
 
         public static bool IsPortable()

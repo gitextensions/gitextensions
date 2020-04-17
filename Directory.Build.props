@@ -1,6 +1,5 @@
 <Project>
   <Import Project=".\scripts\sdk\Sdk.props" />
-  <Import Project="Solution.Versions.props" />
 
   <PropertyGroup>
     <LangVersion>8</LangVersion>

@@ -17,7 +17,7 @@ namespace GitUI.UserManual
 
         public string GetUrl()
         {
-            var subFolder = _subFolder.IsNullOrEmpty() ? string.Empty : _subFolder + ".html";
+            var subFolder = string.IsNullOrEmpty(_subFolder) ? string.Empty : _subFolder + ".html";
 
             return (_location + subFolder).Combine("#", _anchorName);
         }

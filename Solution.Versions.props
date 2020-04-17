@@ -1,5 +1,6 @@
 <Project>
   <PropertyGroup>
+    <!-- Solution dependencies -->
     <AdysTechCredentialManagerVersion>1.7.0</AdysTechCredentialManagerVersion>
     <AppInsightsWindowsDesktopVersion>2.10.42-preview</AppInsightsWindowsDesktopVersion>
     <BenDemystifierVersion>0.1.4</BenDemystifierVersion>
@@ -18,7 +19,22 @@
     <SystemRuntimeInteropServicesRuntimeInformationVersion>4.3.0</SystemRuntimeInteropServicesRuntimeInformationVersion>
     <SystemValueTupleVersion>4.5.0</SystemValueTupleVersion>
 
+    <!-- Test infra -->
+    <ApprovalTestsVersion Condition="'$(ApprovalTestsVersion)' == ''">4.4.0</ApprovalTestsVersion>
+    <FluentAssertionsVersion Condition="'$(FluentAssertionsVersion)' == ''">5.2.0</FluentAssertionsVersion>
+    <MicrosoftNETTestSdkVersion Condition="'$(MicrosoftNETTestSdkVersion)' == ''">15.9.0</MicrosoftNETTestSdkVersion>
+    <NSubstituteVersion Condition="'$(NSubstituteVersion)' == ''">3.1.0</NSubstituteVersion>
+    <OpenCoverVersion Condition="'$(OpenCoverVersion)' == ''">4.7.922</OpenCoverVersion>
+    <NUnitConsoleRunnerVersion Condition="'$(NUnitConsoleRunnerVersion)' == ''">3.10.0</NUnitConsoleRunnerVersion>
+    <NUnitTestAdapterVersion Condition="'$(NUnitTestAdapterVersion)' == ''">3.16.1</NUnitTestAdapterVersion>
+    <NUnitVersion Condition="'$(NUnitVersion)' == ''">3.12.0</NUnitVersion>
+    <UsingToolNUnit Condition="'$(UsingToolNUnit)' == ''">true</UsingToolNUnit>
+
+    <!-- Setup -->
+    <WiXVersion Condition="'$(WiXVersion)' == ''">3.11.2</WiXVersion>
+
+    <!-- Build infra -->
+    <VSWhereVersion Condition="'$(VSWhereVersion)' == ''">2.6.7</VSWhereVersion>
+
   </PropertyGroup>
-
-
 </Project>

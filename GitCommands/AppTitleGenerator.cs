@@ -43,7 +43,7 @@ namespace GitCommands
         {
             if (string.IsNullOrWhiteSpace(workingDir) || !isValidWorkingDir)
             {
-                return "Git Extensions";
+                return AppSettings.ApplicationName;
             }
 
             branchName = branchName?.Trim('(', ')') ?? "no branch";
@@ -51,9 +51,9 @@ namespace GitCommands
             var description = _description.Get(workingDir);
 
 #if DEBUG
-            return $"{description} ({branchName}) - Git Extensions{_extraInfo}";
+            return $"{description} ({branchName}) - {AppSettings.ApplicationName}{_extraInfo}";
 #else
-            return $"{description} ({branchName}) - Git Extensions";
+            return $"{description} ({branchName}) - {AppSettings.ApplicationName}";
 #endif
         }
 
@@ -62,10 +62,10 @@ namespace GitCommands
 #if DEBUG
             if (ObjectId.TryParse(sha, out var objectId))
             {
-                _extraInfo = $" @{objectId.ToShortString()}";
+                _extraInfo = $" {objectId.ToShortString()}";
                 if (!string.IsNullOrWhiteSpace(buildBranch))
                 {
-                    _extraInfo += $" [{buildBranch}]";
+                    _extraInfo += $" ({buildBranch})";
                 }
             }
             else

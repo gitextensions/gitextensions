@@ -135,6 +135,7 @@ namespace GitUI.CommandsDialogs
                 detectMoveAndCopyInAllFilesToolStripMenuItem.Checked = AppSettings.DetectCopyInAllOnBlame;
                 detectMoveAndCopyInThisFileToolStripMenuItem.Checked = AppSettings.DetectCopyInFileOnBlame;
                 displayAuthorFirstToolStripMenuItem.Checked = AppSettings.BlameDisplayAuthorFirst;
+                showAuthorAvatarToolStripMenuItem.Checked = AppSettings.BlameShowAuthorAvatar;
                 showAuthorToolStripMenuItem.Checked = AppSettings.BlameShowAuthor;
                 showAuthorDateToolStripMenuItem.Checked = AppSettings.BlameShowAuthorDate;
                 showAuthorTimeToolStripMenuItem.Checked = AppSettings.BlameShowAuthorTime;
@@ -293,7 +294,7 @@ namespace GitUI.CommandsDialogs
                 .Append("File History - ")
                 .Append(FileName);
 
-            if (!alternativeFileName.IsNullOrEmpty() && alternativeFileName != FileName)
+            if (!string.IsNullOrEmpty(alternativeFileName) && alternativeFileName != FileName)
             {
                 str.Append(" (").Append(alternativeFileName).Append(')');
             }
@@ -379,9 +380,9 @@ namespace GitUI.CommandsDialogs
                 };
                 var revisions = FileChanges.GetSelectedRevisions();
                 var selectedRev = revisions.FirstOrDefault();
-                var firstId = revisions.Skip(1).LastOrDefault()?.ObjectId;
+                var firstId = revisions.Skip(1).LastOrDefault()?.ObjectId ?? selectedRev?.FirstParentGuid;
                 Diff.ViewChangesAsync(firstId, selectedRev, file,
-                    "You need to select at least one revision to view diff.");
+                    defaultText: "You need to select at least one revision to view diff.");
             }
             else if (tabControl1.SelectedTab == CommitInfoTabPage)
             {
@@ -568,7 +569,7 @@ namespace GitUI.CommandsDialogs
             loadBlameOnShowToolStripMenuItem.Checked = AppSettings.LoadBlameOnShow;
         }
 
-        private void Blame_CommandClick(object sender, CommitInfo.CommandEventArgs e)
+        private void Blame_CommandClick(object sender, ResourceManager.CommandEventArgs e)
         {
             if (e.Command == "gotocommit")
             {
@@ -702,6 +703,13 @@ namespace GitUI.CommandsDialogs
         {
             AppSettings.BlameShowOriginalFilePath = !AppSettings.BlameShowOriginalFilePath;
             showOriginalFilePathToolStripMenuItem.Checked = AppSettings.BlameShowOriginalFilePath;
+            UpdateSelectedFileViewers(true);
+        }
+
+        private void showAuthorAvatarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.BlameShowAuthorAvatar = !AppSettings.BlameShowAuthorAvatar;
+            showAuthorAvatarToolStripMenuItem.Checked = AppSettings.BlameShowAuthorAvatar;
             UpdateSelectedFileViewers(true);
         }
     }

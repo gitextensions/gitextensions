@@ -33,6 +33,12 @@ namespace GitUI.Editor
         private readonly CurrentViewPositionCache _currentViewPositionCache;
         private DiffViewerLineNumberControl _lineNumbersControl;
         private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
+        private bool _shouldScrollToTop = false;
+        private bool _shouldScrollToBottom = false;
+        private readonly int _bottomBlankHeight = DpiUtil.Scale(300);
+        private ContinuousScrollEventManager _continuousScrollEventManager;
+        private BlameAuthorMargin _authorsAvatarMargin;
+        private bool _showGutterAvatars;
 
         public FileViewerInternal()
         {
@@ -73,6 +79,7 @@ namespace GitUI.Editor
                     new SelectedLineEventArgs(
                         TextEditor.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y)));
             };
+            TextEditor.ActiveTextAreaControl.TextArea.MouseWheel += TextArea_MouseWheel;
 
             HighlightingManager.Manager.DefaultHighlighting.SetColorFor("LineNumbers",
                 new HighlightColor(SystemColors.ControlText, SystemColors.Control, false, false));
@@ -81,6 +88,11 @@ namespace GitUI.Editor
             _lineNumbersControl = new DiffViewerLineNumberControl(TextEditor.ActiveTextAreaControl.TextArea);
 
             VRulerPosition = AppSettings.DiffVerticalRulerPosition;
+        }
+
+        public void SetContinuousScrollManager(ContinuousScrollEventManager continuousScrollEventManager)
+        {
+            _continuousScrollEventManager = continuousScrollEventManager;
         }
 
         private void SelectionManagerSelectionChanged(object sender, EventArgs e)
@@ -106,7 +118,7 @@ namespace GitUI.Editor
         [NotNull]
         private IList<TextMarker> GetTextMarkersMatchingWord(string word)
         {
-            if (word.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(word))
             {
                 return Array.Empty<TextMarker>();
             }
@@ -203,6 +215,16 @@ namespace GitUI.Editor
         public event EventHandler VScrollPositionChanged;
         public new event EventHandler TextChanged;
 
+        public void ScrollToTop()
+        {
+            _shouldScrollToTop = true;
+        }
+
+        public void ScrollToBottom()
+        {
+            _shouldScrollToBottom = true;
+        }
+
         public string GetText()
         {
             return TextEditor.Text;
@@ -246,6 +268,18 @@ namespace GitUI.Editor
             TextEditor.Refresh();
 
             _currentViewPositionCache.Restore(isDiff);
+
+            if (_shouldScrollToBottom || _shouldScrollToTop)
+            {
+                var scrollBar = TextEditor.ActiveTextAreaControl.VScrollBar;
+                if (scrollBar.Visible)
+                {
+                    scrollBar.Value = _shouldScrollToTop ? 0 : Math.Max(0, scrollBar.Maximum - scrollBar.Height - _bottomBlankHeight);
+                }
+
+                _shouldScrollToTop = false;
+                _shouldScrollToBottom = false;
+            }
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
@@ -475,6 +509,23 @@ namespace GitUI.Editor
             _findAndReplaceForm.SetFileLoader(fileLoader);
         }
 
+        private void TextArea_MouseWheel(object sender, MouseEventArgs e)
+        {
+            var isScrollingTowardTop = e.Delta > 0;
+            var isScrollingTowardBottom = e.Delta < 0;
+            var scrollBar = TextEditor.ActiveTextAreaControl.VScrollBar;
+
+            if (isScrollingTowardTop && (scrollBar.Value == 0))
+            {
+                _continuousScrollEventManager?.RaiseTopScrollReached(sender, e);
+            }
+
+            if (isScrollingTowardBottom && (!scrollBar.Visible || scrollBar.Value + scrollBar.Height > scrollBar.Maximum))
+            {
+                _continuousScrollEventManager?.RaiseBottomScrollReached(sender, e);
+            }
+        }
+
         private void OnHScrollPositionChanged(EventArgs e)
         {
             HScrollPositionChanged?.Invoke(this, e);
@@ -486,6 +537,39 @@ namespace GitUI.Editor
         }
 
         #endregion
+
+        public void SetGitBlameGutter(IEnumerable<GitBlameEntry> gitBlameEntries)
+        {
+            if (_showGutterAvatars)
+            {
+                _authorsAvatarMargin.Initialize(gitBlameEntries);
+            }
+        }
+
+        public bool ShowGutterAvatars
+        {
+            get => _showGutterAvatars;
+            set
+            {
+                _showGutterAvatars = value;
+                if (!_showGutterAvatars)
+                {
+                    _authorsAvatarMargin?.SetVisiblity(false);
+
+                    return;
+                }
+
+                if (_authorsAvatarMargin == null)
+                {
+                    _authorsAvatarMargin = new BlameAuthorMargin(TextEditor.ActiveTextAreaControl.TextArea);
+                    TextEditor.ActiveTextAreaControl.TextArea.InsertLeftMargin(0, _authorsAvatarMargin);
+                }
+                else
+                {
+                    _authorsAvatarMargin.SetVisiblity(true);
+                }
+            }
+        }
 
         internal sealed class CurrentViewPositionCache
         {

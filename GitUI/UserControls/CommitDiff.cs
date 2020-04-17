@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
@@ -23,11 +24,25 @@ namespace GitUI.UserControls
 
             DiffText.EscapePressed += () => EscapePressed?.Invoke();
             DiffText.ExtraDiffArgumentsChanged += DiffText_ExtraDiffArgumentsChanged;
+            DiffText.TopScrollReached += FileViewer_TopScrollReached;
+            DiffText.BottomScrollReached += FileViewer_BottomScrollReached;
             DiffFiles.Focus();
-            DiffFiles.SetDiffs();
+            DiffFiles.ClearDiffs();
 
             splitContainer1.SplitterDistance = DpiUtil.Scale(200);
             splitContainer2.SplitterDistance = DpiUtil.Scale(260);
+        }
+
+        private void FileViewer_TopScrollReached(object sender, EventArgs e)
+        {
+            DiffFiles.SelectPreviousVisibleItem();
+            DiffText.ScrollToBottom();
+        }
+
+        private void FileViewer_BottomScrollReached(object sender, EventArgs e)
+        {
+            DiffFiles.SelectNextVisibleItem();
+            DiffText.ScrollToTop();
         }
 
         public void SetRevision([CanBeNull] ObjectId objectId, [CanBeNull] string fileToSelect)
@@ -71,34 +86,9 @@ namespace GitUI.UserControls
             }).FileAndForget();
         }
 
-        // Partly the same as RevisionDiffControl.cs ShowSelectedFileDiffAsync()
         private async Task ViewSelectedDiffAsync()
         {
-            if (DiffFiles.SelectedItem == null || DiffFiles.Revision == null)
-            {
-                DiffText.Clear();
-                return;
-            }
-
-            if (DiffFiles.SelectedItemParent?.ObjectId == ObjectId.CombinedDiffId)
-            {
-                var diffOfConflict = Module.GetCombinedDiffContent(DiffFiles.Revision, DiffFiles.SelectedItem.Name,
-                    DiffText.GetExtraDiffArguments(), DiffText.Encoding);
-
-                if (string.IsNullOrWhiteSpace(diffOfConflict))
-                {
-                    diffOfConflict = Strings.UninterestingDiffOmitted;
-                }
-
-                await DiffText.ViewPatchAsync(DiffFiles.SelectedItem.Name,
-                    text: diffOfConflict,
-                    openWithDifftool: null,
-                    isText: DiffFiles.SelectedItem.IsSubmodule);
-
-                return;
-            }
-
-            await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.ObjectId, DiffFiles.Revision, DiffFiles.SelectedItem, string.Empty);
+            await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.ObjectId, DiffFiles.Revision, DiffFiles.SelectedItem);
         }
     }
 }

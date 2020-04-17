@@ -2,6 +2,7 @@
     {
         "Name": " no trim space0 ",
         "OldName": null,
+        "ErrorMessage": null,
         "TreeGuid": null,
         "RenameCopyPercentage": null,
         "Staged": 2,
@@ -21,6 +22,7 @@
     {
         "Name": " no trim space1 ",
         "OldName": null,
+        "ErrorMessage": null,
         "TreeGuid": null,
         "RenameCopyPercentage": null,
         "Staged": 2,

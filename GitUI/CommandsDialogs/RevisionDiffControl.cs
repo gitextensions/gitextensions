@@ -49,6 +49,20 @@ namespace GitUI.CommandsDialogs
             _findFilePredicateProvider = new FindFilePredicateProvider();
             _gitRevisionTester = new GitRevisionTester(_fullPathResolver);
             _revisionDiffContextMenuController = new FileStatusListContextMenuController();
+            DiffText.TopScrollReached += FileViewer_TopScrollReached;
+            DiffText.BottomScrollReached += FileViewer_BottomScrollReached;
+        }
+
+        private void FileViewer_TopScrollReached(object sender, EventArgs e)
+        {
+            DiffFiles.SelectPreviousVisibleItem();
+            DiffText.ScrollToBottom();
+        }
+
+        private void FileViewer_BottomScrollReached(object sender, EventArgs e)
+        {
+            DiffFiles.SelectNextVisibleItem();
+            DiffText.ScrollToTop();
         }
 
         public void RefreshArtificial()
@@ -325,32 +339,8 @@ namespace GitUI.CommandsDialogs
 
         private async Task ShowSelectedFileDiffAsync()
         {
-            if (DiffFiles.SelectedItem == null || DiffFiles.Revision == null)
-            {
-                DiffText.Clear();
-                return;
-            }
-
-            if (DiffFiles.SelectedItemParent?.ObjectId == ObjectId.CombinedDiffId)
-            {
-                var diffOfConflict = Module.GetCombinedDiffContent(DiffFiles.Revision, DiffFiles.SelectedItem.Name,
-                    DiffText.GetExtraDiffArguments(), DiffText.Encoding);
-
-                if (string.IsNullOrWhiteSpace(diffOfConflict))
-                {
-                    diffOfConflict = Strings.UninterestingDiffOmitted;
-                }
-
-                await DiffText.ViewPatchAsync(DiffFiles.SelectedItem.Name,
-                    text: diffOfConflict,
-                    openWithDifftool: () => firstToSelectedToolStripMenuItem.PerformClick(),
-                    isText: DiffFiles.SelectedItem.IsSubmodule);
-
-                return;
-            }
-
-            await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.ObjectId, DiffFiles.Revision, DiffFiles.SelectedItem, string.Empty,
-                openWithDifftool: () => firstToSelectedToolStripMenuItem.PerformClick());
+            await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.ObjectId, DiffFiles.Revision, DiffFiles.SelectedItem,
+                openWithDiffTool: () => firstToSelectedToolStripMenuItem.PerformClick());
         }
 
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
@@ -447,14 +437,13 @@ namespace GitUI.CommandsDialogs
             diffOpenRevisionFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
             diffOpenRevisionFileWithToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
 
-            diffCommitSubmoduleChanges.Visible =
+            diffUpdateSubmoduleMenuItem.Visible =
                 diffResetSubmoduleChanges.Visible =
                 diffStashSubmoduleChangesToolStripMenuItem.Visible =
-                diffSubmoduleSummaryMenuItem.Visible =
-                diffUpdateSubmoduleMenuItem.Visible = _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo);
+                diffCommitSubmoduleChanges.Visible =
+                submoduleStripSeparator.Visible = _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo);
 
             diffToolStripSeparator13.Visible = _revisionDiffController.ShouldShowMenuDeleteFile(selectionInfo) ||
-                                               _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo) ||
                                                _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo) ||
                                                _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
 
@@ -686,7 +675,7 @@ namespace GitUI.CommandsDialogs
 
                 firstDiffCaptionMenuItem.Text = _firstRevision.Text;
                 var parentDesc = DescribeRevision(DiffFiles.SelectedItemParents.ToList());
-                if (parentDesc.IsNotNullOrWhitespace())
+                if (!string.IsNullOrWhiteSpace(parentDesc))
                 {
                     firstDiffCaptionMenuItem.Text += parentDesc;
                 }
@@ -900,22 +889,6 @@ namespace GitUI.CommandsDialogs
             }
 
             RefreshArtificial();
-        }
-
-        private void diffSubmoduleSummaryMenuItem_Click(object sender, EventArgs e)
-        {
-            var submodules = DiffFiles.SelectedItems.Where(it => it.IsSubmodule).Select(it => it.Name).Distinct().ToList();
-
-            string summary = "";
-            foreach (var name in submodules)
-            {
-                summary += Module.GetSubmoduleSummary(name);
-            }
-
-            using (var frm = new FormEdit(UICommands, summary))
-            {
-                frm.ShowDialog(this);
-            }
         }
 
         public void SwitchFocus(bool alreadyContainedFocus)

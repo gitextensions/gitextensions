@@ -40,13 +40,20 @@ namespace GitUI.CommandsDialogs
                 objectId = null;
             }
 
-            objectId = objectId ?? Module.GetCurrentCheckout();
+            objectId ??= Module.GetCurrentCheckout();
             if (objectId != null)
             {
                 commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
+
+                if (string.IsNullOrWhiteSpace(newBranchNamePrefix))
+                {
+                    var refs = Module.GetRevision(objectId, shortFormat: true, loadRefs: true).Refs;
+                    IGitRef firstRef = refs.FirstOrDefault(r => !r.IsTag) ?? refs.FirstOrDefault(r => r.IsTag);
+                    newBranchNamePrefix = firstRef?.LocalName;
+                }
             }
 
-            if (newBranchNamePrefix.IsNotNullOrWhitespace())
+            if (!string.IsNullOrWhiteSpace(newBranchNamePrefix))
             {
                 BranchNameTextBox.Text = newBranchNamePrefix;
             }
@@ -96,7 +103,7 @@ namespace GitUI.CommandsDialogs
             }
 
             var branchName = BranchNameTextBox.Text.Trim();
-            if (branchName.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(branchName))
             {
                 MessageBox.Show(_branchNameIsEmpty.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.None;

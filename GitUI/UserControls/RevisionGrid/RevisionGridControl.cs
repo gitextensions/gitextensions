@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -55,11 +54,17 @@ namespace GitUI
     }
 
     [DefaultEvent("DoubleClick")]
-    public sealed partial class RevisionGridControl : GitModuleControl
+    public sealed partial class RevisionGridControl : GitModuleControl, IScriptHostControl
     {
         public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
         public event EventHandler<EventArgs> ShowFirstParentsToggled;
         public event EventHandler SelectionChanged;
+
+        /// <summary>
+        ///  Occurs whenever a user toggles between the artificial and the HEAD commits
+        ///  via the navigation menu item or the shortcut command.
+        /// </summary>
+        public event EventHandler ToggledBetweenArtificialAndHeadCommits;
 
         public static readonly string HotkeySettingsName = "RevisionGrid";
 
@@ -169,7 +174,8 @@ namespace GitUI
 
             // Delay raising the SelectionChanged event for a barely noticeable period to throttle
             // rapid changes, for example by holding the down arrow key in the revision grid.
-            _selectionTimer = new Timer(components) { Interval = 200 };
+            // 75ms is longer than the default keyboard repeat rate of 15 keypresses per second.
+            _selectionTimer = new Timer(components) { Interval = 75 };
             _selectionTimer.Tick += (_, e) =>
             {
                 _selectionTimer.Enabled = false;
@@ -355,10 +361,6 @@ namespace GitUI
             _fixedPathFilter = filter.path;
         }
 
-        #region Quick search
-
-        #endregion
-
         private void InitiateRefAction([CanBeNull] IReadOnlyList<IGitRef> refs, Action<IGitRef> action, FormQuickGitRefSelector.Action actionLabel)
         {
             if (refs == null || refs.Count < 1)
@@ -461,7 +463,7 @@ namespace GitUI
                     }
                 }
 
-                if (filterCommitter && !filter.IsNullOrWhiteSpace())
+                if (filterCommitter && !string.IsNullOrWhiteSpace(filter))
                 {
                     if (cmdLineSafe)
                     {
@@ -473,7 +475,7 @@ namespace GitUI
                     }
                 }
 
-                if (filterAuthor && !filter.IsNullOrWhiteSpace())
+                if (filterAuthor && !string.IsNullOrWhiteSpace(filter))
                 {
                     if (cmdLineSafe)
                     {
@@ -1248,7 +1250,7 @@ namespace GitUI
             var (first, selected) = getFirstAndSelected();
 
             compareToWorkingDirectoryMenuItem.Enabled = selected != null && selected.ObjectId != ObjectId.WorkTreeId;
-            compareWithCurrentBranchToolStripMenuItem.Enabled = Module.GetSelectedBranch(setDefaultIfEmpty: false).IsNotNullOrWhitespace();
+            compareWithCurrentBranchToolStripMenuItem.Enabled = !string.IsNullOrWhiteSpace(Module.GetSelectedBranch(setDefaultIfEmpty: false));
             compareSelectedCommitsMenuItem.Enabled = first != null && selected != null;
             openCommitsWithDiffToolMenuItem.Enabled = first != null && selected != null;
 
@@ -1711,7 +1713,20 @@ namespace GitUI
 
             SetEnabled(openPullRequestPageStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl));
 
-            RefreshOwnScripts();
+            mainContextMenu.AppendUserScripts(runScriptToolStripMenuItem,
+                (scriptKey) =>
+                {
+                    if (_settingsLoaded == false)
+                    {
+                        new FormSettings(UICommands).LoadSettings();
+                        _settingsLoaded = true;
+                    }
+
+                    if (ScriptRunner.RunScript(this, Module, scriptKey, UICommands, this).NeedsGridRefresh)
+                    {
+                        RefreshRevisions();
+                    }
+                });
 
             UpdateSeparators();
 
@@ -1979,6 +1994,13 @@ namespace GitUI
             public IReadOnlyList<GitItemStatus> Deleted { get; set; }
             public IReadOnlyList<GitItemStatus> SubmodulesChanged { get; set; }
             public IReadOnlyList<GitItemStatus> SubmodulesDirty { get; set; }
+
+            public bool HasChanges
+                => (Changed?.Count ?? 0) > 0
+                   || (New?.Count ?? 0) > 0
+                   || (Deleted?.Count ?? 0) > 0
+                   || (SubmodulesChanged?.Count ?? 0) > 0
+                   || (SubmodulesDirty?.Count ?? 0) > 0;
         }
 
         [CanBeNull]
@@ -2084,87 +2106,6 @@ namespace GitUI
 
         #endregion
 
-        private void RefreshOwnScripts()
-        {
-            RemoveOwnScripts();
-            AddOwnScripts();
-            return;
-
-            void RemoveOwnScripts()
-            {
-                runScriptToolStripMenuItem.DropDown.Items.Clear();
-
-                var list = mainContextMenu.Items.Cast<ToolStripItem>().ToList();
-
-                foreach (var item in list)
-                {
-                    if (item.Name.Contains("_ownScript"))
-                    {
-                        mainContextMenu.Items.RemoveByKey(item.Name);
-                    }
-                }
-
-                if (mainContextMenu.Items[mainContextMenu.Items.Count - 1] is ToolStripSeparator)
-                {
-                    mainContextMenu.Items.RemoveAt(mainContextMenu.Items.Count - 1);
-                }
-            }
-
-            void AddOwnScripts()
-            {
-                var scripts = ScriptManager.GetScripts();
-
-                var lastIndex = mainContextMenu.Items.Count;
-
-                foreach (var script in scripts)
-                {
-                    if (script.Enabled)
-                    {
-                        var item = new ToolStripMenuItem
-                        {
-                            Text = script.Name,
-                            Name = script.Name + "_ownScript",
-                            Image = script.GetIcon()
-                        };
-                        item.Click += RunScript;
-
-                        if (script.AddToRevisionGridContextMenu)
-                        {
-                            mainContextMenu.Items.Add(item);
-                        }
-                        else
-                        {
-                            runScriptToolStripMenuItem.DropDown.Items.Add(item);
-                        }
-                    }
-                }
-
-                if (lastIndex != mainContextMenu.Items.Count)
-                {
-                    mainContextMenu.Items.Insert(lastIndex, new ToolStripSeparator());
-                }
-
-                bool showScriptsMenu = runScriptToolStripMenuItem.DropDown.Items.Count > 0;
-                runScriptToolStripMenuItem.Visible = showScriptsMenu;
-
-                return;
-
-                void RunScript(object sender, EventArgs e)
-                {
-                    if (_settingsLoaded == false)
-                    {
-                        new FormSettings(UICommands).LoadSettings();
-                        _settingsLoaded = true;
-                    }
-
-                    if (ScriptRunner.RunScript(this, Module, sender.ToString(), UICommands, this).NeedsGridRefresh)
-                    {
-                        RefreshRevisions();
-                    }
-                }
-            }
-        }
-
         internal void ToggleShowGitNotes()
         {
             AppSettings.ShowGitNotes = !AppSettings.ShowGitNotes;
@@ -2193,6 +2134,36 @@ namespace GitUI
             ShowFirstParentsToggled?.Invoke(this, EventArgs.Empty);
 
             ForceRefreshRevisions();
+        }
+
+        internal void ToggleBetweenArtificialAndHeadCommits()
+        {
+            GoToRef(GetIdToSelect()?.ToString(), showNoRevisionMsg: false);
+            ToggledBetweenArtificialAndHeadCommits?.Invoke(this, EventArgs.Empty);
+            return;
+
+            ObjectId GetIdToSelect()
+            {
+                // Try the up to 3 next possibilities in the circle: WorkTree -> Index -> Head -> WorkTree.
+                // WorkTree and Index are skipped if and only if we do retrieve the ChangeCount info and HasChanges returns false.
+                ObjectId idToSelect = LatestSelectedRevision?.ObjectId;
+                for (int i = 0; i < 3; ++i)
+                {
+                    idToSelect = GetNextIdToSelect(idToSelect);
+                    if (idToSelect != null
+                        && (!idToSelect.IsArtificial || !AppSettings.ShowGitStatusForArtificialCommits || GetChangeCount(idToSelect).HasChanges))
+                    {
+                        return idToSelect;
+                    }
+                }
+
+                return CurrentCheckout;
+
+                ObjectId GetNextIdToSelect(ObjectId id)
+                    => id == ObjectId.WorkTreeId ? ObjectId.IndexId
+                     : id == ObjectId.IndexId ? CurrentCheckout
+                     : ObjectId.WorkTreeId;
+            }
         }
 
         #region Column visibilities
@@ -2268,7 +2239,7 @@ namespace GitUI
             Refresh();
         }
 
-        internal CommandStatus ExecuteCommand(Commands cmd)
+        internal CommandStatus ExecuteCommand(Command cmd)
         {
             return ExecuteCommand((int)cmd);
         }
@@ -2376,6 +2347,11 @@ namespace GitUI
 
         public void GoToRef(string refName, bool showNoRevisionMsg)
         {
+            if (string.IsNullOrEmpty(refName))
+            {
+                return;
+            }
+
             if (DetachedHeadParser.TryParse(refName, out var sha1))
             {
                 refName = sha1;
@@ -2398,21 +2374,21 @@ namespace GitUI
 
         internal void SetShortcutKeys()
         {
-            SetShortcutString(fixupCommitToolStripMenuItem, Commands.CreateFixupCommit);
-            SetShortcutString(selectAsBaseToolStripMenuItem, Commands.SelectAsBaseToCompare);
-            SetShortcutString(openCommitsWithDiffToolMenuItem, Commands.OpenCommitsWithDifftool);
-            SetShortcutString(compareToBaseToolStripMenuItem, Commands.CompareToBase);
-            SetShortcutString(compareToWorkingDirectoryMenuItem, Commands.CompareToWorkingDirectory);
-            SetShortcutString(compareSelectedCommitsMenuItem, Commands.CompareSelectedCommits);
+            SetShortcutString(fixupCommitToolStripMenuItem, Command.CreateFixupCommit);
+            SetShortcutString(selectAsBaseToolStripMenuItem, Command.SelectAsBaseToCompare);
+            SetShortcutString(openCommitsWithDiffToolMenuItem, Command.OpenCommitsWithDifftool);
+            SetShortcutString(compareToBaseToolStripMenuItem, Command.CompareToBase);
+            SetShortcutString(compareToWorkingDirectoryMenuItem, Command.CompareToWorkingDirectory);
+            SetShortcutString(compareSelectedCommitsMenuItem, Command.CompareSelectedCommits);
         }
 
-        private void SetShortcutString(ToolStripMenuItem item, Commands command)
+        private void SetShortcutString(ToolStripMenuItem item, Command command)
         {
             item.ShortcutKeyDisplayString = GetShortcutKeys(command)
                 .ToShortcutKeyDisplayString();
         }
 
-        internal Keys GetShortcutKeys(Commands cmd)
+        internal Keys GetShortcutKeys(Command cmd)
         {
             return GetShortcutKeys((int)cmd);
         }
@@ -2439,7 +2415,7 @@ namespace GitUI
         private void CompareWithCurrentBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var headBranch = Module.GetSelectedBranch(setDefaultIfEmpty: false);
-            if (headBranch.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(headBranch))
             {
                 MessageBox.Show(this, "No branch is currently selected", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -2575,88 +2551,6 @@ namespace GitUI
             RefreshRevisions();
         }
 
-        #region Nested type: RevisionGridInMemFilter
-
-        private sealed class RevisionGridInMemFilter
-        {
-            private readonly string _authorFilter;
-            private readonly Regex _authorFilterRegex;
-            private readonly string _committerFilter;
-            private readonly Regex _committerFilterRegex;
-            private readonly string _messageFilter;
-            private readonly Regex _messageFilterRegex;
-            private readonly string _shaFilter;
-            private readonly Regex _shaFilterRegex;
-
-            private RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
-            {
-                (_authorFilter, _authorFilterRegex) = SetUpVars(authorFilter, ignoreCase);
-                (_committerFilter, _committerFilterRegex) = SetUpVars(committerFilter, ignoreCase);
-                (_messageFilter, _messageFilterRegex) = SetUpVars(messageFilter, ignoreCase);
-
-                if (!string.IsNullOrEmpty(_messageFilter) && ObjectId.IsValidPartial(_messageFilter, minLength: 5))
-                {
-                    (_shaFilter, _shaFilterRegex) = SetUpVars(messageFilter, false);
-                }
-
-                (string filterStr, Regex filterRegex) SetUpVars(string filterValue, bool ignoreKase)
-                {
-                    var filterStr = filterValue?.Trim() ?? string.Empty;
-
-                    try
-                    {
-                        var options = ignoreKase ? RegexOptions.IgnoreCase : RegexOptions.None;
-                        return (filterStr, new Regex(filterStr, options));
-                    }
-                    catch (ArgumentException)
-                    {
-                        return (filterStr, null);
-                    }
-                }
-            }
-
-            public bool Predicate(GitRevision rev)
-            {
-                return CheckCondition(_authorFilter, _authorFilterRegex, rev.Author) &&
-                       CheckCondition(_committerFilter, _committerFilterRegex, rev.Committer) &&
-                       (CheckCondition(_messageFilter, _messageFilterRegex, rev.Body) ||
-                        (_shaFilter != null && CheckCondition(_shaFilter, _shaFilterRegex, rev.Guid)));
-
-                bool CheckCondition(string filter, Regex regex, string value)
-                {
-                    return string.IsNullOrEmpty(filter) ||
-                           (regex != null && value != null && regex.IsMatch(value));
-                }
-            }
-
-            [CanBeNull]
-            public static RevisionGridInMemFilter CreateIfNeeded([CanBeNull] string authorFilter,
-                [CanBeNull] string committerFilter,
-                [CanBeNull] string messageFilter,
-                bool ignoreCase)
-            {
-                if (string.IsNullOrEmpty(authorFilter) &&
-                    string.IsNullOrEmpty(committerFilter) &&
-                    string.IsNullOrEmpty(messageFilter) &&
-                    !ObjectId.IsValidPartial(messageFilter, minLength: 5))
-                {
-                    return null;
-                }
-
-                return new RevisionGridInMemFilter(
-                    authorFilter,
-                    committerFilter,
-                    messageFilter,
-                    ignoreCase);
-            }
-        }
-
-        #endregion
-
-        #region Nested type: SuperProjectInfo
-
-        #endregion
-
         #region Drag/drop patch files on revision grid
 
         private void OnGridViewDragDrop(object sender, DragEventArgs e)
@@ -2705,88 +2599,48 @@ namespace GitUI
                 }
             }
         }
+
         #endregion
 
         #region Hotkey commands
 
-        internal enum Commands
-        {
-            ToggleRevisionGraph = 0,
-            RevisionFilter = 1,
-            ToggleAuthorDateCommitDate = 2,
-            ToggleOrderRevisionsByDate = 3,
-            ToggleShowRelativeDate = 4,
-            ToggleDrawNonRelativesGray = 5,
-            ToggleShowGitNotes = 6,
-            //// <snip>
-            ToggleShowMergeCommits = 8,
-            ShowAllBranches = 9,
-            ShowCurrentBranchOnly = 10,
-            ShowFilteredBranches = 11,
-            ShowRemoteBranches = 12,
-            ShowFirstParent = 13,
-            GoToParent = 14,
-            GoToChild = 15,
-            ToggleHighlightSelectedBranch = 16,
-            NextQuickSearch = 17,
-            PrevQuickSearch = 18,
-            SelectCurrentRevision = 19,
-            GoToCommit = 20,
-            NavigateBackward = 21,
-            NavigateForward = 22,
-            SelectAsBaseToCompare = 23,
-            CompareToBase = 24,
-            CreateFixupCommit = 25,
-            ToggleShowTags = 26,
-            CompareToWorkingDirectory = 27,
-            CompareToCurrentBranch = 28,
-            CompareToBranch = 29,
-            CompareSelectedCommits = 30,
-            GoToMergeBaseCommit = 31,
-            OpenCommitsWithDifftool = 32
-        }
-
         protected override CommandStatus ExecuteCommand(int cmd)
         {
-            switch ((Commands)cmd)
+            switch ((Command)cmd)
             {
-                case Commands.ToggleRevisionGraph: ToggleRevisionGraphColumn(); break;
-                case Commands.RevisionFilter: ShowRevisionFilterDialog(); break;
-                case Commands.ToggleAuthorDateCommitDate: ToggleShowAuthorDate(); break;
-                case Commands.ToggleShowRelativeDate: ToggleShowRelativeDate(null); break;
-                case Commands.ToggleDrawNonRelativesGray: ToggleDrawNonRelativesGray(); break;
-                case Commands.ToggleShowGitNotes: ToggleShowGitNotes(); break;
-                case Commands.ToggleShowMergeCommits: ToggleShowMergeCommits(); break;
-                case Commands.ToggleShowTags: ToggleShowTags(); break;
-                case Commands.ShowAllBranches: ShowAllBranches(); break;
-                case Commands.ShowCurrentBranchOnly: ShowCurrentBranchOnly(); break;
-                case Commands.ShowFilteredBranches: ShowFilteredBranches(); break;
-                case Commands.ShowRemoteBranches: ToggleShowRemoteBranches(); break;
-                case Commands.ShowFirstParent: ShowFirstParent(); break;
-                case Commands.SelectCurrentRevision:
-                    if (CurrentCheckout != null)
-                    {
-                        SetSelectedRevision(new GitRevision(CurrentCheckout));
-                    }
-
-                    break;
-                case Commands.GoToCommit: MenuCommands.GotoCommitExecute(); break;
-                case Commands.GoToParent: goToParentToolStripMenuItem_Click(); break;
-                case Commands.GoToMergeBaseCommit: goToMergeBaseCommitToolStripMenuItem_Click(null, null); break;
-                case Commands.GoToChild: goToChildToolStripMenuItem_Click(); break;
-                case Commands.ToggleHighlightSelectedBranch: ToggleHighlightSelectedBranch(); break;
-                case Commands.NextQuickSearch: _quickSearchProvider.NextResult(down: true); break;
-                case Commands.PrevQuickSearch: _quickSearchProvider.NextResult(down: false); break;
-                case Commands.NavigateBackward: NavigateBackward(); break;
-                case Commands.NavigateForward: NavigateForward(); break;
-                case Commands.SelectAsBaseToCompare: selectAsBaseToolStripMenuItem_Click(null, null); break;
-                case Commands.CompareToBase: compareToBaseToolStripMenuItem_Click(null, null); break;
-                case Commands.CreateFixupCommit: FixupCommitToolStripMenuItemClick(null, null); break;
-                case Commands.OpenCommitsWithDifftool: DiffSelectedCommitsWithDifftool(); break;
-                case Commands.CompareToWorkingDirectory: compareToWorkingDirectoryMenuItem_Click(null, null); break;
-                case Commands.CompareToCurrentBranch: CompareWithCurrentBranchToolStripMenuItem_Click(null, null); break;
-                case Commands.CompareToBranch: CompareToBranchToolStripMenuItem_Click(null, null); break;
-                case Commands.CompareSelectedCommits: compareSelectedCommitsMenuItem_Click(null, null); break;
+                case Command.ToggleRevisionGraph: ToggleRevisionGraphColumn(); break;
+                case Command.RevisionFilter: ShowRevisionFilterDialog(); break;
+                case Command.ToggleAuthorDateCommitDate: ToggleShowAuthorDate(); break;
+                case Command.ToggleShowRelativeDate: ToggleShowRelativeDate(null); break;
+                case Command.ToggleDrawNonRelativesGray: ToggleDrawNonRelativesGray(); break;
+                case Command.ToggleShowGitNotes: ToggleShowGitNotes(); break;
+                case Command.ToggleShowMergeCommits: ToggleShowMergeCommits(); break;
+                case Command.ToggleShowTags: ToggleShowTags(); break;
+                case Command.ShowAllBranches: ShowAllBranches(); break;
+                case Command.ShowCurrentBranchOnly: ShowCurrentBranchOnly(); break;
+                case Command.ShowFilteredBranches: ShowFilteredBranches(); break;
+                case Command.ShowReflogReferences: ToggleShowReflogReferences(); break;
+                case Command.ShowRemoteBranches: ToggleShowRemoteBranches(); break;
+                case Command.ShowFirstParent: ShowFirstParent(); break;
+                case Command.ToggleBetweenArtificialAndHeadCommits: ToggleBetweenArtificialAndHeadCommits(); break;
+                case Command.SelectCurrentRevision: SetSelectedRevision(CurrentCheckout); break;
+                case Command.GoToCommit: MenuCommands.GotoCommitExecute(); break;
+                case Command.GoToParent: goToParentToolStripMenuItem_Click(); break;
+                case Command.GoToMergeBaseCommit: goToMergeBaseCommitToolStripMenuItem_Click(null, null); break;
+                case Command.GoToChild: goToChildToolStripMenuItem_Click(); break;
+                case Command.ToggleHighlightSelectedBranch: ToggleHighlightSelectedBranch(); break;
+                case Command.NextQuickSearch: _quickSearchProvider.NextResult(down: true); break;
+                case Command.PrevQuickSearch: _quickSearchProvider.NextResult(down: false); break;
+                case Command.NavigateBackward: NavigateBackward(); break;
+                case Command.NavigateForward: NavigateForward(); break;
+                case Command.SelectAsBaseToCompare: selectAsBaseToolStripMenuItem_Click(null, null); break;
+                case Command.CompareToBase: compareToBaseToolStripMenuItem_Click(null, null); break;
+                case Command.CreateFixupCommit: FixupCommitToolStripMenuItemClick(null, null); break;
+                case Command.OpenCommitsWithDifftool: DiffSelectedCommitsWithDifftool(); break;
+                case Command.CompareToWorkingDirectory: compareToWorkingDirectoryMenuItem_Click(null, null); break;
+                case Command.CompareToCurrentBranch: CompareWithCurrentBranchToolStripMenuItem_Click(null, null); break;
+                case Command.CompareToBranch: CompareToBranchToolStripMenuItem_Click(null, null); break;
+                case Command.CompareSelectedCommits: compareSelectedCommitsMenuItem_Click(null, null); break;
                 default:
                     {
                         var result = base.ExecuteCommand(cmd);
@@ -2801,6 +2655,21 @@ namespace GitUI
 
             return true;
         }
+        #endregion
+
+        #region IScriptHostControl
+
+        GitRevision IScriptHostControl.GetCurrentRevision()
+            => GetCurrentRevision();
+
+        GitRevision IScriptHostControl.GetLatestSelectedRevision()
+            => LatestSelectedRevision;
+
+        IReadOnlyList<GitRevision> IScriptHostControl.GetSelectedRevisions()
+            => GetSelectedRevisions();
+
+        Point IScriptHostControl.GetQuickItemSelectorLocation()
+            => GetQuickItemSelectorLocation();
 
         #endregion
     }

@@ -56,7 +56,7 @@ namespace GitCommands
         [ContractAnnotation("dirPath:notnull=>notnull")]
         public static string EnsureTrailingPathSeparator([CanBeNull] this string dirPath)
         {
-            if (!dirPath.IsNullOrEmpty() &&
+            if (!string.IsNullOrEmpty(dirPath) &&
                 dirPath[dirPath.Length - 1] != NativeDirectorySeparatorChar &&
                 dirPath[dirPath.Length - 1] != PosixDirectorySeparatorChar)
             {
@@ -87,6 +87,18 @@ namespace GitCommands
                  || path.StartsWith("git:", StringComparison.CurrentCultureIgnoreCase)
                  || path.StartsWith("ssh:", StringComparison.CurrentCultureIgnoreCase)
                  || path.StartsWith("file:", StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        public static bool CanBeGitURL(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return false;
+            }
+
+            return IsUrl(url)
+                   || url.EndsWith(".git", StringComparison.CurrentCultureIgnoreCase)
+                   || GitModule.IsValidGitWorkingDir(url);
         }
 
         [NotNull]
@@ -289,6 +301,12 @@ namespace GitCommands
                 }
 
                 fullName = FindFileInEnvVarFolder("ProgramFiles", location, fileName);
+                if (fullName != null)
+                {
+                    return fullName;
+                }
+
+                fullName = FindFileInEnvVarFolder("ProgramW6432", location, fileName);
                 if (fullName != null)
                 {
                     return fullName;

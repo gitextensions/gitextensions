@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -37,6 +38,8 @@ namespace GitUI.Editor
         public event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
         public event EventHandler HScrollPositionChanged;
         public event EventHandler VScrollPositionChanged;
+        public event EventHandler BottomScrollReached;
+        public event EventHandler TopScrollReached;
         public event EventHandler RequestDiffView;
         public new event EventHandler TextChanged;
         public event EventHandler TextLoaded;
@@ -49,6 +52,7 @@ namespace GitUI.Editor
         private bool _patchHighlighting;
         private Encoding _encoding;
         private Func<Task> _deferShowFunc;
+        private readonly ContinuousScrollEventManager _continuousScrollEventManager;
 
         [Description("Sets what kind of whitespace changes shall be ignored in diffs")]
         [DefaultValue(IgnoreWhitespaceKind.None)]
@@ -89,6 +93,13 @@ namespace GitUI.Editor
             internalFileViewer.KeyUp += (_, e) => OnKeyUp(e);
             internalFileViewer.EscapePressed += () => EscapePressed?.Invoke();
 
+            _continuousScrollEventManager = new ContinuousScrollEventManager();
+            _continuousScrollEventManager.BottomScrollReached += _continuousScrollEventManager_BottomScrollReached;
+            _continuousScrollEventManager.TopScrollReached += _continuousScrollEventManager_TopScrollReached;
+
+            PictureBox.MouseWheel += PictureBox_MouseWheel;
+            internalFileViewer.SetContinuousScrollManager(_continuousScrollEventManager);
+
             _async = new AsyncLoader();
             _async.LoadingError +=
                 (_, e) =>
@@ -118,6 +129,9 @@ namespace GitUI.Editor
             showEntireFileToolStripMenuItem.Checked = ShowEntireFile;
             SetStateOfContextLinesButtons();
 
+            automaticContinuousScrollToolStripMenuItem.Image = Images.UiScrollBar.AdaptLightness();
+            automaticContinuousScrollToolStripMenuItem.Checked = AppSettings.AutomaticContinuousScroll;
+
             showNonPrintChars.Image = Images.ShowWhitespace.AdaptLightness();
             showNonprintableCharactersToolStripMenuItem.Image = showNonPrintChars.Image;
             showNonPrintChars.Checked = AppSettings.ShowNonPrintingChars;
@@ -127,6 +141,7 @@ namespace GitUI.Editor
             ShowSyntaxHighlightingInDiff = AppSettings.ShowSyntaxHighlightingInDiff;
             showSyntaxHighlighting.Image = Resources.SyntaxHighlighting.AdaptLightness();
             showSyntaxHighlighting.Checked = ShowSyntaxHighlightingInDiff;
+            automaticContinuousScrollToolStripMenuItem.Text = Strings.ContScrollToNextFileOnlyWithAlt;
 
             IsReadOnly = true;
 
@@ -175,6 +190,28 @@ namespace GitUI.Editor
             };
 
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+        }
+
+        private void _continuousScrollEventManager_BottomScrollReached(object sender, EventArgs e)
+            => BottomScrollReached?.Invoke(sender, e);
+
+        private void _continuousScrollEventManager_TopScrollReached(object sender, EventArgs e)
+            => TopScrollReached?.Invoke(sender, e);
+
+        private void PictureBox_MouseWheel(object sender, MouseEventArgs e)
+        {
+            var isScrollingTowardTop = e.Delta > 0;
+            var isScrollingTowardBottom = e.Delta < 0;
+
+            if (isScrollingTowardTop)
+            {
+                _continuousScrollEventManager.RaiseTopScrollReached(sender, e);
+            }
+
+            if (isScrollingTowardBottom)
+            {
+                _continuousScrollEventManager.RaiseBottomScrollReached(sender, e);
+            }
         }
 
         private void OnUICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
@@ -245,6 +282,16 @@ namespace GitUI.Editor
                     }
                 }).FileAndForget();
             }
+        }
+
+        public void ScrollToTop()
+        {
+            internalFileViewer.ScrollToTop();
+        }
+
+        public void ScrollToBottom()
+        {
+            internalFileViewer.ScrollToBottom();
         }
 
         [DefaultValue(0)]
@@ -528,6 +575,13 @@ namespace GitUI.Editor
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
+                    if (!string.IsNullOrWhiteSpace(item?.ErrorMessage))
+                    {
+                        // Present error (e.g. parsing Git)
+                        await ViewTextAsync(item.Name, item.ErrorMessage);
+                        return;
+                    }
+
                     if (item.IsSubmodule)
                     {
                         var getStatusTask = item.GetSubmoduleStatusAsync();
@@ -560,7 +614,7 @@ namespace GitUI.Editor
                     {
                         var patch = await Module.GetCurrentChangesAsync(
                             item.Name, item.OldName, isStaged, GetExtraDiffArguments(), Encoding);
-                        await ViewPatchAsync(item.Name, patch?.Text ?? "", openWithDifftool, isText: false);
+                        await ViewPatchAsync(item.Name, patch?.Text ?? "", openWithDifftool);
                     }
 
                     SetVisibilityDiffContextMenuStaging();
@@ -573,40 +627,37 @@ namespace GitUI.Editor
         /// <param name="fileName">The fileName to present</param>
         /// <param name="text">The patch text</param>
         /// <param name="openWithDifftool">The action to open the difftool</param>
-        /// <param name="isText">Handle as 'text' rather than diff/patch</param>
         public void ViewPatch([CanBeNull] string fileName,
             [NotNull] string text,
-            [CanBeNull] Action openWithDifftool = null,
-            bool isText = false)
+            [CanBeNull] Action openWithDifftool = null)
         {
             ThreadHelper.JoinableTaskFactory.Run(
-                () => ViewPatchAsync(fileName, text, openWithDifftool, isText));
+                () => ViewPatchAsync(fileName, text, openWithDifftool));
         }
 
-        public async Task ViewPatchAsync(string fileName, string text, Action openWithDifftool, bool isText)
+        public async Task ViewPatchAsync(string fileName, string text, Action openWithDifftool)
         {
             await ShowOrDeferAsync(
                 text.Length,
                 () =>
                 {
-                    if (isText)
-                    {
-                        // A submodule 'patch' is handled as text
-                        ResetForText(fileName);
-                        internalFileViewer.SetText(text, openWithDifftool, isDiff: false);
-                    }
-                    else
-                    {
-                        ResetForDiff(fileName);
-                        internalFileViewer.SetText(text, openWithDifftool, isDiff: true);
-                    }
+                    ResetForDiff(fileName);
+                    internalFileViewer.SetText(text, openWithDifftool, isDiff: true);
 
                     TextLoaded?.Invoke(this, null);
                     return Task.CompletedTask;
                 });
         }
 
-        public async Task ViewTextAsync([NotNull] string fileName, [NotNull] string text,
+        public void ViewText([CanBeNull] string fileName,
+            [NotNull] string text,
+            [CanBeNull] Action openWithDifftool = null)
+        {
+            ThreadHelper.JoinableTaskFactory.Run(
+                () => ViewTextAsync(fileName, text, openWithDifftool));
+        }
+
+        public async Task ViewTextAsync([CanBeNull] string fileName, [NotNull] string text,
             [CanBeNull] Action openWithDifftool = null, bool checkGitAttributes = false)
         {
             await ShowOrDeferAsync(
@@ -1147,7 +1198,7 @@ namespace GitUI.Editor
 
             var text = internalFileViewer.GetText();
 
-            if (!text.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(text))
             {
                 ClipboardUtil.TrySetText(text);
             }
@@ -1276,6 +1327,12 @@ namespace GitUI.Editor
 
             // Do not go to the start of the file if no change is found
             ////TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = 0;
+        }
+
+        private void ContinuousScrollToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            automaticContinuousScrollToolStripMenuItem.Checked = !automaticContinuousScrollToolStripMenuItem.Checked;
+            AppSettings.AutomaticContinuousScroll = automaticContinuousScrollToolStripMenuItem.Checked;
         }
 
         private void ShowNonprintableCharactersToolStripMenuItemClick(object sender, EventArgs e)
@@ -1617,6 +1674,16 @@ namespace GitUI.Editor
 
             public ToolStripButton IgnoreAllWhitespacesButton => _fileViewer.ignoreAllWhitespaces;
             public ToolStripMenuItem IgnoreAllWhitespacesMenuItem => _fileViewer.ignoreAllWhitespaceChangesToolStripMenuItem;
+        }
+
+        public void SetGitBlameGutter(IEnumerable<GitBlameEntry> gitBlameEntries)
+        {
+            internalFileViewer.ShowGutterAvatars = AppSettings.BlameShowAuthorAvatar;
+
+            if (AppSettings.BlameShowAuthorAvatar)
+            {
+                internalFileViewer.SetGitBlameGutter(gitBlameEntries);
+            }
         }
     }
 }

@@ -81,7 +81,7 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
 
-            if (CanBeGitURL(_url))
+            if (PathUtil.CanBeGitURL(_url))
             {
                 _NO_TRANSLATE_From.Text = _url;
             }
@@ -101,7 +101,7 @@ namespace GitUI.CommandsDialogs
                         string text = Clipboard.GetText(TextDataFormat.Text) ?? string.Empty;
 
                         // See if it's a valid URL.
-                        if (CanBeGitURL(text))
+                        if (PathUtil.CanBeGitURL(text))
                         {
                             _NO_TRANSLATE_From.Text = text;
                         }
@@ -114,10 +114,10 @@ namespace GitUI.CommandsDialogs
 
                 // if the From field is empty, then fill it with the current repository remote URL in hope
                 // that the cloned repository is hosted on the same server
-                if (_NO_TRANSLATE_From.Text.IsNullOrWhiteSpace())
+                if (string.IsNullOrWhiteSpace(_NO_TRANSLATE_From.Text))
                 {
                     var currentBranchRemote = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, Module.GetSelectedBranch()));
-                    if (currentBranchRemote.IsNullOrEmpty())
+                    if (string.IsNullOrEmpty(currentBranchRemote))
                     {
                         var remotes = Module.GetRemoteNames();
 
@@ -132,7 +132,7 @@ namespace GitUI.CommandsDialogs
                     }
 
                     string pushUrl = Module.GetSetting(string.Format(SettingKeyString.RemotePushUrl, currentBranchRemote));
-                    if (pushUrl.IsNullOrEmpty())
+                    if (string.IsNullOrEmpty(pushUrl))
                     {
                         pushUrl = Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentBranchRemote));
                     }
@@ -142,7 +142,7 @@ namespace GitUI.CommandsDialogs
                     try
                     {
                         // If the from directory is filled with the pushUrl from current working directory, set the destination directory to the parent
-                        if (pushUrl.IsNotNullOrWhitespace() && _NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && Module.WorkingDir.IsNotNullOrWhitespace())
+                        if (!string.IsNullOrWhiteSpace(pushUrl) && string.IsNullOrWhiteSpace(_NO_TRANSLATE_To.Text) && !string.IsNullOrWhiteSpace(Module.WorkingDir))
                         {
                             _NO_TRANSLATE_To.Text = Path.GetDirectoryName(Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar));
                         }
@@ -156,7 +156,7 @@ namespace GitUI.CommandsDialogs
 
             // if there is no destination directory, then use the parent of the current working directory
             // this would clone the new repo at the same level as the current one by default
-            if (_NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && Module.WorkingDir.IsNotNullOrWhitespace())
+            if (string.IsNullOrWhiteSpace(_NO_TRANSLATE_To.Text) && !string.IsNullOrWhiteSpace(Module.WorkingDir))
             {
                 if (Module.IsValidGitWorkingDir())
                 {
@@ -179,18 +179,6 @@ namespace GitUI.CommandsDialogs
             {
                 cbLfs.Checked = false;
             }
-        }
-
-        private static bool CanBeGitURL(string url)
-        {
-            if (url.IsNotNullOrWhitespace())
-            {
-                return false;
-            }
-
-            return PathUtil.IsUrl(url)
-                || url.EndsWith(".git", StringComparison.CurrentCultureIgnoreCase)
-                || GitModule.IsValidGitWorkingDir(url);
         }
 
         private void OkClick(object sender, EventArgs e)

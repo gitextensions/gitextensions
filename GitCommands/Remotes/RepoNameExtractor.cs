@@ -38,7 +38,7 @@ namespace GitCommands.Remotes
             // Extract "name of repo" from remote url
             var remoteName = module.GetCurrentRemote();
 
-            if (remoteName.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(remoteName))
             {
                 // No remote for the branch, for instance a submodule. Use first remote.
                 var remotes = module.GetRemoteNames();

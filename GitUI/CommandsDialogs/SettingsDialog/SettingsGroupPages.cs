@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog
+﻿using GitCommands;
+
+namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public class GitSettingsGroup : GroupSettingsPage
     {
@@ -16,7 +18,7 @@
     public class GitExtensionsSettingsGroup : GroupSettingsPage
     {
         public GitExtensionsSettingsGroup()
-            : base("Git Extensions")
+            : base(AppSettings.ApplicationName)
         {
         }
 

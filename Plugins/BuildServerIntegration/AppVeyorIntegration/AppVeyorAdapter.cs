@@ -77,7 +77,7 @@ namespace AppVeyorIntegration
             var accountName = config.GetString("AppVeyorAccountName", null);
             _accountToken = config.GetString("AppVeyorAccountToken", null);
             var projectNamesSetting = config.GetString("AppVeyorProjectName", null);
-            if (accountName.IsNullOrWhiteSpace() && projectNamesSetting.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(accountName) && string.IsNullOrWhiteSpace(projectNamesSetting))
             {
                 return;
             }
@@ -100,13 +100,13 @@ namespace AppVeyorIntegration
                 (!useAllProjects && Projects.Keys.Intersect(projectNames).Count() != projectNames.Length))
             {
                 Projects.Clear();
-                if (_accountToken.IsNullOrWhiteSpace())
+                if (string.IsNullOrWhiteSpace(_accountToken))
                 {
                     FillProjectsFromSettings(accountName, projectNames);
                 }
                 else
                 {
-                    if (accountName.IsNullOrWhiteSpace())
+                    if (string.IsNullOrWhiteSpace(accountName))
                     {
                         return;
                     }
@@ -116,7 +116,7 @@ namespace AppVeyorIntegration
                         {
                             var result = await GetResponseAsync(_httpClientAppVeyor, ApiBaseUrl, CancellationToken.None).ConfigureAwait(false);
 
-                            if (result.IsNullOrWhiteSpace())
+                            if (string.IsNullOrWhiteSpace(result))
                             {
                                 return;
                             }
@@ -172,7 +172,7 @@ namespace AppVeyorIntegration
                 Timeout = TimeSpan.FromMinutes(2),
                 BaseAddress = new Uri(baseUrl, UriKind.Absolute),
             };
-            if (accountToken.IsNotNullOrWhitespace())
+            if (!string.IsNullOrWhiteSpace(accountToken))
             {
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accountToken);
             }

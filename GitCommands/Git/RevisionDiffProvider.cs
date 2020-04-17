@@ -74,21 +74,21 @@ namespace GitCommands.Git
             // Note: As artificial are options, diff unstage..unstage and
             // stage..stage will show output, different from e.g. HEAD..HEAD
             // Diff-to-itself is not always disabled or is transient why this is not handled as error in release builds
-            Debug.Assert(!(firstRevision == secondRevision && (firstRevision.IsNullOrEmpty() || firstRevision == StagedOpt)),
+            Debug.Assert(!(firstRevision == secondRevision && (string.IsNullOrEmpty(firstRevision) || firstRevision == StagedOpt)),
                 "Unexpectedly two identical artificial revisions to diff: " + firstRevision +
                 ". This will be displayed as diff to HEAD, not an identical diff.");
 
             // As empty (unstaged) and --cached (staged) are options (not revisions),
             // order must be preserved with -R
-            if (firstRevision != secondRevision && (firstRevision.IsNullOrEmpty() ||
-                               (firstRevision == StagedOpt && !secondRevision.IsNullOrEmpty())))
+            if (firstRevision != secondRevision && (string.IsNullOrEmpty(firstRevision) ||
+                               (firstRevision == StagedOpt && !string.IsNullOrEmpty(secondRevision))))
             {
                 extra.Add("-R");
             }
 
             // Special case: Remove options comparing worktree-index
-            if ((firstRevision.IsNullOrEmpty() && secondRevision == StagedOpt) ||
-                (firstRevision == StagedOpt && secondRevision.IsNullOrEmpty()))
+            if ((string.IsNullOrEmpty(firstRevision) && secondRevision == StagedOpt) ||
+                (firstRevision == StagedOpt && string.IsNullOrEmpty(secondRevision)))
             {
                 firstRevision = secondRevision = "";
             }
@@ -100,7 +100,7 @@ namespace GitCommands.Git
                 secondRevision = "";
             }
 
-            if (fileName.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(fileName))
             {
                 extra.Add(firstRevision);
                 extra.Add(secondRevision);

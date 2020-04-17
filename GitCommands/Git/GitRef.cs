@@ -40,7 +40,7 @@ namespace GitCommands
 
             var name = ParseName();
 
-            Name = name.IsNullOrWhiteSpace() ? CompleteName : name;
+            Name = string.IsNullOrWhiteSpace(name) ? CompleteName : name;
 
             _remoteSettingName = $"branch.{Name}.remote";
             _mergeSettingName = $"branch.{Name}.merge";

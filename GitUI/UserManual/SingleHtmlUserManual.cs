@@ -32,7 +32,7 @@ namespace GitUI.UserManual
         public string GetUrl()
         {
             return string.Format("{0}/index.html{1}{2}",
-                                 Location, _anchorName.IsNullOrEmpty() ? "" : "#", _anchorName);
+                                 Location, string.IsNullOrEmpty(_anchorName) ? "" : "#", _anchorName);
         }
     }
 }

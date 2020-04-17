@@ -28,7 +28,7 @@ namespace GitCommands.ExternalLinks
 
         private static IEnumerable<ConfigFileRemote> GetMatchingRemotes(ExternalLinkDefinition definition, IEnumerable<ConfigFileRemote> remotes)
         {
-            if (definition.UseRemotesPattern.IsNullOrWhiteSpace() || definition.UseRemotesRegex.Value == null)
+            if (string.IsNullOrWhiteSpace(definition.UseRemotesPattern) || definition.UseRemotesRegex.Value == null)
             {
                 return remotes;
             }
@@ -47,7 +47,7 @@ namespace GitCommands.ExternalLinks
         {
             var allMatches = new List<Match>();
 
-            if (definition.RemoteSearchPattern.IsNullOrWhiteSpace() || definition.RemoteSearchPatternRegex.Value == null)
+            if (string.IsNullOrWhiteSpace(definition.RemoteSearchPattern) || definition.RemoteSearchPatternRegex.Value == null)
             {
                 allMatches.Add(null);
                 return allMatches;
@@ -62,7 +62,7 @@ namespace GitCommands.ExternalLinks
             {
                 if (definition.RemoteSearchInParts.Contains(ExternalLinkDefinition.RemotePart.URL))
                 {
-                    if (remote.Url.IsNotNullOrWhitespace())
+                    if (!string.IsNullOrWhiteSpace(remote.Url))
                     {
                         remoteUrls.Add(remote.Url);
                     }
@@ -70,7 +70,7 @@ namespace GitCommands.ExternalLinks
 
                 if (definition.RemoteSearchInParts.Contains(ExternalLinkDefinition.RemotePart.PushURL))
                 {
-                    if (remote.PushUrl.IsNotNullOrWhitespace())
+                    if (!string.IsNullOrWhiteSpace(remote.PushUrl))
                     {
                         remoteUrls.Add(remote.PushUrl);
                     }
@@ -123,7 +123,7 @@ namespace GitCommands.ExternalLinks
 
         private static IEnumerable<ExternalLink> ParseRevisionPart(GitRevision revision, ExternalLinkDefinition definition, Match remoteMatch, string part)
         {
-            if (definition.SearchPattern.IsNullOrEmpty() || definition.SearchPatternRegex.Value == null || part == null)
+            if (string.IsNullOrEmpty(definition.SearchPattern) || definition.SearchPatternRegex.Value == null || part == null)
             {
                 yield break;
             }
@@ -136,7 +136,7 @@ namespace GitCommands.ExternalLinks
                 var match = matches[i];
                 if (match.Success)
                 {
-                    if (definition.NestedSearchPattern.IsNullOrEmpty())
+                    if (string.IsNullOrEmpty(definition.NestedSearchPattern))
                     {
                         allMatches.Add(match);
                     }

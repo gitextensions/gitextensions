@@ -164,29 +164,13 @@ namespace GitUI.CommitInfo
 
         private void RevisionInfoLinkClicked(object sender, LinkClickedEventArgs e)
         {
-            var link = _linkFactory.ParseLink(e.LinkText);
-
             try
             {
-                var result = new Uri(link);
-                if (result.Scheme == "gitext")
-                {
-                    CommandClickedEvent?.Invoke(sender, new CommandEventArgs(result.Host, result.AbsolutePath.TrimStart('/')));
-                }
-                else
-                {
-                    using (var process = new Process
-                    {
-                        EnableRaisingEvents = false,
-                        StartInfo = { FileName = result.AbsoluteUri }
-                    })
-                    {
-                        process.Start();
-                    }
-                }
+                _linkFactory.ExecuteLink(e.LinkText, commandEventArgs => CommandClickedEvent?.Invoke(sender, commandEventArgs), ShowAll);
             }
-            catch (UriFormatException)
+            catch (Exception ex)
             {
+                MessageBox.Show(this, ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -206,7 +190,7 @@ namespace GitUI.CommitInfo
             ReloadCommitInfo();
         }
 
-        public void ShowAll(string what)
+        private void ShowAll(string what)
         {
             switch (what)
             {

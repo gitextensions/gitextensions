@@ -17,7 +17,10 @@
     -->
   <PropertyGroup>
     <_IsTfsInterop>$(MSBuildProjectName.StartsWith('TfsInterop.'))</_IsTfsInterop>
-    <_AssemblyRename>$(ContinuousIntegrationBuild) != true and !$(MSBuildProjectName.StartsWith('GitExtensions.')) and '$(_IsTfsInterop)' != true</_AssemblyRename>
+
+    <_AssemblyRename>false</_AssemblyRename>
+    <_AssemblyRename Condition="$(ContinuousIntegrationBuild) != true and !$(MSBuildProjectName.StartsWith('GitExtensions.')) and '$(_IsTfsInterop)' != true">true</_AssemblyRename>
+
     <_PluginsBaseOutputPath>$([MSBuild]::NormalizeDirectory('$(GitExtensionsOutputPath)', '$(TargetFramework)', 'Plugins'))</_PluginsBaseOutputPath>
     <_BaseOutputPath>$([MSBuild]::NormalizeDirectory('$(_PluginsBaseOutputPath)', '$(OutDirName)'))</_BaseOutputPath>
     <_BaseOutputPath Condition="'$(_IsTfsInterop)' == true">$([MSBuild]::NormalizeDirectory('$(_PluginsBaseOutputPath)', 'TfsIntegration'))</_BaseOutputPath>

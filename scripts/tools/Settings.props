@@ -3,7 +3,7 @@
 <Project>
 
   <Import Project="ProjectLayout.props" />
-  <Import Project="DefaultVersions.props"/>
+  <Import Project="..\..\Solution.Versions.props" />
   <Import Project="ProjectDefaults.props"/>
   <Import Project="Tests.props" Condition="'$(DisableArcadeTestFramework)' != 'true'" />
 

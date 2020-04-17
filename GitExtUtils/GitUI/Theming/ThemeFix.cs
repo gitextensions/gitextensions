@@ -49,13 +49,13 @@ namespace GitExtUtils.GitUI.Theming
             where TControl : Control
         {
             return c.FindDescendantsOfType<TControl>(SkipThemeAware)
-                .Where(IsNotFixedControl);
+                .Where(control => TryAddToWeakTable(control, AlreadyFixedControls));
         }
 
         private static IEnumerable<ContextMenuStrip> ContextMenusToFix(this Control c)
         {
             return c.FindDescendantsOfType<Control>()
-                .Where(IsNotFixedContextMenuOwner)
+                .Where(control => TryAddToWeakTable(control, AlreadyFixedContextMenuOwners))
                 .Select(_ => _.ContextMenuStrip)
                 .Where(_ => _ != null);
         }
@@ -149,15 +149,7 @@ namespace GitExtUtils.GitUI.Theming
             c.ForeColor = c.ForeColor;
         }
 
-        private static bool IsNotFixedControl(IWin32Window control) =>
-            add(AlreadyFixedControls, control);
-
-        private static bool IsNotFixedContextMenuOwner(IWin32Window control) =>
-            add(AlreadyFixedContextMenuOwners, control);
-
-        private static bool add(
-            ConditionalWeakTable<IWin32Window, IWin32Window> weakTable,
-            IWin32Window element)
+        private static bool TryAddToWeakTable(IWin32Window element, ConditionalWeakTable<IWin32Window, IWin32Window> weakTable)
         {
             if (weakTable.TryGetValue(element, out _))
             {
