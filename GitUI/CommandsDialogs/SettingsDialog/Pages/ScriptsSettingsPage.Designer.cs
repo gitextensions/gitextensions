@@ -37,7 +37,6 @@
             this.chdrNames = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chdrEvents = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chdrCommand = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chdrArguments = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panelButtons = new System.Windows.Forms.FlowLayoutPanel();
             this.btnAdd = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
@@ -107,8 +106,7 @@
             this.lvScripts.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chdrNames,
             this.chdrEvents,
-            this.chdrCommand,
-            this.chdrArguments});
+            this.chdrCommand});
             this.lvScripts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvScripts.FullRowSelect = true;
             this.lvScripts.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
@@ -132,17 +130,12 @@
             // chdrEvents
             // 
             this.chdrEvents.Text = "Event";
-            this.chdrEvents.Width = 100;
+            this.chdrEvents.Width = 130;
             // 
             // chdrCommand
             // 
             this.chdrCommand.Text = "Command";
-            this.chdrCommand.Width = 100;
-            // 
-            // chdrArguments
-            // 
-            this.chdrArguments.Text = "Arguments";
-            this.chdrArguments.Width = 200;
+            this.chdrCommand.Width = 330;
             // 
             // panelButtons
             // 
@@ -228,6 +221,5 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.ColumnHeader chdrEvents;
         private System.Windows.Forms.ColumnHeader chdrCommand;
-        private System.Windows.Forms.ColumnHeader chdrArguments;
     }
 }

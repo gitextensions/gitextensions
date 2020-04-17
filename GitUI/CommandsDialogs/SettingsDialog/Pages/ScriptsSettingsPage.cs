@@ -216,8 +216,7 @@ Current Branch:
                     lvScripts.Items.Add(lvitem);
 
                     lvitem.SubItems.Add(script.OnEvent.ToString());
-                    lvitem.SubItems.Add(script.Command);
-                    lvitem.SubItems.Add(script.Arguments);
+                    lvitem.SubItems.Add(string.Concat(script.Command, " ", script.Arguments));
                 }
 
                 lvScripts.SelectedIndexChanged += lvScripts_SelectedIndexChanged;
