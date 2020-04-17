@@ -2410,7 +2410,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void RevisionInfo_CommandClicked(object sender, CommitInfo.CommandEventArgs e)
+        private void RevisionInfo_CommandClicked(object sender, ResourceManager.CommandEventArgs e)
         {
             // TODO this code duplicated in FormFileHistory.Blame_CommandClick
             switch (e.Command)
@@ -2448,9 +2448,8 @@ namespace GitUI.CommandsDialogs
                 case "navigateforward":
                     RevisionGrid.NavigateForward();
                     break;
-                case "showall":
-                    RevisionInfo.ShowAll(e.Data);
-                    break;
+                default:
+                    throw new InvalidOperationException($"unexpected internal link: {e.Command}/{e.Data}");
             }
         }
 

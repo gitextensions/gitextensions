@@ -328,7 +328,7 @@ namespace GitUI.CommandsDialogs
             this.Blame.Name = "Blame";
             this.Blame.Size = new System.Drawing.Size(744, 291);
             this.Blame.TabIndex = 0;
-            this.Blame.CommandClick += new System.EventHandler<GitUI.CommitInfo.CommandEventArgs>(this.Blame_CommandClick);
+            this.Blame.CommandClick += new System.EventHandler<ResourceManager.CommandEventArgs>(this.Blame_CommandClick);
             // 
             // ToolStrip
             // 

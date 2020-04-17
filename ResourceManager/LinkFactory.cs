@@ -1,23 +1,42 @@
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Net;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace ResourceManager
 {
     public interface ILinkFactory
     {
         void Clear();
+
         string CreateLink(string caption, string uri);
+
         string CreateTagLink(string tag);
+
         string CreateBranchLink(string noPrefixBranch);
+
         string CreateCommitLink(ObjectId objectId, string linkText = null, bool preserveGuidInLinkText = false);
+
         string CreateShowAllLink(string what);
-        string ParseLink(string linkText);
+
+        void ExecuteLink(string linkText, Action<CommandEventArgs> handleInternalLink = null, Action<string> showAll = null);
+
+        [ContractAnnotation("=>false,commandEventArgs:null")]
+        [ContractAnnotation("=>true,commandEventArgs:notnull")]
+        bool ParseInternalScheme(Uri uri, out CommandEventArgs commandEventArgs);
+
+        [ContractAnnotation("=>false,uri:null")]
+        [ContractAnnotation("=>true,uri:notnull")]
+        bool ParseLink(string linkText, out Uri uri);
     }
 
     public sealed class LinkFactory : ILinkFactory
     {
+        private const string InternalScheme = "gitext";
+        private const string ShowAll = "showall";
+
         private readonly ConcurrentDictionary<string, string> _linksMap = new ConcurrentDictionary<string, string>();
 
         public void Clear()
@@ -44,7 +63,7 @@ namespace ResourceManager
         {
             if (tag != "…")
             {
-                return AddLink(tag, "gitext://gototag/" + tag);
+                return AddLink(tag, $"{InternalScheme}://gototag/" + tag);
             }
 
             return WebUtility.HtmlEncode(tag);
@@ -54,7 +73,7 @@ namespace ResourceManager
         {
             if (noPrefixBranch != "…")
             {
-                return AddLink(noPrefixBranch, "gitext://gotobranch/" + noPrefixBranch);
+                return AddLink(noPrefixBranch, $"{InternalScheme}://gotobranch/" + noPrefixBranch);
             }
 
             return WebUtility.HtmlEncode(noPrefixBranch);
@@ -82,26 +101,81 @@ namespace ResourceManager
                 }
             }
 
-            return AddLink(linkText, "gitext://gotocommit/" + objectId);
+            return AddLink(linkText, $"{InternalScheme}://gotocommit/" + objectId);
         }
 
         public string CreateShowAllLink(string what)
-            => AddLink($"[ {Strings.ShowAll} ]", $"gitext://showall/{what}");
+            => AddLink($"[ {Strings.ShowAll} ]", $"{InternalScheme}://{ShowAll}/{what}");
 
-        public string ParseLink(string linkText)
+        public void ExecuteLink(string linkText, Action<CommandEventArgs> handleInternalLink = null, Action<string> showAll = null)
         {
+            if (!ParseLink(linkText, out var uri))
+            {
+                return;
+            }
+
+            if (ParseInternalScheme(uri, out var commandEventArgs))
+            {
+                if (commandEventArgs.Command == ShowAll)
+                {
+                    if (showAll == null)
+                    {
+                        throw new InvalidOperationException($"unexpected internal link: {linkText}");
+                    }
+
+                    showAll(commandEventArgs.Data);
+                    return;
+                }
+
+                if (handleInternalLink == null)
+                {
+                    throw new InvalidOperationException($"unexpected internal link: {linkText}");
+                }
+
+                handleInternalLink(commandEventArgs);
+                return;
+            }
+
+            using var process = new Process
+            {
+                EnableRaisingEvents = false,
+                StartInfo = { FileName = uri.AbsoluteUri }
+            };
+            process.Start();
+        }
+
+        public bool ParseInternalScheme(Uri uri, out CommandEventArgs commandEventArgs)
+        {
+            if (uri?.Scheme == InternalScheme)
+            {
+                commandEventArgs = new CommandEventArgs(uri.Host, uri.AbsolutePath.TrimStart('/'));
+                return true;
+            }
+
+            commandEventArgs = null;
+            return false;
+        }
+
+        public bool ParseLink(string linkText, out Uri uri)
+        {
+            if (linkText == null)
+            {
+                uri = null;
+                return false;
+            }
+
             if (_linksMap.TryGetValue(linkText, out var linkUri))
             {
-                return linkUri;
+                return Uri.TryCreate(linkUri, UriKind.Absolute, out uri);
             }
 
             var uriCandidate = linkText;
 
             while (true)
             {
-                if (Uri.TryCreate(uriCandidate, UriKind.Absolute, out var uri))
+                if (Uri.TryCreate(uriCandidate, UriKind.Absolute, out uri))
                 {
-                    return uri.AbsoluteUri;
+                    return true;
                 }
 
                 var idx = uriCandidate.IndexOf('#');
@@ -114,7 +188,7 @@ namespace ResourceManager
                 uriCandidate = uriCandidate.Substring(idx + 1);
             }
 
-            return linkText;
+            return false;
         }
     }
 }
