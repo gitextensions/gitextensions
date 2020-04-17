@@ -27,14 +27,14 @@ namespace PathTests
         [TestCase(@"\\wsl$\Ubuntu\home\jack\.\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
         public void SolveUriLocalPath(string input, string expected)
         {
-            Assert.AreEqual(expected, PathUtil.SolveUriLocalPath(input));
+            Assert.AreEqual(expected, PathUtil.Resolve(input));
         }
 
         [TestCase(@"\\w$\work\", typeof(UriFormatException))]
         [TestCase(@":$\work\", typeof(UriFormatException))]
         public void SolveUriLocalPathExceptions(string input, Type expectedException)
         {
-            Assert.Throws(expectedException, () => PathUtil.SolveUriLocalPath(input));
+            Assert.Throws(expectedException, () => PathUtil.Resolve(input));
         }
     }
 }

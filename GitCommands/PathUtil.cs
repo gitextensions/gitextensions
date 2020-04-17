@@ -124,7 +124,7 @@ namespace GitCommands
 
             try
             {
-                return Path.GetFullPath(PathUtil.SolveUriLocalPath(path));
+                return Path.GetFullPath(PathUtil.Resolve(path));
             }
             catch (UriFormatException)
             {
@@ -133,30 +133,25 @@ namespace GitCommands
         }
 
         [NotNull]
-        public static string SolveUriLocalPath([NotNull] string path, [NotNull] string relativePath = "")
+        public static string Resolve([NotNull] string path, string relativePath = "")
         {
-            // Fix for on purpose invalid machine name of WSL in Windows 10
-            var wslPathReplaced = false;
-            if (path.StartsWith(@"\\wsl$\"))
+            if (string.IsNullOrWhiteSpace(path))
             {
-                wslPathReplaced = true;
+                throw new ArgumentNullException(nameof(path));
+            }
 
+            // Fix for on purpose invalid machine name of WSL in Windows 10
+            bool replaceWslPath = path.StartsWith(@"\\wsl$\");
+            if (replaceWslPath)
+            {
                 // Temporarily replace machine name with a valid name
                 path = Regex.Replace(path, "^" + Regex.Escape(@"\\wsl$\"), @"\\wsl\");
             }
 
-            string localPath;
+            string localPath =
+                (string.IsNullOrEmpty(relativePath) ? new Uri(path) : new Uri(new Uri(path), relativePath)).LocalPath;
 
-            if (relativePath.Length > 0)
-            {
-                localPath = new Uri(new Uri(path), relativePath).LocalPath;
-            }
-            else
-            {
-                localPath = new Uri(path).LocalPath;
-            }
-
-            if (wslPathReplaced)
+            if (replaceWslPath)
             {
                 // Revert temporary replacement of WSL machine name
                 localPath = Regex.Replace(localPath, "^" + Regex.Escape(@"\\wsl\"), @"\\wsl$\");
