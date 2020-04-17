@@ -8872,10 +8872,6 @@ Current Branch:
 {cDefaultRemotePathFromUrl}</source>
         <target />
       </trans-unit>
-      <trans-unit id="chdrArguments.Text">
-        <source>Arguments</source>
-        <target />
-      </trans-unit>
       <trans-unit id="chdrCommand.Text">
         <source>Command</source>
         <target />
