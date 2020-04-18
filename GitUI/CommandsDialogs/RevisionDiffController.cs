@@ -34,6 +34,7 @@ namespace GitUI.CommandsDialogs
             bool isAnyItemWorkTree = false,
             bool isBareRepository = false,
             bool allFilesExist = true,
+            bool allFilesOrDirectoryExist = false,
             bool isAnyTracked = true,
             bool isAnySubmodule = false)
         {
@@ -45,6 +46,7 @@ namespace GitUI.CommandsDialogs
             IsAnyItemWorkTree = isAnyItemWorkTree;
             IsBareRepository = isBareRepository;
             AllFilesExist = allFilesExist;
+            AllFilesOrDirectoryExist = allFilesOrDirectoryExist;
             IsAnyTracked = isAnyTracked;
             IsAnySubmodule = isAnySubmodule;
         }
@@ -57,6 +59,7 @@ namespace GitUI.CommandsDialogs
         public bool IsAnyItemWorkTree { get; }
         public bool IsBareRepository { get; }
         public bool AllFilesExist { get; }
+        public bool AllFilesOrDirectoryExist { get; }
         public bool IsAnyTracked { get; }
         public bool IsAnySubmodule { get; }
     }
@@ -119,7 +122,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuDeleteFile(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.AllFilesExist && selectionInfo.SelectedRevision.IsArtificial;
+            return selectionInfo.AllFilesOrDirectoryExist && selectionInfo.SelectedRevision.IsArtificial;
         }
 
         public bool ShouldShowMenuOpenRevision(ContextMenuSelectionInfo selectionInfo)

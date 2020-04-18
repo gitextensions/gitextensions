@@ -186,7 +186,7 @@ namespace GitUITests.CommandsDialogs
         public void BrowseDiff_DeleteFile_WorkTree()
         {
             var rev = new GitRevision(ObjectId.WorkTreeId);
-            var selectionInfo = new ContextMenuSelectionInfo(rev);
+            var selectionInfo = new ContextMenuSelectionInfo(rev, allFilesOrDirectoryExist: true);
             _controller.ShouldShowMenuDeleteFile(selectionInfo).Should().BeTrue();
         }
 
@@ -194,7 +194,7 @@ namespace GitUITests.CommandsDialogs
         public void BrowseDiff_DeleteFile_Index()
         {
             var rev = new GitRevision(ObjectId.IndexId);
-            var selectionInfo = new ContextMenuSelectionInfo(rev);
+            var selectionInfo = new ContextMenuSelectionInfo(rev, allFilesOrDirectoryExist: true);
             _controller.ShouldShowMenuDeleteFile(selectionInfo).Should().BeTrue();
         }
 

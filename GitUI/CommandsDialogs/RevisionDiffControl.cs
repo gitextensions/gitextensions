@@ -289,6 +289,7 @@ namespace GitUI.CommandsDialogs
             bool isAnyWorkTree = DiffFiles.SelectedItems.Any(item => item.Staged == StagedStatus.WorkTree);
             bool isAnySubmodule = DiffFiles.SelectedItems.Any(item => item.IsSubmodule);
             bool allFilesExist = DiffFiles.SelectedItems.All(item => File.Exists(_fullPathResolver.Resolve(item.Name)));
+            bool allFilesOrDirectoryExist = allFilesExist || DiffFiles.SelectedItems.All(item => FileOrUntrackedDirExists(item));
 
             var selectionInfo = new ContextMenuSelectionInfo(DiffFiles.Revision,
                 firstIsParent: firstIsParent,
@@ -298,9 +299,16 @@ namespace GitUI.CommandsDialogs
                 isAnyItemWorkTree: isAnyWorkTree,
                 isBareRepository: isBareRepository,
                 allFilesExist: allFilesExist,
+                allFilesOrDirectoryExist: allFilesOrDirectoryExist,
                 isAnyTracked: isAnyTracked,
                 isAnySubmodule: isAnySubmodule);
             return selectionInfo;
+
+            bool FileOrUntrackedDirExists(GitItemStatus item)
+            {
+                var path = _fullPathResolver.Resolve(item.Name);
+                return File.Exists(path) || (!item.IsTracked && Directory.Exists(path));
+            }
         }
 
         private void ResetSelectedItemsTo(bool actsAsChild)
