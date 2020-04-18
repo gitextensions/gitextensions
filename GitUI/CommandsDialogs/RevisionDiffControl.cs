@@ -115,9 +115,11 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
+            UpdateStatusOfMenuItems();
+
             switch ((Command)cmd)
             {
-                case Command.DeleteSelectedFiles: return DeleteSelectedFiles();
+                case Command.DeleteSelectedFiles: diffDeleteFileToolStripMenuItem.PerformClick(); break;
                 case Command.ShowHistory: fileHistoryDiffToolstripMenuItem.PerformClick(); break;
                 case Command.Blame: blameToolStripMenuItem.PerformClick(); break;
                 case Command.OpenWithDifftool: firstToSelectedToolStripMenuItem.PerformClick(); break;
@@ -407,7 +409,7 @@ namespace GitUI.CommandsDialogs
             _revisionFileTree.ExpandToFile(DiffFiles.SelectedItems.First().Name);
         }
 
-        private void DiffContextMenu_Opening(object sender, CancelEventArgs e)
+        private void UpdateStatusOfMenuItems()
         {
             var selectionInfo = GetSelectionInfo();
 
@@ -430,7 +432,8 @@ namespace GitUI.CommandsDialogs
             resetFileToToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowResetFileMenus(selectionInfo);
 
             diffDeleteFileToolStripMenuItem.Text = ResourceManager.Strings.GetDeleteFile(selectionInfo.SelectedGitItemCount);
-            diffDeleteFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuDeleteFile(selectionInfo);
+            diffDeleteFileToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuDeleteFile(selectionInfo);
+            diffDeleteFileToolStripMenuItem.Visible = diffDeleteFileToolStripMenuItem.Enabled;
             diffEditWorkingDirectoryFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo);
             diffOpenWorkingDirectoryFileWithToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo);
             diffOpenRevisionFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
@@ -446,20 +449,22 @@ namespace GitUI.CommandsDialogs
                                                _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo) ||
                                                _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
 
-            // openContainingFolderToolStripMenuItem.Enabled or not
-            {
-                openContainingFolderToolStripMenuItem.Enabled = false;
+            openContainingFolderToolStripMenuItem.Enabled = false;
 
-                foreach (var item in DiffFiles.SelectedItems)
+            foreach (var item in DiffFiles.SelectedItems)
+            {
+                string filePath = _fullPathResolver.Resolve(item.Name);
+                if (FormBrowseUtil.FileOrParentDirectoryExists(filePath))
                 {
-                    string filePath = _fullPathResolver.Resolve(item.Name);
-                    if (FormBrowseUtil.FileOrParentDirectoryExists(filePath))
-                    {
-                        openContainingFolderToolStripMenuItem.Enabled = true;
-                        break;
-                    }
+                    openContainingFolderToolStripMenuItem.Enabled = true;
+                    break;
                 }
             }
+        }
+
+        private void DiffContextMenu_Opening(object sender, CancelEventArgs e)
+        {
+            UpdateStatusOfMenuItems();
         }
 
         private void blameToolStripMenuItem_Click(object sender, EventArgs e)
