@@ -276,6 +276,67 @@ namespace GitCommands
             set => WriteBoolRegKey("AlwaysShowAllCommands", value);
         }
 
+        public static bool EnableExplorerIntegration
+        {
+            // TODO write getter - check if dll is registered
+            // get => ReadBoolRegKey("AlwaysShowAllCommands", false);
+            set => HandleShellIntegration(null, null, value);
+        }
+
+        private static void HandleShellIntegration(object sender = null, EventArgs e = null, bool register = false)
+        {
+            const string GitExtensionsShellEx32Name = "GitExtensionsShellEx32.dll";
+            const string GitExtensionsShellEx64Name = "GitExtensionsShellEx64.dll";
+            string path = Path.Combine(AppSettings.GetInstallDir(), GitExtensionsShellEx32Name);
+
+            if (!File.Exists(path))
+            {
+                path = Assembly.GetExecutingAssembly().Location;
+                path = Path.GetDirectoryName(path);
+                path = Path.Combine(path, GitExtensionsShellEx32Name);
+            }
+
+            if (File.Exists(path))
+            {
+                try
+                {
+                    var pi = new ProcessStartInfo
+                    {
+                        FileName = "regsvr32",
+                        Arguments = $"{(!register ? "/u " : "")}" + path.Quote(),
+                        Verb = "RunAs",
+                        UseShellExecute = false,
+
+                        // TODO confirmation window is not suppressed
+                        CreateNoWindow = true
+                    };
+
+                    // TODO is IntPtr really the correct way to check architecture here?
+                    if (IntPtr.Size == 8)
+                    {
+                        path = path.Replace(GitExtensionsShellEx32Name, GitExtensionsShellEx64Name);
+                        if (File.Exists(path))
+                        {
+                            pi.Arguments = $"{(!register ? "/u" : "")}" + path.Quote();
+                        }
+                    }
+
+                    var process = Process.Start(pi);
+                    process.WaitForExit();
+                }
+                catch (System.ComponentModel.Win32Exception)
+                {
+                    // User cancel operation, continue;
+                }
+            }
+            else
+            {
+                // MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx32Name), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            // CheckSettings();
+        }
+
         public static bool ShowCurrentBranchInVisualStudio
         {
             // This setting MUST be set to false by default, otherwise it will not work in Visual Studio without
