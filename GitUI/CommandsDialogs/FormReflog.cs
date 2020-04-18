@@ -125,9 +125,17 @@ namespace GitUI.CommandsDialogs
 
             DataGridViewRow GetSelectedRow()
             {
-                return gridReflog.SelectedRows.Count > 0
-                    ? gridReflog.SelectedRows[0]
-                    : gridReflog.Rows[gridReflog.SelectedCells[0].RowIndex];
+                if (gridReflog.SelectedRows.Count > 0)
+                {
+                    return gridReflog.SelectedRows[0];
+                }
+
+                if (gridReflog.SelectedCells.Count > 0)
+                {
+                    return gridReflog.Rows[gridReflog.SelectedCells[0].RowIndex];
+                }
+
+                return gridReflog.CurrentRow;
             }
         }
 
