@@ -26,16 +26,17 @@ namespace GitUI.CommandsDialogs
     {
         // Defaults are set to simplify test cases, the defaults enables most
         public ContextMenuSelectionInfo(
-            GitRevision selectedRevision = null,
-            bool firstIsParent = false,
-            bool isAnyCombinedDiff = false,
-            int selectedGitItemCount = 1,
-            bool isAnyItemIndex = false,
-            bool isAnyItemWorkTree = false,
-            bool isBareRepository = false,
-            bool allFilesExist = true,
-            bool isAnyTracked = true,
-            bool isAnySubmodule = false)
+            GitRevision selectedRevision,
+            bool firstIsParent,
+            bool isAnyCombinedDiff,
+            int selectedGitItemCount,
+            bool isAnyItemIndex,
+            bool isAnyItemWorkTree,
+            bool isBareRepository,
+            bool allFilesExist,
+            bool allFilesOrUntrackedDirectoriesExist,
+            bool isAnyTracked,
+            bool isAnySubmodule)
         {
             SelectedRevision = selectedRevision;
             FirstIsParent = firstIsParent;
@@ -45,6 +46,7 @@ namespace GitUI.CommandsDialogs
             IsAnyItemWorkTree = isAnyItemWorkTree;
             IsBareRepository = isBareRepository;
             AllFilesExist = allFilesExist;
+            AllFilesOrUntrackedDirectoriesExist = allFilesOrUntrackedDirectoriesExist;
             IsAnyTracked = isAnyTracked;
             IsAnySubmodule = isAnySubmodule;
         }
@@ -57,6 +59,7 @@ namespace GitUI.CommandsDialogs
         public bool IsAnyItemWorkTree { get; }
         public bool IsBareRepository { get; }
         public bool AllFilesExist { get; }
+        public bool AllFilesOrUntrackedDirectoriesExist { get; }
         public bool IsAnyTracked { get; }
         public bool IsAnySubmodule { get; }
     }
@@ -119,7 +122,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuDeleteFile(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.AllFilesExist && selectionInfo.SelectedRevision.IsArtificial;
+            return selectionInfo.AllFilesOrUntrackedDirectoriesExist && selectionInfo.SelectedRevision.IsArtificial;
         }
 
         public bool ShouldShowMenuOpenRevision(ContextMenuSelectionInfo selectionInfo)

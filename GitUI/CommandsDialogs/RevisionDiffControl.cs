@@ -288,7 +288,7 @@ namespace GitUI.CommandsDialogs
             bool isAnyIndex = DiffFiles.SelectedItems.Any(item => item.Staged == StagedStatus.Index);
             bool isAnyWorkTree = DiffFiles.SelectedItems.Any(item => item.Staged == StagedStatus.WorkTree);
             bool isAnySubmodule = DiffFiles.SelectedItems.Any(item => item.IsSubmodule);
-            bool allFilesExist = DiffFiles.SelectedItems.All(item => File.Exists(_fullPathResolver.Resolve(item.Name)));
+            (bool allFilesExist, bool allFilesOrUntrackedDirectoriesExist) = FileOrUntrackedDirExists(DiffFiles.SelectedItems);
 
             var selectionInfo = new ContextMenuSelectionInfo(DiffFiles.Revision,
                 firstIsParent: firstIsParent,
@@ -298,9 +298,31 @@ namespace GitUI.CommandsDialogs
                 isAnyItemWorkTree: isAnyWorkTree,
                 isBareRepository: isBareRepository,
                 allFilesExist: allFilesExist,
+                allFilesOrUntrackedDirectoriesExist: allFilesOrUntrackedDirectoriesExist,
                 isAnyTracked: isAnyTracked,
                 isAnySubmodule: isAnySubmodule);
             return selectionInfo;
+
+            (bool allFilesExist, bool allFilesOrUntrackedDirectoriesExist) FileOrUntrackedDirExists(IEnumerable<GitItemStatus> items)
+            {
+                bool allFilesExist = true;
+                bool allFilesOrUntrackedDirectoriesExist = true;
+                foreach (var item in items)
+                {
+                    var path = _fullPathResolver.Resolve(item.Name);
+                    var fileExists = File.Exists(path);
+                    allFilesExist = allFilesExist && fileExists;
+                    var fileOrUntrackedDirectoryExists = fileExists || (!item.IsTracked && Directory.Exists(path));
+                    allFilesOrUntrackedDirectoriesExist = allFilesOrUntrackedDirectoriesExist && fileOrUntrackedDirectoryExists;
+
+                    if (allFilesExist == false && allFilesOrUntrackedDirectoriesExist == false)
+                    {
+                        break;
+                    }
+                }
+
+                return (allFilesExist, allFilesOrUntrackedDirectoriesExist);
+            }
         }
 
         private void ResetSelectedItemsTo(bool actsAsChild)
@@ -809,7 +831,7 @@ namespace GitUI.CommandsDialogs
                     bool isDir = (File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory;
                     if (isDir)
                     {
-                        Directory.Delete(path, true);
+                        Directory.Delete(path, recursive: true);
                     }
                     else
                     {
