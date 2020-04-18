@@ -481,8 +481,8 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator15,
             this.openDiffMenuItem,
             this.toolStripSeparator16,
-            this.openFolderMenuItem,
             this.copyFolderNameMenuItem,
+            this.openFolderMenuItem,
             this.toolStripSeparator13,
             this.viewHistoryMenuItem});
             this.UnstagedSubmoduleContext.Name = "UnstagedSubmoduleContext";
