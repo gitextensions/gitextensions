@@ -2155,7 +2155,16 @@ namespace GitUI.CommandsDialogs
                 Unstaged.StoreNextIndexToSelect();
                 foreach (var item in Unstaged.SelectedItems)
                 {
-                    File.Delete(_fullPathResolver.Resolve(item.Name));
+                    var path = _fullPathResolver.Resolve(item.Name);
+                    bool isDir = (File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory;
+                    if (isDir)
+                    {
+                        Directory.Delete(path, true);
+                    }
+                    else
+                    {
+                        File.Delete(path);
+                    }
                 }
 
                 Initialize();
