@@ -178,9 +178,32 @@ namespace GitCommandsTests.Helpers
         [TestCase("\\\\folder\\filename.txt", "\\\\folder\\filename.txt")]
         [TestCase("a:\\\\folder/filename.txt", "a:\\folder\\filename.txt")]
         [TestCase(@"c:\folder#\filename.txt", @"c:\folder#\filename.txt")]
+        [TestCase(@"C:\WORK\..\WORK\.\GitExtensions\", @"C:\WORK\GitExtensions\")]
+        [TestCase(@"\\my-pc\Work\.\GitExtensions\", @"\\my-pc\Work\GitExtensions\")]
+        [TestCase(@"\\wsl$\Ubuntu\home\jack\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
+        [TestCase(@"\\w$\work\", "")]
         public void NormalizePath(string path, string expected)
         {
             PathUtil.NormalizePath(path).Should().Be(expected);
+        }
+
+        [TestCase(@"C:\WORK\GitExtensions\", @"C:\WORK\GitExtensions\")]
+        [TestCase(@"\\my-pc\Work\GitExtensions\", @"\\my-pc\Work\GitExtensions\")]
+        [TestCase(@"\\wsl$\Ubuntu\home\jack\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
+        [TestCase(@"\\wsl$\Ubuntu\home\jack\.\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
+        public void Resolve(string path, string expected)
+        {
+            PathUtil.Resolve(path).Should().Be(expected);
+        }
+
+        [TestCase(@"\\w$\work\", typeof(UriFormatException))]
+        [TestCase(@":$\work\", typeof(UriFormatException))]
+        [TestCase(null, typeof(ArgumentException))]
+        [TestCase("", typeof(ArgumentException))]
+        [TestCase(" ", typeof(ArgumentException))]
+        public void Resolve(string input, Type expectedException)
+        {
+            Assert.Throws(expectedException, () => PathUtil.Resolve(input));
         }
 
         [Platform(Include = "Win")]

@@ -137,7 +137,7 @@ namespace GitCommands
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException(nameof(path));
+                throw new ArgumentException(nameof(path));
             }
 
             // Fix for on purpose invalid machine name of WSL in Windows 10
