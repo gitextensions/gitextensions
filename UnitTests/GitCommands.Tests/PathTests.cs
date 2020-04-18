@@ -32,6 +32,9 @@ namespace PathTests
 
         [TestCase(@"\\w$\work\", typeof(UriFormatException))]
         [TestCase(@":$\work\", typeof(UriFormatException))]
+        [TestCase(null, typeof(ArgumentNullException))]
+        [TestCase("", typeof(ArgumentNullException))]
+        [TestCase(" ", typeof(ArgumentNullException))]
         public void SolveUriLocalPathExceptions(string input, Type expectedException)
         {
             Assert.Throws(expectedException, () => PathUtil.Resolve(input));

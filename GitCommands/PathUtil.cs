@@ -124,7 +124,7 @@ namespace GitCommands
 
             try
             {
-                return Path.GetFullPath(PathUtil.Resolve(path));
+                return Path.GetFullPath(Resolve(path));
             }
             catch (UriFormatException)
             {
