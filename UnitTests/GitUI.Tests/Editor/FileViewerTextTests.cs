@@ -36,6 +36,9 @@ namespace GitUITests.Editor
             _fileViewer.Dispose();
         }
 
+        // Temporarily disabled, see issue #8000
+        // These tests often fail on developer PCs, then ApprovalTest opens a diff viewer (where the open can fail too)
+#if !DEBUG
         [Test]
         [TestCase(AutoCRLFType.@true, "UnixLines")]
         [TestCase(AutoCRLFType.@true, "MacLines")]
@@ -76,6 +79,7 @@ namespace GitUITests.Editor
                 }
             }
         }
+#endif
 
         /// <summary>
         /// When: some text is selected in a <see cref="FileViewer"/>.
