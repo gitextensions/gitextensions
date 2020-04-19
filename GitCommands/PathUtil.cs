@@ -140,24 +140,49 @@ namespace GitCommands
                 throw new ArgumentException(nameof(path));
             }
 
-            // Fix for on purpose invalid machine name of WSL in Windows 10
-            bool replaceWslPath = path.StartsWith(@"\\wsl$\");
-            if (replaceWslPath)
+            return path.IsWslPath() ? ResolveWsl(path, relativePath) : path.ResolveRelativePath(relativePath);
+        }
+
+        /**
+         * Special handling of on purpose invalid WSL machine name in Windows 10
+         */
+        [NotNull]
+        public static string ResolveWsl([NotNull] string path, string relativePath = "")
+        {
+            if (string.IsNullOrWhiteSpace(path) || !path.IsWslPath())
             {
-                // Temporarily replace machine name with a valid name
-                path = Regex.Replace(path, "^" + Regex.Escape(@"\\wsl$\"), @"\\wsl\");
+                throw new ArgumentException(nameof(path));
             }
 
-            string localPath =
-                (string.IsNullOrEmpty(relativePath) ? new Uri(path) : new Uri(new Uri(path), relativePath)).LocalPath;
+            // Temporarily replace machine name with a valid name (remove $ sign from \\wsl$\)
+            path = path.Remove(5, 1);
 
-            if (replaceWslPath)
+            path = path.ResolveRelativePath(relativePath);
+
+            // Revert temporary replacement of WSL machine name (add $ sign back)
+            return path.Insert(5, "$");
+        }
+
+        [NotNull]
+        private static string ResolveRelativePath([NotNull] this string path, string relativePath)
+        {
+            if (string.IsNullOrWhiteSpace(path))
             {
-                // Revert temporary replacement of WSL machine name
-                localPath = Regex.Replace(localPath, "^" + Regex.Escape(@"\\wsl\"), @"\\wsl$\");
+                throw new ArgumentException(nameof(path));
             }
 
-            return localPath;
+            Uri tempPath = new Uri(path);
+            if (!string.IsNullOrEmpty(relativePath))
+            {
+                tempPath = new Uri(tempPath, relativePath);
+            }
+
+            return tempPath.LocalPath;
+        }
+
+        public static bool IsWslPath([NotNull] this string path)
+        {
+            return path.ToLower().StartsWith(@"\\wsl$\");
         }
 
         [ContractAnnotation("=>false,posixPath:null")]

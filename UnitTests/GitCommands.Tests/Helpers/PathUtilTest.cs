@@ -181,6 +181,7 @@ namespace GitCommandsTests.Helpers
         [TestCase(@"C:\WORK\..\WORK\.\GitExtensions\", @"C:\WORK\GitExtensions\")]
         [TestCase(@"\\my-pc\Work\.\GitExtensions\", @"\\my-pc\Work\GitExtensions\")]
         [TestCase(@"\\wsl$\Ubuntu\home\jack\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
+        [TestCase(@"\\Wsl$\Ubuntu\home\jack\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
         [TestCase(@"\\w$\work\", "")]
         public void NormalizePath(string path, string expected)
         {
@@ -191,19 +192,56 @@ namespace GitCommandsTests.Helpers
         [TestCase(@"\\my-pc\Work\GitExtensions\", @"\\my-pc\Work\GitExtensions\")]
         [TestCase(@"\\wsl$\Ubuntu\home\jack\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
         [TestCase(@"\\wsl$\Ubuntu\home\jack\.\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
+        [TestCase(@"\\WSL$\Ubuntu\home\jack\.\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
         public void Resolve(string path, string expected)
         {
             PathUtil.Resolve(path).Should().Be(expected);
         }
 
+        [TestCase(@"C:\WORK\", @"GitExtensions\", @"C:\WORK\GitExtensions\")]
+        [TestCase(@"\\wsl$\", @"Ubuntu\home\jack\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
+        public void Resolve(string path, string relativePath, string expected)
+        {
+            PathUtil.Resolve(path, relativePath).Should().Be(expected);
+        }
+
         [TestCase(@"\\w$\work\", typeof(UriFormatException))]
         [TestCase(@":$\work\", typeof(UriFormatException))]
+        [TestCase(@"C:", typeof(UriFormatException))]
+        [TestCase(@"\\wsl$", typeof(UriFormatException))]
         [TestCase(null, typeof(ArgumentException))]
         [TestCase("", typeof(ArgumentException))]
         [TestCase(" ", typeof(ArgumentException))]
         public void Resolve(string input, Type expectedException)
         {
             Assert.Throws(expectedException, () => PathUtil.Resolve(input));
+        }
+
+        [TestCase(@"\\wsl$\Ubuntu\work\..\GitExtensions\", @"\\wsl$\Ubuntu\GitExtensions\")]
+        [TestCase(@"\\Wsl$\Ubuntu\work\..\GitExtensions\", @"\\wsl$\Ubuntu\GitExtensions\")]
+        [TestCase(@"\\WSL$\Ubuntu\work\..\GitExtensions\", @"\\wsl$\Ubuntu\GitExtensions\")]
+        public void ResolveWsl(string path, string expected)
+        {
+            PathUtil.ResolveWsl(path).Should().Be(expected);
+        }
+
+        [TestCase(@"\\w$\work\", typeof(ArgumentException))]
+        [TestCase(@":$\work\", typeof(ArgumentException))]
+        [TestCase(@"C:\work\", typeof(ArgumentException))]
+        [TestCase(null, typeof(ArgumentException))]
+        [TestCase("", typeof(ArgumentException))]
+        [TestCase(" ", typeof(ArgumentException))]
+        public void ResolveWsl(string input, Type expectedException)
+        {
+            Assert.Throws(expectedException, () => PathUtil.ResolveWsl(input));
+        }
+
+        [TestCase(@"\\Wsl$\Ubuntu\work\..\GitExtensions\", true)]
+        [TestCase(@"\\wsl$\Ubuntu\work\..\GitExtensions\", true)]
+        [TestCase(@"C:\work\..\GitExtensions\", false)]
+        public void IsWslPath(string path, bool expected)
+        {
+            PathUtil.IsWslPath(path).Should().Be(expected);
         }
 
         [Platform(Include = "Win")]
