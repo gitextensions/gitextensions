@@ -9223,6 +9223,10 @@ Select this commit to populate the full message.</source>
         <source>{0} {1:day|days} ago</source>
         <target />
       </trans-unit>
+      <trans-unit id="_deleteFile.Text">
+        <source>{0:Delete file|Delete files}</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.</source>
         <target />

@@ -29,24 +29,22 @@ namespace GitUI.CommandsDialogs
             GitRevision selectedRevision = null,
             bool firstIsParent = false,
             bool isAnyCombinedDiff = false,
-            bool isSingleGitItemSelected = true,
-            bool isAnyItemSelected = true,
+            int selectedGitItemCount = 1,
             bool isAnyItemIndex = false,
             bool isAnyItemWorkTree = false,
             bool isBareRepository = false,
-            bool singleFileExists = true,
+            bool allFilesExist = true,
             bool isAnyTracked = true,
             bool isAnySubmodule = false)
         {
             SelectedRevision = selectedRevision;
             FirstIsParent = firstIsParent;
             IsAnyCombinedDiff = isAnyCombinedDiff;
-            IsSingleGitItemSelected = isSingleGitItemSelected;
-            IsAnyItemSelected = isAnyItemSelected;
+            SelectedGitItemCount = selectedGitItemCount;
             IsAnyItemIndex = isAnyItemIndex;
             IsAnyItemWorkTree = isAnyItemWorkTree;
             IsBareRepository = isBareRepository;
-            SingleFileExists = singleFileExists;
+            AllFilesExist = allFilesExist;
             IsAnyTracked = isAnyTracked;
             IsAnySubmodule = isAnySubmodule;
         }
@@ -54,12 +52,11 @@ namespace GitUI.CommandsDialogs
         public GitRevision SelectedRevision { get; }
         public bool FirstIsParent { get; }
         public bool IsAnyCombinedDiff { get; }
-        public bool IsSingleGitItemSelected { get; }
-        public bool IsAnyItemSelected { get; }
+        public int SelectedGitItemCount { get; }
         public bool IsAnyItemIndex { get; }
         public bool IsAnyItemWorkTree { get; }
         public bool IsBareRepository { get; }
-        public bool SingleFileExists { get; }
+        public bool AllFilesExist { get; }
         public bool IsAnyTracked { get; }
         public bool IsAnySubmodule { get; }
     }
@@ -77,24 +74,24 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowDifftoolMenus(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsAnyItemSelected && !selectionInfo.IsAnyCombinedDiff && selectionInfo.IsAnyTracked;
+            return selectionInfo.SelectedGitItemCount != 0 && !selectionInfo.IsAnyCombinedDiff && selectionInfo.IsAnyTracked;
         }
 
         public bool ShouldShowResetFileMenus(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsAnyItemSelected && !selectionInfo.IsBareRepository && selectionInfo.IsAnyTracked;
+            return selectionInfo.SelectedGitItemCount != 0 && !selectionInfo.IsBareRepository && selectionInfo.IsAnyTracked;
         }
 
         #region Main menu items
         public bool ShouldShowMenuSaveAs(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsSingleGitItemSelected && !selectionInfo.IsAnySubmodule
+            return selectionInfo.SelectedGitItemCount == 1 && !selectionInfo.IsAnySubmodule
                 && !selectionInfo.SelectedRevision.IsArtificial;
         }
 
         public bool ShouldShowMenuCherryPick(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsSingleGitItemSelected && !selectionInfo.IsAnySubmodule
+            return selectionInfo.SelectedGitItemCount == 1 && !selectionInfo.IsAnySubmodule
                 && !selectionInfo.IsAnyCombinedDiff && !selectionInfo.IsBareRepository
                 && !selectionInfo.SelectedRevision.IsArtificial;
         }
@@ -117,34 +114,33 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuEditWorkingDirectoryFile(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsSingleGitItemSelected && !selectionInfo.IsAnySubmodule && selectionInfo.SingleFileExists;
+            return selectionInfo.SelectedGitItemCount == 1 && selectionInfo.AllFilesExist;
         }
 
         public bool ShouldShowMenuDeleteFile(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsSingleGitItemSelected && !selectionInfo.IsAnySubmodule &&
-                   selectionInfo.SingleFileExists && selectionInfo.SelectedRevision.IsArtificial;
+            return selectionInfo.AllFilesExist && selectionInfo.SelectedRevision.IsArtificial;
         }
 
         public bool ShouldShowMenuOpenRevision(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsSingleGitItemSelected && !selectionInfo.IsAnySubmodule &&
+            return selectionInfo.SelectedGitItemCount == 1 && !selectionInfo.IsAnySubmodule &&
                    !selectionInfo.SelectedRevision.IsArtificial;
         }
 
         public bool ShouldShowMenuCopyFileName(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsAnyItemSelected;
+            return selectionInfo.SelectedGitItemCount != 0;
         }
 
         public bool ShouldShowMenuShowInFileTree(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsSingleGitItemSelected && !selectionInfo.SelectedRevision.IsArtificial;
+            return selectionInfo.SelectedGitItemCount == 1 && !selectionInfo.SelectedRevision.IsArtificial;
         }
 
         public bool ShouldShowMenuFileHistory(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsSingleGitItemSelected && selectionInfo.IsAnyTracked;
+            return selectionInfo.SelectedGitItemCount == 1 && selectionInfo.IsAnyTracked;
         }
 
         public bool ShouldShowMenuBlame(ContextMenuSelectionInfo selectionInfo)
