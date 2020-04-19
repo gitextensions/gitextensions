@@ -106,6 +106,7 @@ namespace GitUI.BranchTreePanel
             this.mnubtnMoveDown = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnManageSubmodules = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnSynchronizeSubmodules = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuBtnOpenRemoteUrlInBrowser = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.menuBranch.SuspendLayout();
             this.menuRemotes.SuspendLayout();
@@ -331,7 +332,8 @@ namespace GitUI.BranchTreePanel
             this.mnubtnEnableRemoteAndFetch,
             this.mnubtnDisableRemote,
             this.mnubtnFetchAllBranchesFromARemote,
-            this.mnuBtnPruneAllBranchesFromARemote});
+            this.mnuBtnPruneAllBranchesFromARemote,
+            this.mnuBtnOpenRemoteUrlInBrowser});
             this.menuRemoteRepoNode.Name = "contextmenuRemote";
             this.menuRemoteRepoNode.Size = new System.Drawing.Size(173, 120);
             this.menuRemoteRepoNode.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
@@ -376,6 +378,14 @@ namespace GitUI.BranchTreePanel
             this.mnuBtnPruneAllBranchesFromARemote.Name = "mnuBtnPruneAllBranchesFromARemote";
             this.mnuBtnPruneAllBranchesFromARemote.Size = new System.Drawing.Size(302, 38);
             this.mnuBtnPruneAllBranchesFromARemote.Text = "Fetch and prune";
+            // 
+            // mnuBtnOpenRemoteUrlInBrowser
+            // 
+            this.mnuBtnOpenRemoteUrlInBrowser.Image = global::GitUI.Properties.Images.Globe;
+            this.mnuBtnOpenRemoteUrlInBrowser.Name = "mnuBtnOpenRemoteUrlInBrowser";
+            this.mnuBtnOpenRemoteUrlInBrowser.Size = new System.Drawing.Size(302, 38);
+            this.mnuBtnOpenRemoteUrlInBrowser.Text = "Open remote Url";
+            this.mnuBtnOpenRemoteUrlInBrowser.ToolTipText = "Redirects you to the actual repository page";
             // 
             // repoTreePanel
             // 
@@ -676,5 +686,6 @@ namespace GitUI.BranchTreePanel
         private ToolStripMenuItem mnubtnOpenSubmodule;
         private ToolStripMenuItem mnubtnMoveUp;
         private ToolStripMenuItem mnubtnMoveDown;
+        private ToolStripMenuItem mnuBtnOpenRemoteUrlInBrowser;
     }
 }

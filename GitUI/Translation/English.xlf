@@ -7912,6 +7912,10 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>&amp;Manage...</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnuBtnOpenRemoteUrlInBrowser.Text">
+        <source>Open remote Url</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnuBtnPruneAllBranchesFromARemote.Text">
         <source>Fetch and prune</source>
         <target />
@@ -9221,6 +9225,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_daysAgo.Text">
         <source>{0} {1:day|days} ago</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deleteFile.Text">
+        <source>{0:Delete file|Delete files}</source>
         <target />
       </trans-unit>
       <trans-unit id="_directoryIsNotAValidRepository.Text">

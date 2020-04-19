@@ -127,3 +127,4 @@ YYYY/MM/DD, github id, Full name, email
 2020/04/02, NoahLerner, Noah Lerner, noahlerner94(at)gmail.com
 2020/04/07, dimfish, Dmitry I, dimfish(at)gmail.com
 2020/04/17, miloshavlicek, Miloš Havlíček, miloshavlicek(at)gmail.com
+2020/02/01, wynnfrei, Giorgi Tsouvaltzis, giorgi.tsouvaltzis(at)doso.ge

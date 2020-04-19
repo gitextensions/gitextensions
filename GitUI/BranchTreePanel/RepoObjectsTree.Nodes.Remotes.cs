@@ -10,6 +10,7 @@ using GitCommands.Remotes;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
@@ -286,6 +287,18 @@ namespace GitUI.BranchTreePanel
                 Trace.Assert(Enabled);
                 return DoPrune();
             }
+
+            public void OpenRemoteUrlInBrowser()
+            {
+                if (!IsRemoteUrlUsingHttp)
+                {
+                    return;
+                }
+
+                Process.Start(_remote.FetchUrl);
+            }
+
+            public bool IsRemoteUrlUsingHttp => _remote.FetchUrl.IsUrlUsingHttp();
 
             public void Enable(bool fetch)
             {
