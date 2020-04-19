@@ -143,9 +143,9 @@ namespace GitCommands
             return path.IsWslPath() ? ResolveWsl(path, relativePath) : path.ResolveRelativePath(relativePath);
         }
 
-        /**
-         * Special handling of on purpose invalid WSL machine name in Windows 10
-         */
+        /// <summary>
+        /// Special handling of on purpose invalid WSL machine name in Windows 10
+        /// </summary>
         [NotNull]
         public static string ResolveWsl([NotNull] string path, string relativePath = "")
         {
