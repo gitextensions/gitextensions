@@ -637,7 +637,7 @@ namespace GitCommands
             set => SetBool("closecommitdialogafterlastcommit", value);
         }
 
-        public static bool RefreshCommitDialogOnFormFocus
+        public static bool RefreshArtificialCommitOnApplicationActivated
         {
             get => GetBool("refreshcommitdialogonformfocus", false);
             set => SetBool("refreshcommitdialogonformfocus", value);

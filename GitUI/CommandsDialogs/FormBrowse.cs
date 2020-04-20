@@ -508,7 +508,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnApplicationActivated()
         {
-            if (AppSettings.RefreshCommitDialogOnFormFocus && CommitInfoTabControl.SelectedTab == DiffTabPage)
+            if (AppSettings.RefreshArtificialCommitOnApplicationActivated && CommitInfoTabControl.SelectedTab == DiffTabPage)
             {
                 revisionDiff.RefreshArtificial();
             }
