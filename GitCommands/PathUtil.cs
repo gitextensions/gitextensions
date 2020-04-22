@@ -124,12 +124,65 @@ namespace GitCommands
 
             try
             {
-                return Path.GetFullPath(new Uri(path).LocalPath);
+                return Path.GetFullPath(Resolve(path));
             }
             catch (UriFormatException)
             {
                 return string.Empty;
             }
+        }
+
+        [NotNull]
+        public static string Resolve([NotNull] string path, string relativePath = "")
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentException(nameof(path));
+            }
+
+            return IsWslPath(path) ? ResolveWsl(path, relativePath) : ResolveRelativePath(path, relativePath);
+        }
+
+        /// <summary>
+        /// Special handling of on purpose invalid WSL machine name in Windows 10
+        /// </summary>
+        [NotNull]
+        internal static string ResolveWsl([NotNull] string path, string relativePath = "")
+        {
+            if (string.IsNullOrWhiteSpace(path) || !IsWslPath(path))
+            {
+                throw new ArgumentException(nameof(path));
+            }
+
+            // Temporarily replace machine name with a valid name (remove $ sign from \\wsl$\)
+            path = path.Remove(5, 1);
+
+            path = ResolveRelativePath(path, relativePath);
+
+            // Revert temporary replacement of WSL machine name (add $ sign back)
+            return path.Insert(5, "$");
+        }
+
+        [NotNull]
+        private static string ResolveRelativePath([NotNull] string path, string relativePath)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentException(nameof(path));
+            }
+
+            Uri tempPath = new Uri(path);
+            if (!string.IsNullOrEmpty(relativePath))
+            {
+                tempPath = new Uri(tempPath, relativePath);
+            }
+
+            return tempPath.LocalPath;
+        }
+
+        internal static bool IsWslPath([NotNull] string path)
+        {
+            return path.ToLower().StartsWith(@"\\wsl$\");
         }
 
         [ContractAnnotation("=>false,posixPath:null")]

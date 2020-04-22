@@ -207,7 +207,7 @@ namespace GitUI.CommandsDialogs
                 var dirTo = Path.Combine(destination, _NO_TRANSLATE_NewDirectory.Text);
 
                 // this will fail if the path is anyhow invalid
-                dirTo = new Uri(dirTo).LocalPath;
+                dirTo = PathUtil.Resolve(dirTo);
 
                 if (!Directory.Exists(dirTo))
                 {
