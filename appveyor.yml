@@ -25,6 +25,10 @@ build:
 
 install:
 - cmd: git submodule update --init --recursive
+- cmd: echo %APPVEYOR_REPO_COMMIT%
+- cmd: echo %APPVEYOR_PULL_REQUEST_HEAD_COMMIT%
+  # if building a temporary merge with master, reset the git revision to the HEAD of the PR, keeping the files of the merge of course
+- cmd: if not "%APPVEYOR_PULL_REQUEST_HEAD_COMMIT%" == "" if not "%APPVEYOR_PULL_REQUEST_HEAD_COMMIT%" == "%APPVEYOR_REPO_COMMIT%" git reset --soft "%APPVEYOR_PULL_REQUEST_HEAD_COMMIT%" --
 - cmd: echo /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll">> Directory.Build.rsp
 - cmd: |-
     cd scripts
