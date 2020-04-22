@@ -506,6 +506,16 @@ namespace GitUI.CommandsDialogs
             base.Dispose(disposing);
         }
 
+        protected override void OnApplicationActivated()
+        {
+            if (AppSettings.RefreshArtificialCommitOnApplicationActivated && CommitInfoTabControl.SelectedTab == DiffTabPage)
+            {
+                revisionDiff.RefreshArtificial();
+            }
+
+            base.OnApplicationActivated();
+        }
+
         protected override void OnLoad(EventArgs e)
         {
             _windowsJumpListManager.CreateJumpList(
