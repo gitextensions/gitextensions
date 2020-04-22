@@ -62,8 +62,7 @@ namespace GitCommands
                 basePath += Path.DirectorySeparatorChar;
             }
 
-            var uri = new Uri(new Uri(basePath), path);
-            return uri.LocalPath;
+            return PathUtil.Resolve(basePath, path);
         }
     }
 }
