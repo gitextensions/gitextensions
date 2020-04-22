@@ -140,16 +140,16 @@ namespace GitCommands
                 throw new ArgumentException(nameof(path));
             }
 
-            return path.IsWslPath() ? ResolveWsl(path, relativePath) : path.ResolveRelativePath(relativePath);
+            return IsWslPath(path) ? ResolveWsl(path, relativePath) : ResolveRelativePath(path, relativePath);
         }
 
         /// <summary>
         /// Special handling of on purpose invalid WSL machine name in Windows 10
         /// </summary>
         [NotNull]
-        public static string ResolveWsl([NotNull] string path, string relativePath = "")
+        internal static string ResolveWsl([NotNull] string path, string relativePath = "")
         {
-            if (string.IsNullOrWhiteSpace(path) || !path.IsWslPath())
+            if (string.IsNullOrWhiteSpace(path) || !IsWslPath(path))
             {
                 throw new ArgumentException(nameof(path));
             }
@@ -157,14 +157,14 @@ namespace GitCommands
             // Temporarily replace machine name with a valid name (remove $ sign from \\wsl$\)
             path = path.Remove(5, 1);
 
-            path = path.ResolveRelativePath(relativePath);
+            path = ResolveRelativePath(path, relativePath);
 
             // Revert temporary replacement of WSL machine name (add $ sign back)
             return path.Insert(5, "$");
         }
 
         [NotNull]
-        private static string ResolveRelativePath([NotNull] this string path, string relativePath)
+        private static string ResolveRelativePath([NotNull] string path, string relativePath)
         {
             if (string.IsNullOrWhiteSpace(path))
             {
@@ -180,7 +180,7 @@ namespace GitCommands
             return tempPath.LocalPath;
         }
 
-        public static bool IsWslPath([NotNull] this string path)
+        internal static bool IsWslPath([NotNull] string path)
         {
             return path.ToLower().StartsWith(@"\\wsl$\");
         }
