@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Script;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -14,8 +19,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class ScriptsSettingsPage : SettingsPageWithHeader
     {
-        #region translation
-
         private readonly TranslationString _scriptSettingsPageHelpDisplayArgumentsHelp = new TranslationString("Arguments help");
         private readonly TranslationString _scriptSettingsPageHelpDisplayContent = new TranslationString(@"Use {option} for normal replacement.
 Use {{option}} for quoted replacement.
@@ -65,323 +68,292 @@ Current Branch:
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}");
 
-        #endregion
+        private static readonly string[] WatchedProxyProperties = new string[]
+        {
+            nameof(ScriptInfoProxy.Name),
+            nameof(ScriptInfoProxy.Enabled),
+            nameof(ScriptInfoProxy.Icon),
+            nameof(ScriptInfoProxy.OnEvent),
+            nameof(ScriptInfoProxy.Command),
+            nameof(ScriptInfoProxy.Arguments),
+        };
+        private static ImageList EmbeddedIcons = new ImageList
+        {
+            ColorDepth = ColorDepth.Depth32Bit
+        };
+        private BindingList<ScriptInfoProxy> _scripts;
+        private SimpleHelpDisplayDialog _argumentsCheatSheet;
+        private bool _handlingCheck;
 
-        private string _iconName = "bug";
+        // settings maybe loaded before page is shwon or after
+        // we need to track that so we load images before we bind the list
+        private bool _imagsLoaded;
 
         public ScriptsSettingsPage()
         {
             InitializeComponent();
-            HotkeyCommandIdentifier.Width = DpiUtil.Scale(39);
             Text = "Scripts";
+
+            // stop the localisation of the propertygrid
+            propertyGrid1.Text = string.Empty;
+
             InitializeComplete();
 
-            HotkeyCommandIdentifier.DataPropertyName = nameof(ScriptInfo.HotkeyCommandIdentifier);
-            EnabledColumn.DataPropertyName = nameof(ScriptInfo.Enabled);
-            OnEvent.DataPropertyName = nameof(ScriptInfo.OnEvent);
-            AskConfirmation.DataPropertyName = nameof(ScriptInfo.AskConfirmation);
+            foreach (ColumnHeader column in lvScripts.Columns)
+            {
+                column.Width = DpiUtil.Scale(column.Width);
+            }
+
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            var margin = propertyGrid1.Margin.Left;
+            propertyGrid1.Margin = new Padding(margin, margin, panelButtons.Width, margin);
+
+            propertyGrid1.SelectedGridItemChanged += (s, e) =>
+            {
+                if (WatchedProxyProperties.Contains(e.OldSelection?.PropertyDescriptor.Name ?? ""))
+                {
+                    BindScripts(_scripts, SelectedScript);
+                    propertyGrid1.Focus();
+                }
+            };
         }
 
-        public override bool IsInstantSavePage => true;
+        private ScriptInfoProxy SelectedScript { get; set; }
+
+        protected override void OnParentChanged(EventArgs e)
+        {
+            base.OnParentChanged(e);
+
+            if (Parent is null && _argumentsCheatSheet is object)
+            {
+                _argumentsCheatSheet.Close();
+            }
+        }
 
         public override void OnPageShown()
         {
-            if (EnvUtils.RunningOnWindows())
+            if (!EnvUtils.RunningOnWindows())
             {
-                System.Resources.ResourceManager rm =
-                    new System.Resources.ResourceManager("GitUI.Properties.Images",
-                                System.Reflection.Assembly.GetExecutingAssembly());
+                return;
+            }
 
-                // dummy request; for some strange reason the ResourceSets are not loaded untill after the first object request... bug?
-                rm.GetObject("dummy");
+            var rm = new System.Resources.ResourceManager("GitUI.Properties.Images", Assembly.GetExecutingAssembly());
 
-                System.Resources.ResourceSet resourceSet = rm.GetResourceSet(System.Globalization.CultureInfo.CurrentUICulture, true, true);
+            // dummy request; for some strange reason the ResourceSets are not loaded untill after the first object request... bug?
+            rm.GetObject("dummy");
 
-                contextMenuStrip_SplitButton.Items.Clear();
-
-                var iconItems = new List<ToolStripItem>();
-                foreach (System.Collections.DictionaryEntry icon in resourceSet)
+            using System.Resources.ResourceSet resourceSet = rm.GetResourceSet(CultureInfo.CurrentUICulture, true, true);
+            foreach (DictionaryEntry icon in resourceSet.Cast<DictionaryEntry>().OrderBy(icon => icon.Key))
+            {
+                if (icon.Value is Bitmap bitmap)
                 {
-                    // add entry to toolstrip
-                    if (icon.Value is Icon)
-                    {
-                        ////contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)((Icon)icon.Value).ToBitmap(), SplitButtonMenuItem_Click);
-                    }
-                    else if (icon.Value is Bitmap bitmap)
-                    {
-                        iconItems.Add(new ToolStripMenuItem(icon.Key.ToString(), bitmap, SplitButtonMenuItem_Click));
-                    }
+                    EmbeddedIcons.Images.Add(icon.Key.ToString(), bitmap.AdaptLightness());
                 }
+            }
 
-                contextMenuStrip_SplitButton.Items.AddRange(iconItems.OrderBy(i => i.Text).ToArray());
+            resourceSet.Close();
+            rm.ReleaseAllResources();
 
-                resourceSet.Close();
-                rm.ReleaseAllResources();
+            lvScripts.LargeImageList =
+                lvScripts.SmallImageList = EmbeddedIcons;
+            _imagsLoaded = true;
+
+            if (_scripts is object)
+            {
+                BindScripts(_scripts, null);
             }
         }
 
         protected override void SettingsToPage()
         {
-            scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
-            LoadScripts();
+            _scripts = new BindingList<ScriptInfoProxy>();
+            foreach (var script in ScriptManager.GetScripts())
+            {
+                _scripts.Add(script);
+            }
+
+            if (_imagsLoaded)
+            {
+                BindScripts(_scripts, null);
+            }
         }
 
         protected override void PageToSettings()
         {
-            SaveScripts();
-        }
+            // TODO: this is an abomination, the whole script persistence must be scorched and rewritten
 
-        private static void SaveScripts()
-        {
+            BindingList<ScriptInfo> scripts = ScriptManager.GetScripts();
+            scripts.Clear();
+
+            foreach (ScriptInfoProxy proxy in _scripts)
+            {
+                scripts.Add(proxy);
+            }
+
             AppSettings.OwnScripts = ScriptManager.SerializeIntoXml();
         }
 
-        private void LoadScripts()
+        private void BindScripts(IList<ScriptInfoProxy> scripts, ScriptInfoProxy selectedScript)
         {
-            ScriptList.DataSource = ScriptManager.GetScripts();
-        }
-
-        private void ClearScriptDetails()
-        {
-            nameTextBox.Clear();
-            commandTextBox.Clear();
-            argumentsTextBox.Clear();
-            inMenuCheckBox.Checked = false;
-        }
-
-        private void RefreshScriptDetails()
-        {
-            if (ScriptList.SelectedRows.Count == 0)
+            try
             {
+                lvScripts.BeginUpdate();
+                lvScripts.SelectedIndexChanged -= lvScripts_SelectedIndexChanged;
+                lvScripts.ItemChecked -= lvScripts_ItemChecked;
+                lvScripts.Items.Clear();
+
+                if (scripts.Count < 1)
+                {
+                    btnAdd.Focus();
+                    return;
+                }
+
+                foreach (ScriptInfoProxy script in scripts)
+                {
+                    var color = !script.Enabled ? SystemColors.GrayText : SystemColors.WindowText;
+
+                    ListViewItem lvitem = new ListViewItem(script.Name)
+                    {
+                        ToolTipText = $"{script.Command} {script.Arguments}",
+                        Tag = script,
+                        ForeColor = color,
+                        ImageKey = script.Icon,
+                        Checked = script.Enabled
+                    };
+                    lvScripts.Items.Add(lvitem);
+
+                    lvitem.SubItems.Add(script.OnEvent.ToString());
+                    lvitem.SubItems.Add(string.Concat(script.Command, " ", script.Arguments));
+                }
+
+                lvScripts.SelectedIndexChanged += lvScripts_SelectedIndexChanged;
+                lvScripts.ItemChecked += lvScripts_ItemChecked;
+                lvScripts.SelectedIndices.Clear();
+
+                SelectedScript = selectedScript;
+
+                if (selectedScript is object)
+                {
+                    ListViewItem lvi = lvScripts.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Tag == selectedScript);
+                    if (lvi != null)
+                    {
+                        lvi.Selected = true;
+                        lvScripts.FocusedItem = lvi;
+                    }
+                }
+
+                if (lvScripts.FocusedItem is null)
+                {
+                    lvScripts.Items[0].Selected = true;
+                    lvScripts.FocusedItem = lvScripts.Items[0];
+                }
+
+                lvScripts.Select();
+            }
+            finally
+            {
+                lvScripts.EndUpdate();
+            }
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            ScriptInfoProxy script = _scripts.AddNew();
+            script.HotkeyCommandIdentifier = Math.Max(ScriptManager.MinimumUserScriptID, _scripts.Max(s => s.HotkeyCommandIdentifier)) + 1;
+            script.Name = "<New Script>";
+
+            BindScripts(_scripts, script);
+        }
+
+        private void btnArgumentsHelp_Click(object sender, EventArgs e)
+        {
+            if (_argumentsCheatSheet is object)
+            {
+                _argumentsCheatSheet.BringToFront();
                 return;
             }
 
-            var scriptInfo = (ScriptInfo)ScriptList.SelectedRows[0].DataBoundItem;
-
-            nameTextBox.Text = scriptInfo.Name;
-            commandTextBox.Text = scriptInfo.Command;
-            argumentsTextBox.Text = scriptInfo.Arguments;
-            scriptRunInBackground.Checked = scriptInfo.RunInBackground;
-            scriptIsPowerShell.Checked = scriptInfo.IsPowerShell;
-            inMenuCheckBox.Checked = scriptInfo.AddToRevisionGridContextMenu;
-            scriptEnabled.Checked = scriptInfo.Enabled;
-            scriptNeedsConfirmation.Checked = scriptInfo.AskConfirmation;
-            scriptEvent.SelectedItem = scriptInfo.OnEvent;
-            sbtn_icon.Image = ResizeForSplitButton(scriptInfo.GetIcon());
-            _iconName = scriptInfo.Icon;
-
-            foreach (ToolStripItem item in contextMenuStrip_SplitButton.Items)
-            {
-                if (item.ToString() == _iconName)
-                {
-                    item.Font = new Font(item.Font, FontStyle.Bold);
-                }
-            }
-        }
-
-        private void addScriptButton_Click(object sender, EventArgs e)
-        {
-            ScriptList.ClearSelection();
-            ScriptInfo script = ScriptManager.GetScripts().AddNew();
-            script.HotkeyCommandIdentifier = ScriptManager.NextHotkeyCommandIdentifier();
-            ScriptList.Rows[ScriptList.RowCount - 1].Selected = true;
-            ScriptList_SelectionChanged(null, null); // needed for linux
-        }
-
-        private void removeScriptButton_Click(object sender, EventArgs e)
-        {
-            if (ScriptList.SelectedRows.Count > 0)
-            {
-                ScriptManager.GetScripts().Remove(ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo);
-
-                ClearScriptDetails();
-            }
-        }
-
-        private void ScriptInfoFromEdits()
-        {
-            if (ScriptList.SelectedRows.Count > 0)
-            {
-                var selectedScriptInfo = (ScriptInfo)ScriptList.SelectedRows[0].DataBoundItem;
-
-                selectedScriptInfo.Name = nameTextBox.Text;
-                selectedScriptInfo.Command = commandTextBox.Text;
-                selectedScriptInfo.Arguments = argumentsTextBox.Text;
-                selectedScriptInfo.AddToRevisionGridContextMenu = inMenuCheckBox.Checked;
-                selectedScriptInfo.Enabled = scriptEnabled.Checked;
-                selectedScriptInfo.RunInBackground = scriptRunInBackground.Checked;
-                selectedScriptInfo.IsPowerShell = scriptIsPowerShell.Checked;
-                selectedScriptInfo.AskConfirmation = scriptNeedsConfirmation.Checked;
-                selectedScriptInfo.OnEvent = (ScriptEvent)scriptEvent.SelectedItem;
-                selectedScriptInfo.Icon = _iconName;
-            }
-        }
-
-        private void moveUpButton_Click(object sender, EventArgs e)
-        {
-            if (ScriptList.SelectedRows.Count > 0)
-            {
-                ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
-                int index = ScriptManager.GetScripts().IndexOf(scriptInfo);
-                ScriptManager.GetScripts().Remove(scriptInfo);
-                ScriptManager.GetScripts().Insert(Math.Max(index - 1, 0), scriptInfo);
-
-                ScriptList.ClearSelection();
-                ScriptList.Rows[Math.Max(index - 1, 0)].Selected = true;
-                ScriptList.Focus();
-            }
-        }
-
-        private void moveDownButton_Click(object sender, EventArgs e)
-        {
-            if (ScriptList.SelectedRows.Count > 0)
-            {
-                ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
-                int index = ScriptManager.GetScripts().IndexOf(scriptInfo);
-                ScriptManager.GetScripts().Remove(scriptInfo);
-                ScriptManager.GetScripts().Insert(Math.Min(index + 1, ScriptManager.GetScripts().Count), scriptInfo);
-
-                ScriptList.ClearSelection();
-                ScriptList.Rows[Math.Max(index + 1, 0)].Selected = true;
-                ScriptList.Focus();
-            }
-        }
-
-        private void browseScriptButton_Click(object sender, EventArgs e)
-        {
-            using (var ofd = new OpenFileDialog
-            {
-                InitialDirectory = "c:\\",
-                Filter = "Executable files (*.exe)|*.exe|All files (*.*)|*.*",
-                RestoreDirectory = true
-            })
-            {
-                if (ofd.ShowDialog(this) == DialogResult.OK)
-                {
-                    commandTextBox.Text = ofd.FileName;
-                }
-            }
-        }
-
-        private void ScriptList_SelectionChanged(object sender, EventArgs e)
-        {
-            if (ScriptList.SelectedRows.Count > 0)
-            {
-                RefreshScriptDetails();
-
-                removeScriptButton.Enabled = true;
-                moveDownButton.Enabled = moveUpButton.Enabled = false;
-                if (ScriptList.SelectedRows[0].Index > 0)
-                {
-                    moveUpButton.Enabled = true;
-                }
-
-                if (ScriptList.SelectedRows[0].Index < ScriptList.RowCount - 1)
-                {
-                    moveDownButton.Enabled = true;
-                }
-            }
-            else
-            {
-                removeScriptButton.Enabled = false;
-                moveUpButton.Enabled = false;
-                moveDownButton.Enabled = false;
-                ClearScriptDetails();
-            }
-
-            UpdateIconVisibility();
-        }
-
-        private void ScriptInfoEdit_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            ScriptInfoFromEdits();
-            ScriptList.Refresh();
-        }
-
-        private void ScriptList_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            ScriptList_SelectionChanged(null, null); // needed for linux
-        }
-
-        private void SplitButtonMenuItem_Click(object sender, EventArgs e)
-        {
-            // reset bold item to regular
-            var item = contextMenuStrip_SplitButton.Items.OfType<ToolStripMenuItem>().FirstOrDefault(s => s.Font.Bold);
-            if (item != null)
-            {
-                item.Font = new Font(contextMenuStrip_SplitButton.Font, FontStyle.Regular);
-            }
-
-            // make new item bold
-            ((ToolStripMenuItem)sender).Font = new Font(((ToolStripMenuItem)sender).Font, FontStyle.Bold);
-
-            // set new image on button
-            sbtn_icon.Image = ResizeForSplitButton((Bitmap)((ToolStripMenuItem)sender).Image);
-
-            _iconName = ((ToolStripMenuItem)sender).Text;
-
-            // store variables
-            ScriptInfoEdit_Validating(sender, new System.ComponentModel.CancelEventArgs());
-        }
-
-        private Bitmap ResizeForSplitButton(Bitmap b)
-        {
-            return ResizeBitmap(b, 12, 12);
-        }
-
-        [CanBeNull]
-        public Bitmap ResizeBitmap(Bitmap b, int width, int height)
-        {
-            if (b == null)
-            {
-                return null;
-            }
-
-            var result = new Bitmap(width, height);
-            using (Graphics g = Graphics.FromImage(result))
-            {
-                g.DrawImage(b, 0, 0, width, height);
-            }
-
-            return result;
-        }
-
-        private void scriptEvent_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            UpdateIconVisibility();
-        }
-
-        private void UpdateIconVisibility()
-        {
-            bool showIcon = scriptEvent.Text == ScriptEvent.ShowInUserMenuBar.ToString() || inMenuCheckBox.Checked;
-
-            sbtn_icon.Visible = showIcon;
-            lbl_icon.Visible = showIcon;
-        }
-
-        private void buttonShowArgumentsHelp_Click(object sender, EventArgs e)
-        {
-            var helpDisplayDialog = new SimpleHelpDisplayDialog
+            _argumentsCheatSheet = new SimpleHelpDisplayDialog
             {
                 DialogTitle = _scriptSettingsPageHelpDisplayArgumentsHelp.Text,
                 ContentText = _scriptSettingsPageHelpDisplayContent.Text.Replace("\n", Environment.NewLine)
             };
 
-            helpDisplayDialog.ShowDialog();
+            _argumentsCheatSheet.Show(this);
         }
 
-        private void argumentsTextBox_KeyDown(object sender, KeyEventArgs e)
+        private void btnDelete_Click(object sender, EventArgs e)
         {
-            if ((e.Control && e.KeyCode == Keys.V) || (e.Shift && e.KeyCode == Keys.Insert))
+            if (SelectedScript is null)
             {
-                ((RichTextBox)sender).Paste(DataFormats.GetFormat(DataFormats.UnicodeText));
-                e.Handled = true;
+                return;
             }
+
+            _scripts.Remove(SelectedScript);
+            BindScripts(_scripts, null);
         }
 
-        private void inMenuCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void btnMoveDown_Click(object sender, EventArgs e)
         {
-            UpdateIconVisibility();
+            if (SelectedScript is null)
+            {
+                return;
+            }
+
+            ScriptInfoProxy script = SelectedScript;
+
+            int index = _scripts.IndexOf(script);
+            _scripts.Remove(script);
+            _scripts.Insert(Math.Min(index + 1, _scripts.Count), script);
+
+            BindScripts(_scripts, script);
+        }
+
+        private void btnMoveUp_Click(object sender, EventArgs e)
+        {
+            if (SelectedScript is null)
+            {
+                return;
+            }
+
+            ScriptInfoProxy script = SelectedScript;
+
+            int index = _scripts.IndexOf(script);
+            _scripts.Remove(script);
+            _scripts.Insert(Math.Max(index - 1, 0), script);
+
+            BindScripts(_scripts, script);
+        }
+
+        private void lvScripts_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            if (_handlingCheck)
+            {
+                return;
+            }
+
+            _handlingCheck = true;
+            e.Item.Selected = true;
+            e.Item.Checked = !e.Item.Checked;
+            _handlingCheck = false;
+        }
+
+        private void lvScripts_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lvScripts.SelectedItems.Count < 1 || !(lvScripts.SelectedItems[0].Tag is ScriptInfoProxy script))
+            {
+                propertyGrid1.SelectedObject = null;
+                return;
+            }
+
+            SelectedScript = script;
+            script.SetImages(EmbeddedIcons);
+
+            propertyGrid1.SelectedObject = script;
+
+            int index = _scripts.IndexOf(script);
+            btnMoveUp.Enabled = index > 0;
+            btnMoveDown.Enabled = index < _scripts.Count - 1;
         }
     }
 }

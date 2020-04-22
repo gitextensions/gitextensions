@@ -8826,18 +8826,6 @@ See the changes in the commit form.</source>
         <source>Scripts</source>
         <target />
       </trans-unit>
-      <trans-unit id="AskConfirmation.HeaderText">
-        <source>Confirmation</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="EnabledColumn.HeaderText">
-        <source>Enabled</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="OnEvent.HeaderText">
-        <source>OnEvent</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_scriptSettingsPageHelpDisplayArgumentsHelp.Text">
         <source>Arguments help</source>
         <target />
@@ -8892,64 +8880,16 @@ Current Branch:
 {cDefaultRemotePathFromUrl}</source>
         <target />
       </trans-unit>
-      <trans-unit id="addScriptButton.Text">
-        <source>Add</source>
+      <trans-unit id="chdrCommand.Text">
+        <source>Command</source>
         <target />
       </trans-unit>
-      <trans-unit id="argumentsLabel.Text">
-        <source>Arguments:</source>
+      <trans-unit id="chdrEvents.Text">
+        <source>Event</source>
         <target />
       </trans-unit>
-      <trans-unit id="browseScriptButton.Text">
-        <source>Browse</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="buttonShowArgumentsHelp.Text">
-        <source>Help</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="commandLabel.Text">
-        <source>Command:</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="inMenuCheckBox.Text">
-        <source>Add to revision grid context menu</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="labelOnEvent.Text">
-        <source>On event:</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="lbl_icon.Text">
-        <source>Icon:</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="nameLabel.Text">
-        <source>Name:</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="removeScriptButton.Text">
-        <source>Remove</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="sbtn_icon.Text">
-        <source>Select icon</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="scriptEnabled.Text">
-        <source>Enabled</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="scriptIsPowerShell.Text">
-        <source>Is PowerShell</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="scriptNeedsConfirmation.Text">
-        <source>Ask for confirmation</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="scriptRunInBackground.Text">
-        <source>Run in background</source>
+      <trans-unit id="chdrNames.Text">
+        <source>Name</source>
         <target />
       </trans-unit>
     </body>
