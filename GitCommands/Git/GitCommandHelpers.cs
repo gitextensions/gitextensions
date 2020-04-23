@@ -310,12 +310,14 @@ namespace GitCommands
             };
         }
 
-        public static ArgumentString MergedBranches(bool includeRemote = false)
+        public static ArgumentString MergedBranchesCmd(bool includeRemote = false, bool fullRefname = false, [CanBeNull] string commit = null)
         {
             return new GitArgumentBuilder("branch")
             {
+                { fullRefname, "--format=%(refname)" },
                 { includeRemote, "-a" },
-                "--merged"
+                "--merged",
+                commit
             };
         }
 
