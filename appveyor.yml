@@ -25,10 +25,6 @@ build:
 
 install:
 - cmd: git submodule update --init --recursive
-- cmd: echo %APPVEYOR_REPO_COMMIT%
-- cmd: echo %APPVEYOR_PULL_REQUEST_HEAD_COMMIT%
-  # if building a temporary merge with master, reset the git revision to the HEAD of the PR, keeping the files of the merge of course
-- cmd: if not "%APPVEYOR_PULL_REQUEST_HEAD_COMMIT%" == "" if not "%APPVEYOR_PULL_REQUEST_HEAD_COMMIT%" == "%APPVEYOR_REPO_COMMIT%" git reset --soft "%APPVEYOR_PULL_REQUEST_HEAD_COMMIT%" --
 - cmd: echo /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll">> Directory.Build.rsp
 - cmd: |-
     cd scripts
@@ -44,17 +40,37 @@ build_script:
       & .\scripts\Mark-RepoClean.ps1
     }
 
+    # if building a temporary merge with master, reset the git revision to the HEAD of the PR, keeping the files of the merge of course
+    if ($env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT -and ($env:APPVEYOR_REPO_COMMIT -ne $env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT))
+    {
+      git reset --soft "$env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT" --
+    }
+
     # build
-    & .\cibuild.cmd -restore -build -buildNative -loc
+    & .\cibuild.cmd -restore -build -buildNative -logFileName build.binlog
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+
+    # for pull-requests we get merge-commits, and we reset to the actual PR commit, for the build contains the correct hash
+    # to verify the localisation was done correctly we don't need the original hash, so reset it back
+    # refer to https://github.com/gitextensions/gitextensions/issues/7979
+    if ($env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT) {
+      git reset $env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT --quiet -- "GitUI/Translation/English.xlf" "GitUI/Translation/English.Plugins.xlf"
+      git checkout                                     --force -- "GitUI/Translation/English.xlf" "GitUI/Translation/English.Plugins.xlf"
+    }
+
+    # it would be nice to run '.\cibuild.cmd -loc -logFileName localise.binlog /p:NoBuild=true' but it doesn't work without `-build` switch :\
+    Push-Location .\GitExtensions
+    msbuild /p:Configuration=Release /t:_UpdateEnglishTranslations /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true /v:m /bl:..\artifacts\log\localise.binlog
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    Pop-Location
 
 
 # to run your custom scripts instead of automatic tests
 test_script:
 - ps: |
-    & .\cibuild.cmd -test
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode);  }
-    & .\cibuild.cmd -integrationTest
+    & .\cibuild.cmd -test            -logFileName UnitTest.binlog        /p:NoBuild=true
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    & .\cibuild.cmd -integrationTest -logFileName IntegrationTest.binlog /p:NoBuild=true
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 
@@ -62,7 +78,7 @@ test_script:
 after_test:
 - ps: |
     Write-Host "Preparing build artifacts..."
-    & .\cibuild.cmd -publish
+    & .\cibuild.cmd -publish -logFileName publish.binlog
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 
@@ -73,8 +89,14 @@ artifacts:
 #on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
+
 # on build failure
 on_failure:
+- ps: |
+    Get-ChildItem -recurse artifacts\log\*.binlog -ErrorAction SilentlyContinue `
+    | ForEach-Object {
+        Push-AppveyorArtifact "$_"
+    }
 - ps: |
     Get-ChildItem -recurse artifacts\tests\TestResult.xml -ErrorAction SilentlyContinue `
     | ForEach-Object {

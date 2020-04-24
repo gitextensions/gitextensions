@@ -148,6 +148,7 @@
       <_PublishMsiVersionSuffix>-$(CurrentBuildVersion.ToString())</_PublishMsiVersionSuffix>
       <_PublishMsiCommitHashSuffix Condition="'$(GitCommit)' != ''">-$(GitCommit)</_PublishMsiCommitHashSuffix>
       <_PublishMsiCommitHashSuffix Condition="'$(env:APPVEYOR_REPO_COMMIT)' != ''">-$(env:APPVEYOR_REPO_COMMIT)</_PublishMsiCommitHashSuffix>
+      <_PublishMsiCommitHashSuffix Condition="'$(env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT)' != ''">-$(env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT)</_PublishMsiCommitHashSuffix>
       <_PublishMsiFileName>GitExtensions$(_PublishPortableVersionSuffix)$(_PublishPortableCommitHashSuffix)</_PublishMsiFileName>
       <_PublishMsiPath>$([MSBuild]::NormalizePath('$(ArtifactsPublishDir)'))</_PublishMsiPath>
     </PropertyGroup>
