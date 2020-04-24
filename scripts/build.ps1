@@ -1,6 +1,7 @@
 [CmdletBinding(PositionalBinding=$false)]
 Param(
   [string] $version,
+  [string] $logFileName = "build.binlog",
   [string][Alias('c')] $configuration = "Debug",
   [string][Alias('v')] $verbosity = "minimal",
   [switch] $restore,
@@ -69,7 +70,7 @@ function Build {
   }
 
   # build the solution
-  $bl = if ($binaryLog) { "/bl:" + (Join-Path $LogDir "build.binlog") } else { "" }
+  $bl = if ($binaryLog) { "/bl:" + (Join-Path $LogDir $logFileName) } else { "" }
   $platformArg = if ($platform) { "/p:Platform=$platform" } else { "" }
 
   MSBuild $toolsetBuildProj `
