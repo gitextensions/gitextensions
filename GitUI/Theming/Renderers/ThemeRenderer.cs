@@ -16,12 +16,12 @@ namespace GitUI.Theming
         /// Result code indicating theming method's task was not achieved.
         /// In this case original win32 theming api method is applied by <see cref="Win32ThemeHooks"/>
         /// </summary>
-        protected const int Unhandled = 1;
+        public const int Unhandled = 1;
 
         /// <summary>
         /// Result code indicating successful completion of theming method's task
         /// </summary>
-        protected const int Handled = 0;
+        public const int Handled = 0;
 
         private readonly HashSet<IntPtr> _themeDataHandles = new HashSet<IntPtr>();
 
@@ -36,6 +36,14 @@ namespace GitUI.Theming
 
         public virtual int RenderBackground(IntPtr hdc, int partid, int stateid, Rectangle prect,
             NativeMethods.RECTCLS pcliprect)
+        {
+            return Unhandled;
+        }
+
+        public virtual int RenderBackgroundEx(
+            IntPtr htheme, IntPtr hdc,
+            int partid, int stateid,
+            NativeMethods.RECTCLS prect, ref NativeMethods.DTBGOPTS poptions)
         {
             return Unhandled;
         }
