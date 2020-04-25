@@ -7,8 +7,8 @@ namespace System
         [StructLayout(LayoutKind.Sequential)]
         public struct DTBGOPTS
         {
-            public int dwSize;
-            public int dwFlags;
+            public uint dwSize;
+            public uint dwFlags;
             public RECT rcClip;
         }
     }
