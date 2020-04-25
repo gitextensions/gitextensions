@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 
@@ -59,6 +61,44 @@ namespace GitUI.Theming
                     default:
                         return Unhandled;
                 }
+            }
+        }
+
+        public override int RenderBackgroundEx(
+            IntPtr htheme, IntPtr hdc,
+            int partid, int stateid,
+            NativeMethods.RECTCLS prect, ref NativeMethods.DTBGOPTS poptions)
+        {
+            switch ((Parts)partid)
+            {
+                case Parts.LVP_LISTDETAIL:
+                    CheckBoxState state;
+                    switch ((State.ListItem)stateid)
+                    {
+                        case State.ListItem.LISS_NORMAL:
+                            state = CheckBoxState.UncheckedNormal;
+                            break;
+
+                        case State.ListItem.LISS_SELECTEDNOTFOCUS:
+                            state = CheckBoxState.CheckedNormal;
+                            break;
+
+                        default:
+                            return Unhandled;
+                    }
+
+                    using (var ctx = CreateRenderContext(hdc, clip: null))
+                    {
+                        CheckBoxRenderer.DrawCheckBox(
+                            ctx.Graphics,
+                            new Point(prect.Left, prect.Top),
+                            state);
+                    }
+
+                    return Handled;
+
+                default:
+                    return Unhandled;
             }
         }
 

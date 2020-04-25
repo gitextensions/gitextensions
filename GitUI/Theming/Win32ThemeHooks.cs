@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -15,6 +17,7 @@ namespace GitUI.Theming
         private static GetSysColorDelegate _getSysColorBypass;
         private static GetSysColorBrushDelegate _getSysColorBrushBypass;
         private static DrawThemeBackgroundDelegate _drawThemeBackgroundBypass;
+        private static DrawThemeBackgroundExDelegate _drawThemeBackgroundExBypass;
         private static GetThemeColorDelegate _getThemeColorBypass;
         private static DrawThemeTextDelegate _drawThemeTextBypass;
         private static DrawThemeTextExDelegate _drawThemeTextExBypass;
@@ -23,6 +26,7 @@ namespace GitUI.Theming
         private static LocalHook _getSysColorHook;
         private static LocalHook _getSysColorBrushHook;
         private static LocalHook _drawThemeBackgroundHook;
+        private static LocalHook _drawThemeBackgroundExHook;
         private static LocalHook _getThemeColorHook;
         private static LocalHook _drawThemeTextHook;
         private static LocalHook _drawThemeTextExHook;
@@ -34,6 +38,8 @@ namespace GitUI.Theming
         public static event Action<IntPtr> WindowCreated;
 
         internal static ThemeSettings ThemeSettings { private get; set; } = ThemeSettings.Default;
+
+        private static readonly HashSet<NativeListView> InitializingListViews = new HashSet<NativeListView>();
 
         private static bool BypassThemeRenderers =>
             ThemeSettings.UseSystemVisualStyle || BypassAnyHook;
@@ -62,6 +68,12 @@ namespace GitUI.Theming
                     "DrawThemeBackground",
                     DrawThemeBackgroundHook);
 
+            (_drawThemeBackgroundExHook, _drawThemeBackgroundExBypass) =
+                InstallHook<DrawThemeBackgroundExDelegate>(
+                    "uxtheme.dll",
+                    "DrawThemeBackgroundEx",
+                    DrawThemeBackgroundExHook);
+
             (_getThemeColorHook, _getThemeColorBypass) =
                 InstallHook<GetThemeColorDelegate>(
                     "uxtheme.dll",
@@ -85,6 +97,9 @@ namespace GitUI.Theming
                     "user32.dll",
                     "CreateWindowExW",
                     CreateWindowExHook);
+
+            NativeListView.BeginCreateHandle += ListView_BeginCreateHandle;
+            NativeListView.EndCreateHandle += ListView_EndCreateHandle;
 
             CreateRenderers();
         }
@@ -124,6 +139,7 @@ namespace GitUI.Theming
             _getSysColorHook?.Dispose();
             _getSysColorBrushHook?.Dispose();
             _drawThemeBackgroundHook?.Dispose();
+            _drawThemeBackgroundExHook?.Dispose();
             _getThemeColorHook?.Dispose();
             _drawThemeTextHook?.Dispose();
             _drawThemeTextExHook?.Dispose();
@@ -136,6 +152,11 @@ namespace GitUI.Theming
                     renderer.Dispose();
                 }
             }
+
+            NativeListView.BeginCreateHandle -= ListView_BeginCreateHandle;
+            NativeListView.EndCreateHandle -= ListView_EndCreateHandle;
+
+            InitializingListViews.Clear();
         }
 
         private static (LocalHook hook, TDelegate original) InstallHook<TDelegate>(string dll, string method,
@@ -199,13 +220,36 @@ namespace GitUI.Theming
             if (!BypassThemeRenderers)
             {
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
-                if (renderer?.RenderBackground(hdc, partid, stateid, prect, pcliprect) == 0)
+                if (renderer?.RenderBackground(hdc, partid, stateid, prect, pcliprect) == ThemeRenderer.Handled)
                 {
-                    return 0;
+                    return ThemeRenderer.Handled;
                 }
             }
 
             return _drawThemeBackgroundBypass(htheme, hdc, partid, stateid, prect, pcliprect);
+        }
+
+        private static int DrawThemeBackgroundExHook(
+            IntPtr htheme, IntPtr hdc,
+            int partid, int stateid,
+            NativeMethods.RECTCLS prect, ref NativeMethods.DTBGOPTS poptions)
+        {
+            Debug.WriteLine($"DrawThemeBackgroundEx {htheme} part {partid} state {stateid}");
+            if (!BypassThemeRenderers)
+            {
+                var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
+                if (renderer == null && InitializingListViews.Any(_ => _.CheckBoxes))
+                {
+                    renderer = _renderers.OfType<ListViewRenderer>().SingleOrDefault();
+                }
+
+                if (renderer?.RenderBackgroundEx(htheme, hdc, partid, stateid, prect, ref poptions) == ThemeRenderer.Handled)
+                {
+                    return ThemeRenderer.Handled;
+                }
+            }
+
+            return _drawThemeBackgroundExBypass(htheme, hdc, partid, stateid, prect, ref poptions);
         }
 
         private static int GetThemeColorHook(IntPtr htheme, int ipartid, int istateid, int ipropid,
@@ -214,14 +258,13 @@ namespace GitUI.Theming
             if (!BypassThemeRenderers)
             {
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
-                if (renderer != null && renderer.GetThemeColor(ipartid, istateid, ipropid, out pcolor) == 0)
+                if (renderer != null && renderer.GetThemeColor(ipartid, istateid, ipropid, out pcolor) == ThemeRenderer.Handled)
                 {
-                    return 0;
+                    return ThemeRenderer.Handled;
                 }
             }
 
-            int result = _getThemeColorBypass(htheme, ipartid, istateid, ipropid, out pcolor);
-            return result;
+            return _getThemeColorBypass(htheme, ipartid, istateid, ipropid, out pcolor);
         }
 
         private static int DrawThemeTextHook(
@@ -270,9 +313,9 @@ namespace GitUI.Theming
                     partid, stateid,
                     psztext, cchtext,
                     dwtextflags,
-                    prect, ref poptions) == 0)
+                    prect, ref poptions) == ThemeRenderer.Handled)
                 {
-                    return 0;
+                    return ThemeRenderer.Handled;
                 }
             }
 
@@ -296,6 +339,16 @@ namespace GitUI.Theming
 
             WindowCreated?.Invoke(hwnd);
             return hwnd;
+        }
+
+        private static void ListView_BeginCreateHandle(object sender, EventArgs args)
+        {
+            InitializingListViews.Add((NativeListView)sender);
+        }
+
+        private static void ListView_EndCreateHandle(object sender, EventArgs args)
+        {
+            InitializingListViews.Remove((NativeListView)sender);
         }
     }
 }

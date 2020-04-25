@@ -15,6 +15,11 @@ namespace GitUI.Theming
         int partId, int stateId,
         NativeMethods.RECTCLS prect, NativeMethods.RECTCLS pcliprect);
 
+    [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true, CharSet = CharSet.Unicode)]
+    internal delegate int DrawThemeBackgroundExDelegate(
+        IntPtr htheme, IntPtr hdc, int partId, int stateId,
+        NativeMethods.RECTCLS prect, ref NativeMethods.DTBGOPTS poptions);
+
     [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
     internal delegate int GetThemeColorDelegate(
         IntPtr htheme, int ipartid, int istateid, int ipropid, out int pcolor);
