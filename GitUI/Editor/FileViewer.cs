@@ -182,8 +182,6 @@ namespace GitUI.Editor
             set => internalFileViewer.Font = value;
         }
 
-        public Action OpenWithDifftool => internalFileViewer.OpenWithDifftool;
-
         [DefaultValue(true)]
         [Category("Behavior")]
         public bool IsReadOnly
@@ -352,16 +350,6 @@ namespace GitUI.Editor
         public int GetLineFromVisualPosY(int visualPosY)
         {
             return internalFileViewer.GetLineFromVisualPosY(visualPosY);
-        }
-
-        public string GetLineText(int line)
-        {
-            return internalFileViewer.GetLineText(line);
-        }
-
-        public void HighlightLine(int line, Color color)
-        {
-            internalFileViewer.HighlightLine(line, color);
         }
 
         public void HighlightLines(int startLine, int endLine, Color color)
