@@ -112,6 +112,9 @@ namespace GitUI
             catch (Exception ex)
                 when (
 
+                    // reported in https://github.com/gitextensions/gitextensions/issues/6760
+                    ex is Microsoft.WindowsAPICodePack.Shell.ShellException ||
+
                     // reported in https://github.com/gitextensions/gitextensions/issues/2269
                     ex is COMException ||
 
@@ -196,9 +199,30 @@ namespace GitUI
                 return;
             }
 
-            _commitButton.Enabled = false;
-            _pushButton.Enabled = false;
-            _pullButton.Enabled = false;
+            try
+            {
+                _commitButton.Enabled = false;
+                _pushButton.Enabled = false;
+                _pullButton.Enabled = false;
+            }
+            catch (Exception ex)
+                when (
+
+                    // reported in https://github.com/gitextensions/gitextensions/issues/6760
+                    ex is Microsoft.WindowsAPICodePack.Shell.ShellException ||
+
+                    // reported in https://github.com/gitextensions/gitextensions/issues/2269
+                    ex is COMException ||
+
+                    // reported in https://github.com/gitextensions/gitextensions/issues/6767
+                    ex is UnauthorizedAccessException ||
+
+                    // reported in https://github.com/gitextensions/gitextensions/issues/4549
+                    // looks like a regression in Windows 10.0.16299 (1709)
+                    ex is IOException)
+            {
+                Trace.WriteLine(ex.Message, "DisableThumbnailToolbar");
+            }
         }
 
         /// <summary>
