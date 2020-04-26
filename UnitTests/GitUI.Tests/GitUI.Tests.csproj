@@ -22,9 +22,6 @@
     <None Include="Editor\Diff\SampleCombined.diff">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <EmbeddedResource Include="Editor\MockData\MacLines.bin" />
-    <EmbeddedResource Include="Editor\MockData\UnixLines.bin" />
-    <EmbeddedResource Include="Editor\MockData\WindowsLines.bin" />
   </ItemGroup>
 
 </Project>

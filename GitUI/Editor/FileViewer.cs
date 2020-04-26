@@ -762,30 +762,7 @@ namespace GitUI.Editor
                 code = string.Join("\n", lines);
             }
 
-            ClipboardUtil.TrySetText(DoAutoCRLF(code));
-        }
-
-        private string DoAutoCRLF(string text)
-        {
-            if (Module.EffectiveConfigFile.core.autocrlf.ValueOrDefault != AutoCRLFType.@true)
-            {
-                return text;
-            }
-
-            if (text.Contains("\r\n"))
-            {
-                // AutoCRLF is set to true but the text contains windows endings.
-                // Maybe the user that committed the file had another AutoCRLF setting.
-                return text.Replace("\r\n", Environment.NewLine);
-            }
-
-            if (text.Contains("\r"))
-            {
-                // Old MAC lines (pre OS X). See "if (text.Contains("\r\n"))" above.
-                return text.Replace("\r", Environment.NewLine);
-            }
-
-            return text.Replace("\n", Environment.NewLine);
+            ClipboardUtil.TrySetText(code.AdjustLineEndings(Module.EffectiveConfigFile.core.autocrlf.ValueOrDefault));
         }
 
         private void SetVisibilityDiffContextMenu(bool visibleTextFile, [CanBeNull] string fileName)
@@ -1330,7 +1307,7 @@ namespace GitUI.Editor
                 }
             }
 
-            ClipboardUtil.TrySetText(DoAutoCRLF(code));
+            ClipboardUtil.TrySetText(code.AdjustLineEndings(Module.EffectiveConfigFile.core.autocrlf.ValueOrDefault));
 
             return;
 
