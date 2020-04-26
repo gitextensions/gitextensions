@@ -718,8 +718,8 @@ namespace GitCommandsTests.Git
         [TestCase(false, true, false, null, false, "D:\\myrepo\\.git\\file", null, "merge --no-ff --squash -F \"D:\\myrepo\\.git\\file\" branch")]
 
         // log parameter
-        // [TestCase(true, true, false, null, false, null, -1, "merge --squash branch")]
-        // [TestCase(true, true, false, null, false, null, 0, "merge --squash branch")]
+        [TestCase(true, true, false, null, false, null, -1, "merge --squash branch")]
+        [TestCase(true, true, false, null, false, null, 0, "merge --squash branch")]
         [TestCase(true, true, false, null, false, null, 5, "merge --squash --log=5 branch")]
         public void MergeBranchCmd(bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string mergeCommitFilePath, int? log, string expected)
         {

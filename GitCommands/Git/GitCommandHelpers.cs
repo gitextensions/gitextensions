@@ -1058,7 +1058,7 @@ namespace GitCommands
                 { noCommit, "--no-commit" },
                 { allowUnrelatedHistories, "--allow-unrelated-histories" },
                 { !string.IsNullOrWhiteSpace(mergeCommitFilePath), $"-F \"{mergeCommitFilePath}\"" }, // let git fail, if the file doesn't exist
-                { log != null, $"--log={log}" },
+                { log != null && log.Value > 0, $"--log={log}" },
                 branch
             };
         }
