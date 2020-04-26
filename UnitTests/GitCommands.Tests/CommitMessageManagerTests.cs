@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.IO.Abstractions;
 using System.Text;
+using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using NSubstitute;
@@ -16,6 +18,9 @@ namespace GitCommandsTests
         private const string _mergeMessage = "merge message";
         private const string _newMessage = "new message";
         private const string _overriddenCommitMessage = "commandline message";
+
+        // Created once for the fixture
+        private ReferenceRepository _referenceRepository;
 
         private readonly string _workingDirGitDir = @"c:\dev\repo\.git";
         private readonly Encoding _encoding = Encoding.UTF8;
@@ -41,6 +46,15 @@ namespace GitCommandsTests
         [SetUp]
         public void Setup()
         {
+            if (_referenceRepository == null)
+            {
+                _referenceRepository = new ReferenceRepository();
+            }
+            else
+            {
+                _referenceRepository.Reset();
+            }
+
             _file = Substitute.For<FileBase>();
             _file.ReadAllText(_commitMessagePath, _encoding).Returns(_commitMessage);
             _file.ReadAllText(_mergeMessagePath, _encoding).Returns(_mergeMessage);
@@ -55,6 +69,12 @@ namespace GitCommandsTests
             _fileSystem.Path.Returns(path);
 
             _manager = new CommitMessageManager(_workingDirGitDir, _encoding, _fileSystem, overriddenCommitMessage: null);
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            _referenceRepository.Dispose();
         }
 
         public void SetupExtra(string overriddenCommitMessage)
@@ -175,6 +195,49 @@ namespace GitCommandsTests
         public void CommitMessagePath()
         {
             _manager.CommitMessagePath.Should().Be(_commitMessagePath);
+        }
+
+        [TestCase(false, false)]
+        [TestCase(true, true)]
+        public void IsMergeCommit(bool fileExists, bool expected)
+        {
+            _file.Exists(_manager.MergeMessagePath).Returns(x => fileExists);
+
+            _manager.IsMergeCommit.Should().Be(expected);
+        }
+
+        [Test]
+        public void WriteCommitMessageToFile_should_write_COMMITMESSAGE()
+        {
+            var manager = new CommitMessageManager(_referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding, overriddenCommitMessage: null);
+
+            File.Exists(manager.CommitMessagePath).Should().BeFalse();
+
+            // null message isn't formatted, since we're only interested in testing File.Write logic
+            string message = null;
+            manager.WriteCommitMessageToFile(message, CommitMessageType.Normal, false, false);
+
+            File.Exists(manager.CommitMessagePath).Should().BeTrue();
+        }
+
+        [Test]
+        public void WriteCommitMessageToFile_should_write_MERGE_MSG()
+        {
+            var manager = new CommitMessageManager(_referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding, overriddenCommitMessage: null);
+
+            File.Exists(manager.MergeMessagePath).Should().BeFalse();
+
+            // null message isn't formatted, since we're only interested in testing File.Write logic
+            string message = null;
+            manager.WriteCommitMessageToFile(message, CommitMessageType.Merge, false, false);
+
+            File.Exists(manager.MergeMessagePath).Should().BeTrue();
+        }
+
+        [Test]
+        public void MergeMessagePath()
+        {
+            _manager.MergeMessagePath.Should().Be(_mergeMessagePath);
         }
 
         [Test]
@@ -333,6 +396,54 @@ namespace GitCommandsTests
             Assert.That(deletedA);
             Assert.That(deletedC);
             Assert.That(!deletedM);
+        }
+
+        [Test, TestCaseSource(typeof(FormatCommitMessageTestData), nameof(FormatCommitMessageTestData.FormatCommitMessageTestCases))]
+        public void FormatCommitMessage(
+        string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty, string expectedMessage)
+        {
+            CommitMessageManager.FormatCommitMessage(commitMessageText, usingCommitTemplate, ensureCommitMessageSecondLineEmpty)
+                .Should().Be(expectedMessage);
+        }
+
+        public class FormatCommitMessageTestData
+        {
+            private static readonly string NL = Environment.NewLine;
+
+            public static IEnumerable FormatCommitMessageTestCases
+            {
+                get
+                {
+                    // string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty, string expectedMessage
+                    yield return new TestCaseData(new object[] { null, false, false, "" });
+                    yield return new TestCaseData(new object[] { null, true, false, "" });
+                    yield return new TestCaseData(new object[] { null, false, true, "" });
+                    yield return new TestCaseData(new object[] { null, true, true, "" });
+                    yield return new TestCaseData(new object[] { "", false, false, "" });
+                    yield return new TestCaseData(new object[] { "", true, false, "" });
+                    yield return new TestCaseData(new object[] { "", false, true, "" });
+                    yield return new TestCaseData(new object[] { "", true, true, "" });
+                    yield return new TestCaseData(new object[] { "\n", false, false, NL + NL });
+                    yield return new TestCaseData(new object[] { "\n", true, false, NL + NL });
+                    yield return new TestCaseData(new object[] { "\n", false, true, NL + NL });
+                    yield return new TestCaseData(new object[] { "\n", true, true, NL + NL });
+                    yield return new TestCaseData(new object[] { "1", true, false, "1" + NL });
+                    yield return new TestCaseData(new object[] { "#1", false, false, "#1" + NL });
+                    yield return new TestCaseData(new object[] { "#1", true, false, "" });
+                    yield return new TestCaseData(new object[] { "1\n\n3", false, false, "1" + NL + NL + "3" + NL });
+                    yield return new TestCaseData(new object[] { "1\n\n3", false, true, "1" + NL + NL + "3" + NL });
+                    yield return new TestCaseData(new object[] { "1\n2\n3", false, false, "1" + NL + "2" + NL + "3" + NL });
+                    yield return new TestCaseData(new object[] { "1\n2\n3", false, true, "1" + NL + NL + "2" + NL + "3" + NL });
+                    yield return new TestCaseData(new object[] { "#0\n1\n\n3", true, false, "1" + NL + NL + "3" + NL });
+                    yield return new TestCaseData(new object[] { "#0\n1\n\n3", true, true, "1" + NL + NL + "3" + NL });
+                    yield return new TestCaseData(new object[] { "#0\n1\n2\n3", true, false, "1" + NL + "2" + NL + "3" + NL });
+                    yield return new TestCaseData(new object[] { "#0\n1\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL });
+                    yield return new TestCaseData(new object[] { "#0\n1\n#0\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL });
+                    yield return new TestCaseData(new object[] { "1\n2\n3\n4\n5\n\n7\n\n\n10", true, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL });
+                    yield return new TestCaseData(new object[] { "1\n2\n3\n4\n5\n\n7\n\n\n10", false, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL });
+                    yield return new TestCaseData(new object[] { "1\n2\n3\n4\n5\n\n7\n\n\n10\n", false, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL + NL });
+                }
+            }
         }
     }
 }

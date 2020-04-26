@@ -14,6 +14,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _strategyTooltipText = new TranslationString("resolve " + Environment.NewLine + "This can only resolve two heads (i.e. the current branch and another branch you pulled from) using a 3-way merge algorithm." + Environment.NewLine + "It tries to carefully detect criss-cross merge ambiguities and is considered generally safe and fast. " + Environment.NewLine + Environment.NewLine + "recursive " + Environment.NewLine + "This can only resolve two heads using a 3-way merge algorithm. When there is more than one common ancestor that can be " + Environment.NewLine + "used for 3-way merge, it creates a merged tree of the common ancestors and uses that as the reference tree for the 3-way" + Environment.NewLine + "merge. Additionally this can detect and handle merges involving renames. This is the default merge strategy when pulling or " + Environment.NewLine + "merging one branch. " + Environment.NewLine + Environment.NewLine + "octopus " + Environment.NewLine + "This resolves cases with more than two heads, but refuses to do a complex merge that needs manual resolution. It is " + Environment.NewLine + "primarily meant to be used for bundling topic branch heads together. This is the default merge strategy when pulling or " + Environment.NewLine + "merging more than one branch. " + Environment.NewLine + Environment.NewLine + "ours " + Environment.NewLine + "This resolves any number of heads, but the resulting tree of the merge is always that of the current branch head, effectively " + Environment.NewLine + "ignoring all changes from all other branches. It is meant to be used to supersede old development history of side branches." + Environment.NewLine + Environment.NewLine + "subtree " + Environment.NewLine + "This is a modified recursive strategy. When merging trees A and B, if B corresponds to a subtree of A, B is first adjusted to " + Environment.NewLine + "match the tree structure of A, instead of reading the trees at the same level. This adjustment is also done to the common " + Environment.NewLine + "ancestor tree.");
         private readonly TranslationString _formMergeBranchHoverShowImageLabelText = new TranslationString("Hover to see scenario when fast forward is possible.");
         private readonly string _defaultBranch;
+        private ICommitMessageManager _commitMessageManager;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormMergeBranch()
@@ -30,6 +31,8 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image1 = Properties.Images.HelpCommandMerge.AdaptLightness();
             helpImageDisplayUserControl1.Image2 = Properties.Images.HelpCommandMergeFastForward.AdaptLightness();
             InitializeComplete();
+
+            _commitMessageManager = new CommitMessageManager(Module.WorkingDirGitDir, Module.CommitEncoding);
 
             currentBranchLabel.Font = new Font(currentBranchLabel.Font, FontStyle.Bold);
             noCommit.Checked = AppSettings.DontCommitMerge;
@@ -83,13 +86,24 @@ namespace GitUI.CommandsDialogs
             AppSettings.DontCommitMerge = noCommit.Checked;
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforeMerge);
 
+            string mergeMessagePath = null;
+            if (addMergeMessage.Checked)
+            {
+                // [!] Do not reset the last commit message stored in AppSettings.LastCommitMessage
+
+                _commitMessageManager.WriteCommitMessageToFile(mergeMessage.Text, CommitMessageType.Merge,
+                                                               usingCommitTemplate: false,
+                                                               ensureCommitMessageSecondLineEmpty: false);
+                mergeMessagePath = _commitMessageManager.MergeMessagePath;
+            }
+
             var successfullyMerged = FormProcess.ShowDialog(this, GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(),
                                                                                                    fastForward.Checked,
                                                                                                    squash.Checked,
                                                                                                    noCommit.Checked,
                                                                                                    _NO_TRANSLATE_mergeStrategy.Text,
                                                                                                    allowUnrelatedHistories.Checked,
-                                                                                                   addMergeMessage.Checked ? mergeMessage.Text : null,
+                                                                                                   mergeMessagePath,
                                                                                                    addLogMessages.Checked ? (int)nbMessages.Value : (int?)null));
 
             var wasConflict = MergeConflictHandler.HandleMergeConflicts(UICommands, this, !noCommit.Checked);

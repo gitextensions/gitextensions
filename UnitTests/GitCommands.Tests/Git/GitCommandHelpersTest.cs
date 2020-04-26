@@ -705,36 +705,25 @@ namespace GitCommandsTests.Git
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default, noLocks: true).Arguments);
         }
 
-        [Test]
-        public void MergeBranchCmd()
+        // Don't care about permutations because the args aren't correlated
+        [TestCase(false, false, false, null, false, null, null, "merge --no-ff branch")]
+        [TestCase(true, true, true, null, true, null, null, "merge --squash --no-commit --allow-unrelated-histories branch")]
+
+        // mergeCommitFilePath parameter
+        [TestCase(false, true, false, null, false, "", null, "merge --no-ff --squash branch")]
+        [TestCase(false, true, false, null, false, "   ", null, "merge --no-ff --squash branch")]
+        [TestCase(false, true, false, null, false, "\t", null, "merge --no-ff --squash branch")]
+        [TestCase(false, true, false, null, false, "\n", null, "merge --no-ff --squash branch")]
+        [TestCase(false, true, false, null, false, "foo", null, "merge --no-ff --squash -F \"foo\" branch")]
+        [TestCase(false, true, false, null, false, "D:\\myrepo\\.git\\file", null, "merge --no-ff --squash -F \"D:\\myrepo\\.git\\file\" branch")]
+
+        // log parameter
+        // [TestCase(true, true, false, null, false, null, -1, "merge --squash branch")]
+        // [TestCase(true, true, false, null, false, null, 0, "merge --squash branch")]
+        [TestCase(true, true, false, null, false, null, 5, "merge --squash --log=5 branch")]
+        public void MergeBranchCmd(bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string mergeCommitFilePath, int? log, string expected)
         {
-            Assert.AreEqual(
-                "merge branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, message: null, log: null, strategy: null).Arguments);
-            Assert.AreEqual(
-                "merge --no-ff branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: false, squash: false, noCommit: false, allowUnrelatedHistories: false, message: null, log: null, strategy: null).Arguments);
-            Assert.AreEqual(
-                "merge --squash branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: true, noCommit: false, allowUnrelatedHistories: false, message: null, log: null, strategy: null).Arguments);
-            Assert.AreEqual(
-                "merge --no-commit branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: true, allowUnrelatedHistories: false, message: null, log: null, strategy: null).Arguments);
-            Assert.AreEqual(
-                "merge --allow-unrelated-histories branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: true, message: null, log: null, strategy: null).Arguments);
-            Assert.AreEqual(
-                "merge -m \"message\" branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, message: "message", log: null, strategy: null).Arguments);
-            Assert.AreEqual(
-                "merge --log=0 branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, message: null, log: 0, strategy: null).Arguments);
-            Assert.AreEqual(
-                "merge --strategy=strategy branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, message: null, log: null, strategy: "strategy").Arguments);
-            Assert.AreEqual(
-                "merge --no-ff --strategy=strategy --squash --no-commit --allow-unrelated-histories -m \"message\" --log=1 branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: false, squash: true, noCommit: true, allowUnrelatedHistories: true, message: "message", log: 1, strategy: "strategy").Arguments);
+            Assert.AreEqual(expected, GitCommandHelpers.MergeBranchCmd("branch", allowFastForward, squash, noCommit, strategy, allowUnrelatedHistories, mergeCommitFilePath, log).Arguments);
         }
 
         [Test]
