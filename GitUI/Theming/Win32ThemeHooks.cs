@@ -234,7 +234,6 @@ namespace GitUI.Theming
             int partid, int stateid,
             NativeMethods.RECTCLS prect, ref NativeMethods.DTBGOPTS poptions)
         {
-            Debug.WriteLine($"DrawThemeBackgroundEx {htheme} part {partid} state {stateid}");
             if (!BypassThemeRenderers)
             {
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
