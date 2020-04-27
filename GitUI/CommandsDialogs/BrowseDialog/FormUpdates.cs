@@ -96,6 +96,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 // if a UI component gets disposed or the UI thread EXITs while a 'check for updates' thread
                 // is in the middle of its run... Ignore it, likely the user has closed the app
             }
+            catch (NullReferenceException)
+            {
+                // We had a number of NRE reports.
+                // Most likely scenario is that GitHub is API rate limiting unauthenticated requests that lead to failures in Git.hub library.
+                // Nothing we can do here, ignore it.
+            }
             catch (Exception ex)
             {
                 this.InvokeSync(() =>
