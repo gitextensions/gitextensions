@@ -16,6 +16,9 @@
     <EmbeddedResource Include="ExternalLinks\MockData\level3_roaming_GitExtensions.settings.xml" />
     <EmbeddedResource Include="ExternalLinks\MockData\level1_repogit_GitExtensions.settings.xml" />
     <EmbeddedResource Include="ExternalLinks\MockData\level2_repodist_GitExtensions.settings.xml" />
+    <EmbeddedResource Include="Helpers\MockData\MacLines.bin" />
+    <EmbeddedResource Include="Helpers\MockData\UnixLines.bin" />
+    <EmbeddedResource Include="Helpers\MockData\WindowsLines.bin" />
     <EmbeddedResource Include="MockData\Too_long_lines.txt" />
     <EmbeddedResource Include="MockData\Too_many_lines.txt" />
     <None Include="Patches\testdata\big.patch">
@@ -33,6 +36,12 @@
     <EmbeddedResource Include="UserRepositoryHistory\Legacy\MockData\CategorisedRepositories01.xml" />
     <EmbeddedResource Include="UserRepositoryHistory\Legacy\MockData\CategorisedRepositories02.xml" />
     <None Include="**\*.approved.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Helpers\MockData\MacLines.bin" />
+    <None Remove="Helpers\MockData\UnixLines.bin" />
+    <None Remove="Helpers\MockData\WindowsLines.bin" />
   </ItemGroup>
   <ItemGroup>
     <None Update="**\*.approved.*">
