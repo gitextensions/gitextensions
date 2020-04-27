@@ -17,7 +17,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class FormClone : GitModuleForm
+    public partial class FormClone : GitExtensionsDialog
     {
         private readonly TranslationString _infoNewRepositoryLocation = new TranslationString("The repository will be cloned to a new directory located here:" + Environment.NewLine + "{0}");
         private readonly TranslationString _infoDirectoryExists = new TranslationString("(Directory already exists)");
@@ -43,10 +43,15 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormClone(GitUICommands commands, string url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs> gitModuleChanged)
-            : base(commands)
+            : base(commands, enablePositionRestore: false)
         {
             _gitModuleChanged = gitModuleChanged;
             InitializeComponent();
+
+            // work-around the designer bug that can't add controls to FlowLayoutPanel
+            ControlsPanel.Controls.Add(Ok);
+            ControlsPanel.Controls.Add(LoadSSHKey);
+
             InitializeComplete();
             _openedFromProtocolHandler = openedFromProtocolHandler;
             _url = url;
@@ -68,8 +73,10 @@ namespace GitUI.CommandsDialogs
             base.OnRuntimeLoad(e);
 
             // scale up for hi DPI
-            MaximumSize = DpiUtil.Scale(new Size(950, 375));
-            MinimumSize = DpiUtil.Scale(new Size(450, 375));
+            MaximumSize = DpiUtil.Scale(new Size(950, 425));
+            MinimumSize = DpiUtil.Scale(new Size(450, 425));
+            Size = new Size((tableLayoutPanel2.Left * 2) + tableLayoutPanel2.Width, Height);
+            tableLayoutPanel2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {

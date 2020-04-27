@@ -9,7 +9,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class FormInit : GitExtensionsForm
+    public partial class FormInit : GitExtensionsDialog
     {
         private readonly TranslationString _chooseDirectory =
             new TranslationString("Please choose a directory.");
@@ -26,9 +26,14 @@ namespace GitUI.CommandsDialogs
         private readonly EventHandler<GitModuleEventArgs> _gitModuleChanged;
 
         public FormInit(string dir, EventHandler<GitModuleEventArgs> gitModuleChanged)
+            : base(commands: null, enablePositionRestore: true)
         {
             _gitModuleChanged = gitModuleChanged;
             InitializeComponent();
+
+            // work-around the designer bug that can't add controls to FlowLayoutPanel
+            ControlsPanel.Controls.Add(Init);
+
             InitializeComplete();
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
