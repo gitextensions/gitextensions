@@ -60,7 +60,7 @@ build_script:
       & .\scripts\Mark-RepoClean.ps1
     }
 
-    # if building a temporary merge with master, reset the git revision to the HEAD of the PR, keeping the files of the merge of course
+    # if building a temporary merge with master, soft reset to the PR commit so the build contains the PR's hash instead of the merge-commit's hash
     if ($env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT -and ($env:APPVEYOR_REPO_COMMIT -ne $env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT))
     {
       git reset --soft "$env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT" --
@@ -70,8 +70,7 @@ build_script:
     & .\cibuild.cmd -restore -build -buildNative -logFileName build.binlog
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
-    # for pull-requests we get merge-commits, and we reset to the actual PR commit, for the build contains the correct hash
-    # to verify the localisation was done correctly we don't need the original hash, so reset it back
+    # if we have reset above we need to reset English xlfs, otherwise the loc verification step will fail
     # refer to https://github.com/gitextensions/gitextensions/issues/7979
     if ($env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT) {
       git reset $env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT --quiet -- "GitUI/Translation/English.xlf" "GitUI/Translation/English.Plugins.xlf"
@@ -107,8 +106,8 @@ test_script:
         Write-Host ""
         Write-Host "[INFO]: Test Run ${testRun}/${testRunCount}${failedBefore}"
 
-        if ($runUnitTests        -ne 0) { & .\cibuild.cmd -test            -logFileName UnitTest.binlog        /p:NoBuild=true }
-        if ($runIntegrationTests -ne 0) { & .\cibuild.cmd -integrationTest -logFileName IntegrationTest.binlog /p:NoBuild=true }
+        if ($runUnitTests        -ne 0) { & .\cibuild.cmd /p:NoBuild=true -test            -logFileName UnitTest.binlog        }
+        if ($runIntegrationTests -ne 0) { & .\cibuild.cmd /p:NoBuild=true -integrationTest -logFileName IntegrationTest.binlog }
 
         Get-ChildItem -recurse artifacts\tests\TestResult.xml -ErrorAction SilentlyContinue `
         | ForEach-Object {
