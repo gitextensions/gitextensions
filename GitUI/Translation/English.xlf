@@ -2481,6 +2481,10 @@ Do you want to continue?</source>
         <source>Solve merge conflicts...</source>
         <target />
       </trans-unit>
+      <trans-unit id="setDefaultFetchButtonActionToolStripMenuItem.Text">
+        <source>Set default Fetch button action</source>
+        <target />
+      </trans-unit>
       <trans-unit id="setDefaultPullButtonActionToolStripMenuItem.Text">
         <source>Set default Pull button action</source>
         <target />
@@ -2523,6 +2527,10 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="toolStripButtonCommit.Text">
         <source>Commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="toolStripButtonFetch.Text">
+        <source>Fetch</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripButtonPull.Text">

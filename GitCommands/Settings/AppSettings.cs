@@ -747,6 +747,15 @@ namespace GitCommands
         }
 
         /// <summary>
+        /// Gets or sets the default fetch action that is performed by the toolbar icon when it is clicked on.
+        /// </summary>
+        public static PullAction DefaultFetchAction
+        {
+            get => GetEnum("DefaultFetchAction", PullAction.Fetch);
+            set => SetEnum("DefaultFetchAction", value);
+        }
+
+        /// <summary>
         /// Gets or sets the default pull action that is performed by the toolbar icon when it is clicked on.
         /// </summary>
         public static PullAction DefaultPullAction
