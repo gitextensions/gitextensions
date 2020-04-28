@@ -243,6 +243,9 @@ namespace GitCommandsTests.Git
             Directory.CreateDirectory(Path.Combine(root, "Externals", "conemu-inside"));
             Directory.CreateDirectory(Path.Combine(root, "Externals", "conemu-inside-a"));
             Directory.CreateDirectory(Path.Combine(root, "Externals", "conemu-inside-b"));
+            Directory.CreateDirectory(Path.Combine(root, "Externals", "conemu-inside-w"));
+            Directory.CreateDirectory(Path.Combine(root, "Externals", "conemu-inside-i"));
+            Directory.CreateDirectory(Path.Combine(root, "Externals", "conemu-inside-c"));
             Directory.CreateDirectory(Path.Combine(root, "Assets", "Core", "Vehicle Physics core assets"));
 
             var testModule = new GitModule(root);
@@ -291,6 +294,18 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(ObjectId.Parse("05321769f039f39fa7f6748e8f30d5c8f157c7dc"), status.Commit);
             Assert.AreEqual(fileName, status.Name);
             Assert.IsNull(status.OldCommit);
+            Assert.AreEqual("Externals/ICSharpCode.TextEditor", status.OldName);
+
+            // Submodule name in reverse diff with "w/", "i/", "c/" notation
+
+            text = "diff --git w/Externals/ICSharpCode.TextEditor c/Externals/ICSharpCode.TextEditor\nindex 8da789bf5..9f443b243 160000\n--- w/Externals/ICSharpCode.TextEditor\n+++ c/Externals/ICSharpCode.TextEditor\n@@ -1 +1 @@\n-Subproject commit 8da789bf5fe1c4c6f636f1f920968f00130acfc8\n+Subproject commit 9f443b2435241e4a528558af1b02d0691c285efc\n";
+            fileName = "Externals/conemu-inside-w";
+
+            status = GitCommandHelpers.ParseSubmoduleStatus(text, testModule, fileName);
+
+            Assert.AreEqual(ObjectId.Parse("9f443b2435241e4a528558af1b02d0691c285efc"), status.Commit);
+            Assert.AreEqual("Externals/ICSharpCode.TextEditor", status.Name);
+            Assert.AreEqual(ObjectId.Parse("8da789bf5fe1c4c6f636f1f920968f00130acfc8"), status.OldCommit);
             Assert.AreEqual("Externals/ICSharpCode.TextEditor", status.OldName);
 
             try

@@ -553,7 +553,7 @@ namespace GitCommands
 
                 if (line != null)
                 {
-                    var match = Regex.Match(line, @"diff --git [abic]/(.+)\s[abwi]/(.+)");
+                    var match = Regex.Match(line, @"diff --git [abwic]/(.+)\s[abwic]/(.+)");
                     if (match.Groups.Count > 1)
                     {
                         name = match.Groups[1].Value;
