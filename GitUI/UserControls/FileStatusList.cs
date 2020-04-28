@@ -715,9 +715,11 @@ namespace GitUI
                         var comparer = new GitItemStatusNameEqualityComparer();
                         var commonBaseToAandB = allBaseToB.Intersect(allBaseToA, comparer).Except(allAToB, comparer).ToList();
                         var uniqueBaseToB = allBaseToB.Except(commonBaseToAandB, comparer).ToList();
+                        var uniqueBaseToA = allBaseToA.Except(commonBaseToAandB, comparer).ToList();
 
                         var revBase = new GitRevision(baseRevGuid);
                         tuples.Add((revBase, selectedRev, _diffBaseToB.Text + GetDescriptionForRevision(selectedRev.ObjectId), uniqueBaseToB));
+                        tuples.Add((revBase, firstRev, _diffBaseToB.Text + GetDescriptionForRevision(firstRev.ObjectId), uniqueBaseToA));
                         tuples.Add((revBase, selectedRev, _diffCommonBase.Text + GetDescriptionForRevision(baseRevGuid), commonBaseToAandB));
                     }
                 }
