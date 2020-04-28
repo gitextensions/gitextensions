@@ -16,7 +16,6 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Patches;
-using GitCommands.Settings;
 using GitCommands.Utils;
 using GitExtUtils;
 using GitExtUtils.GitUI;
@@ -24,7 +23,6 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.AutoCompletion;
 using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.Editor;
-using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.Script;
@@ -1413,7 +1411,12 @@ namespace GitUI.CommandsDialogs
                 {
                     if (_useFormCommitMessage)
                     {
-                        SetCommitMessageFromTextBox(Message.Text);
+                        // Save last commit message in settings. This way it can be used in multiple repositories.
+                        AppSettings.LastCommitMessage = Message.Text;
+
+                        _commitMessageManager.WriteCommitMessageToFile(Message.Text, CommitMessageType.Normal,
+                                                                       usingCommitTemplate: !string.IsNullOrEmpty(_commitTemplate),
+                                                                       ensureCommitMessageSecondLineEmpty: AppSettings.EnsureCommitMessageSecondLineEmpty);
                     }
 
                     ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCommit);
@@ -2242,62 +2245,6 @@ namespace GitUI.CommandsDialogs
         {
             UICommands.StartEditGitIgnoreDialog(this, localExcludes: true);
             Initialize();
-        }
-
-        private static string FormatCommitMessageFromTextBox(
-            string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty)
-        {
-            if (commitMessageText == null)
-            {
-                return string.Empty;
-            }
-
-            var formattedCommitMessage = new StringBuilder();
-
-            var lineNumber = 1;
-            foreach (var line in commitMessageText.Split('\n'))
-            {
-                string nonNullLine = line ?? string.Empty;
-
-                // When a committemplate is used, skip comments and do not count them as line.
-                // otherwise: "#" is probably not used for comment but for issue number
-                if (usingCommitTemplate && nonNullLine.StartsWith("#"))
-                {
-                    continue;
-                }
-
-                if (ensureCommitMessageSecondLineEmpty && lineNumber == 2 && !string.IsNullOrEmpty(nonNullLine))
-                {
-                    formattedCommitMessage.AppendLine();
-                }
-
-                formattedCommitMessage.AppendLine(nonNullLine);
-
-                lineNumber++;
-            }
-
-            return formattedCommitMessage.ToString();
-        }
-
-        private void SetCommitMessageFromTextBox(string commitMessageText)
-        {
-            // Save last commit message in settings. This way it can be used in multiple repositories.
-            AppSettings.LastCommitMessage = commitMessageText;
-
-            var path = _commitMessageManager.CommitMessagePath;
-
-            var formattedCommitMessage = FormatCommitMessageFromTextBox(
-                commitMessageText, usingCommitTemplate: !string.IsNullOrEmpty(_commitTemplate), AppSettings.EnsureCommitMessageSecondLineEmpty);
-
-            // Commit messages are UTF-8 by default unless otherwise in the config file.
-            // The git manual states:
-            //  git commit and git commit-tree issues a warning if the commit log message
-            //  given to it does not look like a valid UTF-8 string, unless you
-            //  explicitly say your project uses a legacy encoding. The way to say
-            //  this is to have i18n.commitencoding in .git/config file, like this:...
-            Encoding encoding = Module.CommitEncoding;
-
-            File.WriteAllText(path, formattedCommitMessage, encoding);
         }
 
         private void DeleteAllUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
@@ -3355,10 +3302,6 @@ namespace GitUI.CommandsDialogs
             internal CommandStatus ExecuteCommand(Command command) => _formCommit.ExecuteCommand((int)command);
 
             internal Rectangle Bounds => _formCommit.Bounds;
-
-            internal static string FormatCommitMessageFromTextBox(
-                string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty)
-                    => FormCommit.FormatCommitMessageFromTextBox(commitMessageText, usingCommitTemplate, ensureCommitMessageSecondLineEmpty);
         }
     }
 

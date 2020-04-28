@@ -1048,10 +1048,8 @@ namespace GitCommands
             };
         }
 
-        public static ArgumentString MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string message, int? log)
+        public static ArgumentString MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string mergeCommitFilePath, int? log)
         {
-            // TODO Quote should (optionally?) escape any " characters, at least for usages like the below
-
             return new GitArgumentBuilder("merge")
             {
                 { !allowFastForward, "--no-ff" },
@@ -1059,8 +1057,8 @@ namespace GitCommands
                 { squash, "--squash" },
                 { noCommit, "--no-commit" },
                 { allowUnrelatedHistories, "--allow-unrelated-histories" },
-                { !string.IsNullOrEmpty(message), $"-m {message.Quote()}" },
-                { log != null, $"--log={log}" },
+                { !string.IsNullOrWhiteSpace(mergeCommitFilePath), $"-F \"{mergeCommitFilePath}\"" }, // let git fail, if the file doesn't exist
+                { log != null && log.Value > 0, $"--log={log}" },
                 branch
             };
         }
