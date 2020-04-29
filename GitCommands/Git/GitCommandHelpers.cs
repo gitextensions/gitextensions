@@ -609,9 +609,17 @@ namespace GitCommands
 
             if (oldCommitId != null && commitId != null)
             {
-                var submodule = module.GetSubmodule(fileName);
-                addedCommits = submodule.GetCommitCount(commitId.ToString(), oldCommitId.ToString());
-                removedCommits = submodule.GetCommitCount(oldCommitId.ToString(), commitId.ToString());
+                if (oldCommitId == commitId)
+                {
+                    addedCommits = 0;
+                    removedCommits = 0;
+                }
+                else
+                {
+                    var submodule = module.GetSubmodule(fileName);
+                    addedCommits = submodule.GetCommitCount(commitId.ToString(), oldCommitId.ToString());
+                    removedCommits = submodule.GetCommitCount(oldCommitId.ToString(), commitId.ToString());
+                }
             }
 
             return new GitSubmoduleStatus(name, oldName, isDirty, commitId, oldCommitId, addedCommits, removedCommits);
