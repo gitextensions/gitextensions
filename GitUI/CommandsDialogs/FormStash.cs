@@ -189,28 +189,29 @@ namespace GitUI.CommandsDialogs
                 // FileStatusList has no interface for both worktree<-index, index<-HEAD at the same time
                 // Must be handled when displaying
                 var headId = Module.RevParse("HEAD");
+                var headRev = new GitRevision(headId);
                 var indexRev = new GitRevision(ObjectId.IndexId)
                 {
                     ParentIds = new[] { headId }
                 };
-                var worktreeRev = new GitRevision(ObjectId.WorkTreeId)
+                var workTreeRev = new GitRevision(ObjectId.WorkTreeId)
                 {
                     ParentIds = new[] { ObjectId.IndexId }
                 };
                 var indexItems = gitItemStatuses.Where(item => item.Staged == StagedStatus.Index).ToList();
                 var workTreeItems = gitItemStatuses.Where(item => item.Staged != StagedStatus.Index).ToList();
-                Stashed.SetStashDiffs(worktreeRev, ResourceManager.Strings.Workspace, workTreeItems,
-                    indexRev, ResourceManager.Strings.Index, indexItems);
+                Stashed.SetStashDiffs(headRev, indexRev, ResourceManager.Strings.Index, indexItems, workTreeRev, ResourceManager.Strings.Workspace, workTreeItems);
             }
             else
             {
                 var firstId = Module.RevParse(gitStash.Name + "^");
                 var selectedId = Module.RevParse(gitStash.Name);
-                var selectedRev = selectedId == null ? null : new GitRevision(selectedId)
+                var firstRev = firstId == null ? null : new GitRevision(firstId);
+                var secondRev = selectedId == null ? null : new GitRevision(selectedId)
                 {
                     ParentIds = new[] { firstId }
                 };
-                Stashed.SetStashDiffs(selectedRev, gitItemStatuses);
+                Stashed.SetDiffs(firstRev, secondRev, gitItemStatuses);
             }
 
             Loading.Visible = false;
@@ -226,15 +227,8 @@ namespace GitUI.CommandsDialogs
 
         private void StashedSelectedIndexChanged(object sender, EventArgs e)
         {
-            GitItemStatus stashedItem = Stashed.SelectedItem;
-
+            View.ViewChangesAsync(Stashed.SelectedItem);
             EnablePartialStash();
-
-            using (WaitCursorScope.Enter())
-            {
-                // Special revision handling, see LoadGitItemStatuses()
-                View.ViewChangesAsync(null, Stashed.SelectedItemParent, stashedItem);
-            }
         }
 
         private void StashClick(object sender, EventArgs e)
@@ -264,7 +258,7 @@ namespace GitUI.CommandsDialogs
             using (WaitCursorScope.Enter())
             {
                 var msg = toolStripButton_customMessage.Checked ? " " + StashMessage.Text.Trim() : string.Empty;
-                UICommands.StashSave(this, chkIncludeUntrackedFiles.Checked, StashKeepIndex.Checked, msg, Stashed.SelectedItems.Select(i => i.Name).ToList());
+                UICommands.StashSave(this, chkIncludeUntrackedFiles.Checked, StashKeepIndex.Checked, msg, Stashed.SelectedItems.Select(i => i.Item.Name).ToList());
                 Initialize();
             }
         }

@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
 {
@@ -27,7 +28,6 @@ namespace GitUI.CommandsDialogs
         // Defaults are set to simplify test cases, the defaults enables most
         public ContextMenuSelectionInfo(
             GitRevision selectedRevision,
-            bool firstIsParent,
             bool isAnyCombinedDiff,
             int selectedGitItemCount,
             bool isAnyItemIndex,
@@ -39,7 +39,6 @@ namespace GitUI.CommandsDialogs
             bool isAnySubmodule)
         {
             SelectedRevision = selectedRevision;
-            FirstIsParent = firstIsParent;
             IsAnyCombinedDiff = isAnyCombinedDiff;
             SelectedGitItemCount = selectedGitItemCount;
             IsAnyItemIndex = isAnyItemIndex;
@@ -51,8 +50,8 @@ namespace GitUI.CommandsDialogs
             IsAnySubmodule = isAnySubmodule;
         }
 
+        [CanBeNull]
         public GitRevision SelectedRevision { get; }
-        public bool FirstIsParent { get; }
         public bool IsAnyCombinedDiff { get; }
         public int SelectedGitItemCount { get; }
         public bool IsAnyItemIndex { get; }
@@ -89,14 +88,14 @@ namespace GitUI.CommandsDialogs
         public bool ShouldShowMenuSaveAs(ContextMenuSelectionInfo selectionInfo)
         {
             return selectionInfo.SelectedGitItemCount == 1 && !selectionInfo.IsAnySubmodule
-                && !selectionInfo.SelectedRevision.IsArtificial;
+                && !(selectionInfo.SelectedRevision?.IsArtificial ?? false);
         }
 
         public bool ShouldShowMenuCherryPick(ContextMenuSelectionInfo selectionInfo)
         {
             return selectionInfo.SelectedGitItemCount == 1 && !selectionInfo.IsAnySubmodule
                 && !selectionInfo.IsAnyCombinedDiff && !selectionInfo.IsBareRepository
-                && !selectionInfo.SelectedRevision.IsArtificial;
+                && !(selectionInfo.SelectedRevision?.IsArtificial ?? false);
         }
 
         // Stage/unstage must limit the selected items, IsStaged is not reflecting Staged status
@@ -112,7 +111,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowSubmoduleMenus(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsAnySubmodule && selectionInfo.SelectedRevision.ObjectId == ObjectId.WorkTreeId;
+            return selectionInfo.IsAnySubmodule && selectionInfo.SelectedRevision?.ObjectId == ObjectId.WorkTreeId;
         }
 
         public bool ShouldShowMenuEditWorkingDirectoryFile(ContextMenuSelectionInfo selectionInfo)
@@ -122,13 +121,13 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuDeleteFile(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.AllFilesOrUntrackedDirectoriesExist && selectionInfo.SelectedRevision.IsArtificial;
+            return selectionInfo.AllFilesOrUntrackedDirectoriesExist && (selectionInfo.SelectedRevision?.IsArtificial ?? false);
         }
 
         public bool ShouldShowMenuOpenRevision(ContextMenuSelectionInfo selectionInfo)
         {
             return selectionInfo.SelectedGitItemCount == 1 && !selectionInfo.IsAnySubmodule &&
-                   !selectionInfo.SelectedRevision.IsArtificial;
+                   !(selectionInfo.SelectedRevision?.IsArtificial ?? false);
         }
 
         public bool ShouldShowMenuCopyFileName(ContextMenuSelectionInfo selectionInfo)
@@ -138,7 +137,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuShowInFileTree(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.SelectedGitItemCount == 1 && !selectionInfo.SelectedRevision.IsArtificial;
+            return selectionInfo.SelectedGitItemCount == 1 && !(selectionInfo.SelectedRevision?.IsArtificial ?? false);
         }
 
         public bool ShouldShowMenuFileHistory(ContextMenuSelectionInfo selectionInfo)

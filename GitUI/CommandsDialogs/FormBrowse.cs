@@ -1869,7 +1869,7 @@ namespace GitUI.CommandsDialogs
                     fileNames.AppendLine();
                 }
 
-                fileNames.Append(Path.Combine(module.WorkingDir, item.Name).ToNativePath());
+                fileNames.Append(Path.Combine(module.WorkingDir, item.Item.Name).ToNativePath());
             }
 
             ClipboardUtil.TrySetText(fileNames.ToString());
@@ -2254,7 +2254,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var item in diffFiles.SelectedItems)
             {
-                string filePath = Path.Combine(module.WorkingDir, item.Name.ToNativePath());
+                string filePath = Path.Combine(module.WorkingDir, item.Item.Name.ToNativePath());
                 FormBrowseUtil.ShowFileOrParentFolderInFileExplorer(filePath);
             }
         }

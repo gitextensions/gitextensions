@@ -37,10 +37,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                var revisions = RevisionGrid.GetSelectedRevisions();
-                var selectedRev = revisions.FirstOrDefault();
-                var firstId = revisions.Skip(1).LastOrDefault()?.ObjectId ?? selectedRev?.FirstParentGuid;
-                diffViewer.ViewChangesAsync(firstId, selectedRev, DiffFiles.SelectedItem);
+                diffViewer.ViewChangesAsync(DiffFiles.SelectedItem);
             }
         }
 
