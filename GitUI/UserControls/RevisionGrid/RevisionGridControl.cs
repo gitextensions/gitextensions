@@ -1146,19 +1146,22 @@ namespace GitUI
 
         private void SelectInitialRevision()
         {
-            var selectedObjectIds = _selectedObjectIds ?? Array.Empty<ObjectId>();
+            var toBeSelectedObjectIds = _selectedObjectIds;
 
-            if (selectedObjectIds.Count == 0 && InitialObjectId != null)
+            if (toBeSelectedObjectIds == null || toBeSelectedObjectIds.Count == 0)
             {
-                selectedObjectIds = new ObjectId[] { InitialObjectId };
+                if (InitialObjectId != null)
+                {
+                    toBeSelectedObjectIds = new ObjectId[] { InitialObjectId };
+                    InitialObjectId = null;
+                }
+                else
+                {
+                    toBeSelectedObjectIds = new ObjectId[] { Module.GetCurrentCheckout() };
+                }
             }
 
-            if (selectedObjectIds.Count == 0)
-            {
-                selectedObjectIds = new ObjectId[] { Module.GetCurrentCheckout() };
-            }
-
-            _gridView.ToBeSelectedObjectIds = selectedObjectIds.ToList();
+            _gridView.ToBeSelectedObjectIds = toBeSelectedObjectIds;
             _selectedObjectIds = null;
         }
 
