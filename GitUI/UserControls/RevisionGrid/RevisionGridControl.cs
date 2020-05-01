@@ -574,15 +574,11 @@ namespace GitUI
         {
             try
             {
+                _gridView.Select();
+
                 if (_gridView.Rows[index].Selected)
                 {
-                    int countVisible = _gridView.DisplayedRowCount(includePartialRow: false);
-                    int firstVisible = _gridView.FirstDisplayedScrollingRowIndex;
-                    if (index < firstVisible || firstVisible + countVisible < index)
-                    {
-                        _gridView.FirstDisplayedScrollingRowIndex = index;
-                    }
-
+                    EnsureRowVisible(_gridView, index);
                     return;
                 }
 
@@ -590,12 +586,22 @@ namespace GitUI
 
                 _gridView.Rows[index].Selected = true;
                 _gridView.CurrentCell = _gridView.Rows[index].Cells[1];
-
-                _gridView.Select();
             }
             catch (ArgumentException)
             {
                 // Ignore if selection failed. Datagridview is not threadsafe
+            }
+
+            return;
+
+            static void EnsureRowVisible(DataGridView gridView, int row)
+            {
+                int countVisible = gridView.DisplayedRowCount(includePartialRow: false);
+                int firstVisible = gridView.FirstDisplayedScrollingRowIndex;
+                if (row < firstVisible || firstVisible + countVisible <= row)
+                {
+                    gridView.FirstDisplayedScrollingRowIndex = row;
+                }
             }
         }
 
@@ -1179,6 +1185,8 @@ namespace GitUI
             {
                 SetSelectedIndex(index);
             }
+
+            return;
 
             int SearchRevision(ObjectId objectId)
             {
