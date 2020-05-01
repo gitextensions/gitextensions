@@ -570,22 +570,51 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        private void SetSelectedIndex(int index)
+        private void SetSelectedIndex(int index) => SetSelectedIndex(index, toggleSelection: ModifierKeys.HasFlag(Keys.Control));
+
+        private void SetSelectedIndex(int index, bool toggleSelection)
         {
             try
             {
                 _gridView.Select();
 
-                if (_gridView.Rows[index].Selected)
+                bool shallSelect;
+                bool wasSelected = _gridView.Rows[index].Selected;
+                if (toggleSelection)
+                {
+                    // Toggle the selection, but do not deselect if it is the last one.
+                    shallSelect = !wasSelected || _gridView.SelectedRows.Count == 1;
+                }
+                else
+                {
+                    // Single select this line.
+                    shallSelect = true;
+                    if (!wasSelected || _gridView.SelectedRows.Count > 1)
+                    {
+                        _gridView.ClearSelection();
+                        wasSelected = false;
+                    }
+                }
+
+                if (wasSelected && shallSelect)
                 {
                     EnsureRowVisible(_gridView, index);
                     return;
                 }
 
-                _gridView.ClearSelection();
+                _gridView.Rows[index].Selected = shallSelect;
 
-                _gridView.Rows[index].Selected = true;
-                _gridView.CurrentCell = _gridView.Rows[index].Cells[1];
+                // Set the first selected row as current.
+                // Assigning _gridView.CurrentCell results in a single selection of that row.
+                // So do not set row as current but make it visible at least.
+                var selectedRows = _gridView.SelectedRows;
+                var firstSelectedRow = selectedRows[0];
+                if (selectedRows.Count == 1)
+                {
+                    _gridView.CurrentCell = firstSelectedRow.Cells[1];
+                }
+
+                EnsureRowVisible(_gridView, firstSelectedRow.Index);
             }
             catch (ArgumentException)
             {
