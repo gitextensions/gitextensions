@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace GitUI.UserControls
@@ -65,7 +63,7 @@ namespace GitUI.UserControls
         private void OnAfterSelect(object sender, TreeViewEventArgs e)
         {
             // If arrow key was used to navigate to this node, don't send OnSelected
-            int delta = (int)DateTime.Now.Subtract(_lastKeyNavigateTime).TotalMilliseconds;
+            int delta = (int)_getCurrentTime().Subtract(_lastKeyNavigateTime).TotalMilliseconds;
             if (delta >= 0 && delta < 500)
             {
                 return;
