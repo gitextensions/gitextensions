@@ -680,6 +680,7 @@ namespace GitUI.CommandsDialogs
             FillCommitInfo(selectedRevision);
             ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync(selectedRevision));
             FillBuildReport(selectedRevision);
+            repoObjectsTree.SelectionChanged(selectedRevisions);
         }
 
         #region IBrowseRepo
