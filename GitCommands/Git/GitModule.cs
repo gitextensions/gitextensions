@@ -2778,15 +2778,24 @@ namespace GitCommands
                 return string.Empty;
             }
 
-            // eg. "/path/to/repo/.git/HEAD"
-            var headFileName = Path.Combine(GetGitDirectory(repositoryPath), "HEAD");
-
-            if (!File.Exists(headFileName))
+            string headFileContents;
+            try
             {
+                // eg. "/path/to/repo/.git/HEAD"
+                var headFileName = Path.Combine(GetGitDirectory(repositoryPath), "HEAD");
+
+                if (!File.Exists(headFileName))
+                {
+                    return string.Empty;
+                }
+
+                headFileContents = File.ReadAllText(headFileName, SystemEncoding);
+            }
+            catch (IOException)
+            {
+                // ignore inaccessible file
                 return string.Empty;
             }
-
-            var headFileContents = File.ReadAllText(headFileName, SystemEncoding);
 
             // eg. "ref: refs/heads/master"
             //     "9601551c564b48208bccd50b705264e9bd68140d"
