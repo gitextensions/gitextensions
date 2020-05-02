@@ -20,6 +20,7 @@ namespace GitUI.BranchTreePanel
 {
     public partial class RepoObjectsTree : GitModuleControl
     {
+        private readonly CancellationTokenSequence _selectionCancellationTokenSequence = new CancellationTokenSequence();
         private readonly TranslationString _showBranchOnly =
             new TranslationString("Filter the revision grid to show this branch only\nTo show all branches, right click the revision grid, select 'view' and then the 'show all branches'");
         private readonly TranslationString _searchTooltip = new TranslationString("Search");
@@ -40,6 +41,8 @@ namespace GitUI.BranchTreePanel
 
         public RepoObjectsTree()
         {
+            Disposed += (s, e) => _selectionCancellationTokenSequence.Dispose();
+
             InitializeComponent();
             InitImageList();
             _txtBranchCriterion = CreateSearchBox();
@@ -229,6 +232,27 @@ namespace GitUI.BranchTreePanel
             // This lazily sets the command source, invoking OnUICommandsSourceSet, which is required for setting up
             // notifications for each Tree.
             _ = UICommandsSource;
+        }
+
+        public void SelectionChanged(IReadOnlyList<GitRevision> selectedRevisions)
+        {
+            var cancellationToken = _selectionCancellationTokenSequence.Next();
+
+            string selectedGuid = selectedRevisions.FirstOrDefault()?.Guid;
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                HashSet<string> mergedBranches = selectedGuid == null
+                    ? new HashSet<string>()
+                    : (await Module.GetMergedBranchesAsync(includeRemote: true, fullRefname: true, commit: selectedGuid)).ToHashSet();
+
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+
+                cancellationToken.ThrowIfCancellationRequested();
+                _branchesTree?.DepthEnumerator<BaseBranchLeafNode>().ForEach(node => node.IsMerged = mergedBranches.Contains(GitRefName.RefsHeadsPrefix + node.FullPath));
+                cancellationToken.ThrowIfCancellationRequested();
+                _remotesTree?.DepthEnumerator<BaseBranchLeafNode>().ForEach(node => node.IsMerged = mergedBranches.Contains(GitRefName.RefsRemotesPrefix + node.FullPath));
+            }).FileAndForget();
         }
 
         protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
