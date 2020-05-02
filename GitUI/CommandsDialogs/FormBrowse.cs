@@ -203,12 +203,7 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.SelectionChanged += (sender, e) =>
             {
                 _selectedRevisionUpdatedTargets = UpdateTargets.None;
-
-                FillFileTree();
-                FillDiff();
-                FillCommitInfo();
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync());
-                FillBuildReport();
+                RefreshSelection();
             };
 
             _filterRevisionsHelper.SetFilter(filter);
@@ -243,7 +238,7 @@ namespace GitUI.CommandsDialogs
             _submoduleStatusProvider.StatusUpdating += SubmoduleStatusProvider_StatusUpdating;
             _submoduleStatusProvider.StatusUpdated += SubmoduleStatusProvider_StatusUpdated;
 
-            FillBuildReport(); // Ensure correct page visibility
+            FillBuildReport(revision: null); // Ensure correct page visibility
             RevisionGrid.ShowBuildServerInfo = true;
 
             _formBrowseMenus = new FormBrowseMenus(menuStrip1);
@@ -675,6 +670,18 @@ namespace GitUI.CommandsDialogs
             toolStripButtonPush.DisplayAheadBehindInformation(Module.GetSelectedBranch());
         }
 
+        private void RefreshSelection()
+        {
+            var selectedRevisions = RevisionGrid.GetSelectedRevisions();
+            var selectedRevision = RevisionGrid.GetSelectedRevisions().FirstOrDefault();
+
+            FillFileTree(selectedRevision);
+            FillDiff(selectedRevisions);
+            FillCommitInfo(selectedRevision);
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync(selectedRevision));
+            FillBuildReport(selectedRevision);
+        }
+
         #region IBrowseRepo
 
         public void GoToRef(string refName, bool showNoRevisionMsg, bool toggleSelection = false)
@@ -1003,11 +1010,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (RevisionGrid.IndexWatcher.IndexChanged)
                 {
-                    FillFileTree();
-                    FillDiff();
-                    FillCommitInfo();
-                    ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync());
-                    FillBuildReport();
+                    RefreshSelection();
                 }
 
                 RevisionGrid.IndexWatcher.Reset();
@@ -1139,10 +1142,8 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        private void FillFileTree()
+        private void FillFileTree(GitRevision revision)
         {
-            var revision = RevisionGrid.GetSelectedRevisions().FirstOrDefault();
-
             // Don't show the "File Tree" tab for artificial commits
             var showFileTreeTab = revision?.IsArtificial != true;
 
@@ -1169,7 +1170,7 @@ namespace GitUI.CommandsDialogs
             fileTree.LoadRevision(revision);
         }
 
-        private void FillDiff()
+        private void FillDiff(IReadOnlyList<GitRevision> revisions)
         {
             if (CommitInfoTabControl.SelectedTab != DiffTabPage)
             {
@@ -1182,10 +1183,10 @@ namespace GitUI.CommandsDialogs
             }
 
             _selectedRevisionUpdatedTargets |= UpdateTargets.DiffList;
-            revisionDiff.DisplayDiffTab();
+            revisionDiff.DisplayDiffTab(revisions);
         }
 
-        private void FillCommitInfo()
+        private void FillCommitInfo(GitRevision revision)
         {
             if (_selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.CommitInfo))
             {
@@ -1199,15 +1200,6 @@ namespace GitUI.CommandsDialogs
 
             _selectedRevisionUpdatedTargets |= UpdateTargets.CommitInfo;
 
-            var selectedRevisions = RevisionGrid.GetSelectedRevisions();
-
-            if (selectedRevisions.Count == 0)
-            {
-                return;
-            }
-
-            var revision = selectedRevisions[0];
-
             if (revision == null)
             {
                 return;
@@ -1217,15 +1209,13 @@ namespace GitUI.CommandsDialogs
             RevisionInfo.SetRevisionWithChildren(revision, children);
         }
 
-        private async Task FillGpgInfoAsync()
+        private async Task FillGpgInfoAsync(GitRevision revision)
         {
             if (!AppSettings.ShowGpgInformation.ValueOrDefault || CommitInfoTabControl.SelectedTab != GpgInfoTabPage)
             {
                 return;
             }
 
-            var revisions = RevisionGrid.GetSelectedRevisions();
-            var revision = revisions.FirstOrDefault();
             if (revision == null)
             {
                 return;
@@ -1235,11 +1225,8 @@ namespace GitUI.CommandsDialogs
             revisionGpgInfo1.DisplayGpgInfo(info);
         }
 
-        private void FillBuildReport()
+        private void FillBuildReport(GitRevision revision)
         {
-            var selectedRevisions = RevisionGrid.GetSelectedRevisions();
-            var revision = selectedRevisions.Count == 1 ? selectedRevisions[0] : null;
-
             if (_buildReportTabPageExtension == null)
             {
                 _buildReportTabPageExtension = new BuildReportTabPageExtension(() => Module, CommitInfoTabControl, _buildReportTabCaption.Text);
@@ -1539,11 +1526,7 @@ namespace GitUI.CommandsDialogs
 
         private void CommitInfoTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FillFileTree();
-            FillDiff();
-            FillCommitInfo();
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync());
-            FillBuildReport();
+            RefreshSelection();
             FillTerminalTab();
             if (CommitInfoTabControl.SelectedTab == DiffTabPage)
             {
@@ -2071,7 +2054,8 @@ namespace GitUI.CommandsDialogs
 
         private void AddNotes()
         {
-            var objectId = RevisionGrid.GetSelectedRevisions().FirstOrDefault()?.ObjectId;
+            var revision = RevisionGrid.GetSelectedRevisions().FirstOrDefault();
+            var objectId = revision?.ObjectId;
 
             if (objectId == null || objectId.IsArtificial)
             {
@@ -2079,7 +2063,7 @@ namespace GitUI.CommandsDialogs
             }
 
             Module.EditNotes(objectId);
-            FillCommitInfo();
+            FillCommitInfo(revision);
         }
 
         private void FocusFilter()
