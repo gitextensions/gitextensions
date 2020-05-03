@@ -570,32 +570,67 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        private void SetSelectedIndex(int index)
+        private void SetSelectedIndex(int index) => SetSelectedIndex(index, toggleSelection: ModifierKeys.HasFlag(Keys.Control));
+
+        private void SetSelectedIndex(int index, bool toggleSelection)
         {
             try
             {
-                if (_gridView.Rows[index].Selected)
-                {
-                    int countVisible = _gridView.DisplayedRowCount(includePartialRow: false);
-                    int firstVisible = _gridView.FirstDisplayedScrollingRowIndex;
-                    if (index < firstVisible || firstVisible + countVisible < index)
-                    {
-                        _gridView.FirstDisplayedScrollingRowIndex = index;
-                    }
+                _gridView.Select();
 
+                bool shallSelect;
+                bool wasSelected = _gridView.Rows[index].Selected;
+                if (toggleSelection)
+                {
+                    // Toggle the selection, but do not deselect if it is the last one.
+                    shallSelect = !wasSelected || _gridView.SelectedRows.Count == 1;
+                }
+                else
+                {
+                    // Single select this line.
+                    shallSelect = true;
+                    if (!wasSelected || _gridView.SelectedRows.Count > 1)
+                    {
+                        _gridView.ClearSelection();
+                        wasSelected = false;
+                    }
+                }
+
+                if (wasSelected && shallSelect)
+                {
+                    EnsureRowVisible(_gridView, index);
                     return;
                 }
 
-                _gridView.ClearSelection();
+                _gridView.Rows[index].Selected = shallSelect;
 
-                _gridView.Rows[index].Selected = true;
-                _gridView.CurrentCell = _gridView.Rows[index].Cells[1];
+                // Set the first selected row as current.
+                // Assigning _gridView.CurrentCell results in a single selection of that row.
+                // So do not set row as current but make it visible at least.
+                var selectedRows = _gridView.SelectedRows;
+                var firstSelectedRow = selectedRows[0];
+                if (selectedRows.Count == 1)
+                {
+                    _gridView.CurrentCell = firstSelectedRow.Cells[1];
+                }
 
-                _gridView.Select();
+                EnsureRowVisible(_gridView, firstSelectedRow.Index);
             }
             catch (ArgumentException)
             {
                 // Ignore if selection failed. Datagridview is not threadsafe
+            }
+
+            return;
+
+            static void EnsureRowVisible(DataGridView gridView, int row)
+            {
+                int countVisible = gridView.DisplayedRowCount(includePartialRow: false);
+                int firstVisible = gridView.FirstDisplayedScrollingRowIndex;
+                if (row < firstVisible || firstVisible + countVisible <= row)
+                {
+                    gridView.FirstDisplayedScrollingRowIndex = row;
+                }
             }
         }
 
@@ -1146,19 +1181,22 @@ namespace GitUI
 
         private void SelectInitialRevision()
         {
-            var selectedObjectIds = _selectedObjectIds ?? Array.Empty<ObjectId>();
+            var toBeSelectedObjectIds = _selectedObjectIds;
 
-            if (selectedObjectIds.Count == 0 && InitialObjectId != null)
+            if (toBeSelectedObjectIds == null || toBeSelectedObjectIds.Count == 0)
             {
-                selectedObjectIds = new ObjectId[] { InitialObjectId };
+                if (InitialObjectId != null)
+                {
+                    toBeSelectedObjectIds = new ObjectId[] { InitialObjectId };
+                    InitialObjectId = null;
+                }
+                else
+                {
+                    toBeSelectedObjectIds = new ObjectId[] { Module.GetCurrentCheckout() };
+                }
             }
 
-            if (selectedObjectIds.Count == 0)
-            {
-                selectedObjectIds = new ObjectId[] { Module.GetCurrentCheckout() };
-            }
-
-            _gridView.ToBeSelectedObjectIds = selectedObjectIds.ToList();
+            _gridView.ToBeSelectedObjectIds = toBeSelectedObjectIds;
             _selectedObjectIds = null;
         }
 
@@ -1176,6 +1214,8 @@ namespace GitUI
             {
                 SetSelectedIndex(index);
             }
+
+            return;
 
             int SearchRevision(ObjectId objectId)
             {
