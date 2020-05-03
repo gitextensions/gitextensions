@@ -729,6 +729,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="labelPublishType.Text">
         <source>Publish Type:</source>
+        <target>パブリッシュタイプ:</target>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">
@@ -880,55 +881,57 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
         <source>{0:N0} Blank lines ({1:P1})</source>
-        <target>空行の{0:N0}行目({1:P1})</target>
+        <target>{0:N0} 行の空行 ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0:N0} Comment lines ({1:P1})</source>
-        <target>コメントの{0:N0}行目({1:P1})</target>
+        <target>{0:N0} 行のコメント ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
         <source>{0:N0} Commits</source>
-        <target>{0:N0}コミット</target>
+        <target>{0:N0} コミット</target>
         
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
         <source>{0:N0} Commits by {1}</source>
-        <target>{1}によるコミット数{0:N0}</target>
+        <target>{1} によるコミット数 {0:N0}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
         <source>{0:N0} Lines of code</source>
-        <target>コードの{0:N0}行目</target>
+        <target>{0:N0} 行のコード</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
         <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
-        <target>{1}ファイル内({2:P1})のコードの{0:N0}行目</target>
+        <target>{0:N0} 行の {1}ファイルのコード ({2:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeP.Text">
         <source>{0:N0} Lines of code ({1:P1})</source>
-        <target>コードの{0}行目({1:P1})</target>
+        <target>{0:N0} 行のコード ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
         <source>{0:N0} Lines in designer files ({1:P1})</source>
+        <target>{0:N0} 行はdesignerファイル ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
         <source>{0:N0} Lines of production code ({1:P1})</source>
+        <target>{0:N0} 行のプロダクションコード ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
         <source>{0:N0} Lines of test code</source>
-        <target>テストコードの{0:N0}行目</target>
+        <target>{0:N0} 行のテストコード</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
         <source>{0:N0} Lines of test code ({1:P1})</source>
-        <target>テストコードの{0:N0}行目({1:P1})</target>
+        <target>{0:N0} 行のテストコード ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
@@ -993,6 +996,9 @@ defaultrebase=0</target>
         <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
 
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
+        <target>Git ExtensionsのGerritプラグインは、Gerrit for Git Extensionsとの統合を提供します。 このプラグインはgit-reviewツールに基づいています。
+
+リポジトリのGerritサポートを有効にするには、.gitreviewファイルを作成する必要があります。 これは、リポジトリから実行できます。 .gitreviewメニューオプションを編集します。 .gitreviewファイルとgit-reviewツールの詳細については、以下のリンクを参照してください。</target>
         
       </trans-unit>
     </body>
@@ -1011,6 +1017,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_publishTypeReview.Text">
         <source>For Review</source>
+        <target>レビュー用</target>
         
       </trans-unit>
       <trans-unit id="_publishTypeWip.Text">
@@ -1064,6 +1071,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_predefinedGerritVersion.Caption">
         <source>Treat Gerrit as having version</source>
+        <target>Gerritをバージョンがあるものとして扱う</target>
         
       </trans-unit>
       <trans-unit id="_publishGerritChange.Text">
@@ -1458,6 +1466,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="EmptyQueryResultCaption.Text">
         <source>First Task Preview</source>
+        <target>最初のタスクのプレビュー</target>
         
       </trans-unit>
       <trans-unit id="EmptyQueryResultMessage.Text">
@@ -1472,6 +1481,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="InvalidUrlMessage.Text">
         <source>A valid url is required to launch the Jira query helper</source>
+        <target>Jiraクエリヘルパーを起動するには、有効なURLが必要です</target>
         
       </trans-unit>
       <trans-unit id="JiraFieldsLabel.Text">
@@ -1486,6 +1496,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="QueryHelperLinkText.Text">
         <source>Open the query helper inside Jira</source>
+        <target>Jira内でクエリヘルパーを開く</target>
         
       </trans-unit>
       <trans-unit id="QueryHelperOpenErrorText.Text">
@@ -1495,6 +1506,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
         <source>Jira credentials</source>
+        <target>Jira資格情報</target>
         
       </trans-unit>
       <trans-unit id="_enabledSettings.Caption">

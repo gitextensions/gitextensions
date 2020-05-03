@@ -19,7 +19,7 @@
         <source>Do you want to build {0}?
 
 {1}</source>
-        <target>¿Querés compilar {0}?
+        <target>¿Quieres compilar {0}?
 
 {1}</target>
         
@@ -440,6 +440,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="regexFilter.Text">
         <source>/(feature|develop)/</source>
+        <target>/(feature|develop)/</target>
         
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
@@ -718,14 +719,17 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="labelCc.Text">
         <source>CC:</source>
+        <target>CC:</target>
         
       </trans-unit>
       <trans-unit id="labelHashtag.Text">
         <source>Hashtag:</source>
+        <target>Etiqueta:</target>
         
       </trans-unit>
       <trans-unit id="labelPublishType.Text">
         <source>Publish Type:</source>
+        <target>Tipo de Publicación:</target>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">
@@ -735,6 +739,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="labelReviewers.Text">
         <source>Reviewer(s):</source>
+        <target>Revisor(es):</target>
         
       </trans-unit>
       <trans-unit id="labelTopic.Text">
@@ -886,6 +891,7 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_commits.Text">
         <source>{0:N0} Commits</source>
+        <target>{0:N0} Commits</target>
         
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
@@ -1001,6 +1007,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
     <body>
       <trans-unit id="_publishTypeDraft.Text">
         <source>Draft</source>
+        <target>Borrador</target>
         
       </trans-unit>
       <trans-unit id="_publishTypePrivate.Text">
@@ -1010,10 +1017,12 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
       </trans-unit>
       <trans-unit id="_publishTypeReview.Text">
         <source>For Review</source>
+        <target>Para Revisión</target>
         
       </trans-unit>
       <trans-unit id="_publishTypeWip.Text">
         <source>Work-in-Progress</source>
+        <target>Trabajo-en-Progreso</target>
         
       </trans-unit>
     </body>
@@ -1246,6 +1255,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
       </trans-unit>
       <trans-unit id="GitHubHost.Caption">
         <source>GitHub (Enterprise) hostname</source>
+        <target>GitHub (Enterprise) hostname</target>
         
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
@@ -1259,6 +1269,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
         <source>View in {0}</source>
+        <target>Ver en {0}</target>
         
       </trans-unit>
     </body>
@@ -1451,18 +1462,22 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="EmptyQueryResultCaption.Text">
         <source>First Task Preview</source>
+        <target>Vista preliminar de la primera tarea</target>
         
       </trans-unit>
       <trans-unit id="EmptyQueryResultMessage.Text">
         <source>[Empty Jira Query Result]</source>
+        <target>[Resultado de la Consulta de Jira vacío]</target>
         
       </trans-unit>
       <trans-unit id="InvalidUrlCaption.Text">
         <source>Invalid Jira url</source>
+        <target>Url de Jira no válida</target>
         
       </trans-unit>
       <trans-unit id="InvalidUrlMessage.Text">
         <source>A valid url is required to launch the Jira query helper</source>
+        <target>Se requiere una url válida para lanzar el ayudante de consultas de Jira</target>
         
       </trans-unit>
       <trans-unit id="JiraFieldsLabel.Text">
@@ -1477,10 +1492,12 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="QueryHelperLinkText.Text">
         <source>Open the query helper inside Jira</source>
+        <target>Abrir el ayudante de consultas en Jira</target>
         
       </trans-unit>
       <trans-unit id="QueryHelperOpenErrorText.Text">
         <source>Unable to open Jira query helper</source>
+        <target>Incapaz de abrir el ayudante de consultas</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">

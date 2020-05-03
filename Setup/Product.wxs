@@ -772,24 +772,6 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="TranslationsDir">
-      <Component Id="Czech.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Czech.gif" />
-      </Component>
-      <Component Id="Czech.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Czech.xlf" />
-      </Component>
-      <Component Id="Czech.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Czech.Plugins.xlf" />
-      </Component>
-      <Component Id="Dutch.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Dutch.gif" />
-      </Component>
-      <Component Id="Dutch.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Dutch.xlf" />
-      </Component>
-      <Component Id="Dutch.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Dutch.Plugins.xlf" />
-      </Component>
       <Component Id="English.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\English.gif" />
       </Component>
@@ -834,15 +816,6 @@
       </Component>
       <Component Id="Polish.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Polish.Plugins.xlf" />
-      </Component>
-      <Component Id="Portuguese_Brazil.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Portuguese (Brazil).gif" />
-      </Component>
-      <Component Id="Portuguese_Brazil.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Portuguese (Brazil).xlf" />
-      </Component>
-      <Component Id="Portuguese_Brazil.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Portuguese (Brazil).Plugins.xlf" />
       </Component>
       <Component Id="Russian.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.gif" />
@@ -1727,16 +1700,6 @@
         </Feature>
       </Feature>
       <Feature Id="Translation" Title="Translations" Level="1">
-        <Feature Id="Czech" Title="Czech" Level="1">
-          <ComponentRef Id="Czech.xlf" />
-          <ComponentRef Id="Czech.Plugins.xlf" />
-          <ComponentRef Id="Czech.gif" />
-        </Feature>
-        <Feature Id="Dutch" Title="Dutch" Level="1">
-          <ComponentRef Id="Dutch.xlf" />
-          <ComponentRef Id="Dutch.Plugins.xlf" />
-          <ComponentRef Id="Dutch.gif" />
-        </Feature>
         <Feature Id="French" Title="French" Level="1">
           <ComponentRef Id="French.xlf" />
           <ComponentRef Id="French.Plugins.xlf" />
@@ -1756,11 +1719,6 @@
           <ComponentRef Id="Polish.xlf" />
           <ComponentRef Id="Polish.Plugins.xlf" />
           <ComponentRef Id="Polish.gif" />
-        </Feature>
-        <Feature Id="Portuguese_Brazil" Title="Portuguese (Brazil)" Level="1">
-          <ComponentRef Id="Portuguese_Brazil.xlf" />
-          <ComponentRef Id="Portuguese_Brazil.Plugins.xlf" />
-          <ComponentRef Id="Portuguese_Brazil.gif" />
         </Feature>
         <Feature Id="Russian" Title="Russian" Level="1">
           <ComponentRef Id="Russian.xlf" />

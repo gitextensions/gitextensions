@@ -173,7 +173,7 @@ Diese Aktion wird dann ohne Warnung beim Auschecken eines Branch angewendet.</ta
       </trans-unit>
       <trans-unit id="_noDictFilesFound.Text">
         <source>No dictionary files found in: {0}</source>
-        <target>Keine Wörterbuch-Dateien gefunden: {0}</target>
+        <target>Keine Wörterbuch-Dateien gefunden in: {0}</target>
         
       </trans-unit>
       <trans-unit id="_noImageServiceTooltip.Text">
@@ -200,6 +200,7 @@ Besuchen Sie http://de.gravatar.com/site/implement/images#default-image für meh
       </trans-unit>
       <trans-unit id="chkShowRepoCurrentBranch.Text">
         <source>Show current branch names in the dashboard and the recent repositories dropdown menu</source>
+        <target>Zeige aktuell Branch Namen im Dashboard und im Dropdown Menu der zuletzt verwendeten Repositories.</target>
         
       </trans-unit>
       <trans-unit id="chkSortByAuthorDate.Text">
@@ -842,8 +843,14 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
   </file>
   <file datatype="plaintext" original="ColorsSettingsPage" source-language="en" target-language="de">
     <body>
+      <trans-unit id="$this.Text">
+        <source>Colors</source>
+        <target>Farben</target>
+        
+      </trans-unit>
       <trans-unit id="DefaultThemeName.Text">
         <source>default</source>
+        <target>Standard</target>
         
       </trans-unit>
       <trans-unit id="DrawNonRelativesGray.Text">
@@ -858,6 +865,7 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
       </trans-unit>
       <trans-unit id="FormatUserDefinedThemeName.Text">
         <source>{0}, user-defined</source>
+        <target>{0}, benutzerdefiniert</target>
         
       </trans-unit>
       <trans-unit id="MulticolorBranches.Text">
@@ -877,6 +885,7 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
       </trans-unit>
       <trans-unit id="chkUseSystemVisualStyle.Text">
         <source>Use system-defined visual style (looks bad with dark colors)</source>
+        <target>Verwende den vom System definierten visuellen Stil (schaut schlecht aus mit dunklen Farben)</target>
         
       </trans-unit>
       <trans-unit id="gbRevisionGraph.Text">
@@ -886,10 +895,12 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
       </trans-unit>
       <trans-unit id="gbTheme.Text">
         <source>Theme</source>
+        <target>Theme</target>
         
       </trans-unit>
       <trans-unit id="lblRestartNeeded.Text">
         <source>Restart required to apply changes</source>
+        <target>Neustarten, um Änderungen anzuwenden</target>
         
       </trans-unit>
     </body>
@@ -1255,7 +1266,7 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
       </trans-unit>
       <trans-unit id="_strPleaseCloneGitHubRep.Text">
         <source>Please clone GitHub repository before pull request.</source>
-        <target>Bitte vor der Erstellung eines Pull Requests erst das GitHub Repository klonen.</target>
+        <target>Bitte vor dem Pull Request erst das GitHub Repository klonen.</target>
         
       </trans-unit>
       <trans-unit id="_strPullRequest.Text">
@@ -1413,6 +1424,18 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
 - For two selected commits, show the difference between the commits as well as the difference between a common ancestor (BASE) to the last selected commit.
 - For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
 - For more than four selected commits, show the difference as if the first and the last selected commit were selected.</source>
+        <target>Zeige alle Unterschiede zwischen den ausgewählten Commits nicht limitiert auf nur einen Unterschied.
+
+- Für einen einzelnen ausgewählten Commit, zeige Unterschiede zum Eltern Commit.
+- Für einen einzelnen ausgewählten Merge-Commit, zeige Unterschiede zu allen Eltern.
+- Für zwei ausgewählte Commits, zeige Unterschiede zwischen den Commits sowie die Unterschiede eines gemeinsamen Ahnen (BASE) zum letzten ausgewählten Commit.
+- Für mehrere (bis zu vier) ausgewählte Commits, zeige die Unterschiede aller zuerst ausgewählten Commits mit dem letzten Commit.
+- Für mehr als vier ausgewählte Commits, zeige die Unterschiede als wären nur der erste und zuletzt gewählte Commit ausgewählt.</target>
+        
+      </trans-unit>
+      <trans-unit id="chkContScrollToNextFileOnlyWithAlt.Text">
+        <source>Enable automatic continuous scroll (without ALT button)</source>
+        <target>Aktiviere automatisches kontinuierliches Scrollen (ohne ALT Taste)</target>
         
       </trans-unit>
       <trans-unit id="chkOmitUninterestingDiff.Text">
@@ -1547,11 +1570,6 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
   </file>
   <file datatype="plaintext" original="FileStatusList" source-language="en" target-language="de">
     <body>
-      <trans-unit id="CombinedDiff.Text">
-        <source>Combined Diff</source>
-        <target>Kombiniertes Diff</target>
-        
-      </trans-unit>
       <trans-unit id="FilterWatermarkLabel.Text">
         <source>Filter files using a regular expression...</source>
         <target>Filtern von Dateien über reguläre Ausdrücke...</target>
@@ -1562,12 +1580,24 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
         <target>Keine Änderungen</target>
         
       </trans-unit>
-      <trans-unit id="_diffWithBase.Text">
-        <source>Diff with BASE a/</source>
+      <trans-unit id="_combinedDiff.Text">
+        <source>Combined diff</source>
+        <target>Kombiniertes Diff</target>
+        
+      </trans-unit>
+      <trans-unit id="_diffBaseToB.Text">
+        <source>Unique diff BASE with b/</source>
+        <target>Eindeutiger Diff BASE mit b/</target>
+        
+      </trans-unit>
+      <trans-unit id="_diffCommonBase.Text">
+        <source>Common diff with BASE a/</source>
+        <target>Gemeinsamer Diff mit BASE a/</target>
         
       </trans-unit>
       <trans-unit id="_diffWithParent.Text">
         <source>Diff with a/</source>
+        <target>Diff mit a/</target>
         
       </trans-unit>
       <trans-unit id="_openSubmoduleMenuItem.Text">
@@ -1591,11 +1621,17 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
     <body>
       <trans-unit id="_cannotViewImage.Text">
         <source>Cannot view image {0}</source>
+        <target>Kann Bild {0} nicht anzeigen</target>
         
       </trans-unit>
       <trans-unit id="_largeFileSizeWarning.Text">
         <source>This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.</source>
         <target>Diese Datei ist {0:N1} MB groß. Große Dateien anzuzeigen kann langsam sein. Klicken um die Datei trotzdem anzuzeigen.</target>
+        
+      </trans-unit>
+      <trans-unit id="automaticContinuousScrollToolStripMenuItem.Text">
+        <source>Enable automatic continuous scroll (without ALT button)</source>
+        <target>Aktiviere automatisches kontinuierliches Scrollen (ohne ALT Taste)</target>
         
       </trans-unit>
       <trans-unit id="cherrypickSelectedLinesToolStripMenuItem.Text">
@@ -2568,26 +2604,6 @@ mit erster zu vergleichen:</target>
         <target>Pull Request erzeugen...</target>
         
       </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryCaption.Text">
-        <source>Open</source>
-        <target>Öffnen</target>
-        
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryMainInstruction.Text">
-        <source>The selected item is not a valid git repository.</source>
-        <target>Das ausgewählte Objekt ist kein gültiges Git-Repository.</target>
-        
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryRemoveAllCommand.Text">
-        <source>Remove all {0} invalid repositories</source>
-        <target>Alle {0} ungültigen Repositories entfernen.</target>
-        
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryRemoveSelectedRepoCommand.Text">
-        <source>Remove the selected invalid repository</source>
-        <target>Das ausgewählte ungültige Repository entfernen.</target>
-        
-      </trans-unit>
       <trans-unit id="_forkCloneRepositoryToolStripMenuItem.Text">
         <source>Fork/Clone repository...</source>
         <target>Repository forken/klonen...</target>
@@ -2606,11 +2622,6 @@ mit erster zu vergleichen:</target>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
         <target>Lade...</target>
-        
-      </trans-unit>
-      <trans-unit id="_noBranchTitle.Text">
-        <source>no branch</source>
-        <target>kein Branch</target>
         
       </trans-unit>
       <trans-unit id="_noReposHostFound.Text">
@@ -3239,6 +3250,11 @@ Wollen Sie weiter machen?</target>
       <trans-unit id="cboTerminal.Item2">
         <source>powershell</source>
         <target>PowerShell</target>
+        
+      </trans-unit>
+      <trans-unit id="cboTerminal.Item3">
+        <source>pwsh</source>
+        <target>pwsh</target>
         
       </trans-unit>
       <trans-unit id="chkChowConsoleTab.Text">
@@ -4347,11 +4363,6 @@ Sie können das Template zurücksetzen:
         <target>In Verzeichnis anzeigen</target>
         
       </trans-unit>
-      <trans-unit id="openSubmoduleMenuItem.Text">
-        <source>Open with Git Extensions</source>
-        <target>Öffnen mit Git Extensions...</target>
-        
-      </trans-unit>
       <trans-unit id="openToolStripMenuItem.Text">
         <source>Open</source>
         <target>Öffnen</target>
@@ -4490,11 +4501,6 @@ Sie können das Template zurücksetzen:
       <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
         <source>Stop tracking this file</source>
         <target>Diese Datei nicht mehr überwachen</target>
-        
-      </trans-unit>
-      <trans-unit id="submoduleSummaryMenuItem.Text">
-        <source>View summary</source>
-        <target>Zeige Zusammenfassung</target>
         
       </trans-unit>
       <trans-unit id="toolAuthorLabelItem.Text">
@@ -5332,6 +5338,11 @@ Sollten Sie sich unsicher sein bitte dieses Fenster einfach schliessen.</target>
         <target>Speichern als</target>
         
       </trans-unit>
+      <trans-unit id="showAuthorAvatarToolStripMenuItem.Text">
+        <source>Show author avatar</source>
+        <target>Zeige Autoren Avatar</target>
+        
+      </trans-unit>
       <trans-unit id="showAuthorDateToolStripMenuItem.Text">
         <source>Show author date</source>
         <target>Zeige Autor Datum</target>
@@ -6087,6 +6098,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</target>
       </trans-unit>
       <trans-unit id="_deleteWorktreeFailedText.Text">
         <source>Failed to delete a worktree</source>
+        <target>Worktree konnte nicht gelöscht werden</target>
         
       </trans-unit>
       <trans-unit id="_deleteWorktreeText.Text">
@@ -6359,6 +6371,7 @@ auf den gemeinsamen Vorfahrenbaum angewendet.</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>&amp;Directory:</source>
+        <target>&amp;Verzeichnis</target>
         
       </trans-unit>
     </body>
@@ -8612,6 +8625,7 @@ Wollen Sie den Fingerprint dieses Hosts registrieren und den Prozess neu starten
       </trans-unit>
       <trans-unit id="_errorMessage.Text">
         <source>Failed to download an update.</source>
+        <target>Update konnte nicht heruntergeladen werden.</target>
         
       </trans-unit>
       <trans-unit id="_newVersionAvailable.Text">
@@ -9260,6 +9274,20 @@ Prüfen Sie den Zugriff auf die Datei.</target>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GitRootIntroductionPage" source-language="en" target-language="de">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Git Settings</source>
+        <target>Git Einstellungen</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Select one of the subnodes to view or edit the Git settings</source>
+        <target>Wähle einen der Unterknoten, um die Git Einstellungen anzuzeigen oder zu bearbeiten</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GitSettingsGroup" source-language="en" target-language="de">
     <body>
       <trans-unit id="$this.Title">
@@ -9532,14 +9560,17 @@ zeigen</target>
       </trans-unit>
       <trans-unit id="ContinueButton.Text">
         <source>Continue</source>
+        <target>Fortsetzen</target>
         
       </trans-unit>
       <trans-unit id="MoreButton.Text">
         <source>M&amp;ore...</source>
+        <target>M&amp;ehr...</target>
         
       </trans-unit>
       <trans-unit id="ResolveButton.Text">
         <source>Resolve...</source>
+        <target>Auflösen...</target>
         
       </trans-unit>
       <trans-unit id="_bisect.Text">
@@ -9549,6 +9580,7 @@ zeigen</target>
       </trans-unit>
       <trans-unit id="_conflictsMessage.Text">
         <source>There are unresolved merge conflicts.</source>
+        <target>Es gibt nicht gelöste Merge-Konflikte.</target>
         
       </trans-unit>
       <trans-unit id="_merge.Text">
@@ -9563,10 +9595,12 @@ zeigen</target>
       </trans-unit>
       <trans-unit id="_progressMessage.Text">
         <source>{0} is currently in progress.</source>
+        <target>{0} ist aktuell in Arbeit.</target>
         
       </trans-unit>
       <trans-unit id="_progressWithConflictsMessage.Text">
         <source>{0} is currently in progress with merge conflicts.</source>
+        <target>{0} ist aktuell in Arbeit mit Merge-Konflikten.</target>
         
       </trans-unit>
       <trans-unit id="_rebase.Text">
@@ -9673,6 +9707,16 @@ Do you want to trust this host key and then try again?</source>
         <target>Der Host-Key des Servers ist nicht in der Registry vorhanden.
 
 Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</target>
+        
+      </trans-unit>
+      <trans-unit id="_shellNotFound.Text">
+        <source>The selected shell is not installed, or is not on your path.</source>
+        <target>Die ausgewählte Shell ist nicht installiert oder nicht im Pfad enthalten.</target>
+        
+      </trans-unit>
+      <trans-unit id="_shellNotFoundCaption.Text">
+        <source>Shell not found</source>
+        <target>Shell nicht gefunden</target>
         
       </trans-unit>
       <trans-unit id="_theRepositorySubmodules.Text">
@@ -9807,28 +9851,9 @@ The action cannot be undone.</source>
 Die Aktion kann nicht rückgängig gemacht werden.</target>
         
       </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepository.Text">
-        <source>The selected item is not a valid git repository.
-
-Do you want to remove it from the recent repositories list?</source>
-        <target>Der ausgewählte Eintrag ist kein valides Git Repository.
-
-Wollen Sie ihn aus der Liste der zuletzt verwendeten Repositories entfernen?</target>
-        
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryCaption.Text">
-        <source>Open</source>
-        <target>Öffnen</target>
-        
-      </trans-unit>
       <trans-unit id="_groupRecentRepositories.Text">
         <source>Recent repositories</source>
         <target>Zuletzt verwendete Repositories</target>
-        
-      </trans-unit>
-      <trans-unit id="_notAValidRepository.Text">
-        <source>Not a valid git repository</source>
-        <target>Kein gültiges Git Repository</target>
         
       </trans-unit>
       <trans-unit id="clmhdrBranch.Text">
@@ -9944,6 +9969,10 @@ Um alle Branches anzuzeigen, Rechtsklick in der Revisionsliste, Auswahl 'Anzeige
       <trans-unit id="mnuBtnManageRemotesFromRootNode.Text">
         <source>&amp;Manage...</source>
         <target>&amp;Verwalten</target>
+        
+      </trans-unit>
+      <trans-unit id="mnuBtnOpenRemoteUrlInBrowser.Text">
+        <source>Open remote Url</source>
         
       </trans-unit>
       <trans-unit id="mnuBtnPruneAllBranchesFromARemote.Text">
@@ -10107,6 +10136,7 @@ Um alle Branches anzuzeigen, Rechtsklick in der Revisionsliste, Auswahl 'Anzeige
       </trans-unit>
       <trans-unit id="_firstRevision.Text">
         <source>First: a/</source>
+        <target>Erste: a/</target>
         
       </trans-unit>
       <trans-unit id="_multipleDescription.Text">
@@ -10126,6 +10156,7 @@ Um alle Branches anzuzeigen, Rechtsklick in der Revisionsliste, Auswahl 'Anzeige
       </trans-unit>
       <trans-unit id="_selectedRevision.Text">
         <source>Selected: b/</source>
+        <target>Ausgewählt: b/</target>
         
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
@@ -10186,11 +10217,6 @@ Um alle Branches anzuzeigen, Rechtsklick in der Revisionsliste, Auswahl 'Anzeige
       <trans-unit id="diffStashSubmoduleChangesToolStripMenuItem.Text">
         <source>Stash submodule changes</source>
         <target>Stashe Änderungen am Untermodul</target>
-        
-      </trans-unit>
-      <trans-unit id="diffSubmoduleSummaryMenuItem.Text">
-        <source>View summary</source>
-        <target>Zeige Übersicht</target>
         
       </trans-unit>
       <trans-unit id="diffUpdateSubmoduleMenuItem.Text">
@@ -10582,6 +10608,11 @@ Die Änderungen sehen Sie im Commit Bereich.</target>
         <target>Zeige Tags des übergeordneten Projekts</target>
         
       </trans-unit>
+      <trans-unit id="ToggleBetweenArtificialAndHeadCommits.Text">
+        <source>Toggle between artificial and HEAD commits</source>
+        <target>Umschalten zwischen künstlichen und HEAD Commits</target>
+        
+      </trans-unit>
       <trans-unit id="ToggleHighlightSelectedBranch.Text">
         <source>Highlight selected branch (until refresh)</source>
         <target>Ausgewählten Branch hervorheben (bis zum Refresh)</target>
@@ -10873,6 +10904,7 @@ Die Änderungen sehen Sie im Commit Bereich.</target>
       </trans-unit>
       <trans-unit id="openCommitsWithDiffToolMenuItem.Text">
         <source>Open selected commits with &amp;difftool</source>
+        <target>Die gewählten Commit mit &amp;Diff-Werkzeug öffnen</target>
         
       </trans-unit>
       <trans-unit id="openPullRequestPageStripMenuItem.Text">
@@ -11078,21 +11110,6 @@ Die Änderungen sehen Sie im Commit Bereich.</target>
         <target>Skripte</target>
         
       </trans-unit>
-      <trans-unit id="AskConfirmation.HeaderText">
-        <source>Confirmation</source>
-        <target>Bestätigung</target>
-        
-      </trans-unit>
-      <trans-unit id="EnabledColumn.HeaderText">
-        <source>Enabled</source>
-        <target>Aktiv</target>
-        
-      </trans-unit>
-      <trans-unit id="OnEvent.HeaderText">
-        <source>OnEvent</source>
-        <target>Bei Event</target>
-        
-      </trans-unit>
       <trans-unit id="_scriptSettingsPageHelpDisplayArgumentsHelp.Text">
         <source>Arguments help</source>
         <target>Parameter Hilfe</target>
@@ -11195,79 +11212,18 @@ Aktueller Branch:
 {cDefaultRemotePathFromUrl}</target>
         
       </trans-unit>
-      <trans-unit id="addScriptButton.Text">
-        <source>Add</source>
-        <target>Hinzufügen</target>
+      <trans-unit id="chdrCommand.Text">
+        <source>Command</source>
+        <target>Befehl</target>
         
       </trans-unit>
-      <trans-unit id="argumentsLabel.Text">
-        <source>Arguments:</source>
-        <target>Parameter:</target>
+      <trans-unit id="chdrEvents.Text">
+        <source>Event</source>
         
       </trans-unit>
-      <trans-unit id="browseScriptButton.Text">
-        <source>Browse</source>
-        <target>Durchsuchen</target>
-        
-      </trans-unit>
-      <trans-unit id="buttonShowArgumentsHelp.Text">
-        <source>Help</source>
-        <target>Hilfe</target>
-        
-      </trans-unit>
-      <trans-unit id="commandLabel.Text">
-        <source>Command:</source>
-        <target>Befehl:</target>
-        
-      </trans-unit>
-      <trans-unit id="inMenuCheckBox.Text">
-        <source>Add to revision grid context menu</source>
-        <target>Zum Kontextmenü der Revision-Übersicht hinzufügen</target>
-        
-      </trans-unit>
-      <trans-unit id="labelOnEvent.Text">
-        <source>On event:</source>
-        <target>Bei Ereignis:</target>
-        
-      </trans-unit>
-      <trans-unit id="lbl_icon.Text">
-        <source>Icon:</source>
-        <target>Icon:</target>
-        
-      </trans-unit>
-      <trans-unit id="nameLabel.Text">
-        <source>Name:</source>
-        <target>Name:</target>
-        
-      </trans-unit>
-      <trans-unit id="removeScriptButton.Text">
-        <source>Remove</source>
-        <target>Entfernen</target>
-        
-      </trans-unit>
-      <trans-unit id="sbtn_icon.Text">
-        <source>Select icon</source>
-        <target>Icon auswählen</target>
-        
-      </trans-unit>
-      <trans-unit id="scriptEnabled.Text">
-        <source>Enabled</source>
-        <target>Aktiviert</target>
-        
-      </trans-unit>
-      <trans-unit id="scriptIsPowerShell.Text">
-        <source>Is PowerShell</source>
-        <target>Ist PowerShell</target>
-        
-      </trans-unit>
-      <trans-unit id="scriptNeedsConfirmation.Text">
-        <source>Ask for confirmation</source>
-        <target>Bestätigung anfordern</target>
-        
-      </trans-unit>
-      <trans-unit id="scriptRunInBackground.Text">
-        <source>Run in background</source>
-        <target>Im Hintergrund ausführen</target>
+      <trans-unit id="chdrNames.Text">
+        <source>Name</source>
+        <target>Name</target>
         
       </trans-unit>
     </body>
@@ -11521,10 +11477,12 @@ Bei der Verwendung von OpenSSH werden Kommandozeilendialoge angezeigt!
       </trans-unit>
       <trans-unit id="_authored.Text">
         <source>authored</source>
+        <target>verfasst</target>
         
       </trans-unit>
       <trans-unit id="_authoredAndCommitted.Text">
         <source>authored and committed</source>
+        <target>verfasst und comittet</target>
         
       </trans-unit>
       <trans-unit id="_bodyNotLoaded.Text">
@@ -11553,22 +11511,28 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
         
       </trans-unit>
       <trans-unit id="_commitDateText.Text">
-        <source>{0:Commit date|Commits dates}</source>
-        <target>{0:Commit Datum|Datümer Commits}</target>
+        <source>{0:Commit date|Commit dates}</source>
+        <target>{0:Commit Datum|Commit Daten}</target>
         
       </trans-unit>
       <trans-unit id="_commitHashText.Text">
-        <source>{0:Commit hash|Commits hashes}</source>
-        <target>{0:Commit Hash|Commits Hashes}</target>
+        <source>{0:Commit hash|Commit hashes}</source>
+        <target>{0:Commit Hash|Commit Hashes}</target>
         
       </trans-unit>
       <trans-unit id="_committed.Text">
         <source>committed</source>
+        <target>committet</target>
         
       </trans-unit>
       <trans-unit id="_committerText.Text">
         <source>Committer</source>
         <target>Committer</target>
+        
+      </trans-unit>
+      <trans-unit id="_contScrollToNextFileOnlyWithAlt.Text">
+        <source>Enable automatic continuous scroll (without ALT button)</source>
+        <target>Aktiviere automatisches kontinuierliches Scrollen (ohne ALT Taste)</target>
         
       </trans-unit>
       <trans-unit id="_containedInBranchesText.Text">
@@ -11606,6 +11570,15 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
         <target>vor {0} {1:Tag|Tagen}</target>
         
       </trans-unit>
+      <trans-unit id="_deleteFile.Text">
+        <source>{0:Delete file|Delete files}</source>
+        
+      </trans-unit>
+      <trans-unit id="_directoryIsNotAValidRepository.Text">
+        <source>The selected item is not a valid git repository.</source>
+        <target>Das ausgewählte Objekt ist kein gültiges Git-Repository.</target>
+        
+      </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
         <target>Fehler</target>
@@ -11613,10 +11586,12 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
       </trans-unit>
       <trans-unit id="_errorCaptionFailedDeleteFile.Text">
         <source>Failed to delete file</source>
+        <target>Konnte Datei nicht löschen</target>
         
       </trans-unit>
       <trans-unit id="_errorCaptionFailedDeleteFolder.Text">
         <source>Failed to delete directory</source>
+        <target>Konnte Verzeichnis nicht löschen</target>
         
       </trans-unit>
       <trans-unit id="_findGitExecutable.Text">
@@ -11661,10 +11636,12 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
       </trans-unit>
       <trans-unit id="_markBisectAsBad.Text">
         <source>Marked as bad in bisect</source>
+        <target>Markiert als schlecht in bisect</target>
         
       </trans-unit>
       <trans-unit id="_markBisectAsGood.Text">
         <source>Marked as good in bisect</source>
+        <target>Markiert als gut in bisect</target>
         
       </trans-unit>
       <trans-unit id="_messageText.Text">
@@ -11687,14 +11664,29 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
         <target>Nein</target>
         
       </trans-unit>
+      <trans-unit id="_noBranch.Text">
+        <source>no branch</source>
+        <target>kein Branch</target>
+        
+      </trans-unit>
       <trans-unit id="_noResultsFound.Text">
         <source>&lt;No results found&gt;</source>
         <target>&lt;No results found&gt;</target>
         
       </trans-unit>
+      <trans-unit id="_open.Text">
+        <source>Open</source>
+        <target>Öffnen</target>
+        
+      </trans-unit>
       <trans-unit id="_openReport.Text">
         <source>Open report</source>
         <target>Öffne Report</target>
+        
+      </trans-unit>
+      <trans-unit id="_openWithGitExtensions.Text">
+        <source>Open with Git Extensions</source>
+        <target>Mit Git Extensions öffnen</target>
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
@@ -11710,6 +11702,16 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
       <trans-unit id="_remotesText.Text">
         <source>Remotes</source>
         <target>Remotes</target>
+        
+      </trans-unit>
+      <trans-unit id="_removeAllInvalidRepositories.Text">
+        <source>Remove all {0} invalid repositories</source>
+        <target>Alle {0} ungültigen Repositorys entfernen.</target>
+        
+      </trans-unit>
+      <trans-unit id="_removeSelectedInvalidRepository.Text">
+        <source>Remove the selected invalid repository</source>
+        <target>Das ausgewählte ungültige Repository entfernen.</target>
         
       </trans-unit>
       <trans-unit id="_searchingFor.Text">

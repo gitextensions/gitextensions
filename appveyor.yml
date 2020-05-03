@@ -84,41 +84,39 @@ after_test:
     & .\cibuild.cmd -publish -logFileName publish.binlog
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
+    # get files
+    $msi = (Resolve-Path .\artifacts\publish\GitExtensions-*.msi)[0].Path;
+    $zip = (Resolve-Path .\artifacts\publish\GitExtensions-Portable-*.zip)[0].Path;
+    #$vsix = (Resolve-Path artifacts\publish\GitExtensionsVSIX.vsix)[0].Path;
+
+    # do not sign artifacts for non-release branches
+    if ($env:APPVEYOR_PULL_REQUEST_TITLE) {
+        Write-Host "[INFO]: Do not sign non-release branches"
+        Get-ChildItem $zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+        #Get-ChildItem $vsix | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+        Exit-AppVeyorBuild
+        return
+    }
+
+    # archive files so we send them all in one go
+    $version = "$env:APPVEYOR_BUILD_VERSION";
+    $combined = ".\combined.$version-unsigned.zip"
+    Compress-Archive -LiteralPath $msi, $zip -CompressionLevel NoCompression -DestinationPath $combined -Force
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+
 
 artifacts:
-  - path: artifacts\log\**\*.binlog
-  - path: artifacts\publish\*.zip
-
-#on_finish:
-#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+  - path: 'combined.*-unsigned.zip'
 
 
-# on build failure
-on_failure:
-- ps: |
-    Get-ChildItem -recurse artifacts\log\*.binlog -ErrorAction SilentlyContinue `
-    | ForEach-Object {
-        Push-AppveyorArtifact "$_"
-    }
-- ps: |
-    Get-ChildItem -recurse artifacts\tests\TestResult.xml -ErrorAction SilentlyContinue `
-    | ForEach-Object {
-        $resultFilePath = "$_"
-        Get-Content $resultFilePath `
-        | Select-String -Pattern '<test-run id="[^"]*"\s+testcasecount="(\d+)"\s+result="([^"]*)"\s+total="(\d+)"\s+passed="(\d+)"\s+failed="(\d+)".*' `
-        | foreach {
-            $result = $_.Matches.Groups
-
-            $total  = $result[1].Value
-            $passed = $result[4].Value
-            $failed = $result[5].Value
-            $notPassed = $total - $passed
-            $testErrors = $failed
-            $testProjectName = $resultFilePath.Split('\\')[-3]
-
-            if ($testErrors -ne 0) {
-              $logFile = Get-ChildItem -recurse artifacts\$testProjectName*.log
-              Push-AppveyorArtifact $logFile
-            }
-        }
-    }
+deploy:
+- provider: Webhook
+  on:
+    ARTIFACT_SIGNING_ENABLED: true
+  url: https://app.signpath.io/API/v1/7c19b2cf-90f7-4d15-9b12-1b615f7c18c4/Integrations/AppVeyor?ProjectKey=GitExtensions_combined&SigningPolicyKey=release-2020
+  on_build_success: true
+  on_build_failure: false
+  on_build_status_changed: false
+  method: POST
+  authorization:
+     secure: IlLI/MbhdzmXF/WB2G84zYsDWePXJqHBWDb1zBPxxXvGgx0WRxzMZxuBsvCOcZvbPTRF+UcGp0d5/HT8xZUEjA==
