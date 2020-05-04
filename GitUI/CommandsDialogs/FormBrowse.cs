@@ -2448,7 +2448,7 @@ namespace GitUI.CommandsDialogs
                     CommitData commit = _commitDataManager.GetCommitData(e.Data, out _);
                     if (commit != null)
                     {
-                        RevisionGrid.SetSelectedRevision(new GitRevision(commit.ObjectId));
+                        RevisionGrid.SetSelectedRevision(commit.ObjectId);
                     }
 
                     break;

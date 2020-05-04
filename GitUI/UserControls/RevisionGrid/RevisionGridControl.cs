@@ -673,11 +673,6 @@ namespace GitUI
             return _gridView.GetRevision(objectId);
         }
 
-        public bool SetSelectedRevision([CanBeNull] GitRevision revision)
-        {
-            return SetSelectedRevision(revision?.ObjectId);
-        }
-
         private void HighlightBranch(ObjectId id)
         {
             _revisionGraphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.HighlightSelected;
