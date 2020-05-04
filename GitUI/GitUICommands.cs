@@ -1864,9 +1864,9 @@ namespace GitUI
             InvokeEvent(owner, PostRegisterPlugin);
         }
 
-        public void BrowseGoToRef(string refName, bool showNoRevisionMsg)
+        public void BrowseGoToRef(string refName, bool showNoRevisionMsg, bool toggleSelection = false)
         {
-            BrowseRepo?.GoToRef(refName, showNoRevisionMsg);
+            BrowseRepo?.GoToRef(refName, showNoRevisionMsg, toggleSelection);
         }
 
         public void BrowseSetWorkingDir(string path)

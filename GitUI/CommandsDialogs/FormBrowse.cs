@@ -663,11 +663,11 @@ namespace GitUI.CommandsDialogs
 
         #region IBrowseRepo
 
-        public void GoToRef(string refName, bool showNoRevisionMsg)
+        public void GoToRef(string refName, bool showNoRevisionMsg, bool toggleSelection = false)
         {
             using (WaitCursorScope.Enter())
             {
-                RevisionGrid.GoToRef(refName, showNoRevisionMsg);
+                RevisionGrid.GoToRef(refName, showNoRevisionMsg, toggleSelection);
             }
         }
 
