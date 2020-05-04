@@ -1162,25 +1162,7 @@ namespace GitUI
         }
 
         public void StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision = null, bool filterByRevision = false, bool showBlame = false)
-        {
-            Form ProvideForm()
-            {
-                var form = new FormFileHistory(this, fileName, revision, filterByRevision);
-
-                if (showBlame)
-                {
-                    form.SelectBlameTab();
-                }
-                else
-                {
-                    form.SelectDiffTab();
-                }
-
-                return form;
-            }
-
-            ShowModelessForm(owner, true, null, null, ProvideForm);
-        }
+            => ShowModelessForm(owner, requiresValidWorkingDir: true, preEvent: null, postEvent: null, () => new FormFileHistory(this, fileName, revision, filterByRevision, showBlame));
 
         public void OpenWithDifftool(IWin32Window owner, IReadOnlyList<GitRevision> revisions, string fileName, string oldFileName, RevisionDiffKind diffKind, bool isTracked)
         {
@@ -1704,23 +1686,33 @@ namespace GitUI
             }
         }
 
-        private void RunFileHistoryCommand(IReadOnlyList<string> args)
+        /// <summary>
+        /// Remove working directory from filename and convert to POSIX path.
+        /// This is to prevent filenames that are too long while there is room left when the workingdir was not in the path.
+        /// </summary>
+        private string NormalizeFileName(string fileName)
         {
-            // Remove working directory from filename. This is to prevent filenames that are too
-            // long while there is room left when the workingdir was not in the path.
-            string fileHistoryFileName = string.IsNullOrEmpty(Module.WorkingDir) ? args[2] :
-                args[2].Replace(Module.WorkingDir, "").ToPosixPath();
-            var fullFilePath = _fullPathResolver.Resolve(fileHistoryFileName);
-            if (new FormFileHistoryController().TryGetExactPath(fullFilePath, out var exactFileName) &&
-                exactFileName.Length > Module.WorkingDir.Length)
+            fileName = fileName.ToPosixPath();
+            return string.IsNullOrEmpty(Module.WorkingDir) ? fileName : fileName.Replace(Module.WorkingDir.ToPosixPath(), "");
+        }
+
+        /// <returns>false on error</returns>
+        private bool RunFileHistoryCommand(IReadOnlyList<string> args)
+        {
+            string fileHistoryFileName = args[2];
+            if (new FormFileHistoryController().TryGetExactPath(_fullPathResolver.Resolve(fileHistoryFileName), out var exactFileName))
             {
-                fileHistoryFileName = exactFileName.Substring(Module.WorkingDir.Length);
+                fileHistoryFileName = NormalizeFileName(exactFileName);
             }
 
-            if (!string.IsNullOrWhiteSpace(fileHistoryFileName))
+            if (string.IsNullOrWhiteSpace(fileHistoryFileName))
             {
-                StartFileHistoryDialog(null, fileHistoryFileName);
+                return false;
             }
+
+            StartFileHistoryDialog(owner: null, fileHistoryFileName);
+
+            return true;
         }
 
         private void RunCloneCommand(IReadOnlyList<string> args)
@@ -1733,14 +1725,13 @@ namespace GitUI
             StartInitializeDialog(null, args.Count > 2 ? args[2] : null);
         }
 
-        private void RunBlameCommand(IReadOnlyList<string> args)
+        /// <returns>false on error</returns>
+        private bool RunBlameCommand(IReadOnlyList<string> args)
         {
-            // Remove working directory from filename. This is to prevent filenames that are too
-            // long while there is room left when the workingdir was not in the path.
-            string filenameFromBlame = args[2].Replace(Module.WorkingDir, "").ToPosixPath();
+            string blameFileName = NormalizeFileName(args[2]);
 
             int? initialLine = null;
-            if (args.Count >= 4)
+            if (args.Count > 3)
             {
                 if (int.TryParse(args[3], out var temp))
                 {
@@ -1748,9 +1739,9 @@ namespace GitUI
                 }
             }
 
-            DoActionOnRepo(null, true, false, null, null, () =>
+            return DoActionOnRepo(null, true, false, null, null, () =>
             {
-                using (var frm = new FormBlame(this, filenameFromBlame, null, initialLine))
+                using (var frm = new FormBlame(this, blameFileName, null, initialLine))
                 {
                     frm.ShowDialog(null);
                 }

@@ -93,7 +93,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public FormFileHistory(GitUICommands commands, string fileName, GitRevision revision = null, bool filterByRevision = false)
+        public FormFileHistory(GitUICommands commands, string fileName, GitRevision revision = null, bool filterByRevision = false, bool showBlame = false)
             : this(commands)
         {
             FileChanges.InitialObjectId = revision?.ObjectId;
@@ -148,6 +148,8 @@ namespace GitUI.CommandsDialogs
             {
                 _filterBranchHelper.SetBranchFilter(revision.Guid, false);
             }
+
+            tabControl1.SelectedTab = blameTabExists && showBlame ? BlameTab : DiffTab;
         }
 
         /// <summary>
@@ -170,9 +172,6 @@ namespace GitUI.CommandsDialogs
 
             base.Dispose(disposing);
         }
-
-        public void SelectBlameTab() => tabControl1.SelectedTab = BlameTab;
-        public void SelectDiffTab() => tabControl1.SelectedTab = DiffTab;
 
         protected override void OnRuntimeLoad(EventArgs e)
         {
