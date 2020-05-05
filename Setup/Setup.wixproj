@@ -89,6 +89,8 @@
   </Target>
 
   <Target Name="DownloadPluginManager" BeforeTargets="BeforeBuild">
-    <Exec Command="powershell.exe $(MSBuildProjectDirectory)\..\scripts\Download-PluginManager.ps1 -ExtractRootPath '$(PluginManagerSourceDir)\GitExtensions.PluginManager'" />
+    <Exec
+      Condition="!Exists('$(PluginManagerSourceDir)\GitExtensions.PluginManager')"
+      Command="powershell.exe $(MSBuildProjectDirectory)\..\scripts\Download-PluginManager.ps1 -ExtractRootPath '$(PluginManagerSourceDir)\GitExtensions.PluginManager'" />
   </Target>
 </Project>
