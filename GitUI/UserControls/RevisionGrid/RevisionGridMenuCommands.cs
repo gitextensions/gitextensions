@@ -423,7 +423,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                 if (objectId != null)
                 {
-                    _revisionGrid.SetSelectedRevision(new GitRevision(objectId));
+                    _revisionGrid.SetSelectedRevision(objectId);
                 }
                 else
                 {

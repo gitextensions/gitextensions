@@ -106,7 +106,7 @@ namespace GitUI.BranchTreePanel
             {
                 TreeViewNode.TreeView.BeginInvoke(new Action(() =>
                 {
-                    UICommands.BrowseGoToRef(FullPath, showNoRevisionMsg: true);
+                    UICommands.BrowseGoToRef(FullPath, showNoRevisionMsg: true, toggleSelection: ModifierKeys.HasFlag(Keys.Control));
                     TreeViewNode.TreeView?.Focus();
                 }));
             }

@@ -582,7 +582,7 @@ namespace GitUI.CommandsDialogs
                 CommitData commit = _commitDataManager.GetCommitData(e.Data, out _);
                 if (commit != null)
                 {
-                    FileChanges.SetSelectedRevision(new GitRevision(commit.ObjectId));
+                    FileChanges.SetSelectedRevision(commit.ObjectId);
                 }
             }
             else if (e.Command == "navigatebackward")

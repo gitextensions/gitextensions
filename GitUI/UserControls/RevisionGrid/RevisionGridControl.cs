@@ -570,9 +570,7 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        private void SetSelectedIndex(int index) => SetSelectedIndex(index, toggleSelection: ModifierKeys.HasFlag(Keys.Control));
-
-        private void SetSelectedIndex(int index, bool toggleSelection)
+        private void SetSelectedIndex(int index, bool toggleSelection = false)
         {
             try
             {
@@ -651,13 +649,13 @@ namespace GitUI
         /// </summary>
         /// <param name="objectId">Id of the revision to select.</param>
         /// <returns><c>true</c> if the required revision was found and selected, otherwise <c>false</c>.</returns>
-        public bool SetSelectedRevision([CanBeNull] ObjectId objectId)
+        public bool SetSelectedRevision([CanBeNull] ObjectId objectId, bool toggleSelection = false)
         {
             var index = FindRevisionIndex(objectId);
 
             if (index >= 0 && index < _gridView.RowCount)
             {
-                SetSelectedIndex(index);
+                SetSelectedIndex(index, toggleSelection);
                 _navigationHistory.Push(objectId);
                 return true;
             }
@@ -671,11 +669,6 @@ namespace GitUI
         public GitRevision GetRevision(ObjectId objectId)
         {
             return _gridView.GetRevision(objectId);
-        }
-
-        public bool SetSelectedRevision([CanBeNull] GitRevision revision)
-        {
-            return SetSelectedRevision(revision?.ObjectId);
         }
 
         private void HighlightBranch(ObjectId id)
@@ -2385,7 +2378,7 @@ namespace GitUI
             }
         }
 
-        public void GoToRef(string refName, bool showNoRevisionMsg)
+        public void GoToRef(string refName, bool showNoRevisionMsg, bool toggleSelection = false)
         {
             if (string.IsNullOrEmpty(refName))
             {
@@ -2400,7 +2393,7 @@ namespace GitUI
             var revisionGuid = Module.RevParse(refName);
             if (revisionGuid != null)
             {
-                if (_isReadingRevisions || !SetSelectedRevision(revisionGuid))
+                if (_isReadingRevisions || !SetSelectedRevision(revisionGuid, toggleSelection))
                 {
                     InitialObjectId = revisionGuid;
                     _selectedObjectIds = null;
