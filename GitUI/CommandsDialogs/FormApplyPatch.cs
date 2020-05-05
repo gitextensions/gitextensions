@@ -67,6 +67,7 @@ namespace GitUI.CommandsDialogs
             {
                 Apply.Enabled = false;
                 IgnoreWhitespace.Enabled = false;
+                SignOff.Enabled = false;
                 PatchFileMode.Enabled = false;
                 PatchDirMode.Enabled = false;
                 AddFiles.Enabled = true;
@@ -93,6 +94,7 @@ namespace GitUI.CommandsDialogs
 
                 Apply.Enabled = true;
                 IgnoreWhitespace.Enabled = true;
+                SignOff.Enabled = true;
                 PatchFileMode.Enabled = true;
                 PatchDirMode.Enabled = true;
                 AddFiles.Enabled = false;
@@ -157,6 +159,7 @@ namespace GitUI.CommandsDialogs
             var patchFile = PatchFile.Text;
             var dirText = PatchDir.Text;
             var ignoreWhiteSpace = IgnoreWhitespace.Checked;
+            var signOff = SignOff.Checked;
 
             if (string.IsNullOrEmpty(patchFile) && string.IsNullOrEmpty(dirText))
             {
@@ -170,13 +173,13 @@ namespace GitUI.CommandsDialogs
                 {
                     var arguments = IsDiffFile(patchFile)
                         ? GitCommandHelpers.ApplyDiffPatchCmd(ignoreWhiteSpace, patchFile)
-                        : GitCommandHelpers.ApplyMailboxPatchCmd(ignoreWhiteSpace, patchFile);
+                        : GitCommandHelpers.ApplyMailboxPatchCmd(signOff, ignoreWhiteSpace, patchFile);
 
                     FormProcess.ShowDialog(this, arguments);
                 }
                 else
                 {
-                    var arguments = GitCommandHelpers.ApplyMailboxPatchCmd(ignoreWhiteSpace);
+                    var arguments = GitCommandHelpers.ApplyMailboxPatchCmd(signOff, ignoreWhiteSpace);
 
                     Module.ApplyPatch(dirText, arguments);
                 }
@@ -262,6 +265,7 @@ namespace GitUI.CommandsDialogs
 
             Text = _applyPatchMsgBox.Text + " (" + Module.WorkingDir + ")";
             IgnoreWhitespace.Checked = AppSettings.ApplyPatchIgnoreWhitespace;
+            SignOff.Checked = AppSettings.ApplyPatchSignOff;
         }
 
         private void BrowseDir_Click(object sender, EventArgs e)
@@ -287,6 +291,11 @@ namespace GitUI.CommandsDialogs
         private void IgnoreWhitespace_CheckedChanged(object sender, EventArgs e)
         {
             AppSettings.ApplyPatchIgnoreWhitespace = IgnoreWhitespace.Checked;
+        }
+
+        private void SignOff_CheckedChanged(object sender, EventArgs e)
+        {
+            AppSettings.ApplyPatchSignOff = SignOff.Checked;
         }
     }
 }

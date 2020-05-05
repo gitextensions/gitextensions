@@ -749,18 +749,16 @@ namespace GitCommandsTests.Git
                 GitCommandHelpers.ApplyDiffPatchCmd(true, "hello\\world.patch").Arguments);
         }
 
-        [Test]
-        public void ApplyMailboxPatchCmd()
+        [TestCase(false, false, "hello\\world.patch", "am --3way \"hello/world.patch\"")]
+        [TestCase(false, true, "hello\\world.patch", "am --3way --ignore-whitespace \"hello/world.patch\"")]
+        [TestCase(true, false, "hello\\world.patch", "am --3way --signoff \"hello/world.patch\"")]
+        [TestCase(true, true, "hello\\world.patch", "am --3way --signoff --ignore-whitespace \"hello/world.patch\"")]
+        [TestCase(true, true, null, "am --3way --signoff --ignore-whitespace")]
+        public void ApplyMailboxPatchCmd(bool signOff, bool ignoreWhitespace, string patchFile, string expected)
         {
             Assert.AreEqual(
-                "am --3way --signoff \"hello/world.patch\"",
-                GitCommandHelpers.ApplyMailboxPatchCmd(false, "hello\\world.patch").Arguments);
-            Assert.AreEqual(
-                "am --3way --signoff --ignore-whitespace \"hello/world.patch\"",
-                GitCommandHelpers.ApplyMailboxPatchCmd(true, "hello\\world.patch").Arguments);
-            Assert.AreEqual(
-                "am --3way --signoff --ignore-whitespace",
-                GitCommandHelpers.ApplyMailboxPatchCmd(true).Arguments);
+                expected,
+                GitCommandHelpers.ApplyMailboxPatchCmd(signOff, ignoreWhitespace, patchFile).Arguments);
         }
     }
 }
