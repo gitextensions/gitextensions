@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -21,6 +22,11 @@ namespace GitUI
     /// <summary>Contains methods to invoke GitEx forms, dialogs, etc.</summary>
     public sealed class GitUICommands : IGitUICommands
     {
+        private const string BlameHistoryCommand = "blamehistory";
+        private const string FileHistoryCommand = "filehistory";
+
+        private const string FilterByRevisionArg = "--filter-by-revision";
+
         private readonly ICommitTemplateManager _commitTemplateManager;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
@@ -1157,7 +1163,20 @@ namespace GitUI
         }
 
         public void StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision = null, bool filterByRevision = false, bool showBlame = false)
-            => ShowModelessForm(owner, requiresValidWorkingDir: true, preEvent: null, postEvent: null, () => new FormFileHistory(this, fileName, revision, filterByRevision, showBlame));
+        {
+            string arguments = $"{(showBlame ? BlameHistoryCommand : FileHistoryCommand)} {fileName.Quote()} {revision?.ObjectId} {(filterByRevision ? FilterByRevisionArg : string.Empty)}";
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = Application.ExecutablePath,
+                    Arguments = arguments,
+                    WorkingDirectory = Module.WorkingDir
+                }
+            };
+
+            process.Start();
+        }
 
         public void OpenWithDifftool(IWin32Window owner, IReadOnlyList<GitRevision> revisions, string fileName, string oldFileName, RevisionDiffKind diffKind, bool isTracked)
         {
@@ -1391,9 +1410,9 @@ namespace GitUI
                 return false;
             }
 
-            if (command == "filehistory" && args.Count <= 2)
+            if ((command == BlameHistoryCommand || command == FileHistoryCommand) && args.Count <= 2)
             {
-                MessageBox.Show("Cannot open file history, there is no file selected.", "File history", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Cannot open blame / file history, there is no file selected.", "Blame / file history", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -1452,13 +1471,15 @@ namespace GitUI
                     return Commit(arguments);
                 case "difftool":    // filename
                     return Module.OpenWithDifftool(args[2]) == "";
-                case "filehistory": // filename
+                case BlameHistoryCommand:
+                case FileHistoryCommand:
+                                    // filename [revision [--filter-by-revision]]
                     if (Module.WorkingDir.TrimEnd('\\') == Path.GetFullPath(args[2]) && Module.SuperprojectModule != null)
                     {
                         Module = Module.SuperprojectModule;
                     }
 
-                    return RunFileHistoryCommand(args);
+                    return RunFileHistoryCommand(args, showBlame: command == BlameHistoryCommand);
                 case "fileeditor":  // filename
                     return StartFileEditorDialog(args[2]);
                 case "formatpatch":
@@ -1658,7 +1679,7 @@ namespace GitUI
         }
 
         /// <returns>false on error</returns>
-        private bool RunFileHistoryCommand(IReadOnlyList<string> args)
+        private bool RunFileHistoryCommand(IReadOnlyList<string> args, bool showBlame)
         {
             string fileHistoryFileName = args[2];
             if (new FormFileHistoryController().TryGetExactPath(_fullPathResolver.Resolve(fileHistoryFileName), out var exactFileName))
@@ -1671,7 +1692,30 @@ namespace GitUI
                 return false;
             }
 
-            StartFileHistoryDialog(owner: null, fileHistoryFileName);
+            GitRevision revision = null;
+            if (args.Count > 3)
+            {
+                if (!ObjectId.TryParse(args[3], out var objectId))
+                {
+                    return false;
+                }
+
+                revision = new GitRevision(objectId);
+            }
+
+            bool filterByRevision = false;
+            if (args.Count > 4)
+            {
+                if (args[4] != FilterByRevisionArg)
+                {
+                    return false;
+                }
+
+                filterByRevision = true;
+            }
+
+            ShowModelessForm(owner: null, requiresValidWorkingDir: true, preEvent: null, postEvent: null,
+                () => new FormFileHistory(commands: this, fileHistoryFileName, revision, filterByRevision, showBlame));
 
             return true;
         }
@@ -1886,5 +1930,21 @@ namespace GitUI
         }
 
         #endregion
+
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal struct TestAccessor
+        {
+            private readonly GitUICommands _commands;
+
+            internal TestAccessor(GitUICommands commands)
+            {
+                _commands = commands;
+            }
+
+            internal string NormalizeFileName(string fileName) => _commands.NormalizeFileName(fileName);
+
+            internal bool RunCommandBasedOnArgument(string[] args) => _commands.RunCommandBasedOnArgument(args, InitializeArguments(args));
+        }
     }
 }
