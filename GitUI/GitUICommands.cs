@@ -424,13 +424,13 @@ namespace GitUI
             return StartCloneDialog(owner, url, false, gitModuleChanged);
         }
 
-        public void StartCleanupRepositoryDialog(IWin32Window owner = null, string path = null)
+        public bool StartCleanupRepositoryDialog(IWin32Window owner = null, string path = null)
         {
-            using (var form = new FormCleanupRepository(this))
-            {
-                form.SetPathArgument(path);
-                form.ShowDialog(owner);
-            }
+            using var form = new FormCleanupRepository(this);
+            form.SetPathArgument(path);
+            form.ShowDialog(owner);
+
+            return true;
         }
 
         public bool StartSquashCommitDialog(IWin32Window owner, GitRevision revision)
@@ -1009,11 +1009,6 @@ namespace GitUI
             return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
-        public bool StartRemotesDialog()
-        {
-            return StartRemotesDialog(null);
-        }
-
         public bool StartRebase(IWin32Window owner, string onto)
         {
             return StartRebaseDialog(owner, from: "", to: null, onto: onto,
@@ -1373,13 +1368,13 @@ namespace GitUI
                 });
         }
 
-        public void RunCommand(IReadOnlyList<string> args)
+        public bool RunCommand(IReadOnlyList<string> args)
         {
             var arguments = InitializeArguments(args);
 
             if (args.Count <= 1)
             {
-                return;
+                return false;
             }
 
             var command = args[1];
@@ -1387,182 +1382,141 @@ namespace GitUI
             if (command == "blame" && args.Count <= 2)
             {
                 MessageBox.Show("Cannot open blame, there is no file selected.", "Blame", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return false;
             }
 
             if (command == "difftool" && args.Count <= 2)
             {
                 MessageBox.Show("Cannot open difftool, there is no file selected.", "Difftool", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return false;
             }
 
             if (command == "filehistory" && args.Count <= 2)
             {
                 MessageBox.Show("Cannot open file history, there is no file selected.", "File history", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return false;
             }
 
             if (command == "fileeditor" && args.Count <= 2)
             {
                 MessageBox.Show("Cannot open file editor, there is no file selected.", "File editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return false;
             }
 
             if (command == "revert" && args.Count <= 2)
             {
                 MessageBox.Show("Cannot open revert, there is no file selected.", "Revert", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return false;
             }
 
-            RunCommandBasedOnArgument(args, arguments);
+            return RunCommandBasedOnArgument(args, arguments);
         }
 
         // Please update FormCommandlineHelp if you add or change commands
-        private void RunCommandBasedOnArgument(IReadOnlyList<string> args, IReadOnlyDictionary<string, string> arguments)
+        private bool RunCommandBasedOnArgument(IReadOnlyList<string> args, IReadOnlyDictionary<string, string> arguments)
         {
-            // TODO most of these calls should check return values and set the exit code accordingly
 #pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
-            switch (args[1])
+            var command = args[1];
+            switch (command)
             {
                 case "about":
                     Application.Run(new FormAbout
                     {
                         StartPosition = FormStartPosition.CenterScreen
                     });
-                    return;
+                    return true;
                 case "add":
                 case "addfiles":
-                    StartAddFilesDialog(null, args.Count == 3 ? args[2] : ".");
-                    return;
+                    return StartAddFilesDialog(null, args.Count == 3 ? args[2] : ".");
                 case "apply":       // [filename]
                 case "applypatch":
-                    StartApplyPatchDialog(null, args.Count == 3 ? args[2] : "");
-                    return;
+                    return StartApplyPatchDialog(null, args.Count == 3 ? args[2] : "");
                 case "blame":       // filename
-                    RunBlameCommand(args);
-                    return;
+                    return RunBlameCommand(args);
                 case "branch":
-                    StartCreateBranchDialog();
-                    return;
+                    return StartCreateBranchDialog();
                 case "browse":      // [path] [-filter]
-                    RunBrowseCommand(args);
-                    return;
+                    return RunBrowseCommand(args);
                 case "checkout":
                 case "checkoutbranch":
-                    StartCheckoutBranch(null);
-                    return;
+                    return StartCheckoutBranch(null);
                 case "checkoutrevision":
-                    StartCheckoutRevisionDialog(null);
-                    return;
+                    return StartCheckoutRevisionDialog(null);
                 case "cherry":
-                    StartCherryPickDialog();
-                    return;
+                    return StartCherryPickDialog();
                 case "cleanup":
-                    StartCleanupRepositoryDialog();
-                    return;
+                    return StartCleanupRepositoryDialog();
                 case "clone":       // [path]
-                    RunCloneCommand(args);
-                    return;
+                    return RunCloneCommand(args);
                 case "commit":      // [--quiet]
-                    Commit(arguments);
-                    return;
-                case "difftool":      // filename
-                    Module.OpenWithDifftool(args[2]);
-                    return;
+                    return Commit(arguments);
+                case "difftool":    // filename
+                    return Module.OpenWithDifftool(args[2]) == "";
                 case "filehistory": // filename
                     if (Module.WorkingDir.TrimEnd('\\') == Path.GetFullPath(args[2]) && Module.SuperprojectModule != null)
                     {
                         Module = Module.SuperprojectModule;
                     }
 
-                    RunFileHistoryCommand(args);
-                    return;
+                    return RunFileHistoryCommand(args);
                 case "fileeditor":  // filename
-                    if (!StartFileEditorDialog(args[2]))
-                    {
-                        Environment.ExitCode = -1;
-                    }
-
-                    return;
+                    return StartFileEditorDialog(args[2]);
                 case "formatpatch":
-                    StartFormatPatchDialog();
-                    return;
+                    return StartFormatPatchDialog();
                 case "gitbash":
-                    Module.RunBash();
-                    return;
+                    return Module.RunBash() != null;
                 case "gitignore":
-                    StartEditGitIgnoreDialog(null, false);
-                    return;
+                    return StartEditGitIgnoreDialog(null, false);
                 case "init":        // [path]
-                    RunInitCommand(args);
-                    return;
+                    return RunInitCommand(args);
                 case "merge":       // [--branch name]
-                    RunMergeCommand(arguments);
-                    return;
-                case "mergeconflicts": // [--quiet]
-                case "mergetool":
-                    RunMergeToolOrConflictCommand(arguments);
-                    return;
+                    return RunMergeCommand(arguments);
+                case "mergeconflicts":
+                case "mergetool":   // [--quiet]
+                    return RunMergeToolOrConflictCommand(arguments);
                 case "openrepo":    // [path]
-                    RunOpenRepoCommand(args);
-                    return;
+                    return RunOpenRepoCommand(args);
                 case "pull":        // [--rebase] [--merge] [--fetch] [--quiet] [--remotebranch name]
-                    Pull(arguments);
-                    return;
+                    return Pull(arguments);
                 case "push":        // [--quiet]
-                    Push(arguments);
-                    return;
+                    return Push(arguments);
                 case "rebase":      // [--branch name]
-                    RunRebaseCommand(arguments);
-                    return;
+                    return RunRebaseCommand(arguments);
                 case "remotes":
-                    StartRemotesDialog();
-                    return;
+                    return StartRemotesDialog(owner: null);
                 case "revert":
                 case "reset":
-                    StartResetChangesDialog(args.Count == 3 ? args[2] : "");
-                    return;
+                    return StartResetChangesDialog(args.Count == 3 ? args[2] : "");
                 case "searchfile":
-                    RunSearchFileCommand();
-                    return;
+                    return RunSearchFileCommand();
                 case "settings":
-                    StartSettingsDialog();
-                    return;
+                    return StartSettingsDialog();
                 case "stash":
-                    StartStashDialog();
-                    return;
+                    return StartStashDialog();
                 case "synchronize": // [--rebase] [--merge] [--fetch] [--quiet]
-                    RunSynchronizeCommand(arguments);
-                    return;
+                    return RunSynchronizeCommand(arguments);
                 case "tag":
-                    StartCreateTagDialog();
-                    return;
+                    return StartCreateTagDialog();
                 case "viewdiff":
-                    StartCompareRevisionsDialog();
-                    return;
+                    return StartCompareRevisionsDialog();
                 case "viewpatch":   // [filename]
-                    StartViewPatchDialog(args.Count == 3 ? args[2] : "");
-                    return;
+                    return StartViewPatchDialog(args.Count == 3 ? args[2] : "");
                 case "uninstall":
-                    Uninstall();
-                    return;
+                    return UninstallEditor();
                 default:
                     if (args[1].StartsWith("git://") || args[1].StartsWith("http://") || args[1].StartsWith("https://"))
                     {
-                        StartCloneDialog(null, args[1], true);
-                        return;
+                        return StartCloneDialog(null, args[1], true);
                     }
 
                     if (args[1].StartsWith("github-windows://openRepo/"))
                     {
-                        StartCloneDialog(null, args[1].Replace("github-windows://openRepo/", ""), true);
-                        return;
+                        return StartCloneDialog(null, args[1].Replace("github-windows://openRepo/", ""), true);
                     }
 
                     if (args[1].StartsWith("github-mac://openRepo/"))
                     {
-                        StartCloneDialog(null, args[1].Replace("github-mac://openRepo/", ""), true);
-                        return;
+                        return StartCloneDialog(null, args[1].Replace("github-mac://openRepo/", ""), true);
                     }
 
                     break;
@@ -1570,9 +1524,10 @@ namespace GitUI
 #pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
 
             Application.Run(new FormCommandlineHelp { StartPosition = FormStartPosition.CenterScreen });
+            return true;
         }
 
-        private static void Uninstall()
+        private static bool UninstallEditor()
         {
             var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
 
@@ -1583,9 +1538,11 @@ namespace GitUI
             }
 
             configFileGlobalSettings.Save();
+
+            return true;
         }
 
-        private void RunMergeCommand(IReadOnlyDictionary<string, string> arguments)
+        private bool RunMergeCommand(IReadOnlyDictionary<string, string> arguments)
         {
             string branch = null;
             if (arguments.ContainsKey("branch"))
@@ -1593,10 +1550,10 @@ namespace GitUI
                 branch = arguments["branch"];
             }
 
-            StartMergeBranchDialog(null, branch);
+            return StartMergeBranchDialog(null, branch);
         }
 
-        private void RunSearchFileCommand()
+        private bool RunSearchFileCommand()
         {
             var searchWindow = new SearchWindow<string>(FindFileMatches);
             Application.Run(searchWindow);
@@ -1605,25 +1562,27 @@ namespace GitUI
                 // We need to return the file that has been found, the visual studio plugin uses the return value
                 // to open the selected file.
                 Console.WriteLine(Path.Combine(Module.WorkingDir, searchWindow.SelectedItem));
+                return true;
             }
+
+            return false;
         }
 
-        private void RunBrowseCommand(IReadOnlyList<string> args)
+        private bool RunBrowseCommand(IReadOnlyList<string> args)
         {
             var arg = GetParameterOrEmptyStringAsDefault(args, "-commit");
             if (arg == "")
             {
-                StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"));
+                return StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"));
             }
-            else if (Module.TryResolvePartialCommitId(arg, out var objectId))
+
+            if (Module.TryResolvePartialCommitId(arg, out var objectId))
             {
-                StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"), objectId);
+                return StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"), objectId);
             }
-            else
-            {
-                // TODO log error here
-                Console.Error.WriteLine($"No commit found matching: {arg}");
-            }
+
+            Console.Error.WriteLine($"No commit found matching: {arg}");
+            return false;
         }
 
         private static string GetParameterOrEmptyStringAsDefault(IReadOnlyList<string> args, string paramName)
@@ -1642,7 +1601,7 @@ namespace GitUI
             return "";
         }
 
-        private void RunOpenRepoCommand(IReadOnlyList<string> args)
+        private bool RunOpenRepoCommand(IReadOnlyList<string> args)
         {
             GitUICommands c = this;
             if (args.Count > 2)
@@ -1657,17 +1616,19 @@ namespace GitUI
                 }
             }
 
-            c.StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"));
+            return c.StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"));
         }
 
-        private void RunSynchronizeCommand(IReadOnlyDictionary<string, string> arguments)
+        private bool RunSynchronizeCommand(IReadOnlyDictionary<string, string> arguments)
         {
-            Commit(arguments);
-            Pull(arguments);
-            Push(arguments);
+            bool successful = true;
+            successful = Commit(arguments) && successful;
+            successful = Pull(arguments) && successful;
+            successful = Push(arguments) && successful;
+            return successful;
         }
 
-        private void RunRebaseCommand(IReadOnlyDictionary<string, string> arguments)
+        private bool RunRebaseCommand(IReadOnlyDictionary<string, string> arguments)
         {
             string branch = null;
             if (arguments.ContainsKey("branch"))
@@ -1675,7 +1636,7 @@ namespace GitUI
                 branch = arguments["branch"];
             }
 
-            StartRebaseDialog(owner: null, onto: branch);
+            return StartRebaseDialog(owner: null, onto: branch);
         }
 
         public bool StartFileEditorDialog(string filename, bool showWarning = false)
@@ -1715,15 +1676,11 @@ namespace GitUI
             return true;
         }
 
-        private void RunCloneCommand(IReadOnlyList<string> args)
-        {
-            StartCloneDialog(null, args.Count > 2 ? args[2] : null);
-        }
+        private bool RunCloneCommand(IReadOnlyList<string> args)
+            => StartCloneDialog(null, args.Count > 2 ? args[2] : null);
 
-        private void RunInitCommand(IReadOnlyList<string> args)
-        {
-            StartInitializeDialog(null, args.Count > 2 ? args[2] : null);
-        }
+        private bool RunInitCommand(IReadOnlyList<string> args)
+            => StartInitializeDialog(null, args.Count > 2 ? args[2] : null);
 
         /// <returns>false on error</returns>
         private bool RunBlameCommand(IReadOnlyList<string> args)
@@ -1750,12 +1707,14 @@ namespace GitUI
             });
         }
 
-        private void RunMergeToolOrConflictCommand(IReadOnlyDictionary<string, string> arguments)
+        private bool RunMergeToolOrConflictCommand(IReadOnlyDictionary<string, string> arguments)
         {
             if (!arguments.ContainsKey("quiet") || Module.InTheMiddleOfConflictedMerge())
             {
-                StartResolveConflictsDialog();
+                return StartResolveConflictsDialog();
             }
+
+            return true;
         }
 
         private static IReadOnlyDictionary<string, string> InitializeArguments(IReadOnlyList<string> args)
@@ -1786,19 +1745,17 @@ namespace GitUI
             return candidates.Where(predicate);
         }
 
-        private void Commit(IReadOnlyDictionary<string, string> arguments)
+        private bool Commit(IReadOnlyDictionary<string, string> arguments)
         {
             arguments.TryGetValue("message", out string overridingMessage);
             var showOnlyWhenChanges = arguments.ContainsKey("quiet");
-            StartCommitDialog(null, overridingMessage, showOnlyWhenChanges);
+            return StartCommitDialog(null, overridingMessage, showOnlyWhenChanges);
         }
 
-        private void Push(IReadOnlyDictionary<string, string> arguments)
-        {
-            StartPushDialog(null, arguments.ContainsKey("quiet"));
-        }
+        private bool Push(IReadOnlyDictionary<string, string> arguments)
+            => StartPushDialog(null, arguments.ContainsKey("quiet"));
 
-        private void Pull(IReadOnlyDictionary<string, string> arguments)
+        private bool Pull(IReadOnlyDictionary<string, string> arguments)
         {
             UpdateSettingsBasedOnArguments(arguments);
 
@@ -1812,12 +1769,10 @@ namespace GitUI
 
             if (isQuiet)
             {
-                StartPullDialogAndPullImmediately(remoteBranch: remoteBranch);
+                return StartPullDialogAndPullImmediately(remoteBranch: remoteBranch);
             }
-            else
-            {
-                StartPullDialog(remoteBranch: remoteBranch);
-            }
+
+            return StartPullDialog(remoteBranch: remoteBranch);
         }
 
         private static void UpdateSettingsBasedOnArguments(IReadOnlyDictionary<string, string> arguments)
