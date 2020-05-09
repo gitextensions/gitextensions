@@ -598,7 +598,7 @@ namespace GitUI.Blame
                 return;
             }
 
-            BlameRevision(selectedRevision.FirstParentGuid);
+            BlameRevision(selectedRevision.FirstParentId);
         }
 
         private void BlameRevision(ObjectId revisionId)

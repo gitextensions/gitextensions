@@ -22,14 +22,14 @@ namespace ResourceManagerTests.CommitDataRenders
         {
             var commitGuid = ObjectId.Random();
             var treeGuid = ObjectId.Random();
-            var parentGuid1 = ObjectId.Random();
-            var parentGuid2 = ObjectId.Random();
+            var parentId1 = ObjectId.Random();
+            var parentId2 = ObjectId.Random();
             var authorTime = DateTime.UtcNow.AddDays(-3);
             var commitTime = DateTime.UtcNow.AddDays(-2);
 
             _data = new CommitData(
                 commitGuid, treeGuid,
-                new[] { parentGuid1, parentGuid2 },
+                new[] { parentId1, parentId2 },
                 "John Doe (Acme Inc) <John.Doe@test.com>", authorTime,
                 "Jane Doe <Jane.Doe@test.com>", commitTime,
                 "\tI made a really neat change.\n\nNotes (p4notes):\n\tP4@547123")
@@ -59,8 +59,8 @@ namespace ResourceManagerTests.CommitDataRenders
                                    "<a href='gitext://gotocommit/" + _data.ChildIds[1] + "'>" + _data.ChildIds[1].ToShortString() + "</a> " +
                                    "<a href='gitext://gotocommit/" + _data.ChildIds[2] + "'>" + _data.ChildIds[2].ToShortString() + "</a>" + Environment.NewLine +
                                  "Parents:		" +
-                                   "<a href='gitext://gotocommit/" + _data.ParentGuids[0] + "'>" + _data.ParentGuids[0].ToShortString() + "</a> " +
-                                   "<a href='gitext://gotocommit/" + _data.ParentGuids[1] + "'>" + _data.ParentGuids[1].ToShortString() + "</a>";
+                                   "<a href='gitext://gotocommit/" + _data.ParentIds[0] + "'>" + _data.ParentIds[0].ToShortString() + "</a> " +
+                                   "<a href='gitext://gotocommit/" + _data.ParentIds[1] + "'>" + _data.ParentIds[1].ToShortString() + "</a>";
 
             var result = _rendererTabs.Render(_data, true);
 
@@ -80,8 +80,8 @@ namespace ResourceManagerTests.CommitDataRenders
                                    _data.ChildIds[1].ToShortString() + " " +
                                    _data.ChildIds[2].ToShortString() + Environment.NewLine +
                                  "Parents:		" +
-                                   _data.ParentGuids[0].ToShortString() + " " +
-                                   _data.ParentGuids[1].ToShortString();
+                                   _data.ParentIds[0].ToShortString() + " " +
+                                   _data.ParentIds[1].ToShortString();
 
             var result = _rendererTabs.Render(_data, false);
 
@@ -101,8 +101,8 @@ namespace ResourceManagerTests.CommitDataRenders
                                    "<a href='gitext://gotocommit/" + _data.ChildIds[1] + "'>" + _data.ChildIds[1].ToShortString() + "</a> " +
                                    "<a href='gitext://gotocommit/" + _data.ChildIds[2] + "'>" + _data.ChildIds[2].ToShortString() + "</a>" + Environment.NewLine +
                                  "Parents:     " +
-                                   "<a href='gitext://gotocommit/" + _data.ParentGuids[0] + "'>" + _data.ParentGuids[0].ToShortString() + "</a> " +
-                                   "<a href='gitext://gotocommit/" + _data.ParentGuids[1] + "'>" + _data.ParentGuids[1].ToShortString() + "</a>";
+                                   "<a href='gitext://gotocommit/" + _data.ParentIds[0] + "'>" + _data.ParentIds[0].ToShortString() + "</a> " +
+                                   "<a href='gitext://gotocommit/" + _data.ParentIds[1] + "'>" + _data.ParentIds[1].ToShortString() + "</a>";
 
             var result = _rendererSpaces.Render(_data, true);
 
@@ -122,8 +122,8 @@ namespace ResourceManagerTests.CommitDataRenders
                                    _data.ChildIds[1].ToShortString() + " " +
                                    _data.ChildIds[2].ToShortString() + Environment.NewLine +
                                  "Parents:     " +
-                                   _data.ParentGuids[0].ToShortString() + " " +
-                                   _data.ParentGuids[1].ToShortString();
+                                   _data.ParentIds[0].ToShortString() + " " +
+                                   _data.ParentIds[1].ToShortString();
 
             var result = _rendererSpaces.Render(_data, false);
 

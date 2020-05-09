@@ -65,7 +65,7 @@ namespace GitUI
                 return Task.CompletedTask;
             }
 
-            var firstId = item.FirstRevision?.ObjectId ?? item.SecondRevision.FirstParentGuid;
+            var firstId = item.FirstRevision?.ObjectId ?? item.SecondRevision.FirstParentId;
 
             openWithDiffTool ??= OpenWithDiffTool;
 

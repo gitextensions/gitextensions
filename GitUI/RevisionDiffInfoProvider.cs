@@ -113,7 +113,7 @@ namespace GitUI
 
             string GetParentRef(GitRevision revision)
             {
-                return revision.FirstParentGuid?.ToString() ?? revision.Guid + '^';
+                return revision.FirstParentId?.ToString() ?? revision.Guid + '^';
             }
         }
     }

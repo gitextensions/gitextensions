@@ -662,7 +662,7 @@ namespace GitUI
                             ((GitRevision, GitRevision, string, IReadOnlyList<GitItemStatus>))(new GitRevision(parentId),
                                 selectedRev,
                                 _diffWithParent.Text + GetDescriptionForRevision(parentId),
-                                Module.GetDiffFilesWithSubmodulesStatus(parentId, selectedRev.ObjectId, selectedRev.FirstParentGuid))));
+                                Module.GetDiffFilesWithSubmodulesStatus(parentId, selectedRev.ObjectId, selectedRev.FirstParentId))));
                 }
 
                 // Show combined (merge conflicts) when a single merge commit is selected
@@ -690,7 +690,7 @@ namespace GitUI
                         (firstRev,
                             selectedRev,
                             _diffWithParent.Text + GetDescriptionForRevision(firstRev.ObjectId),
-                            Module.GetDiffFilesWithSubmodulesStatus(firstRev.ObjectId, selectedRev.ObjectId, selectedRev.FirstParentGuid))));
+                            Module.GetDiffFilesWithSubmodulesStatus(firstRev.ObjectId, selectedRev.ObjectId, selectedRev.FirstParentId))));
 
                 if (AppSettings.ShowDiffForAllParents && revisions.Count == 2)
                 {
@@ -699,7 +699,7 @@ namespace GitUI
 
                     // Get base commit, add as parent if unique
                     Lazy<ObjectId> head = getRevision != null
-                        ? new Lazy<ObjectId>(() => getRevision(ObjectId.IndexId).FirstParentGuid)
+                        ? new Lazy<ObjectId>(() => getRevision(ObjectId.IndexId).FirstParentId)
                         : new Lazy<ObjectId>(() => Module.RevParse("HEAD"));
                     var baseRevGuid = Module.GetMergeBase(GetRevisionOrHead(firstRev, head),
                         GetRevisionOrHead(selectedRev, head));
@@ -713,8 +713,8 @@ namespace GitUI
                         // For the following diff:  A->B a,c,d; BASE->B a,b,c; BASE->A a,b,d
                         // (the file a has unique changes, b has the same change and c,d is changed in one of the branches)
                         // The following groups will be shown: A->B a,c,d; BASE->B a,c; BASE->A a,d; Common BASE b
-                        var allBaseToB = Module.GetDiffFilesWithSubmodulesStatus(baseRevGuid, selectedRev.ObjectId, selectedRev.FirstParentGuid);
-                        var allBaseToA = Module.GetDiffFilesWithSubmodulesStatus(baseRevGuid, firstRev.ObjectId, firstRev.FirstParentGuid);
+                        var allBaseToB = Module.GetDiffFilesWithSubmodulesStatus(baseRevGuid, selectedRev.ObjectId, selectedRev.FirstParentId);
+                        var allBaseToA = Module.GetDiffFilesWithSubmodulesStatus(baseRevGuid, firstRev.ObjectId, firstRev.FirstParentId);
 
                         var comparer = new GitItemStatusNameEqualityComparer();
                         var commonBaseToAandB = allBaseToB.Intersect(allBaseToA, comparer).Except(allAToB, comparer).ToList();

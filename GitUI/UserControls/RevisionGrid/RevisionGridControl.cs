@@ -726,7 +726,7 @@ namespace GitUI
         {
             var revisions = GetSelectedRevisions();
             var selectedRev = revisions?.FirstOrDefault();
-            var firstId = revisions != null && revisions.Count > 1 ? revisions.LastOrDefault().ObjectId : selectedRev?.FirstParentGuid;
+            var firstId = revisions != null && revisions.Count > 1 ? revisions.LastOrDefault().ObjectId : selectedRev?.FirstParentId;
 
             return (firstId, selectedRev);
         }
@@ -2325,7 +2325,7 @@ namespace GitUI
                 }
                 else if (r.HasParent)
                 {
-                    _parentChildNavigationHistory.NavigateToParent(r.ObjectId, r.FirstParentGuid);
+                    _parentChildNavigationHistory.NavigateToParent(r.ObjectId, r.FirstParentId);
                 }
             }
         }
@@ -2572,7 +2572,7 @@ namespace GitUI
             }
 
             string rebaseCmd = GitCommandHelpers.RebaseCmd(
-                LatestSelectedRevision.FirstParentGuid?.ToString(),
+                LatestSelectedRevision.FirstParentId?.ToString(),
                 interactive: true, preserveMerges: false, autosquash: false, autoStash: true);
 
             using (var formProcess = new FormProcess(null, rebaseCmd, Module.WorkingDir, null, true))
