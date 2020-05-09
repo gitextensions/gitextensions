@@ -99,7 +99,7 @@ namespace GitCommands
         public bool HasParent => ParentIds?.Count > 0;
 
         [CanBeNull]
-        public ObjectId FirstParentGuid => ParentIds?.FirstOrDefault();
+        public ObjectId FirstParentId => ParentIds?.FirstOrDefault();
 
         #region INotifyPropertyChanged
 
