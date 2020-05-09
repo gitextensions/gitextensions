@@ -152,6 +152,11 @@ namespace GitUI.CommandsDialogs
 
             foreach (var item in DiffFiles.SelectedItems)
             {
+                if (item.FirstRevision?.ObjectId == ObjectId.CombinedDiffId)
+                {
+                    continue;
+                }
+
                 var revs = new[] { item.SecondRevision, item.FirstRevision };
                 UICommands.OpenWithDifftool(this, revs, item.Item.Name, item.Item.OldName, diffKind, item.Item.IsTracked);
             }
@@ -280,7 +285,11 @@ namespace GitUI.CommandsDialogs
 
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
-            var parentIds = DiffFiles.SelectedItems.Select(i => i.FirstRevision.ObjectId).Distinct().ToList();
+            var parentIds = DiffFiles.SelectedItems
+                .Where(i => i.FirstRevision != null)
+                .Select(i => i.FirstRevision.ObjectId)
+                .Distinct()
+                .ToList();
             bool firstIsParent = _revisionTester.AllFirstAreParentsToSelected(parentIds, _headRevision);
             bool localExists = _revisionTester.AnyLocalFileExists(DiffFiles.SelectedItems.Select(i => i.Item));
 
