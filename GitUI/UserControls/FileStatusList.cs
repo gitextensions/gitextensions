@@ -637,7 +637,7 @@ namespace GitUI
         public void SetDiffs(IReadOnlyList<GitRevision> revisions, Func<ObjectId, GitRevision> getRevision = null)
         {
             var tuples = new List<(GitRevision firstRev, GitRevision secondRev, string summary, IReadOnlyList<GitItemStatus> statuses)>();
-            var selectedRev = revisions.FirstOrDefault();
+            var selectedRev = revisions?.FirstOrDefault();
             if (selectedRev == null)
             {
                 GitItemStatusesWithDescription = tuples;
@@ -654,11 +654,15 @@ namespace GitUI
                 else
                 {
                     // Get the parents for the selected revision
-                    tuples.AddRange(selectedRev.ParentIds?.Select(parentId =>
-                        ((GitRevision, GitRevision, string, IReadOnlyList<GitItemStatus>))(new GitRevision(parentId),
-                            selectedRev,
-                            _diffWithParent.Text + GetDescriptionForRevision(parentId),
-                            Module.GetDiffFilesWithSubmodulesStatus(parentId, selectedRev.ObjectId, selectedRev.FirstParentGuid))));
+                    var multipleParents = AppSettings.ShowDiffForAllParents ? selectedRev.ParentIds.Count : 1;
+                    tuples.AddRange(selectedRev
+                        .ParentIds?
+                        .Take(multipleParents)
+                        .Select(parentId =>
+                            ((GitRevision, GitRevision, string, IReadOnlyList<GitItemStatus>))(new GitRevision(parentId),
+                                selectedRev,
+                                _diffWithParent.Text + GetDescriptionForRevision(parentId),
+                                Module.GetDiffFilesWithSubmodulesStatus(parentId, selectedRev.ObjectId, selectedRev.FirstParentGuid))));
                 }
 
                 // Show combined (merge conflicts) when a single merge commit is selected
@@ -678,7 +682,7 @@ namespace GitUI
             {
                 // With more than 4, only first -> selected is interesting
                 // Limited selections: Show multi selection if more than two selected
-                var multipleParents = revisions.Count <= 4 ? revisions.Count - 1 : 1;
+                var multipleParents = AppSettings.ShowDiffForAllParents && revisions.Count <= 4 ? revisions.Count - 1 : 1;
                 tuples.AddRange(revisions
                     .Skip(1)
                     .Take(multipleParents)
@@ -723,11 +727,6 @@ namespace GitUI
                         tuples.Add((revBase, selectedRev, _diffCommonBase.Text + GetDescriptionForRevision(baseRevGuid), commonBaseToAandB));
                     }
                 }
-            }
-
-            if (!AppSettings.ShowDiffForAllParents)
-            {
-                tuples.Capacity = 1;
             }
 
             GitItemStatusesWithDescription = tuples;
