@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             ToolTip.SetToolTip(_NO_TRANSLATE_NoImageService, _noImageServiceTooltip.Text);
             ToolTip.SetToolTip(pictureAvatarHelp, _noImageServiceTooltip.Text);
-            ToolTip.SetToolTip(chkSortByAuthorDate, _authorDateSortWarningTooltip.Text);
+            chkSortByAuthorDate.ToolTipText = _authorDateSortWarningTooltip.Text;
             pictureAvatarHelp.Size = DpiUtil.Scale(pictureAvatarHelp.Size);
 
             // align 1st columns across all tables
