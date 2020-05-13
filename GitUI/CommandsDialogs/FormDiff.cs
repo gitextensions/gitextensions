@@ -8,6 +8,7 @@ using GitCommands.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUI.Theming;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -285,11 +286,7 @@ namespace GitUI.CommandsDialogs
 
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
-            var parentIds = DiffFiles.SelectedItems
-                .Where(i => i.FirstRevision != null)
-                .Select(i => i.FirstRevision.ObjectId)
-                .Distinct()
-                .ToList();
+            var parentIds = DiffFiles.SelectedItems.FirstIds().ToList();
             bool firstIsParent = _revisionTester.AllFirstAreParentsToSelected(parentIds, _headRevision);
             bool localExists = _revisionTester.AnyLocalFileExists(DiffFiles.SelectedItems.Select(i => i.Item));
 
