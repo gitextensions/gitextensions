@@ -31,7 +31,7 @@
             System.Windows.Forms.TableLayoutPanel tlpnlMain;
             this.gbGeneral = new System.Windows.Forms.GroupBox();
             this.tlpnlGeneral = new System.Windows.Forms.TableLayoutPanel();
-            this.chkSortByAuthorDate = new System.Windows.Forms.CheckBox();
+            this.chkSortByAuthorDate = new GitUI.UserControls.Settings.SettingsCheckBox();
             this.chkShowRelativeDate = new System.Windows.Forms.CheckBox();
             this.truncatePathMethod = new System.Windows.Forms.ComboBox();
             this.truncateLongFilenames = new System.Windows.Forms.Label();
@@ -563,6 +563,6 @@
         private System.Windows.Forms.PictureBox pictureAvatarHelp;
         private System.Windows.Forms.Label lblAvatarProvider;
         private System.Windows.Forms.ComboBox AvatarProvider;
-        private System.Windows.Forms.CheckBox chkSortByAuthorDate;
+        private GitUI.UserControls.Settings.SettingsCheckBox chkSortByAuthorDate;
     }
 }

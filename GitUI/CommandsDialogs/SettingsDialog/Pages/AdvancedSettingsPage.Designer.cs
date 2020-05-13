@@ -34,7 +34,7 @@
             this.grpUpdates = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.chkCheckForUpdates = new System.Windows.Forms.CheckBox();
-            this.chkCheckForRCVersions = new System.Windows.Forms.CheckBox();
+            this.chkCheckForRCVersions = new GitUI.UserControls.Settings.SettingsCheckBox();
             this.grpCommit = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.chkCommitAndPushForcedWhenAmend = new System.Windows.Forms.CheckBox();
@@ -46,12 +46,11 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.chkAlwaysShowAdvOpt = new System.Windows.Forms.CheckBox();
             this.chkDontSHowHelpImages = new System.Windows.Forms.CheckBox();
-            this.chkConsoleEmulator = new System.Windows.Forms.CheckBox();
+            this.chkConsoleEmulator = new GitUI.UserControls.Settings.SettingsCheckBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.chkAutoNormaliseBranchName = new System.Windows.Forms.CheckBox();
+            this.chkAutoNormaliseBranchName = new GitUI.UserControls.Settings.SettingsCheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cboAutoNormaliseSymbol = new System.Windows.Forms.ComboBox();
-            this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.tableLayoutPanel2.SuspendLayout();
             this.grpUpdates.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
@@ -142,8 +141,7 @@
             this.chkCheckForRCVersions.Size = new System.Drawing.Size(1426, 19);
             this.chkCheckForRCVersions.TabIndex = 3;
             this.chkCheckForRCVersions.Text = "Check for release candidate versions";
-            this.tooltip.SetToolTip(this.chkCheckForRCVersions, resources.GetString("chkCheckForRCVersions.ToolTip"));
-            this.chkCheckForRCVersions.UseVisualStyleBackColor = true;
+            this.chkCheckForRCVersions.ToolTipText = resources.GetString("chkCheckForRCVersions.ToolTip");
             // 
             // grpCommit
             // 
@@ -310,8 +308,7 @@
             this.chkConsoleEmulator.Size = new System.Drawing.Size(1572, 17);
             this.chkConsoleEmulator.TabIndex = 3;
             this.chkConsoleEmulator.Text = "Use Console Emulator for console output in command dialogs";
-            this.tooltip.SetToolTip(this.chkConsoleEmulator, resources.GetString("chkConsoleEmulator.ToolTip"));
-            this.chkConsoleEmulator.UseVisualStyleBackColor = true;
+            this.chkConsoleEmulator.ToolTipText = resources.GetString("chkConsoleEmulator.ToolTip");
             // 
             // tableLayoutPanel4
             // 
@@ -343,10 +340,10 @@
             this.chkAutoNormaliseBranchName.Size = new System.Drawing.Size(1572, 17);
             this.chkAutoNormaliseBranchName.TabIndex = 0;
             this.chkAutoNormaliseBranchName.Text = "Auto normalise branch name";
-            this.tooltip.SetToolTip(this.chkAutoNormaliseBranchName, "Controls whether branch name should be automatically normalised as per git branch" +
-        " naming rules.\r\nIf enabled, any illegal symbols will be replaced with the replac" +
-        "ement symbol of your choice.");
-            this.chkAutoNormaliseBranchName.UseVisualStyleBackColor = true;
+            this.chkAutoNormaliseBranchName.ToolTipText =
+                "Controls whether branch name should be automatically normalised as per git branch" +
+                " naming rules.\r\nIf enabled, any illegal symbols will be replaced with the replac" +
+                "ement symbol of your choice.";
             this.chkAutoNormaliseBranchName.CheckedChanged += new System.EventHandler(this.chkAutoNormaliseBranchName_CheckedChanged);
             // 
             // label1
@@ -369,12 +366,6 @@
             this.cboAutoNormaliseSymbol.Name = "cboAutoNormaliseSymbol";
             this.cboAutoNormaliseSymbol.Size = new System.Drawing.Size(42, 21);
             this.cboAutoNormaliseSymbol.TabIndex = 2;
-            // 
-            // tooltip
-            // 
-            this.tooltip.AutoPopDelay = 30000;
-            this.tooltip.InitialDelay = 500;
-            this.tooltip.ReshowDelay = 100;
             // 
             // AdvancedSettingsPage
             // 
@@ -420,10 +411,9 @@
         private System.Windows.Forms.CheckBox chkAlwaysShowCheckoutDlg;
         private System.Windows.Forms.CheckBox chkUseLocalChangesAction;
         private System.Windows.Forms.CheckBox chkAlwaysShowAdvOpt;
-        private System.Windows.Forms.CheckBox chkConsoleEmulator;
-        private System.Windows.Forms.ToolTip tooltip;
+        private GitUI.UserControls.Settings.SettingsCheckBox chkConsoleEmulator;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
-        private System.Windows.Forms.CheckBox chkAutoNormaliseBranchName;
+        private GitUI.UserControls.Settings.SettingsCheckBox chkAutoNormaliseBranchName;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cboAutoNormaliseSymbol;
         private System.Windows.Forms.GroupBox grpCommit;
@@ -432,6 +422,6 @@
         private System.Windows.Forms.GroupBox grpUpdates;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
         private System.Windows.Forms.CheckBox chkCheckForUpdates;
-        private System.Windows.Forms.CheckBox chkCheckForRCVersions;
+        private GitUI.UserControls.Settings.SettingsCheckBox chkCheckForRCVersions;
     }
 }
