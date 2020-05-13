@@ -265,7 +265,7 @@ namespace GitUI
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public IReadOnlyList<GitItemStatus> GitItemFilteredStatuses => AllItems.Select(i => i.Item).AsReadOnlyList();
+        public IReadOnlyList<GitItemStatus> GitItemFilteredStatuses => AllItems.Items().AsReadOnlyList();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -364,7 +364,6 @@ namespace GitUI
         [Browsable(false)]
         public IEnumerable<GitItemStatus> SelectedGitItems
         {
-            get => SelectedItems.Select(i => i.Item);
             set
             {
                 if (value == null)
