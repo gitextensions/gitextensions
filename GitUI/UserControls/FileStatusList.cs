@@ -829,8 +829,15 @@ namespace GitUI
 
         protected override void DisposeCustomResources()
         {
-            _selectedIndexChangeSubscription?.Dispose();
-            _diffListSortSubscription?.Dispose();
+            try
+            {
+                _selectedIndexChangeSubscription?.Dispose();
+                _diffListSortSubscription?.Dispose();
+            }
+            catch (InvalidOperationException)
+            {
+                // System.Reactive causes the app to fail with: 'Invoke or BeginInvoke cannot be called on a control until the window handle has been created.'
+            }
         }
 
         protected override void WndProc(ref Message m)
