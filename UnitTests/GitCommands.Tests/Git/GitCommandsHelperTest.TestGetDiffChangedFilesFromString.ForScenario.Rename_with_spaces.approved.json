@@ -17,7 +17,8 @@
         "IsAssumeUnchanged": false,
         "IsSkipWorktree": false,
         "IsSubmodule": false,
-        "IsDirty": false
+        "IsDirty": false,
+        "IsNonFile": false
     },
     {
         "Name": " apa.md",
@@ -37,7 +38,8 @@
         "IsAssumeUnchanged": false,
         "IsSkipWorktree": false,
         "IsSubmodule": false,
-        "IsDirty": false
+        "IsDirty": false,
+        "IsNonFile": false
     },
     {
         "Name": " co decov.yml",
@@ -57,7 +59,8 @@
         "IsAssumeUnchanged": false,
         "IsSkipWorktree": false,
         "IsSubmodule": false,
-        "IsDirty": false
+        "IsDirty": false,
+        "IsNonFile": false
     },
     {
         "Name": "CODE_OF_CONDUCT.md",
@@ -77,6 +80,7 @@
         "IsAssumeUnchanged": false,
         "IsSkipWorktree": false,
         "IsSubmodule": false,
-        "IsDirty": false
+        "IsDirty": false,
+        "IsNonFile": false
     }
 ]

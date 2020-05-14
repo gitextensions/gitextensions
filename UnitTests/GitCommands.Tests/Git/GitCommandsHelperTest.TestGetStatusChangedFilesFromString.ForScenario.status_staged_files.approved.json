@@ -17,7 +17,8 @@
         "IsAssumeUnchanged": false,
         "IsSkipWorktree": false,
         "IsSubmodule": false,
-        "IsDirty": false
+        "IsDirty": false,
+        "IsNonFile": false
     },
     {
         "Name": "adfs.h",
@@ -37,7 +38,8 @@
         "IsAssumeUnchanged": false,
         "IsSkipWorktree": false,
         "IsSubmodule": false,
-        "IsDirty": false
+        "IsDirty": false,
+        "IsNonFile": false
     },
     {
         "Name": "adfs.h",
@@ -57,6 +59,7 @@
         "IsAssumeUnchanged": false,
         "IsSkipWorktree": false,
         "IsSubmodule": false,
-        "IsDirty": false
+        "IsDirty": false,
+        "IsNonFile": false
     }
 ]

@@ -2456,7 +2456,7 @@ namespace GitCommands
                 // For worktree the untracked must be added too
                 // Note that this may add a second GitError, this is a separate Git command
                 var files = GetAllChangedFilesWithSubmodulesStatus().Where(x =>
-                    ((x.Staged == StagedStatus.WorkTree && x.IsNew) || !string.IsNullOrWhiteSpace(x.ErrorMessage))).ToArray();
+                    ((x.Staged == StagedStatus.WorkTree && x.IsNew) || x.IsNonFile)).ToArray();
                 if (firstRevision == GitRevision.WorkTreeGuid)
                 {
                     // The file is seen as "deleted" in 'to' revision
@@ -2638,7 +2638,7 @@ namespace GitCommands
                 output = _gitExecutable.GetOutput(command);
 
                 var res = GitCommandHelpers.GetStatusChangedFilesFromString(this, output)
-                    .Where(item => (item.Staged == StagedStatus.Index || !string.IsNullOrWhiteSpace(item.ErrorMessage)))
+                    .Where(item => (item.Staged == StagedStatus.Index || item.IsNonFile))
                     .ToList();
                 if (IsGitErrorMessage(output))
                 {
@@ -4184,7 +4184,7 @@ namespace GitCommands
 
         private static GitItemStatus createErrorGitItemStatus(string gitOutput)
         {
-            return new GitItemStatus { Name = GitError, ErrorMessage = gitOutput.Replace('\0', '\t') };
+            return new GitItemStatus { Name = GitError, IsNonFile = true, ErrorMessage = gitOutput.Replace('\0', '\t') };
         }
 
         public (int totalCount, Dictionary<string, int> countByName) GetCommitsByContributor(DateTime? since = null, DateTime? until = null)

@@ -17,6 +17,7 @@
         "IsAssumeUnchanged": false,
         "IsSkipWorktree": false,
         "IsSubmodule": false,
-        "IsDirty": false
+        "IsDirty": false,
+        "IsNonFile": false
     }
 ]

@@ -38,6 +38,7 @@ namespace GitCommands
             IsSkipWorktree = 1 << 10,
             IsSubmodule = 1 << 11,
             IsDirty = 1 << 12,
+            IsNonFile = 1 << 13
         }
 
         private JoinableTask<GitSubmoduleStatus> _submoduleStatus;
@@ -125,6 +126,12 @@ namespace GitCommands
         {
             get => _flags.HasFlag(Flags.IsDirty);
             set => SetFlag(value, Flags.IsDirty);
+        }
+
+        public bool IsNonFile
+        {
+            get => _flags.HasFlag(Flags.IsNonFile);
+            set => SetFlag(value, Flags.IsNonFile);
         }
 
         private void SetFlag(bool isSet, Flags flag)

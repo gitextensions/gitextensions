@@ -28,7 +28,6 @@ namespace GitUI
 
     public sealed partial class FileStatusList : GitModuleControl
     {
-        private const string ShowAllDiferencesItemName = "ShowDiffForAllParentsText";
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
         private readonly TranslationString _diffWithParent = new TranslationString("Diff with a/");
         private readonly TranslationString _diffBaseToB = new TranslationString("Unique diff BASE with b/");
@@ -38,7 +37,6 @@ namespace GitUI
         private readonly IFullPathResolver _fullPathResolver;
         private readonly SortDiffListContextMenuItem _sortByContextMenu;
         private readonly IReadOnlyList<GitItemStatus> _noItemStatuses;
-        private static readonly ObjectId EmptyId = ObjectId.Parse("0000000000000000000000000000000000000000");
 
         private int _nextIndexToSelect = -1;
         private bool _groupByRevision;
@@ -106,9 +104,8 @@ namespace GitUI
                 new GitItemStatus
                 {
                     Name = NoFiles.Text,
-                    IsChanged = false,
-                    IsAssumeUnchanged = true,
-                    TreeGuid = EmptyId
+                    IsNonFile = true,
+                    ErrorMessage = ""
                 }
             };
 
@@ -1021,7 +1018,7 @@ namespace GitUI
 
                     var listItem = new ListViewItem(string.Empty, group);
 
-                    if (item.TreeGuid != EmptyId)
+                    if (!item.IsNonFile || !string.IsNullOrWhiteSpace(item.ErrorMessage))
                     {
                         listItem.ImageIndex = GetItemImageIndex(item);
                     }
@@ -1292,7 +1289,7 @@ namespace GitUI
 
         private void FileStatusListView_ContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            if (SelectedItem?.Item?.TreeGuid == EmptyId)
+            if (SelectedItem?.Item?.IsNonFile ?? false)
             {
                 e.Cancel = true;
                 return;
@@ -1326,14 +1323,15 @@ namespace GitUI
                 cm.Items.Add(_sortByContextMenu);
             }
 
-            if (!cm.Items.Find(ShowAllDiferencesItemName, true).Any())
+            const string showAllDifferencesItemName = "ShowDiffForAllParentsText";
+            if (!cm.Items.Find(showAllDiferencesItemName, true).Any())
             {
                 cm.Items.Add(new ToolStripSeparator());
                 var showAllDiferencesItem = new ToolStripMenuItem(Strings.ShowDiffForAllParentsText)
                 {
                     Checked = AppSettings.ShowDiffForAllParents,
                     ToolTipText = Strings.ShowDiffForAllParentsTooltip,
-                    Name = ShowAllDiferencesItemName,
+                    Name = showAllDifferencesItemName,
                     CheckOnClick = true
                 };
                 showAllDiferencesItem.CheckedChanged += (s, e) =>

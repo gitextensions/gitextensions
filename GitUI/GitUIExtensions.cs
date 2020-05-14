@@ -48,7 +48,7 @@ namespace GitUI
             [NotNull] string defaultText = "",
             [CanBeNull] Action openWithDiffTool = null)
         {
-            if (!string.IsNullOrWhiteSpace(item?.Item?.ErrorMessage))
+            if (item?.Item?.IsNonFile ?? false)
             {
                 // Present error (e.g. parsing Git)
                 return fileViewer.ViewTextAsync(item.Item.Name, item.Item.ErrorMessage);
@@ -58,7 +58,7 @@ namespace GitUI
             {
                 if (!string.IsNullOrWhiteSpace(defaultText))
                 {
-                    return fileViewer.ViewTextAsync(item?.Item?.Name, defaultText);
+                    return fileViewer.ViewTextAsync(item.Item.Name, defaultText);
                 }
 
                 fileViewer.Clear();
