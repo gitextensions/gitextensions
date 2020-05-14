@@ -19,7 +19,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComponent();
             Text = "Diff Viewer";
             InitializeComplete();
-            tooltip.SetToolTip(chkShowDiffForAllParents, _showDiffForAllParents.Text);
+            chkShowDiffForAllParents.ToolTipText = _showDiffForAllParents.Text;
             chkContScrollToNextFileOnlyWithAlt.Text = Strings.ContScrollToNextFileOnlyWithAlt;
         }
 

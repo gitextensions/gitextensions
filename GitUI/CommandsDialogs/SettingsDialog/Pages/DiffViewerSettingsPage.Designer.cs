@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.tableLayoutPanelForDiffViewer = new System.Windows.Forms.TableLayoutPanel();
             this.chkContScrollToNextFileOnlyWithAlt = new System.Windows.Forms.CheckBox();
-            this.chkShowDiffForAllParents = new System.Windows.Forms.CheckBox();
+            this.chkShowDiffForAllParents = new GitUI.UserControls.Settings.SettingsCheckBox();
             this.chkOpenSubmoduleDiffInSeparateWindow = new System.Windows.Forms.CheckBox();
             this.chkRememberIgnoreWhiteSpacePreference = new System.Windows.Forms.CheckBox();
             this.chkRememberShowNonPrintingCharsPreference = new System.Windows.Forms.CheckBox();
@@ -41,7 +41,6 @@
             this.chkOmitUninterestingDiff = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.VerticalRulerPosition = new System.Windows.Forms.NumericUpDown();
-            this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.tableLayoutPanelForDiffViewer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.VerticalRulerPosition)).BeginInit();
             this.SuspendLayout();
@@ -62,7 +61,7 @@
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkOpenSubmoduleDiffInSeparateWindow, 0, 7);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkShowDiffForAllParents, 0, 8);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.label1, 0, 9);
-            this.tableLayoutPanelForDiffViewer.Controls.Add(this.VerticalRulerPosition, 1, 10);
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.VerticalRulerPosition, 1, 9);
             this.tableLayoutPanelForDiffViewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelForDiffViewer.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanelForDiffViewer.Name = "tableLayoutPanelForDiffViewer";
@@ -162,12 +161,14 @@
             // chkShowDiffForAllParents
             // 
             this.chkShowDiffForAllParents.AutoSize = true;
-            this.chkShowDiffForAllParents.Location = new System.Drawing.Point(3, 164);
+            this.chkShowDiffForAllParents.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.chkShowDiffForAllParents.Checked = false;
+            this.chkShowDiffForAllParents.Location = new System.Drawing.Point(3, 184);
             this.chkShowDiffForAllParents.Name = "chkShowDiffForAllParents";
-            this.chkShowDiffForAllParents.Size = new System.Drawing.Size(280, 17);
+            this.chkShowDiffForAllParents.Size = new System.Drawing.Size(271, 17);
             this.chkShowDiffForAllParents.TabIndex = 11;
             this.chkShowDiffForAllParents.Text = "Show file differences for all parents in browse dialog";
-            this.chkShowDiffForAllParents.UseVisualStyleBackColor = true;
+            this.chkShowDiffForAllParents.ToolTipText = null;
             // 
             // label1
             // 
@@ -196,12 +197,6 @@
             0,
             0});
             // 
-            // tooltip
-            // 
-            this.tooltip.AutoPopDelay = 30000;
-            this.tooltip.InitialDelay = 500;
-            this.tooltip.ReshowDelay = 100;
-            // 
             // DiffViewerSettingsPage
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -225,10 +220,9 @@
         private System.Windows.Forms.CheckBox chkRememberNumberOfContextLines;
         private System.Windows.Forms.CheckBox chkRememberShowSyntaxHighlightingInDiff;
         private System.Windows.Forms.CheckBox chkOmitUninterestingDiff;
-        private System.Windows.Forms.ToolTip tooltip;
         private System.Windows.Forms.CheckBox chkOpenSubmoduleDiffInSeparateWindow;
         private System.Windows.Forms.CheckBox chkContScrollToNextFileOnlyWithAlt;
-        private System.Windows.Forms.CheckBox chkShowDiffForAllParents;
+        private UserControls.Settings.SettingsCheckBox chkShowDiffForAllParents;
         private System.Windows.Forms.NumericUpDown VerticalRulerPosition;
         private System.Windows.Forms.Label label1;
     }
