@@ -267,7 +267,7 @@ Current Branch:
 
         private void btnArgumentsHelp_Click(object sender, EventArgs e)
         {
-            if (_argumentsCheatSheet is object)
+            if (_argumentsCheatSheet?.Visible ?? false)
             {
                 _argumentsCheatSheet.BringToFront();
                 return;
