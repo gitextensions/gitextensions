@@ -475,6 +475,12 @@ namespace GitCommands.Submodules
                 SetModuleAsDirtyUpwards(superModule.GetTopModule());
             }
 
+            if (submoduleStatus == null || !submoduleStatus.IsDirty)
+            {
+                // no changes to submodules
+                return;
+            }
+
             // Recursively update submodules
             var module = new GitModule(path);
             await GetSubmoduleDetailedStatusAsync(module, cancelToken);
