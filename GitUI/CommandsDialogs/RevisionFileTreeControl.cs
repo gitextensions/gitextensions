@@ -370,7 +370,7 @@ See the changes in the commit form.");
                         var file = new GitItemStatus
                         {
                             IsTracked = true,
-                            Name = gitItem.Name,
+                            Name = gitItem.FileName,
                             TreeGuid = gitItem.ObjectId,
                             IsSubmodule = gitItem.ObjectType == GitObjectType.Commit
                         };
