@@ -3667,7 +3667,7 @@ namespace GitCommands
 
         public SubmoduleStatus CheckSubmoduleStatus([CanBeNull] ObjectId commit, [CanBeNull] ObjectId oldCommit, CommitData data, CommitData oldData, bool loadData = false)
         {
-            // TODO File access for Git revision access
+            // Submodule directory must exist to run commands, unknown otherwise
             if (!IsValidGitWorkingDir() || oldCommit == null)
             {
                 return SubmoduleStatus.NewSubmodule;
