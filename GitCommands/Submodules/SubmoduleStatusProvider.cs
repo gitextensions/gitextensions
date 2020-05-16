@@ -338,18 +338,33 @@ namespace GitCommands.Submodules
             }
 
             // Recursive update in submodules
-            var changedSubmodules = gitStatus?.Where(i => i.IsSubmodule).Select(i => i.Name) ?? new List<string>();
-            var unchangedSubmodules = module.GetSubmodulesLocalPaths(false).Where(s => !changedSubmodules.Contains(s));
-            foreach (var submoduleName in unchangedSubmodules)
+            var changedSubmodules = gitStatus?.Where(i => i.IsSubmodule) ?? new List<GitItemStatus>();
+            var unchangedSubmoduleNames = module
+                .GetSubmodulesLocalPaths(false)
+                .Where(s => changedSubmodules.All(i => i.Name != s));
+            foreach (var submoduleName in unchangedSubmoduleNames)
             {
                 SetSubmoduleEmptyDetailedStatus(module, submoduleName);
             }
 
-            foreach (var submoduleName in changedSubmodules)
+            foreach (var status in changedSubmodules)
             {
-                cancelToken.ThrowIfCancellationRequested();
+                if (status.IsDirty && !status.IsChanged)
+                {
+                    // Submodule is only dirty, no further Git command required for this submodule
+                    var path = module.GetSubmoduleFullPath(status.Name);
+                    SetModuleAsDirty(path, true);
 
-                await GetSubmoduleDetailedStatusAsync(module, submoduleName, cancelToken);
+                    // Recursively update submodules below this
+                    var subModule = new GitModule(path);
+                    await GetSubmoduleDetailedStatusAsync(subModule, cancelToken);
+                }
+                else
+                {
+                    cancelToken.ThrowIfCancellationRequested();
+
+                    await GetSubmoduleDetailedStatusAsync(module, status.Name, cancelToken);
+                }
             }
         }
 
