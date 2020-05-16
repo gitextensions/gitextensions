@@ -1324,9 +1324,11 @@ namespace GitUI
             }
 
             const string showAllDifferencesItemName = "ShowDiffForAllParentsText";
-            if (!cm.Items.Find(showAllDiferencesItemName, true).Any())
+            var diffItem = cm.Items.Find(showAllDifferencesItemName, true);
+            const string separatorKey = showAllDifferencesItemName + "Separator";
+            if (!diffItem.Any())
             {
-                cm.Items.Add(new ToolStripSeparator());
+                cm.Items.Add(new ToolStripSeparator { Name = separatorKey });
                 var showAllDiferencesItem = new ToolStripMenuItem(Strings.ShowDiffForAllParentsText)
                 {
                     Checked = AppSettings.ShowDiffForAllParents,
@@ -1341,6 +1343,21 @@ namespace GitUI
                 };
 
                 cm.Items.Add(showAllDiferencesItem);
+            }
+
+            // Show menu item if it is possible that there are multiple first revisions
+            var mayBeMultipleRevs = _revisions != null &&
+                                    (_revisions.Count > 1
+                                     || (_revisions.Count == 1 && _revisions[0].ParentIds != null && _revisions[0].ParentIds.Count > 1));
+            if (diffItem.Length > 0)
+            {
+                diffItem[0].Visible = mayBeMultipleRevs;
+            }
+
+            var sepItem = cm.Items.Find(separatorKey, true);
+            if (sepItem.Length > 0)
+            {
+                sepItem[0].Visible = mayBeMultipleRevs;
             }
         }
 
