@@ -54,11 +54,12 @@ build_script:
     & .\cibuild.cmd -restore -build -buildNative -logFileName build.binlog
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
-    # if we have reset above we need to reset English xlfs, otherwise the loc verification step will fail
+    # if we have reset above, we need to restore the merge commit, otherwise the loc verification step will fail
     # refer to https://github.com/gitextensions/gitextensions/issues/7979
     if ($env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT) {
-      git reset $env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT --quiet -- "GitUI/Translation/English.xlf" "GitUI/Translation/English.Plugins.xlf"
-      git checkout                                     --force -- "GitUI/Translation/English.xlf" "GitUI/Translation/English.Plugins.xlf"
+      git config user.email "gitextensions@github.com"
+      git config user.name "Git Extensions"
+      git commit -m "restore merge commit"
     }
 
     # it would be nice to run '.\cibuild.cmd -loc -logFileName localise.binlog /p:NoBuild=true' but it doesn't work without `-build` switch :\
@@ -97,6 +98,11 @@ artifacts:
 on_failure:
 - ps: |
     Get-ChildItem -recurse artifacts\log\*.binlog -ErrorAction SilentlyContinue `
+    | ForEach-Object {
+        Push-AppveyorArtifact "$_"
+    }
+- ps: |
+    Get-ChildItem -recurse English*.xlf -ErrorAction SilentlyContinue `
     | ForEach-Object {
         Push-AppveyorArtifact "$_"
     }
