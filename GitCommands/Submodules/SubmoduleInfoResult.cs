@@ -16,8 +16,7 @@ namespace GitCommands.Submodules
         public IList<SubmoduleInfo> OurSubmodules { get; } = new List<SubmoduleInfo>();
 
         // List of SubmoduleInfo for all submodules under TopProject.
-        // Only populated if current module is a submodule (i.e. is not TopProject)
-        public IList<SubmoduleInfo> SuperSubmodules { get; } = new List<SubmoduleInfo>();
+        public IList<SubmoduleInfo> AllSubmodules { get; } = new List<SubmoduleInfo>();
 
         // Always set to the top-most module.
         [NotNull]
