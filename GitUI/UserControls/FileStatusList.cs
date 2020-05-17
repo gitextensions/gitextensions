@@ -105,7 +105,7 @@ namespace GitUI
                 {
                     Name = $"     - {NoFiles.Text} -",
                     IsStatusOnly = true,
-                    ErrorMessage = ""
+                    ErrorMessage = string.Empty
                 }
             };
 
@@ -984,7 +984,6 @@ namespace GitUI
 
             bool hasChanges = GitItemStatusesWithDescription.Any(x => x.statuses.Count > 0);
 
-            IReadOnlyList<GitItemStatus> itemStatuses;
             var list = new List<ListViewItem>();
             foreach (var i in GitItemStatusesWithDescription)
             {
@@ -999,7 +998,8 @@ namespace GitUI
                     FileStatusListView.Groups.Add(group);
                 }
 
-                if (hasChanges && i.statuses.Count < 1)
+                IReadOnlyList<GitItemStatus> itemStatuses;
+                if (hasChanges && i.statuses.Count == 0)
                 {
                     itemStatuses = _noItemStatuses;
                     FileStatusListView.SetGroupState(group, NativeMethods.LVGS.Collapsible | NativeMethods.LVGS.Collapsed);
