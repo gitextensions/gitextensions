@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -58,7 +57,7 @@ namespace GitUI
             {
                 if (!string.IsNullOrWhiteSpace(defaultText))
                 {
-                    return fileViewer.ViewTextAsync(item.Item.Name, defaultText);
+                    return fileViewer.ViewTextAsync(item?.Item?.Name, defaultText);
                 }
 
                 fileViewer.Clear();
