@@ -43,6 +43,11 @@ namespace GitUI.Script
         [CanBeNull]
         public System.Drawing.Bitmap GetIcon()
         {
+            if (string.IsNullOrWhiteSpace(Icon))
+            {
+                return null;
+            }
+
             // Get all resources
             System.Resources.ResourceManager rm
                 = new System.Resources.ResourceManager("GitUI.Properties.Images",

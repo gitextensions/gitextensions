@@ -1,12 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using GitUI.Hotkey;
 using GitUI.Script;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
     public static class UserScriptContextMenuExtensions
     {
+        private static readonly Lazy<IEnumerable<HotkeyCommand>> Hotkeys = new Lazy<IEnumerable<HotkeyCommand>>(()
+            => HotkeySettingsManager.LoadHotkeys(FormSettings.HotkeySettingsName));
+
         /// <summary>
         ///  Appends user scripts to the <paramref name="contextMenu"/>, or under <paramref name="hostMenuItem"/>,
         ///  if scripts are marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.
@@ -60,7 +66,8 @@ namespace GitUI.CommandsDialogs
                     {
                         Text = script.Name,
                         Name = script.Name + "_ownScript",
-                        Image = script.GetIcon()
+                        Image = script.GetIcon(),
+                        ShortcutKeyDisplayString = Hotkeys.Value?.FirstOrDefault(h => h.Name == script.Name)?.KeyData.ToShortcutKeyDisplayString()
                     };
 
                     item.Click += (s, e) =>
