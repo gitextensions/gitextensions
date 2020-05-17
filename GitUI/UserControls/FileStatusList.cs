@@ -103,7 +103,7 @@ namespace GitUI
             {
                 new GitItemStatus
                 {
-                    Name = NoFiles.Text,
+                    Name = $"     - {NoFiles.Text} -",
                     IsNonFile = true,
                     ErrorMessage = ""
                 }
