@@ -141,7 +141,7 @@ namespace GitCommands
             var treeGuid = ObjectId.Parse(lines[1]);
 
             // TODO: we can use this to add more relationship info like gitk does if wanted
-            var parentGuids = lines[2].Split(' ').Where(id => !string.IsNullOrWhiteSpace(id)).Select(id => ObjectId.Parse(id)).ToList();
+            var parentIds = lines[2].Split(' ').Where(id => !string.IsNullOrWhiteSpace(id)).Select(id => ObjectId.Parse(id)).ToList();
             var author = module.ReEncodeStringFromLossless(lines[3]);
             var authorDate = DateTimeUtils.ParseUnixTime(lines[4]);
             var committer = module.ReEncodeStringFromLossless(lines[5]);
@@ -152,7 +152,7 @@ namespace GitCommands
             // commit message is not re-encoded by git when format is given
             var body = module.ReEncodeCommitMessage(message, commitEncoding);
 
-            return new CommitData(guid, treeGuid, parentGuids, author, authorDate, committer, commitDate, body);
+            return new CommitData(guid, treeGuid, parentIds, author, authorDate, committer, commitDate, body);
         }
 
         /// <inheritdoc />
