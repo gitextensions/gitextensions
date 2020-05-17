@@ -38,7 +38,7 @@ namespace GitCommands
             IsSkipWorktree = 1 << 10,
             IsSubmodule = 1 << 11,
             IsDirty = 1 << 12,
-            IsNonFile = 1 << 13
+            IsStatusOnly = 1 << 13
         }
 
         private JoinableTask<GitSubmoduleStatus> _submoduleStatus;
@@ -68,6 +68,10 @@ namespace GitCommands
             set => SetFlag(value, Flags.IsDeleted);
         }
 
+        /// <summary>
+        /// For files, the file is modified
+        /// For submodules, the commit is changed
+        /// </summary>
         public bool IsChanged
         {
             get => _flags.HasFlag(Flags.IsChanged);
@@ -122,16 +126,24 @@ namespace GitCommands
             set => SetFlag(value, Flags.IsSubmodule);
         }
 
+        /// <summary>
+        /// Submodule is dirty
+        /// Info from git-status, may be available before GetSubmoduleStatusAsync is evaluated
+        /// </summary>
         public bool IsDirty
         {
             get => _flags.HasFlag(Flags.IsDirty);
             set => SetFlag(value, Flags.IsDirty);
         }
 
-        public bool IsNonFile
+        /// <summary>
+        /// This item is not a Git item, just status information
+        /// If ErrorMessage is set, this is an error from Git, otherwise just a marker that nothing is changed
+        /// </summary>
+        public bool IsStatusOnly
         {
-            get => _flags.HasFlag(Flags.IsNonFile);
-            set => SetFlag(value, Flags.IsNonFile);
+            get => _flags.HasFlag(Flags.IsStatusOnly);
+            set => SetFlag(value, Flags.IsStatusOnly);
         }
 
         private void SetFlag(bool isSet, Flags flag)

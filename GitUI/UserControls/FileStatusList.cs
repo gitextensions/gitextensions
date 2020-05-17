@@ -104,7 +104,7 @@ namespace GitUI
                 new GitItemStatus
                 {
                     Name = $"     - {NoFiles.Text} -",
-                    IsNonFile = true,
+                    IsStatusOnly = true,
                     ErrorMessage = ""
                 }
             };
@@ -1018,7 +1018,7 @@ namespace GitUI
 
                     var listItem = new ListViewItem(string.Empty, group);
 
-                    if (!item.IsNonFile || !string.IsNullOrWhiteSpace(item.ErrorMessage))
+                    if (!item.IsStatusOnly || !string.IsNullOrWhiteSpace(item.ErrorMessage))
                     {
                         listItem.ImageIndex = GetItemImageIndex(item);
                     }
@@ -1289,7 +1289,7 @@ namespace GitUI
 
         private void FileStatusListView_ContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            if (SelectedItem?.Item?.IsNonFile ?? false)
+            if (SelectedItem?.Item?.IsStatusOnly ?? false)
             {
                 e.Cancel = true;
                 return;

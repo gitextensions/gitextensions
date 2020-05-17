@@ -369,7 +369,7 @@ namespace GitUI.Editor
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
-                    if (item?.IsNonFile ?? false)
+                    if (item?.IsStatusOnly ?? false)
                     {
                         // Present error (e.g. parsing Git)
                         await ViewTextAsync(item.Name, item.ErrorMessage);

@@ -1114,7 +1114,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var fileStatus in allChangedFiles)
             {
-                if (fileStatus.IsNonFile)
+                if (fileStatus.IsStatusOnly)
                 {
                     unstagedFiles.Add(fileStatus);
                 }
