@@ -18,7 +18,7 @@
         "IsSkipWorktree": false,
         "IsSubmodule": false,
         "IsDirty": false,
-        "IsNonFile": false
+        "IsStatusOnly": false
     },
     {
         "Name": "untracked_file",
@@ -39,6 +39,6 @@
         "IsSkipWorktree": false,
         "IsSubmodule": false,
         "IsDirty": false,
-        "IsNonFile": false
+        "IsStatusOnly": false
     }
 ]
