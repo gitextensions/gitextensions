@@ -17,7 +17,8 @@
         "IsAssumeUnchanged": false,
         "IsSkipWorktree": false,
         "IsSubmodule": true,
-        "IsDirty": false
+        "IsDirty": false,
+        "IsStatusOnly": false
     },
     {
         "Name": "ignored_file",
@@ -37,6 +38,7 @@
         "IsAssumeUnchanged": false,
         "IsSkipWorktree": false,
         "IsSubmodule": false,
-        "IsDirty": false
+        "IsDirty": false,
+        "IsStatusOnly": false
     }
 ]

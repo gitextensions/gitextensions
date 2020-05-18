@@ -50,6 +50,18 @@ namespace GitUI
         private readonly TranslationString _open = new TranslationString("Open");
         private readonly TranslationString _directoryIsNotAValidRepository = new TranslationString("The selected item is not a valid git repository.");
 
+        private readonly TranslationString _showDiffForAllParentsText = new TranslationString("Show file differences for all parents in browse dialog");
+        private readonly TranslationString _showDiffForAllParentsTooltip = new TranslationString(@"Show all differences between the selected commits, not limiting to only one difference.
+
+- For a single selected commit, show the difference with its parent commit.
+- For a single selected merge commit, show the difference with all parents.
+- For two selected commits with a common ancestor (BASE):
+   - Show the difference between the commits.
+   - The difference of unique files from BASE to each of the selected commits.
+   - The difference of common files (identical changes) from BASE to the commits.
+- For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
+- For more than four selected commits, show the difference from the first to the last selected commit.");
+
         // public only because of FormTranslate
         public Strings()
         {
@@ -115,5 +127,8 @@ namespace GitUI
         public static string RemoveAllInvalidRepositories => _instance.Value._removeAllInvalidRepositories.Text;
         public static string Open => _instance.Value._open.Text;
         public static string DirectoryInvalidRepository => _instance.Value._directoryIsNotAValidRepository.Text;
+
+        public static string ShowDiffForAllParentsText => _instance.Value._showDiffForAllParentsText.Text;
+        public static string ShowDiffForAllParentsTooltip => _instance.Value._showDiffForAllParentsTooltip.Text;
     }
 }
