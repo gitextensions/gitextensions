@@ -1,5 +1,7 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using JetBrains.Annotations;
 using ResourceManager;
 
@@ -46,6 +48,14 @@ namespace GitUI
         public static void NotValidGitDirectory([CanBeNull] IWin32Window owner)
         {
             MessageBox.Show(owner, Instance._notValidGitDirectory.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        public static void ShowGitConfigurationExceptionMessage(IWin32Window owner, GitConfigurationException exception)
+        {
+            MessageBox.Show(owner,
+                string.Format(ResourceManager.Strings.GeneralGitConfigExceptionMessage, exception.ConfigPath, Environment.NewLine, (exception.InnerException ?? exception).Message),
+                ResourceManager.Strings.GeneralGitConfigExceptionCaption,
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         public static bool UnresolvedMergeConflicts(IWin32Window owner)

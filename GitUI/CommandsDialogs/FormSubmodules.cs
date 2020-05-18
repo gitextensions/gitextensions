@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SubmodulesDialog;
@@ -77,7 +78,7 @@ namespace GitUI.CommandsDialogs
             };
             _bw.DoWork += (sender, e) =>
             {
-                foreach (var oldSubmodule in Module.GetSubmodulesInfo())
+                foreach (var oldSubmodule in Module.GetSubmodulesInfo().Where(submodule => submodule != null))
                 {
                     if (_bw.CancellationPending)
                     {
@@ -146,11 +147,21 @@ namespace GitUI.CommandsDialogs
             {
                 Module.UnstageFile(SubModuleLocalPath.Text);
 
-                var modules = Module.GetSubmoduleConfigFile();
-                modules.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
-                if (modules.ConfigSections.Count > 0)
+                ConfigFile submoduleConfigFile;
+                try
                 {
-                    modules.Save();
+                    submoduleConfigFile = Module.GetSubmoduleConfigFile();
+                }
+                catch (GitConfigurationException ex)
+                {
+                    MessageBoxes.ShowGitConfigurationExceptionMessage(this, ex);
+                    return;
+                }
+
+                submoduleConfigFile.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
+                if (submoduleConfigFile.ConfigSections.Count > 0)
+                {
+                    submoduleConfigFile.Save();
                     Module.StageFile(".gitmodules");
                 }
                 else
