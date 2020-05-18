@@ -1114,19 +1114,14 @@ namespace GitUI.CommandsDialogs
 
             foreach (var fileStatus in allChangedFiles)
             {
-                if (!string.IsNullOrWhiteSpace(fileStatus.ErrorMessage))
+                if (fileStatus.Staged == StagedStatus.WorkTree || fileStatus.IsStatusOnly)
                 {
+                    // Present status only errors in unstaged
                     unstagedFiles.Add(fileStatus);
-                    continue;
                 }
-
-                if (fileStatus.Staged == StagedStatus.Index)
+                else if (fileStatus.Staged == StagedStatus.Index)
                 {
                     stagedFiles.Add(fileStatus);
-                }
-                else if (fileStatus.Staged == StagedStatus.WorkTree)
-                {
-                    unstagedFiles.Add(fileStatus);
                 }
             }
 

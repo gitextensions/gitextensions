@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -48,7 +47,7 @@ namespace GitUI
             [NotNull] string defaultText = "",
             [CanBeNull] Action openWithDiffTool = null)
         {
-            if (!string.IsNullOrWhiteSpace(item?.Item?.ErrorMessage))
+            if (item?.Item?.IsStatusOnly ?? false)
             {
                 // Present error (e.g. parsing Git)
                 return fileViewer.ViewTextAsync(item.Item.Name, item.Item.ErrorMessage);

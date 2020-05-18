@@ -36,6 +36,8 @@ namespace GitUI
         private readonly IGitRevisionTester _revisionTester;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly SortDiffListContextMenuItem _sortByContextMenu;
+        private readonly IReadOnlyList<GitItemStatus> _noItemStatuses;
+
         private int _nextIndexToSelect = -1;
         private bool _groupByRevision;
         private bool _enableSelectedIndexChangeEvent = true;
@@ -48,6 +50,12 @@ namespace GitUI
         [CanBeNull] private IDisposable _diffListSortSubscription;
 
         private bool _updatingColumnWidth;
+
+        // Currently bound revisions. Cache so we can reload the view, if AppSettings.ShowDiffForAllParents is changed.
+        private IReadOnlyList<GitRevision> _revisions;
+
+        // Function to retrieve revisions. Cache so we can reload the view, if AppSettings.ShowDiffForAllParents is changed.
+        private Func<ObjectId, GitRevision> _getRevision;
 
         public delegate void EnterEventHandler(object sender, EnterEventArgs e);
 
@@ -91,6 +99,15 @@ namespace GitUI
 
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _revisionTester = new GitRevisionTester(_fullPathResolver);
+            _noItemStatuses = new[]
+            {
+                new GitItemStatus
+                {
+                    Name = $"     - {NoFiles.Text} -",
+                    IsStatusOnly = true,
+                    ErrorMessage = string.Empty
+                }
+            };
 
             base.Enter += FileStatusList_Enter;
 
@@ -635,6 +652,9 @@ namespace GitUI
 
         public void SetDiffs(IReadOnlyList<GitRevision> revisions, Func<ObjectId, GitRevision> getRevision = null)
         {
+            _revisions = revisions;
+            _getRevision = getRevision;
+
             var tuples = new List<(GitRevision firstRev, GitRevision secondRev, string summary, IReadOnlyList<GitItemStatus> statuses)>();
             var selectedRev = revisions?.FirstOrDefault();
             if (selectedRev == null)
@@ -954,6 +974,8 @@ namespace GitUI
             FileStatusListView.Groups.Clear();
             FileStatusListView.Items.Clear();
 
+            bool hasChanges = GitItemStatusesWithDescription.Any(x => x.statuses.Count > 0);
+
             var list = new List<ListViewItem>();
             foreach (var i in GitItemStatusesWithDescription)
             {
@@ -968,17 +990,30 @@ namespace GitUI
                     FileStatusListView.Groups.Add(group);
                 }
 
-                foreach (var item in i.statuses)
+                IReadOnlyList<GitItemStatus> itemStatuses;
+                if (hasChanges && i.statuses.Count == 0)
+                {
+                    itemStatuses = _noItemStatuses;
+                    FileStatusListView.SetGroupState(group, NativeMethods.LVGS.Collapsible | NativeMethods.LVGS.Collapsed);
+                }
+                else
+                {
+                    itemStatuses = i.statuses;
+                }
+
+                foreach (var item in itemStatuses)
                 {
                     if (!IsFilterMatch(item))
                     {
                         continue;
                     }
 
-                    var listItem = new ListViewItem(string.Empty, group)
+                    var listItem = new ListViewItem(string.Empty, group);
+
+                    if (!item.IsStatusOnly || !string.IsNullOrWhiteSpace(item.ErrorMessage))
                     {
-                        ImageIndex = GetItemImageIndex(item)
-                    };
+                        listItem.ImageIndex = GetItemImageIndex(item);
+                    }
 
                     if (item.GetSubmoduleStatusAsync() != null && !item.GetSubmoduleStatusAsync().IsCompleted)
                     {
@@ -1039,8 +1074,8 @@ namespace GitUI
             {
                 var imageKey = GetItemImageKey(gitItemStatus);
                 return _stateImageIndexDict.ContainsKey(imageKey)
-                ? _stateImageIndexDict[imageKey]
-                : _stateImageIndexDict[nameof(Images.FileStatusUnknown)];
+                    ? _stateImageIndexDict[imageKey]
+                    : _stateImageIndexDict[nameof(Images.FileStatusUnknown)];
             }
 
             static string GetItemImageKey(GitItemStatus gitItemStatus)
@@ -1246,6 +1281,12 @@ namespace GitUI
 
         private void FileStatusListView_ContextMenu_Opening(object sender, CancelEventArgs e)
         {
+            if (SelectedItem?.Item?.IsStatusOnly ?? false)
+            {
+                e.Cancel = true;
+                return;
+            }
+
             var cm = (ContextMenuStrip)sender;
 
             // TODO The handling of _openSubmoduleMenuItem need to be revised
@@ -1272,6 +1313,43 @@ namespace GitUI
             {
                 cm.Items.Add(new ToolStripSeparator());
                 cm.Items.Add(_sortByContextMenu);
+            }
+
+            const string showAllDifferencesItemName = "ShowDiffForAllParentsText";
+            var diffItem = cm.Items.Find(showAllDifferencesItemName, true);
+            const string separatorKey = showAllDifferencesItemName + "Separator";
+            if (!diffItem.Any())
+            {
+                cm.Items.Add(new ToolStripSeparator { Name = separatorKey });
+                var showAllDiferencesItem = new ToolStripMenuItem(Strings.ShowDiffForAllParentsText)
+                {
+                    Checked = AppSettings.ShowDiffForAllParents,
+                    ToolTipText = Strings.ShowDiffForAllParentsTooltip,
+                    Name = showAllDifferencesItemName,
+                    CheckOnClick = true
+                };
+                showAllDiferencesItem.CheckedChanged += (s, e) =>
+                {
+                    AppSettings.ShowDiffForAllParents = showAllDiferencesItem.Checked;
+                    SetDiffs(_revisions, _getRevision);
+                };
+
+                cm.Items.Add(showAllDiferencesItem);
+            }
+
+            // Show menu item if it is possible that there are multiple first revisions
+            var mayBeMultipleRevs = _revisions != null &&
+                                    (_revisions.Count > 1
+                                     || (_revisions.Count == 1 && _revisions[0].ParentIds != null && _revisions[0].ParentIds.Count > 1));
+            if (diffItem.Length > 0)
+            {
+                diffItem[0].Visible = mayBeMultipleRevs;
+            }
+
+            var sepItem = cm.Items.Find(separatorKey, true);
+            if (sepItem.Length > 0)
+            {
+                sepItem[0].Visible = mayBeMultipleRevs;
             }
         }
 

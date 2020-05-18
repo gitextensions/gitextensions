@@ -1144,19 +1144,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Diff Viewer</source>
         <target />
       </trans-unit>
-      <trans-unit id="_showDiffForAllParents.Text">
-        <source>Show all differences between the selected commits, not limiting to only one difference.
-
-- For a single selected commit, show the difference with its parent commit.
-- For a single selected merge commit, show the difference with all parents.
-- For two selected commits with a common ancestor (BASE):
-   - Show the difference between the commits.
-   - The difference of unique files from BASE to each of the selected commits.
-   - The difference of common files (identical changes) from BASE to the commits.
-- For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
-- For more than four selected commits, show the difference from the first to the last selected commit.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="chkContScrollToNextFileOnlyWithAlt.Text">
         <source>Enable automatic continuous scroll (without ALT button)</source>
         <target />
@@ -9304,6 +9291,23 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_showAllText.Text">
         <source>Show all</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_showDiffForAllParentsText.Text">
+        <source>Show file differences for all parents in browse dialog</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_showDiffForAllParentsTooltip.Text">
+        <source>Show all differences between the selected commits, not limiting to only one difference.
+
+- For a single selected commit, show the difference with its parent commit.
+- For a single selected merge commit, show the difference with all parents.
+- For two selected commits with a common ancestor (BASE):
+   - Show the difference between the commits.
+   - The difference of unique files from BASE to each of the selected commits.
+   - The difference of common files (identical changes) from BASE to the commits.
+- For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
+- For more than four selected commits, show the difference from the first to the last selected commit.</source>
         <target />
       </trans-unit>
       <trans-unit id="_submodulesText.Text">
