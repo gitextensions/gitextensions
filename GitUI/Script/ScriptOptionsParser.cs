@@ -156,10 +156,16 @@ namespace GitUI.Script
 
         private static string AskToSpecify(IEnumerable<IGitRef> options, IScriptHostControl scriptHostControl)
         {
+            var items = options.ToList();
+            if (items.Count == 0)
+            {
+                return string.Empty;
+            }
+
             using (var f = new FormQuickGitRefSelector())
             {
                 f.Location = scriptHostControl?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
-                f.Init(FormQuickGitRefSelector.Action.Select, options.ToList());
+                f.Init(FormQuickGitRefSelector.Action.Select, items);
                 f.ShowDialog();
                 return f.SelectedRef.Name;
             }
