@@ -129,3 +129,4 @@ YYYY/MM/DD, github id, Full name, email
 2020/04/17, miloshavlicek, Miloš Havlíček, miloshavlicek(at)gmail.com
 2020/02/01, wynnfrei, Giorgi Tsouvaltzis, giorgi.tsouvaltzis(at)doso.ge
 2020/05/04, digitalcoyote, Curtis Carter, lokiphasma(at)gmail.com
+2020/05/19, mnaoumov, Michael Naumov, mnaoumov(at)gmail.com
