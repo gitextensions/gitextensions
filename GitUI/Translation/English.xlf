@@ -1871,6 +1871,10 @@ You will have push access. {2}</source>
         <source>Conflicts resolved</source>
         <target />
       </trans-unit>
+      <trans-unit id="SignOff.Text">
+        <source>Sign-Off</source>
+        <target />
+      </trans-unit>
       <trans-unit id="Skip.Text">
         <source>Skip patch</source>
         <target />

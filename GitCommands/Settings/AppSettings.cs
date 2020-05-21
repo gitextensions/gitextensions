@@ -343,6 +343,12 @@ namespace GitCommands
             set => SetBool("applypatchignorewhitespace", value);
         }
 
+        public static bool ApplyPatchSignOff
+        {
+            get => GetBool("applypatchsignoff", true);
+            set => SetBool("applypatchsignoff", value);
+        }
+
         public static bool UseHistogramDiffAlgorithm
         {
             // The settings key has patience in the name for historical reasons

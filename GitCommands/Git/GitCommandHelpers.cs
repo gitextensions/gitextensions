@@ -458,12 +458,12 @@ namespace GitCommands
             };
         }
 
-        public static ArgumentString ApplyMailboxPatchCmd(bool ignoreWhiteSpace, string patchFile = null)
+        public static ArgumentString ApplyMailboxPatchCmd(bool signOff, bool ignoreWhiteSpace, string patchFile = null)
         {
             return new GitArgumentBuilder("am")
             {
                 "--3way",
-                "--signoff",
+                { signOff, "--signoff" },
                 { ignoreWhiteSpace, "--ignore-whitespace" },
                 patchFile?.ToPosixPath().Quote()
             };
