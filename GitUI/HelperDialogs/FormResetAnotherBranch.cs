@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -31,8 +32,14 @@ namespace GitUI.HelperDialogs
             _revision = revision;
 
             InitializeComponent();
-            Cancel.Text = Strings.Cancel;
-            Ok.Text = Strings.OK;
+
+            pictureBox1.Image = DpiUtil.Scale(pictureBox1.Image);
+            labelResetBranchWarning.AutoSize = true;
+            labelResetBranchWarning.Dock = DockStyle.Fill;
+
+            Height = tableLayoutPanel1.Height + tableLayoutPanel1.Top;
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+
             InitializeComplete();
 
             labelResetBranchWarning.SetForeColorForBackColor();
