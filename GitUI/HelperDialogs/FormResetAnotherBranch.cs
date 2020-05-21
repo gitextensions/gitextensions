@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Windows;
+using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitExtUtils.GitUI.Theming;
@@ -68,7 +68,7 @@ namespace GitUI.HelperDialogs
             var gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == Branches.Text);
             if (gitRefToReset == null)
             {
-                MessageBox.Show(string.Format(_localRefInvalid.Text, Branches.Text), Strings.Error, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(_localRefInvalid.Text, Branches.Text), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
