@@ -38,6 +38,16 @@ namespace GitUI.HelperDialogs
             labelResetBranchWarning.SetForeColorForBackColor();
         }
 
+        private void Application_Idle(object sender, EventArgs e)
+        {
+            Application.Idle -= Application_Idle;
+
+            if (Branches.Text.Length == 0)
+            {
+                Branches.DroppedDown = true;
+            }
+        }
+
         private IGitRef[] GetLocalBranchesWithoutCurrent()
         {
             var currentBranch = Module.GetSelectedBranch();
@@ -57,10 +67,7 @@ namespace GitUI.HelperDialogs
 
             commitSummaryUserControl.Revision = _revision;
 
-            if (Branches.Text.Length == 0)
-            {
-                Branches.DroppedDown = true;
-            }
+            Application.Idle += Application_Idle;
         }
 
         private void Ok_Click(object sender, EventArgs e)
