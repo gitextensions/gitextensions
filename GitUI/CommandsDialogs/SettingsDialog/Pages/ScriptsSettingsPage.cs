@@ -110,7 +110,7 @@ Current Branch:
 
             propertyGrid1.SelectedGridItemChanged += (s, e) =>
             {
-                if (WatchedProxyProperties.Contains(e.OldSelection?.PropertyDescriptor.Name ?? ""))
+                if (WatchedProxyProperties.Contains(e.OldSelection?.PropertyDescriptor?.Name ?? ""))
                 {
                     BindScripts(_scripts, SelectedScript);
                     propertyGrid1.Focus();
@@ -267,7 +267,7 @@ Current Branch:
 
         private void btnArgumentsHelp_Click(object sender, EventArgs e)
         {
-            if (_argumentsCheatSheet is object)
+            if (_argumentsCheatSheet?.Visible ?? false)
             {
                 _argumentsCheatSheet.BringToFront();
                 return;

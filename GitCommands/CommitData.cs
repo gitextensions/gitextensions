@@ -10,7 +10,7 @@ namespace GitCommands
         public CommitData(
             ObjectId objectId,
             ObjectId treeGuid,
-            IReadOnlyList<ObjectId> parentGuids,
+            IReadOnlyList<ObjectId> parentIds,
             string author,
             DateTime authorDate,
             string committer,
@@ -19,7 +19,7 @@ namespace GitCommands
         {
             ObjectId = objectId;
             TreeGuid = treeGuid;
-            ParentGuids = parentGuids;
+            ParentIds = parentIds;
             Author = author;
             AuthorDate = authorDate.ToDateTimeOffset();
             Committer = committer;
@@ -29,7 +29,7 @@ namespace GitCommands
 
         public ObjectId ObjectId { get; }
         public ObjectId TreeGuid { get; }
-        public IReadOnlyList<ObjectId> ParentGuids { get; }
+        public IReadOnlyList<ObjectId> ParentIds { get; }
         public string Author { get; }
         public DateTimeOffset AuthorDate { get; }
         public string Committer { get; }

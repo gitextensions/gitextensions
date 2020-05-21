@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ConEmu.WinForms;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Gpg;
 using GitCommands.Submodules;
@@ -398,7 +399,19 @@ namespace GitUI.CommandsDialogs
 
                         if (AppSettings.ShowSubmoduleStatus)
                         {
-                            _submoduleStatusProvider.UpdateSubmodulesStatus(Module.WorkingDir, status);
+                            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                            {
+                                try
+                                {
+                                    await TaskScheduler.Default;
+                                    await _submoduleStatusProvider.UpdateSubmodulesStatusAsync(Module.WorkingDir, status);
+                                }
+                                catch (GitConfigurationException ex)
+                                {
+                                    await this.SwitchToMainThreadAsync();
+                                    MessageBoxes.ShowGitConfigurationExceptionMessage(this, ex);
+                                }
+                            });
                         }
                     }
                 };
@@ -524,10 +537,7 @@ namespace GitUI.CommandsDialogs
                     new WindowsThumbnailToolbarButton(toolStripButtonCommit.Text, toolStripButtonCommit.Image, CommitToolStripMenuItemClick),
                     new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
                     new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick)));
-            SetSplitterPositions();
             HideVariableMainMenuItems();
-            RefreshSplitViewLayout();
-            LayoutRevisionInfo();
             InternalInitialize(false);
 
             if (!Module.IsValidGitWorkingDir())
@@ -563,6 +573,10 @@ namespace GitUI.CommandsDialogs
             _formBrowseDiagnosticsReporter.Report();
 
             base.OnLoad(e);
+
+            RefreshSplitViewLayout();
+            LayoutRevisionInfo();
+            SetSplitterPositions();
         }
 
         protected override void OnActivated(EventArgs e)
@@ -2567,7 +2581,20 @@ namespace GitUI.CommandsDialogs
             var updateStatus = AppSettings.ShowSubmoduleStatus && _gitStatusMonitor.Active && (Module.SuperprojectModule != null);
 
             toolStripButtonLevelUp.ToolTipText = "";
-            _submoduleStatusProvider.UpdateSubmodulesStructure(Module.WorkingDir, Strings.NoBranch, updateStatus);
+
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                try
+                {
+                    await TaskScheduler.Default;
+                    await _submoduleStatusProvider.UpdateSubmodulesStructureAsync(Module.WorkingDir, Strings.NoBranch, updateStatus);
+                }
+                catch (GitConfigurationException ex)
+                {
+                    await this.SwitchToMainThreadAsync();
+                    MessageBoxes.ShowGitConfigurationExceptionMessage(this, ex);
+                }
+            });
         }
 
         private void SubmoduleStatusProvider_StatusUpdating(object sender, EventArgs e)

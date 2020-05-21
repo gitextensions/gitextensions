@@ -174,6 +174,7 @@ namespace GitStatistics
             if (_countSubmodules)
             {
                 var submodules = _module.GetSubmodulesInfo()
+                    .Where(submodule => submodule != null)
                     .Select(submodule => new GitModule(Path.Combine(_module.WorkingDir, submodule.LocalPath)));
 
                 foreach (var submodule in submodules)

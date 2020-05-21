@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
+using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -432,7 +433,15 @@ namespace GitCommands
         public IReadOnlyList<string> GetSubmodulesLocalPaths(bool recursive = true)
         {
             var localPaths = new List<string>();
-            DoGetSubmodulesLocalPaths(this, "", localPaths, recursive);
+            try
+            {
+                DoGetSubmodulesLocalPaths(this, "", localPaths, recursive);
+            }
+            catch (GitConfigurationException)
+            {
+                // swallow any exceptions here, any config exceptions would have been shown to the user already
+            }
+
             return localPaths;
 
             void DoGetSubmodulesLocalPaths(GitModule module, string parentPath, List<string> paths, bool recurse)
@@ -452,13 +461,12 @@ namespace GitCommands
                 }
             }
 
-            List<string> GetSubmodulePaths(GitModule module)
+            IEnumerable<string> GetSubmodulePaths(GitModule module)
             {
-                var configFile = module.GetSubmoduleConfigFile();
+                ConfigFile configFile = module.GetSubmoduleConfigFile();
 
                 return configFile.ConfigSections
-                    .Select(section => section.GetValue("path").Trim())
-                    .ToList();
+                    .Select(section => section.GetValue("path").Trim());
             }
         }
 
@@ -1225,9 +1233,7 @@ namespace GitCommands
         }
 
         public ConfigFile GetSubmoduleConfigFile()
-        {
-            return new ConfigFile(WorkingDir + ".gitmodules", true);
-        }
+            => new ConfigFile(WorkingDir + ".gitmodules", true);
 
         [CanBeNull]
         public string GetCurrentSubmoduleLocalPath()
@@ -1267,12 +1273,26 @@ namespace GitCommands
 
         public IEnumerable<IGitSubmoduleInfo> GetSubmodulesInfo()
         {
+            ConfigFile configFile;
+            try
+            {
+                configFile = GetSubmoduleConfigFile();
+            }
+            catch (GitConfigurationException)
+            {
+                // swallow any exceptions here, any config exceptions would have been shown to the user already
+                configFile = null;
+            }
+
+            if (configFile == null)
+            {
+                yield return null;
+            }
+
             var args = new GitArgumentBuilder("submodule") { "status" };
             var lines = _gitExecutable.GetOutputLines(args);
 
             string lastLine = null;
-
-            var configFile = GetSubmoduleConfigFile();
 
             foreach (var line in lines)
             {
@@ -2791,7 +2811,7 @@ namespace GitCommands
 
                 headFileContents = File.ReadAllText(headFileName, SystemEncoding);
             }
-            catch (IOException)
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException || ex is SecurityException)
             {
                 // ignore inaccessible file
                 return string.Empty;
@@ -3666,7 +3686,7 @@ namespace GitCommands
 
         public SubmoduleStatus CheckSubmoduleStatus([CanBeNull] ObjectId commit, [CanBeNull] ObjectId oldCommit, CommitData data, CommitData oldData, bool loadData = false)
         {
-            // TODO File access for Git revision access
+            // Submodule directory must exist to run commands, unknown otherwise
             if (!IsValidGitWorkingDir() || oldCommit == null)
             {
                 return SubmoduleStatus.NewSubmodule;

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using FluentAssertions;
 using GitCommands;
 using GitUI;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
 
@@ -57,10 +57,10 @@ namespace GitExtensions.UITests.CommandsDialogs
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(0);
             _fileStatusList.SelectedIndex.Should().Be(0);
             _fileStatusList.SelectedGitItem.Should().BeSameAs(itemAt0);
-            _fileStatusList.SelectedGitItems.Should().BeEquivalentTo(new List<GitItemStatus> { itemAt0 });
+            _fileStatusList.SelectedItems.Items().Should().BeEquivalentTo(new List<GitItemStatus> { itemAt0 });
 
             _fileStatusList.SelectedGitItem.Should().BeSameAs(_fileStatusList.SelectedItem.Item);
-            _fileStatusList.SelectedGitItems.Should().BeEquivalentTo(_fileStatusList.SelectedItems.Select(i => i.Item));
+            _fileStatusList.SelectedItems.Items().Should().BeEquivalentTo(_fileStatusList.SelectedItems.Items());
 
             // SelectedIndex
 
@@ -69,14 +69,14 @@ namespace GitExtensions.UITests.CommandsDialogs
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(1);
             _fileStatusList.SelectedIndex.Should().Be(1);
             _fileStatusList.SelectedGitItem.Should().BeSameAs(itemAt1);
-            _fileStatusList.SelectedGitItems.Should().BeEquivalentTo(new List<GitItemStatus> { itemAt1 });
+            _fileStatusList.SelectedItems.Items().Should().BeEquivalentTo(new List<GitItemStatus> { itemAt1 });
 
             _fileStatusList.SelectedIndex = -1;
 
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(1); // unchanged
             _fileStatusList.SelectedIndex.Should().Be(-1);
             _fileStatusList.SelectedGitItem.Should().BeNull();
-            _fileStatusList.SelectedGitItems.Should().BeEmpty();
+            _fileStatusList.SelectedItems.Items().Should().BeEmpty();
 
             _fileStatusList.SelectedIndex = 2;
             _fileStatusList.SelectedIndex = 42; // clears the selection
@@ -84,14 +84,14 @@ namespace GitExtensions.UITests.CommandsDialogs
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(2); // unchanged
             _fileStatusList.SelectedIndex.Should().Be(-1);
             _fileStatusList.SelectedGitItem.Should().BeNull();
-            _fileStatusList.SelectedGitItems.Should().BeEmpty();
+            _fileStatusList.SelectedItems.Items().Should().BeEmpty();
 
             _fileStatusList.SelectedIndex = 1;
 
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(1);
             _fileStatusList.SelectedIndex.Should().Be(1);
             _fileStatusList.SelectedGitItem.Should().BeSameAs(itemAt1);
-            _fileStatusList.SelectedGitItems.Should().BeEquivalentTo(new List<GitItemStatus> { itemAt1 });
+            _fileStatusList.SelectedItems.Items().Should().BeEquivalentTo(new List<GitItemStatus> { itemAt1 });
 
             // SelectedGitItem
 
@@ -100,14 +100,14 @@ namespace GitExtensions.UITests.CommandsDialogs
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(1);
             _fileStatusList.SelectedIndex.Should().Be(1);
             _fileStatusList.SelectedGitItem.Should().BeSameAs(itemAt1);
-            _fileStatusList.SelectedGitItems.Should().BeEquivalentTo(new List<GitItemStatus> { itemAt1 });
+            _fileStatusList.SelectedItems.Items().Should().BeEquivalentTo(new List<GitItemStatus> { itemAt1 });
 
             _fileStatusList.SelectedGitItem = null;
 
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(1); // unchanged
             _fileStatusList.SelectedIndex.Should().Be(-1);
             _fileStatusList.SelectedGitItem.Should().BeNull();
-            _fileStatusList.SelectedGitItems.Should().BeEmpty();
+            _fileStatusList.SelectedItems.Items().Should().BeEmpty();
 
             _fileStatusList.SelectedGitItem = itemAt2;
             _fileStatusList.SelectedGitItem = itemNotInList; // clears the selection
@@ -115,37 +115,37 @@ namespace GitExtensions.UITests.CommandsDialogs
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(2); // unchanged
             _fileStatusList.SelectedIndex.Should().Be(-1);
             _fileStatusList.SelectedGitItem.Should().BeNull();
-            _fileStatusList.SelectedGitItems.Should().BeEmpty();
+            _fileStatusList.SelectedItems.Items().Should().BeEmpty();
 
             _fileStatusList.SelectedGitItem = itemAt1;
 
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(1);
             _fileStatusList.SelectedIndex.Should().Be(1);
             _fileStatusList.SelectedGitItem.Should().BeSameAs(itemAt1);
-            _fileStatusList.SelectedGitItems.Should().BeEquivalentTo(new List<GitItemStatus> { itemAt1 });
+            _fileStatusList.SelectedItems.Items().Should().BeEquivalentTo(new List<GitItemStatus> { itemAt1 });
 
-            // SelectedGitItems (up to one item)
+            // SelectedItems.Items() (up to one item)
 
             _fileStatusList.SelectedGitItems = new List<GitItemStatus> { itemAt1 };
 
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(1);
             _fileStatusList.SelectedIndex.Should().Be(1);
             _fileStatusList.SelectedGitItem.Should().BeSameAs(itemAt1);
-            _fileStatusList.SelectedGitItems.Should().BeEquivalentTo(new List<GitItemStatus> { itemAt1 });
+            _fileStatusList.SelectedItems.Items().Should().BeEquivalentTo(new List<GitItemStatus> { itemAt1 });
 
-            _fileStatusList.SelectedGitItems = null;
+            _fileStatusList.SelectedItems = null;
 
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(1); // unchanged
             _fileStatusList.SelectedIndex.Should().Be(-1);
             _fileStatusList.SelectedGitItem.Should().BeNull();
-            _fileStatusList.SelectedGitItems.Should().BeEmpty();
+            _fileStatusList.SelectedItems.Items().Should().BeEmpty();
 
             _fileStatusList.SelectedGitItems = new List<GitItemStatus> { };
 
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(1); // unchanged
             _fileStatusList.SelectedIndex.Should().Be(-1);
             _fileStatusList.SelectedGitItem.Should().BeNull();
-            _fileStatusList.SelectedGitItems.Should().BeEmpty();
+            _fileStatusList.SelectedItems.Items().Should().BeEmpty();
 
             _fileStatusList.SelectedGitItems = new List<GitItemStatus> { itemAt2 };
             _fileStatusList.SelectedGitItems = new List<GitItemStatus> { itemNotInList }; // clears the selection
@@ -153,16 +153,16 @@ namespace GitExtensions.UITests.CommandsDialogs
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(2); // unchanged
             _fileStatusList.SelectedIndex.Should().Be(-1);
             _fileStatusList.SelectedGitItem.Should().BeNull();
-            _fileStatusList.SelectedGitItems.Should().BeEmpty();
+            _fileStatusList.SelectedItems.Items().Should().BeEmpty();
 
             _fileStatusList.SelectedGitItems = new List<GitItemStatus> { itemAt1 };
 
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(1);
             _fileStatusList.SelectedIndex.Should().Be(1);
             _fileStatusList.SelectedGitItem.Should().BeSameAs(itemAt1);
-            _fileStatusList.SelectedGitItems.Should().BeEquivalentTo(new List<GitItemStatus> { itemAt1 });
+            _fileStatusList.SelectedItems.Items().Should().BeEquivalentTo(new List<GitItemStatus> { itemAt1 });
 
-            // SelectedGitItems (multiple items)
+            // SelectedItems.Items() (multiple items)
 
             _fileStatusList.SelectedIndex = 2;
             _fileStatusList.SelectedGitItems = new List<GitItemStatus> { itemAt2, itemAt0, itemNotInList };
@@ -170,14 +170,14 @@ namespace GitExtensions.UITests.CommandsDialogs
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(0);
             _fileStatusList.SelectedIndex.Should().Be(0);
             _fileStatusList.SelectedGitItem.Should().BeSameAs(itemAt0); // focused item
-            _fileStatusList.SelectedGitItems.Should().BeEquivalentTo(new List<GitItemStatus> { itemAt0, itemAt2 });
+            _fileStatusList.SelectedItems.Items().Should().BeEquivalentTo(new List<GitItemStatus> { itemAt0, itemAt2 });
 
             accessor.FileStatusListView.Items[1].Focused = true;
 
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(1);
             _fileStatusList.SelectedIndex.Should().Be(0);
             _fileStatusList.SelectedGitItem.Should().BeSameAs(itemAt2); // LastSelectedItem
-            _fileStatusList.SelectedGitItems.Should().BeEquivalentTo(new List<GitItemStatus> { itemAt0, itemAt2 });
+            _fileStatusList.SelectedItems.Items().Should().BeEquivalentTo(new List<GitItemStatus> { itemAt0, itemAt2 });
 
             _fileStatusList.SelectedIndex = 2;
             _fileStatusList.SelectedGitItems = new List<GitItemStatus> { itemAt2, itemAt1, itemNotInList };
@@ -185,14 +185,14 @@ namespace GitExtensions.UITests.CommandsDialogs
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(1);
             _fileStatusList.SelectedIndex.Should().Be(1);
             _fileStatusList.SelectedGitItem.Should().BeSameAs(itemAt1); // focused item
-            _fileStatusList.SelectedGitItems.Should().BeEquivalentTo(new List<GitItemStatus> { itemAt1, itemAt2 });
+            _fileStatusList.SelectedItems.Items().Should().BeEquivalentTo(new List<GitItemStatus> { itemAt1, itemAt2 });
 
             accessor.FileStatusListView.Items[0].Focused = true;
 
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(0);
             _fileStatusList.SelectedIndex.Should().Be(1);
             _fileStatusList.SelectedGitItem.Should().BeSameAs(itemAt2); // LastSelectedItem
-            _fileStatusList.SelectedGitItems.Should().BeEquivalentTo(new List<GitItemStatus> { itemAt1, itemAt2 });
+            _fileStatusList.SelectedItems.Items().Should().BeEquivalentTo(new List<GitItemStatus> { itemAt1, itemAt2 });
 
             // SelectAll
 
@@ -207,7 +207,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(0);
             _fileStatusList.SelectedIndex.Should().Be(0);
             _fileStatusList.SelectedGitItem.Should().BeSameAs(itemAt0); // focused item
-            _fileStatusList.SelectedGitItems.Should().BeEquivalentTo(new List<GitItemStatus> { itemAt0, itemAt1, itemAt2 });
+            _fileStatusList.SelectedItems.Items().Should().BeEquivalentTo(new List<GitItemStatus> { itemAt0, itemAt1, itemAt2 });
 
             // SelectFirstVisibleItem
 
@@ -217,7 +217,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(0);
             _fileStatusList.SelectedIndex.Should().Be(0);
             _fileStatusList.SelectedGitItem.Should().BeSameAs(itemAt0); // focused item
-            _fileStatusList.SelectedGitItems.Should().BeEquivalentTo(new List<GitItemStatus> { itemAt0 });
+            _fileStatusList.SelectedItems.Items().Should().BeEquivalentTo(new List<GitItemStatus> { itemAt0 });
         }
 
         [Test]

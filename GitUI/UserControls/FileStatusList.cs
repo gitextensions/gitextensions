@@ -265,7 +265,7 @@ namespace GitUI
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public IReadOnlyList<GitItemStatus> GitItemFilteredStatuses => AllItems.Select(i => i.Item).AsReadOnlyList();
+        public IReadOnlyList<GitItemStatus> GitItemFilteredStatuses => AllItems.Items().AsReadOnlyList();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -364,7 +364,6 @@ namespace GitUI
         [Browsable(false)]
         public IEnumerable<GitItemStatus> SelectedGitItems
         {
-            get => SelectedItems.Select(i => i.Item);
             set
             {
                 if (value == null)
@@ -637,7 +636,7 @@ namespace GitUI
         public void SetDiffs(IReadOnlyList<GitRevision> revisions, Func<ObjectId, GitRevision> getRevision = null)
         {
             var tuples = new List<(GitRevision firstRev, GitRevision secondRev, string summary, IReadOnlyList<GitItemStatus> statuses)>();
-            var selectedRev = revisions.FirstOrDefault();
+            var selectedRev = revisions?.FirstOrDefault();
             if (selectedRev == null)
             {
                 GitItemStatusesWithDescription = tuples;
@@ -654,11 +653,15 @@ namespace GitUI
                 else
                 {
                     // Get the parents for the selected revision
-                    tuples.AddRange(selectedRev.ParentIds?.Select(parentId =>
-                        ((GitRevision, GitRevision, string, IReadOnlyList<GitItemStatus>))(new GitRevision(parentId),
-                            selectedRev,
-                            _diffWithParent.Text + GetDescriptionForRevision(parentId),
-                            Module.GetDiffFilesWithSubmodulesStatus(parentId, selectedRev.ObjectId, selectedRev.FirstParentGuid))));
+                    var multipleParents = AppSettings.ShowDiffForAllParents ? selectedRev.ParentIds.Count : 1;
+                    tuples.AddRange(selectedRev
+                        .ParentIds?
+                        .Take(multipleParents)
+                        .Select(parentId =>
+                            ((GitRevision, GitRevision, string, IReadOnlyList<GitItemStatus>))(new GitRevision(parentId),
+                                selectedRev,
+                                _diffWithParent.Text + GetDescriptionForRevision(parentId),
+                                Module.GetDiffFilesWithSubmodulesStatus(parentId, selectedRev.ObjectId, selectedRev.FirstParentId))));
                 }
 
                 // Show combined (merge conflicts) when a single merge commit is selected
@@ -678,7 +681,7 @@ namespace GitUI
             {
                 // With more than 4, only first -> selected is interesting
                 // Limited selections: Show multi selection if more than two selected
-                var multipleParents = revisions.Count <= 4 ? revisions.Count - 1 : 1;
+                var multipleParents = AppSettings.ShowDiffForAllParents && revisions.Count <= 4 ? revisions.Count - 1 : 1;
                 tuples.AddRange(revisions
                     .Skip(1)
                     .Take(multipleParents)
@@ -686,7 +689,7 @@ namespace GitUI
                         (firstRev,
                             selectedRev,
                             _diffWithParent.Text + GetDescriptionForRevision(firstRev.ObjectId),
-                            Module.GetDiffFilesWithSubmodulesStatus(firstRev.ObjectId, selectedRev.ObjectId, selectedRev.FirstParentGuid))));
+                            Module.GetDiffFilesWithSubmodulesStatus(firstRev.ObjectId, selectedRev.ObjectId, selectedRev.FirstParentId))));
 
                 if (AppSettings.ShowDiffForAllParents && revisions.Count == 2)
                 {
@@ -695,7 +698,7 @@ namespace GitUI
 
                     // Get base commit, add as parent if unique
                     Lazy<ObjectId> head = getRevision != null
-                        ? new Lazy<ObjectId>(() => getRevision(ObjectId.IndexId).FirstParentGuid)
+                        ? new Lazy<ObjectId>(() => getRevision(ObjectId.IndexId).FirstParentId)
                         : new Lazy<ObjectId>(() => Module.RevParse("HEAD"));
                     var baseRevGuid = Module.GetMergeBase(GetRevisionOrHead(firstRev, head),
                         GetRevisionOrHead(selectedRev, head));
@@ -709,8 +712,8 @@ namespace GitUI
                         // For the following diff:  A->B a,c,d; BASE->B a,b,c; BASE->A a,b,d
                         // (the file a has unique changes, b has the same change and c,d is changed in one of the branches)
                         // The following groups will be shown: A->B a,c,d; BASE->B a,c; BASE->A a,d; Common BASE b
-                        var allBaseToB = Module.GetDiffFilesWithSubmodulesStatus(baseRevGuid, selectedRev.ObjectId, selectedRev.FirstParentGuid);
-                        var allBaseToA = Module.GetDiffFilesWithSubmodulesStatus(baseRevGuid, firstRev.ObjectId, firstRev.FirstParentGuid);
+                        var allBaseToB = Module.GetDiffFilesWithSubmodulesStatus(baseRevGuid, selectedRev.ObjectId, selectedRev.FirstParentId);
+                        var allBaseToA = Module.GetDiffFilesWithSubmodulesStatus(baseRevGuid, firstRev.ObjectId, firstRev.FirstParentId);
 
                         var comparer = new GitItemStatusNameEqualityComparer();
                         var commonBaseToAandB = allBaseToB.Intersect(allBaseToA, comparer).Except(allAToB, comparer).ToList();
@@ -723,11 +726,6 @@ namespace GitUI
                         tuples.Add((revBase, selectedRev, _diffCommonBase.Text + GetDescriptionForRevision(baseRevGuid), commonBaseToAandB));
                     }
                 }
-            }
-
-            if (!AppSettings.ShowDiffForAllParents)
-            {
-                tuples.Capacity = 1;
             }
 
             GitItemStatusesWithDescription = tuples;

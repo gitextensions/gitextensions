@@ -45,6 +45,9 @@ Yes, I allow telemetry!");
 
         private readonly TranslationString _deleteFile = new TranslationString("{0:Delete file|Delete files}");
 
+        private readonly TranslationString _generalGitConfigExceptionMessage = new TranslationString("Failed to read \"{0}\" due to the following error:{1}{1}{2}{1}{1}Due to the nature of this problem, the behavior of the application cannot be guaranteed and it must be closed.{1}{1}Please correct this issue and re-open Git Extensions.");
+        private readonly TranslationString _generalGitConfigExceptionCaption = new TranslationString("Repository Configuration Error");
+
         // public only because of FormTranslate
         public Strings()
         {
@@ -77,6 +80,9 @@ Yes, I allow telemetry!");
         public static string ShowAll => _instance.Value._showAllText.Text;
         public static string Workspace => _instance.Value._workspaceText.Text;
         public static string Index => _instance.Value._indexText.Text;
+
+        public static string GeneralGitConfigExceptionMessage => _instance.Value._generalGitConfigExceptionMessage.Text;
+        public static string GeneralGitConfigExceptionCaption => _instance.Value._generalGitConfigExceptionCaption.Text;
 
         public static string GetParents(int value)
         {

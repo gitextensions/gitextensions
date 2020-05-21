@@ -280,11 +280,11 @@ namespace GitUI.CommandsDialogs
             var selectedItems = DiffFiles.SelectedItems.ToList();
 
             // Some items are not supported if more than one revision is selected
-            var revisions = selectedItems.Select(item => item.SecondRevision).Distinct().ToList();
+            var revisions = selectedItems.SecondRevs().ToList();
             var selectedRev = revisions.Count() != 1 ? null : revisions.FirstOrDefault();
 
             // First (A) is parent if one revision selected or if parent, then selected
-            var parentIds = selectedItems.Select(i => i.FirstRevision.ObjectId).Distinct();
+            var parentIds = selectedItems.FirstIds().ToList();
 
             // Combined diff is a display only diff, no manipulations
             bool isAnyCombinedDiff = parentIds.Contains(ObjectId.CombinedDiffId);
@@ -349,7 +349,7 @@ namespace GitUI.CommandsDialogs
                     .Select(item => item.Item.Name).ToList();
                 Module.RemoveFiles(deletedItems, false);
 
-                foreach (var childId in selectedItems.Select(i => i.SecondRevision.ObjectId).Distinct())
+                foreach (var childId in selectedItems.SecondIds())
                 {
                     var itemsToCheckout = selectedItems
                         .Where(item => !item.Item.IsDeleted && item.SecondRevision.ObjectId == childId)
@@ -366,10 +366,10 @@ namespace GitUI.CommandsDialogs
                     .Select(item => item.Item.Name).ToList();
                 Module.RemoveFiles(addedItems, false);
 
-                foreach (var parentId in selectedItems.Select(i => i.FirstRevision.ObjectId).Distinct())
+                foreach (var parentId in selectedItems.FirstIds())
                 {
                     var itemsToCheckout = selectedItems
-                        .Where(item => !item.Item.IsNew && item.FirstRevision.ObjectId == parentId)
+                        .Where(item => !item.Item.IsNew && item.FirstRevision?.ObjectId == parentId)
                         .Select(item => item.Item.Name).ToList();
                     Module.CheckoutFiles(itemsToCheckout, parentId, force: false);
                 }
@@ -613,13 +613,14 @@ namespace GitUI.CommandsDialogs
 
             foreach (var item in DiffFiles.SelectedItems)
             {
-                if (item.FirstRevision.ObjectId == ObjectId.CombinedDiffId)
+                if (item.FirstRevision?.ObjectId == ObjectId.CombinedDiffId)
                 {
                     // CombinedDiff cannot be viewed in a difftool
-                    // Disabled in menues but can be activated from shortcuts, just ignore
+                    // Disabled in menus but can be activated from shortcuts, just ignore
                     continue;
                 }
 
+                // If item.FirstRevision is null, compare to root commit
                 GitRevision[] revs = new[] { item.SecondRevision, item.FirstRevision };
                 UICommands.OpenWithDifftool(this, revs, item.Item.Name, item.Item.OldName, diffKind, item.Item.IsTracked);
             }
@@ -688,10 +689,10 @@ namespace GitUI.CommandsDialogs
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
             // Some items are not supported if more than one revision is selected
-            var revisions = DiffFiles.SelectedItems.Select(item => item.SecondRevision).Distinct();
+            var revisions = DiffFiles.SelectedItems.SecondRevs().ToList();
             var selectedRev = revisions.Count() != 1 ? null : revisions.FirstOrDefault();
 
-            var parentIds = DiffFiles.SelectedItems.Select(i => i.FirstRevision.ObjectId).Distinct().ToList();
+            var parentIds = DiffFiles.SelectedItems.FirstIds().ToList();
             bool firstIsParent = _gitRevisionTester.AllFirstAreParentsToSelected(parentIds, selectedRev);
             bool localExists = _gitRevisionTester.AnyLocalFileExists(DiffFiles.SelectedItems.Select(i => i.Item));
 
@@ -720,7 +721,7 @@ namespace GitUI.CommandsDialogs
                 MenuUtil.SetAsCaptionMenuItem(selectedDiffCaptionMenuItem, DiffContextMenu);
 
                 firstDiffCaptionMenuItem.Text = _firstRevision.Text +
-                                                (DescribeRevision(DiffFiles.SelectedItems.Select(i => i.FirstRevision).Distinct().ToList()) ?? string.Empty);
+                                                (DescribeRevision(DiffFiles.SelectedItems.FirstRevs().ToList()) ?? string.Empty);
                 firstDiffCaptionMenuItem.Visible = true;
                 MenuUtil.SetAsCaptionMenuItem(firstDiffCaptionMenuItem, DiffContextMenu);
             }
@@ -759,7 +760,7 @@ namespace GitUI.CommandsDialogs
         private void resetFileToToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             var items = DiffFiles.SelectedItems;
-            var selectedIds = items.Select(it => it.SecondRevision.ObjectId).Distinct().ToList();
+            var selectedIds = items.SecondIds().ToList();
             if (selectedIds.Count == 0)
             {
                 resetFileToSelectedToolStripMenuItem.Visible = false;
@@ -778,7 +779,7 @@ namespace GitUI.CommandsDialogs
                     _selectedRevision + DescribeRevision(selectedIds.FirstOrDefault(), 50);
             }
 
-            var parentIds = DiffFiles.SelectedItems.Select(i => i.FirstRevision.ObjectId).Distinct().ToList();
+            var parentIds = DiffFiles.SelectedItems.FirstIds().ToList();
             if (parentIds.Count != 1 || !CanResetToRevision(parentIds.FirstOrDefault()))
             {
                 resetFileToParentToolStripMenuItem.Visible = false;
