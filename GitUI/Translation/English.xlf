@@ -6066,8 +6066,16 @@ Value has been reset to empty value.</source>
         <source>Reset local &amp;branch:</source>
         <target />
       </trans-unit>
+      <trans-unit id="Cancel.Text">
+        <source>Cancel</source>
+        <target />
+      </trans-unit>
       <trans-unit id="ForceReset.Text">
         <source>&amp;Force reset for a non-fast-forward reset</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Ok.Text">
+        <source>OK</source>
         <target />
       </trans-unit>
       <trans-unit id="ResetTo.Text">
