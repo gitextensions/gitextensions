@@ -17,6 +17,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormRemotes : GitModuleForm
     {
+        private readonly FormRemotesController _formRemotesController = new FormRemotesController();
         private IConfigFileRemoteSettingsManager _remotesManager;
         private ConfigFileRemote _selectedRemote;
         private readonly ListViewGroup _lvgEnabled;
@@ -298,39 +299,6 @@ Inactive remote is completely invisible to git.");
             }
         }
 
-        private static void RemoteDelete(IList<Repository> remotes, string oldRemoteUrl)
-        {
-            if (string.IsNullOrWhiteSpace(oldRemoteUrl))
-            {
-                return;
-            }
-
-            var oldRemote = remotes.FirstOrDefault(r => r.Path == oldRemoteUrl);
-            if (oldRemote != null)
-            {
-                remotes.Remove(oldRemote);
-            }
-        }
-
-        private static void RemoteUpdate(IList<Repository> remotes, string oldRemoteUrl, string newRemoteUrl)
-        {
-            if (string.IsNullOrWhiteSpace(newRemoteUrl))
-            {
-                return;
-            }
-
-            // if remote url was renamed - delete the old value
-            if (!string.Equals(oldRemoteUrl, newRemoteUrl, StringComparison.OrdinalIgnoreCase))
-            {
-                RemoteDelete(remotes, oldRemoteUrl);
-            }
-
-            if (remotes.All(r => r.Path != newRemoteUrl))
-            {
-                remotes.Add(new Repository(newRemoteUrl));
-            }
-        }
-
         private void application_Idle(object sender, EventArgs e)
         {
             // we need this event only once, so unwire
@@ -442,10 +410,10 @@ Inactive remote is completely invisible to git.");
                         var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync();
 
                         await this.SwitchToMainThreadAsync();
-                        RemoteUpdate(repositoryHistory, _selectedRemote?.Url, remoteUrl);
+                        _formRemotesController.RemoteUpdate(repositoryHistory, _selectedRemote?.Url, remoteUrl);
                         if (checkBoxSepPushUrl.Checked)
                         {
-                            RemoteUpdate(repositoryHistory, _selectedRemote?.PushUrl, remotePushUrl);
+                            _formRemotesController.RemoteUpdate(repositoryHistory, _selectedRemote?.PushUrl, remotePushUrl);
                         }
 
                         await RepositoryHistoryManager.Remotes.SaveRecentHistoryAsync(repositoryHistory);
