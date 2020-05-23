@@ -185,11 +185,11 @@ namespace GitUI.CommandsDialogs
             // UnstagedFileContext
             //
             this.UnstagedFileContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openWithDifftoolToolStripMenuItem,
             this.resetChanges,
             this.resetPartOfFileToolStripMenuItem,
             this.interactiveAddToolStripMenuItem,
             this.toolStripSeparator12,
+            this.openWithDifftoolToolStripMenuItem,
             this.editFileToolStripMenuItem,
             this.openToolStripMenuItem,
             this.openWithToolStripMenuItem,
@@ -378,9 +378,9 @@ namespace GitUI.CommandsDialogs
             // StagedFileContext
             //
             this.StagedFileContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.stagedOpenDifftoolToolStripMenuItem9,
             this.stagedResetChanges,
             this.stagedToolStripSeparator14,
+            this.stagedOpenDifftoolToolStripMenuItem9,
             this.stagedEditFileToolStripMenuItem11,
             this.stagedOpenToolStripMenuItem7,
             this.stagedOpenWithToolStripMenuItem8,
