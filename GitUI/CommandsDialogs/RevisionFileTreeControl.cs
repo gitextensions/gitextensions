@@ -563,6 +563,7 @@ See the changes in the commit form.");
             else
             {
                 openSubmoduleMenuItem.Visible = false;
+                toolStripSeparatorEditFileActions.Visible = false;
             }
 
             saveAsToolStripMenuItem.Visible = isFile;
