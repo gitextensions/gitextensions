@@ -112,10 +112,46 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private sealed class LocalBranchNode : BaseBranchNode, IGitRefActions, ICanRename, ICanDelete
+        private class BaseBranchLeafNode : BaseBranchNode
+        {
+            private readonly string _imageKeyMerged;
+            private readonly string _imageKeyUnmerged;
+
+            private bool _isMerged = false;
+
+            public BaseBranchLeafNode(Tree tree, string fullPath, string imageKeyUnmerged, string imageKeyMerged)
+                : base(tree, fullPath)
+            {
+                _imageKeyUnmerged = imageKeyUnmerged;
+                _imageKeyMerged = imageKeyMerged;
+            }
+
+            public bool IsMerged
+            {
+                get => _isMerged;
+                set
+                {
+                    if (_isMerged == value)
+                    {
+                        return;
+                    }
+
+                    _isMerged = value;
+                    ApplyStyle();
+                }
+            }
+
+            protected override void ApplyStyle()
+            {
+                base.ApplyStyle();
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = IsMerged ? _imageKeyMerged : _imageKeyUnmerged;
+            }
+        }
+
+        private sealed class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICanRename, ICanDelete
         {
             public LocalBranchNode(Tree tree, string fullPath, bool isCurrent)
-                : base(tree, fullPath)
+                : base(tree, fullPath, nameof(Images.BranchLocal), nameof(Images.BranchLocalMerged))
             {
                 IsActive = isCurrent;
             }
@@ -125,7 +161,6 @@ namespace GitUI.BranchTreePanel
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.BranchDocument);
                 SetNodeFont(IsActive ? FontStyle.Bold : FontStyle.Regular);
             }
 

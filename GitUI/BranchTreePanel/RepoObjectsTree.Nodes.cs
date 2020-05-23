@@ -202,6 +202,9 @@ namespace GitUI.BranchTreePanel
             {
             }
 
+            public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : Node
+                => Nodes.DepthEnumerator<TNode>();
+
             // Invoke from child class to reload nodes for the current Tree. Clears Nodes, invokes
             // input async function that should populate Nodes, then fills the tree view with its contents,
             // making sure to disable/enable the control.
