@@ -3013,10 +3013,16 @@ namespace GitCommands
             ByCommitDateDescending
         }
 
+        public async Task<string[]> GetMergedBranchesAsync(bool includeRemote = false, bool fullRefname = false, string commit = null)
+            => (await _gitExecutable
+                .GetOutputAsync(GitCommandHelpers.MergedBranchesCmd(includeRemote, fullRefname, commit))
+                .ConfigureAwait(false))
+                .Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
         public IReadOnlyList<string> GetMergedBranches(bool includeRemote = false)
         {
             return _gitExecutable
-                .GetOutput(GitCommandHelpers.MergedBranches(includeRemote))
+                .GetOutput(GitCommandHelpers.MergedBranchesCmd(includeRemote))
                 .Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
@@ -3028,7 +3034,7 @@ namespace GitCommands
             var remotes = GetRemoteNames();
 
             return _gitExecutable
-                .GetOutputLines(GitCommandHelpers.MergedBranches(includeRemote: true))
+                .GetOutputLines(GitCommandHelpers.MergedBranchesCmd(includeRemote: true))
                 .Select(b => b.Trim())
                 .Where(b => b.StartsWith(remoteBranchPrefixForMergedBranches))
                 .Select(b => string.Concat(refsPrefix, b))

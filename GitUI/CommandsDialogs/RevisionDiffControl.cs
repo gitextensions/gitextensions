@@ -159,9 +159,8 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        public void DisplayDiffTab()
+        public void DisplayDiffTab(IReadOnlyList<GitRevision> revisions)
         {
-            var revisions = _revisionGrid.GetSelectedRevisions();
             SetDiffs(revisions);
             if (DiffFiles.SelectedItem == null)
             {
