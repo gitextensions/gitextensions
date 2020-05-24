@@ -1037,6 +1037,54 @@ namespace GitCommands
             return result;
         }
 
+        /// <summary>
+        /// Parse the output from --tool-help
+        /// </summary>
+        /// <param name="output">The output string</param>
+        /// <returns>list with tool names</returns>
+        public static List<string> ParseCustomDiffMergeTool(string output)
+        {
+            var tools = new List<string>();
+
+            // Simple parsing of the textual output opposite to porcelain format
+            // https://github.com/git/git/blob/main/git-mergetool--lib.sh#L298
+            // The sections to parse in the text has a 'header', then break parsing at first non match
+            bool isParsing = false;
+            foreach (var l in output.Split('\n'))
+            {
+                if (l.EndsWith("may be set to one of the following:") || l == "\tuser-defined:")
+                {
+                    isParsing = true;
+                    continue;
+                }
+
+                if (!isParsing || !l.StartsWith("\t\t"))
+                {
+                    isParsing = false;
+                    continue;
+                }
+
+                // two tabs, then toolname, cmd (if split in 3) in second
+                // cmd is unreliable for diff and not needed but could be used for mergetool special handling
+                string[] delimit = { " ", ".cmd" };
+                var tool = l.Substring(2).Split(delimit, 2, StringSplitOptions.None);
+                if (tool.Length == 0)
+                {
+                    continue;
+                }
+
+                // Ignore tools that must run in a terminal
+                string[] ignoredTools = { "vimdiff", "vimdiff2", "vimdiff3" };
+                var toolName = tool[0];
+                if (!string.IsNullOrWhiteSpace(toolName) && !tools.Contains(toolName) && !ignoredTools.Contains(toolName))
+                {
+                    tools.Add(toolName);
+                }
+            }
+
+            return tools.OrderBy(i => i).ToList();
+        }
+
         private static GitItemStatus GitItemStatusFromCopyRename(StagedStatus staged, bool fromDiff, string nextFile, string fileName, char x, string status)
         {
             var gitItemStatus = new GitItemStatus();

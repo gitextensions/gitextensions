@@ -172,6 +172,24 @@ namespace GitUI.CommandsDialogs
             DiffText.ReloadHotkeys();
         }
 
+        public void ReloadCustomDifftools()
+        {
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                var tools = await Module.GetCustomDiffMergeTools(isDiff: true);
+                openWithCustomDifftoolToolStripMenuItem.DropDown = null;
+                ContextMenuStrip customDiffToolDropDown = new ContextMenuStrip();
+                foreach (var tool in tools)
+                {
+                    var toolStripItem = new ToolStripMenuItem(tool) { Tag = tool };
+                    toolStripItem.Click += openWithDifftoolToolStripMenuItem_Click;
+                    customDiffToolDropDown.Items.Add(toolStripItem);
+                }
+
+                openWithCustomDifftoolToolStripMenuItem.DropDown = customDiffToolDropDown;
+            }).FileAndForget();
+        }
+
         private string GetShortcutKeyDisplayString(Command cmd)
         {
             return GetShortcutKeys((int)cmd).ToShortcutKeyDisplayString();
@@ -220,6 +238,7 @@ namespace GitUI.CommandsDialogs
             DiffText.SetFileLoader(GetNextPatchFile);
             DiffText.Font = AppSettings.FixedWidthFont;
             ReloadHotkeys();
+            ReloadCustomDifftools();
 
             base.OnRuntimeLoad();
         }
@@ -622,6 +641,7 @@ namespace GitUI.CommandsDialogs
         private void openWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
         {
             RevisionDiffKind diffKind;
+            string toolName = (sender as ToolStripMenuItem)?.Tag as string;
 
             if (sender == firstToLocalToolStripMenuItem)
             {
@@ -647,7 +667,7 @@ namespace GitUI.CommandsDialogs
 
                 // If item.FirstRevision is null, compare to root commit
                 GitRevision[] revs = new[] { item.SecondRevision, item.FirstRevision };
-                UICommands.OpenWithDifftool(this, revs, item.Item.Name, item.Item.OldName, diffKind, item.Item.IsTracked);
+                UICommands.OpenWithDifftool(this, revs, item.Item.Name, item.Item.OldName, diffKind, item.Item.IsTracked, customTool: toolName);
             }
         }
 
@@ -817,6 +837,8 @@ namespace GitUI.CommandsDialogs
             firstToSelectedToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstToSelected(selectionInfo);
             firstToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstToLocal(selectionInfo);
             selectedToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuSelectedToLocal(selectionInfo);
+
+            openWithCustomDifftoolToolStripMenuItem.Enabled = openWithCustomDifftoolToolStripMenuItem.DropDown.Items.Count > 0;
 
             var diffFiles = DiffFiles.SelectedItems.ToList();
             diffRememberStripSeparator.Visible = diffFiles.Count == 1 || diffFiles.Count == 2;
