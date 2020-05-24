@@ -1474,12 +1474,10 @@ namespace GitUI
             var revision = LatestSelectedRevision;
 
             UICommands.DoActionOnRepo(() =>
-                {
-                    using (var frm = new FormCreateTag(UICommands, revision?.ObjectId))
-                    {
-                        return frm.ShowDialog(this) == DialogResult.OK;
-                    }
-                });
+            {
+                using var form = new FormCreateTag(UICommands, revision?.ObjectId);
+                return form.ShowDialog(this) == DialogResult.OK;
+            });
         }
 
         private void ResetCurrentBranchToHereToolStripMenuItemClick(object sender, EventArgs e)
@@ -1489,8 +1487,25 @@ namespace GitUI
                 return;
             }
 
-            var frm = new FormResetCurrentBranch(UICommands, LatestSelectedRevision);
-            frm.ShowDialog(this);
+            UICommands.DoActionOnRepo(() =>
+            {
+                using var form = FormResetCurrentBranch.Create(UICommands, LatestSelectedRevision);
+                return form.ShowDialog(this) == DialogResult.OK;
+            });
+        }
+
+        private void ResetAnotherBranchToHereToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (LatestSelectedRevision == null)
+            {
+                return;
+            }
+
+            UICommands.DoActionOnRepo(() =>
+            {
+                using var form = FormResetAnotherBranch.Create(UICommands, LatestSelectedRevision);
+                return form.ShowDialog(this) == DialogResult.OK;
+            });
         }
 
         private void CreateNewBranchToolStripMenuItemClick(object sender, EventArgs e)
@@ -1498,11 +1513,10 @@ namespace GitUI
             var revision = LatestSelectedRevision;
 
             UICommands.DoActionOnRepo(() =>
-                {
-                    var frm = new FormCreateBranch(UICommands, revision?.ObjectId);
-
-                    return frm.ShowDialog(this) == DialogResult.OK;
-                });
+            {
+                using var form = new FormCreateBranch(UICommands, revision?.ObjectId);
+                return form.ShowDialog(this) == DialogResult.OK;
+            });
         }
 
         internal void ShowCurrentBranchOnly()
@@ -1739,6 +1753,7 @@ namespace GitUI
             SetEnabled(copyToClipboardToolStripMenuItem, !revision.IsArtificial);
             SetEnabled(createNewBranchToolStripMenuItem, !bareRepositoryOrArtificial);
             SetEnabled(resetCurrentBranchToHereToolStripMenuItem, !bareRepositoryOrArtificial);
+            SetEnabled(resetAnotherBranchToHereToolStripMenuItem, !bareRepositoryOrArtificial);
             SetEnabled(archiveRevisionToolStripMenuItem, !revision.IsArtificial);
             SetEnabled(createTagToolStripMenuItem, !revision.IsArtificial);
 
