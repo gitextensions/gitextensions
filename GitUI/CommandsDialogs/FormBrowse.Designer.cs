@@ -55,7 +55,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripButtonPush = new GitUI.CommandsDialogs.ToolStripPushButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripFileExplorer = new System.Windows.Forms.ToolStripButton();
-            this.GitBash = new System.Windows.Forms.ToolStripButton();
+            this.userShell = new System.Windows.Forms.ToolStripSplitButton();
             this.EditSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
@@ -261,7 +261,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSplitStash,
             this.toolStripSeparator2,
             this.toolStripFileExplorer,
-            this.GitBash,
+            this.userShell,
             this.EditSettings,
             this.toolStripSeparator5,
             this.toolStripLabel1,
@@ -569,14 +569,14 @@ namespace GitUI.CommandsDialogs
             this.toolStripFileExplorer.ToolTipText = "File Explorer";
             this.toolStripFileExplorer.Click += new System.EventHandler(this.FileExplorerToolStripMenuItemClick);
             // 
-            // GitBash
+            // userShell
             // 
-            this.GitBash.Image = global::GitUI.Properties.Images.GitForWindows;
-            this.GitBash.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.GitBash.Name = "GitBash";
-            this.GitBash.Size = new System.Drawing.Size(23, 22);
-            this.GitBash.ToolTipText = "Git bash";
-            this.GitBash.Click += new System.EventHandler(this.GitBashClick);
+            this.userShell.Image = global::GitUI.Properties.Images.GitForWindows;
+            this.userShell.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.userShell.Name = "userShell";
+            this.userShell.Size = new System.Drawing.Size(23, 22);
+            this.userShell.ToolTipText = "Git bash";
+            this.userShell.Click += new System.EventHandler(this.userShell_Click);
             // 
             // EditSettings
             // 
@@ -1193,7 +1193,7 @@ namespace GitUI.CommandsDialogs
             this.gitBashToolStripMenuItem.Name = "gitBashToolStripMenuItem";
             this.gitBashToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.gitBashToolStripMenuItem.Text = "Git bash";
-            this.gitBashToolStripMenuItem.Click += new System.EventHandler(this.GitBashToolStripMenuItemClick1);
+            this.gitBashToolStripMenuItem.Click += new System.EventHandler(this.userShell_Click);
             // 
             // gitGUIToolStripMenuItem
             // 
@@ -1823,7 +1823,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripSplitButton _NO_TRANSLATE_WorkingDir;
         private ToolStripSeparator toolStripSeparator0;
         private ToolStripSeparator toolStripSeparator1;
-        private ToolStripButton GitBash;
+        private ToolStripSplitButton userShell;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripButton EditSettings;
         private ToolStripButton RefreshButton;

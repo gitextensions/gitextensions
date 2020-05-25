@@ -2049,10 +2049,6 @@ compare with first:</source>
         <source>Settings</source>
         <target />
       </trans-unit>
-      <trans-unit id="GitBash.ToolTipText">
-        <source>Git bash</source>
-        <target />
-      </trans-unit>
       <trans-unit id="GpgInfoTabPage.Text">
         <source>GPG</source>
         <target />
@@ -2587,6 +2583,10 @@ Do you want to continue?</source>
         <source>User Manual</source>
         <target />
       </trans-unit>
+      <trans-unit id="userShell.ToolTipText">
+        <source>Git bash</source>
+        <target />
+      </trans-unit>
       <trans-unit id="viewToolStripMenuItem.Text">
         <source>View</source>
         <target />
@@ -2601,22 +2601,6 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="ConEmuGB.Text">
         <source>Console emulator</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboTerminal.Item0">
-        <source>bash</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboTerminal.Item1">
-        <source>cmd</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboTerminal.Item2">
-        <source>powershell</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboTerminal.Item3">
-        <source>pwsh</source>
         <target />
       </trans-unit>
       <trans-unit id="chkChowConsoleTab.Text">
@@ -7674,8 +7658,20 @@ help</source>
   </file>
   <file datatype="plaintext" original="MessageBoxes" source-language="en">
     <body>
+      <trans-unit id="_archiveRevisionCaption.Text">
+        <source>Archive revision</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_confirmDeleteRemoteBranch.Text">
         <source>Do you want to delete the branch {0} from {1}?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_failedToExecuteScript.Text">
+        <source>Failed to execute script</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_failedToRunShell.Text">
+        <source>Failed to run shell</source>
         <target />
       </trans-unit>
       <trans-unit id="_middleOfPatchApply.Text">
@@ -7702,8 +7698,16 @@ help</source>
         <source>Cannot load SSH key. PuTTY is not configured properly.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_reason.Text">
+        <source>Reason</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_rememberChoice.Text">
         <source>Remember choice</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_selectOnlyOneOrTwoRevisions.Text">
+        <source>Select only one or two revisions. Abort.</source>
         <target />
       </trans-unit>
       <trans-unit id="_serverHostkeyNotCachedText.Text">

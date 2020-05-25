@@ -29,6 +29,7 @@ using GitUI.Hotkey;
 using GitUI.Infrastructure.Telemetry;
 using GitUI.Properties;
 using GitUI.Script;
+using GitUI.Shells;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
@@ -92,6 +93,7 @@ namespace GitUI.CommandsDialogs
         private readonly ISubmoduleStatusProvider _submoduleStatusProvider;
         private readonly FormBrowseDiagnosticsReporter _formBrowseDiagnosticsReporter;
         [CanBeNull] private BuildReportTabPageExtension _buildReportTabPageExtension;
+        private readonly ShellProvider _shellProvider = new ShellProvider();
         private ConEmuControl _terminal;
         private Dashboard _dashboard;
 
@@ -288,6 +290,8 @@ namespace GitUI.CommandsDialogs
 
             // Populate terminal tab after translation within InitializeComplete
             FillTerminalTab();
+
+            FillUserShells(defaultShell: BashShell.ShellName);
 
             RevisionGrid.ToggledBetweenArtificialAndHeadCommits += (s, e) => FocusRevisionDiffFileStatusList();
 
@@ -492,6 +496,53 @@ namespace GitUI.CommandsDialogs
                 var clickedMenuItem = (ToolStripMenuItem)sender;
                 AppSettings.DefaultPullAction = (AppSettings.PullAction)clickedMenuItem.Tag;
                 RefreshDefaultPullAction();
+            }
+        }
+
+        private void FillUserShells(string defaultShell)
+        {
+            userShell.DropDownItems.Clear();
+
+            bool userShellAccessible = false;
+            ToolStripMenuItem selectedDefaultShell = null;
+            foreach (IShellDescriptor shell in _shellProvider.GetShells())
+            {
+                if (!shell.HasExecutable)
+                {
+                    continue;
+                }
+
+                var toolStripMenuItem = new ToolStripMenuItem(shell.Name);
+                userShell.DropDownItems.Add(toolStripMenuItem);
+                toolStripMenuItem.Tag = shell;
+                toolStripMenuItem.Image = shell.Icon;
+                toolStripMenuItem.ToolTipText = shell.Name;
+                toolStripMenuItem.Click += userShell_Click;
+
+                if (selectedDefaultShell == null || string.Equals(shell.Name, defaultShell, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    userShellAccessible = true;
+                    selectedDefaultShell = toolStripMenuItem;
+                }
+            }
+
+            if (selectedDefaultShell != null)
+            {
+                userShell.Image = selectedDefaultShell.Image;
+                userShell.ToolTipText = selectedDefaultShell.ToolTipText;
+                userShell.Tag = selectedDefaultShell.Tag;
+            }
+
+            userShell.Visible = userShell.DropDownItems.Count > 0;
+
+            // a user may have a specific shell configured in settings, but the shell is no longer available
+            // set the first available shell as default
+            if (userShell.Visible && !userShellAccessible)
+            {
+                var shell = (IShellDescriptor)userShell.DropDownItems[0].Tag;
+                userShell.Image = shell.Icon;
+                userShell.ToolTipText = shell.Name;
+                userShell.Tag = shell;
             }
         }
 
@@ -1315,9 +1366,28 @@ namespace GitUI.CommandsDialogs
             UICommands.StartApplyPatchDialog(this);
         }
 
-        private void GitBashToolStripMenuItemClick1(object sender, EventArgs e)
+        private void userShell_Click(object sender, EventArgs e)
         {
-            Module.RunBash();
+            if (userShell.DropDownButtonPressed)
+            {
+                return;
+            }
+
+            IShellDescriptor shell = (sender as ToolStripItem)?.Tag as IShellDescriptor;
+            if (shell is null)
+            {
+                return;
+            }
+
+            try
+            {
+                var executable = new Executable(shell.ExecutablePath, Module.WorkingDir);
+                executable.Start(createWindow: true);
+            }
+            catch (Exception exception)
+            {
+                MessageBoxes.FailedToRunShell(this, shell.Name, exception);
+            }
         }
 
         private void GitGuiToolStripMenuItemClick(object sender, EventArgs e)
@@ -1454,7 +1524,7 @@ namespace GitUI.CommandsDialogs
             var revisions = RevisionGrid.GetSelectedRevisions();
             if (revisions.Count < 1 || revisions.Count > 2)
             {
-                MessageBox.Show(this, @"Select only one or two revisions. Abort.", @"Archive revision", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.SelectOnlyOneOrTwoRevisions(this);
                 return;
             }
 
@@ -1847,18 +1917,13 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.ShowError(this, ex.Message);
             }
         }
 
         private void CreateBranchToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartCreateBranchDialog(this, RevisionGrid.LatestSelectedRevision?.ObjectId);
-        }
-
-        private void GitBashClick(object sender, EventArgs e)
-        {
-            GitBashToolStripMenuItemClick1(sender, e);
         }
 
         private void editGitAttributesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2809,7 +2874,8 @@ namespace GitUI.CommandsDialogs
                     WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator
                 };
 
-                startInfo.ConsoleProcessCommandLine = ShellHelper.GetCommandLineForCurrentShell();
+                string shellType = AppSettings.ConEmuTerminal.ValueOrDefault;
+                startInfo.ConsoleProcessCommandLine = _shellProvider.GetShellCommandLine(shellType);
 
                 // Set path to git in this window (actually, effective with CMD only)
                 if (!string.IsNullOrEmpty(AppSettings.GitCommandValue))
@@ -2838,7 +2904,9 @@ namespace GitUI.CommandsDialogs
 
         public void ChangeTerminalActiveFolder(string path)
         {
-            _terminal?.ChangeFolder(path);
+            string shellType = AppSettings.ConEmuTerminal.ValueOrDefault;
+            IShellDescriptor shell = _shellProvider.GetShell(shellType);
+            _terminal?.ChangeFolder(shell, path);
         }
 
         private void menuitemSparseWorkingCopy_Click(object sender, EventArgs e)

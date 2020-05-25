@@ -185,22 +185,6 @@ namespace GitCommands
             return path.ToLower().StartsWith(@"\\wsl$\");
         }
 
-        [ContractAnnotation("=>false,posixPath:null")]
-        [ContractAnnotation("=>true,posixPath:notnull")]
-        public static bool TryConvertWindowsPathToPosix([NotNull] string path, out string posixPath)
-        {
-            var directoryInfo = new DirectoryInfo(path);
-
-            if (!directoryInfo.Exists)
-            {
-                posixPath = null;
-                return false;
-            }
-
-            posixPath = "/" + directoryInfo.FullName.ToPosixPath().Remove(1, 1);
-            return true;
-        }
-
         [NotNull]
         public static string GetRepositoryName([CanBeNull] string repositoryUrl)
         {
