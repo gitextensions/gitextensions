@@ -990,7 +990,7 @@ namespace GitUI
                     AppSettings.RevisionGraphShowWorkingDirChanges &&
                     !Module.IsBareRepository())
                 {
-                    CheckUncommittedChanged(revision.ObjectId);
+                    AddArtificialRevisions(revision.ObjectId);
                 }
 
                 var flags = RevisionNodeFlags.None;
@@ -1014,7 +1014,7 @@ namespace GitUI
 
                 return;
 
-                void CheckUncommittedChanged(ObjectId filteredCurrentCheckout)
+                void AddArtificialRevisions(ObjectId filteredCurrentCheckout)
                 {
                     _indexChangeCount = new ChangeCount();
                     _workTreeChangeCount = new ChangeCount();
