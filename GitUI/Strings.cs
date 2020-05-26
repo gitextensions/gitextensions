@@ -13,6 +13,7 @@ namespace GitUI
         private readonly TranslationString _okText = new TranslationString("OK");
         private readonly TranslationString _cancelText = new TranslationString("Cancel");
 
+        private readonly TranslationString _containedInCurrentCommitText = new TranslationString("'{0}' is contained in the currently selected commit");
         private readonly TranslationString _containedInBranchesText = new TranslationString("Contained in branches:");
         private readonly TranslationString _containedInNoBranchText = new TranslationString("Contained in no branch");
         private readonly TranslationString _containedInTagsText = new TranslationString("Contained in tags:");
@@ -88,6 +89,7 @@ namespace GitUI
         public static string OK => _instance.Value._okText.Text;
         public static string Cancel => _instance.Value._cancelText.Text;
 
+        public static string ContainedInCurrentCommit => _instance.Value._containedInCurrentCommitText.Text;
         public static string ContainedInBranches => _instance.Value._containedInBranchesText.Text;
         public static string ContainedInNoBranch => _instance.Value._containedInNoBranchText.Text;
         public static string ContainedInTags => _instance.Value._containedInTagsText.Text;

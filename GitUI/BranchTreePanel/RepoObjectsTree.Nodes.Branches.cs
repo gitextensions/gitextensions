@@ -138,6 +138,7 @@ namespace GitUI.BranchTreePanel
 
                     _isMerged = value;
                     ApplyStyle();
+                    TreeViewNode.ToolTipText = IsMerged ? string.Format(Strings.ContainedInCurrentCommit, Name) : string.Empty;
                 }
             }
 
