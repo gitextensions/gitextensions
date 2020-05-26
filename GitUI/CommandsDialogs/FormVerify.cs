@@ -29,6 +29,18 @@ namespace GitUI.CommandsDialogs
 
         private LostObject _previewedItem;
 
+        private static readonly Dictionary<string, string> LanguagesStartOfFile = new Dictionary<string, string>
+        {
+            { "{", "recovery.json" },
+            { "#include", "recovery.cpp" },
+            { "import", "recovery.java" },
+            { "from", "recovery.py" },
+            { "package", "recovery.go" },
+            { "#!", "recovery.sh" },
+            { "[", "recovery.ini" },
+            { "using", "recovery.cs" },
+        };
+
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormVerify()
         {
@@ -238,9 +250,33 @@ namespace GitUI.CommandsDialogs
             {
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
-                    await fileViewer.ViewTextAsync("recovery", content ?? string.Empty, null);
+                    var filename = GuessFileTypeWithContent(content);
+                    await fileViewer.ViewTextAsync(filename, content ?? string.Empty, null);
                 }).FileAndForget();
             }
+        }
+
+        private static string GuessFileTypeWithContent(string content)
+        {
+            if (content.StartsWith("<"))
+            {
+                return content.Contains("<html", StringComparison.InvariantCultureIgnoreCase) ? "recovery.html" : "recovery.xml";
+            }
+
+            foreach (var pair in LanguagesStartOfFile)
+            {
+                if (content.StartsWith(pair.Key))
+                {
+                    return pair.Value;
+                }
+            }
+
+            if (content.Contains("function"))
+            {
+                return "recovery.ts";
+            }
+
+            return "recovery.txt";
         }
 
         #endregion
