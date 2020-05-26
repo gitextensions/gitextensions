@@ -9150,6 +9150,10 @@ Select this commit to populate the full message.</source>
         <source>Contained in branches:</source>
         <target />
       </trans-unit>
+      <trans-unit id="_containedInCurrentCommitText.Text">
+        <source>'{0}' is contained in the currently selected commit</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_containedInNoBranchText.Text">
         <source>Contained in no branch</source>
         <target />

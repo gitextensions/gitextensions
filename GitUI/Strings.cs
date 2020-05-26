@@ -11,6 +11,7 @@ namespace GitUI
         private readonly TranslationString _yes = new TranslationString("Yes");
         private readonly TranslationString _no = new TranslationString("No");
 
+        private readonly TranslationString _containedInCurrentCommitText = new TranslationString("'{0}' is contained in the currently selected commit");
         private readonly TranslationString _containedInBranchesText = new TranslationString("Contained in branches:");
         private readonly TranslationString _containedInNoBranchText = new TranslationString("Contained in no branch");
         private readonly TranslationString _containedInTagsText = new TranslationString("Contained in tags:");
@@ -71,6 +72,7 @@ namespace GitUI
         public static string Yes => _instance.Value._yes.Text;
         public static string No => _instance.Value._no.Text;
 
+        public static string ContainedInCurrentCommit => _instance.Value._containedInCurrentCommitText.Text;
         public static string ContainedInBranches => _instance.Value._containedInBranchesText.Text;
         public static string ContainedInNoBranch => _instance.Value._containedInNoBranchText.Text;
         public static string ContainedInTags => _instance.Value._containedInTagsText.Text;
