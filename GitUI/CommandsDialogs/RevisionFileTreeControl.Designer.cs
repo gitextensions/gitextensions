@@ -41,10 +41,10 @@
             this.fileTreeOpenContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileTreeArchiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileTreeCleanWorkingTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparatorGitHistoryActions = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparatorFileNameActions = new System.Windows.Forms.ToolStripSeparator();
             this.fileHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blameToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparatorEditFileActions = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparatorTopActions = new System.Windows.Forms.ToolStripSeparator();
             this.editCheckedOutFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,7 +52,7 @@
             this.toolStripSeparatorGitActions = new System.Windows.Forms.ToolStripSeparator();
             this.stopTrackingThisFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.assumeUnchangedTheFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparatorFileTreeActions = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparatorGitTrackingActions = new System.Windows.Forms.ToolStripSeparator();
             this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.expandSubtreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.expandAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -109,7 +109,7 @@
             this.openSubmoduleMenuItem,
             this.openWithDifftoolToolStripMenuItem,
             this.resetToThisRevisionToolStripMenuItem,
-            this.toolStripSeparatorEditFileActions,
+            this.toolStripSeparatorTopActions,
             this.saveAsToolStripMenuItem,
             this.editCheckedOutFileToolStripMenuItem,
             this.openWithToolStripMenuItem,
@@ -118,7 +118,7 @@
             this.toolStripSeparatorFileSystemActions,
             this.copyFilenameToClipboardToolStripMenuItem,
             this.fileTreeOpenContainingFolderToolStripMenuItem,
-            this.toolStripSeparatorGitHistoryActions,
+            this.toolStripSeparatorFileNameActions,
             this.fileHistoryToolStripMenuItem,
             this.blameToolStripMenuItem1,
             this.fileTreeArchiveToolStripMenuItem,
@@ -126,7 +126,7 @@
             this.toolStripSeparatorGitActions,
             this.stopTrackingThisFileToolStripMenuItem,
             this.assumeUnchangedTheFileToolStripMenuItem,
-            this.toolStripSeparatorFileTreeActions,
+            this.toolStripSeparatorGitTrackingActions,
             this.findToolStripMenuItem,
             this.expandSubtreeToolStripMenuItem,
             this.expandAllToolStripMenuItem,
@@ -205,10 +205,10 @@
             this.fileTreeCleanWorkingTreeToolStripMenuItem.Text = "Clean this folder in the working directory...";
             this.fileTreeCleanWorkingTreeToolStripMenuItem.Click += new System.EventHandler(this.fileTreeCleanWorkingTreeToolStripMenuItem_Click);
             // 
-            // toolStripSeparatorGitHistoryActions
+            // toolStripSeparatorFileNameActions
             // 
-            this.toolStripSeparatorGitHistoryActions.Name = "toolStripSeparatorGitHistoryActions";
-            this.toolStripSeparatorGitHistoryActions.Size = new System.Drawing.Size(322, 6);
+            this.toolStripSeparatorFileNameActions.Name = "toolStripSeparatorFileNameActions";
+            this.toolStripSeparatorFileNameActions.Size = new System.Drawing.Size(322, 6);
             // 
             // fileHistoryToolStripMenuItem
             // 
@@ -226,10 +226,10 @@
             this.blameToolStripMenuItem1.Text = "Blame";
             this.blameToolStripMenuItem1.Click += new System.EventHandler(this.blameMenuItem_Click);
             // 
-            // toolStripSeparatorEditFileActions
+            // toolStripSeparatorTopActions
             // 
-            this.toolStripSeparatorEditFileActions.Name = "toolStripSeparatorEditFileActions";
-            this.toolStripSeparatorEditFileActions.Size = new System.Drawing.Size(322, 6);
+            this.toolStripSeparatorTopActions.Name = "toolStripSeparatorTopActions";
+            this.toolStripSeparatorTopActions.Size = new System.Drawing.Size(322, 6);
             // 
             // editCheckedOutFileToolStripMenuItem
             // 
@@ -285,10 +285,10 @@
             this.assumeUnchangedTheFileToolStripMenuItem.Text = "Assume unchanged this file";
             this.assumeUnchangedTheFileToolStripMenuItem.Click += new System.EventHandler(this.assumeUnchangedToolStripMenuItem_Click);
             // 
-            // toolStripSeparatorFileTreeActions
+            // toolStripSeparatorGitTrackingActions
             // 
-            this.toolStripSeparatorFileTreeActions.Name = "toolStripSeparatorFileTreeActions";
-            this.toolStripSeparatorFileTreeActions.Size = new System.Drawing.Size(322, 6);
+            this.toolStripSeparatorGitTrackingActions.Name = "toolStripSeparatorGitTrackingActions";
+            this.toolStripSeparatorGitTrackingActions.Size = new System.Drawing.Size(322, 6);
             // 
             // findToolStripMenuItem
             // 
@@ -363,16 +363,16 @@
         private System.Windows.Forms.ToolStripMenuItem fileTreeOpenContainingFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fileTreeArchiveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fileTreeCleanWorkingTreeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorGitHistoryActions;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorFileNameActions;
         private System.Windows.Forms.ToolStripMenuItem fileHistoryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem blameToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem findToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorEditFileActions;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorTopActions;
         private System.Windows.Forms.ToolStripMenuItem editCheckedOutFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openWithToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openFileWithToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorFileTreeActions;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorGitTrackingActions;
         private System.Windows.Forms.ToolStripMenuItem expandAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem collapseAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem assumeUnchangedTheFileToolStripMenuItem;
