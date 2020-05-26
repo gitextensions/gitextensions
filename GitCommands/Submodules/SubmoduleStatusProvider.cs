@@ -101,6 +101,7 @@ namespace GitCommands.Submodules
                 _submoduleInfos[info.Path] = info;
             }
 
+            // Note in 3.4: Overwrites info for OurSubmodules
             foreach (var info in result.SuperSubmodules)
             {
                 _submoduleInfos[info.Path] = info;
@@ -111,20 +112,27 @@ namespace GitCommands.Submodules
                 _submoduleInfos.Add(result.TopProject.Path, result.TopProject);
             }
 
-            // Start update status for the submodules
             if (updateStatus)
             {
                 if (result.SuperProject != null)
                 {
-                    // Update status from top module (will stop at current)
-                    // This is only done once
+                    // For the topmodule, use git-status information to update the status
+                    // If a submodule is current, update once from top module to give an overview
+                    // The structure _below_ the current module could have been updated from git-status but the current module
+                    // must be updated from its super project to set the ahead/behind information
                     await GetSubmoduleDetailedStatusAsync(currentModule.GetTopModule(), cancelToken);
-                }
 
-                if (_gitStatusWhileUpdatingStructure != null)
+                    // Ignore if possible or at least delay the pending git-status trigger
+                    _gitStatusWhileUpdatingStructure = null;
+                    _previousSubmoduleUpdateTime = DateTime.Now;
+                }
+                else if (_gitStatusWhileUpdatingStructure != null)
                 {
-                    // Current module must be updated separately (not in _submoduleInfos)
                     await UpdateSubmodulesStatusAsync(currentModule, _gitStatusWhileUpdatingStructure, cancelToken);
+
+                    // Ignore if possible or at least delay the pending git-status trigger
+                    _gitStatusWhileUpdatingStructure = null;
+                    _previousSubmoduleUpdateTime = DateTime.Now;
                 }
 
                 OnStatusUpdated(result, cancelToken);
@@ -319,20 +327,29 @@ namespace GitCommands.Submodules
                 return;
             }
 
-            // Set status for the 'gitStatus' submodule
+            // For the current module git-status has information to set and clear the IsDirty flag
+            // but cannot evaluate or change the ahead/behind information
+            // The top module can only be dirty, but a submodule will only update the tree below current module
             if (gitStatus != null && gitStatus.Count > 0)
             {
                 // If changes this and all super projects are at least dirty
-                // (changed commit can be missed, but top module can only be dirty)
                 SetModuleAsDirtyUpwards(module);
             }
-            else
+            else if (_submoduleInfos[module.WorkingDir].Detailed != null)
             {
-                // No Git changes for this module, clear status (but unknown for super projects)
-                _submoduleInfos[module.WorkingDir].Detailed = null;
+                // No Git changes for this module, clear dirty status (but unknown for super projects)
+                if (_submoduleInfos[module.WorkingDir].Detailed.Status == SubmoduleStatus.Unknown)
+                {
+                    _submoduleInfos[module.WorkingDir].Detailed = null;
+                }
+                else
+                {
+                    _submoduleInfos[module.WorkingDir].Detailed.IsDirty = false;
+                }
             }
 
-            // Recursive update in submodules
+            // Recursive update submodules,
+            // git-status can set IsDirty if Unknown remains (but not ahead/behind status)
             var changedSubmodules = gitStatus?.Where(i => i.IsSubmodule) ?? new List<GitItemStatus>();
             var unchangedSubmoduleNames = module
                 .GetSubmodulesLocalPaths(false)
@@ -383,6 +400,10 @@ namespace GitCommands.Submodules
                     IsDirty = true,
                     AddedAndRemovedText = ""
                 };
+            }
+            else
+            {
+                _submoduleInfos[path].Detailed.IsDirty = true;
             }
         }
 
@@ -467,18 +488,23 @@ namespace GitCommands.Submodules
             {
                 // If any module is changed, top module is dirty
                 // This sets the status but will not clear until a full refresh
+                // v3.4 This will be set for every dirty submodule
                 SetModuleAsDirtyUpwards(superModule.GetTopModule());
-            }
-
-            if (submoduleStatus == null || !submoduleStatus.IsDirty)
-            {
-                // no changes to submodules
-                return;
             }
 
             // Recursively update submodules
             var module = new GitModule(path);
-            await GetSubmoduleDetailedStatusAsync(module, cancelToken);
+            if (submoduleStatus != null && submoduleStatus.IsDirty)
+            {
+                await GetSubmoduleDetailedStatusAsync(module, cancelToken);
+                return;
+            }
+
+            // no changes to submodules
+            foreach (var name in module.GetSubmodulesLocalPaths(false))
+            {
+                SetSubmoduleEmptyDetailedStatus(module, name);
+            }
         }
 
         /// <summary>
