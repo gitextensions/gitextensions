@@ -532,7 +532,10 @@ namespace GitUI.CommandsDialogs
                     new WindowsThumbnailToolbarButton(toolStripButtonCommit.Text, toolStripButtonCommit.Image, CommitToolStripMenuItemClick),
                     new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
                     new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick)));
+            SetSplitterPositions();
             HideVariableMainMenuItems();
+            RefreshSplitViewLayout();
+            LayoutRevisionInfo();
             InternalInitialize(false);
 
             if (!Module.IsValidGitWorkingDir())
@@ -569,8 +572,6 @@ namespace GitUI.CommandsDialogs
 
             base.OnLoad(e);
 
-            RefreshSplitViewLayout();
-            LayoutRevisionInfo();
             SetSplitterPositions();
         }
 
