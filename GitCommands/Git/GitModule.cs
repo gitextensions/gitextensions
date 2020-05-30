@@ -2429,13 +2429,17 @@ namespace GitCommands
             });
         }
 
-        public string GetDiffFilesText(string firstRevision, string secondRevision, bool noCache = false)
+        public string GetDiffFiles(string firstRevision, string secondRevision, bool noCache = false, bool nullSeparated = false)
         {
+            noCache = noCache || firstRevision.IsArtificial() || secondRevision.IsArtificial();
+
             return _gitExecutable.GetOutput(
                 new GitArgumentBuilder("diff")
                 {
                     "--no-color",
-                    "-M -C --name-status",
+                    "-M -C",
+                    "--name-status",
+                    { nullSeparated, "-z" },
                     _revisionDiffProvider.Get(firstRevision, secondRevision)
                 },
                 cache: noCache ? null : GitCommandCache);
@@ -2444,24 +2448,14 @@ namespace GitCommands
         public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId firstId, ObjectId secondId, ObjectId parentToSecond)
         {
             var stagedStatus = GitCommandHelpers.GetStagedStatus(firstId, secondId, parentToSecond);
-            var status = GetDiffFiles(firstId?.ToString(), secondId?.ToString(), stagedStatus);
+            var status = GetDiffFilesWithUntracked(firstId?.ToString(), secondId?.ToString(), stagedStatus);
             GetSubmoduleStatus(status, firstId, secondId);
             return status;
         }
 
-        public IReadOnlyList<GitItemStatus> GetDiffFiles(string firstRevision, string secondRevision, StagedStatus stagedStatus, bool noCache = false)
+        public IReadOnlyList<GitItemStatus> GetDiffFilesWithUntracked(string firstRevision, string secondRevision, StagedStatus stagedStatus, bool noCache = false)
         {
-            noCache = noCache || firstRevision.IsArtificial() || secondRevision.IsArtificial();
-
-            var output = _gitExecutable.GetOutput(
-                new GitArgumentBuilder("diff")
-                {
-                    "--no-color",
-                    "-M -C -z --name-status",
-                    _revisionDiffProvider.Get(firstRevision, secondRevision)
-                },
-                cache: noCache ? null : GitCommandCache);
-
+            var output = GetDiffFiles(firstRevision, secondRevision, noCache: noCache, nullSeparated: true);
             var result = GitCommandHelpers.GetDiffChangedFilesFromString(this, output, stagedStatus).ToList();
 
             if (IsGitErrorMessage(output))
@@ -2497,7 +2491,7 @@ namespace GitCommands
 
         public IReadOnlyList<GitItemStatus> GetStashDiffFiles(string stashName)
         {
-            var resultCollection = GetDiffFiles(stashName + "^", stashName, StagedStatus.None, true).ToList();
+            var resultCollection = GetDiffFilesWithUntracked(stashName + "^", stashName, StagedStatus.None, true).ToList();
 
             // shows untracked files
             var args = new GitArgumentBuilder("log")
@@ -3633,10 +3627,9 @@ namespace GitCommands
                 });
         }
 
-        public string OpenWithDifftoolDirDiff(string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.WorkTreeGuid, string extraDiffArguments = null)
+        public string OpenWithDifftoolDirDiff(string firstRevision, string secondRevision)
         {
-            extraDiffArguments = ((extraDiffArguments ?? "") + " --dir-diff").Trim();
-            return OpenWithDifftool(null, null, firstRevision: firstRevision, secondRevision: secondRevision, extraDiffArguments: extraDiffArguments);
+            return OpenWithDifftool(null, firstRevision: firstRevision, secondRevision: secondRevision, extraDiffArguments: "--dir-diff");
         }
 
         public string OpenWithDifftool(string filename, string oldFileName = "", string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.WorkTreeGuid, string extraDiffArguments = null, bool isTracked = true)
@@ -3645,6 +3638,7 @@ namespace GitCommands
             {
                 "--gui",
                 "--no-prompt",
+                "-M -C",
                 extraDiffArguments,
                 _revisionDiffProvider.Get(firstRevision, secondRevision, filename, oldFileName, isTracked)
             });

@@ -2580,7 +2580,7 @@ namespace GitUI.CommandsDialogs
         {
             foreach (var item in items)
             {
-                string output = Module.OpenWithDifftool(item.Name, null, firstRevision, secondRevision, "", item.IsTracked);
+                string output = Module.OpenWithDifftool(item.Name, firstRevision: firstRevision, secondRevision: secondRevision, isTracked: item.IsTracked);
                 if (!string.IsNullOrEmpty(output))
                 {
                     MessageBox.Show(this, output, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
