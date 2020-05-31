@@ -1665,7 +1665,8 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                Process.Start("http://git-extensions-documentation.readthedocs.org/en/master/");
+                // Point to the default documentation, will work also if the old doc version is removed
+                Process.Start("https://git-extensions-documentation.readthedocs.org");
             }
             catch (Win32Exception)
             {
