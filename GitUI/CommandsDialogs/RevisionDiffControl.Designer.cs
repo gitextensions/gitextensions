@@ -35,6 +35,11 @@ namespace GitUI.CommandsDialogs
             this.DiffFiles = new GitUI.FileStatusList();
             this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.diffRememberStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.diffTwoSelectedDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.diffWithRememberedDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rememberSecondRevDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rememberFirstRevDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.secondDiffCaptionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firstDiffCaptionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firstToSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -154,12 +159,49 @@ namespace GitUI.CommandsDialogs
                 this.firstToLocalToolStripMenuItem,
                 this.selectedParentToLocalToolStripMenuItem,
                 this.firstParentToLocalToolStripMenuItem,
+                this.diffRememberStripSeparator,
+                this.diffTwoSelectedDifftoolToolStripMenuItem,
+                this.diffWithRememberedDifftoolToolStripMenuItem,
+                this.rememberSecondRevDiffToolStripMenuItem,
+                this.rememberFirstRevDiffToolStripMenuItem
             });
             this.openWithDifftoolToolStripMenuItem.Image = global::GitUI.Properties.Images.Diff;
             this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
             this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
             this.openWithDifftoolToolStripMenuItem.Text = "Open with difftool";
             this.openWithDifftoolToolStripMenuItem.DropDownOpening += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_DropDownOpening);
+            // 
+            // diffRememberStripSeparator
+            // 
+            this.diffRememberStripSeparator.Name = "diffRememberStripSeparator";
+            this.diffRememberStripSeparator.Size = new System.Drawing.Size(293, 6);
+            // 
+            // diffTwoSelectedDifftoolToolStripMenuItem
+            // 
+            this.diffTwoSelectedDifftoolToolStripMenuItem.Name = "diffTwoSelectedDifftoolToolStripMenuItem";
+            this.diffTwoSelectedDifftoolToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
+            this.diffTwoSelectedDifftoolToolStripMenuItem.Text = "Diff the selected files";
+            this.diffTwoSelectedDifftoolToolStripMenuItem.Click += new System.EventHandler(this.diffTwoSelectedDiffToolToolStripMenuItem_Click);
+            // 
+            // diffWithRememberedDifftoolToolStripMenuItem
+            // 
+            this.diffWithRememberedDifftoolToolStripMenuItem.Name = "diffWithRememberedDifftoolToolStripMenuItem";
+            this.diffWithRememberedDifftoolToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
+            this.diffWithRememberedDifftoolToolStripMenuItem.Click += new System.EventHandler(this.diffWithRememberedDiffToolToolStripMenuItem_Click);
+            // 
+            // rememberSecondRevDiffToolStripMenuItem
+            // 
+            this.rememberSecondRevDiffToolStripMenuItem.Name = "rememberSecondRevDiffToolStripMenuItem";
+            this.rememberSecondRevDiffToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
+            this.rememberSecondRevDiffToolStripMenuItem.Text = "Remember Second for diff";
+            this.rememberSecondRevDiffToolStripMenuItem.Click += new System.EventHandler(this.rememberSecondDiffToolToolStripMenuItem_Click);
+            // 
+            // rememberFirstRevDiffToolStripMenuItem
+            // 
+            this.rememberFirstRevDiffToolStripMenuItem.Name = "rememberFirstRevDiffToolStripMenuItem";
+            this.rememberFirstRevDiffToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
+            this.rememberFirstRevDiffToolStripMenuItem.Text = "Remember First for diff";
+            this.rememberFirstRevDiffToolStripMenuItem.Click += new System.EventHandler(this.rememberFirstDiffToolToolStripMenuItem_Click);
             // 
             // firstDiffCaptionMenuItem
             // 
@@ -474,8 +516,13 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator diffToolStripSeparator13;
         private ToolStripMenuItem resetFileToToolStripMenuItem;
         private ToolStripMenuItem saveAsToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
+        private ToolStripMenuItem saveToolStripMenuItem;
+        private ToolStripMenuItem openWithDifftoolToolStripMenuItem;
+        private ToolStripSeparator diffRememberStripSeparator;
+        private ToolStripMenuItem diffTwoSelectedDifftoolToolStripMenuItem;
+        private ToolStripMenuItem diffWithRememberedDifftoolToolStripMenuItem;
+        private ToolStripMenuItem rememberSecondRevDiffToolStripMenuItem;
+        private ToolStripMenuItem rememberFirstRevDiffToolStripMenuItem;
         private SplitContainer DiffSplitContainer;
         private ContextMenuStrip DiffContextMenu;
         private FileStatusList DiffFiles;

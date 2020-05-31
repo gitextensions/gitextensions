@@ -8071,6 +8071,10 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Delete</source>
         <target />
       </trans-unit>
+      <trans-unit id="_diffSelectedWithRememberedFile.Text">
+        <source>Diff with "{0}"</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_firstRevision.Text">
         <source>First: a/</source>
         <target />
@@ -8139,6 +8143,10 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Stash submodule changes</source>
         <target />
       </trans-unit>
+      <trans-unit id="diffTwoSelectedDifftoolToolStripMenuItem.Text">
+        <source>Diff the selected files</source>
+        <target />
+      </trans-unit>
       <trans-unit id="diffUpdateSubmoduleMenuItem.Text">
         <source>Update submodule</source>
         <target />
@@ -8169,6 +8177,14 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
         <source>Open with difftool</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="rememberFirstRevDiffToolStripMenuItem.Text">
+        <source>Remember First for diff</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="rememberSecondRevDiffToolStripMenuItem.Text">
+        <source>Remember Second for diff</source>
         <target />
       </trans-unit>
       <trans-unit id="resetFileToToolStripMenuItem.Text">
