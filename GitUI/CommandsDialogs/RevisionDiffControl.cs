@@ -716,7 +716,7 @@ namespace GitUI.CommandsDialogs
         private void openWithDifftoolToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             ContextMenuDiffToolInfo selectionInfo = GetContextMenuDiffToolInfo();
-            var revisions = DiffFiles.SelectedItems.Select(item => item.SecondRevision).Distinct().ToList();
+            var revisions = DiffFiles.SelectedItems.SecondRevs().ToList();
 
             if (revisions.Any())
             {
