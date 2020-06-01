@@ -221,7 +221,7 @@ namespace GitUI.CommandsDialogs
             this.resetFileToToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.resetFileToSelectedToolStripMenuItem,
             this.resetFileToParentToolStripMenuItem});
-            this.resetFileToToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetFileTo;
+            this.resetFileToToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetWorkingDirChanges;
             this.resetFileToToolStripMenuItem.Name = "resetFileToToolStripMenuItem";
             this.resetFileToToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
             this.resetFileToToolStripMenuItem.Text = "Reset file(s) to";
