@@ -186,23 +186,13 @@ namespace GitUI.UserControls.RevisionGrid
 
         // Contains the object Id's that will be selected as soon as all of them have been loaded.
         // The object Id's are in the order in which they were originally selected.
-        public IReadOnlyList<ObjectId> ToBeSelectedObjectIds { get; set; } = new List<ObjectId>();
+        public IReadOnlyList<ObjectId> ToBeSelectedObjectIds { get; set; } = Array.Empty<ObjectId>();
 
-        // The ToBeSelectedObjectIds's should be converted to indexes.
-        // Since revisions are read in order, this list stores those indexes along with information on the order in which they were selected.
-        private List<RowIndexToBeSelectedWithOrderInfo> ToBeSelectedRowIndexes { get; set; } = new List<RowIndexToBeSelectedWithOrderInfo>();
-
-        private class RowIndexToBeSelectedWithOrderInfo
-        {
-            public int RowIndex { get; set; }
-
-            // Order in which the row should be selected.
-            public int SelectionOrder { get; set; }
-        }
+        private int _loadedToBeSelectedRevisionsCount = 0;
 
         public bool HasSelection()
         {
-            return ToBeSelectedObjectIds.Any() || ToBeSelectedRowIndexes.Any() || SelectedRows.Count > 0;
+            return ToBeSelectedObjectIds.Any() || SelectedRows.Count > 0;
         }
 
         [CanBeNull]
@@ -308,13 +298,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (ToBeSelectedObjectIds.Contains(revision.ObjectId))
             {
-                var rowIndexToBeSelectedWithOrderInfo = new RowIndexToBeSelectedWithOrderInfo
-                {
-                    RowIndex = _revisionGraph.Count - 1,
-                    SelectionOrder = ToBeSelectedObjectIds.IndexOf(o => o == revision.ObjectId)
-                };
-
-                ToBeSelectedRowIndexes.Add(rowIndexToBeSelectedWithOrderInfo);
+                ++_loadedToBeSelectedRevisionsCount;
             }
 
             UpdateVisibleRowRange();
@@ -332,7 +316,7 @@ namespace GitUI.UserControls.RevisionGrid
             // Set rowcount to 0 first, to ensure it is not possible to select or redraw, since we are about te delete the data
             SetRowCount(0);
             _revisionGraph.Clear();
-            ToBeSelectedRowIndexes = new List<RowIndexToBeSelectedWithOrderInfo>();
+            _loadedToBeSelectedRevisionsCount = 0;
 
             // The graphdata is stored in one of the columnproviders, clear this last
             foreach (var columnProvider in _columnProviders)
@@ -405,35 +389,36 @@ namespace GitUI.UserControls.RevisionGrid
         private void SelectRowsIfReady(int rowCount)
         {
             // Wait till we have all the row indexes to be selected.
-            if (!ToBeSelectedRowIndexes.Any() || ToBeSelectedRowIndexes.Count < ToBeSelectedObjectIds.Count)
+            if (_loadedToBeSelectedRevisionsCount == 0 || _loadedToBeSelectedRevisionsCount < ToBeSelectedObjectIds.Count)
             {
                 return;
             }
 
-            if (rowCount > ToBeSelectedRowIndexes.Max(ri => ri.RowIndex))
+            foreach (var objectId in ToBeSelectedObjectIds)
             {
                 try
                 {
-                    var rowIndicesToBeSelectedInOriginalOrder = ToBeSelectedRowIndexes.OrderBy(ri => ri.SelectionOrder).Select(ri => ri.RowIndex);
-
-                    foreach (var rowIndexToBeSelected in rowIndicesToBeSelectedInOriginalOrder)
+                    if (!_revisionGraph.TryGetRowIndex(objectId, out int rowIndexToBeSelected) || rowIndexToBeSelected >= rowCount)
                     {
-                        Rows[rowIndexToBeSelected].Selected = true;
-
-                        if (CurrentCell == null)
-                        {
-                            CurrentCell = Rows[rowIndexToBeSelected].Cells[1];
-                        }
+                        return;
                     }
 
-                    // The rows to be selected have just been selected. Prevent from selecting them again.
-                    ToBeSelectedRowIndexes.Clear();
+                    Rows[rowIndexToBeSelected].Selected = true;
+
+                    if (CurrentCell == null)
+                    {
+                        CurrentCell = Rows[rowIndexToBeSelected].Cells[1];
+                    }
                 }
                 catch (ArgumentOutOfRangeException)
                 {
                     // Not worth crashing for. Ignore exception.
                 }
             }
+
+            // The rows to be selected have just been selected. Prevent from selecting them again.
+            _loadedToBeSelectedRevisionsCount = 0;
+            ToBeSelectedObjectIds = Array.Empty<ObjectId>();
         }
 
         private void SetRowCountAndSelectRowsIfReady(int rowCount)
