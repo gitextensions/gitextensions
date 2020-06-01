@@ -268,6 +268,9 @@ namespace GitUI.CommandsDialogs
             commitAuthorStatus.ToolTipText = _commitCommitterToolTip.Text;
             skipWorktreeToolStripMenuItem.ToolTipText = _skipWorktreeToolTip.Text;
             assumeUnchangedToolStripMenuItem.ToolTipText = _assumeUnchangedToolTip.Text;
+            stageToolStripMenuItem.Text = toolStageItem.Text;
+            stagedUnstageToolStripMenuItem.Text = toolUnstageItem.Text;
+
             toolAuthor.Control.PreviewKeyDown += (_, e) =>
             {
                 if (e.Alt)

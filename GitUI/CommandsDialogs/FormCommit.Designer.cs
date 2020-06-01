@@ -1,3 +1,4 @@
+using System.Drawing;
 using System.Windows.Forms;
 using GitUI.Editor;
 using GitUI.SpellChecker;
@@ -27,6 +28,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.filenameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,6 +54,7 @@ namespace GitUI.CommandsDialogs
             this.stagedToolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.stagedOpenToolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
             this.stagedOpenWithToolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
+            this.stagedUnstageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stagedOpenDifftoolToolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
             this.stagedToolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.stagedCopyPathToolStripMenuItem14 = new System.Windows.Forms.ToolStripMenuItem();
@@ -185,6 +188,7 @@ namespace GitUI.CommandsDialogs
             // UnstagedFileContext
             //
             this.UnstagedFileContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.stageToolStripMenuItem,
             this.openWithDifftoolToolStripMenuItem,
             this.resetChanges,
             this.resetPartOfFileToolStripMenuItem,
@@ -244,6 +248,14 @@ namespace GitUI.CommandsDialogs
             this.openWithToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
             this.openWithToolStripMenuItem.Text = "Open with...";
             this.openWithToolStripMenuItem.Click += new System.EventHandler(this.OpenWithToolStripMenuItemClick);
+            //
+            // stageToolStripMenuItem
+            //
+            this.stageToolStripMenuItem.Image = global::GitUI.Properties.Images.Stage;
+            this.stageToolStripMenuItem.Name = "stageToolStripMenuItem";
+            this.stageToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.stageToolStripMenuItem.Font = new Font(this.stageToolStripMenuItem.Font, FontStyle.Bold);
+            this.stageToolStripMenuItem.Click += new System.EventHandler(this.StageClick);
             //
             // openWithDifftoolToolStripMenuItem
             //
@@ -378,6 +390,7 @@ namespace GitUI.CommandsDialogs
             // StagedFileContext
             //
             this.StagedFileContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.stagedUnstageToolStripMenuItem,
             this.stagedOpenDifftoolToolStripMenuItem9,
             this.stagedResetChanges,
             this.stagedToolStripSeparator14,
@@ -432,6 +445,14 @@ namespace GitUI.CommandsDialogs
             this.stagedOpenWithToolStripMenuItem8.Size = new System.Drawing.Size(232, 22);
             this.stagedOpenWithToolStripMenuItem8.Text = "Open with...";
             this.stagedOpenWithToolStripMenuItem8.Click += new System.EventHandler(this.OpenWithToolStripMenuItemClick);
+            //
+            // stagedUnstageToolStripMenuItem
+            //
+            this.stagedUnstageToolStripMenuItem.Image = global::GitUI.Properties.Images.Unstage;
+            this.stagedUnstageToolStripMenuItem.Name = "stagedUnstageToolStripMenuItem";
+            this.stagedUnstageToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.stagedUnstageToolStripMenuItem.Font = new Font(this.stagedUnstageToolStripMenuItem.Font, FontStyle.Bold);
+            this.stagedUnstageToolStripMenuItem.Click += new System.EventHandler(this.UnstageFilesClick);
             //
             // stagedOpenDifftoolToolStripMenuItem9
             //
@@ -1539,6 +1560,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripMenuItem openWithToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem filenameToClipboardToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem stageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
         private System.Windows.Forms.ToolTip fileTooltip;
         private System.Windows.Forms.ToolStripMenuItem resetPartOfFileToolStripMenuItem;
@@ -1614,6 +1636,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator stagedToolStripSeparator14;
         private ToolStripMenuItem stagedOpenToolStripMenuItem7;
         private ToolStripMenuItem stagedOpenWithToolStripMenuItem8;
+        private ToolStripMenuItem stagedUnstageToolStripMenuItem;
         private ToolStripMenuItem stagedOpenDifftoolToolStripMenuItem9;
         private ToolStripMenuItem stagedOpenFolderToolStripMenuItem10;
         private ToolStripMenuItem stagedEditFileToolStripMenuItem11;
