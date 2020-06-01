@@ -746,10 +746,18 @@ namespace GitUI.CommitInfo
 
         protected override void DisposeCustomResources()
         {
-            _asyncLoadCancellation.Dispose();
-            _revisionInfoResizedSubscription.Dispose();
-            _commitMessageResizedSubscription.Dispose();
-            base.DisposeCustomResources();
+            try
+            {
+                _asyncLoadCancellation.Dispose();
+                _revisionInfoResizedSubscription?.Dispose();
+                _commitMessageResizedSubscription?.Dispose();
+
+                base.DisposeCustomResources();
+            }
+            catch (InvalidOperationException)
+            {
+                // System.Reactive causes the app to fail with: 'Invoke or BeginInvoke cannot be called on a control until the window handle has been created.'
+            }
         }
 
         internal sealed class BranchComparer : IComparer<string>

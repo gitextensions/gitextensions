@@ -151,8 +151,16 @@ namespace GitUI.CommitInfo
 
         protected override void DisposeCustomResources()
         {
-            _rtbResizedSubscription.Dispose();
-            base.DisposeCustomResources();
+            try
+            {
+                _rtbResizedSubscription?.Dispose();
+
+                base.DisposeCustomResources();
+            }
+            catch (InvalidOperationException)
+            {
+                // System.Reactive causes the app to fail with: 'Invoke or BeginInvoke cannot be called on a control until the window handle has been created.'
+            }
         }
     }
 }
