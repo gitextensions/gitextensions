@@ -9,7 +9,7 @@
     <MicrosoftVisualStudioCompositionVersion>15.6.36</MicrosoftVisualStudioCompositionVersion>
     <MicrosoftVisualStudioThreadingVersion>16.5.132</MicrosoftVisualStudioThreadingVersion>
     <NewtonsoftJsonVersion>10.0.3</NewtonsoftJsonVersion>
-    <RestSharpVersion>106.6.10</RestSharpVersion>
+    <RestSharpVersion>106.11.4</RestSharpVersion>
     <SmartFormatNETVersion>2.0.0</SmartFormatNETVersion>
     <StyleCopAnalyzersVersion>1.2.0-beta.113</StyleCopAnalyzersVersion>
     <SystemCollectionsImmutableVersion>1.5.0</SystemCollectionsImmutableVersion>

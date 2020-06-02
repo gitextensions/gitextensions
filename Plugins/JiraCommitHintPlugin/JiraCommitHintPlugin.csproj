@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <PackageReference Include="Atlassian.SDK" Version="10.0.2" />
+    <PackageReference Include="Atlassian.SDK" Version="12.1.1" />
     <PackageReference Include="NString" Version="1.2.0" />
   </ItemGroup>
 
