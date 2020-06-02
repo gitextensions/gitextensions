@@ -554,26 +554,38 @@ See the changes in the commit form.");
             // Many items does not make sense if a local file does not exist, why this is used for Enabled
             var isExistingFileOrDirectory = itemSelected && FormBrowseUtil.IsFileOrDirectory(_fullPathResolver.Resolve(gitItem.FileName));
 
-            openSubmoduleMenuItem.Visible = itemSelected && gitItem.ObjectType == GitObjectType.Commit && isExistingFileOrDirectory;
-            if (openSubmoduleMenuItem.Visible && !openSubmoduleMenuItem.Font.Bold)
+            var openSubVisible = itemSelected && gitItem.ObjectType == GitObjectType.Commit && isExistingFileOrDirectory;
+            openSubmoduleMenuItem.Visible = openSubVisible;
+            if (openSubVisible)
             {
-                openSubmoduleMenuItem.Font = new Font(openSubmoduleMenuItem.Font, FontStyle.Bold);
+                if (!openSubmoduleMenuItem.Font.Bold)
+                {
+                    openSubmoduleMenuItem.Font = new Font(openSubmoduleMenuItem.Font, FontStyle.Bold);
+                }
+
+                if (fileHistoryToolStripMenuItem.Font.Bold)
+                {
+                    fileHistoryToolStripMenuItem.Font = new Font(fileHistoryToolStripMenuItem.Font, FontStyle.Regular);
+                }
+            }
+            else if (!fileHistoryToolStripMenuItem.Font.Bold)
+            {
+                fileHistoryToolStripMenuItem.Font = new Font(fileHistoryToolStripMenuItem.Font, FontStyle.Bold);
             }
 
             // Diff with workTree (some tools like kdiff3 and meld allows diff to NUL)
-            openWithDifftoolToolStripMenuItem.Visible = isFile;
             resetToThisRevisionToolStripMenuItem.Visible = itemSelected && !Module.IsBareRepository();
             toolStripSeparatorTopActions.Visible = itemSelected && ((gitItem.ObjectType == GitObjectType.Commit && isExistingFileOrDirectory)
-                                                                    || !Module.IsBareRepository()
-                                                                    || isFile);
+                                                                    || !Module.IsBareRepository());
 
-            saveAsToolStripMenuItem.Visible = isFile;
-            editCheckedOutFileToolStripMenuItem.Visible = isFile;
-            editCheckedOutFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
+            openWithDifftoolToolStripMenuItem.Visible = isFile;
             openWithToolStripMenuItem.Visible = isFile;
             openWithToolStripMenuItem.Enabled = isExistingFileOrDirectory;
             openFileToolStripMenuItem.Visible = isFile;
             openFileWithToolStripMenuItem.Visible = isFile;
+            saveAsToolStripMenuItem.Visible = isFile;
+            editCheckedOutFileToolStripMenuItem.Visible = isFile;
+            editCheckedOutFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
             toolStripSeparatorFileSystemActions.Visible = isFile;
 
             copyFilenameToClipboardToolStripMenuItem.Visible = itemSelected;
