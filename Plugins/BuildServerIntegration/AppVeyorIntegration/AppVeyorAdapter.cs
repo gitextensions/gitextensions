@@ -136,7 +136,7 @@ namespace AppVeyorIntegration
 
                                 if (useAllProjects || projectNames.Contains(projectObj.Name))
                                 {
-                                    Projects.Add(projectObj.Name, projectObj);
+                                    Projects[projectObj.Name] = projectObj;
                                 }
                             }
                         });
