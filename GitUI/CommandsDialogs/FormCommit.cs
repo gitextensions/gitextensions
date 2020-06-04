@@ -244,9 +244,14 @@ namespace GitUI.CommandsDialogs
             HotkeysEnabled = true;
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
 
+            stageToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StageSelectedFile);
             openToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenFile);
             openWithToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenFileWith);
             editFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.EditFile);
+
+            stageSubmoduleToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StageSelectedFile);
+
+            stagedUnstageToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.UnStageSelectedFile);
             stagedOpenToolStripMenuItem7.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenFile);
             stagedOpenWithToolStripMenuItem8.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenFileWith);
             stagedEditFileToolStripMenuItem11.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.EditFile);
@@ -269,6 +274,7 @@ namespace GitUI.CommandsDialogs
             skipWorktreeToolStripMenuItem.ToolTipText = _skipWorktreeToolTip.Text;
             assumeUnchangedToolStripMenuItem.ToolTipText = _assumeUnchangedToolTip.Text;
             stageToolStripMenuItem.Text = toolStageItem.Text;
+            stageSubmoduleToolStripMenuItem.Text = toolStageItem.Text;
             stagedUnstageToolStripMenuItem.Text = toolUnstageItem.Text;
 
             toolAuthor.Control.PreviewKeyDown += (_, e) =>
@@ -1648,11 +1654,12 @@ namespace GitUI.CommandsDialogs
             var isSkipWorktreeAll = Unstaged.SelectedItems.All(s => s.Item.IsSkipWorktree);
 
             openWithDifftoolToolStripMenuItem.Enabled = isTrackedSelected;
-            assumeUnchangedToolStripMenuItem.Visible = isTrackedSelected && !isSkipWorktreeExist && !isAssumeUnchangedAll;
-            doNotAssumeUnchangedToolStripMenuItem.Visible = showAssumeUnchangedFilesToolStripMenuItem.Checked && !isSkipWorktreeExist && isAssumeUnchangedExist;
+            viewFileHistoryToolStripItem.Enabled = isTrackedSelected;
+
             skipWorktreeToolStripMenuItem.Visible = isTrackedSelected && !isAssumeUnchangedExist && !isSkipWorktreeAll;
             doNotSkipWorktreeToolStripMenuItem.Visible = showSkipWorktreeFilesToolStripMenuItem.Checked && !isAssumeUnchangedExist && isSkipWorktreeExist;
-            viewFileHistoryToolStripItem.Enabled = isTrackedSelected;
+            assumeUnchangedToolStripMenuItem.Visible = isTrackedSelected && !isSkipWorktreeExist && !isAssumeUnchangedAll;
+            doNotAssumeUnchangedToolStripMenuItem.Visible = showAssumeUnchangedFilesToolStripMenuItem.Checked && !isSkipWorktreeExist && isAssumeUnchangedExist;
 
             bool isExactlyOneItemSelected = Unstaged.SelectedItems.Count() == 1;
             bool singleFileExists = isExactlyOneItemSelected && File.Exists(_fullPathResolver.Resolve(Unstaged?.SelectedGitItem?.Name));
@@ -3081,7 +3088,7 @@ namespace GitUI.CommandsDialogs
 
                 AddSeparator();
 
-                // Add a settings item
+                // Add a settings  item
                 AddSettingsItem();
 
                 return;

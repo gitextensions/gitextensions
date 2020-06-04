@@ -228,7 +228,18 @@ namespace GitUI
             get { return FileStatusListView.ContextMenuStrip; }
             set
             {
+                if (FileStatusListView.ContextMenuStrip == value)
+                {
+                    return;
+                }
+
+                if (FileStatusListView.ContextMenuStrip != null)
+                {
+                    FileStatusListView.ContextMenuStrip.Opening -= FileStatusListView_ContextMenu_Opening;
+                }
+
                 FileStatusListView.ContextMenuStrip = value;
+
                 if (FileStatusListView.ContextMenuStrip != null)
                 {
                     FileStatusListView.ContextMenuStrip.Opening += FileStatusListView_ContextMenu_Opening;
@@ -1322,18 +1333,27 @@ namespace GitUI
                 cm.Items.Add(_sortByContextMenu);
             }
 
+            // Show 'Show file differences for all parents' menu item if it is possible that there are multiple first revisions
+            var mayBeMultipleRevs = _revisions != null &&
+                                    (_revisions.Count > 1 || (_revisions.Count == 1 && _revisions[0].ParentIds?.Count > 1));
+
             const string showAllDifferencesItemName = "ShowDiffForAllParentsText";
             var diffItem = cm.Items.Find(showAllDifferencesItemName, true);
             const string separatorKey = showAllDifferencesItemName + "Separator";
             if (!diffItem.Any())
             {
-                cm.Items.Add(new ToolStripSeparator { Name = separatorKey });
+                cm.Items.Add(new ToolStripSeparator
+                {
+                    Name = separatorKey,
+                    Visible = mayBeMultipleRevs
+                });
                 var showAllDiferencesItem = new ToolStripMenuItem(Strings.ShowDiffForAllParentsText)
                 {
                     Checked = AppSettings.ShowDiffForAllParents,
                     ToolTipText = Strings.ShowDiffForAllParentsTooltip,
                     Name = showAllDifferencesItemName,
-                    CheckOnClick = true
+                    CheckOnClick = true,
+                    Visible = mayBeMultipleRevs
                 };
                 showAllDiferencesItem.CheckedChanged += (s, e) =>
                 {
@@ -1343,20 +1363,15 @@ namespace GitUI
 
                 cm.Items.Add(showAllDiferencesItem);
             }
-
-            // Show menu item if it is possible that there are multiple first revisions
-            var mayBeMultipleRevs = _revisions != null &&
-                                    (_revisions.Count > 1
-                                     || (_revisions.Count == 1 && _revisions[0].ParentIds != null && _revisions[0].ParentIds.Count > 1));
-            if (diffItem.Length > 0)
+            else
             {
                 diffItem[0].Visible = mayBeMultipleRevs;
-            }
 
-            var sepItem = cm.Items.Find(separatorKey, true);
-            if (sepItem.Length > 0)
-            {
-                sepItem[0].Visible = mayBeMultipleRevs;
+                var sepItem = cm.Items.Find(separatorKey, true);
+                if (sepItem.Length > 0)
+                {
+                    sepItem[0].Visible = mayBeMultipleRevs;
+                }
             }
         }
 

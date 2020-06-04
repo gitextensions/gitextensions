@@ -65,9 +65,11 @@ namespace GitUI.CommandsDialogs
             this.resetSubmoduleChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.stashSubmoduleChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateSubmoduleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stageSubmoduleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.viewHistoryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
+            this.unstagedSubmoduleStageToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.openFolderMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openDiffMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
@@ -189,14 +191,14 @@ namespace GitUI.CommandsDialogs
             //
             this.UnstagedFileContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.stageToolStripMenuItem,
-            this.openWithDifftoolToolStripMenuItem,
             this.resetChanges,
             this.resetPartOfFileToolStripMenuItem,
             this.interactiveAddToolStripMenuItem,
             this.toolStripSeparator12,
-            this.editFileToolStripMenuItem,
+            this.openWithDifftoolToolStripMenuItem,
             this.openToolStripMenuItem,
             this.openWithToolStripMenuItem,
+            this.editFileToolStripMenuItem,
             this.deleteFileToolStripMenuItem,
             this.toolStripSeparator9,
             this.filenameToClipboardToolStripMenuItem,
@@ -391,12 +393,12 @@ namespace GitUI.CommandsDialogs
             //
             this.StagedFileContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.stagedUnstageToolStripMenuItem,
-            this.stagedOpenDifftoolToolStripMenuItem9,
             this.stagedResetChanges,
             this.stagedToolStripSeparator14,
-            this.stagedEditFileToolStripMenuItem11,
+            this.stagedOpenDifftoolToolStripMenuItem9,
             this.stagedOpenToolStripMenuItem7,
             this.stagedOpenWithToolStripMenuItem8,
+            this.stagedEditFileToolStripMenuItem11,
             this.stagedToolStripSeparator18,
             this.stagedCopyPathToolStripMenuItem14,
             this.stagedOpenFolderToolStripMenuItem10,
@@ -500,6 +502,8 @@ namespace GitUI.CommandsDialogs
             this.stashSubmoduleChangesToolStripMenuItem,
             this.commitSubmoduleChanges,
             this.toolStripSeparator15,
+            this.stageSubmoduleToolStripMenuItem,
+            this.unstagedSubmoduleStageToolStripSeparator,
             this.openDiffMenuItem,
             this.toolStripSeparator16,
             this.copyFolderNameMenuItem,
@@ -542,6 +546,14 @@ namespace GitUI.CommandsDialogs
             this.updateSubmoduleMenuItem.Text = "Update submodule";
             this.updateSubmoduleMenuItem.Click += new System.EventHandler(this.updateSubmoduleMenuItem_Click);
             //
+            // stageSubmoduleToolStripMenuItem
+            //
+            this.stageSubmoduleToolStripMenuItem.Image = global::GitUI.Properties.Images.Stage;
+            this.stageSubmoduleToolStripMenuItem.Name = "stageSubmoduleToolStripMenuItem";
+            this.stageSubmoduleToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.stageSubmoduleToolStripMenuItem.Font = new Font(this.stageToolStripMenuItem.Font, FontStyle.Bold);
+            this.stageSubmoduleToolStripMenuItem.Click += new System.EventHandler(this.StageClick);
+            //
             // toolStripSeparator13
             //
             this.toolStripSeparator13.Name = "toolStripSeparator13";
@@ -560,6 +572,11 @@ namespace GitUI.CommandsDialogs
             //
             this.toolStripSeparator15.Name = "toolStripSeparator15";
             this.toolStripSeparator15.Size = new System.Drawing.Size(225, 6);
+            //
+            // unstagedSubmoduleStageToolStripSeparator
+            //
+            this.unstagedSubmoduleStageToolStripSeparator.Name = "unstagedSubmoduleStageToolStripSeparator";
+            this.unstagedSubmoduleStageToolStripSeparator.Size = new System.Drawing.Size(225, 6);
             //
             // openFolderMenuItem
             //
@@ -1616,6 +1633,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem updateSubmoduleMenuItem;
         private ToolStripSeparator toolStripSeparator13;
         private ToolStripMenuItem viewHistoryMenuItem;
+        private ToolStripSeparator unstagedSubmoduleStageToolStripSeparator;
         private ToolStripSeparator toolStripSeparator15;
         private ToolStripMenuItem openFolderMenuItem;
         private ToolStripMenuItem openDiffMenuItem;
@@ -1625,6 +1643,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem commitSubmoduleChanges;
         private ToolStripMenuItem stashSubmoduleChangesToolStripMenuItem;
         private ToolStripSeparator toolStripMenuItem1;
+        private ToolStripMenuItem stageSubmoduleToolStripMenuItem;
         private ToolStripMenuItem generateListOfChangesInSubmodulesChangesToolStripMenuItem;
         private ToolStripDropDownButton commitTemplatesToolStripMenuItem;
         private ToolStripMenuItem openContainingFolderToolStripMenuItem;

@@ -107,14 +107,14 @@
             // 
             this.FileTreeContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openSubmoduleMenuItem,
-            this.openWithDifftoolToolStripMenuItem,
             this.resetToThisRevisionToolStripMenuItem,
             this.toolStripSeparatorTopActions,
-            this.saveAsToolStripMenuItem,
-            this.editCheckedOutFileToolStripMenuItem,
+            this.openWithDifftoolToolStripMenuItem,
             this.openWithToolStripMenuItem,
             this.openFileToolStripMenuItem,
             this.openFileWithToolStripMenuItem,
+            this.saveAsToolStripMenuItem,
+            this.editCheckedOutFileToolStripMenuItem,
             this.toolStripSeparatorFileSystemActions,
             this.copyFilenameToClipboardToolStripMenuItem,
             this.fileTreeOpenContainingFolderToolStripMenuItem,
