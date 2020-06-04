@@ -152,6 +152,9 @@ namespace GitUI.Script
                 }
                 else
                 {
+                    // It is totally valid to have a command without an argument, e.g.:
+                    //    Command  : myscript.cmd
+                    //    Arguments: <blank>
                     new Executable(command, module.WorkingDir).Start(argument ?? string.Empty);
                 }
             }
