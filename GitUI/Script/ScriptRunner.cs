@@ -152,7 +152,7 @@ namespace GitUI.Script
                 }
                 else
                 {
-                    new Executable(command, module.WorkingDir).Start(argument);
+                    new Executable(command, module.WorkingDir).Start(argument ?? string.Empty);
                 }
             }
 

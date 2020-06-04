@@ -997,9 +997,18 @@ namespace GitUI.CommandsDialogs
 
                     button.Click += delegate
                     {
-                        if (ScriptRunner.RunScript(this, Module, script.Name, UICommands, RevisionGrid).NeedsGridRefresh)
+                        try
                         {
-                            RevisionGrid.RefreshRevisions();
+                            if (ScriptRunner.RunScript(this, Module, script.Name, UICommands, RevisionGrid).NeedsGridRefresh)
+                            {
+                                RevisionGrid.RefreshRevisions();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(this,
+                                $"Failed to execute '{script.Name}' script.{Environment.NewLine}Reason: {ex.Message}",
+                                Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     };
 
