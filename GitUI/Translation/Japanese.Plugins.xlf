@@ -269,7 +269,7 @@
       </trans-unit>
       <trans-unit id="tabView.Text">
         <source>View Pull Requests</source>
-        <target>Pull Requestの表示</target>
+        <target>プルリクエストを表示</target>
         
       </trans-unit>
     </body>
@@ -775,12 +775,12 @@ Check if file is accessible.</source>
       </trans-unit>
       <trans-unit id="_gitreviewOnlyInWorkingDirSupported.Text">
         <source>.gitreview is only supported when there is a working directory.</source>
-        <target>.gitreview ファイルはワーキング ディレクトリが あるときのみサポートされます。</target>
+        <target>.gitreview ファイルは作業ディレクトリがあるときのみサポートされます。</target>
         
       </trans-unit>
       <trans-unit id="_gitreviewOnlyInWorkingDirSupportedCaption.Text">
         <source>No working directory</source>
-        <target>ワーキングディレクトリではありません</target>
+        <target>作業ディレクトリがありません</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
@@ -1095,7 +1095,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_settingsErrorFileNotFound.Text">
         <source>Cannot find the &quot;.gitreview&quot; file in the working directory.</source>
-        <target>ワーキング ディレクトリで .gitreview ファイルを 見つけられません。</target>
+        <target>作業ディレクトリで .gitreview ファイルを見つけられません。</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorHostNotEntered.Text">

@@ -26,7 +26,7 @@
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
-        <target>Пожалуйста введите правильный путь к MSBuild в настройках плагина и попробуйте снова.</target>
+        <target>Пожалуйста, введите правильный путь к MSBuild в настройках плагина и попробуйте снова.</target>
         
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
@@ -416,7 +416,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
-        <target>Включить не слитые ветки</target>
+        <target>Включить неслитые ветки</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">

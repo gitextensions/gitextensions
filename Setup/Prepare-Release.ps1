@@ -40,39 +40,20 @@ function Generate-Changelog {
         }
     }
 
-    $pullrequests = @();
     $issues = @();
     $issueLinks = @();
 
     $totalIssues | Sort-Object number -Descending | ForEach-Object {
         $issue = $_;
-
-        if ($issue.pull_request -ne $null) {
-            $issue | Add-Member customTitle "PR";
-        }
-        else {
-            $issue | Add-Member customTitle "Issue";
-        }
-
-        if ($issue.labels.name -like '*bug*') {
-            $issues += $issue;
-        }
-        else {
-            $pullrequests += $issue;
-        }
+        $issues += $issue;
         $issueLinks += "[$($issue.number)]:$($issue.html_url)"
     }
 
     "### Version $milestoneTitle ($milestoneDue)" | Out-File $changelogFile -Encoding utf8
-    "`r`n#### Features:" | Out-File $changelogFile -Append -Encoding utf8
-    $pullrequests | ForEach-Object {
-        $issue = $_;
-        "* $($issue.title) - $($issue.customTitle) [$($issue.number)]" | Out-File $changelogFile -Append -Encoding utf8
-    }
-    "`r`n#### Fixes:" | Out-File $changelogFile -Append -Encoding utf8
+    "`r`n#### Changes:" | Out-File $changelogFile -Append -Encoding utf8
     $issues | ForEach-Object {
         $issue = $_;
-        "* $($issue.title) - $($issue.customTitle) [$($issue.number)]" | Out-File $changelogFile -Append -Encoding utf8
+        "* [#$($issue.number)] $($issue.title)" | Out-File $changelogFile -Append -Encoding utf8
     }
     "`r`n" | Out-File $changelogFile -Append -Encoding utf8
     $issueLinks | Out-File $changelogFile -Append -Encoding utf8

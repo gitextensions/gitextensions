@@ -1,213 +1,205 @@
 Changelog
 =========
 
-### Version 3.4 (10 May 2020)
+### Version 3.4 (6 June 2020)
 
-#### Features:
-* Correct filemode for source files - PR [8059]
-* Ignore inaccessible file in GetSelectedBranchFast - PR [8058]
-* git-diff override  diff.mnemonicprefix=true - PR [8051]
-* Unneeded rev-list for submodule status - PR [8050]
-* Ignore GitHub API rate limit induced errors when search for app updates - PR [8043]
-* Fix 3954 quotes in merge commit message - PR [8042]
-* Restore broken AutoCRLF tests - PR [8041]
-* Ignore Microsoft.WindowsAPICodePack.Shell.ShellException - PR [8040]
-* Remove debugging code - PR [8039]
-* Apply dark theme for check boxes in NativeListView - PR [8037]
-* Cleanup git status before calling TranslationApp - PR [8034]
-* Fix compatibility with WSL (\\wsl$\) network resource - PR [8031]
-* Update artificial commit diff - PR [8020]
-* Prevent an ArgumentOutOfRangeException - PR [8016]
-* RevDiff, Commit: Delete untracked directories - PR [8012]
-* Fix #7937 Reflog form : index was out of range. - PR [8008]
-* Fix up double plural in ResourceManager.Strings - PR [7999]
-* Fix naming issue in ThemeFix.cs - PR [7998]
-* Fix up show all branches / tags in history - PR [7993]
-* Update Codecov version - PR [7987]
-* fix: Error while executing user script from RevisionGrid - PR [7986]
-* Deleted files presented as Unkown - PR [7984]
-* Redesign script config - PR [7981]
-* GitStatusMonitor: Avoid background updates if GUI is not visible - PR [7976]
-* Fix incorrect location of tests - PR [7975]
-* Centralise removal of invalid repositories - PR [7974]
-* Unify the use of "Git Extensions" - PR [7972]
-* Revision Links: Detect GH issues like ".../i1111" - PR [7970]
-* Fix branch rendering - PR [7968]
-* Avoid invalid path exception on invalidated Module.WorkingDir - PR [7962]
-* Align context menu order for FileStatusList - PR [7961]
-* Conemu 19.10.12 - PR [7960]
-* Fix rename file icon size - PR [7959]
-* [NBug] The path has an invalid format. - Issue [7958]
-* Fix error during Publish build. - PR [7955]
-* Merge combined conflict set to IsConflict - PR [7951]
-* Uplift script handling - PR [7950]
-* fix: Locate diff tools in C:\Program Files\ folder - PR [7948]
-* Git: Set recommended version to 2.25.1 - PR [7946]
-* LeftPanel: Fix size of the GitHub remote icon - PR [7942]
-* Windows TaskBar JumpList was not initiated - PR [7941]
-* formstash improvements - PR [7938]
-* Contributors file signed - PR [7933]
-* Fix/7931 - PR [7932]
-* Break the build if there are any errors in publish tasks - PR [7929]
-* Improve blame gutter display - PR [7928]
-* Move settings page titles from designer files - PR [7927]
-* Use ViewChangesAsync consistently for changes - PR [7926]
-* Fix portable artifact generation. - PR [7925]
-* Align recent branch names - PR [7924]
-* RevDiff: Show common/unique files for BASE->selected(B) - PR [7923]
-* FileStatus icon: submodule before status updated - PR [7922]
-* Fix 3 not reproduced exceptions - PR [7921]
-* Settings: Color title label missing - PR [7919]
-* [NBug] Attempted to perform an unauthorized operation. - Issue [7918]
-* Settings > Appearance > Colors has no title - Issue [7917]
-* Prepopulate branch name in FormCreateBranch - PR [7916]
-* Ignore Git error messages in parsing - PR [7915]
-* Separate staged status from GetDiff - PR [7914]
-* git-status:  use config to set ignoreSubmodules - PR [7913]
-* RevDiff: follow selection only in first list group - PR [7912]
-* Fix msi - PR [7911]
-* Collect and publish plugins (portable) - PR [7910]
-* Bugfix/i7898 nre no parent - PR [7908]
-* Add root description to Git node in settings tree view - PR [7904]
-* Make DropDownWidth in BranchSelector adjust to longest item - PR [7903]
-* Simulate continuous scroll to display revision diff - PR [7900]
-* RevDiff: Show common files for BASE->A - PR [7899]
-* Remove Gerrit plugin - PR [7895]
-* Share common GitUI.Strings.Error - PR [7893]
-* FormCommit: F3 to diff large files - PR [7891]
-* Add hotkey for switching between artificial commits - PR [7888]
-* Bring into view already selected branch on ROT click - PR [7886]
-* UX: Swap OK and Cancel button Recent Repo Settings UI - PR [7884]
-* Add setting to show branch name in recent repos drop down - PR [7883]
-* BitBucket plugin update of RestSharp - PR [7881]
-* Centralise reference version management - PR [7878]
-* fix: Translation update issues - PR [7877]
-* More complete CanBeGitURL - PR [7876]
-* Tab "Diff" is not updated at changes for artificial commits - Issue [7875]
-* Fixup translation (last master merge) - PR [7872]
-* submodules IsDirty item status - PR [7869]
-* Display text if an image cannot be displayed - PR [7868]
-* Cleanup - PR [7865]
-* Handle gracefully a NRE on body message - PR [7853]
-* Fix slow plugins loading - PR [7850]
-* Plugins are extremely slow to load - Issue [7842]
-* Enhance tests output - PR [7837]
-* Fail for dirty translations - PR [7833]
-* Files starting with space incorrectly handled - PR [7832]
-* Show new files as file, not diff  - PR [7831]
-* revdiff: Show new file in worktree as file, not diff - PR [7824]
-* do not crash on missing theme file - PR [7821]
-* Surround access to plugin collection with a `lock()` - PR [7820]
-* Change portable artifact name - PR [7808]
-* Stash: Form fail to load - PR [7800]
-* RevisionDiff: Try retain the file selection when switching commits - PR [7798]
-* Convert theme file to css palette - PR [7797]
-* Publish portable build - PR [7785]
-* Support merge.guitool - PR [7781]
-* SidePanel Submodules: Status for top module - PR [7779]
-* Fix incomplete reset in ReferenceRepository - PR [7775]
-* Update to Microsoft.VisualStudio.Threading 16.5.132 - PR [7772]
-* use RECT class (not struct) in theming interop - PR [7771]
-* Adapt submodule button to context - PR [7770]
-* Improve ScriptRunnerTests - PR [7769]
-* JoinPendingOperationsAsync right after closing the tested Form - PR [7766]
-* Improve exception-safety of UITests.RunForm - PR [7765]
-* Provide consent to MIT license - PR [7760]
-* Provide consent to MIT license (#7758) - PR [7759]
-* Provide consent to MIT license - PR [7758]
-* Provide consent to MIT license - PR [7756]
-* Provide consent to MIT license - PR [7754]
-* Avoid deleting test directories while operations may be in progress - PR [7753]
-* Avoid a 200ms delay when RunBackgroundAsync is cancelled - PR [7752]
-* Avoid attempting to update non-existent UI - PR [7750]
-* Provide consent to MIT license - PR [7749]
-* Update vs-threading analyzers and fix new diagnostics - PR [7747]
-* Disable flaky ROT remotes tests - PR [7744]
-* fix: Plugins private binaries not resovled - PR [7741]
-* FormCommit: Unaccessible COMMITMESSAGE - PR [7739]
-* Some plugins are broken because they fails to load there dependencies - Issue [7735]
-* AzureDevOps CI: Fix and improvements - PR [7732]
-* Contributor list updated - PR [7729]
-* Sign-off contribution - PR [7727]
-* improve file status list presentation - PR [7720]
-* Refactor: Compare with ObjectId rather than Guid - PR [7719]
-* Cleanup interops - PR [7718]
-* removed TopMost attribute from the FormUpdates dialog - PR [7715]
-* GE should not crash when no email applications are available and user… - PR [7714]
-* gitex.cmd: handle quotes in commands - PR [7711]
-* Addendum to Arcade build - PR [7703]
-* Fix AppTitleGeneratorTests.Generate_should_include_debug_suffix - PR [7698]
-* Remove unexpected ConfigureAwait(false) - PR [7696]
-* Delete multiple files at a same time with popup menu - PR [7694]
-* Update NUnit - PR [7691]
-* FileViewer: Do not access the file system for git blobs - PR [7690]
-* RevisionGrid: Directory Diff HotKey - PR [7687]
-* Do not deregister from Application.ThreadException between tests - PR [7686]
-* Make folder removal safer - PR [7685]
-* Add pwsh as a choice of shell in Console tab - PR [7678]
-* bugfix: ignore specific ActiveDocument exception - PR [7677]
-* ObjectId ShortString: set default to 8 chars - PR [7667]
-* Add A/B to RevisionDiff revision descriptions #7626 - PR [7666]
-* Keep Syntax Highlight Rules Synced With Resources - PR [7657]
-* merge conflict: Do not require .cmd or .path - PR [7655]
-* Add TempAppSettingsAttribute for all tests - PR [7654]
-* ls-tree: Use -- to escape files starting with "-" - PR [7651]
-* Use Microsoft Arcade to improve build pipelines - PR [7649]
-* Update to Visual Studio 2019 and C# 8 - PR [7648]
-* Improve [Form]CommitInfoTests - PR [7647]
-* Restore test Submodule_status_changes_for_top_module - PR [7646]
-* Check if path is valid before Path.Combine - PR [7633]
-* FileViewer context menu fixes - PR [7624]
-* Improve closing of FormCommit - PR [7619]
-* Convert and quote file names for BatchUnstageFiles - PR [7615]
-* Improve speed of directory change in console tab - PR [7612]
-* Separate integration/UI and unit tests - PR [7611]
-* Run the test assemblies one after the other - PR [7610]
-* Include theming related files into installer - PR [7609]
-* Merge branch dialog: Make form border style fixed and align checkboxes - PR [7603]
-* Improve restoring of the commit dialog geometry (Fixes #7588) - PR [7597]
-* Disable maximising/minimising of update form - PR [7596]
-* Sign-off contribution - PR [7593]
-* Improve determination of the GitExt directory (fix of issue #7587) - PR [7591]
-* Make message textbox bounds clear - PR [7585]
-* Prevent NRE in designers that use EditNetSpell - PR [7584]
-* Add feature to open repo in a new window - PR [7567]
-* Color scheme followup #2 - PR [7562]
-* RevisionDiff: Show BASE diff - PR [7561]
-* RevisionDiff: Limit parents - PR [7560]
-* Gerrit: fix server version parsing - PR [7559]
-* RevisionDiff: No reset to CombinedDiff - PR [7558]
-* Remove obsolete 2-way merge tool names - PR [7551]
-* kdiff3: Incorrect merge cmd - PR [7548]
-* gitex: If no argument start browse in current workdir - PR [7547]
-* Color scheme followup - PR [7540]
-* CI: Improve Azure Devops builds - PR [7537]
-* Open repo directly on confirmation of folder dialog - PR [7516]
-* Reduce clipping in FormSettings - PR [7515]
-* CI: Only look for newly finished builds if previously running build found - PR [7497]
-* Filter staged files - PR [7496]
-* OpenRemoteUrlInBrowser: Issue (#7439) - PR [7490]
-* Install with AppGet (https://appget.net/) - PR [7489]
-* BuildServerIntegration: Fix freeze due to polling interval adjustment - PR [7485]
-* ResetCurrentBranch: Correct tab order - PR [7482]
-* Azure devops ci: reduce calls to api when revision grid is refreshed  - PR [7477]
-* Update contributors - PR [7476]
-* Add warning header - PR [7457]
-* BuildServerIntegration: Adjust polling interval for running builds - PR [7452]
-* Remove background thread from RevisionDataGridView - PR [7445]
-* NullReferenceException during update check - Issue [7413]
-* Add view blame in GitHub - PR [7406]
-* Convert to SDK-style projects - PR [7396]
-* Add icon to all MessageBox that don't have one - PR [7334]
-* Improve revisiongrid tooltips - PR [7329]
-* Introduce C# 8 and start using Nullable Reference Types - PR [7321]
-* Dark theme - PR [7213]
-* Add and refactor diffmerge tools - PR [7044]
+#### Changes:
+* [#8182] Make scripts execution safer
+* [#8178] AppVeyor Exception at init
+* [#8177] Prevent NRE when getting AppVeyor build duration
+* [#8175] FileStatusList context menu order
+* [#8164] Link to read-the-docs for release version
+* [#8163] Shell extension icons
+* [#8155] Fix up splitter positions
+* [#8152] Improve display of merged branches
+* [#8144] Fix up restoring the selection of revisions on reload
+* [#8140] Add 'Reset another branch to here' feature
+* [#8138] Hide extra separator in context menu for folder item
+* [#8137] Fix `FormCommit` context menu issues
+* [#8133] fix: New remotes not saved, if exceed limit
+* [#8123] Fix 8122 Update Atlassian.SDK package to latest version
+* [#8122] Jira Commit Hint throws exception for some Jira issues
+* [#8118] Fix up user scripts without icon
+* [#8114] Limit number of diff revisions
+* [#8093] Add information icon to checkboxes in Settings window
+* [#8089] [NBug] Could not load file or assembly 'RestSharp, Version=106.1.0...
+* [#8068] Portable build doesn't contain PluginManager
+* [#8059] Correct filemode for source files
+* [#8058] Ignore inaccessible file in GetSelectedBranchFast
+* [#8056] Select multiple revisions using Left Panel
+* [#8051] git-diff override  diff.mnemonicprefix=true
+* [#8050] Unneeded rev-list for submodule status
+* [#8043] Ignore GitHub API rate limit induced errors when search for app updates
+* [#8042] Fix 3954 quotes in merge commit message
+* [#8041] Restore broken AutoCRLF tests
+* [#8040] Ignore Microsoft.WindowsAPICodePack.Shell.ShellException
+* [#8034] Cleanup git status before calling TranslationApp
+* [#8031] Fix compatibility with WSL (\\wsl$\) network resource
+* [#8020] Update artificial commit diff
+* [#8016] Prevent an ArgumentOutOfRangeException
+* [#8012] RevDiff, Commit: Delete untracked directories
+* [#8008] Fix #7937 Reflog form : index was out of range.
+* [#7999] Fix up double plural in ResourceManager.Strings
+* [#7993] Fix up show all branches / tags in history
+* [#7986] fix: Error while executing user script from RevisionGrid
+* [#7984] Deleted files presented as Unkown
+* [#7981] Redesign script config
+* [#7976] GitStatusMonitor: Avoid background updates if GUI is not visible
+* [#7974] Centralise removal of invalid repositories
+* [#7972] Unify the use of "Git Extensions"
+* [#7970] Revision Links: Detect GH issues like ".../i1111"
+* [#7968] Fix branch rendering
+* [#7962] Avoid invalid path exception on invalidated Module.WorkingDir
+* [#7961] Align context menu order for FileStatusList
+* [#7959] Fix rename file icon size
+* [#7958] [NBug] The path has an invalid format.
+* [#7955] Fix error during Publish build.
+* [#7951] Merge combined conflict set to IsConflict
+* [#7950] Uplift script handling
+* [#7948] fix: Locate diff tools in C:\Program Files\ folder
+* [#7942] LeftPanel: Fix size of the GitHub remote icon
+* [#7941] Windows TaskBar JumpList was not initiated
+* [#7938] formstash improvements
+* [#7932] Fix/7931
+* [#7929] Break the build if there are any errors in publish tasks
+* [#7928] Improve blame gutter display
+* [#7927] Move settings page titles from designer files
+* [#7926] Use ViewChangesAsync consistently for changes
+* [#7924] Align recent branch names
+* [#7923] RevDiff: Show common/unique files for BASE->selected(B)
+* [#7922] FileStatus icon: submodule before status updated
+* [#7921] Fix 3 not reproduced exceptions
+* [#7919] Settings: Color title label missing
+* [#7918] [NBug] Attempted to perform an unauthorized operation.
+* [#7917] Settings > Appearance > Colors has no title
+* [#7916] Prepopulate branch name in FormCreateBranch
+* [#7915] Ignore Git error messages in parsing
+* [#7914] Separate staged status from GetDiff
+* [#7913] git-status:  use config to set ignoreSubmodules
+* [#7912] RevDiff: follow selection only in first list group
+* [#7908] Bugfix/i7898 nre no parent
+* [#7904] Add root description to Git node in settings tree view
+* [#7903] Make DropDownWidth in BranchSelector adjust to longest item
+* [#7900] Simulate continuous scroll to display revision diff
+* [#7899] RevDiff: Show common files for BASE->A
+* [#7895] Remove Gerrit plugin
+* [#7893] Share common GitUI.Strings.Error
+* [#7891] FormCommit: F3 to diff large files
+* [#7888] Add hotkey for switching between artificial commits
+* [#7886] Bring into view already selected branch on ROT click
+* [#7884] UX: Swap OK and Cancel button Recent Repo Settings UI
+* [#7883] Add setting to show branch name in recent repos drop down
+* [#7881] BitBucket plugin update of RestSharp
+* [#7878] Centralise reference version management
+* [#7877] fix: Translation update issues
+* [#7876] More complete CanBeGitURL
+* [#7875] Tab "Diff" is not updated at changes for artificial commits
+* [#7872] Fixup translation (last master merge)
+* [#7869] submodules IsDirty item status
+* [#7868] Display text if an image cannot be displayed
+* [#7853] Handle gracefully a NRE on body message
+* [#7850] Fix slow plugins loading
+* [#7842] Plugins are extremely slow to load
+* [#7832] Files starting with space incorrectly handled
+* [#7831] Show new files as file, not diff 
+* [#7824] revdiff: Show new file in worktree as file, not diff
+* [#7820] Surround access to plugin collection with a `lock()`
+* [#7800] Stash: Form fail to load
+* [#7798] RevisionDiff: Try retain the file selection when switching commits
+* [#7797] Convert theme file to css palette
+* [#7781] Support merge.guitool
+* [#7779] SidePanel Submodules: Status for top module
+* [#7775] Fix incomplete reset in ReferenceRepository
+* [#7770] Adapt submodule button to context
+* [#7753] Avoid deleting test directories while operations may be in progress
+* [#7752] Avoid a 200ms delay when RunBackgroundAsync is cancelled
+* [#7750] Avoid attempting to update non-existent UI
+* [#7739] FormCommit: Unaccessible COMMITMESSAGE
+* [#7732] AzureDevOps CI: Fix and improvements
+* [#7720] improve file status list presentation
+* [#7719] Refactor: Compare with ObjectId rather than Guid
+* [#7715] removed TopMost attribute from the FormUpdates dialog
+* [#7714] GE should not crash when no email applications are available and user…
+* [#7711] gitex.cmd: handle quotes in commands
+* [#7694] Delete multiple files at a same time with popup menu
+* [#7690] FileViewer: Do not access the file system for git blobs
+* [#7687] RevisionGrid: Directory Diff HotKey
+* [#7686] Do not deregister from Application.ThreadException between tests
+* [#7685] Make folder removal safer
+* [#7678] Add pwsh as a choice of shell in Console tab
+* [#7677] bugfix: ignore specific ActiveDocument exception
+* [#7667] ObjectId ShortString: set default to 8 chars
+* [#7666] Add A/B to RevisionDiff revision descriptions #7626
+* [#7657] Keep Syntax Highlight Rules Synced With Resources
+* [#7655] merge conflict: Do not require .cmd or .path
+* [#7651] ls-tree: Use -- to escape files starting with "-"
+* [#7647] Improve [Form]CommitInfoTests
+* [#7641] NRE when GitHub token is invalid
+* [#7633] Check if path is valid before Path.Combine
+* [#7624] FileViewer context menu fixes
+* [#7619] Improve closing of FormCommit
+* [#7615] Convert and quote file names for BatchUnstageFiles
+* [#7612] Improve speed of directory change in console tab
+* [#7603] Merge branch dialog: Make form border style fixed and align checkboxes
+* [#7597] Improve restoring of the commit dialog geometry (Fixes #7588)
+* [#7596] Disable maximising/minimising of update form
+* [#7591] Improve determination of the GitExt directory (fix of issue #7587)
+* [#7585] Make message textbox bounds clear
+* [#7584] Prevent NRE in designers that use EditNetSpell
+* [#7567] Add feature to open repo in a new window
+* [#7562] Color scheme followup #2
+* [#7561] RevisionDiff: Show BASE diff
+* [#7560] RevisionDiff: Limit parents
+* [#7559] Gerrit: fix server version parsing
+* [#7558] RevisionDiff: No reset to CombinedDiff
+* [#7551] Remove obsolete 2-way merge tool names
+* [#7548] kdiff3: Incorrect merge cmd
+* [#7547] gitex: If no argument start browse in current workdir
+* [#7540] Color scheme followup
+* [#7516] Open repo directly on confirmation of folder dialog
+* [#7515] Reduce clipping in FormSettings
+* [#7496] Filter staged files
+* [#7490] OpenRemoteUrlInBrowser: Issue (#7439)
+* [#7489] Install with AppGet (https://appget.net/)
+* [#7485] BuildServerIntegration: Fix freeze due to polling interval adjustment
+* [#7482] ResetCurrentBranch: Correct tab order
+* [#7477] Azure devops ci: reduce calls to api when revision grid is refreshed 
+* [#7457] Add warning header
+* [#7452] BuildServerIntegration: Adjust polling interval for running builds
+* [#7445] Remove background thread from RevisionDataGridView
+* [#7413] NullReferenceException during update check
+* [#7406] Add view blame in GitHub
+* [#7334] Add icon to all MessageBox that don't have one
+* [#7329] Improve revisiongrid tooltips
+* [#7213] Dark theme
+* [#7044] Add and refactor diffmerge tools
 
 
-
+[8182]:https://github.com/gitextensions/gitextensions/pull/8182
+[8178]:https://github.com/gitextensions/gitextensions/pull/8178
+[8177]:https://github.com/gitextensions/gitextensions/pull/8177
+[8175]:https://github.com/gitextensions/gitextensions/pull/8175
+[8164]:https://github.com/gitextensions/gitextensions/pull/8164
+[8163]:https://github.com/gitextensions/gitextensions/pull/8163
+[8155]:https://github.com/gitextensions/gitextensions/pull/8155
+[8152]:https://github.com/gitextensions/gitextensions/pull/8152
+[8144]:https://github.com/gitextensions/gitextensions/pull/8144
+[8140]:https://github.com/gitextensions/gitextensions/pull/8140
+[8138]:https://github.com/gitextensions/gitextensions/pull/8138
+[8137]:https://github.com/gitextensions/gitextensions/pull/8137
+[8133]:https://github.com/gitextensions/gitextensions/pull/8133
+[8123]:https://github.com/gitextensions/gitextensions/pull/8123
+[8122]:https://github.com/gitextensions/gitextensions/issues/8122
+[8118]:https://github.com/gitextensions/gitextensions/pull/8118
+[8114]:https://github.com/gitextensions/gitextensions/pull/8114
+[8093]:https://github.com/gitextensions/gitextensions/pull/8093
+[8089]:https://github.com/gitextensions/gitextensions/issues/8089
+[8088]:https://github.com/gitextensions/gitextensions/pull/8088
+[8068]:https://github.com/gitextensions/gitextensions/issues/8068
+[8062]:https://github.com/gitextensions/gitextensions/pull/8062
 [8059]:https://github.com/gitextensions/gitextensions/pull/8059
 [8058]:https://github.com/gitextensions/gitextensions/pull/8058
+[8056]:https://github.com/gitextensions/gitextensions/pull/8056
 [8051]:https://github.com/gitextensions/gitextensions/pull/8051
 [8050]:https://github.com/gitextensions/gitextensions/pull/8050
 [8043]:https://github.com/gitextensions/gitextensions/pull/8043
@@ -358,6 +350,7 @@ Changelog
 [7648]:https://github.com/gitextensions/gitextensions/pull/7648
 [7647]:https://github.com/gitextensions/gitextensions/pull/7647
 [7646]:https://github.com/gitextensions/gitextensions/pull/7646
+[7641]:https://github.com/gitextensions/gitextensions/issues/7641
 [7633]:https://github.com/gitextensions/gitextensions/pull/7633
 [7624]:https://github.com/gitextensions/gitextensions/pull/7624
 [7619]:https://github.com/gitextensions/gitextensions/pull/7619

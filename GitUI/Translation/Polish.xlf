@@ -264,7 +264,7 @@ Zobacz szczegóły pod http://en.gravatar.com/site/implement/images#default-imag
       </trans-unit>
       <trans-unit id="truncatePathMethod.Item0">
         <source>None</source>
-        <target>Nie obcinaj</target>
+        <target>Brak</target>
         
       </trans-unit>
       <trans-unit id="truncatePathMethod.Item1">
@@ -547,7 +547,7 @@ Wymagane jest poprawne konto GitHub.</target>
       </trans-unit>
       <trans-unit id="_noneItem.Text">
         <source>None</source>
-        <target>Nie obcinaj</target>
+        <target>Brak</target>
         
       </trans-unit>
       <trans-unit id="checkBoxEnableBuildServerIntegration.Text">
@@ -1174,7 +1174,7 @@ Upewnij się, czy jest zainstalowany git (Git dla Windows lub cygwin) lub ustal 
       </trans-unit>
       <trans-unit id="chkUndoLastCommitConfirmation.Text">
         <source>Undo last commit</source>
-        <target>Cofnij ostatnie zatwierdzenie</target>
+        <target>Cofnij ostatnie zatwierdzenieCofnij ostatnie zatwierdzenie</target>
         
       </trans-unit>
       <trans-unit id="chkUpdateModules.Text">
@@ -1410,16 +1410,6 @@ Upewnij się, czy jest zainstalowany git (Git dla Windows lub cygwin) lub ustal 
       <trans-unit id="$this.Text">
         <source>Diff Viewer</source>
         <target>Przeglądarka różnic</target>
-        
-      </trans-unit>
-      <trans-unit id="_showDiffForAllParents.Text">
-        <source>Show all differences between the selected commits, not limiting to only one difference.
-
-- For a single selected commit, show the difference with its parent commit.
-- For a single selected merge commit, show the difference with all parents.
-- For two selected commits, show the difference between the commits as well as the difference between a common ancestor (BASE) to the last selected commit.
-- For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
-- For more than four selected commits, show the difference as if the first and the last selected commit were selected.</source>
         
       </trans-unit>
       <trans-unit id="chkContScrollToNextFileOnlyWithAlt.Text">
@@ -1865,7 +1855,7 @@ Upewnij się, czy jest zainstalowany git (Git dla Windows lub cygwin) lub ustal 
       </trans-unit>
       <trans-unit id="lblReplaceWith.Text">
         <source>Re&amp;place with:</source>
-        <target>Zastą&amp;p z:</target>
+        <target>&amp;Zastąp z:</target>
         
       </trans-unit>
     </body>
@@ -2262,7 +2252,7 @@ Będziesz mieć uprawnienia wysyłania. {2}</target>
       </trans-unit>
       <trans-unit id="Apply.Text">
         <source>Apply patch</source>
-        <target>Zastosuj łatkę</target>
+        <target>Stosowanie łatek</target>
         
       </trans-unit>
       <trans-unit id="BrowseDir.Text">
@@ -2282,7 +2272,7 @@ Będziesz mieć uprawnienia wysyłania. {2}</target>
       </trans-unit>
       <trans-unit id="Mergetool.Text">
         <source>Solve conflicts</source>
-        <target>Rozwiąż konflikt</target>
+        <target>Rozwiąż konflikty</target>
         
       </trans-unit>
       <trans-unit id="PatchDirMode.Text">
@@ -2314,12 +2304,12 @@ Będziesz mieć uprawnienia wysyłania. {2}</target>
       </trans-unit>
       <trans-unit id="_applyPatchMsgBox.Text">
         <source>Apply patch</source>
-        <target>Zastosuj łatkę</target>
+        <target>Stosowanie łatek</target>
         
       </trans-unit>
       <trans-unit id="_conflictMergetoolText.Text">
         <source>Solve conflicts</source>
-        <target>Rozwiąż konflikt</target>
+        <target>Rozwiąż konflikty</target>
         
       </trans-unit>
       <trans-unit id="_conflictResolvedText.Text">
@@ -2882,7 +2872,7 @@ Chcesz kontynuować?</target>
       </trans-unit>
       <trans-unit id="fileExplorerToolStripMenuItem.Text">
         <source>File Explorer</source>
-        <target>Otwórz folder</target>
+        <target>Eksplorator plików</target>
         
       </trans-unit>
       <trans-unit id="fileToolStripMenuItem.Text">
@@ -3082,7 +3072,7 @@ Chcesz kontynuować?</target>
       </trans-unit>
       <trans-unit id="stashChangesToolStripMenuItem.Text">
         <source>Stash</source>
-        <target>Odłóż</target>
+        <target>Odłożone</target>
         
       </trans-unit>
       <trans-unit id="stashPopToolStripMenuItem.Text">
@@ -3167,7 +3157,7 @@ Chcesz kontynuować?</target>
       </trans-unit>
       <trans-unit id="translateToolStripMenuItem.Text">
         <source>Translate</source>
-        <target>Tłumaczenie</target>
+        <target>Przetłumacz</target>
         
       </trans-unit>
       <trans-unit id="tsmiFavouriteRepositories.Text">
@@ -3192,7 +3182,7 @@ Chcesz kontynuować?</target>
       </trans-unit>
       <trans-unit id="undoLastCommitToolStripMenuItem.Text">
         <source>Undo last commit</source>
-        <target>Cofnij ostatnie zatwierdzenie</target>
+        <target>Cofnij ostatnie zatwierdzenieCofnij ostatnie zatwierdzenie</target>
         
       </trans-unit>
       <trans-unit id="updateAllSubmodulesToolStripMenuItem.Text">
@@ -3297,7 +3287,7 @@ Chcesz kontynuować?</target>
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>Checkout</source>
-        <target>Przełącz</target>
+        <target>Przełączanie</target>
         
       </trans-unit>
       <trans-unit id="Remotebranch.Text">
@@ -3406,7 +3396,7 @@ Na pewno chcesz to zrobić?</target>
       </trans-unit>
       <trans-unit id="rbStash.Text">
         <source>Stash</source>
-        <target>Odłóż</target>
+        <target>Odłożone</target>
         
       </trans-unit>
     </body>
@@ -3425,7 +3415,7 @@ Na pewno chcesz to zrobić?</target>
       </trans-unit>
       <trans-unit id="OkCheckout.Text">
         <source>Checkout</source>
-        <target>Przełącz</target>
+        <target>Przełączanie</target>
         
       </trans-unit>
       <trans-unit id="_noRevisionSelectedMsgBox.Text">
@@ -3435,7 +3425,7 @@ Na pewno chcesz to zrobić?</target>
       </trans-unit>
       <trans-unit id="_noRevisionSelectedMsgBoxCaption.Text">
         <source>Checkout</source>
-        <target>Przełącz</target>
+        <target>Przełączanie</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -3449,7 +3439,7 @@ Na pewno chcesz to zrobić?</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Cherry pick commit</source>
-        <target>Dobieranie zatwierdzenia</target>
+        <target>Dobierz zatwierdzenie</target>
         
       </trans-unit>
       <trans-unit id="AutoCommit.Text">
@@ -3811,7 +3801,7 @@ gitex.cmd / gitex (umieszczone w tym samym folderze, co GitExtensions.exe):</tar
     <body>
       <trans-unit id="$this.Text">
         <source>Commit</source>
-        <target>Zatwierdź</target>
+        <target>Zatwierdzenie</target>
         
       </trans-unit>
       <trans-unit id="Amend.Text">
@@ -3836,7 +3826,7 @@ gitex.cmd / gitex (umieszczone w tym samym folderze, co GitExtensions.exe):</tar
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>Commit</source>
-        <target>Zatwierdź</target>
+        <target>Zatwierdzenie</target>
         
       </trans-unit>
       <trans-unit id="Reset.Text">
@@ -4059,7 +4049,7 @@ Chcesz kontynuować?</target>
       </trans-unit>
       <trans-unit id="_notOnBranchCaption.Text">
         <source>Not on a branch</source>
-        <target>Nie w gałęzi</target>
+        <target>Nie na gałęzi</target>
         
       </trans-unit>
       <trans-unit id="_notOnBranchMainInstruction.Text">
@@ -4236,7 +4226,7 @@ Cofnięcie ustawienia szablonu:
       </trans-unit>
       <trans-unit id="commitSubmoduleChanges.Text">
         <source>Commit submodule changes</source>
-        <target>Zmiany modułów zależnych zatwierdzenia</target>
+        <target>Zatwierdź zmiany modułu zależnego</target>
         
       </trans-unit>
       <trans-unit id="commitTemplatesToolStripMenuItem.Text">
@@ -4381,7 +4371,7 @@ Cofnięcie ustawienia szablonu:
       </trans-unit>
       <trans-unit id="resetSubmoduleChanges.Text">
         <source>Reset submodule changes</source>
-        <target>Zresetuj zmiany modułów zależnych</target>
+        <target>Zresetuj zmiany modułu zależnego</target>
         
       </trans-unit>
       <trans-unit id="resetUnstagedChangesToolStripMenuItem.Text">
@@ -5497,7 +5487,7 @@ To ustawienie powinno być zmieniane tylko, jeżeli doświadczasz problemów.</t
       </trans-unit>
       <trans-unit id="FormatPatch.Text">
         <source>Create patch(es)</source>
-        <target>Stwórz łatki</target>
+        <target>Stwórz łatk(ę/i)</target>
         
       </trans-unit>
       <trans-unit id="SaveToDir.Text">
@@ -5943,7 +5933,7 @@ Proszę wybrać katalog.</target>
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Repository type</source>
-        <target>Typ repozytorium</target>
+        <target>Rodzaj repozytorium</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -6374,7 +6364,7 @@ poziomie. Dostosowanie jest również wykonywane do zwyczajnego drzewa przodka.<
       </trans-unit>
       <trans-unit id="Mergetool.Text">
         <source>Solve conflicts</source>
-        <target>Rozwiąż konflikt</target>
+        <target>Rozwiąż konflikty</target>
         
       </trans-unit>
       <trans-unit id="NoTags.Text">
@@ -6603,7 +6593,7 @@ Ta akcja zainicjuje i zaktualizuje rekurencyjnie wszystkie moduły zależne.</ta
       </trans-unit>
       <trans-unit id="_selectRemoteRepository.Text">
         <source>Please select a remote repository</source>
-        <target>Proszę wybrać zdalne repozytorium</target>
+        <target>Proszę wybrać katalog zdalny</target>
         
       </trans-unit>
       <trans-unit id="_selectSourceDirectory.Text">
@@ -6727,7 +6717,7 @@ Ta akcja zainicjuje i zaktualizuje rekurencyjnie wszystkie moduły zależne.</ta
       </trans-unit>
       <trans-unit id="RecursiveSubmodules.Item0">
         <source>None</source>
-        <target>Nic nie rób</target>
+        <target>Brak</target>
         
       </trans-unit>
       <trans-unit id="RecursiveSubmodules.Item1">
@@ -7002,7 +6992,7 @@ Chcesz to zrobić teraz?</target>
       </trans-unit>
       <trans-unit id="Mergetool.Text">
         <source>Solve conflicts</source>
-        <target>Rozwiąż konflikt</target>
+        <target>Rozwiąż konflikty</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -7559,7 +7549,7 @@ Przywrócono do pustej wartości.</target>
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>Rename</source>
-        <target>Zmień nazwę</target>
+        <target>Przemianuj</target>
         
       </trans-unit>
       <trans-unit id="_branchRenameFailed.Text">
@@ -7570,6 +7560,42 @@ Przywrócono do pustej wartości.</target>
       <trans-unit id="label1.Text">
         <source>New name</source>
         <target>Nowa nazwa</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormResetAnotherBranch" source-language="en" target-language="pl">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Reset branch</source>
+        <target>Zresetuj gałąź</target>
+        
+      </trans-unit>
+      <trans-unit id="BranchInfo.Text">
+        <source>Reset local &amp;branch:</source>
+        
+      </trans-unit>
+      <trans-unit id="Cancel.Text">
+        <source>Cancel</source>
+        <target>Anuluj</target>
+        
+      </trans-unit>
+      <trans-unit id="ForceReset.Text">
+        <source>&amp;Force reset for a non-fast-forward reset</source>
+        
+      </trans-unit>
+      <trans-unit id="Ok.Text">
+        <source>OK</source>
+        <target>OK</target>
+        
+      </trans-unit>
+      <trans-unit id="_localRefInvalid.Text">
+        <source>The entered value '{0}' is not the name of an existing local branch.</source>
+        
+      </trans-unit>
+      <trans-unit id="labelResetBranchWarning.Text">
+        <source>You can only reset a branch safely if there is a direct path from it to selected revision.
+Forcing a branch to reset if it has not been merged might leave some commits unreachable.</source>
         
       </trans-unit>
     </body>
@@ -8151,7 +8177,7 @@ Chcesz go użyć?</target>
       </trans-unit>
       <trans-unit id="columnHeader1.Text">
         <source>No.</source>
-        <target>Lp.</target>
+        <target>Nr</target>
         
       </trans-unit>
       <trans-unit id="columnHeader2.Text">
@@ -8284,7 +8310,7 @@ Chcesz teraz ustawić prawidłową komendę? Jeżeli nie, ustawienia globalne i 
       </trans-unit>
       <trans-unit id="buttonApply.Text">
         <source>Apply</source>
-        <target>Zastosuj</target>
+        <target>Zatwierdź</target>
         
       </trans-unit>
       <trans-unit id="buttonCancel.Text">
@@ -8536,7 +8562,7 @@ Chcesz zarejestrować OdciskPalca hosta i zresetować proces?</target>
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>Commit</source>
-        <target>Zatwierdź</target>
+        <target>Zatwierdzenie</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
@@ -8770,7 +8796,7 @@ Odzyskaj. Użyj menu kontekstowego dla dodatkowych operacji.</target>
       </trans-unit>
       <trans-unit id="mnuLostObjectView.Text">
         <source>View</source>
-        <target>Pokaż</target>
+        <target>Widok</target>
         
       </trans-unit>
       <trans-unit id="mnuLostObjectsCreateBranch.Text">
@@ -9916,7 +9942,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnuBtnManageRemotesFromRootNode.Text">
         <source>&amp;Manage...</source>
-        <target>Za&amp;rządzaj</target>
+        <target>Za&amp;rządzaj...</target>
         
       </trans-unit>
       <trans-unit id="mnuBtnOpenRemoteUrlInBrowser.Text">
@@ -10000,7 +10026,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnManageRemotes.Text">
         <source>&amp;Manage...</source>
-        <target>Za&amp;rządzaj</target>
+        <target>Za&amp;rządzaj...</target>
         
       </trans-unit>
       <trans-unit id="mnubtnManageSubmodules.Text">
@@ -10468,7 +10494,7 @@ Przejrzyj zmiany w formularzu zatwierdzenia.</target>
       </trans-unit>
       <trans-unit id="GotoCommit.Text">
         <source>Go to commit...</source>
-        <target>Przejdź do zatwierdzenia</target>
+        <target>Szukaj...</target>
         
       </trans-unit>
       <trans-unit id="GotoCurrentRevision.Text">
@@ -10883,6 +10909,10 @@ Przejrzyj zmiany w formularzu zatwierdzenia.</target>
       <trans-unit id="renameBranchToolStripMenuItem.Text">
         <source>Rename branch...</source>
         <target>Przemianuj gałąź...</target>
+        
+      </trans-unit>
+      <trans-unit id="resetAnotherBranchToHereToolStripMenuItem.Text">
+        <source>Reset another branch to here...</source>
         
       </trans-unit>
       <trans-unit id="resetCurrentBranchToHereToolStripMenuItem.Text">
@@ -11451,6 +11481,11 @@ Wybierz to zatwierdzenie, aby wyświetlić pełną wiadomość.</target>
         <target>Gałęzie</target>
         
       </trans-unit>
+      <trans-unit id="_cancelText.Text">
+        <source>Cancel</source>
+        <target>Anuluj</target>
+        
+      </trans-unit>
       <trans-unit id="_childrenText.Text">
         <source>{0:Child|Children}</source>
         <target>{0:Dziecko|Dzieci}</target>
@@ -11548,6 +11583,14 @@ Wybierz to zatwierdzenie, aby wyświetlić pełną wiadomość.</target>
         <target>Rozgałęź lub sklonuj repozytorium</target>
         
       </trans-unit>
+      <trans-unit id="_generalGitConfigExceptionCaption.Text">
+        <source>Repository Configuration Error</source>
+        
+      </trans-unit>
+      <trans-unit id="_generalGitConfigExceptionMessage.Text">
+        <source>Failed to read &quot;{0}&quot; due to the following error:{1}{1}{2}{1}{1}Due to the nature of this problem, the behavior of the application cannot be guaranteed and it must be closed.{1}{1}Please correct this issue and re-open Git Extensions.</source>
+        
+      </trans-unit>
       <trans-unit id="_gitExecutableNotFoundText.Text">
         <source>The Git executable could not be located on your system.</source>
         <target>Nie udało się znaleźć pliku wykonywalnego Git w Twoim systemie.</target>
@@ -11617,6 +11660,16 @@ Wybierz to zatwierdzenie, aby wyświetlić pełną wiadomość.</target>
         <source>&lt;No results found&gt;</source>
         
       </trans-unit>
+      <trans-unit id="_noRevision.Text">
+        <source>No revision</source>
+        <target>Brak rewizji</target>
+        
+      </trans-unit>
+      <trans-unit id="_okText.Text">
+        <source>OK</source>
+        <target>OK</target>
+        
+      </trans-unit>
       <trans-unit id="_open.Text">
         <source>Open</source>
         <target>Otwórz</target>
@@ -11670,6 +11723,24 @@ Wybierz to zatwierdzenie, aby wyświetlić pełną wiadomość.</target>
       <trans-unit id="_showAllText.Text">
         <source>Show all</source>
         <target>Pokaż wszystko</target>
+        
+      </trans-unit>
+      <trans-unit id="_showDiffForAllParentsText.Text">
+        <source>Show file differences for all parents in browse dialog</source>
+        <target>Pokaż różnice pliku w oknie przeglądania dla wszystkich rodziców</target>
+        
+      </trans-unit>
+      <trans-unit id="_showDiffForAllParentsTooltip.Text">
+        <source>Show all differences between the selected commits, not limiting to only one difference.
+
+- For a single selected commit, show the difference with its parent commit.
+- For a single selected merge commit, show the difference with all parents.
+- For two selected commits with a common ancestor (BASE):
+   - Show the difference between the commits.
+   - The difference of unique files from BASE to each of the selected commits.
+   - The difference of common files (identical changes) from BASE to the commits.
+- For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
+- For more than four selected commits, show the difference from the first to the last selected commit.</source>
         
       </trans-unit>
       <trans-unit id="_submodulesText.Text">

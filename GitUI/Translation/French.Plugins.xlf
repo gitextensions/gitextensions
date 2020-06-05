@@ -265,7 +265,8 @@
       </trans-unit>
       <trans-unit id="tabCreate.Text">
         <source>Create Pull Request</source>
-        <target>Créer une demande de pull</target>
+        <target>Créer une demande de tirage
+</target>
         
       </trans-unit>
       <trans-unit id="tabView.Text">
@@ -298,7 +299,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Create local tracking branches</source>
-        <target>Créer des branches de suivie locales</target>
+        <target>Créer des branches locales de suivie</target>
         
       </trans-unit>
     </body>
@@ -396,7 +397,7 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
         <source>Search branches</source>
-        <target>Rechercher des branches</target>
+        <target>Rechercher les branches</target>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
@@ -621,7 +622,7 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       </trans-unit>
       <trans-unit id="AddRemote.Text">
         <source>Manage remotes</source>
-        <target>Gérer</target>
+        <target>Gérer les dépôts distants</target>
         
       </trans-unit>
       <trans-unit id="Download.Text">
@@ -685,7 +686,7 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       </trans-unit>
       <trans-unit id="AddRemote.Text">
         <source>Manage remotes</source>
-        <target>Gérer</target>
+        <target>Gérer les dépôts distants</target>
         
       </trans-unit>
       <trans-unit id="Publish.Text">
@@ -1161,7 +1162,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="btnPull.Text">
         <source>Pull</source>
-        <target>Récupérer</target>
+        <target>Récupérer (pull)</target>
         
       </trans-unit>
       <trans-unit id="cbBasedOn.Text">

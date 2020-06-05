@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 
-[git-extensions.ui-master]
+[git-extensions.ui-3_4]
 file_filter = <lang>.xlf
 source_file = English.xlf
 source_lang = en
@@ -17,15 +17,15 @@ trans.ko = Korean.xlf
 trans.lv = Latvian.xlf
 trans.nl = Dutch.xlf
 trans.pl = Polish.xlf
-trans.pt_BR = Portuguese (Brazil).xlf
 trans.pt = Portuguese.xlf
+trans.pt_BR = Portuguese (Brazil).xlf
 trans.ro = Romanian.xlf
 trans.ru = Russian.xlf
 trans.zh-Hans = Simplified Chinese.xlf
 trans.zh-Hant = Traditional Chinese.xlf
 type = XLIFF
 
-[git-extensions.plugins-master]
+[git-extensions.plugins-3_4]
 file_filter = <lang>.Plugins.xlf
 source_file = English.Plugins.xlf
 source_lang = en
@@ -48,3 +48,4 @@ trans.ru = Russian.Plugins.xlf
 trans.zh-Hans = Simplified Chinese.Plugins.xlf
 trans.zh-Hant = Traditional Chinese.Plugins.xlf
 type = XLIFF
+

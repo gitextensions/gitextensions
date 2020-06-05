@@ -1415,16 +1415,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target>Просмотр изменений</target>
         
       </trans-unit>
-      <trans-unit id="_showDiffForAllParents.Text">
-        <source>Show all differences between the selected commits, not limiting to only one difference.
-
-- For a single selected commit, show the difference with its parent commit.
-- For a single selected merge commit, show the difference with all parents.
-- For two selected commits, show the difference between the commits as well as the difference between a common ancestor (BASE) to the last selected commit.
-- For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
-- For more than four selected commits, show the difference as if the first and the last selected commit were selected.</source>
-        
-      </trans-unit>
       <trans-unit id="chkContScrollToNextFileOnlyWithAlt.Text">
         <source>Enable automatic continuous scroll (without ALT button)</source>
         <target>Включить автоматическую непрерывную прокрутку (без использования кнопки ALT)</target>
@@ -1574,6 +1564,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="_combinedDiff.Text">
         <source>Combined diff</source>
+        <target>Объединённый список изменений</target>
         
       </trans-unit>
       <trans-unit id="_diffBaseToB.Text">
@@ -1590,7 +1581,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="_openSubmoduleMenuItem.Text">
         <source>Open with Git Extensions</source>
-        <target>Открыть в Git Extensions...</target>
+        <target>Открыть в Git Extensions</target>
         
       </trans-unit>
       <trans-unit id="_sortByContextMenu.Text">
@@ -1782,7 +1773,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="_findString.Text">
         <source>Find</source>
-        <target>Поиск</target>
+        <target>Найти</target>
         
       </trans-unit>
       <trans-unit id="_noOccurrencesFoundString.Text">
@@ -2299,7 +2290,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="Resolved.Text">
         <source>Conflicts resolved</source>
-        <target>Конфликты решены</target>
+        <target>Конфликты разрешены</target>
         
       </trans-unit>
       <trans-unit id="Skip.Text">
@@ -2884,7 +2875,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="fileExplorerToolStripMenuItem.Text">
         <source>File Explorer</source>
-        <target>Открыть в проводнике</target>
+        <target>Дерево файлов</target>
         
       </trans-unit>
       <trans-unit id="fileToolStripMenuItem.Text">
@@ -2969,7 +2960,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="mergeBranchToolStripMenuItem.Text">
         <source>Merge branches...</source>
-        <target>Объединить ветки...</target>
+        <target>Слить ветки...</target>
         
       </trans-unit>
       <trans-unit id="mergeToolStripMenuItem.Text">
@@ -3084,7 +3075,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="stashChangesToolStripMenuItem.Text">
         <source>Stash</source>
-        <target>Спрятанные изменения</target>
+        <target>Спрятать</target>
         
       </trans-unit>
       <trans-unit id="stashPopToolStripMenuItem.Text">
@@ -3169,7 +3160,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="translateToolStripMenuItem.Text">
         <source>Translate</source>
-        <target>Перевести</target>
+        <target>Перевод</target>
         
       </trans-unit>
       <trans-unit id="tsmiFavouriteRepositories.Text">
@@ -3393,7 +3384,7 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="rbMerge.Text">
         <source>Merge</source>
-        <target>Объединить</target>
+        <target>Слияние</target>
         
       </trans-unit>
       <trans-unit id="rbReset.Text">
@@ -3408,7 +3399,7 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="rbStash.Text">
         <source>Stash</source>
-        <target>Спрятанные изменения</target>
+        <target>Спрятать</target>
         
       </trans-unit>
     </body>
@@ -3742,7 +3733,7 @@ revision:</source>
       <trans-unit id="_questionOpenRepo.Text">
         <source>The repository has been cloned successfully.
 Do you want to open the new repository &quot;{0}&quot; now?</source>
-        <target>Репозиторий успешно склонирован.
+        <target>Клонирование репозитория прошло успешно. 
 Желаете открыть новый репозиторий &quot;{0}&quot; сейчас?</target>
         
       </trans-unit>
@@ -3813,7 +3804,7 @@ gitex.cmd / gitex (находится в той же папке, что и GitEx
     <body>
       <trans-unit id="$this.Text">
         <source>Commit</source>
-        <target>Зафиксировать</target>
+        <target>Коммит</target>
         
       </trans-unit>
       <trans-unit id="Amend.Text">
@@ -3838,7 +3829,7 @@ gitex.cmd / gitex (находится в той же папке, что и GitEx
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>Commit</source>
-        <target>Зафиксировать</target>
+        <target>Коммит</target>
         
       </trans-unit>
       <trans-unit id="Reset.Text">
@@ -3859,7 +3850,7 @@ gitex.cmd / gitex (находится в той же папке, что и GitEx
       <trans-unit id="SolveMergeconflicts.Text">
         <source>There are unresolved merge conflicts
 </source>
-        <target>Неразрёшенные конфликты слияния
+        <target>Неразрешённые конфликты слияния
 </target>
         
       </trans-unit>
@@ -4046,7 +4037,7 @@ Are you sure you want to commit?</source>
       </trans-unit>
       <trans-unit id="_noUnstagedChanges.Text">
         <source>There are no unstaged changes</source>
-        <target>Нет не индексированных изменений</target>
+        <target>Нет неиндексированных изменений</target>
         
       </trans-unit>
       <trans-unit id="_notOnBranch.Text">
@@ -4208,7 +4199,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
         <source>Close dialog when all changes are committed</source>
-        <target>Закрыть диалог после коммита всех изменений</target>
+        <target>Закрыть диалог после фиксации всех изменений</target>
         
       </trans-unit>
       <trans-unit id="closeDialogAfterEachCommitToolStripMenuItem.Text">
@@ -4303,7 +4294,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="filenameToClipboardToolStripMenuItem.Text">
         <source>Copy full path</source>
-        <target>Имя файла в буфер обмена</target>
+        <target>Копировать имя файла в буфер обмена</target>
         
       </trans-unit>
       <trans-unit id="generateListOfChangesInSubmodulesChangesToolStripMenuItem.Text">
@@ -4333,7 +4324,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="openDiffMenuItem.Text">
         <source>Open with difftool</source>
-        <target>Открыть с помощью Difftool</target>
+        <target>Открыть в инструменте сравнения</target>
         
       </trans-unit>
       <trans-unit id="openFolderMenuItem.Text">
@@ -4418,7 +4409,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="showUntrackedFilesToolStripMenuItem.Text">
         <source>Show untracked files</source>
-        <target>Показывать неотслеживаемые файлы</target>
+        <target>Показать не отслеживаемые файлы</target>
         
       </trans-unit>
       <trans-unit id="signOffToolStripMenuItem.Text">
@@ -4533,7 +4524,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="viewHistoryMenuItem.Text">
         <source>View history</source>
-        <target>История субмодуля</target>
+        <target>Показать историю</target>
         
       </trans-unit>
       <trans-unit id="workingToolStripMenuItem.Text">
@@ -5047,7 +5038,7 @@ in order to recover the lost commits.</source>
       </trans-unit>
       <trans-unit id="diffShowInFileTreeToolStripMenuItem.Text">
         <source>Show in File tree</source>
-        <target>Показать файл в дереве</target>
+        <target>Показать дереве файлов</target>
         
       </trans-unit>
       <trans-unit id="fileHistoryDiffToolstripMenuItem.Text">
@@ -6135,8 +6126,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>&amp;Merge</source>
-        <target>&amp;Объединить
-</target>
+        <target>&amp;Слить</target>
         
       </trans-unit>
       <trans-unit id="_formMergeBranchHoverShowImageLabelText.Text">
@@ -6220,7 +6210,7 @@ ancestor tree.</source>
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Merge</source>
-        <target>Объединить</target>
+        <target>Слияние</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -6381,12 +6371,12 @@ ancestor tree.</source>
       </trans-unit>
       <trans-unit id="Fetch.Text">
         <source>Do not merge, only &amp;fetch remote changes</source>
-        <target>Только забрать внешнюю ветку, не объединяя с локальной [fetch]</target>
+        <target>Только забрать внешнюю ветку, не сливая в локальную [fetch]</target>
         
       </trans-unit>
       <trans-unit id="Merge.Text">
         <source>&amp;Merge remote branch into current branch</source>
-        <target>Слить внешнюю ветки в локальную [merge]</target>
+        <target>Объединить внешнюю ветку с локальной</target>
         
       </trans-unit>
       <trans-unit id="Mergetool.Text">
@@ -6431,7 +6421,7 @@ ancestor tree.</source>
       </trans-unit>
       <trans-unit id="Stash.Text">
         <source>Stash changes</source>
-        <target>Спрятанные изменения</target>
+        <target>Спрятать</target>
         
       </trans-unit>
       <trans-unit id="Unshallow.Text">
@@ -6468,7 +6458,7 @@ Are you sure you want to rebase this merge?</source>
       </trans-unit>
       <trans-unit id="_areYouSureYouWantToRebaseMergeCaption.Text">
         <source>Rebase merge commit?</source>
-        <target>Переместить коммит объединения?</target>
+        <target>Переместить коммит слияния?</target>
         
       </trans-unit>
       <trans-unit id="_buttonFetch.Text">
@@ -6565,7 +6555,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_notOnBranchCaption.Text">
         <source>Not on a branch</source>
-        <target>Не на ветке.</target>
+        <target>Не на ветке</target>
         
       </trans-unit>
       <trans-unit id="_notOnBranchMainInstruction.Text">
@@ -6733,7 +6723,7 @@ This will initialize and update all submodules recursive.</source>
       </trans-unit>
       <trans-unit id="PushToRemote.Text">
         <source>Remote</source>
-        <target>Внешние</target>
+        <target>Внешний</target>
         
       </trans-unit>
       <trans-unit id="PushToUrl.Text">
@@ -6768,7 +6758,7 @@ This will initialize and update all submodules recursive.</source>
       </trans-unit>
       <trans-unit id="ShowOptions.Text">
         <source>Show options</source>
-        <target>Дополнительные параметры</target>
+        <target>Показать настройки</target>
         
       </trans-unit>
       <trans-unit id="TagTab.Text">
@@ -6817,7 +6807,7 @@ Would you like to do it now?</source>
       </trans-unit>
       <trans-unit id="_pullActionMerge.Text">
         <source>merge</source>
-        <target>объединить</target>
+        <target>слить</target>
         
       </trans-unit>
       <trans-unit id="_pullActionNone.Text">
@@ -6832,7 +6822,7 @@ Would you like to do it now?</source>
       </trans-unit>
       <trans-unit id="_pullRepository.Text">
         <source>The push was rejected because the tip of your current branch is behind its remote counterpart. Merge the remote changes before pushing again.</source>
-        <target>Отправка изменений был отклонена, поскольку конец вашей текущей ветки отстает от внешнего двойника. Объедините внешние изменения перед повторной отправкой.</target>
+        <target>Отправка изменений был отклонена, поскольку конец вашей текущей ветки отстает от внешнего двойника. Слить внешние изменения перед повторной отправкой.</target>
         
       </trans-unit>
       <trans-unit id="_pullRepositoryButtons.Text">
@@ -7102,7 +7092,7 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="chkPreserveMerges.Text">
         <source>Preserve Merges</source>
-        <target>Сохранять объединения веток</target>
+        <target>Сохранять слияния веток</target>
         
       </trans-unit>
       <trans-unit id="chkSpecificRange.Text">
@@ -7340,7 +7330,7 @@ Stash them before if you don't want to lose them.</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Remote repositories</source>
-        <target>Внешнее репозиторий</target>
+        <target>Внешние репозитории</target>
         
       </trans-unit>
       <trans-unit id="BranchName.HeaderText">
@@ -7355,17 +7345,17 @@ Stash them before if you don't want to lose them.</source>
       </trans-unit>
       <trans-unit id="MergeWith.HeaderText">
         <source>Default merge with</source>
-        <target>По умолчанию объединить с</target>
+        <target>По умолчанию сливать с</target>
         
       </trans-unit>
       <trans-unit id="RemoteCombo.HeaderText">
         <source>Remote repository</source>
-        <target>Внешний репозиторий</target>
+        <target>Репозиторий</target>
         
       </trans-unit>
       <trans-unit id="Save.Text">
         <source>Save changes</source>
-        <target>Сохранить</target>
+        <target>Сохранить изменения</target>
         
       </trans-unit>
       <trans-unit id="SaveDefaultPushPull.Text">
@@ -7506,7 +7496,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Name</source>
-        <target>Название</target>
+        <target>Имя</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -7531,7 +7521,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Default merge with</source>
-        <target>По умолчанию объединять с</target>
+        <target>По умолчанию сливать с</target>
         
       </trans-unit>
       <trans-unit id="labelPushUrl.Text">
@@ -7586,6 +7576,42 @@ Value has been reset to empty value.</source>
       <trans-unit id="label1.Text">
         <source>New name</source>
         <target>Новое имя</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormResetAnotherBranch" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Reset branch</source>
+        <target>Откатить ветку</target>
+        
+      </trans-unit>
+      <trans-unit id="BranchInfo.Text">
+        <source>Reset local &amp;branch:</source>
+        
+      </trans-unit>
+      <trans-unit id="Cancel.Text">
+        <source>Cancel</source>
+        <target>Отмена</target>
+        
+      </trans-unit>
+      <trans-unit id="ForceReset.Text">
+        <source>&amp;Force reset for a non-fast-forward reset</source>
+        
+      </trans-unit>
+      <trans-unit id="Ok.Text">
+        <source>OK</source>
+        <target>OK</target>
+        
+      </trans-unit>
+      <trans-unit id="_localRefInvalid.Text">
+        <source>The entered value '{0}' is not the name of an existing local branch.</source>
+        
+      </trans-unit>
+      <trans-unit id="labelResetBranchWarning.Text">
+        <source>You can only reset a branch safely if there is a direct path from it to selected revision.
+Forcing a branch to reset if it has not been merged might leave some commits unreachable.</source>
         
       </trans-unit>
     </body>
@@ -7699,7 +7725,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="ContextChooseLocal.Text">
         <source>Choose local</source>
-        <target>Выбрать локальную</target>
+        <target>Выбрать локальный</target>
         
       </trans-unit>
       <trans-unit id="ContextChooseRemote.Text">
@@ -7832,8 +7858,7 @@ Is the merge conflict solved?</source>
       </trans-unit>
       <trans-unit id="_button1Text.Text">
         <source>Open in</source>
-        <target>Открыть в
-</target>
+        <target>Открыть в</target>
         
       </trans-unit>
       <trans-unit id="_chooseBaseFileFailedText.Text">
@@ -7919,6 +7944,8 @@ Is the merge conflict solved?</source>
       <trans-unit id="_fileBinaryChooseLocalBaseRemote.Text">
         <source>File ({0}) appears to be a binary file.
 Choose to keep the local ({1}), remote ({2}) or base file.</source>
+        <target>Файл ({0}) оказался двоичным файлом.
+Выберите сохранить локальный ({1}), внешний ({2}) или базовый файл.</target>
         
       </trans-unit>
       <trans-unit id="_fileChangeLocallyAndRemotely.Text">
@@ -7936,10 +7963,15 @@ Choose to keep the local ({1}), remote ({2}) or base file.</source>
 A file with the same name has been created locally ({1}) and remotely ({2}) causing this conflict.
 
 Choose the file you want to keep, merge the files or delete the file?</source>
+        <target>Файл {0} не имеет базовой ревизии.
+Файл с одним и тем же именем был создан локально ({1}) и извне ({2}), что вызвало конфликт.
+
+Удалите локальный файл, слейте файлы или удалите другой файл.</target>
         
       </trans-unit>
       <trans-unit id="_fileDeletedLocallyAndModifiedRemotely.Text">
         <source>The file has been deleted locally ({0}) and modified remotely ({1}). Choose to delete the file or keep the modified version.</source>
+        <target>Файл был удален локально ({0}) и изменен извне ({1}). Удалите или оставьте измененную версию.</target>
         
       </trans-unit>
       <trans-unit id="_fileDeletedLocallyAndModifiedRemotelyLong.Text">
@@ -7993,7 +8025,7 @@ The merge conflict will not be marked as solved. Please try again.</source>
       </trans-unit>
       <trans-unit id="_noBaseFileMergeCaption.Text">
         <source>Merge</source>
-        <target>Объединить</target>
+        <target>Слияние</target>
         
       </trans-unit>
       <trans-unit id="_noBaseRevision.Text">
@@ -8029,7 +8061,7 @@ Please go to settings and configure the mergetool!</source>
       </trans-unit>
       <trans-unit id="_resetItemMergeText.Text">
         <source>Abort merge</source>
-        <target>Отменить объединение</target>
+        <target>Отменить слияние</target>
         
       </trans-unit>
       <trans-unit id="_resetItemRebaseText.Text">
@@ -8325,7 +8357,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Stash</source>
-        <target>Спрятанные изменения</target>
+        <target>Спрятать</target>
         
       </trans-unit>
       <trans-unit id="Apply.Text">
@@ -8769,7 +8801,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="mnuLostObjectView.Text">
         <source>View</source>
-        <target>Просмотреть</target>
+        <target>Показать</target>
         
       </trans-unit>
       <trans-unit id="mnuLostObjectsCreateBranch.Text">
@@ -9695,7 +9727,6 @@ Do you want to trust this host key and then try again?</source>
 
 This will just checkout on the submodule the commit determined by the superproject.</source>
         <target>Репозиторий содержит субмодули, необходимо обновить их после каждого переключения.
-
 
 Обновление переключит субмодуль на коммит, указанный в суперпроекте.</target>
         
@@ -10889,6 +10920,10 @@ See the changes in the commit form.</source>
         <target>Переименовать ветку...</target>
         
       </trans-unit>
+      <trans-unit id="resetAnotherBranchToHereToolStripMenuItem.Text">
+        <source>Reset another branch to here...</source>
+        
+      </trans-unit>
       <trans-unit id="resetCurrentBranchToHereToolStripMenuItem.Text">
         <source>Reset current branch to here...</source>
         <target>Сбросить текущую ветку сюда...</target>
@@ -10955,7 +10990,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="EnabledChx.Text">
         <source>Enabled</source>
-        <target>Включен</target>
+        <target>Включить</target>
         
       </trans-unit>
       <trans-unit id="LocalBranchChx.Text">
@@ -11383,10 +11418,12 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_authored.Text">
         <source>authored</source>
+        <target>авторизован</target>
         
       </trans-unit>
       <trans-unit id="_authoredAndCommitted.Text">
         <source>authored and committed</source>
+        <target>авторизован и закоммичен</target>
         
       </trans-unit>
       <trans-unit id="_bodyNotLoaded.Text">
@@ -11396,8 +11433,8 @@ Full message text is not present in older commits.
 Select this commit to populate the full message.</source>
         <target>
 
-Полный текст сообщения отсутствие в старых коммитах.
-Выберите этот коммит, чтобы заполнить полный текст сообщения.</target>
+Полный текст сообщения отсутствует в старых коммитах.
+Выберите этот коммит, чтобы отобразить полный текст сообщения.</target>
         
       </trans-unit>
       <trans-unit id="_branchText.Text">
@@ -11410,6 +11447,11 @@ Select this commit to populate the full message.</source>
         <target>Ветки</target>
         
       </trans-unit>
+      <trans-unit id="_cancelText.Text">
+        <source>Cancel</source>
+        <target>Отмена</target>
+        
+      </trans-unit>
       <trans-unit id="_childrenText.Text">
         <source>{0:Child|Children}</source>
         <target>{0:Child|Children}</target>
@@ -11417,10 +11459,12 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_commitDateText.Text">
         <source>{0:Commit date|Commit dates}</source>
+        <target>{0:Commit date|Commit dates}</target>
         
       </trans-unit>
       <trans-unit id="_commitHashText.Text">
         <source>{0:Commit hash|Commit hashes}</source>
+        <target>{0:Commit hash|Commit hashes}</target>
         
       </trans-unit>
       <trans-unit id="_committed.Text">
@@ -11475,6 +11519,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_deleteFile.Text">
         <source>{0:Delete file|Delete files}</source>
+        <target>{0:Delete file|Delete files}</target>
         
       </trans-unit>
       <trans-unit id="_directoryIsNotAValidRepository.Text">
@@ -11505,6 +11550,15 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_forkCloneRepo.Text">
         <source>Fork or clone a repository</source>
         <target>Ответвить или склонировать репозиторий</target>
+        
+      </trans-unit>
+      <trans-unit id="_generalGitConfigExceptionCaption.Text">
+        <source>Repository Configuration Error</source>
+        <target>Ошибка настройки репозитория</target>
+        
+      </trans-unit>
+      <trans-unit id="_generalGitConfigExceptionMessage.Text">
+        <source>Failed to read &quot;{0}&quot; due to the following error:{1}{1}{2}{1}{1}Due to the nature of this problem, the behavior of the application cannot be guaranteed and it must be closed.{1}{1}Please correct this issue and re-open Git Extensions.</source>
         
       </trans-unit>
       <trans-unit id="_gitExecutableNotFoundText.Text">
@@ -11577,6 +11631,16 @@ Select this commit to populate the full message.</source>
         <target>&lt;No results found&gt;</target>
         
       </trans-unit>
+      <trans-unit id="_noRevision.Text">
+        <source>No revision</source>
+        <target>Нет ревизий</target>
+        
+      </trans-unit>
+      <trans-unit id="_okText.Text">
+        <source>OK</source>
+        <target>OK</target>
+        
+      </trans-unit>
       <trans-unit id="_open.Text">
         <source>Open</source>
         <target>Открыть</target>
@@ -11630,6 +11694,24 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_showAllText.Text">
         <source>Show all</source>
         <target>Показать все</target>
+        
+      </trans-unit>
+      <trans-unit id="_showDiffForAllParentsText.Text">
+        <source>Show file differences for all parents in browse dialog</source>
+        <target>Показать различия между файлами для всех родителей в окне обзора</target>
+        
+      </trans-unit>
+      <trans-unit id="_showDiffForAllParentsTooltip.Text">
+        <source>Show all differences between the selected commits, not limiting to only one difference.
+
+- For a single selected commit, show the difference with its parent commit.
+- For a single selected merge commit, show the difference with all parents.
+- For two selected commits with a common ancestor (BASE):
+   - Show the difference between the commits.
+   - The difference of unique files from BASE to each of the selected commits.
+   - The difference of common files (identical changes) from BASE to the commits.
+- For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
+- For more than four selected commits, show the difference from the first to the last selected commit.</source>
         
       </trans-unit>
       <trans-unit id="_submodulesText.Text">
