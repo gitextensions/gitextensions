@@ -35,55 +35,55 @@
     <None Include="Resources\git-extensions-logo.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\IconAbout.ico">
+    <None Include="Resources\Settings.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\IconAdded.ico">
+    <None Include="Resources\information.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\IconBranchCheckout.ico">
+    <None Include="Resources\FileStatusAdded.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\IconBranchCreate.ico">
+    <None Include="Resources\BranchCreate.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\IconBrowseFileExplorer.ico">
+    <None Include="Resources\stash.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\IconCloneRepoGit.ico">
+    <None Include="Resources\CloneRepoGit.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\IconCommit.ico">
+    <None Include="Resources\FileHistory.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\IconDiff.ico">
+    <None Include="Resources\Pull.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\IconFileHistory.ico">
+    <None Include="Resources\Push.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\IconPull.ico">
+    <None Include="Resources\PatchApply.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\IconPush.ico">
+    <None Include="Resources\RepoCreate.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\IconResetFileTo.ico">
+    <None Include="Resources\checkout.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\IconRevisionCheckout.ico">
+    <None Include="Resources\RepoStateClean.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\IconSettings.ico">
+    <None Include="Resources\BranchCheckout.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\IconStash.ico">
+    <None Include="Resources\ShellExtensions.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\IconRepoCreate.ico">
+    <None Include="Resources\ResetWorkingDirChanges.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\IconPatchApply.ico">
+    <None Include="Resources\Diff.ico">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

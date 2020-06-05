@@ -3,6 +3,8 @@ try {
     # Download tx.exe for Python 3 from https://github.com/transifex/transifex-client/releases/latest
     # or install it using pip install transifex-client
 
+    $env:PYTHONIOENCODING='UTF-8'
+
     # 1. remove all existing translations
     Get-ChildItem -Path ../../GitUI/Translation/* -Filter *.xlf -Exclude English* | `
         Remove-Item -Force;

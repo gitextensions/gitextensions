@@ -10,6 +10,8 @@ namespace GitUI
         private readonly TranslationString _warning = new TranslationString("Warning");
         private readonly TranslationString _yes = new TranslationString("Yes");
         private readonly TranslationString _no = new TranslationString("No");
+        private readonly TranslationString _okText = new TranslationString("OK");
+        private readonly TranslationString _cancelText = new TranslationString("Cancel");
 
         private readonly TranslationString _containedInBranchesText = new TranslationString("Contained in branches:");
         private readonly TranslationString _containedInNoBranchText = new TranslationString("Contained in no branch");
@@ -34,6 +36,7 @@ namespace GitUI
         private readonly TranslationString _remote = new TranslationString("Remote");
         private readonly TranslationString _openWithGitExtensions = new TranslationString("Open with Git Extensions");
         private readonly TranslationString _contScrollToNextFileOnlyWithAlt = new TranslationString("Enable automatic continuous scroll (without ALT button)");
+        private readonly TranslationString _noRevision = new TranslationString("No revision");
 
         private readonly TranslationString _authored = new TranslationString("authored");
         private readonly TranslationString _committed = new TranslationString("committed");
@@ -49,6 +52,18 @@ namespace GitUI
         private readonly TranslationString _removeAllInvalidRepositories = new TranslationString("Remove all {0} invalid repositories");
         private readonly TranslationString _open = new TranslationString("Open");
         private readonly TranslationString _directoryIsNotAValidRepository = new TranslationString("The selected item is not a valid git repository.");
+
+        private readonly TranslationString _showDiffForAllParentsText = new TranslationString("Show file differences for all parents in browse dialog");
+        private readonly TranslationString _showDiffForAllParentsTooltip = new TranslationString(@"Show all differences between the selected commits, not limiting to only one difference.
+
+- For a single selected commit, show the difference with its parent commit.
+- For a single selected merge commit, show the difference with all parents.
+- For two selected commits with a common ancestor (BASE):
+   - Show the difference between the commits.
+   - The difference of unique files from BASE to each of the selected commits.
+   - The difference of common files (identical changes) from BASE to the commits.
+- For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
+- For more than four selected commits, show the difference from the first to the last selected commit.");
 
         // public only because of FormTranslate
         public Strings()
@@ -70,6 +85,8 @@ namespace GitUI
         public static string Warning => _instance.Value._warning.Text;
         public static string Yes => _instance.Value._yes.Text;
         public static string No => _instance.Value._no.Text;
+        public static string OK => _instance.Value._okText.Text;
+        public static string Cancel => _instance.Value._cancelText.Text;
 
         public static string ContainedInBranches => _instance.Value._containedInBranchesText.Text;
         public static string ContainedInNoBranch => _instance.Value._containedInNoBranchText.Text;
@@ -97,6 +114,7 @@ namespace GitUI
         public static string Remote => _instance.Value._remote.Text;
         public static string OpenWithGitExtensions => _instance.Value._openWithGitExtensions.Text;
         public static string ContScrollToNextFileOnlyWithAlt => _instance.Value._contScrollToNextFileOnlyWithAlt.Text;
+        public static string NoRevision => _instance.Value._noRevision.Text;
 
         public static string OpenReport => _instance.Value._openReport.Text;
 
@@ -115,5 +133,8 @@ namespace GitUI
         public static string RemoveAllInvalidRepositories => _instance.Value._removeAllInvalidRepositories.Text;
         public static string Open => _instance.Value._open.Text;
         public static string DirectoryInvalidRepository => _instance.Value._directoryIsNotAValidRepository.Text;
+
+        public static string ShowDiffForAllParentsText => _instance.Value._showDiffForAllParentsText.Text;
+        public static string ShowDiffForAllParentsTooltip => _instance.Value._showDiffForAllParentsTooltip.Text;
     }
 }

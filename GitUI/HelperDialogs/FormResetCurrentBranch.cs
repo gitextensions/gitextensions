@@ -22,13 +22,16 @@ namespace GitUI.HelperDialogs
             Hard
         }
 
+        public static FormResetCurrentBranch Create(GitUICommands commands, GitRevision revision, ResetType resetType = ResetType.Mixed)
+            => new FormResetCurrentBranch(commands, revision ?? throw new NotSupportedException(Strings.NoRevision), resetType);
+
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormResetCurrentBranch()
         {
             InitializeComponent();
         }
 
-        public FormResetCurrentBranch(GitUICommands commands, GitRevision revision, ResetType resetType = ResetType.Mixed)
+        private FormResetCurrentBranch(GitUICommands commands, GitRevision revision, ResetType resetType)
             : base(commands)
         {
             Revision = revision;
@@ -65,11 +68,6 @@ namespace GitUI.HelperDialogs
 
         private void FormResetCurrentBranch_Load(object sender, EventArgs e)
         {
-            if (Revision == null)
-            {
-                throw new Exception("No revision");
-            }
-
             _NO_TRANSLATE_BranchInfo.Text = string.Format(_branchInfo.Text, Module.GetSelectedBranch());
             commitSummaryUserControl1.Revision = Revision;
         }

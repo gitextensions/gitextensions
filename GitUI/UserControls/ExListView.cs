@@ -230,7 +230,7 @@ namespace GitUI.UserControls
                 }
 
                 var listViewGroup = Groups[groupIndex];
-                SetGrpState(listViewGroup, LVGS.Collapsible);
+                SetGroupState(listViewGroup, LVGS.Collapsible);
                 Invalidate();
 
                 int GetGroupIndex()
@@ -244,23 +244,6 @@ namespace GitUI.UserControls
                     }
 
                     return index - 1 + _minGroupInsertionIndex;
-                }
-
-                unsafe void SetGrpState(ListViewGroup grp, LVGS state)
-                {
-                    int groupId = GetGroupId(grp);
-                    if (groupId < 0)
-                    {
-                        groupId = Groups.IndexOf(grp) - _minGroupInsertionIndex;
-                    }
-
-                    var lvgroup = new LVGROUPW();
-                    lvgroup.cbSize = (uint)sizeof(LVGROUPW);
-                    lvgroup.state = state;
-                    lvgroup.mask = LVGF.STATE;
-                    lvgroup.iGroupId = groupId;
-
-                    NativeMethods.SendMessageW(Handle, LVM_SETGROUPINFO, (IntPtr)groupId, ref lvgroup);
                 }
             }
 
@@ -285,6 +268,23 @@ namespace GitUI.UserControls
 
                 return eventArgs.Handled;
             }
+        }
+
+        public unsafe void SetGroupState(ListViewGroup group, LVGS state)
+        {
+            int groupId = GetGroupId(group);
+            if (groupId < 0)
+            {
+                groupId = Groups.IndexOf(group) - _minGroupInsertionIndex;
+            }
+
+            var lvgroup = new LVGROUPW();
+            lvgroup.cbSize = (uint)sizeof(LVGROUPW);
+            lvgroup.state = state;
+            lvgroup.mask = LVGF.STATE;
+            lvgroup.iGroupId = groupId;
+
+            NativeMethods.SendMessageW(Handle, LVM_SETGROUPINFO, (IntPtr)groupId, ref lvgroup);
         }
 
         /// <summary>

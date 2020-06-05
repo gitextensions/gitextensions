@@ -1002,6 +1002,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
     <body>
       <trans-unit id="_publishTypeDraft.Text">
         <source>Draft</source>
+        <target>Szkic</target>
         
       </trans-unit>
       <trans-unit id="_publishTypePrivate.Text">
@@ -1264,6 +1265,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
         <source>View in {0}</source>
+        <target>Zobacz na {0}</target>
         
       </trans-unit>
     </body>
@@ -1800,6 +1802,7 @@ Proszę się upewnić, czy URL jest poprawny i czy token API ma dostęp do infor
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
         <source>Log as guest to display the build report</source>
+        <target>Zaloguj jako gość, aby wyświetlić raport tworzenia</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">

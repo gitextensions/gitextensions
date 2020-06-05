@@ -265,12 +265,12 @@
       </trans-unit>
       <trans-unit id="tabCreate.Text">
         <source>Create Pull Request</source>
-        <target>Pull Request erzeugen</target>
+        <target>Pull-Request erzeugen</target>
         
       </trans-unit>
       <trans-unit id="tabView.Text">
         <source>View Pull Requests</source>
-        <target>Pull Requests anzeigen</target>
+        <target>Pull-Requests anzeigen</target>
         
       </trans-unit>
     </body>
@@ -651,7 +651,7 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       </trans-unit>
       <trans-unit id="_selectRemote.Text">
         <source>Please select a remote repository</source>
-        <target>Bitte wählen Sie ein Remote Repository aus</target>
+        <target>Bitte wählen Sie ein Remote-Repository aus</target>
         
       </trans-unit>
       <trans-unit id="labelChange.Text">
@@ -710,7 +710,7 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       </trans-unit>
       <trans-unit id="_selectRemote.Text">
         <source>Please select a remote repository</source>
-        <target>Bitte wählen Sie ein Remote Repository aus</target>
+        <target>Bitte wählen Sie ein Remote-Repository aus</target>
         
       </trans-unit>
       <trans-unit id="labelBranch.Text">
