@@ -1117,8 +1117,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                System.Drawing.Point pt = ConflictedFiles.PointToClient(Cursor.Position);
-                DataGridView.HitTestInfo hti = ConflictedFiles.HitTest(pt.X, pt.Y);
+                DataGridView.HitTestInfo hti = ConflictedFiles.HitTest(e.X, e.Y);
                 int lastRow = hti.RowIndex;
                 ConflictedFiles.ClearSelection();
                 if (lastRow >= 0 && ConflictedFiles.Rows.Count > lastRow)

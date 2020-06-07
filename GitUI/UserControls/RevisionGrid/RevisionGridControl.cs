@@ -1418,8 +1418,7 @@ namespace GitUI
 
         private void OnGridViewMouseClick(object sender, MouseEventArgs e)
         {
-            var pt = _gridView.PointToClient(Cursor.Position);
-            var hti = _gridView.HitTest(pt.X, pt.Y);
+            var hti = _gridView.HitTest(e.X, e.Y);
             _latestSelectedRowIndex = hti.RowIndex;
         }
 
@@ -1430,8 +1429,7 @@ namespace GitUI
                 return;
             }
 
-            var pt = _gridView.PointToClient(Cursor.Position);
-            var hti = _gridView.HitTest(pt.X, pt.Y);
+            var hti = _gridView.HitTest(e.X, e.Y);
 
             if (_latestSelectedRowIndex == hti.RowIndex
                 && _latestSelectedRowIndex < _gridView.Rows.Count
