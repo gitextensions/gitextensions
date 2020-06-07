@@ -3088,7 +3088,7 @@ namespace GitUI.CommandsDialogs
 
                 AddSeparator();
 
-                // Add a settings  item
+                // Add a settings item
                 AddSettingsItem();
 
                 return;
