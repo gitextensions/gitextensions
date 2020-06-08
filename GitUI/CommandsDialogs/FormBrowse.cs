@@ -996,9 +996,18 @@ namespace GitUI.CommandsDialogs
 
                     button.Click += delegate
                     {
-                        if (ScriptRunner.RunScript(this, Module, script.Name, UICommands, RevisionGrid).NeedsGridRefresh)
+                        try
                         {
-                            RevisionGrid.RefreshRevisions();
+                            if (ScriptRunner.RunScript(this, Module, script.Name, UICommands, RevisionGrid).NeedsGridRefresh)
+                            {
+                                RevisionGrid.RefreshRevisions();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(this,
+                                $"Failed to execute '{script.Name}' script.{Environment.NewLine}Reason: {ex.Message}",
+                                Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     };
 
@@ -1664,7 +1673,8 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                Process.Start("http://git-extensions-documentation.readthedocs.org/en/master/");
+                // Point to the default documentation, will work also if the old doc version is removed
+                Process.Start("https://git-extensions-documentation.readthedocs.org");
             }
             catch (Win32Exception)
             {
@@ -2563,7 +2573,7 @@ namespace GitUI.CommandsDialogs
         private void UpdateSubmodulesStructure()
         {
             // Submodule status is updated on git-status updates. To make sure supermodule status is updated, update immediately (once)
-            var updateStatus = AppSettings.ShowSubmoduleStatus && _gitStatusMonitor.Active && (Module.SuperprojectModule != null);
+            var updateStatus = AppSettings.ShowSubmoduleStatus && _gitStatusMonitor.Active;
 
             toolStripButtonLevelUp.ToolTipText = "";
 

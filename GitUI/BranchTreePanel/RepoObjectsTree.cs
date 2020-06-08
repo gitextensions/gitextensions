@@ -238,7 +238,8 @@ namespace GitUI.BranchTreePanel
         {
             var cancellationToken = _selectionCancellationTokenSequence.Next();
 
-            string selectedGuid = selectedRevisions.FirstOrDefault()?.Guid;
+            GitRevision selectedRevision = selectedRevisions.FirstOrDefault();
+            string selectedGuid = selectedRevision?.IsArtificial ?? true ? "HEAD" : selectedRevision.Guid;
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -246,12 +247,22 @@ namespace GitUI.BranchTreePanel
                     ? new HashSet<string>()
                     : (await Module.GetMergedBranchesAsync(includeRemote: true, fullRefname: true, commit: selectedGuid)).ToHashSet();
 
+                selectedRevision?.Refs.ForEach(gitRef => mergedBranches.Remove(gitRef.CompleteName));
+
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
-                cancellationToken.ThrowIfCancellationRequested();
-                _branchesTree?.DepthEnumerator<BaseBranchLeafNode>().ForEach(node => node.IsMerged = mergedBranches.Contains(GitRefName.RefsHeadsPrefix + node.FullPath));
-                cancellationToken.ThrowIfCancellationRequested();
-                _remotesTree?.DepthEnumerator<BaseBranchLeafNode>().ForEach(node => node.IsMerged = mergedBranches.Contains(GitRefName.RefsRemotesPrefix + node.FullPath));
+                try
+                {
+                    treeMain.BeginUpdate();
+                    cancellationToken.ThrowIfCancellationRequested();
+                    _branchesTree?.DepthEnumerator<BaseBranchLeafNode>().ForEach(node => node.IsMerged = mergedBranches.Contains(GitRefName.RefsHeadsPrefix + node.FullPath));
+                    cancellationToken.ThrowIfCancellationRequested();
+                    _remotesTree?.DepthEnumerator<BaseBranchLeafNode>().ForEach(node => node.IsMerged = mergedBranches.Contains(GitRefName.RefsRemotesPrefix + node.FullPath));
+                }
+                finally
+                {
+                    treeMain.EndUpdate();
+                }
             }).FileAndForget();
         }
 

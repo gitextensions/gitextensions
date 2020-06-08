@@ -131,3 +131,5 @@ YYYY/MM/DD, github id, Full name, email
 2020/05/04, digitalcoyote, Curtis Carter, lokiphasma(at)gmail.com
 2020/05/05, f-i-x-7, Artem Eliseev, f-i-x-7(at)mail.ru
 2020/05/19, mnaoumov, Michael Naumov, mnaoumov(at)gmail.com
+2020/05/19, haldyr, Stanislav Řehák, haldyr(at)gmail.com
+

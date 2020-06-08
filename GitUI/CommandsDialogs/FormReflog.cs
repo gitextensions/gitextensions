@@ -155,10 +155,8 @@ namespace GitUI.CommandsDialogs
             var resetType = _isDirtyDir ? FormResetCurrentBranch.ResetType.Soft : FormResetCurrentBranch.ResetType.Hard;
             UICommands.DoActionOnRepo(() =>
             {
-                using (var form = new FormResetCurrentBranch(UICommands, gitRevision, resetType))
-                {
-                    return form.ShowDialog(this) == DialogResult.OK;
-                }
+                using var form = FormResetCurrentBranch.Create(UICommands, gitRevision, resetType);
+                return form.ShowDialog(this) == DialogResult.OK;
             });
         }
 

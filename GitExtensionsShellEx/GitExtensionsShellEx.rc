@@ -27,23 +27,23 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDI_GITEXTENSIONS           ICON    "Resources\\git-extensions-logo.ico"
-IDI_ICONADDED               ICON    "Resources\\IconAdded.ico"
-IDI_ICONBROWSEFILEEXPLORER  ICON    "Resources\\IconBrowseFileExplorer.ico"
-IDI_ICONBRANCHCREATE        ICON    "Resources\\IconBranchCreate.ico"
-IDI_ICONBRANCHCHECKOUT      ICON    "Resources\\IconBranchCheckout.ico"
-IDI_ICONREVISIONCHECKOUT    ICON    "Resources\\IconRevisionCheckout.ico"
-IDI_ICONABOUT               ICON    "Resources\\IconAbout.ico"
-IDI_ICONCLONEREPOGIT        ICON    "Resources\\IconCloneRepoGit.ico"
-IDI_ICONCOMMIT              ICON    "Resources\\IconCommit.ico"
-IDI_ICONFILEHISTORY         ICON    "Resources\\IconFileHistory.ico"
-IDI_ICONPULL                ICON    "Resources\\IconPull.ico"
-IDI_ICONPUSH                ICON    "Resources\\IconPush.ico"
-IDI_ICONTRESETFILETO        ICON    "Resources\\IconResetFileTo.ico"
-IDI_ICONSETTINGS            ICON    "Resources\\IconSettings.ico"
-IDI_ICONVIEWCHANGES         ICON    "Resources\\IconDiff.ico"
-IDI_ICONSTASH               ICON    "Resources\\IconStash.ico"
-IDI_ICONCREATEREPOSITORY    ICON    "Resources\\IconRepoCreate.ico"
-IDI_ICONPATCHAPPLY          ICON    "Resources\\IconPatchApply.ico"
+IDI_ICONADDED               ICON    "Resources\\FileStatusAdded.ico"
+IDI_ICONBROWSEFILEEXPLORER  ICON    "Resources\\ShellExtensions.ico"
+IDI_ICONBRANCHCREATE        ICON    "Resources\\BranchCreate.ico"
+IDI_ICONBRANCHCHECKOUT      ICON    "Resources\\BranchCheckout.ico"
+IDI_ICONREVISIONCHECKOUT    ICON    "Resources\\checkout.ico"
+IDI_ICONABOUT               ICON    "Resources\\information.ico"
+IDI_ICONCLONEREPOGIT        ICON    "Resources\\CloneRepoGit.ico"
+IDI_ICONCOMMIT              ICON    "Resources\\RepoStateClean.ico"
+IDI_ICONFILEHISTORY         ICON    "Resources\\FileHistory.ico"
+IDI_ICONPULL                ICON    "Resources\\Pull.ico"
+IDI_ICONPUSH                ICON    "Resources\\Push.ico"
+IDI_ICONTRESETFILETO        ICON    "Resources\\ResetWorkingDirChanges.ico"
+IDI_ICONSETTINGS            ICON    "Resources\\Settings.ico"
+IDI_ICONVIEWCHANGES         ICON    "Resources\\Diff.ico"
+IDI_ICONSTASH               ICON    "Resources\\stash.ico"
+IDI_ICONCREATEREPOSITORY    ICON    "Resources\\RepoCreate.ico"
+IDI_ICONPATCHAPPLY          ICON    "Resources\\PatchApply.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -51,8 +51,8 @@ IDI_ICONPATCHAPPLY          ICON    "Resources\\IconPatchApply.ico"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,1,0,0
- PRODUCTVERSION 3,1,0,0
+ FILEVERSION 33,33,0,0
+ PRODUCTVERSION 33,33,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,12 +68,12 @@ BEGIN
         BLOCK "040904B0"
         BEGIN
             VALUE "FileDescription", "Shell extensions for Windows Explorer"
-            VALUE "FileVersion", "3.1.0"
-            VALUE "InternalName", "GitExtensions"
+            VALUE "FileVersion", "33.3.0"
+            VALUE "InternalName", "Git Extensions"
             VALUE "LegalCopyright", "Copyright 2008-2018"
             VALUE "OriginalFilename", "GitExtensionsShellEx.dll"
-            VALUE "ProductName", "GitExtensions"
-            VALUE "ProductVersion", "3.1.0"
+            VALUE "ProductName", "Git Extensions"
+            VALUE "ProductVersion", "33.33.0"
         END
     END
     BLOCK "VarFileInfo"

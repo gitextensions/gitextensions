@@ -787,6 +787,11 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
   </file>
   <file datatype="plaintext" original="ColorsSettingsPage" source-language="en" target-language="lv">
     <body>
+      <trans-unit id="$this.Text">
+        <source>Colors</source>
+        <target>Krāsas</target>
+        
+      </trans-unit>
       <trans-unit id="DefaultThemeName.Text">
         <source>default</source>
         
@@ -1343,9 +1348,16 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
 
 - For a single selected commit, show the difference with its parent commit.
 - For a single selected merge commit, show the difference with all parents.
-- For two selected commits, show the difference between the commits as well as the difference between a common ancestor (BASE) to the last selected commit.
+- For two selected commits with a common ancestor (BASE):
+   - Show the difference between the commits.
+   - The difference of unique files from BASE to each of the selected commits.
+   - The difference of common files (identical changes) from BASE to the commits.
 - For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
-- For more than four selected commits, show the difference as if the first and the last selected commit were selected.</source>
+- For more than four selected commits, show the difference from the first to the last selected commit.</source>
+        
+      </trans-unit>
+      <trans-unit id="chkContScrollToNextFileOnlyWithAlt.Text">
+        <source>Enable automatic continuous scroll (without ALT button)</source>
         
       </trans-unit>
       <trans-unit id="chkOmitUninterestingDiff.Text">
@@ -1478,11 +1490,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
   </file>
   <file datatype="plaintext" original="FileStatusList" source-language="en" target-language="lv">
     <body>
-      <trans-unit id="CombinedDiff.Text">
-        <source>Combined Diff</source>
-        <target>Kombinētais Diff</target>
-        
-      </trans-unit>
       <trans-unit id="FilterWatermarkLabel.Text">
         <source>Filter files using a regular expression...</source>
         
@@ -1492,8 +1499,16 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target>Bez izmaiņām</target>
         
       </trans-unit>
-      <trans-unit id="_diffWithBase.Text">
-        <source>Diff with BASE a/</source>
+      <trans-unit id="_combinedDiff.Text">
+        <source>Combined diff</source>
+        
+      </trans-unit>
+      <trans-unit id="_diffBaseToB.Text">
+        <source>Unique diff BASE with b/</source>
+        
+      </trans-unit>
+      <trans-unit id="_diffCommonBase.Text">
+        <source>Common diff with BASE a/</source>
         
       </trans-unit>
       <trans-unit id="_diffWithParent.Text">
@@ -1525,6 +1540,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       <trans-unit id="_largeFileSizeWarning.Text">
         <source>This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.</source>
         <target>Šis fails ir {0: N1} MB. Lielu failu rādīšana var būt lēna. Noklikšķiniet, lai tik un tā parādītu.</target>
+        
+      </trans-unit>
+      <trans-unit id="automaticContinuousScrollToolStripMenuItem.Text">
+        <source>Enable automatic continuous scroll (without ALT button)</source>
         
       </trans-unit>
       <trans-unit id="cherrypickSelectedLinesToolStripMenuItem.Text">
@@ -2195,6 +2214,10 @@ You will have push access. {2}</source>
         <target>Konflikti atrisināti</target>
         
       </trans-unit>
+      <trans-unit id="SignOff.Text">
+        <source>Sign-Off</source>
+        
+      </trans-unit>
       <trans-unit id="Skip.Text">
         <source>Skip patch</source>
         <target>Izlaist ielāpu</target>
@@ -2481,26 +2504,6 @@ compare with first:</source>
         <target>Izveidot vilkšanas pieprasījumus...</target>
         
       </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryCaption.Text">
-        <source>Open</source>
-        <target>Atvērums</target>
-        
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryMainInstruction.Text">
-        <source>The selected item is not a valid git repository.</source>
-        <target>Atlasītais vienums nav derīgs krāsu repozitorijs.</target>
-        
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryRemoveAllCommand.Text">
-        <source>Remove all {0} invalid repositories</source>
-        <target>Noņemt visus {0} nederīgos repozitorijus</target>
-        
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryRemoveSelectedRepoCommand.Text">
-        <source>Remove the selected invalid repository</source>
-        <target>Noņemt atlasīto nederīgo repozitoriju</target>
-        
-      </trans-unit>
       <trans-unit id="_forkCloneRepositoryToolStripMenuItem.Text">
         <source>Fork/Clone repository...</source>
         <target>Dakšas/klona repozitorijs...</target>
@@ -2519,11 +2522,6 @@ compare with first:</source>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
         <target>Notiek ielāde...</target>
-        
-      </trans-unit>
-      <trans-unit id="_noBranchTitle.Text">
-        <source>no branch</source>
-        <target>bez filiāles</target>
         
       </trans-unit>
       <trans-unit id="_noReposHostFound.Text">
@@ -3144,6 +3142,10 @@ Do you want to continue?</source>
       <trans-unit id="cboTerminal.Item2">
         <source>powershell</source>
         <target>PowerShell</target>
+        
+      </trans-unit>
+      <trans-unit id="cboTerminal.Item3">
+        <source>pwsh</source>
         
       </trans-unit>
       <trans-unit id="chkChowConsoleTab.Text">
@@ -4191,11 +4193,6 @@ You can unset the template:
         <target>Rādīt mapē</target>
         
       </trans-unit>
-      <trans-unit id="openSubmoduleMenuItem.Text">
-        <source>Open with Git Extensions</source>
-        <target>Atvērt, izmantojot Git paplašinājumus</target>
-        
-      </trans-unit>
       <trans-unit id="openToolStripMenuItem.Text">
         <source>Open</source>
         <target>Atvērums</target>
@@ -4330,11 +4327,6 @@ You can unset the template:
       <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
         <source>Stop tracking this file</source>
         <target>Apturēt šī faila izsekošanu</target>
-        
-      </trans-unit>
-      <trans-unit id="submoduleSummaryMenuItem.Text">
-        <source>View summary</source>
-        <target>Skatīt kopsavilkumu</target>
         
       </trans-unit>
       <trans-unit id="toolAuthorLabelItem.Text">
@@ -5136,6 +5128,10 @@ If you are not sure just close this window.</source>
       <trans-unit id="saveAsToolStripMenuItem.Text">
         <source>Save as</source>
         <target>Saglabāt kā</target>
+        
+      </trans-unit>
+      <trans-unit id="showAuthorAvatarToolStripMenuItem.Text">
+        <source>Show author avatar</source>
         
       </trans-unit>
       <trans-unit id="showAuthorDateToolStripMenuItem.Text">
@@ -8824,6 +8820,18 @@ Check if file is accessible.</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GitRootIntroductionPage" source-language="en" target-language="lv">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Git Settings</source>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Select one of the subnodes to view or edit the Git settings</source>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GitSettingsGroup" source-language="en" target-language="lv">
     <body>
       <trans-unit id="$this.Title">
@@ -9219,6 +9227,14 @@ Do you want to trust this host key and then try again?</source>
         <target>Servera resursdatora atslēga reģistrā nav ievietota kešatmiņā. Vai vēlaties uzticēties šai resursdatora atslēgai un pēc tam mēģināt vēlreiz?</target>
         
       </trans-unit>
+      <trans-unit id="_shellNotFound.Text">
+        <source>The selected shell is not installed, or is not on your path.</source>
+        
+      </trans-unit>
+      <trans-unit id="_shellNotFoundCaption.Text">
+        <source>Shell not found</source>
+        
+      </trans-unit>
       <trans-unit id="_theRepositorySubmodules.Text">
         <source>Update submodules on checkout?</source>
         <target>Vai atjaunināt paņemšanas apakšmoduļus?</target>
@@ -9344,25 +9360,9 @@ The action cannot be undone.</source>
         <target>Vai vēlaties dzēst kategoriju “{0}” ar {1} krātuvēm? Darbību nevar atsaukt.</target>
         
       </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepository.Text">
-        <source>The selected item is not a valid git repository.
-
-Do you want to remove it from the recent repositories list?</source>
-        <target>Atlasītais vienums nav derīgs krāsu repozitorijs. Vai vēlaties to noņemt no jaunāko krātuvju saraksta?</target>
-        
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryCaption.Text">
-        <source>Open</source>
-        <target>Atvērums</target>
-        
-      </trans-unit>
       <trans-unit id="_groupRecentRepositories.Text">
         <source>Recent repositories</source>
         <target>Nesenie repozitoriji</target>
-        
-      </trans-unit>
-      <trans-unit id="_notAValidRepository.Text">
-        <source>Not a valid git repository</source>
         
       </trans-unit>
       <trans-unit id="clmhdrBranch.Text">
@@ -9473,6 +9473,10 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnuBtnManageRemotesFromRootNode.Text">
         <source>&amp;Manage...</source>
+        
+      </trans-unit>
+      <trans-unit id="mnuBtnOpenRemoteUrlInBrowser.Text">
+        <source>Open remote Url</source>
         
       </trans-unit>
       <trans-unit id="mnuBtnPruneAllBranchesFromARemote.Text">
@@ -9698,11 +9702,6 @@ To show all branches, right click the revision grid, select 'view' and then the 
       <trans-unit id="diffStashSubmoduleChangesToolStripMenuItem.Text">
         <source>Stash submodule changes</source>
         <target>Krājumu submodule izmaiņas</target>
-        
-      </trans-unit>
-      <trans-unit id="diffSubmoduleSummaryMenuItem.Text">
-        <source>View summary</source>
-        <target>Skatīt kopsavilkumu</target>
         
       </trans-unit>
       <trans-unit id="diffUpdateSubmoduleMenuItem.Text">
@@ -10079,6 +10078,10 @@ See the changes in the commit form.</source>
       <trans-unit id="ShowSuperprojectTags.Text">
         <source>Show superproject tags</source>
         <target>Rādīt superprojekta atzīmes</target>
+        
+      </trans-unit>
+      <trans-unit id="ToggleBetweenArtificialAndHeadCommits.Text">
+        <source>Toggle between artificial and HEAD commits</source>
         
       </trans-unit>
       <trans-unit id="ToggleHighlightSelectedBranch.Text">
@@ -10562,21 +10565,6 @@ See the changes in the commit form.</source>
         <target>Skripti</target>
         
       </trans-unit>
-      <trans-unit id="AskConfirmation.HeaderText">
-        <source>Confirmation</source>
-        <target>Apstiprinājums</target>
-        
-      </trans-unit>
-      <trans-unit id="EnabledColumn.HeaderText">
-        <source>Enabled</source>
-        <target>Iespējots</target>
-        
-      </trans-unit>
-      <trans-unit id="OnEvent.HeaderText">
-        <source>OnEvent</source>
-        <target>Onevent</target>
-        
-      </trans-unit>
       <trans-unit id="_scriptSettingsPageHelpDisplayArgumentsHelp.Text">
         <source>Arguments help</source>
         <target>Argumentu palīdzība</target>
@@ -10632,79 +10620,18 @@ Current Branch:
 {cDefaultRemotePathFromUrl}</source>
         
       </trans-unit>
-      <trans-unit id="addScriptButton.Text">
-        <source>Add</source>
-        <target>Pievienot</target>
+      <trans-unit id="chdrCommand.Text">
+        <source>Command</source>
+        <target>Komanda</target>
         
       </trans-unit>
-      <trans-unit id="argumentsLabel.Text">
-        <source>Arguments:</source>
-        <target>Argumenti:</target>
+      <trans-unit id="chdrEvents.Text">
+        <source>Event</source>
         
       </trans-unit>
-      <trans-unit id="browseScriptButton.Text">
-        <source>Browse</source>
-        <target>Pārlūkot</target>
-        
-      </trans-unit>
-      <trans-unit id="buttonShowArgumentsHelp.Text">
-        <source>Help</source>
-        <target>Palīdzība</target>
-        
-      </trans-unit>
-      <trans-unit id="commandLabel.Text">
-        <source>Command:</source>
-        <target>Komanda:</target>
-        
-      </trans-unit>
-      <trans-unit id="inMenuCheckBox.Text">
-        <source>Add to revision grid context menu</source>
-        <target>Pievienot pārskatījuma režģa konteksta izvēlnei</target>
-        
-      </trans-unit>
-      <trans-unit id="labelOnEvent.Text">
-        <source>On event:</source>
-        <target>Uz pasākumu:</target>
-        
-      </trans-unit>
-      <trans-unit id="lbl_icon.Text">
-        <source>Icon:</source>
-        <target>Ikona:</target>
-        
-      </trans-unit>
-      <trans-unit id="nameLabel.Text">
-        <source>Name:</source>
-        <target>Nosaukums:</target>
-        
-      </trans-unit>
-      <trans-unit id="removeScriptButton.Text">
-        <source>Remove</source>
-        <target>Noņemt</target>
-        
-      </trans-unit>
-      <trans-unit id="sbtn_icon.Text">
-        <source>Select icon</source>
-        <target>Atlasīt ikonu</target>
-        
-      </trans-unit>
-      <trans-unit id="scriptEnabled.Text">
-        <source>Enabled</source>
-        <target>Iespējots</target>
-        
-      </trans-unit>
-      <trans-unit id="scriptIsPowerShell.Text">
-        <source>Is PowerShell</source>
-        <target>Ir PowerShell</target>
-        
-      </trans-unit>
-      <trans-unit id="scriptNeedsConfirmation.Text">
-        <source>Ask for confirmation</source>
-        <target>Pieprasīt apstiprinājumu</target>
-        
-      </trans-unit>
-      <trans-unit id="scriptRunInBackground.Text">
-        <source>Run in background</source>
-        <target>Izpildīt fonā</target>
+      <trans-unit id="chdrNames.Text">
+        <source>Name</source>
+        <target>Vārds</target>
         
       </trans-unit>
     </body>
@@ -10983,13 +10910,11 @@ Select this commit to populate the full message.</source>
         
       </trans-unit>
       <trans-unit id="_commitDateText.Text">
-        <source>{0:Commit date|Commits dates}</source>
-        <target>{0: izpildes datums lielākam datumam}</target>
+        <source>{0:Commit date|Commit dates}</source>
         
       </trans-unit>
       <trans-unit id="_commitHashText.Text">
-        <source>{0:Commit hash|Commits hashes}</source>
-        <target>{0: veikt jaucējhašus}</target>
+        <source>{0:Commit hash|Commit hashes}</source>
         
       </trans-unit>
       <trans-unit id="_committed.Text">
@@ -10999,6 +10924,10 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_committerText.Text">
         <source>Committer</source>
         <target>Committer</target>
+        
+      </trans-unit>
+      <trans-unit id="_contScrollToNextFileOnlyWithAlt.Text">
+        <source>Enable automatic continuous scroll (without ALT button)</source>
         
       </trans-unit>
       <trans-unit id="_containedInBranchesText.Text">
@@ -11035,6 +10964,15 @@ Select this commit to populate the full message.</source>
         <target>{0} {1: dienas] pirms</target>
         
       </trans-unit>
+      <trans-unit id="_deleteFile.Text">
+        <source>{0:Delete file|Delete files}</source>
+        
+      </trans-unit>
+      <trans-unit id="_directoryIsNotAValidRepository.Text">
+        <source>The selected item is not a valid git repository.</source>
+        <target>Atlasītais vienums nav derīgs krāsu repozitorijs.</target>
+        
+      </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
         <target>Kļūda</target>
@@ -11055,6 +10993,14 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_forkCloneRepo.Text">
         <source>Fork or clone a repository</source>
+        
+      </trans-unit>
+      <trans-unit id="_generalGitConfigExceptionCaption.Text">
+        <source>Repository Configuration Error</source>
+        
+      </trans-unit>
+      <trans-unit id="_generalGitConfigExceptionMessage.Text">
+        <source>Failed to read &quot;{0}&quot; due to the following error:{1}{1}{2}{1}{1}Due to the nature of this problem, the behavior of the application cannot be guaranteed and it must be closed.{1}{1}Please correct this issue and re-open Git Extensions.</source>
         
       </trans-unit>
       <trans-unit id="_gitExecutableNotFoundText.Text">
@@ -11115,12 +11061,27 @@ Select this commit to populate the full message.</source>
         <target>Nē</target>
         
       </trans-unit>
+      <trans-unit id="_noBranch.Text">
+        <source>no branch</source>
+        <target>bez filiāles</target>
+        
+      </trans-unit>
       <trans-unit id="_noResultsFound.Text">
         <source>&lt;No results found&gt;</source>
         
       </trans-unit>
+      <trans-unit id="_open.Text">
+        <source>Open</source>
+        <target>Atvērums</target>
+        
+      </trans-unit>
       <trans-unit id="_openReport.Text">
         <source>Open report</source>
+        
+      </trans-unit>
+      <trans-unit id="_openWithGitExtensions.Text">
+        <source>Open with Git Extensions</source>
+        <target>Atvērt, izmantojot Git paplašinājumus</target>
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
@@ -11136,6 +11097,16 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_remotesText.Text">
         <source>Remotes</source>
         <target>Attālinājumi</target>
+        
+      </trans-unit>
+      <trans-unit id="_removeAllInvalidRepositories.Text">
+        <source>Remove all {0} invalid repositories</source>
+        <target>Noņemt visus {0} nederīgos repozitorijus</target>
+        
+      </trans-unit>
+      <trans-unit id="_removeSelectedInvalidRepository.Text">
+        <source>Remove the selected invalid repository</source>
+        <target>Noņemt atlasīto nederīgo repozitoriju</target>
         
       </trans-unit>
       <trans-unit id="_searchingFor.Text">

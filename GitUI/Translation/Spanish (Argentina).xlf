@@ -803,6 +803,11 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
   </file>
   <file datatype="plaintext" original="ColorsSettingsPage" source-language="en" target-language="es-AR">
     <body>
+      <trans-unit id="$this.Text">
+        <source>Colors</source>
+        <target>Colores</target>
+        
+      </trans-unit>
       <trans-unit id="DefaultThemeName.Text">
         <source>default</source>
         
@@ -1369,9 +1374,16 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
 
 - For a single selected commit, show the difference with its parent commit.
 - For a single selected merge commit, show the difference with all parents.
-- For two selected commits, show the difference between the commits as well as the difference between a common ancestor (BASE) to the last selected commit.
+- For two selected commits with a common ancestor (BASE):
+   - Show the difference between the commits.
+   - The difference of unique files from BASE to each of the selected commits.
+   - The difference of common files (identical changes) from BASE to the commits.
 - For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
-- For more than four selected commits, show the difference as if the first and the last selected commit were selected.</source>
+- For more than four selected commits, show the difference from the first to the last selected commit.</source>
+        
+      </trans-unit>
+      <trans-unit id="chkContScrollToNextFileOnlyWithAlt.Text">
+        <source>Enable automatic continuous scroll (without ALT button)</source>
         
       </trans-unit>
       <trans-unit id="chkOmitUninterestingDiff.Text">
@@ -1505,11 +1517,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
   </file>
   <file datatype="plaintext" original="FileStatusList" source-language="en" target-language="es-AR">
     <body>
-      <trans-unit id="CombinedDiff.Text">
-        <source>Combined Diff</source>
-        <target>Diff combinado</target>
-        
-      </trans-unit>
       <trans-unit id="FilterWatermarkLabel.Text">
         <source>Filter files using a regular expression...</source>
         <target>Filtrar archivos con una expresión regular...</target>
@@ -1520,8 +1527,16 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target>No hay ningún cambio</target>
         
       </trans-unit>
-      <trans-unit id="_diffWithBase.Text">
-        <source>Diff with BASE a/</source>
+      <trans-unit id="_combinedDiff.Text">
+        <source>Combined diff</source>
+        
+      </trans-unit>
+      <trans-unit id="_diffBaseToB.Text">
+        <source>Unique diff BASE with b/</source>
+        
+      </trans-unit>
+      <trans-unit id="_diffCommonBase.Text">
+        <source>Common diff with BASE a/</source>
         
       </trans-unit>
       <trans-unit id="_diffWithParent.Text">
@@ -1554,6 +1569,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       <trans-unit id="_largeFileSizeWarning.Text">
         <source>This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.</source>
         <target>Este es un archivo de {0:N1} MB. Mostrar archivos grandes puede ser algo lento. Hacé click si lo querés ver igual.</target>
+        
+      </trans-unit>
+      <trans-unit id="automaticContinuousScrollToolStripMenuItem.Text">
+        <source>Enable automatic continuous scroll (without ALT button)</source>
         
       </trans-unit>
       <trans-unit id="cherrypickSelectedLinesToolStripMenuItem.Text">
@@ -2231,6 +2250,10 @@ Vas a tener acceso para hacer push. {2}</target>
         <target>Conflictos resueltos</target>
         
       </trans-unit>
+      <trans-unit id="SignOff.Text">
+        <source>Sign-Off</source>
+        
+      </trans-unit>
       <trans-unit id="Skip.Text">
         <source>Skip patch</source>
         <target>Saltear este patch</target>
@@ -2520,26 +2543,6 @@ comparar con la primera:</target>
         <target>Crear pull requests...</target>
         
       </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryCaption.Text">
-        <source>Open</source>
-        <target>Abrir</target>
-        
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryMainInstruction.Text">
-        <source>The selected item is not a valid git repository.</source>
-        <target>El elemento seleccionado no es un repositorio de git válido.</target>
-        
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryRemoveAllCommand.Text">
-        <source>Remove all {0} invalid repositories</source>
-        <target>Eliminar los {0} repositorios inválidos</target>
-        
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryRemoveSelectedRepoCommand.Text">
-        <source>Remove the selected invalid repository</source>
-        <target>Eliminar el repositorio inválido seleccionado</target>
-        
-      </trans-unit>
       <trans-unit id="_forkCloneRepositoryToolStripMenuItem.Text">
         <source>Fork/Clone repository...</source>
         <target>Hacer fork/clonar el repositorio...</target>
@@ -2558,11 +2561,6 @@ comparar con la primera:</target>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
         <target>Cargando...</target>
-        
-      </trans-unit>
-      <trans-unit id="_noBranchTitle.Text">
-        <source>no branch</source>
-        <target>no hay ninguna branch</target>
         
       </trans-unit>
       <trans-unit id="_noReposHostFound.Text">
@@ -3189,6 +3187,10 @@ Do you want to continue?</source>
       <trans-unit id="cboTerminal.Item2">
         <source>powershell</source>
         <target>powershell</target>
+        
+      </trans-unit>
+      <trans-unit id="cboTerminal.Item3">
+        <source>pwsh</source>
         
       </trans-unit>
       <trans-unit id="chkChowConsoleTab.Text">
@@ -4276,11 +4278,6 @@ Borralo así:
         <target>Mostrar en el directorio</target>
         
       </trans-unit>
-      <trans-unit id="openSubmoduleMenuItem.Text">
-        <source>Open with Git Extensions</source>
-        <target>Abrir Git Extensions</target>
-        
-      </trans-unit>
       <trans-unit id="openToolStripMenuItem.Text">
         <source>Open</source>
         <target>Abrir</target>
@@ -4419,11 +4416,6 @@ Borralo así:
       <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
         <source>Stop tracking this file</source>
         <target>Hacer que git deje de seguir este archivo</target>
-        
-      </trans-unit>
-      <trans-unit id="submoduleSummaryMenuItem.Text">
-        <source>View summary</source>
-        <target>Ver el resumen</target>
         
       </trans-unit>
       <trans-unit id="toolAuthorLabelItem.Text">
@@ -5252,6 +5244,10 @@ Si no sabés lo que estás haciendo, cerrá esta ventana.</target>
       <trans-unit id="saveAsToolStripMenuItem.Text">
         <source>Save as</source>
         <target>Guardar como</target>
+        
+      </trans-unit>
+      <trans-unit id="showAuthorAvatarToolStripMenuItem.Text">
+        <source>Show author avatar</source>
         
       </trans-unit>
       <trans-unit id="showAuthorDateToolStripMenuItem.Text">
@@ -9104,6 +9100,18 @@ Fijate si se puede acceder al archivo.</target>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GitRootIntroductionPage" source-language="en" target-language="es-AR">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Git Settings</source>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Select one of the subnodes to view or edit the Git settings</source>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GitSettingsGroup" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="$this.Title">
@@ -9494,6 +9502,14 @@ Do you want to trust this host key and then try again?</source>
 ¿Confiás en esta clave como para probar de vuelta?</target>
         
       </trans-unit>
+      <trans-unit id="_shellNotFound.Text">
+        <source>The selected shell is not installed, or is not on your path.</source>
+        
+      </trans-unit>
+      <trans-unit id="_shellNotFoundCaption.Text">
+        <source>Shell not found</source>
+        
+      </trans-unit>
       <trans-unit id="_theRepositorySubmodules.Text">
         <source>Update submodules on checkout?</source>
         <target>¿Actualizar los submódulos al hacer checkout?</target>
@@ -9623,28 +9639,9 @@ The action cannot be undone.</source>
 Esta acción no se puede revertir.</target>
         
       </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepository.Text">
-        <source>The selected item is not a valid git repository.
-
-Do you want to remove it from the recent repositories list?</source>
-        <target>Lo que seleccionaste no es un repositorio de git válido.
-
-¿Lo querés borrar de la lista de repositorios recientes?</target>
-        
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryCaption.Text">
-        <source>Open</source>
-        <target>Abrir</target>
-        
-      </trans-unit>
       <trans-unit id="_groupRecentRepositories.Text">
         <source>Recent repositories</source>
         <target>Repositorios recientes</target>
-        
-      </trans-unit>
-      <trans-unit id="_notAValidRepository.Text">
-        <source>Not a valid git repository</source>
-        <target>No es un repositorio de git válido</target>
         
       </trans-unit>
       <trans-unit id="clmhdrBranch.Text">
@@ -9760,6 +9757,10 @@ Para mostrar todas las branches, hacé click derecho en la lista de revisiones, 
       <trans-unit id="mnuBtnManageRemotesFromRootNode.Text">
         <source>&amp;Manage...</source>
         <target>&amp;Administrar...</target>
+        
+      </trans-unit>
+      <trans-unit id="mnuBtnOpenRemoteUrlInBrowser.Text">
+        <source>Open remote Url</source>
         
       </trans-unit>
       <trans-unit id="mnuBtnPruneAllBranchesFromARemote.Text">
@@ -10000,11 +10001,6 @@ Para mostrar todas las branches, hacé click derecho en la lista de revisiones, 
       <trans-unit id="diffStashSubmoduleChangesToolStripMenuItem.Text">
         <source>Stash submodule changes</source>
         <target>Guardar los cambios de los submódulos en el stash</target>
-        
-      </trans-unit>
-      <trans-unit id="diffSubmoduleSummaryMenuItem.Text">
-        <source>View summary</source>
-        <target>Ver el resumen</target>
         
       </trans-unit>
       <trans-unit id="diffUpdateSubmoduleMenuItem.Text">
@@ -10358,6 +10354,10 @@ Podés ver los cambios en la ventana de commit.</target>
       </trans-unit>
       <trans-unit id="ShowSuperprojectTags.Text">
         <source>Show superproject tags</source>
+        
+      </trans-unit>
+      <trans-unit id="ToggleBetweenArtificialAndHeadCommits.Text">
+        <source>Toggle between artificial and HEAD commits</source>
         
       </trans-unit>
       <trans-unit id="ToggleHighlightSelectedBranch.Text">
@@ -10778,18 +10778,6 @@ Podés ver los cambios en la ventana de commit.</target>
         <source>Scripts</source>
         
       </trans-unit>
-      <trans-unit id="AskConfirmation.HeaderText">
-        <source>Confirmation</source>
-        
-      </trans-unit>
-      <trans-unit id="EnabledColumn.HeaderText">
-        <source>Enabled</source>
-        
-      </trans-unit>
-      <trans-unit id="OnEvent.HeaderText">
-        <source>OnEvent</source>
-        
-      </trans-unit>
       <trans-unit id="_scriptSettingsPageHelpDisplayArgumentsHelp.Text">
         <source>Arguments help</source>
         
@@ -10844,69 +10832,18 @@ Current Branch:
 {cDefaultRemotePathFromUrl}</source>
         
       </trans-unit>
-      <trans-unit id="addScriptButton.Text">
-        <source>Add</source>
-        <target>Agregar</target>
+      <trans-unit id="chdrCommand.Text">
+        <source>Command</source>
+        <target>Comando</target>
         
       </trans-unit>
-      <trans-unit id="argumentsLabel.Text">
-        <source>Arguments:</source>
+      <trans-unit id="chdrEvents.Text">
+        <source>Event</source>
         
       </trans-unit>
-      <trans-unit id="browseScriptButton.Text">
-        <source>Browse</source>
-        <target>Mostrar</target>
-        
-      </trans-unit>
-      <trans-unit id="buttonShowArgumentsHelp.Text">
-        <source>Help</source>
-        <target>Ayuda</target>
-        
-      </trans-unit>
-      <trans-unit id="commandLabel.Text">
-        <source>Command:</source>
-        
-      </trans-unit>
-      <trans-unit id="inMenuCheckBox.Text">
-        <source>Add to revision grid context menu</source>
-        
-      </trans-unit>
-      <trans-unit id="labelOnEvent.Text">
-        <source>On event:</source>
-        
-      </trans-unit>
-      <trans-unit id="lbl_icon.Text">
-        <source>Icon:</source>
-        
-      </trans-unit>
-      <trans-unit id="nameLabel.Text">
-        <source>Name:</source>
-        <target>Nombre:</target>
-        
-      </trans-unit>
-      <trans-unit id="removeScriptButton.Text">
-        <source>Remove</source>
-        <target>Eliminar</target>
-        
-      </trans-unit>
-      <trans-unit id="sbtn_icon.Text">
-        <source>Select icon</source>
-        
-      </trans-unit>
-      <trans-unit id="scriptEnabled.Text">
-        <source>Enabled</source>
-        
-      </trans-unit>
-      <trans-unit id="scriptIsPowerShell.Text">
-        <source>Is PowerShell</source>
-        
-      </trans-unit>
-      <trans-unit id="scriptNeedsConfirmation.Text">
-        <source>Ask for confirmation</source>
-        
-      </trans-unit>
-      <trans-unit id="scriptRunInBackground.Text">
-        <source>Run in background</source>
+      <trans-unit id="chdrNames.Text">
+        <source>Name</source>
+        <target>Nombre</target>
         
       </trans-unit>
     </body>
@@ -11156,11 +11093,11 @@ Select this commit to populate the full message.</source>
         
       </trans-unit>
       <trans-unit id="_commitDateText.Text">
-        <source>{0:Commit date|Commits dates}</source>
+        <source>{0:Commit date|Commit dates}</source>
         
       </trans-unit>
       <trans-unit id="_commitHashText.Text">
-        <source>{0:Commit hash|Commits hashes}</source>
+        <source>{0:Commit hash|Commit hashes}</source>
         
       </trans-unit>
       <trans-unit id="_committed.Text">
@@ -11170,6 +11107,10 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_committerText.Text">
         <source>Committer</source>
         <target>Persona que creó el commit</target>
+        
+      </trans-unit>
+      <trans-unit id="_contScrollToNextFileOnlyWithAlt.Text">
+        <source>Enable automatic continuous scroll (without ALT button)</source>
         
       </trans-unit>
       <trans-unit id="_containedInBranchesText.Text">
@@ -11205,6 +11146,15 @@ Select this commit to populate the full message.</source>
         <source>{0} {1:day|days} ago</source>
         
       </trans-unit>
+      <trans-unit id="_deleteFile.Text">
+        <source>{0:Delete file|Delete files}</source>
+        
+      </trans-unit>
+      <trans-unit id="_directoryIsNotAValidRepository.Text">
+        <source>The selected item is not a valid git repository.</source>
+        <target>El elemento seleccionado no es un repositorio de git válido.</target>
+        
+      </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
         <target>Error</target>
@@ -11224,6 +11174,14 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_forkCloneRepo.Text">
         <source>Fork or clone a repository</source>
+        
+      </trans-unit>
+      <trans-unit id="_generalGitConfigExceptionCaption.Text">
+        <source>Repository Configuration Error</source>
+        
+      </trans-unit>
+      <trans-unit id="_generalGitConfigExceptionMessage.Text">
+        <source>Failed to read &quot;{0}&quot; due to the following error:{1}{1}{2}{1}{1}Due to the nature of this problem, the behavior of the application cannot be guaranteed and it must be closed.{1}{1}Please correct this issue and re-open Git Extensions.</source>
         
       </trans-unit>
       <trans-unit id="_gitExecutableNotFoundText.Text">
@@ -11276,12 +11234,27 @@ Select this commit to populate the full message.</source>
         <target>No</target>
         
       </trans-unit>
+      <trans-unit id="_noBranch.Text">
+        <source>no branch</source>
+        <target>no hay ninguna branch</target>
+        
+      </trans-unit>
       <trans-unit id="_noResultsFound.Text">
         <source>&lt;No results found&gt;</source>
         
       </trans-unit>
+      <trans-unit id="_open.Text">
+        <source>Open</source>
+        <target>Abrir</target>
+        
+      </trans-unit>
       <trans-unit id="_openReport.Text">
         <source>Open report</source>
+        
+      </trans-unit>
+      <trans-unit id="_openWithGitExtensions.Text">
+        <source>Open with Git Extensions</source>
+        <target>Abrir Git Extensions</target>
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
@@ -11295,6 +11268,16 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_remotesText.Text">
         <source>Remotes</source>
+        
+      </trans-unit>
+      <trans-unit id="_removeAllInvalidRepositories.Text">
+        <source>Remove all {0} invalid repositories</source>
+        <target>Eliminar los {0} repositorios inválidos</target>
+        
+      </trans-unit>
+      <trans-unit id="_removeSelectedInvalidRepository.Text">
+        <source>Remove the selected invalid repository</source>
+        <target>Eliminar el repositorio inválido seleccionado</target>
         
       </trans-unit>
       <trans-unit id="_searchingFor.Text">

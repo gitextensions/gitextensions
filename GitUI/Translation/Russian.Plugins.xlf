@@ -12,7 +12,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile SubModules</source>
-        <target>Автоматически компилировать субмодули</target>
+        <target>Автоматическая сборка субмодулей</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
@@ -1008,6 +1008,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
     <body>
       <trans-unit id="_publishTypeDraft.Text">
         <source>Draft</source>
+        <target>Черновик</target>
         
       </trans-unit>
       <trans-unit id="_publishTypePrivate.Text">
@@ -1071,6 +1072,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_predefinedGerritVersion.Caption">
         <source>Treat Gerrit as having version</source>
+        <target>Рассматривать Gerrit, как имеющий версию</target>
         
       </trans-unit>
       <trans-unit id="_publishGerritChange.Text">
@@ -1256,6 +1258,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="GitHubHost.Caption">
         <source>GitHub (Enterprise) hostname</source>
+        <target>Имя хоста GitHub (Enterprise)</target>
         
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
@@ -1270,6 +1273,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
         <source>View in {0}</source>
+        <target>Просмотр в {0}</target>
         
       </trans-unit>
     </body>
@@ -1606,7 +1610,7 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Release Notes Generator</source>
-        <target>Генератор Release Notes</target>
+        <target>Генератор примечаний к выпуску</target>
         
       </trans-unit>
       <trans-unit id="_caption.Text">
@@ -1733,7 +1737,7 @@ branch names, tag names)</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Release Notes Generator</source>
-        <target>Генератор Release Notes</target>
+        <target>Генератор примечаний к выпуску</target>
         
       </trans-unit>
     </body>

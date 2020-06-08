@@ -33,6 +33,7 @@ namespace GitUI
             this.checkoutBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetCurrentBranchToHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetAnotherBranchToHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rebaseOnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.createNewBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -128,6 +129,7 @@ namespace GitUI
             this.createNewBranchToolStripMenuItem,
             this.renameBranchToolStripMenuItem,
             this.deleteBranchToolStripMenuItem,
+            this.resetAnotherBranchToHereToolStripMenuItem,
             this.toolStripSeparator4,
             this.createTagToolStripMenuItem,
             this.deleteTagToolStripMenuItem,
@@ -227,6 +229,14 @@ namespace GitUI
             this.resetCurrentBranchToHereToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.resetCurrentBranchToHereToolStripMenuItem.Text = "Reset current branch to here...";
             this.resetCurrentBranchToHereToolStripMenuItem.Click += new System.EventHandler(this.ResetCurrentBranchToHereToolStripMenuItemClick);
+            // 
+            // resetAnotherBranchToHereToolStripMenuItem
+            // 
+            this.resetAnotherBranchToHereToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetCurrentBranchToHere;
+            this.resetAnotherBranchToHereToolStripMenuItem.Name = "resetAnotherBranchToHereToolStripMenuItem";
+            this.resetAnotherBranchToHereToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.resetAnotherBranchToHereToolStripMenuItem.Text = "Reset another branch to here...";
+            this.resetAnotherBranchToHereToolStripMenuItem.Click += new System.EventHandler(this.ResetAnotherBranchToHereToolStripMenuItemClick);
             // 
             // toolStripSeparator3
             // 
@@ -571,6 +581,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem createTagToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createNewBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetCurrentBranchToHereToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetAnotherBranchToHereToolStripMenuItem;
         private GitUI.UserControls.RevisionGrid.CopyContextMenuItem copyToClipboardToolStripMenuItem;
 
         private System.Windows.Forms.ToolStripSeparator bisectSeparator;

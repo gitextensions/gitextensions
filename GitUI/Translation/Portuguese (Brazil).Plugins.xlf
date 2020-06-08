@@ -483,6 +483,7 @@ Deseja realmente continuar?</target>
       </trans-unit>
       <trans-unit id="_regexCaseInsensitiveFlag.Caption">
         <source>Is regex filter case insensitive?</source>
+        <target>O filtro regex é case insensitive?</target>
         
       </trans-unit>
       <trans-unit id="_regexFilter.Caption">
@@ -492,6 +493,7 @@ Deseja realmente continuar?</target>
       </trans-unit>
       <trans-unit id="_regexInvertedFlag.Caption">
         <source>Search branches that does not match regex</source>
+        <target>Pesquisar branchs que não combine com o regex</target>
         
       </trans-unit>
       <trans-unit id="_remoteName.Caption">
@@ -1030,10 +1032,12 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_installCommitMsgHookDownloadFileFailed.Text">
         <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
+        <target>Não foi possível fazer o download do arquivo commit-msg. Por favor, instale o commit-msg hook manualmente.</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookFolderCreationFailed.Text">
         <source>Could not create the hooks folder. Please create the folder manually and try again.</source>
+        <target>Não foi possível criar a pasta hooks. Por favor, cria a pasta manualmente e tente novamente.</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookMessage.Text">
@@ -1042,6 +1046,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_installCommitMsgHookShortText.Text">
         <source>Install commit-msg hook</source>
+        <target>Instalar commit-msg hook</target>
         
       </trans-unit>
       <trans-unit id="_predefinedGerritVersion.Caption">
@@ -1434,14 +1439,17 @@ Quer redefinir o caminho configurado?</target>
       </trans-unit>
       <trans-unit id="EmptyQueryResultCaption.Text">
         <source>First Task Preview</source>
+        <target>Pré-visualização da Primeira Tarefa</target>
         
       </trans-unit>
       <trans-unit id="EmptyQueryResultMessage.Text">
         <source>[Empty Jira Query Result]</source>
+        <target>[Sem Resultados de Consulta no Jira]</target>
         
       </trans-unit>
       <trans-unit id="InvalidUrlCaption.Text">
         <source>Invalid Jira url</source>
+        <target>Url do Jira inválida</target>
         
       </trans-unit>
       <trans-unit id="InvalidUrlMessage.Text">

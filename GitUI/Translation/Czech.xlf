@@ -431,6 +431,7 @@ A valid GitHub account is required</source>
       </trans-unit>
       <trans-unit id="applicationLabel.Text">
         <source>Application:</source>
+        <target>Aplikace:</target>
         
       </trans-unit>
       <trans-unit id="btnCopy.Text">
@@ -605,6 +606,7 @@ A valid GitHub account is required</source>
       </trans-unit>
       <trans-unit id="_adviceDiffToolConfiguration.Text">
         <source>You should configure a diff tool to show file diff in external program.</source>
+        <target>Měli byste nastavit nástroj na rozdíly.</target>
         
       </trans-unit>
       <trans-unit id="_cantRegisterShellExtension.Text">
@@ -614,6 +616,7 @@ A valid GitHub account is required</source>
       </trans-unit>
       <trans-unit id="_configureMergeTool.Text">
         <source>You need to configure merge tool in order to solve merge conflicts.</source>
+        <target>Měli byste nastavit nástroj na rozdíly, abyste mohli řešit konflikty sloučení.</target>
         
       </trans-unit>
       <trans-unit id="_customMergeToolXConfigured.Text">
@@ -684,6 +687,7 @@ Prosím ujistěte se že jsou linuxové nástroje nainstalovány (buď přes Git
       </trans-unit>
       <trans-unit id="_mergeToolXConfigured.Text">
         <source>There is a mergetool configured: {0}</source>
+        <target>Nastaven nástroj na sloučení: {0}</target>
         
       </trans-unit>
       <trans-unit id="_mergeToolXConfiguredNeedsCmd.Text">
@@ -804,8 +808,14 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
   </file>
   <file datatype="plaintext" original="ColorsSettingsPage" source-language="en" target-language="cs">
     <body>
+      <trans-unit id="$this.Text">
+        <source>Colors</source>
+        <target>Barvy</target>
+        
+      </trans-unit>
       <trans-unit id="DefaultThemeName.Text">
         <source>default</source>
+        <target>výchozí</target>
         
       </trans-unit>
       <trans-unit id="DrawNonRelativesGray.Text">
@@ -842,6 +852,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="gbRevisionGraph.Text">
         <source>Revision graph</source>
+        <target>Graf revizí</target>
         
       </trans-unit>
       <trans-unit id="gbTheme.Text">
@@ -1032,6 +1043,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
     <body>
       <trans-unit id="_cantReadRegistry.Text">
         <source>Git Extensions has insufficient permissions to check the registry.</source>
+        <target>Git Extensions nemá dostatečná oprávnění pro přístup k registru.</target>
         
       </trans-unit>
       <trans-unit id="_selectFile.Text">
@@ -1347,9 +1359,16 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
 
 - For a single selected commit, show the difference with its parent commit.
 - For a single selected merge commit, show the difference with all parents.
-- For two selected commits, show the difference between the commits as well as the difference between a common ancestor (BASE) to the last selected commit.
+- For two selected commits with a common ancestor (BASE):
+   - Show the difference between the commits.
+   - The difference of unique files from BASE to each of the selected commits.
+   - The difference of common files (identical changes) from BASE to the commits.
 - For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
-- For more than four selected commits, show the difference as if the first and the last selected commit were selected.</source>
+- For more than four selected commits, show the difference from the first to the last selected commit.</source>
+        
+      </trans-unit>
+      <trans-unit id="chkContScrollToNextFileOnlyWithAlt.Text">
+        <source>Enable automatic continuous scroll (without ALT button)</source>
         
       </trans-unit>
       <trans-unit id="chkOmitUninterestingDiff.Text">
@@ -1401,6 +1420,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="_autoCompletionText.Text">
         <source>Provide auto completion</source>
+        <target>Poskytovat automatické doplňování</target>
         
       </trans-unit>
       <trans-unit id="_copyMenuItemText.Text">
@@ -1454,6 +1474,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
     <body>
       <trans-unit id="_repoHasNoCommits.Text">
         <source>This repository does not yet contain any commits.</source>
+        <target>Repozitář zatím neobsahuje odevzdání</target>
         
       </trans-unit>
       <trans-unit id="btnEditGitIgnore.Text">
@@ -1468,17 +1489,13 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="lblEmptyRepository.Text">
         <source>This repository does not yet contain any commits.</source>
+        <target>Repozitář zatím neobsahuje odevzdání</target>
         
       </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="FileStatusList" source-language="en" target-language="cs">
     <body>
-      <trans-unit id="CombinedDiff.Text">
-        <source>Combined Diff</source>
-        <target>Kombinovaný rozdíl</target>
-        
-      </trans-unit>
       <trans-unit id="FilterWatermarkLabel.Text">
         <source>Filter files using a regular expression...</source>
         
@@ -1488,8 +1505,16 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target>Žádné změny</target>
         
       </trans-unit>
-      <trans-unit id="_diffWithBase.Text">
-        <source>Diff with BASE a/</source>
+      <trans-unit id="_combinedDiff.Text">
+        <source>Combined diff</source>
+        
+      </trans-unit>
+      <trans-unit id="_diffBaseToB.Text">
+        <source>Unique diff BASE with b/</source>
+        
+      </trans-unit>
+      <trans-unit id="_diffCommonBase.Text">
+        <source>Common diff with BASE a/</source>
         
       </trans-unit>
       <trans-unit id="_diffWithParent.Text">
@@ -1520,6 +1545,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="_largeFileSizeWarning.Text">
         <source>This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.</source>
+        
+      </trans-unit>
+      <trans-unit id="automaticContinuousScrollToolStripMenuItem.Text">
+        <source>Enable automatic continuous scroll (without ALT button)</source>
         
       </trans-unit>
       <trans-unit id="cherrypickSelectedLinesToolStripMenuItem.Text">
@@ -2191,6 +2220,10 @@ Budete moci odesílat. {2}</target>
         <target>Konflikty vyřešeny</target>
         
       </trans-unit>
+      <trans-unit id="SignOff.Text">
+        <source>Sign-Off</source>
+        
+      </trans-unit>
       <trans-unit id="Skip.Text">
         <source>Skip patch</source>
         <target>Přeskočit záplatu</target>
@@ -2478,23 +2511,6 @@ compare with first:</source>
         <target>Vytvořit žádosti o stažení...</target>
         
       </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryCaption.Text">
-        <source>Open</source>
-        <target>Otevřít</target>
-        
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryMainInstruction.Text">
-        <source>The selected item is not a valid git repository.</source>
-        
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryRemoveAllCommand.Text">
-        <source>Remove all {0} invalid repositories</source>
-        
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryRemoveSelectedRepoCommand.Text">
-        <source>Remove the selected invalid repository</source>
-        
-      </trans-unit>
       <trans-unit id="_forkCloneRepositoryToolStripMenuItem.Text">
         <source>Fork/Clone repository...</source>
         <target>Rozvětvit/Klonovat repozitář...</target>
@@ -2513,11 +2529,6 @@ compare with first:</source>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
         <target>Načítám...</target>
-        
-      </trans-unit>
-      <trans-unit id="_noBranchTitle.Text">
-        <source>no branch</source>
-        <target>žádná větev</target>
         
       </trans-unit>
       <trans-unit id="_noReposHostFound.Text">
@@ -2812,6 +2823,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.Text">
         <source>Git command log</source>
+        <target>Záznam příkazů Gitu</target>
         
       </trans-unit>
       <trans-unit id="helpToolStripMenuItem.Text">
@@ -3114,6 +3126,10 @@ Do you want to continue?</source>
       <trans-unit id="cboTerminal.Item2">
         <source>powershell</source>
         <target>powershell</target>
+        
+      </trans-unit>
+      <trans-unit id="cboTerminal.Item3">
+        <source>pwsh</source>
         
       </trans-unit>
       <trans-unit id="chkChowConsoleTab.Text">
@@ -4052,6 +4068,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="commitAuthorStatus.ToolTipText">
         <source>Click to change author information.</source>
+        <target>Klepněte sem pro změny informací o autorovi</target>
         
       </trans-unit>
       <trans-unit id="commitCursorColumnLabel.Text">
@@ -4156,6 +4173,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
         <source>Show in folder</source>
+        <target>Ukázat soubor ve složce</target>
         
       </trans-unit>
       <trans-unit id="openDiffMenuItem.Text">
@@ -4165,11 +4183,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="openFolderMenuItem.Text">
         <source>Show in folder</source>
-        
-      </trans-unit>
-      <trans-unit id="openSubmoduleMenuItem.Text">
-        <source>Open with Git Extensions</source>
-        <target>Otevřít pomocí Git Extensions</target>
+        <target>Ukázat soubor ve složce</target>
         
       </trans-unit>
       <trans-unit id="openToolStripMenuItem.Text">
@@ -4281,6 +4295,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="stagedOpenFolderToolStripMenuItem10.Text">
         <source>Show in folder</source>
+        <target>Ukázat soubor ve složce</target>
         
       </trans-unit>
       <trans-unit id="stagedOpenToolStripMenuItem7.Text">
@@ -4305,11 +4320,6 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
         <source>Stop tracking this file</source>
-        
-      </trans-unit>
-      <trans-unit id="submoduleSummaryMenuItem.Text">
-        <source>View summary</source>
-        <target>Ukázat souhrn</target>
         
       </trans-unit>
       <trans-unit id="toolAuthorLabelItem.Text">
@@ -4561,6 +4571,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="_trsAnnotated.Text">
         <source>Annotated tag</source>
+        <target>Značku s poznámkou</target>
         
       </trans-unit>
       <trans-unit id="_trsLightweight.Text">
@@ -4648,10 +4659,12 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="_categoryNameExistsText.Text">
         <source>Category name already exists</source>
+        <target>Název kategorie již existuje</target>
         
       </trans-unit>
       <trans-unit id="_categoryNameRequiredText.Text">
         <source>Category name is required</source>
+        <target>Název kategorie je povinný</target>
         
       </trans-unit>
       <trans-unit id="_renameCategoryText.Text">
@@ -4888,6 +4901,7 @@ in order to recover the lost commits.</source>
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
         <source>Show in folder</source>
+        <target>Ukázat soubor ve složce</target>
         
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
@@ -5071,6 +5085,7 @@ Pokud si nejste jisti, prostě zavřete toto okno.</target>
       </trans-unit>
       <trans-unit id="ignoreWhitespaceToolStripMenuItem.Text">
         <source>Ignore whitespace</source>
+        <target>Ignorovat prázdný znak</target>
         
       </trans-unit>
       <trans-unit id="loadBlameOnShowToolStripMenuItem.Text">
@@ -5101,6 +5116,10 @@ Pokud si nejste jisti, prostě zavřete toto okno.</target>
       <trans-unit id="saveAsToolStripMenuItem.Text">
         <source>Save as</source>
         <target>Uložit jako</target>
+        
+      </trans-unit>
+      <trans-unit id="showAuthorAvatarToolStripMenuItem.Text">
+        <source>Show author avatar</source>
         
       </trans-unit>
       <trans-unit id="showAuthorDateToolStripMenuItem.Text">
@@ -5466,6 +5485,7 @@ Pro více informací spusťte příkaz
     <body>
       <trans-unit id="$this.Text">
         <source>Git Command Log</source>
+        <target>Záznam příkazů Gitu</target>
         
       </trans-unit>
       <trans-unit id="chkAlwaysOnTop.Text">
@@ -8631,6 +8651,7 @@ menu na tlačítku Obnovit pro další operace</target>
       </trans-unit>
       <trans-unit id="groupBoxTelemetry.Text">
         <source>Telemetry</source>
+        <target>Telemetrie</target>
         
       </trans-unit>
       <trans-unit id="lblCommitsLimit.Text">
@@ -8831,6 +8852,7 @@ Check if file is accessible.</source>
       </trans-unit>
       <trans-unit id="_cannotAccessGitignoreCaption.Text">
         <source>Failed to save .gitignore</source>
+        <target>Nemohu uložit .gitignore.</target>
         
       </trans-unit>
       <trans-unit id="_editGitignoreTitle.Text">
@@ -8875,6 +8897,18 @@ Zkontrolujte jestli je soubor přístupný.</target>
       <trans-unit id="_saveFileQuestion.Text">
         <source>Save changes to .git/info/exclude?</source>
         <target>Uložit změny do .git/info/exclude?</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitRootIntroductionPage" source-language="en" target-language="cs">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Git Settings</source>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Select one of the subnodes to view or edit the Git settings</source>
         
       </trans-unit>
     </body>
@@ -9123,6 +9157,7 @@ nápovědu</target>
       </trans-unit>
       <trans-unit id="ContinueButton.Text">
         <source>Continue</source>
+        <target>Pokračovat</target>
         
       </trans-unit>
       <trans-unit id="MoreButton.Text">
@@ -9262,6 +9297,14 @@ Do you want to trust this host key and then try again?</source>
 Chcete důvěřovat tomuto hostitelskému klíci a zkusit znova?</target>
         
       </trans-unit>
+      <trans-unit id="_shellNotFound.Text">
+        <source>The selected shell is not installed, or is not on your path.</source>
+        
+      </trans-unit>
+      <trans-unit id="_shellNotFoundCaption.Text">
+        <source>Shell not found</source>
+        
+      </trans-unit>
       <trans-unit id="_theRepositorySubmodules.Text">
         <source>Update submodules on checkout?</source>
         <target>Při získání aktualizovat podmoduly?</target>
@@ -9386,25 +9429,9 @@ The action cannot be undone.</source>
 The action cannot be undone.</source>
         
       </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepository.Text">
-        <source>The selected item is not a valid git repository.
-
-Do you want to remove it from the recent repositories list?</source>
-        
-      </trans-unit>
-      <trans-unit id="_directoryIsNotAValidRepositoryCaption.Text">
-        <source>Open</source>
-        <target>Otevřít</target>
-        
-      </trans-unit>
       <trans-unit id="_groupRecentRepositories.Text">
         <source>Recent repositories</source>
         <target>Nedávné repozitáře</target>
-        
-      </trans-unit>
-      <trans-unit id="_notAValidRepository.Text">
-        <source>Not a valid git repository</source>
-        <target>Neplatný git repozitář</target>
         
       </trans-unit>
       <trans-unit id="clmhdrBranch.Text">
@@ -9462,14 +9489,17 @@ Do you want to remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="tsmiOpenFolder.Text">
         <source>Show in folder</source>
+        <target>Ukázat soubor ve složce</target>
         
       </trans-unit>
       <trans-unit id="tsmiRemoveFromList.Text">
         <source>Remove project from the list</source>
+        <target>Odstranit projekt ze seznamu</target>
         
       </trans-unit>
       <trans-unit id="tsmiRemoveMissingReposFromList.Text">
         <source>Remove missing projects from the list</source>
+        <target>Odstranit chybějící projekty ze seznamu</target>
         
       </trans-unit>
     </body>
@@ -9509,6 +9539,10 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnuBtnManageRemotesFromRootNode.Text">
         <source>&amp;Manage...</source>
+        
+      </trans-unit>
+      <trans-unit id="mnuBtnOpenRemoteUrlInBrowser.Text">
+        <source>Open remote Url</source>
         
       </trans-unit>
       <trans-unit id="mnuBtnPruneAllBranchesFromARemote.Text">
@@ -9732,11 +9766,6 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target>Uschovat změny podmodulu</target>
         
       </trans-unit>
-      <trans-unit id="diffSubmoduleSummaryMenuItem.Text">
-        <source>View summary</source>
-        <target>Ukázat souhrn</target>
-        
-      </trans-unit>
       <trans-unit id="diffUpdateSubmoduleMenuItem.Text">
         <source>Update submodule</source>
         <target>Aktualizovat podmodul</target>
@@ -9766,6 +9795,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
         <source>Show in folder</source>
+        <target>Ukázat soubor ve složce</target>
         
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
@@ -9931,6 +9961,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="fileTreeOpenContainingFolderToolStripMenuItem.Text">
         <source>Show in folder</source>
+        <target>Ukázat soubor ve složce</target>
         
       </trans-unit>
       <trans-unit id="findToolStripMenuItem.Text">
@@ -9988,6 +10019,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="_tagNotSigned.Text">
         <source>Tag is not signed</source>
+        <target>Značka není podepsána</target>
         
       </trans-unit>
       <trans-unit id="txtCommitGpgInfo.Text">
@@ -10093,6 +10125,10 @@ See the changes in the commit form.</source>
       <trans-unit id="ShowSuperprojectTags.Text">
         <source>Show superproject tags</source>
         <target>Zobrazit značky nadřazeného projektu</target>
+        
+      </trans-unit>
+      <trans-unit id="ToggleBetweenArtificialAndHeadCommits.Text">
+        <source>Toggle between artificial and HEAD commits</source>
         
       </trans-unit>
       <trans-unit id="ToggleHighlightSelectedBranch.Text">
@@ -10559,21 +10595,6 @@ See the changes in the commit form.</source>
         <target>Skripty</target>
         
       </trans-unit>
-      <trans-unit id="AskConfirmation.HeaderText">
-        <source>Confirmation</source>
-        <target>Potvrzení</target>
-        
-      </trans-unit>
-      <trans-unit id="EnabledColumn.HeaderText">
-        <source>Enabled</source>
-        <target>Povoleno</target>
-        
-      </trans-unit>
-      <trans-unit id="OnEvent.HeaderText">
-        <source>OnEvent</source>
-        <target>Při události</target>
-        
-      </trans-unit>
       <trans-unit id="_scriptSettingsPageHelpDisplayArgumentsHelp.Text">
         <source>Arguments help</source>
         <target>Nápověda parametrů</target>
@@ -10629,78 +10650,19 @@ Current Branch:
 {cDefaultRemotePathFromUrl}</source>
         
       </trans-unit>
-      <trans-unit id="addScriptButton.Text">
-        <source>Add</source>
-        <target>Přidat</target>
+      <trans-unit id="chdrCommand.Text">
+        <source>Command</source>
+        <target>Příkaz</target>
         
       </trans-unit>
-      <trans-unit id="argumentsLabel.Text">
-        <source>Arguments:</source>
-        <target>Parametry:</target>
+      <trans-unit id="chdrEvents.Text">
+        <source>Event</source>
+        <target>Událost</target>
         
       </trans-unit>
-      <trans-unit id="browseScriptButton.Text">
-        <source>Browse</source>
-        <target>Procházet</target>
-        
-      </trans-unit>
-      <trans-unit id="buttonShowArgumentsHelp.Text">
-        <source>Help</source>
-        <target>Nápověda</target>
-        
-      </trans-unit>
-      <trans-unit id="commandLabel.Text">
-        <source>Command:</source>
-        <target>Příkaz:</target>
-        
-      </trans-unit>
-      <trans-unit id="inMenuCheckBox.Text">
-        <source>Add to revision grid context menu</source>
-        <target>Přidat do kontextové nabídky grafu revizí</target>
-        
-      </trans-unit>
-      <trans-unit id="labelOnEvent.Text">
-        <source>On event:</source>
-        <target>Při události:</target>
-        
-      </trans-unit>
-      <trans-unit id="lbl_icon.Text">
-        <source>Icon:</source>
-        <target>Ikona:</target>
-        
-      </trans-unit>
-      <trans-unit id="nameLabel.Text">
-        <source>Name:</source>
-        <target>Název:</target>
-        
-      </trans-unit>
-      <trans-unit id="removeScriptButton.Text">
-        <source>Remove</source>
-        <target>Odstranit</target>
-        
-      </trans-unit>
-      <trans-unit id="sbtn_icon.Text">
-        <source>Select icon</source>
-        <target>Vybrat ikonu</target>
-        
-      </trans-unit>
-      <trans-unit id="scriptEnabled.Text">
-        <source>Enabled</source>
-        <target>Povoleno</target>
-        
-      </trans-unit>
-      <trans-unit id="scriptIsPowerShell.Text">
-        <source>Is PowerShell</source>
-        
-      </trans-unit>
-      <trans-unit id="scriptNeedsConfirmation.Text">
-        <source>Ask for confirmation</source>
-        <target>Vyžádat potvrzení</target>
-        
-      </trans-unit>
-      <trans-unit id="scriptRunInBackground.Text">
-        <source>Run in background</source>
-        <target>Spouštět na pozadí</target>
+      <trans-unit id="chdrNames.Text">
+        <source>Name</source>
+        <target>Název</target>
         
       </trans-unit>
     </body>
@@ -10978,11 +10940,11 @@ Select this commit to populate the full message.</source>
         
       </trans-unit>
       <trans-unit id="_commitDateText.Text">
-        <source>{0:Commit date|Commits dates}</source>
+        <source>{0:Commit date|Commit dates}</source>
         
       </trans-unit>
       <trans-unit id="_commitHashText.Text">
-        <source>{0:Commit hash|Commits hashes}</source>
+        <source>{0:Commit hash|Commit hashes}</source>
         
       </trans-unit>
       <trans-unit id="_committed.Text">
@@ -10992,6 +10954,10 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_committerText.Text">
         <source>Committer</source>
         <target>Odevzdávající</target>
+        
+      </trans-unit>
+      <trans-unit id="_contScrollToNextFileOnlyWithAlt.Text">
+        <source>Enable automatic continuous scroll (without ALT button)</source>
         
       </trans-unit>
       <trans-unit id="_containedInBranchesText.Text">
@@ -11029,6 +10995,14 @@ Select this commit to populate the full message.</source>
         <target>Před {0} {1:dnem|dny}</target>
         
       </trans-unit>
+      <trans-unit id="_deleteFile.Text">
+        <source>{0:Delete file|Delete files}</source>
+        
+      </trans-unit>
+      <trans-unit id="_directoryIsNotAValidRepository.Text">
+        <source>The selected item is not a valid git repository.</source>
+        
+      </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
         <target>Chyba</target>
@@ -11049,6 +11023,14 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_forkCloneRepo.Text">
         <source>Fork or clone a repository</source>
+        
+      </trans-unit>
+      <trans-unit id="_generalGitConfigExceptionCaption.Text">
+        <source>Repository Configuration Error</source>
+        
+      </trans-unit>
+      <trans-unit id="_generalGitConfigExceptionMessage.Text">
+        <source>Failed to read &quot;{0}&quot; due to the following error:{1}{1}{2}{1}{1}Due to the nature of this problem, the behavior of the application cannot be guaranteed and it must be closed.{1}{1}Please correct this issue and re-open Git Extensions.</source>
         
       </trans-unit>
       <trans-unit id="_gitExecutableNotFoundText.Text">
@@ -11107,12 +11089,28 @@ Select this commit to populate the full message.</source>
         <target>Ne</target>
         
       </trans-unit>
+      <trans-unit id="_noBranch.Text">
+        <source>no branch</source>
+        <target>žádná větev</target>
+        
+      </trans-unit>
       <trans-unit id="_noResultsFound.Text">
         <source>&lt;No results found&gt;</source>
+        <target>&lt;No results found&gt;</target>
+        
+      </trans-unit>
+      <trans-unit id="_open.Text">
+        <source>Open</source>
+        <target>Otevřít</target>
         
       </trans-unit>
       <trans-unit id="_openReport.Text">
         <source>Open report</source>
+        
+      </trans-unit>
+      <trans-unit id="_openWithGitExtensions.Text">
+        <source>Open with Git Extensions</source>
+        <target>Otevřít pomocí Git Extensions</target>
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
@@ -11128,6 +11126,14 @@ Select this commit to populate the full message.</source>
         <source>Remotes</source>
         
       </trans-unit>
+      <trans-unit id="_removeAllInvalidRepositories.Text">
+        <source>Remove all {0} invalid repositories</source>
+        
+      </trans-unit>
+      <trans-unit id="_removeSelectedInvalidRepository.Text">
+        <source>Remove the selected invalid repository</source>
+        
+      </trans-unit>
       <trans-unit id="_searchingFor.Text">
         <source>Searching for: </source>
         
@@ -11139,6 +11145,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_showAllText.Text">
         <source>Show all</source>
+        <target>Zobrazit vše</target>
         
       </trans-unit>
       <trans-unit id="_submodulesText.Text">
@@ -11218,6 +11225,7 @@ Yes, I allow telemetry!</source>
       </trans-unit>
       <trans-unit id="DeleteTooltip.Text">
         <source>Delete this tag</source>
+        <target>Smazat tuto značku</target>
         
       </trans-unit>
       <trans-unit id="MergeTooltip.Text">

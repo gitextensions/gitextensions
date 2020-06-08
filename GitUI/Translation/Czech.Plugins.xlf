@@ -3,6 +3,7 @@
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
+        <target>Zobrazit výsledky testů v souhrnu stavů sestavení pro každý výsledek sestavení (síťově náročné!)</target>
         
       </trans-unit>
     </body>
@@ -78,6 +79,7 @@
     <body>
       <trans-unit id="BitbucketBaseUrl.Caption">
         <source>Specify the base URL to Bitbucket</source>
+        <target>Zadejte základní adresu URL pro Bitbucket</target>
         
       </trans-unit>
       <trans-unit id="BitbucketDisableSsl.Caption">
@@ -128,6 +130,7 @@
       </trans-unit>
       <trans-unit id="_linkLabelToolTip.Text">
         <source>Right-click to copy link</source>
+        <target>Pravý klik pro zkopírování odkazu</target>
         
       </trans-unit>
       <trans-unit id="_success.Text">
@@ -433,6 +436,7 @@ Opravdu chcete pokračovat?</target>
       </trans-unit>
       <trans-unit id="regexDoesNotMatch.Text">
         <source>Does not match</source>
+        <target>Nesouhlasí</target>
         
       </trans-unit>
       <trans-unit id="regexFilter.Text">
@@ -442,6 +446,7 @@ Opravdu chcete pokračovat?</target>
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
         <source>Case insensitive</source>
+        <target>Citlivé na velikost písmen</target>
         
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
@@ -465,6 +470,7 @@ Opravdu chcete pokračovat?</target>
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
         <source>Delete obsolete branches from remote</source>
+        <target>Smazat větev ze vzdáleného repozitáře</target>
         
       </trans-unit>
       <trans-unit id="_includeUnmergedBranchesFlag.Caption">
@@ -495,6 +501,7 @@ Opravdu chcete pokračovat?</target>
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
         <source>Use regex to filter branches to delete</source>
+        <target>K filtrování větví ke smazaní použít regulérní výraz</target>
         
       </trans-unit>
     </body>
@@ -709,10 +716,12 @@ Opravdu chcete pokračovat?</target>
       </trans-unit>
       <trans-unit id="labelCc.Text">
         <source>CC:</source>
+        <target>CC:</target>
         
       </trans-unit>
       <trans-unit id="labelHashtag.Text">
         <source>Hashtag:</source>
+        <target>Hashtag:</target>
         
       </trans-unit>
       <trans-unit id="labelPublishType.Text">
@@ -991,6 +1000,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
     <body>
       <trans-unit id="_publishTypeDraft.Text">
         <source>Draft</source>
+        <target>Koncept</target>
         
       </trans-unit>
       <trans-unit id="_publishTypePrivate.Text">
@@ -1005,6 +1015,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_publishTypeWip.Text">
         <source>Work-in-Progress</source>
+        <target>Rozpracované</target>
         
       </trans-unit>
     </body>
@@ -1481,6 +1492,7 @@ Chcete znovu nastavit cestu?</target>
       </trans-unit>
       <trans-unit id="_jqlQuerySettings.Caption">
         <source>JQL Query</source>
+        <target>JQL Query</target>
         
       </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
@@ -1739,6 +1751,10 @@ Please ensure that the url is valid and that the API token has access to build a
  - https://dev.azure.com/yourorganization/projectname/
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</source>
+        <target>Příklady:
+- https://dev.azure.com/yourorganization/projectname/
+- https://yourhost:8080/tfs/collectionname/projectname/
+- https://yourorganization.visualstudio.com/projectname/</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">

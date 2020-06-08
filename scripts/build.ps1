@@ -7,7 +7,8 @@ Param(
   [switch] $restore,
   [switch][Alias('b')]$build,
   [switch] $rebuild,
-  [switch] $buildNative,
+  [switch][Alias('bn')] $buildNative,
+  [switch][Alias('l')] $launch,
   [switch] $clean,
   [switch] $publish,
   [switch] $loc,
@@ -89,7 +90,17 @@ function Build {
     @properties;
 
   $exitCode = $LastExitCode;
-  Exit $exitCode;
+  if ($exitCode -ne 0) {
+    Exit $exitCode
+  }
+
+  # launch the app once it is built
+  if ($launch) {
+    $gitExtensionsExe = "$ArtifactsDir\bin\GitExtensions\$configuration\net461\GitExtensions.exe";
+    if (Test-Path $gitExtensionsExe) {
+      & $gitExtensionsExe
+    }
+  }
 }
 
 try {

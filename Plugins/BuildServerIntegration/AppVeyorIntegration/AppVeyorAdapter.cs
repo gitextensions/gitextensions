@@ -136,7 +136,7 @@ namespace AppVeyorIntegration
 
                                 if (useAllProjects || projectNames.Contains(projectObj.Name))
                                 {
-                                    Projects.Add(projectObj.Name, projectObj);
+                                    Projects[projectObj.Name] = projectObj;
                                 }
                             }
                         });
@@ -434,9 +434,14 @@ namespace AppVeyorIntegration
 
         private static long GetBuildDuration(JToken buildData)
         {
-            var startTime = buildData["started"].ToObject<DateTime>();
-            var updateTime = buildData["updated"].ToObject<DateTime>();
-            return (long)(updateTime - startTime).TotalMilliseconds;
+            var startTime = (buildData["started"] ?? buildData["created"])?.ToObject<DateTime>();
+            var updateTime = buildData["updated"]?.ToObject<DateTime>();
+            if (!startTime.HasValue || !updateTime.HasValue)
+            {
+                return 0;
+            }
+
+            return (long)(updateTime.Value - startTime.Value).TotalMilliseconds;
         }
 
         private async Task<JObject> FetchBuildDetailsManagingVersionUpdateAsync(AppVeyorBuildInfo buildDetails, CancellationToken cancellationToken)
