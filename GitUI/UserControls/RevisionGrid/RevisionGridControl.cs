@@ -1429,16 +1429,14 @@ namespace GitUI
                 return;
             }
 
-            var hti = _gridView.HitTest(e.X, e.Y);
-
-            if (_latestSelectedRowIndex == hti.RowIndex
+            if (_latestSelectedRowIndex == e.RowIndex
                 && _latestSelectedRowIndex < _gridView.Rows.Count
                 && _gridView.Rows[_latestSelectedRowIndex].Selected)
             {
                 return;
             }
 
-            _latestSelectedRowIndex = hti.RowIndex;
+            _latestSelectedRowIndex = e.RowIndex;
             _gridView.ClearSelection();
 
             if (IsValidRevisionIndex(_latestSelectedRowIndex))
