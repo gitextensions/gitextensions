@@ -817,15 +817,6 @@
       <Component Id="German.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\German.Plugins.xlf" />
       </Component>
-      <Component Id="Italian.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Italian.gif" />
-      </Component>
-      <Component Id="Italian.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Italian.xlf" />
-      </Component>
-      <Component Id="Italian.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Italian.Plugins.xlf" />
-      </Component>
       <Component Id="Japanese.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Japanese.gif" />
       </Component>
@@ -834,15 +825,6 @@
       </Component>
       <Component Id="Japanese.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Japanese.Plugins.xlf" />
-      </Component>
-      <Component Id="Latvian.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Latvian.gif" />
-      </Component>
-      <Component Id="Latvian.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Latvian.xlf" />
-      </Component>
-      <Component Id="Latvian.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Latvian.Plugins.xlf" />
       </Component>
       <Component Id="Polish.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Polish.gif" />
@@ -879,15 +861,6 @@
       </Component>
       <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.Plugins.xlf" />
-      </Component>
-      <Component Id="Spanish_Argentina.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish (Argentina).gif" />
-      </Component>
-      <Component Id="Spanish_Argentina.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish (Argentina).xlf" />
-      </Component>
-      <Component Id="Spanish_Argentina.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish (Argentina).Plugins.xlf" />
       </Component>
       <Component Id="Spanish.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish.gif" />
@@ -1774,20 +1747,10 @@
           <ComponentRef Id="German.Plugins.xlf" />
           <ComponentRef Id="German.gif" />
         </Feature>
-        <Feature Id="Italian" Title="Italian" Level="1">
-          <ComponentRef Id="Italian.xlf" />
-          <ComponentRef Id="Italian.Plugins.xlf" />
-          <ComponentRef Id="Italian.gif" />
-        </Feature>
         <Feature Id="Japanese" Title="Japanese" Level="1">
           <ComponentRef Id="Japanese.xlf" />
           <ComponentRef Id="Japanese.Plugins.xlf" />
           <ComponentRef Id="Japanese.gif" />
-        </Feature>
-        <Feature Id="Latvian" Title="Latvian" Level="1">
-          <ComponentRef Id="Latvian.xlf" />
-          <ComponentRef Id="Latvian.Plugins.xlf" />
-          <ComponentRef Id="Latvian.gif" />
         </Feature>
         <Feature Id="Polish" Title="Polish" Level="1">
           <ComponentRef Id="Polish.xlf" />
@@ -1808,11 +1771,6 @@
           <ComponentRef Id="SimplifiedChinese.xlf" />
           <ComponentRef Id="SimplifiedChinese.Plugins.xlf" />
           <ComponentRef Id="SimplifiedChinese.gif" />
-        </Feature>
-        <Feature Id="Spanish_Argentina" Title="Spanish (Argentina)" Level="1">
-          <ComponentRef Id="Spanish_Argentina.xlf" />
-          <ComponentRef Id="Spanish_Argentina.Plugins.xlf" />
-          <ComponentRef Id="Spanish_Argentina.gif" />
         </Feature>
         <Feature Id="Spanish" Title="Spanish" Level="1">
           <ComponentRef Id="Spanish.xlf" />
