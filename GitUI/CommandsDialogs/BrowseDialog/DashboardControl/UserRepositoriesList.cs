@@ -607,11 +607,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             }
             else if (e.Button == MouseButtons.Right)
             {
-                // translate the mouse position from screen coordinates to
-                // client coordinates within the given ListView
-                Point localPoint = listView1.PointToClient(Cursor.Position);
-                _rightClickedItem = listView1.GetItemAt(localPoint.X, localPoint.Y);
-
+                _rightClickedItem = listView1.GetItemAt(e.X, e.Y);
                 if (_rightClickedItem != null)
                 {
                     _rightClickedItem.Selected = true;
