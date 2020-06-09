@@ -262,17 +262,8 @@ namespace GitUI.BranchTreePanel
 
                 var submoduleNodes = new List<SubmoduleNode>();
 
-                // We always want to display submodules rooted from the top project. If the currently open project is the top project,
-                // OurSubmodules contains all child submodules recursively; otherwise, if we're currently in a submodule, SuperSubmodules
-                // contains all submodule info relative to the top project.
-                if (result.SuperSubmodules?.Count > 0)
-                {
-                    CreateSubmoduleNodes(result.SuperSubmodules, threadModule, ref submoduleNodes);
-                }
-                else
-                {
-                    CreateSubmoduleNodes(result.OurSubmodules, threadModule, ref submoduleNodes);
-                }
+                // We always want to display submodules rooted from the top project.
+                CreateSubmoduleNodes(result.AllSubmodules, threadModule, ref submoduleNodes);
 
                 var nodes = new Nodes(this);
                 AddNodesToTree(ref nodes, submoduleNodes, threadModule, result.TopProject);
@@ -281,7 +272,7 @@ namespace GitUI.BranchTreePanel
 
             private void CreateSubmoduleNodes(IEnumerable<SubmoduleInfo> submodules, GitModule threadModule, ref List<SubmoduleNode> nodes)
             {
-                // result.OurSubmodules/SuperSubmodules contain a recursive list of submodules, but don't provide info about the super
+                // result.OurSubmodules/AllSubmodules contain a recursive list of submodules, but don't provide info about the super
                 // project path. So we deduce these by substring matching paths against an ordered list of all paths.
                 var modulePaths = submodules.Select(info => info.Path).ToList();
 

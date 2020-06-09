@@ -705,19 +705,9 @@ namespace GitCommandsTests
             using (CommonTestUtils.GitModuleTestHelper moduleTestHelperSuper = new CommonTestUtils.GitModuleTestHelper("super repo"),
                                                        moduleTestHelperSub = new CommonTestUtils.GitModuleTestHelper("sub repo"))
             {
-                // Inital commit in super project
-                moduleTestHelperSuper.Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Initial commit""");
-
-                // Submodules require at least one commit
-                moduleTestHelperSub.Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Empty commit""");
-
-                // Add submodule
-                moduleTestHelperSuper.Module.GitExecutable.GetOutput(GitCommandHelpers.AddSubmoduleCmd(moduleTestHelperSub.Module.WorkingDir.ToPosixPath(), "sub repo", null, true));
-                moduleTestHelperSuper.Module.GitExecutable.GetOutput(@"commit -am ""Add submodule""");
-                GitModule moduleSub = new GitModule(Path.Combine(moduleTestHelperSuper.Module.WorkingDir, "sub repo").ToPosixPath());
-
-                // Init submodule
-                moduleTestHelperSuper.Module.GitExecutable.GetOutput(@"submodule update --init --recursive");
+                // Add and init the submodule
+                moduleTestHelperSuper.AddSubmodule(moduleTestHelperSub, "sub repo");
+                var moduleSub = moduleTestHelperSuper.GetSubmodulesRecursive().ElementAt(0);
 
                 // Commit in submodule
                 moduleSub.GitExecutable.GetOutput(@"commit --allow-empty -am ""First commit""");
