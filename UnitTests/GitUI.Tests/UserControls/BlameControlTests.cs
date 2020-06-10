@@ -53,7 +53,9 @@ namespace GitUITests.UserControls
             _gitBlameLine = new GitBlameLine(blameCommit1, 1, 1, "line1");
 
             _blameControl = new BlameControl();
-            _blameControl.GetTestAccessor().Blame = new GitBlame(new GitBlameLine[]
+
+            var blameControlTestAccessor = _blameControl.GetTestAccessor();
+            blameControlTestAccessor.Blame = new GitBlame(new GitBlameLine[]
             {
                 _gitBlameLine,
                 new GitBlameLine(blameCommit1, 2, 2, "line2"),
