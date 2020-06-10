@@ -59,7 +59,9 @@ namespace GitUITests.UserControls.RevisionGrid
                 buildCacheTask.Start();
                 renderTask.Start();
 
+#pragma warning disable VSTHRD002
                 Task.WaitAll(loadRevisionsTask, buildCacheTask, renderTask);
+#pragma warning restore VSTHRD002
 
                 // One last 'cache to', in case the loading of the revisions was finished after building the cache (unlikely)
                 _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);

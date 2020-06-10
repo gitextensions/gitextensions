@@ -275,7 +275,9 @@ namespace TeamCityIntegration
 
                     try
                     {
+#pragma warning disable VSTHRD002
                         Task.WaitAll(batchTasks, cancellationToken);
+#pragma warning restore VSTHRD002
                     }
                     catch (Exception e)
                     {

@@ -104,7 +104,7 @@ namespace GitUIPluginInterfaces
                     return false;
                 }
 
-                return CredentialManager.SaveCredentials(GetTarget(target), new NetworkCredential(userName.Trim(), password));
+                return CredentialManager.SaveCredentials(GetTarget(target), new NetworkCredential(userName.Trim(), password)) != null;
             }
 
             private static bool RemoveCredentials(string target)

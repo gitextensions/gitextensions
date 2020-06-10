@@ -16,6 +16,7 @@ namespace ResourceManagerTests.CommitDataRenders
     [TestFixture]
     public class CommitDataHeaderRendererTests
     {
+        private const int MultipleCommits = 2;
         private IHeaderLabelFormatter _labelFormatter;
         private IHeaderRenderStyleProvider _headerRendererStyleProvider;
         private ILinkFactory _linkFactory;
@@ -47,9 +48,9 @@ namespace ResourceManagerTests.CommitDataRenders
             _labelFormatter.FormatLabel(ResourceManager.Strings.CommitDate, Arg.Any<int>()).Returns(x => "Commit date:   ");
             _labelFormatter.FormatLabel(ResourceManager.Strings.CommitHash, Arg.Any<int>()).Returns(x => "Commit hash:   ");
             _labelFormatter.FormatLabel(ResourceManager.Strings.GetParents(1), Arg.Any<int>()).Returns(x => "Parent:        ");
-            _labelFormatter.FormatLabel(ResourceManager.Strings.GetParents(Arg.Any<int>()), Arg.Any<int>()).Returns(x => "Parents:       ");
+            _labelFormatter.FormatLabel(ResourceManager.Strings.GetParents(MultipleCommits), Arg.Any<int>()).Returns(x => "Parents:       ");
             _labelFormatter.FormatLabel(ResourceManager.Strings.GetChildren(1), Arg.Any<int>()).Returns(x => "Child:         ");
-            _labelFormatter.FormatLabel(ResourceManager.Strings.GetChildren(Arg.Any<int>()), Arg.Any<int>()).Returns(x => "Children:      ");
+            _labelFormatter.FormatLabel(ResourceManager.Strings.GetChildren(MultipleCommits), Arg.Any<int>()).Returns(x => "Children:      ");
 
             _headerRendererStyleProvider = Substitute.For<IHeaderRenderStyleProvider>();
             _linkFactory = Substitute.For<ILinkFactory>();
