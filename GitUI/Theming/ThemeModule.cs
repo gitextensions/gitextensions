@@ -22,26 +22,28 @@ namespace GitUI.Theming
             Settings = TryLoadTheme();
             ColorHelper.ThemeSettings = Settings;
             ThemeFix.ThemeSettings = Settings;
-            Win32ThemeHooks.ThemeSettings = Settings;
+            ////Win32ThemeHooks.ThemeSettings = Settings;
         }
 
         private static bool TryInstallHooks(Theme theme)
         {
-            Win32ThemeHooks.WindowCreated += Handle_WindowCreated;
+            ////Win32ThemeHooks.WindowCreated += Handle_WindowCreated;
 
-            try
-            {
-                Win32ThemeHooks.InstallHooks(theme, new SystemDialogDetector());
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine($"Failed to install Win32 theming hooks: {ex}");
-                Win32ThemeHooks.Uninstall();
-                return false;
-            }
+            ////try
+            ////{
+            ////    Win32ThemeHooks.InstallHooks(theme, new SystemDialogDetector());
+            ////}
+            ////catch (Exception ex)
+            ////{
+            ////    Trace.WriteLine($"Failed to install Win32 theming hooks: {ex}");
+            ////    Win32ThemeHooks.Uninstall();
+            ////    return false;
+            ////}
 
-            ResetGdiCaches();
-            return true;
+            ////ResetGdiCaches();
+            ////return true;
+
+            return false;
         }
 
         private static ThemeSettings TryLoadTheme()
@@ -106,8 +108,8 @@ namespace GitUI.Theming
 
         public static void Unload()
         {
-            Win32ThemeHooks.Uninstall();
-            Win32ThemeHooks.WindowCreated -= Handle_WindowCreated;
+            ////Win32ThemeHooks.Uninstall();
+            ////Win32ThemeHooks.WindowCreated -= Handle_WindowCreated;
         }
 
         private static void Handle_WindowCreated(IntPtr hwnd)

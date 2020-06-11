@@ -37,8 +37,8 @@ namespace GitExtensions
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            ThemeModule.Load();
-            Application.ApplicationExit += (s, e) => ThemeModule.Unload();
+            ////ThemeModule.Load();
+            ////Application.ApplicationExit += (s, e) => ThemeModule.Unload();
 
             HighDpiMouseCursors.Enable();
 
