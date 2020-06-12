@@ -2797,28 +2797,7 @@ namespace GitUI.CommandsDialogs
                     WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator
                 };
 
-                var startInfoBaseConfiguration = startInfo.BaseConfiguration;
-                if (!string.IsNullOrWhiteSpace(AppSettings.ConEmuFontSize.ValueOrDefault))
-                {
-                    if (int.TryParse(AppSettings.ConEmuFontSize.ValueOrDefault, out var fontSize))
-                    {
-                        var nodeFontSize =
-                            startInfoBaseConfiguration.SelectSingleNode("/key/key/key/value[@name='FontSize']");
-
-                        if (nodeFontSize?.Attributes != null)
-                        {
-                            nodeFontSize.Attributes["data"].Value = fontSize.ToString("X8");
-                        }
-                    }
-                }
-
-                startInfo.BaseConfiguration = startInfoBaseConfiguration;
                 startInfo.ConsoleProcessCommandLine = ShellHelper.GetCommandLineForCurrentShell();
-
-                if (AppSettings.ConEmuStyle.ValueOrDefault != "Default")
-                {
-                    startInfo.ConsoleProcessExtraArgs = " -new_console:P:\"" + AppSettings.ConEmuStyle.ValueOrDefault + "\"";
-                }
 
                 // Set path to git in this window (actually, effective with CMD only)
                 if (!string.IsNullOrEmpty(AppSettings.GitCommandValue))
@@ -2832,7 +2811,7 @@ namespace GitUI.CommandsDialogs
 
                 try
                 {
-                    _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory);
+                    _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.ConEmuStyle.ValueOrDefault, AppSettings.ConEmuFontSize.ValueOrDefault);
                 }
                 catch (InvalidOperationException)
                 {
