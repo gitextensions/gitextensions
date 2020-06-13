@@ -176,7 +176,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.firstToSelectedToolStripMenuItem.Name = "firstToSelectedToolStripMenuItem";
             this.firstToSelectedToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
-            this.firstToSelectedToolStripMenuItem.Text = "First -> Selected";
+            this.firstToSelectedToolStripMenuItem.Text = "First -> Second";
             this.firstToSelectedToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // firstToLocalToolStripMenuItem
@@ -190,7 +190,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.selectedToLocalToolStripMenuItem.Name = "selectedToLocalToolStripMenuItem";
             this.selectedToLocalToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
-            this.selectedToLocalToolStripMenuItem.Text = "Selected -> Working directory";
+            this.selectedToLocalToolStripMenuItem.Text = "Second -> Working directory";
             this.selectedToLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // firstParentToLocalToolStripMenuItem
@@ -204,7 +204,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.selectedParentToLocalToolStripMenuItem.Name = "selectedParentToLocalToolStripMenuItem";
             this.selectedParentToLocalToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
-            this.selectedParentToLocalToolStripMenuItem.Text = "Parent to selected -> Working directory";
+            this.selectedParentToLocalToolStripMenuItem.Text = "Parent to second -> Working directory";
             this.selectedParentToLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem1

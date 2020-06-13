@@ -8088,7 +8088,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target />
       </trans-unit>
       <trans-unit id="_selectedRevision.Text">
-        <source>Selected: b/</source>
+        <source>Second: b/</source>
         <target />
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
@@ -8160,7 +8160,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target />
       </trans-unit>
       <trans-unit id="firstToSelectedToolStripMenuItem.Text">
-        <source>First -&gt; Selected</source>
+        <source>First -&gt; Second</source>
         <target />
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
@@ -8184,11 +8184,11 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target />
       </trans-unit>
       <trans-unit id="selectedParentToLocalToolStripMenuItem.Text">
-        <source>Parent to selected -&gt; Working directory</source>
+        <source>Parent to second -&gt; Working directory</source>
         <target />
       </trans-unit>
       <trans-unit id="selectedToLocalToolStripMenuItem.Text">
-        <source>Selected -&gt; Working directory</source>
+        <source>Second -&gt; Working directory</source>
         <target />
       </trans-unit>
       <trans-unit id="stageFileToolStripMenuItem.Text">
