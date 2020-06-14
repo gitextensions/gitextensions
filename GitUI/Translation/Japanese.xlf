@@ -3857,7 +3857,7 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
       </trans-unit>
       <trans-unit id="StageInSuperproject.Text">
         <source>Stage &amp;in Superproject</source>
-        <target>親プロジェクトにステージ(&amp;in)</target>
+        <target>親プロジェクトにステージ(&amp;I)</target>
         
       </trans-unit>
       <trans-unit id="_addSelectionToCommitMessage.Text">
@@ -6366,7 +6366,7 @@ subtree
       </trans-unit>
       <trans-unit id="Merge.Text">
         <source>&amp;Merge remote branch into current branch</source>
-        <target>現在のブランチと取得したブランチをマージする(&amp;M) : git pull</target>
+        <target>現在のブランチにリモートブランチをマージ(&amp;M)</target>
         
       </trans-unit>
       <trans-unit id="Mergetool.Text">
@@ -7580,7 +7580,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="BranchInfo.Text">
         <source>Reset local &amp;branch:</source>
-        <target>ローカル &amp; ブランチのリセット:</target>
+        <target>ローカルブランチのリセット(&amp;B):</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
@@ -7590,7 +7590,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="ForceReset.Text">
         <source>&amp;Force reset for a non-fast-forward reset</source>
-        <target>&amp; non-fast-forwardリセットの強制リセット　</target>
+        <target>非fast-forwardリセットの強制リセット(&amp;F)</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -10920,7 +10920,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="resetAnotherBranchToHereToolStripMenuItem.Text">
         <source>Reset another branch to here...</source>
-        <target>ここに別のブランチをリセットして...</target>
+        <target>別のブランチをここにリセット...</target>
         
       </trans-unit>
       <trans-unit id="resetCurrentBranchToHereToolStripMenuItem.Text">
