@@ -137,7 +137,6 @@ difftool filename
 filehistory filename
 fileeditor filename
 formatpatch
-gitbash
 gitignore
 help (shows this dialog)
 init [path]

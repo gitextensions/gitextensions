@@ -1484,8 +1484,6 @@ namespace GitUI
                     return StartFileEditorDialog(args[2]);
                 case "formatpatch":
                     return StartFormatPatchDialog();
-                case "gitbash":
-                    return Module.RunBash() != null;
                 case "gitignore":
                     return StartEditGitIgnoreDialog(null, false);
                 case "init":        // [path]

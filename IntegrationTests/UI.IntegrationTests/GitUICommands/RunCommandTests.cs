@@ -226,35 +226,6 @@ namespace GitUITests.GitUICommandsTests
             => RunCommandBasedOnArgument<FormFormatPatch>(new string[] { "ge.exe", "formatpatch" });
 
         [Test]
-        public void RunCommandBasedOnArgument_gitbash()
-        {
-            _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { "ge.exe", "gitbash" }).Should().BeTrue();
-
-            // wait for the shell to be started
-            Thread.Sleep(5000);
-
-            // find and kill the started shell executable
-            var currentProcessId = Process.GetCurrentProcess().Id;
-            int numberOfShellChildren = KillChildProcess("git-bash") + KillChildProcess("cmd");
-            numberOfShellChildren.Should().Be(1);
-
-            return;
-
-            int KillChildProcess(string name)
-            {
-                int number = 0;
-                Process.GetProcessesByName(name)
-                    .Where(process => process.ParentProcess()?.Id == currentProcessId)
-                    .ForEach(process =>
-                    {
-                        process.TerminateTree();
-                        ++number;
-                    });
-                return number;
-            }
-        }
-
-        [Test]
         public void RunCommandBasedOnArgument_gitignore()
             => RunCommandBasedOnArgument<FormGitIgnore>(new string[] { "ge.exe", "gitignore" });
 
