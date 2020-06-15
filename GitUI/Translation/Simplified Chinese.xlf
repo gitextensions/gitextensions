@@ -849,6 +849,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="DefaultThemeName.Text">
         <source>default</source>
+        <target>默认</target>
         
       </trans-unit>
       <trans-unit id="DrawNonRelativesGray.Text">
@@ -892,6 +893,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="gbTheme.Text">
         <source>Theme</source>
+        <target>主题</target>
         
       </trans-unit>
       <trans-unit id="lblRestartNeeded.Text">
@@ -5310,6 +5312,7 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="showAuthorAvatarToolStripMenuItem.Text">
         <source>Show author avatar</source>
+        <target>显示作者头像</target>
         
       </trans-unit>
       <trans-unit id="showAuthorDateToolStripMenuItem.Text">
@@ -8567,10 +8570,12 @@ Do you want to register the host's fingerprint and restart the process?</source>
       </trans-unit>
       <trans-unit id="_errorHeading.Text">
         <source>Download Failed</source>
+        <target>下载失败</target>
         
       </trans-unit>
       <trans-unit id="_errorMessage.Text">
         <source>Failed to download an update.</source>
+        <target>下载更新失败</target>
         
       </trans-unit>
       <trans-unit id="_newVersionAvailable.Text">
@@ -9210,6 +9215,7 @@ Check if file is accessible.</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Git Settings</source>
+        <target>Git 配置</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -9486,6 +9492,7 @@ help</source>
       </trans-unit>
       <trans-unit id="ContinueButton.Text">
         <source>Continue</source>
+        <target>继续</target>
         
       </trans-unit>
       <trans-unit id="MoreButton.Text">
@@ -9494,6 +9501,7 @@ help</source>
       </trans-unit>
       <trans-unit id="ResolveButton.Text">
         <source>Resolve...</source>
+        <target>解决...</target>
         
       </trans-unit>
       <trans-unit id="_bisect.Text">
@@ -9517,6 +9525,7 @@ help</source>
       </trans-unit>
       <trans-unit id="_progressMessage.Text">
         <source>{0} is currently in progress.</source>
+        <target>正在处理 {0}</target>
         
       </trans-unit>
       <trans-unit id="_progressWithConflictsMessage.Text">
@@ -9891,6 +9900,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnuBtnOpenRemoteUrlInBrowser.Text">
         <source>Open remote Url</source>
+        <target>打开远程 URL</target>
         
       </trans-unit>
       <trans-unit id="mnuBtnPruneAllBranchesFromARemote.Text">
