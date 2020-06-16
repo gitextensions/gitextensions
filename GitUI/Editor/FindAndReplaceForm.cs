@@ -49,18 +49,9 @@ namespace GitUI
             InitializeComponent();
             InitializeComplete();
             _search = new TextEditorSearcher();
+            _search.ScanRegionChanged += ScanRegionChanged;
 
             ShowInTaskbar = false;
-        }
-
-        private TextEditorControl Editor
-        {
-            set
-            {
-                _editor = value;
-                _search.Document = _editor.Document;
-                UpdateTitleBar();
-            }
         }
 
         public bool ReplaceMode
@@ -97,7 +88,7 @@ namespace GitUI
 
         public void ShowFor(TextEditorControl editor, bool replaceMode)
         {
-            Editor = editor;
+            SetEditor(editor);
 
             _search.ClearScanRegion();
             SelectionManager sm = editor.ActiveTextAreaControl.SelectionManager;
@@ -174,7 +165,6 @@ namespace GitUI
                 {
                     // user moved outside of the originally selected region
                     _search.ClearScanRegion();
-                    UpdateTitleBar();
                 }
 
                 int startFrom = caret.Offset - (searchBackward ? 1 : 0);
@@ -183,12 +173,14 @@ namespace GitUI
                     startFrom = _search.EndOffset;
                 }
 
+                var isMultiFileSearch = _fileLoader != null && !_search.HasScanRegion;
+
                 range = _search.FindNext(startFrom, searchBackward, out _lastSearchLoopedAround);
-                if (range != null && (!_lastSearchLoopedAround || _fileLoader == null))
+                if (range != null && (!_lastSearchLoopedAround || !isMultiFileSearch))
                 {
                     SelectResult(range);
                 }
-                else if (_fileLoader != null)
+                else if (isMultiFileSearch)
                 {
                     range = null;
                     if (currentIdx != -1 && startIdx == -1)
@@ -233,6 +225,11 @@ namespace GitUI
             // Also move the caret to the end of the selection, because when the user
             // presses F3, the caret is where we start searching next time.
             _editor.ActiveTextAreaControl.Caret.Position = p2;
+        }
+
+        private void ScanRegionChanged(object sender, EventArgs e)
+        {
+            UpdateTitleBar();
         }
 
         private void btnHighlightAll_Click(object sender, EventArgs e)
@@ -382,6 +379,13 @@ namespace GitUI
             }
         }
 
+        private void SetEditor(TextEditorControl editor)
+        {
+            _editor = editor;
+            _search.Document = _editor.Document;
+            UpdateTitleBar();
+        }
+
         internal void SetFileLoader(GetNextFileFnc fileLoader)
         {
             _fileLoader = fileLoader;
@@ -401,11 +405,33 @@ namespace GitUI
 
             base.Dispose(disposing);
         }
+
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly FindAndReplaceForm _control;
+
+            public TestAccessor(FindAndReplaceForm control)
+            {
+                _control = control;
+            }
+
+            public TextEditorSearcher Search => _control._search;
+            public TextBox TxtLookFor => _control.txtLookFor;
+            public CheckBox ChkMatchCase => _control.chkMatchCase;
+            public CheckBox ChkMatchWholeWord => _control.chkMatchWholeWord;
+
+            public void SetEditor(TextEditorControl editor)
+            {
+                _control.SetEditor(editor);
+            }
+        }
     }
 
     public class TextRange : AbstractSegment
     {
-        public TextRange(IDocument document, int offset, int length)
+        public TextRange(int offset, int length)
         {
             this.offset = offset;
             this.length = length;
@@ -416,8 +442,8 @@ namespace GitUI
     /// editor's IDocument... it's like Find box without a GUI.</summary>
     public sealed class TextEditorSearcher : IDisposable
     {
+        public event EventHandler ScanRegionChanged;
         public bool MatchCase;
-
         public bool MatchWholeWordOnly;
         private IDocument _document;
         private string _lookFor2; // uppercase in case-insensitive mode
@@ -503,6 +529,8 @@ namespace GitUI
             _region = new TextMarker(offset, length, TextMarkerType.SolidBlock,
                                      Globals.HalfMix(bkgColor, Color.FromArgb(160, 160, 160)));
             _document.MarkerStrategy.AddMarker(_region);
+            _document.TextContentChanged += DocumentOnTextContentChanged;
+            ScanRegionChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public void ClearScanRegion()
@@ -510,7 +538,9 @@ namespace GitUI
             if (_region != null)
             {
                 _document.MarkerStrategy.RemoveMarker(_region);
+                _document.TextContentChanged -= DocumentOnTextContentChanged;
                 _region = null;
+                ScanRegionChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -589,7 +619,7 @@ namespace GitUI
                         (IsWholeWordMatch(offset) ||
                          (!MatchWholeWordOnly && IsPartWordMatch(offset))))
                     {
-                        return new TextRange(_document, offset, LookFor.Length);
+                        return new TextRange(offset, LookFor.Length);
                     }
                 }
             }
@@ -602,7 +632,7 @@ namespace GitUI
                         (IsWholeWordMatch(offset) ||
                          (!MatchWholeWordOnly && IsPartWordMatch(offset))))
                     {
-                        return new TextRange(_document, offset, LookFor.Length);
+                        return new TextRange(offset, LookFor.Length);
                     }
                 }
             }
@@ -641,6 +671,11 @@ namespace GitUI
             }
 
             return substr == _lookFor2;
+        }
+
+        private void DocumentOnTextContentChanged(object sender, EventArgs e)
+        {
+            ClearScanRegion();
         }
     }
 
