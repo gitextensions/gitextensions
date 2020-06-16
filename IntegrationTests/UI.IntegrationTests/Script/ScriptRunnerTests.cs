@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -23,6 +25,10 @@ namespace GitExtensions.UITests.Script
 
         // Created once for the fixture
         private ReferenceRepository _referenceRepository;
+
+        // perf optimisation: get hold of the static ScriptRunner.RunScript method for test invocations
+        // we could have used TestAccessor, but it would involve more code.
+        private static MethodInfo s_miRunScript = typeof(ScriptRunner).GetMethod("RunScript", BindingFlags.NonPublic | BindingFlags.Static);
 
         // Created once for each test
         private GitUICommands _uiCommands;
@@ -49,6 +55,11 @@ namespace GitExtensions.UITests.Script
             _exampleScript = ScriptManager.GetScript(_keyOfExampleScript);
             _exampleScript.AskConfirmation = false; // avoid any dialogs popping up
             _exampleScript.RunInBackground = true; // avoid any dialogs popping up
+
+            if (s_miRunScript == null)
+            {
+                throw new InvalidOperationException();
+            }
         }
 
         [OneTimeTearDown]
@@ -71,7 +82,7 @@ namespace GitExtensions.UITests.Script
             const string invalidScriptKey = "InVaLid ScRiPt KeY";
             string errorMessage = null;
 
-            var result = ScriptRunner.RunScript(null, _module, invalidScriptKey, uiCommands: null, revisionGrid: null, error => errorMessage = error);
+            var result = ExecuteRunScript(null, _module, invalidScriptKey, uiCommands: null, revisionGrid: null, error => errorMessage = error);
 
             result.Executed.Should().BeFalse();
             errorMessage.Should().Be("Cannot find script: " + invalidScriptKey);
@@ -130,7 +141,7 @@ namespace GitExtensions.UITests.Script
 
             string errorMessage = null;
 
-            var result = ScriptRunner.RunScript(null, _module, _keyOfExampleScript, uiCommands: null, revisionGrid: null, error => errorMessage = error);
+            var result = ExecuteRunScript(null, _module, _keyOfExampleScript, uiCommands: null, revisionGrid: null, error => errorMessage = error);
 
             result.Should().BeEquivalentTo(new CommandStatus(executed: false, needsGridRefresh: false));
             errorMessage.Should().Be($"There must be a revision in order to substitute the argument option(s) for the script to run.");
@@ -144,7 +155,7 @@ namespace GitExtensions.UITests.Script
 
             string errorMessage = null;
 
-            var result = ScriptRunner.RunScript(null, _module, _keyOfExampleScript, uiCommands: null, revisionGrid: null, error => errorMessage = error);
+            var result = ExecuteRunScript(null, _module, _keyOfExampleScript, uiCommands: null, revisionGrid: null, error => errorMessage = error);
 
             result.Executed.Should().BeFalse();
             errorMessage.Should().Be($"Option sHash is only supported when started with revision grid available.");
@@ -162,7 +173,7 @@ namespace GitExtensions.UITests.Script
 
             RunFormTest(formBrowse =>
             {
-                var result = ScriptRunner.RunScript(null, _module, _keyOfExampleScript, _uiCommands, formBrowse.RevisionGridControl, error => errorMessage = error);
+                var result = ExecuteRunScript(null, _module, _keyOfExampleScript, _uiCommands, formBrowse.RevisionGridControl, error => errorMessage = error);
                 formBrowse.RevisionGridControl.LatestSelectedRevision.Should().BeNull(); // check for correct test setup
 
                 result.Should().BeEquivalentTo(new CommandStatus(executed: false, needsGridRefresh: false));
@@ -185,12 +196,28 @@ namespace GitExtensions.UITests.Script
                 Assert.AreEqual(1, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
 
                 string errorMessage = null;
-                var result = ScriptRunner.RunScript(formBrowse, _referenceRepository.Module, _keyOfExampleScript, _uiCommands,
-                                                    formBrowse.RevisionGridControl, error => errorMessage = error);
+                var result = ExecuteRunScript(formBrowse, _referenceRepository.Module, _keyOfExampleScript, _uiCommands,
+                                              formBrowse.RevisionGridControl, error => errorMessage = error);
 
                 errorMessage.Should().BeNull();
                 result.Should().BeEquivalentTo(new CommandStatus(executed: true, needsGridRefresh: false));
             });
+        }
+
+        private CommandStatus ExecuteRunScript(IWin32Window owner, IGitModule module, string scriptKey, IGitUICommands uiCommands,
+            RevisionGridControl revisionGrid, Action<string> showError)
+        {
+            var result = (CommandStatus)s_miRunScript.Invoke(null,
+                                                             new object[]
+                                                             {
+                                                               owner,
+                                                               module,
+                                                               scriptKey,
+                                                               uiCommands,
+                                                               revisionGrid,
+                                                               showError
+                                                             });
+            return result;
         }
 
         private void RunFormTest(Action<FormBrowse> testDriver)
