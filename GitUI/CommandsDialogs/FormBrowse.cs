@@ -752,34 +752,48 @@ namespace GitUI.CommandsDialogs
 
         private void RegisterPlugins()
         {
+            const string PluginManagerName = "Plugin Manager";
             var existingPluginMenus = pluginsToolStripMenuItem.DropDownItems.OfType<ToolStripMenuItem>().ToLookup(c => c.Tag);
 
             lock (PluginRegistry.Plugins)
             {
                 var pluginEntries = PluginRegistry.Plugins
-                    .OrderBy(entry => entry.Name, StringComparer.CurrentCultureIgnoreCase);
+                    .OrderByDescending(entry => entry.Name, StringComparer.CurrentCultureIgnoreCase);
 
+                // the menu already contains 2 items:
+                //    [0] Separator
+                //    [1] Plugin Settings
+                // insert plugins above the separator (the list is in reverse order)
                 foreach (var plugin in pluginEntries)
                 {
-                    // Add the plugin to the Plugins menu, if not already added
-                    if (!existingPluginMenus.Contains(plugin))
+                    // don't add the plugin to the Plugins menu, if already added
+                    if (existingPluginMenus.Contains(plugin))
                     {
-                        var item = new ToolStripMenuItem
-                        {
-                            Text = plugin.Description,
-                            Image = plugin.Icon,
-                            Tag = plugin
-                        };
-                        item.Click += delegate
-                        {
-                            if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
-                            {
-                                RefreshRevisions();
-                            }
-                        };
+                        continue;
+                    }
 
-                        pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2,
-                            item);
+                    var item = new ToolStripMenuItem
+                    {
+                        Text = plugin.Description,
+                        Image = plugin.Icon,
+                        Tag = plugin
+                    };
+                    item.Click += delegate
+                    {
+                        if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
+                        {
+                            RefreshRevisions();
+                        }
+                    };
+
+                    if (plugin.Name == PluginManagerName)
+                    {
+                        // insert Plugin Manager below the separator
+                        pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 1, item);
+                    }
+                    else
+                    {
+                        pluginsToolStripMenuItem.DropDownItems.Insert(0, item);
                     }
                 }
             }
