@@ -75,7 +75,7 @@ namespace GitUI
                 throw new ArgumentException(nameof(workingDir));
             }
 
-            try
+            SafeInvoke(() =>
             {
                 string repositoryDescription = _repositoryDescriptionProvider.Get(workingDir);
                 if (string.IsNullOrWhiteSpace(repositoryDescription))
@@ -108,33 +108,18 @@ namespace GitUI
                 _commitButton.Enabled = true;
                 _pushButton.Enabled = true;
                 _pullButton.Enabled = true;
-            }
-            catch (Exception ex)
-                when (
-
-                    // reported in https://github.com/gitextensions/gitextensions/issues/6760
-                    ex is Microsoft.WindowsAPICodePack.Shell.ShellException ||
-
-                    // reported in https://github.com/gitextensions/gitextensions/issues/2269
-                    ex is COMException ||
-
-                    // reported in https://github.com/gitextensions/gitextensions/issues/6767
-                    ex is UnauthorizedAccessException ||
-
-                    // reported in https://github.com/gitextensions/gitextensions/issues/4549
-                    // looks like a regression in Windows 10.0.16299 (1709)
-                    ex is IOException)
-            {
-                Trace.WriteLine(ex.Message, "UpdateJumplist");
-            }
+            }, "AddToRecent");
         }
 
         public void UpdateCommitIcon(Image image)
         {
-            if (ToolbarButtonsCreated && IsSupportedAndVisible)
+            SafeInvoke(() =>
             {
-                _commitButton.Icon = MakeIcon(image, 48, true);
-            }
+                if (ToolbarButtonsCreated && IsSupportedAndVisible)
+                {
+                    _commitButton.Icon = MakeIcon(image, 48, true);
+                }
+            }, "UpdateJumplist");
         }
 
         /// <summary>
@@ -150,27 +135,21 @@ namespace GitUI
                 return;
             }
 
-            CreateJumpList();
-
-            CreateTaskbarButtons(windowHandle, buttons);
+            SafeInvoke(() =>
+            {
+                CreateJumpList();
+                CreateTaskbarButtons(windowHandle, buttons);
+            }, "CreateJumpList");
 
             return;
 
             void CreateJumpList()
             {
-                try
-                {
-                    // One ApplicationId, so all windows must share the same jumplist
-                    var jumpList = JumpList.CreateJumpList();
-                    jumpList.ClearAllUserTasks();
-                    jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
-                    jumpList.Refresh();
-                }
-                catch (Exception ex)
-                {
-                    // have seen a COM exception here that caused the UI to stop loading
-                    Trace.WriteLine(ex.Message, "CreateJumpList");
-                }
+                // One ApplicationId, so all windows must share the same jumplist
+                var jumpList = JumpList.CreateJumpList();
+                jumpList.ClearAllUserTasks();
+                jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
+                jumpList.Refresh();
             }
 
             void CreateTaskbarButtons(IntPtr handle, WindowsThumbnailToolbarButtons thumbButtons)
@@ -199,30 +178,12 @@ namespace GitUI
                 return;
             }
 
-            try
+            SafeInvoke(() =>
             {
                 _commitButton.Enabled = false;
                 _pushButton.Enabled = false;
                 _pullButton.Enabled = false;
-            }
-            catch (Exception ex)
-                when (
-
-                    // reported in https://github.com/gitextensions/gitextensions/issues/6760
-                    ex is Microsoft.WindowsAPICodePack.Shell.ShellException ||
-
-                    // reported in https://github.com/gitextensions/gitextensions/issues/2269
-                    ex is COMException ||
-
-                    // reported in https://github.com/gitextensions/gitextensions/issues/6767
-                    ex is UnauthorizedAccessException ||
-
-                    // reported in https://github.com/gitextensions/gitextensions/issues/4549
-                    // looks like a regression in Windows 10.0.16299 (1709)
-                    ex is IOException)
-            {
-                Trace.WriteLine(ex.Message, "DisableThumbnailToolbar");
-            }
+            }, "DisableThumbnailToolbar");
         }
 
         /// <summary>
@@ -280,6 +241,33 @@ namespace GitUI
             // following line would work directly on any image, but then
             // it wouldn't look as nice.
             return Icon.FromHandle(square.GetHicon());
+        }
+
+        private static void SafeInvoke(Action action, string callerName)
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception ex)
+                when (
+
+                    // reported in https://github.com/gitextensions/gitextensions/issues/6760
+                    // reported in https://github.com/gitextensions/gitextensions/issues/8234
+                    ex is Microsoft.WindowsAPICodePack.Shell.ShellException ||
+
+                    // reported in https://github.com/gitextensions/gitextensions/issues/2269
+                    ex is COMException ||
+
+                    // reported in https://github.com/gitextensions/gitextensions/issues/6767
+                    ex is UnauthorizedAccessException ||
+
+                    // reported in https://github.com/gitextensions/gitextensions/issues/4549
+                    // looks like a regression in Windows 10.0.16299 (1709)
+                    ex is IOException)
+            {
+                Trace.WriteLine(ex.Message, callerName);
+            }
         }
     }
 }
