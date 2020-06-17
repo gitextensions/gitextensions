@@ -7726,6 +7726,10 @@ help</source>
         <source>Remember choice</source>
         <target />
       </trans-unit>
+      <trans-unit id="_resetChangesCaption.Text">
+        <source>Reset changes</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_selectOnlyOneOrTwoRevisions.Text">
         <source>Select only one or two revisions. Abort.</source>
         <target />
@@ -8085,6 +8089,10 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="_multipleDescription.Text">
         <source>&lt;multiple&gt;</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_resetSelectedChangesText.Text">
+        <source>Are you sure you want to reset all selected files to {0}?</source>
         <target />
       </trans-unit>
       <trans-unit id="_saveFileFilterAllFiles.Text">

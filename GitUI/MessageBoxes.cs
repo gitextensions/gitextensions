@@ -45,6 +45,7 @@ namespace GitUI
 
         private readonly TranslationString _shellNotFoundCaption = new TranslationString("Shell not found");
         private readonly TranslationString _shellNotFound = new TranslationString("The selected shell is not installed, or is not on your path.");
+        private readonly TranslationString _resetChangesCaption = new TranslationString("Reset changes");
 
         // internal for FormTranslate
         internal MessageBoxes()
@@ -137,5 +138,8 @@ namespace GitUI
 
         public static void ShowError([CanBeNull] IWin32Window owner, string text, string caption = null)
             => MessageBox.Show(owner, text, caption ?? Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+        public static bool ResetSelectedFiles(IWin32Window owner, string text)
+            => MessageBox.Show(owner, text, Instance._resetChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
     }
 }
