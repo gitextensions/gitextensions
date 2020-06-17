@@ -137,20 +137,16 @@ namespace GitUI
 
             SafeInvoke(() =>
             {
-                CreateJumpList();
-                CreateTaskbarButtons(windowHandle, buttons);
-            }, "CreateJumpList");
-
-            return;
-
-            void CreateJumpList()
-            {
                 // One ApplicationId, so all windows must share the same jumplist
                 var jumpList = JumpList.CreateJumpList();
                 jumpList.ClearAllUserTasks();
                 jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
                 jumpList.Refresh();
-            }
+
+                CreateTaskbarButtons(windowHandle, buttons);
+            }, "CreateJumpList");
+
+            return;
 
             void CreateTaskbarButtons(IntPtr handle, WindowsThumbnailToolbarButtons thumbButtons)
             {
@@ -264,7 +260,10 @@ namespace GitUI
 
                     // reported in https://github.com/gitextensions/gitextensions/issues/4549
                     // looks like a regression in Windows 10.0.16299 (1709)
-                    ex is IOException)
+                    ex is IOException ||
+
+                    // observed during integration tests: A valid active Window is needed to update the Taskbar.
+                    ex is InvalidOperationException)
             {
                 Trace.WriteLine(ex.Message, callerName);
             }
