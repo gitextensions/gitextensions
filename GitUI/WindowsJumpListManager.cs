@@ -108,7 +108,7 @@ namespace GitUI
                 _commitButton.Enabled = true;
                 _pushButton.Enabled = true;
                 _pullButton.Enabled = true;
-            }, "AddToRecent");
+            }, nameof(AddToRecent));
         }
 
         public void UpdateCommitIcon(Image image)
@@ -119,7 +119,7 @@ namespace GitUI
                 {
                     _commitButton.Icon = MakeIcon(image, 48, true);
                 }
-            }, "UpdateJumplist");
+            }, nameof(UpdateCommitIcon));
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace GitUI
                 jumpList.Refresh();
 
                 CreateTaskbarButtons(windowHandle, buttons);
-            }, "CreateJumpList");
+            }, nameof(CreateJumpList));
 
             return;
 
@@ -179,7 +179,7 @@ namespace GitUI
                 _commitButton.Enabled = false;
                 _pushButton.Enabled = false;
                 _pullButton.Enabled = false;
-            }, "DisableThumbnailToolbar");
+            }, nameof(DisableThumbnailToolbar));
         }
 
         /// <summary>
