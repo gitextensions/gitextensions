@@ -178,44 +178,46 @@ namespace GitCommands
             }
 
             fixed (char* pc = comparand)
-            fixed (char* ps = source)
             {
-                // Create writeable pointers to equivalent positions in each string
-                var c = pc;
-                var s = &ps[index];
-
-                // Loop every 10 characters (20 bytes each loop)
-                while (len >= 10)
+                fixed (char* ps = source)
                 {
-                    // Compare an int by int, 5 times
-                    if (*(int*)c != *(int*)s ||
-                        *(int*)(c + 2) != *(int*)(s + 2) ||
-                        *(int*)(c + 4) != *(int*)(s + 4) ||
-                        *(int*)(c + 6) != *(int*)(s + 6) ||
-                        *(int*)(c + 8) != *(int*)(s + 8))
+                    // Create writeable pointers to equivalent positions in each string
+                    var c = pc;
+                    var s = &ps[index];
+
+                    // Loop every 10 characters (20 bytes each loop)
+                    while (len >= 10)
                     {
-                        return false;
+                        // Compare an int by int, 5 times
+                        if (*(int*)c != *(int*)s ||
+                            *(int*)(c + 2) != *(int*)(s + 2) ||
+                            *(int*)(c + 4) != *(int*)(s + 4) ||
+                            *(int*)(c + 6) != *(int*)(s + 6) ||
+                            *(int*)(c + 8) != *(int*)(s + 8))
+                        {
+                            return false;
+                        }
+
+                        // Update the pointers.
+                        // We delay this (rather than using ++ inline) to avoid
+                        // CPU stall on flushing writes.
+                        c += 10;
+                        s += 10;
+                        len -= 10;
                     }
 
-                    // Update the pointers.
-                    // We delay this (rather than using ++ inline) to avoid
-                    // CPU stall on flushing writes.
-                    c += 10;
-                    s += 10;
-                    len -= 10;
-                }
+                    // Loop every 2 characters (4 bytes)
+                    while (len > 1 && *(int*)c == *(int*)s)
+                    {
+                        // Compare int by int (4 bytes each loop)
+                        c += 2;
+                        s += 2;
+                        len -= 2;
+                    }
 
-                // Loop every 2 characters (4 bytes)
-                while (len > 1 && *(int*)c == *(int*)s)
-                {
-                    // Compare int by int (4 bytes each loop)
-                    c += 2;
-                    s += 2;
-                    len -= 2;
+                    // If last byte has odd index, check it too
+                    return len == 0 || (len == 1 && *c == *s);
                 }
-
-                // If last byte has odd index, check it too
-                return len == 0 || (len == 1 && *c == *s);
             }
         }
 

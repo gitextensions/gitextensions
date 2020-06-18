@@ -110,7 +110,9 @@ namespace GitUI
                 if (file.IsSubmodule && file.GetSubmoduleStatusAsync() != null)
                 {
                     // Patch already evaluated
+#pragma warning disable VSTHRD103 // Call async methods when in an async method (this is intentional for the test)
                     var status = ThreadHelper.JoinableTaskFactory.Run(file.GetSubmoduleStatusAsync);
+#pragma warning restore VSTHRD103 // Call async methods when in an async method
                     return status != null
                         ? LocalizationHelpers.ProcessSubmoduleStatus(fileViewer.Module, status)
                         : $"Failed to get status for submodule \"{file.Name}\"";
