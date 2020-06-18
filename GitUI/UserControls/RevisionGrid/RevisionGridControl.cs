@@ -1669,13 +1669,18 @@ namespace GitUI
             }
 
             var allBranches = gitRefListsForRevision.AllBranches;
+            bool isHeadOfCurrentBranch = false;
             bool firstRemoteBranchForCheckout = false;
             foreach (var head in allBranches)
             {
                 // skip remote branches - they can not be deleted this way
                 if (!head.IsRemote)
                 {
-                    if (head.CompleteName != currentBranchRef)
+                    if (head.CompleteName == currentBranchRef)
+                    {
+                        isHeadOfCurrentBranch = true;
+                    }
+                    else
                     {
                         AddBranchMenuItem(deleteBranchDropDown, head, delegate { UICommands.StartDeleteBranchDialog(this, head.Name); });
                     }
@@ -1733,6 +1738,10 @@ namespace GitUI
 
             deleteBranchToolStripMenuItem.DropDown = deleteBranchDropDown;
             SetEnabled(deleteBranchToolStripMenuItem, deleteBranchDropDown.Items.Count > 0 && !Module.IsBareRepository());
+            if (isHeadOfCurrentBranch)
+            {
+                deleteBranchToolStripMenuItem.Visible = true;
+            }
 
             checkoutBranchToolStripMenuItem.DropDown = checkoutBranchDropDown;
             SetEnabled(checkoutBranchToolStripMenuItem, !bareRepositoryOrArtificial && HasEnabledItem(checkoutBranchDropDown) && !Module.IsBareRepository());
