@@ -197,7 +197,7 @@ namespace GitCommands
                 return false;
             }
 
-            posixPath = "/" + directoryInfo.FullName.ToPosixPath().Remove(1, 1);
+            posixPath = ("/" + directoryInfo.FullName.ToPosixPath().Remove(1, 1)).QuoteIfContainsWhiteSpace();
             return true;
         }
 
