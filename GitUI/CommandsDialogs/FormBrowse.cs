@@ -760,10 +760,10 @@ namespace GitUI.CommandsDialogs
                 var pluginEntries = PluginRegistry.Plugins
                     .OrderByDescending(entry => entry.Name, StringComparer.CurrentCultureIgnoreCase);
 
-                // the menu already contains 2 items:
-                //    [0] Separator
-                //    [1] Plugin Settings
-                // insert plugins above the separator (the list is in reverse order)
+                // pluginsToolStripMenuItem.DropDownItems menu already contains 2 items:
+                //    [1] Separator
+                //    [0] Plugin Settings
+                // insert all plugins except 'Plugin Manager' above the separator
                 foreach (var plugin in pluginEntries)
                 {
                     // don't add the plugin to the Plugins menu, if already added
