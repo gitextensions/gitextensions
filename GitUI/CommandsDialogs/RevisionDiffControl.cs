@@ -720,9 +720,9 @@ namespace GitUI.CommandsDialogs
 
             if (revisions.Any())
             {
-                selectedDiffCaptionMenuItem.Text = _selectedRevision + (DescribeRevision(revisions) ?? string.Empty);
-                selectedDiffCaptionMenuItem.Visible = true;
-                MenuUtil.SetAsCaptionMenuItem(selectedDiffCaptionMenuItem, DiffContextMenu);
+                secondDiffCaptionMenuItem.Text = _selectedRevision + (DescribeRevision(revisions) ?? string.Empty);
+                secondDiffCaptionMenuItem.Visible = true;
+                MenuUtil.SetAsCaptionMenuItem(secondDiffCaptionMenuItem, DiffContextMenu);
 
                 firstDiffCaptionMenuItem.Text = _firstRevision.Text +
                                                 (DescribeRevision(DiffFiles.SelectedItems.FirstRevs().ToList()) ?? string.Empty);
@@ -732,7 +732,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 firstDiffCaptionMenuItem.Visible = false;
-                selectedDiffCaptionMenuItem.Visible = false;
+                secondDiffCaptionMenuItem.Visible = false;
             }
 
             firstToSelectedToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstToSelected(selectionInfo);
