@@ -24,8 +24,6 @@ namespace GitUITests.Helpers
             var head = ObjectId.Random();
             revisions = new List<GitRevision> { new GitRevision(head), null };
             Assert.False(RevisionDiffInfoProvider.TryGet(revisions, RevisionDiffKind.DiffBLocal, out _, out _, out _), "2nd null rev DiffBLocal");
-
-            Assert.False(RevisionDiffInfoProvider.TryGet(revisions, RevisionDiffKind.DiffBParentLocal, out _, out _, out _), "2nd null rev DiffBParentLocal");
         }
 
         [Test]
@@ -109,28 +107,6 @@ namespace GitUITests.Helpers
         }
 
         [Test]
-        public void DiffKindRevisionTests_ApL_1()
-        {
-            var head = ObjectId.Random();
-            var revisions = new[] { new GitRevision(head) };
-
-            Assert.True(RevisionDiffInfoProvider.TryGet(revisions, RevisionDiffKind.DiffAParentLocal, out var firstRevision, out var secondRevision, out _), "null rev");
-            Assert.AreEqual($"{head}^^", firstRevision, "first");
-            Assert.AreEqual(null, secondRevision, "second");
-        }
-
-        [Test]
-        public void DiffKindRevisionTests_ApL_2()
-        {
-            var head = ObjectId.Random();
-            var revisions = new[] { new GitRevision(head), null };
-
-            Assert.True(RevisionDiffInfoProvider.TryGet(revisions, RevisionDiffKind.DiffAParentLocal, out var firstRevision, out var secondRevision, out _), "null rev");
-            Assert.AreEqual("--root", firstRevision, "first");
-            Assert.AreEqual(null, secondRevision, "second");
-        }
-
-        [Test]
         public void DiffKindRevisionTests_BL_1()
         {
             var head = ObjectId.Random();
@@ -150,17 +126,6 @@ namespace GitUITests.Helpers
 
             Assert.True(RevisionDiffInfoProvider.TryGet(revisions, RevisionDiffKind.DiffBLocal, out var firstRevision, out var secondRevision, out _), "null rev");
             Assert.AreEqual(head.ToString(), firstRevision, "first");
-            Assert.AreEqual(null, secondRevision, "second");
-        }
-
-        [Test]
-        public void DiffKindRevisionTests_BpL_1()
-        {
-            var head = ObjectId.Random();
-            var revisions = new[] { new GitRevision(head) };
-
-            Assert.True(RevisionDiffInfoProvider.TryGet(revisions, RevisionDiffKind.DiffBParentLocal, out var firstRevision, out var secondRevision, out _), "null rev");
-            Assert.AreEqual($"{head}^", firstRevision, "first");
             Assert.AreEqual(null, secondRevision, "second");
         }
     }

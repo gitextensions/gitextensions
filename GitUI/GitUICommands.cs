@@ -1192,9 +1192,9 @@ namespace GitUI
             }
         }
 
-        public FormDiff ShowFormDiff(bool firstParentIsValid, ObjectId baseCommitSha, ObjectId headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr)
+        public FormDiff ShowFormDiff(ObjectId baseCommitSha, ObjectId headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr)
         {
-            var diffForm = new FormDiff(this, firstParentIsValid, baseCommitSha, headCommitSha, baseCommitDisplayStr, headCommitDisplayStr)
+            var diffForm = new FormDiff(this, baseCommitSha, headCommitSha, baseCommitDisplayStr, headCommitDisplayStr)
             {
                 ShowInTaskbar = true
             };

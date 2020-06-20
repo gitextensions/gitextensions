@@ -24,8 +24,6 @@ namespace GitUITests.CommandsDialogs
             _revisionDiffContextMenuController.ShouldShowMenuFirstToSelected(selectionInfo).Should().BeFalse();
             _revisionDiffContextMenuController.ShouldShowMenuFirstToLocal(selectionInfo).Should().BeFalse();
             _revisionDiffContextMenuController.ShouldShowMenuSelectedToLocal(selectionInfo).Should().BeFalse();
-            _revisionDiffContextMenuController.ShouldShowMenuFirstParentToLocal(selectionInfo).Should().BeFalse();
-            _revisionDiffContextMenuController.ShouldShowMenuSelectedParentToLocal(selectionInfo).Should().BeFalse();
         }
 
         [Test]
@@ -36,8 +34,6 @@ namespace GitUITests.CommandsDialogs
             _revisionDiffContextMenuController.ShouldShowMenuFirstToSelected(selectionInfo).Should().BeTrue();
             _revisionDiffContextMenuController.ShouldShowMenuFirstToLocal(selectionInfo).Should().BeFalse();
             _revisionDiffContextMenuController.ShouldShowMenuSelectedToLocal(selectionInfo).Should().BeFalse();
-            _revisionDiffContextMenuController.ShouldShowMenuFirstParentToLocal(selectionInfo).Should().BeFalse();
-            _revisionDiffContextMenuController.ShouldShowMenuSelectedParentToLocal(selectionInfo).Should().BeFalse();
         }
 
         [Test]
@@ -48,8 +44,6 @@ namespace GitUITests.CommandsDialogs
             _revisionDiffContextMenuController.ShouldShowMenuFirstToSelected(selectionInfo).Should().BeTrue();
             _revisionDiffContextMenuController.ShouldShowMenuFirstToLocal(selectionInfo).Should().BeTrue();
             _revisionDiffContextMenuController.ShouldShowMenuSelectedToLocal(selectionInfo).Should().BeFalse();
-            _revisionDiffContextMenuController.ShouldShowMenuFirstParentToLocal(selectionInfo).Should().BeTrue();
-            _revisionDiffContextMenuController.ShouldShowMenuSelectedParentToLocal(selectionInfo).Should().BeTrue();
         }
 
         [Test]
@@ -60,8 +54,6 @@ namespace GitUITests.CommandsDialogs
             _revisionDiffContextMenuController.ShouldShowMenuFirstToSelected(selectionInfo).Should().BeTrue();
             _revisionDiffContextMenuController.ShouldShowMenuFirstToLocal(selectionInfo).Should().BeFalse();
             _revisionDiffContextMenuController.ShouldShowMenuSelectedToLocal(selectionInfo).Should().BeTrue();
-            _revisionDiffContextMenuController.ShouldShowMenuFirstParentToLocal(selectionInfo).Should().BeTrue();
-            _revisionDiffContextMenuController.ShouldShowMenuSelectedParentToLocal(selectionInfo).Should().BeTrue();
         }
 
         [TestCase(true, true)]
@@ -75,8 +67,6 @@ namespace GitUITests.CommandsDialogs
             _revisionDiffContextMenuController.ShouldShowMenuFirstToSelected(selectionInfo).Should().BeTrue();
             _revisionDiffContextMenuController.ShouldShowMenuFirstToLocal(selectionInfo).Should().BeTrue();
             _revisionDiffContextMenuController.ShouldShowMenuSelectedToLocal(selectionInfo).Should().Be(!d);
-            _revisionDiffContextMenuController.ShouldShowMenuFirstParentToLocal(selectionInfo).Should().BeTrue();
-            _revisionDiffContextMenuController.ShouldShowMenuSelectedParentToLocal(selectionInfo).Should().Be(!n);
         }
     }
 }

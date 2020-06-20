@@ -51,7 +51,7 @@ namespace GitUI
                 return false;
             }
 
-            if (revisions.Count == 2 && revisions[1] == null && (diffKind == RevisionDiffKind.DiffBLocal || diffKind == RevisionDiffKind.DiffBParentLocal))
+            if (revisions.Count == 2 && revisions[1] == null && diffKind == RevisionDiffKind.DiffBLocal)
             {
                 error = "Unexpected second null argument to difftool for DiffB";
                 firstRevision = null;
@@ -76,19 +76,11 @@ namespace GitUI
                 {
                     firstRevision = revisions[0].Guid;
                 }
-                else if (diffKind == RevisionDiffKind.DiffBParentLocal)
-                {
-                    firstRevision = GetParentRef(revisions[0]);
-                }
                 else if (revisions.Count == 1)
                 {
                     if (diffKind == RevisionDiffKind.DiffALocal)
                     {
                         firstRevision = GetParentRef(revisions[0]);
-                    }
-                    else if (diffKind == RevisionDiffKind.DiffAParentLocal)
-                    {
-                        firstRevision = GetParentRef(revisions[0]) + "^";
                     }
                     else
                     {
@@ -100,10 +92,6 @@ namespace GitUI
                 else if (diffKind == RevisionDiffKind.DiffALocal)
                 {
                     firstRevision = revisions[1]?.Guid ?? "--root";
-                }
-                else if (diffKind == RevisionDiffKind.DiffAParentLocal)
-                {
-                    firstRevision = revisions[1] == null ? "--root" : GetParentRef(revisions[1]);
                 }
                 else
                 {

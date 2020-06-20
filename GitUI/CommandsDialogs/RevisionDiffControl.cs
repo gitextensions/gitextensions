@@ -631,14 +631,6 @@ namespace GitUI.CommandsDialogs
             {
                 diffKind = RevisionDiffKind.DiffBLocal;
             }
-            else if (sender == firstParentToLocalToolStripMenuItem)
-            {
-                diffKind = RevisionDiffKind.DiffAParentLocal;
-            }
-            else if (sender == selectedParentToLocalToolStripMenuItem)
-            {
-                diffKind = RevisionDiffKind.DiffBParentLocal;
-            }
             else
             {
                 diffKind = RevisionDiffKind.DiffAB;
@@ -797,7 +789,6 @@ namespace GitUI.CommandsDialogs
                 allAreNew: allAreNew,
                 allAreDeleted: allAreDeleted,
                 firstIsParent: firstIsParent,
-                firstParentsValid: _revisionGrid.IsFirstParentValid(),
                 localExists: localExists);
         }
 
@@ -826,10 +817,6 @@ namespace GitUI.CommandsDialogs
             firstToSelectedToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstToSelected(selectionInfo);
             firstToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstToLocal(selectionInfo);
             selectedToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuSelectedToLocal(selectionInfo);
-            firstParentToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstParentToLocal(selectionInfo);
-            selectedParentToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuSelectedParentToLocal(selectionInfo);
-            firstParentToLocalToolStripMenuItem.Visible = _revisionDiffContextMenuController.ShouldDisplayMenuFirstParentToLocal(selectionInfo);
-            selectedParentToLocalToolStripMenuItem.Visible = _revisionDiffContextMenuController.ShouldDisplayMenuSelectedParentToLocal(selectionInfo);
 
             var diffFiles = DiffFiles.SelectedItems.ToList();
             diffRememberStripSeparator.Visible = diffFiles.Count == 1 || diffFiles.Count == 2;

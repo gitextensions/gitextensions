@@ -11,10 +11,6 @@ namespace GitUI.CommandsDialogs
         bool ShouldShowMenuFirstToSelected(ContextMenuDiffToolInfo selectionInfo);
         bool ShouldShowMenuFirstToLocal(ContextMenuDiffToolInfo selectionInfo);
         bool ShouldShowMenuSelectedToLocal(ContextMenuDiffToolInfo selectionInfo);
-        bool ShouldShowMenuFirstParentToLocal(ContextMenuDiffToolInfo selectionInfo);
-        bool ShouldShowMenuSelectedParentToLocal(ContextMenuDiffToolInfo selectionInfo);
-        bool ShouldDisplayMenuFirstParentToLocal(ContextMenuDiffToolInfo selectionInfo);
-        bool ShouldDisplayMenuSelectedParentToLocal(ContextMenuDiffToolInfo selectionInfo);
     }
 
     public sealed class ContextMenuDiffToolInfo
@@ -25,7 +21,6 @@ namespace GitUI.CommandsDialogs
             bool allAreNew = false,
             bool allAreDeleted = false,
             bool firstIsParent = false,
-            bool firstParentsValid = true,
             bool localExists = true)
         {
             SelectedRevision = selectedRevision;
@@ -33,7 +28,6 @@ namespace GitUI.CommandsDialogs
             AllAreNew = allAreNew;
             AllAreDeleted = allAreDeleted;
             FirstIsParent = firstIsParent;
-            FirstParentsValid = firstParentsValid;
             LocalExists = localExists;
         }
 
@@ -44,7 +38,6 @@ namespace GitUI.CommandsDialogs
         public bool AllAreNew { get; }
         public bool AllAreDeleted { get; }
         public bool FirstIsParent { get; }
-        public bool FirstParentsValid { get; }
         public bool LocalExists { get; }
     }
 
@@ -75,33 +68,6 @@ namespace GitUI.CommandsDialogs
 
                 // Selected (B) is not local
                 && selectionInfo.SelectedRevision.ObjectId != ObjectId.WorkTreeId;
-        }
-
-        public bool ShouldShowMenuFirstParentToLocal(ContextMenuDiffToolInfo selectionInfo)
-        {
-            return selectionInfo.SelectedRevision != null && selectionInfo.LocalExists
-                && ShouldDisplayMenuFirstParentToLocal(selectionInfo);
-        }
-
-        public bool ShouldShowMenuSelectedParentToLocal(ContextMenuDiffToolInfo selectionInfo)
-        {
-            return selectionInfo.SelectedRevision != null && selectionInfo.LocalExists
-                && ShouldDisplayMenuSelectedParentToLocal(selectionInfo)
-
-                // Selected (B) parent exists
-                && !selectionInfo.AllAreNew;
-        }
-
-        public bool ShouldDisplayMenuFirstParentToLocal(ContextMenuDiffToolInfo selectionInfo)
-        {
-            // First (A) parents may not be known, then hide this option
-            return selectionInfo.FirstParentsValid;
-        }
-
-        public bool ShouldDisplayMenuSelectedParentToLocal(ContextMenuDiffToolInfo selectionInfo)
-        {
-            // Not visible if same revision as ShouldShowMenuFirstToLocal()
-            return !selectionInfo.FirstIsParent;
         }
     }
 }

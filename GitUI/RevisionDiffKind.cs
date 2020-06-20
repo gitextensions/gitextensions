@@ -4,8 +4,6 @@ namespace GitUI
     {
         DiffAB = 0,
         DiffALocal,
-        DiffBLocal,
-        DiffAParentLocal,
-        DiffBParentLocal
+        DiffBLocal
     }
 }
