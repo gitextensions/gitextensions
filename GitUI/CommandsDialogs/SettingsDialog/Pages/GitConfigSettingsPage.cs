@@ -20,6 +20,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComponent();
             Text = "Config";
 
+            txtDiffToolPath.Enabled =
+                btnDiffToolBrowse.Enabled =
+                    txtDiffToolCommand.Enabled =
+                        btnDiffToolCommandSuggest.Enabled = false;
+
+            txtMergeToolPath.Enabled =
+                btnMergeToolBrowse.Enabled =
+                    txtMergeToolCommand.Enabled =
+                        btnMergeToolCommandSuggest.Enabled = false;
+
             _NO_TRANSLATE_cboMergeTool.Items.AddRange(RegisteredDiffMergeTools.All(DiffMergeToolType.Merge).ToArray());
             _NO_TRANSLATE_cboDiffTool.Items.AddRange(RegisteredDiffMergeTools.All(DiffMergeToolType.Diff).ToArray());
 
