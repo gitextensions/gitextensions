@@ -241,17 +241,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void cboDiffTool_TextChanged(object sender, EventArgs e)
         {
-            if (IsLoadingSettings)
-            {
-                return;
-            }
-
             var toolName = _NO_TRANSLATE_cboDiffTool.Text;
 
             txtDiffToolPath.Enabled =
                 btnDiffToolBrowse.Enabled =
                     txtDiffToolCommand.Enabled =
                         btnDiffToolCommandSuggest.Enabled = !string.IsNullOrEmpty(toolName);
+
+            if (IsLoadingSettings)
+            {
+                return;
+            }
 
             string toolPath;
             if (string.IsNullOrWhiteSpace(toolName) || string.IsNullOrWhiteSpace(toolPath = _diffMergeToolConfigurationManager.GetToolPath(toolName, DiffMergeToolType.Diff)))
@@ -267,17 +267,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void cboMergeTool_TextChanged(object sender, EventArgs e)
         {
-            if (IsLoadingSettings)
-            {
-                return;
-            }
-
             var toolName = _NO_TRANSLATE_cboMergeTool.Text;
 
             txtMergeToolPath.Enabled =
                 btnMergeToolBrowse.Enabled =
                     txtMergeToolCommand.Enabled =
                         btnMergeToolCommandSuggest.Enabled = !string.IsNullOrEmpty(toolName);
+
+            if (IsLoadingSettings)
+            {
+                return;
+            }
 
             string toolPath;
             if (string.IsNullOrWhiteSpace(toolName) || string.IsNullOrWhiteSpace(toolPath = _diffMergeToolConfigurationManager.GetToolPath(toolName, DiffMergeToolType.Merge)))
