@@ -11404,7 +11404,8 @@ When OpenSSH is used, command line dialogs are shown!
 </source>
         <target>OpenSSH是一个命令行工具。 对于Windows用户来说，PuTTY用起来更方便，
 但需要在后台运行PuTTY验证客户端。
-当使用OpenSSH时，会显示命令行对话框！</target>
+当使用OpenSSH时，会显示命令行对话框！
+</target>
         
       </trans-unit>
     </body>
