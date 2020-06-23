@@ -751,34 +751,48 @@ namespace GitUI.CommandsDialogs
 
         private void RegisterPlugins()
         {
+            const string PluginManagerName = "Plugin Manager";
             var existingPluginMenus = pluginsToolStripMenuItem.DropDownItems.OfType<ToolStripMenuItem>().ToLookup(c => c.Tag);
 
             lock (PluginRegistry.Plugins)
             {
                 var pluginEntries = PluginRegistry.Plugins
-                    .OrderBy(entry => entry.Name, StringComparer.CurrentCultureIgnoreCase);
+                    .OrderByDescending(entry => entry.Name, StringComparer.CurrentCultureIgnoreCase);
 
+                // pluginsToolStripMenuItem.DropDownItems menu already contains at least 2 items:
+                //    [1] Separator
+                //    [0] Plugin Settings
+                // insert all plugins except 'Plugin Manager' above the separator
                 foreach (var plugin in pluginEntries)
                 {
-                    // Add the plugin to the Plugins menu, if not already added
-                    if (!existingPluginMenus.Contains(plugin))
+                    // don't add the plugin to the Plugins menu, if already added
+                    if (existingPluginMenus.Contains(plugin))
                     {
-                        var item = new ToolStripMenuItem
-                        {
-                            Text = plugin.Description,
-                            Image = plugin.Icon,
-                            Tag = plugin
-                        };
-                        item.Click += delegate
-                        {
-                            if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
-                            {
-                                RefreshRevisions();
-                            }
-                        };
+                        continue;
+                    }
 
-                        pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2,
-                            item);
+                    var item = new ToolStripMenuItem
+                    {
+                        Text = plugin.Description,
+                        Image = plugin.Icon,
+                        Tag = plugin
+                    };
+                    item.Click += delegate
+                    {
+                        if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
+                        {
+                            RefreshRevisions();
+                        }
+                    };
+
+                    if (plugin.Name == PluginManagerName)
+                    {
+                        // insert Plugin Manager below the separator
+                        pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 1, item);
+                    }
+                    else
+                    {
+                        pluginsToolStripMenuItem.DropDownItems.Insert(0, item);
                     }
                 }
             }
@@ -996,18 +1010,9 @@ namespace GitUI.CommandsDialogs
 
                     button.Click += delegate
                     {
-                        try
+                        if (ScriptRunner.RunScript(this, Module, script.Name, UICommands, RevisionGrid).NeedsGridRefresh)
                         {
-                            if (ScriptRunner.RunScript(this, Module, script.Name, UICommands, RevisionGrid).NeedsGridRefresh)
-                            {
-                                RevisionGrid.RefreshRevisions();
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(this,
-                                $"Failed to execute '{script.Name}' script.{Environment.NewLine}Reason: {ex.Message}",
-                                Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            RevisionGrid.RefreshRevisions();
                         }
                     };
 

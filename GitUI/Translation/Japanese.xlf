@@ -1457,7 +1457,7 @@ Git (Git for Windows あるいは cygwin)がインストールされているか
       </trans-unit>
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog</source>
-        <target>全ての親のファイルの際をダイアログに表示</target>
+        <target>すべての親のファイルの差異をダイアログに表示</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -4901,7 +4901,7 @@ When you want to delete a not-fully merged branch, you can override this using t
       </trans-unit>
       <trans-unit id="labelSelectBranches.Text">
         <source>Select branches</source>
-        <target>ブランチを洗濯</target>
+        <target>ブランチを選択</target>
         
       </trans-unit>
     </body>
@@ -4947,7 +4947,7 @@ in order to recover the lost commits.</source>
       </trans-unit>
       <trans-unit id="labelSelectBranches.Text">
         <source>Select branches</source>
-        <target>ブランチを洗濯</target>
+        <target>ブランチを選択</target>
         
       </trans-unit>
     </body>
@@ -6556,7 +6556,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_pruneBranchesBranch.Text">
         <source>Do you want to delete all stale remote-tracking branches?</source>
-        <target>全ての古いリモート上の追跡ブランチを削除しますか？</target>
+        <target>古いリモート追跡ブランチをすべて削除しますか？</target>
         
       </trans-unit>
       <trans-unit id="_pruneBranchesButtons.Text">
@@ -7641,7 +7641,7 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>This will delete any uncommitted work.</source>
-        <target>コミットしていない変更は全て削除されます。</target>
+        <target>コミットしていない変更はすべて削除されます。</target>
         
       </trans-unit>
     </body>
@@ -8294,7 +8294,7 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="selectBranchesLabel.Text">
         <source>Select branches</source>
-        <target>ブランチを洗濯</target>
+        <target>ブランチを選択</target>
         
       </trans-unit>
     </body>
@@ -11745,7 +11745,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_showDiffForAllParentsText.Text">
         <source>Show file differences for all parents in browse dialog</source>
-        <target>全ての親のファイルの際をダイアログに表示</target>
+        <target>すべての親のファイルの差異をダイアログに表示</target>
         
       </trans-unit>
       <trans-unit id="_showDiffForAllParentsTooltip.Text">

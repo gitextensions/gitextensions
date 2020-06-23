@@ -240,8 +240,8 @@ namespace GitCommands
         {
             return new GitArgumentBuilder("push")
             {
-                $"file://{repoPath}",
-                $"{targetId}:{gitRef}",
+                $"file://{repoPath}".RemoveTrailingPathSeparator().QuoteNE(),
+                $"{targetId}:{gitRef}".QuoteNE(),
                 { force, "--force" }
             };
         }

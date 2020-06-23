@@ -50,7 +50,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             var superprojectRefs = new List<IGitRef>();
             var offset = ColumnLeftMargin;
             var normalFont = style.NormalFont;
-            var hasSelectedRef = false;
 
             #region Draw super project references (for submodules)
 
@@ -118,11 +117,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             DrawImage(_bisectBadImage);
                             continue;
                         }
-                    }
-
-                    if (gitRef.IsSelected)
-                    {
-                        hasSelectedRef = true;
                     }
 
                     var headColor = RevisionGridRefRenderer.GetHeadColor(gitRef);
@@ -208,7 +202,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                 // Draw the summary text
                 var bounds = messageBounds.ReduceLeft(offset);
-                _grid.DrawColumnText(e, text, hasSelectedRef ? style.BoldFont : normalFont, style.ForeColor, bounds);
+                _grid.DrawColumnText(e, text, revision.ObjectId == _grid.CurrentCheckout ? style.BoldFont : normalFont, style.ForeColor, bounds);
 
                 // Draw the multi-line indicator
                 indicator.Render();

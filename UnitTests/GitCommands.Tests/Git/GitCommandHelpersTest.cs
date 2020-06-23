@@ -652,6 +652,14 @@ namespace GitCommandsTests.Git
                 () => GitCommandHelpers.ResetCmd(ResetMode.ResetIndex, commit: hash, file: "file.txt"));
         }
 
+        [TestCase(@"a path with spaces\", "mybranch", false, ExpectedResult = @"push ""file://a path with spaces"" ""1111111111111111111111111111111111111111:mybranch""")]
+        [TestCase(@"c:\path2\", "branch2", true, ExpectedResult = @"push ""file://c:\path2"" ""1111111111111111111111111111111111111111:branch2"" --force")]
+        [TestCase(@"/c/path3/", "branch3", true, ExpectedResult = @"push ""file:///c/path3"" ""1111111111111111111111111111111111111111:branch3"" --force")]
+        public string PushLocalCmd(string repoPath, string gitRef, bool force)
+        {
+            return GitCommandHelpers.PushLocalCmd(repoPath, gitRef, ObjectId.WorkTreeId, force).Arguments;
+        }
+
         [TestCase(ResetMode.ResetIndex, "tree-ish", null, @"reset ""tree-ish"" --")]
         [TestCase(ResetMode.ResetIndex, "tree-ish", "file.txt", @"reset ""tree-ish"" -- ""file.txt""")]
         [TestCase(ResetMode.Soft, null, null, @"reset --soft --")]

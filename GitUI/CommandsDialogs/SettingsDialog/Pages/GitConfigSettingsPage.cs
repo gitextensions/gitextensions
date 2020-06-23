@@ -20,6 +20,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComponent();
             Text = "Config";
 
+            txtDiffToolPath.Enabled =
+                btnDiffToolBrowse.Enabled =
+                    txtDiffToolCommand.Enabled =
+                        btnDiffToolCommandSuggest.Enabled = false;
+
+            txtMergeToolPath.Enabled =
+                btnMergeToolBrowse.Enabled =
+                    txtMergeToolCommand.Enabled =
+                        btnMergeToolCommandSuggest.Enabled = false;
+
             _NO_TRANSLATE_cboMergeTool.Items.AddRange(RegisteredDiffMergeTools.All(DiffMergeToolType.Merge).ToArray());
             _NO_TRANSLATE_cboDiffTool.Items.AddRange(RegisteredDiffMergeTools.All(DiffMergeToolType.Diff).ToArray());
 
@@ -145,10 +155,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
-        private string BrowseDiffMergeTool(string toolName, string path)
+        private string BrowseDiffMergeTool(string toolName, string path, DiffMergeToolType toolType)
         {
             DiffMergeToolConfiguration diffMergeToolConfig = default;
-            if (_NO_TRANSLATE_cboDiffTool.SelectedIndex > -1)
+            var index = toolType == DiffMergeToolType.Diff ? _NO_TRANSLATE_cboDiffTool.SelectedIndex : _NO_TRANSLATE_cboMergeTool.SelectedIndex;
+            if (index > -1)
             {
                 diffMergeToolConfig = _diffMergeToolConfigurationManager.LoadDiffMergeToolConfig(toolName, null);
             }
@@ -224,23 +235,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void btnMergeToolBrowse_Click(object sender, EventArgs e)
         {
-            txtMergeToolPath.Text = BrowseDiffMergeTool(_NO_TRANSLATE_cboMergeTool.Text, txtMergeToolPath.Text).ToPosixPath();
+            txtMergeToolPath.Text = BrowseDiffMergeTool(_NO_TRANSLATE_cboMergeTool.Text, txtMergeToolPath.Text, DiffMergeToolType.Merge).ToPosixPath();
             SuggestMergeToolCommand();
         }
 
         private void cboDiffTool_TextChanged(object sender, EventArgs e)
         {
-            if (IsLoadingSettings)
-            {
-                return;
-            }
-
             var toolName = _NO_TRANSLATE_cboDiffTool.Text;
 
             txtDiffToolPath.Enabled =
                 btnDiffToolBrowse.Enabled =
                     txtDiffToolCommand.Enabled =
                         btnDiffToolCommandSuggest.Enabled = !string.IsNullOrEmpty(toolName);
+
+            if (IsLoadingSettings)
+            {
+                return;
+            }
 
             string toolPath;
             if (string.IsNullOrWhiteSpace(toolName) || string.IsNullOrWhiteSpace(toolPath = _diffMergeToolConfigurationManager.GetToolPath(toolName, DiffMergeToolType.Diff)))
@@ -256,17 +267,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void cboMergeTool_TextChanged(object sender, EventArgs e)
         {
-            if (IsLoadingSettings)
-            {
-                return;
-            }
-
             var toolName = _NO_TRANSLATE_cboMergeTool.Text;
 
             txtMergeToolPath.Enabled =
                 btnMergeToolBrowse.Enabled =
                     txtMergeToolCommand.Enabled =
                         btnMergeToolCommandSuggest.Enabled = !string.IsNullOrEmpty(toolName);
+
+            if (IsLoadingSettings)
+            {
+                return;
+            }
 
             string toolPath;
             if (string.IsNullOrWhiteSpace(toolName) || string.IsNullOrWhiteSpace(toolPath = _diffMergeToolConfigurationManager.GetToolPath(toolName, DiffMergeToolType.Merge)))
@@ -282,7 +293,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void btnDiffToolBrowse_Click(object sender, EventArgs e)
         {
-            txtDiffToolPath.Text = BrowseDiffMergeTool(_NO_TRANSLATE_cboDiffTool.Text, txtDiffToolPath.Text).ToPosixPath();
+            txtDiffToolPath.Text = BrowseDiffMergeTool(_NO_TRANSLATE_cboDiffTool.Text, txtDiffToolPath.Text, DiffMergeToolType.Diff).ToPosixPath();
             SuggestDiffToolCommand();
         }
 

@@ -1,6 +1,28 @@
 Changelog
 =========
 
+### Version 3.4.2 (21 June 2020)
+
+#### Changes:
+* [#8255] [NBug] Invalid diff/merge tool requestedParameter name: toolName
+* [#8252] Draw current commit message bold in detached-head mode
+* [#8246] Disable context menu items rather than hiding them
+* [#8240] Make WindowsJumpListManager calls safer
+* [#8238] Display 'Plugin Manager" next to "Plugin settings" in the menu
+* [#8237] ResetAnotherBranch: Quote path arguments
+* [#8231] Centrally handle user script errors
+
+
+[8255]:https://github.com/gitextensions/gitextensions/pull/8255
+[8252]:https://github.com/gitextensions/gitextensions/pull/8252
+[8246]:https://github.com/gitextensions/gitextensions/pull/8246
+[8240]:https://github.com/gitextensions/gitextensions/pull/8240
+[8238]:https://github.com/gitextensions/gitextensions/pull/8238
+[8237]:https://github.com/gitextensions/gitextensions/pull/8237
+[8231]:https://github.com/gitextensions/gitextensions/pull/8231
+
+
+
 ### Version 3.4.1 (14 June 2020)
 
 #### Changes:
