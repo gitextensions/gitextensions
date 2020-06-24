@@ -136,14 +136,3 @@ if __name__ == '__main__':
         o += line
     outfile = open(filename, "w")
     outfile.writelines(o)
-    
-    filename = "..\GitExtensionsVSIX\source.extension.vsixmanifest"
-    vsixManifest = open(filename, "r").readlines()
-    o = ""
-    for i in vsixManifest:
-        line = i
-        if line.find("<Identity Publisher=\"GitExt Team\" Version=") != -1:
-            line = re.sub("<Identity Publisher=\"GitExt Team\" Version=\"[0-9\.]+", "<Identity Publisher=\"GitExt Team\" Version=\"" + '.'.join(verSplitted), line)
-        o += line
-    outfile = open(filename, "w")
-    outfile.writelines(o)
