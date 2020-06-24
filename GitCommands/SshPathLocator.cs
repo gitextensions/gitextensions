@@ -54,7 +54,10 @@ namespace GitCommands
 
             try
             {
-                var gitDirInfo = _fileSystem.Directory.GetParent(gitBinDirectory);
+                // gitBinDirectory will normally end with a directory separator
+                // (at least this is what AppSettings.GitBinDir ensures),
+                // but then GetParent() returns the same directory, only without the trailing separator
+                var gitDirInfo = _fileSystem.Directory.GetParent(gitBinDirectory.RemoveTrailingPathSeparator());
                 if (gitDirInfo == null)
                 {
                     return null;
