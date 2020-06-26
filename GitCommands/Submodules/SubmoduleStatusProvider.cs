@@ -154,7 +154,7 @@ namespace GitCommands.Submodules
             TimeSpan elapsed = DateTime.Now - _previousSubmoduleUpdateTime;
             if (gitStatus == null || (!forceUpdate && elapsed.TotalSeconds <= 15))
             {
-                Console.WriteLine($"{MethodBase.GetCurrentMethod().Name} called too early again - aborting");
+                // Just drop the update in 3.4, proper delay in master
                 return;
             }
 
