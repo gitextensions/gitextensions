@@ -31,7 +31,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _multipleDescription = new TranslationString("<multiple>");
         private readonly TranslationString _selectedRevision = new TranslationString("Second: b/");
         private readonly TranslationString _firstRevision = new TranslationString("First: a/");
-        private readonly TranslationString _diffSelectedWithRememberedFile = new TranslationString("Diff with \"{0}\"");
 
         private RevisionGridControl _revisionGrid;
         private RevisionFileTreeControl _revisionFileTree;
@@ -40,7 +39,8 @@ namespace GitUI.CommandsDialogs
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
         private readonly IGitRevisionTester _gitRevisionTester;
-        private readonly RememberFileContextMenuController _rememberFileContextMenuController;
+        private readonly RememberFileContextMenuController _rememberFileContextMenuController
+            = RememberFileContextMenuController.Default;
 
         public RevisionDiffControl()
         {
@@ -52,7 +52,6 @@ namespace GitUI.CommandsDialogs
             _findFilePredicateProvider = new FindFilePredicateProvider();
             _gitRevisionTester = new GitRevisionTester(_fullPathResolver);
             _revisionDiffContextMenuController = new FileStatusListContextMenuController();
-            _rememberFileContextMenuController = new RememberFileContextMenuController();
             DiffText.TopScrollReached += FileViewer_TopScrollReached;
             DiffText.BottomScrollReached += FileViewer_BottomScrollReached;
         }
@@ -828,7 +827,7 @@ namespace GitUI.CommandsDialogs
                 && _rememberFileContextMenuController.ShouldEnableSecondItemDiff(diffFiles[0]);
             diffWithRememberedDifftoolToolStripMenuItem.Text =
                 _rememberFileContextMenuController.RememberedDiffFileItem != null
-                    ? string.Format(_diffSelectedWithRememberedFile.Text, _rememberFileContextMenuController.RememberedDiffFileItem.Item.Name)
+                    ? string.Format(Strings.DiffSelectedWithRememberedFile, _rememberFileContextMenuController.RememberedDiffFileItem.Item.Name)
                     : string.Empty;
 
             rememberSecondRevDiffToolStripMenuItem.Visible = diffFiles.Count == 1;

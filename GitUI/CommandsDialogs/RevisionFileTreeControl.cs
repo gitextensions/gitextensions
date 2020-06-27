@@ -14,6 +14,7 @@ using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
+using GitUI.UserControls;
 using JetBrains.Annotations;
 using ResourceManager;
 
@@ -52,6 +53,8 @@ See the changes in the commit form.");
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
         [CanBeNull] private GitRevision _revision;
+        private readonly RememberFileContextMenuController _rememberFileContextMenuController
+            = RememberFileContextMenuController.Default;
 
         public RevisionFileTreeControl()
         {
@@ -578,9 +581,25 @@ See the changes in the commit form.");
             toolStripSeparatorTopActions.Visible = itemSelected && ((gitItem.ObjectType == GitObjectType.Commit && isExistingFileOrDirectory)
                                                                     || !Module.IsBareRepository());
 
+            // RememberFile diff can be done for folders too (as well as for submodules, but that is meaningless)
+            // However diffs will open many windows that cannot be aborted, so it is blocked
+            // Another reason is that file<->folder compare is not giving any result
+            // (and diff is shared with Diff tab that has no notion of folders)
             openWithDifftoolToolStripMenuItem.Visible = isFile;
             openWithToolStripMenuItem.Visible = isFile;
             openWithToolStripMenuItem.Enabled = isExistingFileOrDirectory;
+            var fsi = _rememberFileContextMenuController.CreateFileStatusItem(gitItem?.FileName, _revision);
+            diffWithRememberedFileToolStripMenuItem.Visible = _rememberFileContextMenuController.RememberedDiffFileItem != null;
+            diffWithRememberedFileToolStripMenuItem.Enabled = isFile && fsi != _rememberFileContextMenuController.RememberedDiffFileItem
+                                                                         && _rememberFileContextMenuController.ShouldEnableSecondItemDiff(fsi);
+            diffWithRememberedFileToolStripMenuItem.Text =
+                _rememberFileContextMenuController.RememberedDiffFileItem != null
+                    ? string.Format(Strings.DiffSelectedWithRememberedFile, _rememberFileContextMenuController.RememberedDiffFileItem.Item.Name)
+                    : string.Empty;
+
+            rememberFileStripMenuItem.Visible = isFile;
+            rememberFileStripMenuItem.Enabled = _rememberFileContextMenuController.ShouldEnableFirstItemDiff(fsi, isSecondRevision: true);
+
             openFileToolStripMenuItem.Visible = isFile;
             openFileWithToolStripMenuItem.Visible = isFile;
             saveAsToolStripMenuItem.Visible = isFile;
@@ -666,6 +685,32 @@ See the changes in the commit form.");
             {
                 Module.OpenWithDifftool(gitItem.FileName, firstRevision: _revision?.ObjectId?.ToString());
             }
+        }
+
+        private void diffWithRememberedFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!(tvGitTree.SelectedNode?.Tag is GitItem gitItem) || _revision == null)
+            {
+                return;
+            }
+
+            var fsi = _rememberFileContextMenuController.CreateFileStatusItem(gitItem.FileName, _revision);
+            var first = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash,
+                _rememberFileContextMenuController.RememberedDiffFileItem, isSecondRevision: true);
+            var second = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash, fsi, isSecondRevision: true);
+
+            Module.OpenFilesWithDifftool(first, second);
+        }
+
+        private void rememberFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!(tvGitTree.SelectedNode?.Tag is GitItem gitItem) || _revision == null)
+            {
+                return;
+            }
+
+            var fsi = _rememberFileContextMenuController.CreateFileStatusItem(gitItem.FileName, _revision);
+            _rememberFileContextMenuController.RememberedDiffFileItem = fsi;
         }
 
         private void resetToThisRevisionToolStripMenuItem_Click(object sender, EventArgs e)

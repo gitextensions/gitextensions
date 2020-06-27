@@ -1,4 +1,7 @@
-﻿using System;
+﻿#define CONTRACTS_FULL
+
+using System;
+using GitCommands;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -7,6 +10,9 @@ namespace GitUI.CommandsDialogs
 {
     public class RememberFileContextMenuController
     {
+        // Singleton accessor
+        public static RememberFileContextMenuController Default { get; } = new RememberFileContextMenuController();
+
         /// <summary>
         /// The remembered file status item, to diff with other files and commits
         /// </summary>
@@ -15,12 +21,27 @@ namespace GitUI.CommandsDialogs
         // Note that the methods in this class are without side effects (static)
 
         /// <summary>
+        /// Get a FileStatusItem that can be used to compare with
+        /// </summary>
+        /// <param name="name">The file name</param>
+        /// <param name="rev">The Git revision</param>
+        /// <returns>The FileStatusItem</returns>
+        [Pure]
+        public FileStatusItem CreateFileStatusItem(string name, GitRevision rev)
+        {
+            var gis = new GitItemStatus { IsNew = true, Name = name };
+            var fsi = new FileStatusItem(null, rev, gis);
+            return fsi;
+        }
+
+        /// <summary>
         /// Check if this file and commit can be used as the first item in a diff to another item
         /// It must be possible to describe the item as a Git commitish
         /// </summary>
         /// <param name="item">The file status item</param>
         /// <param name="isSecondRevision">true if second revision can be used as the first item</param>
         /// <returns>If the item can be used</returns>
+        [Pure]
         public bool ShouldEnableFirstItemDiff(FileStatusItem item, bool isSecondRevision)
         {
             // First item must be a git reference existing in the revision, i.e. other than work tree
@@ -28,6 +49,7 @@ namespace GitUI.CommandsDialogs
                    && (isSecondRevision ? item.SecondRevision : item.FirstRevision)?.ObjectId != ObjectId.WorkTreeId;
         }
 
+        [Pure]
         public bool ShouldEnableFirstItemDiff(FileStatusItem item)
             => ShouldEnableFirstItemDiff(item, isSecondRevision: false)
                || ShouldEnableFirstItemDiff(item, isSecondRevision: true);
@@ -38,6 +60,7 @@ namespace GitUI.CommandsDialogs
         /// <param name="item">The file status item</param>
         /// <param name="isSecondRevision">true if second revision can be used as the second item</param>
         /// <returns>If the item can be used</returns>
+        [Pure]
         public bool ShouldEnableSecondItemDiff(FileStatusItem item, bool isSecondRevision)
         {
             // Git reference in this revision or work tree file existing on the file system
@@ -46,6 +69,7 @@ namespace GitUI.CommandsDialogs
                    && (isSecondRevision ? !item.Item.IsDeleted : !item.Item.IsNew);
         }
 
+        [Pure]
         public bool ShouldEnableSecondItemDiff(FileStatusItem item)
             => ShouldEnableSecondItemDiff(item, isSecondRevision: false)
                || ShouldEnableSecondItemDiff(item, isSecondRevision: true);
@@ -58,6 +82,7 @@ namespace GitUI.CommandsDialogs
         /// <param name="item">the item</param>
         /// <param name="isSecondRevision">true if second revision is used</param>
         /// <returns>A Git commitish</returns>
+        [Pure]
         public string GetGitCommit([CanBeNull] Func<string, ObjectId, ObjectId> getFileBlobHash, [CanBeNull] FileStatusItem item, bool isSecondRevision)
         {
             if (item == null)
@@ -65,7 +90,10 @@ namespace GitUI.CommandsDialogs
                 return null;
             }
 
-            var name = !isSecondRevision && !string.IsNullOrWhiteSpace(item.Item.OldName) ? item.Item.OldName : item.Item.Name;
+            var name = (!isSecondRevision && !string.IsNullOrWhiteSpace(item.Item.OldName)
+                    ? item.Item.OldName
+                    : item.Item.Name)
+                ?.ToPosixPath();
             var id = (isSecondRevision ? item.SecondRevision : item.FirstRevision)?.ObjectId;
             if (string.IsNullOrWhiteSpace(name) || id == null)
             {
