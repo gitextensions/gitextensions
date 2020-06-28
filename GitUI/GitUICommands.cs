@@ -1182,13 +1182,13 @@ namespace GitUI
         {
             // Note: Order in revisions is that first clicked is last in array
 
-            if (!RevisionDiffInfoProvider.TryGet(revisions, diffKind, out var extraDiffArgs, out var firstRevision, out var secondRevision, out var error))
+            if (!RevisionDiffInfoProvider.TryGet(revisions, diffKind, out var firstRevision, out var secondRevision, out var error))
             {
                 MessageBox.Show(owner, error, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                string output = Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, extraDiffArgs, isTracked);
+                string output = Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, isTracked: isTracked);
                 if (!string.IsNullOrEmpty(output))
                 {
                     MessageBox.Show(owner, output, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);

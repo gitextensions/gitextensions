@@ -15,21 +15,17 @@ namespace GitUI
         /// A - first selected row
         /// B - second selected row
         /// </summary>
-        [ContractAnnotation("revisions:null=>false,extraDiffArgs:null,firstRevision:null,secondRevision:null,error:notnull")]
-        [ContractAnnotation("=>false,extraDiffArgs:null,firstRevision:null,secondRevision:null,error:notnull")]
-        [ContractAnnotation("=>true,extraDiffArgs:notnull,firstRevision:notnull,secondRevision:notnull,error:null")]
+        [ContractAnnotation("revisions:null=>false,firstRevision:null,secondRevision:null,error:notnull")]
+        [ContractAnnotation("=>false,firstRevision:null,secondRevision:null,error:notnull")]
+        [ContractAnnotation("=>true,firstRevision:notnull,secondRevision:notnull,error:null")]
         public static bool TryGet(
             IReadOnlyList<GitRevision> revisions,
             RevisionDiffKind diffKind,
-            out string extraDiffArgs,
             out string firstRevision,
             out string secondRevision,
             out string error)
         {
             // NOTE Order in revisions is that first clicked is last in array
-
-            // Detect rename and copy
-            extraDiffArgs = "-M -C";
 
             if (revisions == null)
             {

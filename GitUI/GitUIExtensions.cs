@@ -87,8 +87,7 @@ namespace GitUI
                     item.Item.OldName,
                     firstId?.ToString(),
                     item.SecondRevision.ToString(),
-                    "",
-                    item.Item.IsTracked);
+                    isTracked: item.Item.IsTracked);
             }
 
             static string GetSelectedPatch(

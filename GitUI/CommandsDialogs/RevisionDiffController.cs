@@ -1,5 +1,6 @@
 ﻿using GitCommands;
 using GitCommands.Git;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
@@ -76,12 +77,12 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowDifftoolMenus(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.SelectedGitItemCount != 0 && !selectionInfo.IsAnyCombinedDiff && selectionInfo.IsAnyTracked;
+            return selectionInfo.SelectedGitItemCount > 0 && !selectionInfo.IsAnyCombinedDiff;
         }
 
         public bool ShouldShowResetFileMenus(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.SelectedGitItemCount != 0 && !selectionInfo.IsBareRepository && selectionInfo.IsAnyTracked;
+            return selectionInfo.SelectedGitItemCount > 0 && !selectionInfo.IsBareRepository && selectionInfo.IsAnyTracked;
         }
 
         #region Main menu items

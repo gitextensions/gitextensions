@@ -60,16 +60,7 @@ namespace GitUITests.CommandsDialogs
         {
             var rev = new GitRevision(ObjectId.Random());
             var selectionInfo = CreateContextMenuSelectionInfo(rev, selectedGitItemCount: t);
-            _controller.ShouldShowDifftoolMenus(selectionInfo).Should().Be(t != 0);
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public void BrowseDiff_DifftoolMenu_Tracked(bool t)
-        {
-            var rev = new GitRevision(ObjectId.Random());
-            var selectionInfo = CreateContextMenuSelectionInfo(rev, isAnyTracked: t);
-            _controller.ShouldShowDifftoolMenus(selectionInfo).Should().Be(t);
+            _controller.ShouldShowDifftoolMenus(selectionInfo).Should().Be(t > 0);
         }
 
         [TestCase(true)]
@@ -98,7 +89,7 @@ namespace GitUITests.CommandsDialogs
         {
             var rev = new GitRevision(ObjectId.Random());
             var selectionInfo = CreateContextMenuSelectionInfo(rev, selectedGitItemCount: t);
-            _controller.ShouldShowResetFileMenus(selectionInfo).Should().Be(t != 0);
+            _controller.ShouldShowResetFileMenus(selectionInfo).Should().Be(t > 0);
         }
 
         [TestCase(true)]

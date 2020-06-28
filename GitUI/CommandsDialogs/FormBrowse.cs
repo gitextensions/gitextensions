@@ -648,6 +648,7 @@ namespace GitUI.CommandsDialogs
             this.InvokeAsync(RefreshRevisions).FileAndForget();
             UpdateSubmodulesStructure();
             UpdateStashCount();
+            revisionDiff.UICommands_PostRepositoryChanged(sender, e);
         }
 
         private void RefreshRevisions()
