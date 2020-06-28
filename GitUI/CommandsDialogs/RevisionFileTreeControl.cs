@@ -664,7 +664,7 @@ See the changes in the commit form.");
         {
             if (tvGitTree.SelectedNode?.Tag is GitItem gitItem)
             {
-                Module.OpenWithDifftool(gitItem.Name, firstRevision: _revision?.ObjectId?.ToString());
+                Module.OpenWithDifftool(gitItem.FileName, firstRevision: _revision?.ObjectId?.ToString());
             }
         }
 
