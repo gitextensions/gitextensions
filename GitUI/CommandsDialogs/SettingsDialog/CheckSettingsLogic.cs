@@ -236,5 +236,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             return !string.IsNullOrEmpty(Module.GitExecutable.GetOutput(""));
         }
+
+        public bool CanFindGPGCmd()
+        {
+            // Gets help documentation because gpg with no args blocks and waits for input
+            return !string.IsNullOrEmpty(Module.GpgExecutable.GetOutput("-?"));
+        }
     }
 }
