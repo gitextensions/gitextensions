@@ -1,6 +1,6 @@
-﻿namespace GitUI.UserControls
+﻿namespace GitUI.UserControls.GPGKeys
 {
-    partial class GPGSecretKeysComboboxControl
+    partial class GPGSecretKeysCombobox
     {
         /// <summary> 
         /// Required designer variable.
@@ -36,7 +36,7 @@
             // 
             // comboBoxKeys
             // 
-            this.comboBoxKeys.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.comboBoxKeys.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxKeys.DataSource = this.gpgKeyDisplayInfoBindingSource;
             this.comboBoxKeys.DisplayMember = "Caption";
@@ -52,17 +52,16 @@
             // 
             // gpgKeyDisplayInfoBindingSource
             // 
-            this.gpgKeyDisplayInfoBindingSource.DataSource = typeof(GitUI.UserControls.GPGSecretKeysComboboxControl.GpgKeyDisplayInfo);
+            this.gpgKeyDisplayInfoBindingSource.DataSource = typeof(GitUI.UserControls.GPGKeys.GpgKeyDisplayInfo);
             // 
-            // GPGSecretKeysComboboxControl
+            // GPGSecretKeysCombobox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.comboBoxKeys);
             this.MinimumSize = new System.Drawing.Size(20, 20);
-            this.Name = "GPGSecretKeysComboboxControl";
+            this.Name = "GPGSecretKeysCombobox";
             this.Size = new System.Drawing.Size(291, 29);
-            this.Load += new System.EventHandler(this.GPGSecretKeysComboboxControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.gpgKeyDisplayInfoBindingSource)).EndInit();
             this.ResumeLayout(false);
 
