@@ -7250,6 +7250,18 @@ Context menu for additional operations</source>
         <source>Suggest</source>
         <target />
       </trans-unit>
+      <trans-unit id="button1.Text">
+        <source>Browse</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="button2.Text">
+        <source>button2</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkCommitSigning.Text">
+        <source>Sign commits automatically?</source>
+        <target />
+      </trans-unit>
       <trans-unit id="globalAutoCrlfFalse.Text">
         <source>Checkout as-is, commit as-is ("core.autocrlf"  is set to "false")</source>
         <target />
@@ -7293,32 +7305,16 @@ global settings.
 </source>
         <target />
       </trans-unit>
-      <trans-unit id="lblCommitTemplatePath.Text">
-        <source>Path to commit template</source>
+      <trans-unit id="lblCommitSigning.Text">
+        <source>Commit Signing</source>
         <target />
       </trans-unit>
-      <trans-unit id="lblDiffTool.Text">
-        <source>Difftool</source>
+      <trans-unit id="lblGPGProgram.Text">
+        <source>GPG Program Path</source>
         <target />
       </trans-unit>
-      <trans-unit id="lblDiffToolCommand.Text">
-        <source>Difftool command</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="lblDiffToolPath.Text">
-        <source>Path to difftool</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="lblMergeTool.Text">
-        <source>Mergetool</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="lblMergeToolCommand.Text">
-        <source>Mergetool command</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="lblMergeToolPath.Text">
-        <source>Path to mergetool</source>
+      <trans-unit id="lblSigningKey.Text">
+        <source>User Signing Key</source>
         <target />
       </trans-unit>
     </body>
