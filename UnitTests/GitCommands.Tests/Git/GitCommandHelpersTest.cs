@@ -599,37 +599,58 @@ namespace GitCommandsTests.Git
         {
             Assert.AreEqual(
                 "-c rebase.autoSquash=false rebase \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false).Arguments);
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false).Arguments);
             Assert.AreEqual(
                 "-c rebase.autoSquash=false rebase -i --no-autosquash \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: false, autoStash: false).Arguments);
+                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false).Arguments);
             Assert.AreEqual(
                 GitVersion.Current.SupportRebaseMerges ? "-c rebase.autoSquash=false rebase --rebase-merges \"branch\"" : "-c rebase.autoSquash=false rebase --preserve-merges \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: true, autosquash: false, autoStash: false).Arguments);
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: true, autosquash: false, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false).Arguments);
             Assert.AreEqual(
                 "-c rebase.autoSquash=false rebase \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: true, autoStash: false).Arguments);
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: true, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false).Arguments);
             Assert.AreEqual(
                 "-c rebase.autoSquash=false rebase --autostash \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: true).Arguments);
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: false).Arguments);
             Assert.AreEqual(
                 "-c rebase.autoSquash=false rebase -i --autosquash \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: true, autoStash: false).Arguments);
+                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: true, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false).Arguments);
+            Assert.AreEqual(
+                "-c rebase.autoSquash=false rebase --ignore-date \"branch\"",
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: true, committerDateIsAuthorDate: false).Arguments);
+            Assert.AreEqual(
+                "-c rebase.autoSquash=false rebase --committer-date-is-author-date \"branch\"",
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: true).Arguments);
+            Assert.AreEqual(
+                "-c rebase.autoSquash=false rebase --ignore-date --autostash \"branch\"",
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: true, ignoreDate: true, committerDateIsAuthorDate: false).Arguments);
+            Assert.AreEqual(
+                "-c rebase.autoSquash=false rebase --committer-date-is-author-date --autostash \"branch\"",
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: true).Arguments);
+            Assert.AreEqual(
+                "-c rebase.autoSquash=false rebase --ignore-date --autostash \"branch\"",
+                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: true, autosquash: true, autoStash: true, ignoreDate: true, committerDateIsAuthorDate: false).Arguments);
+            Assert.AreEqual(
+                "-c rebase.autoSquash=false rebase --committer-date-is-author-date --autostash \"branch\"",
+                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: true, autosquash: true, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: true).Arguments);
             Assert.AreEqual(
                 GitVersion.Current.SupportRebaseMerges ? "-c rebase.autoSquash=false rebase -i --autosquash --rebase-merges --autostash \"branch\"" : "-c rebase.autoSquash=false rebase -i --autosquash --preserve-merges --autostash \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: true, autosquash: true, autoStash: true).Arguments);
+                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: true, autosquash: true, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: false).Arguments);
 
             // TODO quote 'onto'?
 
             Assert.AreEqual(
                 "-c rebase.autoSquash=false rebase \"from\" \"branch\" --onto onto",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, "from", "onto").Arguments);
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false, "from", "onto").Arguments);
+            Assert.AreEqual(
+                "-c rebase.autoSquash=false rebase --ignore-date \"from\" \"branch\" --onto onto",
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: true, committerDateIsAuthorDate: false, "from", "onto").Arguments);
 
             Assert.Throws<ArgumentException>(
-                () => GitCommandHelpers.RebaseCmd("branch", false, false, false, false, from: null, onto: "onto"));
+                () => GitCommandHelpers.RebaseCmd("branch", false, false, false, false, false, false, from: null, onto: "onto"));
 
             Assert.Throws<ArgumentException>(
-                () => GitCommandHelpers.RebaseCmd("branch", false, false, false, false, from: "from", onto: null));
+                () => GitCommandHelpers.RebaseCmd("branch", false, false, false, false, false, false, from: "from", onto: null));
         }
 
         [TestCase(CleanMode.OnlyNonIgnored, true, false, null, "clean --dry-run")]

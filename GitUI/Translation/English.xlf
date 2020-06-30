@@ -5647,6 +5647,14 @@ Nothing to rebase.</source>
         <source>Autosquash</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkCommitterDateIsAuthorDate.Text">
+        <source>Committer date is author date</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkIgnoreDate.Text">
+        <source>Ignore date</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkInteractive.Text">
         <source>Interactive Rebase</source>
         <target />
