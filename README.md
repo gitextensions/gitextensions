@@ -129,6 +129,11 @@ For more details please refer to [versions comparison](https://github.com/gitext
 
 **[Download it now](https://github.com/gitextensions/gitextensions/releases/latest)** or install it with [Chocolatey](https://chocolatey.org/packages/gitextensions) or [AppGet](https://appget.net/packages/i/gitextensions).
 
+If you want to **update a portable version**, you should delete all the files and the subfolders from the existing folder except:
+* _GitExtensions.settings_
+* _WindowPositions.xml_
+* folder _Recent_
+
 <table>
   <tr>
     <td>
