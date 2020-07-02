@@ -15,6 +15,7 @@ using GitExtUtils.GitUI;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -66,7 +67,10 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _pullRepository =
             new TranslationString("The push was rejected because the tip of your current branch is behind its remote counterpart. " +
                 "Merge the remote changes before pushing again.");
-        private readonly TranslationString _pullRepositoryButtons = new TranslationString("Pull with the default pull action ({0})|Pull with rebase|Pull with merge|Force push with lease|Cancel");
+        private readonly TranslationString _pullDefaultButton = new TranslationString("Pull with the default pull action ({0})");
+        private readonly TranslationString _pullRebaseButton = new TranslationString("Pull with rebase");
+        private readonly TranslationString _pullMergeButton = new TranslationString("Pull with merge");
+        private readonly TranslationString _pushForceButton = new TranslationString("Force push with lease");
         private readonly TranslationString _pullActionNone = new TranslationString("none");
         private readonly TranslationString _pullActionFetch = new TranslationString("fetch");
         private readonly TranslationString _pullActionRebase = new TranslationString("rebase");
@@ -573,38 +577,72 @@ namespace GitUI.CommandsDialogs
             if (onRejectedPullAction == null)
             {
                 string destination = _NO_TRANSLATE_Remotes.Text;
-                string buttons = _pullRepositoryButtons.Text;
+                string pullDefaultButtonText;
                 switch (AppSettings.DefaultPullAction)
                 {
                     case AppSettings.PullAction.Fetch:
                     case AppSettings.PullAction.FetchAll:
                     case AppSettings.PullAction.FetchPruneAll:
-                        buttons = string.Format(buttons, _pullActionFetch.Text);
+                        pullDefaultButtonText = string.Format(_pullDefaultButton.Text, _pullActionFetch.Text);
                         break;
                     case AppSettings.PullAction.Merge:
-                        buttons = string.Format(buttons, _pullActionMerge.Text);
+                        pullDefaultButtonText = string.Format(_pullDefaultButton.Text, _pullActionMerge.Text);
                         break;
                     case AppSettings.PullAction.Rebase:
-                        buttons = string.Format(buttons, _pullActionRebase.Text);
+                        pullDefaultButtonText = string.Format(_pullDefaultButton.Text, _pullActionRebase.Text);
                         break;
                     default:
-                        buttons = string.Format(buttons, _pullActionNone.Text);
+                        pullDefaultButtonText = string.Format(_pullDefaultButton.Text, _pullActionNone.Text);
                         break;
                 }
 
-                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(owner,
-                                string.Format(_pullRepositoryCaption.Text, destination),
-                                _pullRepositoryMainInstruction.Text,
-                                _pullRepository.Text,
-                                "",
-                                "",
-                                _dontShowAgain.Text,
-                                buttons,
-                                true,
-                                0,
-                                0);
-                bool rememberDecision = PSTaskDialog.cTaskDialog.VerificationChecked;
-                switch (idx)
+                int dialogResult = -1;
+
+                using var dialog = new TaskDialog
+                {
+                    OwnerWindowHandle = owner.Handle,
+                    Text = _pullRepository.Text,
+                    InstructionText = _pullRepositoryMainInstruction.Text,
+                    Caption = string.Format(_pullRepositoryCaption.Text, destination),
+                    StandardButtons = TaskDialogStandardButtons.Cancel,
+                    Icon = TaskDialogStandardIcon.Error,
+                    FooterCheckBoxText = _dontShowAgain.Text,
+                    FooterIcon = TaskDialogStandardIcon.Information,
+                    StartupLocation = TaskDialogStartupLocation.CenterOwner,
+                    Cancelable = true
+                };
+                var btnPullDefault = new TaskDialogCommandLink("PullDefault", null, pullDefaultButtonText);
+                btnPullDefault.Click += (s, e) =>
+                {
+                    dialogResult = 0;
+                    dialog.Close();
+                };
+                var btnPullRebase = new TaskDialogCommandLink("PullRebase", null, _pullRebaseButton.Text);
+                btnPullRebase.Click += (s, e) =>
+                {
+                    dialogResult = 1;
+                    dialog.Close();
+                };
+                var btnPullMerge = new TaskDialogCommandLink("PullMerge", null, _pullMergeButton.Text);
+                btnPullMerge.Click += (s, e) =>
+                {
+                    dialogResult = 2;
+                    dialog.Close();
+                };
+                var btnPushForce = new TaskDialogCommandLink("PushForce", null, _pushForceButton.Text);
+                btnPushForce.Click += (s, e) =>
+                {
+                    dialogResult = 3;
+                    dialog.Close();
+                };
+                dialog.Controls.Add(btnPullDefault);
+                dialog.Controls.Add(btnPullRebase);
+                dialog.Controls.Add(btnPullMerge);
+                dialog.Controls.Add(btnPushForce);
+
+                dialog.Show();
+
+                switch (dialogResult)
                 {
                     case 0:
                         onRejectedPullAction = AppSettings.PullAction.Default;
@@ -623,7 +661,7 @@ namespace GitUI.CommandsDialogs
                         break;
                 }
 
-                if (rememberDecision)
+                if (dialog.FooterCheckBoxChecked == true)
                 {
                     AppSettings.AutoPullOnPushRejectedAction = onRejectedPullAction;
                 }
