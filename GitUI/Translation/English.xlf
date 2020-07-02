@@ -8071,10 +8071,6 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Delete</source>
         <target />
       </trans-unit>
-      <trans-unit id="_diffSelectedWithRememberedFile.Text">
-        <source>Diff with "{0}"</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_firstRevision.Text">
         <source>First: a/</source>
         <target />
@@ -8351,6 +8347,10 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="openWithToolStripMenuItem.Text">
         <source>Open working directory file with...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="rememberFileStripMenuItem.Text">
+        <source>Remember file for diff</source>
         <target />
       </trans-unit>
       <trans-unit id="resetToThisRevisionToolStripMenuItem.Text">
@@ -9224,6 +9224,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_deleteFile.Text">
         <source>{0:Delete file|Delete files}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_diffSelectedWithRememberedFile.Text">
+        <source>Diff with "{0}"</source>
         <target />
       </trans-unit>
       <trans-unit id="_directoryIsNotAValidRepository.Text">
