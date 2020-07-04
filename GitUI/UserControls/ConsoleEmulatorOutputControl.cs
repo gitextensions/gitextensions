@@ -95,11 +95,6 @@ namespace GitUI.UserControls
                 StartupDirectory = workDir
             };
 
-            if (AppSettings.ConEmuStyle.ValueOrDefault != "Default")
-            {
-                startInfo.ConsoleProcessExtraArgs = " -new_console:P:\"" + AppSettings.ConEmuStyle.ValueOrDefault + "\"";
-            }
-
             foreach (var (name, value) in envVariables)
             {
                 startInfo.SetEnv(name, value);
@@ -123,7 +118,7 @@ namespace GitUI.UserControls
                 }
             };
 
-            _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory);
+            _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.ConEmuStyle.ValueOrDefault, AppSettings.ConEmuFontSize.ValueOrDefault);
         }
     }
 
