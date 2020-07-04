@@ -2152,8 +2152,8 @@ namespace GitUI.CommandsDialogs
                 case Command.GoToSuperproject: toolStripButtonLevelUp_ButtonClick(null, null); break;
                 case Command.GoToSubmodule: toolStripButtonLevelUp.ShowDropDown(); break;
                 case Command.ToggleBetweenArtificialAndHeadCommits: RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.ToggleBetweenArtificialAndHeadCommits); break;
-                case Command.GoToChild: RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.GoToChild); break;
-                case Command.GoToParent: RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.GoToParent); break;
+                case Command.GoToChild: RestoreFileStatusListFocus(() => RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.GoToChild)); break;
+                case Command.GoToParent: RestoreFileStatusListFocus(() => RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.GoToParent)); break;
                 default: return base.ExecuteCommand(cmd);
             }
 
@@ -2249,6 +2249,18 @@ namespace GitUI.CommandsDialogs
                 else if (fileTree.Visible)
                 {
                     fileTree.ExecuteCommand(RevisionFileTreeControl.Command.EditFile);
+                }
+            }
+
+            void RestoreFileStatusListFocus(Action action)
+            {
+                bool restoreFocus = revisionDiff.ContainsFocus;
+
+                action();
+
+                if (restoreFocus)
+                {
+                    revisionDiff.SwitchFocus(alreadyContainedFocus: false);
                 }
             }
         }
