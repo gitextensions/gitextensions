@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
@@ -1015,7 +1016,7 @@ namespace GitUI.CommandsDialogs
         {
             var submodules = DiffFiles.SelectedItems.Where(it => it.Item.IsSubmodule).Select(it => it.Item.Name).Distinct().ToList();
 
-            FormProcess.ShowDialog(FindForm() as FormBrowse, GitCommandHelpers.SubmoduleUpdateCmd(submodules));
+            FormProcess.ShowDialog(FindForm() as FormBrowse, process: null, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submodules), Module.WorkingDir, input: null, useDialogSettings: true);
             RefreshArtificial();
         }
 

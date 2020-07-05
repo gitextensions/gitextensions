@@ -11,6 +11,7 @@ using GitCommands.Git;
 using GitCommands.Utils;
 using GitExtUtils;
 using GitUI.CommandsDialogs.ResolveConflictsDialog;
+using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using ResourceManager;
 

@@ -11,6 +11,7 @@ using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
+using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -245,7 +246,7 @@ namespace GitUI.CommandsDialogs
                                                           CentralRepository.Checked,
                                                           cbIntializeAllSubmodules.Checked,
                                                           branch, depth, isSingleBranch, cbLfs.Checked);
-                using (var fromProcess = new FormRemoteProcess(Module, AppSettings.GitCommand, cloneCmd))
+                using (var fromProcess = new FormRemoteProcess(UICommands, AppSettings.GitCommand, cloneCmd))
                 {
                     fromProcess.SetUrlTryingToConnect(sourceRepo);
                     fromProcess.ShowDialog(this);
@@ -403,7 +404,7 @@ namespace GitUI.CommandsDialogs
             {
                 string remoteUrl = _NO_TRANSLATE_From.Text;
 
-                if (FormRemoteProcess.AskForCacheHostkey(this, Module, remoteUrl))
+                if (FormRemoteProcess.AskForCacheHostkey(this, remoteUrl))
                 {
                     LoadBranches();
                 }

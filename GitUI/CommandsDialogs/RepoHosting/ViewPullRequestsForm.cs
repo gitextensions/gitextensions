@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
@@ -404,9 +405,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             var cmd = string.Format("fetch --no-tags --progress {0} {1}:{2}",
                 _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl, _currentPullRequestInfo.HeadRef, _currentPullRequestInfo.FetchBranch);
-            var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand, cmd);
-
-            if (errorOccurred)
+            var success = FormProcess.ShowDialog(this, process: AppSettings.GitCommand, arguments: cmd, Module.WorkingDir, input: null, useDialogSettings: true);
+            if (!success)
             {
                 return;
             }
@@ -437,8 +437,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     hostedRepository.CloneProtocol = _cloneGitProtocol;
                     if (hostedRepository.CloneReadOnlyUrl != remoteUrl)
                     {
-                        MessageBox.Show(this, string.Format(_strRemoteAlreadyExist.Text,
-                                            remoteName, hostedRepository.CloneReadOnlyUrl, remoteUrl),
+                        MessageBox.Show(this, string.Format(_strRemoteAlreadyExist.Text, remoteName, hostedRepository.CloneReadOnlyUrl, remoteUrl),
                             Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
@@ -456,9 +455,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 }
 
                 var cmd = string.Format("fetch --no-tags --progress {0} {1}:{0}/{1}", remoteName, remoteRef);
-                var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand, cmd);
-
-                if (errorOccurred)
+                var success = FormProcess.ShowDialog(this, process: AppSettings.GitCommand, arguments: cmd, Module.WorkingDir, input: null, useDialogSettings: true);
+                if (!success)
                 {
                     return;
                 }
@@ -466,7 +464,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 UICommands.RepoChangedNotifier.Notify();
 
                 cmd = string.Format("checkout {0}/{1}", remoteName, remoteRef);
-                if (FormProcess.ShowDialog(this, AppSettings.GitCommand, cmd))
+                success = FormProcess.ShowDialog(this, process: AppSettings.GitCommand, arguments: cmd, Module.WorkingDir, input: null, useDialogSettings: true);
+                if (success)
                 {
                     UICommands.RepoChangedNotifier.Notify();
                 }

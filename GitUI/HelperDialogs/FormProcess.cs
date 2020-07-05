@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.UserControls;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
-namespace GitUI
+namespace GitUI.HelperDialogs
 {
     /// <param name="isError">if command finished with error</param>
     /// <param name="form">this form</param>
@@ -23,12 +22,13 @@ namespace GitUI
         public HandleOnExit HandleOnExitCallback { get; set; }
         public readonly Dictionary<string, string> ProcessEnvVariables = new Dictionary<string, string>();
 
-        protected FormProcess()
-            : base(true)
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
+        public FormProcess()
+            : base()
         {
         }
 
-        public FormProcess(ConsoleOutputControl outputControl, [CanBeNull] string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
+        private FormProcess(ConsoleOutputControl outputControl, [CanBeNull] string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
             : base(outputControl, useDialogSettings)
         {
             ProcessCallback = ProcessStart;
@@ -54,36 +54,6 @@ namespace GitUI
         {
         }
 
-        public static bool ShowDialog([CanBeNull] IWin32Window owner, GitModule module, ArgumentString arguments)
-        {
-            return ShowDialog(owner, null, arguments, module.WorkingDir, null, true);
-        }
-
-        public static bool ShowDialog([CanBeNull] IWin32Window owner, GitModule module, string process, ArgumentString arguments)
-        {
-            return ShowDialog(owner, process, arguments, module.WorkingDir, null, true);
-        }
-
-        public static bool ShowDialog(GitModuleForm owner, ArgumentString arguments)
-        {
-            return ShowDialog(owner, null, arguments);
-        }
-
-        public static bool ShowDialog(GitModuleForm owner, string process, ArgumentString arguments)
-        {
-            return ShowDialog(owner, process, arguments, owner.Module.WorkingDir, null, true);
-        }
-
-        public static bool ShowDialog(GitModuleForm owner, ArgumentString arguments, bool useDialogSettings)
-        {
-            return ShowDialog(owner, owner.Module, arguments, useDialogSettings);
-        }
-
-        public static bool ShowDialog([CanBeNull] IWin32Window owner, GitModule module, ArgumentString arguments, bool useDialogSettings)
-        {
-            return ShowDialog(owner, null, arguments, module.WorkingDir, null, useDialogSettings);
-        }
-
         public static bool ShowDialog([CanBeNull] IWin32Window owner, string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
         {
             using (var formProcess = new FormProcess(process, arguments, workingDirectory, input, useDialogSettings))
@@ -93,41 +63,9 @@ namespace GitUI
             }
         }
 
-        public static bool ShowStandardProcessDialog([CanBeNull] IWin32Window owner, string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
+        public static string ReadDialog([CanBeNull] IWin32Window owner, string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
         {
-            var outputCtrl = new EditboxBasedConsoleOutputControl();
-            using (var formProcess = new FormProcess(outputCtrl, process, arguments, workingDirectory, input, useDialogSettings))
-            {
-                formProcess.ShowDialog(owner);
-                return !formProcess.ErrorOccurred();
-            }
-        }
-
-        public static FormProcess ShowModeless([CanBeNull] IWin32Window owner, string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
-        {
-            var formProcess = new FormProcess(process, arguments, workingDirectory, input, useDialogSettings)
-            {
-                ControlBox = true
-            };
-
-            formProcess.Show(owner);
-
-            return formProcess;
-        }
-
-        public static FormProcess ShowModeless(GitModuleForm owner, ArgumentString arguments)
-        {
-            return ShowModeless(owner, null, arguments, owner.Module.WorkingDir, null, true);
-        }
-
-        public static string ReadDialog(GitModuleForm owner, ArgumentString arguments)
-        {
-            return ReadDialog(owner, null, arguments, owner.Module, null, true);
-        }
-
-        public static string ReadDialog([CanBeNull] IWin32Window owner, string process, ArgumentString arguments, GitModule module, string input, bool useDialogSettings)
-        {
-            using (var formProcess = new FormProcess(process, arguments, module.WorkingDir, input, useDialogSettings))
+            using (var formProcess = new FormProcess(process, arguments, workingDirectory, input, useDialogSettings))
             {
                 formProcess.ShowDialog(owner);
                 return formProcess.GetOutputString();

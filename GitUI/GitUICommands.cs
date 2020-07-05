@@ -106,7 +106,7 @@ namespace GitUI
                     writer.Write(batchFile);
                 }
 
-                FormProcess.ShowDialog(null, Module, "cmd.exe", $"/C \"{tempFile}\"");
+                FormProcess.ShowDialog(null, process: "cmd.exe", arguments: $"/C \"{tempFile}\"", Module.WorkingDir, input: null, useDialogSettings: true);
             }
             finally
             {
@@ -117,8 +117,8 @@ namespace GitUI
         public bool StartCommandLineProcessDialog(IWin32Window owner, IGitCommand command)
         {
             var executed = command.AccessesRemote
-                ? FormRemoteProcess.ShowDialog(owner, Module, command.Arguments)
-                : FormProcess.ShowDialog(owner, Module, command.Arguments);
+                ? FormRemoteProcess.ShowDialog(owner, this, command.Arguments)
+                : FormProcess.ShowDialog(owner, process: null, arguments: command.Arguments, Module.WorkingDir, input: null, useDialogSettings: true);
 
             if (executed && command.ChangesRepoState)
             {
@@ -130,12 +130,12 @@ namespace GitUI
 
         public void StartCommandLineProcessDialog(IWin32Window owner, string command, ArgumentString arguments)
         {
-            FormProcess.ShowDialog(owner, Module, command, arguments);
+            FormProcess.ShowDialog(owner, command, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
         }
 
         public void StartGitCommandProcessDialog(IWin32Window owner, ArgumentString arguments)
         {
-            FormProcess.ShowDialog(owner, Module, arguments);
+            FormProcess.ShowDialog(owner, process: null, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
         }
 
         public bool StartDeleteBranchDialog(IWin32Window owner, string branch)
@@ -199,8 +199,7 @@ namespace GitUI
             bool Action()
             {
                 var arguments = GitCommandHelpers.StashSaveCmd(includeUntrackedFiles, keepIndex, message, selectedFiles);
-                FormProcess.ShowDialog(owner, Module, arguments);
-                return true;
+                return FormProcess.ShowDialog(owner, process: null, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
             }
 
             return DoActionOnRepo(owner, true, true, null, null, Action);
@@ -210,9 +209,8 @@ namespace GitUI
         {
             bool Action()
             {
-                FormProcess.ShowDialog(owner, Module, "stash pop");
-                MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
-                return true;
+                bool success = FormProcess.ShowDialog(owner, process: null, arguments: "stash pop", Module.WorkingDir, input: null, useDialogSettings: true);
+                return success && MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
             }
 
             return DoActionOnRepo(owner, true, true, null, null, Action);
@@ -222,8 +220,7 @@ namespace GitUI
         {
             bool Action()
             {
-                FormProcess.ShowDialog(owner, Module, "stash drop " + stashName.Quote());
-                return true;
+                return FormProcess.ShowDialog(owner, process: null, arguments: $"stash drop {stashName.Quote()}", Module.WorkingDir, input: null, useDialogSettings: true);
             }
 
             return DoActionOnRepo(owner, true, true, null, null, Action);
@@ -233,9 +230,8 @@ namespace GitUI
         {
             bool Action()
             {
-                FormProcess.ShowDialog(owner, Module, "stash apply " + stashName.Quote());
-                MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
-                return true;
+                bool success = FormProcess.ShowDialog(owner, process: null, arguments: $"stash apply {stashName.Quote()}", Module.WorkingDir, input: null, useDialogSettings: true);
+                return success && MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
             }
 
             return DoActionOnRepo(owner, true, true, null, null, Action);
@@ -1089,7 +1085,7 @@ namespace GitUI
         {
             bool Action()
             {
-                return FormProcess.ShowDialog(owner, Module, GitCommandHelpers.SubmoduleUpdateCmd(submoduleLocalPath));
+                return FormProcess.ShowDialog(owner, process: null, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submoduleLocalPath), Module.WorkingDir, input: null, useDialogSettings: true);
             }
 
             return DoActionOnRepo(owner, true, true, null, PostUpdateSubmodules, Action);
@@ -1110,7 +1106,7 @@ namespace GitUI
         {
             bool Action()
             {
-                return FormProcess.ShowDialog(owner, Module, GitCommandHelpers.SubmoduleSyncCmd(""));
+                return FormProcess.ShowDialog(owner, process: null, arguments: GitCommandHelpers.SubmoduleSyncCmd(""), Module.WorkingDir, input: null, useDialogSettings: true);
             }
 
             return DoActionOnRepo(owner, true, true, null, null, Action);
@@ -1864,7 +1860,7 @@ namespace GitUI
 
         public IGitRemoteCommand CreateRemoteCommand()
         {
-            return new GitRemoteCommand(Module);
+            return new GitRemoteCommand(this);
         }
 
         #region Nested class: GitRemoteCommand
@@ -1878,13 +1874,13 @@ namespace GitUI
             public bool ErrorOccurred { get; private set; }
             public string CommandOutput { get; private set; }
 
-            private readonly GitModule _module;
+            private readonly GitUICommands _commands;
 
             public event EventHandler<GitRemoteCommandCompletedEventArgs> Completed;
 
-            internal GitRemoteCommand(GitModule module)
+            internal GitRemoteCommand(GitUICommands commands)
             {
-                _module = module;
+                _commands = commands;
             }
 
             public void Execute()
@@ -1894,7 +1890,7 @@ namespace GitUI
                     throw new InvalidOperationException("CommandText is required");
                 }
 
-                using (var form = new FormRemoteProcess(_module, CommandText))
+                using (var form = new FormRemoteProcess(_commands, process: null, CommandText))
                 {
                     if (Title != null)
                     {

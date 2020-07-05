@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
+using GitUI.HelperDialogs;
 using GitUI.Script;
 using ResourceManager;
 
@@ -97,18 +98,19 @@ namespace GitUI.CommandsDialogs
                 mergeMessagePath = _commitMessageManager.MergeMessagePath;
             }
 
-            var successfullyMerged = FormProcess.ShowDialog(this, GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(),
-                                                                                                   fastForward.Checked,
-                                                                                                   squash.Checked,
-                                                                                                   noCommit.Checked,
-                                                                                                   _NO_TRANSLATE_mergeStrategy.Text,
-                                                                                                   allowUnrelatedHistories.Checked,
-                                                                                                   mergeMessagePath,
-                                                                                                   addLogMessages.Checked ? (int)nbMessages.Value : (int?)null));
+            var command = GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(),
+                                                            fastForward.Checked,
+                                                            squash.Checked,
+                                                            noCommit.Checked,
+                                                            _NO_TRANSLATE_mergeStrategy.Text,
+                                                            allowUnrelatedHistories.Checked,
+                                                            mergeMessagePath,
+                                                            addLogMessages.Checked ? (int)nbMessages.Value : (int?)null);
+            bool success = FormProcess.ShowDialog(this, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
 
             var wasConflict = MergeConflictHandler.HandleMergeConflicts(UICommands, this, !noCommit.Checked);
 
-            if (successfullyMerged || wasConflict)
+            if (success || wasConflict)
             {
                 ScriptManager.RunEventScripts(this, ScriptEvent.AfterMerge);
                 UICommands.RepoChangedNotifier.Notify();

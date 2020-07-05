@@ -25,6 +25,7 @@ using GitUI.BranchTreePanel;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.WorktreeDialog;
+using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Infrastructure.Telemetry;
 using GitUI.Properties;
@@ -1481,7 +1482,7 @@ namespace GitUI.CommandsDialogs
 
         private void CompressGitDatabaseToolStripMenuItemClick(object sender, EventArgs e)
         {
-            FormProcess.ShowModeless(this, "gc");
+            FormProcess.ReadDialog(this, process: null, arguments: "gc", Module.WorkingDir, input: null, useDialogSettings: true);
         }
 
         private void recoverLostObjectsToolStripMenuItemClick(object sender, EventArgs e)
@@ -1575,7 +1576,7 @@ namespace GitUI.CommandsDialogs
             if (sender is ToolStripMenuItem toolStripMenuItem)
             {
                 var submodule = toolStripMenuItem.Tag as string;
-                FormProcess.ShowDialog(this, Module.SuperprojectModule, GitCommandHelpers.SubmoduleUpdateCmd(submodule));
+                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submodule), Module.SuperprojectModule.WorkingDir, input: null, useDialogSettings: true);
             }
 
             UICommands.RepoChangedNotifier.Notify();
@@ -2102,7 +2103,7 @@ namespace GitUI.CommandsDialogs
         private void QuickFetch()
         {
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforeFetch);
-            var success = FormProcess.ShowDialog(this, Module.FetchCmd(string.Empty, string.Empty, string.Empty));
+            bool success = FormProcess.ShowDialog(this, process: null, arguments: Module.FetchCmd(string.Empty, string.Empty, string.Empty), Module.WorkingDir, input: null, useDialogSettings: true);
             if (!success)
             {
                 return;

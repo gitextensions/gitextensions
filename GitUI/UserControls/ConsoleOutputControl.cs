@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.HelperDialogs;
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls

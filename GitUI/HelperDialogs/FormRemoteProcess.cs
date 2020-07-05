@@ -3,10 +3,10 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitUI.UserControls;
-using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using ResourceManager;
 
-namespace GitUI
+namespace GitUI.HelperDialogs
 {
     /// <summary>
     /// Form that handles Plink exceptions
@@ -26,42 +26,33 @@ Do you want to register the host's fingerprint and restart the process?");
             new TranslationString("Host Fingerprint not registered");
         #endregion
 
-        public bool Plink { get; set; }
         private bool _restart;
-        protected readonly GitModule Module;
+        private string _urlTryingToConnect = string.Empty;
 
-        // only for translation
-        protected FormRemoteProcess()
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
+        public FormRemoteProcess()
+            : base()
         {
+            InitializeComponent();
         }
 
-        public FormRemoteProcess(GitModule module, string process, ArgumentString arguments)
-            : base(process, arguments, module.WorkingDir, null, true)
+        public FormRemoteProcess([NotNull] GitUICommands commands, string process, ArgumentString arguments)
+            : base(process, arguments, commands?.Module?.WorkingDir, null, true)
         {
-            Module = module;
+            Commands = commands ?? throw new ArgumentNullException(nameof(commands));
         }
 
-        public FormRemoteProcess(GitModule module, ArgumentString arguments)
-            : base(null, arguments, module.WorkingDir, null, true)
+        public static bool ShowDialog(IWin32Window owner, GitUICommands commands, ArgumentString arguments)
         {
-            Module = module;
-        }
-
-        public static new bool ShowDialog(GitModuleForm owner, ArgumentString arguments)
-        {
-            return ShowDialog(owner, owner.Module, arguments);
-        }
-
-        public static new bool ShowDialog(IWin32Window owner, GitModule module, ArgumentString arguments)
-        {
-            using (var formRemoteProcess = new FormRemoteProcess(module, arguments))
+            using (var formRemoteProcess = new FormRemoteProcess(commands, process: null, arguments))
             {
                 formRemoteProcess.ShowDialog(owner);
                 return !formRemoteProcess.ErrorOccurred();
             }
         }
 
-        private string _urlTryingToConnect = string.Empty;
+        public bool Plink { get; set; }
+        private GitUICommands Commands { get; }
 
         /// <summary>
         /// When cloning a remote using putty, sometimes an error occurs that the fingerprint is not known.
@@ -109,9 +100,9 @@ Do you want to register the host's fingerprint and restart the process?");
                     {
                         // To prevent future authentication errors, save this key for this remote.
                         if (!string.IsNullOrEmpty(loadedKey) && !string.IsNullOrEmpty(Remote) &&
-                            string.IsNullOrEmpty(Module.GetSetting("remote.{0}.puttykeyfile")))
+                            string.IsNullOrEmpty(Commands.Module.GetSetting("remote.{0}.puttykeyfile")))
                         {
-                            Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey);
+                            Commands.Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey);
                         }
 
                         // Retry the command.
@@ -126,7 +117,7 @@ Do you want to register the host's fingerprint and restart the process?");
 
                     if (string.IsNullOrEmpty(_urlTryingToConnect))
                     {
-                        remoteUrl = Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
+                        remoteUrl = Commands.Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
                         if (string.IsNullOrEmpty(remoteUrl))
                         {
                             remoteUrl = Remote;
@@ -137,7 +128,7 @@ Do you want to register the host's fingerprint and restart the process?");
                         remoteUrl = _urlTryingToConnect;
                     }
 
-                    if (AskForCacheHostkey(this, Module, remoteUrl))
+                    if (AskForCacheHostkey(this, remoteUrl))
                     {
                         Retry();
                         return true;
@@ -148,7 +139,7 @@ Do you want to register the host's fingerprint and restart the process?");
             return base.HandleOnExit(ref isError);
         }
 
-        public static bool AskForCacheHostkey(IWin32Window owner, GitModule module, string remoteUrl)
+        public static bool AskForCacheHostkey(IWin32Window owner, string remoteUrl)
         {
             if (!string.IsNullOrEmpty(remoteUrl) && MessageBoxes.CacheHostkey(owner))
             {
@@ -167,7 +158,7 @@ Do you want to register the host's fingerprint and restart the process?");
                     string remoteUrl;
                     if (string.IsNullOrEmpty(_urlTryingToConnect))
                     {
-                        remoteUrl = Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
+                        remoteUrl = Commands.Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
                         remoteUrl = string.IsNullOrEmpty(remoteUrl) ? Remote : remoteUrl;
                     }
                     else

@@ -12,6 +12,7 @@ using GitCommands.Git;
 using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
+using GitUI.HelperDialogs;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -432,7 +433,7 @@ namespace GitUI.CommandsDialogs
             _candidateForRebasingMergeCommit = PushToRemote.Checked && (_selectedBranch != AllRefs) && TabControlTagBranch.SelectedTab == BranchTab;
             _selectedRemoteBranchName = RemoteBranch.Text;
 
-            using (var form = new FormRemoteProcess(Module, pushCmd)
+            using (var form = new FormRemoteProcess(UICommands, process: null, pushCmd)
             {
                 Remote = remote,
                 Text = string.Format(_pushToCaption.Text, destination),
@@ -960,7 +961,7 @@ namespace GitUI.CommandsDialogs
                 {
                     EnsurePageant(remote);
 
-                    var formProcess = new FormRemoteProcess(Module, $"ls-remote --heads \"{remote}\"")
+                    var formProcess = new FormRemoteProcess(UICommands, process: null, $"ls-remote --heads \"{remote}\"")
                     {
                         Remote = remote
                     };

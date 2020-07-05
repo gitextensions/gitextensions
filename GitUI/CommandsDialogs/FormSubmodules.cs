@@ -7,6 +7,7 @@ using GitCommands.Config;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SubmodulesDialog;
+using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -119,7 +120,12 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.SubmoduleSyncCmd(SubModuleLocalPath.Text));
+                bool success = FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.SubmoduleSyncCmd(SubModuleLocalPath.Text), Module.WorkingDir, input: null, useDialogSettings: true);
+                if (!success)
+                {
+                    return;
+                }
+
                 Initialize();
             }
         }
@@ -128,7 +134,12 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.SubmoduleUpdateCmd(SubModuleLocalPath.Text));
+                bool success = FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.SubmoduleUpdateCmd(SubModuleLocalPath.Text), Module.WorkingDir, input: null, useDialogSettings: true);
+                if (!success)
+                {
+                    return;
+                }
+
                 Initialize();
             }
         }

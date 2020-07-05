@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Tag;
+using GitUI.HelperDialogs;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -115,7 +116,7 @@ namespace GitUI.CommandsDialogs
 
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
 
-            using (var form = new FormRemoteProcess(Module, pushCmd)
+            using (var form = new FormRemoteProcess(UICommands, process: null, pushCmd)
             {
                 Remote = _currentRemote,
                 Text = string.Format(_pushToCaption.Text, _currentRemote),

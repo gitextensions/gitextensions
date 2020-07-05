@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.HelperDialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -77,7 +78,13 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            FormProcess.ShowDialog(this, GitCommandHelpers.RevertCmd(Revision.ObjectId, AutoCommit.Checked, parentIndex));
+            var command = GitCommandHelpers.RevertCmd(Revision.ObjectId, AutoCommit.Checked, parentIndex);
+            bool success = FormProcess.ShowDialog(this, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+            if (!success)
+            {
+                return;
+            }
+
             MergeConflictHandler.HandleMergeConflicts(UICommands, this, AutoCommit.Checked);
             DialogResult = DialogResult.OK;
             Close();
