@@ -1115,7 +1115,7 @@ namespace GitUI.CommandsDialogs
 
             var rev = _firstRevision.Text + (DescribeRevision(DiffFiles.SelectedItems.FirstRevs().ToList()) ?? string.Empty);
             var text = string.Format(_resetSelectedChangesText.Text, rev);
-            if (!MessageBoxes.ResetSelectedFiles(this, text))
+            if (!MessageBoxes.ConfirmResetSelectedFiles(this, text))
             {
                 return true;
             }
