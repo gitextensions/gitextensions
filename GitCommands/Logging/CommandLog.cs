@@ -25,25 +25,43 @@ namespace GitCommands.Logging
             _raiseCommandsChanged = raiseCommandsChanged;
         }
 
-        public void LogProcessEnd(int? exitCode = null)
-        {
-            _entry.Duration = _stopwatch.Elapsed;
-            _entry.ExitCode = exitCode;
-            _raiseCommandsChanged();
-        }
+        public void LogProcessEnd(int exitCode) => LogProcessEnd(exitCode, ex: null);
+
+        public void LogProcessEnd(Exception ex) => LogProcessEnd(exitCode: null, ex);
 
         public void SetProcessId(int processId)
         {
-            _entry.ProcessId = processId;
-            _raiseCommandsChanged();
+            try
+            {
+                _entry.ProcessId = processId;
+                _raiseCommandsChanged();
+            }
+            catch (Exception)
+            {
+                // do not disturb the actual operation
+            }
         }
 
         public void NotifyDisposed()
         {
             if (_entry.Duration == null)
             {
+                LogProcessEnd();
+            }
+        }
+
+        private void LogProcessEnd(int? exitCode = null, Exception ex = null)
+        {
+            try
+            {
                 _entry.Duration = _stopwatch.Elapsed;
+                _entry.ExitCode = exitCode;
+                _entry.Exception = ex;
                 _raiseCommandsChanged();
+            }
+            catch (Exception)
+            {
+                // do not disturb the actual operation
             }
         }
     }
@@ -58,6 +76,7 @@ namespace GitCommands.Logging
         public TimeSpan? Duration { get; internal set; }
         public int? ProcessId { get; set; }
         public int? ExitCode { get; set; }
+        [CanBeNull] public Exception Exception { get; set; }
         [CanBeNull] public StackTrace CallStack { get; set; }
 
         internal CommandLogEntry(string fileName, string arguments, string workingDir, DateTime startedAt, bool isOnMainThread)
@@ -84,10 +103,10 @@ namespace GitCommands.Logging
                     fileName = "git";
                 }
 
-                var pid = ProcessId == null ? "" : $"{ProcessId}";
-                var exit = ExitCode == null ? "" : $"{ExitCode}";
+                var exit = ExitCode != null ? $"{ExitCode}" : Exception != null ? "exc" : string.Empty;
+                var ex = Exception != null ? $"  {Exception.GetType().Name}: {Exception.Message}" : string.Empty;
 
-                return $"{StartedAt:HH:mm:ss.fff} {duration,9} {pid,5} {(IsOnMainThread ? "UI" : "  ")} {exit,2} {fileName} {Arguments}";
+                return $"{StartedAt:HH:mm:ss.fff} {duration,9} {ProcessId,5} {(IsOnMainThread ? "UI" : "  ")} {exit,3} {fileName} {Arguments}{ex}";
             }
         }
 
@@ -102,12 +121,11 @@ namespace GitCommands.Logging
                 fileName = "git";
             }
 
-            var pid = ProcessId == null ? "" : $"{ProcessId}";
-            var exit = ExitCode == null ? "" : $"{ExitCode}";
-            var callStack = CallStack == null ? "" : $"{Environment.NewLine}{CallStack}";
+            var exit = ExitCode != null ? $"{ExitCode}" : Exception != null ? "exc" : string.Empty;
+            var ex = Exception != null ? $"{Environment.NewLine}{Exception}" : string.Empty;
+            var callStack = CallStack != null ? $"{Environment.NewLine}{CallStack}" : string.Empty;
 
-            return
-                $"{StartedAt:O}{sep}{duration}{sep}{pid}{sep}{(IsOnMainThread ? "UI" : "")}{sep}{exit}{sep}{fileName}{sep}{Arguments}{sep}{WorkingDir}{callStack}";
+            return $"{StartedAt:O}{sep}{duration}{sep}{ProcessId}{sep}{(IsOnMainThread ? "UI" : "")}{sep}{exit}{sep}{fileName}{sep}{Arguments}{sep}{WorkingDir}{callStack}{ex}";
         }
 
         public string Detail
@@ -119,20 +137,12 @@ namespace GitCommands.Logging
                 s.Append("File name:   ").AppendLine(FileName);
                 s.Append("Arguments:   ").AppendLine(Arguments);
                 s.Append("Working dir: ").AppendLine(WorkingDir);
-                s.Append("Process ID:  ").Append(ProcessId == null ? "unknown" : ProcessId.ToString()).AppendLine();
-                s.Append("Started at:  ").Append(StartedAt.ToString("O")).AppendLine();
-                s.Append("UI Thread?:  ").Append(IsOnMainThread).AppendLine();
-                s.Append("Duration:    ").Append(Duration == null ? "still running" : $"{Duration.Value.TotalMilliseconds:0.###} ms").AppendLine();
-                s.Append("Exit code:   ").Append(ExitCode == null ? "unknown" : ExitCode.ToString()).AppendLine();
-
-                if (CallStack != null)
-                {
-                    s.AppendLine("Call stack: ").Append(CallStack);
-                }
-                else
-                {
-                    s.Append("Call stack: not captured");
-                }
+                s.Append("Process ID:  ").AppendLine(ProcessId != null ? $"{ProcessId}" : "unknown");
+                s.Append("Started at:  ").AppendLine($"{StartedAt:O}");
+                s.Append("UI Thread?:  ").AppendLine($"{IsOnMainThread}");
+                s.Append("Duration:    ").AppendLine(Duration != null ? $"{Duration.Value.TotalMilliseconds:0.###} ms" : "still running");
+                s.Append("Exit code:   ").AppendLine(ExitCode != null ? $"{ExitCode}" : Exception != null ? $"{Exception}" : "unknown");
+                s.Append("Call stack:  ").Append(CallStack != null ? $"{Environment.NewLine}{CallStack}" : "not captured");
 
                 return s.ToString();
             }

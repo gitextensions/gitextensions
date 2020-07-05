@@ -111,9 +111,17 @@ namespace GitCommands
                     // if the Process is disposed then reading ExitCode will throw.
                     if (!_disposed)
                     {
-                        var exitCode = _process.ExitCode;
-                        _logOperation.LogProcessEnd(exitCode);
-                        _exitTaskCompletionSource.TrySetResult(exitCode);
+                        try
+                        {
+                            var exitCode = _process.ExitCode;
+                            _logOperation.LogProcessEnd(exitCode);
+                            _exitTaskCompletionSource.TrySetResult(exitCode);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logOperation.LogProcessEnd(ex);
+                            _exitTaskCompletionSource.TrySetException(ex);
+                        }
                     }
                 }
             }
