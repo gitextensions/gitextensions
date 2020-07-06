@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
@@ -12,7 +13,14 @@ namespace GitUI
     {
         private readonly TranslationString _archiveRevisionCaption = new TranslationString("Archive revision");
 
-        private readonly TranslationString _failedToExecuteScript = new TranslationString("Failed to execute script");
+        private readonly TranslationString _context = new TranslationString("Context");
+
+        private readonly TranslationString _externalOperationFailure = new TranslationString("External operation failure");
+
+        private readonly TranslationString _externalOperationFailureHint
+            = new TranslationString("If you think this was caused by Git Extensions, you can report a bug, or just ignore and continue.");
+
+        private readonly TranslationString _failedToExecute = new TranslationString("Failed to execute");
 
         private readonly TranslationString _failedToRunShell = new TranslationString("Failed to run shell");
 
@@ -46,6 +54,8 @@ namespace GitUI
         private readonly TranslationString _shellNotFound = new TranslationString("The selected shell is not installed, or is not on your path.");
         private readonly TranslationString _resetChangesCaption = new TranslationString("Reset changes");
 
+        private readonly TranslationString _workingDirectory = new TranslationString("Working directory");
+
         // internal for FormTranslate
         internal MessageBoxes()
         {
@@ -56,13 +66,13 @@ namespace GitUI
 
         private static MessageBoxes Instance => instance ?? (instance = new MessageBoxes());
 
-        public static void FailedToExecuteScript(IWin32Window owner, string scriptKey, Exception ex)
-            => ShowError(owner, $"{Instance._failedToExecuteScript.Text} {scriptKey.Quote()}.{Environment.NewLine}"
-                                + $"{Instance._reason.Text}: {ex.Message}");
+        public static void FailedToExecute(IWin32Window owner, string executable, Exception ex)
+            => ShowError(owner, $"{Instance._failedToExecute.Text} {executable}.{Environment.NewLine}"
+                                + $"{Instance._reason.Text}: {Instance.GetText(ex)}");
 
         public static void FailedToRunShell(IWin32Window owner, string shell, Exception ex)
             => ShowError(owner, $"{Instance._failedToRunShell.Text} {shell.Quote()}.{Environment.NewLine}"
-                                + $"{Instance._reason.Text}: {ex.Message}");
+                                + $"{Instance._reason.Text}: {Instance.GetText(ex)}");
 
         public static void NotValidGitDirectory([CanBeNull] IWin32Window owner)
             => ShowError(owner, Instance._notValidGitDirectory.Text);
@@ -124,6 +134,44 @@ namespace GitUI
         public static void ShellNotFound([CanBeNull] IWin32Window owner)
             => ShowError(owner, Instance._shellNotFound.Text, Instance._shellNotFoundCaption.Text);
 
+        public static void Show([CanBeNull] IWin32Window owner, ExternalOperationException ex, ExternalOperationExceptionFactory.Handling exceptionHandling)
+        {
+            if (exceptionHandling == ExternalOperationExceptionFactory.Handling.None)
+            {
+                return;
+            }
+
+            string error = Instance.GetText(ex.InnerException ?? ex);
+            string message = Instance.GetText(ex, addInnerExceptions: false);
+            if (exceptionHandling == ExternalOperationExceptionFactory.Handling.OptionalBugReport)
+            {
+                message += $"{Environment.NewLine}{Environment.NewLine}{Instance._externalOperationFailureHint.Text}";
+            }
+
+            bool handled = true;
+            ShowInMainThread(owner, owner =>
+            {
+                using var dialog = new TaskDialog
+                {
+                    OwnerWindowHandle = owner?.Handle ?? IntPtr.Zero,
+                    Caption = Instance._externalOperationFailure.Text,
+                    Icon = TaskDialogStandardIcon.Error,
+                    InstructionText = error,
+                    Text = message,
+                    Cancelable = true
+                };
+                dialog.AddButton("IgnoreContinue", "Ignore and continue");
+                if (exceptionHandling == ExternalOperationExceptionFactory.Handling.OptionalBugReport)
+                {
+                    dialog.AddButton("Report", "Report bug", () => handled = false);
+                }
+
+                return dialog.Show();
+            });
+
+            ex.Handled = handled;
+        }
+
         public static void ShowError([CanBeNull] IWin32Window owner, string text, string caption = null)
             => Show(owner, text, caption ?? Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
@@ -131,6 +179,71 @@ namespace GitUI
             => Show(owner, text, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
 
         private static DialogResult Show([CanBeNull] IWin32Window owner, string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
-            => MessageBox.Show(owner, text, caption, buttons, icon);
+            => ShowInMainThread(owner, owner => MessageBox.Show(owner, text, caption, buttons, icon));
+
+        private static TResult ShowInMainThread<TResult>([CanBeNull] IWin32Window owner, Func<IWin32Window, TResult> show)
+            => ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                owner ??= Form.ActiveForm;
+
+                return show(owner);
+            });
+
+        private string GetText(Exception ex, bool addInnerExceptions = true)
+        {
+            string text;
+            switch (ex)
+            {
+                case ExternalOperationException externalOperationException:
+                    text = $"{_failedToExecute.Text}:{Environment.NewLine}{externalOperationException.Command.ShortenTo(1000)}"
+                           + $"{Environment.NewLine}{Environment.NewLine}{_workingDirectory.Text}:{Environment.NewLine}{externalOperationException.WorkingDirectory}"
+                           + (externalOperationException.Context == null ? string.Empty : $"{Environment.NewLine}{Environment.NewLine}{_context.Text}: {externalOperationException.Context}");
+                    break;
+
+                default:
+                    text = $"{ex.GetType().Name}: {ex.Message}";
+                    break;
+            }
+
+            if (addInnerExceptions && ex.InnerException is object)
+            {
+                text = $"{text}{Environment.NewLine}{Environment.NewLine}{_reason.Text}: {GetText(ex.InnerException, addInnerExceptions)}";
+            }
+
+            return text;
+        }
+    }
+
+    public static class TaskDialogExtensions
+    {
+        /// <summary>
+        /// Sadly does not close the TaskDialog and does not affect the value returned by Show()!
+        /// </summary>
+        /// <param name="dialog">guess what</param>
+        /// <param name="name">button name</param>
+        /// <param name="label">button label</param>
+        /// <param name="result">result of TaskDialog.Show</param>
+        public static void AddButton(this TaskDialog dialog, string name, string label, TaskDialogResult result)
+        {
+            var button = new TaskDialogCommandLink(name, label);
+            button.Click += (s, e) =>
+            {
+                dialog.Close(result);
+            };
+            dialog.Controls.Add(button);
+        }
+
+        public static void AddButton(this TaskDialog dialog, string name, string label, Action onClick = null)
+        {
+            var button = new TaskDialogCommandLink(name, label);
+            button.Click += (s, e) =>
+            {
+                dialog.Close();
+                onClick?.Invoke();
+            };
+            dialog.Controls.Add(button);
+        }
     }
 }

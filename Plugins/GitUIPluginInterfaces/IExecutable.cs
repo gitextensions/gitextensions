@@ -25,7 +25,7 @@ namespace GitUIPluginInterfaces
         /// <returns>The started process.</returns>
         [NotNull]
         [MustUseReturnValue]
-        IProcess Start(ArgumentString arguments = default, bool createWindow = false, bool redirectInput = false, bool redirectOutput = false, [CanBeNull] Encoding outputEncoding = null);
+        IProcess Start(ArgumentString arguments = default, bool createWindow = false, bool redirectInput = false, bool redirectOutput = false, [CanBeNull] Encoding outputEncoding = null, bool useShellExecute = false);
 
         /// <summary>
         /// Launches a process for the executable and returns its output.

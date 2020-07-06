@@ -15,23 +15,35 @@ namespace GitCommands
     /// <inheritdoc />
     public sealed class Executable : IExecutable
     {
-        private readonly string _workingDir;
+        private readonly string _context;
+        private readonly ExternalOperationExceptionFactory.Handling _exceptionHandling;
         private readonly Func<string> _fileNameProvider;
+        private readonly string _workingDir;
 
         public Executable([NotNull] string fileName, [NotNull] string workingDir = "")
             : this(() => fileName, workingDir)
         {
         }
 
-        public Executable([NotNull] Func<string> fileNameProvider, [NotNull] string workingDir = "")
+        public Executable([NotNull] Func<string> fileNameProvider,
+            [NotNull] string workingDir = "",
+            ExternalOperationExceptionFactory.Handling exceptionHandling = ExternalOperationExceptionFactory.Handling.OptionalBugReport,
+            [CanBeNull] string context = null)
         {
+            if (string.IsNullOrWhiteSpace(workingDir))
+            {
+                workingDir = Directory.GetCurrentDirectory();
+            }
+
             _workingDir = workingDir;
             _fileNameProvider = fileNameProvider;
+            _exceptionHandling = exceptionHandling;
+            _context = context;
         }
 
         /// <inheritdoc />
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        public IProcess Start(ArgumentString arguments = default, bool createWindow = false, bool redirectInput = false, bool redirectOutput = false, Encoding outputEncoding = null)
+        public IProcess Start(ArgumentString arguments = default, bool createWindow = false, bool redirectInput = false, bool redirectOutput = false, Encoding outputEncoding = null, bool useShellExecute = false)
         {
             // TODO should we set these on the child process only?
             EnvironmentConfiguration.SetEnvironmentVariables();
@@ -40,12 +52,19 @@ namespace GitCommands
 
             var fileName = _fileNameProvider();
 
-            return new ProcessWrapper(fileName, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding);
+            return new ProcessWrapper(fileName, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute, _exceptionHandling, _context);
         }
 
         public string GetOutput(ArgumentString arguments)
         {
-            return this.GetOutput(arguments, null);
+            try
+            {
+                return this.GetOutput(arguments, input: null);
+            }
+            catch (Exception ex) when (!(ex is ExternalOperationException))
+            {
+                throw ExternalOperationExceptionFactory.Default.Create(_context, command: $"{_fileNameProvider()} {arguments}", _workingDir, inner: ex, _exceptionHandling);
+            }
         }
 
         #region ProcessWrapper
@@ -69,38 +88,62 @@ namespace GitCommands
             private bool _disposed;
 
             [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-            public ProcessWrapper(string fileName, string arguments, string workDir, bool createWindow, bool redirectInput, bool redirectOutput, [CanBeNull] Encoding outputEncoding)
+            public ProcessWrapper(string fileName,
+                                  string arguments,
+                                  string workDir,
+                                  bool createWindow,
+                                  bool redirectInput,
+                                  bool redirectOutput,
+                                  [CanBeNull] Encoding outputEncoding,
+                                  bool useShellExecute,
+                                  ExternalOperationExceptionFactory.Handling exceptionHandling,
+                                  [CanBeNull] string context)
             {
-                Debug.Assert(redirectOutput == (outputEncoding != null), "redirectOutput == (outputEncoding != null)");
-                _redirectInput = redirectInput;
-                _redirectOutput = redirectOutput;
-
-                _process = new Process
+                try
                 {
-                    EnableRaisingEvents = true,
-                    StartInfo =
+                    Debug.Assert(redirectOutput == (outputEncoding != null), "redirectOutput == (outputEncoding != null)");
+                    _redirectInput = redirectInput;
+                    _redirectOutput = redirectOutput;
+
+                    _process = new Process
                     {
-                        UseShellExecute = false,
-                        ErrorDialog = false,
-                        CreateNoWindow = !createWindow,
-                        RedirectStandardInput = redirectInput,
-                        RedirectStandardOutput = redirectOutput,
-                        RedirectStandardError = redirectOutput,
-                        StandardOutputEncoding = outputEncoding,
-                        StandardErrorEncoding = outputEncoding,
-                        FileName = fileName,
-                        Arguments = arguments,
-                        WorkingDirectory = workDir
-                    }
-                };
+                        EnableRaisingEvents = true,
+                        StartInfo =
+                        {
+                            UseShellExecute = useShellExecute,
+                            ErrorDialog = false,
+                            CreateNoWindow = !createWindow,
+                            RedirectStandardInput = redirectInput,
+                            RedirectStandardOutput = redirectOutput,
+                            RedirectStandardError = redirectOutput,
+                            StandardOutputEncoding = outputEncoding,
+                            StandardErrorEncoding = outputEncoding,
+                            FileName = fileName,
+                            Arguments = arguments,
+                            WorkingDirectory = workDir
+                        }
+                    };
 
-                _logOperation = CommandLog.LogProcessStart(fileName, arguments, workDir);
+                    _logOperation = CommandLog.LogProcessStart(fileName, arguments, workDir);
 
-                _process.Exited += OnProcessExit;
+                    _process.Exited += OnProcessExit;
 
-                _process.Start();
+                    _process.Start();
 
-                _logOperation.SetProcessId(_process.Id);
+                    _logOperation.SetProcessId(_process.Id);
+                }
+                catch (Exception ex)
+                {
+                    _logOperation.LogProcessEnd(ex);
+
+                    Dispose();
+
+                    throw ExternalOperationExceptionFactory.Default.Create(context,
+                        command: $"{_process.StartInfo.FileName} {_process.StartInfo.Arguments}",
+                        _process.StartInfo.WorkingDirectory,
+                        inner: ex,
+                        exceptionHandling);
+                }
             }
 
             private void OnProcessExit(object sender, EventArgs eventArgs)

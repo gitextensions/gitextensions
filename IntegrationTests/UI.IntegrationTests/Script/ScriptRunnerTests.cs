@@ -85,7 +85,7 @@ namespace GitExtensions.UITests.Script
             var result = ExecuteRunScript(null, _module, invalidScriptKey, uiCommands: null, revisionGrid: null, error => errorMessage = error);
 
             result.Executed.Should().BeFalse();
-            errorMessage.Should().Be("Cannot find script: " + invalidScriptKey);
+            errorMessage.Should().Be($"Cannot find script \"{invalidScriptKey}\"");
         }
 
         [Test]

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
@@ -39,7 +38,11 @@ namespace GitUI.Script
             }
             catch (Exception ex)
             {
-                MessageBoxes.FailedToExecuteScript(owner, scriptKey, ex);
+                if ((ex as ExternalOperationException)?.Handled == false)
+                {
+                    MessageBoxes.FailedToExecute(owner, $"{Strings.Script} {scriptKey.Quote()}", ex);
+                }
+
                 return new CommandStatus(false, false);
             }
         }
@@ -52,10 +55,12 @@ namespace GitUI.Script
                 return false;
             }
 
+            string scriptDesignation = $"{Strings.Script} {scriptKey.Quote()}";
+
             var scriptInfo = ScriptManager.GetScript(scriptKey);
             if (scriptInfo is null)
             {
-                showError("Cannot find script: " + scriptKey);
+                showError($"Cannot find {scriptDesignation}");
                 return false;
             }
 
@@ -77,7 +82,7 @@ namespace GitUI.Script
                 }
             }
 
-            if (scriptInfo.AskConfirmation && MessageBox.Show(owner, $"Do you want to execute '{scriptInfo.Name}'?", "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            if (scriptInfo.AskConfirmation && MessageBox.Show(owner, $"Do you want to execute {scriptDesignation}?", Strings.Script, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
                 return false;
             }
@@ -131,7 +136,8 @@ namespace GitUI.Script
                 command = command.Replace(NavigateToPrefix, string.Empty);
                 if (!string.IsNullOrEmpty(command))
                 {
-                    var revisionRef = new Executable(command, module.WorkingDir).GetOutputLines(argument).FirstOrDefault();
+                    var revisionRef = ExecutableFactory.Default.Create(command, module.WorkingDir, ExternalOperationExceptionFactory.Handling.Show, scriptDesignation)
+                        .GetOutputLines(argument).FirstOrDefault();
 
                     if (revisionRef != null)
                     {
@@ -150,14 +156,11 @@ namespace GitUI.Script
             {
                 if (originalCommand.Equals("{openurl}", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    Process.Start(argument);
+                    OsShellUtil.OpenUrlInDefaultBrowser(argument);
                 }
                 else
                 {
-                    // It is totally valid to have a command without an argument, e.g.:
-                    //    Command  : myscript.cmd
-                    //    Arguments: <blank>
-                    new Executable(command, module.WorkingDir).Start(argument ?? string.Empty);
+                    ExecutableFactory.Default.Create(command, module.WorkingDir, ExternalOperationExceptionFactory.Handling.Show, scriptDesignation).Start(argument);
                 }
             }
 

@@ -29,6 +29,8 @@ namespace GitExtensions
         [STAThread]
         private static void Main()
         {
+            ExternalOperationExceptionFactory.Default.OnException += (ex, handling) => MessageBoxes.Show(owner: null, ex, handling);
+
             if (Environment.OSVersion.Version.Major >= 6)
             {
                 SetProcessDPIAware();
@@ -359,6 +361,11 @@ namespace GitExtensions
 
         private static void ReportBug(Exception ex)
         {
+            if ((ex as ExternalOperationException)?.Handled == true)
+            {
+                return;
+            }
+
             // if the error happens before we had a chance to init the environment information
             // the call to GetInformation() will fail. A double Initialise() call is safe.
             UserEnvironmentInformation.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty);

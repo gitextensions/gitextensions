@@ -7751,8 +7751,20 @@ help</source>
         <source>Archive revision</source>
         <target />
       </trans-unit>
-      <trans-unit id="_failedToExecuteScript.Text">
-        <source>Failed to execute script</source>
+      <trans-unit id="_context.Text">
+        <source>Context</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_externalOperationFailure.Text">
+        <source>External operation failure</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_externalOperationFailureHint.Text">
+        <source>If you think this was caused by Git Extensions, you can report a bug, or just ignore and continue.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_failedToExecute.Text">
+        <source>Failed to execute</source>
         <target />
       </trans-unit>
       <trans-unit id="_failedToRunShell.Text">
@@ -7833,6 +7845,10 @@ Do you want to trust this host key and then try again?</source>
         <source>Since this repository has submodules, it's necessary to update them on every checkout.
 
 This will just checkout on the submodule the commit determined by the superproject.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_workingDirectory.Text">
+        <source>Working directory</source>
         <target />
       </trans-unit>
     </body>
@@ -9495,6 +9511,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_rotInactive.Text">
         <source>[ Inactive ]</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_script.Text">
+        <source>script</source>
         <target />
       </trans-unit>
       <trans-unit id="_searchingFor.Text">
