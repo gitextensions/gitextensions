@@ -42,6 +42,7 @@ namespace GitCommands
         private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
         private readonly IGitCommandRunner _gitCommandRunner;
         private readonly IExecutable _gitExecutable;
+        private readonly IExecutable _gpgExecutable;
 
         public GitModule([CanBeNull] string workingDir)
         {
@@ -50,6 +51,10 @@ namespace GitCommands
             _indexLockManager = new IndexLockManager(this);
             _commitDataManager = new CommitDataManager(() => this);
             _gitExecutable = new Executable(() => AppSettings.GitCommand, WorkingDir);
+
+            // TODO use setting for path to gpg
+            _gpgExecutable = new Executable(() => @"C:\Program Files (x86)\GnuPG\bin\gpg.exe", WorkingDir);
+
             _gitCommandRunner = new GitCommandRunner(_gitExecutable, () => SystemEncoding);
 
             // If this is a submodule, populate relevant properties.
@@ -133,6 +138,12 @@ namespace GitCommands
         /// </summary>
         [NotNull]
         public IExecutable GitExecutable => _gitExecutable;
+
+        /// <summary>
+        /// Gets the access to the current GPG executable associated with this module.
+        /// </summary>
+        [CanBeNull]
+        public IExecutable GpgExecutable => _gpgExecutable;
 
         /// <summary>
         /// Gets the access to the current git executable associated with this module.

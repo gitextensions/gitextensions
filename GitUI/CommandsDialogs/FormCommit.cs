@@ -29,6 +29,7 @@ using GitUI.Script;
 using GitUI.SpellChecker;
 using GitUI.Theming;
 using GitUI.UserControls;
+using GitUI.UserControls.GPGKeys;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
@@ -1433,7 +1434,7 @@ namespace GitUI.CommandsDialogs
                         _useFormCommitMessage,
                         noVerifyToolStripMenuItem.Checked,
                         gpgSignCommitToolStripComboBox.SelectedIndex > 0,
-                        toolStripGpgKeyTextBox.Text);
+                        toolStripGpgKeyComboBox.KeyID);
                     var errorOccurred = !FormProcess.ShowDialog(this, commitCmd);
 
                     UICommands.RepoChangedNotifier.Notify();
@@ -2952,8 +2953,16 @@ namespace GitUI.CommandsDialogs
             Commit.Image = gpgSignCommitToolStripComboBox.SelectedIndex > 0
                 ? Images.Key
                 : Images.RepoStateClean;
+            var cbo = (GPGSecretKeysCombobox)toolStripGpgKeyComboBox.Control;
+            try
+            {
+                cbo.UICommandsSource = this;
+            }
+            catch (Exception)
+            {
+            }
 
-            toolStripGpgKeyTextBox.Visible = gpgSignCommitToolStripComboBox.SelectedIndex == 2;
+            toolStripGpgKeyComboBox.Visible = gpgSignCommitToolStripComboBox.SelectedIndex == 2;
         }
 
         #region Selection filtering

@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
+using GitCommands.Gpg;
 using GitCommands.Settings;
 using ResourceManager;
 
@@ -302,6 +303,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             txtCommitTemplatePath.Text = CommonLogic.SelectFile(".", "*.txt (*.txt)|*.txt", txtCommitTemplatePath.Text);
         }
 
+        private void btnGPGProgramBrowse_Click(object sender, EventArgs e)
+        {
+            // TODO refactor to gpg program default location logic in helper
+            string initialDirectory = txtGPGProgram.Text.Length > 0 && System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(txtGPGProgram.Text)) ?
+                System.IO.Path.GetDirectoryName(txtGPGProgram.Text) : @"C:\Program Files (x86)\GnuPG\bin\";
+            txtGPGProgram.Text = CommonLogic.SelectFile(initialDirectory, "gpg.exe|gpg.exe", txtGPGProgram.Text);
+        }
+
         private void ConfigureEncoding_Click(object sender, EventArgs e)
         {
             using (var encodingDlg = new FormAvailableEncodings())
@@ -312,6 +321,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     CommonLogic.FillEncodings(Global_FilesEncoding);
                 }
             }
+        }
+
+        private async void Button2_Click(object sender, EventArgs e)
+        {
+            var gpg = new GitGpgController(() => Module);
+            var lst = await gpg.GetGpgSecretKeys();
+
+            gpgSecretKeysComboboxUserKeys.KeyID = lst.Skip(1).First().KeyID; // just a test to make sure the combobox changes and ignore empty key info
         }
     }
 }

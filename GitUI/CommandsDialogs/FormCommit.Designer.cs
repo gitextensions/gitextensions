@@ -142,7 +142,7 @@ namespace GitUI.CommandsDialogs
             this.noVerifyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.gpgSignCommitToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripGpgKeyTextBox = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripGpgKeyComboBox = new UserControls.GPGKeys.ToolStripGPGSecretKeysComboBox();
             this.commitTemplatesToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
             this.createBranchToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.commitStatusStrip = new System.Windows.Forms.StatusStrip();
@@ -1275,7 +1275,7 @@ namespace GitUI.CommandsDialogs
             this.noVerifyToolStripMenuItem,
             this.toolStripSeparator14,
             this.gpgSignCommitToolStripComboBox,
-            this.toolStripGpgKeyTextBox});
+            this.toolStripGpgKeyComboBox});
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
             this.toolStripMenuItem3.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.toolStripMenuItem3.Size = new System.Drawing.Size(62, 23);
@@ -1341,9 +1341,9 @@ namespace GitUI.CommandsDialogs
             //
             this.toolStripSeparator14.Name = "toolStripSeparator14";
             this.toolStripSeparator14.Size = new System.Drawing.Size(311, 6);
-            //
+            // 
             // gpgSignCommitToolStripComboBox
-            //
+            // 
             this.gpgSignCommitToolStripComboBox.BackColor = System.Drawing.SystemColors.Control;
             this.gpgSignCommitToolStripComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.gpgSignCommitToolStripComboBox.Items.AddRange(new object[] {
@@ -1354,15 +1354,14 @@ namespace GitUI.CommandsDialogs
             this.gpgSignCommitToolStripComboBox.Name = "gpgSignCommitToolStripComboBox";
             this.gpgSignCommitToolStripComboBox.Size = new System.Drawing.Size(230, 23);
             this.gpgSignCommitToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.gpgSignCommitChanged);
-            //
+            // 
             // toolStripGpgKeyTextBox
-            //
-            this.toolStripGpgKeyTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.toolStripGpgKeyTextBox.MaxLength = 8;
-            this.toolStripGpgKeyTextBox.Name = "toolStripGpgKeyTextBox";
-            this.toolStripGpgKeyTextBox.Size = new System.Drawing.Size(230, 23);
-            this.toolStripGpgKeyTextBox.Visible = false;
-            //
+            // 
+            this.toolStripGpgKeyComboBox.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.toolStripGpgKeyComboBox.Name = "toolStripGpgKeyTextBox";
+            this.toolStripGpgKeyComboBox.Size = new System.Drawing.Size(230, 23);
+            // this.toolStripGpgKeyComboBox.Visible = false;
+            // 
             // commitTemplatesToolStripMenuItem
             //
             this.commitTemplatesToolStripMenuItem.Image = global::GitUI.Properties.Images.CommitTemplates;
@@ -1688,7 +1687,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripStatusLabel branchNameLabel;
         private ToolStripStatusLabel remoteNameLabel;
         private ToolStripSeparator toolStripSeparator14;
-        private ToolStripTextBox toolStripGpgKeyTextBox;
+        private GitUI.UserControls.GPGKeys.ToolStripGPGSecretKeysComboBox toolStripGpgKeyComboBox;
         private ToolStripComboBox gpgSignCommitToolStripComboBox;
         private ToolStripMenuItem stopTrackingThisFileToolStripMenuItem;
         private Button modifyCommitMessageButton;
