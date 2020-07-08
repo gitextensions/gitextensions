@@ -13,6 +13,10 @@ namespace GitUI
         private readonly TranslationString _okText = new TranslationString("OK");
         private readonly TranslationString _cancelText = new TranslationString("Cancel");
 
+        private readonly TranslationString _buttonCheckoutBranch = new TranslationString("Checkout branch");
+        private readonly TranslationString _buttonContinue = new TranslationString("Continue");
+        private readonly TranslationString _buttonCreateBranch = new TranslationString("Create branch");
+
         private readonly TranslationString _containedInCurrentCommitText = new TranslationString("'{0}' is contained in the currently selected commit");
         private readonly TranslationString _containedInBranchesText = new TranslationString("Contained in branches:");
         private readonly TranslationString _containedInNoBranchText = new TranslationString("Contained in no branch");
@@ -47,6 +51,9 @@ namespace GitUI
 
         private readonly TranslationString _errorCaptionFailedDeleteFile = new TranslationString("Failed to delete file");
         private readonly TranslationString _errorCaptionFailedDeleteFolder = new TranslationString("Failed to delete directory");
+        private readonly TranslationString _errorCaptionNotOnBranch = new TranslationString("Not on a branch");
+
+        private readonly TranslationString _mainInstructionNotOnBranch = new TranslationString("You are not working on a branch");
 
         private readonly TranslationString _noBranch = new TranslationString("no branch");
         private readonly TranslationString _removeSelectedInvalidRepository = new TranslationString("Remove the selected invalid repository");
@@ -90,6 +97,10 @@ namespace GitUI
         public static string OK => _instance.Value._okText.Text;
         public static string Cancel => _instance.Value._cancelText.Text;
 
+        public static string ButtonContinue => _instance.Value._buttonContinue.Text;
+        public static string ButtonCheckoutBranch => _instance.Value._buttonCheckoutBranch.Text;
+        public static string ButtonCreateBranch => _instance.Value._buttonCreateBranch.Text;
+
         public static string ContainedInCurrentCommit => _instance.Value._containedInCurrentCommitText.Text;
         public static string ContainedInBranches => _instance.Value._containedInBranchesText.Text;
         public static string ContainedInNoBranch => _instance.Value._containedInNoBranchText.Text;
@@ -130,6 +141,9 @@ namespace GitUI
 
         public static string ErrorCaptionFailedDeleteFile => _instance.Value._errorCaptionFailedDeleteFile.Text;
         public static string ErrorCaptionFailedDeleteFolder => _instance.Value._errorCaptionFailedDeleteFolder.Text;
+        public static string ErrorCaptionNotOnBranch => _instance.Value._errorCaptionNotOnBranch.Text;
+
+        public static string ErrorInstructionNotOnBranch => _instance.Value._mainInstructionNotOnBranch.Text;
 
         public static string NoBranch => _instance.Value._noBranch.Text;
         public static string RemoveSelectedInvalidRepository => _instance.Value._removeSelectedInvalidRepository.Text;

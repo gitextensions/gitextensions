@@ -3264,26 +3264,6 @@ Are you sure you want to commit?</source>
 Do you want to continue?</source>
         <target />
       </trans-unit>
-      <trans-unit id="_notOnBranchButtonCheckout.Text">
-        <source>Checkout branch</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_notOnBranchButtonContinue.Text">
-        <source>Continue</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_notOnBranchButtonCreate.Text">
-        <source>Create branch</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_notOnBranchCaption.Text">
-        <source>Not on a branch</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_notOnBranchMainInstruction.Text">
-        <source>You are not working on a branch</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_onlyStageChunkOfSingleFileError.Text">
         <source>You can only use this option when selecting a single file</source>
         <target />
@@ -5223,22 +5203,6 @@ you must specify a remote branch.</source>
         <source>You cannot "pull" when git head detached.
 
 Do you want to continue?</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_notOnBranchButtonCheckout.Text">
-        <source>Checkout branch</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_notOnBranchButtonContinue.Text">
-        <source>Continue</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_notOnBranchCaption.Text">
-        <source>Not on a branch</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_notOnBranchMainInstruction.Text">
-        <source>You are not working on a branch</source>
         <target />
       </trans-unit>
       <trans-unit id="_pruneBranchesBranch.Text">
@@ -9182,6 +9146,18 @@ Select this commit to populate the full message.</source>
         <source>Branches</source>
         <target />
       </trans-unit>
+      <trans-unit id="_buttonCheckoutBranch.Text">
+        <source>Checkout branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_buttonContinue.Text">
+        <source>Continue</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_buttonCreateBranch.Text">
+        <source>Create branch</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_cancelText.Text">
         <source>Cancel</source>
         <target />
@@ -9266,6 +9242,10 @@ Select this commit to populate the full message.</source>
         <source>Failed to delete directory</source>
         <target />
       </trans-unit>
+      <trans-unit id="_errorCaptionNotOnBranch.Text">
+        <source>Not on a branch</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_findGitExecutable.Text">
         <source>Find git...</source>
         <target />
@@ -9304,6 +9284,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_local.Text">
         <source>Local</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_mainInstructionNotOnBranch.Text">
+        <source>You are not working on a branch</source>
         <target />
       </trans-unit>
       <trans-unit id="_markBisectAsBad.Text">

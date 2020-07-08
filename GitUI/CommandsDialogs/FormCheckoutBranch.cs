@@ -393,8 +393,7 @@ namespace GitUI.CommandsDialogs
                             StartupLocation = TaskDialogStartupLocation.CenterOwner
                         };
 
-                        TaskDialogResult result = dialog.Show();
-                        messageBoxResult = result == TaskDialogResult.Yes;
+                        messageBoxResult = dialog.Show() == TaskDialogResult.Yes;
 
                         if (dialog.FooterCheckBoxChecked == true)
                         {

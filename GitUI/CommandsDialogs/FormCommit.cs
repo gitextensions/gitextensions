@@ -85,14 +85,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noStagedChanges = new TranslationString("There are no staged changes");
         private readonly TranslationString _noUnstagedChanges = new TranslationString("There are no unstaged changes");
 
-        private readonly TranslationString _notOnBranchMainInstruction = new TranslationString("You are not working on a branch");
         private readonly TranslationString _notOnBranch =
             new TranslationString("This commit will be unreferenced when switching to another branch and can be lost." +
                                   Environment.NewLine + Environment.NewLine + "Do you want to continue?");
-        private readonly TranslationString _notOnBranchButtonCheckout = new TranslationString("Checkout branch");
-        private readonly TranslationString _notOnBranchButtonCreate = new TranslationString("Create branch");
-        private readonly TranslationString _notOnBranchButtonContinue = new TranslationString("Continue");
-        private readonly TranslationString _notOnBranchCaption = new TranslationString("Not on a branch");
 
         private readonly TranslationString _onlyStageChunkOfSingleFileError =
             new TranslationString("You can only use this option when selecting a single file");
@@ -1392,25 +1387,25 @@ namespace GitUI.CommandsDialogs
                     {
                         OwnerWindowHandle = Handle,
                         Text = _notOnBranch.Text,
-                        InstructionText = _notOnBranchMainInstruction.Text,
-                        Caption = _notOnBranchCaption.Text,
+                        InstructionText = Strings.ErrorInstructionNotOnBranch,
+                        Caption = Strings.ErrorCaptionNotOnBranch,
                         StandardButtons = TaskDialogStandardButtons.Cancel,
                         Icon = TaskDialogStandardIcon.Error,
                         Cancelable = true,
                     };
-                    var btnCheckout = new TaskDialogCommandLink("Checkout", null, _notOnBranchButtonCheckout.Text);
+                    var btnCheckout = new TaskDialogCommandLink("Checkout", null, Strings.ButtonCheckoutBranch);
                     btnCheckout.Click += (s, e) =>
                     {
                         dialogResult = 0;
                         dialog.Close();
                     };
-                    var btnCreate = new TaskDialogCommandLink("Create", null, _notOnBranchButtonCreate.Text);
+                    var btnCreate = new TaskDialogCommandLink("Create", null, Strings.ButtonCreateBranch);
                     btnCreate.Click += (s, e) =>
                     {
                         dialogResult = 1;
                         dialog.Close();
                     };
-                    var btnContinue = new TaskDialogCommandLink("Continue", null, _notOnBranchButtonContinue.Text);
+                    var btnContinue = new TaskDialogCommandLink("Continue", null, Strings.ButtonContinue);
                     btnContinue.Click += (s, e) =>
                     {
                         dialogResult = 2;

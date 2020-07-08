@@ -65,12 +65,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _questionInitSubmodulesCaption =
             new TranslationString("Submodules");
 
-        private readonly TranslationString _notOnBranchMainInstruction = new TranslationString("You are not working on a branch");
         private readonly TranslationString _notOnBranch = new TranslationString("You cannot \"pull\" when git head detached." +
                                   Environment.NewLine + Environment.NewLine + "Do you want to continue?");
-        private readonly TranslationString _notOnBranchButtonCheckout = new TranslationString("Checkout branch");
-        private readonly TranslationString _notOnBranchButtonContinue = new TranslationString("Continue");
-        private readonly TranslationString _notOnBranchCaption = new TranslationString("Not on a branch");
 
         private readonly TranslationString _noRemoteBranch = new TranslationString("You didn't specify a remote branch");
         private readonly TranslationString _noRemoteBranchMainInstruction = new TranslationString(
@@ -372,19 +368,19 @@ namespace GitUI.CommandsDialogs
                 {
                     OwnerWindowHandle = owner.Handle,
                     Text = _notOnBranch.Text,
-                    InstructionText = _notOnBranchMainInstruction.Text,
-                    Caption = _notOnBranchCaption.Text,
+                    InstructionText = Strings.ErrorInstructionNotOnBranch,
+                    Caption = Strings.ErrorCaptionNotOnBranch,
                     StandardButtons = TaskDialogStandardButtons.Cancel,
                     Icon = TaskDialogStandardIcon.Error,
                     Cancelable = true,
                 };
-                var btnCheckout = new TaskDialogCommandLink("Checkout", null, _notOnBranchButtonCheckout.Text);
+                var btnCheckout = new TaskDialogCommandLink("Checkout", null, Strings.ButtonCheckoutBranch);
                 btnCheckout.Click += (s, e) =>
                 {
                     dialogResult = 0;
                     dialog.Close();
                 };
-                var btnContinue = new TaskDialogCommandLink("Continue", null, _notOnBranchButtonContinue.Text);
+                var btnContinue = new TaskDialogCommandLink("Continue", null, Strings.ButtonContinue);
                 btnContinue.Click += (s, e) =>
                 {
                     dialogResult = 1;
