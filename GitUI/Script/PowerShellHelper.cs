@@ -1,6 +1,5 @@
-﻿using System.Diagnostics;
-using GitCommands;
-using GitCommands.Logging;
+﻿using GitCommands;
+using GitUIPluginInterfaces;
 
 namespace GitUI.Script
 {
@@ -12,18 +11,8 @@ namespace GitUI.Script
             var arguments = (runInBackground ? "" : "-NoExit") + " -ExecutionPolicy Unrestricted -Command \"" + command + " " + argument + "\"";
             EnvironmentConfiguration.SetEnvironmentVariables();
 
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = filename,
-                Arguments = arguments,
-                WorkingDirectory = workingDir,
-                UseShellExecute = false
-            };
-
-            var operation = CommandLog.LogProcessStart(filename, arguments, workingDir);
-            var process = Process.Start(startInfo);
-            operation.SetProcessId(process.Id);
-            process.Exited += (s, e) => operation.LogProcessEnd();
+            IExecutable executable = new Executable(filename, workingDir);
+            executable.Start(arguments);
         }
     }
 }
