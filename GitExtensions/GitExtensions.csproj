@@ -22,11 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="PSTaskDialog">
-      <HintPath>..\Bin\PSTaskDialog.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="GitInfo">
       <Version>2.0.21</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>

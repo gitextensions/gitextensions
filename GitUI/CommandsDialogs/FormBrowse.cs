@@ -1843,7 +1843,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                Process.Start(Module.WorkingDir);
+                Process.Start("explorer.exe", Module.WorkingDir);
             }
             catch (Exception ex)
             {

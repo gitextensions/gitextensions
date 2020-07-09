@@ -158,9 +158,6 @@
       <Component Id="Git.hub.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Git.hub.dll" />
       </Component>
-      <Component Id="PSTaskDialog.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\PSTaskDialog.dll" />
-      </Component>
       <Component Id="RestSharp.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\RestSharp.dll" />
       </Component>
@@ -1541,7 +1538,6 @@
       <ComponentRef Id="AdysTech.CredentialManager.dll" />
       <ComponentRef Id="GitUI.dll" />
       <ComponentRef Id="ConEmu.WinForms.dll" />
-      <ComponentRef Id="PSTaskDialog.dll" />
       <ComponentRef Id="AppInsights.WindowsDesktop.dll" />
       <ComponentRef Id="Microsoft.ApplicationInsights.dll" />
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll" />

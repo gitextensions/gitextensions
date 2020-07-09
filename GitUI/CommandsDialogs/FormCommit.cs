@@ -32,6 +32,7 @@ using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -84,12 +85,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noStagedChanges = new TranslationString("There are no staged changes");
         private readonly TranslationString _noUnstagedChanges = new TranslationString("There are no unstaged changes");
 
-        private readonly TranslationString _notOnBranchMainInstruction = new TranslationString("You are not working on a branch");
         private readonly TranslationString _notOnBranch =
             new TranslationString("This commit will be unreferenced when switching to another branch and can be lost." +
                                   Environment.NewLine + Environment.NewLine + "Do you want to continue?");
-        private readonly TranslationString _notOnBranchButtons = new TranslationString("Checkout branch|Create branch|Continue");
-        private readonly TranslationString _notOnBranchCaption = new TranslationString("Not on a branch");
 
         private readonly TranslationString _onlyStageChunkOfSingleFileError =
             new TranslationString("You can only use this option when selecting a single file");
@@ -1383,14 +1381,43 @@ namespace GitUI.CommandsDialogs
 
                 if (!AppSettings.DontConfirmCommitIfNoBranch && Module.IsDetachedHead() && !Module.InTheMiddleOfRebase())
                 {
-                    int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(
-                        this,
-                        _notOnBranchCaption.Text,
-                        _notOnBranchMainInstruction.Text,
-                        _notOnBranch.Text,
-                        _notOnBranchButtons.Text,
-                        true);
-                    switch (idx)
+                    int dialogResult = -1;
+
+                    using var dialog = new TaskDialog
+                    {
+                        OwnerWindowHandle = Handle,
+                        Text = _notOnBranch.Text,
+                        InstructionText = Strings.ErrorInstructionNotOnBranch,
+                        Caption = Strings.ErrorCaptionNotOnBranch,
+                        StandardButtons = TaskDialogStandardButtons.Cancel,
+                        Icon = TaskDialogStandardIcon.Error,
+                        Cancelable = true,
+                    };
+                    var btnCheckout = new TaskDialogCommandLink("Checkout", null, Strings.ButtonCheckoutBranch);
+                    btnCheckout.Click += (s, e) =>
+                    {
+                        dialogResult = 0;
+                        dialog.Close();
+                    };
+                    var btnCreate = new TaskDialogCommandLink("Create", null, Strings.ButtonCreateBranch);
+                    btnCreate.Click += (s, e) =>
+                    {
+                        dialogResult = 1;
+                        dialog.Close();
+                    };
+                    var btnContinue = new TaskDialogCommandLink("Continue", null, Strings.ButtonContinue);
+                    btnContinue.Click += (s, e) =>
+                    {
+                        dialogResult = 2;
+                        dialog.Close();
+                    };
+                    dialog.Controls.Add(btnCheckout);
+                    dialog.Controls.Add(btnCreate);
+                    dialog.Controls.Add(btnContinue);
+
+                    dialog.Show();
+
+                    switch (dialogResult)
                     {
                         case 0:
                             var revisions = _editedCommit != null ? new[] { _editedCommit.ObjectId } : null;

@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using JetBrains.Annotations;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI
@@ -85,21 +86,21 @@ namespace GitUI
 
         public static bool ConfirmUpdateSubmodules(IWin32Window win)
         {
-            var result = PSTaskDialog.cTaskDialog.ShowTaskDialogBox(
-                Owner: win,
-                Title: Instance._updateSubmodules.Text,
-                MainInstruction: Instance._theRepositorySubmodules.Text,
-                Content: Instance._updateSubmodulesToo.Text,
-                ExpandedInfo: "",
-                Footer: "",
-                VerificationText: Instance._rememberChoice.Text,
-                RadioButtons: "",
-                CommandButtons: "",
-                Buttons: PSTaskDialog.eTaskDialogButtons.YesNo,
-                MainIcon: PSTaskDialog.eSysIcons.Question,
-                FooterIcon: PSTaskDialog.eSysIcons.Information) == DialogResult.Yes;
+            using var dialog = new TaskDialog
+            {
+                OwnerWindowHandle = win.Handle,
+                Text = Instance._updateSubmodulesToo.Text,
+                InstructionText = Instance._theRepositorySubmodules.Text,
+                Caption = Instance._updateSubmodules.Text,
+                Icon = TaskDialogStandardIcon.Information,
+                StandardButtons = TaskDialogStandardButtons.Yes | TaskDialogStandardButtons.No,
+                FooterCheckBoxText = Instance._rememberChoice.Text,
+                FooterIcon = TaskDialogStandardIcon.Information,
+                StartupLocation = TaskDialogStartupLocation.CenterOwner
+            };
 
-            if (PSTaskDialog.cTaskDialog.VerificationChecked)
+            bool result = dialog.Show() == TaskDialogResult.Yes;
+            if (dialog.FooterCheckBoxChecked == true)
             {
                 AppSettings.DontConfirmUpdateSubmodulesOnCheckout = result;
                 AppSettings.UpdateSubmodulesOnCheckout = result;

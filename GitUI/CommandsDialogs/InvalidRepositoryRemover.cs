@@ -1,6 +1,7 @@
 using System.Linq;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace GitUI.CommandsDialogs
 {
@@ -22,37 +23,58 @@ namespace GitUI.CommandsDialogs
         {
             int invalidPathCount = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadRecentHistoryAsync())
                                                                    .Count(repo => !GitModule.IsValidGitWorkingDir(repo.Path));
-            string commandButtonCaptions = Strings.RemoveSelectedInvalidRepository;
+            int dialogResult = -1;
+
+            using var dialog = new TaskDialog
+            {
+                InstructionText = Strings.DirectoryInvalidRepository,
+                Caption = Strings.Open,
+                Icon = TaskDialogStandardIcon.Error,
+                StandardButtons = TaskDialogStandardButtons.Cancel,
+                Cancelable = true,
+            };
+            var btnRemoveSelectedInvalidRepository = new TaskDialogCommandLink("RemoveSelectedInvalidRepository", null, Strings.RemoveSelectedInvalidRepository);
+            btnRemoveSelectedInvalidRepository.Click += (s, e) =>
+            {
+                dialogResult = 0;
+                dialog.Close();
+            };
+            dialog.Controls.Add(btnRemoveSelectedInvalidRepository);
             if (invalidPathCount > 1)
             {
-                commandButtonCaptions =
-                    string.Format("{0}|{1}", commandButtonCaptions, string.Format(Strings.RemoveAllInvalidRepositories, invalidPathCount));
+                var btnRemoveAllInvalidRepositories = new TaskDialogCommandLink("RemoveAllInvalidRepositories", null, string.Format(Strings.RemoveAllInvalidRepositories, invalidPathCount));
+                btnRemoveAllInvalidRepositories.Click += (s, e) =>
+                {
+                    dialogResult = 1;
+                    dialog.Close();
+                };
+                dialog.Controls.Add(btnRemoveAllInvalidRepositories);
             }
 
-            int dialogResult = PSTaskDialog.cTaskDialog.ShowCommandBox(
-                Title: Strings.Open,
-                MainInstruction: Strings.DirectoryInvalidRepository,
-                Content: "",
-                CommandButtons: commandButtonCaptions,
-                ShowCancelButton: true);
+            dialog.Show();
 
-            if (dialogResult < 0)
+            switch (dialogResult)
             {
-                /* Cancel */
-                return false;
-            }
-            else if (PSTaskDialog.cTaskDialog.CommandButtonResult == 0)
-            {
-                /* Remove selected invalid repo */
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveRecentAsync(repositoryPath));
-            }
-            else if (PSTaskDialog.cTaskDialog.CommandButtonResult == 1)
-            {
-                /* Remove all invalid repos */
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveInvalidRepositoriesAsync(repoPath => GitModule.IsValidGitWorkingDir(repoPath)));
-            }
+                case 0:
+                    {
+                        /* Remove selected invalid repo */
+                        ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveRecentAsync(repositoryPath));
+                        return true;
+                    }
 
-            return true;
+                case 1:
+                    {
+                        /* Remove all invalid repos */
+                        ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveInvalidRepositoriesAsync(repoPath => GitModule.IsValidGitWorkingDir(repoPath)));
+                        return true;
+                    }
+
+                default:
+                    {
+                        /* Cancel */
+                        return false;
+                    }
+            }
         }
     }
 }

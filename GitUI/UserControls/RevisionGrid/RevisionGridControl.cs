@@ -29,6 +29,7 @@ using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI
@@ -1837,71 +1838,78 @@ namespace GitUI
 
         private void ToolStripItemClickRebaseBranch(object sender, EventArgs e)
         {
-            if (_rebaseOnTopOf != null)
+            if (_rebaseOnTopOf == null)
             {
-                if (!AppSettings.DontConfirmRebase)
-                {
-                    DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
-                        this,
-                        _rebaseConfirmTitle.Text,
-                        _rebaseBranch.Text,
-                        _areYouSureRebase.Text,
-                        "",
-                        "",
-                        _dontShowAgain.Text,
-                        PSTaskDialog.eTaskDialogButtons.OKCancel,
-                        PSTaskDialog.eSysIcons.Information,
-                        PSTaskDialog.eSysIcons.Information);
+                return;
+            }
 
-                    if (res == DialogResult.OK)
-                    {
-                        UICommands.StartRebase(this, _rebaseOnTopOf);
-                    }
+            if (AppSettings.DontConfirmRebase)
+            {
+                UICommands.StartRebase(this, _rebaseOnTopOf);
+                return;
+            }
 
-                    if (PSTaskDialog.cTaskDialog.VerificationChecked)
-                    {
-                        AppSettings.DontConfirmRebase = true;
-                    }
-                }
-                else
-                {
-                    UICommands.StartRebase(this, _rebaseOnTopOf);
-                }
+            using var dialog = new TaskDialog
+            {
+                OwnerWindowHandle = Handle,
+                Text = _areYouSureRebase.Text,
+                Caption = _rebaseConfirmTitle.Text,
+                InstructionText = _rebaseBranch.Text,
+                StandardButtons = TaskDialogStandardButtons.Yes | TaskDialogStandardButtons.No,
+                Icon = TaskDialogStandardIcon.Information,
+                FooterCheckBoxText = _dontShowAgain.Text,
+                FooterIcon = TaskDialogStandardIcon.Information,
+                StartupLocation = TaskDialogStartupLocation.CenterOwner,
+            };
+
+            TaskDialogResult result = dialog.Show();
+
+            if (dialog.FooterCheckBoxChecked == true)
+            {
+                AppSettings.DontConfirmRebase = true;
+            }
+
+            if (result == TaskDialogResult.Yes)
+            {
+                UICommands.StartRebase(this, _rebaseOnTopOf);
             }
         }
 
         private void OnRebaseInteractivelyClicked(object sender, EventArgs e)
         {
-            if (_rebaseOnTopOf != null)
+            if (_rebaseOnTopOf == null)
             {
-                if (!AppSettings.DontConfirmRebase)
-                {
-                    DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
-                        this,
-                        _rebaseConfirmTitle.Text,
-                        _rebaseBranchInteractive.Text,
-                        _areYouSureRebase.Text,
-                        "",
-                        "",
-                        _dontShowAgain.Text,
-                        PSTaskDialog.eTaskDialogButtons.OKCancel,
-                        PSTaskDialog.eSysIcons.Information,
-                        PSTaskDialog.eSysIcons.Information);
+                return;
+            }
 
-                    if (res == DialogResult.OK)
-                    {
-                        UICommands.StartInteractiveRebase(this, _rebaseOnTopOf);
-                    }
+            if (AppSettings.DontConfirmRebase)
+            {
+                UICommands.StartInteractiveRebase(this, _rebaseOnTopOf);
+            }
 
-                    if (PSTaskDialog.cTaskDialog.VerificationChecked)
-                    {
-                        AppSettings.DontConfirmRebase = true;
-                    }
-                }
-                else
-                {
-                    UICommands.StartInteractiveRebase(this, _rebaseOnTopOf);
-                }
+            using var dialog = new TaskDialog
+            {
+                OwnerWindowHandle = Handle,
+                Text = _areYouSureRebase.Text,
+                Caption = _rebaseConfirmTitle.Text,
+                InstructionText = _rebaseBranchInteractive.Text,
+                StandardButtons = TaskDialogStandardButtons.Yes | TaskDialogStandardButtons.No,
+                Icon = TaskDialogStandardIcon.Information,
+                FooterCheckBoxText = _dontShowAgain.Text,
+                FooterIcon = TaskDialogStandardIcon.Information,
+                StartupLocation = TaskDialogStartupLocation.CenterOwner,
+            };
+
+            TaskDialogResult result = dialog.Show();
+
+            if (dialog.FooterCheckBoxChecked == true)
+            {
+                AppSettings.DontConfirmRebase = true;
+            }
+
+            if (result == TaskDialogResult.Yes)
+            {
+                UICommands.StartInteractiveRebase(this, _rebaseOnTopOf);
             }
         }
 
