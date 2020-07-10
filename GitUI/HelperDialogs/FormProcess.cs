@@ -23,7 +23,7 @@ namespace GitUI.HelperDialogs
         public readonly Dictionary<string, string> ProcessEnvVariables = new Dictionary<string, string>();
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
-        public FormProcess()
+        private protected FormProcess()
             : base()
         {
         }

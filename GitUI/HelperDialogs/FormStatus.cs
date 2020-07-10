@@ -17,7 +17,7 @@ namespace GitUI.HelperDialogs
         private DispatcherFrameModalController _modalController;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
-        public FormStatus()
+        private protected FormStatus()
             : base()
         {
             ConsoleOutput = new EditboxBasedConsoleOutputControl();

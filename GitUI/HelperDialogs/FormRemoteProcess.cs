@@ -30,7 +30,7 @@ Do you want to register the host's fingerprint and restart the process?");
         private string _urlTryingToConnect = string.Empty;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
-        public FormRemoteProcess()
+        private FormRemoteProcess()
             : base()
         {
             InitializeComponent();
