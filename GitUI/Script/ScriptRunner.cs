@@ -38,9 +38,7 @@ namespace GitUI.Script
             }
             catch (Exception ex)
             {
-                MessageBox.Show(owner,
-                    $"Failed to execute '{scriptKey}' script.{Environment.NewLine}Reason: {ex.Message}",
-                    Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.FailedToExecuteScript(owner, scriptKey, ex);
                 return new CommandStatus(false, false);
             }
         }

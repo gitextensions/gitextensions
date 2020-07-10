@@ -819,5 +819,14 @@
   </data>
   <data name="PullRequest" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\PullRequest.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>  
+  </data>
+  <data name="cmd" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\cmd.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="powershell" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\powershell.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pwsh" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\pwsh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

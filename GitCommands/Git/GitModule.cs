@@ -920,69 +920,6 @@ namespace GitCommands
             }
         }
 
-        /// <summary>Runs a bash or shell command.</summary>
-        [CanBeNull]
-        public IProcess RunBash(string bashCommand = null)
-        {
-            if (EnvUtils.RunningOnUnix())
-            {
-                string[] termEmuCommands =
-                {
-                    "gnome-terminal",
-                    "konsole",
-                    "Terminal",
-                    "xterm"
-                };
-
-                var which = new Executable("which");
-                var cmd = termEmuCommands.FirstOrDefault(
-                    termEmuCmd => !string.IsNullOrEmpty(which.GetOutput(termEmuCmd)));
-                var args = "";
-
-                if (string.IsNullOrEmpty(cmd))
-                {
-                    cmd = "bash";
-                    args = "--login -i";
-                }
-
-                return new Executable(cmd, WorkingDir).Start(args, createWindow: true);
-            }
-            else
-            {
-                if (PathUtil.TryFindShellPath("git-bash.exe", out var shellPath))
-                {
-                    return new Executable(shellPath, WorkingDir).Start(createWindow: true);
-                }
-
-                string args;
-                if (string.IsNullOrWhiteSpace(bashCommand))
-                {
-                    args = "--login -i\"";
-                }
-                else
-                {
-                    args = "--login -i -c \"" + bashCommand.Replace("\"", "\\\"") + "\"";
-                }
-
-                args = "/c \"\"{0}\" " + args;
-
-                if (PathUtil.TryFindShellPath("bash.exe", out shellPath))
-                {
-                    return new Executable("cmd.exe", WorkingDir)
-                        .Start(string.Format(args, shellPath), createWindow: true);
-                }
-
-                if (PathUtil.TryFindShellPath("sh.exe", out shellPath))
-                {
-                    return new Executable("cmd.exe", WorkingDir)
-                        .Start(string.Format(args, shellPath), createWindow: true);
-                }
-
-                return new Executable("cmd.exe", WorkingDir)
-                    .Start(@"/K echo git bash command not found! :( Please add a folder containing 'bash.exe' to your PATH...", createWindow: true);
-            }
-        }
-
         public string Init(bool bare, bool shared)
         {
             var args = new GitArgumentBuilder("init")

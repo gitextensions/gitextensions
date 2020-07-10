@@ -177,11 +177,6 @@
             // 
             this.cboTerminal.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboTerminal.FormattingEnabled = true;
-            this.cboTerminal.Items.AddRange(new object[] {
-            "bash",
-            "cmd",
-            "powershell",
-            "pwsh"});
             this.cboTerminal.Location = new System.Drawing.Point(118, 59);
             this.cboTerminal.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cboTerminal.Name = "cboTerminal";

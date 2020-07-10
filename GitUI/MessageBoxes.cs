@@ -10,6 +10,12 @@ namespace GitUI
 {
     public class MessageBoxes : Translate
     {
+        private readonly TranslationString _archiveRevisionCaption = new TranslationString("Archive revision");
+
+        private readonly TranslationString _failedToExecuteScript = new TranslationString("Failed to execute script");
+
+        private readonly TranslationString _failedToRunShell = new TranslationString("Failed to run shell");
+
         private readonly TranslationString _notValidGitDirectory = new TranslationString("The current directory is not a valid git repository.");
 
         private readonly TranslationString _unresolvedMergeConflictsCaption = new TranslationString("Merge conflicts");
@@ -33,6 +39,10 @@ namespace GitUI
         private readonly TranslationString _rememberChoice = new TranslationString("Remember choice");
         private readonly TranslationString _confirmDeleteRemoteBranch = new TranslationString("Do you want to delete the branch {0} from {1}?");
 
+        private readonly TranslationString _reason = new TranslationString("Reason");
+
+        private readonly TranslationString _selectOnlyOneOrTwoRevisions = new TranslationString("Select only one or two revisions. Abort.");
+
         private readonly TranslationString _shellNotFoundCaption = new TranslationString("Shell not found");
         private readonly TranslationString _shellNotFound = new TranslationString("The selected shell is not installed, or is not on your path.");
 
@@ -46,10 +56,16 @@ namespace GitUI
 
         private static MessageBoxes Instance => instance ?? (instance = new MessageBoxes());
 
+        public static void FailedToExecuteScript(IWin32Window owner, string scriptKey, Exception ex)
+            => ShowError(owner, $"{Instance._failedToExecuteScript.Text} {scriptKey.Quote()}.{Environment.NewLine}"
+                                + $"{Instance._reason.Text}: {ex.Message}");
+
+        public static void FailedToRunShell(IWin32Window owner, string shell, Exception ex)
+            => ShowError(owner, $"{Instance._failedToRunShell.Text} {shell.Quote()}.{Environment.NewLine}"
+                                + $"{Instance._reason.Text}: {ex.Message}");
+
         public static void NotValidGitDirectory([CanBeNull] IWin32Window owner)
-        {
-            MessageBox.Show(owner, Instance._notValidGitDirectory.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
+            => ShowError(owner, Instance._notValidGitDirectory.Text);
 
         public static void ShowGitConfigurationExceptionMessage(IWin32Window owner, GitConfigurationException exception)
         {
@@ -75,9 +91,10 @@ namespace GitUI
         }
 
         public static void PAgentNotFound(IWin32Window owner)
-        {
-            MessageBox.Show(owner, Instance._pageantNotFound.Text, _putty, MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
+            => ShowError(owner, Instance._pageantNotFound.Text, _putty);
+
+        public static void SelectOnlyOneOrTwoRevisions(IWin32Window owner)
+            => ShowError(owner, Instance._selectOnlyOneOrTwoRevisions.Text, Instance._archiveRevisionCaption.Text);
 
         public static bool CacheHostkey(IWin32Window owner)
         {
@@ -116,8 +133,9 @@ namespace GitUI
         }
 
         public static void ShellNotFound([CanBeNull] IWin32Window owner)
-        {
-            MessageBox.Show(owner, Instance._shellNotFound.Text, Instance._shellNotFoundCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
+            => ShowError(owner, Instance._shellNotFound.Text, Instance._shellNotFoundCaption.Text);
+
+        public static void ShowError([CanBeNull] IWin32Window owner, string text, string caption = null)
+            => MessageBox.Show(owner, text, caption ?? Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
     }
 }
