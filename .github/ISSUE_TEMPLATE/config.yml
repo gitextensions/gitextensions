@@ -1,0 +1,20 @@
+blank_issues_enabled: false
+contact_links:
+  - name: If you have a general question
+    url:  https://github.com/gitextensions/gitextensions/discussions
+    about: If you have a question about the app - ask it here
+  - name: Issue with Git Extensions docs
+    url:  https://github.com/gitextensions/GitExtensionsDoc/issues/new
+    about: Please open issues with the app's documentation in their repo
+  - name: Issue with the Visual Studio extension
+    url:  https://github.com/gitextensions/gitextensions.vsix/issues/new
+    about: Please open issues with the Visual Studio extension of the app in their repo
+  - name: Issue with the Plugin Manager
+    url:  https://github.com/gitextensions/gitextensions.pluginmanager/issues/new
+    about: Please open issues with the Plugin Manager their repo
+  - name: Issue with AzureDevOpsCommitMessage plugin
+    url:  https://github.com/gitextensions/GitExtensions.AzureDevOpsCommitMessage/issues/new
+    about: Please open issues with Azure DevOps commit message plugin in their repo
+  - name: Issue with Gerrit plugin
+    url:  https://github.com/gitextensions/GitExtensions.GerritPlugin/issues/new
+    about: Please open issues with the Gerrit plugin in their repo
