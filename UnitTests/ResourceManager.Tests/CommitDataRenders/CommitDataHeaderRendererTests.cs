@@ -244,7 +244,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var data = new CommitData(
                 ObjectId.Parse(artificialGuid),
                 ObjectId.Random(),
-                _childrenHashes,
+                _parentHashes,
                 author, authorDate,
                 committer, commitDate, "");
 
@@ -252,7 +252,8 @@ namespace ResourceManagerTests.CommitDataRenders
 
             var result = _renderer.Render(data, false);
 
-            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Parents:       3b6ce324 2a8788ff 8e66fa80");
+            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}" +
+                               $"Parents:       {_parentHashes[0].ToShortString()} {_parentHashes[1].ToShortString()} {_parentHashes[2].ToShortString()}");
             _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.Author, Arg.Any<int>());
             _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.Date, Arg.Any<int>());
             _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.CommitHash, Arg.Any<int>());
