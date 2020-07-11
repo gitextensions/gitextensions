@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
@@ -28,8 +28,8 @@ namespace GitUI.HelperDialogs
         {
         }
 
-        private FormProcess(ConsoleOutputControl outputControl, [CanBeNull] string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
-            : base(outputControl, useDialogSettings)
+        private FormProcess(GitUICommands commands, ConsoleOutputControl outputControl, [CanBeNull] string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
+            : base(commands, outputControl, useDialogSettings)
         {
             ProcessCallback = ProcessStart;
             AbortCallback = ProcessAbort;
@@ -49,14 +49,14 @@ namespace GitUI.HelperDialogs
             ConsoleOutput.DataReceived += DataReceivedCore;
         }
 
-        public FormProcess(string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
-            : this(null, process, arguments, workingDirectory, input, useDialogSettings)
+        public FormProcess(GitUICommands commands, string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
+            : this(commands, outputControl: null, process, arguments, workingDirectory, input, useDialogSettings)
         {
         }
 
         public static bool ShowDialog([CanBeNull] IWin32Window owner, string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
         {
-            using (var formProcess = new FormProcess(process, arguments, workingDirectory, input, useDialogSettings))
+            using (var formProcess = new FormProcess(commands: null, process, arguments, workingDirectory, input, useDialogSettings))
             {
                 formProcess.ShowDialog(owner);
                 return !formProcess.ErrorOccurred();
@@ -65,7 +65,7 @@ namespace GitUI.HelperDialogs
 
         public static string ReadDialog([CanBeNull] IWin32Window owner, string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
         {
-            using (var formProcess = new FormProcess(process, arguments, workingDirectory, input, useDialogSettings))
+            using (var formProcess = new FormProcess(commands: null, process, arguments, workingDirectory, input, useDialogSettings))
             {
                 formProcess.ShowDialog(owner);
                 return formProcess.GetOutputString();
