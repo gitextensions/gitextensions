@@ -137,3 +137,4 @@ YYYY/MM/DD, github id, Full name, email
 2020/07/07, bstecisa, Borja Serrano, borjaserrano(at)gmail.com
 2020/08/02, FodderMK, Kevin Yockey, gitex{at]foddermk.com
 2020/09/13, hoborm, Mihaly Hobor, mail{{at]]hobor.xyz
+2020/07/11, blitzmann, Ryan Holmes, holmes.ryan.90(at)gmail.com
