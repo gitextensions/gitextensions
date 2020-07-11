@@ -120,7 +120,13 @@ namespace GitUI.CommandsDialogs
 
             if (canExecute)
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.CherryPickCmd(Revision.ObjectId, AutoCommit.Checked, args.ToString()));
+                var command = GitCommandHelpers.CherryPickCmd(Revision.ObjectId, AutoCommit.Checked, args.ToString());
+                bool success = FormProcess.ShowDialog(this, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+                if (!success)
+                {
+                    return;
+                }
+
                 MergeConflictHandler.HandleMergeConflicts(UICommands, this, AutoCommit.Checked);
                 DialogResult = DialogResult.OK;
                 Close();

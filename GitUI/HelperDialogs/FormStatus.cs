@@ -8,7 +8,7 @@ using GitUI.UserControls;
 using JetBrains.Annotations;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
-namespace GitUI
+namespace GitUI.HelperDialogs
 {
     public partial class FormStatus : GitExtensionsForm
     {
@@ -16,13 +16,12 @@ namespace GitUI
 
         private DispatcherFrameModalController _modalController;
 
-        public FormStatus() : this(true)
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
+        private protected FormStatus()
+            : base()
         {
-        }
-
-        public FormStatus(bool useDialogSettings)
-            : this(null, useDialogSettings)
-        {
+            ConsoleOutput = new EditboxBasedConsoleOutputControl();
+            InitializeComponent();
         }
 
         public FormStatus([CanBeNull] ConsoleOutputControl consoleOutput, bool useDialogSettings)

@@ -2155,13 +2155,14 @@ namespace GitUI
                 return;
             }
 
-            FormProcess.ShowDialog(this, Module, GitCommandHelpers.ContinueBisectCmd(bisectOption, LatestSelectedRevision.ObjectId), false);
+            string command = GitCommandHelpers.ContinueBisectCmd(bisectOption, LatestSelectedRevision.ObjectId);
+            FormProcess.ShowDialog(this, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: false);
             RefreshRevisions();
         }
 
         private void StopBisectToolStripMenuItemClick(object sender, EventArgs e)
         {
-            FormProcess.ShowDialog(this, Module, GitCommandHelpers.StopBisectCmd());
+            FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.StopBisectCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
             RefreshRevisions();
         }
 

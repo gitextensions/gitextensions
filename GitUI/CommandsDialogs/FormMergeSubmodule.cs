@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
-using GitCommands;
 using GitExtUtils;
+using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;
 

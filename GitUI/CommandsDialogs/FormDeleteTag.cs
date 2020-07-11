@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
+using GitUI.HelperDialogs;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 
@@ -64,7 +65,7 @@ namespace GitUI.CommandsDialogs
 
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
 
-            using (var form = new FormRemoteProcess(Module, pushCmd)
+            using (var form = new FormRemoteProcess(UICommands, process: null, pushCmd)
             {
                 ////Remote = currentRemote,
                 ////Text = string.Format(_deleteFromCaption.Text, currentRemote),

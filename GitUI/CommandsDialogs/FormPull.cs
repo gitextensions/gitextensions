@@ -14,6 +14,7 @@ using GitCommands.UserRepositoryHistory;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
+using GitUI.HelperDialogs;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUIPluginInterfaces;
@@ -659,12 +660,12 @@ namespace GitUI.CommandsDialogs
         {
             if (Fetch.Checked)
             {
-                return new FormRemoteProcess(Module, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg(), Unshallow.Checked, Prune.Checked));
+                return new FormRemoteProcess(UICommands, process: null, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg(), Unshallow.Checked, Prune.Checked));
             }
 
             Debug.Assert(Merge.Checked || Rebase.Checked, "Merge.Checked || Rebase.Checked");
 
-            return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked, Prune.Checked))
+            return new FormRemoteProcess(UICommands, process: null, Module.PullCmd(source, curRemoteBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked, Prune.Checked))
             {
                 HandleOnExitCallback = HandlePullOnExit
             };
@@ -708,7 +709,7 @@ namespace GitUI.CommandsDialogs
                     {
                         string remote = _NO_TRANSLATE_Remotes.Text;
                         string pruneCmd = "remote prune " + remote;
-                        using (var formPrune = new FormRemoteProcess(Module, pruneCmd)
+                        using (var formPrune = new FormRemoteProcess(UICommands, process: null, pruneCmd)
                         {
                             Remote = remote,
                             Text = string.Format(_pruneFromCaption.Text, remote)

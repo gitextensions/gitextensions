@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 
 using GitCommands;
-
+using GitUI.HelperDialogs;
 using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
@@ -156,7 +156,7 @@ namespace GitUI.CommandsDialogs
         {
             // Re-apply tree to the index
             // TODO: check how it affects the uncommitted working copy changes
-            using (var fromProcess = new FormRemoteProcess(_gitCommands.Module, AppSettings.GitCommand, RefreshWorkingCopyCommandName))
+            using (var fromProcess = new FormRemoteProcess(_gitCommands, AppSettings.GitCommand, RefreshWorkingCopyCommandName))
             {
                 fromProcess.ShowDialog(Form.ActiveForm);
             }

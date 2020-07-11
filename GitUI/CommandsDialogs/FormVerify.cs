@@ -77,8 +77,7 @@ namespace GitUI.CommandsDialogs
         private void SaveObjectsClick(object sender, EventArgs e)
         {
             var options = GetOptions();
-
-            FormProcess.ShowDialog(this, "fsck-objects --lost-found" + options);
+            FormProcess.ShowDialog(this, process: null, arguments: $"fsck-objects --lost-found{options}", Module.WorkingDir, input: null, useDialogSettings: true);
             UpdateLostObjects();
         }
 
@@ -93,7 +92,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            FormProcess.ShowDialog(this, "prune");
+            FormProcess.ShowDialog(this, process: null, arguments: "prune", Module.WorkingDir, input: null, useDialogSettings: true);
             UpdateLostObjects();
         }
 
@@ -222,9 +221,8 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                var dialogResult = FormProcess.ReadDialog(this, "fsck-objects" + GetOptions());
-
-                if (FormProcess.IsOperationAborted(dialogResult))
+                string cmdOutput = FormProcess.ReadDialog(this, process: null, arguments: $"fsck-objects{GetOptions()}", Module.WorkingDir, input: null, useDialogSettings: true);
+                if (FormProcess.IsOperationAborted(cmdOutput))
                 {
                     DialogResult = DialogResult.Abort;
                     return;
@@ -232,7 +230,7 @@ namespace GitUI.CommandsDialogs
 
                 _lostObjects.Clear();
                 _lostObjects.AddRange(
-                    dialogResult
+                    cmdOutput
                         .Split('\r', '\n')
                         .Where(s => !string.IsNullOrEmpty(s))
                         .Select((s) => LostObject.TryParse(Module, s))

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -121,23 +122,23 @@ namespace GitUI.CommandsDialogs
             {
                 var originalHash = Module.GetCurrentCheckout();
 
-                var cmd = Orphan.Checked
+                var command = Orphan.Checked
                     ? GitCommandHelpers.CreateOrphanCmd(branchName, objectId)
                     : GitCommandHelpers.BranchCmd(branchName, objectId.ToString(), chkbxCheckoutAfterCreate.Checked);
 
-                bool wasSuccessful = FormProcess.ShowDialog(this, cmd);
-                if (Orphan.Checked && wasSuccessful && ClearOrphan.Checked)
+                bool success = FormProcess.ShowDialog(this, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+                if (Orphan.Checked && success && ClearOrphan.Checked)
                 {
                     // orphan AND orphan creation success AND clear
-                    FormProcess.ShowDialog(this, GitCommandHelpers.RemoveCmd());
+                    FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.RemoveCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                 }
 
-                if (wasSuccessful && chkbxCheckoutAfterCreate.Checked && objectId != originalHash)
+                if (success && chkbxCheckoutAfterCreate.Checked && objectId != originalHash)
                 {
                     UICommands.UpdateSubmodules(this);
                 }
 
-                DialogResult = wasSuccessful ? DialogResult.OK : DialogResult.None;
+                DialogResult = success ? DialogResult.OK : DialogResult.None;
             }
             catch (Exception ex)
             {

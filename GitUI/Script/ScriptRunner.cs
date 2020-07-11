@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 
 namespace GitUI.Script
@@ -143,7 +144,7 @@ namespace GitUI.Script
 
             if (!scriptInfo.RunInBackground)
             {
-                FormProcess.ShowStandardProcessDialog(owner, command, argument, module.WorkingDir, null, true);
+                FormProcess.ShowDialog(owner, command, argument, module.WorkingDir, null, true);
             }
             else
             {

@@ -76,18 +76,19 @@ namespace GitUI.HelperDialogs
         {
             if (Soft.Checked)
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.ResetCmd(ResetMode.Soft, Revision.Guid));
+                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.ResetCmd(ResetMode.Soft, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
             }
             else if (Mixed.Checked)
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.ResetCmd(ResetMode.Mixed, Revision.Guid));
+                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.ResetCmd(ResetMode.Mixed, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
             }
             else if (Hard.Checked)
             {
                 if (MessageBox.Show(this, _resetHardWarning.Text, _resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     var currentCheckout = Module.GetCurrentCheckout();
-                    if (FormProcess.ShowDialog(this, GitCommandHelpers.ResetCmd(ResetMode.Hard, Revision.Guid)))
+                    bool success = FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.ResetCmd(ResetMode.Hard, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
+                    if (success)
                     {
                         if (currentCheckout != Revision.ObjectId)
                         {
@@ -102,11 +103,11 @@ namespace GitUI.HelperDialogs
             }
             else if (Merge.Checked)
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.ResetCmd(ResetMode.Merge, Revision.Guid));
+                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.ResetCmd(ResetMode.Merge, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
             }
             else if (Keep.Checked)
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.ResetCmd(ResetMode.Keep, Revision.Guid));
+                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.ResetCmd(ResetMode.Keep, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
             }
 
             UICommands.RepoChangedNotifier.Notify();

@@ -23,6 +23,7 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.AutoCompletion;
 using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.Editor;
+using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.Script;
@@ -1461,11 +1462,12 @@ namespace GitUI.CommandsDialogs
                         noVerifyToolStripMenuItem.Checked,
                         gpgSignCommitToolStripComboBox.SelectedIndex > 0,
                         toolStripGpgKeyTextBox.Text);
-                    var errorOccurred = !FormProcess.ShowDialog(this, commitCmd);
+
+                    bool success = FormProcess.ShowDialog(this, process: null, arguments: commitCmd, Module.WorkingDir, input: null, useDialogSettings: true);
 
                     UICommands.RepoChangedNotifier.Notify();
 
-                    if (errorOccurred)
+                    if (!success)
                     {
                         return;
                     }
@@ -2279,7 +2281,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            FormProcess.ShowDialog(this, "clean -f");
+            FormProcess.ShowDialog(this, process: null, arguments: "clean -f", Module.WorkingDir, input: null, useDialogSettings: true);
             Initialize();
         }
 
@@ -3060,7 +3062,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var item in unstagedFiles.Where(it => it.IsSubmodule))
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.SubmoduleUpdateCmd(item.Name));
+                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.SubmoduleUpdateCmd(item.Name), Module.WorkingDir, input: null, useDialogSettings: true);
             }
 
             Initialize();

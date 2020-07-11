@@ -1,4 +1,4 @@
-﻿namespace GitUI
+﻿namespace GitUI.HelperDialogs
 {
     partial class FormRemoteProcess
     {

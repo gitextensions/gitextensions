@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms;
-namespace GitUI
+﻿namespace GitUI.HelperDialogs
 {
     partial class FormStatus
     {
@@ -185,9 +184,9 @@ namespace GitUI
         protected System.Windows.Forms.Button Ok;
         protected System.Windows.Forms.CheckBox KeepDialogOpen;
         protected System.Windows.Forms.Button Abort;
-        private TableLayoutPanel tableLayoutPanel1;
-        private TableLayoutPanel tableLayoutPanel2;
-        private PictureBox picBoxSuccessFail;
-        private TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.PictureBox picBoxSuccessFail;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
     }
 }

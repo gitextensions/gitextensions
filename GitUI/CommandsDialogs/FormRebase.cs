@@ -191,7 +191,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.ContinueRebaseCmd());
+                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.ContinueRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
 
                 if (!Module.InTheMiddleOfRebase())
                 {
@@ -213,7 +213,7 @@ namespace GitUI.CommandsDialogs
                     applyingPatch.IsSkipped = true;
                 }
 
-                FormProcess.ShowDialog(this, GitCommandHelpers.SkipRebaseCmd());
+                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.SkipRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
 
                 if (!Module.InTheMiddleOfRebase())
                 {
@@ -230,7 +230,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.AbortRebaseCmd());
+                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.AbortRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
 
                 if (!Module.InTheMiddleOfRebase())
                 {
@@ -268,8 +268,8 @@ namespace GitUI.CommandsDialogs
                         chkPreserveMerges.Checked, chkAutosquash.Checked, chkStash.Checked);
                 }
 
-                var dialogResult = FormProcess.ReadDialog(this, rebaseCmd);
-                if (dialogResult.Trim() == "Current branch a is up to date.")
+                string cmdOutput = FormProcess.ReadDialog(this, process: null, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
+                if (cmdOutput.Trim() == "Current branch a is up to date.")
                 {
                     MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
