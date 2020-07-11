@@ -49,7 +49,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void Start_Click(object sender, EventArgs e)
         {
-            bool success = FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.StartBisectCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+            FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.StartBisectCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
 
             UpdateButtonsState();
 
