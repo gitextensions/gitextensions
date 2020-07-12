@@ -105,24 +105,16 @@ namespace GitUI.HelperDialogs
         /// <summary>
         /// Adds a message to the console display control ONLY, <see cref="GetOutputString" /> will not list it.
         /// </summary>
-        public void AddMessage(string text)
+        public void AppendMessage(string text)
         {
             ConsoleOutput.AppendMessageFreeThreaded(text);
-        }
-
-        /// <summary>
-        /// Adds a message line to the console display control ONLY, <see cref="GetOutputString" /> will not list it.
-        /// </summary>
-        public void AddMessageLine(string text)
-        {
-            AddMessage(text + Environment.NewLine);
         }
 
         public void Done(bool isSuccess)
         {
             try
             {
-                AppendMessageCrossThread("Done");
+                AppendMessage("Done");
                 ProgressBar.Visible = false;
                 Ok.Enabled = true;
                 Ok.Focus();
@@ -143,11 +135,6 @@ namespace GitUI.HelperDialogs
             {
                 // Do nothing
             }
-        }
-
-        public void AppendMessageCrossThread(string text)
-        {
-            ConsoleOutput.AppendMessageFreeThreaded(text);
         }
 
         public void Reset()
@@ -174,7 +161,7 @@ namespace GitUI.HelperDialogs
                 {
                     foreach (string line in output)
                     {
-                        form.AppendMessageCrossThread(line);
+                        form.AppendMessage(line);
                     }
                 }
 
