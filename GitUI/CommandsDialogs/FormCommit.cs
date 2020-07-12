@@ -1979,19 +1979,10 @@ namespace GitUI.CommandsDialogs
                     bool wereErrors = false;
                     if (AppSettings.ShowErrorsWhenStagingFiles)
                     {
-                        using (var form = new FormStatus(ProcessStart, _stageDetails.Text))
+                        var output = Module.StageFiles(files, out wereErrors);
+                        if (wereErrors)
                         {
-                            form.ShowDialogOnError(this);
-                        }
-
-                        void ProcessStart(FormStatus form)
-                        {
-                            form.AppendMessageCrossThread(
-                                string.Format(
-                                    _stageFiles.Text + "\n", files.Count));
-                            var output = Module.StageFiles(files, out wereErrors);
-                            form.AppendMessageCrossThread(output);
-                            form.Done(isSuccess: string.IsNullOrWhiteSpace(output));
+                            FormStatus.ShowErrorDialog(this, _stageDetails.Text, string.Format(_stageFiles.Text + "\n", files.Count), output);
                         }
                     }
                     else

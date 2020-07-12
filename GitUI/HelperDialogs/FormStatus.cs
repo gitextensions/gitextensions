@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Threading;
 using GitCommands;
 using GitUI.Properties;
 using GitUI.UserControls;
@@ -14,14 +13,10 @@ namespace GitUI.HelperDialogs
     {
         private readonly bool _useDialogSettings;
 
-        private DispatcherFrameModalController _modalController;
-
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private protected FormStatus()
-            : base()
+            : this(commands: null, consoleOutput: null, useDialogSettings: true)
         {
-            ConsoleOutput = new EditboxBasedConsoleOutputControl();
-            InitializeComponent();
         }
 
         public FormStatus(GitUICommands commands, [CanBeNull] ConsoleOutputControl consoleOutput, bool useDialogSettings)
@@ -31,7 +26,12 @@ namespace GitUI.HelperDialogs
 
             ConsoleOutput = consoleOutput ?? ConsoleOutputControl.CreateInstance();
             ConsoleOutput.Dock = DockStyle.Fill;
-            ConsoleOutput.Terminated += delegate { Close(); }; // This means the control is not visible anymore, no use in keeping. Expected scenario: user hits ESC in the prompt after the git process exits
+            ConsoleOutput.Terminated += (s, e) =>
+            {
+                // This means the control is not visible anymore, no use in keeping.
+                // Expected scenario: user hits ESC in the prompt after the git process exits
+                Close();
+            };
 
             InitializeComponent();
 
@@ -55,18 +55,10 @@ namespace GitUI.HelperDialogs
             InitializeComplete();
         }
 
-        public FormStatus(Action<FormStatus> process, string text)
-            : this(commands: null, new EditboxBasedConsoleOutputControl(), true)
-        {
-            ProcessCallback = process;
-            Text = text;
-        }
-
         protected readonly ConsoleOutputControl ConsoleOutput;
         public Action<FormStatus> ProcessCallback;
         public Action<FormStatus> AbortCallback;
         private bool _errorOccurred;
-        private bool _showOnError;
 
         /// <summary>
         /// Gets the logged output text. Note that this is a separate string from what you see in the console output control.
@@ -80,7 +72,7 @@ namespace GitUI.HelperDialogs
             get
             {
                 CreateParams mdiCp = base.CreateParams;
-                mdiCp.ClassStyle = mdiCp.ClassStyle | NativeMethods.CP_NOCLOSE_BUTTON;
+                mdiCp.ClassStyle |= NativeMethods.CP_NOCLOSE_BUTTON;
                 return mdiCp;
             }
         }
@@ -136,20 +128,13 @@ namespace GitUI.HelperDialogs
                 Ok.Focus();
                 AcceptButton = Ok;
                 Abort.Enabled = false;
-                TaskbarProgress.SetProgress(
-                    isSuccess
-                        ? TaskbarProgressBarState.Normal
-                        : TaskbarProgressBarState.Error,
-                    100,
-                    100);
+                TaskbarProgress.SetProgress(isSuccess ? TaskbarProgressBarState.Normal : TaskbarProgressBarState.Error, 100, 100);
 
-                picBoxSuccessFail.Image = isSuccess
-                    ? Images.StatusBadgeSuccess
-                    : Images.StatusBadgeError;
+                picBoxSuccessFail.Image = isSuccess ? Images.StatusBadgeSuccess : Images.StatusBadgeError;
 
                 _errorOccurred = !isSuccess;
 
-                if (isSuccess && !_showOnError && (_useDialogSettings && AppSettings.CloseProcessDialog))
+                if (isSuccess && (_useDialogSettings && AppSettings.CloseProcessDialog))
                 {
                     Close();
                 }
@@ -157,10 +142,6 @@ namespace GitUI.HelperDialogs
             catch (ConEmu.WinForms.GuiMacroExecutor.GuiMacroException)
             {
                 // Do nothing
-            }
-            finally
-            {
-                _modalController?.EndModal(isSuccess);
             }
         }
 
@@ -184,42 +165,51 @@ namespace GitUI.HelperDialogs
             ProcessCallback(this);
         }
 
-        public void ShowDialogOnError(IWin32Window owner = null)
+        public static void ShowErrorDialog(IWin32Window owner, string text, params string[] output)
         {
-            KeepDialogOpen.Visible = false;
-            Abort.Visible = false;
-            _showOnError = true;
-            _modalController = new DispatcherFrameModalController(this, owner);
-            _modalController.BeginModal();
+            using (var form = new FormStatus(commands: null, new EditboxBasedConsoleOutputControl(), useDialogSettings: true))
+            {
+                form.Text = text;
+                if (output?.Length > 0)
+                {
+                    foreach (string line in output)
+                    {
+                        form.AppendMessageCrossThread(line);
+                    }
+                }
+
+                form.ProgressBar.Visible = false;
+                form.KeepDialogOpen.Visible = false;
+                form.Abort.Visible = false;
+
+                form.StartPosition = FormStartPosition.CenterParent;
+
+                // We know that an operation (whatever it may have been) has failed, so set the error state.
+                form.Done(false);
+
+                form.ShowDialog(owner);
+            }
         }
 
         private void Ok_Click(object sender, EventArgs e)
         {
-            Close();
             DialogResult = DialogResult.OK;
+            Close();
         }
 
-        private void FormStatus_Load(object sender, EventArgs e)
+        protected override void OnRuntimeLoad(EventArgs e)
         {
-            if (DesignMode)
-            {
-                return;
-            }
+            base.OnRuntimeLoad(e);
 
-            if (_modalController != null)
+            // If the dialog was invoked via ShowErrorDialog, there is no operation to invoke
+            // it has already failed (i.e. completed).
+            if (!_errorOccurred)
             {
-                return;
+                Start();
             }
-
-            Start();
         }
 
-        private void FormStatus_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            AfterClosed();
-        }
-
-        internal void Start()
+        private void Start()
         {
             if (ProcessCallback == null)
             {
@@ -232,11 +222,16 @@ namespace GitUI.HelperDialogs
             }
 
             StartPosition = FormStartPosition.CenterParent;
-
-            TaskbarProgress.SetIndeterminate();
+            TaskbarProgress.SetState(TaskbarProgressBarState.Indeterminate);
 
             Reset();
             ProcessCallback(this);
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            TaskbarProgress.Clear();
+            base.OnFormClosed(e);
         }
 
         private void Abort_Click(object sender, EventArgs e)
@@ -268,44 +263,6 @@ namespace GitUI.HelperDialogs
             {
                 Close();
             }
-        }
-
-        internal void AfterClosed()
-        {
-            TaskbarProgress.Clear();
-        }
-    }
-
-    internal class DispatcherFrameModalController
-    {
-        private readonly DispatcherFrame _dispatcherFrame = new DispatcherFrame();
-        private readonly FormStatus _formStatus;
-        private readonly IWin32Window _owner;
-
-        public DispatcherFrameModalController(FormStatus formStatus, IWin32Window owner)
-        {
-            _formStatus = formStatus;
-            _owner = owner;
-        }
-
-        public void BeginModal()
-        {
-            _formStatus.Start();
-            Dispatcher.PushFrame(_dispatcherFrame);
-        }
-
-        public void EndModal(bool success)
-        {
-            if (!success)
-            {
-                _formStatus.ShowDialog(_owner);
-            }
-            else
-            {
-                _formStatus.AfterClosed();
-            }
-
-            _dispatcherFrame.Continue = false;
         }
     }
 }
