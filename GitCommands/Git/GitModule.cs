@@ -2883,7 +2883,8 @@ namespace GitCommands
                         ? (ArgumentString)"--no-optional-locks"
                         : default)
                 {
-                    { branches, "--dereference", "--tags" },
+                    { !branches, "--tags" },
+                    "--dereference"
                 };
             }
             else if (branches)
@@ -2984,11 +2985,12 @@ namespace GitCommands
             //
             // Lines may also use \t as a column delimiter, such as output of "ls-remote --heads origin".
 
-            var regex = new Regex(@"^(?<objectid>[0-9a-f]{40})[ \t](?<refname>.+)$", RegexOptions.Multiline);
+            var regex = new Regex(@"^(?<objectid>[0-9a-f]{40})[ \t](?<refname>.+?)(?<dereference>\^\{\})?$", RegexOptions.Multiline);
 
             var matches = regex.Matches(refList);
 
             var gitRefs = new List<IGitRef>();
+            var indexByRefName = new Dictionary<string, int>();
             var headByRemote = new Dictionary<string, GitRef>();
 
             foreach (Match match in matches)
@@ -2996,15 +2998,31 @@ namespace GitCommands
                 var refName = match.Groups["refname"].Value;
                 var objectId = ObjectId.Parse(refList, match.Groups["objectid"]);
                 var remoteName = GitRefName.GetRemoteName(refName);
-                var head = new GitRef(this, objectId, refName, remoteName);
+                bool isDeref = match.Groups["dereference"].Success;
+                var gitRef = new GitRef(this, objectId, refName, remoteName);
 
                 if (GitRefName.IsRemoteHead(refName))
                 {
-                    headByRemote[remoteName] = head;
+                    headByRemote[remoteName] = gitRef;
                 }
                 else
                 {
-                    gitRefs.Add(head);
+                    if (indexByRefName.TryGetValue(refName, out var index))
+                    {
+                        if (isDeref)
+                        {
+                            gitRefs[index] = gitRef;
+                        }
+                        else
+                        {
+                            // keep dereferenced entry
+                        }
+                    }
+                    else
+                    {
+                        indexByRefName.Add(refName, gitRefs.Count);
+                        gitRefs.Add(gitRef);
+                    }
                 }
             }
 

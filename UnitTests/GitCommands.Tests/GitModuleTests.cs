@@ -752,7 +752,7 @@ namespace GitCommandsTests
         }
 
         [TestCase(@"show-ref --dereference", true, true, false)]
-        [TestCase(@"show-ref --tags", true, false, false)]
+        [TestCase(@"show-ref --tags --dereference", true, false, false)]
         [TestCase(@"for-each-ref --sort=-committerdate refs/heads/ --format=""%(objectname) %(refname)""", false, true, false)]
         [TestCase(@"--no-optional-locks for-each-ref --sort=-committerdate refs/heads/ --format=""%(objectname) %(refname)""", false, true, true)]
         public void GetRefsCmd(string expected, bool tags, bool branches, bool noLocks)
