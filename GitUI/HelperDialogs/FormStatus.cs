@@ -12,6 +12,10 @@ namespace GitUI.HelperDialogs
     public partial class FormStatus : GitExtensionsDialog
     {
         private readonly bool _useDialogSettings;
+        private bool _errorOccurred;
+
+        private protected Action<FormStatus> ProcessCallback;
+        private protected Action<FormStatus> AbortCallback;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private protected FormStatus()
@@ -55,18 +59,6 @@ namespace GitUI.HelperDialogs
             InitializeComplete();
         }
 
-        private protected ConsoleOutputControl ConsoleOutput { get; }
-        private protected Action<FormStatus> ProcessCallback;
-        private protected Action<FormStatus> AbortCallback;
-        private bool _errorOccurred;
-
-        /// <summary>
-        /// Gets the logged output text. Note that this is a separate string from what you see in the console output control.
-        /// For instance, progress messages might be skipped; other messages might be added manually.
-        /// </summary>
-        [NotNull]
-        private protected FormStatusOutputLog OutputLog { get; } = new FormStatusOutputLog();
-
         protected override CreateParams CreateParams
         {
             get
@@ -77,28 +69,72 @@ namespace GitUI.HelperDialogs
             }
         }
 
+        private protected ConsoleOutputControl ConsoleOutput { get; }
+
+        /// <summary>
+        /// Gets the logged output text. Note that this is a separate string from what you see in the console output control.
+        /// For instance, progress messages might be skipped; other messages might be added manually.
+        /// </summary>
+        [NotNull]
+        private protected FormStatusOutputLog OutputLog { get; } = new FormStatusOutputLog();
+
         public bool ErrorOccurred()
         {
             return _errorOccurred;
         }
 
-        private protected async Task SetProgressAsync(string text)
+        public string GetOutputString()
         {
-            // This has to happen on the UI thread
-            await this.SwitchToMainThreadAsync();
+            return OutputLog.GetString();
+        }
 
-            int index = text.LastIndexOf('%');
-            if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out var progressValue) && progressValue >= 0)
+        public void Retry()
+        {
+            Reset();
+            ProcessCallback(this);
+        }
+
+        public static void ShowErrorDialog(IWin32Window owner, string text, params string[] output)
+        {
+            using (var form = new FormStatus(commands: null, new EditboxBasedConsoleOutputControl(), useDialogSettings: true))
             {
-                ProgressBar.Style = ProgressBarStyle.Blocks;
-                ProgressBar.Value = Math.Min(100, progressValue);
-                TaskbarProgress.SetProgress(TaskbarProgressBarState.Normal, progressValue, 100);
+                form.Text = text;
+                if (output?.Length > 0)
+                {
+                    foreach (string line in output)
+                    {
+                        form.AppendMessage(line);
+                    }
+                }
+
+                form.ProgressBar.Visible = false;
+                form.KeepDialogOpen.Visible = false;
+                form.Abort.Visible = false;
+
+                form.StartPosition = FormStartPosition.CenterParent;
+
+                // We know that an operation (whatever it may have been) has failed, so set the error state.
+                form.Done(false);
+
+                form.ShowDialog(owner);
             }
+        }
 
-            // Show last progress message in the title, unless it's showing in the control body already
-            if (!ConsoleOutput.IsDisplayingFullProcessOutput)
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            TaskbarProgress.Clear();
+            base.OnFormClosed(e);
+        }
+
+        protected override void OnRuntimeLoad(EventArgs e)
+        {
+            base.OnRuntimeLoad(e);
+
+            // If the dialog was invoked via ShowErrorDialog, there is no operation to invoke
+            // it has already failed (i.e. completed).
+            if (!_errorOccurred)
             {
-                Text = text;
+                Start();
             }
         }
 
@@ -146,53 +182,23 @@ namespace GitUI.HelperDialogs
             ActiveControl = null;
         }
 
-        public void Retry()
+        private protected async Task SetProgressAsync(string text)
         {
-            Reset();
-            ProcessCallback(this);
-        }
+            // This has to happen on the UI thread
+            await this.SwitchToMainThreadAsync();
 
-        public static void ShowErrorDialog(IWin32Window owner, string text, params string[] output)
-        {
-            using (var form = new FormStatus(commands: null, new EditboxBasedConsoleOutputControl(), useDialogSettings: true))
+            int index = text.LastIndexOf('%');
+            if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out var progressValue) && progressValue >= 0)
             {
-                form.Text = text;
-                if (output?.Length > 0)
-                {
-                    foreach (string line in output)
-                    {
-                        form.AppendMessage(line);
-                    }
-                }
-
-                form.ProgressBar.Visible = false;
-                form.KeepDialogOpen.Visible = false;
-                form.Abort.Visible = false;
-
-                form.StartPosition = FormStartPosition.CenterParent;
-
-                // We know that an operation (whatever it may have been) has failed, so set the error state.
-                form.Done(false);
-
-                form.ShowDialog(owner);
+                ProgressBar.Style = ProgressBarStyle.Blocks;
+                ProgressBar.Value = Math.Min(100, progressValue);
+                TaskbarProgress.SetProgress(TaskbarProgressBarState.Normal, progressValue, 100);
             }
-        }
 
-        private void Ok_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
-            Close();
-        }
-
-        protected override void OnRuntimeLoad(EventArgs e)
-        {
-            base.OnRuntimeLoad(e);
-
-            // If the dialog was invoked via ShowErrorDialog, there is no operation to invoke
-            // it has already failed (i.e. completed).
-            if (!_errorOccurred)
+            // Show last progress message in the title, unless it's showing in the control body already
+            if (!ConsoleOutput.IsDisplayingFullProcessOutput)
             {
-                Start();
+                Text = text;
             }
         }
 
@@ -215,12 +221,6 @@ namespace GitUI.HelperDialogs
             ProcessCallback(this);
         }
 
-        protected override void OnFormClosed(FormClosedEventArgs e)
-        {
-            TaskbarProgress.Clear();
-            base.OnFormClosed(e);
-        }
-
         private void Abort_Click(object sender, EventArgs e)
         {
             try
@@ -235,11 +235,6 @@ namespace GitUI.HelperDialogs
             }
         }
 
-        public string GetOutputString()
-        {
-            return OutputLog.GetString();
-        }
-
         private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
         {
             AppSettings.CloseProcessDialog = !KeepDialogOpen.Checked;
@@ -250,6 +245,12 @@ namespace GitUI.HelperDialogs
             {
                 Close();
             }
+        }
+
+        private void Ok_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            Close();
         }
     }
 }
