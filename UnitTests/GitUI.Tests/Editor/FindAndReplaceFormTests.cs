@@ -32,7 +32,7 @@ namespace GitUITests.Editor
             _textEditorControl.Dispose();
         }
 
-        public static IEnumerable<TestCaseData> MatchCase
+        private static IEnumerable<TestCaseData> MatchCase
         {
             get
             {
@@ -43,7 +43,7 @@ namespace GitUITests.Editor
             }
         }
 
-        [Test, TestCaseSource(nameof(MatchCase))]
+        [TestCaseSource(nameof(MatchCase))]
         public async Task FindNextAsync_match_case(string text, string searchPhrase, bool matchCase, TextRange expectedRange)
         {
             Arrange(text, searchPhrase, matchCase);
@@ -53,7 +53,7 @@ namespace GitUITests.Editor
             AssertTextRange(expectedRange, actualRange);
         }
 
-        public static IEnumerable<TestCaseData> MatchWholeWordOnly
+        private static IEnumerable<TestCaseData> MatchWholeWordOnly
         {
             get
             {
@@ -62,7 +62,7 @@ namespace GitUITests.Editor
             }
         }
 
-        [Test, TestCaseSource(nameof(MatchWholeWordOnly))]
+        [TestCaseSource(nameof(MatchWholeWordOnly))]
         public async Task FindNextAsync_match_whole_world_only(string text, string searchPhrase, TextRange expectedRange)
         {
             Arrange(text, searchPhrase, matchWholeWordOnly: true);
@@ -72,7 +72,7 @@ namespace GitUITests.Editor
             AssertTextRange(expectedRange, actualRange);
         }
 
-        public static IEnumerable<TestCaseData> LoopAround
+        private static IEnumerable<TestCaseData> LoopAround
         {
             get
             {
@@ -110,14 +110,14 @@ namespace GitUITests.Editor
             }
         }
 
-        [Test, TestCaseSource(nameof(LoopAround))]
+        [TestCaseSource(nameof(LoopAround))]
         public async Task FindNextAsync_should_make_a_loop_and_return_to_first_occurrence(
             string text,
             string searchPhrase,
             bool searchBackwards,
             TextLocation scanRegionStart,
             TextLocation scanRegionEnd,
-            IEnumerable<TextRange> expectedRanges)
+            TextRange[] expectedRanges)
         {
             Arrange(text, searchPhrase, scanRegionStart: scanRegionStart, scanRegionEnd: scanRegionEnd);
 
@@ -148,7 +148,7 @@ namespace GitUITests.Editor
             AssertTextRange(new TextRange(20, 4), actualRange);
         }
 
-        public static IEnumerable<TestCaseData> MultiFileSearch
+        private static IEnumerable<TestCaseData> MultiFileSearch
         {
             get
             {
@@ -170,13 +170,13 @@ namespace GitUITests.Editor
             }
         }
 
-        [Test, TestCaseSource(nameof(MultiFileSearch))]
+        [TestCaseSource(nameof(MultiFileSearch))]
         public async Task FindNextAsync_should_iterate_over_files(
             string[] texts,
             string searchPhrase,
             TextLocation scanRegionStart,
             TextLocation scanRegionEnd,
-            IEnumerable<TextRange> expectedRanges)
+            TextRange[] expectedRanges)
         {
             int currentIndex = 0;
 
