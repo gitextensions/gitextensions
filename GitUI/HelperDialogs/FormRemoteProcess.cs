@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
@@ -37,7 +37,7 @@ Do you want to register the host's fingerprint and restart the process?");
         }
 
         public FormRemoteProcess([NotNull] GitUICommands commands, string process, ArgumentString arguments)
-            : base(process, arguments, commands?.Module?.WorkingDir, null, true)
+            : base(commands, process, arguments, commands?.Module?.WorkingDir, null, true)
         {
             Commands = commands ?? throw new ArgumentNullException(nameof(commands));
         }

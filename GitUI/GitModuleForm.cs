@@ -61,11 +61,16 @@ namespace GitUI
             }
         }
 
-        protected GitModuleForm([NotNull] GitUICommands commands)
-            : base(enablePositionRestore: true)
+        protected GitModuleForm([NotNull] GitUICommands commands, bool enablePositionRestore)
+            : base(enablePositionRestore)
         {
             _uiCommands = commands;
             DiagnosticsClient.TrackPageView(GetType().FullName);
+        }
+
+        protected GitModuleForm([NotNull] GitUICommands commands)
+            : this(commands, enablePositionRestore: true)
+        {
         }
 
         protected override CommandStatus ExecuteCommand(int command)

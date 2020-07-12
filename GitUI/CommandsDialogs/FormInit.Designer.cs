@@ -30,55 +30,59 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_Directory = new System.Windows.Forms.ComboBox();
-            this.Browse = new System.Windows.Forms.Button();
+            this.Browse = new GitUI.UserControls.FolderBrowserButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Central = new System.Windows.Forms.RadioButton();
             this.Personal = new System.Windows.Forms.RadioButton();
             this.Init = new System.Windows.Forms.Button();
+            this.MainPanel.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // MainPanel
+            // 
+            this.MainPanel.Controls.Add(this.groupBox1);
+            this.MainPanel.Controls.Add(this.Init);
+            this.MainPanel.Controls.Add(this.Browse);
+            this.MainPanel.Controls.Add(this._NO_TRANSLATE_Directory);
+            this.MainPanel.Controls.Add(this.label1);
+            this.MainPanel.Size = new System.Drawing.Size(572, 155);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 11);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(24, 27);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(79, 23);
+            this.label1.Size = new System.Drawing.Size(49, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Directory";
             // 
-            // Directory
+            // _NO_TRANSLATE_Directory
             // 
             this._NO_TRANSLATE_Directory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this._NO_TRANSLATE_Directory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this._NO_TRANSLATE_Directory.FormattingEnabled = true;
-            this._NO_TRANSLATE_Directory.Location = new System.Drawing.Point(122, 8);
-            this._NO_TRANSLATE_Directory.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._NO_TRANSLATE_Directory.Location = new System.Drawing.Point(110, 24);
             this._NO_TRANSLATE_Directory.Name = "_NO_TRANSLATE_Directory";
-            this._NO_TRANSLATE_Directory.Size = new System.Drawing.Size(422, 31);
+            this._NO_TRANSLATE_Directory.Size = new System.Drawing.Size(338, 21);
             this._NO_TRANSLATE_Directory.TabIndex = 1;
             // 
             // Browse
             // 
-            this.Browse.Location = new System.Drawing.Point(552, 5);
-            this.Browse.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Browse.Location = new System.Drawing.Point(454, 22);
             this.Browse.Name = "Browse";
-            this.Browse.Size = new System.Drawing.Size(126, 31);
+            this.Browse.PathShowingControl = this._NO_TRANSLATE_Directory;
+            this.Browse.Size = new System.Drawing.Size(91, 25);
             this.Browse.TabIndex = 2;
-            this.Browse.Text = "Browse";
-            this.Browse.UseVisualStyleBackColor = true;
             this.Browse.Click += new System.EventHandler(this.BrowseClick);
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.Central);
             this.groupBox1.Controls.Add(this.Personal);
-            this.groupBox1.Location = new System.Drawing.Point(19, 41);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Location = new System.Drawing.Point(27, 51);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.groupBox1.Size = new System.Drawing.Size(526, 85);
+            this.groupBox1.Size = new System.Drawing.Size(421, 78);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Repository type";
@@ -86,10 +90,9 @@
             // Central
             // 
             this.Central.AutoSize = true;
-            this.Central.Location = new System.Drawing.Point(8, 52);
-            this.Central.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Central.Location = new System.Drawing.Point(19, 48);
             this.Central.Name = "Central";
-            this.Central.Size = new System.Drawing.Size(453, 27);
+            this.Central.Size = new System.Drawing.Size(303, 17);
             this.Central.TabIndex = 1;
             this.Central.Text = "Central repository, no working directory  (--bare --shared=all)";
             this.Central.UseVisualStyleBackColor = true;
@@ -98,10 +101,9 @@
             // 
             this.Personal.AutoSize = true;
             this.Personal.Checked = true;
-            this.Personal.Location = new System.Drawing.Point(8, 24);
-            this.Personal.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Personal.Location = new System.Drawing.Point(19, 25);
             this.Personal.Name = "Personal";
-            this.Personal.Size = new System.Drawing.Size(177, 27);
+            this.Personal.Size = new System.Drawing.Size(114, 17);
             this.Personal.TabIndex = 0;
             this.Personal.TabStop = true;
             this.Personal.Text = "Personal repository";
@@ -109,10 +111,9 @@
             // 
             // Init
             // 
-            this.Init.Location = new System.Drawing.Point(552, 98);
-            this.Init.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Init.Location = new System.Drawing.Point(451, 106);
             this.Init.Name = "Init";
-            this.Init.Size = new System.Drawing.Size(126, 31);
+            this.Init.Size = new System.Drawing.Size(101, 25);
             this.Init.TabIndex = 4;
             this.Init.Text = "Create";
             this.Init.UseVisualStyleBackColor = true;
@@ -121,21 +122,17 @@
             // FormInit
             // 
             this.AcceptButton = this.Init;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(685, 141);
-            this.Controls.Add(this.Init);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.Browse);
-            this.Controls.Add(this._NO_TRANSLATE_Directory);
-            this.Controls.Add(this.label1);
+            this.ClientSize = new System.Drawing.Size(572, 200);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormInit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create new repository";
+            this.MainPanel.ResumeLayout(false);
+            this.MainPanel.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -147,7 +144,7 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox _NO_TRANSLATE_Directory;
-        private System.Windows.Forms.Button Browse;
+        private UserControls.FolderBrowserButton Browse;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton Central;
         private System.Windows.Forms.RadioButton Personal;

@@ -4695,10 +4695,6 @@ _ReSharper*/</source>
         <source>Create new repository</source>
         <target />
       </trans-unit>
-      <trans-unit id="Browse.Text">
-        <source>Browse</source>
-        <target />
-      </trans-unit>
       <trans-unit id="Central.Text">
         <source>Central repository, no working directory  (--bare --shared=all)</source>
         <target />

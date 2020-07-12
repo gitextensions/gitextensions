@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Threading;
@@ -10,7 +10,7 @@ using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI.HelperDialogs
 {
-    public partial class FormStatus : GitExtensionsForm
+    public partial class FormStatus : GitExtensionsDialog
     {
         private readonly bool _useDialogSettings;
 
@@ -24,8 +24,8 @@ namespace GitUI.HelperDialogs
             InitializeComponent();
         }
 
-        public FormStatus([CanBeNull] ConsoleOutputControl consoleOutput, bool useDialogSettings)
-            : base(true)
+        public FormStatus(GitUICommands commands, [CanBeNull] ConsoleOutputControl consoleOutput, bool useDialogSettings)
+            : base(commands, enablePositionRestore: true)
         {
             _useDialogSettings = useDialogSettings;
 
@@ -44,11 +44,19 @@ namespace GitUI.HelperDialogs
                 KeepDialogOpen.Hide();
             }
 
+            // work-around the designer bug that can't add controls to FlowLayoutPanel
+            ControlsPanel.Controls.Add(Abort);
+            ControlsPanel.Controls.Add(Ok);
+            ControlsPanel.Controls.Add(KeepDialogOpen);
+
+            Controls.SetChildIndex(ProgressBar, 1);
+            ProgressBar.Dock = DockStyle.Bottom;
+
             InitializeComplete();
         }
 
         public FormStatus(Action<FormStatus> process, string text)
-            : this(new EditboxBasedConsoleOutputControl(), true)
+            : this(commands: null, new EditboxBasedConsoleOutputControl(), true)
         {
             ProcessCallback = process;
             Text = text;
