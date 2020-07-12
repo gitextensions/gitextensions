@@ -55,9 +55,9 @@ namespace GitUI.HelperDialogs
             InitializeComplete();
         }
 
-        protected readonly ConsoleOutputControl ConsoleOutput;
-        public Action<FormStatus> ProcessCallback;
-        public Action<FormStatus> AbortCallback;
+        private protected ConsoleOutputControl ConsoleOutput { get; }
+        private protected Action<FormStatus> ProcessCallback;
+        private protected Action<FormStatus> AbortCallback;
         private bool _errorOccurred;
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace GitUI.HelperDialogs
         /// For instance, progress messages might be skipped; other messages might be added manually.
         /// </summary>
         [NotNull]
-        public readonly FormStatusOutputLog OutputLog = new FormStatusOutputLog();
+        private protected FormStatusOutputLog OutputLog { get; } = new FormStatusOutputLog();
 
         protected override CreateParams CreateParams
         {
@@ -82,7 +82,7 @@ namespace GitUI.HelperDialogs
             return _errorOccurred;
         }
 
-        public async Task SetProgressAsync(string text)
+        private protected async Task SetProgressAsync(string text)
         {
             // This has to happen on the UI thread
             await this.SwitchToMainThreadAsync();
@@ -105,12 +105,12 @@ namespace GitUI.HelperDialogs
         /// <summary>
         /// Adds a message to the console display control ONLY, <see cref="GetOutputString" /> will not list it.
         /// </summary>
-        public void AppendMessage(string text)
+        private protected void AppendMessage(string text)
         {
             ConsoleOutput.AppendMessageFreeThreaded(text);
         }
 
-        public void Done(bool isSuccess)
+        private protected void Done(bool isSuccess)
         {
             try
             {
@@ -137,7 +137,7 @@ namespace GitUI.HelperDialogs
             }
         }
 
-        public void Reset()
+        private protected void Reset()
         {
             ConsoleOutput.Reset();
             OutputLog.Clear();
