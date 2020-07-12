@@ -1885,6 +1885,7 @@ namespace GitUI
             if (AppSettings.DontConfirmRebase)
             {
                 UICommands.StartInteractiveRebase(this, _rebaseOnTopOf);
+                return;
             }
 
             using var dialog = new TaskDialog
