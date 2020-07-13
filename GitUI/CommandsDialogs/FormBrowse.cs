@@ -14,6 +14,7 @@ using GitCommands.Git;
 using GitCommands.Gpg;
 using GitCommands.Repository;
 using GitCommands.Utils;
+using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.WorktreeDialog;
@@ -156,6 +157,9 @@ namespace GitUI.CommandsDialogs
             //Save value for commit info panel, may be changed
             _showRevisionInfoNextToRevisionGrid = AppSettings.ShowRevisionInfoNextToRevisionGrid;
             InitializeComponent();
+
+            Layout += formBrowse_layout;
+            toolStripRevisionFilterTextBox.TextBox.MinimumSize = DpiUtil.Scale(new Size(97, 25));
 
             // set tab page images
             {
@@ -2810,6 +2814,11 @@ namespace GitUI.CommandsDialogs
         private void toolStripBranchFilterComboBox_Click(object sender, EventArgs e)
         {
             toolStripBranchFilterComboBox.DroppedDown = true;
+        }
+
+        private void formBrowse_layout(object sender, LayoutEventArgs e)
+        {
+            ToolStrip.MinimumSize = new Size(toolPanel.ClientSize.Width, 0);
         }
     }
 }
