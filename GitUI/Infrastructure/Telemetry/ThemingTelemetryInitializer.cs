@@ -9,10 +9,10 @@ namespace GitUI.Infrastructure.Telemetry
         public void Initialize(ITelemetry telemetry)
         {
             var properties = telemetry.Context.GlobalProperties;
-            ThemeId themeId = Theming.ThemeModule.Settings.Theme.Id;
-            properties["Theme name"] = themeId.Name;
-            properties["Theme is builtin"] = themeId.IsBuiltin.ToString();
-            properties["Theme use system visual style"] = Theming.ThemeModule.Settings.UseSystemVisualStyle.ToString();
+            var themeSettings = Theming.ThemeModule.Settings;
+            properties["Theme dark"] = themeSettings.Theme.Id.Name == "dark" ? 1 : 0;
+            properties["Theme builtin"] = themeSettings.Theme.Id.IsBuiltin ? 1 : 0;
+            properties["Theme systemstyles"] = themeSettings.UseSystemVisualStyle ? 1 : 0;
         }
     }
 }
