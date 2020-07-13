@@ -27,6 +27,20 @@ namespace GitUI.CommandsDialogs
         private readonly DataGridViewCheckBoxHeaderCell _selectedItemsHeader = new DataGridViewCheckBoxHeaderCell();
         private readonly IGitTagController _gitTagController;
 
+        private LostObject _previewedItem;
+
+        private static readonly Dictionary<string, string> LanguagesStartOfFile = new Dictionary<string, string>
+        {
+            { "{", "recovery.json" },
+            { "#include", "recovery.cpp" },
+            { "import", "recovery.java" },
+            { "from", "recovery.py" },
+            { "package", "recovery.go" },
+            { "#!", "recovery.sh" },
+            { "[", "recovery.ini" },
+            { "using", "recovery.cs" },
+        };
+
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormVerify()
         {
@@ -213,6 +227,55 @@ namespace GitUI.CommandsDialogs
             }
 
             ViewCurrentItem();
+        }
+
+        private void Warnings_SelectionChanged(object sender, EventArgs e)
+        {
+            if (CurrentItem == null || _previewedItem == CurrentItem)
+            {
+                return;
+            }
+
+            _previewedItem = CurrentItem;
+
+            var content = Module.ShowObject(_previewedItem.ObjectId);
+            if (_previewedItem.ObjectType == LostObjectType.Commit)
+            {
+                ThreadHelper.JoinableTaskFactory.RunAsync(() =>
+                    fileViewer.ViewPatchAsync("commit.patch", content, null))
+                .FileAndForget();
+            }
+            else
+            {
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    var filename = GuessFileTypeWithContent(content);
+                    await fileViewer.ViewTextAsync(filename, content ?? string.Empty, null);
+                }).FileAndForget();
+            }
+        }
+
+        private static string GuessFileTypeWithContent(string content)
+        {
+            if (content.StartsWith("<"))
+            {
+                return content.Contains("<html", StringComparison.InvariantCultureIgnoreCase) ? "recovery.html" : "recovery.xml";
+            }
+
+            foreach (var pair in LanguagesStartOfFile)
+            {
+                if (content.StartsWith(pair.Key))
+                {
+                    return pair.Value;
+                }
+            }
+
+            if (content.Contains("function"))
+            {
+                return "recovery.ts";
+            }
+
+            return "recovery.txt";
         }
 
         #endregion
