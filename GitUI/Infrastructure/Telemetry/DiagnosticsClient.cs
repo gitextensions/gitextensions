@@ -22,6 +22,7 @@ namespace GitUI.Infrastructure.Telemetry
             TelemetryConfiguration.Active.TelemetryInitializers.Add(new AppEnvironmentTelemetryInitializer());
             TelemetryConfiguration.Active.TelemetryInitializers.Add(new AppInfoTelemetryInitializer(isDirty));
             TelemetryConfiguration.Active.TelemetryInitializers.Add(new MonitorsTelemetryInitializer());
+            TelemetryConfiguration.Active.TelemetryInitializers.Add(new ThemingTelemetryInitializer());
 
             _initialized = true;
 
