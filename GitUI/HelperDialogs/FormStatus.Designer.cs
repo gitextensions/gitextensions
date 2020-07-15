@@ -136,8 +136,6 @@
             this.Name = "FormStatus";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Process";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormStatus_FormClosed);
-            this.Load += new System.EventHandler(this.FormStatus_Load);
             this.Controls.SetChildIndex(this.ProgressBar, 0);
             this.Controls.SetChildIndex(this.MainPanel, 0);
             this.MainPanel.ResumeLayout(false);

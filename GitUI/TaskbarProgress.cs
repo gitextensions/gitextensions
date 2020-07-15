@@ -29,14 +29,14 @@ namespace GitUI
         {
             Try(taskbar =>
             {
-                taskbar.SetProgressState(TaskbarProgressBarState.Normal);
+                taskbar.SetProgressState(state);
                 taskbar.SetProgressValue(progressValue, maximumValue);
             });
         }
 
-        public static void SetIndeterminate()
+        public static void SetState(TaskbarProgressBarState state)
         {
-            Try(taskbar => taskbar.SetProgressState(TaskbarProgressBarState.Indeterminate));
+            Try(taskbar => taskbar.SetProgressState(state));
         }
     }
 }
