@@ -33,6 +33,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _selectedRevision = new TranslationString("Second: b/");
         private readonly TranslationString _firstRevision = new TranslationString("First: a/");
 
+        private readonly TranslationString _resetSelectedChangesText =
+            new TranslationString("Are you sure you want to reset all selected files to {0}?");
+
         private RevisionGridControl _revisionGrid;
         private RevisionFileTreeControl _revisionFileTree;
         private IRevisionDiffController _revisionDiffController;
@@ -109,7 +112,10 @@ namespace GitUI.CommandsDialogs
             OpenAsTempFile = 5,
             OpenAsTempFileWith = 6,
             OpenWithDifftoolFirstToLocal = 7,
-            OpenWithDifftoolSelectedToLocal = 8
+            OpenWithDifftoolSelectedToLocal = 8,
+            ResetSelectedFiles = 9,
+            StageSelectedFile = 10,
+            UnStageSelectedFile = 11,
         }
 
         public CommandStatus ExecuteCommand(Command cmd)
@@ -137,6 +143,9 @@ namespace GitUI.CommandsDialogs
                 case Command.EditFile: diffEditWorkingDirectoryFileToolStripMenuItem.PerformClick(); break;
                 case Command.OpenAsTempFile: diffOpenRevisionFileToolStripMenuItem.PerformClick(); break;
                 case Command.OpenAsTempFileWith: diffOpenRevisionFileWithToolStripMenuItem.PerformClick(); break;
+                case Command.ResetSelectedFiles: return ResetSelectedFilesWithConfirmation();
+                case Command.StageSelectedFile: return StageSelectedFiles();
+                case Command.UnStageSelectedFile: return UnstageSelectedFiles();
 
                 default: return base.ExecuteCommand(cmd);
             }
@@ -156,6 +165,9 @@ namespace GitUI.CommandsDialogs
             diffEditWorkingDirectoryFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.EditFile);
             diffOpenRevisionFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenAsTempFile);
             diffOpenRevisionFileWithToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenAsTempFileWith);
+            resetFileToParentToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ResetSelectedFiles);
+            stageFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StageSelectedFile);
+            unstageFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.UnStageSelectedFile);
 
             DiffText.ReloadHotkeys();
         }
@@ -533,6 +545,11 @@ namespace GitUI.CommandsDialogs
 
         private void StageFileToolStripMenuItemClick(object sender, EventArgs e)
         {
+            StageFiles();
+        }
+
+        private void StageFiles()
+        {
             var files = DiffFiles.SelectedItems.Where(item => item.Item.Staged == StagedStatus.WorkTree).Select(i => i.Item).ToList();
 
             Module.StageFiles(files, out _);
@@ -540,6 +557,11 @@ namespace GitUI.CommandsDialogs
         }
 
         private void UnstageFileToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            UnstageFiles();
+        }
+
+        private void UnstageFiles()
         {
             Module.BatchUnstageFiles(DiffFiles.SelectedItems.Where(item => item.Item.Staged == StagedStatus.Index).Select(i => i.Item).ToList());
             RefreshArtificial();
@@ -1043,6 +1065,77 @@ namespace GitUI.CommandsDialogs
             {
                 DiffFiles.Focus();
             }
+        }
+
+        /// <summary>
+        /// Hotkey handler
+        /// </summary>
+        /// <returns>true if hotkey handled</returns>
+        private bool StageSelectedFiles()
+        {
+            if (!DiffFiles.Focused)
+            {
+                return false;
+            }
+
+            var selectedIds = DiffFiles.SelectedItems.SecondIds().ToList();
+            if (selectedIds.Count != 1 || selectedIds.FirstOrDefault() != ObjectId.WorkTreeId)
+            {
+                return true;
+            }
+
+            StageFiles();
+            return true;
+        }
+
+        /// <summary>
+        /// Hotkey handler
+        /// </summary>
+        /// <returns>true if hotkey handled</returns>
+        private bool UnstageSelectedFiles()
+        {
+            if (!DiffFiles.Focused)
+            {
+                return false;
+            }
+
+            var selectedIds = DiffFiles.SelectedItems.SecondIds().ToList();
+            if (selectedIds.Count != 1 || selectedIds.FirstOrDefault() != ObjectId.IndexId)
+            {
+                return true;
+            }
+
+            UnstageFiles();
+            return true;
+        }
+
+        /// <summary>
+        /// Hotkey handler
+        /// </summary>
+        /// <returns>true if hotkey handled</returns>
+        private bool ResetSelectedFilesWithConfirmation()
+        {
+            if (!DiffFiles.Focused)
+            {
+                return false;
+            }
+
+            var parentIds = DiffFiles.SelectedItems.FirstIds().ToList();
+            if (parentIds.Count != 1 || !CanResetToRevision(parentIds.FirstOrDefault()))
+            {
+                return true;
+            }
+
+            var rev = _firstRevision.Text + (DescribeRevision(DiffFiles.SelectedItems.FirstRevs().ToList()) ?? string.Empty);
+            var text = string.Format(_resetSelectedChangesText.Text, rev);
+            if (!MessageBoxes.ResetSelectedFiles(this, text))
+            {
+                return true;
+            }
+
+            // Reset to first (parent)
+            ResetSelectedItemsTo(actsAsChild: false);
+            return true;
         }
     }
 }
