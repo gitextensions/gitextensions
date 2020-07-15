@@ -119,7 +119,7 @@ namespace Gource
                 Settings.SetValue(_gourcePath.Name, gourceStart.PathToGource, s => s);
             }
 
-            return true;
+            return false;
         }
 
         #endregion
