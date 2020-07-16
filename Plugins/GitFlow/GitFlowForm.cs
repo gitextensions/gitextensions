@@ -127,6 +127,8 @@ namespace GitFlow
         private void LoadBranches(string branchType)
         {
             cbManageType.Enabled = false;
+            btnFinish.Enabled = false;
+
             cbBranches.DataSource = new List<string> { _loading.Text };
             if (!Branches.ContainsKey(branchType))
             {
@@ -140,6 +142,8 @@ namespace GitFlow
             {
                 DisplayBranchData();
             }
+
+            btnFinish.Enabled = Branches.Any();
         }
 
         private IReadOnlyList<string> GetBranches(string typeBranch)

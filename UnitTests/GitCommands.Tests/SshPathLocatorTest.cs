@@ -87,14 +87,29 @@ namespace GitCommandsTests
             sshPathLocator.Find(path).Should().Be(string.Empty);
         }
 
+        [Theory]
+        public void Find_on_gitBinDir_should_work_with_or_without_trailing_separator(bool withTrailingSeparator)
+        {
+            const string sshExe = @"C:\someotherdir\ssh.exe";
+            var path = SetUpFileSystemWithSshExePathsAs(sshExe);
+            var sshPathLocator = new SshPathLocator(_fileSystem, _environment);
+            sshPathLocator.Find(path + (withTrailingSeparator ? @"\" : "")).Should().Be(sshExe);
+        }
+
         private string SetUpFileSystemWithSshExePathsAs(params string[] sshExePaths)
         {
             const string path = @"C:\somedir";
             const string parentPath = @"C:\";
+            var gitBinDir = Substitute.For<DirectoryInfoBase>();
+            gitBinDir.FullName.Returns(path);
             var gitDir = Substitute.For<DirectoryInfoBase>();
             gitDir.FullName.Returns(parentPath);
             var directoryBase = Substitute.For<DirectoryBase>();
             directoryBase.GetParent(path).Returns(gitDir);
+
+            // a single trailing separator is considered a sub-directory by Directory.GetParent
+            directoryBase.GetParent(path + @"\").Returns(gitBinDir);
+
             directoryBase.EnumerateFiles(parentPath, "ssh.exe", SearchOption.AllDirectories).Returns(sshExePaths);
             _fileSystem.Directory.Returns(directoryBase);
             return path;

@@ -33,13 +33,8 @@
             this.NoReflogs = new System.Windows.Forms.CheckBox();
             this.FullCheck = new System.Windows.Forms.CheckBox();
             this.Unreachable = new System.Windows.Forms.CheckBox();
-            this.mnuLostObjects = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.mnuLostObjectView = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuLostObjectsCreateTag = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuLostObjectsCreateBranch = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Warnings = new System.Windows.Forms.DataGridView();
-            this.copyParentHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.columnIsLostObjectSelected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.columnDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnType = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -47,15 +42,26 @@
             this.columnAuthor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnHash = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnParent = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.mnuLostObjects = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mnuLostObjectView = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuLostObjectsCreateTag = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuLostObjectsCreateBranch = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyParentHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileViewer = new GitUI.Editor.FileViewer();
             panel1 = new System.Windows.Forms.Panel();
             panel2 = new System.Windows.Forms.Panel();
             flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
-            this.mnuLostObjects.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Warnings)).BeginInit();
+            this.mnuLostObjects.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -151,7 +157,7 @@
             flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
             flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(5);
-            flowLayoutPanel1.Size = new System.Drawing.Size(322, 134);
+            flowLayoutPanel1.Size = new System.Drawing.Size(318, 134);
             flowLayoutPanel1.TabIndex = 13;
             // 
             // label2
@@ -159,7 +165,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(8, 5);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(306, 91);
+            this.label2.Size = new System.Drawing.Size(302, 91);
             this.label2.TabIndex = 15;
             this.label2.Text = resources.GetString("label2.Text");
             // 
@@ -169,7 +175,7 @@
             this.label1.Location = new System.Drawing.Point(8, 101);
             this.label1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(177, 13);
+            this.label1.Size = new System.Drawing.Size(179, 13);
             this.label1.TabIndex = 16;
             this.label1.Text = "Double-click on a row for quick view";
             // 
@@ -178,7 +184,7 @@
             this.ShowOtherObjects.AutoSize = true;
             this.ShowOtherObjects.Location = new System.Drawing.Point(588, 9);
             this.ShowOtherObjects.Name = "ShowOtherObjects";
-            this.ShowOtherObjects.Size = new System.Drawing.Size(119, 17);
+            this.ShowOtherObjects.Size = new System.Drawing.Size(117, 17);
             this.ShowOtherObjects.TabIndex = 0;
             this.ShowOtherObjects.Text = "Show other objects";
             this.ShowOtherObjects.UseVisualStyleBackColor = true;
@@ -204,7 +210,7 @@
             this.NoReflogs.CheckState = System.Windows.Forms.CheckState.Checked;
             this.NoReflogs.Location = new System.Drawing.Point(430, 35);
             this.NoReflogs.Name = "NoReflogs";
-            this.NoReflogs.Size = new System.Drawing.Size(345, 30);
+            this.NoReflogs.Size = new System.Drawing.Size(335, 30);
             this.NoReflogs.TabIndex = 1;
             this.NoReflogs.Text = "Do not consider commits that are referenced only by an entry in a \r\nreflog to be " +
     "reachable.";
@@ -216,7 +222,7 @@
             this.FullCheck.AutoSize = true;
             this.FullCheck.Location = new System.Drawing.Point(430, 101);
             this.FullCheck.Name = "FullCheck";
-            this.FullCheck.Size = new System.Drawing.Size(376, 30);
+            this.FullCheck.Size = new System.Drawing.Size(382, 30);
             this.FullCheck.TabIndex = 3;
             this.FullCheck.Text = "Check not just objects in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), \r\nbut also the" +
     " ones found in alternate object pools.\r\n";
@@ -228,59 +234,31 @@
             this.Unreachable.AutoSize = true;
             this.Unreachable.Location = new System.Drawing.Point(430, 68);
             this.Unreachable.Name = "Unreachable";
-            this.Unreachable.Size = new System.Drawing.Size(403, 30);
+            this.Unreachable.Size = new System.Drawing.Size(383, 30);
             this.Unreachable.TabIndex = 2;
             this.Unreachable.Text = "Print out objects that exist but that aren\'t readable from any of the reference \r" +
     "\nnodes.\r\n";
             this.Unreachable.UseVisualStyleBackColor = true;
             this.Unreachable.CheckedChanged += new System.EventHandler(this.UnreachableCheckedChanged);
             // 
-            // mnuLostObjects
+            // splitContainer1
             // 
-            this.mnuLostObjects.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuLostObjectView,
-            this.mnuLostObjectsCreateTag,
-            this.mnuLostObjectsCreateBranch,
-            this.copyHashToolStripMenuItem,
-            this.copyParentHashToolStripMenuItem,
-            this.saveAsToolStripMenuItem});
-            this.mnuLostObjects.Name = "mnuLostObjects";
-            this.mnuLostObjects.Size = new System.Drawing.Size(190, 114);
-            this.mnuLostObjects.Opening += new System.ComponentModel.CancelEventHandler(this.mnuLostObjects_Opening);
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.Location = new System.Drawing.Point(0, 134);
+            this.splitContainer1.Name = "splitContainer1";
             // 
-            // mnuLostObjectView
+            // splitContainer1.Panel1
             // 
-            this.mnuLostObjectView.Image = global::GitUI.Properties.Images.ViewFile;
-            this.mnuLostObjectView.Name = "mnuLostObjectView";
-            this.mnuLostObjectView.Size = new System.Drawing.Size(189, 22);
-            this.mnuLostObjectView.Text = "View";
-            this.mnuLostObjectView.Click += new System.EventHandler(this.mnuLostObjectView_Click);
+            this.splitContainer1.Panel1.Controls.Add(this.Warnings);
             // 
-            // mnuLostObjectsCreateTag
+            // splitContainer1.Panel2
             // 
-            this.mnuLostObjectsCreateTag.Image = global::GitUI.Properties.Images.TagCreate;
-            this.mnuLostObjectsCreateTag.Name = "mnuLostObjectsCreateTag";
-            this.mnuLostObjectsCreateTag.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
-            this.mnuLostObjectsCreateTag.Size = new System.Drawing.Size(189, 22);
-            this.mnuLostObjectsCreateTag.Text = "Create tag";
-            this.mnuLostObjectsCreateTag.Click += new System.EventHandler(this.mnuLostObjectsCreateTag_Click);
-            // 
-            // mnuLostObjectsCreateBranch
-            // 
-            this.mnuLostObjectsCreateBranch.Image = global::GitUI.Properties.Images.BranchCreate;
-            this.mnuLostObjectsCreateBranch.Name = "mnuLostObjectsCreateBranch";
-            this.mnuLostObjectsCreateBranch.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
-            this.mnuLostObjectsCreateBranch.Size = new System.Drawing.Size(189, 22);
-            this.mnuLostObjectsCreateBranch.Text = "Create branch";
-            this.mnuLostObjectsCreateBranch.Click += new System.EventHandler(this.mnuLostObjectsCreateBranch_Click);
-            // 
-            // copyHashToolStripMenuItem
-            // 
-            this.copyHashToolStripMenuItem.Image = global::GitUI.Properties.Images.CopyToClipboard;
-            this.copyHashToolStripMenuItem.Name = "copyHashToolStripMenuItem";
-            this.copyHashToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.copyHashToolStripMenuItem.Text = "Copy object hash";
-            this.copyHashToolStripMenuItem.Click += new System.EventHandler(this.copyHashToolStripMenuItem_Click);
+            this.splitContainer1.Panel2.Controls.Add(this.fileViewer);
+            this.splitContainer1.Size = new System.Drawing.Size(859, 374);
+            this.splitContainer1.SplitterDistance = 700;
+            this.splitContainer1.TabIndex = 17;
             // 
             // Warnings
             // 
@@ -300,26 +278,19 @@
             this.columnParent});
             this.Warnings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Warnings.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.Warnings.Location = new System.Drawing.Point(0, 134);
+            this.Warnings.Location = new System.Drawing.Point(0, 0);
             this.Warnings.MultiSelect = false;
             this.Warnings.Name = "Warnings";
             this.Warnings.RowHeadersVisible = false;
             this.Warnings.RowTemplate.ContextMenuStrip = this.mnuLostObjects;
             this.Warnings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Warnings.ShowEditingIcon = false;
-            this.Warnings.Size = new System.Drawing.Size(859, 380);
+            this.Warnings.Size = new System.Drawing.Size(700, 374);
             this.Warnings.TabIndex = 4;
             this.Warnings.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Warnings_CellMouseDoubleClick);
             this.Warnings.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Warnings_CellMouseDown);
+            this.Warnings.SelectionChanged += new System.EventHandler(this.Warnings_SelectionChanged);
             this.Warnings.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Warnings_KeyDown);
-            // 
-            // copyParentHashToolStripMenuItem
-            // 
-            this.copyParentHashToolStripMenuItem.Image = global::GitUI.Properties.Images.CopyToClipboard;
-            this.copyParentHashToolStripMenuItem.Name = "copyParentHashToolStripMenuItem";
-            this.copyParentHashToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.copyParentHashToolStripMenuItem.Text = "Copy parent hash";
-            this.copyParentHashToolStripMenuItem.Click += new System.EventHandler(this.copyParentHashToolStripMenuItem_Click);
             // 
             // columnIsLostObjectSelected
             // 
@@ -373,6 +344,61 @@
             this.columnParent.Name = "columnParent";
             this.columnParent.ReadOnly = true;
             // 
+            // mnuLostObjects
+            // 
+            this.mnuLostObjects.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuLostObjectView,
+            this.mnuLostObjectsCreateTag,
+            this.mnuLostObjectsCreateBranch,
+            this.copyHashToolStripMenuItem,
+            this.copyParentHashToolStripMenuItem,
+            this.saveAsToolStripMenuItem});
+            this.mnuLostObjects.Name = "mnuLostObjects";
+            this.mnuLostObjects.Size = new System.Drawing.Size(190, 136);
+            this.mnuLostObjects.Opening += new System.ComponentModel.CancelEventHandler(this.mnuLostObjects_Opening);
+            // 
+            // mnuLostObjectView
+            // 
+            this.mnuLostObjectView.Image = global::GitUI.Properties.Images.ViewFile;
+            this.mnuLostObjectView.Name = "mnuLostObjectView";
+            this.mnuLostObjectView.Size = new System.Drawing.Size(189, 22);
+            this.mnuLostObjectView.Text = "View";
+            this.mnuLostObjectView.Click += new System.EventHandler(this.mnuLostObjectView_Click);
+            // 
+            // mnuLostObjectsCreateTag
+            // 
+            this.mnuLostObjectsCreateTag.Image = global::GitUI.Properties.Images.TagCreate;
+            this.mnuLostObjectsCreateTag.Name = "mnuLostObjectsCreateTag";
+            this.mnuLostObjectsCreateTag.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
+            this.mnuLostObjectsCreateTag.Size = new System.Drawing.Size(189, 22);
+            this.mnuLostObjectsCreateTag.Text = "Create tag";
+            this.mnuLostObjectsCreateTag.Click += new System.EventHandler(this.mnuLostObjectsCreateTag_Click);
+            // 
+            // mnuLostObjectsCreateBranch
+            // 
+            this.mnuLostObjectsCreateBranch.Image = global::GitUI.Properties.Images.BranchCreate;
+            this.mnuLostObjectsCreateBranch.Name = "mnuLostObjectsCreateBranch";
+            this.mnuLostObjectsCreateBranch.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
+            this.mnuLostObjectsCreateBranch.Size = new System.Drawing.Size(189, 22);
+            this.mnuLostObjectsCreateBranch.Text = "Create branch";
+            this.mnuLostObjectsCreateBranch.Click += new System.EventHandler(this.mnuLostObjectsCreateBranch_Click);
+            // 
+            // copyHashToolStripMenuItem
+            // 
+            this.copyHashToolStripMenuItem.Image = global::GitUI.Properties.Images.CopyToClipboard;
+            this.copyHashToolStripMenuItem.Name = "copyHashToolStripMenuItem";
+            this.copyHashToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.copyHashToolStripMenuItem.Text = "Copy object hash";
+            this.copyHashToolStripMenuItem.Click += new System.EventHandler(this.copyHashToolStripMenuItem_Click);
+            // 
+            // copyParentHashToolStripMenuItem
+            // 
+            this.copyParentHashToolStripMenuItem.Image = global::GitUI.Properties.Images.CopyToClipboard;
+            this.copyParentHashToolStripMenuItem.Name = "copyParentHashToolStripMenuItem";
+            this.copyParentHashToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.copyParentHashToolStripMenuItem.Text = "Copy parent hash";
+            this.copyParentHashToolStripMenuItem.Click += new System.EventHandler(this.copyParentHashToolStripMenuItem_Click);
+            // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Image = global::GitUI.Properties.Images.SaveAs;
@@ -381,14 +407,23 @@
             this.saveAsToolStripMenuItem.Text = "Save as...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
+            // fileViewer
+            // 
+            this.fileViewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.fileViewer.Location = new System.Drawing.Point(0, 0);
+            this.fileViewer.Margin = new System.Windows.Forms.Padding(0);
+            this.fileViewer.Name = "fileViewer";
+            this.fileViewer.Size = new System.Drawing.Size(155, 374);
+            this.fileViewer.TabIndex = 0;
+            // 
             // FormVerify
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.btnCloseDialog;
             this.ClientSize = new System.Drawing.Size(859, 575);
-            this.Controls.Add(this.Warnings);
             this.Controls.Add(panel2);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(panel1);
             this.MinimizeBox = false;
             this.Name = "FormVerify";
@@ -400,8 +435,12 @@
             panel2.PerformLayout();
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
-            this.mnuLostObjects.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Warnings)).EndInit();
+            this.mnuLostObjects.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -436,5 +475,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn columnParent;
         private System.Windows.Forms.CheckBox ShowOtherObjects;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private Editor.FileViewer fileViewer;
     }
 }

@@ -2368,12 +2368,14 @@ namespace GitUI.CommandsDialogs
             }
 
             Dictionary<string, string> modules = stagedFiles
-                .Where(item => item.IsSubmodule)
+                .Where(item => item.IsSubmodule
+                               && Directory.Exists(_fullPathResolver.Resolve(item.Name))
+                               && configFile.ConfigSections.FirstOrDefault(section => section.GetValue("path").Trim() == item.Name)?.SubSection != null)
                 .Select(item => item.Name)
                 .ToDictionary(localPath =>
                 {
                     var submodule = configFile.ConfigSections.FirstOrDefault(section => section.GetValue("path").Trim() == localPath);
-                    return submodule?.SubSection.Trim();
+                    return submodule?.SubSection?.Trim();
                 });
 
             if (modules.Count == 0)
