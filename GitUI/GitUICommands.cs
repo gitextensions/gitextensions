@@ -549,7 +549,7 @@ namespace GitUI
                         });
                     }
 
-                    using (var form = new FormLfsLocks(this, commitMessage: ""))
+                    using (var form = new FormLocks())
                     {
                         form.ShowDialog(owner);
                     }
