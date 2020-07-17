@@ -2201,7 +2201,7 @@ namespace GitUI
 
         internal void ShowLocks()
         {
-            //
+            UICommands.StartLocksDialog(this);
         }
 
         internal void ToggleBetweenArtificialAndHeadCommits()

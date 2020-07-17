@@ -1537,6 +1537,12 @@ namespace GitCommands
             set => SetBool("UseFormCommitMessage", value);
         }
 
+        public static bool UseFormLocksMessage
+        {
+            get => GetBool("UseFormLocskMessage", true);
+            set => SetBool("UseFormLocksMessage", value);
+        }
+
         public static bool CommitAutomaticallyAfterCherryPick
         {
             get => GetBool("CommitAutomaticallyAfterCherryPick", false);
