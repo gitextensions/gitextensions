@@ -7670,10 +7670,6 @@ help</source>
         <source>Archive revision</source>
         <target />
       </trans-unit>
-      <trans-unit id="_confirmDeleteRemoteBranch.Text">
-        <source>Do you want to delete the branch {0} from {1}?</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_failedToExecuteScript.Text">
         <source>Failed to execute script</source>
         <target />
