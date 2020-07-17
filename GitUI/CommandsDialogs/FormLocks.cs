@@ -1,19 +1,48 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using GitCommands;
 using GitUI.Properties;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
     public sealed class FormLocks : GitExtensionsForm
     {
-        private readonly TranslationString _developers = new TranslationString("Developers");
-        private readonly TranslationString _translators = new TranslationString("Translators");
-        private readonly TranslationString _designers = new TranslationString("Designers");
-        private readonly TranslationString _team = new TranslationString("Team");
-        private readonly TranslationString _contributors = new TranslationString("Contributors");
-        private readonly TranslationString _caption = new TranslationString("The application would not be possible without...");
+        // private readonly TranslationString _developers = new TranslationString("Developers");
+        // private readonly TranslationString _translators = new TranslationString("Translators");
+        // private readonly TranslationString _designers = new TranslationString("Designers");
+        // private readonly TranslationString _team = new TranslationString("Team");
+        // private readonly TranslationString _contributors = new TranslationString("Contributors");
+        // private readonly TranslationString _caption = new TranslationString("The application would not be possible without...");
+
+        // [CanBeNull] private IReadOnlyList<GitItemStatus> _currentSelection;
+
+        private FileStatusList _currentFilesList;
+
+        private void StagedSelectionChanged(object sender, EventArgs e)
+        {
+            _currentFilesList.ClearSelected();
+
+            // _currentSelection = this._currentFilesList.SelectedItems.Items().ToList();
+
+            var item = _currentFilesList.SelectedItem;
+        }
+
+        private void Staged_DataSourceChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void Staged_Enter(object sender, EnterEventArgs e)
+        {
+        }
+
+        private void Staged_DoubleClick(object sender, EventArgs e)
+        {
+        }
 
         public FormLocks()
         {
@@ -25,25 +54,23 @@ namespace GitUI.CommandsDialogs
                 SuspendLayout();
                 Controls.Clear();
 
-                var tabControl = GetNewTabControl();
+                _currentFilesList = new GitUI.FileStatusList();
 
-                var tabCaptions = new[] { _developers.Text, _translators.Text, _designers.Text };
-                var textBoxes = new TextBox[tabCaptions.Length];
-                var tabPages = new TabPage[tabCaptions.Length];
-                for (var i = 0; i < tabCaptions.Length; i++)
-                {
-                    textBoxes[i] = GetNewTextBox();
-                    tabPages[i] = GetNewTabPage(textBoxes[i], tabCaptions[i]);
-                }
+                // this._currentFilesList.ContextMenuStrip = this.StagedFileContext;
 
-                const string NEWLINES = @"\r\n?|\n";
-                textBoxes[0].Text = string.Format("{0}:\r\n{1}\r\n\r\n{2}:\r\n{3}",
-                    _team.Text, Regex.Replace(Resources.Team, NEWLINES, " "),
-                    _contributors.Text, Regex.Replace(Resources.Coders, NEWLINES, " "));
-                textBoxes[1].Text = Regex.Replace(Resources.Translators, NEWLINES, " ");
-                textBoxes[2].Text = Regex.Replace(Resources.Designers, NEWLINES, " ");
+                _currentFilesList.Dock = System.Windows.Forms.DockStyle.Fill;
+                _currentFilesList.Location = new System.Drawing.Point(0, 28);
+                _currentFilesList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+                _currentFilesList.Name = "Staged";
+                _currentFilesList.SelectFirstItemOnSetItems = false;
+                _currentFilesList.Size = new System.Drawing.Size(397, 314);
+                _currentFilesList.TabIndex = 0;
+                _currentFilesList.SelectedIndexChanged += new System.EventHandler(StagedSelectionChanged);
+                _currentFilesList.DataSourceChanged += new System.EventHandler(Staged_DataSourceChanged);
+                _currentFilesList.DoubleClick += new System.EventHandler(Staged_DoubleClick);
+                _currentFilesList.Enter += new FileStatusList.EnterEventHandler(Staged_Enter);
 
-                Controls.Add(tabControl);
+                Controls.Add(_currentFilesList);
 
                 AutoScaleDimensions = new SizeF(96F, 96F);
                 AutoScaleMode = AutoScaleMode.Dpi;
@@ -52,50 +79,12 @@ namespace GitUI.CommandsDialogs
                 MaximizeBox = false;
                 MinimizeBox = false;
                 StartPosition = FormStartPosition.CenterParent;
-                Text = _caption.Text;
+
+                // Text = _caption.Text;
 
                 ResumeLayout(false);
 
                 return;
-
-                TextBox GetNewTextBox()
-                {
-                    return new TextBox
-                    {
-                        BackColor = SystemColors.Window,
-                        ForeColor = SystemColors.WindowText,
-                        BorderStyle = BorderStyle.None,
-                        Dock = DockStyle.Fill,
-                        Margin = new Padding(0),
-                        Multiline = true,
-                        ReadOnly = true,
-                        ScrollBars = ScrollBars.Vertical,
-                        TabStop = false
-                    };
-                }
-
-                TabPage GetNewTabPage(TextBox textBox, string caption)
-                {
-                    var tabPage = new TabPage
-                    {
-                        BorderStyle = BorderStyle.None,
-                        Margin = new Padding(0),
-                        Padding = new Padding(0),
-                        Text = caption
-                    };
-                    tabPage.Controls.Add(textBox);
-                    tabControl.Controls.Add(tabPage);
-                    return tabPage;
-                }
-
-                TabControl GetNewTabControl()
-                {
-                    return new FullBleedTabControl
-                    {
-                        Dock = DockStyle.Fill,
-                        SelectedIndex = 0,
-                    };
-                }
             }
         }
     }
