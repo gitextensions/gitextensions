@@ -66,6 +66,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripRevisionFilterTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripRevisionFilterDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
             this.ShowFirstParent = new System.Windows.Forms.ToolStripButton();
+            this.ShowLocks = new System.Windows.Forms.ToolStripButton();
             this.MainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.repoObjectsTree = new GitUI.BranchTreePanel.RepoObjectsTree();
             this.RightSplitContainer = new System.Windows.Forms.SplitContainer();
@@ -271,7 +272,8 @@ namespace GitUI.CommandsDialogs
             this.toolStripRevisionFilterLabel,
             this.toolStripRevisionFilterTextBox,
             this.toolStripRevisionFilterDropDownButton,
-            this.ShowFirstParent});
+            this.ShowFirstParent,
+            this.ShowLocks});
             this.ToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.ToolStrip.Location = new System.Drawing.Point(3, 0);
             this.ToolStrip.Name = "ToolStrip";
@@ -650,6 +652,15 @@ namespace GitUI.CommandsDialogs
             this.ShowFirstParent.Name = "ShowFirstParent";
             this.ShowFirstParent.Size = new System.Drawing.Size(23, 20);
             this.ShowFirstParent.ToolTipText = "Show first parents";
+            // 
+            // ShowLocks
+            // 
+            this.ShowLocks.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ShowLocks.Image = global::GitUI.Properties.Images.ShowFirstParent;
+            this.ShowLocks.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ShowLocks.Name = "ShowLocks";
+            this.ShowLocks.Size = new System.Drawing.Size(23, 20);
+            this.ShowLocks.ToolTipText = "Show locks";
             // 
             // MainSplitContainer
             // 
@@ -1947,6 +1958,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparator7;
         private ToolStripMenuItem menuitemSparse;
         private ToolStripButton ShowFirstParent;
+        private ToolStripButton ShowLocks;
         private ToolStripSeparator toolStripSeparator10;
         private ToolStripMenuItem editgitinfoexcludeToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItemReflog;

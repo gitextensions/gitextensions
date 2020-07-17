@@ -2199,6 +2199,11 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
+        internal void ShowLocks()
+        {
+            //
+        }
+
         internal void ToggleBetweenArtificialAndHeadCommits()
         {
             GoToRef(GetIdToSelect()?.ToString(), showNoRevisionMsg: false);
