@@ -6,7 +6,7 @@ using GitUI.UserControls.RevisionGrid;
 
 namespace GitUI.CommandsDialogs
 {
-    partial class FormLocks
+    partial class FormLfsLocks
     {
         /// <summary>
         /// Required designer variable.
@@ -1500,7 +1500,7 @@ namespace GitUI.CommandsDialogs
             this.stopTrackingThisFileToolStripMenuItem.Text = "Stop tracking this file";
             this.stopTrackingThisFileToolStripMenuItem.Click += new System.EventHandler(this.stopTrackingThisFileToolStripMenuItem_Click);
             //
-            // FormLocks
+            // FormCommit
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -1511,7 +1511,7 @@ namespace GitUI.CommandsDialogs
             this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MinimumSize = new System.Drawing.Size(600, 297);
-            this.Name = "FormLocks";
+            this.Name = "FormCommit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Commit";
             this.UnstagedFileContext.ResumeLayout(false);

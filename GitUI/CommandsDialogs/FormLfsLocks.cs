@@ -38,7 +38,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public sealed partial class FormLocks : GitModuleForm
+    public sealed partial class FormLfsLocks : GitModuleForm
     {
         private const string fixupPrefix = "fixup!";
         private const string squashPrefix = "squash!";
@@ -159,7 +159,7 @@ namespace GitUI.CommandsDialogs
         private readonly ToolStripMenuItem _stageSelectedLinesToolStripMenuItem;
         private readonly ToolStripMenuItem _resetSelectedLinesToolStripMenuItem;
         private readonly AsyncLoader _unstagedLoader = new AsyncLoader();
-        private readonly bool _useFormLocksMessage = AppSettings.UseFormLocksMessage;
+        private readonly bool _useFormCommitMessage = AppSettings.UseFormCommitMessage;
         private readonly CancellationTokenSequence _interactiveAddSequence = new CancellationTokenSequence();
         private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("CommitDialog"));
         private readonly Subject<string> _selectionFilterSubject = new Subject<string>();
@@ -191,8 +191,8 @@ namespace GitUI.CommandsDialogs
             {
                 _commitKind = value;
 
-                modifyCommitMessageButton.Visible = _useFormLocksMessage && CommitKind != CommitKind.Normal;
-                bool messageCanBeChanged = _useFormLocksMessage && CommitKind == CommitKind.Normal;
+                modifyCommitMessageButton.Visible = _useFormCommitMessage && CommitKind != CommitKind.Normal;
+                bool messageCanBeChanged = _useFormCommitMessage && CommitKind == CommitKind.Normal;
                 Message.Enabled = messageCanBeChanged;
                 commitMessageToolStripMenuItem.Enabled = messageCanBeChanged;
                 commitTemplatesToolStripMenuItem.Enabled = messageCanBeChanged;
@@ -200,12 +200,12 @@ namespace GitUI.CommandsDialogs
         }
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
-        private FormLocks()
+        private FormLfsLocks()
         {
             InitializeComponent();
         }
 
-        public FormLocks([NotNull] GitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision editedCommit = null, string commitMessage = null)
+        public FormLfsLocks([NotNull] GitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision editedCommit = null, string commitMessage = null)
             : base(commands)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
@@ -379,7 +379,7 @@ namespace GitUI.CommandsDialogs
             {
                 CommitKind = commitKind;
 
-                Message.WatermarkText = _useFormLocksMessage
+                Message.WatermarkText = _useFormCommitMessage
                     ? _enterCommitMessageHint.Text
                     : _commitMessageDisabled.Text;
             }
@@ -480,7 +480,7 @@ namespace GitUI.CommandsDialogs
                     break;
             }
 
-            if (_useFormLocksMessage && !string.IsNullOrEmpty(message))
+            if (_useFormCommitMessage && !string.IsNullOrEmpty(message))
             {
                 Message.Text = message; // initial assignment
             }
@@ -1369,13 +1369,13 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                if (_useFormLocksMessage && (string.IsNullOrEmpty(Message.Text) || Message.Text == _commitTemplate))
+                if (_useFormCommitMessage && (string.IsNullOrEmpty(Message.Text) || Message.Text == _commitTemplate))
                 {
                     MessageBox.Show(this, _enterCommitMessage.Text, _enterCommitMessageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     return;
                 }
 
-                if (_useFormLocksMessage && !IsCommitMessageValid())
+                if (_useFormCommitMessage && !IsCommitMessageValid())
                 {
                     return;
                 }
@@ -1442,7 +1442,7 @@ namespace GitUI.CommandsDialogs
 
                 try
                 {
-                    if (_useFormLocksMessage)
+                    if (_useFormCommitMessage)
                     {
                         // Save last commit message in settings. This way it can be used in multiple repositories.
                         AppSettings.LastCommitMessage = Message.Text;
@@ -1458,7 +1458,7 @@ namespace GitUI.CommandsDialogs
                         amend,
                         signOffToolStripMenuItem.Checked,
                         toolAuthor.Text,
-                        _useFormLocksMessage,
+                        _useFormCommitMessage,
                         noVerifyToolStripMenuItem.Checked,
                         gpgSignCommitToolStripComboBox.SelectedIndex > 0,
                         toolStripGpgKeyTextBox.Text);
@@ -3157,6 +3157,12 @@ namespace GitUI.CommandsDialogs
                     var settingsItem = new ToolStripMenuItem(_commitMessageSettings.Text, Images.Settings);
                     settingsItem.Click += delegate
                     {
+                        using (var frm = new FormCommitTemplateSettings())
+                        {
+                            frm.ShowDialog(this);
+                        }
+
+                        _shouldReloadCommitTemplates = true;
                     };
                     commitTemplatesToolStripMenuItem.DropDownItems.Add(settingsItem);
                 }
@@ -3301,32 +3307,32 @@ namespace GitUI.CommandsDialogs
 
         internal readonly struct TestAccessor
         {
-            private readonly FormLocks _FormLocks;
+            private readonly FormLfsLocks _formCommit;
 
-            internal TestAccessor(FormLocks formLocks)
+            internal TestAccessor(FormLfsLocks formCommit)
             {
-                _FormLocks = formLocks;
+                _formCommit = formCommit;
             }
 
-            internal ToolStripMenuItem EditFileToolStripMenuItem => _FormLocks.editFileToolStripMenuItem;
+            internal ToolStripMenuItem EditFileToolStripMenuItem => _formCommit.editFileToolStripMenuItem;
 
-            internal FileStatusList UnstagedList => _FormLocks.Unstaged;
+            internal FileStatusList UnstagedList => _formCommit.Unstaged;
 
-            internal EditNetSpell Message => _FormLocks.Message;
+            internal EditNetSpell Message => _formCommit.Message;
 
-            internal FileViewer SelectedDiff => _FormLocks.SelectedDiff;
+            internal FileViewer SelectedDiff => _formCommit.SelectedDiff;
 
-            internal ToolStripDropDownButton CommitMessageToolStripMenuItem => _FormLocks.commitMessageToolStripMenuItem;
+            internal ToolStripDropDownButton CommitMessageToolStripMenuItem => _formCommit.commitMessageToolStripMenuItem;
 
-            internal ToolStripStatusLabel CommitAuthorStatusToolStripStatusLabel => _FormLocks.commitAuthorStatus;
+            internal ToolStripStatusLabel CommitAuthorStatusToolStripStatusLabel => _formCommit.commitAuthorStatus;
 
-            internal ToolStripStatusLabel CurrentBranchNameLabelStatus => _FormLocks.branchNameLabel;
+            internal ToolStripStatusLabel CurrentBranchNameLabelStatus => _formCommit.branchNameLabel;
 
-            internal ToolStripStatusLabel RemoteNameLabelStatus => _FormLocks.remoteNameLabel;
+            internal ToolStripStatusLabel RemoteNameLabelStatus => _formCommit.remoteNameLabel;
 
-            internal CommandStatus ExecuteCommand(Command command) => _FormLocks.ExecuteCommand((int)command);
+            internal CommandStatus ExecuteCommand(Command command) => _formCommit.ExecuteCommand((int)command);
 
-            internal Rectangle Bounds => _FormLocks.Bounds;
+            internal Rectangle Bounds => _formCommit.Bounds;
         }
     }
 }
