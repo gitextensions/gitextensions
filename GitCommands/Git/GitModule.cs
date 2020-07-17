@@ -4153,6 +4153,34 @@ namespace GitCommands
             return output;
         }
 
+        public void LfsLock(IReadOnlyList<string> files)
+        {
+            if (files.Count == 0)
+            {
+                return;
+            }
+
+            // Run batch arguments to work around max command line length on Windows. Fix #6593
+            // 3: double quotes + ' '
+            // See https://referencesource.microsoft.com/#system/services/monitoring/system/diagnosticts/Process.cs,1952
+            _gitExecutable.RunBatchCommand(new GitArgumentBuilder("lfs lock", false)
+                .BuildBatchArgumentsForFiles(files));
+        }
+
+        public void LfsUnLock(IReadOnlyList<string> files)
+        {
+            if (files.Count == 0)
+            {
+                return;
+            }
+
+            // Run batch arguments to work around max command line length on Windows. Fix #6593
+            // 3: double quotes + ' '
+            // See https://referencesource.microsoft.com/#system/services/monitoring/system/diagnosticts/Process.cs,1952
+            _gitExecutable.RunBatchCommand(new GitArgumentBuilder("lfs unlock", false)
+                .BuildBatchArgumentsForFiles(files));
+        }
+
         /// <summary>
         /// Determines whether a git command's output indicates an error occurred.
         /// </summary>

@@ -847,5 +847,23 @@ See the changes in the commit form.");
 
             return _revisionFileTreeController.SelectFileOrFolder(tvGitTree, filePath.Substring(Module.WorkingDir.Length));
         }
+
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            // lfs lock
+            if (tvGitTree.SelectedNode?.Tag is GitItem gitItem)
+            {
+                Module.LfsLock(new[] { gitItem.FileName });
+            }
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            // lfs unlock
+            if (tvGitTree.SelectedNode?.Tag is GitItem gitItem)
+            {
+                Module.LfsUnLock(new[] { gitItem.FileName });
+            }
+        }
     }
 }
