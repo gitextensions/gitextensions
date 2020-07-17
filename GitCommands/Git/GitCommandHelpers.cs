@@ -427,24 +427,43 @@ namespace GitCommands
             return new GitArgumentBuilder("bisect") { "reset" };
         }
 
-        public static ArgumentString RebaseCmd(string branch, bool interactive, bool preserveMerges, bool autosquash, bool autoStash, string from = null, string onto = null)
+        public static ArgumentString RebaseCmd(
+            string branch, bool interactive, bool preserveMerges, bool autosquash, bool autoStash, bool ignoreDate, bool committerDateIsAuthorDate, string from = null, string onto = null)
         {
             if (from == null ^ onto == null)
             {
                 throw new ArgumentException($"For arguments \"{nameof(from)}\" and \"{nameof(onto)}\", either both must have values, or neither may.");
             }
 
-            return new GitArgumentBuilder("rebase")
+            var builder = new GitArgumentBuilder("rebase");
+            if (ignoreDate)
             {
-                { interactive, "-i" },
-                { interactive && autosquash, "--autosquash" },
-                { interactive && !autosquash, "--no-autosquash" },
-                { preserveMerges, GitVersion.Current.SupportRebaseMerges ? "--rebase-merges" : "--preserve-merges" },
-                { autoStash, "--autostash" },
-                from.QuoteNE(),
-                branch.Quote(),
-                { onto != null, $"--onto {onto}" }
-            };
+                builder.Add("--ignore-date");
+            }
+            else if (committerDateIsAuthorDate)
+            {
+                builder.Add("--committer-date-is-author-date");
+            }
+            else
+            {
+                if (interactive)
+                {
+                    builder.Add("-i");
+                    builder.Add(autosquash ? "--autosquash" : "--no-autosquash");
+                }
+
+                if (preserveMerges)
+                {
+                    builder.Add(GitVersion.Current.SupportRebaseMerges ? "--rebase-merges" : "--preserve-merges");
+                }
+            }
+
+            builder.Add(autoStash, "--autostash");
+            builder.Add(from.QuoteNE());
+            builder.Add(branch.Quote());
+            builder.Add(onto != null, $"--onto {onto}");
+
+            return builder;
         }
 
         public static ArgumentString AbortRebaseCmd()

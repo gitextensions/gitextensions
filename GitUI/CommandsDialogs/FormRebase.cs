@@ -177,9 +177,28 @@ namespace GitUI.CommandsDialogs
             EnableButtons();
         }
 
-        private void InteractiveRebaseClick(object sender, EventArgs e)
+        private void chkInteractive_CheckedChanged(object sender, EventArgs e)
         {
             chkAutosquash.Enabled = chkInteractive.Checked;
+        }
+
+        private void chkIgnoreDate_CheckedChanged(object sender, EventArgs e)
+        {
+            ToggleDateCheckboxMutualExclusions();
+        }
+
+        private void chkCommitterDateIsAuthorDate_CheckedChanged(object sender, EventArgs e)
+        {
+            ToggleDateCheckboxMutualExclusions();
+        }
+
+        private void ToggleDateCheckboxMutualExclusions()
+        {
+            chkCommitterDateIsAuthorDate.Enabled = !chkIgnoreDate.Checked;
+            chkIgnoreDate.Enabled = !chkCommitterDateIsAuthorDate.Checked;
+            chkInteractive.Enabled = !chkIgnoreDate.Checked && !chkCommitterDateIsAuthorDate.Checked;
+            chkPreserveMerges.Enabled = !chkIgnoreDate.Checked && !chkCommitterDateIsAuthorDate.Checked;
+            chkAutosquash.Enabled = chkInteractive.Checked && !chkIgnoreDate.Checked && !chkCommitterDateIsAuthorDate.Checked;
         }
 
         private void AddFilesClick(object sender, EventArgs e)
@@ -259,13 +278,13 @@ namespace GitUI.CommandsDialogs
                 {
                     rebaseCmd = GitCommandHelpers.RebaseCmd(
                         cboTo.Text, chkInteractive.Checked, chkPreserveMerges.Checked,
-                        chkAutosquash.Checked, chkStash.Checked, txtFrom.Text, Branches.Text);
+                        chkAutosquash.Checked, chkStash.Checked, chkIgnoreDate.Checked, chkCommitterDateIsAuthorDate.Checked, txtFrom.Text, Branches.Text);
                 }
                 else
                 {
                     rebaseCmd = GitCommandHelpers.RebaseCmd(
                         Branches.Text, chkInteractive.Checked,
-                        chkPreserveMerges.Checked, chkAutosquash.Checked, chkStash.Checked);
+                        chkPreserveMerges.Checked, chkAutosquash.Checked, chkStash.Checked, chkIgnoreDate.Checked, chkCommitterDateIsAuthorDate.Checked);
                 }
 
                 string cmdOutput = FormProcess.ReadDialog(this, process: null, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
@@ -314,10 +333,29 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void CommitButtonClick(object sender, EventArgs e)
+        private void Commit_Click(object sender, EventArgs e)
         {
             UICommands.StartCommitDialog(this);
             EnableButtons();
+        }
+
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly FormRebase _form;
+
+            public TestAccessor(FormRebase form)
+            {
+                _form = form;
+            }
+
+            public CheckBox chkInteractive => _form.chkInteractive;
+            public CheckBox chkPreserveMerges => _form.chkPreserveMerges;
+            public CheckBox chkAutosquash => _form.chkAutosquash;
+            public CheckBox chkStash => _form.chkStash;
+            public CheckBox chkIgnoreDate => _form.chkIgnoreDate;
+            public CheckBox chkCommitterDateIsAuthorDate => _form.chkCommitterDateIsAuthorDate;
         }
     }
 }
