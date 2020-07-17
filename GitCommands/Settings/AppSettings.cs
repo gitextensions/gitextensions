@@ -1110,12 +1110,6 @@ namespace GitCommands
             set => SetBool("showfirstparent", value);
         }
 
-        public static bool ShowLocks
-        {
-            get => GetBool("showlocks", false);
-            set => SetBool("showlocks", value);
-        }
-
         public static bool CommitDialogSelectionFilter
         {
             get => GetBool("commitdialogselectionfilter", false);

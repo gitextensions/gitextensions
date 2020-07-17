@@ -87,7 +87,8 @@ namespace GitUI
             });
 
             _NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
-            _NO_TRANSLATE_showLocks.Checked = AppSettings.ShowLocks;
+
+            // _NO_TRANSLATE_showLocks.Checked = true;
 
             label.Click += delegate { ApplyFilter(); };
             _NO_TRANSLATE_textBox.Leave += delegate { ApplyFilter(); };
@@ -101,7 +102,8 @@ namespace GitUI
             _NO_TRANSLATE_showFirstParentButton.Click += delegate { _NO_TRANSLATE_revisionGrid.ShowFirstParent(); };
             _NO_TRANSLATE_revisionGrid.ShowFirstParentsToggled += delegate { _NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent; };
             _NO_TRANSLATE_showLocks.Click += delegate { _NO_TRANSLATE_revisionGrid.ShowLocks(); };
-            _NO_TRANSLATE_revisionGrid.ShowFirstParentsToggled += delegate { _NO_TRANSLATE_showLocks.Checked = AppSettings.ShowLocks; };
+
+            // _NO_TRANSLATE_revisionGrid.ShowLocks += delegate { _NO_TRANSLATE_showLocks.Checked = true; };
         }
 
         public void SetFilter(string filter)
