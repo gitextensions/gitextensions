@@ -20,11 +20,6 @@ namespace GitCommands
         private readonly Func<string> _fileNameProvider;
         private readonly string _workingDir;
 
-        public Executable([NotNull] string fileName, [NotNull] string workingDir = "")
-            : this(() => fileName, workingDir)
-        {
-        }
-
         public Executable([NotNull] Func<string> fileNameProvider,
             [NotNull] string workingDir = "",
             ExternalOperationExceptionFactory.Handling exceptionHandling = ExternalOperationExceptionFactory.Handling.OptionalBugReport,

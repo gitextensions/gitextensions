@@ -30,7 +30,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _askMergeConflictSolvedCaption = new TranslationString("Conflict solved?");
         private readonly TranslationString _noMergeTool = new TranslationString("There is no mergetool configured." + Environment.NewLine + "Please go to settings and set a mergetool!");
         private readonly TranslationString _noMergeToolConfigured = new TranslationString("The mergetool is not correctly configured." + Environment.NewLine + "Please go to settings and configure the mergetool!");
-        private readonly TranslationString _errorStartingMergetool = new TranslationString("Error starting mergetool: {0}");
         private readonly TranslationString _stageFilename = new TranslationString("Stage {0}");
 
         private readonly TranslationString _noBaseRevision = new TranslationString("There is no base revision for {0}." + Environment.NewLine + "Fall back to 2-way merge?");
@@ -362,7 +361,7 @@ namespace GitUI.CommandsDialogs
                 FixPath(baseFileName).Quote()
             };
 
-            new Executable("wscript", Module.WorkingDir).Start(args);
+            ExecutableFactory.Default.Create("wscript", Module.WorkingDir).Start(args);
 
             if (MessageBox.Show(this, string.Format(_askMergeConflictSolvedAfterCustomMergeScript.Text,
                 FixPath(_fullPathResolver.Resolve(fileName))), _askMergeConflictSolvedCaption.Text,
@@ -554,13 +553,11 @@ namespace GitUI.CommandsDialogs
                     GitUIPluginInterfaces.ExecutionResult res;
                     try
                     {
-                        res = new Executable(_mergetoolPath, Module.WorkingDir).Execute(arguments);
+                        res = ExecutableFactory.Default.Create(_mergetoolPath, Module.WorkingDir, ExternalOperationExceptionFactory.Handling.Show).Execute(arguments);
                     }
-                    catch (Exception)
+                    catch (ExternalOperationException)
                     {
-                        var text = string.Format(_errorStartingMergetool.Text, _mergetoolPath);
-                        MessageBox.Show(this, text, _noBaseFileMergeCaption.Text,
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        // ignore because already shown to the user
                         return;
                     }
 

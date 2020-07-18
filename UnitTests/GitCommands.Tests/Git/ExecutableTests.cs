@@ -31,7 +31,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void StartNonexisting()
         {
-            IExecutable executable = new Executable(_invalidExe);
+            IExecutable executable = ExecutableFactory.Default.Create(_invalidExe);
 
             ExternalOperationException ex = Assert.Throws<ExternalOperationException>(() => executable.Start());
 
@@ -42,7 +42,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void GetOutputNonexisting()
         {
-            IExecutable executable = new Executable(_invalidExe);
+            IExecutable executable = ExecutableFactory.Default.Create(_invalidExe);
 
             ExternalOperationException ex = Assert.Throws<ExternalOperationException>(() => executable.GetOutput(""));
 
@@ -55,7 +55,7 @@ namespace GitCommandsTests.Git
         {
             string executableName = "cmd.exe";
             string workingDirectory = @"C:\nonexistent-dir";
-            IExecutable executable = new Executable(executableName, workingDirectory);
+            IExecutable executable = ExecutableFactory.Default.Create(executableName, workingDirectory);
 
             ExternalOperationException ex = Assert.Throws<ExternalOperationException>(() => executable.Start());
 

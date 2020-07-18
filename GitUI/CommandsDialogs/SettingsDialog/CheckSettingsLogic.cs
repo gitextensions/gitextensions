@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using GitCommands;
+using GitCommands.Git;
 using GitCommands.Settings;
 using GitCommands.Utils;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -175,7 +176,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 try
                 {
-                    string output = new Executable(command).GetOutput();
+                    string output = ExecutableFactory.Default.Create(command, exceptionHandling: ExternalOperationExceptionFactory.Handling.None).GetOutput();
                     if (!string.IsNullOrEmpty(output))
                     {
                         if (command != null)

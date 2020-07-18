@@ -22,8 +22,6 @@ namespace GitUI
 
         private readonly TranslationString _failedToExecute = new TranslationString("Failed to execute");
 
-        private readonly TranslationString _failedToRunShell = new TranslationString("Failed to run shell");
-
         private readonly TranslationString _notValidGitDirectory = new TranslationString("The current directory is not a valid git repository.");
 
         private readonly TranslationString _unresolvedMergeConflictsCaption = new TranslationString("Merge conflicts");
@@ -68,10 +66,6 @@ namespace GitUI
 
         public static void FailedToExecute(IWin32Window owner, string executable, Exception ex)
             => ShowError(owner, $"{Instance._failedToExecute.Text} {executable}.{Environment.NewLine}"
-                                + $"{Instance._reason.Text}: {Instance.GetText(ex)}");
-
-        public static void FailedToRunShell(IWin32Window owner, string shell, Exception ex)
-            => ShowError(owner, $"{Instance._failedToRunShell.Text} {shell.Quote()}.{Environment.NewLine}"
                                 + $"{Instance._reason.Text}: {Instance.GetText(ex)}");
 
         public static void NotValidGitDirectory([CanBeNull] IWin32Window owner)

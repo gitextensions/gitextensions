@@ -51,7 +51,7 @@ namespace GitCommands
             WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(WorkingDir);
             _indexLockManager = new IndexLockManager(this);
             _commitDataManager = new CommitDataManager(() => this);
-            _gitExecutable = new Executable(() => AppSettings.GitCommand, WorkingDir);
+            _gitExecutable = ExecutableFactory.Default.Create(() => AppSettings.GitCommand, WorkingDir);
             _gitCommandRunner = new GitCommandRunner(_gitExecutable, () => SystemEncoding);
             _getAllChangedFilesOutputParser = new GetAllChangedFilesOutputParser(() => this);
 
@@ -859,7 +859,7 @@ namespace GitCommands
         {
             if (EnvUtils.RunningOnUnix())
             {
-                new Executable("gitk", WorkingDir).Start(createWindow: true);
+                ExecutableFactory.Default.Create("gitk", WorkingDir).Start(createWindow: true);
             }
             else
             {
@@ -870,7 +870,7 @@ namespace GitCommands
                     .Replace("git.exe", "gitk")
                     .Replace("git.cmd", "gitk");
 
-                new Executable("cmd.exe", WorkingDir).Start($"/c \"\"{cmd}\" --branches --tags --remotes\"");
+                ExecutableFactory.Default.Create("cmd.exe", WorkingDir).Start($"/c \"\"{cmd}\" --branches --tags --remotes\"");
             }
         }
 
@@ -890,7 +890,7 @@ namespace GitCommands
                     $"\"{AppSettings.GitCommand.QuoteNE()}",
                     "gui\""
                 };
-                new Executable("cmd.exe", WorkingDir).Start(args);
+                ExecutableFactory.Default.Create("cmd.exe", WorkingDir).Start(args);
             }
         }
 
@@ -1415,7 +1415,7 @@ namespace GitCommands
 
         public static void StartPageantWithKey(string sshKeyFile)
         {
-            var pageantExecutable = new Executable(AppSettings.Pageant);
+            var pageantExecutable = ExecutableFactory.Default.Create(AppSettings.Pageant);
 
             // ensure pageant is loaded, so we can wait for loading a key in the next command
             // otherwise we'll stuck there waiting until pageant exits
@@ -3861,7 +3861,7 @@ namespace GitCommands
 
             // Get processes by "ps" command.
             var cmd = Path.Combine(AppSettings.GitBinDir, "ps");
-            var lines = new Executable(cmd).GetOutput("x").Split('\n');
+            var lines = ExecutableFactory.Default.Create(cmd).GetOutput("x").Split('\n');
 
             if (lines.Length <= 2)
             {

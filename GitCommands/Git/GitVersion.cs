@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GitCommands.Git;
 
 namespace GitCommands
 {
@@ -34,7 +35,7 @@ namespace GitCommands
             {
                 if (_current == null || _current.IsUnknown)
                 {
-                    var output = new Executable(AppSettings.GitCommand).GetOutput("--version");
+                    var output = ExecutableFactory.Default.Create(AppSettings.GitCommand).GetOutput("--version");
                     _current = new GitVersion(output);
                 }
 

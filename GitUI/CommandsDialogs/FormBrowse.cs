@@ -1452,12 +1452,12 @@ namespace GitUI.CommandsDialogs
 
             try
             {
-                var executable = new Executable(shell.ExecutablePath, Module.WorkingDir);
-                executable.Start(createWindow: true);
+                string context = $"shell {shell.Name.Quote()}";
+                ExecutableFactory.Default.Create(shell.ExecutablePath, Module.WorkingDir, ExternalOperationExceptionFactory.Handling.Show, context).Start(createWindow: true);
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                MessageBoxes.FailedToRunShell(this, shell.Name, exception);
+                // ignore because already shown to the user
             }
         }
 
@@ -1674,12 +1674,12 @@ namespace GitUI.CommandsDialogs
 
         private void StartAuthenticationAgentToolStripMenuItemClick(object sender, EventArgs e)
         {
-            new Executable(AppSettings.Pageant, Module.WorkingDir).Start();
+            ExecutableFactory.Default.Create(AppSettings.Pageant, Module.WorkingDir).Start();
         }
 
         private void GenerateOrImportKeyToolStripMenuItemClick(object sender, EventArgs e)
         {
-            new Executable(AppSettings.Puttygen, Module.WorkingDir).Start();
+            ExecutableFactory.Default.Create(AppSettings.Puttygen, Module.WorkingDir).Start();
         }
 
         private void CommitInfoTabControl_SelectedIndexChanged(object sender, EventArgs e)

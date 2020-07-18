@@ -17,7 +17,7 @@ namespace GitCommandsTests.Git
     public sealed class ExecutableExtensionsTests
     {
         private MockExecutable _executable;
-        private Executable _gitExecutable;
+        private IExecutable _gitExecutable;
         private string _appPath;
 
         [SetUp]
@@ -37,7 +37,7 @@ namespace GitCommandsTests.Git
             // git always return non-zero exit code when run git reset outside of git repository
             // NUnit working directory always default to MS test host
             var workingDir = Path.GetDirectoryName(Assembly.GetAssembly(typeof(ExecutableExtensionsTests)).Location);
-            _gitExecutable = new Executable(_appPath, workingDir);
+            _gitExecutable = ExecutableFactory.Default.Create(_appPath, workingDir);
         }
 
         [TearDown]

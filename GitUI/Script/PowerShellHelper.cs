@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitCommands.Git;
 using GitUIPluginInterfaces;
 
 namespace GitUI.Script
@@ -10,9 +11,7 @@ namespace GitUI.Script
             const string filename = "powershell.exe";
             var arguments = (runInBackground ? "" : "-NoExit") + " -ExecutionPolicy Unrestricted -Command \"" + command + " " + argument + "\"";
             EnvironmentConfiguration.SetEnvironmentVariables();
-
-            IExecutable executable = new Executable(filename, workingDir);
-            executable.Start(arguments);
+            ExecutableFactory.Default.Create(filename, workingDir).Start(arguments);
         }
     }
 }

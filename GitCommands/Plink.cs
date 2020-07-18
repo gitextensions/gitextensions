@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using GitCommands.Git;
 using GitUI;
+using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
@@ -57,11 +59,11 @@ namespace GitCommands
          *   -shareexists
          *             test whether a connection-sharing upstream exists
          */
-        private readonly Executable _executable;
+        private readonly IExecutable _executable;
 
-        public Plink(Executable executable = null)
+        public Plink(IExecutable executable = null)
         {
-            _executable = executable ?? new Executable("cmd.exe");
+            _executable = executable ?? ExecutableFactory.Default.Create("cmd.exe");
         }
 
         public bool Connect(string host)
