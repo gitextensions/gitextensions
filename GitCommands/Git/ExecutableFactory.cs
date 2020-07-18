@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
@@ -22,5 +23,8 @@ namespace GitCommands
             ExternalOperationExceptionFactory.Handling exceptionHandling = ExternalOperationExceptionFactory.Handling.OptionalBugReport,
             [CanBeNull] string context = null)
             => Create(() => fileName, workingDir, exceptionHandling, context);
+
+        public IProcess Spawn(string arguments, [NotNull] string workingDir = "")
+            => Create(Application.ExecutablePath, workingDir, ExternalOperationExceptionFactory.Handling.OptionalBugReport).Start(arguments);
     }
 }

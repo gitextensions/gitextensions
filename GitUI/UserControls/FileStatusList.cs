@@ -793,20 +793,9 @@ namespace GitUI
         private async Task OpenSubmoduleAsync()
         {
             var submoduleName = SelectedItem.Item.Name;
-
             var status = await SelectedItem.Item.GetSubmoduleStatusAsync().ConfigureAwait(false);
-
-            var process = new Process
-            {
-                StartInfo =
-                {
-                    FileName = Application.ExecutablePath,
-                    Arguments = "browse -commit=" + status.Commit,
-                    WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator())
-                }
-            };
-
-            process.Start();
+            string arguments = "browse -commit=" + status.Commit;
+            ExecutableFactory.Default.Spawn(arguments, _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator()));
         }
 
         private void SelectItems(Func<ListViewItem, bool> predicate)

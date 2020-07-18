@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -335,21 +334,13 @@ See the changes in the commit form.");
 
         private void SpawnCommitBrowser(GitItem item)
         {
-            var process = new Process
-            {
-                StartInfo =
-                {
-                    FileName = Application.ExecutablePath,
-                    Arguments = "browse",
-                    WorkingDirectory = _fullPathResolver.Resolve(item.FileName.EnsureTrailingPathSeparator())
-                }
-            };
+            string arguments = "browse";
             if (item.ObjectId != null)
             {
-                process.StartInfo.Arguments += " -commit=" + item.Guid;
+                arguments += " -commit=" + item.Guid;
             }
 
-            process.Start();
+            ExecutableFactory.Default.Spawn(arguments, workingDir: _fullPathResolver.Resolve(item.FileName.EnsureTrailingPathSeparator()));
         }
 
         private void tvGitTree_AfterSelect(object sender, TreeViewEventArgs e)

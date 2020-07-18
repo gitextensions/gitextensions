@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -449,18 +448,8 @@ namespace GitUI.CommandsDialogs
                     async () =>
                     {
                         var status = await item.Item.GetSubmoduleStatusAsync().ConfigureAwait(false);
-
-                        var process = new Process
-                        {
-                            StartInfo =
-                            {
-                                FileName = Application.ExecutablePath,
-                                Arguments = "browse -commit=" + status.Commit,
-                                WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator())
-                            }
-                        };
-
-                        process.Start();
+                        string arguments = "browse -commit=" + status.Commit;
+                        ExecutableFactory.Default.Spawn(arguments, _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator()));
                     });
             }
             else
