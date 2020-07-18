@@ -1038,7 +1038,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Parse the output from --tool-help
+        /// Parse the output from 'git difftool --tool-help'
         /// </summary>
         /// <param name="output">The output string</param>
         /// <returns>list with tool names</returns>
@@ -1048,19 +1048,20 @@ namespace GitCommands
 
             // Simple parsing of the textual output opposite to porcelain format
             // https://github.com/git/git/blob/main/git-mergetool--lib.sh#L298
+            // An alternative is to parse "git config --get-regexp difftool'\..*\.cmd'" and see show_tool_names()
+
             // The sections to parse in the text has a 'header', then break parsing at first non match
-            bool isParsing = false;
+
             foreach (var l in output.Split('\n'))
             {
-                if (l.EndsWith("may be set to one of the following:") || l == "\tuser-defined:")
+                if (l == "The following tools are valid, but not currently available:")
                 {
-                    isParsing = true;
-                    continue;
+                    // No more usable tools
+                    break;
                 }
 
-                if (!isParsing || !l.StartsWith("\t\t"))
+                if (!l.StartsWith("\t\t"))
                 {
-                    isParsing = false;
                     continue;
                 }
 
