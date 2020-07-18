@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Git.hub;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.Git;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -203,18 +204,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                 try
                 {
-                    Process process = new Process();
-                    process.StartInfo.UseShellExecute = false;
-                    process.StartInfo.FileName = "msiexec.exe";
-                    process.StartInfo.Arguments = string.Format("/i \"{0}\\{1}\" /qb LAUNCH=1", Environment.GetEnvironmentVariable("TEMP"), fileName);
-                    process.Start();
+                    string arguments = string.Format("/i \"{0}\\{1}\" /qb LAUNCH=1", Environment.GetEnvironmentVariable("TEMP"), fileName);
+                    ExecutableFactory.Default.Create("msiexec.exe", exceptionHandling: ExternalOperationExceptionFactory.Handling.Show).Start(arguments);
 
                     progressBar1.Visible = false;
                     Close();
                     Application.Exit();
                 }
-                catch (Win32Exception)
+                catch (ExternalOperationException)
                 {
+                    // ignore because already shown to the user
                 }
             }).FileAndForget();
         }
