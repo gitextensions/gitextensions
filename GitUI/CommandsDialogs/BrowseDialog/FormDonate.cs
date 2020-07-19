@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using ResourceManager;
 
@@ -27,7 +26,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void PictureBox1Click(object sender, EventArgs e)
         {
-            Process.Start(DonationUrl);
+            OsShellUtil.OpenUrlInDefaultBrowser(DonationUrl);
         }
     }
 }

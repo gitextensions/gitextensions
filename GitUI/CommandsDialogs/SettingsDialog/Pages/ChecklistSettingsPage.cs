@@ -647,7 +647,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void GcmDetectedFix_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/gitextensions/gitextensions/wiki/How-To:-fix-GitCredentialWinStore-missing");
+            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/wiki/How-To:-fix-GitCredentialWinStore-missing");
         }
     }
 }

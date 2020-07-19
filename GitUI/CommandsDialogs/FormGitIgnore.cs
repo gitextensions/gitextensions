@@ -241,12 +241,12 @@ namespace GitUI.CommandsDialogs
 
         private void lnkGitIgnorePatterns_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"https://github.com/github/gitignore");
+            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/github/gitignore");
         }
 
         private void lnkGitIgnoreGenerate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"https://www.gitignore.io/");
+            OsShellUtil.OpenUrlInDefaultBrowser(@"https://www.gitignore.io/");
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

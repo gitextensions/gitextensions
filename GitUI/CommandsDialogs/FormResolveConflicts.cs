@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -1416,7 +1415,7 @@ namespace GitUI.CommandsDialogs
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string fileName = GetFileName();
-            Process.Start(_fullPathResolver.Resolve(fileName));
+            OsShellUtil.Open(_fullPathResolver.Resolve(fileName));
         }
 
         private void openWithToolStripMenuItem_Click(object sender, EventArgs e)

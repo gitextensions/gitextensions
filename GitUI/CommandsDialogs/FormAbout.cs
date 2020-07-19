@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using GitCommands;
@@ -30,10 +29,10 @@ namespace GitUI.CommandsDialogs
             linkLabelIcons.LinkColor = clrLink;
 
             // Click handlers
-            _NO_TRANSLATE_labelProductName.LinkClicked += delegate { Process.Start("https://github.com/gitextensions/gitextensions"); };
+            _NO_TRANSLATE_labelProductName.LinkClicked += delegate { OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions"); };
             _NO_TRANSLATE_ThanksTo.LinkClicked += delegate { ShowContributorsForm(); };
-            pictureDonate.Click += delegate { Process.Start(FormDonate.DonationUrl); };
-            linkLabelIcons.LinkClicked += delegate { Process.Start("http://p.yusukekamiyamane.com/"); };
+            pictureDonate.Click += delegate { OsShellUtil.OpenUrlInDefaultBrowser(FormDonate.DonationUrl); };
+            linkLabelIcons.LinkClicked += delegate { OsShellUtil.OpenUrlInDefaultBrowser(@"http://p.yusukekamiyamane.com/"); };
 
             var contributorsList = GetContributorList();
             var thanksToContributorsText = string.Format(_thanksToContributors.Text, contributorsList.Count);

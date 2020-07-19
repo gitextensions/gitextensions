@@ -1822,7 +1822,7 @@ namespace GitUI.CommandsDialogs
             try
             {
                 // Point to the default documentation, will work also if the old doc version is removed
-                Process.Start("https://git-extensions-documentation.readthedocs.org");
+                OsShellUtil.OpenUrlInDefaultBrowser(@"https://git-extensions-documentation.readthedocs.org");
             }
             catch (Win32Exception)
             {
@@ -1980,19 +1980,12 @@ namespace GitUI.CommandsDialogs
 
         private void TranslateToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/gitextensions/gitextensions/wiki/Translations");
+            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/wiki/Translations");
         }
 
         private void FileExplorerToolStripMenuItemClick(object sender, EventArgs e)
         {
-            try
-            {
-                Process.Start("explorer.exe", Module.WorkingDir);
-            }
-            catch (Exception ex)
-            {
-                MessageBoxes.ShowError(this, ex.Message);
-            }
+            OsShellUtil.OpenWithFileExplorer(Module.WorkingDir);
         }
 
         private void CreateBranchToolStripMenuItemClick(object sender, EventArgs e)
@@ -2870,7 +2863,7 @@ namespace GitUI.CommandsDialogs
         private void reportAnIssueToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UserEnvironmentInformation.CopyInformation();
-            Process.Start(@"https://github.com/gitextensions/gitextensions/issues");
+            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/issues");
         }
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)

@@ -348,7 +348,7 @@ namespace GitExtensions
 
                 case 1:
                     {
-                        Process.Start(@"https://github.com/gitextensions/gitextensions/wiki/Application-Dependencies#git");
+                        OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/wiki/Application-Dependencies#git");
                         return false;
                     }
 

@@ -22,6 +22,7 @@ using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.AutoCompletion;
+using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.Editor;
 using GitUI.HelperDialogs;
@@ -2564,15 +2565,7 @@ namespace GitUI.CommandsDialogs
 
             var fileName = list.SelectedGitItem.Name;
             var path = _fullPathResolver.Resolve(fileName).ToNativePath();
-
-            try
-            {
-                Process.Start(path);
-            }
-            catch (System.ComponentModel.Win32Exception)
-            {
-                OsShellUtil.OpenAs(path);
-            }
+            OsShellUtil.Open(path);
         }
 
         private void OpenWithToolStripMenuItemClick(object sender, EventArgs e)
@@ -3184,14 +3177,8 @@ namespace GitUI.CommandsDialogs
         {
             foreach (var item in list.SelectedItems)
             {
-                var fileNames = new StringBuilder();
-                fileNames.Append(_fullPathResolver.Resolve(item.Item.Name).ToNativePath());
-
-                string filePath = fileNames.ToString();
-                if (File.Exists(filePath))
-                {
-                    OsShellUtil.SelectPathInFileExplorer(filePath);
-                }
+                string filePath = _fullPathResolver.Resolve(item.Item.Name).ToNativePath();
+                FormBrowseUtil.ShowFileOrParentFolderInFileExplorer(filePath);
             }
         }
 

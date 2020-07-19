@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager;
@@ -86,7 +85,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void downloadGitForWindows_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"https://github.com/gitextensions/gitextensions/wiki/Application-Dependencies#git");
+            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/wiki/Application-Dependencies#git");
         }
 
         private void ChangeHomeButton_Click(object sender, EventArgs e)

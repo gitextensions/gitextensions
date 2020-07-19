@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -731,16 +730,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         }
 
         private void tsmiOpenFolder_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                RepositoryContextAction(sender as ToolStripMenuItem, selectedRepositoryItem => Process.Start(selectedRepositoryItem.Repository.Path));
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+            => RepositoryContextAction(sender as ToolStripMenuItem, selectedRepositoryItem => OsShellUtil.OpenWithFileExplorer(selectedRepositoryItem.Repository.Path));
 
         private void tsmiRemoveFromList_Click(object sender, EventArgs e)
         {

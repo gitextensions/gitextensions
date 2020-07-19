@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reactive.Concurrency;
@@ -2592,7 +2591,7 @@ namespace GitUI
 
             if (revision != null && !string.IsNullOrWhiteSpace(revision.BuildStatus?.Url))
             {
-                Process.Start(revision.BuildStatus.Url);
+                OsShellUtil.OpenUrlInDefaultBrowser(revision.BuildStatus.Url);
             }
         }
 
@@ -2602,7 +2601,7 @@ namespace GitUI
 
             if (revision != null && !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl))
             {
-                Process.Start(revision.BuildStatus.PullRequestUrl);
+                OsShellUtil.OpenUrlInDefaultBrowser(revision.BuildStatus.PullRequestUrl);
             }
         }
 

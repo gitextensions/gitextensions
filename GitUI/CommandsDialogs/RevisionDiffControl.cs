@@ -759,7 +759,7 @@ namespace GitUI.CommandsDialogs
 
         private void diffOpenRevisionFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveSelectedItemToTempFile(fileName => Process.Start(fileName));
+            SaveSelectedItemToTempFile(fileName => OsShellUtil.Open(fileName));
         }
 
         private void diffOpenRevisionFileWithToolStripMenuItem_Click(object sender, EventArgs e)

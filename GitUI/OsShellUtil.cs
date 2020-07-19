@@ -1,29 +1,57 @@
 ﻿using System.Diagnostics;
 using System.Windows.Forms;
+using GitCommands;
 using Microsoft.WindowsAPICodePack.Dialogs;
 namespace GitUI
 {
     public static class OsShellUtil
     {
-        public static void OpenAs(string file)
+        public static void Open(string filePath)
         {
-            Process.Start(new ProcessStartInfo
+            try
             {
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                FileName = "rundll32.exe",
-                Arguments = "shell32.dll,OpenAs_RunDLL " + file
-            });
+                ExecutableFactory.Default.Create(filePath, exceptionHandling: ExternalOperationExceptionFactory.Handling.None).Start();
+            }
+            catch (ExternalOperationException)
+            {
+                OpenAs(filePath);
+            }
+        }
+
+        public static void OpenAs(string filePath)
+        {
+            try
+            {
+                ExecutableFactory.Default.Create("rundll32.exe", exceptionHandling: ExternalOperationExceptionFactory.Handling.Show).Start("shell32.dll,OpenAs_RunDLL " + filePath);
+            }
+            catch (ExternalOperationException)
+            {
+                // ignore because already shown to the user
+            }
         }
 
         public static void SelectPathInFileExplorer(string filePath)
         {
-            Process.Start("explorer.exe", "/select, " + filePath);
+            try
+            {
+                ExecutableFactory.Default.Create("explorer.exe", exceptionHandling: ExternalOperationExceptionFactory.Handling.Show).Start("/select, " + filePath);
+            }
+            catch (ExternalOperationException)
+            {
+                // ignore because already shown to the user
+            }
         }
 
         public static void OpenWithFileExplorer(string filePath)
         {
-            Process.Start("explorer.exe", filePath);
+            try
+            {
+                ExecutableFactory.Default.Create("explorer.exe", exceptionHandling: ExternalOperationExceptionFactory.Handling.Show).Start(filePath);
+            }
+            catch (ExternalOperationException)
+            {
+                // ignore because already shown to the user
+            }
         }
 
         /// <summary>
@@ -33,7 +61,14 @@ namespace GitUI
         {
             if (!string.IsNullOrWhiteSpace(url))
             {
-                Process.Start(url);
+                try
+                {
+                    ExecutableFactory.Default.Create(url, exceptionHandling: ExternalOperationExceptionFactory.Handling.Show).Start(useShellExecute: true);
+                }
+                catch (ExternalOperationException)
+                {
+                    // ignore because already shown to the user
+                }
             }
         }
 
