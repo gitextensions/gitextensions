@@ -65,14 +65,14 @@ namespace GitUI.CommandsDialogs
         {
             IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus()
             {
-                return Module.GetAllChangedFilesWithSubmodulesStatus();
+                return Module.LfsLockedFiles();
             }
 
             if (doAsync)
             {
                 ThreadHelper.JoinableTaskFactory.RunAsync(() =>
                 {
-                    return _unstagedLoader.LoadAsync(GetAllChangedFilesWithSubmodulesStatus, onComputed);
+                    return _unstagedLoader.LoadAsync(Module.LfsLockedFiles, onComputed);
                 });
             }
             else
@@ -88,7 +88,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var fileStatus in allChangedFiles)
             {
-                if (fileStatus.Staged == StagedStatus.WorkTree || fileStatus.IsStatusOnly)
+                if (fileStatus.Staged == StagedStatus.Unset || fileStatus.IsStatusOnly)
                 {
                     // Present status only errors in unstaged
                     unstagedFiles.Add(fileStatus);

@@ -56,9 +56,6 @@
     <Compile Update="CommandsDialogs\FormContributors.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="CommandsDialogs\FormLfsLocks.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="Properties\Images.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

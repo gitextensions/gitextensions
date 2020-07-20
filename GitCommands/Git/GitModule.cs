@@ -4181,6 +4181,15 @@ namespace GitCommands
                 .BuildBatchArgumentsForFiles(files));
         }
 
+        public IReadOnlyList<GitItemStatus> LfsLockedFiles()
+        {
+            var output = _gitExecutable.GetOutput(new GitArgumentBuilder("lfs locks", false));
+
+            var result = GitCommandHelpers.GetLockedFileList(output).ToList();
+
+            return result;
+        }
+
         /// <summary>
         /// Determines whether a git command's output indicates an error occurred.
         /// </summary>
