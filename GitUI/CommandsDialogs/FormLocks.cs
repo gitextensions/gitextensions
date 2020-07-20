@@ -4,13 +4,18 @@ using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
+using GitCommands.Git;
+using GitCommands.Patches;
+using GitCommands.Utils;
 using GitUI.Properties;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public sealed class FormLocks : GitExtensionsForm
+    public sealed class FormLocks : GitModuleForm
     {
         // private readonly TranslationString _developers = new TranslationString("Developers");
         // private readonly TranslationString _translators = new TranslationString("Translators");
@@ -22,6 +27,7 @@ namespace GitUI.CommandsDialogs
         // [CanBeNull] private IReadOnlyList<GitItemStatus> _currentSelection;
 
         private FileStatusList _currentFilesList;
+        private readonly AsyncLoader _unstagedLoader = new AsyncLoader();
 
         private void StagedSelectionChanged(object sender, EventArgs e)
         {
@@ -44,7 +50,61 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormLocks()
+        private void Initialize(bool loadUnstaged = true)
+        {
+            using (WaitCursorScope.Enter())
+            {
+                if (loadUnstaged)
+                {
+                    ComputeUnstagedFiles(LoadUnstagedOutput, true);
+                }
+            }
+        }
+
+        private void ComputeUnstagedFiles(Action<IReadOnlyList<GitItemStatus>> onComputed, bool doAsync)
+        {
+            IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus()
+            {
+                return Module.GetAllChangedFilesWithSubmodulesStatus();
+            }
+
+            if (doAsync)
+            {
+                ThreadHelper.JoinableTaskFactory.RunAsync(() =>
+                {
+                    return _unstagedLoader.LoadAsync(GetAllChangedFilesWithSubmodulesStatus, onComputed);
+                });
+            }
+            else
+            {
+                _unstagedLoader.Cancel();
+                onComputed(GetAllChangedFilesWithSubmodulesStatus());
+            }
+        }
+
+        private void LoadUnstagedOutput(IReadOnlyList<GitItemStatus> allChangedFiles)
+        {
+            var unstagedFiles = new List<GitItemStatus>();
+
+            foreach (var fileStatus in allChangedFiles)
+            {
+                if (fileStatus.Staged == StagedStatus.WorkTree || fileStatus.IsStatusOnly)
+                {
+                    // Present status only errors in unstaged
+                    unstagedFiles.Add(fileStatus);
+                }
+            }
+
+            _currentFilesList.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), unstagedFiles);
+            RestoreSelectedFiles(unstagedFiles);
+        }
+
+        private void RestoreSelectedFiles(IReadOnlyList<GitItemStatus> unstagedFiles)
+        {
+            //
+        }
+
+        public FormLocks([NotNull] GitUICommands commands) : base(commands)
         {
             InitialiseComponent();
             InitializeComplete();
@@ -69,6 +129,10 @@ namespace GitUI.CommandsDialogs
                 _currentFilesList.DataSourceChanged += new System.EventHandler(Staged_DataSourceChanged);
                 _currentFilesList.DoubleClick += new System.EventHandler(Staged_DoubleClick);
                 _currentFilesList.Enter += new FileStatusList.EnterEventHandler(Staged_Enter);
+
+                _currentFilesList.SetNoFilesText("no files locked");
+
+                Initialize();
 
                 Controls.Add(_currentFilesList);
 

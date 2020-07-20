@@ -549,7 +549,7 @@ namespace GitUI
                         });
                     }
 
-                    using (var form = new FormLocks())
+                    using (var form = new FormLocks(this))
                     {
                         form.ShowDialog(owner);
                     }
