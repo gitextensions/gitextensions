@@ -23,6 +23,7 @@ namespace GitUI.CommandsDialogs
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormLocks));
             this._currentFilesList = new GitUI.FileStatusList();
             this.Pull = new System.Windows.Forms.Button();
             this._stageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,7 +59,7 @@ namespace GitUI.CommandsDialogs
             // _stageToolStripMenuItem
             // 
             this._stageToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold);
-            this._stageToolStripMenuItem.Image = global::GitUI.Properties.Images.Stage;
+            this._stageToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("_stageToolStripMenuItem.Image")));
             this._stageToolStripMenuItem.Name = "_stageToolStripMenuItem";
             this._stageToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this._stageToolStripMenuItem.Text = "Unlock";
