@@ -10,7 +10,7 @@
     <ProjectReference Include="..\GitCommands\GitCommands.csproj" />
     <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj" />
     <ProjectReference Include="..\GitUI\GitUI.csproj" />
-    <ProjectReference Include="..\NetSpell.SpellChecker\SpellChecker.csproj" />
+    <ProjectReference Include="..\Externals\NetSpell.SpellChecker\SpellChecker.csproj" />
     <ProjectReference Include="..\ResourceManager\ResourceManager.csproj" />
   </ItemGroup>
 
