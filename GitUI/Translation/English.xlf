@@ -8175,6 +8175,10 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Show in folder</source>
         <target />
       </trans-unit>
+      <trans-unit id="openWithCustomDifftoolToolStripMenuItem.Text">
+        <source>First -&gt; Second...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
         <source>Open with difftool</source>
         <target />
