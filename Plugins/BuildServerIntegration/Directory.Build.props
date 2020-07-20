@@ -5,23 +5,4 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <!--
-      Direct plugins artifacts to be placed under GitExtensions/Plugins folder
-    -->
-  <PropertyGroup>
-    <_IsTfsInterop>$(MSBuildProjectName.StartsWith('TfsInterop.'))</_IsTfsInterop>
-
-    <_AssemblyRename>false</_AssemblyRename>
-    <_AssemblyRename Condition="$(ContinuousIntegrationBuild) != true and !$(MSBuildProjectName.StartsWith('GitExtensions.')) and '$(_IsTfsInterop)' != true">true</_AssemblyRename>
-
-    <_PluginsBaseOutputPath>$([MSBuild]::NormalizeDirectory('$(GitExtensionsOutputPath)', '$(TargetFramework)', 'Plugins'))</_PluginsBaseOutputPath>
-    <_BaseOutputPath>$([MSBuild]::NormalizeDirectory('$(_PluginsBaseOutputPath)', '$(OutDirName)'))</_BaseOutputPath>
-    <_BaseOutputPath Condition="'$(_IsTfsInterop)' == true">$([MSBuild]::NormalizeDirectory('$(_PluginsBaseOutputPath)', 'TfsIntegration'))</_BaseOutputPath>
-
-    <AssemblyName Condition="$(_AssemblyRename) == true">GitExtensions.$(MSBuildProjectName)</AssemblyName>
-    <BaseOutputPath>$(_BaseOutputPath)</BaseOutputPath>
-    <OutputPath>$(_BaseOutputPath)</OutputPath>
-    <OutDir>$(_BaseOutputPath)</OutDir>
-  </PropertyGroup>
-
 </Project>
