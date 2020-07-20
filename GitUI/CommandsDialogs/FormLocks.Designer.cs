@@ -23,42 +23,13 @@ namespace GitUI.CommandsDialogs
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this._unstagedFileContext = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this._stageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this._toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
-            this._toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this._currentFilesList = new GitUI.FileStatusList();
             this.Pull = new System.Windows.Forms.Button();
+            this._stageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._unstagedFileContext = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._unstagedFileContext.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // _unstagedFileContext
-            // 
-            this._unstagedFileContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this._stageToolStripMenuItem,
-            this._toolStripSeparator12,
-            this._toolStripSeparator5});
-            this._unstagedFileContext.Name = "_unstagedFileContext";
-            this._unstagedFileContext.Size = new System.Drawing.Size(119, 38);
-            // 
-            // _stageToolStripMenuItem
-            // 
-            this._stageToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold);
-            this._stageToolStripMenuItem.Image = global::GitUI.Properties.Images.Stage;
-            this._stageToolStripMenuItem.Name = "_stageToolStripMenuItem";
-            this._stageToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
-            this._stageToolStripMenuItem.Text = "Unlock";
-            this._stageToolStripMenuItem.Click += new System.EventHandler(this.stageToolStripMenuItem_Click);
-            // 
-            // _toolStripSeparator12
-            // 
-            this._toolStripSeparator12.Name = "_toolStripSeparator12";
-            this._toolStripSeparator12.Size = new System.Drawing.Size(115, 6);
-            // 
-            // _toolStripSeparator5
-            // 
-            this._toolStripSeparator5.Name = "_toolStripSeparator5";
-            this._toolStripSeparator5.Size = new System.Drawing.Size(115, 6);
             // 
             // _currentFilesList
             // 
@@ -71,10 +42,7 @@ namespace GitUI.CommandsDialogs
             this._currentFilesList.SelectFirstItemOnSetItems = false;
             this._currentFilesList.Size = new System.Drawing.Size(832, 436);
             this._currentFilesList.TabIndex = 0;
-            this._currentFilesList.SelectedIndexChanged += new System.EventHandler(this.StagedSelectionChanged);
-            this._currentFilesList.DataSourceChanged += new System.EventHandler(this.Staged_DataSourceChanged);
-            this._currentFilesList.DoubleClick += new System.EventHandler(this.Staged_DoubleClick);
-            this._currentFilesList.Enter += new GitUI.FileStatusList.EnterEventHandler(this.Staged_Enter);
+            this._currentFilesList.SelectedIndexChanged += new System.EventHandler(this.SelectionChanged);
             // 
             // Pull
             // 
@@ -85,7 +53,31 @@ namespace GitUI.CommandsDialogs
             this.Pull.TabIndex = 3;
             this.Pull.Text = "Refresh";
             this.Pull.UseVisualStyleBackColor = true;
-            this.Pull.Click += new System.EventHandler(this.Pull_Click);
+            this.Pull.Click += new System.EventHandler(this.RefreshButton_Click);
+            // 
+            // _stageToolStripMenuItem
+            // 
+            this._stageToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold);
+            this._stageToolStripMenuItem.Image = global::GitUI.Properties.Images.Stage;
+            this._stageToolStripMenuItem.Name = "_stageToolStripMenuItem";
+            this._stageToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this._stageToolStripMenuItem.Text = "Unlock";
+            this._stageToolStripMenuItem.Click += new System.EventHandler(this.stageToolStripMenuItem_Click);
+            // 
+            // _unstagedFileContext
+            // 
+            this._unstagedFileContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._stageToolStripMenuItem,
+            this.refreshToolStripMenuItem});
+            this._unstagedFileContext.Name = "_unstagedFileContext";
+            this._unstagedFileContext.Size = new System.Drawing.Size(181, 70);
+            // 
+            // refreshToolStripMenuItem
+            // 
+            this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.refreshToolStripMenuItem.Text = "Refresh";
+            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
             // FormLocks
             // 
@@ -99,14 +91,13 @@ namespace GitUI.CommandsDialogs
         }
 
         private FileStatusList _currentFilesList;
-        private ContextMenuStrip _unstagedFileContext;
-        private ToolStripMenuItem _stageToolStripMenuItem;
-        private ToolStripSeparator _toolStripSeparator12;
-        private ToolStripSeparator _toolStripSeparator5;
 
         #endregion
 
         private System.ComponentModel.IContainer components;
         private Button Pull;
+        private ToolStripMenuItem _stageToolStripMenuItem;
+        private ContextMenuStrip _unstagedFileContext;
+        private ToolStripMenuItem refreshToolStripMenuItem;
     }
 }

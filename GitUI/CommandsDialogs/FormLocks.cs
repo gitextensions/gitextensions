@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
@@ -9,6 +10,7 @@ using GitCommands.Git;
 using GitCommands.Patches;
 using GitCommands.Utils;
 using GitUI.Properties;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -17,39 +19,19 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormLocks : GitModuleForm
     {
-        // private readonly TranslationString _developers = new TranslationString("Developers");
-        // private readonly TranslationString _translators = new TranslationString("Translators");
-        // private readonly TranslationString _designers = new TranslationString("Designers");
-        // private readonly TranslationString _team = new TranslationString("Team");
-        // private readonly TranslationString _contributors = new TranslationString("Contributors");
-        // private readonly TranslationString _caption = new TranslationString("The application would not be possible without...");
-
-        // [CanBeNull] private IReadOnlyList<GitItemStatus> _currentSelection;
-
+        [CanBeNull] private IReadOnlyList<GitItemStatus> _currentSelection;
         private readonly AsyncLoader _unstagedLoader = new AsyncLoader();
 
-        private void StagedSelectionChanged(object sender, EventArgs e)
+        private void SelectionChanged(object sender, EventArgs e)
         {
-            _currentFilesList.ClearSelected();
+            // _currentFilesList.ClearSelected();
 
-            // _currentSelection = _currentFilesList.SelectedItems.Items().ToList();
+            _currentSelection = _currentFilesList.SelectedItems.Items().ToList();
 
-            var item = _currentFilesList.SelectedItem;
+            // var item = _currentFilesList.SelectedItem;
         }
 
-        private void Staged_DataSourceChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void Staged_Enter(object sender, EnterEventArgs e)
-        {
-        }
-
-        private void Staged_DoubleClick(object sender, EventArgs e)
-        {
-        }
-
-        private void Initialize(bool loadUnstaged = true)
+        private void FreshLockedList(bool loadUnstaged = true)
         {
             using (WaitCursorScope.Enter())
             {
@@ -83,6 +65,10 @@ namespace GitUI.CommandsDialogs
 
         private void LoadUnstagedOutput(IReadOnlyList<GitItemStatus> allChangedFiles)
         {
+            var lastSelection = _currentFilesList != null
+                ? _currentSelection ?? Array.Empty<GitItemStatus>()
+                : Array.Empty<GitItemStatus>();
+
             var unstagedFiles = new List<GitItemStatus>();
 
             foreach (var fileStatus in allChangedFiles)
@@ -95,6 +81,31 @@ namespace GitUI.CommandsDialogs
             }
 
             _currentFilesList.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), unstagedFiles);
+
+            RestoreSelectedFiles(unstagedFiles, lastSelection);
+        }
+
+        private void RestoreSelectedFiles(IReadOnlyList<GitItemStatus> unstagedFiles, IReadOnlyList<GitItemStatus> lastSelection)
+        {
+            if (_currentFilesList == null || _currentFilesList.IsEmpty)
+            {
+                return;
+            }
+
+            var newItems = unstagedFiles;
+            var names = lastSelection.ToHashSet(x => x.Name);
+            var newSelection = newItems.Where(x => names.Contains(x.Name)).ToList();
+
+            if (newSelection.Any())
+            {
+                _currentFilesList.SelectedGitItems = newSelection;
+            }
+            else
+            {
+                _currentFilesList.SelectStoredNextIndex(0);
+            }
+
+            return;
         }
 
         public FormLocks([NotNull] GitUICommands commands) : base(commands)
@@ -103,17 +114,29 @@ namespace GitUI.CommandsDialogs
 
             InitializeComplete();
 
-            Initialize();
+            _currentFilesList.ContextMenuStrip = _unstagedFileContext;
+
+            FreshLockedList();
         }
 
         private void stageToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //
+            if (_currentFilesList.SelectedGitItem != null)
+            {
+                Module.LfsUnLock(new[] { _currentFilesList.SelectedGitItem.Name });
+            }
+
+            FreshLockedList();
         }
 
-        private void Pull_Click(object sender, EventArgs e)
+        private void RefreshButton_Click(object sender, EventArgs e)
         {
-            //
+            FreshLockedList();
+        }
+
+        private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FreshLockedList();
         }
     }
 }
