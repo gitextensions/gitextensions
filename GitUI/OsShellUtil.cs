@@ -62,35 +62,14 @@ namespace GitUI
         /// <returns>The path selected by the user, or null if the user cancels the dialog.</returns>
         public static string? PickFolder(IWin32Window ownerWindow, string? selectedPath = null)
         {
-            if (GitCommands.Utils.EnvUtils.IsWindowsVistaOrGreater())
+            using (var dialog = new FolderBrowserDialog())
             {
-                // use Vista+ dialog
-                using var dialog = new CommonOpenFileDialog();
-                dialog.IsFolderPicker = true;
-
-                if (selectedPath is not null)
-                {
-                    dialog.InitialDirectory = selectedPath;
-                }
-
-                var result = dialog.ShowDialog(ownerWindow.Handle);
-
-                if (result == CommonFileDialogResult.Ok)
-                {
-                    return dialog.FileName;
-                }
-            }
-            else
-            {
-                // use XP-era dialog
-                using var dialog = new FolderBrowserDialog();
                 if (selectedPath is not null)
                 {
                     dialog.SelectedPath = selectedPath;
                 }
 
                 var result = dialog.ShowDialog(ownerWindow);
-
                 if (result == DialogResult.OK)
                 {
                     return dialog.SelectedPath;

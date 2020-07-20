@@ -6,7 +6,8 @@
     <NoWarn>$(NoWarn);1573;1591;1712</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
-    <TargetFramework>net461</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <Prefer32Bit>false</Prefer32Bit>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)GitExtensions.ruleset</CodeAnalysisRuleSet>
@@ -31,12 +32,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="netstandard" />
-
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)scripts\stylecop.json">
       <Link>stylecop.json</Link>
     </AdditionalFiles>

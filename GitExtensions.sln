@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28917.182
@@ -93,6 +93,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildServerIntegration", "B
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Externals", "Externals", "{0E859634-B3DF-46AC-A73C-D49734F19D6A}"
+	ProjectSection(SolutionItems) = preProject
+		Externals\Directory.Build.props = Externals\Directory.Build.props
+		Externals\Directory.Build.targets = Externals\Directory.Build.targets
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Git.hub", "Externals\Git.hub\Git.hub\Git.hub.csproj", "{F50B1DBF-1C9F-4437-87EC-7ABA805CC446}"
 EndProject

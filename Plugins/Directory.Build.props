@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
-  <Import Project="..\Directory.Build.props" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)\.., Directory.Build.props))\Directory.Build.props" />
  
   <PropertyGroup>
     <Nullable>enable</Nullable>

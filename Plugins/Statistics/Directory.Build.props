@@ -1,5 +1,5 @@
 <Project>
-  <Import Project="..\Directory.Build.props" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)\.., Directory.Build.props))\Directory.Build.props" />
 
   <!--
       Direct plugins artifacts to be placed under GitExtensions/Plugins folder

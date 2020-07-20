@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants Condition="$(ContinuousIntegrationBuild) == true">CI_BUILD</DefineConstants>
   </PropertyGroup>
   
   <ItemGroup>
@@ -12,14 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Composition" Version="$(MicrosoftVisualStudioCompositionVersion)" />
-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
-    <PackageReference Include="System.Reactive.Interfaces" Version="$(SystemReactiveVersion)" />
-    <PackageReference Include="System.ValueTuple" Version="$(SystemValueTupleVersion)" />
     <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsAnnotationsVersion)" />
+    <PackageReference Include="Microsoft.VisualStudio.Composition" Version="$(MicrosoftVisualStudioCompositionVersion)" />
+    <PackageReference Include="System.Reactive.Interfaces" Version="$(SystemReactiveVersion)" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj" />
   </ItemGroup>
+
 </Project>

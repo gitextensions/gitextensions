@@ -1,12 +1,11 @@
 <Project>
-  <Import Project="..\Directory.Build.props" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)\.., Directory.Build.props))\Directory.Build.props" />
 
   <PropertyGroup>
     <RootNamespace>$([System.String]::Copy('$(MSBuildProjectName)').Replace('.Tests', 'Tests'))</RootNamespace>
     
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <Prefer32Bit>false</Prefer32Bit>
-    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DebugType>full</DebugType>
 

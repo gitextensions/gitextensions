@@ -1,32 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
     <Compile Include="..\GitExtUtils\Annotations.cs" Link="Utils\Annotations.cs" />
     <Compile Include="..\GitExtUtils\Delimiters.cs" Link="Utils\Delimiters.cs" />
     <Compile Include="..\GitExtUtils\LazyStringSplit.cs" Link="Utils\LazyStringSplit.cs" />
     <Compile Include="..\GitExtUtils\Strings.cs" Link="Utils\Strings.cs" />
     <Compile Include="..\GitExtUtils\Validates.cs" Link="Utils\Validates.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Design" />
-    <Reference Include="System.DirectoryServices" />
-    <Reference Include="System.Drawing.Design" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,15 +19,12 @@
     <PackageReference Include="Microsoft-WindowsAPICodePack-Core" Version="$(MicrosoftWindowsAPICodePackVersion)" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="$(MicrosoftWindowsAPICodePackVersion)" />
     <PackageReference Include="System.IO.Abstractions" Version="$(SystemIOAbstractionsVersion)" />
-    <PackageReference Include="System.Reactive" Version="$(SystemReactiveVersion)" />
-    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="$(SystemRuntimeInteropServicesRuntimeInformationVersion)" />
     <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsAnnotationsVersion)" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BugReporter\BugReporter.csproj" />
     <ProjectReference Include="..\Externals\conemu-inside\ConEmuWinForms\ConEmuWinForms.csproj" />
-    <ProjectReference Include="..\Externals\EasyHook\EasyHook\EasyHook.csproj" />
     <ProjectReference Include="..\Externals\Git.hub\Git.hub\Git.hub.csproj" />
     <ProjectReference Include="..\Externals\ICSharpCode.TextEditor\Project\ICSharpCode.TextEditor.csproj" />
     <ProjectReference Include="..\GitCommands\GitCommands.csproj" />
@@ -76,34 +56,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Resources\Icons\artwork\**" />
-    <Compile Remove="Resources\Icons\originals\**" />
-    <EmbeddedResource Remove="Resources\Icons\artwork\**" />
-    <EmbeddedResource Remove="Resources\Icons\originals\**" />
-    <None Remove="Resources\Icons\artwork\**" />
-    <None Remove="Resources\Icons\originals\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="app.config">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="gituikey.snk.pfx" />
-    <None Include="Resources\ChangeLog.md" />
 
+    <None Remove="Resources\Icons\artwork\**" />
+    <None Remove="Resources\Icons\originals\**" />
     <Content Include="Themes\*.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Themes\README.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Utils\" />
   </ItemGroup>
 
 </Project>

@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <UseWindowsForms>true</UseWindowsForms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Nullable>enable</Nullable>
     <ApplicationIcon>Resources\git-extensions-logo.ico</ApplicationIcon>

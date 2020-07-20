@@ -7,10 +7,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System.Net.Http" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Externals\Git.hub\Git.hub\Git.hub.csproj" />
     <ProjectReference Include="..\..\GitCommands\GitCommands.csproj" />
     <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj" />

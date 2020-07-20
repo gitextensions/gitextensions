@@ -3,6 +3,9 @@
   <Import Project="..\Solution.Versions.props" />
 
   <PropertyGroup>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+
     <_SuppressSdkImports>true</_SuppressSdkImports>
     <DeterministicSourcePaths>false</DeterministicSourcePaths>
     <IsPublishable>false</IsPublishable>
