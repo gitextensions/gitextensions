@@ -72,22 +72,22 @@ namespace GitCommands
         // TODO: optimise?
         internal static bool IsValidPath(string path)
         {
-            FileInfo fi = null;
             try
             {
-                fi = new FileInfo(path);
+                _ = new FileInfo(path).Attributes;
+                return true;
             }
             catch (ArgumentException)
             {
             }
-            catch (PathTooLongException)
+            catch (IOException)
             {
             }
             catch (NotSupportedException)
             {
             }
 
-            return fi != null;
+            return false;
         }
     }
 }

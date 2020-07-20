@@ -176,7 +176,7 @@ namespace GitUI.CommandsDialogs
         {
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                var tools = await Module.GetCustomDiffMergeTools(isDiff: true);
+                var tools = await Module.GetCustomDiffMergeToolsAsync(isDiff: true);
                 openWithCustomDifftoolToolStripMenuItem.DropDown = null;
                 ContextMenuStrip customDiffToolDropDown = new ContextMenuStrip();
                 foreach (var tool in tools)

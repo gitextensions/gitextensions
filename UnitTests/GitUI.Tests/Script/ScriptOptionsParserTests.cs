@@ -30,7 +30,7 @@ namespace GitUITests.Script
         {
             ((Action)(() => ScriptOptionsParser.Contains(null, null))).Should()
                 .Throw<ArgumentNullException>()
-                .WithMessage("Value cannot be null.\r\nParameter name: arguments");
+                .WithMessage("Value cannot be null. (Parameter 'arguments')");
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace GitUITests.Script
         {
             ((Action)(() => ScriptOptionsParser.Contains("", null))).Should()
                 .Throw<ArgumentNullException>()
-                .WithMessage("Value cannot be null.\r\nParameter name: option");
+                .WithMessage("Value cannot be null. (Parameter 'option')");
         }
 
         [TestCase("", "", true)]
@@ -57,7 +57,7 @@ namespace GitUITests.Script
         {
             ((Action)(() => ScriptOptionsParser.DependsOnSelectedRevision(null))).Should()
                 .Throw<ArgumentNullException>()
-                .WithMessage("Value cannot be null.\r\nParameter name: option");
+                .WithMessage("Value cannot be null. (Parameter 'option')");
         }
 
         [TestCase("", false)]
@@ -145,7 +145,7 @@ namespace GitUITests.Script
         {
             ((Action)(() => ScriptOptionsParser.Parse(arguments: "bla", module: null, owner: null, scriptHostControl: null))).Should()
                 .Throw<ArgumentNullException>()
-                .WithMessage("Value cannot be null.\r\nParameter name: module");
+                .WithMessage("Value cannot be null. (Parameter 'module')");
         }
 
         [TestCase(null)]

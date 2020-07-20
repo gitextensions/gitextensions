@@ -16,7 +16,6 @@ namespace GitCommandsTests.Settings
 
         [TestCase(null)]
         [TestCase("")]
-        [TestCase("C:\\" + "\t")]
         [TestCase("boo")]
         public void ctor_FileWatcher_Path_should_not_set_if_invalid_dir(string settingsFilePath)
         {
@@ -25,16 +24,14 @@ namespace GitCommandsTests.Settings
 
         [TestCase(null)]
         [TestCase("")]
-        [TestCase("C:\\" + "\t")]
         [TestCase("boo")]
         public void ctor_FileWatcher_Filter_should_be_default_if_invalid_dir(string settingsFilePath)
         {
-            new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor().FileSystemWatcher.Filter.Should().Be("*.*");
+            new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor().FileSystemWatcher.Filter.Should().Be("*");
         }
 
         [TestCase(null)]
         [TestCase("")]
-        [TestCase("C:\\" + "\t")]
         [TestCase("boo")]
         public void ctor_FileWatcher_EnableRaisingEvents_should_be_false_if_invalid_dir(string settingsFilePath)
         {
@@ -43,7 +40,6 @@ namespace GitCommandsTests.Settings
 
         [TestCase(null)]
         [TestCase("")]
-        [TestCase("C:\\" + "\t")]
         [TestCase("boo")]
         public void ctor_CanEnableFileWatcher_should_be_false_if_invalid_dir(string settingsFilePath)
         {
@@ -53,7 +49,6 @@ namespace GitCommandsTests.Settings
         [Ignore("Popup instead of a throw")]
         [TestCase(null)]
         [TestCase("")]
-        [TestCase("C:\\" + "\t")]
         public void SaveImpl_should_throw_if_invalid_path(string settingsFilePath)
         {
             var cache = new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor();

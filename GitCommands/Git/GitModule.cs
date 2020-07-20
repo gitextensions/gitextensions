@@ -3570,13 +3570,13 @@ namespace GitCommands
         /// </summary>
         /// <param name="isDiff">diff or merge</param>
         /// <returns>the list</returns>
-        public async Task<List<string>> GetCustomDiffMergeTools(bool isDiff)
+        public async Task<List<string>> GetCustomDiffMergeToolsAsync(bool isDiff)
         {
             // Note that --gui has no effect here
             var args = new GitArgumentBuilder(isDiff ? "difftool" : "mergetool") { "--tool-help" };
             string output = await _gitExecutable.GetOutputAsync(args);
             return GitCommandHelpers.ParseCustomDiffMergeTool(output);
-         }
+        }
 
         public string OpenWithDifftoolDirDiff(string firstRevision, string secondRevision)
         {

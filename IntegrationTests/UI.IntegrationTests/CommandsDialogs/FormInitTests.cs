@@ -65,7 +65,6 @@ namespace GitExtensions.UITests.CommandsDialogs
         [TestCase("")]
         [TestCase(null)]
         [TestCase("    ")]
-        [TestCase(@"c:\foo*\bar?\")]
         [TestCase(@"foo\bar")]
         public void IsRootedDirectoryPath_should_detect_invalid_paths(string input)
         {

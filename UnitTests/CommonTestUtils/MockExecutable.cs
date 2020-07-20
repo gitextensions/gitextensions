@@ -179,7 +179,7 @@ namespace CommonTestUtils
 
                 // Only verify if std input is not closed.
                 // ExecutableExtensions.ExecuteAsync will close std input when writeInput action is specified
-                if (StandardInput.BaseStream != null)
+                if (StandardInput.BaseStream?.CanRead == true)
                 {
                     // no input should have been written (yet)
                     Assert.AreEqual(0, StandardInput.BaseStream.Length);
