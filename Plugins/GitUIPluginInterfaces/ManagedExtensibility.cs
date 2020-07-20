@@ -101,13 +101,7 @@ namespace GitUIPluginInterfaces
         {
             try
             {
-                var assemblyName = AssemblyName.GetAssemblyName(file.FullName);
-                if (assemblyName == null)
-                {
-                    return null;
-                }
-
-                return Assembly.Load(assemblyName);
+                return Assembly.LoadFile(file.FullName);
             }
             catch
             {
