@@ -20,7 +20,7 @@ namespace GitStatistics
 
         public void FindAndAnalyzeCodeFiles(string filePattern, string directoriesToIgnore, IEnumerable<string> filesToCheck)
         {
-            var extensions = filePattern.Replace("*", "").Split(';').ToHashSet(StringComparer.InvariantCultureIgnoreCase);
+            var extensions = LinqExtensions.ToHashSet(filePattern.Replace("*", "").Split(';'), StringComparer.InvariantCultureIgnoreCase);
             var directoryFilter = directoriesToIgnore.Split(';');
             var lastUpdate = DateTime.Now;
             var timer = TimeSpan.FromMilliseconds(500);
