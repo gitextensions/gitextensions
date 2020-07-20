@@ -15,7 +15,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public sealed class FormLocks : GitModuleForm
+    public sealed partial class FormLocks : GitModuleForm
     {
         // private readonly TranslationString _developers = new TranslationString("Developers");
         // private readonly TranslationString _translators = new TranslationString("Translators");
@@ -26,14 +26,13 @@ namespace GitUI.CommandsDialogs
 
         // [CanBeNull] private IReadOnlyList<GitItemStatus> _currentSelection;
 
-        private FileStatusList _currentFilesList;
         private readonly AsyncLoader _unstagedLoader = new AsyncLoader();
 
         private void StagedSelectionChanged(object sender, EventArgs e)
         {
             _currentFilesList.ClearSelected();
 
-            // _currentSelection = this._currentFilesList.SelectedItems.Items().ToList();
+            // _currentSelection = _currentFilesList.SelectedItems.Items().ToList();
 
             var item = _currentFilesList.SelectedItem;
         }
@@ -96,60 +95,25 @@ namespace GitUI.CommandsDialogs
             }
 
             _currentFilesList.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), unstagedFiles);
-            RestoreSelectedFiles(unstagedFiles);
-        }
-
-        private void RestoreSelectedFiles(IReadOnlyList<GitItemStatus> unstagedFiles)
-        {
-            //
         }
 
         public FormLocks([NotNull] GitUICommands commands) : base(commands)
         {
-            InitialiseComponent();
+            InitializeComponent();
+
             InitializeComplete();
 
-            void InitialiseComponent()
-            {
-                SuspendLayout();
-                Controls.Clear();
+            Initialize();
+        }
 
-                _currentFilesList = new GitUI.FileStatusList();
+        private void stageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //
+        }
 
-                // this._currentFilesList.ContextMenuStrip = this.StagedFileContext;
-
-                _currentFilesList.Dock = System.Windows.Forms.DockStyle.Fill;
-                _currentFilesList.Location = new System.Drawing.Point(0, 28);
-                _currentFilesList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-                _currentFilesList.Name = "Staged";
-                _currentFilesList.SelectFirstItemOnSetItems = false;
-                _currentFilesList.Size = new System.Drawing.Size(397, 314);
-                _currentFilesList.TabIndex = 0;
-                _currentFilesList.SelectedIndexChanged += new System.EventHandler(StagedSelectionChanged);
-                _currentFilesList.DataSourceChanged += new System.EventHandler(Staged_DataSourceChanged);
-                _currentFilesList.DoubleClick += new System.EventHandler(Staged_DoubleClick);
-                _currentFilesList.Enter += new FileStatusList.EnterEventHandler(Staged_Enter);
-
-                _currentFilesList.SetNoFilesText("no files locked");
-
-                Initialize();
-
-                Controls.Add(_currentFilesList);
-
-                AutoScaleDimensions = new SizeF(96F, 96F);
-                AutoScaleMode = AutoScaleMode.Dpi;
-                ClientSize = new Size(624, 442);
-                FormBorderStyle = FormBorderStyle.FixedDialog;
-                MaximizeBox = false;
-                MinimizeBox = false;
-                StartPosition = FormStartPosition.CenterParent;
-
-                // Text = _caption.Text;
-
-                ResumeLayout(false);
-
-                return;
-            }
+        private void Pull_Click(object sender, EventArgs e)
+        {
+            //
         }
     }
 }
