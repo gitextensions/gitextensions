@@ -1,12 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <ApplicationIcon>..\Logo\git-extensions-logo.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
     <StartupObject />
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\GitCommands\GitCommands.csproj" />

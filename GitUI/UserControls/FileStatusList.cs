@@ -217,12 +217,6 @@ namespace GitUI
 
         public int AllItemsCount => FileStatusListView.Items.Count;
 
-        public override ContextMenu ContextMenu
-        {
-            get => FileStatusListView.ContextMenu;
-            set => FileStatusListView.ContextMenu = value;
-        }
-
         public override ContextMenuStrip ContextMenuStrip
         {
             get { return FileStatusListView.ContextMenuStrip; }

@@ -6,7 +6,7 @@ using GitCommands;
 using GitCommands.Utils;
 using GitUI.HelperDialogs;
 using JetBrains.Annotations;
-using Microsoft.WindowsAPICodePack.Dialogs;
+////using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -111,21 +111,16 @@ namespace GitUI.CommandsDialogs
 
         private void AddPath_Click(object sender, EventArgs e)
         {
-            var dialog = new CommonOpenFileDialog
+            var dialog = new FolderBrowserDialog()
             {
-                InitialDirectory = Module.WorkingDir,
-                EnsurePathExists = true,
-                EnsureFileExists = false,
-                IsFolderPicker = true,
-                ShowHiddenItems = false,
-                Multiselect = true,
-                AddToMostRecentlyUsedList = false,
+                SelectedPath = Module.WorkingDir,
             };
 
-            var result = dialog.ShowDialog();
-            if (result == CommonFileDialogResult.Ok)
+            var result = dialog.ShowDialog(this);
+            if (result == DialogResult.OK)
             {
-                var subFoldersToClean = dialog.FileNames
+                // TODO: fix
+                var subFoldersToClean = new[] { dialog.SelectedPath }
                     .Where(d => d.StartsWith(Module.WorkingDir)
                                 && Directory.Exists(d)
                                 && !d.Equals(Module.WorkingDirGitDir.TrimEnd(Path.DirectorySeparatorChar)))

@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Windows.Forms;
-using Microsoft.WindowsAPICodePack.Dialogs;
 namespace GitUI
 {
     public static class OsShellUtil
@@ -45,42 +44,17 @@ namespace GitUI
         /// <returns>The path selected by the user, or null if the user cancels the dialog.</returns>
         public static string PickFolder(IWin32Window ownerWindow, string selectedPath = null)
         {
-            if (GitCommands.Utils.EnvUtils.IsWindowsVistaOrGreater())
+            using (var dialog = new FolderBrowserDialog())
             {
-                // use Vista+ dialog
-                using (var dialog = new CommonOpenFileDialog())
+                if (selectedPath != null)
                 {
-                    dialog.IsFolderPicker = true;
-
-                    if (selectedPath != null)
-                    {
-                        dialog.InitialDirectory = selectedPath;
-                    }
-
-                    var result = dialog.ShowDialog(ownerWindow.Handle);
-
-                    if (result == CommonFileDialogResult.Ok)
-                    {
-                        return dialog.FileName;
-                    }
+                    dialog.SelectedPath = selectedPath;
                 }
-            }
-            else
-            {
-                // use XP-era dialog
-                using (var dialog = new FolderBrowserDialog())
+
+                var result = dialog.ShowDialog(ownerWindow);
+                if (result == DialogResult.OK)
                 {
-                    if (selectedPath != null)
-                    {
-                        dialog.SelectedPath = selectedPath;
-                    }
-
-                    var result = dialog.ShowDialog(ownerWindow);
-
-                    if (result == DialogResult.OK)
-                    {
-                        return dialog.SelectedPath;
-                    }
+                    return dialog.SelectedPath;
                 }
             }
 

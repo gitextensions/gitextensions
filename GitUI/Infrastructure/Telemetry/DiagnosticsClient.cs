@@ -1,4 +1,4 @@
-﻿// The original idea and the implementation are borrowed from  https://github.com/NuGetPackageExplorer/NuGetPackageExplorer
+// The original idea and the implementation are borrowed from  https://github.com/NuGetPackageExplorer/NuGetPackageExplorer
 // Credits to Oren Novotny
 
 using System;
@@ -14,15 +14,16 @@ namespace GitUI.Infrastructure.Telemetry
     {
         private static bool _initialized;
         private static TelemetryClient _client;
+        private static TelemetryConfiguration _telemetryConfiguration = TelemetryConfiguration.CreateDefault();
 
         private static bool Enabled => _initialized && (AppSettings.TelemetryEnabled ?? false);
 
         public static void Initialize(bool isDirty)
         {
-            TelemetryConfiguration.Active.TelemetryInitializers.Add(new AppEnvironmentTelemetryInitializer());
-            TelemetryConfiguration.Active.TelemetryInitializers.Add(new AppInfoTelemetryInitializer(isDirty));
-            TelemetryConfiguration.Active.TelemetryInitializers.Add(new MonitorsTelemetryInitializer());
-            TelemetryConfiguration.Active.TelemetryInitializers.Add(new ThemingTelemetryInitializer());
+            _telemetryConfiguration.TelemetryInitializers.Add(new AppEnvironmentTelemetryInitializer());
+            _telemetryConfiguration.TelemetryInitializers.Add(new AppInfoTelemetryInitializer(isDirty));
+            _telemetryConfiguration.TelemetryInitializers.Add(new MonitorsTelemetryInitializer());
+            _telemetryConfiguration.TelemetryInitializers.Add(new ThemingTelemetryInitializer());
 
             _initialized = true;
 
@@ -32,7 +33,7 @@ namespace GitUI.Infrastructure.Telemetry
                 OnExit();
             };
 
-            _client = new TelemetryClient();
+            _client = new TelemetryClient(_telemetryConfiguration);
 
             // override capture of the hostname
             // https://github.com/Microsoft/ApplicationInsights-dotnet/blob/80025b5d79cc52485510d422cfa5a0a8159dac83/src/Microsoft.ApplicationInsights/TelemetryClient.cs#L544

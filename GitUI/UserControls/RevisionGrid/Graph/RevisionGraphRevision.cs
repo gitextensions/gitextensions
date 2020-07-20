@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
 
@@ -21,7 +21,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             Objectid = objectId;
 
-            StartSegments = new SynchronizedCollection<RevisionGraphSegment>();
+            StartSegments = new ConcurrentBag<RevisionGraphSegment>();
 
             Score = guessScore;
 
@@ -97,7 +97,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public ImmutableStack<RevisionGraphRevision> Parents => _parents;
         public ImmutableStack<RevisionGraphRevision> Children => _children;
-        public SynchronizedCollection<RevisionGraphSegment> StartSegments { get; }
+        public ConcurrentBag<RevisionGraphSegment> StartSegments { get; }
 
         // Mark this commit, and all its parents, as relative. Used for branch highlighting.
         // By default, the current checkout will be marked relative.

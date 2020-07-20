@@ -1,17 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
-  <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
-  </ItemGroup>
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
+  </PropertyGroup>
 
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AdysTech.CredentialManager" Version="$(AdysTechCredentialManagerVersion)" />
     <PackageReference Include="Ben.Demystifier" Version="$(BenDemystifierVersion)" />
     <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsAnnotationsVersion)" />
-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
-    <PackageReference Include="System.ValueTuple" Version="$(SystemValueTupleVersion)" />
   </ItemGroup>
+
 </Project>

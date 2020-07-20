@@ -9,6 +9,7 @@ using GitCommands.Logging;
 using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
+using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
 
 namespace GitCommands
 {

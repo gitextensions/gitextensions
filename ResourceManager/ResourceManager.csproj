@@ -1,12 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  
-  <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
-  </ItemGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
-  <ItemGroup>
-    <Reference Include="System.Xml" />
-  </ItemGroup>
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="SmartFormat.NET" Version="$(SmartFormatNETVersion)" />

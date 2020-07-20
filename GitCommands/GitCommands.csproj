@@ -1,34 +1,22 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
   <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-
-    <!-- Settings -->
-    <None Update="Properties\Settings.settings" Generator="SettingsSingleFileGenerator" LastGenOutput="Settings.Designer.cs" />
-    <Compile Update="Properties\Settings.Designer.cs" AutoGen="True" DependentUpon="Settings.settings" />
-
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsAnnotationsVersion)" />
     <PackageReference Include="System.IO.Abstractions" Version="$(SystemIOAbstractionsVersion)" />
     <PackageReference Include="System.Reactive.Linq" Version="$(SystemReactiveVersion)" />
-    <PackageReference Include="System.ValueTuple" Version="$(SystemValueTupleVersion)" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj" />
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
   </ItemGroup>
+
 </Project>

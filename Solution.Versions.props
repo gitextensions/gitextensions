@@ -4,17 +4,17 @@
     <AdysTechCredentialManagerVersion>2.1.1</AdysTechCredentialManagerVersion>
     <AppInsightsWindowsDesktopVersion>2.13.1</AppInsightsWindowsDesktopVersion>
     <BenDemystifierVersion>0.1.6</BenDemystifierVersion>
-    <JetBrainsAnnotationsVersion>2020.1.0 </JetBrainsAnnotationsVersion>
+    <JetBrainsAnnotationsVersion>2020.1.0</JetBrainsAnnotationsVersion>
     <LibGit2SharpVersion>0.26.2</LibGit2SharpVersion>
-    <MicrosoftVisualStudioCompositionVersion>16.4.11 </MicrosoftVisualStudioCompositionVersion>
-    <MicrosoftVisualStudioThreadingVersion>16.6.13 </MicrosoftVisualStudioThreadingVersion>
+    <MicrosoftVisualStudioCompositionVersion>16.4.11</MicrosoftVisualStudioCompositionVersion>
+    <MicrosoftVisualStudioThreadingVersion>16.6.13</MicrosoftVisualStudioThreadingVersion>
     <NewtonsoftJsonVersion>12.0.3</NewtonsoftJsonVersion>
     <RestSharpVersion>106.11.4</RestSharpVersion>
     <SmartFormatNETVersion>2.5.0</SmartFormatNETVersion>
     <StyleCopAnalyzersVersion>1.2.0-beta.164</StyleCopAnalyzersVersion>
     <SystemCollectionsImmutableVersion>1.7.1</SystemCollectionsImmutableVersion>
     <SystemIOAbstractionsVersion>11.0.6</SystemIOAbstractionsVersion>
-    <SystemIOAbstractionsTestingHelpersVersion>11.0.6 </SystemIOAbstractionsTestingHelpersVersion>
+    <SystemIOAbstractionsTestingHelpersVersion>11.0.6</SystemIOAbstractionsTestingHelpersVersion>
     <SystemReactiveVersion>4.4.1</SystemReactiveVersion>
     <SystemRuntimeInteropServicesRuntimeInformationVersion>4.3.0</SystemRuntimeInteropServicesRuntimeInformationVersion>
     <SystemValueTupleVersion>4.5.0</SystemValueTupleVersion>

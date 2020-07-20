@@ -1,18 +1,21 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
   <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants Condition="$(ContinuousIntegrationBuild) == true">CI_BUILD</DefineConstants>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Composition" Version="$(MicrosoftVisualStudioCompositionVersion)" />
-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
-    <PackageReference Include="System.Reactive.Interfaces" Version="$(SystemReactiveVersion)" />
-    <PackageReference Include="System.ValueTuple" Version="$(SystemValueTupleVersion)" />
     <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsAnnotationsVersion)" />
+    <PackageReference Include="Microsoft.VisualStudio.Composition" Version="$(MicrosoftVisualStudioCompositionVersion)" />
+    <PackageReference Include="System.Reactive.Interfaces" Version="$(SystemReactiveVersion)" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj" />
   </ItemGroup>
+
 </Project>
