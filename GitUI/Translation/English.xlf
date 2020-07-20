@@ -7159,7 +7159,7 @@ Context menu for additional operations</source>
         <target />
       </trans-unit>
       <trans-unit id="lblCommitsLimit.Text">
-        <source>Limit number of commits that will be loaded at startup</source>
+        <source>Limit number of commits to be loaded</source>
         <target />
       </trans-unit>
       <trans-unit id="lblDefaultCloneDestination.Text">
