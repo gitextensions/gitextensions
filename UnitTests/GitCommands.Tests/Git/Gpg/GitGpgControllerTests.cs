@@ -161,9 +161,6 @@ namespace GitCommandsTests.Git.Gpg
                         var gitRef = new GitRef(_module, objectId, "refs/tags/TagName");
                         revision.Refs = new[] { gitRef };
 
-                        var args = new GitArgumentBuilder("verify-tag") { gitRef.LocalName };
-                        validate = _executable.StageOutput(args.ToString(), "");
-
                         break;
                     }
 

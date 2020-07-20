@@ -48,9 +48,9 @@ namespace ResourceManagerTests.CommitDataRenders
             _labelFormatter.FormatLabel(TranslatedStrings.CommitDate, Arg.Any<int>()).Returns(x => "Commit date:   ");
             _labelFormatter.FormatLabel(TranslatedStrings.CommitHash, Arg.Any<int>()).Returns(x => "Commit hash:   ");
             _labelFormatter.FormatLabel(TranslatedStrings.GetParents(1), Arg.Any<int>()).Returns(x => "Parent:        ");
-            _labelFormatter.FormatLabel(TranslatedStrings.GetParents(Arg.Any<int>()), Arg.Any<int>()).Returns(x => "Parents:       ");
+            _labelFormatter.FormatLabel(TranslatedStrings.GetParents(3), Arg.Any<int>()).Returns(x => "Parents:       ");
             _labelFormatter.FormatLabel(TranslatedStrings.GetChildren(1), Arg.Any<int>()).Returns(x => "Child:         ");
-            _labelFormatter.FormatLabel(TranslatedStrings.GetChildren(Arg.Any<int>()), Arg.Any<int>()).Returns(x => "Children:      ");
+            _labelFormatter.FormatLabel(TranslatedStrings.GetChildren(3), Arg.Any<int>()).Returns(x => "Children:      ");
 
             _headerRendererStyleProvider = Substitute.For<IHeaderRenderStyleProvider>();
             _linkFactory = Substitute.For<ILinkFactory>();

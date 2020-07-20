@@ -30,7 +30,7 @@ namespace GitCommandsTests
         public void GetEnvironmentValidPaths()
         {
             string pathVariable = string.Join(_separator, GetValidPaths().Concat(GetInvalidPaths()));
-            _environment.GetEnvironmentVariable("PATH").Returns(pathVariable);
+            _environment.GetEnvironmentVariable("PATH").Returns(x => pathVariable);
 
             var validPaths = _provider.GetEnvironmentValidPaths();
 

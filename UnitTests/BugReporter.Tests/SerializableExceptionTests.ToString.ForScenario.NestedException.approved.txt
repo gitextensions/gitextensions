@@ -1,4 +1,6 @@
-﻿System.Exception: OPPS! ---> System.ApplicationException: BAM! ---> System.DivideByZeroException: BOOM!
+﻿System.Exception: OPPS!
+ ---> System.ApplicationException: BAM!
+ ---> System.DivideByZeroException: BOOM!
    at BugReporterTests.SerializableExceptionTests.Code.SimpleException()
    at BugReporterTests.SerializableExceptionTests.Code.NestedException()
    --- End of inner exception stack trace ---
