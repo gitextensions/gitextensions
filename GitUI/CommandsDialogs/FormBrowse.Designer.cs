@@ -18,6 +18,8 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBrowse));
+
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
             System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
@@ -656,7 +658,7 @@ namespace GitUI.CommandsDialogs
             // ShowLocks
             // 
             this.ShowLocks.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ShowLocks.Image = global::GitUI.Properties.Images.ShowFirstParent;
+            this.ShowLocks.Image = ((System.Drawing.Image)(resources.GetObject("ShowLocks.Image")));
             this.ShowLocks.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ShowLocks.Name = "ShowLocks";
             this.ShowLocks.Size = new System.Drawing.Size(23, 20);
