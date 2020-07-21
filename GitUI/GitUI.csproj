@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
   </ItemGroup>
@@ -78,7 +78,7 @@
     <None Remove="Resources\Icons\artwork\**" />
     <None Remove="Resources\Icons\originals\**" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Include="app.config">
       <SubType>Designer</SubType>
@@ -89,10 +89,7 @@
     <None Include="gituikey.snk.pfx" />
     <None Include="Resources\ChangeLog.md" />
 
-    <Content Include="Themes\dark.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Themes\win10default.css">
+    <Content Include="Themes\*.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

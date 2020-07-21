@@ -91,7 +91,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowGitStatusInToolbar.Checked = AppSettings.ShowGitStatusInBrowseToolbar;
             chkShowGitStatusForArtificialCommits.Checked = AppSettings.ShowGitStatusForArtificialCommits;
             chkShowSubmoduleStatusInBrowse.Checked = AppSettings.ShowSubmoduleStatus;
+            lblCommitsLimit.Checked = AppSettings.MaxRevisionGraphCommits != 0;
             _NO_TRANSLATE_MaxCommits.Value = AppSettings.MaxRevisionGraphCommits;
+            _NO_TRANSLATE_MaxCommits.Enabled = AppSettings.MaxRevisionGraphCommits != 0;
             chkCloseProcessDialog.Checked = AppSettings.CloseProcessDialog;
             chkShowGitCommandLine.Checked = AppSettings.ShowGitCommandLine;
             chkUseFastChecks.Checked = AppSettings.UseFastChecks;
@@ -118,7 +120,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.CloseProcessDialog = chkCloseProcessDialog.Checked;
             AppSettings.ShowGitCommandLine = chkShowGitCommandLine.Checked;
             AppSettings.UseFastChecks = chkUseFastChecks.Checked;
-            AppSettings.MaxRevisionGraphCommits = (int)_NO_TRANSLATE_MaxCommits.Value;
+            AppSettings.MaxRevisionGraphCommits = lblCommitsLimit.Checked ? (int)_NO_TRANSLATE_MaxCommits.Value : 0;
             AppSettings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
             AppSettings.ShowStashCount = chkShowStashCountInBrowseWindow.Checked;
             AppSettings.ShowAheadBehindData = chkShowAheadBehindDataInBrowseWindow.Checked;
@@ -168,6 +170,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void LlblTelemetryPrivacyLink_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://github.com/gitextensions/gitextensions/blob/master/PrivacyPolicy.md");
+        }
+
+        private void lblCommitsLimit_CheckedChanged(object sender, EventArgs e)
+        {
+            _NO_TRANSLATE_MaxCommits.Enabled = lblCommitsLimit.Checked;
         }
     }
 }

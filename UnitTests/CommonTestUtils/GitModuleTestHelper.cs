@@ -32,6 +32,12 @@ namespace CommonTestUtils
             // Don't assume global user/email
             SetDummyUserEmail(module);
 
+            // Stage operations may fail due to different line endings, so want only warning and not a fatal error
+            //
+            //  fatal: LF would be replaced by CRLF in .gitmodules
+            //         Failed to register submodule 'repo2'
+            module.GitExecutable.GetOutput(@"config core.safecrlf false");
+
             return;
 
             string GetTemporaryPath()

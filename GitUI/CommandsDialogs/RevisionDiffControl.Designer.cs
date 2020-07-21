@@ -35,6 +35,7 @@ namespace GitUI.CommandsDialogs
             this.DiffFiles = new GitUI.FileStatusList();
             this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openWithCustomDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffRememberStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.diffTwoSelectedDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffWithRememberedDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,8 +46,6 @@ namespace GitUI.CommandsDialogs
             this.firstToSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firstToLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectedToLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.firstParentToLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.selectedParentToLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.resetFileToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetFileToSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -155,10 +154,9 @@ namespace GitUI.CommandsDialogs
                 this.secondDiffCaptionMenuItem,
                 this.firstDiffCaptionMenuItem,
                 this.firstToSelectedToolStripMenuItem,
+                this.openWithCustomDifftoolToolStripMenuItem,
                 this.selectedToLocalToolStripMenuItem,
                 this.firstToLocalToolStripMenuItem,
-                this.selectedParentToLocalToolStripMenuItem,
-                this.firstParentToLocalToolStripMenuItem,
                 this.diffRememberStripSeparator,
                 this.diffTwoSelectedDifftoolToolStripMenuItem,
                 this.diffWithRememberedDifftoolToolStripMenuItem,
@@ -170,6 +168,12 @@ namespace GitUI.CommandsDialogs
             this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
             this.openWithDifftoolToolStripMenuItem.Text = "Open with difftool";
             this.openWithDifftoolToolStripMenuItem.DropDownOpening += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_DropDownOpening);
+            // 
+            // openWithCustomDifftoolToolStripMenuItem
+            // 
+            this.openWithCustomDifftoolToolStripMenuItem.Name = "openWithCustomDifftoolToolStripMenuItem";
+            this.openWithCustomDifftoolToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
+            this.openWithCustomDifftoolToolStripMenuItem.Text = "First -> Second...";
             // 
             // diffRememberStripSeparator
             // 
@@ -235,20 +239,6 @@ namespace GitUI.CommandsDialogs
             this.selectedToLocalToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
             this.selectedToLocalToolStripMenuItem.Text = "Second -> Working directory";
             this.selectedToLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
-            // 
-            // firstParentToLocalToolStripMenuItem
-            // 
-            this.firstParentToLocalToolStripMenuItem.Name = "firstParentToLocalToolStripMenuItem";
-            this.firstParentToLocalToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
-            this.firstParentToLocalToolStripMenuItem.Text = "Parent to first -> Working directory";
-            this.firstParentToLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
-            // 
-            // selectedParentToLocalToolStripMenuItem
-            // 
-            this.selectedParentToLocalToolStripMenuItem.Name = "selectedParentToLocalToolStripMenuItem";
-            this.selectedParentToLocalToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
-            this.selectedParentToLocalToolStripMenuItem.Text = "Parent to second -> Working directory";
-            this.selectedParentToLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem1
             // 
@@ -491,8 +481,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem resetFileToSelectedToolStripMenuItem;
         private ToolStripMenuItem secondDiffCaptionMenuItem;
         private ToolStripMenuItem firstDiffCaptionMenuItem;
-        private ToolStripMenuItem firstParentToLocalToolStripMenuItem;
-        private ToolStripMenuItem selectedParentToLocalToolStripMenuItem;
         private ToolStripMenuItem selectedToLocalToolStripMenuItem;
         private ToolStripMenuItem firstToLocalToolStripMenuItem;
         private ToolStripMenuItem firstToSelectedToolStripMenuItem;
@@ -518,6 +506,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem saveAsToolStripMenuItem1;
         private ToolStripMenuItem saveToolStripMenuItem;
         private ToolStripMenuItem openWithDifftoolToolStripMenuItem;
+        private ToolStripMenuItem openWithCustomDifftoolToolStripMenuItem;
         private ToolStripSeparator diffRememberStripSeparator;
         private ToolStripMenuItem diffTwoSelectedDifftoolToolStripMenuItem;
         private ToolStripMenuItem diffWithRememberedDifftoolToolStripMenuItem;

@@ -427,24 +427,43 @@ namespace GitCommands
             return new GitArgumentBuilder("bisect") { "reset" };
         }
 
-        public static ArgumentString RebaseCmd(string branch, bool interactive, bool preserveMerges, bool autosquash, bool autoStash, string from = null, string onto = null)
+        public static ArgumentString RebaseCmd(
+            string branch, bool interactive, bool preserveMerges, bool autosquash, bool autoStash, bool ignoreDate, bool committerDateIsAuthorDate, string from = null, string onto = null)
         {
             if (from == null ^ onto == null)
             {
                 throw new ArgumentException($"For arguments \"{nameof(from)}\" and \"{nameof(onto)}\", either both must have values, or neither may.");
             }
 
-            return new GitArgumentBuilder("rebase")
+            var builder = new GitArgumentBuilder("rebase");
+            if (ignoreDate)
             {
-                { interactive, "-i" },
-                { interactive && autosquash, "--autosquash" },
-                { interactive && !autosquash, "--no-autosquash" },
-                { preserveMerges, GitVersion.Current.SupportRebaseMerges ? "--rebase-merges" : "--preserve-merges" },
-                { autoStash, "--autostash" },
-                from.QuoteNE(),
-                branch.Quote(),
-                { onto != null, $"--onto {onto}" }
-            };
+                builder.Add("--ignore-date");
+            }
+            else if (committerDateIsAuthorDate)
+            {
+                builder.Add("--committer-date-is-author-date");
+            }
+            else
+            {
+                if (interactive)
+                {
+                    builder.Add("-i");
+                    builder.Add(autosquash ? "--autosquash" : "--no-autosquash");
+                }
+
+                if (preserveMerges)
+                {
+                    builder.Add(GitVersion.Current.SupportRebaseMerges ? "--rebase-merges" : "--preserve-merges");
+                }
+            }
+
+            builder.Add(autoStash, "--autostash");
+            builder.Add(from.QuoteNE());
+            builder.Add(branch.Quote());
+            builder.Add(onto != null, $"--onto {onto}");
+
+            return builder;
         }
 
         public static ArgumentString AbortRebaseCmd()
@@ -1113,6 +1132,55 @@ namespace GitCommands
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Parse the output from 'git difftool --tool-help'
+        /// </summary>
+        /// <param name="output">The output string</param>
+        /// <returns>list with tool names</returns>
+        public static List<string> ParseCustomDiffMergeTool(string output)
+        {
+            var tools = new List<string>();
+
+            // Simple parsing of the textual output opposite to porcelain format
+            // https://github.com/git/git/blob/main/git-mergetool--lib.sh#L298
+            // An alternative is to parse "git config --get-regexp difftool'\..*\.cmd'" and see show_tool_names()
+
+            // The sections to parse in the text has a 'header', then break parsing at first non match
+
+            foreach (var l in output.Split('\n'))
+            {
+                if (l == "The following tools are valid, but not currently available:")
+                {
+                    // No more usable tools
+                    break;
+                }
+
+                if (!l.StartsWith("\t\t"))
+                {
+                    continue;
+                }
+
+                // two tabs, then toolname, cmd (if split in 3) in second
+                // cmd is unreliable for diff and not needed but could be used for mergetool special handling
+                string[] delimit = { " ", ".cmd" };
+                var tool = l.Substring(2).Split(delimit, 2, StringSplitOptions.None);
+                if (tool.Length == 0)
+                {
+                    continue;
+                }
+
+                // Ignore tools that must run in a terminal
+                string[] ignoredTools = { "vimdiff", "vimdiff2", "vimdiff3" };
+                var toolName = tool[0];
+                if (!string.IsNullOrWhiteSpace(toolName) && !tools.Contains(toolName) && !ignoredTools.Contains(toolName))
+                {
+                    tools.Add(toolName);
+                }
+            }
+
+            return tools.OrderBy(i => i).ToList();
         }
 
         private static GitItemStatus GitItemStatusFromCopyRename(StagedStatus staged, bool fromDiff, string nextFile, string fileName, char x, string status)

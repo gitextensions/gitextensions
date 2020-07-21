@@ -102,7 +102,7 @@ namespace GitUI.HelperDialogs
                 quotedProcessString = quotedProcessString.Quote();
             }
 
-            AddMessageLine(quotedProcessString + " " + ProcessArguments);
+            AppendMessage($"{quotedProcessString} {ProcessArguments}{Environment.NewLine}");
 
             try
             {
@@ -120,7 +120,7 @@ namespace GitUI.HelperDialogs
             }
             catch (Exception e)
             {
-                AddMessageLine("\n" + e.ToStringWithData());
+                AppendMessage($"{Environment.NewLine}{e.ToStringWithData()}{Environment.NewLine}");
                 OnExit(1);
             }
         }
@@ -212,7 +212,7 @@ namespace GitUI.HelperDialogs
             OutputLog.Append(line);
 
             // To the display control
-            AddMessage(line);
+            AppendMessage(line);
         }
 
         public static bool IsOperationAborted(string dialogResult)

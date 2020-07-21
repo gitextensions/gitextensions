@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Threading.Tasks;
-using GitCommands;
 
 namespace GitUI.Avatars
 {
@@ -10,6 +9,7 @@ namespace GitUI.Avatars
     {
         private readonly IAvatarProvider _inner;
         private readonly Image _backupImage;
+        private readonly Dictionary<int, Image> _cacheBackupImage = new Dictionary<int, Image>();
 
         public BackupAvatarProvider(IAvatarProvider inner, Image backupImage)
         {
@@ -29,15 +29,36 @@ namespace GitUI.Avatars
         {
             try
             {
-                return await _inner.GetAvatarAsync(email, name, imageSize) ?? _backupImage;
+                return await _inner.GetAvatarAsync(email, name, imageSize) ?? BackupImageResized();
             }
             catch
             {
-                return _backupImage;
+                return BackupImageResized();
+            }
+
+            Image BackupImageResized()
+            {
+                lock (_cacheBackupImage)
+                {
+                    if (_cacheBackupImage.TryGetValue(imageSize, out var image))
+                    {
+                        return image;
+                    }
+
+                    var backupImageResized = (imageSize == _backupImage.Height)
+                        ? _backupImage
+                        : new Bitmap(_backupImage, new Size(imageSize, imageSize));
+                    _cacheBackupImage.Add(imageSize, backupImageResized);
+                    return backupImageResized;
+                }
             }
         }
 
         /// <inheritdoc />
-        public Task ClearCacheAsync() => _inner.ClearCacheAsync();
+        public Task ClearCacheAsync()
+        {
+            _cacheBackupImage.Clear();
+            return _inner.ClearCacheAsync();
+        }
     }
 }

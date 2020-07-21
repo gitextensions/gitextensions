@@ -732,14 +732,6 @@ namespace GitUI
             return (firstId, selectedRev);
         }
 
-        public bool IsFirstParentValid()
-        {
-            var revisions = GetSelectedRevisions();
-
-            // Parents to First (A) are only known if A is explicitly selected (there is no explicit search for parents to parents of a single selected revision)
-            return revisions.Count > 1;
-        }
-
         public IReadOnlyList<ObjectId> GetRevisionChildren(ObjectId objectId)
         {
             return _gridView.GetRevisionChildren(objectId);
@@ -2474,7 +2466,7 @@ namespace GitUI
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     var baseCommit = Module.RevParse(form.BranchName);
-                    UICommands.ShowFormDiff(IsFirstParentValid(), baseCommit, headCommit.ObjectId,
+                    UICommands.ShowFormDiff(baseCommit, headCommit.ObjectId,
                         form.BranchName, headCommit.Subject);
                 }
             }
@@ -2496,7 +2488,7 @@ namespace GitUI
             }
 
             var headBranchName = Module.RevParse(headBranch);
-            UICommands.ShowFormDiff(IsFirstParentValid(), baseCommit.ObjectId, headBranchName, baseCommit.Subject, headBranch);
+            UICommands.ShowFormDiff(baseCommit.ObjectId, headBranchName, baseCommit.Subject, headBranch);
         }
 
         private void selectAsBaseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2519,7 +2511,7 @@ namespace GitUI
                 return;
             }
 
-            UICommands.ShowFormDiff(IsFirstParentValid(), _baseCommitToCompare.ObjectId, headCommit.ObjectId, _baseCommitToCompare.Subject, headCommit.Subject);
+            UICommands.ShowFormDiff(_baseCommitToCompare.ObjectId, headCommit.ObjectId, _baseCommitToCompare.Subject, headCommit.Subject);
         }
 
         private void compareToWorkingDirectoryMenuItem_Click(object sender, EventArgs e)
@@ -2536,7 +2528,7 @@ namespace GitUI
                 return;
             }
 
-            UICommands.ShowFormDiff(IsFirstParentValid(), baseCommit.ObjectId, ObjectId.WorkTreeId, baseCommit.Subject, "Working directory");
+            UICommands.ShowFormDiff(baseCommit.ObjectId, ObjectId.WorkTreeId, baseCommit.Subject, "Working directory");
         }
 
         private void compareSelectedCommitsMenuItem_Click(object sender, EventArgs e)
@@ -2549,7 +2541,7 @@ namespace GitUI
                 return;
             }
 
-            UICommands.ShowFormDiff(IsFirstParentValid(), first, selected.ObjectId, firstRev.Subject, selected.Subject);
+            UICommands.ShowFormDiff(first, selected.ObjectId, firstRev.Subject, selected.Subject);
         }
 
         private void diffSelectedCommitsMenuItem_Click(object sender, EventArgs e)
@@ -2607,8 +2599,8 @@ namespace GitUI
             }
 
             string rebaseCmd = GitCommandHelpers.RebaseCmd(
-                LatestSelectedRevision.FirstParentId?.ToString(),
-                interactive: true, preserveMerges: false, autosquash: false, autoStash: true);
+                LatestSelectedRevision.FirstParentId?.ToString(), interactive: true, preserveMerges: false,
+                autosquash: false, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: false);
 
             using (var formProcess = new FormProcess(UICommands, process: null, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true))
             {

@@ -906,11 +906,12 @@ namespace GitCommands
             }
         }
 
-        public void RunMergeTool([CanBeNull] string fileName = "")
+        public void RunMergeTool([CanBeNull] string fileName = "", [CanBeNull] string customTool = null)
         {
+            var gui = GitVersion.Current.SupportGuiMergeTool ? "--gui" : string.Empty;
             var args = new GitArgumentBuilder("mergetool")
             {
-                { GitVersion.Current.SupportGuiMergeTool, "--gui" },
+                { string.IsNullOrWhiteSpace(customTool), gui, $"--tool={customTool}" },
                 { !string.IsNullOrWhiteSpace(fileName), "--" },
                 fileName.ToPosixPath().QuoteNE()
             };
@@ -3564,16 +3565,29 @@ namespace GitCommands
                 });
         }
 
+        /// <summary>
+        /// Get a list of diff/merge tools known by Git
+        /// </summary>
+        /// <param name="isDiff">diff or merge</param>
+        /// <returns>the list</returns>
+        public async Task<List<string>> GetCustomDiffMergeTools(bool isDiff)
+        {
+            // Note that --gui has no effect here
+            var args = new GitArgumentBuilder(isDiff ? "difftool" : "mergetool") { "--tool-help" };
+            string output = await _gitExecutable.GetOutputAsync(args);
+            return GitCommandHelpers.ParseCustomDiffMergeTool(output);
+         }
+
         public string OpenWithDifftoolDirDiff(string firstRevision, string secondRevision)
         {
             return OpenWithDifftool(null, firstRevision: firstRevision, secondRevision: secondRevision, extraDiffArguments: "--dir-diff");
         }
 
-        public string OpenWithDifftool(string filename, string oldFileName = "", string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.WorkTreeGuid, string extraDiffArguments = null, bool isTracked = true)
+        public string OpenWithDifftool(string filename, string oldFileName = "", string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.WorkTreeGuid, string extraDiffArguments = null, bool isTracked = true, string customTool = null)
         {
             _gitCommandRunner.RunDetached(new GitArgumentBuilder("difftool")
             {
-                "--gui",
+                { string.IsNullOrWhiteSpace(customTool), "--gui", $"--tool={customTool}" },
                 "--no-prompt",
                 "-M -C",
                 extraDiffArguments,

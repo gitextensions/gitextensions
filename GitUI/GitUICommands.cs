@@ -1222,7 +1222,7 @@ namespace GitUI
             process.Start();
         }
 
-        public void OpenWithDifftool(IWin32Window owner, IReadOnlyList<GitRevision> revisions, string fileName, string oldFileName, RevisionDiffKind diffKind, bool isTracked)
+        public void OpenWithDifftool(IWin32Window owner, IReadOnlyList<GitRevision> revisions, string fileName, string oldFileName, RevisionDiffKind diffKind, bool isTracked, string customTool = null)
         {
             // Note: Order in revisions is that first clicked is last in array
 
@@ -1232,7 +1232,7 @@ namespace GitUI
             }
             else
             {
-                string output = Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, isTracked: isTracked);
+                string output = Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, isTracked: isTracked, customTool: customTool);
                 if (!string.IsNullOrEmpty(output))
                 {
                     MessageBox.Show(owner, output, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1240,9 +1240,9 @@ namespace GitUI
             }
         }
 
-        public FormDiff ShowFormDiff(bool firstParentIsValid, ObjectId baseCommitSha, ObjectId headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr)
+        public FormDiff ShowFormDiff(ObjectId baseCommitSha, ObjectId headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr)
         {
-            var diffForm = new FormDiff(this, firstParentIsValid, baseCommitSha, headCommitSha, baseCommitDisplayStr, headCommitDisplayStr)
+            var diffForm = new FormDiff(this, baseCommitSha, headCommitSha, baseCommitDisplayStr, headCommitDisplayStr)
             {
                 ShowInTaskbar = true
             };

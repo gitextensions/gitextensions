@@ -42,7 +42,7 @@
             this.chkShowStashCountInBrowseWindow = new System.Windows.Forms.CheckBox();
             this.chkShowSubmoduleStatusInBrowse = new System.Windows.Forms.CheckBox();
             this.chkUseFastChecks = new System.Windows.Forms.CheckBox();
-            this.lblCommitsLimit = new System.Windows.Forms.Label();
+            this.lblCommitsLimit = new System.Windows.Forms.CheckBox();
             this._NO_TRANSLATE_MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.groupBoxBehaviour = new System.Windows.Forms.GroupBox();
             this.tlpnlBehaviour = new System.Windows.Forms.TableLayoutPanel();
@@ -90,7 +90,7 @@
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tlpnlMain.Size = new System.Drawing.Size(1494, 621);
+            tlpnlMain.Size = new System.Drawing.Size(1263, 507);
             tlpnlMain.TabIndex = 0;
             // 
             // groupBoxTelemetry
@@ -101,7 +101,7 @@
             this.groupBoxTelemetry.Location = new System.Drawing.Point(3, 503);
             this.groupBoxTelemetry.Name = "groupBoxTelemetry";
             this.groupBoxTelemetry.Padding = new System.Windows.Forms.Padding(8);
-            this.groupBoxTelemetry.Size = new System.Drawing.Size(1488, 52);
+            this.groupBoxTelemetry.Size = new System.Drawing.Size(1257, 52);
             this.groupBoxTelemetry.TabIndex = 3;
             this.groupBoxTelemetry.TabStop = false;
             this.groupBoxTelemetry.Text = "Telemetry";
@@ -120,7 +120,7 @@
             this.tlpnlTelemetry.Name = "tlpnlTelemetry";
             this.tlpnlTelemetry.RowCount = 1;
             this.tlpnlTelemetry.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlTelemetry.Size = new System.Drawing.Size(1472, 23);
+            this.tlpnlTelemetry.Size = new System.Drawing.Size(1241, 23);
             this.tlpnlTelemetry.TabIndex = 0;
             // 
             // chkTelemetry
@@ -154,7 +154,7 @@
             this.groupBoxPerformance.Location = new System.Drawing.Point(3, 3);
             this.groupBoxPerformance.Name = "groupBoxPerformance";
             this.groupBoxPerformance.Padding = new System.Windows.Forms.Padding(8);
-            this.groupBoxPerformance.Size = new System.Drawing.Size(1488, 216);
+            this.groupBoxPerformance.Size = new System.Drawing.Size(1257, 216);
             this.groupBoxPerformance.TabIndex = 0;
             this.groupBoxPerformance.TabStop = false;
             this.groupBoxPerformance.Text = "Performance";
@@ -189,7 +189,7 @@
             this.tlpnlPerformance.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlPerformance.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlPerformance.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlPerformance.Size = new System.Drawing.Size(1472, 187);
+            this.tlpnlPerformance.Size = new System.Drawing.Size(1241, 187);
             this.tlpnlPerformance.TabIndex = 0;
             // 
             // chkShowAheadBehindDataInBrowseWindow
@@ -221,7 +221,7 @@
             this.chkShowGitStatusInToolbar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkShowGitStatusInToolbar.Location = new System.Drawing.Point(3, 3);
             this.chkShowGitStatusInToolbar.Name = "chkShowGitStatusInToolbar";
-            this.chkShowGitStatusInToolbar.Size = new System.Drawing.Size(1466, 17);
+            this.chkShowGitStatusInToolbar.Size = new System.Drawing.Size(1235, 17);
             this.chkShowGitStatusInToolbar.TabIndex = 0;
             this.chkShowGitStatusInToolbar.Text = "Show number of changed files on commit button";
             this.chkShowGitStatusInToolbar.UseVisualStyleBackColor = true;
@@ -234,7 +234,7 @@
             this.chkShowGitStatusForArtificialCommits.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkShowGitStatusForArtificialCommits.Location = new System.Drawing.Point(3, 26);
             this.chkShowGitStatusForArtificialCommits.Name = "chkShowGitStatusForArtificialCommits";
-            this.chkShowGitStatusForArtificialCommits.Size = new System.Drawing.Size(1466, 17);
+            this.chkShowGitStatusForArtificialCommits.Size = new System.Drawing.Size(1235, 17);
             this.chkShowGitStatusForArtificialCommits.TabIndex = 1;
             this.chkShowGitStatusForArtificialCommits.Text = "Show number of changed files for artificial commits";
             this.chkShowGitStatusForArtificialCommits.UseVisualStyleBackColor = true;
@@ -277,12 +277,12 @@
             // 
             this.lblCommitsLimit.AutoSize = true;
             this.lblCommitsLimit.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblCommitsLimit.Location = new System.Drawing.Point(3, 161);
+            this.lblCommitsLimit.Location = new System.Drawing.Point(3, 164);
             this.lblCommitsLimit.Name = "lblCommitsLimit";
-            this.lblCommitsLimit.Size = new System.Drawing.Size(347, 26);
+            this.lblCommitsLimit.Size = new System.Drawing.Size(347, 20);
             this.lblCommitsLimit.TabIndex = 7;
-            this.lblCommitsLimit.Text = "Limit number of commits that will be loaded at startup";
-            this.lblCommitsLimit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblCommitsLimit.Text = "Limit number of commits to be loaded";
+            this.lblCommitsLimit.CheckedChanged += new System.EventHandler(this.lblCommitsLimit_CheckedChanged);
             // 
             // _NO_TRANSLATE_MaxCommits
             // 
@@ -316,7 +316,7 @@
             this.groupBoxBehaviour.Location = new System.Drawing.Point(3, 225);
             this.groupBoxBehaviour.Name = "groupBoxBehaviour";
             this.groupBoxBehaviour.Padding = new System.Windows.Forms.Padding(8);
-            this.groupBoxBehaviour.Size = new System.Drawing.Size(1488, 272);
+            this.groupBoxBehaviour.Size = new System.Drawing.Size(1257, 272);
             this.groupBoxBehaviour.TabIndex = 1;
             this.groupBoxBehaviour.TabStop = false;
             this.groupBoxBehaviour.Text = "Behaviour";
@@ -358,7 +358,7 @@
             this.tlpnlBehaviour.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlBehaviour.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlBehaviour.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlBehaviour.Size = new System.Drawing.Size(1472, 243);
+            this.tlpnlBehaviour.Size = new System.Drawing.Size(1241, 243);
             this.tlpnlBehaviour.TabIndex = 0;
             // 
             // chkFollowRenamesInFileHistoryExact
@@ -367,7 +367,7 @@
             this.chkFollowRenamesInFileHistoryExact.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkFollowRenamesInFileHistoryExact.Location = new System.Drawing.Point(273, 118);
             this.chkFollowRenamesInFileHistoryExact.Name = "chkFollowRenamesInFileHistoryExact";
-            this.chkFollowRenamesInFileHistoryExact.Size = new System.Drawing.Size(1138, 17);
+            this.chkFollowRenamesInFileHistoryExact.Size = new System.Drawing.Size(907, 17);
             this.chkFollowRenamesInFileHistoryExact.TabIndex = 6;
             this.chkFollowRenamesInFileHistoryExact.Text = "Follow exact renames and copies only";
             this.chkFollowRenamesInFileHistoryExact.UseVisualStyleBackColor = true;
@@ -405,7 +405,7 @@
             // 
             this.btnDefaultDestinationBrowse.AutoSize = true;
             this.btnDefaultDestinationBrowse.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnDefaultDestinationBrowse.Location = new System.Drawing.Point(1417, 164);
+            this.btnDefaultDestinationBrowse.Location = new System.Drawing.Point(1186, 164);
             this.btnDefaultDestinationBrowse.Name = "btnDefaultDestinationBrowse";
             this.btnDefaultDestinationBrowse.Size = new System.Drawing.Size(52, 23);
             this.btnDefaultDestinationBrowse.TabIndex = 9;
@@ -443,7 +443,7 @@
             this.cbDefaultCloneDestination.FormattingEnabled = true;
             this.cbDefaultCloneDestination.Location = new System.Drawing.Point(273, 164);
             this.cbDefaultCloneDestination.Name = "cbDefaultCloneDestination";
-            this.cbDefaultCloneDestination.Size = new System.Drawing.Size(1138, 21);
+            this.cbDefaultCloneDestination.Size = new System.Drawing.Size(907, 21);
             this.cbDefaultCloneDestination.TabIndex = 8;
             // 
             // chkShowGitCommandLine
@@ -550,7 +550,7 @@
             this.Controls.Add(tlpnlMain);
             this.Name = "GeneralSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
-            this.Size = new System.Drawing.Size(1510, 637);
+            this.Size = new System.Drawing.Size(1279, 523);
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
             this.groupBoxTelemetry.ResumeLayout(false);
@@ -590,7 +590,7 @@
         private System.Windows.Forms.CheckBox chkUseFastChecks;
         private System.Windows.Forms.CheckBox chkShowStashCountInBrowseWindow;
         private System.Windows.Forms.CheckBox chkShowSubmoduleStatusInBrowse;
-        private System.Windows.Forms.Label lblCommitsLimit;
+        private System.Windows.Forms.CheckBox lblCommitsLimit;
         private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_MaxCommits;
         private System.Windows.Forms.Label lblDefaultCloneDestination;
         private System.Windows.Forms.ComboBox cbDefaultCloneDestination;

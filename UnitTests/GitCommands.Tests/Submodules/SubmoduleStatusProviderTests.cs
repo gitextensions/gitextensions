@@ -10,12 +10,15 @@ using GitCommands.Git;
 using GitCommands.Submodules;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace GitCommandsTests.Submodules
 {
     [SetCulture("en-US")]
     [SetUICulture("en-US")]
     [TestFixture]
+
+    [Parallelizable]
     internal class SubmoduleStatusProviderTests
     {
         private GitModuleTestHelper _repo1;
@@ -30,10 +33,23 @@ namespace GitCommandsTests.Submodules
         private GitModule _repo3Module;
 
         private ISubmoduleStatusProvider _provider;
+        private bool _isInit = false;
 
+        /// <summary>
+        /// The repo creation should only be done once as it slows tests down considerably
+        /// Each test must therefore revert changes after the test
+        /// OneTimeSetUp cannot be used, as the setup must run after BeforeTest in CommonTestUtils\ConfigureJoinableTaskFactoryAttribute.cs
+        /// OneTimeTearDown can be used though
+        /// </summary>
         [SetUp]
         public void SetUp()
         {
+            if (_isInit)
+            {
+                return;
+            }
+
+            _isInit = true;
             _repo1 = new GitModuleTestHelper("repo1");
             _repo2 = new GitModuleTestHelper("repo2");
             _repo3 = new GitModuleTestHelper("repo3");
@@ -49,8 +65,8 @@ namespace GitCommandsTests.Submodules
             _provider = new SubmoduleStatusProvider();
         }
 
-        [TearDown]
-        public void TearDown()
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
             _provider.Dispose();
             _repo1.Dispose();
@@ -58,6 +74,7 @@ namespace GitCommandsTests.Submodules
             _repo3.Dispose();
         }
 
+        [NonParallelizable]
         [Test]
         public async Task UpdateSubmoduleStructure_valid_result_for_top_module()
         {
@@ -72,6 +89,7 @@ namespace GitCommandsTests.Submodules
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task UpdateSubmoduleStructure_valid_result_for_first_nested_submodule()
         {
@@ -87,6 +105,7 @@ namespace GitCommandsTests.Submodules
             result.OurSubmodules.Select(info => info.Path).Should().ContainSingle(_repo3Module.WorkingDir);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task UpdateSubmoduleStructure_valid_result_for_second_nested_submodule()
         {
@@ -101,6 +120,7 @@ namespace GitCommandsTests.Submodules
             result.OurSubmodules.Select(info => info.Path).Should().BeEmpty();
         }
 
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_first_nested_module_change()
         {
@@ -130,14 +150,10 @@ namespace GitCommandsTests.Submodules
 
             // Revert the change
             File.Delete(Path.Combine(_repo2Module.WorkingDir, "test.txt"));
-            changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
-            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
-            result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-            result.TopProject.Detailed.Should().BeNull();
+            await CheckRevertedStatus(result);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_first_nested_module_commit()
         {
@@ -168,14 +184,10 @@ namespace GitCommandsTests.Submodules
 
             // Revert the change
             _repo2Module.GitExecutable.GetOutput(@"checkout HEAD^");
-            changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
-            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
-            result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-            result.TopProject.Detailed.Should().BeNull();
+            await CheckRevertedStatus(result);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_first_nested_module_change_commit()
         {
@@ -208,14 +220,10 @@ namespace GitCommandsTests.Submodules
             // Revert the change
             File.Delete(Path.Combine(_repo2Module.WorkingDir, "test.txt"));
             _repo2Module.GitExecutable.GetOutput(@"checkout HEAD^");
-            changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
-            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
-            result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-            result.TopProject.Detailed.Should().BeNull();
+            await CheckRevertedStatus(result);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_second_nested_module_change()
         {
@@ -247,14 +255,10 @@ namespace GitCommandsTests.Submodules
 
             // Revert the change
             File.Delete(Path.Combine(_repo3Module.WorkingDir, "test.txt"));
-            changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
-            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
-            result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-            result.TopProject.Detailed.Should().BeNull();
+            await CheckRevertedStatus(result);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_first_nested_module_commit_second_nested_module_change()
         {
@@ -299,14 +303,10 @@ namespace GitCommandsTests.Submodules
 
             // Revert the change
             _repo2Module.GitExecutable.GetOutput(@"checkout HEAD^");
-            changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
-            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
-            result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-            result.TopProject.Detailed.Should().BeNull();
+            await CheckRevertedStatus(result);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_second_nested_module_commit()
         {
@@ -338,14 +338,10 @@ namespace GitCommandsTests.Submodules
 
             // Revert the change
             _repo3Module.GitExecutable.GetOutput(@"checkout HEAD^");
-            changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
-            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
-            result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-            result.TopProject.Detailed.Should().BeNull();
+            await CheckRevertedStatus(result);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_top_module_change()
         {
@@ -375,14 +371,10 @@ namespace GitCommandsTests.Submodules
 
             // Revert the change
             File.Delete(Path.Combine(_repo1Module.WorkingDir, "test.txt"));
-            changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
-            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
-            result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-            result.TopProject.Detailed.Should().BeNull();
+            await CheckRevertedStatus(result);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_top_module_commit()
         {
@@ -410,14 +402,10 @@ namespace GitCommandsTests.Submodules
 
             // Revert the change
             _repo1Module.GitExecutable.GetOutput(@"checkout HEAD^");
-            changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
-            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
-            result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-            result.TopProject.Detailed.Should().BeNull();
+            await CheckRevertedStatus(result);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_first_nested_module_with_top_module_changes()
         {
@@ -445,14 +433,10 @@ namespace GitCommandsTests.Submodules
 
             // Revert the change
             File.Delete(Path.Combine(_repo1Module.WorkingDir, "test.txt"));
-            changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
-            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
-            result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
-            result.TopProject.Detailed.Should().BeNull();
+            await CheckRevertedStatus(result);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_first_nested_module_with_second_nested_module_changes()
         {
@@ -483,17 +467,10 @@ namespace GitCommandsTests.Submodules
 
             // Revert the change
             File.Delete(Path.Combine(_repo3Module.WorkingDir, "test.txt"));
-            changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
-            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
-            result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
-
-            // Revert manually - not changed back automatically
-            result.TopProject.Detailed.IsDirty.Should().BeTrue();
-            result.TopProject.Detailed = null;
+            await CheckRevertedStatus(result);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_first_nested_module_with_second_nested_module_commit()
         {
@@ -524,17 +501,10 @@ namespace GitCommandsTests.Submodules
 
             // Revert the change
             _repo3Module.GitExecutable.GetOutput(@"checkout HEAD^");
-            changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
-            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
-            result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
-
-            // Revert manually
-            result.TopProject.Detailed.IsDirty.Should().BeTrue();
-            result.TopProject.Detailed = null;
+            await CheckRevertedStatus(result);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_second_nested_module_with_second_nested_module_changes()
         {
@@ -563,19 +533,10 @@ namespace GitCommandsTests.Submodules
 
             // Revert the change
             File.Delete(Path.Combine(_repo3Module.WorkingDir, "test.txt"));
-            changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
-            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules[1].Detailed.Should().BeNull();
-
-            // Revert manually
-            result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
-            result.TopProject.Detailed.IsDirty.Should().BeTrue();
-            result.TopProject.Detailed = null;
-            result.AllSubmodules[0].Detailed = null;
+            await CheckRevertedStatus(result);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_second_nested_module_with_second_nested_module_commit()
         {
@@ -601,13 +562,10 @@ namespace GitCommandsTests.Submodules
 
             // Revert the change
             _repo3Module.GitExecutable.GetOutput(@"checkout HEAD^");
-            changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
-            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
-            result.TopProject.Detailed.Should().BeNull();
+            await CheckRevertedStatus(result);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_second_nested_module_with_first_nested_module_commit()
         {
@@ -632,15 +590,12 @@ namespace GitCommandsTests.Submodules
             result.TopProject.Detailed.Should().BeNull();
 
             // Revert the change
-            _repo3Module.GitExecutable.GetOutput(@"checkout HEAD^");
-            changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
-            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
-            result.TopProject.Detailed.Should().BeNull();
+            _repo2Module.GitExecutable.GetOutput(@"checkout HEAD^");
+            await CheckRevertedStatus(result);
         }
 
         [Ignore("Delays tests with 15s without much value in the test")]
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_no_forced_changes()
         {
@@ -672,14 +627,10 @@ namespace GitCommandsTests.Submodules
 
             // Revert the change
             File.Delete(Path.Combine(_repo1Module.WorkingDir, "test.txt"));
-            changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
-            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
-            result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-            result.TopProject.Detailed.Should().BeNull();
+            await CheckRevertedStatus(result);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_top_module_changes()
         {
@@ -705,14 +656,10 @@ namespace GitCommandsTests.Submodules
 
             // Revert the change
             File.Delete(Path.Combine(_repo1Module.WorkingDir, "test.txt"));
-            changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
-            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
-            result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-            result.TopProject.Detailed.Should().BeNull();
+            await CheckRevertedStatus(result);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_second_nested_module_with_first_nested_module_prechanges()
         {
@@ -730,17 +677,12 @@ namespace GitCommandsTests.Submodules
             result.AllSubmodules[1].Detailed.Should().BeNull();
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
 
-            // Revert the change, top and first level status is not reverted
+            // Revert the change
             _repo2Module.GitExecutable.GetOutput(@"checkout HEAD^");
-            var changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
-            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules[0].Detailed.IsDirty.Should().BeFalse();
-            result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.FastForward);
-            result.AllSubmodules[1].Detailed.Should().BeNull();
-            result.TopProject.Detailed.IsDirty.Should().BeTrue();
+            await CheckRevertedStatus(result);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_second_nested_module_with_prechanges_noupdate()
         {
@@ -761,8 +703,18 @@ namespace GitCommandsTests.Submodules
 
             result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
             result.TopProject.Detailed.Should().BeNull();
+
+            // Revert the change
+            _repo1Module.GitExecutable.GetOutput(@"checkout HEAD^");
+            File.Delete(Path.Combine(_repo1Module.WorkingDir, "test.txt"));
+            _repo2Module.GitExecutable.GetOutput(@"checkout HEAD^");
+            File.Delete(Path.Combine(_repo2Module.WorkingDir, "test.txt"));
+            _repo3Module.GitExecutable.GetOutput(@"checkout HEAD^");
+            File.Delete(Path.Combine(_repo3Module.WorkingDir, "test.txt"));
+            await CheckRevertedStatus(result);
         }
 
+        [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_second_nested_module_with_first_nested_module_precommit()
         {
@@ -792,14 +744,24 @@ namespace GitCommandsTests.Submodules
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
 
             // Revert the change
+            _repo2Module.GitExecutable.GetOutput(@"checkout HEAD^");
             File.Delete(Path.Combine(_repo3Module.WorkingDir, "test.txt"));
-            changedFiles = GetStatusChangedFiles(currentModule);
+            await CheckRevertedStatus(result);
+        }
+
+        /// <summary>
+        /// Check that the repo is reverted after the test, prepared for next
+        /// An explicit Git clean and reset will require additional time
+        /// </summary>
+        /// <param name="result">The existing structure, reused from the test</param>
+        /// <returns>a Task</returns>
+        private async Task CheckRevertedStatus(SubmoduleInfoResult result)
+        {
+            var changedFiles = GetStatusChangedFiles(_repo1Module);
             changedFiles.Should().HaveCount(0);
-            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.FastForward);
-            result.AllSubmodules[1].Detailed.Should().BeNull();
-            result.TopProject.Detailed.IsDirty.Should().BeTrue();
+            await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, _repo1Module, changedFiles);
+            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.TopProject.Detailed.Should().BeNull();
         }
 
         private static IReadOnlyList<GitItemStatus> GetStatusChangedFiles(IGitModule module)

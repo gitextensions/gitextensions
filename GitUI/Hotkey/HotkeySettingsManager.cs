@@ -364,7 +364,10 @@ namespace GitUI.Hotkey
                     Hk(RevisionDiffControl.Command.OpenWithDifftool, OpenWithDifftoolHotkey),
                     Hk(RevisionDiffControl.Command.OpenWithDifftoolFirstToLocal, OpenWithDifftoolFirstToLocalHotkey),
                     Hk(RevisionDiffControl.Command.OpenWithDifftoolSelectedToLocal, OpenWithDifftoolSelectedToLocalHotkey),
-                    Hk(RevisionDiffControl.Command.ShowHistory, ShowHistoryHotkey)),
+                    Hk(RevisionDiffControl.Command.ShowHistory, ShowHistoryHotkey),
+                    Hk(RevisionDiffControl.Command.ResetSelectedFiles, Keys.R),
+                    Hk(RevisionDiffControl.Command.StageSelectedFile, Keys.S),
+                    Hk(RevisionDiffControl.Command.UnStageSelectedFile, Keys.U)),
                 new HotkeySettings(
                     RevisionFileTreeControl.HotkeySettingsName,
                     Hk(RevisionFileTreeControl.Command.Blame, BlameHotkey),

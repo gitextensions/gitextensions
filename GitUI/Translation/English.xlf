@@ -4036,10 +4036,6 @@ in order to recover the lost commits.</source>
         <source>Find</source>
         <target />
       </trans-unit>
-      <trans-unit id="firstParentToLocalToolStripMenuItem.Text">
-        <source>Parent to BASE -&gt; Working directory</source>
-        <target />
-      </trans-unit>
       <trans-unit id="firstToLocalToolStripMenuItem.Text">
         <source>BASE -&gt; Working directory</source>
         <target />
@@ -4058,10 +4054,6 @@ in order to recover the lost commits.</source>
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
         <source>Open with difftool</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="selectedParentToLocalToolStripMenuItem.Text">
-        <source>Parent to Compare -&gt; Working directory</source>
         <target />
       </trans-unit>
       <trans-unit id="selectedToLocalToolStripMenuItem.Text">
@@ -5609,6 +5601,14 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="chkAutosquash.Text">
         <source>Autosquash</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkCommitterDateIsAuthorDate.Text">
+        <source>Committer date is author date</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkIgnoreDate.Text">
+        <source>Ignore date</source>
         <target />
       </trans-unit>
       <trans-unit id="chkInteractive.Text">
@@ -7159,7 +7159,7 @@ Context menu for additional operations</source>
         <target />
       </trans-unit>
       <trans-unit id="lblCommitsLimit.Text">
-        <source>Limit number of commits that will be loaded at startup</source>
+        <source>Limit number of commits to be loaded</source>
         <target />
       </trans-unit>
       <trans-unit id="lblDefaultCloneDestination.Text">
@@ -7678,10 +7678,6 @@ help</source>
         <source>Archive revision</source>
         <target />
       </trans-unit>
-      <trans-unit id="_confirmDeleteRemoteBranch.Text">
-        <source>Do you want to delete the branch {0} from {1}?</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_failedToExecuteScript.Text">
         <source>Failed to execute script</source>
         <target />
@@ -7720,6 +7716,10 @@ help</source>
       </trans-unit>
       <trans-unit id="_rememberChoice.Text">
         <source>Remember choice</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_resetChangesCaption.Text">
+        <source>Reset changes</source>
         <target />
       </trans-unit>
       <trans-unit id="_selectOnlyOneOrTwoRevisions.Text">
@@ -8083,6 +8083,10 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>&lt;multiple&gt;</source>
         <target />
       </trans-unit>
+      <trans-unit id="_resetSelectedChangesText.Text">
+        <source>Are you sure you want to reset all selected files to {0}?</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_saveFileFilterAllFiles.Text">
         <source>All files</source>
         <target />
@@ -8159,10 +8163,6 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Find</source>
         <target />
       </trans-unit>
-      <trans-unit id="firstParentToLocalToolStripMenuItem.Text">
-        <source>Parent to first -&gt; Working directory</source>
-        <target />
-      </trans-unit>
       <trans-unit id="firstToLocalToolStripMenuItem.Text">
         <source>First -&gt; Working directory</source>
         <target />
@@ -8173,6 +8173,10 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
         <source>Show in folder</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="openWithCustomDifftoolToolStripMenuItem.Text">
+        <source>First -&gt; Second...</source>
         <target />
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
@@ -8197,10 +8201,6 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="saveToolStripMenuItem.Text">
         <source>Save</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="selectedParentToLocalToolStripMenuItem.Text">
-        <source>Parent to second -&gt; Working directory</source>
         <target />
       </trans-unit>
       <trans-unit id="selectedToLocalToolStripMenuItem.Text">

@@ -1245,23 +1245,20 @@ namespace GitUI.CommandsDialogs
 
         private void StageFile(string filename)
         {
-            using (var form = new FormStatus(ProcessStart, string.Format(_stageFilename.Text, filename)))
+            var args = new GitArgumentBuilder("add")
             {
-                form.ShowDialogOnError(this);
+                "--",
+                filename.QuoteNE()
+            };
+            string output = Module.GitExecutable.GetOutput(args);
+
+            if (string.IsNullOrWhiteSpace(output))
+            {
+                return;
             }
 
-            void ProcessStart(FormStatus form)
-            {
-                form.AddMessageLine(string.Format(_stageFilename.Text, filename));
-                var args = new GitArgumentBuilder("add")
-                {
-                    "--",
-                    filename.QuoteNE()
-                };
-                string output = Module.GitExecutable.GetOutput(args);
-                form.AddMessageLine(output);
-                form.Done(isSuccess: string.IsNullOrWhiteSpace(output));
-            }
+            string text = string.Format(_stageFilename.Text, filename);
+            FormStatus.ShowErrorDialog(this, text, text, output);
         }
 
         private void merge_Click(object sender, EventArgs e)
