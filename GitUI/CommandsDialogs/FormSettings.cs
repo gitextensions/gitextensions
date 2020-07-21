@@ -25,13 +25,8 @@ namespace GitUI.CommandsDialogs
 
         #region Translation
 
-        private readonly TranslationString _cantFindGitMessage =
-            new TranslationString("The command to run git is not configured correct." + Environment.NewLine +
-                "You need to set the correct path to be able to use Git Extensions." + Environment.NewLine +
-                Environment.NewLine + "Do you want to set the correct command now? If not Global and Local Settings will not be saved.");
-
-        private readonly TranslationString _cantFindGitMessageCaption =
-            new TranslationString("Incorrect path");
+        private readonly TranslationString _cantFindGitMessage1 =
+            new TranslationString("Without a valid git command some settings may fail to save.\r\nDo you wish to continue?");
 
         #endregion
 
@@ -322,8 +317,19 @@ namespace GitUI.CommandsDialogs
         {
             if (!CheckSettingsLogic.CanFindGitCmd())
             {
-                if (MessageBox.Show(this, _cantFindGitMessage.Text, _cantFindGitMessageCaption.Text,
-                        MessageBoxButtons.YesNo) == DialogResult.Yes)
+                using var dialog = new TaskDialog
+                {
+                    OwnerWindowHandle = Handle,
+                    Text = _cantFindGitMessage1.Text,
+                    InstructionText = ResourceManager.Strings.GitExecutableNotFound,
+                    Caption = Strings.Error,
+                    StandardButtons = TaskDialogStandardButtons.Yes | TaskDialogStandardButtons.No,
+                    DefaultButton = TaskDialogDefaultButton.No,
+                    Icon = TaskDialogStandardIcon.Error,
+                    Cancelable = true,
+                };
+
+                if (dialog.Show() == TaskDialogResult.Yes)
                 {
                     return false;
                 }
