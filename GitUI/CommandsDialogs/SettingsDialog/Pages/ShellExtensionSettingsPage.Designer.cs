@@ -111,7 +111,9 @@
             "Revert",
             "Settings",
             "View stash",
-            "View changes"});
+            "View changes", 
+            "LFS Lock", 
+            "LFS UnLock"});
             this.chlMenuEntries.Location = new System.Drawing.Point(3, 78);
             this.chlMenuEntries.Name = "chlMenuEntries";
             this.chlMenuEntries.Size = new System.Drawing.Size(315, 110);
