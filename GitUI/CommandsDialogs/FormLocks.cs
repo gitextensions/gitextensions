@@ -123,7 +123,7 @@ namespace GitUI.CommandsDialogs
         {
             if (_currentFilesList.SelectedGitItem != null)
             {
-                Module.LfsUnLock(new[] { _currentFilesList.SelectedGitItem.Name });
+                Module.LfsUnLock(new[] { _currentFilesList.SelectedGitItem.File });
             }
 
             FreshLockedList();

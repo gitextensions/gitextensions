@@ -748,7 +748,11 @@ namespace GitCommands
 
                 char x = '?';
                 string fileName = items[0];
-                GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(StagedStatus.Unset, fileName, x);
+                string user = items[1];
+                string itemDesc = user.PadRight(20, ' ') + fileName;
+                GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(StagedStatus.Unset, itemDesc, x);
+                gitItemStatus.File = fileName;
+                gitItemStatus.User = user;
 
                 lockFiles.Add(gitItemStatus);
             }
