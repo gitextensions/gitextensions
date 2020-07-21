@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Settings;
 using GitCommands.Utils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SettingsDialog;
@@ -11,6 +12,7 @@ using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SettingsDialog.Plugins;
 using GitUI.Properties;
 using JetBrains.Annotations;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -21,6 +23,7 @@ namespace GitUI.CommandsDialogs
 
         #region Translation
 
+        private readonly TranslationString _cantSaveSettings = new TranslationString("Failed to save all settings");
         private readonly TranslationString _cantFindGitMessage =
             new TranslationString("The command to run git is not configured correct." + Environment.NewLine +
                 "You need to set the correct path to be able to use Git Extensions." + Environment.NewLine +
@@ -239,29 +242,48 @@ namespace GitUI.CommandsDialogs
             if (!CheckSettingsLogic.CanFindGitCmd())
             {
                 if (MessageBox.Show(this, _cantFindGitMessage.Text, _cantFindGitMessageCaption.Text,
-                        MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                     MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     return false;
                 }
             }
 
-            foreach (var settingsPage in SettingsPages)
+            try
             {
-                settingsPage.SaveSettings();
+                foreach (var settingsPage in SettingsPages)
+                {
+                    settingsPage.SaveSettings();
+                }
+
+                _commonLogic.ConfigFileSettingsSet.EffectiveSettings.Save();
+                _commonLogic.RepoDistSettingsSet.EffectiveSettings.Save();
+
+                if (EnvUtils.RunningOnWindows())
+                {
+                    FormFixHome.CheckHomePath();
+                }
+
+                // TODO: this method has a generic sounding name but only saves some specific settings
+                AppSettings.SaveSettings();
+
+                return true;
             }
-
-            _commonLogic.ConfigFileSettingsSet.EffectiveSettings.Save();
-            _commonLogic.RepoDistSettingsSet.EffectiveSettings.Save();
-
-            if (EnvUtils.RunningOnWindows())
+            catch (SaveSettingsException ex) when (ex.InnerException != null)
             {
-                FormFixHome.CheckHomePath();
+                using var dialog = new TaskDialog
+                {
+                    OwnerWindowHandle = Handle,
+                    Text = ex.InnerException.Message,
+                    InstructionText = _cantSaveSettings.Text,
+                    Caption = Strings.Error,
+                    StandardButtons = TaskDialogStandardButtons.Ok,
+                    Icon = TaskDialogStandardIcon.Error,
+                    Cancelable = true,
+                };
+                dialog.Show();
+
+                return false;
             }
-
-            // TODO: this method has a generic sounding name but only saves some specific settings
-            AppSettings.SaveSettings();
-
-            return true;
         }
 
         private void FormSettings_Shown(object sender, EventArgs e)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
 using GitCommands.Utils;
 
 namespace GitCommands.Settings
@@ -172,7 +171,7 @@ namespace GitCommands.Settings
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Cannot save settings", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    throw new SaveSettingsException(ex);
                 }
 
                 _lastFileModificationDate = GetLastFileModificationUtc();
@@ -182,10 +181,9 @@ namespace GitCommands.Settings
                     _fileWatcher.EnableRaisingEvents = _canEnableFileWatcher;
                 }
             }
-            catch (IOException e)
+            catch (IOException ex)
             {
-                Debug.WriteLine(e.Message);
-                throw;
+                throw new SaveSettingsException(ex);
             }
         }
 
