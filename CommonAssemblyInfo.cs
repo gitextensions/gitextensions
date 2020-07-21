@@ -20,9 +20,9 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("33.33.33")]
-[assembly: AssemblyFileVersion("33.33.33")]
-[assembly: AssemblyInformationalVersion("33.33.33")]
+[assembly: AssemblyVersion("33.33.35")]
+[assembly: AssemblyFileVersion("33.33.35")]
+[assembly: AssemblyInformationalVersion("33.33.35")]
 
 // Disable CLS compliance. See https://github.com/gitextensions/gitextensions/issues/4710
 [assembly: CLSCompliant(isCompliant: false)]
