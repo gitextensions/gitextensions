@@ -592,6 +592,9 @@
       <Component Id="dark.css" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Themes\dark.css" />
       </Component>
+      <Component Id="darksilver.css" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Themes\darksilver.css" />
+      </Component>
     </DirectoryRef>
     <DirectoryRef Id="PluginsDir">
       <Component Id="DeleteUnusedBranches.dll" Guid="*">
@@ -1583,6 +1586,7 @@
       <ComponentRef Id="EasyHook64.dll" />
       <ComponentRef Id="win10default.css" />
       <ComponentRef Id="dark.css" />
+      <ComponentRef Id="darksilver.css" />
       <!-- Remove unused dll, installed in versions <= 2.31 -->
       <ComponentRef Id="GithubSharp.Core.dll" />
       <!-- Remove unused dll, installed in versions <= 2.31 -->
