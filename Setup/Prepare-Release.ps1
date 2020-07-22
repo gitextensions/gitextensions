@@ -1,5 +1,5 @@
 ﻿# Example:
-#    .\Prepare-Release.ps1 -oldVersion 2.51.01 -newVersion 2.51.02 -milestones 36,37
+#    .\Prepare-Release.ps1 -milestones 36,37
 #
 
 [CmdletBinding()]
