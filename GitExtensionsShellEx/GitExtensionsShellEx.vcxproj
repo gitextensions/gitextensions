@@ -282,6 +282,13 @@
   <ItemGroup>
     <Midl Include="GitExtensionsShellEx.idl" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\icon1.ico" />
+    <Image Include="resources\icon2.ico" />
+    <Image Include="Resources\lock.ico" />
+    <Image Include="Resources\locks.ico" />
+    <Image Include="Resources\unlock.ico" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

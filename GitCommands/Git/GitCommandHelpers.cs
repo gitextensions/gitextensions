@@ -754,6 +754,103 @@ namespace GitCommands
             return trimmedStatus;
         }
 
+        public static IReadOnlyList<GitItemStatus> GetLockedFileList(string lockedFilesString)
+        {
+            var lockFiles = new List<GitItemStatus>();
+            const char x = '?';
+
+            var files = lockedFilesString.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            for (int n = 0; n < files.Length; n++)
+            {
+                string line = files[n];
+
+                var items = ParseLockedInfo(line);
+
+                string fileName = items[0];
+                string user = items[1];
+                string itemDesc = user.PadRight(20, ' ') + fileName;
+                GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(StagedStatus.Unset, itemDesc, x);
+                gitItemStatus.File = fileName;
+                gitItemStatus.User = user;
+
+                lockFiles.Add(gitItemStatus);
+            }
+
+            return lockFiles;
+        }
+
+        private static IReadOnlyList<string> ParseLockedInfo(string line)
+        {
+            bool beginQuote = false;
+            var items = new List<string>();
+            if (line[0] == '"' || line[0] == '\'')
+            {
+                beginQuote = true;
+            }
+
+            int userStart = 0;
+            string file = null;
+            string user = null;
+
+            for (int i = 1; i < line.Length; ++i)
+            {
+                if (file == null)
+                {
+                    if (beginQuote)
+                    {
+                        if (line[i] == '"' || line[i] == '\'')
+                        {
+                            file = line.Substring(0, i);
+
+                            // skip the quote
+                            i++;
+
+                            // clear it for user
+                            beginQuote = false;
+                        }
+                    }
+                    else if (line[i] == ' ' || line[i] == '\t')
+                    {
+                        file = line.Substring(0, i);
+                    }
+
+                    // skip spaces
+                    while (line[i] == ' ' || line[i] == '\t')
+                    {
+                        i++;
+                    }
+
+                    userStart = i;
+                }
+                else if (user == null)
+                {
+                    if (beginQuote)
+                    {
+                        if (line[i] == '"' || line[i] == '\'')
+                        {
+                            int length = i - userStart;
+
+                            user = line.Substring(userStart, length);
+
+                            // skip the quote
+                            i++;
+                        }
+                    }
+                    else if (line[i] == ' ' || line[i] == '\t')
+                    {
+                        int length = i - userStart;
+
+                        user = line.Substring(userStart, length);
+                    }
+                }
+            }
+
+            items.Add(file);
+            items.Add(user);
+
+            return items;
+        }
+
         /// <summary>
         /// Parse the output from git-status --porcelain=2
         /// </summary>

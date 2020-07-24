@@ -48,7 +48,10 @@ const wchar_t* const gitExCommandNames[] =
     L"revert",
     L"settings",
     L"stash",
-    L"viewdiff"
+    L"viewdiff",
+    L"lfslock",
+    L"lfsunlock",
+    L"showlfslocks"
 };
 
 C_ASSERT(gcMaxValue == _countof(gitExCommandNames));
@@ -541,6 +544,18 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
         isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcApplyPatch);
         cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Apply patch...", IDI_ICONPATCHAPPLY, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
         commandsId[cmdid]=gcApplyPatch;
+
+        isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcLfsLock);
+        cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"LFS Lock", IDI_ICONLOCK, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
+        commandsId[cmdid]=gcLfsLock;
+
+        isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcLfsUnLock);
+        cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"LFS UnLock", IDI_ICONUNLOCK, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
+        commandsId[cmdid]=gcLfsUnLock;
+
+        isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcShowLfsLocks);
+        cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Show LFS Locks", IDI_ICONLOCKS, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
+        commandsId[cmdid]=gcShowLfsLocks;
     }
 
     isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcSettings);

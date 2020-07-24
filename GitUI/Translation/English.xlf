@@ -2065,6 +2065,10 @@ compare with first:</source>
         <source>Show first parents</source>
         <target />
       </trans-unit>
+      <trans-unit id="ShowLocks.ToolTipText">
+        <source>Show locks</source>
+        <target />
+      </trans-unit>
       <trans-unit id="TreeTabPage.Text">
         <source>File tree</source>
         <target />
@@ -4722,6 +4726,22 @@ Please choose a directory.</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Directory</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormLocks" source-language="en">
+    <body>
+      <trans-unit id="Pull.Text">
+        <source>Refresh</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_stageToolStripMenuItem.Text">
+        <source>Unlock</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="refreshToolStripMenuItem.Text">
+        <source>Refresh</source>
         <target />
       </trans-unit>
     </body>
@@ -8369,6 +8389,14 @@ See the changes in the commit form.</source>
         <source>Stop tracking this file</source>
         <target />
       </trans-unit>
+      <trans-unit id="toolStripMenuItem1.Text">
+        <source>LFS UnLock</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="toolStripMenuItem2.Text">
+        <source>LFS Lock</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="RevisionGpgInfoControl" source-language="en">
@@ -9019,8 +9047,20 @@ Current Branch:
         <source>View changes</source>
         <target />
       </trans-unit>
+      <trans-unit id="chlMenuEntries.Item18">
+        <source>LFS Lock</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item19">
+        <source>LFS UnLock</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chlMenuEntries.Item2">
         <source>Browse</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item20">
+        <source>Show LFS Locks</source>
         <target />
       </trans-unit>
       <trans-unit id="chlMenuEntries.Item3">

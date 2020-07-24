@@ -2558,6 +2558,11 @@ compare with first:</source>
         <target>显示第一个父提交</target>
         
       </trans-unit>
+      <trans-unit id="ShowLocks.ToolTipText">
+        <source>Show locks</source>
+        <target>显示锁定的文件</target>
+		
+      </trans-unit>
       <trans-unit id="TreeTabPage.Text">
         <source>File tree</source>
         <target>文件树</target>
@@ -5963,6 +5968,25 @@ Please choose a directory.</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="FormLocks" source-language="en">
+    <body>
+      <trans-unit id="Pull.Text">
+        <source>Refresh</source>
+        <target>刷新</target>
+		
+      </trans-unit>
+      <trans-unit id="_stageToolStripMenuItem.Text">
+        <source>Unlock</source>
+        <target>解锁</target>
+		
+      </trans-unit>
+      <trans-unit id="refreshToolStripMenuItem.Text">
+        <source>Refresh</source>
+        <target>刷新</target>
+		
+      </trans-unit>
+    </body>
+  </file>  
   <file datatype="plaintext" original="FormMailMap" source-language="en" target-language="zh-Hans">
     <body>
       <trans-unit id="$this.Text">
@@ -10411,6 +10435,16 @@ See the changes in the commit form.</source>
         <target>停止跟踪这个文件</target>
         
       </trans-unit>
+      <trans-unit id="toolStripMenuItem1.Text">
+        <source>LFS UnLock</source>
+        <target>解锁</target>
+		
+      </trans-unit>
+      <trans-unit id="toolStripMenuItem2.Text">
+        <source>LFS Lock</source>
+        <target>锁定</target>
+		
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="RevisionGpgInfoControl" source-language="en" target-language="zh-Hans">
@@ -11243,10 +11277,25 @@ Current Branch:
         <target>查看所有修改</target>
         
       </trans-unit>
+      <trans-unit id="chlMenuEntries.Item18">
+        <source>LFS Lock</source>
+        <target>锁定</target>
+		
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item19">
+        <source>LFS UnLock</source>
+        <target>解锁</target>
+		
+      </trans-unit>
       <trans-unit id="chlMenuEntries.Item2">
         <source>Browse</source>
         <target>浏览</target>
         
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item20">
+        <source>Show LFS Locks</source>
+        <target>显示锁定的文件</target>
+		
       </trans-unit>
       <trans-unit id="chlMenuEntries.Item3">
         <source>Create branch...</source>

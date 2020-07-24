@@ -9,6 +9,7 @@ namespace GitUI
         private readonly ToolStripTextBox _NO_TRANSLATE_textBox;
         private readonly RevisionGridControl _NO_TRANSLATE_revisionGrid;
         private readonly ToolStripButton _NO_TRANSLATE_showFirstParentButton;
+        private readonly ToolStripButton _NO_TRANSLATE_showLocks;
 
         private readonly ToolStripMenuItem _commitFilterToolStripMenuItem;
         private readonly ToolStripMenuItem _committerToolStripMenuItem;
@@ -18,7 +19,7 @@ namespace GitUI
 
         private readonly Form _NO_TRANSLATE_form;
 
-        public FilterRevisionsHelper(ToolStripTextBox textBox, ToolStripDropDownButton dropDownButton, RevisionGridControl revisionGrid, ToolStripLabel label, ToolStripButton showFirstParentButton, Form form)
+        public FilterRevisionsHelper(ToolStripTextBox textBox, ToolStripDropDownButton dropDownButton, RevisionGridControl revisionGrid, ToolStripLabel label, ToolStripButton showFirstParentButton, ToolStripButton showLocks, Form form)
         {
             _commitFilterToolStripMenuItem = new ToolStripMenuItem
             {
@@ -74,6 +75,7 @@ namespace GitUI
             _NO_TRANSLATE_textBox = textBox;
             _NO_TRANSLATE_revisionGrid = revisionGrid;
             _NO_TRANSLATE_showFirstParentButton = showFirstParentButton;
+            _NO_TRANSLATE_showLocks = showLocks;
             _NO_TRANSLATE_form = form;
 
             dropDownButton.DropDownItems.AddRange(new ToolStripItem[]
@@ -97,6 +99,10 @@ namespace GitUI
             };
             _NO_TRANSLATE_showFirstParentButton.Click += delegate { _NO_TRANSLATE_revisionGrid.ShowFirstParent(); };
             _NO_TRANSLATE_revisionGrid.ShowFirstParentsToggled += delegate { _NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent; };
+            if (_NO_TRANSLATE_showLocks != null)
+            {
+                _NO_TRANSLATE_showLocks.Click += delegate { _NO_TRANSLATE_revisionGrid.ShowLocks(); };
+            }
         }
 
         public void SetFilter(string filter)

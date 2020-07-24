@@ -4167,6 +4167,35 @@ namespace GitCommands
             return output;
         }
 
+        private string LfsOperation(string file, string lfsOperation)
+        {
+            string cmd = lfsOperation + " " + file;
+
+            // for debugging
+            var output = _gitExecutable.GetOutput(new GitArgumentBuilder(cmd, false));
+
+            return output;
+        }
+
+        public string LfsLock(string file)
+        {
+            return LfsOperation(file, "lfs lock");
+        }
+
+        public string LfsUnLock(string file)
+        {
+            return LfsOperation(file, "lfs unlock");
+        }
+
+        public IReadOnlyList<GitItemStatus> LfsLockedFiles()
+        {
+            var output = _gitExecutable.GetOutput(new GitArgumentBuilder("lfs locks", false));
+
+            var result = GitCommandHelpers.GetLockedFileList(output).ToList();
+
+            return result;
+        }
+
         /// <summary>
         /// Determines whether a git command's output indicates an error occurred.
         /// </summary>

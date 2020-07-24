@@ -50,6 +50,12 @@
       <LastGenOutput>Images.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
+    <Compile Update="CommandsDialogs\FormLocks.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="CommandsDialogs\FormContributors.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Properties\Images.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
