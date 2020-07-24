@@ -1105,6 +1105,16 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap IconMergeFFOnly {
+            get {
+                object obj = ResourceManager.GetObject("IconMergeFFOnly", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap IconMixed {
             get {
                 object obj = ResourceManager.GetObject("IconMixed", resourceCulture);
@@ -1707,6 +1717,16 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap PullMerge {
             get {
                 object obj = ResourceManager.GetObject("PullMerge", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PullMergeFFOnly {
+            get {
+                object obj = ResourceManager.GetObject("PullMergeFFOnly", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

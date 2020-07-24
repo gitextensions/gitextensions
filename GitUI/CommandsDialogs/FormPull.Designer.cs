@@ -1,4 +1,4 @@
-﻿namespace GitUI.CommandsDialogs
+namespace GitUI.CommandsDialogs
 {
     partial class FormPull
     {
@@ -48,6 +48,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.Merge = new System.Windows.Forms.RadioButton();
+            this.MergeFFOnly = new System.Windows.Forms.RadioButton();
             this.Rebase = new System.Windows.Forms.RadioButton();
             this.Fetch = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -124,7 +125,7 @@
             // Unshallow
             // 
             this.Unshallow.AutoSize = true;
-            this.Unshallow.Location = new System.Drawing.Point(7, 387);
+            this.Unshallow.Location = new System.Drawing.Point(7, 406);
             this.Unshallow.Margin = new System.Windows.Forms.Padding(7, 2, 2, 2);
             this.Unshallow.Name = "Unshallow";
             this.Unshallow.Size = new System.Drawing.Size(126, 17);
@@ -160,7 +161,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(674, 479);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(674, 498);
             this.tableLayoutPanel1.TabIndex = 16;
             // 
             // helpImageDisplayUserControl1
@@ -178,7 +179,7 @@
             this.helpImageDisplayUserControl1.Location = new System.Drawing.Point(3, 3);
             this.helpImageDisplayUserControl1.MinimumSize = new System.Drawing.Size(40, 83);
             this.helpImageDisplayUserControl1.Name = "helpImageDisplayUserControl1";
-            this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(40, 473);
+            this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(40, 492);
             this.helpImageDisplayUserControl1.TabIndex = 10;
             this.helpImageDisplayUserControl1.UniqueIsExpandedSettingsId = "Pull";
             // 
@@ -188,7 +189,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(49, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(622, 473);
+            this.panel2.Size = new System.Drawing.Size(622, 492);
             this.panel2.TabIndex = 19;
             // 
             // tableLayoutPanel2
@@ -214,7 +215,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(622, 473);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(622, 492);
             this.tableLayoutPanel2.TabIndex = 42;
             // 
             // groupBox2
@@ -279,10 +280,10 @@
             this.folderBrowserButton1.AutoSize = true;
             this.folderBrowserButton1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.folderBrowserButton1.Enabled = false;
-            this.folderBrowserButton1.Location = new System.Drawing.Point(460, 45);
+            this.folderBrowserButton1.Location = new System.Drawing.Point(560, 45);
             this.folderBrowserButton1.Name = "folderBrowserButton1";
             this.folderBrowserButton1.PathShowingControl = this.comboBoxPullSource;
-            this.folderBrowserButton1.Size = new System.Drawing.Size(100, 25);
+            this.folderBrowserButton1.Size = new System.Drawing.Size(0, 0);
             this.folderBrowserButton1.TabIndex = 5;
             // 
             // groupBox1
@@ -292,7 +293,7 @@
             this.groupBox1.Controls.Add(this.flowLayoutPanel1);
             this.groupBox1.Location = new System.Drawing.Point(3, 169);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(616, 103);
+            this.groupBox1.Size = new System.Drawing.Size(616, 122);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge options";
@@ -301,13 +302,14 @@
             // 
             this.flowLayoutPanel1.AutoSize = true;
             this.flowLayoutPanel1.Controls.Add(this.Merge);
+            this.flowLayoutPanel1.Controls.Add(this.MergeFFOnly);
             this.flowLayoutPanel1.Controls.Add(this.Rebase);
             this.flowLayoutPanel1.Controls.Add(this.Fetch);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(610, 83);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(610, 102);
             this.flowLayoutPanel1.TabIndex = 11;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -327,15 +329,31 @@
             this.Merge.UseVisualStyleBackColor = true;
             this.Merge.CheckedChanged += new System.EventHandler(this.MergeCheckedChanged);
             // 
+            // MergeFFOnly
+            // 
+            this.MergeFFOnly.AutoSize = true;
+            this.MergeFFOnly.Image = global::GitUI.Properties.Resources.IconMergeFFOnly;
+            this.MergeFFOnly.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.MergeFFOnly.Location = new System.Drawing.Point(3, 28);
+            this.MergeFFOnly.Name = "MergeFFOnly";
+            this.MergeFFOnly.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
+            this.MergeFFOnly.Size = new System.Drawing.Size(371, 19);
+            this.MergeFFOnly.TabIndex = 9;
+            this.MergeFFOnly.TabStop = true;
+            this.MergeFFOnly.Text = "Merge remote branch into current branch (&only if fast-forward, safe)";
+            this.MergeFFOnly.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.MergeFFOnly.UseVisualStyleBackColor = true;
+            this.MergeFFOnly.CheckedChanged += new System.EventHandler(this.MergeFFOnlyCheckedChanged);
+            // 
             // Rebase
             // 
             this.Rebase.AutoSize = true;
             this.Rebase.Image = global::GitUI.Properties.Resources.IconRebase;
-            this.Rebase.Location = new System.Drawing.Point(3, 28);
+            this.Rebase.Location = new System.Drawing.Point(3, 53);
             this.Rebase.Name = "Rebase";
             this.Rebase.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
             this.Rebase.Size = new System.Drawing.Size(468, 19);
-            this.Rebase.TabIndex = 9;
+            this.Rebase.TabIndex = 10;
             this.Rebase.Text = "&Rebase current branch on top of remote branch, creates linear history (use with " +
     "caution)";
             this.Rebase.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -345,12 +363,12 @@
             // Fetch
             // 
             this.Fetch.AutoSize = true;
-            this.Fetch.Location = new System.Drawing.Point(3, 53);
+            this.Fetch.Location = new System.Drawing.Point(3, 78);
             this.Fetch.Name = "Fetch";
             this.Fetch.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.Fetch.Size = new System.Drawing.Size(225, 19);
-            this.Fetch.TabIndex = 10;
-            this.Fetch.Text = "Do not merge, only &fetch remote changes";
+            this.Fetch.Size = new System.Drawing.Size(266, 19);
+            this.Fetch.TabIndex = 11;
+            this.Fetch.Text = "Do not merge, only &fetch remote changes (safest)";
             this.Fetch.UseVisualStyleBackColor = true;
             this.Fetch.CheckedChanged += new System.EventHandler(this.FetchCheckedChanged);
             // 
@@ -395,7 +413,7 @@
             this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.flowLayoutPanel2);
-            this.groupBox4.Location = new System.Drawing.Point(3, 278);
+            this.groupBox4.Location = new System.Drawing.Point(3, 297);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(616, 104);
             this.groupBox4.TabIndex = 15;
@@ -465,7 +483,7 @@
             this.tableLayoutPanel3.Controls.Add(this.Stash, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.AutoStash, 2, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 430);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 449);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
             this.tableLayoutPanel3.RowCount = 1;
@@ -479,7 +497,7 @@
             this.Mergetool.Location = new System.Drawing.Point(3, 8);
             this.Mergetool.Name = "Mergetool";
             this.Mergetool.Size = new System.Drawing.Size(141, 25);
-            this.Mergetool.TabIndex = 11;
+            this.Mergetool.TabIndex = 12;
             this.Mergetool.Text = "Solve conflicts";
             this.Mergetool.UseVisualStyleBackColor = true;
             this.Mergetool.Click += new System.EventHandler(this.MergetoolClick);
@@ -490,7 +508,7 @@
             this.Stash.Location = new System.Drawing.Point(150, 8);
             this.Stash.Name = "Stash";
             this.Stash.Size = new System.Drawing.Size(132, 25);
-            this.Stash.TabIndex = 12;
+            this.Stash.TabIndex = 13;
             this.Stash.Text = "Stash changes";
             this.Stash.UseVisualStyleBackColor = true;
             this.Stash.Click += new System.EventHandler(this.StashClick);
@@ -502,14 +520,14 @@
             this.AutoStash.Location = new System.Drawing.Point(288, 12);
             this.AutoStash.Name = "AutoStash";
             this.AutoStash.Size = new System.Drawing.Size(78, 17);
-            this.AutoStash.TabIndex = 13;
+            this.AutoStash.TabIndex = 14;
             this.AutoStash.Text = "Auto stash";
             this.AutoStash.UseVisualStyleBackColor = true;
             // 
             // Prune
             // 
             this.Prune.AutoSize = true;
-            this.Prune.Location = new System.Drawing.Point(7, 408);
+            this.Prune.Location = new System.Drawing.Point(7, 427);
             this.Prune.Margin = new System.Windows.Forms.Padding(7, 2, 2, 2);
             this.Prune.Name = "Prune";
             this.Prune.Size = new System.Drawing.Size(138, 17);
@@ -523,7 +541,7 @@
             this.AcceptButton = this.Pull;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(674, 479);
+            this.ClientSize = new System.Drawing.Size(674, 498);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -591,5 +609,6 @@
         private UserControls.FolderBrowserButton folderBrowserButton1;
         private System.Windows.Forms.CheckBox Unshallow;
         private System.Windows.Forms.CheckBox Prune;
+        private System.Windows.Forms.RadioButton MergeFFOnly;
     }
 }

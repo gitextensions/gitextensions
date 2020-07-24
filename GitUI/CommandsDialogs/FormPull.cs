@@ -124,11 +124,12 @@ namespace GitUI.CommandsDialogs
             Init(defaultRemote);
 
             Merge.Checked = AppSettings.FormPullAction == AppSettings.PullAction.Merge;
+            MergeFFOnly.Checked = AppSettings.FormPullAction == AppSettings.PullAction.MergeFFOnly;
             Rebase.Checked = AppSettings.FormPullAction == AppSettings.PullAction.Rebase;
             Fetch.Checked = AppSettings.FormPullAction == AppSettings.PullAction.Fetch;
             localBranch.Enabled = Fetch.Checked;
             AutoStash.Checked = AppSettings.AutoStash;
-            Prune.Enabled = AppSettings.FormPullAction == AppSettings.PullAction.Merge || AppSettings.FormPullAction == AppSettings.PullAction.Fetch;
+            Prune.Enabled = AppSettings.FormPullAction == AppSettings.PullAction.Merge || AppSettings.FormPullAction == AppSettings.PullAction.MergeFFOnly || AppSettings.FormPullAction == AppSettings.PullAction.Fetch;
 
             ErrorOccurred = false;
 
@@ -486,9 +487,9 @@ namespace GitUI.CommandsDialogs
                 return new FormRemoteProcess(Module, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg(), Unshallow.Checked, Prune.Checked));
             }
 
-            Debug.Assert(Merge.Checked || Rebase.Checked);
+            Debug.Assert(Merge.Checked || MergeFFOnly.Checked || Rebase.Checked);
 
-            return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked, Prune.Checked))
+            return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, Rebase.Checked, MergeFFOnly.Checked, GetTagsArg(), Unshallow.Checked, Prune.Checked))
                        {
                            HandleOnExitCallback = HandlePullOnExit
                        };
@@ -660,6 +661,8 @@ namespace GitUI.CommandsDialogs
         {
             if (Merge.Checked)
                 AppSettings.FormPullAction = AppSettings.PullAction.Merge;
+            if (MergeFFOnly.Checked)
+                AppSettings.FormPullAction = AppSettings.PullAction.MergeFFOnly;
             if (Rebase.Checked)
                 AppSettings.FormPullAction = AppSettings.PullAction.Rebase;
             if (Fetch.Checked)
@@ -760,6 +763,7 @@ namespace GitUI.CommandsDialogs
             AddRemote.Enabled = true;
 
             Merge.Enabled = !IsPullAll();
+            MergeFFOnly.Enabled = !IsPullAll();
             Rebase.Enabled = !IsPullAll();
         }
 
@@ -788,6 +792,7 @@ namespace GitUI.CommandsDialogs
             AddRemote.Enabled = false;
 
             Merge.Enabled = true;
+            MergeFFOnly.Enabled = true;
             Rebase.Enabled = true;
 
             FillPullSourceDropDown();
@@ -820,6 +825,20 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullMerge;
             helpImageDisplayUserControl1.Image2 = Resources.HelpPullMergeFastForward;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
+            AllTags.Enabled = false;
+            Prune.Enabled = true;
+            if (AllTags.Checked)
+                ReachableTags.Checked = true;
+        }
+
+        private void MergeFFOnlyCheckedChanged(object sender, EventArgs e)
+        {
+            if (!MergeFFOnly.Checked)
+                return;
+            localBranch.Enabled = false;
+            localBranch.Text = _branch;
+            helpImageDisplayUserControl1.Image1 = Resources.HelpPullMergeFastForward;
+            helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = false;
             Prune.Enabled = true;
             if (AllTags.Checked)
@@ -876,6 +895,7 @@ namespace GitUI.CommandsDialogs
 
             // update merge options radio buttons
             Merge.Enabled = !IsPullAll();
+            MergeFFOnly.Enabled = !IsPullAll();
             Rebase.Enabled = !IsPullAll();
             if (IsPullAll())
             {
