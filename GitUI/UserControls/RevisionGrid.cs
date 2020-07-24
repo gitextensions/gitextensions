@@ -1156,7 +1156,7 @@ namespace GitUI
                 if (AppSettings.ShowFirstParent)
                     _refsOptions |= RefsFiltringOptions.FirstParent;
 
-                if (AppSettings.ShowSimplifyByDecoration)
+                if (AppSettings.ShowSimplifyByDecoration && AppSettings.BranchFilterEnabled)
                     _refsOptions |= RefsFiltringOptions.SimplifyByDecoration;
 
                 RevisionGridInMemFilter revisionFilterIMF = RevisionGridInMemFilter.CreateIfNeeded(_revisionFilter.GetInMemAuthorFilter(),
