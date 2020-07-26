@@ -6618,15 +6618,8 @@ Do you want to use this custom merge script?</source>
         <source>Settings</source>
         <target />
       </trans-unit>
-      <trans-unit id="_cantFindGitMessage.Text">
-        <source>The command to run git is not configured correct.
-You need to set the correct path to be able to use Git Extensions.
-
-Do you want to set the correct command now? If not Global and Local Settings will not be saved.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_cantFindGitMessageCaption.Text">
-        <source>Incorrect path</source>
+      <trans-unit id="_cantSaveSettings.Text">
+        <source>Failed to save all settings</source>
         <target />
       </trans-unit>
       <trans-unit id="buttonApply.Text">
