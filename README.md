@@ -132,7 +132,7 @@ For more details please refer to [versions comparison](https://github.com/gitext
 If you want to **update a portable version**, you should delete all the files and the subfolders from the existing folder except:
 * _GitExtensions.settings_
 * _WindowPositions.xml_
-* folder _Recent_
+* User defined themes in folder _Themes_
 
 <table>
   <tr>
