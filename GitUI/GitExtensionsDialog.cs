@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
-using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using JetBrains.Annotations;
-using ResourceManager;
 
 namespace GitUI
 {
@@ -30,6 +27,9 @@ namespace GitUI
             : base(commands, enablePositionRestore)
         {
             InitializeComponent();
+
+            // Lighten up the control panel
+            ControlsPanel.BackColor = KnownColor.ControlLight.MakeBackgroundDarkerBy(-0.04);
         }
     }
 }
