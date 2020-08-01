@@ -329,13 +329,13 @@ namespace GitCommands.Remotes
                 }
 
                 remoteDisabled = remote.Disabled;
-                if (!string.Equals(remote.Name, remoteName, StringComparison.OrdinalIgnoreCase))
+                if (!string.Equals(remote.Name, remoteName, StringComparison.Ordinal))
                 {
                     // the name of the remote changed - perform rename
                     output = module.RenameRemote(remote.Name, remoteName);
                 }
 
-                if (!string.Equals(remote.Url, remoteUrl, StringComparison.OrdinalIgnoreCase))
+                if (!string.Equals(remote.Url, remoteUrl, StringComparison.Ordinal))
                 {
                     // the remote url changed - we may need to update remote
                     updateRemoteRequired = true;

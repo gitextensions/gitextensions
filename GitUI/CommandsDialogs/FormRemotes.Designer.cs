@@ -48,9 +48,9 @@ namespace GitUI.CommandsDialogs
             this.tblpnlMgtDetails = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.folderBrowserButtonPushUrl = new GitUI.UserControls.FolderBrowserButton();
-            this.comboBoxPushUrl = new System.Windows.Forms.ComboBox();
+            this.comboBoxPushUrl = new GitUI.UserControls.CaseSensitiveComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.Url = new System.Windows.Forms.ComboBox();
+            this.Url = new GitUI.UserControls.CaseSensitiveComboBox();
             this.labelPushUrl = new System.Windows.Forms.Label();
             this.folderBrowserButtonUrl = new GitUI.UserControls.FolderBrowserButton();
             this.checkBoxSepPushUrl = new System.Windows.Forms.CheckBox();
@@ -774,10 +774,10 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.TextBox RemoteName;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox Url;
+        private GitUI.UserControls.CaseSensitiveComboBox Url;
         private System.Windows.Forms.CheckBox checkBoxSepPushUrl;
         private System.Windows.Forms.Label labelPushUrl;
-        private System.Windows.Forms.ComboBox comboBoxPushUrl;
+        private GitUI.UserControls.CaseSensitiveComboBox comboBoxPushUrl;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.DataGridView RemoteBranches;
