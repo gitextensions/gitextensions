@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitExtUtils;
 using GitUI;
@@ -415,6 +416,11 @@ namespace GitCommands
                 Debug.Fail("Unable to read body from the log -- this should not happen");
                 revision = default;
                 return false;
+            }
+
+            if (AppSettings.ShowMultiLineCommitMessages)
+            {
+                subject = Regex.Replace(body, "[\r\n]", " ");
             }
 
             #endregion

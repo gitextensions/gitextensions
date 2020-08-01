@@ -106,6 +106,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             chkShowRelativeDate.Checked = AppSettings.RelativeDate;
+            chkShowMultiLineCommitMessages.Checked = AppSettings.ShowMultiLineCommitMessages;
 
             return;
 
@@ -159,6 +160,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RelativeDate = chkShowRelativeDate.Checked;
 
             AppSettings.Dictionary = Dictionary.SelectedIndex == 0 ? "none" : Dictionary.Text;
+            AppSettings.ShowMultiLineCommitMessages = chkShowMultiLineCommitMessages.Checked;
 
             return;
 
