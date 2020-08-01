@@ -85,7 +85,7 @@ namespace GitUI.CommandsDialogs
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Ok.Location = new System.Drawing.Point(12, 3);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(115, 25);
+            this.Ok.Size = new System.Drawing.Size(118, 25);
             this.Ok.TabIndex = 0;
             this.Ok.Text = "Clone";
             this.Ok.UseVisualStyleBackColor = true;
