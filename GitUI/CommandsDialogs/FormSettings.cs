@@ -35,6 +35,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly CommonLogic _commonLogic;
         private readonly string _translatedTitle;
+        private SettingsPageReference _initialPage;
 
         public CheckSettingsLogic CheckSettingsLogic { get; }
 
@@ -50,18 +51,28 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            _translatedTitle = Text;
 
-            settingsTreeView.SuspendLayout();
+            _translatedTitle = Text;
 
 #if DEBUG
             buttonDiscard.Visible = true;
 #endif
 
             _commonLogic = new CommonLogic(Module);
+
             CheckSettingsLogic = new CheckSettingsLogic(_commonLogic);
 
-            var checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(this);
+            InitializeComplete();
+            _initialPage = initialPage;
+        }
+
+        protected override void OnRuntimeLoad(EventArgs e)
+        {
+            base.OnRuntimeLoad(e);
+
+            settingsTreeView.SuspendLayout();
+
+            ChecklistSettingsPage checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(this);
 
             // Git Extensions settings
             settingsTreeView.AddSettingsPage(new GitExtensionsSettingsGroup(), null, Images.GitExtensionsLogo16);
@@ -126,15 +137,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (initialPage == null && _lastSelectedSettingsPageType != null)
-            {
-                initialPage = new SettingsPageReferenceByType(_lastSelectedSettingsPageType);
-            }
-
-            settingsTreeView.GotoPage(initialPage);
             settingsTreeView.ResumeLayout();
-
-            InitializeComplete();
         }
 
         public static DialogResult ShowSettingsDialog(GitUICommands uiCommands, IWin32Window owner, SettingsPageReference initialPage = null)
@@ -152,89 +155,18 @@ namespace GitUI.CommandsDialogs
             return result;
         }
 
-        private void FormSettings_Load(object sender, EventArgs e)
-        {
-            if (DesignMode)
-            {
-                return;
-            }
-
-            WindowState = FormWindowState.Normal;
-
-            if (HasClippedControl())
-            {
-                var appFont = AppSettings.Font;
-                var smallFont = new Font(appFont.FontFamily, emSize: 8);
-                ReplaceFont(Controls, appFont, smallFont);
-                foreach (var page in settingsTreeView.SettingsPages)
-                {
-                    ReplaceFont(page?.GuiControl?.Controls, appFont, smallFont);
-                }
-            }
-
-            return;
-
-            // TODO: C#8 static
-            void ReplaceFont(Control.ControlCollection controls, Font oldFont, Font newFont)
-            {
-                if (controls == null)
-                {
-                    return;
-                }
-
-                foreach (Control control in controls)
-                {
-                    if (control.Font.Equals(oldFont))
-                    {
-                        control.Font = newFont;
-                    }
-
-                    ReplaceFont(control.Controls, oldFont, newFont);
-                }
-            }
-
-            bool HasClippedControl()
-            {
-                foreach (var page in settingsTreeView.SettingsPages)
-                {
-                    if (ContainsClippedControl(page?.GuiControl?.Controls))
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-
-                bool ContainsClippedControl(Control.ControlCollection controls)
-                {
-                    if (controls == null)
-                    {
-                        return false;
-                    }
-
-                    foreach (Control control in controls)
-                    {
-                        if (control.Bottom > panelCurrentSettingsPage.Bottom && control.Visible && control.GetType() != typeof(TableLayoutPanel))
-                        {
-                            return true;
-                        }
-
-                        if (ContainsClippedControl(control.Controls))
-                        {
-                            return true;
-                        }
-                    }
-
-                    return false;
-                }
-            }
-        }
-
         private void FormSettings_Shown(object sender, EventArgs e)
         {
             using (WaitCursorScope.Enter())
             {
                 LoadSettings();
+
+                if (_initialPage == null && _lastSelectedSettingsPageType != null)
+                {
+                    _initialPage = new SettingsPageReferenceByType(_lastSelectedSettingsPageType);
+                }
+
+                settingsTreeView.GotoPage(_initialPage);
             }
         }
 
@@ -243,7 +175,6 @@ namespace GitUI.CommandsDialogs
             panelCurrentSettingsPage.Controls.Clear();
 
             var settingsPage = e.SettingsPage;
-
             if (settingsPage != null)
             {
                 _lastSelectedSettingsPageType = settingsPage.GetType();
