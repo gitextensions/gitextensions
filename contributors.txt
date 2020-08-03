@@ -135,3 +135,4 @@ YYYY/MM/DD, github id, Full name, email
 2020/06/24, lanfeust69, Jean-Jacques Lafay, jeanjacques.lafay(at)gmail.com
 2020/07/03, gtisdelle, George Tisdelle, gwnt97(at)gmail.com
 2020/07/07, bstecisa, Borja Serrano, borjaserrano(at)gmail.com
+2020/08/02, FodderMK, Kevin Yockey, gitex{at]foddermk.com
