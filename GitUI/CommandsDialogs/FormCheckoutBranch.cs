@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitExtUtils.GitUI;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -15,7 +16,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class FormCheckoutBranch : GitModuleForm
+    public partial class FormCheckoutBranch : GitExtensionsDialog
     {
         #region Translation
         private readonly TranslationString _customBranchNameIsEmpty =
@@ -56,31 +57,24 @@ namespace GitUI.CommandsDialogs
         private FormCheckoutBranch()
         {
             InitializeComponent();
+
+            // work-around the designer bug that can't add controls to FlowLayoutPanel
+            ControlsPanel.Controls.Add(Ok);
         }
 
-        internal FormCheckoutBranch(GitUICommands commands)
-            : base(commands)
+        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote, IReadOnlyList<ObjectId> containRevisions = null)
+            : base(commands, true)
         {
             _branchNameNormaliser = new GitBranchNameNormaliser();
             InitializeComponent();
             InitializeComplete();
             _rbResetBranchDefaultText = rbResetBranch.Text;
 
+            // work-around the designer bug that can't add controls to FlowLayoutPanel
+            ControlsPanel.Controls.Add(Ok);
+
             ApplyLayout();
             Shown += FormCheckoutBranch_Shown;
-
-            return;
-
-            void FormCheckoutBranch_Shown(object sender, EventArgs e)
-            {
-                Shown -= FormCheckoutBranch_Shown;
-                RecalculateSizeConstraints();
-            }
-        }
-
-        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote, IReadOnlyList<ObjectId> containRevisions = null)
-            : this(commands)
-        {
             _isLoading = true;
 
             try
@@ -127,6 +121,14 @@ namespace GitUI.CommandsDialogs
             finally
             {
                 _isLoading = false;
+            }
+
+            return;
+
+            void FormCheckoutBranch_Shown(object sender, EventArgs e)
+            {
+                Shown -= FormCheckoutBranch_Shown;
+                RecalculateSizeConstraints();
             }
         }
 
@@ -178,37 +180,33 @@ namespace GitUI.CommandsDialogs
         {
             var controls1 = new Control[]
             {
-                setBranchPanel,
+                tlpnlBranches,
                 horLine,
-                remoteOptionsPanel,
-                localChangesPanel
+                tlpnlRemoteOptions,
+                localChangesGB
             };
 
-            Ok.Anchor = AnchorStyles.Right;
-
-            flowLayoutPanel2.AutoSize = true;
-            flowLayoutPanel2.Dock = DockStyle.Fill;
             localChangesGB.AutoSize = true;
-            localChangesGB.Height = (flowLayoutPanel2.Height * 2) + localChangesGB.Padding.Top + localChangesGB.Padding.Bottom;
-            localChangesPanel.ColumnStyles[1].Width = Ok.Width + 10;
-            var height = localChangesGB.Height + localChangesGB.Margin.Top + localChangesGB.Margin.Bottom;
-            localChangesPanel.RowStyles[0].Height = height;
-            localChangesPanel.Height = height;
+            localChangesGB.Dock = DockStyle.Fill;
 
-            Width = tableLayoutPanel1.PreferredSize.Width + 40;
+            Width = tlpnlMain.PreferredSize.Width + 50;
 
+            int height;
             for (var i = 0; i < controls1.Length; i++)
             {
                 var margin = controls1[i].Margin;
                 height = controls1[i].Height + margin.Top + margin.Bottom;
                 _controls.Add(controls1[i], height);
 
-                tableLayoutPanel1.RowStyles[i].Height = height;
-                tableLayoutPanel1.RowStyles[i].SizeType = SizeType.Absolute;
+                tlpnlMain.RowStyles[i].Height = height;
+                tlpnlMain.RowStyles[i].SizeType = SizeType.Absolute;
+
+                controls1[i].Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+                controls1[i].AutoSize = true;
             }
 
-            tableLayoutPanel1.RowStyles[2].Height = Remotebranch.Checked ? _controls[remoteOptionsPanel] : 0;
-            tableLayoutPanel1.Height = tableLayoutPanel1.Height - _controls[remoteOptionsPanel];
+            tlpnlMain.RowStyles[2].Height = Remotebranch.Checked ? _controls[tlpnlRemoteOptions] : 0;
+            tlpnlMain.Height = tlpnlMain.Height - _controls[tlpnlRemoteOptions];
         }
 
         private void PopulateBranches()
@@ -548,15 +546,19 @@ namespace GitUI.CommandsDialogs
 
         private void RecalculateSizeConstraints()
         {
-            MinimumSize = MaximumSize = new Size(0, 0);
+            SuspendLayout();
+            MinimumSize = MaximumSize = Size.Empty;
 
-            remoteOptionsPanel.Visible = Remotebranch.Checked;
-            tableLayoutPanel1.RowStyles[2].Height = Remotebranch.Checked ? _controls[remoteOptionsPanel] : 0;
-            tableLayoutPanel1.Height = _controls.Select(c => c.Key.Visible ? c.Value : 0).Sum() + tableLayoutPanel1.Padding.Top + tableLayoutPanel1.Padding.Bottom;
-            Height = tableLayoutPanel1.Height + tableLayoutPanel1.Margin.Top + tableLayoutPanel1.Margin.Bottom + 40;
+            tlpnlRemoteOptions.Visible = Remotebranch.Checked;
+            tlpnlMain.RowStyles[2].Height = Remotebranch.Checked ? _controls[tlpnlRemoteOptions] : 0;
+            tlpnlMain.Height = _controls.Select(c => c.Key.Visible ? c.Value : 0).Sum() + tlpnlMain.Padding.Top + tlpnlMain.Padding.Bottom;
+            int height = ControlsPanel.Height + MainPanel.Padding.Top + MainPanel.Padding.Bottom
+                       + tlpnlMain.Height + tlpnlMain.Margin.Top + tlpnlMain.Margin.Bottom + DpiUtil.Scale(30);
 
-            MinimumSize = new Size(tableLayoutPanel1.PreferredSize.Width + 40, Height);
-            MaximumSize = new Size(Screen.PrimaryScreen.Bounds.Width, Height);
+            MinimumSize = new Size(tlpnlMain.PreferredSize.Width + DpiUtil.Scale(70), height);
+            MaximumSize = new Size(Screen.PrimaryScreen.Bounds.Width, height);
+            Size = new Size(Width, height);
+            ResumeLayout();
         }
 
         private void rbReset_CheckedChanged(object sender, EventArgs e)

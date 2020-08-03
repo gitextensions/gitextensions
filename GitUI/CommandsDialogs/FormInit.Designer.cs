@@ -113,7 +113,7 @@
             // 
             this.Init.Location = new System.Drawing.Point(451, 106);
             this.Init.Name = "Init";
-            this.Init.Size = new System.Drawing.Size(101, 25);
+            this.Init.Size = new System.Drawing.Size(118, 25);
             this.Init.TabIndex = 4;
             this.Init.Text = "Create";
             this.Init.UseVisualStyleBackColor = true;

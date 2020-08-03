@@ -52,7 +52,7 @@
             // 
             this.Ok.Location = new System.Drawing.Point(314, 234);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(105, 25);
+            this.Ok.Size = new System.Drawing.Size(118, 25);
             this.Ok.TabIndex = 0;
             this.Ok.Text = "OK";
             this.Ok.UseCompatibleTextRendering = true;
