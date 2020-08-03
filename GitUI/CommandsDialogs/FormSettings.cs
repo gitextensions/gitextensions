@@ -19,8 +19,6 @@ namespace GitUI.CommandsDialogs
     {
         public static readonly string HotkeySettingsName = "Scripts";
 
-        [CanBeNull] private static Type _lastSelectedSettingsPageType;
-
         #region Translation
 
         private readonly TranslationString _cantFindGitMessage =
@@ -28,17 +26,14 @@ namespace GitUI.CommandsDialogs
                 "You need to set the correct path to be able to use Git Extensions." + Environment.NewLine +
                 Environment.NewLine + "Do you want to set the correct command now? If not Global and Local Settings will not be saved.");
 
-        private readonly TranslationString _cantFindGitMessageCaption =
-            new TranslationString("Incorrect path");
+        private readonly TranslationString _cantFindGitMessageCaption = new TranslationString("Incorrect path");
 
         #endregion
 
+        [CanBeNull] private static Type _lastSelectedSettingsPageType;
         private readonly CommonLogic _commonLogic;
         private readonly string _translatedTitle;
-
-        public CheckSettingsLogic CheckSettingsLogic { get; }
-
-        private IEnumerable<ISettingsPage> SettingsPages => settingsTreeView.SettingsPages;
+        private SettingsPageReference _initialPage;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormSettings()
@@ -50,18 +45,83 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            _translatedTitle = Text;
 
-            settingsTreeView.SuspendLayout();
+            _translatedTitle = Text;
 
 #if DEBUG
             buttonDiscard.Visible = true;
 #endif
 
             _commonLogic = new CommonLogic(Module);
+
             CheckSettingsLogic = new CheckSettingsLogic(_commonLogic);
 
-            var checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(this);
+            InitializeComplete();
+            _initialPage = initialPage;
+        }
+
+        public CheckSettingsLogic CheckSettingsLogic { get; }
+
+        private IEnumerable<ISettingsPage> SettingsPages => settingsTreeView.SettingsPages;
+
+        public void GotoPage(SettingsPageReference settingsPageReference)
+        {
+            settingsTreeView.GotoPage(settingsPageReference);
+        }
+
+        public void LoadAll()
+        {
+            LoadSettings();
+        }
+
+        public void LoadSettings()
+        {
+            try
+            {
+                foreach (var settingsPage in SettingsPages)
+                {
+                    settingsPage.LoadSettings();
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionUtils.ShowException(e);
+
+                // Bail out before the user saves the incompletely loaded settings
+                // and has their day ruined.
+                DialogResult = DialogResult.Abort;
+
+                throw;
+            }
+        }
+
+        public void SaveAll()
+        {
+            Save();
+        }
+
+        public static DialogResult ShowSettingsDialog(GitUICommands uiCommands, IWin32Window owner, SettingsPageReference initialPage = null)
+        {
+            DialogResult result = DialogResult.None;
+
+            using (var form = new FormSettings(uiCommands, initialPage))
+            {
+                AppSettings.UsingContainer(form._commonLogic.RepoDistSettingsSet.GlobalSettings, () =>
+                {
+                    result = form.ShowDialog(owner);
+                });
+            }
+
+            return result;
+        }
+
+        protected override void OnRuntimeLoad(EventArgs e)
+        {
+            base.OnRuntimeLoad(e);
+
+            settingsTreeView.SuspendLayout();
+
+            ChecklistSettingsPage checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(this);
 
             // Git Extensions settings
             settingsTreeView.AddSettingsPage(new GitExtensionsSettingsGroup(), null, Images.GitExtensionsLogo16);
@@ -126,116 +186,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (initialPage == null && _lastSelectedSettingsPageType != null)
-            {
-                initialPage = new SettingsPageReferenceByType(_lastSelectedSettingsPageType);
-            }
-
-            settingsTreeView.GotoPage(initialPage);
             settingsTreeView.ResumeLayout();
-
-            InitializeComplete();
-        }
-
-        public static DialogResult ShowSettingsDialog(GitUICommands uiCommands, IWin32Window owner, SettingsPageReference initialPage = null)
-        {
-            DialogResult result = DialogResult.None;
-
-            using (var form = new FormSettings(uiCommands, initialPage))
-            {
-                AppSettings.UsingContainer(form._commonLogic.RepoDistSettingsSet.GlobalSettings, () =>
-                {
-                    result = form.ShowDialog(owner);
-                });
-            }
-
-            return result;
-        }
-
-        private void FormSettings_Load(object sender, EventArgs e)
-        {
-            if (DesignMode)
-            {
-                return;
-            }
-
-            WindowState = FormWindowState.Normal;
-
-            if (HasClippedControl())
-            {
-                var appFont = AppSettings.Font;
-                var smallFont = new Font(appFont.FontFamily, emSize: 8);
-                ReplaceFont(Controls, appFont, smallFont);
-                foreach (var page in settingsTreeView.SettingsPages)
-                {
-                    ReplaceFont(page?.GuiControl?.Controls, appFont, smallFont);
-                }
-            }
-
-            return;
-
-            // TODO: C#8 static
-            void ReplaceFont(Control.ControlCollection controls, Font oldFont, Font newFont)
-            {
-                if (controls == null)
-                {
-                    return;
-                }
-
-                foreach (Control control in controls)
-                {
-                    if (control.Font.Equals(oldFont))
-                    {
-                        control.Font = newFont;
-                    }
-
-                    ReplaceFont(control.Controls, oldFont, newFont);
-                }
-            }
-
-            bool HasClippedControl()
-            {
-                foreach (var page in settingsTreeView.SettingsPages)
-                {
-                    if (ContainsClippedControl(page?.GuiControl?.Controls))
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-
-                bool ContainsClippedControl(Control.ControlCollection controls)
-                {
-                    if (controls == null)
-                    {
-                        return false;
-                    }
-
-                    foreach (Control control in controls)
-                    {
-                        if (control.Bottom > panelCurrentSettingsPage.Bottom && control.Visible && control.GetType() != typeof(TableLayoutPanel))
-                        {
-                            return true;
-                        }
-
-                        if (ContainsClippedControl(control.Controls))
-                        {
-                            return true;
-                        }
-                    }
-
-                    return false;
-                }
-            }
-        }
-
-        private void FormSettings_Shown(object sender, EventArgs e)
-        {
-            using (WaitCursorScope.Enter())
-            {
-                LoadSettings();
-            }
         }
 
         private void OnSettingsPageSelected(object sender, SettingsPageSelectedEventArgs e)
@@ -243,7 +194,6 @@ namespace GitUI.CommandsDialogs
             panelCurrentSettingsPage.Controls.Clear();
 
             var settingsPage = e.SettingsPage;
-
             if (settingsPage != null)
             {
                 _lastSelectedSettingsPageType = settingsPage.GetType();
@@ -284,38 +234,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public void LoadSettings()
-        {
-            try
-            {
-                foreach (var settingsPage in SettingsPages)
-                {
-                    settingsPage.LoadSettings();
-                }
-            }
-            catch (Exception e)
-            {
-                ExceptionUtils.ShowException(e);
-
-                // Bail out before the user saves the incompletely loaded settings
-                // and has their day ruined.
-                DialogResult = DialogResult.Abort;
-
-                throw;
-            }
-        }
-
-        private void Ok_Click(object sender, EventArgs e)
-        {
-            using (WaitCursorScope.Enter())
-            {
-                if (Save())
-                {
-                    Close();
-                }
-            }
-        }
-
         private bool Save()
         {
             if (!CheckSettingsLogic.CanFindGitCmd())
@@ -346,6 +264,32 @@ namespace GitUI.CommandsDialogs
             return true;
         }
 
+        private void FormSettings_Shown(object sender, EventArgs e)
+        {
+            using (WaitCursorScope.Enter())
+            {
+                LoadSettings();
+
+                if (_initialPage == null && _lastSelectedSettingsPageType != null)
+                {
+                    _initialPage = new SettingsPageReferenceByType(_lastSelectedSettingsPageType);
+                }
+
+                settingsTreeView.GotoPage(_initialPage);
+            }
+        }
+
+        private void Ok_Click(object sender, EventArgs e)
+        {
+            using (WaitCursorScope.Enter())
+            {
+                if (Save())
+                {
+                    Close();
+                }
+            }
+        }
+
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             Close();
@@ -365,21 +309,6 @@ namespace GitUI.CommandsDialogs
             {
                 Save();
             }
-        }
-
-        public void GotoPage(SettingsPageReference settingsPageReference)
-        {
-            settingsTreeView.GotoPage(settingsPageReference);
-        }
-
-        public void SaveAll()
-        {
-            Save();
-        }
-
-        public void LoadAll()
-        {
-            LoadSettings();
         }
     }
 }
