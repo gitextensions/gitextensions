@@ -1719,12 +1719,6 @@ namespace GitCommands
             return Properties.Settings.Default.IsPortable;
         }
 
-        public static bool ShowMultiLineCommitMessages
-        {
-            get => GetBool("showmultilinecommitmessages", false);
-            set => SetBool("showmultilinecommitmessages", value);
-        }
-
         private static IEnumerable<(string name, string value)> GetSettingsFromRegistry()
         {
             RegistryKey oldSettings = VersionIndependentRegKey.OpenSubKey("GitExtensions");

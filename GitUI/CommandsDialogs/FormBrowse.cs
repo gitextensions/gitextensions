@@ -730,7 +730,16 @@ namespace GitUI.CommandsDialogs
 
             FillFileTree(selectedRevision);
             FillDiff(selectedRevisions);
+
+            var oldBody = selectedRevision?.Body;
             FillCommitInfo(selectedRevision);
+
+            // If the revision's body has been updated then the grid needs to be refreshed to display it
+            if (selectedRevision != null && selectedRevision.HasMultiLineMessage && oldBody != selectedRevision.Body)
+            {
+                RevisionGrid.Refresh();
+            }
+
             ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync(selectedRevision));
             FillBuildReport(selectedRevision);
             repoObjectsTree.SelectionChanged(selectedRevisions);

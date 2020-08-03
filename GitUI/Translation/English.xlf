@@ -156,10 +156,6 @@ See http://en.gravatar.com/site/implement/images#default-image for more details.
         <source>Show current branch in Visual Studio</source>
         <target />
       </trans-unit>
-      <trans-unit id="chkShowMultiLineCommitMessages.Text">
-        <source>Show multi-line commit messages in the revision graph</source>
-        <target />
-      </trans-unit>
       <trans-unit id="chkShowRelativeDate.Text">
         <source>Show relative date instead of full date</source>
         <target />
