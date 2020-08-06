@@ -1364,7 +1364,7 @@ namespace GitCommands
                 {
                     "-M -C -B",
                     { start != null, $"--start-number {start}" },
-                    $"{from.Quote()}..{to.Quote()}",
+                    { !string.IsNullOrEmpty(from), $"{from.Quote()}..{to.Quote()}", $"--root {to.Quote()}" },
                     $"-o {output.ToPosixPath().Quote()}"
                 });
         }
