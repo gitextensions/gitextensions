@@ -274,7 +274,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         {
             if (!revision.IsArtificial)
             {
-                if (AppSettings.ShowMultiLineCommitMessages && revision.HasMultiLineMessage && revision.Body != null)
+                if (revision.HasMultiLineMessage && revision.Body != null)
                 {
                     e.Value = Regex.Replace(revision.Body.Trim(), "[\r\n]", " ");
                 }

@@ -2182,13 +2182,6 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        internal void ToggleShowMultiLineCommit()
-        {
-            AppSettings.ShowMultiLineCommitMessages = !AppSettings.ShowMultiLineCommitMessages;
-            MenuCommands.TriggerMenuChanged();
-            Refresh();
-        }
-
         internal void ShowFirstParent()
         {
             AppSettings.ShowFirstParent = !AppSettings.ShowFirstParent;
