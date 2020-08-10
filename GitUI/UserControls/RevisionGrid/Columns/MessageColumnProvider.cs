@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
@@ -273,7 +274,14 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         {
             if (!revision.IsArtificial)
             {
-                e.Value = revision.Subject.Trim();
+                if (revision.HasMultiLineMessage && revision.Body != null)
+                {
+                    e.Value = Regex.Replace(revision.Body.Trim(), "[\r\n]", " ");
+                }
+                else
+                {
+                    e.Value = revision.Subject.Trim();
+                }
 
                 e.FormattingApplied = true;
             }
