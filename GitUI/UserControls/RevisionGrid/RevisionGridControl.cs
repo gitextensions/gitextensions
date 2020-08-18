@@ -56,7 +56,7 @@ namespace GitUI
     }
 
     [DefaultEvent("DoubleClick")]
-    public sealed partial class RevisionGridControl : GitModuleControl, IScriptHostControl, ICheckRefs
+    public sealed partial class RevisionGridControl : GitModuleControl, IScriptHostControl, ICheckRefs, IRunScript
     {
         public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
         public event EventHandler<EventArgs> ShowFirstParentsToggled;
@@ -147,8 +147,6 @@ namespace GitUI
         private string _branchFilter = "";
         private SuperProjectInfo _superprojectCurrentCheckout;
         private int _latestSelectedRowIndex;
-
-        private bool _settingsLoaded;
 
         // NOTE internal properties aren't serialised by the WinForms designer
 
@@ -1808,20 +1806,7 @@ namespace GitUI
 
             SetEnabled(openPullRequestPageStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl));
 
-            mainContextMenu.AppendUserScripts(runScriptToolStripMenuItem,
-                (scriptKey) =>
-                {
-                    if (_settingsLoaded == false)
-                    {
-                        new FormSettings(UICommands).LoadSettings();
-                        _settingsLoaded = true;
-                    }
-
-                    if (ScriptRunner.RunScript(this, Module, scriptKey, UICommands, this).NeedsGridRefresh)
-                    {
-                        RefreshRevisions();
-                    }
-                });
+            mainContextMenu.AddUserScripts(runScriptToolStripMenuItem, ((IRunScript)this).Execute);
 
             UpdateSeparators();
 
@@ -2783,6 +2768,14 @@ namespace GitUI
         /// <param name="objectId">The hash to find.</param>
         /// <returns><see langword="true"/>, if the given hash if found; otherwise <see langword="false"/>.</returns>
         bool ICheckRefs.Contains(ObjectId objectId) => _gridView.Contains(objectId);
+
+        void IRunScript.Execute(string name)
+        {
+            if (ScriptRunner.RunScript(this, Module, name, UICommands, this).NeedsGridRefresh)
+            {
+                RefreshRevisions();
+            }
+        }
 
         internal TestAccessor GetTestAccessor()
             => new TestAccessor(this);

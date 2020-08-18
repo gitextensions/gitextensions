@@ -8,8 +8,8 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.BranchTreePanel.ContextMenu;
 using GitUI.BranchTreePanel.Interfaces;
+using GitUI.CommandsDialogs;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.BranchTreePanel
@@ -122,6 +122,15 @@ namespace GitUI.BranchTreePanel
             _localBranchMenuItems.GetInactiveBranchItems().ForEach(t => t.Item.Visible = isNotActiveBranch);
 
             _menuBranchCopyContextMenuItems.ForEach(x => x.Visible = node.Visible);
+
+            if (node.Visible)
+            {
+                contextMenu.AddUserScripts(runScriptToolStripMenuItem, _scriptRunner.Execute);
+            }
+            else
+            {
+                contextMenu.RemoveUserScripts(runScriptToolStripMenuItem);
+            }
         }
 
         private void ContextMenuRemoteSpecific(ContextMenuStrip contextMenu)
