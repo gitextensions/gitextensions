@@ -136,3 +136,4 @@ YYYY/MM/DD, github id, Full name, email
 2020/07/03, gtisdelle, George Tisdelle, gwnt97(at)gmail.com
 2020/07/07, bstecisa, Borja Serrano, borjaserrano(at)gmail.com
 2020/08/02, FodderMK, Kevin Yockey, gitex{at]foddermk.com
+2020/08/21, Arash.jfz, Arash Jafarzadeh, arashjfz{at]gmail.com
