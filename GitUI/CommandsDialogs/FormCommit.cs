@@ -1476,8 +1476,11 @@ namespace GitUI.CommandsDialogs
                     noVerifyToolStripMenuItem.Checked = false;
 
                     ScriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
+                    if (!push)
+                    {
+                        Message.Text = string.Empty; // Message.Text has been used and stored
+                    }
 
-                    Message.Text = string.Empty; // Message.Text has been used and stored
                     _commitMessageManager.ResetCommitMessage();
                     CommitKind = CommitKind.Normal;
 
