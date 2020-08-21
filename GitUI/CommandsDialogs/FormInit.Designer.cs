@@ -46,12 +46,12 @@
             this.MainPanel.Controls.Add(this.Browse);
             this.MainPanel.Controls.Add(this._NO_TRANSLATE_Directory);
             this.MainPanel.Controls.Add(this.label1);
-            this.MainPanel.Size = new System.Drawing.Size(572, 155);
+            this.MainPanel.Size = new System.Drawing.Size(572, 146);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(24, 27);
+            this.label1.Location = new System.Drawing.Point(27, 24);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(49, 13);
             this.label1.TabIndex = 0;
@@ -62,17 +62,17 @@
             this._NO_TRANSLATE_Directory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this._NO_TRANSLATE_Directory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this._NO_TRANSLATE_Directory.FormattingEnabled = true;
-            this._NO_TRANSLATE_Directory.Location = new System.Drawing.Point(110, 24);
+            this._NO_TRANSLATE_Directory.Location = new System.Drawing.Point(110, 21);
             this._NO_TRANSLATE_Directory.Name = "_NO_TRANSLATE_Directory";
-            this._NO_TRANSLATE_Directory.Size = new System.Drawing.Size(338, 21);
+            this._NO_TRANSLATE_Directory.Size = new System.Drawing.Size(323, 21);
             this._NO_TRANSLATE_Directory.TabIndex = 1;
             // 
             // Browse
             // 
-            this.Browse.Location = new System.Drawing.Point(454, 22);
+            this.Browse.Location = new System.Drawing.Point(439, 19);
             this.Browse.Name = "Browse";
             this.Browse.PathShowingControl = this._NO_TRANSLATE_Directory;
-            this.Browse.Size = new System.Drawing.Size(91, 25);
+            this.Browse.Size = new System.Drawing.Size(106, 25);
             this.Browse.TabIndex = 2;
             this.Browse.Click += new System.EventHandler(this.BrowseClick);
             // 
@@ -80,9 +80,9 @@
             // 
             this.groupBox1.Controls.Add(this.Central);
             this.groupBox1.Controls.Add(this.Personal);
-            this.groupBox1.Location = new System.Drawing.Point(27, 51);
+            this.groupBox1.Location = new System.Drawing.Point(27, 48);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(421, 78);
+            this.groupBox1.Size = new System.Drawing.Size(518, 78);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Repository type";
@@ -124,7 +124,7 @@
             this.AcceptButton = this.Init;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(572, 200);
+            this.ClientSize = new System.Drawing.Size(572, 191);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

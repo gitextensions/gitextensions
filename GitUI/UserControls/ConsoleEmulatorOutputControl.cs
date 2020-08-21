@@ -27,7 +27,7 @@ namespace GitUI.UserControls
 
         private void InitializeComponent()
         {
-            Controls.Add(_panel = new Panel { Dock = DockStyle.Fill, BorderStyle = BorderStyle.Fixed3D });
+            Controls.Add(_panel = new Panel { Dock = DockStyle.Fill, BorderStyle = BorderStyle.FixedSingle });
         }
 
         public override int ExitCode => _nLastExitCode;

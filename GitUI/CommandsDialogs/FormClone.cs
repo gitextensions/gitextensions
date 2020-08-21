@@ -75,8 +75,8 @@ namespace GitUI.CommandsDialogs
             // scale up for hi DPI
             MaximumSize = DpiUtil.Scale(new Size(950, 425));
             MinimumSize = DpiUtil.Scale(new Size(450, 425));
-            Size = new Size((tableLayoutPanel2.Left * 2) + tableLayoutPanel2.Width, Height);
-            tableLayoutPanel2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            Size = new Size((tpnlMain.Left * 2) + tpnlMain.Width + /* right margin */DpiUtil.Scale(16), Height);
+            tpnlMain.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
