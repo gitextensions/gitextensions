@@ -54,6 +54,7 @@ namespace GitUI
             this.MainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainPanel.Location = new System.Drawing.Point(0, 0);
             this.MainPanel.Name = "MainPanel";
+            this.MainPanel.Padding = new System.Windows.Forms.Padding(24);
             this.MainPanel.Size = new System.Drawing.Size(553, 292);
             this.MainPanel.TabIndex = 1;
             // 

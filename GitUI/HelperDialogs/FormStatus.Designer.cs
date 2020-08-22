@@ -7,19 +7,6 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
         #region Windows Form Designer generated code
 
         /// <summary>
@@ -32,21 +19,18 @@
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.KeepDialogOpen = new System.Windows.Forms.CheckBox();
             this.Abort = new System.Windows.Forms.Button();
-            this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.picBoxSuccessFail = new System.Windows.Forms.PictureBox();
+            this.pnlOutput = new System.Windows.Forms.Panel();
             this.MainPanel.SuspendLayout();
-            this.tableLayoutPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxSuccessFail)).BeginInit();
             this.SuspendLayout();
             // 
             // MainPanel
             // 
+            this.MainPanel.Controls.Add(this.pnlOutput);
             this.MainPanel.Controls.Add(this.KeepDialogOpen);
             this.MainPanel.Controls.Add(this.Abort);
-            this.MainPanel.Controls.Add(this.tableLayoutPanel);
             this.MainPanel.Controls.Add(this.Ok);
-            this.MainPanel.Padding = new System.Windows.Forms.Padding(16, 20, 40, 20);
-            this.MainPanel.Size = new System.Drawing.Size(549, 243);
+            this.MainPanel.Padding = new System.Windows.Forms.Padding(0);
+            this.MainPanel.Size = new System.Drawing.Size(549, 240);
             // 
             // Ok
             // 
@@ -62,7 +46,7 @@
             // ProgressBar
             // 
             this.ProgressBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ProgressBar.Location = new System.Drawing.Point(0, 0);
+            this.ProgressBar.Location = new System.Drawing.Point(0, 240);
             this.ProgressBar.Margin = new System.Windows.Forms.Padding(0);
             this.ProgressBar.MarqueeAnimationSpeed = 1;
             this.ProgressBar.Name = "ProgressBar";
@@ -74,7 +58,7 @@
             // KeepDialogOpen
             // 
             this.KeepDialogOpen.AutoSize = true;
-            this.KeepDialogOpen.Location = new System.Drawing.Point(194, 248);
+            this.KeepDialogOpen.Location = new System.Drawing.Point(178, 228);
             this.KeepDialogOpen.Name = "KeepDialogOpen";
             this.KeepDialogOpen.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
             this.KeepDialogOpen.Size = new System.Drawing.Size(111, 22);
@@ -96,32 +80,14 @@
             this.Abort.UseVisualStyleBackColor = true;
             this.Abort.Click += new System.EventHandler(this.Abort_Click);
             // 
-            // tableLayoutPanel
+            // pnlOutput
             // 
-            this.tableLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel.ColumnCount = 2;
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel.Controls.Add(this.ConsoleOutput, 1, 0);
-            this.tableLayoutPanel.Controls.Add(this.picBoxSuccessFail, 0, 0);
-            this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel.Location = new System.Drawing.Point(10, 24);
-            this.tableLayoutPanel.Name = "tableLayoutPanel";
-            this.tableLayoutPanel.RowCount = 2;
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 3F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(515, 209);
-            this.tableLayoutPanel.TabIndex = 0;
-            // 
-            // picBoxSuccessFail
-            // 
-            this.picBoxSuccessFail.Dock = System.Windows.Forms.DockStyle.Right;
-            this.picBoxSuccessFail.Image = global::GitUI.Properties.Images.StatusBadgeWaiting;
-            this.picBoxSuccessFail.Location = new System.Drawing.Point(3, 3);
-            this.picBoxSuccessFail.Name = "picBoxSuccessFail";
-            this.picBoxSuccessFail.Size = new System.Drawing.Size(47, 200);
-            this.picBoxSuccessFail.TabIndex = 1;
-            this.picBoxSuccessFail.TabStop = false;
+            this.pnlOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlOutput.Location = new System.Drawing.Point(0, 0);
+            this.pnlOutput.Name = "pnlOutput";
+            this.pnlOutput.Padding = new System.Windows.Forms.Padding(27);
+            this.pnlOutput.Size = new System.Drawing.Size(549, 240);
+            this.pnlOutput.TabIndex = 0;
             // 
             // FormStatus
             // 
@@ -130,8 +96,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.Abort;
             this.ClientSize = new System.Drawing.Size(549, 288);
-            this.ControlBox = false;
             this.Controls.Add(this.ProgressBar);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(500, 200);
             this.Name = "FormStatus";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -140,8 +107,6 @@
             this.Controls.SetChildIndex(this.MainPanel, 0);
             this.MainPanel.ResumeLayout(false);
             this.MainPanel.PerformLayout();
-            this.tableLayoutPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxSuccessFail)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -153,7 +118,6 @@
         protected System.Windows.Forms.Button Ok;
         protected System.Windows.Forms.CheckBox KeepDialogOpen;
         protected System.Windows.Forms.Button Abort;
-        private System.Windows.Forms.PictureBox picBoxSuccessFail;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
+        protected System.Windows.Forms.Panel pnlOutput;
     }
 }

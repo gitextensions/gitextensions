@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -29,7 +30,6 @@ namespace GitUI.HelperDialogs
             _useDialogSettings = useDialogSettings;
 
             ConsoleOutput = consoleOutput ?? ConsoleOutputControl.CreateInstance();
-            ConsoleOutput.Dock = DockStyle.Fill;
             ConsoleOutput.Terminated += (s, e) =>
             {
                 // This means the control is not visible anymore, no use in keeping.
@@ -38,6 +38,11 @@ namespace GitUI.HelperDialogs
             };
 
             InitializeComponent();
+
+            SetIcon(Images.StatusBadgeWaiting);
+
+            pnlOutput.Controls.Add(ConsoleOutput);
+            ConsoleOutput.Dock = DockStyle.Fill;
 
             if (_useDialogSettings)
             {
@@ -59,10 +64,27 @@ namespace GitUI.HelperDialogs
             InitializeComplete();
         }
 
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+
+                Icon?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
         protected override CreateParams CreateParams
         {
             get
             {
+                // disable the control box close button
                 CreateParams mdiCp = base.CreateParams;
                 mdiCp.ClassStyle |= NativeMethods.CP_NOCLOSE_BUTTON;
                 return mdiCp;
@@ -146,6 +168,25 @@ namespace GitUI.HelperDialogs
             ConsoleOutput.AppendMessageFreeThreaded(text);
         }
 
+        private static Icon BitmapToIcon(Bitmap bitmap)
+        {
+            IntPtr handle = IntPtr.Zero;
+            try
+            {
+                handle = bitmap.GetHicon();
+                var icon = Icon.FromHandle(handle);
+
+                return (Icon)icon.Clone();
+            }
+            finally
+            {
+                if (handle != IntPtr.Zero)
+                {
+                    NativeMethods.DestroyIcon(handle);
+                }
+            }
+        }
+
         private protected void Done(bool isSuccess)
         {
             try
@@ -158,7 +199,8 @@ namespace GitUI.HelperDialogs
                 Abort.Enabled = false;
                 TaskbarProgress.SetProgress(isSuccess ? TaskbarProgressBarState.Normal : TaskbarProgressBarState.Error, 100, 100);
 
-                picBoxSuccessFail.Image = isSuccess ? Images.StatusBadgeSuccess : Images.StatusBadgeError;
+                Bitmap image = isSuccess ? Images.StatusBadgeSuccess : Images.StatusBadgeError;
+                SetIcon(image);
 
                 _errorOccurred = !isSuccess;
 
@@ -175,11 +217,19 @@ namespace GitUI.HelperDialogs
 
         private protected void Reset()
         {
+            SetIcon(Images.StatusBadgeWaiting);
             ConsoleOutput.Reset();
             OutputLog.Clear();
             ProgressBar.Visible = true;
             Ok.Enabled = false;
             ActiveControl = null;
+        }
+
+        private void SetIcon(Bitmap image)
+        {
+            Icon oldIcon = Icon;
+            Icon = BitmapToIcon(image);
+            oldIcon?.Dispose();
         }
 
         private protected async Task SetProgressAsync(string text)
