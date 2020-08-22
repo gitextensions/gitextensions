@@ -529,15 +529,12 @@ namespace GitUI
                     dir = Module.IsValidGitWorkingDir() ? Module.WorkingDir : string.Empty;
                 }
 
-                using (var frm = new FormInit(dir, gitModuleChanged))
-                {
-                    frm.ShowDialog(owner);
-                }
-
+                using var frm = new FormInit(dir, gitModuleChanged);
+                frm.ShowDialog(owner);
                 return true;
             }
 
-            return DoActionOnRepo(owner, Action, requiresValidWorkingDir: false);
+            return DoActionOnRepo(owner, Action, requiresValidWorkingDir: false, changesRepo: false);
         }
 
         public bool StartPullDialogAndPullImmediately(IWin32Window owner = null, string remoteBranch = null, string remote = null, AppSettings.PullAction pullAction = AppSettings.PullAction.None)
