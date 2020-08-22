@@ -558,6 +558,12 @@ namespace GitUI.CommandsDialogs
             void MoveSelection(int direction)
             {
                 var list = Message.Focused ? Staged : _currentFilesList;
+                if (list is null)
+                {
+                    // If a user is keyboard-happy, we may receive KeyUp event before we have selected a file list control.
+                    return;
+                }
+
                 _currentFilesList = list;
                 var itemsCount = list.AllItemsCount;
                 if (itemsCount != 0)
