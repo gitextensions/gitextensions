@@ -1,6 +1,22 @@
 Changelog
 =========
 
+
+### Version 3.4.3 (23 July 2020)
+
+#### Changes:
+* [#8329](https://github.com/gitextensions/gitextensions/pull/8329) ConEmu 20.07.13
+* [#8323](https://github.com/gitextensions/gitextensions/pull/8323) Dark silver theme
+* [#8319](https://github.com/gitextensions/gitextensions/pull/8319) Resize also the backup/default avatar image
+* [#8318](https://github.com/gitextensions/gitextensions/pull/8318) FormCommit: No summary  for deleted submodules
+* [#8296](https://github.com/gitextensions/gitextensions/pull/8296) Disable Finish button while loading branches in GitFlow form.
+* [#8287](https://github.com/gitextensions/gitextensions/pull/8287) Restore FileStatusList focus after GoToChild/Parent
+* [#8277](https://github.com/gitextensions/gitextensions/pull/8277) Track theme colors via Telemetry
+* [#8274](https://github.com/gitextensions/gitextensions/pull/8274) Avoid console printouts when submodule updates are throttled
+* [#8266](https://github.com/gitextensions/gitextensions/pull/8266) Fix ssh not found
+* [#8250](https://github.com/gitextensions/gitextensions/pull/8250) Fix "selection only" text search on Diff view (#7784)
+* [#8212](https://github.com/gitextensions/gitextensions/pull/8212) Recover lost object: Add a file preview
+
 ### Version 3.4.2 (21 June 2020)
 
 #### Changes:
