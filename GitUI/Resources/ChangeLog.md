@@ -42,9 +42,9 @@ Changelog
 ### Version 3.4.1 (14 June 2020)
 
 #### Changes:
-* [8208] Restore missing app.manifest
+* [8218] Restore missing app.manifest
 
-[8182]:https://github.com/gitextensions/gitextensions/pull/8182
+[8218]:https://github.com/gitextensions/gitextensions/pull/8218
 
 
 ### Version 3.4 (6 June 2020)
