@@ -7936,6 +7936,14 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Show/hide branches/remotes/tags</source>
         <target />
       </trans-unit>
+      <trans-unit id="_sortByContextMenuItem.Text">
+        <source>&amp;Sort by...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_sortOrderContextMenuItem.Text">
+        <source>&amp;Sort order...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="lblSearchBranch.Text">
         <source>Search:</source>
         <target />
@@ -9414,6 +9422,14 @@ Select this commit to populate the full message.</source>
    - The difference of common files (identical changes) from BASE to the commits.
 - For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
 - For more than four selected commits, show the difference from the first to the last selected commit.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_sortBy.Text">
+        <source>&amp;Sort by...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_sortOrder.Text">
+        <source>&amp;Sort order...</source>
         <target />
       </trans-unit>
       <trans-unit id="_submodulesText.Text">

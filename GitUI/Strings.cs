@@ -61,6 +61,9 @@ namespace GitUI
         private readonly TranslationString _open = new TranslationString("Open");
         private readonly TranslationString _directoryIsNotAValidRepository = new TranslationString("The selected item is not a valid git repository.");
 
+        private readonly TranslationString _sortBy = new TranslationString("&Sort by...");
+        private readonly TranslationString _sortOrder = new TranslationString("&Sort order...");
+
         private readonly TranslationString _diffSelectedWithRememberedFile = new TranslationString("Diff with \"{0}\"");
         private readonly TranslationString _showDiffForAllParentsText = new TranslationString("Show file differences for all parents in browse dialog");
         private readonly TranslationString _showDiffForAllParentsTooltip = new TranslationString(@"Show all differences between the selected commits, not limiting to only one difference.
@@ -150,6 +153,9 @@ namespace GitUI
         public static string RemoveAllInvalidRepositories => _instance.Value._removeAllInvalidRepositories.Text;
         public static string Open => _instance.Value._open.Text;
         public static string DirectoryInvalidRepository => _instance.Value._directoryIsNotAValidRepository.Text;
+
+        public static string SortBy => _instance.Value._sortBy.Text;
+        public static string SortOrder => _instance.Value._sortOrder.Text;
 
         public static string DiffSelectedWithRememberedFile => _instance.Value._diffSelectedWithRememberedFile.Text;
         public static string ShowDiffForAllParentsText => _instance.Value._showDiffForAllParentsText.Text;

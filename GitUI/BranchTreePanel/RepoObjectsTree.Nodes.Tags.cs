@@ -6,6 +6,7 @@ using GitUI.BranchTreePanel.Interfaces;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.BranchTreePanel
@@ -14,12 +15,14 @@ namespace GitUI.BranchTreePanel
     {
         private class TagNode : BaseBranchNode, IGitRefActions, ICanDelete
         {
-            private readonly IGitRef _tagInfo;
-
-            public TagNode(Tree tree, string fullPath, IGitRef tagInfo) : base(tree, fullPath)
+            public TagNode(Tree tree, in ObjectId objectId, string fullPath)
+                : base(tree, fullPath)
             {
-                _tagInfo = tagInfo;
+                ObjectId = objectId;
             }
+
+            [CanBeNull]
+            public ObjectId ObjectId { get; }
 
             internal override void OnSelected()
             {
@@ -39,12 +42,12 @@ namespace GitUI.BranchTreePanel
 
             public bool CreateBranch()
             {
-                return UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, _tagInfo.ObjectId);
+                return UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, ObjectId);
             }
 
             public bool Delete()
             {
-                return UICommands.StartDeleteTagDialog(TreeViewNode.TreeView, _tagInfo.Name);
+                return UICommands.StartDeleteTagDialog(TreeViewNode.TreeView, Name);
             }
 
             public bool Merge()
@@ -75,14 +78,19 @@ namespace GitUI.BranchTreePanel
             {
             }
 
-            protected override Task OnAttachedAsync()
-            {
-                return ReloadNodesAsync(LoadNodesAsync);
-            }
+            protected override Task OnAttachedAsync() => ReloadNodesAsync(LoadNodesAsync);
 
-            protected override Task PostRepositoryChangedAsync()
+            protected override Task PostRepositoryChangedAsync() => ReloadNodesAsync(LoadNodesAsync);
+
+            /// <summary>
+            /// Requests to refresh the data tree retaining the current filtering rules.
+            /// </summary>
+            internal void RefreshRefs()
             {
-                return ReloadNodesAsync(LoadNodesAsync);
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await ReloadNodesAsync(LoadNodesAsync);
+                });
             }
 
             private async Task<Nodes> LoadNodesAsync(CancellationToken token)
@@ -92,14 +100,14 @@ namespace GitUI.BranchTreePanel
                 return FillTagTree(Module.GetRefs(tags: true, branches: false), token);
             }
 
-            private Nodes FillTagTree(IEnumerable<IGitRef> tags, CancellationToken token)
+            private Nodes FillTagTree(IReadOnlyList<IGitRef> tags, CancellationToken token)
             {
                 var nodes = new Nodes(this);
                 var pathToNodes = new Dictionary<string, BaseBranchNode>();
-                foreach (var tag in tags)
+                foreach (IGitRef tag in tags)
                 {
                     token.ThrowIfCancellationRequested();
-                    var branchNode = new TagNode(this, tag.Name, tag);
+                    var branchNode = new TagNode(this, tag.ObjectId, tag.Name);
                     var parent = branchNode.CreateRootNode(pathToNodes,
                         (tree, parentPath) => new BasePathNode(tree, parentPath));
                     if (parent != null)
