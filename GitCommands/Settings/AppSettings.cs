@@ -61,7 +61,7 @@ namespace GitCommands
         private static string _applicationExecutablePath = Application.ExecutablePath;
         private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
 
-        public static readonly Lazy<string> ApplicationDataPath;
+        public static Lazy<string> ApplicationDataPath { get; private set; }
         public static readonly Lazy<string> LocalApplicationDataPath;
         public static string SettingsFilePath => Path.Combine(ApplicationDataPath.Value, SettingsFileName);
         public static string UserPluginsPath => Path.Combine(LocalApplicationDataPath.Value, UserPluginsDirectoryName);
@@ -1246,6 +1246,18 @@ namespace GitCommands
             }
         }
 
+        public static string[] ThemeVariations
+        {
+            get
+            {
+                return GetString("uithemevariations", string.Empty).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            }
+            set
+            {
+                SetString("uithemevariations", string.Join(",", value ?? Array.Empty<string>()));
+            }
+        }
+
         #region Fonts
 
         public static Font FixedWidthFont
@@ -1923,6 +1935,12 @@ namespace GitCommands
             {
                 get => _applicationExecutablePath;
                 set => _applicationExecutablePath = value;
+            }
+
+            public Lazy<string> ApplicationDataPath
+            {
+                get => AppSettings.ApplicationDataPath;
+                set => AppSettings.ApplicationDataPath = value;
             }
         }
     }

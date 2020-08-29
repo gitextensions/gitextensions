@@ -130,5 +130,11 @@ namespace GitExtUtils.GitUI.Theming
         /// </summary>
         private static bool IsSystemColor(KnownColor name) =>
             name < KnownColor.Transparent || name > KnownColor.YellowGreen;
+
+        internal static class TestAccessor
+        {
+            public static IReadOnlyCollection<KnownColor> SysColorNames =>
+                Theme.SysColorNames;
+        }
     }
 }
