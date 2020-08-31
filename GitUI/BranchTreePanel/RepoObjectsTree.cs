@@ -12,6 +12,7 @@ using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
+using GitUI.Script;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -41,6 +42,7 @@ namespace GitUI.BranchTreePanel
         private IAheadBehindDataProvider _aheadBehindDataProvider;
         private bool _searchCriteriaChanged;
         private ICheckRefs _refsSource;
+        private IScriptHostControl _scriptHost;
 
         public RepoObjectsTree()
         {
@@ -227,11 +229,12 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        public void Initialize([CanBeNull] IAheadBehindDataProvider aheadBehindDataProvider, FilterBranchHelper filterBranchHelper, ICheckRefs refsSource)
+        public void Initialize([CanBeNull] IAheadBehindDataProvider aheadBehindDataProvider, FilterBranchHelper filterBranchHelper, ICheckRefs refsSource, IScriptHostControl scriptHost)
         {
             _aheadBehindDataProvider = aheadBehindDataProvider;
             _filterBranchHelper = filterBranchHelper;
             _refsSource = refsSource;
+            _scriptHost = scriptHost;
 
             // This lazily sets the command source, invoking OnUICommandsSourceSet, which is required for setting up
             // notifications for each Tree.
