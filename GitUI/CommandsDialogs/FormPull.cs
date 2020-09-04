@@ -139,16 +139,22 @@ namespace GitUI.CommandsDialogs
             switch (pullAction)
             {
                 case AppSettings.PullAction.None:
+                    Merge.Checked = true;
+                    break;
                 case AppSettings.PullAction.Merge:
                     Merge.Checked = true;
-                    Prune.Enabled = true;
+                    Prune.Enabled = false;
+                    PruneTags.Enabled = false;
                     break;
                 case AppSettings.PullAction.Rebase:
                     Rebase.Checked = true;
+                    Prune.Enabled = false;
+                    PruneTags.Enabled = false;
                     break;
                 case AppSettings.PullAction.Fetch:
                     Fetch.Checked = true;
                     Prune.Enabled = true;
+                    PruneTags.Enabled = true;
                     break;
                 case AppSettings.PullAction.FetchAll:
                     Fetch.Checked = true;
@@ -157,6 +163,8 @@ namespace GitUI.CommandsDialogs
                 case AppSettings.PullAction.FetchPruneAll:
                     Fetch.Checked = true;
                     Prune.Checked = true;
+                    PruneTags.Checked = true;
+
                     if (string.IsNullOrEmpty(defaultRemote))
                     {
                         _NO_TRANSLATE_Remotes.Text = AllRemotes;
@@ -660,12 +668,12 @@ namespace GitUI.CommandsDialogs
         {
             if (Fetch.Checked)
             {
-                return new FormRemoteProcess(UICommands, process: null, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg(), Unshallow.Checked, Prune.Checked));
+                return new FormRemoteProcess(UICommands, process: null, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg(), Unshallow.Checked, Prune.Checked, PruneTags.Checked));
             }
 
             Debug.Assert(Merge.Checked || Rebase.Checked, "Merge.Checked || Rebase.Checked");
 
-            return new FormRemoteProcess(UICommands, process: null, Module.PullCmd(source, curRemoteBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked, Prune.Checked))
+            return new FormRemoteProcess(UICommands, process: null, Module.PullCmd(source, curRemoteBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked))
             {
                 HandleOnExitCallback = HandlePullOnExit
             };
@@ -1049,7 +1057,9 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image2 = DpiUtil.Scale(Images.HelpPullMergeFastForward.AdaptLightness());
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
             AllTags.Enabled = false;
-            Prune.Enabled = true;
+            Prune.Enabled = false;
+            PruneTags.Enabled = false;
+
             UpdateFormTitleAndButton();
             if (AllTags.Checked)
             {
@@ -1070,6 +1080,8 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = false;
             Prune.Enabled = false;
+            PruneTags.Enabled = false;
+
             UpdateFormTitleAndButton();
             if (AllTags.Checked)
             {
@@ -1091,6 +1103,8 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = true;
             Prune.Enabled = true;
+            PruneTags.Enabled = true;
+
             UpdateFormTitleAndButton();
         }
 
@@ -1138,6 +1152,17 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void Prune_CheckedChanged(object sender, EventArgs e)
+        {
+            PruneTags.Checked = Prune.Checked && PruneTags.Checked;
+        }
+
+        private void PruneTags_CheckedChanged(object sender, EventArgs e)
+        {
+            Prune.Checked = Prune.Checked || PruneTags.Checked;
+            AllTags.Checked = AllTags.Checked || PruneTags.Checked;
+        }
+
         internal TestAccessor GetTestAccessor() => new TestAccessor(this);
 
         internal readonly struct TestAccessor
@@ -1157,6 +1182,7 @@ namespace GitUI.CommandsDialogs
             public RadioButton Fetch => _form.Fetch;
             public CheckBox AutoStash => _form.AutoStash;
             public CheckBox Prune => _form.Prune;
+            public CheckBox PruneTags => _form.PruneTags;
             public ComboBox Remotes => _form._NO_TRANSLATE_Remotes;
             public TextBox LocalBranch => _form.localBranch;
 

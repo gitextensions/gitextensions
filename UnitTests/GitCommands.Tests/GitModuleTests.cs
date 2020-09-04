@@ -171,7 +171,14 @@ namespace GitCommandsTests
             {
                 Assert.AreEqual(
                     "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune",
-                    _gitModule.FetchCmd("remote", "remotebranch", "localbranch", prune: true).Arguments);
+                    _gitModule.FetchCmd("remote", "remotebranch", "localbranch", pruneRemoteBranches: true).Arguments);
+            }
+
+            using (_executable.StageOutput("rev-parse \"refs/heads/remotebranch~0\"", null))
+            {
+                Assert.AreEqual(
+                    "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune --prune-tags",
+                    _gitModule.FetchCmd("remote", "remotebranch", "localbranch", pruneRemoteBranches: true, pruneRemoteBranchesAndTags: true).Arguments);
             }
         }
 
