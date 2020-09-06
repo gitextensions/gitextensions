@@ -659,22 +659,5 @@ namespace GitCommands
                 branch
             };
         }
-
-        // returns " --find-renames=..." according to app settings
-        public static ArgumentString FindRenamesOpt()
-        {
-            return AppSettings.FollowRenamesInFileHistoryExactOnly
-                ? " --find-renames=\"100%\""
-                : " --find-renames";
-        }
-
-        // returns " --find-renames=... --find-copies=..." according to app settings
-        public static ArgumentString FindRenamesAndCopiesOpts()
-        {
-            var findCopies = AppSettings.FollowRenamesInFileHistoryExactOnly
-                ? " --find-copies=\"100%\""
-                : " --find-copies";
-            return FindRenamesOpt() + findCopies;
-        }
     }
 }
