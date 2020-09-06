@@ -15,83 +15,6 @@ using JetBrains.Annotations;
 
 namespace GitCommands
 {
-    /// <summary>Specifies whether to check untracked files/directories (e.g. via 'git status')</summary>
-    public enum UntrackedFilesMode
-    {
-        /// <summary>Default is <see cref="All"/>; when <see cref="UntrackedFilesMode"/> is NOT used, 'git status' uses <see cref="Normal"/>.</summary>
-        Default = 0,
-
-        /// <summary>Show no untracked files.</summary>
-        No,
-
-        /// <summary>Shows untracked files and directories.</summary>
-        Normal,
-
-        /// <summary>Shows untracked files and directories, and individual files in untracked directories.</summary>
-        All
-    }
-
-    /// <summary>Specifies whether to ignore changes to submodules when looking for changes (e.g. via 'git status').</summary>
-    public enum IgnoreSubmodulesMode
-    {
-        /// <summary>Default is <see cref="All"/> (hides all changes to submodules).</summary>
-        Default = 0,
-
-        /// <summary>Consider a submodule modified when it either:
-        ///  contains untracked or modified files,
-        ///  or its HEAD differs from the commit recorded in the superproject.</summary>
-        None,
-
-        /// <summary>Submodules NOT considered dirty when they only contain <i>untracked</i> content
-        ///  (but they are still scanned for modified content).</summary>
-        Untracked,
-
-        /// <summary>Ignores all changes to the work tree of submodules,
-        ///  only changes to the <i>commits</i> stored in the superproject are shown.</summary>
-        Dirty,
-
-        /// <summary>Hides all changes to submodules
-        ///  (and suppresses the output of submodule summaries when the config option status.submodulesummary is set).</summary>
-        All
-    }
-
-    /// <summary>Mode for 'git clean'</summary>
-    public enum CleanMode
-    {
-        /// <summary>Only untracked files not in .gitignore, the default. Git clean without either -x or -X option.</summary>
-        OnlyNonIgnored = 0,
-
-        /// <summary>Only files included in any ignore list (.gitignore, $GIT_DIR/info/exclude). Git clean with -X option.</summary>
-        OnlyIgnored,
-
-        /// <summary>All files not tracked by Git. Git clean with  -x option.</summary>
-        All
-    }
-
-    /// <summary>Arguments to 'git reset'.</summary>
-    public enum ResetMode
-    {
-        /// <summary>(no option)</summary>
-        ResetIndex = 0,
-
-        /// <summary>--soft</summary>
-        Soft,
-
-        /// <summary>--mixed</summary>
-        Mixed,
-
-        /// <summary>--hard</summary>
-        Hard,
-
-        /// <summary>--merge</summary>
-        Merge,
-
-        /// <summary>--keep</summary>
-        Keep
-
-        // All options are not implemented, like --patch
-    }
-
     public static class GitCommandHelpers
     {
         #region SSH / Plink
@@ -192,6 +115,59 @@ namespace GitCommands
                 remotePath.ToPosixPath().Quote(),
                 localPath.ToPosixPath().Quote()
             };
+        }
+
+        public static ArgumentString GetCurrentChangesCmd(string fileName, [CanBeNull] string oldFileName, bool staged,
+            string extraDiffArguments, bool noLocks)
+        {
+            return new GitArgumentBuilder("diff", gitOptions:
+                    noLocks && GitVersion.Current.SupportNoOptionalLocks
+                        ? (ArgumentString)"--no-optional-locks"
+                        : default)
+                {
+                    "--no-color",
+                    { staged, "-M -C --cached" },
+                    extraDiffArguments,
+                    { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
+                    "--",
+                    fileName.ToPosixPath().Quote(),
+                    { staged, oldFileName?.ToPosixPath().Quote() }
+                };
+        }
+
+        public static ArgumentString GetRefsCmd(bool tags, bool branches, bool noLocks)
+        {
+            GitArgumentBuilder cmd;
+
+            if (tags)
+            {
+                cmd = new GitArgumentBuilder("show-ref", gitOptions:
+                    noLocks && GitVersion.Current.SupportNoOptionalLocks
+                        ? (ArgumentString)"--no-optional-locks"
+                        : default)
+                {
+                    { branches, "--dereference", "--tags" },
+                };
+            }
+            else if (branches)
+            {
+                // branches only
+                cmd = new GitArgumentBuilder("for-each-ref", gitOptions:
+                    noLocks && GitVersion.Current.SupportNoOptionalLocks
+                        ? (ArgumentString)"--no-optional-locks"
+                        : default)
+                {
+                    "--sort=-committerdate",
+                    @"refs/heads/",
+                    @"--format=""%(objectname) %(refname)"""
+                };
+            }
+            else
+            {
+                throw new ArgumentException("GetRefs: Neither branches nor tags requested");
+            }
+
+            return cmd;
         }
 
         public static ArgumentString RevertCmd(ObjectId commitId, bool autoCommit, int parentIndex)
@@ -365,6 +341,38 @@ namespace GitCommands
                 { all, "--tags" },
                 { !all, $"tag {tag.Replace(" ", "")}" }
             };
+        }
+
+        public static ArgumentString GetSortedRefsCommand(bool noLocks = false)
+        {
+            if (AppSettings.ShowSuperprojectRemoteBranches)
+            {
+                return new GitArgumentBuilder("for-each-ref", gitOptions:
+                    noLocks && GitVersion.Current.SupportNoOptionalLocks
+                        ? (ArgumentString)"--no-optional-locks"
+                        : default)
+                {
+                    "--sort=-committerdate",
+                    "--format=\"%(objectname) %(refname)\"",
+                    "refs/"
+                };
+            }
+
+            if (AppSettings.ShowSuperprojectBranches || AppSettings.ShowSuperprojectTags)
+            {
+                return new GitArgumentBuilder("for-each-ref", gitOptions:
+                    noLocks && GitVersion.Current.SupportNoOptionalLocks
+                        ? (ArgumentString)"--no-optional-locks"
+                        : default)
+                {
+                    "--sort=-committerdate",
+                    "--format=\"%(objectname) %(refname)\"",
+                    { AppSettings.ShowSuperprojectBranches, "refs/heads/" },
+                    { AppSettings.ShowSuperprojectTags, " refs/tags/" }
+                };
+            }
+
+            return "";
         }
 
         public static ArgumentString StashSaveCmd(bool untracked, bool keepIndex, string message, IReadOnlyList<string> selectedFiles)
