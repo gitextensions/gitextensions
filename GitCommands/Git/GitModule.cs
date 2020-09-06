@@ -2498,7 +2498,7 @@ namespace GitCommands
                     var localItem = item;
                     localItem.SetSubmoduleStatus(ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
-                        var submoduleStatus = await GitCommandHelpers.GetCurrentSubmoduleChangesAsync(this, localItem.Name, localItem.OldName, localItem.Staged == StagedStatus.Index)
+                        var submoduleStatus = await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(this, localItem.Name, localItem.OldName, localItem.Staged == StagedStatus.Index)
                         .ConfigureAwait(false);
                         if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                         {
@@ -2524,7 +2524,7 @@ namespace GitCommands
 
                             Patch patch = GetSingleDiff(firstId, secondId, item.Name, item.OldName, "", SystemEncoding, true);
                             string text = patch != null ? patch.Text : "";
-                            var submoduleStatus = GitCommandHelpers.ParseSubmoduleStatus(text, this, item.Name);
+                            var submoduleStatus = SubmoduleHelpers.ParseSubmoduleStatus(text, this, item.Name);
                             if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                             {
                                 var submodule = submoduleStatus.GetSubmodule(this);

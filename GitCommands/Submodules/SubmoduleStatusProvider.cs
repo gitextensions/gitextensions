@@ -423,7 +423,7 @@ namespace GitCommands.Submodules
             var info = _submoduleInfos[path];
             cancelToken.ThrowIfCancellationRequested();
 
-            var submoduleStatus = await GitCommandHelpers.GetCurrentSubmoduleChangesAsync(superModule, submoduleName, noLocks: true)
+            var submoduleStatus = await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(superModule, submoduleName, noLocks: true)
             .ConfigureAwait(false);
             if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
             {
