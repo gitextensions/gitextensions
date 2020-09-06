@@ -354,7 +354,7 @@ namespace GitUI.CommandsDialogs
 
                 gitStatusMonitor.GitWorkingDirectoryStatusChanged += (s, e) =>
                 {
-                    var status = e.ItemStatuses?.ToList();
+                    IReadOnlyList<GitItemStatus> status = e.ItemStatuses;
 
                     bool countToolbar = AppSettings.ShowGitStatusInBrowseToolbar;
                     bool countArtificial = AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowWorkingDirChanges;

@@ -40,6 +40,7 @@ namespace GitCommands
         private readonly ICommitDataManager _commitDataManager;
         private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
         private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
+        private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
         private readonly IGitCommandRunner _gitCommandRunner;
         private readonly IExecutable _gitExecutable;
 
@@ -51,6 +52,7 @@ namespace GitCommands
             _commitDataManager = new CommitDataManager(() => this);
             _gitExecutable = new Executable(() => AppSettings.GitCommand, WorkingDir);
             _gitCommandRunner = new GitCommandRunner(_gitExecutable, () => SystemEncoding);
+            _getAllChangedFilesOutputParser = new GetAllChangedFilesOutputParser(() => this);
 
             // If this is a submodule, populate relevant properties.
             // If this is not a submodule, these will all be null.
@@ -2454,7 +2456,7 @@ namespace GitCommands
             var output = _gitExecutable.GetOutput(
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles));
 
-            var result = GitCommandHelpers.GetStatusChangedFilesFromString(this, output).ToList();
+            List<GitItemStatus> result = _getAllChangedFilesOutputParser.Parse(output).ToList();
             if (IsGitErrorMessage(output))
             {
                 // No simple way to pass the error message, create fake file
@@ -2556,9 +2558,9 @@ namespace GitCommands
 
                 output = _gitExecutable.GetOutput(command);
 
-                var res = GitCommandHelpers.GetStatusChangedFilesFromString(this, output)
-                    .Where(item => (item.Staged == StagedStatus.Index || item.IsStatusOnly))
-                    .ToList();
+                List<GitItemStatus> res = _getAllChangedFilesOutputParser.Parse(output)
+                                                .Where(item => (item.Staged == StagedStatus.Index || item.IsStatusOnly))
+                                                .ToList();
                 if (IsGitErrorMessage(output))
                 {
                     // No simple way to pass the error message, create fake file
@@ -2594,7 +2596,7 @@ namespace GitCommands
         {
             var args = GitCommandHelpers.GetAllChangedFilesCmd(true, untrackedFilesMode, ignoreSubmodulesMode);
             var output = _gitExecutable.GetOutput(args);
-            var result = GitCommandHelpers.GetStatusChangedFilesFromString(this, output).ToList();
+            List<GitItemStatus> result = _getAllChangedFilesOutputParser.Parse(output).ToList();
             if (IsGitErrorMessage(output))
             {
                 // No simple way to pass the error message, create fake file
