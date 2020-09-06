@@ -802,7 +802,7 @@ namespace GitCommands
                 }
 
                 var staged = isIndex ? StagedStatus.Index : StagedStatus.WorkTree;
-                GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(staged, fileName, x);
+                GitItemStatus gitItemStatus = GitItemStatusConverter.FromStatusCharacter(staged, fileName, x);
                 if (oldFileName != null)
                 {
                     gitItemStatus.OldName = oldFileName;
@@ -917,7 +917,7 @@ namespace GitCommands
                     }
                     else
                     {
-                        gitItemStatusX = GitItemStatusFromStatusCharacter(stagedX, fileName, x);
+                        gitItemStatusX = GitItemStatusConverter.FromStatusCharacter(stagedX, fileName, x);
                     }
 
                     if (submodules.Contains(gitItemStatusX.Name))
@@ -944,7 +944,7 @@ namespace GitCommands
                 }
                 else
                 {
-                    gitItemStatusY = GitItemStatusFromStatusCharacter(stagedY, fileName, y);
+                    gitItemStatusY = GitItemStatusConverter.FromStatusCharacter(stagedY, fileName, y);
                 }
 
                 if (submodules.Contains(gitItemStatusY.Name))
@@ -971,7 +971,7 @@ namespace GitCommands
                 }
 
                 string fileName = line.SubstringAfter(' ');
-                GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(StagedStatus.WorkTree, fileName, statusCharacter);
+                GitItemStatus gitItemStatus = GitItemStatusConverter.FromStatusCharacter(StagedStatus.WorkTree, fileName, statusCharacter);
                 gitItemStatus.IsAssumeUnchanged = true;
                 result.Add(gitItemStatus);
             }
@@ -988,7 +988,7 @@ namespace GitCommands
                 char statusCharacter = line[0];
 
                 string fileName = line.SubstringAfter(' ');
-                GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(StagedStatus.WorkTree, fileName, statusCharacter);
+                GitItemStatus gitItemStatus = GitItemStatusConverter.FromStatusCharacter(StagedStatus.WorkTree, fileName, statusCharacter);
                 if (gitItemStatus.IsSkipWorktree)
                 {
                     result.Add(gitItemStatus);
@@ -1084,26 +1084,6 @@ namespace GitCommands
             gitItemStatus.Staged = staged;
 
             return gitItemStatus;
-        }
-
-        private static GitItemStatus GitItemStatusFromStatusCharacter(StagedStatus staged, string fileName, char x)
-        {
-            var isNew = x == 'A' || x == '?' || x == '!';
-
-            return new GitItemStatus
-            {
-                Name = fileName,
-                IsNew = isNew,
-                IsChanged = x == 'M',
-                IsDeleted = x == 'D',
-                IsSkipWorktree = x == 'S',
-                IsRenamed = x == 'R',
-                IsCopied = x == 'C',
-                IsTracked = (x != '?' && x != '!' && x != ' ') || !isNew,
-                IsIgnored = x == '!',
-                IsConflict = x == 'U',
-                Staged = staged
-            };
         }
 
         public static ArgumentString MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string mergeCommitFilePath, int? log)
