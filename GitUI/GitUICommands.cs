@@ -40,7 +40,7 @@ namespace GitUI
         {
             Module = module ?? throw new ArgumentNullException(nameof(module));
 
-            _commitTemplateManager = new CommitTemplateManager(module);
+            _commitTemplateManager = new CommitTemplateManager(() => module);
             RepoChangedNotifier = new ActionNotifier(
                 () => InvokeEvent(null, PostRepositoryChanged));
 
