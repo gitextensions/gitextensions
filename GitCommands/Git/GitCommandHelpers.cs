@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 using GitCommands.Git;
-using GitCommands.Utils;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -678,40 +675,6 @@ namespace GitCommands
                 ? " --find-copies=\"100%\""
                 : " --find-copies";
             return FindRenamesOpt() + findCopies;
-        }
-
-        private static class NativeMethods
-        {
-            [DllImport("kernel32.dll")]
-            public static extern bool SetConsoleCtrlHandler(IntPtr handlerRoutine, bool add);
-
-            [DllImport("kernel32.dll", SetLastError = true)]
-            public static extern bool AttachConsole(int dwProcessId);
-
-            [DllImport("kernel32.dll", SetLastError = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool GenerateConsoleCtrlEvent(uint dwCtrlEvent, int dwProcessGroupId);
-        }
-
-        public static void TerminateTree(this Process process)
-        {
-            if (EnvUtils.RunningOnWindows())
-            {
-                // Send Ctrl+C
-                NativeMethods.AttachConsole(process.Id);
-                NativeMethods.SetConsoleCtrlHandler(IntPtr.Zero, add: true);
-                NativeMethods.GenerateConsoleCtrlEvent(0, 0);
-
-                if (!process.HasExited)
-                {
-                    process.WaitForExit(500);
-                }
-            }
-
-            if (!process.HasExited)
-            {
-                process.Kill();
-            }
         }
     }
 }

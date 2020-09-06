@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git.Extensions;
 using GitCommands.Logging;
 using JetBrains.Annotations;
 
