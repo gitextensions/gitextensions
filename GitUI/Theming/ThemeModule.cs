@@ -15,6 +15,7 @@ namespace GitUI.Theming
         public static ThemeSettings Settings { get; private set; } = ThemeSettings.Default;
 
         private static ThemeRepository Repository { get; } = new ThemeRepository(new ThemePersistence());
+        public static bool IsDarkTheme { get; private set; }
 
         public static void Load()
         {
@@ -65,6 +66,8 @@ namespace GitUI.Theming
             {
                 return new ThemeSettings(Theme.Default, invariantTheme, AppSettings.UseSystemVisualStyle);
             }
+
+            IsDarkTheme = theme.SysColorValues[KnownColor.Window].GetBrightness() < 0.5;
 
             return new ThemeSettings(theme, invariantTheme, AppSettings.UseSystemVisualStyle);
         }
