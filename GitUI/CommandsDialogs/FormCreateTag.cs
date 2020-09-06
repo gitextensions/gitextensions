@@ -2,6 +2,8 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git.Commands;
+using GitCommands.Git.Extensions;
 using GitCommands.Git.Tag;
 using GitUI.HelperDialogs;
 using GitUI.Script;

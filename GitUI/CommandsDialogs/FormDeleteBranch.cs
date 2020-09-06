@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
-using GitCommands;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

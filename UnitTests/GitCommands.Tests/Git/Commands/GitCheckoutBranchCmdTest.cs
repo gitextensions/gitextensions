@@ -1,8 +1,8 @@
 using GitCommands;
-using GitCommands.Git;
+using GitCommands.Git.Commands;
 using NUnit.Framework;
 
-namespace GitCommandsTests.Git
+namespace GitCommandsTests.Git.Commands
 {
     [TestFixture]
     public sealed class GitCheckoutBranchCmdTest

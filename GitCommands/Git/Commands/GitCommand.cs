@@ -1,6 +1,6 @@
 ﻿using GitUIPluginInterfaces;
 
-namespace GitCommands
+namespace GitCommands.Git.Commands
 {
     /// <summary>
     /// Base class for structured git command
