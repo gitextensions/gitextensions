@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GitCommands.Git;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -81,39 +80,59 @@ namespace GitCommands.Git.Commands
                 };
         }
 
-        public static ArgumentString GetRefsCmd(bool tags, bool branches, bool noLocks)
+        public static ArgumentString GetRefsCmd(bool tags, bool branches, bool noLocks, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder)
         {
-            GitArgumentBuilder cmd;
-
-            if (tags)
+            string format;
+            if (!tags)
             {
-                cmd = new GitArgumentBuilder("show-ref", gitOptions:
-                    noLocks && GitVersion.Current.SupportNoOptionalLocks
-                        ? (ArgumentString)"--no-optional-locks"
-                        : default)
-                {
-                    { branches, "--dereference", "--tags" },
-                };
-            }
-            else if (branches)
-            {
-                // branches only
-                cmd = new GitArgumentBuilder("for-each-ref", gitOptions:
-                    noLocks && GitVersion.Current.SupportNoOptionalLocks
-                        ? (ArgumentString)"--no-optional-locks"
-                        : default)
-                {
-                    "--sort=-committerdate",
-                    @"refs/heads/",
-                    @"--format=""%(objectname) %(refname)"""
-                };
+                // If we don't need tags, it is easy.
+                format = @"--format=""%(objectname) %(refname)""";
             }
             else
             {
-                throw new ArgumentException("GetRefs: Neither branches nor tags requested");
+                // ...however, if we're interested in tags, tags may be simple (in which case they are point to commits directly),
+                // or "dereferences" (i.e. commits that contian metadata and point to other commits, "^{}").
+                // Derefence commits do not contain date information, so we need to find information from the referenced commits (those with '*').
+                // So the following format is as follows:
+                //      If (there is a 'authordate' information, then this is a simple tag/direct commit)
+                //      Then
+                //          format = %(objectname) %(refname)
+                //      Else
+                //          format = %(*objectname) %(*refname) // i.e. info from a referenced commit
+                //      End
+                format = @"--format=""%(if)%(authordate)%(then)%(objectname) %(refname)%(else)%(*objectname) %(*refname)%(end)""";
             }
 
+            GitArgumentBuilder cmd = new GitArgumentBuilder("for-each-ref",
+                gitOptions: noLocks && GitVersion.Current.SupportNoOptionalLocks
+                    ? (ArgumentString)"--no-optional-locks"
+                    : default)
+            {
+                { sortBy != GitRefsSortBy.Default, GetSortCriteria(tags, sortBy, sortOrder), string.Empty },
+                format,
+                { branches, "refs/heads/", string.Empty },
+                { branches && tags, "refs/remotes/", string.Empty },
+                { tags, "refs/tags/", string.Empty },
+            };
+
             return cmd;
+
+            static string GetSortCriteria(bool needTags, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder)
+            {
+                if (!GitVersion.Current.SupportRefSort)
+                {
+                    return string.Empty;
+                }
+
+                string order = sortOrder == GitRefsSortOrder.Ascending ? string.Empty : "-";
+                if (!needTags)
+                {
+                    return $"--sort={order}{sortBy}";
+                }
+
+                // Sort by dereferenced data
+                return $"--sort={order}{sortBy} --sort={order}*{sortBy}";
+            }
         }
 
         public static ArgumentString RevertCmd(ObjectId commitId, bool autoCommit, int parentIndex)

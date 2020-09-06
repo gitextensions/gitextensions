@@ -17,13 +17,14 @@ namespace GitCommands
         private static readonly GitVersion v2_7_0 = new GitVersion("2.7.0");
         private static readonly GitVersion v2_9_0 = new GitVersion("2.9.0");
         private static readonly GitVersion v2_11_0 = new GitVersion("2.11.0");
+        private static readonly GitVersion v2_14_6 = new GitVersion("2.14.6");
         private static readonly GitVersion v2_15_0 = new GitVersion("2.15.0");
         private static readonly GitVersion v2_15_2 = new GitVersion("2.15.2");
         private static readonly GitVersion v2_19_0 = new GitVersion("2.19.0");
         private static readonly GitVersion v2_20_0 = new GitVersion("2.20.0");
 
-        public static readonly GitVersion LastSupportedVersion = v2_11_0;
-        public static readonly GitVersion LastRecommendedVersion = new GitVersion("2.25.1");
+        public static readonly GitVersion LastSupportedVersion = v2_19_0;
+        public static readonly GitVersion LastRecommendedVersion = new GitVersion("2.28.0");
 
         private static GitVersion _current;
 
@@ -127,6 +128,8 @@ namespace GitCommands
         public bool SupportNoOptionalLocks => this >= v2_15_2;
 
         public bool SupportRebaseMerges => this >= v2_19_0;
+
+        public bool SupportRefSort => this >= v2_14_6;
 
         public bool SupportGuiMergeTool => this >= v2_20_0;
 

@@ -192,6 +192,14 @@ See http://en.gravatar.com/site/implement/images#default-image for more details.
         <source>Avatar provider</source>
         <target />
       </trans-unit>
+      <trans-unit id="lblBranchesOrder.Text">
+        <source>Order branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblBranchesSortBy.Text">
+        <source>Sort branches by</source>
+        <target />
+      </trans-unit>
       <trans-unit id="lblCacheDays.Text">
         <source>Cache images (days)</source>
         <target />

@@ -2,13 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitCommands;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
-using ResourceManager;
 
 namespace GitUI.BranchTreePanel
 {
@@ -91,7 +89,7 @@ namespace GitUI.BranchTreePanel
             {
                 await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
-                return FillTagTree(Module.GetTagRefs(GitModule.GetTagRefsSortOrder.ByName), token);
+                return FillTagTree(Module.GetRefs(tags: true, branches: false), token);
             }
 
             private Nodes FillTagTree(IEnumerable<IGitRef> tags, CancellationToken token)

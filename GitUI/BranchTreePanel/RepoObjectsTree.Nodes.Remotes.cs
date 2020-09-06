@@ -44,7 +44,7 @@ namespace GitUI.BranchTreePanel
                 var nodes = new Nodes(this);
                 var pathToNodes = new Dictionary<string, BaseBranchNode>();
 
-                var branches = Module.GetRefs(tags: true, branches: true, noLocks: true)
+                var branches = Module.GetRefs(tags: true, branches: true)
                     .Where(branch => branch.IsRemote && !branch.IsTag)
                     .OrderBy(branch => branch.Name)
                     .Select(branch => branch.Name);

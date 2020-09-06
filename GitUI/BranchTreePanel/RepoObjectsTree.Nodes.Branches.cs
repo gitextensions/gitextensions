@@ -279,7 +279,7 @@ namespace GitUI.BranchTreePanel
                 await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
 
-                var branchNames = Module.GetRefs(tags: false, branches: true, noLocks: true).Select(b => b.Name);
+                var branchNames = Module.GetRefs(tags: false, branches: true).Select(b => b.Name);
                 return FillBranchTree(branchNames, token);
             }
 
