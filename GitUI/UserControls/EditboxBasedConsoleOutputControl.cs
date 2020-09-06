@@ -102,7 +102,7 @@ namespace GitUI.UserControls
             {
                 EnvironmentConfiguration.SetEnvironmentVariables();
 
-                bool ssh = GitCommandHelpers.UseSsh(arguments);
+                bool ssh = GitSshHelpers.UseSsh(arguments);
 
                 KillProcess();
 

@@ -335,7 +335,7 @@ namespace GitUI.CommandsDialogs
 
         private void FormCloneLoad(object sender, EventArgs e)
         {
-            if (!GitCommandHelpers.Plink())
+            if (!GitSshHelpers.Plink())
             {
                 LoadSSHKey.Visible = false;
             }

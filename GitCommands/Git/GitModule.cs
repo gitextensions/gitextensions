@@ -1421,7 +1421,7 @@ namespace GitCommands
             if (string.IsNullOrEmpty(remote) ||
                 string.IsNullOrEmpty(AppSettings.Pageant) ||
                 !AppSettings.AutoStartPageant ||
-                !GitCommandHelpers.Plink())
+                !GitSshHelpers.Plink())
             {
                 return "";
             }

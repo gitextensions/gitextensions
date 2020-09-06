@@ -892,7 +892,7 @@ namespace GitUI.CommandsDialogs
 
         private void EnsurePageant(string remote)
         {
-            if (GitCommandHelpers.Plink())
+            if (GitSshHelpers.Plink())
             {
                 StartPageant(remote);
             }

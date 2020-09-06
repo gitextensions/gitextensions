@@ -887,7 +887,7 @@ namespace GitUI.CommandsDialogs
 
         private void LoadPuttyKey()
         {
-            if (!GitCommandHelpers.Plink())
+            if (!GitSshHelpers.Plink())
             {
                 return;
             }
