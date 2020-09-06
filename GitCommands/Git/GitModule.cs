@@ -2355,22 +2355,48 @@ namespace GitCommands
 
         public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId firstId, ObjectId secondId, ObjectId parentToSecond)
         {
-            var stagedStatus = GitCommandHelpers.GetStagedStatus(firstId, secondId, parentToSecond);
+            var stagedStatus = GetStagedStatus(firstId, secondId, parentToSecond);
             var status = GetDiffFilesWithUntracked(firstId?.ToString(), secondId?.ToString(), stagedStatus);
             GetSubmoduleStatus(status, firstId, secondId);
             return status;
         }
 
+        /// <summary>
+        /// If possible, find if files in a diff are index or worktree
+        /// </summary>
+        /// <param name="firstId">from revision string</param>
+        /// <param name="secondId">to revision</param>
+        /// <param name="parentToSecond">The parent for the second revision</param>
+        /// <remarks>Git revisions are required to determine if <see cref="StagedStatus"/> allows stage/unstage.</remarks>
+        private static StagedStatus GetStagedStatus([CanBeNull] ObjectId firstId, [CanBeNull] ObjectId secondId, [CanBeNull] ObjectId parentToSecond)
+        {
+            StagedStatus staged;
+            if (firstId == ObjectId.IndexId && secondId == ObjectId.WorkTreeId)
+            {
+                staged = StagedStatus.WorkTree;
+            }
+            else if (firstId == parentToSecond && secondId == ObjectId.IndexId)
+            {
+                staged = StagedStatus.Index;
+            }
+            else if (firstId != null && !firstId.IsArtificial &&
+                     secondId != null && !secondId.IsArtificial)
+            {
+                // This cannot be a worktree/index file
+                staged = StagedStatus.None;
+            }
+            else
+            {
+                staged = StagedStatus.Unknown;
+            }
+
+            return staged;
+        }
+
         public IReadOnlyList<GitItemStatus> GetDiffFilesWithUntracked(string firstRevision, string secondRevision, StagedStatus stagedStatus, bool noCache = false)
         {
             var output = GetDiffFiles(firstRevision, secondRevision, noCache: noCache, nullSeparated: true);
-            var result = GitCommandHelpers.GetDiffChangedFilesFromString(this, output, stagedStatus).ToList();
-
-            if (IsGitErrorMessage(output))
-            {
-                // No simple way to pass the error message, create fake file
-                result.Add(createErrorGitItemStatus(output));
-            }
+            var result = GetDiffChangedFilesFromString(output, stagedStatus);
 
             if (firstRevision == GitRevision.WorkTreeGuid || secondRevision == GitRevision.WorkTreeGuid)
             {
@@ -2470,12 +2496,52 @@ namespace GitCommands
 
                 if (!excludeAssumeUnchangedFiles)
                 {
-                    result.AddRange(GitCommandHelpers.GetAssumeUnchangedFilesFromString(lsOutput));
+                    result.AddRange(GetAssumeUnchangedFilesFromString(lsOutput));
                 }
 
                 if (!excludeSkipWorktreeFiles)
                 {
-                    result.AddRange(GitCommandHelpers.GetSkipWorktreeFilesFromString(lsOutput));
+                    result.AddRange(GetSkipWorktreeFilesFromString(lsOutput));
+                }
+            }
+
+            return result;
+        }
+
+        private static IReadOnlyList<GitItemStatus> GetAssumeUnchangedFilesFromString(string lsString)
+        {
+            var result = new List<GitItemStatus>();
+            string[] lines = lsString.SplitLines();
+            foreach (string line in lines)
+            {
+                char statusCharacter = line[0];
+                if (char.IsUpper(statusCharacter))
+                {
+                    continue;
+                }
+
+                string fileName = line.SubstringAfter(' ');
+                GitItemStatus gitItemStatus = GitItemStatusConverter.FromStatusCharacter(StagedStatus.WorkTree, fileName, statusCharacter);
+                gitItemStatus.IsAssumeUnchanged = true;
+                result.Add(gitItemStatus);
+            }
+
+            return result;
+        }
+
+        private static IReadOnlyList<GitItemStatus> GetSkipWorktreeFilesFromString(string lsString)
+        {
+            var result = new List<GitItemStatus>();
+            string[] lines = lsString.SplitLines();
+            foreach (string line in lines)
+            {
+                char statusCharacter = line[0];
+
+                string fileName = line.SubstringAfter(' ');
+                GitItemStatus gitItemStatus = GitItemStatusConverter.FromStatusCharacter(StagedStatus.WorkTree, fileName, statusCharacter);
+                if (gitItemStatus.IsSkipWorktree)
+                {
+                    result.Add(gitItemStatus);
                 }
             }
 
@@ -2570,11 +2636,23 @@ namespace GitCommands
                 return res;
             }
 
-            var result = GitCommandHelpers.GetDiffChangedFilesFromString(this, output, StagedStatus.Index).ToList();
-            if (IsGitErrorMessage(output))
+            return GetDiffChangedFilesFromString(output, StagedStatus.Index);
+        }
+
+        /// <summary>
+        /// Parse the output from git-diff --name-status
+        /// </summary>
+        /// <param name="statusString">output from the git command</param>
+        /// <param name="staged">required to determine if <see cref="StagedStatus"/> allows stage/unstage.</param>
+        /// <returns>list with the parsed GitItemStatus</returns>
+        /// <seealso href="https://git-scm.com/docs/git-diff"/>
+        private List<GitItemStatus> GetDiffChangedFilesFromString(string statusString, StagedStatus staged)
+        {
+            List<GitItemStatus> result = _getAllChangedFilesOutputParser.GetAllChangedFilesFromString_v1(statusString, true, staged);
+            if (IsGitErrorMessage(statusString))
             {
                 // No simple way to pass the error message, create fake file
-                result.Add(createErrorGitItemStatus(output));
+                result.Add(createErrorGitItemStatus(statusString));
             }
 
             return result;
@@ -3487,12 +3565,61 @@ namespace GitCommands
         /// </summary>
         /// <param name="isDiff">diff or merge</param>
         /// <returns>the list</returns>
-        public async Task<List<string>> GetCustomDiffMergeTools(bool isDiff)
+        public async Task<IEnumerable<string>> GetCustomDiffMergeTools(bool isDiff)
         {
             // Note that --gui has no effect here
             var args = new GitArgumentBuilder(isDiff ? "difftool" : "mergetool") { "--tool-help" };
             string output = await _gitExecutable.GetOutputAsync(args);
-            return GitCommandHelpers.ParseCustomDiffMergeTool(output);
+            return ParseCustomDiffMergeTool(output);
+        }
+
+        /// <summary>
+        /// Parse the output from 'git difftool --tool-help'
+        /// </summary>
+        /// <param name="output">The output string</param>
+        /// <returns>list with tool names</returns>
+        private static IEnumerable<string> ParseCustomDiffMergeTool(string output)
+        {
+            var tools = new List<string>();
+
+            // Simple parsing of the textual output opposite to porcelain format
+            // https://github.com/git/git/blob/main/git-mergetool--lib.sh#L298
+            // An alternative is to parse "git config --get-regexp difftool'\..*\.cmd'" and see show_tool_names()
+
+            // The sections to parse in the text has a 'header', then break parsing at first non match
+
+            foreach (var l in output.Split('\n'))
+            {
+                if (l == "The following tools are valid, but not currently available:")
+                {
+                    // No more usable tools
+                    break;
+                }
+
+                if (!l.StartsWith("\t\t"))
+                {
+                    continue;
+                }
+
+                // two tabs, then toolname, cmd (if split in 3) in second
+                // cmd is unreliable for diff and not needed but could be used for mergetool special handling
+                string[] delimit = { " ", ".cmd" };
+                var tool = l.Substring(2).Split(delimit, 2, StringSplitOptions.None);
+                if (tool.Length == 0)
+                {
+                    continue;
+                }
+
+                // Ignore tools that must run in a terminal
+                string[] ignoredTools = { "vimdiff", "vimdiff2", "vimdiff3" };
+                var toolName = tool[0];
+                if (!string.IsNullOrWhiteSpace(toolName) && !tools.Contains(toolName) && !ignoredTools.Contains(toolName))
+                {
+                    tools.Add(toolName);
+                }
+            }
+
+            return tools.OrderBy(i => i);
         }
 
         public string OpenWithDifftoolDirDiff(string firstRevision, string secondRevision)
@@ -4164,6 +4291,15 @@ namespace GitCommands
             }
 
             public GitArgumentBuilder UpdateIndexCmd(bool showErrorsWhenStagingFiles) => _gitModule.UpdateIndexCmd(showErrorsWhenStagingFiles);
+
+            public List<GitItemStatus> GetDiffChangedFilesFromString(string statusString, StagedStatus staged)
+                => _gitModule.GetDiffChangedFilesFromString(statusString, staged);
+
+            public StagedStatus GetStagedStatus([CanBeNull] ObjectId firstId, [CanBeNull] ObjectId secondId, [CanBeNull] ObjectId parentToSecond)
+                => GitModule.GetStagedStatus(firstId, secondId, parentToSecond);
+
+            public IEnumerable<string> ParseCustomDiffMergeTool(string output)
+                => GitModule.ParseCustomDiffMergeTool(output);
         }
     }
 }

@@ -46,7 +46,7 @@ namespace GitCommands.Git
         /// <param name="fromDiff">Parse git-diff</param>
         /// <param name="staged">The staged status <see cref="GitItemStatus"/>, only relevant for git-diff (parsed for git-status)</param>
         /// <returns>list with the git items</returns>
-        internal IReadOnlyList<GitItemStatus> GetAllChangedFilesFromString_v1(string getAllChangedFilesCommandOutput, bool fromDiff, StagedStatus staged)
+        internal List<GitItemStatus> GetAllChangedFilesFromString_v1(string getAllChangedFilesCommandOutput, bool fromDiff, StagedStatus staged)
         {
             var diffFiles = new List<GitItemStatus>();
 
