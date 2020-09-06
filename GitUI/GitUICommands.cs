@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitCommands.Settings;
 using GitExtUtils;
 using GitUI.CommandsDialogs;

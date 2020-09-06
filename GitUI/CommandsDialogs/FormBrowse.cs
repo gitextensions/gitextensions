@@ -14,6 +14,7 @@ using ConEmu.WinForms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitCommands.Gpg;
 using GitCommands.Submodules;
 using GitCommands.UserRepositoryHistory;

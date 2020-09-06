@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
-using GitCommands;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;

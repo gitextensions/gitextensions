@@ -6,7 +6,7 @@ using GitExtUtils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
-namespace GitCommands
+namespace GitCommands.Git.Commands
 {
     public static class GitCommandHelpers
     {

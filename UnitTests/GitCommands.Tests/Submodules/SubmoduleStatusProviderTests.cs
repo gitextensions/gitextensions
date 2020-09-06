@@ -7,6 +7,7 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitCommands.Submodules;
 using GitUIPluginInterfaces;
 using NUnit.Framework;

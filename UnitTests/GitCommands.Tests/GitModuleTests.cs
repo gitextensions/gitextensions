@@ -10,6 +10,7 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;

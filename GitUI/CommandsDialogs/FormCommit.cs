@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitCommands.Patches;
 using GitCommands.Utils;
 using GitExtUtils;

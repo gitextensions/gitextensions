@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
 

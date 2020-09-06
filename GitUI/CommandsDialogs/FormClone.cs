@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;

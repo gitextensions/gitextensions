@@ -2,11 +2,12 @@
 using System.IO;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
 using ResourceManager;
 
-namespace GitCommandsTests.Git
+namespace GitCommandsTests.Git.Commands
 {
     [TestFixture]
     public class GitCommandsHelperTest
