@@ -18,7 +18,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void SettingsToPage()
         {
-            for (int i = 0; i < AppSettings.CascadeShellMenuItems.Length; i++)
+            var itemsCount = Math.Min(AppSettings.CascadeShellMenuItems.Length, chlMenuEntries.Items.Count);
+            for (int i = 0; i < itemsCount; i++)
             {
                 chlMenuEntries.SetItemChecked(i, AppSettings.CascadeShellMenuItems[i] == '1');
             }
