@@ -26,6 +26,7 @@ using GitUI.BranchTreePanel;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.WorktreeDialog;
+using GitUI.Configuring;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Infrastructure.Telemetry;
@@ -98,6 +99,7 @@ namespace GitUI.CommandsDialogs
         private readonly FormBrowseDiagnosticsReporter _formBrowseDiagnosticsReporter;
         [CanBeNull] private BuildReportTabPageExtension _buildReportTabPageExtension;
         private readonly ShellProvider _shellProvider = new ShellProvider();
+        private readonly IShellService _shellService = new ShellService();
         private ConEmuControl _terminal;
         private Dashboard _dashboard;
 
@@ -549,21 +551,29 @@ namespace GitUI.CommandsDialogs
 
             bool userShellAccessible = false;
             ToolStripMenuItem selectedDefaultShell = null;
-            foreach (IShellDescriptor shell in _shellProvider.GetShells())
+
+            foreach (var shell in _shellService.List())
             {
-                if (!shell.HasExecutable)
+                var shellDescriptor = _shellProvider
+                    .GetShell(shell.Name);
+
+                if (!shellDescriptor.HasExecutable)
                 {
                     continue;
                 }
 
-                var toolStripMenuItem = new ToolStripMenuItem(shell.Name);
-                userShell.DropDownItems.Add(toolStripMenuItem);
-                toolStripMenuItem.Tag = shell;
-                toolStripMenuItem.Image = shell.Icon;
-                toolStripMenuItem.ToolTipText = shell.Name;
+                var toolStripMenuItem = new ToolStripMenuItem(shellDescriptor.Name)
+                {
+                    Tag = shellDescriptor,
+                    Image = shellDescriptor.Icon,
+                    ToolTipText = shellDescriptor.Name
+                };
+
                 toolStripMenuItem.Click += userShell_Click;
 
-                if (selectedDefaultShell is null || string.Equals(shell.Name, defaultShell, StringComparison.InvariantCultureIgnoreCase))
+                userShell.DropDownItems.Add(toolStripMenuItem);
+
+                if (shell.Default)
                 {
                     userShellAccessible = true;
                     selectedDefaultShell = toolStripMenuItem;
@@ -2967,7 +2977,10 @@ namespace GitUI.CommandsDialogs
                     WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator
                 };
 
-                string shellType = AppSettings.ConEmuTerminal.Value;
+                var defauldShell = _shellService
+                    .GetDefault();
+
+                string shellType = defauldShell.Name;
                 startInfo.ConsoleProcessCommandLine = _shellProvider.GetShellCommandLine(shellType);
 
                 // Set path to git in this window (actually, effective with CMD only)
@@ -2997,7 +3010,10 @@ namespace GitUI.CommandsDialogs
 
         public void ChangeTerminalActiveFolder(string path)
         {
-            string shellType = AppSettings.ConEmuTerminal.Value;
+            var defauldShell = _shellService
+                .GetDefault();
+
+            string shellType = defauldShell.Name;
             IShellDescriptor shell = _shellProvider.GetShell(shellType);
             _terminal?.ChangeFolder(shell, path);
         }

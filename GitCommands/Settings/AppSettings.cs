@@ -409,6 +409,8 @@ namespace GitCommands
         public static ISetting<string> ConEmuFontSize => Setting.Create(DetailedSettingsPath, nameof(ConEmuFontSize), "12");
         public static ISetting<bool> ShowGpgInformation => Setting.Create(DetailedSettingsPath, nameof(ShowGpgInformation), true);
 
+        public static readonly ISetting<string> Shells = Setting.Create(DetailedSettingsPath, nameof(Shells), string.Empty);
+
         public static CommitInfoPosition CommitInfoPosition
         {
             get => DetailedSettingsPath.GetNullableEnum<CommitInfoPosition>("CommitInfoPosition") ?? (

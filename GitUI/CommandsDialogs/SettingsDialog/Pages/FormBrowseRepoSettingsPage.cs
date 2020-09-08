@@ -1,5 +1,6 @@
 ﻿using System;
 using GitCommands;
+using GitUI.Configuring;
 using GitUI.Shells;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -7,6 +8,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
     {
         private readonly ShellProvider _shellProvider = new ShellProvider();
+        private readonly IShellService _shellService = new ShellService();
+
         private int _cboTerminalPreviousIndex = -1;
 
         public FormBrowseRepoSettingsPage()
@@ -27,7 +30,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowConEmuTab.Value = chkChowConsoleTab.Checked;
             AppSettings.ShowGpgInformation.Value = chkShowGpgInformation.Checked;
 
-            AppSettings.ConEmuTerminal.Value = ((IShellDescriptor)cboTerminal.SelectedItem).Name.ToLowerInvariant();
+            var selectedShell = (IShell)cboTerminal.SelectedItem;
+
+            if (selectedShell != null)
+            {
+                _shellService.Default(selectedShell.Name);
+            }
+
             base.PageToSettings();
         }
 
@@ -36,11 +45,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkChowConsoleTab.Checked = AppSettings.ShowConEmuTab.Value;
             chkShowGpgInformation.Checked = AppSettings.ShowGpgInformation.Value;
 
-            foreach (IShellDescriptor shell in _shellProvider.GetShells())
+            foreach (var shell in _shellService.List())
             {
                 cboTerminal.Items.Add(shell);
 
-                if (string.Equals(shell.Name, AppSettings.ConEmuTerminal.Value, StringComparison.InvariantCultureIgnoreCase))
+                if (shell.Default)
                 {
                     cboTerminal.SelectedItem = shell;
                 }
@@ -56,12 +65,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void cboTerminal_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (!(cboTerminal.SelectedItem is IShellDescriptor shell))
+            if (!(cboTerminal.SelectedItem is IShell shell))
             {
                 return;
             }
 
-            if (shell.HasExecutable)
+            var shellDescriptor = _shellProvider
+                .GetShell(shell.Name);
+
+            if (shellDescriptor.HasExecutable)
             {
                 return;
             }
