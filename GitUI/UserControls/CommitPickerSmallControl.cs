@@ -23,6 +23,8 @@ namespace GitUI.UserControls
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ObjectId SelectedObjectId { get; private set; }
 
+        public EventHandler<RevisionChangedEventArgs> RevisionChanged;
+
         /// <summary>
         /// shows a message box if commitHash is invalid
         /// </summary>
@@ -44,6 +46,8 @@ namespace GitUI.UserControls
             {
                 textBoxCommitHash.Text = "";
                 lbCommits.Text = "";
+
+                RevisionChanged?.Invoke(this, new RevisionChangedEventArgs() { ObjectId = null });
             }
             else
             {
@@ -62,6 +66,8 @@ namespace GitUI.UserControls
                         await this.SwitchToMainThreadAsync();
 
                         lbCommits.Text = text;
+
+                        RevisionChanged?.Invoke(this, new RevisionChangedEventArgs() { ObjectId = SelectedObjectId });
                     });
             }
         }
@@ -81,5 +87,10 @@ namespace GitUI.UserControls
         {
             SetSelectedCommitHash(textBoxCommitHash.Text.Trim());
         }
+    }
+
+    public sealed class RevisionChangedEventArgs : EventArgs
+    {
+        public ObjectId ObjectId { get; set; }
     }
 }

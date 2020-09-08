@@ -6,6 +6,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitUI.HelperDialogs;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -36,6 +37,18 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
 
             groupBox1.AutoSize = true;
+
+            commitPickerSmallControl1.RevisionChanged += (object s, RevisionChangedEventArgs e) =>
+            {
+                if (e.ObjectId == null)
+                {
+                    commitSummary.Revision = null;
+                }
+                else
+                {
+                    commitSummary.Revision = Module.GetRevision(e.ObjectId);
+                }
+            };
 
             if (objectId != null && objectId.IsArtificial)
             {
