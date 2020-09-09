@@ -17,7 +17,7 @@
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-#pragma code_page(1251)
+#pragma code_page(936)
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -26,24 +26,42 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_GITEXTENSIONS           ICON    "Resources\\git-extensions-logo.ico"
-IDI_ICONADDED               ICON    "Resources\\FileStatusAdded.ico"
-IDI_ICONBROWSEFILEEXPLORER  ICON    "Resources\\ShellExtensions.ico"
-IDI_ICONBRANCHCREATE        ICON    "Resources\\BranchCreate.ico"
-IDI_ICONBRANCHCHECKOUT      ICON    "Resources\\BranchCheckout.ico"
-IDI_ICONREVISIONCHECKOUT    ICON    "Resources\\checkout.ico"
-IDI_ICONABOUT               ICON    "Resources\\information.ico"
-IDI_ICONCLONEREPOGIT        ICON    "Resources\\CloneRepoGit.ico"
-IDI_ICONCOMMIT              ICON    "Resources\\RepoStateClean.ico"
-IDI_ICONFILEHISTORY         ICON    "Resources\\FileHistory.ico"
-IDI_ICONPULL                ICON    "Resources\\Pull.ico"
-IDI_ICONPUSH                ICON    "Resources\\Push.ico"
-IDI_ICONTRESETFILETO        ICON    "Resources\\ResetWorkingDirChanges.ico"
-IDI_ICONSETTINGS            ICON    "Resources\\Settings.ico"
-IDI_ICONVIEWCHANGES         ICON    "Resources\\Diff.ico"
-IDI_ICONSTASH               ICON    "Resources\\stash.ico"
-IDI_ICONCREATEREPOSITORY    ICON    "Resources\\RepoCreate.ico"
-IDI_ICONPATCHAPPLY          ICON    "Resources\\PatchApply.ico"
+IDI_GITEXTENSIONS       ICON                    "Resources\\git-extensions-logo.ico"
+
+IDI_ICONADDED           ICON                    "Resources\\FileStatusAdded.ico"
+
+IDI_ICONBROWSEFILEEXPLORER ICON                    "Resources\\ShellExtensions.ico"
+
+IDI_ICONBRANCHCREATE    ICON                    "Resources\\BranchCreate.ico"
+
+IDI_ICONBRANCHCHECKOUT  ICON                    "Resources\\BranchCheckout.ico"
+
+IDI_ICONREVISIONCHECKOUT ICON                    "Resources\\checkout.ico"
+
+IDI_ICONABOUT           ICON                    "Resources\\information.ico"
+
+IDI_ICONCLONEREPOGIT    ICON                    "Resources\\CloneRepoGit.ico"
+
+IDI_ICONCOMMIT          ICON                    "Resources\\RepoStateClean.ico"
+
+IDI_ICONFILEHISTORY     ICON                    "Resources\\FileHistory.ico"
+
+IDI_ICONPULL            ICON                    "Resources\\Pull.ico"
+
+IDI_ICONPUSH            ICON                    "Resources\\Push.ico"
+
+IDI_ICONTRESETFILETO    ICON                    "Resources\\ResetWorkingDirChanges.ico"
+
+IDI_ICONSETTINGS        ICON                    "Resources\\Settings.ico"
+
+IDI_ICONVIEWCHANGES     ICON                    "Resources\\Diff.ico"
+
+IDI_ICONSTASH           ICON                    "Resources\\stash.ico"
+
+IDI_ICONCREATEREPOSITORY ICON                    "Resources\\RepoCreate.ico"
+
+IDI_ICONPATCHAPPLY      ICON                    "Resources\\PatchApply.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -90,6 +108,7 @@ END
 
 IDR_GITEXTENSIONSSHELLEX REGISTRY                "GitExtensionsShellEx.rgs"
 
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // String Table
@@ -101,6 +120,30 @@ BEGIN
 END
 
 #endif    // Neutral resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (Simplified, PRC) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICONLOCK               ICON                    "Resources\\lock.ico"
+
+IDI_ICONLOCKS              ICON                    "Resources\\locks.ico"
+
+IDI_ICONUNLOCK             ICON                    "Resources\\unlock.ico"
+
+#endif    // Chinese (Simplified, PRC) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -117,18 +160,18 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE
+2 TEXTINCLUDE 
 BEGIN
     "#include ""winres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE
+3 TEXTINCLUDE 
 BEGIN
     "\0"
 END

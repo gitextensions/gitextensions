@@ -39,6 +39,9 @@ enum GitExCommands
     gcSettings,
     gcStash,
     gcViewDiff,
+    gcLfsLock,
+    gcLfsUnLock,
+    gcShowLfsLocks,
     gcMaxValue
 };
 

@@ -48,7 +48,7 @@ namespace GitUI.CommandsDialogs
             ConfigureTabControl();
 
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, FileChanges);
-            _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, FileChanges, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
+            _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, FileChanges, toolStripRevisionFilterLabel, ShowFirstParent, null, form: this);
 
             _formBrowseMenus = new FormBrowseMenus(FileHistoryContextMenu);
             _formBrowseMenus.ResetMenuCommandSets();

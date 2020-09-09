@@ -108,4 +108,21 @@
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\icon1.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\lock.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\unlock.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\locks.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\icon2.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

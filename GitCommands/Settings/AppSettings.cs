@@ -252,14 +252,14 @@ namespace GitCommands
 
         public static bool CheckSettings
         {
-            get => ReadBoolRegKey("CheckSettings", true);
+            get => ReadBoolRegKey("CheckSettings", false);
             set => WriteBoolRegKey("CheckSettings", value);
         }
 
         [NotNull]
         public static string CascadeShellMenuItems
         {
-            get => ReadStringRegValue("CascadeShellMenuItems", "110111000111111111");
+            get => ReadStringRegValue("CascadeShellMenuItems", "110111000111111111110");
             set => WriteStringRegValue("CascadeShellMenuItems", value);
         }
 

@@ -45,6 +45,9 @@ namespace GitCommands
 
         private Flags _flags;
 
+        public string User { get; set; }
+        public string File { get; set; }
+
         public string Name { get; set; }
         public string OldName { get; set; }
         public string ErrorMessage { get; set; }
