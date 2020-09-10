@@ -313,8 +313,12 @@ namespace GitUI.CommandsDialogs
 
             // Populate terminal tab after translation within InitializeComplete
             FillTerminalTab();
+            FillUserShells();
 
-            FillUserShells(defaultShell: BashShell.ShellName);
+            AppSettings.Shells.Updated += (s, e) =>
+            {
+                FillUserShells();
+            };
 
             RevisionGrid.ToggledBetweenArtificialAndHeadCommits += (s, e) => FocusRevisionDiffFileStatusList();
 
@@ -545,12 +549,11 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void FillUserShells(string defaultShell)
+        private void FillUserShells()
         {
-            userShell.DropDownItems.Clear();
+            var userShellAccessible = false;
 
-            bool userShellAccessible = false;
-            ToolStripMenuItem selectedDefaultShell = null;
+            userShell.DropDownItems.Clear();
 
             foreach (var shell in _shellService.List())
             {
@@ -576,15 +579,11 @@ namespace GitUI.CommandsDialogs
                 if (shell.Default)
                 {
                     userShellAccessible = true;
-                    selectedDefaultShell = toolStripMenuItem;
-                }
-            }
 
-            if (selectedDefaultShell is not null)
-            {
-                userShell.Image = selectedDefaultShell.Image;
-                userShell.ToolTipText = selectedDefaultShell.ToolTipText;
-                userShell.Tag = selectedDefaultShell.Tag;
+                    userShell.Image = shellDescriptor.Icon;
+                    userShell.ToolTipText = shellDescriptor.Name;
+                    userShell.Tag = shellDescriptor;
+                }
             }
 
             userShell.Visible = userShell.DropDownItems.Count > 0;
