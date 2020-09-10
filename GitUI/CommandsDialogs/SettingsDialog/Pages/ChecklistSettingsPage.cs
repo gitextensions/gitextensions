@@ -184,7 +184,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void SshConfig_Click(object sender, EventArgs e)
         {
-            if (GitCommandHelpers.Plink())
+            if (GitSshHelpers.Plink())
             {
                 if (SshSettingsPage.AutoFindPuttyPaths())
                 {
@@ -433,7 +433,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private bool CheckSSHSettings()
         {
             SshConfig.Visible = true;
-            if (GitCommandHelpers.Plink())
+            if (GitSshHelpers.Plink())
             {
                 return RenderSettingSetUnset(() => !File.Exists(AppSettings.Plink) || !File.Exists(AppSettings.Puttygen) || !File.Exists(AppSettings.Pageant),
                                         SshConfig, SshConfig_Fix,

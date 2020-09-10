@@ -4,7 +4,7 @@ using System.Linq;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 
-namespace GitCommands
+namespace GitCommands.Git.Commands
 {
     public sealed class GitDeleteBranchCmd : GitCommand
     {

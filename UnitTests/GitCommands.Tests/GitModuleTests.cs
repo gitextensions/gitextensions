@@ -4,14 +4,17 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using ApprovalTests;
+using ApprovalTests.Namers;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace GitCommandsTests
@@ -427,6 +430,50 @@ namespace GitCommandsTests
             }
         }
 
+        [Test]
+        [TestCase("WorkTree1", StagedStatus.Index,
+            "\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0")]
+        [TestCase("WorkTree2", StagedStatus.Index,
+            "\0\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0")]
+        [TestCase("WorkTree3", StagedStatus.Index,
+            "\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\nM\0testfile.txt\0")]
+        [TestCase("WorkTree4", StagedStatus.Index,
+            "M\0testfile.txt\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\n")]
+        [TestCase("fatal error", StagedStatus.None,
+            "M\0testfile.txt\0fatal: bad config line 1 in file F:/dev/gc/gitextensions/.git/modules/GitExtensionsDoc/config\nfatal: 'git status --porcelain=2' failed in submodule GitExtensionsDoc\nM\0testfile2.txt\0")]
+
+        [TestCase("Ignore_unmerged_in_conflict_if_revision_is_work_tree", StagedStatus.WorkTree,
+            "M\0testfile.txt\0U\0testfile.txt\0")]
+        [TestCase("Include_unmerged_in_conflict_if_revision_is_index", StagedStatus.Index,
+            "M\0testfile.txt\0U\0testfile2.txt\0")]
+        [TestCase("Check_that_the_staged_status_is_None_if_not_IndexWorkTree1", StagedStatus.None,
+            "M\0testfile.txt\0U\0testfile2.txt\0")]
+        [TestCase("Check_that_the_staged_status_is_None_if_not_IndexWorkTree2", StagedStatus.None,
+            "M\0testfile.txt\0U\0testfile2.txt\0")]
+
+        [TestCase("Check that spaces are not trimmed in file names", StagedStatus.None,
+            "M\0 no trim space0 \0U\0 no trim space1 \0A\0 no trim space2 \0")]
+        [TestCase("Rename_with_spaces", StagedStatus.None,
+            "R100\0CONTRIBUTING.md\0 CONTRIBUTI NG.md\0C70\0apa.md\0 apa.md\0A\0 co decov.yml\0D\0CODE_OF_CONDUCT.md\0")]
+#if !DEBUG && false
+            // This test is for documentation, but as the throw is in a called function, it will not test cleanly
+                // Check that the staged status is None if not Index/WorkTree
+                // Assertion in Debug, throws in Release
+        [TestCase("Check_that_the_staged_status_is_None_if_not_IndexWorkTree3", StagedStatus.None,
+            "M\0testfile.txt\0U\0testfile2.txt\0")]
+#endif
+        public void GetDiffChangedFilesFromString(string testName, StagedStatus stagedStatus, string statusString)
+        {
+            // TODO produce a valid working directory
+            var module = new GitModule(Path.GetTempPath());
+            using (ApprovalResults.ForScenario(testName.Replace(' ', '_')))
+            {
+                // git diff -M -C -z --name-status
+                var statuses = module.GetTestAccessor().GetDiffChangedFilesFromString(statusString, stagedStatus);
+                Approvals.VerifyJson(JsonConvert.SerializeObject(statuses));
+            }
+        }
+
         [TestCase("fatal: not a git repository:")]
         [TestCase("error: something went wrong")]
         [TestCase("HEAD")]
@@ -654,6 +701,58 @@ namespace GitCommandsTests
             Assert.AreEqual("Please enter a name.", _gitModule.AddRemote(null, path));
         }
 
+        private static IEnumerable<TestCaseData> StagedStatuses
+        {
+            get
+            {
+                var headObjectId = ObjectId.Random();
+
+                yield return new TestCaseData(ObjectId.IndexId, ObjectId.WorkTreeId, ObjectId.IndexId, StagedStatus.WorkTree);
+
+                yield return new TestCaseData(headObjectId, ObjectId.IndexId, headObjectId, StagedStatus.Index);
+
+                yield return new TestCaseData(ObjectId.Random(), ObjectId.Random(), ObjectId.Random(), StagedStatus.None);
+                yield return new TestCaseData(ObjectId.Random(), ObjectId.Random(), null, StagedStatus.None);
+
+                // Situations where staged status is unknown
+                yield return new TestCaseData(ObjectId.WorkTreeId, ObjectId.Random(), ObjectId.Random(), StagedStatus.Unknown);
+                yield return new TestCaseData(ObjectId.Random(), ObjectId.WorkTreeId, ObjectId.IndexId, StagedStatus.Unknown);
+                yield return new TestCaseData(ObjectId.IndexId, ObjectId.Random(), ObjectId.Random(), StagedStatus.Unknown);
+                yield return new TestCaseData(ObjectId.Random(), ObjectId.IndexId, ObjectId.Random(), StagedStatus.Unknown);
+                yield return new TestCaseData(ObjectId.IndexId, ObjectId.Random(), null, StagedStatus.Unknown);
+                yield return new TestCaseData(ObjectId.Random(), ObjectId.IndexId, null, StagedStatus.Unknown);
+                yield return new TestCaseData(ObjectId.Random(), null, ObjectId.Random(), StagedStatus.Unknown);
+                yield return new TestCaseData(null, ObjectId.Random(), ObjectId.Random(), StagedStatus.Unknown);
+
+                // Impossible combinations
+                yield return new TestCaseData(ObjectId.Random(), ObjectId.WorkTreeId, ObjectId.Random(), StagedStatus.Unknown);
+                yield return new TestCaseData(ObjectId.Random(), ObjectId.Random(), ObjectId.WorkTreeId, StagedStatus.None);
+                yield return new TestCaseData(ObjectId.Random(), ObjectId.IndexId, ObjectId.WorkTreeId, StagedStatus.Unknown);
+                yield return new TestCaseData(headObjectId, ObjectId.WorkTreeId, headObjectId, StagedStatus.Unknown);
+                yield return new TestCaseData(ObjectId.Random(), ObjectId.Random(), ObjectId.IndexId, StagedStatus.None);
+            }
+        }
+
+        [Test, TestCaseSource(nameof(StagedStatuses))]
+        public void GetStagedStatus(ObjectId firstRevision, ObjectId secondRevision, ObjectId parentToSecond, StagedStatus status)
+        {
+            var stagedStatus = _gitModule.GetTestAccessor().GetStagedStatus(firstRevision, secondRevision, parentToSecond);
+            Assert.AreEqual(status, stagedStatus);
+        }
+
+        [TestCase("'git difftool --tool=<tool>' may be set to one of the following:\n\t\tvimdiff\n\t\tvimdiff2\n\t\tvimdiff3\n\t\twinmerge\n\n\tuser-defined:\n\t\tDiffMerge.cmd \"C:/Program Files/SourceGear/Common/DiffMerge/sgdm.exe\" -merge -result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"\n\t\tdiffmerge.cmd \"C:/Program Files/SourceGear/Common/DiffMerge/sgdm.exe\" \"$LOCAL\" \"$REMOTE\"\n\t\tkdiff3.cmd \"C:/Program Files/KDiff3/kdiff3.exe\" \"$LOCAL\" \"$REMOTE\"\n\t\tmeld.cmd \"C:/Program Files (x86)/Meld/meld.exe\" \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output \"$MERGED\"\n\t\tmeld.cmd \"C:/Program Files (x86)/Meld/meld.exe\" \"$LOCAL\" \"$REMOTE\"\n\t\tp4merge.cmd \"C:/Program Files/Perforce/p4merge.exe\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"\n\t\tp4merge.cmd \"C:/Program Files/Perforce/p4merge.exe\" \"$LOCAL\" \"$REMOTE\"\n\t\tsemanticdiff.cmd \"C:/Users/ejgo/AppData/Local/semanticmerge/semanticmergetool.exe\" -s \"$LOCAL\" -d \"$REMOTE\"\n\t\tsemanticmerge.cmd \"C:/Users/ejgo/AppData/Local/semanticmerge/semanticmergetool.exe\" -s \"$LOCAL\" -d \"$REMOTE\"\n\t\tsemanticmerge.cmd \"C:/Users/ejgo/AppData/Local/semanticmerge/semanticmergetool.exe\" -s \"$REMOTE\" -d \"$LOCAL\" -b \"$BASE\" -r \"$MERGED\"\n\t\tsourcetree.cmd 'C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe'  -base:\"$BASE\" -mine:\"$LOCAL\" -theirs:\"$REMOTE\" -merged:\"$MERGED\"\n\t\tsourcetree.cmd 'C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe' \"$LOCAL\" \"$REMOTE\"\n\t\tssss.cmd ggfjf dhdf df\n\t\ttortoisemerge.cmd \"C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe\" -base:\"$BASE\" -mine:\"$LOCAL\"\n\t\ttortoisemerge.cmd \"C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe\" -base:\"$BASE\" -mine:\"$LOCAL\" -theirs:\"$REMOTE\" -merged:\"$MERGED\"\n\t\ttortoisemerge2.cmd \"C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe\" \"$LOCAL\" \"$REMOTE\"\n\t\tvsdiffmerge.cmd \"F:/Program Files (x86)/Microsoft Visual Studio/2017/Community/Common7/IDE/CommonExtensions/Microsoft/TeamFoundation/Team Explorer/vsDiffMerge.exe\" \"$LOCAL\" \"$REMOTE\"\n\t\twinmerge.cmd \"C:/Program Files/WinMerge/winmergeu.exe\" -e -u  -wl -wr -fm -dl \"Mine: $LOCAL\" -dm \"Merged: $BASE\" -dr \"Theirs: $REMOTE\" \"$LOCAL\" \"$BASE\" \"$REMOTE\" -o \"$MERGED\"\n\t\twinmerge.cmd \"C:/Program Files/WinMerge/winmergeu.exe\" -e -u \"$LOCAL\" \"$REMOTE\"\n\nThe following tools are valid, but not currently available:\n\t\taraxis\n\t\tbc\n\t\tbc3\n\t\tcodecompare\n\t\tdeltawalker\n\t\tdiffmerge\n\t\tdiffuse\n\t\tecmerge\n\t\temerge\n\t\texamdiff\n\t\tguiffy\n\t\tgvimdiff\n\t\tgvimdiff2\n\t\tgvimdiff3\n\t\tkdiff3\n\t\tkompare\n\t\tmeld\n\t\topendiff\n\t\tp4merge\n\t\tsmerge\n\t\ttkdiff\n\t\txxdiff\n\nSome of the tools listed above only work in a windowed\nenvironment. If run in a terminal-only session, they will fail.\n",
+            new[] { "diffmerge", "DiffMerge", "kdiff3", "meld", "p4merge", "semanticdiff", "semanticmerge", "sourcetree", "ssss", "tortoisemerge", "tortoisemerge2", "winmerge", "vsdiffmerge" })]
+        [TestCase("'git difftool --tool=<tool>' may be set to one of the following:\n\t\tvimdiff\n\t\tvimdiff2\n\t\tvimdiff3\n\t\twinmerge\n\nThe following tools are valid, but not currently available:\n\t\taraxis\n\t\tbc\n\t\tbc3\n\t\tcodecompare\n\t\tdeltawalker\n\t\tdiffmerge\n\t\tdiffuse\n\t\tecmerge\n\t\temerge\n\t\texamdiff\n\t\tguiffy\n\t\tgvimdiff\n\t\tgvimdiff2\n\t\tgvimdiff3\n\t\tkdiff3\n\t\tkompare\n\t\tmeld\n\t\topendiff\n\t\tp4merge\n\t\tsmerge\n\t\ttkdiff\n\t\txxdiff\n\nSome of the tools listed above only work in a windowed\nenvironment. If run in a terminal-only session, they will fail.\n",
+            new[] { "winmerge" })]
+        [TestCase("'git difftool --tool=<tool>' may be set to one of the following:\n\t\tvimdiff\n\t\tvimdiff2\n\t\tvimdiff3\n\t\twinmerge\n",
+            new[] { "winmerge" })]
+        public void ParseCustomDiffMergeToolTest(string output, string[] expected)
+        {
+            IEnumerable<string> tools = _gitModule.GetTestAccessor().ParseCustomDiffMergeTool(output);
+
+            tools.Should().BeEquivalentTo(expected);
+        }
+
         [Test]
         public void GetSubmodulesLocalPaths()
         {
@@ -739,32 +838,6 @@ namespace GitCommandsTests
         public void GetStashesCmd(bool noLocks, string expected)
         {
             Assert.AreEqual(expected, _gitModule.GetStashesCmd(noLocks).ToString());
-        }
-
-        [TestCase(@"-c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoreSubmodules=none diff --no-color -M -C --cached extra -- ""new"" ""old""", "new", "old", true, "extra", false)]
-        [TestCase(@"-c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoreSubmodules=none diff --no-color extra -- ""new""", "new", "old", false, "extra", false)]
-        [TestCase(@"--no-optional-locks -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoreSubmodules=none diff --no-color -M -C --cached extra -- ""new"" ""old""", "new", "old", true, "extra", true)]
-        public void GetCurrentChangesCmd(string expected, string fileName, [CanBeNull] string oldFileName, bool staged,
-            string extraDiffArguments, bool noLocks)
-        {
-            Assert.AreEqual(expected, _gitModule.GetCurrentChangesCmd(fileName, oldFileName, staged,
-                extraDiffArguments, noLocks).ToString());
-        }
-
-        [TestCase(@"for-each-ref --sort=-committerdate --format=""%(objectname) %(refname)"" refs/heads/", false)]
-        [TestCase(@"--no-optional-locks for-each-ref --sort=-committerdate --format=""%(objectname) %(refname)"" refs/heads/", true)]
-        public void GetSortedRefsCommand(string expected, bool noLocks)
-        {
-            Assert.AreEqual(expected, _gitModule.GetSortedRefsCommand(noLocks).ToString());
-        }
-
-        [TestCase(@"show-ref --dereference", true, true, false)]
-        [TestCase(@"show-ref --tags", true, false, false)]
-        [TestCase(@"for-each-ref --sort=-committerdate refs/heads/ --format=""%(objectname) %(refname)""", false, true, false)]
-        [TestCase(@"--no-optional-locks for-each-ref --sort=-committerdate refs/heads/ --format=""%(objectname) %(refname)""", false, true, true)]
-        public void GetRefsCmd(string expected, bool tags, bool branches, bool noLocks)
-        {
-            Assert.AreEqual(expected, _gitModule.GetRefsCmd(tags, branches, noLocks).ToString());
         }
 
         [TestCase(false, @"-c core.safecrlf=false update-index --add --stdin")]

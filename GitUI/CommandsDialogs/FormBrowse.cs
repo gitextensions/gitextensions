@@ -14,6 +14,7 @@ using ConEmu.WinForms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitCommands.Gpg;
 using GitCommands.Submodules;
 using GitCommands.UserRepositoryHistory;
@@ -354,7 +355,7 @@ namespace GitUI.CommandsDialogs
 
                 gitStatusMonitor.GitWorkingDirectoryStatusChanged += (s, e) =>
                 {
-                    var status = e.ItemStatuses?.ToList();
+                    IReadOnlyList<GitItemStatus> status = e.ItemStatuses;
 
                     bool countToolbar = AppSettings.ShowGitStatusInBrowseToolbar;
                     bool countArtificial = AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowWorkingDirChanges;

@@ -1410,7 +1410,7 @@ namespace GitCommands
 
             try
             {
-                GitCommandHelpers.SetSsh(SshPath);
+                GitSshHelpers.SetSsh(SshPath);
             }
             catch
             {

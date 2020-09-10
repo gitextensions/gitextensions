@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
@@ -892,7 +893,7 @@ namespace GitUI.CommandsDialogs
 
         private void EnsurePageant(string remote)
         {
-            if (GitCommandHelpers.Plink())
+            if (GitSshHelpers.Plink())
             {
                 StartPageant(remote);
             }

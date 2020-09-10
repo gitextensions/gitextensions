@@ -7,10 +7,10 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitCommands.Submodules;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
 namespace GitCommandsTests.Submodules
 {
@@ -768,7 +768,7 @@ namespace GitCommandsTests.Submodules
         {
             var cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default, noLocks: true);
             var output = module.GitExecutable.GetOutput(cmd);
-            return GitCommandHelpers.GetStatusChangedFilesFromString(module, output);
+            return new GetAllChangedFilesOutputParser(() => module).Parse(output);
         }
     }
 }

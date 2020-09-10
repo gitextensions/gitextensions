@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitCommands.Settings;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
@@ -40,7 +41,7 @@ namespace GitUI
         {
             Module = module ?? throw new ArgumentNullException(nameof(module));
 
-            _commitTemplateManager = new CommitTemplateManager(module);
+            _commitTemplateManager = new CommitTemplateManager(() => module);
             RepoChangedNotifier = new ActionNotifier(
                 () => InvokeEvent(null, PostRepositoryChanged));
 

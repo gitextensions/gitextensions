@@ -16,7 +16,7 @@ namespace GitUI.Infrastructure.Telemetry
             {
                 sshClient = "OpenSSH";
             }
-            else if (GitCommandHelpers.Plink())
+            else if (GitSshHelpers.Plink())
             {
                 sshClient = "PuTTY";
             }

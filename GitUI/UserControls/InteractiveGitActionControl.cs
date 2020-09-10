@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using GitCommands;
+using GitCommands.Git.Commands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;

@@ -7,6 +7,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands;
+using GitCommands.Git;
+using GitCommands.Git.Commands;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
@@ -15,11 +18,13 @@ namespace GitUI.AutoCompletion
     public class CommitAutoCompleteProvider : IAutoCompleteProvider
     {
         private static readonly Lazy<Dictionary<string, Regex>> _regexes = new Lazy<Dictionary<string, Regex>>(ParseRegexes);
-        private readonly GitModule _module;
+        private readonly Func<IGitModule> _getModule;
+        private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
 
-        public CommitAutoCompleteProvider(GitModule module)
+        public CommitAutoCompleteProvider(Func<IGitModule> getModule)
         {
-            _module = module;
+            _getModule = getModule;
+            _getAllChangedFilesOutputParser = new GetAllChangedFilesOutputParser(getModule);
         }
 
         public async Task<IEnumerable<AutoCompleteWord>> GetAutoCompleteWordsAsync(CancellationToken cancellationToken)
@@ -28,9 +33,10 @@ namespace GitUI.AutoCompletion
 
             var autoCompleteWords = new HashSet<string>();
 
-            var cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default, noLocks: true);
-            var output = await _module.GitExecutable.GetOutputAsync(cmd).ConfigureAwait(false);
-            var changedFiles = GitCommandHelpers.GetStatusChangedFilesFromString(_module, output);
+            IGitModule module = GetModule();
+            ArgumentString cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default, noLocks: true);
+            var output = await module.GitExecutable.GetOutputAsync(cmd).ConfigureAwait(false);
+            IReadOnlyList<GitItemStatus> changedFiles = _getAllChangedFilesOutputParser.Parse(output);
             foreach (var file in changedFiles)
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -39,7 +45,8 @@ namespace GitUI.AutoCompletion
 
                 if (regex != null)
                 {
-                    var text = await GetChangedFileTextAsync(_module, file);
+                    // HACK: need to expose require methods at IGitModule level
+                    var text = await GetChangedFileTextAsync((GitModule)module, file);
                     var matches = regex.Matches(text);
                     foreach (Match match in matches)
                     {
@@ -64,6 +71,19 @@ namespace GitUI.AutoCompletion
             }
 
             return autoCompleteWords.Select(w => new AutoCompleteWord(w));
+        }
+
+        [NotNull]
+        private IGitModule GetModule()
+        {
+            var module = _getModule();
+
+            if (module == null)
+            {
+                throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
+            }
+
+            return module;
         }
 
         [CanBeNull]

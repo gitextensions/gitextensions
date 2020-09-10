@@ -1,9 +1,11 @@
 ﻿using System;
+using GitCommands.Git.Extensions;
+using GitCommands.Git.Tag;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
-namespace GitCommands.Git.Tag
+namespace GitCommands.Git.Commands
 {
     public sealed class GitCreateTagCmd : GitCommand
     {

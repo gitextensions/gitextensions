@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using GitExtUtils;
-using GitUIPluginInterfaces;
 
-namespace GitCommands.Git
+namespace GitCommands.Git.Commands
 {
     public sealed class GitDeleteRemoteBranchesCmd : GitCommand
     {
