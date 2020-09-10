@@ -2944,14 +2944,20 @@ namespace GitUI.CommandsDialogs
             _consoleTabPage.ImageKey = nameof(Images.Console);
 
             // Delay-create the terminal window when the tab is first selected
-            CommitInfoTabControl.Selecting += (sender, args) =>
+            CommitInfoTabControl.Selecting += CommitInfoTabControl_Selecting;
+
+            void CommitInfoTabControl_Selecting(object sender, TabControlCancelEventArgs args)
             {
                 if (args.TabPage != _consoleTabPage)
                 {
                     return;
                 }
 
-                if (_terminal is null)
+                RefreshShell();
+            }
+
+            void RefreshShell()
+            {
                 {
                     // Lazy-create on first opening the tab
                     _consoleTabPage.Controls.Clear();
@@ -2994,7 +3000,13 @@ namespace GitUI.CommandsDialogs
 
                 try
                 {
-                    _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.ConEmuStyle.Value, AppSettings.ConEmuFontSize.Value);
+                    _terminal
+                        .Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.ConEmuStyle.Value, AppSettings.ConEmuFontSize.Value)
+                        .WaitForConsoleEmulatorCloseAsync()
+                            .ContinueWith(x =>
+                            {
+                                RefreshShell();
+                            }, TaskScheduler.FromCurrentSynchronizationContext());
                 }
                 catch (InvalidOperationException)
                 {
@@ -3004,7 +3016,7 @@ namespace GitUI.CommandsDialogs
                     throw;
 #endif
                 }
-            };
+            }
         }
 
         public void ChangeTerminalActiveFolder(string path)
