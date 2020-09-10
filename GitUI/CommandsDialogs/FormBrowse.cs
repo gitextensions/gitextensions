@@ -318,6 +318,20 @@ namespace GitUI.CommandsDialogs
             AppSettings.Shells.Updated += (s, e) =>
             {
                 FillUserShells();
+
+                Task.Run(async () =>
+                {
+                    if (_terminal == null)
+                    {
+                        return;
+                    }
+
+                    await _terminal.RunningSession?
+                        .BeginGuiMacro("Close")
+                        .WithParam(0)
+                        .WithParam(1)
+                        .ExecuteAsync();
+                });
             };
 
             RevisionGrid.ToggledBetweenArtificialAndHeadCommits += (s, e) => FocusRevisionDiffFileStatusList();
