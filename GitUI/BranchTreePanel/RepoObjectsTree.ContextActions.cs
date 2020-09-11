@@ -224,15 +224,15 @@ namespace GitUI.BranchTreePanel
         {
             _sortOrderContextMenuItem = new GitRefsSortOrderContextMenuItem(() =>
             {
-                _branchesTree.RefreshRefs();
-                _remotesTree.RefreshRefs();
-                _tagTree.RefreshRefs();
+                _branchesTree.Refresh();
+                _remotesTree.Refresh();
+                _tagTree.Refresh();
             });
             _sortByContextMenuItem = new GitRefsSortByContextMenuItem(() =>
             {
-                _branchesTree.RefreshRefs();
-                _remotesTree.RefreshRefs();
-                _tagTree.RefreshRefs();
+                _branchesTree.Refresh();
+                _remotesTree.Refresh();
+                _tagTree.Refresh();
             });
 
             _localBranchMenuItems = new LocalBranchMenuItems<LocalBranchNode>(this);

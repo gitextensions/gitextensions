@@ -13,6 +13,7 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUI.UserControls;
+using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -39,6 +40,7 @@ namespace GitUI.BranchTreePanel
         private FilterBranchHelper _filterBranchHelper;
         private IAheadBehindDataProvider _aheadBehindDataProvider;
         private bool _searchCriteriaChanged;
+        private ICheckRefs _refsSource;
 
         public RepoObjectsTree()
         {
@@ -225,14 +227,22 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        public void Initialize([CanBeNull] IAheadBehindDataProvider aheadBehindDataProvider, FilterBranchHelper filterBranchHelper)
+        public void Initialize([CanBeNull] IAheadBehindDataProvider aheadBehindDataProvider, FilterBranchHelper filterBranchHelper, ICheckRefs refsSource)
         {
             _aheadBehindDataProvider = aheadBehindDataProvider;
             _filterBranchHelper = filterBranchHelper;
+            _refsSource = refsSource;
 
             // This lazily sets the command source, invoking OnUICommandsSourceSet, which is required for setting up
             // notifications for each Tree.
             _ = UICommandsSource;
+        }
+
+        public void RefreshRefs(bool isFiltering)
+        {
+            _branchesTree.Refresh(isFiltering);
+            _remotesTree.Refresh(isFiltering);
+            _tagTree.Refresh(isFiltering);
         }
 
         public void SelectionChanged(IReadOnlyList<GitRevision> selectedRevisions)
@@ -310,7 +320,7 @@ namespace GitUI.BranchTreePanel
                 ImageKey = nameof(Images.BranchLocalRoot),
                 SelectedImageKey = nameof(Images.BranchLocalRoot),
             };
-            _branchesTree = new BranchTree(rootNode, UICommandsSource, _aheadBehindDataProvider);
+            _branchesTree = new BranchTree(rootNode, UICommandsSource, _aheadBehindDataProvider, _refsSource);
         }
 
         private void CreateRemotes()
@@ -321,7 +331,7 @@ namespace GitUI.BranchTreePanel
                 ImageKey = nameof(Images.BranchRemoteRoot),
                 SelectedImageKey = nameof(Images.BranchRemoteRoot),
             };
-            _remotesTree = new RemoteBranchTree(rootNode, UICommandsSource)
+            _remotesTree = new RemoteBranchTree(rootNode, UICommandsSource, _refsSource)
             {
                 TreeViewNode =
                 {
@@ -338,7 +348,7 @@ namespace GitUI.BranchTreePanel
                 ImageKey = nameof(Images.TagHorizontal),
                 SelectedImageKey = nameof(Images.TagHorizontal),
             };
-            _tagTree = new TagTree(rootNode, UICommandsSource);
+            _tagTree = new TagTree(rootNode, UICommandsSource, _refsSource);
         }
 
         private void CreateSubmodules()

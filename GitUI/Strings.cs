@@ -22,6 +22,7 @@ namespace GitUI
         private readonly TranslationString _containedInNoBranchText = new TranslationString("Contained in no branch");
         private readonly TranslationString _containedInTagsText = new TranslationString("Contained in tags:");
         private readonly TranslationString _containedInNoTagText = new TranslationString("Contained in no tag");
+        private readonly TranslationString _invisibleCommitText = new TranslationString("'{0}' is not currently visible");
         private readonly TranslationString _viewPullRequest = new TranslationString("View pull requests");
         private readonly TranslationString _createPullRequest = new TranslationString("Create pull request");
         private readonly TranslationString _forkCloneRepo = new TranslationString("Fork or clone a repository");
@@ -77,6 +78,8 @@ namespace GitUI
 - For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
 - For more than four selected commits, show the difference from the first to the last selected commit.");
 
+        private readonly TranslationString _rotInactive = new TranslationString("[ Inactive ]");
+
         // public only because of FormTranslate
         public Strings()
         {
@@ -109,6 +112,7 @@ namespace GitUI
         public static string ContainedInNoBranch => _instance.Value._containedInNoBranchText.Text;
         public static string ContainedInTags => _instance.Value._containedInTagsText.Text;
         public static string ContainedInNoTag => _instance.Value._containedInNoTagText.Text;
+        public static string InvisibleCommit => _instance.Value._invisibleCommitText.Text;
 
         public static string CreatePullRequest => _instance.Value._createPullRequest.Text;
         public static string ForkCloneRepo => _instance.Value._forkCloneRepo.Text;
@@ -160,5 +164,7 @@ namespace GitUI
         public static string DiffSelectedWithRememberedFile => _instance.Value._diffSelectedWithRememberedFile.Text;
         public static string ShowDiffForAllParentsText => _instance.Value._showDiffForAllParentsText.Text;
         public static string ShowDiffForAllParentsTooltip => _instance.Value._showDiffForAllParentsTooltip.Text;
+
+        public static string Inactive => _instance.Value._rotInactive.Text;
     }
 }

@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands.Git;
+using GitExtUtils.GitUI.Theming;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.Properties;
+using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
@@ -18,30 +21,12 @@ namespace GitUI.BranchTreePanel
     {
         #region private classes
 
+        [DebuggerDisplay("(Node) FullPath = {FullPath}")]
         private abstract class BaseBranchNode : Node
         {
             protected const char PathSeparator = '/';
 
-            /// <summary>Short name of the branch/branch path. <example>"issue1344"</example></summary>
-            protected string Name { get; set; }
-
-            private string ParentPath { get; }
-            protected string AheadBehind { get; set; }
-
-            /// <summary>Full path of the branch. <example>"issues/issue1344"</example></summary>
-            public string FullPath => ParentPath.Combine(PathSeparator.ToString(), Name);
-
-            public override int GetHashCode()
-            {
-                return FullPath.GetHashCode();
-            }
-
-            public override bool Equals(object obj)
-            {
-                return obj is BaseBranchNode other && (ReferenceEquals(other, this) || string.Equals(FullPath, other.FullPath));
-            }
-
-            protected BaseBranchNode(Tree tree, string fullPath)
+            protected BaseBranchNode(Tree tree, string fullPath, bool visible)
                 : base(tree)
             {
                 fullPath = fullPath.Trim();
@@ -53,6 +38,44 @@ namespace GitUI.BranchTreePanel
                 var dirs = fullPath.Split(PathSeparator);
                 Name = dirs[dirs.Length - 1];
                 ParentPath = dirs.Take(dirs.Length - 1).Join(PathSeparator.ToString());
+                Visible = visible;
+            }
+
+            protected string AheadBehind { get; set; }
+
+            /// <summary>
+            /// Short name of the branch/branch path. <example>"issue1344"</example>.
+            /// </summary>
+            public string Name { get; protected set; }
+
+            protected string ParentPath { get; }
+
+            /// <summary>
+            /// Full path of the branch. <example>"issues/issue1344"</example>.
+            /// </summary>
+            public string FullPath => ParentPath.Combine(PathSeparator.ToString(), Name);
+
+            /// <summary>
+            /// Gets whether the commit that the node represents is currently visible in the revision grid.
+            /// </summary>
+            public bool Visible { get; }
+
+            protected override void ApplyStyle()
+            {
+                base.ApplyStyle();
+
+                TreeViewNode.ForeColor = Visible ? TreeViewNode.TreeView.ForeColor : Color.Silver.AdaptTextColor();
+                TreeViewNode.ImageKey =
+                    TreeViewNode.SelectedImageKey = Visible ? null : nameof(Images.EyeClosed);
+            }
+
+            public override int GetHashCode() => FullPath.GetHashCode() ^ Visible.GetHashCode();
+
+            public override bool Equals(object obj)
+            {
+                return obj is BaseBranchNode other
+                    && (ReferenceEquals(other, this) || string.Equals(FullPath, other.FullPath))
+                    && Visible == other.Visible;
             }
 
             public void UpdateAheadBehind(string aheadBehindData)
@@ -119,8 +142,8 @@ namespace GitUI.BranchTreePanel
 
             private bool _isMerged = false;
 
-            public BaseBranchLeafNode(Tree tree, in ObjectId objectId, string fullPath, string imageKeyUnmerged, string imageKeyMerged)
-                : base(tree, fullPath)
+            public BaseBranchLeafNode(Tree tree, in ObjectId objectId, string fullPath, bool visible, string imageKeyUnmerged, string imageKeyMerged)
+                : base(tree, fullPath, visible)
             {
                 ObjectId = objectId;
                 _imageKeyUnmerged = imageKeyUnmerged;
@@ -138,8 +161,13 @@ namespace GitUI.BranchTreePanel
                     }
 
                     _isMerged = value;
+
                     ApplyStyle();
-                    TreeViewNode.ToolTipText = IsMerged ? string.Format(Strings.ContainedInCurrentCommit, Name) : string.Empty;
+
+                    if (_isMerged && Visible)
+                    {
+                        TreeViewNode.ToolTipText = string.Format(Strings.ContainedInCurrentCommit, Name);
+                    }
                 }
             }
 
@@ -149,14 +177,23 @@ namespace GitUI.BranchTreePanel
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = IsMerged ? _imageKeyMerged : _imageKeyUnmerged;
+
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey =
+                    Visible
+                        ? IsMerged ? _imageKeyMerged : _imageKeyUnmerged
+                        : nameof(Images.EyeClosed);
+                if (!Visible)
+                {
+                    TreeViewNode.ToolTipText = string.Format(Strings.InvisibleCommit, FullPath);
+                }
             }
         }
 
+        [DebuggerDisplay("(Local) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {IsVisible}")]
         private sealed class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICanRename, ICanDelete
         {
-            public LocalBranchNode(Tree tree, in ObjectId objectId, string fullPath, bool isCurrent)
-                : base(tree, objectId, fullPath, nameof(Images.BranchLocal), nameof(Images.BranchLocalMerged))
+            public LocalBranchNode(Tree tree, in ObjectId objectId, string fullPath, bool isCurrent, bool visible)
+                : base(tree, objectId, fullPath, visible, nameof(Images.BranchLocal), nameof(Images.BranchLocalMerged))
             {
                 IsActive = isCurrent;
             }
@@ -166,18 +203,17 @@ namespace GitUI.BranchTreePanel
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
+
                 SetNodeFont(IsActive ? FontStyle.Bold : FontStyle.Regular);
             }
 
             public override bool Equals(object obj)
-            {
-                return base.Equals(obj) && obj is LocalBranchNode localBranchNode && IsActive == localBranchNode.IsActive;
-            }
+                => base.Equals(obj)
+                    && obj is LocalBranchNode localBranchNode
+                    && IsActive == localBranchNode.IsActive;
 
             public override int GetHashCode()
-            {
-                return base.GetHashCode();
-            }
+                => base.GetHashCode() ^ IsActive.GetHashCode();
 
             internal override void OnDoubleClick()
             {
@@ -223,17 +259,20 @@ namespace GitUI.BranchTreePanel
 
         private class BasePathNode : BaseBranchNode
         {
-            public BasePathNode(Tree tree, string fullPath) : base(tree, fullPath)
+            public BasePathNode(Tree tree, string fullPath) : base(tree, fullPath, visible: true)
             {
             }
 
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.BranchFolder);
+
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey =
+                    FullPath == Strings.Inactive ? nameof(Images.EyeClosed) : nameof(Images.BranchFolder);
             }
         }
 
+        [DebuggerDisplay("(Branch path) FullPath = {FullPath}")]
         private class BranchPathNode : BasePathNode
         {
             public BranchPathNode(Tree tree, string fullPath)
@@ -262,40 +301,51 @@ namespace GitUI.BranchTreePanel
         private sealed class BranchTree : Tree
         {
             private readonly IAheadBehindDataProvider _aheadBehindDataProvider;
+            private readonly ICheckRefs _refsSource;
 
-            public BranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, [CanBeNull] IAheadBehindDataProvider aheadBehindDataProvider)
+            // Retains the list of currently loaded branches.
+            // This is needed to apply filtering without reloading the data.
+            // Whether or not force the reload of data is controlled by <see cref="_isFiltering"/> flag.
+            private IReadOnlyList<IGitRef> _loadedBranches;
+
+            public BranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, [CanBeNull] IAheadBehindDataProvider aheadBehindDataProvider, ICheckRefs refsSource)
                 : base(treeNode, uiCommands)
             {
                 _aheadBehindDataProvider = aheadBehindDataProvider;
+                _refsSource = refsSource;
             }
 
-            protected override Task OnAttachedAsync() => ReloadNodesAsync(LoadNodesAsync);
+            protected override bool SupportsFiltering => true;
 
-            protected override Task PostRepositoryChangedAsync() => ReloadNodesAsync(LoadNodesAsync);
-
-            /// <summary>
-            /// Requests to refresh the data tree retaining the current filtering rules.
-            /// </summary>
-            internal void RefreshRefs()
+            protected override Task OnAttachedAsync()
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    await ReloadNodesAsync(LoadNodesAsync);
-                });
+                IsFiltering.Value = false;
+                return ReloadNodesAsync(LoadNodesAsync);
             }
 
-            private async Task<Nodes> LoadNodesAsync(CancellationToken token)
+            protected override Task PostRepositoryChangedAsync()
+            {
+                IsFiltering.Value = false;
+                return ReloadNodesAsync(LoadNodesAsync);
+            }
+
+            protected override async Task<Nodes> LoadNodesAsync(CancellationToken token)
             {
                 await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
 
-                IReadOnlyList<IGitRef> branches = Module.GetRefs(tags: false, branches: true);
-                return FillBranchTree(branches, token);
+                if (!IsFiltering.Value || _loadedBranches is null)
+                {
+                    _loadedBranches = Module.GetRefs(tags: false, branches: true);
+                    token.ThrowIfCancellationRequested();
+                }
+
+                return FillBranchTree(_loadedBranches, token);
             }
 
             private Nodes FillBranchTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
             {
-                #region ex
+                #region example
 
                 // (input)
                 // a-branch
@@ -330,10 +380,12 @@ namespace GitUI.BranchTreePanel
 
                 var currentBranch = Module.GetSelectedBranch();
                 var pathToNode = new Dictionary<string, BaseBranchNode>();
-                foreach (var branch in branches)
+                foreach (IGitRef branch in branches)
                 {
                     token.ThrowIfCancellationRequested();
-                    var localBranchNode = new LocalBranchNode(this, branch.ObjectId, branch.Name, branch.Name == currentBranch);
+
+                    bool isVisible = !IsFiltering.Value || _refsSource.Contains(branch.ObjectId);
+                    var localBranchNode = new LocalBranchNode(this, branch.ObjectId, branch.Name, branch.Name == currentBranch, isVisible);
 
                     if (aheadBehindData != null && aheadBehindData.ContainsKey(localBranchNode.FullPath))
                     {
