@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace GitCommands.Settings
 {
@@ -8,6 +10,8 @@ namespace GitCommands.Settings
         public readonly T DefaultValue;
         public readonly string Name;
 
+        public event EventHandler Updated;
+
         protected Setting(string name, SettingsPath settingsSource, T defaultValue)
         {
             Name = name;
@@ -15,7 +19,20 @@ namespace GitCommands.Settings
             DefaultValue = defaultValue;
         }
 
-        public abstract T Value { get; set; }
+        public virtual T Value
+        {
+            get => GetValue(Name, DefaultValue);
+            set
+            {
+                if (Value.Equals(value))
+                {
+                    return;
+                }
+
+                SetValue(Name, value);
+                Updated?.Invoke(this, EventArgs.Empty);
+            }
+        }
 
         public T ValueOrDefault
         {
@@ -39,5 +56,39 @@ namespace GitCommands.Settings
         }
 
         public string FullPath => SettingsSource.PathFor(Name);
+
+        private T GetValue(string name, T defaultValue = default)
+        {
+            return SettingsSource.GetValue(name, defaultValue, value =>
+            {
+                switch (Type.GetTypeCode(typeof(T)))
+                {
+                    case TypeCode.String:
+                        return (T)(object)value;
+                    default:
+                        return JsonConvert
+                            .DeserializeObject<T>(value) ?? defaultValue;
+                }
+            });
+        }
+
+        private void SetValue(string name, T value)
+        {
+            SettingsSource.SetValue(name, value, value =>
+            {
+                switch (Type.GetTypeCode(typeof(T)))
+                {
+                    case TypeCode.String:
+                        var stringValue = (string)(object)value;
+
+                        return string.IsNullOrEmpty(stringValue)
+                            ? null
+                            : stringValue;
+                    default:
+                        return JsonConvert
+                            .SerializeObject(value);
+                }
+            });
+        }
     }
 }

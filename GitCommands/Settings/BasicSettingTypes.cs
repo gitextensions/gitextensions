@@ -8,12 +8,6 @@ namespace GitCommands.Settings
             : base(name, settingsSource, defaultValue)
         {
         }
-
-        public override string Value
-        {
-            get => SettingsSource.GetString(Name, null);
-            set => SettingsSource.SetString(Name, value);
-        }
     }
 
     public class BoolNullableSetting : Setting<bool?>
@@ -21,12 +15,6 @@ namespace GitCommands.Settings
         public BoolNullableSetting(string name, SettingsPath settingsSource, bool defaultValue)
             : base(name, settingsSource, defaultValue)
         {
-        }
-
-        public override bool? Value
-        {
-            get => SettingsSource.GetBool(Name);
-            set => SettingsSource.SetBool(Name, value);
         }
 
         public new bool ValueOrDefault => base.ValueOrDefault.Value;
@@ -39,12 +27,6 @@ namespace GitCommands.Settings
         {
         }
 
-        public override int? Value
-        {
-            get => SettingsSource.GetInt(Name);
-            set => SettingsSource.SetInt(Name, value);
-        }
-
         public new int ValueOrDefault => base.ValueOrDefault.Value;
     }
 
@@ -53,12 +35,6 @@ namespace GitCommands.Settings
         public BoolSetting(string name, SettingsPath settingsSource, bool defaultValue)
             : base(name, settingsSource, defaultValue)
         {
-        }
-
-        public override bool Value
-        {
-            get => SettingsSource.GetBool(Name, DefaultValue);
-            set => SettingsSource.SetBool(Name, value);
         }
     }
 
