@@ -10,7 +10,6 @@ using GitUI.BranchTreePanel.Interfaces;
 using GitUI.Properties;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
-using ResourceManager;
 
 namespace GitUI.BranchTreePanel
 {
@@ -259,7 +258,7 @@ namespace GitUI.BranchTreePanel
         {
             private readonly IAheadBehindDataProvider _aheadBehindDataProvider;
 
-            public BranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, [CanBeNull]IAheadBehindDataProvider aheadBehindDataProvider)
+            public BranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, [CanBeNull] IAheadBehindDataProvider aheadBehindDataProvider)
                 : base(treeNode, uiCommands)
             {
                 _aheadBehindDataProvider = aheadBehindDataProvider;
@@ -346,6 +345,12 @@ namespace GitUI.BranchTreePanel
                 if (firstTime)
                 {
                     TreeViewNode.Expand();
+                }
+
+                if (TreeViewNode.TreeView.SelectedNode != null)
+                {
+                    // If there's a selected treenode, don't stomp over it
+                    return;
                 }
 
                 var activeBranch = Nodes.DepthEnumerator<LocalBranchNode>().FirstOrDefault(b => b.IsActive);

@@ -261,31 +261,24 @@ namespace GitUI.BranchTreePanel
             {
                 if (TreeViewNode.TreeView.SelectedNode != null)
                 {
-                    SetSelectedNode(TreeViewNode.TreeView.SelectedNode);
-                    EnsureNodeVisible(TreeViewNode.TreeView.SelectedNode);
+                    EnsureNodeVisible(TreeViewNode.TreeView.Handle, TreeViewNode.TreeView.SelectedNode);
                 }
-
-                if (TreeViewNode.TreeView.Nodes.Count > 0)
+                else if (TreeViewNode.TreeView.Nodes.Count > 0)
                 {
                     // No selected node, just make sure the first node is visible
-                    EnsureNodeVisible(TreeViewNode.TreeView.Nodes[0]);
+                    EnsureNodeVisible(TreeViewNode.TreeView.Handle, TreeViewNode.TreeView.Nodes[0]);
                 }
 
                 return;
 
-                void SetSelectedNode(TreeNode node)
-                {
-                    TreeViewNode.TreeView.SelectedNode = node;
-                }
-
-                void EnsureNodeVisible(TreeNode node)
+                static void EnsureNodeVisible(IntPtr hwnd, TreeNode node)
                 {
                     node.EnsureVisible();
 
                     // EnsureVisible leads to horizontal scrolling in some cases. We make sure to force horizontal
                     // scroll back to 0. Note that we use SendMessage rather than SetScrollPos as the former works
                     // outside of Begin/EndUpdate.
-                    NativeMethods.SendMessageW(TreeViewNode.TreeView.Handle, NativeMethods.WM_HSCROLL, (IntPtr)NativeMethods.SBH.LEFT, IntPtr.Zero);
+                    NativeMethods.SendMessageW(hwnd, NativeMethods.WM_HSCROLL, (IntPtr)NativeMethods.SBH.LEFT, IntPtr.Zero);
                 }
             }
         }
