@@ -117,16 +117,16 @@ namespace GitCommands.Settings
 
     public class BuildServer : SettingsPath
     {
-        public readonly StringSetting Type;
-        public readonly BoolNullableSetting EnableIntegration;
-        public readonly BoolNullableSetting ShowBuildResultPage;
+        public readonly ISetting<string> Type;
+        public readonly ISetting<bool> EnableIntegration;
+        public readonly ISetting<bool> ShowBuildResultPage;
 
         public BuildServer(RepoDistSettings container)
             : base(container, "BuildServer")
         {
-            Type = new StringSetting("Type", this, null);
-            EnableIntegration = new BoolNullableSetting("EnableIntegration", this, defaultValue: false);
-            ShowBuildResultPage = new BoolNullableSetting("ShowBuildResultPage", this, defaultValue: true);
+            Type = Setting.Create(this, nameof(Type), null);
+            EnableIntegration = Setting.Create(this, nameof(EnableIntegration), false);
+            ShowBuildResultPage = Setting.Create(this, nameof(ShowBuildResultPage), true);
         }
 
         public SettingsPath TypeSettings => new SettingsPath(this, Type.ValueOrDefault);
@@ -134,16 +134,16 @@ namespace GitCommands.Settings
 
     public class DetailedGroup : SettingsPath
     {
-        public readonly BoolNullableSetting GetRemoteBranchesDirectlyFromRemote;
-        public readonly BoolNullableSetting AddMergeLogMessages;
-        public readonly IntNullableSetting MergeLogMessagesCount;
+        public readonly ISetting<bool> GetRemoteBranchesDirectlyFromRemote;
+        public readonly ISetting<bool> AddMergeLogMessages;
+        public readonly ISetting<int> MergeLogMessagesCount;
 
         public DetailedGroup(RepoDistSettings container)
             : base(container, "Detailed")
         {
-            GetRemoteBranchesDirectlyFromRemote = new BoolNullableSetting("GetRemoteBranchesDirectlyFromRemote", this, false);
-            AddMergeLogMessages = new BoolNullableSetting("AddMergeLogMessages", this, false);
-            MergeLogMessagesCount = new IntNullableSetting("MergeLogMessagesCount", this, 20);
+            GetRemoteBranchesDirectlyFromRemote = Setting.Create(this, nameof(GetRemoteBranchesDirectlyFromRemote), false);
+            AddMergeLogMessages = Setting.Create(this, nameof(AddMergeLogMessages), false);
+            MergeLogMessagesCount = Setting.Create(this, nameof(MergeLogMessagesCount), 20);
         }
     }
 }
