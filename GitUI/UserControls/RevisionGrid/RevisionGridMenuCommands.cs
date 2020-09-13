@@ -417,9 +417,10 @@ namespace GitUI.UserControls.RevisionGrid
                 },
                 new MenuCommand
                 {
-                    Name = "ToggleHighlightSelectedBranch",
+                    Name = "HighlightSelectedBranch",
                     Text = "Highlight selected branch (until refresh)",
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.ToggleHighlightSelectedBranch),
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.ToggleHighlightSelectedBranch)
+                    + $", {Keys.Alt}+{Keys.LButton}",
                     ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGridControl.Command.ToggleHighlightSelectedBranch)
                 },
 

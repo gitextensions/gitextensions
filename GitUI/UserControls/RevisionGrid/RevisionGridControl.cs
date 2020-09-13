@@ -1585,6 +1585,11 @@ namespace GitUI
         {
             var hti = _gridView.HitTest(e.X, e.Y);
             _latestSelectedRowIndex = hti.RowIndex;
+
+            if (Control.ModifierKeys.HasFlag(Keys.Alt))
+            {
+                HighlightSelectedBranch();
+            }
         }
 
         private void OnGridViewCellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
@@ -2429,10 +2434,9 @@ namespace GitUI
             return ExecuteCommand((int)cmd);
         }
 
-        private void ToggleHighlightSelectedBranch()
+        private void HighlightSelectedBranch()
         {
-            var revision = GetSelectedRevisions().FirstOrDefault();
-
+            GitRevision revision = GetSelectedRevisions().FirstOrDefault();
             if (revision is null)
             {
                 return;
@@ -2870,7 +2874,7 @@ namespace GitUI
                 case Command.SelectNextForkPointAsDiffBase: SelectNextForkPointAsDiffBase(); break;
                 case Command.GoToMergeBase: GoToMergeBase(); break;
                 case Command.GoToChild: goToChildToolStripMenuItem_Click(); break;
-                case Command.ToggleHighlightSelectedBranch: ToggleHighlightSelectedBranch(); break;
+                case Command.ToggleHighlightSelectedBranch: HighlightSelectedBranch(); break;
                 case Command.NextQuickSearch: _quickSearchProvider.NextResult(down: true); break;
                 case Command.PrevQuickSearch: _quickSearchProvider.NextResult(down: false); break;
                 case Command.NavigateBackward:
