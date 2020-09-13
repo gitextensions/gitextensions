@@ -406,7 +406,7 @@ namespace GitUI.BranchTreePanel
             }
 
             [CanBeNull]
-            private static T GetNodeSafe<T>([CanBeNull] TreeNode treeNode) where T : class, INode
+            internal static T GetNodeSafe<T>([CanBeNull] TreeNode treeNode) where T : class, INode
             {
                 return treeNode?.Tag as T;
             }

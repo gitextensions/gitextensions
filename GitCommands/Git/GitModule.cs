@@ -2895,51 +2895,16 @@ namespace GitCommands
 
         public IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true)
         {
-            return GetRefs(tags, branches, false);
-        }
+            // We do not want to lock the repo for background operations.
+            // The primary use of 'noLocks' is to run git-status the commit count as a background operation,
+            // but to run the same in a foreground for FormCommit.
+            //
+            // Assume that all GetRefs() are done in the background, which may not be correct in the future.
+            const bool noLocks = true;
 
-        public IReadOnlyList<IGitRef> GetRefs(bool tags, bool branches, bool noLocks)
-        {
-            var refList = _gitExecutable.GetOutput(GitCommandHelpers.GetRefsCmd(tags: tags, branches: branches, noLocks: noLocks));
-
+            string cmd = GitCommandHelpers.GetRefsCmd(tags: tags, branches: branches, noLocks, AppSettings.RefsSortBy, AppSettings.RefsSortOrder);
+            var refList = _gitExecutable.GetOutput(cmd);
             return ParseRefs(refList);
-        }
-
-        /// <param name="option">Order by date is slower.</param>
-        public IReadOnlyList<IGitRef> GetTagRefs(GetTagRefsSortOrder option)
-        {
-            var list = GetRefs(true, false);
-
-            switch (option)
-            {
-                case GetTagRefsSortOrder.ByCommitDateAscending:
-                    return list.OrderBy(GetDate).ToList();
-                case GetTagRefsSortOrder.ByCommitDateDescending:
-                    return list.OrderByDescending(GetDate).ToList();
-                default:
-                    return list;
-            }
-
-            // BUG this sorting logic has no effect as CommitDate is not set by the GitRevision constructor
-            DateTime GetDate(IGitRef head) => new GitRevision(head.ObjectId).CommitDate;
-        }
-
-        public enum GetTagRefsSortOrder
-        {
-            /// <summary>
-            /// default
-            /// </summary>
-            ByName,
-
-            /// <summary>
-            /// slower than ByName
-            /// </summary>
-            ByCommitDateAscending,
-
-            /// <summary>
-            /// slower than ByName
-            /// </summary>
-            ByCommitDateDescending
         }
 
         public async Task<string[]> GetMergedBranchesAsync(bool includeRemote = false, bool fullRefname = false, string commit = null)

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
+using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
 using ResourceManager;
@@ -640,13 +642,45 @@ namespace GitCommandsTests.Git.Commands
             Assert.AreEqual(expected, GitCommandHelpers.GetSortedRefsCommand(noLocks).ToString());
         }
 
-        [TestCase(@"show-ref --dereference", true, true, false)]
-        [TestCase(@"show-ref --tags", true, false, false)]
-        [TestCase(@"for-each-ref --sort=-committerdate refs/heads/ --format=""%(objectname) %(refname)""", false, true, false)]
-        [TestCase(@"--no-optional-locks for-each-ref --sort=-committerdate refs/heads/ --format=""%(objectname) %(refname)""", false, true, true)]
-        public void GetRefsCmd(string expected, bool tags, bool branches, bool noLocks)
+        private static IEnumerable<TestCaseData> GetRefsCommandTestData
         {
-            Assert.AreEqual(expected, GitCommandHelpers.GetRefsCmd(tags, branches, noLocks).ToString());
+            get
+            {
+                foreach (GitRefsSortBy sortBy in EnumHelper.GetValues<GitRefsSortBy>())
+                {
+                    foreach (GitRefsSortOrder sortOrder in EnumHelper.GetValues<GitRefsSortOrder>())
+                    {
+                        string sortCondition;
+                        string sortConditionRef;
+                        string format = @" --format=""%(if)%(authordate)%(then)%(objectname) %(refname)%(else)%(*objectname) %(*refname)%(end)""";
+                        if (sortBy == GitRefsSortBy.Default)
+                        {
+                            sortCondition = sortConditionRef = string.Empty;
+                        }
+                        else
+                        {
+                            string prefix = sortOrder == GitRefsSortOrder.Ascending ? string.Empty : "-";
+                            sortCondition = $" --sort={prefix}{sortBy}";
+                            sortConditionRef = $" --sort={prefix}*{sortBy}";
+                        }
+
+                        yield return new TestCaseData(/* tags */ true, /* branches */ true, /* noLocks */ false, sortBy, sortOrder,
+                            /* expected */ $@"for-each-ref{sortCondition}{sortConditionRef}{format} refs/heads/ refs/remotes/ refs/tags/");
+                        yield return new TestCaseData(/* tags */ true, /* branches */ false, /* noLocks */ false, sortBy, sortOrder,
+                            /* expected */ $@"for-each-ref{sortCondition}{sortConditionRef}{format} refs/tags/");
+                        yield return new TestCaseData(/* tags */ false, /* branches */ true, /* noLocks */ false, sortBy, sortOrder,
+                            /* expected */ $@"for-each-ref{sortCondition} --format=""%(objectname) %(refname)"" refs/heads/");
+                        yield return new TestCaseData(/* tags */ false, /* branches */ true, /* noLocks */ true, sortBy, sortOrder,
+                            /* expected */ $@"--no-optional-locks for-each-ref{sortCondition} --format=""%(objectname) %(refname)"" refs/heads/");
+                    }
+                }
+            }
+        }
+
+        [TestCaseSource(nameof(GetRefsCommandTestData))]
+        public void GetRefsCmd(bool tags, bool branches, bool noLocks, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder, string expected)
+        {
+            Assert.AreEqual(expected, GitCommandHelpers.GetRefsCmd(tags, branches, noLocks, sortBy, sortOrder).ToString());
         }
     }
 }

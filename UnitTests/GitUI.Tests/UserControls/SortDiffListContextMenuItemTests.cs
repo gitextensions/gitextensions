@@ -50,7 +50,7 @@ namespace GitUITests.UserControls
             _testingSortService.DiffListSorting.Returns(sortType);
 
             // invoke the requery method to reselect the proper sub item
-            _itemUnderTest.GetTestAccessor().SimulateOpeningEvent();
+            _itemUnderTest.GetTestAccessor().RaiseDropDownOpening();
 
             AssertOnlyCheckedItemIs(sortType);
         }

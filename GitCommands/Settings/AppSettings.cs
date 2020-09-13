@@ -1579,6 +1579,18 @@ namespace GitCommands
             set => SetBool("UseConsoleEmulatorForCommands", value);
         }
 
+        public static GitRefsSortBy RefsSortBy
+        {
+            get => GetEnum("RefsSortBy", GitRefsSortBy.Default);
+            set => SetEnum("RefsSortBy", value);
+        }
+
+        public static GitRefsSortOrder RefsSortOrder
+        {
+            get => GetEnum("RefsSortOrder", GitRefsSortOrder.Descending);
+            set => SetEnum("RefsSortOrder", value);
+        }
+
         public static DiffListSortType DiffListSorting
         {
             get => GetEnum("DiffListSortType", DiffListSortType.FilePath);

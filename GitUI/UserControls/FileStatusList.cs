@@ -33,7 +33,6 @@ namespace GitUI
         private readonly TranslationString _diffBaseToB = new TranslationString("Unique diff BASE with b/");
         private readonly TranslationString _diffCommonBase = new TranslationString("Common diff with BASE a/");
         private readonly TranslationString _combinedDiff = new TranslationString("Combined diff");
-        private readonly IGitRevisionTester _revisionTester;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly SortDiffListContextMenuItem _sortByContextMenu;
         private readonly IReadOnlyList<GitItemStatus> _noItemStatuses;
@@ -77,7 +76,11 @@ namespace GitUI
             InitializeComponent();
             InitialiseFiltering();
             CreateOpenSubmoduleMenuItem();
-            _sortByContextMenu = CreateSortByContextMenuItem();
+            _sortByContextMenu = new SortDiffListContextMenuItem(DiffListSortService.Instance)
+            {
+                Name = "sortListByContextMenuItem"
+            };
+
             SetupUnifiedDiffListSorting();
             lblSplitter.Height = DpiUtil.Scale(1);
             InitializeComplete();
@@ -98,7 +101,6 @@ namespace GitUI
             FilterComboBox.Font = new Font(FilterComboBox.Font, FontStyle.Bold);
 
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
-            _revisionTester = new GitRevisionTester(_fullPathResolver);
             _noItemStatuses = new[]
             {
                 new GitItemStatus
@@ -200,14 +202,6 @@ namespace GitUI
                     return Observable.Empty<DiffListSortType>();
                 })
                 .Subscribe();
-        }
-
-        private static SortDiffListContextMenuItem CreateSortByContextMenuItem()
-        {
-            return new SortDiffListContextMenuItem(DiffListSortService.Instance)
-            {
-                Name = "sortListByContextMenuItem"
-            };
         }
 
         // Properties

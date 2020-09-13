@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands;
 using GitUI.BranchTreePanel.ContextMenu;
 using GitUI.BranchTreePanel.Interfaces;
 using ResourceManager;
@@ -13,6 +14,8 @@ namespace GitUI.BranchTreePanel
     partial class RepoObjectsTree : IMenuItemFactory
     {
         private TreeNode _lastRightClickedNode;
+        private GitRefsSortOrderContextMenuItem _sortOrderContextMenuItem;
+        private GitRefsSortByContextMenuItem _sortByContextMenuItem;
 
         /// <summary>
         /// Local branch context menu [git ref / rename / delete] actions
@@ -104,7 +107,7 @@ namespace GitUI.BranchTreePanel
             }
 
             var node = (contextMenu.SourceControl as TreeView)?.SelectedNode;
-            if (node == null)
+            if (node is null)
             {
                 return;
             }
@@ -121,7 +124,7 @@ namespace GitUI.BranchTreePanel
             }
 
             var node = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag as RemoteRepoNode;
-            if (node == null)
+            if (node is null)
             {
                 return;
             }
@@ -137,10 +140,38 @@ namespace GitUI.BranchTreePanel
             mnubtnEnableRemoteAndFetch.Visible = !node.Enabled;
         }
 
+        private void ContextMenuSort(ContextMenuStrip contextMenu)
+        {
+            // We can only sort refs, i.e. branches and tags
+            if (contextMenu != menuBranch &&
+                contextMenu != menuRemote &&
+                contextMenu != menuTag)
+            {
+                return;
+            }
+
+            // Add the following to the every participating context menu:
+            //
+            //    ---------
+            //    Sort By...
+            //    Sort Order...
+
+            if (!contextMenu.Items.Contains(_sortOrderContextMenuItem))
+            {
+                AddContextMenuItems(contextMenu,
+                    new ToolStripItem[] { _sortByContextMenuItem, _sortOrderContextMenuItem, new ToolStripSeparator() },
+                    tsmiMainMenuSpacer1);
+            }
+
+            // If refs are sorted by git (GitRefsSortBy = Default) don't show sort order options
+            contextMenu.Items[GitRefsSortOrderContextMenuItem.MenuItemName].Visible =
+                AppSettings.RefsSortBy != GitUIPluginInterfaces.GitRefsSortBy.Default;
+        }
+
         private void ContextMenuSubmoduleSpecific(ContextMenuStrip contextMenu)
         {
             TreeNode selectedNode = (contextMenu.SourceControl as TreeView)?.SelectedNode;
-            if (selectedNode == null)
+            if (selectedNode is null)
             {
                 return;
             }
@@ -184,6 +215,19 @@ namespace GitUI.BranchTreePanel
 
         private void RegisterContextActions()
         {
+            _sortOrderContextMenuItem = new GitRefsSortOrderContextMenuItem(() =>
+            {
+                _branchesTree.RefreshRefs();
+                _remotesTree.RefreshRefs();
+                _tagTree.RefreshRefs();
+            });
+            _sortByContextMenuItem = new GitRefsSortByContextMenuItem(() =>
+            {
+                _branchesTree.RefreshRefs();
+                _remotesTree.RefreshRefs();
+                _tagTree.RefreshRefs();
+            });
+
             _localBranchMenuItems = new LocalBranchMenuItems<LocalBranchNode>(this);
             AddContextMenuItems(menuBranch, _localBranchMenuItems.Select(s => s.Item));
 
@@ -247,12 +291,13 @@ namespace GitUI.BranchTreePanel
         private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
             var contextMenu = sender as ContextMenuStrip;
-            if (contextMenu == null)
+            if (contextMenu is null)
             {
                 return;
             }
 
             ContextMenuAddExpandCollapseTree(contextMenu);
+            ContextMenuSort(contextMenu);
             ContextMenuBranchSpecific(contextMenu);
             ContextMenuRemoteRepoSpecific(contextMenu);
             ContextMenuSubmoduleSpecific(contextMenu);
@@ -278,7 +323,7 @@ namespace GitUI.BranchTreePanel
         private void AddContextMenuItems(ContextMenuStrip menu, IEnumerable<ToolStripItem> items, ToolStripItem insertAfter = null)
         {
             menu.SuspendLayout();
-            int index = insertAfter == null ? 0 : Math.Max(0, menu.Items.IndexOf(insertAfter) + 1);
+            int index = insertAfter is null ? 0 : Math.Max(0, menu.Items.IndexOf(insertAfter) + 1);
             items.ForEach(item => menu.Items.Insert(index++, item));
             menu.ResumeLayout();
         }

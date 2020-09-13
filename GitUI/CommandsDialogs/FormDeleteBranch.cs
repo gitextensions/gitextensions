@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs
 
         private void FormDeleteBranchLoad(object sender, EventArgs e)
         {
-            Branches.BranchesToSelect = Module.GetRefs(true, true).Where(h => h.IsHead && !h.IsRemote).ToList();
+            Branches.BranchesToSelect = Module.GetRefs(tags: true, branches: true).Where(h => h.IsHead && !h.IsRemote).ToList();
             foreach (var branch in Module.GetMergedBranches())
             {
                 if (!branch.StartsWith("* "))

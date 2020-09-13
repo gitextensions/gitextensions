@@ -524,7 +524,7 @@ namespace GitUI.CommandsDialogs
         {
             if (_localBranches == null)
             {
-                _localBranches = Module.GetRefs(false);
+                _localBranches = Module.GetRefs(tags: false, branches: true);
             }
 
             return _localBranches;
@@ -534,7 +534,7 @@ namespace GitUI.CommandsDialogs
         {
             if (_remoteBranches == null)
             {
-                _remoteBranches = Module.GetRefs(true, true).Where(h => h.IsRemote && !h.IsTag).ToList();
+                _remoteBranches = Module.GetRefs(tags: true, branches: true).Where(h => h.IsRemote && !h.IsTag).ToList();
             }
 
             return _remoteBranches;
