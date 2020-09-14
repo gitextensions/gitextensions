@@ -171,7 +171,7 @@ namespace GitUI.CommandsDialogs
             TreeTabPage.ImageKey = nameof(Images.FileTree);
             GpgInfoTabPage.ImageKey = nameof(Images.Key);
 
-            if (!AppSettings.ShowGpgInformation.ValueOrDefault)
+            if (!AppSettings.ShowGpgInformation.Value)
             {
                 CommitInfoTabControl.RemoveIfExists(GpgInfoTabPage);
             }
@@ -1290,7 +1290,7 @@ namespace GitUI.CommandsDialogs
 
         private async Task FillGpgInfoAsync(GitRevision revision)
         {
-            if (!AppSettings.ShowGpgInformation.ValueOrDefault || CommitInfoTabControl.SelectedTab != GpgInfoTabPage)
+            if (!AppSettings.ShowGpgInformation.Value || CommitInfoTabControl.SelectedTab != GpgInfoTabPage)
             {
                 return;
             }
@@ -2202,7 +2202,7 @@ namespace GitUI.CommandsDialogs
                 case Command.FocusCommitInfo: FocusCommitInfo(); break;
                 case Command.FocusDiff: FocusTabOf(revisionDiff, (c, alreadyContainedFocus) => c.SwitchFocus(alreadyContainedFocus)); break;
                 case Command.FocusFileTree: FocusTabOf(fileTree, (c, alreadyContainedFocus) => c.SwitchFocus(alreadyContainedFocus)); break;
-                case Command.FocusGpgInfo when AppSettings.ShowGpgInformation.ValueOrDefault: FocusTabOf(revisionGpgInfo1, (c, alreadyContainedFocus) => c.Focus()); break;
+                case Command.FocusGpgInfo when AppSettings.ShowGpgInformation.Value: FocusTabOf(revisionGpgInfo1, (c, alreadyContainedFocus) => c.Focus()); break;
                 case Command.FocusGitConsole: FocusGitConsole(); break;
                 case Command.FocusBuildServerStatus: FocusTabOf(_buildReportTabPageExtension.Control, (c, alreadyContainedFocus) => c.Focus()); break;
                 case Command.FocusNextTab: FocusNextTab(); break;
@@ -2825,7 +2825,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void FillTerminalTab()
         {
-            if (!EnvUtils.RunningOnWindows() || !AppSettings.ShowConEmuTab.ValueOrDefault)
+            if (!EnvUtils.RunningOnWindows() || !AppSettings.ShowConEmuTab.Value)
             {
                 // ConEmu only works on WinNT
                 return;
@@ -2887,7 +2887,7 @@ namespace GitUI.CommandsDialogs
                     WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator
                 };
 
-                string shellType = AppSettings.ConEmuTerminal.ValueOrDefault;
+                string shellType = AppSettings.ConEmuTerminal.Value;
                 startInfo.ConsoleProcessCommandLine = _shellProvider.GetShellCommandLine(shellType);
 
                 // Set path to git in this window (actually, effective with CMD only)
@@ -2902,7 +2902,7 @@ namespace GitUI.CommandsDialogs
 
                 try
                 {
-                    _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.ConEmuStyle.ValueOrDefault, AppSettings.ConEmuFontSize.ValueOrDefault);
+                    _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.ConEmuStyle.Value, AppSettings.ConEmuFontSize.Value);
                 }
                 catch (InvalidOperationException)
                 {
@@ -2917,7 +2917,7 @@ namespace GitUI.CommandsDialogs
 
         public void ChangeTerminalActiveFolder(string path)
         {
-            string shellType = AppSettings.ConEmuTerminal.ValueOrDefault;
+            string shellType = AppSettings.ConEmuTerminal.Value;
             IShellDescriptor shell = _shellProvider.GetShell(shellType);
             _terminal?.ChangeFolder(shell, path);
         }

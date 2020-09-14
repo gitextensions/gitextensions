@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 cboTerminal.Items.Add(shell);
 
-                if (string.Equals(shell.Name, AppSettings.ConEmuTerminal.ValueOrDefault, StringComparison.InvariantCultureIgnoreCase))
+                if (string.Equals(shell.Name, AppSettings.ConEmuTerminal.Value, StringComparison.InvariantCultureIgnoreCase))
                 {
                     cboTerminal.SelectedItem = shell;
                 }

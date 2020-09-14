@@ -614,7 +614,7 @@ namespace GitCommands
             using (var blobStream = GetFileStream(blob))
             {
                 var blobData = blobStream.ToArray();
-                if (EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
+                if (EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.@true)
                 {
                     if (!FileHelper.IsBinaryFileName(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(blobData))
                     {

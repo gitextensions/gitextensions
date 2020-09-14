@@ -306,12 +306,12 @@ namespace GitUI.BuildServerIntegration
 
             var buildServerSettings = _module().EffectiveSettings.BuildServer;
 
-            if (!buildServerSettings.EnableIntegration.ValueOrDefault)
+            if (!buildServerSettings.EnableIntegration.Value)
             {
                 return null;
             }
 
-            var buildServerType = buildServerSettings.Type.ValueOrDefault;
+            var buildServerType = buildServerSettings.Type.Value;
             if (string.IsNullOrEmpty(buildServerType))
             {
                 return null;
