@@ -4,91 +4,129 @@ using Newtonsoft.Json;
 
 namespace GitCommands.Settings
 {
-    public abstract class Setting<T>
+    public interface ISetting<T>
     {
-        public readonly SettingsPath SettingsSource;
-        public readonly T DefaultValue;
-        public readonly string Name;
+        event EventHandler Updated;
 
-        public event EventHandler Updated;
+        SettingsPath SettingsSource { get; }
 
-        protected Setting(string name, SettingsPath settingsSource, T defaultValue)
+        string Name { get; }
+
+        T Default { get; }
+
+        T ValueOrDefault { get; }
+
+        T Value { get; set; }
+
+        string FullPath { get; }
+    }
+
+    public static class Setting
+    {
+        public static ISetting<string> Create(SettingsPath settingsSource, string name, string defaultValue)
         {
-            Name = name;
-            SettingsSource = settingsSource;
-            DefaultValue = defaultValue;
+            return new SettingOf<string>(settingsSource, name, defaultValue);
         }
 
-        public virtual T Value
+        public static ISetting<T> Create<T>(SettingsPath settingsSource, string name, T defaultValue)
+            where T : struct
         {
-            get => GetValue(Name, DefaultValue);
-            set
-            {
-                if (Value.Equals(value))
-                {
-                    return;
-                }
+            return new SettingOf<T>(settingsSource, name, defaultValue);
+        }
 
-                SetValue(Name, value);
-                Updated?.Invoke(this, EventArgs.Empty);
+        public static ISetting<T?> Create<T>(SettingsPath settingsSource, string name)
+            where T : struct
+        {
+            return new SettingOf<T?>(settingsSource, name);
+        }
+
+        private sealed class SettingOf<T> : ISetting<T>
+        {
+            public event EventHandler Updated;
+
+            public SettingOf(SettingsPath settingsSource, string name, T defaultValue = default)
+            {
+                SettingsSource = settingsSource;
+                Name = name;
+                Default = defaultValue;
             }
-        }
 
-        public T ValueOrDefault
-        {
-            get
+            public SettingsPath SettingsSource { get; }
+
+            public string Name { get; }
+
+            public T Default { get; }
+
+            public T ValueOrDefault
             {
-                T v = Value;
-                if (ValueIsEmpty(v))
+                get
                 {
-                    return DefaultValue;
-                }
-                else
-                {
-                    return v;
+                    T v = Value;
+
+                    if (IsDefault(v))
+                    {
+                        return Default;
+                    }
+                    else
+                    {
+                        return v;
+                    }
                 }
             }
-        }
 
-        public virtual bool ValueIsEmpty(T value)
-        {
-            return EqualityComparer<T>.Default.Equals(value, default);
-        }
-
-        public string FullPath => SettingsSource.PathFor(Name);
-
-        private T GetValue(string name, T defaultValue = default)
-        {
-            return SettingsSource.GetValue(name, defaultValue, value =>
+            public T Value
             {
-                switch (Type.GetTypeCode(typeof(T)))
+                get => GetValue(Name, Default);
+                set
                 {
-                    case TypeCode.String:
-                        return (T)(object)value;
-                    default:
-                        return JsonConvert
-                            .DeserializeObject<T>(value) ?? defaultValue;
-                }
-            });
-        }
+                    if (Value.Equals(value))
+                    {
+                        return;
+                    }
 
-        private void SetValue(string name, T value)
-        {
-            SettingsSource.SetValue(name, value, value =>
+                    SetValue(Name, value);
+                    Updated?.Invoke(this, EventArgs.Empty);
+                }
+            }
+
+            public string FullPath => SettingsSource.PathFor(Name);
+
+            private bool IsDefault(T value)
             {
-                switch (Type.GetTypeCode(typeof(T)))
-                {
-                    case TypeCode.String:
-                        var stringValue = (string)(object)value;
+                return EqualityComparer<T>.Default.Equals(value, default);
+            }
 
-                        return string.IsNullOrEmpty(stringValue)
-                            ? null
-                            : stringValue;
-                    default:
-                        return JsonConvert
-                            .SerializeObject(value);
-                }
-            });
+            private T GetValue(string name, T defaultValue = default)
+            {
+                return SettingsSource
+                    .GetValue(name, defaultValue, value =>
+                    {
+                        switch (Type.GetTypeCode(typeof(T)))
+                        {
+                            case TypeCode.String:
+                                return (T)(object)value;
+                            default:
+                                return JsonConvert
+                                    .DeserializeObject<T>(value) ?? defaultValue;
+                        }
+                    });
+            }
+
+            private void SetValue(string name, T value)
+            {
+                SettingsSource
+                    .SetValue(name, value, value =>
+                    {
+                        switch (Type.GetTypeCode(typeof(T)))
+                        {
+                            case TypeCode.String:
+                                return (string)(object)value;
+                            default:
+                                return JsonConvert
+                                    .SerializeObject(value);
+                        }
+                    });
+            }
         }
     }
 }

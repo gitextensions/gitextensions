@@ -179,12 +179,12 @@ namespace GitCommands.Settings
 
     public class CorePath : SettingsPath
     {
-        public readonly EnumNullableSetting<AutoCRLFType> autocrlf;
+        public readonly ISetting<AutoCRLFType?> autocrlf;
 
         public CorePath(ConfigFileSettings container)
             : base(container, "core")
         {
-            autocrlf = new EnumNullableSetting<AutoCRLFType>("autocrlf", this);
+            autocrlf = Setting.Create<AutoCRLFType>(this, nameof(autocrlf));
         }
     }
 }
