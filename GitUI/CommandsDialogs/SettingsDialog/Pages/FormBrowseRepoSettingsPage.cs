@@ -20,20 +20,22 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void Init(ISettingsPageHost pageHost)
         {
             base.Init(pageHost);
-
-            // Bind settings with controls
-            AddSettingBinding(AppSettings.ShowConEmuTab, chkChowConsoleTab);
-            AddSettingBinding(AppSettings.ShowGpgInformation, chkShowGpgInformation);
         }
 
         protected override void PageToSettings()
         {
+            AppSettings.ShowConEmuTab.Value = chkChowConsoleTab.Checked;
+            AppSettings.ShowGpgInformation.Value = chkShowGpgInformation.Checked;
+
             AppSettings.ConEmuTerminal.Value = ((IShellDescriptor)cboTerminal.SelectedItem).Name.ToLowerInvariant();
             base.PageToSettings();
         }
 
         protected override void SettingsToPage()
         {
+            chkChowConsoleTab.Checked = AppSettings.ShowConEmuTab.Value;
+            chkShowGpgInformation.Checked = AppSettings.ShowGpgInformation.Value;
+
             foreach (IShellDescriptor shell in _shellProvider.GetShells())
             {
                 cboTerminal.Items.Add(shell);
