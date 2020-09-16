@@ -56,6 +56,10 @@
             this.folderBrowserButton1 = new GitUI.UserControls.FolderBrowserButton();
             this.Pull = new System.Windows.Forms.Button();
             this.PushOptionsPanel = new System.Windows.Forms.Panel();
+            this.menuPushSelection = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.unselectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectTrackedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ForcePushOptionPanel.SuspendLayout();
             this.TabControlTagBranch.SuspendLayout();
             this.BranchTab.SuspendLayout();
@@ -66,6 +70,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.BranchGrid)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.PushOptionsPanel.SuspendLayout();
+            this.menuPushSelection.SuspendLayout();
             this.SuspendLayout();
             // 
             // ForcePushOptionPanel
@@ -542,6 +547,36 @@
             this.PushOptionsPanel.TabIndex = 3;
             this.PushOptionsPanel.Visible = false;
             // 
+            // contextMenuStripPush
+            // 
+            this.menuPushSelection.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.unselectAllToolStripMenuItem,
+            this.selectTrackedToolStripMenuItem,
+            this.selectAllToolStripMenuItem});
+            this.menuPushSelection.Name = "menuPushSelection";
+            this.menuPushSelection.Size = new System.Drawing.Size(181, 92);
+            // 
+            // unselectAllToolStripMenuItem
+            // 
+            this.unselectAllToolStripMenuItem.Name = "unselectAllToolStripMenuItem";
+            this.unselectAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.unselectAllToolStripMenuItem.Text = "Unselect all";
+            this.unselectAllToolStripMenuItem.Click += new System.EventHandler(this.unselectAllToolStripMenuItem_Click);
+            // 
+            // selectTrackedToolStripMenuItem
+            // 
+            this.selectTrackedToolStripMenuItem.Name = "selectTrackedToolStripMenuItem";
+            this.selectTrackedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.selectTrackedToolStripMenuItem.Text = "Select tracked";
+            this.selectTrackedToolStripMenuItem.Click += new System.EventHandler(this.selectTrackedToolStripMenuItem_Click);
+            // 
+            // selectAllToolStripMenuItem
+            // 
+            this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.selectAllToolStripMenuItem.Text = "Select all";
+            this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
+            // 
             // FormPush
             // 
             this.AcceptButton = this.Push;
@@ -576,6 +611,7 @@
             this.groupBox2.PerformLayout();
             this.PushOptionsPanel.ResumeLayout(false);
             this.PushOptionsPanel.PerformLayout();
+            this.menuPushSelection.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -622,5 +658,9 @@
         private System.Windows.Forms.CheckBox ckForceWithLease;
         private System.Windows.Forms.FlowLayoutPanel ForcePushOptionPanel;
         private System.Windows.Forms.Panel PushOptionsPanel;
+        private System.Windows.Forms.ContextMenuStrip menuPushSelection;
+        private System.Windows.Forms.ToolStripMenuItem unselectAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem selectTrackedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
     }
 }
