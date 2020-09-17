@@ -163,7 +163,7 @@ namespace GitUI.CommandsDialogs
                 case AppSettings.PullAction.FetchPruneAll:
                     Fetch.Checked = true;
                     Prune.Checked = true;
-                    PruneTags.Checked = true;
+                    PruneTags.Checked = false;
 
                     if (string.IsNullOrEmpty(defaultRemote))
                     {
