@@ -66,6 +66,11 @@ namespace GitUI
         private readonly TranslationString _sortOrder = new TranslationString("&Sort order...");
 
         private readonly TranslationString _diffSelectedWithRememberedFile = new TranslationString("Diff with \"{0}\"");
+        private readonly TranslationString _diffWithParent = new TranslationString("Diff with a/");
+        private readonly TranslationString _diffBaseToB = new TranslationString("Unique diff BASE with b/");
+        private readonly TranslationString _diffCommonBase = new TranslationString("Common diff with BASE a/");
+        private readonly TranslationString _combinedDiff = new TranslationString("Combined diff");
+
         private readonly TranslationString _showDiffForAllParentsText = new TranslationString("Show file differences for all parents in browse dialog");
         private readonly TranslationString _showDiffForAllParentsTooltip = new TranslationString(@"Show all differences between the selected commits, not limiting to only one difference.
 
@@ -162,6 +167,10 @@ namespace GitUI
         public static string SortOrder => _instance.Value._sortOrder.Text;
 
         public static string DiffSelectedWithRememberedFile => _instance.Value._diffSelectedWithRememberedFile.Text;
+        public static string DiffWithParent => _instance.Value._diffWithParent.Text;
+        public static string DiffBaseToB => _instance.Value._diffBaseToB.Text;
+        public static string DiffCommonBase => _instance.Value._diffCommonBase.Text;
+        public static string CombinedDiff => _instance.Value._combinedDiff.Text;
         public static string ShowDiffForAllParentsText => _instance.Value._showDiffForAllParentsText.Text;
         public static string ShowDiffForAllParentsTooltip => _instance.Value._showDiffForAllParentsTooltip.Text;
 
