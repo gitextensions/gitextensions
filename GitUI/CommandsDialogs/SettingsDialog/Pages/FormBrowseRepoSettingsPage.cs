@@ -23,8 +23,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             // Bind settings with controls
             AddSettingBinding(AppSettings.ShowConEmuTab, chkChowConsoleTab);
-            AddSettingBinding(AppSettings.ConEmuStyle, _NO_TRANSLATE_cboStyle);
-            AddSettingBinding(AppSettings.ConEmuFontSize, cboFontSize);
             AddSettingBinding(AppSettings.ShowGpgInformation, chkShowGpgInformation);
         }
 
@@ -47,11 +45,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             base.SettingsToPage();
-        }
-
-        private void chkChowConsoleTab_CheckedChanged(object sender, EventArgs e)
-        {
-            groupBoxConsoleSettings.Enabled = chkChowConsoleTab.Checked;
         }
 
         public static SettingsPageReference GetPageReference()
