@@ -5079,10 +5079,6 @@ ancestor tree.</source>
         <source>Prune remote branches</source>
         <target />
       </trans-unit>
-      <trans-unit id="PruneTags.Text">
-        <source>Prune remote branches and tags</source>
-        <target />
-      </trans-unit>
       <trans-unit id="Pull.Text">
         <source>&amp;Pull</source>
         <target />

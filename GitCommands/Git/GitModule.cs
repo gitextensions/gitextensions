@@ -1432,29 +1432,29 @@ namespace GitCommands
             return GetSetting($"remote.{remote}.puttykeyfile");
         }
 
-        public ArgumentString FetchCmd([CanBeNull] string remote, [CanBeNull] string remoteBranch, [CanBeNull] string localBranch, bool? fetchTags = false, bool isUnshallow = false, bool pruneRemoteBranches = false, bool pruneRemoteBranchesAndTags = false)
+        public ArgumentString FetchCmd([CanBeNull] string remote, [CanBeNull] string remoteBranch, [CanBeNull] string localBranch, bool? fetchTags = false, bool isUnshallow = false, bool prune = false)
         {
             return new GitArgumentBuilder("fetch")
             {
                 { GitVersion.Current.FetchCanAskForProgress, "--progress" },
                 {
                     !string.IsNullOrEmpty(remote) || !string.IsNullOrEmpty(remoteBranch) || !string.IsNullOrEmpty(localBranch),
-                    GetFetchArgs(remote, remoteBranch, localBranch, fetchTags, isUnshallow, pruneRemoteBranches, pruneRemoteBranchesAndTags)
+                    GetFetchArgs(remote, remoteBranch, localBranch, fetchTags, isUnshallow, prune)
                 }
             };
         }
 
-        public ArgumentString PullCmd(string remote, string remoteBranch, bool rebase, bool? fetchTags = false, bool isUnshallow = false)
+        public ArgumentString PullCmd(string remote, string remoteBranch, bool rebase, bool? fetchTags = false, bool isUnshallow = false, bool prune = false)
         {
             return new GitArgumentBuilder("pull")
             {
                 { rebase, "--rebase" },
                 { GitVersion.Current.FetchCanAskForProgress, "--progress" },
-                GetFetchArgs(remote, remoteBranch, null, fetchTags, isUnshallow)
+                GetFetchArgs(remote, remoteBranch, null, fetchTags, isUnshallow, prune && !rebase)
             };
         }
 
-        private ArgumentString GetFetchArgs(string remote, string remoteBranch, string localBranch, bool? fetchTags, bool isUnshallow, bool pruneRemoteBranches = false, bool pruneRemoteBranchesAndTags = false)
+        private ArgumentString GetFetchArgs(string remote, string remoteBranch, string localBranch, bool? fetchTags, bool isUnshallow, bool prune)
         {
             // Remove spaces...
             remoteBranch = remoteBranch?.Replace(" ", "");
@@ -1485,8 +1485,7 @@ namespace GitCommands
                 { fetchTags == true, "--tags" },
                 { fetchTags == false, "--no-tags" },
                 { isUnshallow, "--unshallow" },
-                { pruneRemoteBranches || pruneRemoteBranchesAndTags, "--prune" },
-                { pruneRemoteBranchesAndTags, "--prune-tags" },
+                { prune, "--prune" }
             };
         }
 
