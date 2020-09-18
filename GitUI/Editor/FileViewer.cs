@@ -762,7 +762,7 @@ namespace GitUI.Editor
                 code = string.Join("\n", lines);
             }
 
-            ClipboardUtil.TrySetText(code.AdjustLineEndings(Module.EffectiveConfigFile.core.autocrlf.ValueOrDefault));
+            ClipboardUtil.TrySetText(code.AdjustLineEndings(Module.EffectiveConfigFile.core.autocrlf.Value));
         }
 
         private void SetVisibilityDiffContextMenu(bool visibleTextFile, [CanBeNull] string fileName)
@@ -1307,7 +1307,7 @@ namespace GitUI.Editor
                 }
             }
 
-            ClipboardUtil.TrySetText(code.AdjustLineEndings(Module.EffectiveConfigFile.core.autocrlf.ValueOrDefault));
+            ClipboardUtil.TrySetText(code.AdjustLineEndings(Module.EffectiveConfigFile.core.autocrlf.Value));
 
             return;
 

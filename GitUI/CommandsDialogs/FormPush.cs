@@ -959,7 +959,7 @@ namespace GitUI.CommandsDialogs
             using (WaitCursorScope.Enter(Cursors.AppStarting))
             {
                 IReadOnlyList<IGitRef> remoteHeads;
-                if (Module.EffectiveSettings.Detailed.GetRemoteBranchesDirectlyFromRemote.ValueOrDefault)
+                if (Module.EffectiveSettings.Detailed.GetRemoteBranchesDirectlyFromRemote.Value)
                 {
                     EnsurePageant(remote);
 

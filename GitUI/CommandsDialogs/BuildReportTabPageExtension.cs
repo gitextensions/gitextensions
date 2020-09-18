@@ -215,7 +215,7 @@ namespace GitUI.CommandsDialogs
         private bool IsBuildResultPageEnabled()
         {
             var settings = GetModule().GetEffectiveSettings() as RepoDistSettings;
-            return settings?.BuildServer.ShowBuildResultPage.ValueOrDefault ?? false;
+            return settings?.BuildServer.ShowBuildResultPage.Value ?? false;
         }
 
         private IGitModule GetModule()

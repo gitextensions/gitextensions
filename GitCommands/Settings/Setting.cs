@@ -1,23 +1,53 @@
 ﻿using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace GitCommands.Settings
 {
     public interface ISetting<T>
     {
+        /// <summary>
+        /// Event triggered after settings update.
+        /// </summary>
         event EventHandler Updated;
 
+        /// <summary>
+        /// Settings provider.
+        /// </summary>
         SettingsPath SettingsSource { get; }
 
+        /// <summary>
+        /// Name of the setting.
+        /// </summary>
         string Name { get; }
 
+        /// <summary>
+        /// Default value for setting type.
+        /// For nullable except "string" is default(T).
+        /// For "string" is the defaultValue ?? string.Empty from constructor.
+        /// For non nullable is the defaultValue from constructor.
+        /// </summary>
         T Default { get; }
 
-        T ValueOrDefault { get; }
-
+        /// <summary>
+        /// Value of the setting.
+        /// For nullable except "string" is the value from storage.
+        /// For "string" is the value from storage or <see cref="Default"/>.
+        /// For non nullable is the value from storage or <see cref="Default"/>.
+        /// </summary>
         T Value { get; set; }
 
+        /// <summary>
+        /// Value of the setting.
+        /// For nullable except "string" always false (null is value too).
+        /// For "string" is true when the stored value is null or is false when the stored value not null.
+        /// For non nullable is true when the stored value is null or is false when the stored value not null.
+        /// </summary>
+        bool IsUnset { get; }
+
+        /// <summary>
+        /// Full name of the setting.
+        /// Includes section name and setting name.
+        /// </summary>
         string FullPath { get; }
     }
 
@@ -25,7 +55,7 @@ namespace GitCommands.Settings
     {
         public static ISetting<string> Create(SettingsPath settingsSource, string name, string defaultValue)
         {
-            return new SettingOf<string>(settingsSource, name, defaultValue);
+            return new SettingOf<string>(settingsSource, name, defaultValue ?? string.Empty);
         }
 
         public static ISetting<T> Create<T>(SettingsPath settingsSource, string name, T defaultValue)
@@ -42,6 +72,7 @@ namespace GitCommands.Settings
 
         private sealed class SettingOf<T> : ISetting<T>
         {
+            /// <inheritdoc />
             public event EventHandler Updated;
 
             public SettingOf(SettingsPath settingsSource, string name, T defaultValue = default)
@@ -51,76 +82,117 @@ namespace GitCommands.Settings
                 Default = defaultValue;
             }
 
+            /// <inheritdoc />
             public SettingsPath SettingsSource { get; }
 
+            /// <inheritdoc />
             public string Name { get; }
 
+            /// <inheritdoc />
             public T Default { get; }
 
-            public T ValueOrDefault
+            /// <inheritdoc />
+            public T Value
             {
                 get
                 {
-                    T v = Value;
+                    var storedValue = GetValue(Name);
 
-                    if (IsDefault(v))
+                    if (default(T) is null)
+                    {
+                        if (Type.GetTypeCode(typeof(T)) != TypeCode.String)
+                        {
+                            return (T)storedValue;
+                        }
+                    }
+
+                    if (storedValue is null)
                     {
                         return Default;
                     }
-                    else
-                    {
-                        return v;
-                    }
-                }
-            }
 
-            public T Value
-            {
-                get => GetValue(Name, Default);
+                    return (T)storedValue;
+                }
+
                 set
                 {
-                    if (Value.Equals(value))
+                    var storedValue = GetValue(Name);
+
+                    if (Type.GetTypeCode(typeof(T)) == TypeCode.String)
                     {
-                        return;
+                        if (storedValue?.Equals((object)value ?? string.Empty) ?? false)
+                        {
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        if (storedValue?.Equals(value) ?? ((default(T) is null) && (value is null)))
+                        {
+                            return;
+                        }
                     }
 
-                    SetValue(Name, value);
+                    if (Type.GetTypeCode(typeof(T)) == TypeCode.String)
+                    {
+                        SetValue(Name, (object)value ?? string.Empty);
+                    }
+                    else
+                    {
+                        SetValue(Name, value);
+                    }
+
                     Updated?.Invoke(this, EventArgs.Empty);
                 }
             }
 
-            public string FullPath => SettingsSource.PathFor(Name);
-
-            private bool IsDefault(T value)
+            /// <inheritdoc />
+            public bool IsUnset
             {
-                return EqualityComparer<T>.Default.Equals(value, default);
+                get
+                {
+                    if (default(T) is null)
+                    {
+                        if (Type.GetTypeCode(typeof(T)) != TypeCode.String)
+                        {
+                            return false;
+                        }
+                    }
+
+                    var storedValue = GetValue(Name);
+
+                    return storedValue is null;
+                }
             }
 
-            private T GetValue(string name, T defaultValue = default)
+            /// <inheritdoc />
+            public string FullPath => SettingsSource.PathFor(Name);
+
+            private object GetValue(string name)
             {
                 return SettingsSource
-                    .GetValue(name, defaultValue, value =>
+                    .GetValue<object>(name, null, value =>
                     {
                         switch (Type.GetTypeCode(typeof(T)))
                         {
                             case TypeCode.String:
-                                return (T)(object)value;
+                                return value;
                             default:
                                 return JsonConvert
-                                    .DeserializeObject<T>(value) ?? defaultValue;
+                                    .DeserializeObject<T>(value);
                         }
                     });
             }
 
-            private void SetValue(string name, T value)
+            private void SetValue(string name, object value)
             {
                 SettingsSource
-                    .SetValue(name, value, value =>
+                    .SetValue<object>(name, value, value =>
                     {
                         switch (Type.GetTypeCode(typeof(T)))
                         {
                             case TypeCode.String:
-                                return (string)(object)value;
+                                return (string)value;
                             default:
                                 return JsonConvert
                                     .SerializeObject(value);

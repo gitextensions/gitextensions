@@ -129,7 +129,7 @@ namespace GitCommands.Settings
             ShowBuildResultPage = Setting.Create(this, nameof(ShowBuildResultPage), true);
         }
 
-        public SettingsPath TypeSettings => new SettingsPath(this, Type.ValueOrDefault);
+        public SettingsPath TypeSettings => new SettingsPath(this, Type.Value);
     }
 
     public class DetailedGroup : SettingsPath
