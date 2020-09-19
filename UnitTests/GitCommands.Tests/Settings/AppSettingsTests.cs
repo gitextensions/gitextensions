@@ -17,16 +17,16 @@ namespace GitCommandsTests.Settings
 
         [Test]
         [TestCaseSource(nameof(TestCases))]
-        public void Should_return_default_value(PropertyInfo property, object value, object defaultValue, bool isSetting)
+        public void Should_return_default_value(MemberInfo member, object value, object defaultValue, bool isSetting)
         {
             // Arrange
             object root = null;
 
             if (isSetting)
             {
-                root = property.GetValue(null);
+                root = GetMemberValue(member, null);
 
-                property = property.PropertyType
+                member = GetMemberType(member)
                     .GetProperty(nameof(ISetting<string>.Value));
             }
 
@@ -40,7 +40,7 @@ namespace GitCommandsTests.Settings
             // Act
             AppSettings.UsingContainer(container, () =>
             {
-                storedValue = property.GetValue(root);
+                storedValue = GetMemberValue(member, root);
             });
 
             // Assert
@@ -49,16 +49,16 @@ namespace GitCommandsTests.Settings
 
         [Test]
         [TestCaseSource(nameof(TestCases))]
-        public void Should_save_value(PropertyInfo property, object value, object defaultValue, bool isSetting)
+        public void Should_save_value(MemberInfo member, object value, object defaultValue, bool isSetting)
         {
             // Arrange
             object root = null;
 
             if (isSetting)
             {
-                root = property.GetValue(null);
+                root = GetMemberValue(member, null);
 
-                property = property.PropertyType
+                member = GetMemberType(member)
                     .GetProperty(nameof(ISetting<string>.Value));
             }
 
@@ -72,13 +72,13 @@ namespace GitCommandsTests.Settings
             // Act
             AppSettings.UsingContainer(container, () =>
             {
-                property.SetValue(root, value);
+                SetMemberValue(member, root, value);
 
-                storedValue = property.GetValue(root);
+                storedValue = GetMemberValue(member, root);
             });
 
             // Assert
-            if (Type.GetTypeCode(property.PropertyType) == TypeCode.String)
+            if (Type.GetTypeCode(GetMemberType(member)) == TypeCode.String)
             {
                 if (isSetting)
                 {
@@ -101,7 +101,7 @@ namespace GitCommandsTests.Settings
         {
             foreach (var value in Values())
             {
-                foreach ((PropertyInfo property, object defaultValue, bool isNullable, bool isSetting) in PropertyInfos())
+                foreach ((MemberInfo property, object defaultValue, bool isNullable, bool isSetting) in PropertyInfos())
                 {
                     if (value is null && isNullable)
                     {
@@ -111,7 +111,7 @@ namespace GitCommandsTests.Settings
                     if (value is not null)
                     {
                         var valueType = Nullable.GetUnderlyingType(value.GetType()) ?? value.GetType();
-                        var propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                        var propertyType = Nullable.GetUnderlyingType(property.DeclaringType) ?? property.DeclaringType;
 
                         if (valueType == propertyType)
                         {
@@ -121,9 +121,12 @@ namespace GitCommandsTests.Settings
                 }
             }
 
-            static IEnumerable<(PropertyInfo property, object defaultValue, bool isNullable, bool isSetting)> PropertyInfos()
+            static IEnumerable<(MemberInfo property, object defaultValue, bool isNullable, bool isSetting)> PropertyInfos()
             {
-                var properties = typeof(AppSettings).GetProperties()
+                var type = typeof(AppSettings);
+                var bindingFlags = BindingFlags.Public | BindingFlags.Static;
+                var properties = type.GetProperties(bindingFlags)
+                    .Union(type.GetFields(bindingFlags).Cast<MemberInfo>())
                     .ToDictionary(x => x.Name, x => x);
 
                 yield return (properties[nameof(AppSettings.TelemetryEnabled)], null, true, false);
@@ -145,7 +148,6 @@ namespace GitCommandsTests.Settings
 
                 yield return (properties[nameof(AppSettings.ShowConEmuTab)], true, false, true);
                 yield return (properties[nameof(AppSettings.ConEmuStyle)], "<Solarized Light>", true, true);
-                yield return (properties[nameof(AppSettings.ConEmuTerminal)], "bash", true, true);
                 yield return (properties[nameof(AppSettings.ConEmuFontSize)], "12", true, true);
                 yield return (properties[nameof(AppSettings.ShowGpgInformation)], true, false, true);
 
@@ -393,5 +395,46 @@ namespace GitCommandsTests.Settings
         }
 
         #endregion Test Cases
+
+        private static void SetMemberValue(MemberInfo member, object target, object value)
+        {
+            switch (member.MemberType)
+            {
+                case MemberTypes.Field:
+                    ((FieldInfo)member).SetValue(target, value);
+                    break;
+                case MemberTypes.Property:
+                    ((PropertyInfo)member).SetValue(target, value);
+                    break;
+                default:
+                    throw new ArgumentException("MemberInfo must be if type FieldInfo or PropertyInfo", nameof(member));
+            }
+        }
+
+        private static object GetMemberValue(MemberInfo member, object target)
+        {
+            switch (member.MemberType)
+            {
+                case MemberTypes.Field:
+                    return ((FieldInfo)member).GetValue(target);
+                case MemberTypes.Property:
+                    return ((PropertyInfo)member).GetValue(target);
+                default:
+                    throw new ArgumentException("MemberInfo must be if type FieldInfo or PropertyInfo", nameof(member));
+            }
+        }
+
+        private static Type GetMemberType(MemberInfo member)
+        {
+            switch (member.MemberType)
+            {
+                case MemberTypes.Field:
+                    return ((FieldInfo)member).FieldType;
+                case MemberTypes.Property:
+                    return ((PropertyInfo)member).PropertyType;
+                default:
+                    throw new ArgumentException("MemberInfo must be if type FieldInfo or PropertyInfo", nameof(member));
+            }
+        }
     }
 }

@@ -2643,6 +2643,10 @@ Do you want to continue?</source>
         <source>Browse repository window</source>
         <target />
       </trans-unit>
+      <trans-unit id="_shellPropertyGrid.Text">
+        <source>PropertyGrid</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkChowConsoleTab.Text">
         <source>Show the Console tab</source>
         <target />
@@ -2651,16 +2655,20 @@ Do you want to continue?</source>
         <source>Show GPG information</source>
         <target />
       </trans-unit>
-      <trans-unit id="gbGeneral.Text">
-        <source>General</source>
+      <trans-unit id="columnArguments.Text">
+        <source>Arguments</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="columnCommand.Text">
+        <source>Command</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="columnName.Text">
+        <source>Name</source>
         <target />
       </trans-unit>
       <trans-unit id="gbTabs.Text">
         <source>Tabs (restart required)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Default shell</source>
         <target />
       </trans-unit>
     </body>

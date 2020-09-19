@@ -1,32 +1,28 @@
 ﻿#nullable enable
 
-using System;
+using System.Threading.Tasks;
 using ConEmu.WinForms;
 
 namespace GitUI.Shells
 {
     public static class ConEmuControlExtensions
     {
-        public static void ChangeFolder(this ConEmuControl terminal, IShellDescriptor shell, string path)
+        private const string TerminalCloseMacro = "Close";
+        private const int TerminalCloseMacroFirstParameter = 0;
+        private const int TerminalCloseMacroSecondParameter = 1;
+
+        public static Task CloseTerminal(this ConEmuControl terminal)
         {
-            if (terminal?.RunningSession is null || shell is null || string.IsNullOrWhiteSpace(path))
+            if (terminal is null || terminal.RunningSession is null)
             {
-                return;
+                return Task.CompletedTask;
             }
 
-            string command = shell.GetChangeDirCommand(path);
-
-            switch (shell.Name)
-            {
-                case BashShell.ShellName:
-                    terminal.RunningSession.BeginGuiMacro("Keys").WithParam("^A").WithParam("^K").ExecuteSync();
-                    terminal.RunningSession.WriteInputTextAsync(command + Environment.NewLine);
-                    break;
-
-                default:
-                    terminal.RunningSession.WriteInputTextAsync($"\x1B{command}{Environment.NewLine}");
-                    break;
-            }
+            return terminal.RunningSession
+                .BeginGuiMacro(TerminalCloseMacro)
+                .WithParam(TerminalCloseMacroFirstParameter)
+                .WithParam(TerminalCloseMacroSecondParameter)
+                .ExecuteAsync();
         }
     }
 }

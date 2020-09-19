@@ -26,7 +26,6 @@ using GitUI.BranchTreePanel;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.WorktreeDialog;
-using GitUI.Configuring;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Infrastructure.Telemetry;
@@ -98,8 +97,7 @@ namespace GitUI.CommandsDialogs
         private readonly ISubmoduleStatusProvider _submoduleStatusProvider;
         private readonly FormBrowseDiagnosticsReporter _formBrowseDiagnosticsReporter;
         [CanBeNull] private BuildReportTabPageExtension _buildReportTabPageExtension;
-        private readonly ShellProvider _shellProvider = new ShellProvider();
-        private readonly IShellService _shellService = new ShellService();
+        private readonly IShellService _shellService = new ShellService(new ShellRepository());
         private ConEmuControl _terminal;
         private Dashboard _dashboard;
 
@@ -311,28 +309,8 @@ namespace GitUI.CommandsDialogs
             UpdateCommitButtonAndGetBrush(null, AppSettings.ShowGitStatusInBrowseToolbar);
             RestorePosition();
 
-            // Populate terminal tab after translation within InitializeComplete
-            FillTerminalTab();
-            FillUserShells();
-
-            AppSettings.Shells.Updated += (s, e) =>
-            {
-                FillUserShells();
-
-                Task.Run(async () =>
-                {
-                    if (_terminal == null)
-                    {
-                        return;
-                    }
-
-                    await _terminal.RunningSession?
-                        .BeginGuiMacro("Close")
-                        .WithParam(0)
-                        .WithParam(1)
-                        .ExecuteAsync();
-                });
-            };
+            // Initialize work with terminals after translation within InitializeComplete
+            InitTerminals();
 
             RevisionGrid.ToggledBetweenArtificialAndHeadCommits += (s, e) => FocusRevisionDiffFileStatusList();
 
@@ -560,56 +538,6 @@ namespace GitUI.CommandsDialogs
                 var clickedMenuItem = (ToolStripMenuItem)sender;
                 AppSettings.DefaultPullAction = (AppSettings.PullAction)clickedMenuItem.Tag;
                 RefreshDefaultPullAction();
-            }
-        }
-
-        private void FillUserShells()
-        {
-            var userShellAccessible = false;
-
-            userShell.DropDownItems.Clear();
-
-            foreach (var shell in _shellService.List())
-            {
-                var shellDescriptor = _shellProvider
-                    .GetShell(shell.Name);
-
-                if (!shellDescriptor.HasExecutable)
-                {
-                    continue;
-                }
-
-                var toolStripMenuItem = new ToolStripMenuItem(shellDescriptor.Name)
-                {
-                    Tag = shellDescriptor,
-                    Image = shellDescriptor.Icon,
-                    ToolTipText = shellDescriptor.Name
-                };
-
-                toolStripMenuItem.Click += userShell_Click;
-
-                userShell.DropDownItems.Add(toolStripMenuItem);
-
-                if (shell.Default)
-                {
-                    userShellAccessible = true;
-
-                    userShell.Image = shellDescriptor.Icon;
-                    userShell.ToolTipText = shellDescriptor.Name;
-                    userShell.Tag = shellDescriptor;
-                }
-            }
-
-            userShell.Visible = userShell.DropDownItems.Count > 0;
-
-            // a user may have a specific shell configured in settings, but the shell is no longer available
-            // set the first available shell as default
-            if (userShell.Visible && !userShellAccessible)
-            {
-                var shell = (IShellDescriptor)userShell.DropDownItems[0].Tag;
-                userShell.Image = shell.Icon;
-                userShell.ToolTipText = shell.Name;
-                userShell.Tag = shell;
             }
         }
 
@@ -1483,7 +1411,8 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            IShellDescriptor shell = (sender as ToolStripItem)?.Tag as IShellDescriptor;
+            var shell = (sender as ToolStripItem)?.Tag as IShell;
+
             if (shell is null)
             {
                 return;
@@ -1491,8 +1420,9 @@ namespace GitUI.CommandsDialogs
 
             try
             {
-                var executable = new Executable(shell.ExecutablePath, Module.WorkingDir);
-                executable.Start(createWindow: true);
+                var executable = new Executable(shell.Command, Module.WorkingDir);
+
+                executable.Start(shell.Arguments, createWindow: true);
             }
             catch (Exception exception)
             {
@@ -1724,7 +1654,7 @@ namespace GitUI.CommandsDialogs
         private void CommitInfoTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             RefreshSelection();
-            FillTerminalTab();
+
             if (CommitInfoTabControl.SelectedTab == DiffTabPage)
             {
                 // workaround to avoid focusing the "filter files" combobox
@@ -1981,7 +1911,7 @@ namespace GitUI.CommandsDialogs
                 var path = Module.WorkingDir;
                 ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
                 AppSettings.RecentWorkingDir = path;
-                ChangeTerminalActiveFolder(path);
+                CloseTerminal();
 
 #if DEBUG
                 // Current encodings
@@ -2374,7 +2304,6 @@ namespace GitUI.CommandsDialogs
 
             void FocusGitConsole()
             {
-                FillTerminalTab();
                 if (_consoleTabPage is not null && CommitInfoTabControl.TabPages.Contains(_consoleTabPage))
                 {
                     CommitInfoTabControl.SelectedTab = _consoleTabPage;
@@ -2923,64 +2852,98 @@ namespace GitUI.CommandsDialogs
             PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
+        #region Terminal
+
+        private void InitTerminals()
+        {
+            InitTerminalTab();
+            FillUserShellMenu();
+
+            AppSettings.Shells.Updated += (s, e) =>
+            {
+                FillUserShellMenu();
+                CloseTerminal();
+            };
+        }
+
         /// <summary>
         /// Adds a tab with console interface to Git over the current working copy. Recreates the terminal on tab activation if user exits the shell.
         /// </summary>
-        private void FillTerminalTab()
+        private void InitTerminalTab()
         {
-            if (!EnvUtils.RunningOnWindows() || !AppSettings.ShowConEmuTab.Value)
+            if (!EnvUtils.RunningOnWindows())
             {
                 // ConEmu only works on WinNT
                 return;
             }
 
-            if (_terminal is not null)
+            if (AppSettings.ShowConEmuTab.Value)
             {
-                // Terminal already created; give it focus
-                _terminal.Focus();
-                return;
+                AddTerminalTab();
             }
 
-            if (_consoleTabPage is not null)
+            AppSettings.ShowConEmuTab.Updated += (s, e) =>
             {
-                // Tab page already created
-                return;
-            }
+                if (AppSettings.ShowConEmuTab.Value)
+                {
+                    AddTerminalTab();
+                }
+                else
+                {
+                    RemoveTerminalTab();
+                }
+            };
+        }
 
+        private void AddTerminalTab()
+        {
             _consoleTabPage = new TabPage
             {
                 Text = _consoleTabCaption.Text,
                 Name = _consoleTabCaption.Text
             };
+
             CommitInfoTabControl.Controls.Add(_consoleTabPage);
 
             // We have to set ImageKey after it's added to the tab control
             _consoleTabPage.ImageKey = nameof(Images.Console);
 
             // Delay-create the terminal window when the tab is first selected
-            CommitInfoTabControl.Selecting += CommitInfoTabControl_Selecting;
-
-            void CommitInfoTabControl_Selecting(object sender, TabControlCancelEventArgs args)
+            CommitInfoTabControl.Selecting += (object sender, TabControlCancelEventArgs e) =>
             {
-                if (args.TabPage != _consoleTabPage)
+                if (e.TabPage != _consoleTabPage)
                 {
                     return;
                 }
 
+                if (_terminal != null)
+                {
+                    // Terminal already created; give it focus
+                    _terminal.Focus();
+                    return;
+                }
+
+                AddConsoleControl();
                 RefreshShell();
+            };
+
+            void AddConsoleControl()
+            {
+                // Lazy-create on first opening the tab
+                _consoleTabPage.Controls.Clear();
+                _consoleTabPage.Controls.Add(
+                    _terminal = new ConEmuControl
+                    {
+                        Dock = DockStyle.Fill,
+                        IsStatusbarVisible = false
+                    });
             }
 
             void RefreshShell()
             {
+                if (_terminal == null)
                 {
-                    // Lazy-create on first opening the tab
-                    _consoleTabPage.Controls.Clear();
-                    _consoleTabPage.Controls.Add(
-                        _terminal = new ConEmuControl
-                        {
-                            Dock = DockStyle.Fill,
-                            IsStatusbarVisible = false
-                        });
+                    return;
                 }
 
                 // If user has typed "exit" in there, restart the shell; otherwise just return
@@ -2997,18 +2960,23 @@ namespace GitUI.CommandsDialogs
                 };
 
                 var defauldShell = _shellService
-                    .GetDefault();
+                    .FindDefault();
 
-                string shellType = defauldShell.Name;
-                startInfo.ConsoleProcessCommandLine = _shellProvider.GetShellCommandLine(shellType);
+                if (defauldShell is null)
+                {
+                    return;
+                }
+
+                startInfo.ConsoleProcessCommandLine = $"{defauldShell.Command} {defauldShell.Arguments}";
 
                 // Set path to git in this window (actually, effective with CMD only)
                 if (!string.IsNullOrEmpty(AppSettings.GitCommandValue))
                 {
-                    string dirGit = Path.GetDirectoryName(AppSettings.GitCommandValue);
+                    var dirGit = Path.GetDirectoryName(AppSettings.GitCommandValue);
+
                     if (!string.IsNullOrEmpty(dirGit))
                     {
-                        startInfo.SetEnv("PATH", dirGit + ";" + "%PATH%");
+                        startInfo.SetEnv("PATH", $"{dirGit};%PATH%");
                     }
                 }
 
@@ -3033,15 +3001,68 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public void ChangeTerminalActiveFolder(string path)
+        private void RemoveTerminalTab()
         {
-            var defauldShell = _shellService
-                .GetDefault();
+            CommitInfoTabControl.Controls.Remove(_consoleTabPage);
 
-            string shellType = defauldShell.Name;
-            IShellDescriptor shell = _shellProvider.GetShell(shellType);
-            _terminal?.ChangeFolder(shell, path);
+            _consoleTabPage.Controls.Clear();
+
+            _consoleTabPage?.Dispose();
+            _consoleTabPage = null;
+
+            _terminal?.Dispose();
+            _terminal = null;
         }
+
+        public void CloseTerminal()
+        {
+            ThreadHelper.JoinableTaskFactory.Run(() => _terminal.CloseTerminal());
+        }
+
+        private void FillUserShellMenu()
+        {
+            var userShellAccessible = false;
+
+            userShell.DropDownItems.Clear();
+
+            foreach (var shell in _shellService.EnabledShells())
+            {
+                var toolStripMenuItem = new ToolStripMenuItem(shell.Name)
+                {
+                    Image = ResourceImagesProvider.Images[shell.Icon],
+                    ToolTipText = shell.Name,
+                    Tag = shell
+                };
+
+                toolStripMenuItem.Click += userShell_Click;
+
+                userShell.DropDownItems.Add(toolStripMenuItem);
+
+                if (shell.Default)
+                {
+                    userShellAccessible = true;
+
+                    userShell.Image = ResourceImagesProvider.Images[shell.Icon];
+                    userShell.ToolTipText = shell.Name;
+                    userShell.Tag = shell;
+                }
+            }
+
+            userShell.Visible = userShell.DropDownItems.Count > 0;
+
+            // a user may have a specific shell configured in settings, but the shell is no longer available
+            // set the first available shell as default
+            if (userShell.Visible && !userShellAccessible)
+            {
+                var shell = (IShell)userShell.DropDownItems[0].Tag;
+
+                userShell.Image = ResourceImagesProvider.Images[shell.Icon];
+                userShell.ToolTipText = shell.Name;
+                userShell.Tag = shell;
+            }
+        }
+
+        #endregion Terminal
 
         private void menuitemSparseWorkingCopy_Click(object sender, EventArgs e)
         {
