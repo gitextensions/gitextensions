@@ -403,11 +403,11 @@ namespace GitCommands
             set => SetBool("showresetallchanges", value);
         }
 
-        public static readonly ISetting<bool> ShowConEmuTab = Setting.Create(DetailedSettingsPath, nameof(ShowConEmuTab), true);
-        public static readonly ISetting<string> ConEmuStyle = Setting.Create(DetailedSettingsPath, nameof(ConEmuStyle), "<Solarized Light>");
-        public static readonly ISetting<string> ConEmuTerminal = Setting.Create(DetailedSettingsPath, nameof(ConEmuTerminal), "bash");
-        public static readonly ISetting<string> ConEmuFontSize = Setting.Create(DetailedSettingsPath, nameof(ConEmuFontSize), "12");
-        public static readonly ISetting<bool> ShowGpgInformation = Setting.Create(DetailedSettingsPath, nameof(ShowGpgInformation), true);
+        public static ISetting<bool> ShowConEmuTab => Setting.Create(DetailedSettingsPath, nameof(ShowConEmuTab), true);
+        public static ISetting<string> ConEmuStyle => Setting.Create(DetailedSettingsPath, nameof(ConEmuStyle), "<Solarized Light>");
+        public static ISetting<string> ConEmuTerminal => Setting.Create(DetailedSettingsPath, nameof(ConEmuTerminal), "bash");
+        public static ISetting<string> ConEmuFontSize => Setting.Create(DetailedSettingsPath, nameof(ConEmuFontSize), "12");
+        public static ISetting<bool> ShowGpgInformation => Setting.Create(DetailedSettingsPath, nameof(ShowGpgInformation), true);
 
         public static CommitInfoPosition CommitInfoPosition
         {
