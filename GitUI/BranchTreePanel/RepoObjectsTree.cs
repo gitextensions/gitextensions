@@ -518,6 +518,11 @@ namespace GitUI.BranchTreePanel
         private void OnNodeClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             Node.OnNode<Node>(e.Node, node => node.OnClick());
+            if ((ModifierKeys & Keys.Control) != 0 && e.Button == MouseButtons.Left)
+            {
+                var branchNode = (BaseBranchNode)e.Node.Tag;
+                _filterBranchHelper.SetBranchFilter(branchNode.FullPath, refresh: true);
+            }
         }
 
         private void OnNodeDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
