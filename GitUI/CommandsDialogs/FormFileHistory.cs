@@ -236,7 +236,7 @@ namespace GitUI.CommandsDialogs
                         "--format=\"%n\"",
                         "--name-only",
                         "--follow",
-                        GitCommandHelpers.FindRenamesAndCopiesOpts(),
+                        FindRenamesAndCopiesOpts(),
                         "--",
                         fileName.Quote()
                     };
@@ -260,13 +260,13 @@ namespace GitUI.CommandsDialogs
 
                     // here we need --name-only to get the previous filenames in the revision graph
                     res.path = listOfFileNames.ToString();
-                    res.revision += " --name-only --parents" + GitCommandHelpers.FindRenamesAndCopiesOpts();
+                    res.revision += $" --name-only --parents{FindRenamesAndCopiesOpts()}";
                 }
                 else if (AppSettings.FollowRenamesInFileHistory)
                 {
                     // history of a directory
                     // --parents doesn't work with --follow enabled, but needed to graph a filtered log
-                    res.revision = " " + GitCommandHelpers.FindRenamesOpt() + " --follow --parents";
+                    res.revision = $" {FindRenamesOpt()} --follow --parents";
                 }
                 else
                 {
@@ -281,6 +281,23 @@ namespace GitUI.CommandsDialogs
 
                 return res;
             }
+        }
+
+        // returns " --find-renames=..." according to app settings
+        private static ArgumentString FindRenamesOpt()
+        {
+            return AppSettings.FollowRenamesInFileHistoryExactOnly
+                ? " --find-renames=\"100%\""
+                : " --find-renames";
+        }
+
+        // returns " --find-renames=... --find-copies=..." according to app settings
+        private static ArgumentString FindRenamesAndCopiesOpts()
+        {
+            var findCopies = AppSettings.FollowRenamesInFileHistoryExactOnly
+                ? " --find-copies=\"100%\""
+                : " --find-copies";
+            return FindRenamesOpt() + findCopies;
         }
 
         private void FileChangesSelectionChanged(object sender, EventArgs e)

@@ -39,7 +39,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             var showIcon = AppSettings.ShowBuildStatusIconColumn;
             var showText = AppSettings.ShowBuildStatusTextColumn;
-            var columnVisible = settings.EnableIntegration.ValueOrDefault &&
+            var columnVisible = settings.EnableIntegration.Value &&
                                 (showIcon || showText);
 
             Column.Visible = columnVisible;

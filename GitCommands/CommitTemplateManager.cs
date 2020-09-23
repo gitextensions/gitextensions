@@ -60,18 +60,18 @@ namespace GitCommands
 
         private static readonly List<RegisteredCommitTemplateItem> RegisteredTemplatesStorage = new List<RegisteredCommitTemplateItem>();
         private readonly IFileSystem _fileSystem;
-        private readonly IGitModule _module;
+        private readonly Func<IGitModule> _getModule;
         private readonly IFullPathResolver _fullPathResolver;
 
-        public CommitTemplateManager(IGitModule module, IFullPathResolver fullPathResolver, IFileSystem fileSystem)
+        public CommitTemplateManager(Func<IGitModule> getModule, IFullPathResolver fullPathResolver, IFileSystem fileSystem)
         {
-            _module = module;
+            _getModule = getModule;
             _fullPathResolver = fullPathResolver;
             _fileSystem = fileSystem;
         }
 
-        public CommitTemplateManager(IGitModule module)
-            : this(module, new FullPathResolver(() => module.WorkingDir), new FileSystem())
+        public CommitTemplateManager(Func<IGitModule> getModule)
+            : this(getModule, new FullPathResolver(() => getModule().WorkingDir), new FileSystem())
         {
         }
 
@@ -101,7 +101,7 @@ namespace GitCommands
         /// </remarks>
         public string LoadGitCommitTemplate()
         {
-            string fileName = _module.GetEffectiveSetting("commit.template");
+            string fileName = GetModule().GetEffectiveSetting("commit.template");
             if (string.IsNullOrEmpty(fileName))
             {
                 return null;
@@ -143,6 +143,17 @@ namespace GitCommands
             {
                 RegisteredTemplatesStorage.RemoveAll(item => item.Name == templateName);
             }
+        }
+
+        private IGitModule GetModule()
+        {
+            var module = _getModule();
+            if (module == null)
+            {
+                throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
+            }
+
+            return module;
         }
     }
 }

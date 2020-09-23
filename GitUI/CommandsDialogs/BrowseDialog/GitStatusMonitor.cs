@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
 
@@ -40,6 +42,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private string _gitPath;
         private string _submodulesPath;
         private readonly CancellationTokenSequence _statusSequence = new CancellationTokenSequence();
+        private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
 
         // Timestamps to schedule status updates, limit the update interval dynamically
         // Note that TickCount wraps after 25 days uptime, always compare diff
@@ -99,6 +102,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _gitDirWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;
 
             Init(commandsSource);
+
+            _getAllChangedFilesOutputParser = new GetAllChangedFilesOutputParser(() => commandsSource.UICommands.GitModule);
 
             return;
 
@@ -386,7 +391,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                             var cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default,
                                 noLocks: true);
                             var output = await module.GitExecutable.GetOutputAsync(cmd).ConfigureAwait(false);
-                            var changedFiles = GitCommandHelpers.GetStatusChangedFilesFromString(module, output);
+                            IReadOnlyList<GitItemStatus> changedFiles = _getAllChangedFilesOutputParser.Parse(output);
 
                             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 

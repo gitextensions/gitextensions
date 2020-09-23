@@ -1,9 +1,10 @@
 using System;
+using GitCommands.Git.Commands;
 using GitCommands.Git.Tag;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
 
-namespace GitCommandsTests.Git.Tag
+namespace GitCommandsTests.Git.Commands
 {
     [TestFixture]
     public sealed class GitCreateTagCmdTests

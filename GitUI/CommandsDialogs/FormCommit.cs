@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitCommands.Patches;
 using GitCommands.Utils;
 using GitExtUtils;
@@ -220,8 +221,8 @@ namespace GitUI.CommandsDialogs
 
             Message.TextChanged += Message_TextChanged;
             Message.TextAssigned += Message_TextAssigned;
-            Message.AddAutoCompleteProvider(new CommitAutoCompleteProvider(Module));
-            _commitTemplateManager = new CommitTemplateManager(Module);
+            Message.AddAutoCompleteProvider(new CommitAutoCompleteProvider(() => Module));
+            _commitTemplateManager = new CommitTemplateManager(() => Module);
 
             SolveMergeconflicts.Font = new Font(SolveMergeconflicts.Font, FontStyle.Bold);
 
@@ -1029,7 +1030,7 @@ namespace GitUI.CommandsDialogs
                 remoteNameLabel.Click -= _branchNameLabelOnClick;
             }
 
-            var currentBranch = Module.GetRefs(false, true).FirstOrDefault(r => r.LocalName == currentBranchName);
+            var currentBranch = Module.GetRefs(tags: false, branches: true).FirstOrDefault(r => r.LocalName == currentBranchName);
             if (currentBranch == null)
             {
                 branchNameLabel.Text = currentBranchName;

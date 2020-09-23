@@ -32,7 +32,7 @@ namespace GitCommandsTests
             _file = Substitute.For<FileBase>();
             _fileSystem = Substitute.For<IFileSystem>();
             _fileSystem.File.Returns(_file);
-            _manager = new CommitTemplateManager(_module, _fullPathResolver, _fileSystem);
+            _manager = new CommitTemplateManager(() => _module, _fullPathResolver, _fileSystem);
         }
 
         [TestCase(null)]
@@ -113,7 +113,7 @@ namespace GitCommandsTests
             {
                 using (var helper = new GitModuleTestHelper())
                 {
-                    var manager = new CommitTemplateManager(helper.Module);
+                    var manager = new CommitTemplateManager(() => helper.Module);
 
                     const string content = "line1\r\nline2\rline3\nline4";
 

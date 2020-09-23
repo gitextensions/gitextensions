@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitUI.HelperDialogs;
 using GitUI.Script;
 using GitUIPluginInterfaces;
@@ -110,7 +110,7 @@ namespace GitUI.CommandsDialogs
 
         private void EnsurePageant(string remote)
         {
-            if (GitCommandHelpers.Plink())
+            if (GitSshHelpers.Plink())
             {
                 if (!File.Exists(AppSettings.Pageant))
                 {

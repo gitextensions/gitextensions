@@ -1,6 +1,7 @@
+using GitCommands.Git.Tag;
 using GitUIPluginInterfaces;
 
-namespace GitCommands.Git.Tag
+namespace GitCommands.Git.Commands
 {
     public class GitCreateTagArgs
     {

@@ -7,6 +7,7 @@ using GitCommands;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI.Avatars;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -24,6 +25,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Text = "Appearance";
             InitializeComplete();
 
+            FillComboBoxWithEnumValues<GitRefsSortOrder>(_NO_TRANSLATE_cmbBranchesOrder);
+            FillComboBoxWithEnumValues<GitRefsSortBy>(_NO_TRANSLATE_cmbBranchesSortBy);
             FillComboBoxWithEnumValues<AvatarProvider>(AvatarProvider);
             FillComboBoxWithEnumValues<GravatarFallbackAvatarType>(_NO_TRANSLATE_NoImageService);
         }
@@ -47,16 +50,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             pictureAvatarHelp.Size = DpiUtil.Scale(pictureAvatarHelp.Size);
 
             // align 1st columns across all tables
-            tlpnlGeneral.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
-            tlpnlAuthor.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
-            tlpnlLanguage.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
+            tlpnlGeneral.AdjustWidthToSize(0, lblBranchesSortBy, lblBranchesOrder, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
+            tlpnlAuthor.AdjustWidthToSize(0, lblBranchesSortBy, lblBranchesOrder, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
+            tlpnlLanguage.AdjustWidthToSize(0, lblBranchesSortBy, lblBranchesOrder, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
 
             // align 2nd columns across all tables
             truncatePathMethod.AdjustWidthToFitContent();
             Language.AdjustWidthToFitContent();
-            tlpnlGeneral.AdjustWidthToSize(1, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
-            tlpnlAuthor.AdjustWidthToSize(1, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
-            tlpnlLanguage.AdjustWidthToSize(1, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
+            tlpnlGeneral.AdjustWidthToSize(1, _NO_TRANSLATE_cmbBranchesSortBy, _NO_TRANSLATE_cmbBranchesOrder, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
+            tlpnlAuthor.AdjustWidthToSize(1, _NO_TRANSLATE_cmbBranchesSortBy, _NO_TRANSLATE_cmbBranchesOrder, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
+            tlpnlLanguage.AdjustWidthToSize(1, _NO_TRANSLATE_cmbBranchesSortBy, _NO_TRANSLATE_cmbBranchesOrder, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
         }
 
         public static SettingsPageReference GetPageReference()
@@ -84,6 +87,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Language.Text = AppSettings.Translation;
 
             truncatePathMethod.SelectedIndex = GetTruncatePathMethodIndex(AppSettings.TruncatePathMethod);
+            _NO_TRANSLATE_cmbBranchesOrder.SelectedIndex = (int)AppSettings.RefsSortOrder;
+            _NO_TRANSLATE_cmbBranchesSortBy.SelectedIndex = (int)AppSettings.RefsSortBy;
 
             Dictionary.Items.Clear();
             Dictionary.Items.Add(_noDictFile.Text);
@@ -135,6 +140,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatarInCommitInfo.Checked;
             AppSettings.AvatarImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
             AppSettings.SortByAuthorDate = chkSortByAuthorDate.Checked;
+            AppSettings.RefsSortOrder = (GitRefsSortOrder)_NO_TRANSLATE_cmbBranchesOrder.SelectedIndex;
+            AppSettings.RefsSortBy = (GitRefsSortBy)_NO_TRANSLATE_cmbBranchesSortBy.SelectedIndex;
 
             AppSettings.Translation = Language.Text;
             ResourceManager.Strings.Reinitialize();
@@ -162,20 +169,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             return;
 
-            TruncatePathMethod GetTruncatePathMethodString(int index)
+            TruncatePathMethod GetTruncatePathMethodString(int index) => index switch
             {
-                switch (index)
-                {
-                    case 1:
-                        return TruncatePathMethod.Compact;
-                    case 2:
-                        return TruncatePathMethod.TrimStart;
-                    case 3:
-                        return TruncatePathMethod.FileNameOnly;
-                    default:
-                        return TruncatePathMethod.None;
-                }
-            }
+                1 => TruncatePathMethod.Compact,
+                2 => TruncatePathMethod.TrimStart,
+                3 => TruncatePathMethod.FileNameOnly,
+                _ => TruncatePathMethod.None,
+            };
         }
 
         private void Dictionary_DropDown(object sender, EventArgs e)

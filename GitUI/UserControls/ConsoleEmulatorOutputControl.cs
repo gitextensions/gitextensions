@@ -120,7 +120,7 @@ namespace GitUI.UserControls
                     }
                 };
 
-                _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.ConEmuStyle.ValueOrDefault, AppSettings.ConEmuFontSize.ValueOrDefault);
+                _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.ConEmuStyle.Value, AppSettings.ConEmuFontSize.Value);
             }
             catch (Exception ex)
             {

@@ -74,8 +74,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void PageToSettings()
         {
-            CurrentSettings.BuildServer.EnableIntegration.Value = checkBoxEnableBuildServerIntegration.GetNullableChecked();
-            CurrentSettings.BuildServer.ShowBuildResultPage.Value = checkBoxShowBuildResultPage.GetNullableChecked();
+            CurrentSettings.BuildServer.EnableIntegration.Value = checkBoxEnableBuildServerIntegration.Checked;
+            CurrentSettings.BuildServer.ShowBuildResultPage.Value = checkBoxShowBuildResultPage.Checked;
 
             var selectedBuildServerType = GetSelectedBuildServerType();
 

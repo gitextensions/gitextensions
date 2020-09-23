@@ -1,6 +1,7 @@
 using System;
+using GitCommands.Git.Tag;
 
-namespace GitCommands.Git.Tag
+namespace GitCommands.Git.Extensions
 {
     public static class TagOperationExtensions
     {

@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git.Commands;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils;
 using GitUI.HelperDialogs;

@@ -192,6 +192,14 @@ See http://en.gravatar.com/site/implement/images#default-image for more details.
         <source>Avatar provider</source>
         <target />
       </trans-unit>
+      <trans-unit id="lblBranchesOrder.Text">
+        <source>Order branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblBranchesSortBy.Text">
+        <source>Sort branches by</source>
+        <target />
+      </trans-unit>
       <trans-unit id="lblCacheDays.Text">
         <source>Cache images (days)</source>
         <target />
@@ -958,6 +966,26 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="gbConfirmations.Text">
         <source>Don't ask to confirm to (use with caution)</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ConsoleStyleSettingsPage" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Console style</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="groupBoxConsoleSettings.Text">
+        <source>Console settings (restart required)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Console style</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Font size</source>
         <target />
       </trans-unit>
     </body>
@@ -2599,32 +2627,24 @@ Do you want to continue?</source>
         <source>Browse repository window</source>
         <target />
       </trans-unit>
-      <trans-unit id="ConEmuGB.Text">
-        <source>Console emulator</source>
-        <target />
-      </trans-unit>
       <trans-unit id="chkChowConsoleTab.Text">
-        <source>Show the Console tab (restart required)</source>
+        <source>Show the Console tab</source>
         <target />
       </trans-unit>
       <trans-unit id="chkShowGpgInformation.Text">
-        <source>Show GPG information (a restart is needed to take effect)</source>
+        <source>Show GPG information</source>
         <target />
       </trans-unit>
-      <trans-unit id="groupBoxConsoleSettings.Text">
-        <source>Console settings (a restart is needed to take effect)</source>
+      <trans-unit id="gbGeneral.Text">
+        <source>General</source>
         <target />
       </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Console style</source>
+      <trans-unit id="gbTabs.Text">
+        <source>Tabs (restart required)</source>
         <target />
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>Shell to run</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>Font size</source>
+        <source>Default shell</source>
         <target />
       </trans-unit>
     </body>
@@ -7928,6 +7948,14 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Show/hide branches/remotes/tags</source>
         <target />
       </trans-unit>
+      <trans-unit id="_sortByContextMenuItem.Text">
+        <source>&amp;Sort by...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_sortOrderContextMenuItem.Text">
+        <source>&amp;Sort order...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="lblSearchBranch.Text">
         <source>Search:</source>
         <target />
@@ -9406,6 +9434,14 @@ Select this commit to populate the full message.</source>
    - The difference of common files (identical changes) from BASE to the commits.
 - For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
 - For more than four selected commits, show the difference from the first to the last selected commit.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_sortBy.Text">
+        <source>&amp;Sort by...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_sortOrder.Text">
+        <source>&amp;Sort order...</source>
         <target />
       </trans-unit>
       <trans-unit id="_submodulesText.Text">

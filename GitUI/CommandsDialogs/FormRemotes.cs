@@ -311,7 +311,7 @@ Inactive remote is completely invisible to git.");
                     $" Either {nameof(PreselectRemoteOnLoad)} or {nameof(PreselectLocalOnLoad)}");
             }
 
-            pnlMgtPuttySsh.Visible = GitCommandHelpers.Plink();
+            pnlMgtPuttySsh.Visible = GitSshHelpers.Plink();
 
             // if Putty SSH isn't enabled, reduce the minimum height of the form
             MinimumSize = new Size(MinimumSize.Width, pnlMgtPuttySsh.Visible ? MinimumSize.Height : MinimumSize.Height - pnlMgtPuttySsh.Height);

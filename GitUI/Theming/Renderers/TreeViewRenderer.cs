@@ -40,6 +40,11 @@ namespace GitUI.Theming
             {
                 case Parts.TVP_TREEITEM:
                 {
+                    if (poptions.dwFlags.HasFlag(NativeMethods.DTT.TextColor))
+                    {
+                        return Unhandled;
+                    }
+
                     Color foreColor;
                     switch ((State.Item)stateid)
                     {

@@ -13,7 +13,6 @@ using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.Win32;
-using StringSetting = GitCommands.Settings.StringSetting;
 
 namespace GitCommands
 {
@@ -404,11 +403,11 @@ namespace GitCommands
             set => SetBool("showresetallchanges", value);
         }
 
-        public static readonly BoolNullableSetting ShowConEmuTab = new BoolNullableSetting("ShowConEmuTab", DetailedSettingsPath, true);
-        public static readonly StringSetting ConEmuStyle = new StringSetting("ConEmuStyle", DetailedSettingsPath, "<Solarized Light>");
-        public static readonly StringSetting ConEmuTerminal = new StringSetting("ConEmuTerminal", DetailedSettingsPath, "bash");
-        public static readonly StringSetting ConEmuFontSize = new StringSetting("ConEmuFontSize", DetailedSettingsPath, "12");
-        public static readonly BoolNullableSetting ShowGpgInformation = new BoolNullableSetting("ShowGpgInformation", DetailedSettingsPath, true);
+        public static readonly ISetting<bool> ShowConEmuTab = Setting.Create(DetailedSettingsPath, nameof(ShowConEmuTab), true);
+        public static readonly ISetting<string> ConEmuStyle = Setting.Create(DetailedSettingsPath, nameof(ConEmuStyle), "<Solarized Light>");
+        public static readonly ISetting<string> ConEmuTerminal = Setting.Create(DetailedSettingsPath, nameof(ConEmuTerminal), "bash");
+        public static readonly ISetting<string> ConEmuFontSize = Setting.Create(DetailedSettingsPath, nameof(ConEmuFontSize), "12");
+        public static readonly ISetting<bool> ShowGpgInformation = Setting.Create(DetailedSettingsPath, nameof(ShowGpgInformation), true);
 
         public static CommitInfoPosition CommitInfoPosition
         {
@@ -1410,7 +1409,7 @@ namespace GitCommands
 
             try
             {
-                GitCommandHelpers.SetSsh(SshPath);
+                GitSshHelpers.SetSsh(SshPath);
             }
             catch
             {
@@ -1577,6 +1576,18 @@ namespace GitCommands
         {
             get => GetBool("UseConsoleEmulatorForCommands", true);
             set => SetBool("UseConsoleEmulatorForCommands", value);
+        }
+
+        public static GitRefsSortBy RefsSortBy
+        {
+            get => GetEnum("RefsSortBy", GitRefsSortBy.Default);
+            set => SetEnum("RefsSortBy", value);
+        }
+
+        public static GitRefsSortOrder RefsSortOrder
+        {
+            get => GetEnum("RefsSortOrder", GitRefsSortOrder.Descending);
+            set => SetEnum("RefsSortOrder", value);
         }
 
         public static DiffListSortType DiffListSorting

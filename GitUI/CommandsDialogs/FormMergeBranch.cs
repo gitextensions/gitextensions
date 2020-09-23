@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git.Commands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUI.Script;
@@ -43,8 +44,8 @@ namespace GitUI.CommandsDialogs
             _defaultBranch = defaultBranch;
 
             noFastForward.Checked = Module.EffectiveSettings.NoFastForwardMerge;
-            addLogMessages.Checked = Module.EffectiveSettings.Detailed.AddMergeLogMessages.ValueOrDefault;
-            nbMessages.Value = Module.EffectiveSettings.Detailed.MergeLogMessagesCount.ValueOrDefault;
+            addLogMessages.Checked = Module.EffectiveSettings.Detailed.AddMergeLogMessages.Value;
+            nbMessages.Value = Module.EffectiveSettings.Detailed.MergeLogMessagesCount.Value;
 
             advanced.Checked = AppSettings.AlwaysShowAdvOpt;
             advanced_CheckedChanged(null, null);

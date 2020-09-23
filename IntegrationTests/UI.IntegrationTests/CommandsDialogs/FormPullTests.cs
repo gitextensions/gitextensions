@@ -114,7 +114,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [TestCase(AppSettings.PullAction.Rebase, false, false, false, true, false, false, false, false)]
         [TestCase(AppSettings.PullAction.Fetch, false, false, false, false, true, false, true, true)]
         [TestCase(AppSettings.PullAction.FetchAll, false, false, false, false, true, false, true, true)]
-        [TestCase(AppSettings.PullAction.FetchPruneAll, false, true, true, false, true, false, true, true)]
+        [TestCase(AppSettings.PullAction.FetchPruneAll, false, true, false, false, true, false, true, true)]
         public void Should_correctly_setup_for_defined_pull_action(AppSettings.PullAction pullAction,
             bool mergeChecked, bool pruneRemoteBranches, bool pruneRemoteBranchesAndTags, bool rebaseChecked, bool fetchChecked, bool autoStashChecked, bool pruneRemoteBranchesEnabled, bool pruneRemoteBranchesAndTagsEnabled)
         {
@@ -141,7 +141,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [TestCase(AppSettings.PullAction.Rebase, false, false, false, true, false, false, false, false)]
         [TestCase(AppSettings.PullAction.Fetch, false, false, false, false, true, false, true, true)]
         [TestCase(AppSettings.PullAction.FetchAll, false, false, false, false, true, false, true, true)]
-        [TestCase(AppSettings.PullAction.FetchPruneAll, false, true, true, false, true, false, true, true)]
+        [TestCase(AppSettings.PullAction.FetchPruneAll, false, true, false, false, true, false, true, true)]
         public void Should_use_user_DefaultPullAction_pull_action_None(AppSettings.PullAction pullAction,
             bool mergeChecked, bool pruneRemoteBranches, bool pruneRemoteBranchesAndTags, bool rebaseChecked, bool fetchChecked, bool autoStashChecked, bool pruneRemoteBranchesEnabled, bool pruneRemoteBranchesAndTagsEnabled)
         {

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git.Commands;
 using GitUI.HelperDialogs;
 using GitUI.Script;
 using ResourceManager;

@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
@@ -892,7 +893,7 @@ namespace GitUI.CommandsDialogs
 
         private void EnsurePageant(string remote)
         {
-            if (GitCommandHelpers.Plink())
+            if (GitSshHelpers.Plink())
             {
                 StartPageant(remote);
             }
@@ -906,8 +907,9 @@ namespace GitUI.CommandsDialogs
         private void FillTagDropDown()
         {
             // var tags = Module.GetTagHeads(GitModule.GetTagHeadsOption.OrderByCommitDateDescending); // comment out to sort by commit date
-            var tags = Module.GetTagRefs(GitModule.GetTagRefsSortOrder.ByName)
-                .Select(tag => tag.Name).ToList();
+            List<string> tags = Module.GetRefs(tags: true, branches: false)
+                                      .Select(tag => tag.Name)
+                                      .ToList();
             tags.Insert(0, AllRefs);
             TagComboBox.DataSource = tags;
 
@@ -957,7 +959,7 @@ namespace GitUI.CommandsDialogs
             using (WaitCursorScope.Enter(Cursors.AppStarting))
             {
                 IReadOnlyList<IGitRef> remoteHeads;
-                if (Module.EffectiveSettings.Detailed.GetRemoteBranchesDirectlyFromRemote.ValueOrDefault)
+                if (Module.EffectiveSettings.Detailed.GetRemoteBranchesDirectlyFromRemote.Value)
                 {
                     EnsurePageant(remote);
 

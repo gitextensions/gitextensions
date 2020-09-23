@@ -13,6 +13,7 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUI.UserControls;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 
@@ -224,7 +225,7 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        public void Initialize([CanBeNull]IAheadBehindDataProvider aheadBehindDataProvider, FilterBranchHelper filterBranchHelper)
+        public void Initialize([CanBeNull] IAheadBehindDataProvider aheadBehindDataProvider, FilterBranchHelper filterBranchHelper)
         {
             _aheadBehindDataProvider = aheadBehindDataProvider;
             _filterBranchHelper = filterBranchHelper;
@@ -236,6 +237,13 @@ namespace GitUI.BranchTreePanel
 
         public void SelectionChanged(IReadOnlyList<GitRevision> selectedRevisions)
         {
+            // If we arrived here through the chain of events after selecting a node in the tree,
+            // and the selected revision is the one we have selected - do nothing.
+            if (selectedRevisions.Count == 1 && selectedRevisions[0].ObjectId == GetSelectedNodeObjectId(treeMain.SelectedNode))
+            {
+                return;
+            }
+
             var cancellationToken = _selectionCancellationTokenSequence.Next();
 
             GitRevision selectedRevision = selectedRevisions.FirstOrDefault();
@@ -264,6 +272,13 @@ namespace GitUI.BranchTreePanel
                     treeMain.EndUpdate();
                 }
             }).FileAndForget();
+
+            static ObjectId GetSelectedNodeObjectId(TreeNode treeNode)
+            {
+                // Local or remote branch nodes or tag nodes
+                return Node.GetNodeSafe<BaseBranchLeafNode>(treeNode)?.ObjectId ??
+                    Node.GetNodeSafe<TagNode>(treeNode)?.ObjectId;
+            }
         }
 
         protected override void OnUICommandsSourceSet(IGitUICommandsSource source)

@@ -27,14 +27,19 @@ namespace GitUI.BranchTreePanel
             {
             }
 
-            protected override Task OnAttachedAsync()
-            {
-                return ReloadNodesAsync(LoadNodesAsync);
-            }
+            protected override Task OnAttachedAsync() => ReloadNodesAsync(LoadNodesAsync);
 
-            protected override Task PostRepositoryChangedAsync()
+            protected override Task PostRepositoryChangedAsync() => ReloadNodesAsync(LoadNodesAsync);
+
+            /// <summary>
+            /// Requests to refresh the data tree retaining the current filtering rules.
+            /// </summary>
+            internal void RefreshRefs()
             {
-                return ReloadNodesAsync(LoadNodesAsync);
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await ReloadNodesAsync(LoadNodesAsync);
+                });
             }
 
             private async Task<Nodes> LoadNodesAsync(CancellationToken token)
@@ -44,10 +49,8 @@ namespace GitUI.BranchTreePanel
                 var nodes = new Nodes(this);
                 var pathToNodes = new Dictionary<string, BaseBranchNode>();
 
-                var branches = Module.GetRefs(tags: true, branches: true, noLocks: true)
-                    .Where(branch => branch.IsRemote && !branch.IsTag)
-                    .OrderBy(branch => branch.Name)
-                    .Select(branch => branch.Name);
+                IEnumerable<IGitRef> branches = Module.GetRefs(tags: true, branches: true)
+                    .Where(branch => branch.IsRemote && !branch.IsTag);
 
                 token.ThrowIfCancellationRequested();
 
@@ -57,13 +60,13 @@ namespace GitUI.BranchTreePanel
                 var remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
 
                 // Create nodes for enabled remotes with branches
-                foreach (var branchPath in branches)
+                foreach (IGitRef branch in branches)
                 {
                     token.ThrowIfCancellationRequested();
-                    var remoteName = branchPath.SubstringUntil('/');
+                    var remoteName = branch.Name.SubstringUntil('/');
                     if (remoteByName.TryGetValue(remoteName, out var remote))
                     {
-                        var remoteBranchNode = new RemoteBranchNode(this, branchPath);
+                        var remoteBranchNode = new RemoteBranchNode(this, branch.ObjectId, branch.Name);
                         var parent = remoteBranchNode.CreateRootNode(
                             pathToNodes,
                             (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
@@ -157,8 +160,8 @@ namespace GitUI.BranchTreePanel
 
         private sealed class RemoteBranchNode : BaseBranchLeafNode, IGitRefActions, ICanDelete, ICanRename
         {
-            public RemoteBranchNode(Tree tree, string fullPath)
-                : base(tree, fullPath, nameof(Images.BranchRemote), nameof(Images.BranchRemoteMerged))
+            public RemoteBranchNode(Tree tree, in ObjectId objectId, string fullPath)
+                : base(tree, objectId, fullPath, nameof(Images.BranchRemote), nameof(Images.BranchRemoteMerged))
             {
             }
 

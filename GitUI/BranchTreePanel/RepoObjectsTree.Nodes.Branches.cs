@@ -8,9 +8,9 @@ using System.Windows.Forms;
 using GitCommands.Git;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.Properties;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
-using ResourceManager;
 
 namespace GitUI.BranchTreePanel
 {
@@ -119,9 +119,10 @@ namespace GitUI.BranchTreePanel
 
             private bool _isMerged = false;
 
-            public BaseBranchLeafNode(Tree tree, string fullPath, string imageKeyUnmerged, string imageKeyMerged)
+            public BaseBranchLeafNode(Tree tree, in ObjectId objectId, string fullPath, string imageKeyUnmerged, string imageKeyMerged)
                 : base(tree, fullPath)
             {
+                ObjectId = objectId;
                 _imageKeyUnmerged = imageKeyUnmerged;
                 _imageKeyMerged = imageKeyMerged;
             }
@@ -142,6 +143,9 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
+            [CanBeNull]
+            public ObjectId ObjectId { get; }
+
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
@@ -151,8 +155,8 @@ namespace GitUI.BranchTreePanel
 
         private sealed class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICanRename, ICanDelete
         {
-            public LocalBranchNode(Tree tree, string fullPath, bool isCurrent)
-                : base(tree, fullPath, nameof(Images.BranchLocal), nameof(Images.BranchLocalMerged))
+            public LocalBranchNode(Tree tree, in ObjectId objectId, string fullPath, bool isCurrent)
+                : base(tree, objectId, fullPath, nameof(Images.BranchLocal), nameof(Images.BranchLocalMerged))
             {
                 IsActive = isCurrent;
             }
@@ -259,20 +263,25 @@ namespace GitUI.BranchTreePanel
         {
             private readonly IAheadBehindDataProvider _aheadBehindDataProvider;
 
-            public BranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, [CanBeNull]IAheadBehindDataProvider aheadBehindDataProvider)
+            public BranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, [CanBeNull] IAheadBehindDataProvider aheadBehindDataProvider)
                 : base(treeNode, uiCommands)
             {
                 _aheadBehindDataProvider = aheadBehindDataProvider;
             }
 
-            protected override Task OnAttachedAsync()
-            {
-                return ReloadNodesAsync(LoadNodesAsync);
-            }
+            protected override Task OnAttachedAsync() => ReloadNodesAsync(LoadNodesAsync);
 
-            protected override Task PostRepositoryChangedAsync()
+            protected override Task PostRepositoryChangedAsync() => ReloadNodesAsync(LoadNodesAsync);
+
+            /// <summary>
+            /// Requests to refresh the data tree retaining the current filtering rules.
+            /// </summary>
+            internal void RefreshRefs()
             {
-                return ReloadNodesAsync(LoadNodesAsync);
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await ReloadNodesAsync(LoadNodesAsync);
+                });
             }
 
             private async Task<Nodes> LoadNodesAsync(CancellationToken token)
@@ -280,11 +289,11 @@ namespace GitUI.BranchTreePanel
                 await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
 
-                var branchNames = Module.GetRefs(tags: false, branches: true, noLocks: true).Select(b => b.Name);
-                return FillBranchTree(branchNames, token);
+                IReadOnlyList<IGitRef> branches = Module.GetRefs(tags: false, branches: true);
+                return FillBranchTree(branches, token);
             }
 
-            private Nodes FillBranchTree(IEnumerable<string> branches, CancellationToken token)
+            private Nodes FillBranchTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
             {
                 #region ex
 
@@ -324,7 +333,7 @@ namespace GitUI.BranchTreePanel
                 foreach (var branch in branches)
                 {
                     token.ThrowIfCancellationRequested();
-                    var localBranchNode = new LocalBranchNode(this, branch, branch == currentBranch);
+                    var localBranchNode = new LocalBranchNode(this, branch.ObjectId, branch.Name, branch.Name == currentBranch);
 
                     if (aheadBehindData != null && aheadBehindData.ContainsKey(localBranchNode.FullPath))
                     {
@@ -346,6 +355,12 @@ namespace GitUI.BranchTreePanel
                 if (firstTime)
                 {
                     TreeViewNode.Expand();
+                }
+
+                if (TreeViewNode.TreeView.SelectedNode != null)
+                {
+                    // If there's a selected treenode, don't stomp over it
+                    return;
                 }
 
                 var activeBranch = Nodes.DepthEnumerator<LocalBranchNode>().FirstOrDefault(b => b.IsActive);
