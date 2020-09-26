@@ -234,11 +234,16 @@ namespace GitUI.Editor
 
         public void SetText(string text, Action openWithDifftool, bool isDiff = false)
         {
+            SetText(text, openWithDifftool, isDiff, false);
+        }
+
+        public void SetText(string text, Action openWithDifftool, bool isDiff, bool isRangeDiff)
+        {
             _currentViewPositionCache.Capture();
 
             OpenWithDifftool = openWithDifftool;
-            _lineNumbersControl.Clear(isDiff);
-            _lineNumbersControl.SetVisibility(isDiff);
+            _lineNumbersControl.Clear(isDiff && !isRangeDiff);
+            _lineNumbersControl.SetVisibility(isDiff && !isRangeDiff);
 
             if (isDiff)
             {
@@ -248,11 +253,16 @@ namespace GitUI.Editor
                     TextEditor.ActiveTextAreaControl.TextArea.InsertLeftMargin(0, _lineNumbersControl);
                 }
 
-                _diffHighlightService = DiffHighlightService.IsCombinedDiff(text)
-                    ? CombinedDiffHighlightService.Instance
-                    : DiffHighlightService.Instance;
+                _diffHighlightService = isRangeDiff
+                    ? RangeDiffHighlightService.Instance
+                    : DiffHighlightService.IsCombinedDiff(text)
+                        ? CombinedDiffHighlightService.Instance
+                        : DiffHighlightService.Instance;
 
-                _lineNumbersControl.DisplayLineNumFor(text);
+                if (!isRangeDiff)
+                {
+                    _lineNumbersControl.DisplayLineNumFor(text);
+                }
             }
 
             TextEditor.Text = text;

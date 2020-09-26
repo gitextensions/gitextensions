@@ -50,7 +50,6 @@ namespace GitUI.Editor.Diff
 
         public bool DoesLineStartWith(IDocument document, int lineOffset, string prefixStr)
         {
-            Debug.Assert(prefixStr.Length <= 2 && prefixStr.Length >= 1, "prefixStr.Length <= 2 && prefixStr.Length >= 1");
             if (prefixStr.Length == 1)
             {
                 return document.GetCharAt(lineOffset) == prefixStr[0];
@@ -61,10 +60,15 @@ namespace GitUI.Editor.Diff
                 return false;
             }
 
-            var firstChar = document.GetCharAt(lineOffset);
-            var secondChar = document.GetCharAt(lineOffset + 1);
+            for (int i = 0; i < prefixStr.Length; i++)
+            {
+                if (document.GetCharAt(lineOffset + i) != prefixStr[i])
+                {
+                    return false;
+                }
+            }
 
-            return firstChar == prefixStr[0] && secondChar == prefixStr[1];
+            return true;
         }
 
         public bool DoesLineStartWith(IDocument document, int lineOffset, string[] prefixStrs)

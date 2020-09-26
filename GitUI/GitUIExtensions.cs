@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -86,9 +87,13 @@ namespace GitUI
                         item.SecondRevision.ObjectId,
                         item.BaseA,
                         item.BaseB,
-                        fileViewer.GetExtraDiffArguments());
+                        fileViewer.GetExtraDiffArguments(isRangeDiff: true));
 
-                return fileViewer.ViewTextAsync(item.Item.Name, output ?? defaultText);
+                // Try set highlighting from first found filename
+                var match = new Regex(@"\n\s*(@@|##)\s+(?<file>[^#:\n]+)").Match(output ?? "");
+                var filename = match.Groups["file"].Success ? match.Groups["file"].Value : item.Item.Name;
+
+                return fileViewer.ViewRangeDiffAsync(filename, output ?? defaultText);
             }
 
             string selectedPatch = GetSelectedPatch(fileViewer, firstId, item.SecondRevision.ObjectId, item.Item)
