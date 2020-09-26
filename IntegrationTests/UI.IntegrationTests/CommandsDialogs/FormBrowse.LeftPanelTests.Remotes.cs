@@ -14,7 +14,8 @@ using NUnit.Framework;
 namespace GitExtensions.UITests.CommandsDialogs
 {
     [Apartment(ApartmentState.STA)]
-    public class FormBrowseLeftPanelRemotesTests
+    [NonParallelizable]
+    public class FormBrowse_LeftPanel_RemotesTests
     {
         // Created once for the fixture
         private ReferenceRepository _referenceRepository;

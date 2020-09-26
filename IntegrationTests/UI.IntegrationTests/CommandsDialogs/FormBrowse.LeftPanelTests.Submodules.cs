@@ -14,7 +14,8 @@ using NUnit.Framework;
 namespace GitExtensions.UITests.CommandsDialogs
 {
     [Apartment(ApartmentState.STA)]
-    public class FormBrowseLeftPanelSubmodulesTests
+    [NonParallelizable]
+    public class FormBrowse_LeftPanel_SubmodulesTests
     {
         // Created once for each test
         private GitUICommands _commands;

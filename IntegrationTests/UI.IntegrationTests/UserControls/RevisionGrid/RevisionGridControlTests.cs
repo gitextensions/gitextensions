@@ -14,6 +14,7 @@ using NUnit.Framework;
 namespace GitExtensions.UITests.UserControls.RevisionGrid
 {
     [Apartment(ApartmentState.STA)]
+    [NonParallelizable]
     public class RevisionGridControlTests
     {
         // Created once for the fixture

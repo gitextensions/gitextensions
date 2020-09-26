@@ -548,7 +548,12 @@ namespace GitUI.BranchTreePanel
                 _repoObjectsTree = repoObjectsTree;
             }
 
+            public ContextMenuStrip BranchContextMenu => _repoObjectsTree.menuBranch;
+            public ContextMenuStrip RemoteContextMenu => _repoObjectsTree.menuRemote;
+            public ContextMenuStrip TagContextMenu => _repoObjectsTree.menuTag;
             public NativeTreeView TreeView => _repoObjectsTree.treeMain;
+
+            public void OnContextMenuOpening(object sender, CancelEventArgs e) => _repoObjectsTree.contextMenu_Opening(sender, e);
 
             public void ReorderTreeNode(TreeNode node, bool up)
             {

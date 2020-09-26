@@ -51,6 +51,14 @@ namespace CommonTestUtils
             }
         }
 
+        public void CreateTag(string tagName, string commitHash, bool allowOverwrite = false)
+        {
+            using (var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir))
+            {
+                repository.Tags.Add(tagName, commitHash, allowOverwrite);
+            }
+        }
+
         public void CheckoutRevision()
         {
             using (var repository = new LibGit2Sharp.Repository(Module.WorkingDir))
@@ -80,6 +88,13 @@ namespace CommonTestUtils
                     b => b.Remote = remote.Name,
                     b => b.UpstreamBranch = masterBranch.CanonicalName);
             }
+        }
+
+        public void Fetch(string remoteName)
+        {
+            using var repository = new LibGit2Sharp.Repository(Module.WorkingDir);
+            var options = new LibGit2Sharp.FetchOptions();
+            Commands.Fetch(repository, remoteName, Array.Empty<string>(), options, null);
         }
 
         public void Reset()
