@@ -74,10 +74,11 @@ namespace GitUI
                 return fileViewer.ViewGitItemRevisionAsync(item.Item, item.SecondRevision.ObjectId, openWithDiffTool);
             }
 
-            string selectedPatch = GetSelectedPatch(fileViewer, firstId, item.SecondRevision.ObjectId, item.Item);
+            string selectedPatch = GetSelectedPatch(fileViewer, firstId, item.SecondRevision.ObjectId, item.Item)
+                ?? defaultText;
 
-            return item.Item.IsSubmodule || selectedPatch == null
-                ? fileViewer.ViewTextAsync(item.Item.Name, text: selectedPatch ?? defaultText, openWithDifftool: openWithDiffTool)
+            return item.Item.IsSubmodule
+                ? fileViewer.ViewTextAsync(item.Item.Name, text: selectedPatch, openWithDifftool: openWithDiffTool)
                 : fileViewer.ViewPatchAsync(item.Item.Name, text: selectedPatch, openWithDifftool: openWithDiffTool);
 
             void OpenWithDiffTool()
