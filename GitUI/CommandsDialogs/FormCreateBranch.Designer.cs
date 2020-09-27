@@ -41,6 +41,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.commitSummaryUserControl1 = new GitUI.UserControls.CommitSummaryUserControl();
             this.MainPanel.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -51,7 +52,7 @@
             // 
             this.MainPanel.Controls.Add(this.Ok);
             this.MainPanel.Controls.Add(this.tableLayoutPanel1);
-            this.MainPanel.Size = new System.Drawing.Size(480, 175);
+            this.MainPanel.Size = new System.Drawing.Size(570, 321);
             // 
             // label2
             // 
@@ -73,8 +74,9 @@
             this.commitPickerSmallControl1.Location = new System.Drawing.Point(153, 31);
             this.commitPickerSmallControl1.MinimumSize = new System.Drawing.Size(100, 26);
             this.commitPickerSmallControl1.Name = "commitPickerSmallControl1";
-            this.commitPickerSmallControl1.Size = new System.Drawing.Size(306, 26);
+            this.commitPickerSmallControl1.Size = new System.Drawing.Size(396, 26);
             this.commitPickerSmallControl1.TabIndex = 3;
+            this.commitPickerSmallControl1.SelectedObjectIdChanged += new System.EventHandler(this.commitPickerSmallControl1_SelectedObjectIdChanged);
             // 
             // chkbxCheckoutAfterCreate
             // 
@@ -84,7 +86,7 @@
             this.chkbxCheckoutAfterCreate.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkbxCheckoutAfterCreate.Location = new System.Drawing.Point(153, 59);
             this.chkbxCheckoutAfterCreate.Name = "chkbxCheckoutAfterCreate";
-            this.chkbxCheckoutAfterCreate.Size = new System.Drawing.Size(306, 22);
+            this.chkbxCheckoutAfterCreate.Size = new System.Drawing.Size(396, 22);
             this.chkbxCheckoutAfterCreate.TabIndex = 5;
             this.chkbxCheckoutAfterCreate.Text = "Checkout &after create";
             this.chkbxCheckoutAfterCreate.UseVisualStyleBackColor = true;
@@ -106,7 +108,7 @@
             this.BranchNameTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BranchNameTextBox.Location = new System.Drawing.Point(153, 3);
             this.BranchNameTextBox.Name = "BranchNameTextBox";
-            this.BranchNameTextBox.Size = new System.Drawing.Size(306, 20);
+            this.BranchNameTextBox.Size = new System.Drawing.Size(396, 20);
             this.BranchNameTextBox.TabIndex = 1;
             this.BranchNameTextBox.Leave += new System.EventHandler(this.BranchNameTextBox_Leave);
             // 
@@ -156,29 +158,30 @@
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.AutoSize = true;
             this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.groupBox1, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.groupBox1, 0, 4);
             this.tableLayoutPanel1.Controls.Add(this.commitPickerSmallControl1, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.BranchNameTextBox, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.chkbxCheckoutAfterCreate, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.commitSummaryUserControl1, 0, 3);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(9, 9);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
+            this.tableLayoutPanel1.RowCount = 5;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(462, 142);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(552, 296);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // groupBox1
@@ -188,10 +191,10 @@
             this.tableLayoutPanel1.SetColumnSpan(this.groupBox1, 2);
             this.groupBox1.Controls.Add(this.flowLayoutPanel1);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(3, 87);
+            this.groupBox1.Location = new System.Drawing.Point(3, 241);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(8);
-            this.groupBox1.Size = new System.Drawing.Size(456, 52);
+            this.groupBox1.Size = new System.Drawing.Size(546, 52);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Orphan";
@@ -206,21 +209,35 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(8, 21);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(440, 23);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(530, 23);
             this.flowLayoutPanel1.TabIndex = 1;
+            // 
+            // commitSummaryUserControl1
+            // 
+            this.commitSummaryUserControl1.AutoSize = true;
+            this.commitSummaryUserControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel1.SetColumnSpan(this.commitSummaryUserControl1, 2);
+            this.commitSummaryUserControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.commitSummaryUserControl1.Location = new System.Drawing.Point(2, 86);
+            this.commitSummaryUserControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.commitSummaryUserControl1.MinimumSize = new System.Drawing.Size(293, 107);
+            this.commitSummaryUserControl1.Name = "commitSummaryUserControl1";
+            this.commitSummaryUserControl1.Revision = null;
+            this.commitSummaryUserControl1.Size = new System.Drawing.Size(548, 150);
+            this.commitSummaryUserControl1.TabIndex = 7;
             // 
             // FormCreateBranch
             // 
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(480, 207);
+            this.ClientSize = new System.Drawing.Size(570, 366);
             this.HelpButton = true;
             this.ManualSectionAnchorName = "create-branch";
             this.ManualSectionSubfolder = "branches";
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(480, 246);
+            this.MinimumSize = new System.Drawing.Size(580, 405);
             this.Name = "FormCreateBranch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create branch";
@@ -251,5 +268,6 @@
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.CheckBox chkbxCheckoutAfterCreate;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private UserControls.CommitSummaryUserControl commitSummaryUserControl1;
     }
 }

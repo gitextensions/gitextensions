@@ -42,13 +42,12 @@ namespace GitUI.UserControls
             labelAuthor.Font = new Font(labelAuthor.Font, FontStyle.Bold);
         }
 
+        /// <summary>
+        /// Gets or sets a revision for which to show a summary.
+        /// </summary>
         public GitRevision Revision
         {
-            get
-            {
-                return _revision;
-            }
-
+            get => _revision;
             set
             {
                 _revision = value;

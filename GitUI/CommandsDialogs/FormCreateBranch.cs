@@ -47,6 +47,8 @@ namespace GitUI.CommandsDialogs
                 objectId = null;
             }
 
+            commitSummaryUserControl1.Revision = null;
+
             objectId ??= Module.GetCurrentCheckout();
             if (objectId != null)
             {
@@ -54,9 +56,11 @@ namespace GitUI.CommandsDialogs
 
                 if (string.IsNullOrWhiteSpace(newBranchNamePrefix))
                 {
-                    var refs = Module.GetRevision(objectId, shortFormat: true, loadRefs: true).Refs;
-                    IGitRef firstRef = refs.FirstOrDefault(r => !r.IsTag) ?? refs.FirstOrDefault(r => r.IsTag);
+                    GitRevision revision = Module.GetRevision(objectId, shortFormat: true, loadRefs: true);
+                    IGitRef firstRef = revision.Refs.FirstOrDefault(r => !r.IsTag) ?? revision.Refs.FirstOrDefault(r => r.IsTag);
                     newBranchNamePrefix = firstRef?.LocalName;
+
+                    commitSummaryUserControl1.Revision = revision;
                 }
             }
 
@@ -164,6 +168,12 @@ namespace GitUI.CommandsDialogs
             {
                 chkbxCheckoutAfterCreate.Checked = true;
             }
+        }
+
+        private void commitPickerSmallControl1_SelectedObjectIdChanged(object sender, EventArgs e)
+        {
+            GitRevision revision = Module.GetRevision(commitPickerSmallControl1.SelectedObjectId, shortFormat: true, loadRefs: true);
+            commitSummaryUserControl1.Revision = revision;
         }
     }
 }

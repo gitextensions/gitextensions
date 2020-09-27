@@ -12,6 +12,11 @@ namespace GitUI.UserControls
 {
     public partial class CommitPickerSmallControl : GitModuleControl
     {
+        /// <summary>
+        /// Occurs whenever the selected commit hash changes.
+        /// </summary>
+        public event EventHandler SelectedObjectIdChanged;
+
         public CommitPickerSmallControl()
         {
             InitializeComponent();
@@ -36,6 +41,10 @@ namespace GitUI.UserControls
             {
                 SelectedObjectId = oldCommitHash;
                 MessageBox.Show("The given commit hash is not valid for this repository and was therefore discarded.", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                SelectedObjectIdChanged?.Invoke(this, EventArgs.Empty);
             }
 
             var isArtificialCommitForEmptyRepo = commitHash == "HEAD";
