@@ -11,7 +11,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public sealed partial class FormCreateBranch : GitModuleForm
+    public sealed partial class FormCreateBranch : GitExtensionsDialog
     {
         private readonly TranslationString _noRevisionSelected = new TranslationString("Select 1 revision to create the branch on.");
         private readonly TranslationString _branchNameIsEmpty = new TranslationString("Enter branch name.");
@@ -30,9 +30,14 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormCreateBranch(GitUICommands commands, ObjectId objectId, string newBranchNamePrefix = null)
-            : base(commands)
+            : base(commands, enablePositionRestore: false)
         {
             InitializeComponent();
+
+            // work-around the designer bug that can't add controls to FlowLayoutPanel
+            ControlsPanel.Controls.Add(Ok);
+            AcceptButton = Ok;
+
             InitializeComplete();
 
             groupBox1.AutoSize = true;
@@ -74,8 +79,10 @@ namespace GitUI.CommandsDialogs
             BranchNameTextBox.SelectionStart = caretPosition;
         }
 
-        private void FormCreateBranch_Shown(object sender, EventArgs e)
+        protected override void OnShown(EventArgs e)
         {
+            base.OnShown(e);
+
             // ensure all labels are wrapped if required
             // this must happen only after the label texts have been set
             foreach (var label in this.FindDescendantsOfType<Label>())
