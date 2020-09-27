@@ -15,6 +15,11 @@ namespace GitUI.Script
     public sealed class ScriptOptionsParser
     {
         /// <summary>
+        /// Name of the option which requires the full commit message.
+        /// </summary>
+        private const string currentMessage = "cMessage";
+
+        /// <summary>
         /// Gets the list of available script options.
         /// </summary>
         public static readonly IReadOnlyList<string> Options = new[]
@@ -30,6 +35,7 @@ namespace GitUI.Script
             "sRemotePathFromUrl",
             "sHash",
             "sMessage",
+            "sSubject",
             "sAuthor",
             "sCommitter",
             "sAuthorDate",
@@ -40,7 +46,8 @@ namespace GitUI.Script
             "cRemoteBranch",
             "cRemoteBranchName",
             "cHash",
-            "cMessage",
+            currentMessage,
+            "cSubject",
             "cAuthor",
             "cCommitter",
             "cAuthorDate",
@@ -113,7 +120,8 @@ namespace GitUI.Script
 
                 if (currentRevision == null && option.StartsWith("c"))
                 {
-                    currentRevision = GetCurrentRevision(module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches);
+                    currentRevision = GetCurrentRevision(module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches,
+                        loadBody: Contains(arguments, currentMessage));
                     if (currentRevision == null)
                     {
                         return (arguments: null, abort: true);
@@ -239,11 +247,11 @@ namespace GitUI.Script
         [CanBeNull]
         private static GitRevision GetCurrentRevision(
             [NotNull] IGitModule module, List<IGitRef> currentTags, List<IGitRef> currentLocalBranches,
-            List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches)
+            List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches, bool loadBody)
         {
             GitRevision currentRevision;
             IEnumerable<IGitRef> refs;
-            currentRevision = module.GetRevision(shortFormat: true, loadRefs: true);
+            currentRevision = module.GetRevision(shortFormat: !loadBody, loadRefs: true);
             refs = currentRevision?.Refs ?? Array.Empty<IGitRef>();
 
             foreach (var gitRef in refs)
@@ -346,6 +354,10 @@ namespace GitUI.Script
                     break;
 
                 case "sMessage":
+                    newString = EscapeLinefeeds(selectedRevision.Body) ?? selectedRevision.Subject;
+                    break;
+
+                case "sSubject":
                     newString = selectedRevision.Subject;
                     break;
 
@@ -390,6 +402,10 @@ namespace GitUI.Script
                     break;
 
                 case "cMessage":
+                    newString = EscapeLinefeeds(currentRevision.Body) ?? currentRevision.Subject;
+                    break;
+
+                case "cSubject":
                     newString = currentRevision.Subject;
                     break;
 
@@ -494,7 +510,10 @@ namespace GitUI.Script
 
             return arguments;
 
+            static string EscapeLinefeeds(string multiLine) => multiLine?.Replace("\n", "\\n");
+
             string SelectOneRef(IList<IGitRef> refs) => ScriptOptionsParser.SelectOne(refs, scriptHostControl);
+
             string SelectOneString(IList<string> strings) => ScriptOptionsParser.SelectOne(strings, scriptHostControl);
         }
 
@@ -542,8 +561,8 @@ namespace GitUI.Script
                 => ScriptOptionsParser.CreateOption(option, quoted);
 
             public GitRevision GetCurrentRevision(IGitModule module, List<IGitRef> currentTags,
-                List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches)
-                => ScriptOptionsParser.GetCurrentRevision(module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches);
+                List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches, bool loadBody)
+                => ScriptOptionsParser.GetCurrentRevision(module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, loadBody);
 
             public string ParseScriptArguments(string arguments, string option, IWin32Window owner, IScriptHostControl scriptHostControl,
                 IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions, List<IGitRef> selectedTags, List<IGitRef> selectedBranches,
