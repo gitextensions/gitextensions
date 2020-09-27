@@ -187,7 +187,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public void SetBranchFilter(string filter)
         {
-            BranchFilter.Text = filter;
+            BranchFilter.Text = filter?.Trim();
         }
 
         private void OkClick(object sender, EventArgs e)
