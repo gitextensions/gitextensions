@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
@@ -114,7 +113,7 @@ namespace GitUI.Script
 
                 if (currentRevision == null && option.StartsWith("c"))
                 {
-                    currentRevision = GetCurrentRevision(module, scriptHostControl, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches);
+                    currentRevision = GetCurrentRevision(module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches);
                     if (currentRevision == null)
                     {
                         return (arguments: null, abort: true);
@@ -239,22 +238,13 @@ namespace GitUI.Script
 
         [CanBeNull]
         private static GitRevision GetCurrentRevision(
-            [NotNull] IGitModule module, [CanBeNull] IScriptHostControl scriptHostControl, List<IGitRef> currentTags, List<IGitRef> currentLocalBranches,
+            [NotNull] IGitModule module, List<IGitRef> currentTags, List<IGitRef> currentLocalBranches,
             List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches)
         {
             GitRevision currentRevision;
             IEnumerable<IGitRef> refs;
-            if (scriptHostControl == null)
-            {
-                var currentRevisionGuid = module.GetCurrentCheckout();
-                currentRevision = currentRevisionGuid == null ? null : new GitRevision(currentRevisionGuid);
-                refs = module.GetRefs(true, true).Where(gitRef => gitRef.ObjectId == currentRevisionGuid);
-            }
-            else
-            {
-                currentRevision = scriptHostControl.GetCurrentRevision();
-                refs = currentRevision?.Refs ?? Array.Empty<IGitRef>();
-            }
+            currentRevision = module.GetRevision(shortFormat: true, loadRefs: true);
+            refs = currentRevision?.Refs ?? Array.Empty<IGitRef>();
 
             foreach (var gitRef in refs)
             {
@@ -551,9 +541,9 @@ namespace GitUI.Script
             public string CreateOption([NotNull] string option, bool quoted)
                 => ScriptOptionsParser.CreateOption(option, quoted);
 
-            public GitRevision GetCurrentRevision(IGitModule module, [CanBeNull] IScriptHostControl scriptHostControl, List<IGitRef> currentTags,
+            public GitRevision GetCurrentRevision(IGitModule module, List<IGitRef> currentTags,
                 List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches)
-                => ScriptOptionsParser.GetCurrentRevision(module, scriptHostControl, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches);
+                => ScriptOptionsParser.GetCurrentRevision(module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches);
 
             public string ParseScriptArguments(string arguments, string option, IWin32Window owner, IScriptHostControl scriptHostControl,
                 IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions, List<IGitRef> selectedTags, List<IGitRef> selectedBranches,

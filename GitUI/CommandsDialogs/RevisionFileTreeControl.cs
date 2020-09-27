@@ -14,7 +14,7 @@ using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
-using GitUI.UserControls;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 

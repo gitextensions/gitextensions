@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using GitExtUtils;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands.Git

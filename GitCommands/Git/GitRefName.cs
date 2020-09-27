@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands

@@ -95,47 +95,25 @@ namespace GitUITests.Script
         }
 
         [Test]
-        public void GetCurrentRevision_should_return_null_if_scriptHostControl_unset_bare_or_empty_repo()
+        public void GetCurrentRevision_should_return_null_if_bare_or_empty_repo()
         {
             // bare repo has no current checkout, empty repo has no commits
-            _module.GetCurrentCheckout().Returns(x => null);
+            _module.GetRevision(shortFormat: true, loadRefs: true).Returns(x => null);
 
             var result = ScriptOptionsParser.GetTestAccessor()
-                .GetCurrentRevision(module: _module, scriptHostControl: null, currentTags: null, currentLocalBranches: null, currentRemoteBranches: null, currentBranches: null);
+                .GetCurrentRevision(module: _module, currentTags: null, currentLocalBranches: null, currentRemoteBranches: null, currentBranches: null);
 
             result.Should().Be(null);
         }
 
         [Test]
-        public void GetCurrentRevision_should_return_expected_if_scriptHostControl_unset_unmatched_ref()
-        {
-            _module.GetCurrentCheckout().Returns(x => ObjectId.IndexId);
-
-            var result = ScriptOptionsParser.GetTestAccessor()
-                .GetCurrentRevision(module: _module, scriptHostControl: null, currentTags: null, currentLocalBranches: null, currentRemoteBranches: null, currentBranches: null);
-
-            result.ObjectId.Should().Be(ObjectId.IndexId);
-        }
-
-        [Test]
-        public void GetCurrentRevision_should_return_null_if_scriptHostControl_set_current_revision_null()
-        {
-            _scriptHostControl.GetCurrentRevision().Returns(x => null);
-
-            var result = ScriptOptionsParser.GetTestAccessor()
-                .GetCurrentRevision(module: _module, scriptHostControl: _scriptHostControl, currentTags: null, currentLocalBranches: null, currentRemoteBranches: null, currentBranches: null);
-
-            result.Should().Be(null);
-        }
-
-        [Test]
-        public void GetCurrentRevision_should_return_expected_if_scriptHostControl_set_current_revision_has_no_refs()
+        public void GetCurrentRevision_should_return_expected_if_current_revision_has_no_refs()
         {
             var revision = new GitRevision(ObjectId.IndexId);
-            _scriptHostControl.GetCurrentRevision().Returns(x => revision);
+            _module.GetRevision(shortFormat: true, loadRefs: true).Returns(x => revision);
 
             var result = ScriptOptionsParser.GetTestAccessor()
-                .GetCurrentRevision(module: _module, scriptHostControl: _scriptHostControl, currentTags: null, currentLocalBranches: null, currentRemoteBranches: null, currentBranches: null);
+                .GetCurrentRevision(module: _module, currentTags: null, currentLocalBranches: null, currentRemoteBranches: null, currentBranches: null);
 
             result.Should().Be(revision);
         }
@@ -168,6 +146,21 @@ namespace GitUITests.Script
             var result = ScriptOptionsParser.Parse(arguments: arguments, module: _module, owner: null, scriptHostControl: null);
 
             result.arguments.Should().Be(arguments);
+            result.abort.Should().Be(false);
+        }
+
+        [Test]
+        public void Parse_should_parse_c_arguments()
+        {
+            var revision = new GitRevision(ObjectId.IndexId)
+            {
+                Subject = "line1"
+            };
+            _module.GetRevision(shortFormat: true, loadRefs: true).Returns(x => revision);
+
+            var result = ScriptOptionsParser.Parse("echo \"{cMessage}\"", module: _module, owner: null, scriptHostControl: null);
+
+            result.arguments.Should().Be($"echo \"{revision.Subject}\"");
             result.abort.Should().Be(false);
         }
 

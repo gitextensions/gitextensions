@@ -70,7 +70,7 @@ namespace GitUI.CommandsDialogs
             // 
             // gitRevisionBindingSource
             // 
-            this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
+            this.gitRevisionBindingSource.DataSource = typeof(GitUIPluginInterfaces.GitRevision);
             // 
             // gitItemBindingSource
             // 
