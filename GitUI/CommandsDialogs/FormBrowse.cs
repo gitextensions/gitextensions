@@ -1881,6 +1881,7 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.InvalidateCount();
             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
             _submoduleStatusProvider.Init();
+            _filterBranchHelper.SetBranchFilter(string.Empty, refresh: false);
 
             UICommands = new GitUICommands(module);
             if (Module.IsValidGitWorkingDir())
