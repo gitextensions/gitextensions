@@ -41,6 +41,7 @@
             this.lblRestartNeeded = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_cbSelectTheme = new System.Windows.Forms.ComboBox();
             this.chkUseSystemVisualStyle = new System.Windows.Forms.CheckBox();
+            this.chkColorblind = new System.Windows.Forms.CheckBox();
             tlpnlMain = new System.Windows.Forms.TableLayoutPanel();
             tlpnlMain.SuspendLayout();
             this.gbRevisionGraph.SuspendLayout();
@@ -182,6 +183,7 @@
             this.fpnlTheme.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.fpnlTheme.Controls.Add(this.lblRestartNeeded);
             this.fpnlTheme.Controls.Add(this._NO_TRANSLATE_cbSelectTheme);
+            this.fpnlTheme.Controls.Add(this.chkColorblind);
             this.fpnlTheme.Controls.Add(this.chkUseSystemVisualStyle);
             this.fpnlTheme.Dock = System.Windows.Forms.DockStyle.Fill;
             this.fpnlTheme.Location = new System.Drawing.Point(3, 19);
@@ -225,6 +227,18 @@
             this.chkUseSystemVisualStyle.UseVisualStyleBackColor = true;
             this.chkUseSystemVisualStyle.CheckedChanged += new System.EventHandler(this.ChkUseSystemVisualStyle_CheckedChanged);
             // 
+            // chkColorblind
+            // 
+            this.chkColorblind.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.chkColorblind.AutoSize = true;
+            this.chkColorblind.Location = new System.Drawing.Point(188, 32);
+            this.chkColorblind.Name = "chkColorblind";
+            this.chkColorblind.Size = new System.Drawing.Size(72, 17);
+            this.chkColorblind.TabIndex = 6;
+            this.chkColorblind.Text = "Colorblind";
+            this.chkColorblind.UseVisualStyleBackColor = true;
+            this.chkColorblind.CheckedChanged += new System.EventHandler(this.ChkColorblind_CheckedChanged);
+            // 
             // ColorsSettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -260,5 +274,6 @@
         private System.Windows.Forms.FlowLayoutPanel fpnlTheme;
         private System.Windows.Forms.CheckBox chkUseSystemVisualStyle;
         private System.Windows.Forms.Label lblRestartNeeded;
+        private System.Windows.Forms.CheckBox chkColorblind;
     }
 }

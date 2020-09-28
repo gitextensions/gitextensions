@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
@@ -89,7 +90,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                 var container = e.Graphics.BeginContainer();
                 e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                e.Graphics.FillEllipse(GetBrush(), new Rectangle(location, size));
+                using var brush = CreateCircleBrush();
+                e.Graphics.FillEllipse(brush, new Rectangle(location, size));
                 e.Graphics.EndContainer(container);
             }
             else
@@ -111,43 +113,61 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             {
                 var isSelected = _gridView.Rows[e.RowIndex].Selected;
 
+                Color customColor;
                 switch (revision.BuildStatus.Status)
                 {
-                    case BuildInfo.BuildStatus.Success:
-                        return isSelected ? Color.LightGreen : Color.DarkGreen;
-                    case BuildInfo.BuildStatus.Failure:
-                        return isSelected ? Color.Red : Color.DarkRed;
-                    case BuildInfo.BuildStatus.InProgress:
-                        return isSelected ? Color.LightBlue : Color.Blue;
-                    case BuildInfo.BuildStatus.Unstable:
-                        return Color.OrangeRed;
-                    case BuildInfo.BuildStatus.Stopped:
-                        return isSelected ? Color.LightGray : Color.Gray;
                     case BuildInfo.BuildStatus.Unknown:
                         return foreColor;
+
+                    case BuildInfo.BuildStatus.Success:
+                        customColor = isSelected ? Color.LightGreen : Color.DarkGreen;
+                        break;
+                    case BuildInfo.BuildStatus.Failure:
+                        customColor = isSelected ? Color.Red : Color.DarkRed;
+                        break;
+                    case BuildInfo.BuildStatus.InProgress:
+                        customColor = isSelected ? Color.LightBlue : Color.Blue;
+                        break;
+                    case BuildInfo.BuildStatus.Unstable:
+                        customColor = Color.OrangeRed;
+                        break;
+                    case BuildInfo.BuildStatus.Stopped:
+                        customColor = isSelected ? Color.LightGray : Color.Gray;
+                        break;
+
                     default:
                         throw new InvalidOperationException("Unsupported build status enum value.");
                 }
+
+                return customColor.AdaptTextColor();
             }
 
-            Brush GetBrush()
+            Brush CreateCircleBrush()
             {
+                Color color;
                 switch (revision.BuildStatus.Status)
                 {
                     case BuildInfo.BuildStatus.Success:
-                        return Brushes.LightGreen;
+                        color = Color.LightGreen;
+                        break;
                     case BuildInfo.BuildStatus.Failure:
-                        return Brushes.Red;
+                        color = Color.Red;
+                        break;
                     case BuildInfo.BuildStatus.InProgress:
-                        return Brushes.DodgerBlue;
+                        color = Color.DodgerBlue;
+                        break;
                     case BuildInfo.BuildStatus.Unstable:
-                        return Brushes.DarkOrange;
+                        color = Color.DarkOrange;
+                        break;
                     case BuildInfo.BuildStatus.Stopped:
                     case BuildInfo.BuildStatus.Unknown:
-                        return Brushes.Gray;
+                        color = Color.Gray;
+                        break;
                     default:
                         throw new InvalidOperationException("Unsupported build status enum value.");
                 }
+
+                return new SolidBrush(color.AdaptBackColor());
             }
         }
 

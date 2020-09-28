@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Collections;
-using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
@@ -14,19 +13,19 @@ namespace GitUI.Theming
     {
         public static ThemeSettings Settings { get; private set; } = ThemeSettings.Default;
 
-        private static ThemeRepository Repository { get; } = new ThemeRepository(new ThemePersistence());
+        private static ThemeRepository Repository { get; } = new ThemeRepository();
         public static bool IsDarkTheme { get; private set; }
 
         public static void Load()
         {
             new ThemeMigration(Repository).Migrate();
-            Settings = TryLoadTheme();
+            Settings = LoadThemeSettings();
             ColorHelper.ThemeSettings = Settings;
             ThemeFix.ThemeSettings = Settings;
             Win32ThemeHooks.ThemeSettings = Settings;
         }
 
-        private static bool TryInstallHooks(Theme theme)
+        private static void InstallHooks(Theme theme)
         {
             Win32ThemeHooks.WindowCreated += Handle_WindowCreated;
 
@@ -34,24 +33,26 @@ namespace GitUI.Theming
             {
                 Win32ThemeHooks.InstallHooks(theme, new SystemDialogDetector());
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Trace.WriteLine($"Failed to install Win32 theming hooks: {ex}");
                 Win32ThemeHooks.Uninstall();
-                return false;
+                throw;
             }
 
             ResetGdiCaches();
-            return true;
         }
 
-        private static ThemeSettings TryLoadTheme()
+        private static ThemeSettings LoadThemeSettings()
         {
-            var invariantTheme = Repository.GetInvariantTheme();
-            if (invariantTheme == null)
+            Theme invariantTheme;
+            try
+            {
+                invariantTheme = Repository.GetInvariantTheme();
+            }
+            catch (ThemeException ex)
             {
                 // Not good, ColorHelper needs actual InvariantTheme to correctly transform colors.
-                // Still not a mission-critical failure, do not raise.
+                MessageBoxes.ShowError(null, $"Failed to load invariant theme: {ex}");
                 return ThemeSettings.Default;
             }
 
@@ -61,9 +62,24 @@ namespace GitUI.Theming
                 return new ThemeSettings(Theme.Default, invariantTheme, AppSettings.UseSystemVisualStyle);
             }
 
-            var theme = Repository.GetTheme(themeId);
-            if (theme == null || !TryInstallHooks(theme))
+            Theme theme;
+            try
             {
+                theme = Repository.GetTheme(themeId, AppSettings.ThemeVariations);
+            }
+            catch (ThemeException ex)
+            {
+                MessageBoxes.ShowError(null, $"Failed to load {(themeId.IsBuiltin ? "preinstalled" : "user-defined")} theme {themeId.Name}: {ex}");
+                return new ThemeSettings(Theme.Default, invariantTheme, AppSettings.UseSystemVisualStyle);
+            }
+
+            try
+            {
+                InstallHooks(theme);
+            }
+            catch (Exception ex)
+            {
+                MessageBoxes.ShowError(null, $"Failed to install Win32 theming hooks: {ex}");
                 return new ThemeSettings(Theme.Default, invariantTheme, AppSettings.UseSystemVisualStyle);
             }
 

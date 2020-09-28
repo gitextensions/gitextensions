@@ -42,7 +42,9 @@ namespace GitUITests.Theming
         [Test]
         public void Default_values_are_specified_in_invariant_theme()
         {
-            var repository = new ThemeRepository(new ThemePersistence());
+            var themePathProvider = new ThemePathProvider();
+            var themeLoader = new ThemeLoader(new ThemeCssUrlResolver(themePathProvider), new ThemeFileReader());
+            var repository = new ThemeRepository(new ThemePersistence(themeLoader), themePathProvider);
             var invariantTheme = repository.GetInvariantTheme();
             invariantTheme.Should().NotBeNull();
             foreach (AppColor name in Enum.GetValues(typeof(AppColor)))
