@@ -1,5 +1,6 @@
 ﻿using System;
 using GitCommands;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls

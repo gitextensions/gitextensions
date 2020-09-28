@@ -4,11 +4,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using JetBrains.Annotations;
 
-namespace GitCommands
+namespace GitUIPluginInterfaces
 {
     public sealed class GitRevision : IGitItem, INotifyPropertyChanged
     {

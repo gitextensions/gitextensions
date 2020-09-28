@@ -1,4 +1,6 @@
-﻿namespace GitCommands.Git.Extensions
+﻿using GitUIPluginInterfaces;
+
+namespace GitCommands.Git.Extensions
 {
     public static class GitRevisionExtensions
     {

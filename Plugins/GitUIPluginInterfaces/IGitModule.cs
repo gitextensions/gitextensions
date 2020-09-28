@@ -109,6 +109,8 @@ namespace GitUIPluginInterfaces
         /// <summary>Gets the remote of the current branch; or "" if no remote is configured.</summary>
         string GetCurrentRemote();
 
+        GitRevision GetRevision([CanBeNull] ObjectId objectId = null, bool shortFormat = false, bool loadRefs = false);
+
         Task<IReadOnlyList<Remote>> GetRemotesAsync();
 
         string GetSetting(string setting);

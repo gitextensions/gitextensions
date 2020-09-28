@@ -6,6 +6,7 @@ using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.Avatars;
 using GitUI.Properties;
+using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Columns
 {

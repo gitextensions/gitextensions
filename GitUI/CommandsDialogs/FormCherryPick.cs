@@ -5,6 +5,7 @@ using GitCommands;
 using GitCommands.Git.Commands;
 using GitExtUtils;
 using GitUI.HelperDialogs;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 

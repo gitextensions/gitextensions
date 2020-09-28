@@ -4,6 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
+using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace GitUI.UserControls.RevisionGrid.Columns

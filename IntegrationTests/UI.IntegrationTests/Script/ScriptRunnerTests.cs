@@ -126,6 +126,9 @@ namespace GitExtensions.UITests.Script
             _exampleScript.Command = "cmd";
             _exampleScript.Arguments = "/c echo {cHash}";
 
+            var revision = new GitRevision(ObjectId.IndexId);
+            _module.GetRevision(shortFormat: true, loadRefs: true).Returns(x => revision);
+
             var result = ScriptRunner.RunScript(null, _module, _keyOfExampleScript, uiCommands: null, revisionGrid: null);
 
             result.Should().BeEquivalentTo(new CommandStatus(true, needsGridRefresh: false));
