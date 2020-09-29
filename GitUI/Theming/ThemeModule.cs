@@ -59,7 +59,7 @@ namespace GitUI.Theming
             ThemeId themeId = AppSettings.ThemeId;
             if (string.IsNullOrEmpty(themeId.Name))
             {
-                return new ThemeSettings(Theme.Default, invariantTheme, AppSettings.UseSystemVisualStyle);
+                return CreateFallbackSettings(invariantTheme);
             }
 
             Theme theme;
@@ -70,7 +70,7 @@ namespace GitUI.Theming
             catch (ThemeException ex)
             {
                 MessageBoxes.ShowError(null, $"Failed to load {(themeId.IsBuiltin ? "preinstalled" : "user-defined")} theme {themeId.Name}: {ex}");
-                return new ThemeSettings(Theme.Default, invariantTheme, AppSettings.UseSystemVisualStyle);
+                return CreateFallbackSettings(invariantTheme);
             }
 
             try
@@ -80,12 +80,12 @@ namespace GitUI.Theming
             catch (Exception ex)
             {
                 MessageBoxes.ShowError(null, $"Failed to install Win32 theming hooks: {ex}");
-                return new ThemeSettings(Theme.Default, invariantTheme, AppSettings.UseSystemVisualStyle);
+                return CreateFallbackSettings(invariantTheme);
             }
 
             IsDarkTheme = theme.SysColorValues[KnownColor.Window].GetBrightness() < 0.5;
 
-            return new ThemeSettings(theme, invariantTheme, AppSettings.UseSystemVisualStyle);
+            return new ThemeSettings(theme, invariantTheme, AppSettings.ThemeVariations, AppSettings.UseSystemVisualStyle);
         }
 
         private static void ResetGdiCaches()
@@ -138,5 +138,8 @@ namespace GitUI.Theming
                     break;
             }
         }
+
+        private static ThemeSettings CreateFallbackSettings(Theme invariantTheme) =>
+            new ThemeSettings(Theme.Default, invariantTheme, ThemeVariations.None, useSystemVisualStyle: true);
     }
 }

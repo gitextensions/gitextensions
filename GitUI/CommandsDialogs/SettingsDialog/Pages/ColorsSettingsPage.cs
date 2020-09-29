@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
@@ -55,7 +55,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private string[] SelectedThemeVariations
         {
-            get => chkColorblind.Checked ? new[] { ThemeVariations.Colorblind } : ThemeVariations.None;
+            get => chkColorblind.Checked
+                ? new[] { ThemeVariations.Colorblind }
+                : GitExtUtils.GitUI.Theming.ThemeVariations.None;
+
             set => chkColorblind.Checked = value.Contains(ThemeVariations.Colorblind);
         }
 

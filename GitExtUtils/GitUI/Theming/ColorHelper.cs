@@ -160,6 +160,11 @@ namespace GitExtUtils.GitUI.Theming
 
         private static Color AdaptColor(Color originalRgb, KnownColor exampleName, KnownColor oppositeName)
         {
+            if (ThemeSettings.Variations.Contains(ThemeVariations.Colorblind))
+            {
+                originalRgb = originalRgb.AdaptToColorblindness();
+            }
+
             var exampleOrig = RgbHsl(ThemeSettings.InvariantTheme.GetNonEmptyColor(exampleName));
             var oppositeOrig = RgbHsl(ThemeSettings.InvariantTheme.GetNonEmptyColor(oppositeName));
             var example = RgbHsl(ThemeSettings.Theme.GetNonEmptyColor(exampleName));
@@ -242,6 +247,26 @@ namespace GitExtUtils.GitUI.Theming
         private static bool IsLightColor(this Color color)
         {
             return new HslColor(color).L > 0.5;
+        }
+
+        private static Color AdaptToColorblindness(this Color color)
+        {
+            double excludeHTo = 15d; // orange
+
+            var hsl = new HslColor(color);
+            var deltaH = ((hsl.H * 360d) - excludeHTo + 180).Modulo(360) - 180;
+
+            const double deltaFrom = -140d;
+            const double deltaTo = 0d;
+
+            if (deltaH <= deltaFrom || deltaH >= deltaTo)
+            {
+                return color;
+            }
+
+            double correctedDelta = deltaFrom + ((deltaH - deltaFrom) / 2d);
+            double correctedH = (excludeHTo + correctedDelta).Modulo(360);
+            return new HslColor(correctedH / 360d, hsl.S, hsl.L).ToColor();
         }
     }
 }
