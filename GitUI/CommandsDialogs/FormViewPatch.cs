@@ -27,6 +27,7 @@ namespace GitUI.CommandsDialogs
 
             typeDataGridViewTextBoxColumn.Width = DpiUtil.Scale(70);
             File.Width = DpiUtil.Scale(50);
+            ChangesList.ExtraDiffArgumentsChanged += GridChangedFiles_SelectionChanged;
 
             InitializeComplete();
 
@@ -55,7 +56,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            ChangesList.ViewPatch(patch.FileNameB, patch.Text ?? "");
+            ChangesList.ViewFixedPatch(patch.FileNameB, patch.Text ?? "");
         }
 
         private void BrowsePatch_Click(object sender, EventArgs e)

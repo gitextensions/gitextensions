@@ -48,6 +48,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             InitializeComponent();
             _selectHostedRepoCB.DisplayMember = nameof(IHostedRemote.DisplayData);
+            _diffViewer.ExtraDiffArgumentsChanged += _fileStatusList_SelectedIndexChanged;
             _loader.LoadingError += (sender, ex) =>
                 {
                     MessageBox.Show(this, ex.Exception.ToString(), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -494,7 +495,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
             else
             {
-                _diffViewer.ViewPatch(gis.Name, text: data);
+                _diffViewer.ViewFixedPatch(gis.Name, text: data);
             }
         }
 
