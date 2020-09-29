@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using Newtonsoft.Json;
 
 namespace GitCommands.Settings
@@ -173,13 +174,37 @@ namespace GitCommands.Settings
                 return SettingsSource
                     .GetValue<object>(name, null, value =>
                     {
-                        switch (Type.GetTypeCode(typeof(T)))
+                        var type = typeof(T);
+                        var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
+
+                        switch (Type.GetTypeCode(underlyingType))
                         {
                             case TypeCode.String:
-                                return value;
+                                return (string)value;
+                            case TypeCode.Object:
+                                try
+                                {
+                                    return JsonConvert
+                                        .DeserializeObject<T>(value);
+                                }
+                                catch
+                                {
+                                    return null;
+                                }
+
                             default:
-                                return JsonConvert
-                                    .DeserializeObject<T>(value);
+                                var converter = TypeDescriptor
+                                    .GetConverter(underlyingType);
+
+                                try
+                                {
+                                    return converter
+                                        .ConvertFromInvariantString(value);
+                                }
+                                catch
+                                {
+                                    return null;
+                                }
                         }
                     });
             }
@@ -189,13 +214,23 @@ namespace GitCommands.Settings
                 SettingsSource
                     .SetValue<object>(name, value, value =>
                     {
-                        switch (Type.GetTypeCode(typeof(T)))
+                        var type = typeof(T);
+                        var underlyingType = Nullable
+                            .GetUnderlyingType(type) ?? type;
+
+                        switch (Type.GetTypeCode(underlyingType))
                         {
                             case TypeCode.String:
                                 return (string)value;
-                            default:
+                            case TypeCode.Object:
                                 return JsonConvert
                                     .SerializeObject(value);
+                            default:
+                                var converter = TypeDescriptor
+                                    .GetConverter(underlyingType);
+
+                                return converter
+                                    .ConvertToInvariantString(value);
                         }
                     });
             }
