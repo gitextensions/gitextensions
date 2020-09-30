@@ -579,12 +579,6 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnLoad(EventArgs e)
         {
-            _windowsJumpListManager.CreateJumpList(
-                Handle,
-                new WindowsThumbnailToolbarButtons(
-                    new WindowsThumbnailToolbarButton(toolStripButtonCommit.Text, toolStripButtonCommit.Image, CommitToolStripMenuItemClick),
-                    new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
-                    new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick)));
             SetSplitterPositions();
             HideVariableMainMenuItems();
             RefreshSplitViewLayout();
@@ -630,6 +624,17 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnActivated(EventArgs e)
         {
+            // wait for windows to really be displayed, which isn't necessarily the case in OnLoad()
+            if (_windowsJumpListManager.NeedsJumpListCreation)
+            {
+                _windowsJumpListManager.CreateJumpList(
+                    Handle,
+                    new WindowsThumbnailToolbarButtons(
+                        new WindowsThumbnailToolbarButton(toolStripButtonCommit.Text, toolStripButtonCommit.Image, CommitToolStripMenuItemClick),
+                        new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
+                        new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick)));
+            }
+
             this.InvokeAsync(OnActivate).FileAndForget();
             base.OnActivated(e);
         }
