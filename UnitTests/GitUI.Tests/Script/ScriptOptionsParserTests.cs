@@ -101,7 +101,7 @@ namespace GitUITests.Script
             _module.GetRevision(shortFormat: true, loadRefs: true).Returns(x => null);
 
             var result = ScriptOptionsParser.GetTestAccessor()
-                .GetCurrentRevision(module: _module, currentTags: null, currentLocalBranches: null, currentRemoteBranches: null, currentBranches: null);
+                .GetCurrentRevision(module: _module, currentTags: null, currentLocalBranches: null, currentRemoteBranches: null, currentBranches: null, loadBody: false);
 
             result.Should().Be(null);
         }
@@ -113,7 +113,7 @@ namespace GitUITests.Script
             _module.GetRevision(shortFormat: true, loadRefs: true).Returns(x => revision);
 
             var result = ScriptOptionsParser.GetTestAccessor()
-                .GetCurrentRevision(module: _module, currentTags: null, currentLocalBranches: null, currentRemoteBranches: null, currentBranches: null);
+                .GetCurrentRevision(module: _module, currentTags: null, currentLocalBranches: null, currentRemoteBranches: null, currentBranches: null, loadBody: false);
 
             result.Should().Be(revision);
         }
@@ -152,15 +152,38 @@ namespace GitUITests.Script
         [Test]
         public void Parse_should_parse_c_arguments()
         {
+            const string Subject = "line1";
             var revision = new GitRevision(ObjectId.IndexId)
             {
-                Subject = "line1"
+                Subject = Subject,
+                Body = $"{Subject}\n\nline3"
             };
-            _module.GetRevision(shortFormat: true, loadRefs: true).Returns(x => revision);
+            _module.GetRevision(shortFormat: false, loadRefs: true).Returns(x => revision);
 
-            var result = ScriptOptionsParser.Parse("echo \"{cMessage}\"", module: _module, owner: null, scriptHostControl: null);
+            string expectedMessage = $"{Subject}\\n\\nline3";
 
-            result.arguments.Should().Be($"echo \"{revision.Subject}\"");
+            var result = ScriptOptionsParser.Parse("echo {{cSubject}} {{cMessage}}", module: _module, owner: null, scriptHostControl: null);
+
+            result.arguments.Should().Be($"echo \"{revision.Subject}\" \"{expectedMessage}\"");
+            result.abort.Should().Be(false);
+        }
+
+        [Test]
+        public void Parse_should_parse_s_arguments()
+        {
+            const string Subject = "line1";
+            var revision = new GitRevision(ObjectId.IndexId)
+            {
+                Subject = Subject,
+                Body = $"{Subject}\n\nline3"
+            };
+            _scriptHostControl.GetLatestSelectedRevision().Returns(x => revision);
+
+            string expectedMessage = $"{Subject}\\n\\nline3";
+
+            var result = ScriptOptionsParser.Parse("echo {{sSubject}} {{sMessage}}", module: _module, owner: null, _scriptHostControl);
+
+            result.arguments.Should().Be($"echo \"{revision.Subject}\" \"{expectedMessage}\"");
             result.abort.Should().Be(false);
         }
 
