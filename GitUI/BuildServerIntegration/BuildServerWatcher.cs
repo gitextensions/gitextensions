@@ -97,7 +97,7 @@ namespace GitUI.BuildServerIntegration
                     {
                         fullDayObservable.OnErrorResumeNext(fullObservable)
                                          .OnErrorResumeNext(Observable.Empty<BuildInfo>()
-                                                                      .DelaySubscription(TimeSpan.FromMinutes(1))
+                                                                      .DelaySubscription(LongPollInterval)
                                                                       .OnErrorResumeNext(fromNowObservable)
                                                                       .Retry()
                                                                       .Repeat())
