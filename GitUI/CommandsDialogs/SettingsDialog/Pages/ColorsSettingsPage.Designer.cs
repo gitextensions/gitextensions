@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TableLayoutPanel tlpnlMain;
             this.gbRevisionGraph = new System.Windows.Forms.GroupBox();
             this.tlpnlRevisionGraph = new System.Windows.Forms.TableLayoutPanel();
@@ -42,12 +43,17 @@
             this._NO_TRANSLATE_cbSelectTheme = new System.Windows.Forms.ComboBox();
             this.chkColorblind = new System.Windows.Forms.CheckBox();
             this.chkUseSystemVisualStyle = new System.Windows.Forms.CheckBox();
+            this.sbOpenThemeFolder = new GitUI.Script.SplitButton();
+            this.cmsOpenThemeFolders = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsmiApplicationFolder = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiUserFolder = new System.Windows.Forms.ToolStripMenuItem();
             tlpnlMain = new System.Windows.Forms.TableLayoutPanel();
             tlpnlMain.SuspendLayout();
             this.gbRevisionGraph.SuspendLayout();
             this.tlpnlRevisionGraph.SuspendLayout();
             this.gbTheme.SuspendLayout();
             this.fpnlTheme.SuspendLayout();
+            this.cmsOpenThemeFolders.SuspendLayout();
             this.SuspendLayout();
             // 
             // tlpnlMain
@@ -66,7 +72,7 @@
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tlpnlMain.Size = new System.Drawing.Size(1421, 792);
+            tlpnlMain.Size = new System.Drawing.Size(1421, 617);
             tlpnlMain.TabIndex = 0;
             // 
             // gbRevisionGraph
@@ -172,7 +178,7 @@
             this.gbTheme.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbTheme.Location = new System.Drawing.Point(3, 153);
             this.gbTheme.Name = "gbTheme";
-            this.gbTheme.Size = new System.Drawing.Size(1415, 73);
+            this.gbTheme.Size = new System.Drawing.Size(1415, 75);
             this.gbTheme.TabIndex = 3;
             this.gbTheme.TabStop = false;
             this.gbTheme.Text = "Theme";
@@ -185,10 +191,11 @@
             this.fpnlTheme.Controls.Add(this._NO_TRANSLATE_cbSelectTheme);
             this.fpnlTheme.Controls.Add(this.chkColorblind);
             this.fpnlTheme.Controls.Add(this.chkUseSystemVisualStyle);
+            this.fpnlTheme.Controls.Add(this.sbOpenThemeFolder);
             this.fpnlTheme.Dock = System.Windows.Forms.DockStyle.Fill;
             this.fpnlTheme.Location = new System.Drawing.Point(3, 16);
             this.fpnlTheme.Name = "fpnlTheme";
-            this.fpnlTheme.Size = new System.Drawing.Size(1409, 54);
+            this.fpnlTheme.Size = new System.Drawing.Size(1409, 56);
             this.fpnlTheme.TabIndex = 0;
             // 
             // lblRestartNeeded
@@ -209,7 +216,7 @@
             this._NO_TRANSLATE_cbSelectTheme.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this._NO_TRANSLATE_cbSelectTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._NO_TRANSLATE_cbSelectTheme.FormattingEnabled = true;
-            this._NO_TRANSLATE_cbSelectTheme.Location = new System.Drawing.Point(3, 30);
+            this._NO_TRANSLATE_cbSelectTheme.Location = new System.Drawing.Point(3, 31);
             this._NO_TRANSLATE_cbSelectTheme.Name = "_NO_TRANSLATE_cbSelectTheme";
             this._NO_TRANSLATE_cbSelectTheme.Size = new System.Drawing.Size(179, 21);
             this._NO_TRANSLATE_cbSelectTheme.TabIndex = 0;
@@ -219,7 +226,7 @@
             // 
             this.chkColorblind.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.chkColorblind.AutoSize = true;
-            this.chkColorblind.Location = new System.Drawing.Point(188, 32);
+            this.chkColorblind.Location = new System.Drawing.Point(188, 33);
             this.chkColorblind.Name = "chkColorblind";
             this.chkColorblind.Size = new System.Drawing.Size(72, 17);
             this.chkColorblind.TabIndex = 6;
@@ -231,13 +238,48 @@
             // 
             this.chkUseSystemVisualStyle.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.chkUseSystemVisualStyle.AutoSize = true;
-            this.chkUseSystemVisualStyle.Location = new System.Drawing.Point(266, 32);
+            this.chkUseSystemVisualStyle.Location = new System.Drawing.Point(266, 33);
             this.chkUseSystemVisualStyle.Name = "chkUseSystemVisualStyle";
             this.chkUseSystemVisualStyle.Size = new System.Drawing.Size(304, 17);
             this.chkUseSystemVisualStyle.TabIndex = 4;
             this.chkUseSystemVisualStyle.Text = "Use system-defined visual style (looks bad with dark colors)";
             this.chkUseSystemVisualStyle.UseVisualStyleBackColor = true;
             this.chkUseSystemVisualStyle.CheckedChanged += new System.EventHandler(this.ChkUseSystemVisualStyle_CheckedChanged);
+            // 
+            // sbOpenThemeFolder
+            // 
+            this.sbOpenThemeFolder.AutoSize = true;
+            this.sbOpenThemeFolder.ContextMenuStrip = this.cmsOpenThemeFolders;
+            this.sbOpenThemeFolder.Location = new System.Drawing.Point(576, 30);
+            this.sbOpenThemeFolder.Name = "sbOpenThemeFolder";
+            this.sbOpenThemeFolder.Size = new System.Drawing.Size(122, 23);
+            this.sbOpenThemeFolder.SplitMenuStrip = this.cmsOpenThemeFolders;
+            this.sbOpenThemeFolder.TabIndex = 7;
+            this.sbOpenThemeFolder.Text = "Open theme folder";
+            this.sbOpenThemeFolder.UseVisualStyleBackColor = true;
+            this.sbOpenThemeFolder.WholeButtonDropdown = true;
+            // 
+            // cmsOpenThemeFolders
+            // 
+            this.cmsOpenThemeFolders.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiApplicationFolder,
+            this.tsmiUserFolder});
+            this.cmsOpenThemeFolders.Name = "cmsOpenThemeFolders";
+            this.cmsOpenThemeFolders.Size = new System.Drawing.Size(181, 70);
+            // 
+            // tsmiApplicationFolder
+            // 
+            this.tsmiApplicationFolder.Name = "tsmiApplicationFolder";
+            this.tsmiApplicationFolder.Size = new System.Drawing.Size(180, 22);
+            this.tsmiApplicationFolder.Text = "Application folder";
+            this.tsmiApplicationFolder.Click += new System.EventHandler(this.tsmiApplicationFolder_Click);
+            // 
+            // tsmiUserFolder
+            // 
+            this.tsmiUserFolder.Name = "tsmiUserFolder";
+            this.tsmiUserFolder.Size = new System.Drawing.Size(180, 22);
+            this.tsmiUserFolder.Text = "User folder";
+            this.tsmiUserFolder.Click += new System.EventHandler(this.tsmiUserFolder_Click);
             // 
             // ColorsSettingsPage
             // 
@@ -246,7 +288,7 @@
             this.Controls.Add(tlpnlMain);
             this.Name = "ColorsSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
-            this.Size = new System.Drawing.Size(1437, 808);
+            this.Size = new System.Drawing.Size(1437, 633);
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
             this.gbRevisionGraph.ResumeLayout(false);
@@ -257,6 +299,7 @@
             this.gbTheme.PerformLayout();
             this.fpnlTheme.ResumeLayout(false);
             this.fpnlTheme.PerformLayout();
+            this.cmsOpenThemeFolders.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -276,5 +319,9 @@
         private System.Windows.Forms.CheckBox chkUseSystemVisualStyle;
         private System.Windows.Forms.Label lblRestartNeeded;
         private System.Windows.Forms.CheckBox chkColorblind;
+        private Script.SplitButton sbOpenThemeFolder;
+        private System.Windows.Forms.ContextMenuStrip cmsOpenThemeFolders;
+        private System.Windows.Forms.ToolStripMenuItem tsmiApplicationFolder;
+        private System.Windows.Forms.ToolStripMenuItem tsmiUserFolder;
     }
 }
