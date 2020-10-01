@@ -5009,18 +5009,6 @@ ancestor tree.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormModifiedDeletedCreated" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Solve merge conflict</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Abort.Text">
-        <source>Abort</source>
-        <target />
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="FormOpenDirectory" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -6413,6 +6401,34 @@ Choose to delete the file or keep the modified version.</source>
 The merge conflict will not be marked as solved. Please try again.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_filesDeletedLocallyAndModifiedRemotelyLong.Text">
+        <source>{0} and {1} other out of {2} selected files do not have a local revision.
+The files have been deleted locally, but modified remotely
+
+Choose to delete the files or keep the modified versions.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_filesDeletedLocallyAndModifiedRemotelyLongNoOtherFilesSelected.Text">
+        <source>{0} and {1} other selected file(s) do not have a local revision.
+The files have been deleted locally, but modified remotely
+
+Choose to delete the files or keep the modified versions.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_filesModifiedLocallyAndDeletedRemotelyLong.Text">
+        <source>{0} and {1} other out of {2} selected files do not have a remote revision.
+The files have been modified locally, but deleted remotely.
+
+Choose to delete the files or keep the modified versions.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_filesModifiedLocallyAndDeletedRemotelyLongNoOtherFilesSelected.Text">
+        <source>{0} and {1} other selected file(s) do not have a remote revision.
+The files have been modified locally, but deleted remotely.
+
+Choose to delete the files or keep the modified versions.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_keepBaseButtonText.Text">
         <source>Keep base file</source>
         <target />
@@ -6458,6 +6474,14 @@ Please go to settings and configure the mergetool!</source>
       </trans-unit>
       <trans-unit id="_resetItemRebaseText.Text">
         <source>Abort rebase</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_solveMergeConflictApplyToAllCheckBoxText.Text">
+        <source>Apply to {0} and {1} other file(s)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_solveMergeConflictDialogCaption.Text">
+        <source>Solve merge conflict</source>
         <target />
       </trans-unit>
       <trans-unit id="_stageFilename.Text">

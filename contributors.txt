@@ -139,4 +139,5 @@ YYYY/MM/DD, github id, Full name, email
 2020/09/09, adamshakhabov, Adam Shakhabov, theadamo86(at)gmail.com
 2020/09/13, hoborm, Mihaly Hobor, mail(at)hobor.xyz
 2020/07/11, blitzmann, Ryan Holmes, holmes.ryan.90(at)gmail.com
+2020/10/01, racecrew, Otis Hix, otis.hix(at)protonmail.com
 2020/10/04, GintasS, Gintautas Švedas, svedgintas(at)gmail.com
