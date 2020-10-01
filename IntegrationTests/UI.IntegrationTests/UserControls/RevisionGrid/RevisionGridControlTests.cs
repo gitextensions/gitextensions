@@ -14,12 +14,13 @@ using NUnit.Framework;
 namespace GitExtensions.UITests.UserControls.RevisionGrid
 {
     [Apartment(ApartmentState.STA)]
-    public class ToggleBetweenArtificialAndHeadCommitsTests
+    public class RevisionGridControlTests
     {
         // Created once for the fixture
         private ReferenceRepository _referenceRepository;
         private string _initialCommit;
         private string _headCommit;
+        private string _branch1Commit;
 
         // Created once for each test
         private GitUICommands _commands;
@@ -38,6 +39,13 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         {
             _referenceRepository = new ReferenceRepository();
             _initialCommit = _referenceRepository.CommitHash;
+
+            _referenceRepository.CreateCommit("Commit1", "Commit1");
+            _branch1Commit = _referenceRepository.CommitHash;
+            _referenceRepository.CreateBranch("Branch1", _branch1Commit);
+            _referenceRepository.CreateCommit("Commit2", "Commit2");
+            _referenceRepository.CreateBranch("Branch2", _referenceRepository.CommitHash);
+
             _referenceRepository.CreateCommit("head commit");
             _headCommit = _referenceRepository.CommitHash;
 
@@ -48,6 +56,111 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         public void TearDown()
         {
             _referenceRepository.Dispose();
+        }
+
+        [Test]
+        public void Assert_default_filter_related_settings()
+        {
+            AppSettings.BranchFilterEnabled = false;
+            AppSettings.ShowCurrentBranchOnly = false;
+
+            RunSetAndApplyBranchFilterTest(
+                initialFilter: "",
+                revisionGridControl =>
+                {
+                    Assert.False(AppSettings.BranchFilterEnabled);
+                    Assert.False(AppSettings.ShowCurrentBranchOnly);
+
+                    Assert.True(revisionGridControl.IsShowAllBranchesChecked);
+                    Assert.False(revisionGridControl.IsShowCurrentBranchOnlyChecked);
+                    Assert.False(revisionGridControl.IsShowFilteredBranchesChecked);
+
+                    var ta = revisionGridControl.GetTestAccessor();
+                    ta.RefFilterOptions.Should().Be(RefFilterOptions.All | RefFilterOptions.Boundary | RefFilterOptions.ShowGitNotes);
+                });
+
+            RunSetAndApplyBranchFilterTest(
+                initialFilter: "Branch1",
+                revisionGridControl =>
+                {
+                    Assert.True(AppSettings.BranchFilterEnabled);
+                    Assert.False(AppSettings.ShowCurrentBranchOnly);
+
+                    Assert.False(revisionGridControl.IsShowAllBranchesChecked);
+                    Assert.False(revisionGridControl.IsShowCurrentBranchOnlyChecked);
+                    Assert.True(revisionGridControl.IsShowFilteredBranchesChecked);
+
+                    var ta = revisionGridControl.GetTestAccessor();
+                    ta.RefFilterOptions.Should().Be(RefFilterOptions.None);
+                });
+        }
+
+        [Test]
+        public void View_refect_applied_branch_filter()
+        {
+            AppSettings.BranchFilterEnabled = false;
+            AppSettings.ShowCurrentBranchOnly = false;
+
+            RunSetAndApplyBranchFilterTest(
+                "",
+                revisionGridControl =>
+                {
+                    var ta = revisionGridControl.GetTestAccessor();
+                    Assert.False(revisionGridControl.IsShowFilteredBranchesChecked);
+                    ta.VisibleRevisionCount.Should().Be(6);
+
+                    // Verify the view hasn't changed until we refresh
+                    revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_headCommit);
+
+                    // set filter
+                    revisionGridControl.SetAndApplyBranchFilter("Branch1");
+                    Assert.True(revisionGridControl.IsShowFilteredBranchesChecked);
+
+                    // ...assert nothing changed, applying the filter doesn't change the view
+                    revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_headCommit);
+
+                    // Refresh the grid, to reflect the filter
+                    revisionGridControl.ForceRefreshRevisions();
+                    DoEvents();
+
+                    // Confirm the filter has been applied
+                    revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_branch1Commit);
+                    ta.VisibleRevisionCount.Should().Be(2);
+                });
+        }
+
+        [Test]
+        public void View_refect_reset_branch_filter()
+        {
+            AppSettings.BranchFilterEnabled = false;
+            AppSettings.ShowCurrentBranchOnly = false;
+
+            RunSetAndApplyBranchFilterTest(
+                "Branch1",
+                revisionGridControl =>
+                {
+                    var ta = revisionGridControl.GetTestAccessor();
+                    Assert.True(revisionGridControl.IsShowFilteredBranchesChecked);
+                    ta.VisibleRevisionCount.Should().Be(2);
+
+                    // Verify the view hasn't changed until we refresh
+                    revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_branch1Commit);
+
+                    // reset filter
+                    revisionGridControl.SetAndApplyBranchFilter("");
+                    Assert.False(revisionGridControl.IsShowFilteredBranchesChecked);
+
+                    // ...assert nothing changed, applying the filter doesn't change the view
+                    revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_branch1Commit);
+
+                    // Refresh the grid, to reflect the filter
+                    revisionGridControl.ForceRefreshRevisions();
+                    DoEvents();
+
+                    // Confirm the filter has been reset, all commits are shown
+                    revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_headCommit);
+                    ta.VisibleRevisionCount.Should().Be(6);
+                });
         }
 
         [Test]
@@ -186,6 +299,35 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                 });
         }
 
+        private void RunSetAndApplyBranchFilterTest(string initialFilter, Action<RevisionGridControl> runTest)
+        {
+            UITest.RunForm<FormBrowse>(
+                showForm: () => _commands.StartBrowseDialog(owner: null).Should().BeTrue(),
+                runTestAsync: async formBrowse =>
+                {
+                    DoEvents();
+
+                    // wait for the revisions to be loaded
+                    await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+
+                    formBrowse.RevisionGridControl.SetAndApplyBranchFilter(initialFilter);
+
+                    // Refresh the grid, to reflect the filter
+                    formBrowse.RevisionGridControl.ForceRefreshRevisions();
+                    DoEvents();
+
+                    try
+                    {
+                        runTest(formBrowse.RevisionGridControl);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"{runTest.Method.Name} failed: {ex.Demystify()}");
+                        Console.WriteLine(_referenceRepository.Module.GitExecutable.GetOutput("status"));
+                    }
+                });
+        }
+
         private void RunToggleBetweenArtificialAndHeadCommitsTest(bool showGitStatusForArtificialCommits, Action<RevisionGridControl> runTest)
         {
             AppSettings.ShowGitStatusForArtificialCommits = showGitStatusForArtificialCommits;
@@ -221,18 +363,16 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     DoEvents();
 
                     Assert.IsTrue(ta.CommitInfoTabControl.SelectedTab == ta.DiffTabPage, "Diff tab should be active");
-
-                    return;
-
-                    static void DoEvents()
-                    {
-                        for (int i = 0; i < 10; ++i)
-                        {
-                            Thread.Sleep(100);
-                            Application.DoEvents();
-                        }
-                    }
                 });
+        }
+
+        private static void DoEvents()
+        {
+            for (int i = 0; i < 5; ++i)
+            {
+                Thread.Sleep(50);
+                Application.DoEvents();
+            }
         }
     }
 }

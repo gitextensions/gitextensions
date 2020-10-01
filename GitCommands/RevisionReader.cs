@@ -12,20 +12,24 @@ using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
+#pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
     [Flags]
     public enum RefFilterOptions
     {
-        Branches = 1,              // --branches
-        Remotes = 2,               // --remotes
-        Tags = 4,                  // --tags
-        Stashes = 8,               //
-        All = 15,                  // --all
-        Boundary = 16,             // --boundary
-        ShowGitNotes = 32,         // --not --glob=notes --not
-        NoMerges = 64,             // --no-merges
-        FirstParent = 128,         // --first-parent
-        SimplifyByDecoration = 256 // --simplify-by-decoration
+        None                    = 0x000,
+        Branches                = 0x001,    // --branches
+        Remotes                 = 0x002,    // --remotes
+        Tags                    = 0x004,    // --tags
+        Stashes                 = 0x008,    //
+        All                     = 0x00F,    // --all
+        Boundary                = 0x010,    // --boundary
+        ShowGitNotes            = 0x020,    // --not --glob=notes --not
+        NoMerges                = 0x040,    // --no-merges
+        FirstParent             = 0x080,    // --first-parent
+        SimplifyByDecoration    = 0x100,    // --simplify-by-decoration
+        Reflogs                 = 0x200,    // --reflog
     }
+#pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
 
     public sealed class RevisionReader : IDisposable
     {
@@ -178,7 +182,7 @@ namespace GitCommands
                     "--first-parent",
                     new ArgumentBuilder
                     {
-                        { AppSettings.ShowReflogReferences, "--reflog" },
+                        { refFilterOptions.HasFlag(RefFilterOptions.Reflogs), "--reflog" },
                         { AppSettings.SortByAuthorDate, "--author-date-order" },
                         {
                             refFilterOptions.HasFlag(RefFilterOptions.All),

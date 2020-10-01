@@ -32,6 +32,14 @@ namespace CommonTestUtils
             return commit.Id.Sha;
         }
 
+        public void CreateBranch(string branchName, string commitHash, bool allowOverwrite = false)
+        {
+            using (var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir))
+            {
+                repository.Branches.Add(branchName, commitHash, allowOverwrite);
+            }
+        }
+
         public void CreateCommit(string commitMessage, string content = null)
         {
             using (var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir))

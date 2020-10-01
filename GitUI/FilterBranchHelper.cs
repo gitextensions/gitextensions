@@ -20,41 +20,50 @@ namespace GitUI
 
         private static readonly string[] _noResultsFound = { Strings.NoResultsFound };
 
-        public FilterBranchHelper()
+        public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGridControl revisionGrid)
         {
-            _localToolStripMenuItem = new ToolStripMenuItem();
-            _tagsToolStripMenuItem = new ToolStripMenuItem();
-            _remoteToolStripMenuItem = new ToolStripMenuItem();
-
             //
             // localToolStripMenuItem
             //
-            _localToolStripMenuItem.Checked = true;
-            _localToolStripMenuItem.CheckOnClick = true;
-            _localToolStripMenuItem.Name = "localToolStripMenuItem";
-            _localToolStripMenuItem.Text = Strings.Local;
+            _localToolStripMenuItem = new ToolStripMenuItem
+            {
+                Checked = true,
+                CheckOnClick = true,
+                Name = "localToolStripMenuItem",
+                Text = Strings.Local
+            };
 
             //
             // tagsToolStripMenuItem
             //
-            _tagsToolStripMenuItem.CheckOnClick = true;
-            _tagsToolStripMenuItem.Name = "tagToolStripMenuItem";
-            _tagsToolStripMenuItem.Text = Strings.Tag;
+            _tagsToolStripMenuItem = new ToolStripMenuItem
+            {
+                CheckOnClick = true,
+                Name = "tagToolStripMenuItem",
+                Text = Strings.Tag
+            };
 
             //
             // remoteToolStripMenuItem
             //
-            _remoteToolStripMenuItem.CheckOnClick = true;
-            _remoteToolStripMenuItem.Name = "remoteToolStripMenuItem";
-            _remoteToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-            _remoteToolStripMenuItem.Text = Strings.Remote;
-        }
+            _remoteToolStripMenuItem = new ToolStripMenuItem
+            {
+                CheckOnClick = true,
+                Name = "remoteToolStripMenuItem",
+                Size = new System.Drawing.Size(115, 22),
+                Text = Strings.Remote
+            };
 
-        public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGridControl revisionGrid)
-            : this()
-        {
             _NO_TRANSLATE_toolStripBranches = toolStripBranches;
             _NO_TRANSLATE_RevisionGrid = revisionGrid;
+            _NO_TRANSLATE_RevisionGrid.RefFilterOptionsChanged += (s, e) =>
+            {
+                if (e.RefFilterOptions.HasFlag(RefFilterOptions.All | RefFilterOptions.Boundary))
+                {
+                    // This means show all branches
+                    _NO_TRANSLATE_toolStripBranches.Text = string.Empty;
+                }
+            };
 
             toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[]
             {
@@ -151,9 +160,9 @@ namespace GitUI
 
         private void toolStripBranches_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyValue == (char)Keys.Enter)
+            if (e.KeyCode == Keys.Enter)
             {
-                ApplyBranchFilter(true);
+                ApplyBranchFilter(refresh: true);
             }
         }
 
@@ -216,7 +225,7 @@ namespace GitUI
 
         private void toolStripBranches_Leave(object sender, EventArgs e)
         {
-            ApplyBranchFilter(true);
+            ApplyBranchFilter(refresh: true);
         }
 
         public void Dispose()

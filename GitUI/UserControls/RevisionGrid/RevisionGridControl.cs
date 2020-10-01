@@ -68,6 +68,12 @@ namespace GitUI
         /// </summary>
         public event EventHandler ToggledBetweenArtificialAndHeadCommits;
 
+        /// <summary>
+        ///  Occurs whenever a user toggles between the artificial and the HEAD commits
+        ///  via the navigation menu item or the shortcut command.
+        /// </summary>
+        public event EventHandler<RefFilterOptionsEventArgs> RefFilterOptionsChanged;
+
         public static readonly string HotkeySettingsName = "RevisionGrid";
 
         private readonly TranslationString _droppingFilesBlocked = new TranslationString("For you own protection dropping more than 10 patch files at once is blocked!");
@@ -97,7 +103,26 @@ namespace GitUI
         private readonly DataGridViewColumn _maximizedColumn;
         private DataGridViewColumn _lastVisibleResizableColumn;
 
-        private RefFilterOptions _refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
+        private RefFilterOptions _DONT_USE_ME_DIRECTLY_refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
+
+        /// <summary>
+        /// Gets or sets the current git reference filter options.
+        /// </summary>
+        private RefFilterOptions RefFilterOptions
+        {
+            get => _DONT_USE_ME_DIRECTLY_refFilterOptions;
+            set
+            {
+                if (_DONT_USE_ME_DIRECTLY_refFilterOptions == value)
+                {
+                    return;
+                }
+
+                _DONT_USE_ME_DIRECTLY_refFilterOptions = value;
+
+                RefFilterOptionsChanged?.Invoke(this, new RefFilterOptionsEventArgs(_DONT_USE_ME_DIRECTLY_refFilterOptions));
+            }
+        }
 
         /// <summary>
         /// The set of ref names that are ambiguous.
@@ -505,22 +530,14 @@ namespace GitUI
 
         public bool SetAndApplyBranchFilter(string filter)
         {
-            if (filter == _revisionFilter.GetBranchFilter())
-            {
-                return false;
-            }
+            AppSettings.BranchFilterEnabled = !string.IsNullOrWhiteSpace(filter);
 
-            if (filter == "")
-            {
-                AppSettings.BranchFilterEnabled = false;
-                AppSettings.ShowCurrentBranchOnly = true;
-            }
-            else
-            {
-                AppSettings.BranchFilterEnabled = true;
-                AppSettings.ShowCurrentBranchOnly = false;
-                _revisionFilter.SetBranchFilter(filter);
-            }
+            // ShowCurrentBranchOnly depends on BranchFilterEnabled, and to show the current branch
+            // both flags must be set simultaneously (check SetShowBranches implementation).
+            // And since we set a filter - we can't be showing the current branch.
+            AppSettings.ShowCurrentBranchOnly = false;
+
+            _revisionFilter.SetBranchFilter(filter);
 
             SetShowBranches();
             return true;
@@ -850,30 +867,39 @@ namespace GitUI
 
                 SelectInitialRevision();
 
-                if (!AppSettings.ShowGitNotes && _refFilterOptions.HasFlag(RefFilterOptions.All | RefFilterOptions.Boundary))
+                // NB: Build ref filter before updating the property to reduce the number of chage events.
+                RefFilterOptions refFilterOptions = RefFilterOptions;
+                if (!AppSettings.ShowGitNotes && refFilterOptions.HasFlag(RefFilterOptions.All | RefFilterOptions.Boundary))
                 {
-                    _refFilterOptions |= RefFilterOptions.ShowGitNotes;
+                    refFilterOptions |= RefFilterOptions.ShowGitNotes;
                 }
 
                 if (AppSettings.ShowGitNotes)
                 {
-                    _refFilterOptions &= ~RefFilterOptions.ShowGitNotes;
+                    refFilterOptions &= ~RefFilterOptions.ShowGitNotes;
                 }
 
                 if (!AppSettings.ShowMergeCommits)
                 {
-                    _refFilterOptions |= RefFilterOptions.NoMerges;
+                    refFilterOptions |= RefFilterOptions.NoMerges;
                 }
 
                 if (AppSettings.ShowFirstParent)
                 {
-                    _refFilterOptions |= RefFilterOptions.FirstParent;
+                    refFilterOptions |= RefFilterOptions.FirstParent;
                 }
 
                 if (AppSettings.ShowSimplifyByDecoration)
                 {
-                    _refFilterOptions |= RefFilterOptions.SimplifyByDecoration;
+                    refFilterOptions |= RefFilterOptions.SimplifyByDecoration;
                 }
+
+                if (AppSettings.ShowReflogReferences)
+                {
+                    refFilterOptions |= RefFilterOptions.Reflogs;
+                }
+
+                RefFilterOptions = refFilterOptions;
 
                 var formFilter = RevisionGridInMemFilter.CreateIfNeeded(
                     _revisionFilter.GetInMemAuthorFilter(),
@@ -934,7 +960,7 @@ namespace GitUI
                     Module,
                     refs,
                     revisions,
-                    _refFilterOptions,
+                    refFilterOptions,
                     _branchFilter,
                     _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + _fixedRevisionFilter,
                     _revisionFilter.GetPathFilter() + _fixedPathFilter,
@@ -999,7 +1025,7 @@ namespace GitUI
                     flags |= RevisionNodeFlags.HasRef;
                 }
 
-                if (_refFilterOptions.HasFlag(RefFilterOptions.FirstParent))
+                if (RefFilterOptions.HasFlag(RefFilterOptions.FirstParent))
                 {
                     flags |= RevisionNodeFlags.OnlyFirstParent;
                 }
@@ -1531,6 +1557,9 @@ namespace GitUI
             }
 
             AppSettings.BranchFilterEnabled = false;
+            AppSettings.ShowCurrentBranchOnly = false;
+
+            _revisionFilter.SetBranchFilter(string.Empty);
 
             SetShowBranches();
             ForceRefreshRevisions();
@@ -1560,16 +1589,16 @@ namespace GitUI
 
             if (!AppSettings.BranchFilterEnabled)
             {
-                _refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
+                RefFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
             }
             else if (AppSettings.ShowCurrentBranchOnly)
             {
-                _refFilterOptions = 0;
+                RefFilterOptions = RefFilterOptions.None;
             }
             else
             {
-                _refFilterOptions = _branchFilter.Length > 0
-                    ? 0
+                RefFilterOptions = _branchFilter.Length > 0
+                    ? RefFilterOptions.None
                     : RefFilterOptions.All | RefFilterOptions.Boundary;
             }
 
@@ -2728,5 +2757,22 @@ namespace GitUI
             => GetQuickItemSelectorLocation();
 
         #endregion
+
+        internal TestAccessor GetTestAccessor()
+            => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly RevisionGridControl _revisionGridControl;
+
+            public TestAccessor(RevisionGridControl revisionGridControl)
+            {
+                _revisionGridControl = revisionGridControl;
+            }
+
+            public RefFilterOptions RefFilterOptions => _revisionGridControl.RefFilterOptions;
+
+            public int VisibleRevisionCount => _revisionGridControl._gridView.RowCount;
+        }
     }
 }

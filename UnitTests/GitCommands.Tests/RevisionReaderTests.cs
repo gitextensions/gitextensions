@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using NUnit.Framework;
@@ -10,20 +9,12 @@ namespace GitCommandsTests
     [TestFixture]
     public sealed class RevisionReaderTests
     {
-        private bool _showReflogReferences;
         private RevisionReader _revisionReader;
 
         [SetUp]
         public void Setup()
         {
-            _showReflogReferences = AppSettings.ShowReflogReferences;
             _revisionReader = new RevisionReader();
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            AppSettings.ShowReflogReferences = _showReflogReferences;
         }
 
         [Test]
@@ -34,17 +25,15 @@ namespace GitCommandsTests
             args.ToString().Should().Contain(" log -z ");
         }
 
-        [TestCase(RefFilterOptions.FirstParent, false, false)]
-        [TestCase(RefFilterOptions.FirstParent, true, false)]
-        [TestCase(RefFilterOptions.All, false, false)]
-        [TestCase(RefFilterOptions.All, true, true)]
-        public void BuildArguments_should_add_reflog_if_requested(RefFilterOptions refFilterOptions, bool reflog, bool expected)
+        [TestCase(RefFilterOptions.FirstParent, false)]
+        [TestCase(RefFilterOptions.FirstParent | RefFilterOptions.Reflogs, false)]
+        [TestCase(RefFilterOptions.All, false)]
+        [TestCase(RefFilterOptions.All | RefFilterOptions.Reflogs, true)]
+        public void BuildArguments_should_add_reflog_if_requested(RefFilterOptions refFilterOptions, bool expected)
         {
-            AppSettings.ShowReflogReferences = reflog;
-
             var args = _revisionReader.GetTestAccessor().BuildArgumentsBuildArguments(refFilterOptions, "", "", "");
 
-            if (expected && reflog)
+            if (expected)
             {
                 args.ToString().Should().Contain(" --reflog ");
             }
