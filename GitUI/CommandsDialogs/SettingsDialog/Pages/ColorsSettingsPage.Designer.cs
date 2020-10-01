@@ -40,8 +40,8 @@
             this.fpnlTheme = new System.Windows.Forms.FlowLayoutPanel();
             this.lblRestartNeeded = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_cbSelectTheme = new System.Windows.Forms.ComboBox();
-            this.chkUseSystemVisualStyle = new System.Windows.Forms.CheckBox();
             this.chkColorblind = new System.Windows.Forms.CheckBox();
+            this.chkUseSystemVisualStyle = new System.Windows.Forms.CheckBox();
             tlpnlMain = new System.Windows.Forms.TableLayoutPanel();
             tlpnlMain.SuspendLayout();
             this.gbRevisionGraph.SuspendLayout();
@@ -66,7 +66,7 @@
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tlpnlMain.Size = new System.Drawing.Size(1004, 612);
+            tlpnlMain.Size = new System.Drawing.Size(1421, 792);
             tlpnlMain.TabIndex = 0;
             // 
             // gbRevisionGraph
@@ -78,7 +78,7 @@
             this.gbRevisionGraph.Location = new System.Drawing.Point(3, 3);
             this.gbRevisionGraph.Name = "gbRevisionGraph";
             this.gbRevisionGraph.Padding = new System.Windows.Forms.Padding(8);
-            this.gbRevisionGraph.Size = new System.Drawing.Size(998, 157);
+            this.gbRevisionGraph.Size = new System.Drawing.Size(1415, 144);
             this.gbRevisionGraph.TabIndex = 0;
             this.gbRevisionGraph.TabStop = false;
             this.gbRevisionGraph.Text = "Revision graph";
@@ -97,7 +97,7 @@
             this.tlpnlRevisionGraph.Controls.Add(this.DrawNonRelativesTextGray, 0, 3);
             this.tlpnlRevisionGraph.Controls.Add(this.DrawNonRelativesGray, 0, 2);
             this.tlpnlRevisionGraph.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpnlRevisionGraph.Location = new System.Drawing.Point(8, 24);
+            this.tlpnlRevisionGraph.Location = new System.Drawing.Point(8, 21);
             this.tlpnlRevisionGraph.Name = "tlpnlRevisionGraph";
             this.tlpnlRevisionGraph.RowCount = 5;
             this.tlpnlRevisionGraph.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -106,16 +106,16 @@
             this.tlpnlRevisionGraph.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlRevisionGraph.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlRevisionGraph.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpnlRevisionGraph.Size = new System.Drawing.Size(982, 125);
+            this.tlpnlRevisionGraph.Size = new System.Drawing.Size(1399, 115);
             this.tlpnlRevisionGraph.TabIndex = 0;
             // 
             // chkHighlightAuthored
             // 
             this.chkHighlightAuthored.AutoSize = true;
             this.chkHighlightAuthored.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkHighlightAuthored.Location = new System.Drawing.Point(3, 103);
+            this.chkHighlightAuthored.Location = new System.Drawing.Point(3, 95);
             this.chkHighlightAuthored.Name = "chkHighlightAuthored";
-            this.chkHighlightAuthored.Size = new System.Drawing.Size(183, 19);
+            this.chkHighlightAuthored.Size = new System.Drawing.Size(167, 17);
             this.chkHighlightAuthored.TabIndex = 5;
             this.chkHighlightAuthored.Text = "Highlight authored revisions";
             this.chkHighlightAuthored.UseVisualStyleBackColor = true;
@@ -126,7 +126,7 @@
             this.MulticolorBranches.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MulticolorBranches.Location = new System.Drawing.Point(3, 3);
             this.MulticolorBranches.Name = "MulticolorBranches";
-            this.MulticolorBranches.Size = new System.Drawing.Size(183, 19);
+            this.MulticolorBranches.Size = new System.Drawing.Size(167, 17);
             this.MulticolorBranches.TabIndex = 0;
             this.MulticolorBranches.Text = "Multicolor branches";
             this.MulticolorBranches.UseVisualStyleBackColor = true;
@@ -135,9 +135,9 @@
             // 
             this.chkDrawAlternateBackColor.AutoSize = true;
             this.chkDrawAlternateBackColor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkDrawAlternateBackColor.Location = new System.Drawing.Point(3, 28);
+            this.chkDrawAlternateBackColor.Location = new System.Drawing.Point(3, 26);
             this.chkDrawAlternateBackColor.Name = "chkDrawAlternateBackColor";
-            this.chkDrawAlternateBackColor.Size = new System.Drawing.Size(183, 19);
+            this.chkDrawAlternateBackColor.Size = new System.Drawing.Size(167, 17);
             this.chkDrawAlternateBackColor.TabIndex = 2;
             this.chkDrawAlternateBackColor.Text = "Draw alternate background";
             this.chkDrawAlternateBackColor.UseVisualStyleBackColor = true;
@@ -146,9 +146,9 @@
             // 
             this.DrawNonRelativesTextGray.AutoSize = true;
             this.DrawNonRelativesTextGray.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DrawNonRelativesTextGray.Location = new System.Drawing.Point(3, 78);
+            this.DrawNonRelativesTextGray.Location = new System.Drawing.Point(3, 72);
             this.DrawNonRelativesTextGray.Name = "DrawNonRelativesTextGray";
-            this.DrawNonRelativesTextGray.Size = new System.Drawing.Size(183, 19);
+            this.DrawNonRelativesTextGray.Size = new System.Drawing.Size(167, 17);
             this.DrawNonRelativesTextGray.TabIndex = 4;
             this.DrawNonRelativesTextGray.Text = "Draw non relatives text gray";
             this.DrawNonRelativesTextGray.UseVisualStyleBackColor = true;
@@ -157,9 +157,9 @@
             // 
             this.DrawNonRelativesGray.AutoSize = true;
             this.DrawNonRelativesGray.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DrawNonRelativesGray.Location = new System.Drawing.Point(3, 53);
+            this.DrawNonRelativesGray.Location = new System.Drawing.Point(3, 49);
             this.DrawNonRelativesGray.Name = "DrawNonRelativesGray";
-            this.DrawNonRelativesGray.Size = new System.Drawing.Size(183, 19);
+            this.DrawNonRelativesGray.Size = new System.Drawing.Size(167, 17);
             this.DrawNonRelativesGray.TabIndex = 3;
             this.DrawNonRelativesGray.Text = "Draw non relatives graph gray";
             this.DrawNonRelativesGray.UseVisualStyleBackColor = true;
@@ -170,9 +170,9 @@
             this.gbTheme.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbTheme.Controls.Add(this.fpnlTheme);
             this.gbTheme.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbTheme.Location = new System.Drawing.Point(3, 166);
+            this.gbTheme.Location = new System.Drawing.Point(3, 153);
             this.gbTheme.Name = "gbTheme";
-            this.gbTheme.Size = new System.Drawing.Size(998, 76);
+            this.gbTheme.Size = new System.Drawing.Size(1415, 73);
             this.gbTheme.TabIndex = 3;
             this.gbTheme.TabStop = false;
             this.gbTheme.Text = "Theme";
@@ -186,9 +186,9 @@
             this.fpnlTheme.Controls.Add(this.chkColorblind);
             this.fpnlTheme.Controls.Add(this.chkUseSystemVisualStyle);
             this.fpnlTheme.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.fpnlTheme.Location = new System.Drawing.Point(3, 19);
+            this.fpnlTheme.Location = new System.Drawing.Point(3, 16);
             this.fpnlTheme.Name = "fpnlTheme";
-            this.fpnlTheme.Size = new System.Drawing.Size(992, 54);
+            this.fpnlTheme.Size = new System.Drawing.Size(1409, 54);
             this.fpnlTheme.TabIndex = 0;
             // 
             // lblRestartNeeded
@@ -211,21 +211,9 @@
             this._NO_TRANSLATE_cbSelectTheme.FormattingEnabled = true;
             this._NO_TRANSLATE_cbSelectTheme.Location = new System.Drawing.Point(3, 30);
             this._NO_TRANSLATE_cbSelectTheme.Name = "_NO_TRANSLATE_cbSelectTheme";
-            this._NO_TRANSLATE_cbSelectTheme.Size = new System.Drawing.Size(179, 23);
+            this._NO_TRANSLATE_cbSelectTheme.Size = new System.Drawing.Size(179, 21);
             this._NO_TRANSLATE_cbSelectTheme.TabIndex = 0;
             this._NO_TRANSLATE_cbSelectTheme.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTheme_SelectedIndexChanged);
-            // 
-            // chkUseSystemVisualStyle
-            // 
-            this.chkUseSystemVisualStyle.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkUseSystemVisualStyle.AutoSize = true;
-            this.chkUseSystemVisualStyle.Location = new System.Drawing.Point(188, 31);
-            this.chkUseSystemVisualStyle.Name = "chkUseSystemVisualStyle";
-            this.chkUseSystemVisualStyle.Size = new System.Drawing.Size(339, 19);
-            this.chkUseSystemVisualStyle.TabIndex = 4;
-            this.chkUseSystemVisualStyle.Text = "Use system-defined visual style (looks bad with dark colors)";
-            this.chkUseSystemVisualStyle.UseVisualStyleBackColor = true;
-            this.chkUseSystemVisualStyle.CheckedChanged += new System.EventHandler(this.ChkUseSystemVisualStyle_CheckedChanged);
             // 
             // chkColorblind
             // 
@@ -239,6 +227,18 @@
             this.chkColorblind.UseVisualStyleBackColor = true;
             this.chkColorblind.CheckedChanged += new System.EventHandler(this.ChkColorblind_CheckedChanged);
             // 
+            // chkUseSystemVisualStyle
+            // 
+            this.chkUseSystemVisualStyle.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.chkUseSystemVisualStyle.AutoSize = true;
+            this.chkUseSystemVisualStyle.Location = new System.Drawing.Point(266, 32);
+            this.chkUseSystemVisualStyle.Name = "chkUseSystemVisualStyle";
+            this.chkUseSystemVisualStyle.Size = new System.Drawing.Size(304, 17);
+            this.chkUseSystemVisualStyle.TabIndex = 4;
+            this.chkUseSystemVisualStyle.Text = "Use system-defined visual style (looks bad with dark colors)";
+            this.chkUseSystemVisualStyle.UseVisualStyleBackColor = true;
+            this.chkUseSystemVisualStyle.CheckedChanged += new System.EventHandler(this.ChkUseSystemVisualStyle_CheckedChanged);
+            // 
             // ColorsSettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -246,7 +246,7 @@
             this.Controls.Add(tlpnlMain);
             this.Name = "ColorsSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
-            this.Size = new System.Drawing.Size(1020, 628);
+            this.Size = new System.Drawing.Size(1437, 808);
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
             this.gbRevisionGraph.ResumeLayout(false);
@@ -259,6 +259,7 @@
             this.fpnlTheme.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
