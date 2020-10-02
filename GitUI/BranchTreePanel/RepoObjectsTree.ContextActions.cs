@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -16,6 +17,7 @@ namespace GitUI.BranchTreePanel
         private TreeNode _lastRightClickedNode;
         private GitRefsSortOrderContextMenuItem _sortOrderContextMenuItem;
         private GitRefsSortByContextMenuItem _sortByContextMenuItem;
+        private ToolStripSeparator _tsmiSortMenuSpacer = new ToolStripSeparator { Name = "tsmiSortMenuSpacer" };
 
         /// <summary>
         /// Local branch context menu [git ref / rename / delete] actions
@@ -159,8 +161,13 @@ namespace GitUI.BranchTreePanel
             if (!contextMenu.Items.Contains(_sortOrderContextMenuItem))
             {
                 AddContextMenuItems(contextMenu,
-                    new ToolStripItem[] { _sortByContextMenuItem, _sortOrderContextMenuItem, new ToolStripSeparator() },
-                    tsmiMainMenuSpacer1);
+                    new ToolStripItem[]
+                    {
+                        _tsmiSortMenuSpacer,
+                        _sortByContextMenuItem,
+                        _sortOrderContextMenuItem,
+                    },
+                    insertBefore: tsmiMainMenuSpacer1);
             }
 
             // If refs are sorted by git (GitRefsSortBy = Default) don't show sort order options
@@ -232,7 +239,7 @@ namespace GitUI.BranchTreePanel
             AddContextMenuItems(menuBranch, _localBranchMenuItems.Select(s => s.Item));
 
             _remoteBranchMenuItems = new RemoteBranchMenuItems<RemoteBranchNode>(this);
-            AddContextMenuItems(menuRemote, _remoteBranchMenuItems.Select(s => s.Item), toolStripSeparator1);
+            AddContextMenuItems(menuRemote, _remoteBranchMenuItems.Select(s => s.Item), insertAfter: toolStripSeparator1);
 
             _tagNodeMenuItems = new TagMenuItems<TagNode>(this);
             AddContextMenuItems(menuTag, _tagNodeMenuItems.Select(s => s.Item));
@@ -320,11 +327,24 @@ namespace GitUI.BranchTreePanel
             return result;
         }
 
-        private void AddContextMenuItems(ContextMenuStrip menu, IEnumerable<ToolStripItem> items, ToolStripItem insertAfter = null)
+        private void AddContextMenuItems(ContextMenuStrip menu, IEnumerable<ToolStripItem> items, ToolStripItem insertBefore = null, ToolStripItem insertAfter = null)
         {
+            Debug.Assert(!(insertAfter != null && insertBefore != null), $"Only {nameof(insertBefore)} or {nameof(insertAfter)} is allowed.");
+
             menu.SuspendLayout();
-            int index = insertAfter is null ? 0 : Math.Max(0, menu.Items.IndexOf(insertAfter) + 1);
-            items.ForEach(item => menu.Items.Insert(index++, item));
+
+            int index;
+            if (insertBefore != null)
+            {
+                index = Math.Max(0, menu.Items.IndexOf(insertBefore) - 1);
+                items.ForEach(item => menu.Items.Insert(++index, item));
+            }
+            else
+            {
+                index = insertAfter is null ? 0 : Math.Max(0, menu.Items.IndexOf(insertAfter) + 1);
+                items.ForEach(item => menu.Items.Insert(index++, item));
+            }
+
             menu.ResumeLayout();
         }
     }
