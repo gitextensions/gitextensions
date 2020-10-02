@@ -300,23 +300,26 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             void BindRepositories(IReadOnlyList<RecentRepoInfo> repos, bool isFavourite)
             {
-                foreach (var repository in repos)
-                {
-                    var isInvalidRepo = !_controller.IsValidGitWorkingDir(repository.Repo.Path);
-                    _hasInvalidRepos |= isInvalidRepo;
+                var repoValidityArray = repos.AsParallel().Select(r => !_controller.IsValidGitWorkingDir(r.Repo.Path)).ToArray();
 
-                    listView1.Items.Add(new ListViewItem(repository.Caption)
+                _hasInvalidRepos = repoValidityArray.Any();
+
+                for (var index = 0; index < repos.Count; index++)
+                {
+                    listView1.Items.Add(new ListViewItem(repos[index].Caption)
                     {
                         ForeColor = ForeColor,
                         Font = AppSettings.Font,
-                        Group = isFavourite ? GetTileGroup(repository.Repo) : _lvgRecentRepositories,
-                        ImageIndex = isInvalidRepo ? 1 : 0,
+                        Group = isFavourite ? GetTileGroup(repos[index].Repo) : _lvgRecentRepositories,
+                        ImageIndex = repoValidityArray[index] ? 1 : 0,
                         UseItemStyleForSubItems = false,
-                        Tag = repository.Repo,
-                        ToolTipText = repository.Repo.Path,
+                        Tag = repos[index].Repo,
+                        ToolTipText = repos[index].Repo.Path,
                         SubItems =
                         {
-                            { _controller.GetCurrentBranchName(repository.Repo.Path), BranchNameColor, BackColor, _secondaryFont },
+                            {
+                                _controller.GetCurrentBranchName(repos[index].Repo.Path), BranchNameColor, BackColor, _secondaryFont
+                            },
                             //// NB: we can add a 3rd row as well: { repository.Repo.Category, SystemColors.GrayText, BackColor, _secondaryFont }
                         }
                     });
