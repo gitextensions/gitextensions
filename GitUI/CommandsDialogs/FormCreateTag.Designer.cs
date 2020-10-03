@@ -104,7 +104,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.textBoxGpgKey.Enabled = false;
             this.textBoxGpgKey.Location = new System.Drawing.Point(141, 115);
-            this.textBoxGpgKey.MaxLength = 8;
+            this.textBoxGpgKey.MaxLength = 16;
             this.textBoxGpgKey.Name = "textBoxGpgKey";
             this.textBoxGpgKey.Size = new System.Drawing.Size(60, 21);
             this.textBoxGpgKey.TabIndex = 7;
