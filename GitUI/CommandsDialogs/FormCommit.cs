@@ -1484,6 +1484,7 @@ namespace GitUI.CommandsDialogs
 
                     ScriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
 
+                    Message.Text = string.Empty; // Message.Text has been used and stored
                     _commitMessageManager.ResetCommitMessage();
                     CommitKind = CommitKind.Normal;
 
@@ -1501,14 +1502,12 @@ namespace GitUI.CommandsDialogs
 
                     if (AppSettings.CloseCommitDialogAfterCommit)
                     {
-                        Message.Text = string.Empty; // Message.Text has been used and stored
                         Close();
                         return;
                     }
 
                     if (Unstaged.GitItemStatuses.Any())
                     {
-                        Message.Text = string.Empty; // Message.Text has been used and stored
                         InitializedStaged();
                         return;
                     }
@@ -1521,8 +1520,6 @@ namespace GitUI.CommandsDialogs
                     {
                         InitializedStaged();
                     }
-
-                    Message.Text = string.Empty; // Message.Text has been used and stored
                 }
                 catch (Exception e)
                 {
