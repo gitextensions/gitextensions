@@ -18,7 +18,7 @@ namespace GitUI
 
         public static void SelectPathInFileExplorer(string filePath)
         {
-            Process.Start("explorer.exe", "/select, " + filePath);
+            Process.Start("explorer.exe", "/select, \"" + filePath + "\"");
         }
 
         public static void OpenWithFileExplorer(string filePath)
