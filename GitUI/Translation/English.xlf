@@ -5288,7 +5288,7 @@ This will initialize and update all submodules recursive.</source>
         <target />
       </trans-unit>
       <trans-unit id="ForceColumn.HeaderText">
-        <source>Push (Force Rewind)</source>
+        <source>Force</source>
         <target />
       </trans-unit>
       <trans-unit id="ForcePushBranches.Text">

@@ -421,7 +421,7 @@
             // ForceColumn
             // 
             this.ForceColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.ForceColumn.HeaderText = "Push (Force Rewind)";
+            this.ForceColumn.HeaderText = "Force";
             this.ForceColumn.Name = "ForceColumn";
             this.ForceColumn.Width = 101;
             // 
