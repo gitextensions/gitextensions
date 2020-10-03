@@ -11,6 +11,8 @@ namespace GitUI
     public class FilterBranchHelper : IDisposable
     {
         private bool _applyingFilter;
+        private bool _filterBeingChanged;
+
         private readonly ToolStripComboBox _NO_TRANSLATE_toolStripBranches;
         private readonly RevisionGridControl _NO_TRANSLATE_RevisionGrid;
         private readonly ToolStripMenuItem _localToolStripMenuItem;
@@ -74,7 +76,7 @@ namespace GitUI
 
             _NO_TRANSLATE_toolStripBranches.DropDown += toolStripBranches_DropDown;
             _NO_TRANSLATE_toolStripBranches.TextUpdate += toolStripBranches_TextUpdate;
-            _NO_TRANSLATE_toolStripBranches.Leave += toolStripBranches_Leave;
+            _NO_TRANSLATE_toolStripBranches.TextChanged += (s, e) => _filterBeingChanged = true;
             _NO_TRANSLATE_toolStripBranches.KeyUp += toolStripBranches_KeyUp;
         }
 
@@ -155,6 +157,7 @@ namespace GitUI
 
         private void toolStripBranches_TextUpdate(object sender, EventArgs e)
         {
+            _filterBeingChanged = true;
             UpdateBranchFilterItems();
         }
 
@@ -162,7 +165,7 @@ namespace GitUI
         {
             if (e.KeyCode == Keys.Enter)
             {
-                ApplyBranchFilter(refresh: true);
+                ApplyBranchFilter(refresh: _filterBeingChanged);
             }
         }
 
@@ -179,6 +182,10 @@ namespace GitUI
             }
 
             _applyingFilter = true;
+
+            // The user has accepted the filter
+            _filterBeingChanged = false;
+
             try
             {
                 string filter = _NO_TRANSLATE_toolStripBranches.Items.Count > 0 ? _NO_TRANSLATE_toolStripBranches.Text : string.Empty;
@@ -221,11 +228,6 @@ namespace GitUI
         {
             _NO_TRANSLATE_toolStripBranches.Text = filter;
             ApplyBranchFilter(refresh);
-        }
-
-        private void toolStripBranches_Leave(object sender, EventArgs e)
-        {
-            ApplyBranchFilter(refresh: true);
         }
 
         public void Dispose()
