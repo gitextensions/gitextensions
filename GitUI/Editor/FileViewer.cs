@@ -32,6 +32,24 @@ namespace GitUI.Editor
         /// </summary>
         public event Action EscapePressed;
 
+        /// <summary>
+        /// The type of information currently shown in the file viewer
+        /// </summary>
+        private enum ViewMode
+        {
+            // Plain text
+            Text,
+
+            // Diff or patch
+            Diff,
+
+            // Diffs that will not be affected by diff arguments like white space etc (limited options)
+            FixedDiff,
+
+            // Image viewer
+            Image
+        }
+
         private readonly TranslationString _largeFileSizeWarning = new TranslationString("This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.");
         private readonly TranslationString _cannotViewImage = new TranslationString("Cannot view image {0}");
 
@@ -48,8 +66,7 @@ namespace GitUI.Editor
 
         private readonly AsyncLoader _async;
         private readonly IFullPathResolver _fullPathResolver;
-        private bool _currentViewIsPatch;
-        private bool _patchHighlighting;
+        private ViewMode _viewMode;
         private Encoding _encoding;
         private Func<Task> _deferShowFunc;
         private readonly ContinuousScrollEventManager _continuousScrollEventManager;
@@ -83,7 +100,7 @@ namespace GitUI.Editor
                 {
                     if (!IsDisposed)
                     {
-                        ResetForText(null);
+                        ResetView(ViewMode.Text, null);
                         internalFileViewer.SetText("Unsupported file: \n\n" + e.Exception.ToString(), openWithDifftool: null /* not applicable */);
                         TextLoaded?.Invoke(this, null);
                     }
@@ -124,7 +141,7 @@ namespace GitUI.Editor
 
             internalFileViewer.MouseMove += (_, e) =>
             {
-                if (_currentViewIsPatch && !fileviewerToolbar.Visible)
+                if (IsDiffView(_viewMode) && !fileviewerToolbar.Visible)
                 {
                     fileviewerToolbar.Visible = true;
                     fileviewerToolbar.Location = new Point(Width - fileviewerToolbar.Width - 40, 0);
@@ -141,7 +158,7 @@ namespace GitUI.Editor
             };
             internalFileViewer.TextChanged += (sender, e) =>
             {
-                if (_patchHighlighting)
+                if (IsDiffView(_viewMode))
                 {
                     internalFileViewer.AddPatchHighlighting();
                 }
@@ -431,16 +448,26 @@ namespace GitUI.Editor
 
         public async Task ViewPatchAsync(string fileName, string text, Action openWithDifftool)
         {
-            await ShowOrDeferAsync(
-                text.Length,
-                () =>
-                {
-                    ResetForDiff(fileName);
-                    internalFileViewer.SetText(text, openWithDifftool, isDiff: true);
+            await ViewPrivateAsync(fileName, text, openWithDifftool, ViewMode.Diff);
+        }
 
-                    TextLoaded?.Invoke(this, null);
-                    return Task.CompletedTask;
-                });
+        /// <summary>
+        /// Present the text as a patch in the file viewer, for GitHub
+        /// </summary>
+        /// <param name="fileName">The fileName to present</param>
+        /// <param name="text">The patch text</param>
+        /// <param name="openWithDifftool">The action to open the difftool</param>
+        public void ViewFixedPatch([CanBeNull] string fileName,
+            [NotNull] string text,
+            [CanBeNull] Action openWithDifftool = null)
+        {
+            ThreadHelper.JoinableTaskFactory.Run(
+                () => ViewPrivateAsync(fileName, text, openWithDifftool, ViewMode.FixedDiff));
+        }
+
+        public async Task ViewFixedPatchAsync(string fileName, string text, Action openWithDifftool = null)
+        {
+            await ViewPrivateAsync(fileName, text, openWithDifftool, ViewMode.FixedDiff);
         }
 
         public void ViewText([CanBeNull] string fileName,
@@ -458,7 +485,7 @@ namespace GitUI.Editor
                 text.Length,
                 () =>
                 {
-                    ResetForText(fileName);
+                    ResetView(ViewMode.Text, fileName);
 
                     // Check for binary file. Using gitattributes could be misleading for a changed file,
                     // but not much other can be done
@@ -726,6 +753,25 @@ namespace GitUI.Editor
 
         // Private methods
 
+        private static bool IsDiffView(ViewMode viewMode)
+        {
+            return viewMode == ViewMode.Diff || viewMode == ViewMode.FixedDiff;
+        }
+
+        private async Task ViewPrivateAsync(string fileName, string text, Action openWithDifftool, ViewMode viewMode = ViewMode.Diff)
+        {
+            await ShowOrDeferAsync(
+                text.Length,
+                () =>
+                {
+                    ResetView(viewMode, fileName);
+                    internalFileViewer.SetText(text, openWithDifftool, isDiff: IsDiffView(_viewMode));
+
+                    TextLoaded?.Invoke(this, null);
+                    return Task.CompletedTask;
+                });
+        }
+
         private void CopyNotStartingWith(char startChar)
         {
             string code = internalFileViewer.GetSelectedText();
@@ -737,7 +783,7 @@ namespace GitUI.Editor
                 noSelection = true;
             }
 
-            if (_currentViewIsPatch)
+            if (IsDiffView(_viewMode))
             {
                 // add artificial space if selected text is not starting from line beginning, it will be removed later
                 int pos = noSelection ? 0 : internalFileViewer.GetSelectionPosition();
@@ -765,27 +811,38 @@ namespace GitUI.Editor
             ClipboardUtil.TrySetText(code.AdjustLineEndings(Module.EffectiveConfigFile.core.autocrlf.Value));
         }
 
-        private void SetVisibilityDiffContextMenu(bool visibleTextFile, [CanBeNull] string fileName)
+        private void SetVisibilityDiffContextMenu(ViewMode viewMode, [CanBeNull] string fileName)
         {
-            _currentViewIsPatch = visibleTextFile;
-            ignoreWhitespaceAtEolToolStripMenuItem.Visible = visibleTextFile;
-            ignoreWhitespaceChangesToolStripMenuItem.Visible = visibleTextFile;
-            ignoreAllWhitespaceChangesToolStripMenuItem.Visible = visibleTextFile;
-            increaseNumberOfLinesToolStripMenuItem.Visible = visibleTextFile;
-            decreaseNumberOfLinesToolStripMenuItem.Visible = visibleTextFile;
-            showEntireFileToolStripMenuItem.Visible = visibleTextFile;
-            toolStripSeparator2.Visible = visibleTextFile;
-            treatAllFilesAsTextToolStripMenuItem.Visible = visibleTextFile;
-            copyNewVersionToolStripMenuItem.Visible = visibleTextFile;
-            copyOldVersionToolStripMenuItem.Visible = visibleTextFile;
+            bool changePhysicalFile = (viewMode == ViewMode.Diff || viewMode == ViewMode.FixedDiff)
+                                      && !Module.IsBareRepository()
+                                      && !string.IsNullOrWhiteSpace(fileName)
+                                      && File.Exists(_fullPathResolver.Resolve(fileName));
 
-            bool fileExists = !string.IsNullOrWhiteSpace(fileName)
-                              && File.Exists(_fullPathResolver.Resolve(fileName));
+            cherrypickSelectedLinesToolStripMenuItem.Visible = changePhysicalFile;
+            revertSelectedLinesToolStripMenuItem.Visible = changePhysicalFile;
+            copyPatchToolStripMenuItem.Visible = IsDiffView(viewMode);
+            copyNewVersionToolStripMenuItem.Visible = IsDiffView(viewMode);
+            copyOldVersionToolStripMenuItem.Visible = IsDiffView(viewMode);
 
-            cherrypickSelectedLinesToolStripMenuItem.Visible =
-                revertSelectedLinesToolStripMenuItem.Visible =
-                    visibleTextFile && fileExists && !Module.IsBareRepository();
-            copyPatchToolStripMenuItem.Visible = visibleTextFile;
+            ignoreWhitespaceAtEolToolStripMenuItem.Visible = viewMode == ViewMode.Diff;
+            ignoreWhitespaceChangesToolStripMenuItem.Visible = viewMode == ViewMode.Diff;
+            ignoreAllWhitespaceChangesToolStripMenuItem.Visible = viewMode == ViewMode.Diff;
+            increaseNumberOfLinesToolStripMenuItem.Visible = viewMode == ViewMode.Diff;
+            decreaseNumberOfLinesToolStripMenuItem.Visible = viewMode == ViewMode.Diff;
+            showEntireFileToolStripMenuItem.Visible = viewMode == ViewMode.Diff;
+            toolStripSeparator2.Visible = IsDiffView(viewMode);
+            treatAllFilesAsTextToolStripMenuItem.Visible = IsDiffView(viewMode);
+
+            // toolbar
+            nextChangeButton.Visible = IsDiffView(viewMode);
+            previousChangeButton.Visible = IsDiffView(viewMode);
+            increaseNumberOfLines.Visible = viewMode == ViewMode.Diff;
+            decreaseNumberOfLines.Visible = viewMode == ViewMode.Diff;
+            showEntireFileButton.Visible = viewMode == ViewMode.Diff;
+            showSyntaxHighlighting.Visible = IsDiffView(viewMode);
+            ignoreWhitespaceAtEol.Visible = viewMode == ViewMode.Diff;
+            ignoreWhiteSpaces.Visible = viewMode == ViewMode.Diff;
+            ignoreAllWhitespaces.Visible = viewMode == ViewMode.Diff;
         }
 
         private void SetVisibilityDiffContextMenuStaging()
@@ -915,39 +972,23 @@ namespace GitUI.Editor
             AppSettings.IgnoreWhitespaceKind = IgnoreWhitespace;
         }
 
-        private void ResetForImage([CanBeNull] string fileName)
+        private void ResetView(ViewMode viewMode, [CanBeNull] string fileName)
         {
-            Reset(false, false, fileName);
-            internalFileViewer.SetHighlighting("Default");
-        }
-
-        private void ResetForText([CanBeNull] string fileName)
-        {
-            if (!string.IsNullOrEmpty(fileName) &&
-                (fileName.EndsWith(".diff", StringComparison.OrdinalIgnoreCase) ||
-                 fileName.EndsWith(".patch", StringComparison.OrdinalIgnoreCase)))
+            _viewMode = viewMode;
+            if (_viewMode == ViewMode.Text
+                && !string.IsNullOrEmpty(fileName)
+                && (fileName.EndsWith(".diff", StringComparison.OrdinalIgnoreCase)
+                    || fileName.EndsWith(".patch", StringComparison.OrdinalIgnoreCase)))
             {
-                ResetForDiff(fileName);
-                return;
+                _viewMode = ViewMode.FixedDiff;
             }
 
-            Reset(false, true, fileName);
+            SetVisibilityDiffContextMenu(_viewMode, fileName);
+            ClearImage();
+            PictureBox.Visible = _viewMode == ViewMode.Image;
+            internalFileViewer.Visible = _viewMode != ViewMode.Image;
 
-            if (fileName == null)
-            {
-                internalFileViewer.SetHighlighting("Default");
-            }
-            else
-            {
-                internalFileViewer.SetHighlightingForFile(fileName);
-            }
-        }
-
-        private void ResetForDiff([CanBeNull] string fileName)
-        {
-            Reset(true, true, fileName);
-
-            if (ShowSyntaxHighlightingInDiff && fileName != null)
+            if (((ShowSyntaxHighlightingInDiff && IsDiffView(_viewMode)) || _viewMode == ViewMode.Text) && fileName != null)
             {
                 internalFileViewer.SetHighlightingForFile(fileName);
             }
@@ -955,15 +996,6 @@ namespace GitUI.Editor
             {
                 internalFileViewer.SetHighlighting("");
             }
-        }
-
-        private void Reset(bool isDiff, bool isText, [CanBeNull] string fileName)
-        {
-            _patchHighlighting = isDiff;
-            SetVisibilityDiffContextMenu(isDiff, fileName);
-            ClearImage();
-            PictureBox.Visible = !isText;
-            internalFileViewer.Visible = isText;
 
             return;
 
@@ -999,12 +1031,12 @@ namespace GitUI.Editor
                             {
                                 if (image == null)
                                 {
-                                    ResetForText(null);
+                                    ResetView(ViewMode.Text, null);
                                     internalFileViewer.SetText(string.Format(_cannotViewImage.Text, fileName), openWithDifftool);
                                     return;
                                 }
 
-                                ResetForImage(fileName);
+                                ResetView(ViewMode.Image, fileName);
                                 var size = DpiUtil.Scale(image.Size);
                                 if (size.Height > PictureBox.Size.Height || size.Width > PictureBox.Size.Width)
                                 {
@@ -1283,7 +1315,7 @@ namespace GitUI.Editor
                 return;
             }
 
-            if (_currentViewIsPatch)
+            if (IsDiffView(_viewMode))
             {
                 // add artificial space if selected text is not starting from line beginning, it will be removed later
                 int pos = internalFileViewer.GetSelectionPosition();

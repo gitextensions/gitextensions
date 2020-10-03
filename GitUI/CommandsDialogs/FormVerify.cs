@@ -63,6 +63,7 @@ namespace GitUI.CommandsDialogs
             columnParent.MinimumWidth = DpiUtil.Scale(75);
 
             _selectedItemsHeader.AttachTo(columnIsLostObjectSelected);
+            fileViewer.ExtraDiffArgumentsChanged += Warnings_SelectionChanged;
 
             InitializeComplete();
             Warnings.AutoGenerateColumns = false;
@@ -243,7 +244,7 @@ namespace GitUI.CommandsDialogs
             if (_previewedItem.ObjectType == LostObjectType.Commit)
             {
                 ThreadHelper.JoinableTaskFactory.RunAsync(() =>
-                    fileViewer.ViewPatchAsync("commit.patch", content, null))
+                    fileViewer.ViewFixedPatchAsync("commit.patch", content, null))
                 .FileAndForget();
             }
             else
