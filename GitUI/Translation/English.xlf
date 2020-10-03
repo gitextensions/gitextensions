@@ -9329,6 +9329,10 @@ Select this commit to populate the full message.</source>
         <source>Install git...</source>
         <target />
       </trans-unit>
+      <trans-unit id="_invisibleCommitText.Text">
+        <source>'{0}' is not currently visible</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_loadingDataText.Text">
         <source>Loading data...</source>
         <target />
@@ -9411,6 +9415,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_removeSelectedInvalidRepository.Text">
         <source>Remove the selected invalid repository</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_rotInactive.Text">
+        <source>[ Inactive ]</source>
         <target />
       </trans-unit>
       <trans-unit id="_searchingFor.Text">

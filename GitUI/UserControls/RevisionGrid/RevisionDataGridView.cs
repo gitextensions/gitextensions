@@ -331,6 +331,13 @@ namespace GitUI.UserControls.RevisionGrid
             StartBackgroundProcessingTask(cancellationToken);
         }
 
+        /// <summary>
+        /// Checks whether the given hash is present in the graph.
+        /// </summary>
+        /// <param name="objectId">The hash to find.</param>
+        /// <returns><see langword="true"/>, if the given hash if found; otherwise <see langword="false"/>.</returns>
+        public bool Contains(ObjectId objectId) => _revisionGraph.Contains(objectId);
+
         private void StartBackgroundProcessingTask(CancellationToken cancellationToken)
         {
             // Start the background processing via JoinableTaskContext.Factory to avoid tracking the long-running

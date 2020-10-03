@@ -26,9 +26,6 @@ namespace GitExtensions.UITests.CommandsDialogs
         private bool _originalShowAuthorAvatarColumn;
         private static readonly string[] RemoteNames = new[] { "remote1", "remote5", "remote3", "remote4", "remote2" };
 
-        // TODO: how do we reference RemoteBranchTree._inactiveRemoteNodeLabel?
-        private const string InactiveLabel = @"Inactive";
-
         [OneTimeSetUp]
         public void SetUpFixture()
         {
@@ -121,7 +118,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    remotesNode.Nodes.OfType<TreeNode>().Any(n => n.Text == InactiveLabel).Should().BeFalse();
+                    remotesNode.Nodes.OfType<TreeNode>().Any(n => n.Text == Strings.Inactive).Should().BeFalse();
                 });
         }
 
@@ -138,7 +135,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    remotesNode.Nodes.OfType<TreeNode>().Count(n => n.Text == InactiveLabel).Should().Be(1);
+                    remotesNode.Nodes.OfType<TreeNode>().Count(n => n.Text == Strings.Inactive).Should().Be(1);
                 });
         }
 
@@ -155,7 +152,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    remotesNode.Nodes.OfType<TreeNode>().Last().Text.Should().Be(InactiveLabel);
+                    remotesNode.Nodes.OfType<TreeNode>().Last().Text.Should().Be(Strings.Inactive);
                 });
         }
 

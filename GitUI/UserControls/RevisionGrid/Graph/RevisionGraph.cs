@@ -56,6 +56,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public int Count => _nodes.Count;
 
+        /// <summary>
+        /// Checks whether the given hash is present in the graph.
+        /// </summary>
+        /// <param name="objectId">The hash to find.</param>
+        /// <returns><see langword="true"/>, if the given hash if found; otherwise <see langword="false"/>.</returns>
+        public bool Contains(ObjectId objectId) => _nodeByObjectId.ContainsKey(objectId);
+
         public int GetCachedCount()
         {
             if (_orderedRowCache == null)

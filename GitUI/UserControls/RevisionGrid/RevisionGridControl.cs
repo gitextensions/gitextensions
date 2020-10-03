@@ -56,10 +56,11 @@ namespace GitUI
     }
 
     [DefaultEvent("DoubleClick")]
-    public sealed partial class RevisionGridControl : GitModuleControl, IScriptHostControl
+    public sealed partial class RevisionGridControl : GitModuleControl, IScriptHostControl, ICheckRefs
     {
         public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
         public event EventHandler<EventArgs> ShowFirstParentsToggled;
+        public event EventHandler RevisionGraphLoaded;
         public event EventHandler SelectionChanged;
 
         /// <summary>
@@ -329,6 +330,8 @@ namespace GitUI
             {
                 Controls.Add(content);
             }
+
+            RevisionGraphLoaded?.Invoke(content == _gridView ? _gridView : null, EventArgs.Empty);
         }
 
         internal int DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color, Rectangle bounds, bool useEllipsis = true)
@@ -2757,6 +2760,13 @@ namespace GitUI
             => GetQuickItemSelectorLocation();
 
         #endregion
+
+        /// <summary>
+        /// Checks whether the given hash is present in the graph.
+        /// </summary>
+        /// <param name="objectId">The hash to find.</param>
+        /// <returns><see langword="true"/>, if the given hash if found; otherwise <see langword="false"/>.</returns>
+        bool ICheckRefs.Contains(ObjectId objectId) => _gridView.Contains(objectId);
 
         internal TestAccessor GetTestAccessor()
             => new TestAccessor(this);

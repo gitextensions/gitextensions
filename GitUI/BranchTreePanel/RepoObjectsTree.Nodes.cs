@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.UserControls;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitUI.BranchTreePanel
@@ -24,6 +25,10 @@ namespace GitUI.BranchTreePanel
                 Tree = tree;
             }
 
+            /// <summary>
+            /// Adds a new node to the collection.
+            /// </summary>
+            /// <param name="node">The node to add.</param>
             public void AddNode(Node node)
             {
                 _nodesList.Add(node);
@@ -40,6 +45,8 @@ namespace GitUI.BranchTreePanel
             }
 
             public IEnumerator<Node> GetEnumerator() => _nodesList.GetEnumerator();
+
+            public void InsertNode(int index, Node node) => _nodesList.Insert(index, node);
 
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -106,6 +113,8 @@ namespace GitUI.BranchTreePanel
             }
 
             public int Count => _nodesList.Count;
+
+            public Node LastNode => _nodesList.Count > 0 ? _nodesList[_nodesList.Count - 1] : null;
         }
 
         private abstract class Tree : IDisposable
@@ -115,11 +124,12 @@ namespace GitUI.BranchTreePanel
             private readonly CancellationTokenSequence _reloadCancellationTokenSequence = new CancellationTokenSequence();
             private bool _firstReloadNodesSinceModuleChanged = true;
 
-            public void Dispose()
-            {
-                Detached();
-                _reloadCancellationTokenSequence.Dispose();
-            }
+            // A flag to indicate whether the data is currently being filtered or not.
+            // This helps to reduce unnecessary treeview rebinds.
+            private bool _isCurrentlyFiltering;
+
+            // A flag to indicate whether the data is being filtered (e.g. Show Current Branch Only).
+            private protected static AsyncLocal<bool> IsFiltering = new AsyncLocal<bool>();
 
             protected Tree(TreeNode treeNode, IGitUICommandsSource uiCommands)
             {
@@ -150,7 +160,13 @@ namespace GitUI.BranchTreePanel
                 uiCommands.UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
             }
 
-            private void UICommands_PostRepositoryChanged(object sender, GitUIPluginInterfaces.GitUIEventArgs e)
+            public void Dispose()
+            {
+                Detached();
+                _reloadCancellationTokenSequence.Dispose();
+            }
+
+            private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
             {
                 if (!IsAttached)
                 {
@@ -177,8 +193,8 @@ namespace GitUI.BranchTreePanel
             /// </summary>
             public bool IgnoreSelectionChangedEvent { get; set; }
             protected GitModule Module => UICommands.Module;
-
             protected bool IsAttached { get; private set; }
+            protected virtual bool SupportsFiltering { get; } = false;
 
             public Task AttachedAsync()
             {
@@ -200,6 +216,45 @@ namespace GitUI.BranchTreePanel
 
             protected virtual void OnDetached()
             {
+            }
+
+            /// <summary>
+            /// Requests to refresh the data tree and to apply filtering, if necessary.
+            /// </summary>
+            internal void Refresh() => Refresh(_isCurrentlyFiltering);
+
+            /// <summary>
+            /// Requests to refresh the data tree and to apply filtering, if necessary.
+            /// </summary>
+            /// <param name="isFiltering">
+            ///  <see langword="true"/>, if the data is being filtered; otherwise <see langword="false"/>.
+            /// </param>
+            public void Refresh(bool isFiltering)
+            {
+                // If we're not currently filtering and no need to filter now -> exit.
+                // Else we need to iterate over the list and rebind the tree - whilst there
+                // could be a situation whether a user just refreshed the grid, there could
+                // also be a situation where the user applied a different filter, or checked
+                // out a different ref (e.g. a branch or commit), and we have a different
+                // set of branches to show/hide.
+
+                if (!SupportsFiltering || (!isFiltering && !_isCurrentlyFiltering))
+                {
+                    return;
+                }
+
+                _isCurrentlyFiltering = isFiltering;
+
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    IsFiltering.Value = true;
+                    await ReloadNodesAsync(LoadNodesAsync);
+                });
+            }
+
+            protected virtual Task<Nodes> LoadNodesAsync(CancellationToken token)
+            {
+                return Task.FromResult<Nodes>(null);
             }
 
             public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : Node
@@ -386,6 +441,7 @@ namespace GitUI.BranchTreePanel
             protected virtual void ApplyStyle()
             {
                 SetNodeFont(FontStyle.Regular);
+                TreeViewNode.ToolTipText = string.Empty;
             }
 
             internal virtual void OnSelected()

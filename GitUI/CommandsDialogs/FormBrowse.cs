@@ -33,6 +33,7 @@ using GitUI.Properties;
 using GitUI.Script;
 using GitUI.Shells;
 using GitUI.UserControls;
+using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
@@ -188,7 +189,7 @@ namespace GitUI.CommandsDialogs
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
 
-            repoObjectsTree.Initialize(_aheadBehindDataProvider, _filterBranchHelper);
+            repoObjectsTree.Initialize(_aheadBehindDataProvider, _filterBranchHelper, RevisionGrid);
             toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
             revisionDiff.Bind(RevisionGrid, fileTree);
 
@@ -208,6 +209,24 @@ namespace GitUI.CommandsDialogs
             {
                 _selectedRevisionUpdatedTargets = UpdateTargets.None;
                 RefreshSelection();
+            };
+            RevisionGrid.RevisionGraphLoaded += (sender, e) =>
+            {
+                if (sender is null || MainSplitContainer.Panel1Collapsed)
+                {
+                    // - the event is either not originated from the revision grid, or
+                    // - the left panel is hidden
+                    return;
+                }
+
+                // Apply filtering when:
+                // 1. don't show reflogs, and
+                // 2. one of the following
+                //      a) show the current branch only, or
+                //      b) filter on specific branch
+                bool isFiltering = !AppSettings.ShowReflogReferences
+                                && (AppSettings.ShowCurrentBranchOnly || AppSettings.BranchFilterEnabled);
+                repoObjectsTree.RefreshRefs(isFiltering);
             };
 
             _filterRevisionsHelper.SetFilter(filter);
@@ -2019,20 +2038,23 @@ namespace GitUI.CommandsDialogs
 
             void AddBranchesMenuItems()
             {
-                foreach (var branchName in GetBranchNames())
+                foreach (IGitRef branch in GetBranches())
                 {
-                    var toolStripItem = branchSelect.DropDownItems.Add(branchName);
-                    toolStripItem.Click
-                        += delegate { UICommands.StartCheckoutBranch(this, toolStripItem.Text); };
+                    bool isBranchVisible = ((ICheckRefs)RevisionGridControl).Contains(branch.ObjectId);
+
+                    ToolStripItem toolStripItem = branchSelect.DropDownItems.Add(branch.Name);
+                    toolStripItem.ForeColor = isBranchVisible ? branchSelect.ForeColor : Color.Silver.AdaptTextColor();
+                    toolStripItem.Image = isBranchVisible ? Images.Branch : Images.EyeClosed;
+                    toolStripItem.Click += (s, e) => UICommands.StartCheckoutBranch(this, toolStripItem.Text);
+                    toolStripItem.AdaptImageLightness();
                 }
 
-                IEnumerable<string> GetBranchNames()
+                IEnumerable<IGitRef> GetBranches()
                 {
                     // Make sure there are never more than a 100 branches added to the menu
                     // Git Extensions will hang when the drop down is too large...
                     return Module
                         .GetRefs(tags: false, branches: true)
-                        .Select(b => b.Name)
                         .Take(100);
                 }
             }
