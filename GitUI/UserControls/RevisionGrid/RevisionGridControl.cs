@@ -829,6 +829,12 @@ namespace GitUI
         {
             ThreadHelper.AssertOnUIThread();
 
+            if (_isRefreshingRevisions)
+            {
+                return;
+            }
+
+            _isRefreshingRevisions = true;
             ShowLoading();
 
             var firstRevisionReceived = false;
@@ -863,7 +869,6 @@ namespace GitUI
                 }
 
                 CurrentCheckout = newCurrentCheckout;
-                _isRefreshingRevisions = true;
                 base.Refresh();
 
                 IndexWatcher.Reset();
@@ -984,8 +989,12 @@ namespace GitUI
                 {
                     var scc = await GetSuperprojectCheckoutAsync(ShowRemoteRef, capturedModule, noLocks: true);
                     await this.SwitchToMainThreadAsync();
-                    _superprojectCurrentCheckout = scc;
-                    Refresh();
+
+                    if (_superprojectCurrentCheckout != scc)
+                    {
+                        _superprojectCurrentCheckout = scc;
+                        Refresh();
+                    }
                 });
                 ResetNavigationHistory();
             }
