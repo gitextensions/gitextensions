@@ -9299,7 +9299,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_findGitExecutable.Text">
         <source>Browse to Git
-Find Git on your computer</source>
+ Find Git on your computer</source>
         <target />
       </trans-unit>
       <trans-unit id="_forkCloneRepo.Text">
@@ -9328,8 +9328,7 @@ Find Git on your computer</source>
       </trans-unit>
       <trans-unit id="_installGitInstructions.Text">
         <source>Install Git
-Go to GitExtensions wiki
-        </source>
+Go to GitExtensions wiki</source>
         <target />
       </trans-unit>
       <trans-unit id="_invisibleCommitText.Text">
