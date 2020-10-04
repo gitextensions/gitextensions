@@ -1484,7 +1484,6 @@ namespace GitUI.CommandsDialogs
 
                     ScriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
 
-                    Message.Text = string.Empty; // Message.Text has been used and stored
                     _commitMessageManager.ResetCommitMessage();
                     CommitKind = CommitKind.Normal;
 
@@ -1495,6 +1494,7 @@ namespace GitUI.CommandsDialogs
                         UICommands.StartPushDialog(this, true, pushForced, out pushCompleted);
                     }
 
+                    Message.Text = string.Empty; // Message.Text has been used and stored
                     if (pushCompleted && Module.SuperprojectModule != null && AppSettings.StageInSuperprojectAfterCommit)
                     {
                         Module.SuperprojectModule.StageFile(Module.SubmodulePath);
