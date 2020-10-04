@@ -1034,7 +1034,7 @@ namespace GitUI.CommandsDialogs
                     row[LocalColumnName] = head.Name;
                     row[RemoteColumnName] = remoteName;
                     row[NewColumnName] = isKnownAtRemote ? Strings.No : Strings.Yes;
-                    row[PushColumnName] = isKnownAtRemote;
+                    row[PushColumnName] = false;
 
                     _branchTable.Rows.Add(row);
                 }
