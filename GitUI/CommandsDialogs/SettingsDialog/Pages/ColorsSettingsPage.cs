@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using GitCommands;
+using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using ResourceManager;
@@ -28,6 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Text = "Colors";
+            sbOpenThemeFolder.AutoSize = false;
             InitializeComplete();
         }
 
