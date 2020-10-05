@@ -101,7 +101,7 @@ namespace GitUI
 
             return item.Item.IsSubmodule
                 ? fileViewer.ViewTextAsync(item.Item.Name, text: selectedPatch, openWithDifftool: openWithDiffTool)
-                : fileViewer.ViewPatchAsync(item.Item.Name, text: selectedPatch, openWithDifftool: openWithDiffTool);
+                : fileViewer.ViewPatchAsync(item, text: selectedPatch, openWithDifftool: openWithDiffTool);
 
             void OpenWithDiffTool()
             {
