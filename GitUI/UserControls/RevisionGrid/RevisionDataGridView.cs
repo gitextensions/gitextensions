@@ -12,7 +12,6 @@ using GitCommands;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
-using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
@@ -462,7 +461,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                 try
                 {
-                    CancellationToken timeoutToken;
+                    CancellationToken timeoutToken = default;
                     Func<CancellationToken, Task> backgroundOperation;
                     CancellationToken backgroundOperationCancellation;
                     try

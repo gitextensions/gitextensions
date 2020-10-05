@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using GitExtUtils.GitUI.Theming;
-using GitUI.Theming;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor.Diff
@@ -20,12 +18,12 @@ namespace GitUI.Editor.Diff
 
         protected override int TryHighlightAddedAndDeletedLines(IDocument document, int line, LineSegment lineSegment)
         {
-            ProcessLineSegment(document, ref line, lineSegment, "++", AppColor.DiffAdded.GetThemeColor());
-            ProcessLineSegment(document, ref line, lineSegment, "+ ", AppColor.DiffAdded.GetThemeColor());
-            ProcessLineSegment(document, ref line, lineSegment, " +", AppColor.DiffAdded.GetThemeColor());
-            ProcessLineSegment(document, ref line, lineSegment, "--", AppColor.DiffRemoved.GetThemeColor());
-            ProcessLineSegment(document, ref line, lineSegment, "- ", AppColor.DiffRemoved.GetThemeColor());
-            ProcessLineSegment(document, ref line, lineSegment, " -", AppColor.DiffRemoved.GetThemeColor());
+            ////ProcessLineSegment(document, ref line, lineSegment, "++", AppColor.DiffAdded.GetThemeColor());
+            ////ProcessLineSegment(document, ref line, lineSegment, "+ ", AppColor.DiffAdded.GetThemeColor());
+            ////ProcessLineSegment(document, ref line, lineSegment, " +", AppColor.DiffAdded.GetThemeColor());
+            ////ProcessLineSegment(document, ref line, lineSegment, "--", AppColor.DiffRemoved.GetThemeColor());
+            ////ProcessLineSegment(document, ref line, lineSegment, "- ", AppColor.DiffRemoved.GetThemeColor());
+            ////ProcessLineSegment(document, ref line, lineSegment, " -", AppColor.DiffRemoved.GetThemeColor());
             return line;
         }
 

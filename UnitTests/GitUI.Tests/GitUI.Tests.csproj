@@ -1,5 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <Compile Remove="Theming\**" />
+    <EmbeddedResource Remove="Theming\**" />
+    <None Remove="Theming\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="System.IO.Abstractions" Version="$(SystemIOAbstractionsVersion)" />
     <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="$(SystemIOAbstractionsTestingHelpersVersion)" />
     <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsAnnotationsVersion)" />

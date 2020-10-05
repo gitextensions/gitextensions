@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
@@ -44,8 +44,8 @@ namespace GitExtensions
 
             AppSettings.SetDocumentationBaseUrl(ThisAssembly.Git.Branch);
 
-            ThemeModule.Load();
-            Application.ApplicationExit += (s, e) => ThemeModule.Unload();
+            ////ThemeModule.Load();
+            ////Application.ApplicationExit += (s, e) => ThemeModule.Unload();
 
             SystemEvents.UserPreferenceChanged += (s, e) =>
             {
@@ -53,7 +53,7 @@ namespace GitExtensions
                 // reload the theme, and repaint all forms
                 if (e.Category == UserPreferenceCategory.Desktop || e.Category == UserPreferenceCategory.VisualStyle)
                 {
-                    ThemeModule.ReloadWin32ThemeData();
+                    ////ThemeModule.ReloadWin32ThemeData();
                     foreach (Form form in Application.OpenForms)
                     {
                         form.BeginInvoke((MethodInvoker)(() => form.Invalidate()));

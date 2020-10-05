@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
-using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
-using GitUI.Theming;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
@@ -130,13 +127,13 @@ namespace GitUI.Editor
                 indexMatch = textContent.IndexOf(word, indexMatch + 1, StringComparison.OrdinalIgnoreCase);
                 if (indexMatch >= 0)
                 {
-                    Color highlightColor = AppColor.HighlightAllOccurences.GetThemeColor();
+                    ////Color highlightColor = AppColor.HighlightAllOccurences.GetThemeColor();
 
-                    var textMarker = new TextMarker(indexMatch,
-                        word.Length, TextMarkerType.SolidBlock, highlightColor,
-                        ColorHelper.GetForeColorForBackColor(highlightColor));
+                    ////var textMarker = new TextMarker(indexMatch,
+                    ////    word.Length, TextMarkerType.SolidBlock, highlightColor,
+                    ////    ColorHelper.GetForeColorForBackColor(highlightColor));
 
-                    selectionMarkers.Add(textMarker);
+                    ////selectionMarkers.Add(textMarker);
                 }
             }
             while (indexMatch >= 0 && indexMatch < textContent.Length - 1);
@@ -326,11 +323,11 @@ namespace GitUI.Editor
 
         private void SetHighlightingStrategy(IHighlightingStrategy highlightingStrategy)
         {
-            TextEditor.Document.HighlightingStrategy =
-                ThemeModule.Settings.UseSystemVisualStyle
-                    ? highlightingStrategy
-                    : new ThemeBasedHighlighting(highlightingStrategy);
-            TextEditor.Refresh();
+            ////TextEditor.Document.HighlightingStrategy =
+            ////    ThemeModule.Settings.UseSystemVisualStyle
+            ////        ? highlightingStrategy
+            ////        : new ThemeBasedHighlighting(highlightingStrategy);
+            ////TextEditor.Refresh();
         }
 
         public string GetSelectedText()

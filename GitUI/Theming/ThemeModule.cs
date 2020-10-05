@@ -94,37 +94,37 @@ namespace GitUI.Theming
 
         private static void ResetGdiCaches()
         {
-            var systemDrawingAssembly = typeof(Color).Assembly;
+            ////var systemDrawingAssembly = typeof(Color).Assembly;
 
-            var colorTableField =
-                systemDrawingAssembly.GetType("System.Drawing.KnownColorTable")
-                    .GetField("colorTable", BindingFlags.Static | BindingFlags.NonPublic) ??
-                throw new NotSupportedException();
+            ////var colorTableField =
+            ////    systemDrawingAssembly.GetType("System.Drawing.KnownColorTable")
+            ////        .GetField("colorTable", BindingFlags.Static | BindingFlags.NonPublic) ??
+            ////    throw new NotSupportedException();
 
-            var threadDataProperty =
-                systemDrawingAssembly.GetType("System.Drawing.SafeNativeMethods")
-                    .GetNestedType("Gdip", BindingFlags.NonPublic)
-                    .GetProperty("ThreadData", BindingFlags.Static | BindingFlags.NonPublic) ??
-                throw new NotSupportedException();
+            ////var threadDataProperty =
+            ////    systemDrawingAssembly.GetType("System.Drawing.SafeNativeMethods")
+            ////        .GetNestedType("Gdip", BindingFlags.NonPublic)
+            ////        .GetProperty("ThreadData", BindingFlags.Static | BindingFlags.NonPublic) ??
+            ////    throw new NotSupportedException();
 
-            var systemBrushesKeyField =
-                    typeof(SystemBrushes).GetField("SystemBrushesKey", BindingFlags.Static | BindingFlags.NonPublic) ??
-                    throw new NotSupportedException();
+            ////var systemBrushesKeyField =
+            ////        typeof(SystemBrushes).GetField("SystemBrushesKey", BindingFlags.Static | BindingFlags.NonPublic) ??
+            ////        throw new NotSupportedException();
 
-            var systemBrushesKey = systemBrushesKeyField.GetValue(null);
+            ////var systemBrushesKey = systemBrushesKeyField.GetValue(null);
 
-            FieldInfo systemPensKeyField = typeof(SystemPens)
-                .GetField("SystemPensKey", BindingFlags.Static | BindingFlags.NonPublic) ??
-                throw new NotSupportedException();
+            ////FieldInfo systemPensKeyField = typeof(SystemPens)
+            ////    .GetField("SystemPensKey", BindingFlags.Static | BindingFlags.NonPublic) ??
+            ////    throw new NotSupportedException();
 
-            var systemPensKey = systemPensKeyField
-                .GetValue(null);
+            ////var systemPensKey = systemPensKeyField
+            ////    .GetValue(null);
 
-            var threadData = (IDictionary)threadDataProperty.GetValue(null, null);
-            colorTableField.SetValue(null, null);
+            ////var threadData = (IDictionary)threadDataProperty.GetValue(null, null);
+            ////colorTableField.SetValue(null, null);
 
-            threadData[systemBrushesKey] = null;
-            threadData[systemPensKey] = null;
+            ////threadData[systemBrushesKey] = null;
+            ////threadData[systemPensKey] = null;
         }
 
         public static void Unload()
@@ -143,7 +143,7 @@ namespace GitUI.Theming
             switch (Control.FromHandle(hwnd))
             {
                 case Form form:
-                    form.Load += (s, e) => ((Form)s).FixVisualStyle();
+                    form.Load += (s, e) => ((Form)s!).FixVisualStyle();
                     break;
             }
         }

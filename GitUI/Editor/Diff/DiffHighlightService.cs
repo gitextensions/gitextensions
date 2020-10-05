@@ -1,9 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using GitCommands.Patches;
-using GitExtUtils.GitUI.Theming;
-using GitUI.Theming;
 using ICSharpCode.TextEditor.Document;
 using JetBrains.Annotations;
 
@@ -72,26 +70,26 @@ namespace GitUI.Editor.Diff
                 lineAddedEndOffset--;
             }
 
-            Color color;
+            ////Color color;
             var markerStrategy = document.MarkerStrategy;
 
-            if (lineAdded.Length - beginOffset - reverseOffset > 0)
-            {
-                color = AppColor.DiffAddedExtra.GetThemeColor();
-                markerStrategy.AddMarker(new TextMarker(lineAdded.Offset + beginOffset,
-                                                        lineAdded.Length - beginOffset - reverseOffset,
-                                                        TextMarkerType.SolidBlock, color,
-                                                        ColorHelper.GetForeColorForBackColor(color)));
-            }
+            ////if (lineAdded.Length - beginOffset - reverseOffset > 0)
+            ////{
+            ////    color = AppColor.DiffAddedExtra.GetThemeColor();
+            ////    markerStrategy.AddMarker(new TextMarker(lineAdded.Offset + beginOffset,
+            ////                                            lineAdded.Length - beginOffset - reverseOffset,
+            ////                                            TextMarkerType.SolidBlock, color,
+            ////                                            ColorHelper.GetForeColorForBackColor(color)));
+            ////}
 
-            if (lineRemoved.Length - beginOffset - reverseOffset > 0)
-            {
-                color = AppColor.DiffRemovedExtra.GetThemeColor();
-                markerStrategy.AddMarker(new TextMarker(lineRemoved.Offset + beginOffset,
-                                                        lineRemoved.Length - beginOffset - reverseOffset,
-                                                        TextMarkerType.SolidBlock, color,
-                                                        ColorHelper.GetForeColorForBackColor(color)));
-            }
+            ////if (lineRemoved.Length - beginOffset - reverseOffset > 0)
+            ////{
+            ////    color = AppColor.DiffRemovedExtra.GetThemeColor();
+            ////    markerStrategy.AddMarker(new TextMarker(lineRemoved.Offset + beginOffset,
+            ////                                            lineRemoved.Length - beginOffset - reverseOffset,
+            ////                                            TextMarkerType.SolidBlock, color,
+            ////                                            ColorHelper.GetForeColorForBackColor(color)));
+            ////}
         }
 
         private void AddExtraPatchHighlighting(IDocument document)
@@ -167,10 +165,10 @@ namespace GitUI.Editor.Diff
             line = Math.Max(0, line - 2);
             endLine = document.GetLineSegment(line);
 
-            document.MarkerStrategy.AddMarker(new TextMarker(lineSegment.Offset,
-                (endLine.Offset + endLine.TotalLength) -
-                lineSegment.Offset, TextMarkerType.SolidBlock, color,
-                ColorHelper.GetForeColorForBackColor(color)));
+            ////document.MarkerStrategy.AddMarker(new TextMarker(lineSegment.Offset,
+            ////    (endLine.Offset + endLine.TotalLength) -
+            ////    lineSegment.Offset, TextMarkerType.SolidBlock, color,
+            ////    ColorHelper.GetForeColorForBackColor(color)));
 
             return;
 
@@ -200,15 +198,15 @@ namespace GitUI.Editor.Diff
 
                 line = TryHighlightAddedAndDeletedLines(document, line, lineSegment);
 
-                ProcessLineSegment(document, ref line, lineSegment, "@", AppColor.DiffSection.GetThemeColor());
-                ProcessLineSegment(document, ref line, lineSegment, "\\", AppColor.DiffSection.GetThemeColor());
+                ////ProcessLineSegment(document, ref line, lineSegment, "@", AppColor.DiffSection.GetThemeColor());
+                ////ProcessLineSegment(document, ref line, lineSegment, "\\", AppColor.DiffSection.GetThemeColor());
             }
         }
 
         protected virtual int TryHighlightAddedAndDeletedLines(IDocument document, int line, LineSegment lineSegment)
         {
-            ProcessLineSegment(document, ref line, lineSegment, "+", AppColor.DiffAdded.GetThemeColor());
-            ProcessLineSegment(document, ref line, lineSegment, "-", AppColor.DiffRemoved.GetThemeColor());
+            ////ProcessLineSegment(document, ref line, lineSegment, "+", AppColor.DiffAdded.GetThemeColor());
+            ////ProcessLineSegment(document, ref line, lineSegment, "-", AppColor.DiffRemoved.GetThemeColor());
             return line;
         }
 

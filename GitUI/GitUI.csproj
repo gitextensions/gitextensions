@@ -15,7 +15,7 @@
   <ItemGroup>
     <PackageReference Include="AppInsights.WindowsDesktop" Version="$(AppInsightsWindowsDesktopVersion)" />
     <PackageReference Include="EnvDTE" Version="16.9.31023.347" />
-    <PackageReference Include="ExCSS" Version="2.0.6" />
+    <PackageReference Include="ExCSS" Version="3.0.0" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Core" Version="$(MicrosoftWindowsAPICodePackVersion)" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="$(MicrosoftWindowsAPICodePackVersion)" />
     <PackageReference Include="System.IO.Abstractions" Version="$(SystemIOAbstractionsVersion)" />
@@ -59,9 +59,12 @@
     <None Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Remove="Theming\**" />
+    <EmbeddedResource Remove="Theming\**" />
 
     <None Remove="Resources\Icons\artwork\**" />
     <None Remove="Resources\Icons\originals\**" />
+    <None Remove="Theming\**" />
     <Content Include="Themes\*.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

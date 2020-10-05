@@ -1,10 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using ExCSS;
+using GitCommands;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
+using Color = System.Drawing.Color;
 
 namespace GitUI.Theming
 {
@@ -18,13 +21,13 @@ namespace GitUI.Theming
         private const string ClassSelector = ".";
         private const string ColorProperty = "color";
 
-        private readonly Parser _parser;
+        private readonly StylesheetParser _parser;
         private readonly IThemeCssUrlResolver _urlResolver;
         private readonly IThemeFileReader _themeFileReader;
 
         public ThemeLoader(IThemeCssUrlResolver urlResolver, IThemeFileReader themeFileReader)
         {
-            _parser = new Parser();
+            _parser = new StylesheetParser();
             _urlResolver = urlResolver;
             _themeFileReader = themeFileReader;
         }
