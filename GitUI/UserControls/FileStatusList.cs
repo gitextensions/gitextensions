@@ -1400,6 +1400,11 @@ namespace GitUI
 
             var (image, prefix, text, suffix, prefixTextStartX, _, textMaxWidth) = FormatListViewItem(item, formatter, item.Bounds.Width);
 
+            if (item.Selected)
+            {
+                e.Graphics.FillRectangle(SystemBrushes.Highlight, e.Bounds);
+            }
+
             if (image != null)
             {
                 e.Graphics.DrawImageUnscaled(image, item.Position.X, item.Position.Y);
@@ -1411,18 +1416,18 @@ namespace GitUI
 
                 if (!string.IsNullOrEmpty(prefix))
                 {
-                    DrawString(textRect, prefix, SystemColors.GrayText);
+                    DrawString(textRect, prefix, item.Selected ? SystemColors.HighlightText : SystemColors.GrayText);
                     var prefixSize = formatter.MeasureString(prefix);
                     textRect.Offset(prefixSize.Width, 0);
                 }
 
-                DrawString(textRect, text, SystemColors.ControlText);
+                DrawString(textRect, text, item.Selected ? SystemColors.HighlightText : SystemColors.ControlText);
 
                 if (!string.IsNullOrEmpty(suffix))
                 {
                     var textSize = formatter.MeasureString(text);
                     textRect.Offset(textSize.Width, 0);
-                    DrawString(textRect, suffix, SystemColors.GrayText);
+                    DrawString(textRect, suffix, item.Selected ? SystemColors.HighlightText : SystemColors.GrayText);
                 }
             }
 
