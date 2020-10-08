@@ -53,9 +53,10 @@
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(95, 25);
             this.btnReset.TabIndex = 1;
-            this.btnReset.Text = "&Reset";
+            this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = true;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
+            this.btnReset.UseMnemonic = false;
             // 
             // btnCancel
             // 
