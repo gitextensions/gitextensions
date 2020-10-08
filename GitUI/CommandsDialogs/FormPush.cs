@@ -473,7 +473,7 @@ namespace GitUI.CommandsDialogs
 
         private ForcePushOptions GetForcePushOption()
         {
-            if (ForcePushBranches.Checked)
+            if (ForcePushBranches.Checked || ForcePushTags.Checked /* tags cannot be pushed using --force-with-lease */)
             {
                 return ForcePushOptions.Force;
             }
@@ -1262,6 +1262,26 @@ namespace GitUI.CommandsDialogs
 
                 pushCheckBox.Value = willPush(row);
             }
+        }
+
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly FormPush _form;
+
+            public TestAccessor(FormPush form)
+            {
+                _form = form;
+            }
+
+            public CheckBox ckForceWithLease => _form.ckForceWithLease;
+
+            public CheckBox ForcePushBranches => _form.ForcePushBranches;
+
+            public CheckBox ForcePushTags => _form.ForcePushTags;
+
+            public ForcePushOptions GetForcePushOption() => _form.GetForcePushOption();
         }
     }
 }
