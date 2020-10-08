@@ -14,7 +14,6 @@ namespace GitUI.BranchTreePanel
 {
     partial class RepoObjectsTree : IMenuItemFactory
     {
-        private TreeNode _lastRightClickedNode;
         private GitRefsSortOrderContextMenuItem _sortOrderContextMenuItem;
         private GitRefsSortByContextMenuItem _sortByContextMenuItem;
         private ToolStripSeparator _tsmiSortMenuSpacer = new ToolStripSeparator { Name = "tsmiSortMenuSpacer" };
@@ -205,11 +204,6 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private void OnNodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            _lastRightClickedNode = e.Button == MouseButtons.Right ? e.Node : null;
-        }
-
         private static void RegisterClick(ToolStripItem item, Action onClick)
         {
             item.Click += (o, e) => onClick();
@@ -217,7 +211,7 @@ namespace GitUI.BranchTreePanel
 
         private void RegisterClick<T>(ToolStripItem item, Action<T> onClick) where T : class, INode
         {
-            item.Click += (o, e) => Node.OnNode(_lastRightClickedNode, onClick);
+            item.Click += (o, e) => Node.OnNode(treeMain.SelectedNode, onClick);
         }
 
         private void RegisterContextActions()
@@ -248,8 +242,6 @@ namespace GitUI.BranchTreePanel
             RegisterClick(mnubtnExpandAll, () => treeMain.ExpandAll());
             RegisterClick(mnubtnMoveUp, () => ReorderTreeNode(treeMain.SelectedNode, up: true));
             RegisterClick(mnubtnMoveDown, () => ReorderTreeNode(treeMain.SelectedNode, up: false));
-
-            treeMain.NodeMouseClick += OnNodeMouseClick;
 
             RegisterClick<LocalBranchNode>(mnubtnFilterLocalBranchInRevisionGrid, FilterInRevisionGrid);
             Node.RegisterContextMenu(typeof(LocalBranchNode), menuBranch);
