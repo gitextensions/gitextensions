@@ -133,6 +133,8 @@ namespace GitCommands
 
         public bool SupportGuiMergeTool => this >= v2_20_0;
 
+        public bool SupportRangeDiffTool => this >= v2_19_0;
+
         public bool IsUnknown => _a == 0 && _b == 0 && _c == 0 && _d == 0;
 
         // Returns true if it's possible to pass given string as command line

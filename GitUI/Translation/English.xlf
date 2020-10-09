@@ -9305,6 +9305,10 @@ Select this commit to populate the full message.</source>
         <source>Common diff with BASE a/</source>
         <target />
       </trans-unit>
+      <trans-unit id="_diffRange.Text">
+        <source>Range diff</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_diffSelectedWithRememberedFile.Text">
         <source>Diff with "{0}"</source>
         <target />

@@ -937,7 +937,7 @@ namespace GitUI
                         listItem.Selected = true;
                     }
 
-                    listItem.Tag = new FileStatusItem(i.FirstRev, i.SecondRev, item);
+                    listItem.Tag = new FileStatusItem(i.FirstRev, i.SecondRev, item, i.BaseA, i.BaseB);
                     list.Add(listItem);
                 }
             }
@@ -982,15 +982,20 @@ namespace GitUI
 
             static string GetItemImageKey(GitItemStatus gitItemStatus)
             {
-                if (!gitItemStatus.IsNew && !gitItemStatus.IsDeleted && !gitItemStatus.IsTracked)
+                if (!gitItemStatus.IsNew && !gitItemStatus.IsDeleted && !gitItemStatus.IsTracked && !gitItemStatus.IsRangeDiff)
                 {
-                    // Illegal combinations, no flags set?
+                    // Illegal flag combinations or no flags set?
                     return nameof(Images.FileStatusUnknown);
                 }
 
                 if (gitItemStatus.IsDeleted)
                 {
                     return nameof(Images.FileStatusRemoved);
+                }
+
+                if (gitItemStatus.IsRangeDiff)
+                {
+                    return nameof(Images.Diff);
                 }
 
                 if (gitItemStatus.IsNew || (!gitItemStatus.IsTracked && !gitItemStatus.IsSubmodule))

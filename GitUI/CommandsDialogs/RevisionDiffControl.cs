@@ -326,7 +326,7 @@ namespace GitUI.CommandsDialogs
             var parentIds = selectedItems.FirstIds().ToList();
 
             // Combined diff, range diff etc are for display only, no manipulations
-            bool isStatusOnly = selectedItems.Any(item => item.Item.IsStatusOnly);
+            bool isStatusOnly = selectedItems.Any(item => item.Item.IsRangeDiff || item.Item.IsStatusOnly);
             bool isDisplayOnlyDiff = parentIds.Contains(ObjectId.CombinedDiffId) || isStatusOnly;
             int selectedGitItemCount = selectedItems.Count();
 

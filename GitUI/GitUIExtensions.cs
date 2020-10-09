@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -72,6 +73,22 @@ namespace GitUI
             {
                 // View blob guid from revision, or file for worktree
                 return fileViewer.ViewGitItemRevisionAsync(item.Item, item.SecondRevision.ObjectId, openWithDiffTool);
+            }
+
+            if (item.Item.IsRangeDiff)
+            {
+                // This command may take time, give an indication of what is going on
+                // The sha are incorrect if baseA/baseB is set, to simplify the presentation
+                fileViewer.ViewText("range-diff.sh", $"git range-diff {firstId}...{item.SecondRevision.ObjectId}");
+
+                string output = fileViewer.Module.GetRangeDiff(
+                        firstId,
+                        item.SecondRevision.ObjectId,
+                        item.BaseA,
+                        item.BaseB,
+                        fileViewer.GetExtraDiffArguments());
+
+                return fileViewer.ViewTextAsync(item.Item.Name, output ?? defaultText);
             }
 
             string selectedPatch = GetSelectedPatch(fileViewer, firstId, item.SecondRevision.ObjectId, item.Item)

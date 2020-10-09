@@ -18,7 +18,8 @@
         "IsSkipWorktree": false,
         "IsSubmodule": false,
         "IsDirty": false,
-        "IsStatusOnly": false
+        "IsStatusOnly": false,
+        "IsRangeDiff": false
     },
     {
         "Name": " no trim space1 ",
@@ -39,6 +40,7 @@
         "IsSkipWorktree": false,
         "IsSubmodule": true,
         "IsDirty": true,
-        "IsStatusOnly": false
+        "IsStatusOnly": false,
+        "IsRangeDiff": false
     }
 ]
