@@ -5469,6 +5469,18 @@ Would you like to do it now?</source>
         <source>to</source>
         <target />
       </trans-unit>
+      <trans-unit id="selectAllToolStripMenuItem.Text">
+        <source>Select all</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="selectTrackedToolStripMenuItem.Text">
+        <source>Select tracked</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="unselectAllToolStripMenuItem.Text">
+        <source>Unselect all</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="FormPuttyError" source-language="en">

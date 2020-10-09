@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -43,7 +44,7 @@ namespace GitUI.CommandsDialogs
         private readonly IConfigFileRemoteSettingsManager _remotesManager;
 
         public bool ErrorOccurred { get; private set; }
-
+        private int _pushColumnIndex;
         #region Translation
         private readonly TranslationString _branchNewForRemote =
             new TranslationString("The branch you are about to push seems to be a new branch for the remote." +
@@ -155,6 +156,14 @@ namespace GitUI.CommandsDialogs
                 {
                     ShowOptions_LinkClicked(null, null);
                 }
+
+                // Save the value because later the value for all the columns will be at '0'
+                _pushColumnIndex = PushColumn.Index;
+
+                PushColumn.HeaderCell.ContextMenuStrip = menuPushSelection;
+
+                // Handle left button click to also open the context menu
+                BranchGrid.ColumnHeaderMouseClick += BranchGrid_ColumnHeaderMouseClick;
             }
         }
 
@@ -1195,6 +1204,54 @@ namespace GitUI.CommandsDialogs
             if (ckForceWithLease.Checked)
             {
                 ForcePushBranches.Checked = false;
+            }
+        }
+
+        private void BranchGrid_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex == _pushColumnIndex && e.Button == MouseButtons.Left)
+            {
+                var locationWhereToOpenContextMenu = BranchGrid.PointToScreen(BranchGrid.Location)
+                                                     + new Size(BranchGrid.GetCellDisplayRectangle(_pushColumnIndex, -1, true).Location)
+                                                     + new Size(e.Location);
+                menuPushSelection.Show(locationWhereToOpenContextMenu);
+            }
+        }
+
+        private void unselectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetBranchesPushCheckboxesState(_ => false);
+        }
+
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetBranchesPushCheckboxesState(_ => true);
+        }
+
+        private void selectTrackedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetBranchesPushCheckboxesState(row =>
+                {
+                    // Check if the branch is tracked (i.e. not new)
+                    var isNewAtRemote = row.Cells[NewColumn.Name] as DataGridViewTextBoxCell;
+                    return isNewAtRemote != null && isNewAtRemote.Value.ToString() == Strings.No;
+                });
+        }
+
+        private void SetBranchesPushCheckboxesState(Func<DataGridViewRow, bool> willPush)
+        {
+            // Necessary to end the edit mode of the Cell.
+            BranchGrid.EndEdit();
+
+            foreach (DataGridViewRow row in BranchGrid.Rows)
+            {
+                var pushCheckBox = row.Cells[PushColumn.Name] as DataGridViewCheckBoxCell;
+                if (pushCheckBox == null || !pushCheckBox.Visible)
+                {
+                    continue;
+                }
+
+                pushCheckBox.Value = willPush(row);
             }
         }
     }
