@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -1414,20 +1414,31 @@ namespace GitUI
             {
                 var textRect = new Rectangle(prefixTextStartX, item.Bounds.Top, textMaxWidth, item.Bounds.Height);
 
+                Color grayTextColor = item.Selected
+                    ? ColorHelper.GetHighlightGrayTextColor(
+                        backgroundColorName: KnownColor.Window,
+                        textColorName: KnownColor.WindowText,
+                        highlightColorName: KnownColor.Highlight)
+                    : SystemColors.GrayText;
+
+                Color textColor = item.Selected
+                    ? SystemColors.HighlightText
+                    : SystemColors.WindowText;
+
                 if (!string.IsNullOrEmpty(prefix))
                 {
-                    DrawString(textRect, prefix, item.Selected ? SystemColors.HighlightText : SystemColors.GrayText);
+                    DrawString(textRect, prefix, grayTextColor);
                     var prefixSize = formatter.MeasureString(prefix);
                     textRect.Offset(prefixSize.Width, 0);
                 }
 
-                DrawString(textRect, text, item.Selected ? SystemColors.HighlightText : SystemColors.ControlText);
+                DrawString(textRect, text, textColor);
 
                 if (!string.IsNullOrEmpty(suffix))
                 {
                     var textSize = formatter.MeasureString(text);
                     textRect.Offset(textSize.Width, 0);
-                    DrawString(textRect, suffix, item.Selected ? SystemColors.HighlightText : SystemColors.GrayText);
+                    DrawString(textRect, suffix, grayTextColor);
                 }
             }
 
