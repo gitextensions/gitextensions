@@ -323,11 +323,20 @@ See the changes in the commit form.");
                 gitItem.ObjectType == GitObjectType.Blob &&
                 !string.IsNullOrWhiteSpace(gitItem.FileName))
             {
-                var fileName = gitItem.FileName.SubstringAfterLast('/').SubstringAfterLast('\\');
+                var originalName = gitItem.Guid;
+                var saveAsName = gitItem.FileName.SubstringAfterLast('/').SubstringAfterLast('\\');
+                saveAsName = (Path.GetTempPath() + saveAsName).ToNativePath();
+                try
+                {
+                    Module.SaveBlobAs(saveAsName, originalName);
+                }
+                catch (IOException ex)
+                {
+                    MessageBoxes.FailedToSaveAs(this, originalName, saveAsName, ex);
+                    return null;
+                }
 
-                fileName = (Path.GetTempPath() + fileName).ToNativePath();
-                Module.SaveBlobAs(fileName, gitItem.Guid);
-                return fileName;
+                return saveAsName;
             }
 
             return null;
@@ -743,7 +752,16 @@ See the changes in the commit form.");
                     fileDialog.Filter = $@"{_saveFileFilterCurrentFormat.Text}(*{extension})|*{extension}| {_saveFileFilterAllFiles.Text} (*.*)|*.*";
                     if (fileDialog.ShowDialog(this) == DialogResult.OK)
                     {
-                        Module.SaveBlobAs(fileDialog.FileName, gitItem.Guid);
+                        var saveAsName = fileDialog.FileName;
+                        var originalName = gitItem.Guid;
+                        try
+                        {
+                            Module.SaveBlobAs(saveAsName, originalName);
+                        }
+                        catch (IOException ex)
+                        {
+                            MessageBoxes.FailedToSaveAs(this, originalName, saveAsName, ex);
+                        }
                     }
                 }
             }

@@ -16,6 +16,8 @@ namespace GitUI
 
         private readonly TranslationString _failedToRunShell = new TranslationString("Failed to run shell");
 
+        private readonly TranslationString _failedToSave = new TranslationString("Failed to save \"{0}\" as \"{1}\" due to the following exception:\r\n\r\n{2}");
+
         private readonly TranslationString _notValidGitDirectory = new TranslationString("The current directory is not a valid git repository.");
 
         private readonly TranslationString _unresolvedMergeConflictsCaption = new TranslationString("Merge conflicts");
@@ -63,6 +65,9 @@ namespace GitUI
         public static void FailedToRunShell(IWin32Window owner, string shell, Exception ex)
             => ShowError(owner, $"{Instance._failedToRunShell.Text} {shell.Quote()}.{Environment.NewLine}"
                                 + $"{Instance._reason.Text}: {ex.Message}");
+
+        public static void FailedToSaveAs(IWin32Window owner, string originalName, string saveAsName, Exception ex)
+            => ShowError(owner, string.Format(Instance._failedToSave.ToString(), originalName, saveAsName, ex.Message));
 
         public static void NotValidGitDirectory([CanBeNull] IWin32Window owner)
             => ShowError(owner, Instance._notValidGitDirectory.Text);

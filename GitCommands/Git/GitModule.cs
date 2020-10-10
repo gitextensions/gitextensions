@@ -611,21 +611,29 @@ namespace GitCommands
 
         public void SaveBlobAs(string saveAs, string blob)
         {
-            using (var blobStream = GetFileStream(blob))
+            try
             {
-                var blobData = blobStream.ToArray();
-                if (EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.@true)
+                using (var blobStream = GetFileStream(blob))
                 {
-                    if (!FileHelper.IsBinaryFileName(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(blobData))
+                    var blobData = blobStream.ToArray();
+                    if (EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.@true)
                     {
-                        blobData = GitConvert.ConvertCrLfToWorktree(blobData);
+                        if (!FileHelper.IsBinaryFileName(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(blobData))
+                        {
+                            blobData = GitConvert.ConvertCrLfToWorktree(blobData);
+                        }
+                    }
+
+                    using (var stream = File.Create(saveAs))
+                    {
+                        stream.Write(blobData, 0, blobData.Length);
                     }
                 }
-
-                using (var stream = File.Create(saveAs))
-                {
-                    stream.Write(blobData, 0, blobData.Length);
-                }
+            }
+            catch (IOException)
+            {
+                // currently only handling IOException in client code
+                throw;
             }
         }
 
