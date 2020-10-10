@@ -141,3 +141,4 @@ YYYY/MM/DD, github id, Full name, email
 2020/07/11, blitzmann, Ryan Holmes, holmes.ryan.90(at)gmail.com
 2020/10/01, racecrew, Otis Hix, otis.hix(at)protonmail.com
 2020/10/04, GintasS, Gintautas Švedas, svedgintas(at)gmail.com
+2020/10/10, vrubleg, Evgeny Vrublevsky, me@veg.by
