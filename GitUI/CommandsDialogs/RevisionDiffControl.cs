@@ -325,8 +325,9 @@ namespace GitUI.CommandsDialogs
             // First (A) is parent if one revision selected or if parent, then selected
             var parentIds = selectedItems.FirstIds().ToList();
 
-            // Combined diff is a display only diff, no manipulations
-            bool isAnyCombinedDiff = parentIds.Contains(ObjectId.CombinedDiffId);
+            // Combined diff, range diff etc are for display only, no manipulations
+            bool isStatusOnly = selectedItems.Any(item => item.Item.IsStatusOnly);
+            bool isDisplayOnlyDiff = parentIds.Contains(ObjectId.CombinedDiffId) || isStatusOnly;
             int selectedGitItemCount = selectedItems.Count();
 
             // No changes to files in bare repos
@@ -339,7 +340,8 @@ namespace GitUI.CommandsDialogs
 
             var selectionInfo = new ContextMenuSelectionInfo(
                 selectedRevision: selectedRev,
-                isAnyCombinedDiff: isAnyCombinedDiff,
+                isDisplayOnlyDiff: isDisplayOnlyDiff,
+                isStatusOnly: isStatusOnly,
                 selectedGitItemCount: selectedGitItemCount,
                 isAnyItemIndex: isAnyIndex,
                 isAnyItemWorkTree: isAnyWorkTree,
@@ -523,6 +525,7 @@ namespace GitUI.CommandsDialogs
             diffOpenRevisionFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
             diffOpenRevisionFileWithToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
             saveAsToolStripMenuItem1.Visible = _revisionDiffController.ShouldShowMenuSaveAs(selectionInfo);
+            openContainingFolderToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuShowInFolder(selectionInfo);
             diffEditWorkingDirectoryFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo);
             diffDeleteFileToolStripMenuItem.Text = ResourceManager.Strings.GetDeleteFile(selectionInfo.SelectedGitItemCount);
             diffDeleteFileToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuDeleteFile(selectionInfo);
