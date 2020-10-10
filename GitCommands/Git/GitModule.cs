@@ -1373,13 +1373,13 @@ namespace GitCommands
                 return "";
             }
 
-            return _gitExecutable.GetOutput(
+            return _gitExecutable.GetBatchOutput(
                 new GitArgumentBuilder("rm")
                 {
                     { force, "--force" },
-                    "--",
-                    files.Select(f => f.ToPosixPath().Quote())
-                });
+                    "--"
+                }
+                    .BuildBatchArgumentsForFiles(files));
         }
 
         /// <summary>Tries to start Pageant for the specified remote repo (using the remote's PuTTY key file).</summary>
