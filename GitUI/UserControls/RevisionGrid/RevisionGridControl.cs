@@ -1456,24 +1456,31 @@ namespace GitUI
 
         private void OnGridViewCellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (e.Button != MouseButtons.Right)
+            try
             {
-                return;
+                if (e.Button != MouseButtons.Right)
+                {
+                    return;
+                }
+
+                if (_latestSelectedRowIndex == e.RowIndex
+                    && _latestSelectedRowIndex < _gridView.Rows.Count
+                    && _gridView.Rows[_latestSelectedRowIndex].Selected)
+                {
+                    return;
+                }
+
+                _latestSelectedRowIndex = e.RowIndex;
+                _gridView.ClearSelection();
+
+                if (IsValidRevisionIndex(_latestSelectedRowIndex))
+                {
+                    _gridView.Rows[_latestSelectedRowIndex].Selected = true;
+                }
             }
-
-            if (_latestSelectedRowIndex == e.RowIndex
-                && _latestSelectedRowIndex < _gridView.Rows.Count
-                && _gridView.Rows[_latestSelectedRowIndex].Selected)
+            catch (Exception)
             {
-                return;
-            }
-
-            _latestSelectedRowIndex = e.RowIndex;
-            _gridView.ClearSelection();
-
-            if (IsValidRevisionIndex(_latestSelectedRowIndex))
-            {
-                _gridView.Rows[_latestSelectedRowIndex].Selected = true;
+                // Checks for bounds seems not enough. See https://github.com/gitextensions/gitextensions/issues/8475
             }
         }
 
