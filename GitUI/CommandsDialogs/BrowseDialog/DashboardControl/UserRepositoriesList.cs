@@ -330,6 +330,20 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             handler?.Invoke(this, args);
         }
 
+        protected override bool ProcessDialogKey(Keys keyData)
+        {
+            if (keyData == Keys.Enter)
+            {
+                // .NET 5.0 introduced collapsible `ListViewGoup`s, which we do not yet have API access to but still get rendered in the UI.
+                // Whenever the list of repos is collapsed but we still have a repo selected (and hidden), if we hit enter, the selected repo will
+                // be opened. This should be a no-op instead, however, since we cannot visually tell what repo is selected. When we upgrade
+                // to .NET 5.0, we can check ListViewGroup.CollapsedState to fix this issue.
+                return TryOpenSelectedRepository();
+            }
+
+            return base.ProcessDialogKey(keyData);
+        }
+
         private List<string> GetCategories()
         {
             return GetRepositories()
@@ -587,23 +601,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             if (e.Button == MouseButtons.Left)
             {
-                var selected = GetSelectedRepository();
-                if (selected == null)
-                {
-                    return;
-                }
-
-                if (_controller.IsValidGitWorkingDir(selected.Path))
-                {
-                    OnModuleChanged(new GitModuleEventArgs(new GitModule(selected.Path)));
-                    return;
-                }
-
-                if (_controller.RemoveInvalidRepository(selected.Path))
-                {
-                    ShowRecentRepositories();
-                    return;
-                }
+                TryOpenSelectedRepository();
             }
             else if (e.Button == MouseButtons.Right)
             {
@@ -861,6 +859,30 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     e.Effect = DragDropEffects.Copy;
                 }
             }
+        }
+
+        // returns false only if no repository is selected
+        private bool TryOpenSelectedRepository()
+        {
+            var selected = GetSelectedRepository();
+            if (selected == null)
+            {
+                return false;
+            }
+
+            if (_controller.IsValidGitWorkingDir(selected.Path))
+            {
+                OnModuleChanged(new GitModuleEventArgs(new GitModule(selected.Path)));
+                return true;
+            }
+
+            if (_controller.RemoveInvalidRepository(selected.Path))
+            {
+                ShowRecentRepositories();
+                return true;
+            }
+
+            return true;
         }
     }
 }
