@@ -16,6 +16,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormSubmodules : GitModuleForm
     {
+        private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("FormSubmodules"));
         private readonly TranslationString _removeSelectedSubmodule = new TranslationString("Are you sure you want remove the selected submodule?");
         private readonly TranslationString _removeSelectedSubmoduleCaption = new TranslationString("Remove");
 
@@ -39,6 +40,19 @@ namespace GitUI.CommandsDialogs
             splitContainer1.SplitterDistance = DpiUtil.Scale(222);
             Pull.AdaptImageLightness();
             InitializeComplete();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            _splitterManager.AddSplitter(splitContainer1, nameof(splitContainer1));
+            _splitterManager.RestoreSplitters();
+            base.OnLoad(e);
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            _splitterManager.SaveSplitters();
+            base.OnClosing(e);
         }
 
         private void AddSubmoduleClick(object sender, EventArgs e)
