@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.BranchTreePanel.ContextMenu;
 using GitUI.BranchTreePanel.Interfaces;
+using GitUI.UserControls.RevisionGrid;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.BranchTreePanel
@@ -17,6 +19,8 @@ namespace GitUI.BranchTreePanel
         private GitRefsSortOrderContextMenuItem _sortOrderContextMenuItem;
         private GitRefsSortByContextMenuItem _sortByContextMenuItem;
         private ToolStripSeparator _tsmiSortMenuSpacer = new ToolStripSeparator { Name = "tsmiSortMenuSpacer" };
+        private ToolStripItem[] _menuBranchCopyContextMenuItems = Array.Empty<ToolStripItem>();
+        private ToolStripItem[] _menuRemoteCopyContextMenuItems = Array.Empty<ToolStripItem>();
 
         /// <summary>
         /// Local branch context menu [git ref / rename / delete] actions
@@ -107,14 +111,34 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
-            var node = (contextMenu.SourceControl as TreeView)?.SelectedNode;
+            var node = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag as LocalBranchNode;
+
             if (node is null)
             {
                 return;
             }
 
-            var isNotActiveBranch = !((node.Tag as LocalBranchNode)?.IsActive ?? false);
+            var isNotActiveBranch = !node.IsActive;
             _localBranchMenuItems.GetInactiveBranchItems().ForEach(t => t.Item.Visible = isNotActiveBranch);
+
+            _menuBranchCopyContextMenuItems.ForEach(x => x.Visible = node.Visible);
+        }
+
+        private void ContextMenuRemoteSpecific(ContextMenuStrip contextMenu)
+        {
+            if (contextMenu != menuRemote)
+            {
+                return;
+            }
+
+            var node = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag as RemoteBranchNode;
+
+            if (node is null)
+            {
+                return;
+            }
+
+            _menuRemoteCopyContextMenuItems.ForEach(x => x.Visible = node.Visible);
         }
 
         private void ContextMenuRemoteRepoSpecific(ContextMenuStrip contextMenu)
@@ -216,6 +240,12 @@ namespace GitUI.BranchTreePanel
 
         private void RegisterContextActions()
         {
+            _menuBranchCopyContextMenuItems = CreateCopyContextMenuItems();
+            _menuRemoteCopyContextMenuItems = CreateCopyContextMenuItems();
+
+            AddContextMenuItems(menuBranch, _menuBranchCopyContextMenuItems);
+            AddContextMenuItems(menuRemote, _menuRemoteCopyContextMenuItems);
+
             _sortOrderContextMenuItem = new GitRefsSortOrderContextMenuItem(() =>
             {
                 _branchesTree.Refresh();
@@ -230,7 +260,7 @@ namespace GitUI.BranchTreePanel
             });
 
             _localBranchMenuItems = new LocalBranchMenuItems<LocalBranchNode>(this);
-            AddContextMenuItems(menuBranch, _localBranchMenuItems.Select(s => s.Item));
+            AddContextMenuItems(menuBranch, _localBranchMenuItems.Select(s => s.Item), insertAfter: _menuBranchCopyContextMenuItems[1]);
 
             _remoteBranchMenuItems = new RemoteBranchMenuItems<RemoteBranchNode>(this);
             AddContextMenuItems(menuRemote, _remoteBranchMenuItems.Select(s => s.Item), insertAfter: toolStripSeparator1);
@@ -282,6 +312,19 @@ namespace GitUI.BranchTreePanel
             Node.RegisterContextMenu(typeof(SubmoduleNode), menuSubmodule);
         }
 
+        private ToolStripItem[] CreateCopyContextMenuItems()
+        {
+            var copyContextMenuItem = new CopyContextMenuItem();
+
+            copyContextMenuItem.SetRevisionFunc(() => _scriptHost.GetSelectedRevisions());
+
+            return new ToolStripItem[]
+            {
+                copyContextMenuItem,
+                new ToolStripSeparator()
+            };
+        }
+
         private void FilterInRevisionGrid(BaseBranchNode branch)
         {
             _filterBranchHelper?.SetBranchFilter(branch.FullPath, refresh: true);
@@ -298,6 +341,7 @@ namespace GitUI.BranchTreePanel
             ContextMenuAddExpandCollapseTree(contextMenu);
             ContextMenuSort(contextMenu);
             ContextMenuBranchSpecific(contextMenu);
+            ContextMenuRemoteSpecific(contextMenu);
             ContextMenuRemoteRepoSpecific(contextMenu);
             ContextMenuSubmoduleSpecific(contextMenu);
 

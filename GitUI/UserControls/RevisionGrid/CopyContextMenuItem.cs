@@ -63,7 +63,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             var item = new ToolStripMenuItem
             {
-                Text = displayText,
+                Text = displayText.TrimEnd('\r', '\n'),
                 ShowShortcutKeys = true,
                 Image = image
             };
