@@ -1,6 +1,9 @@
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using GitCommands;
+using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using ResourceManager;
@@ -11,6 +14,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private int _updateThemeSettingsCounter;
         private readonly ThemeRepository _themeRepository = new ThemeRepository();
+        private readonly ThemePathProvider _themePathProvider = new ThemePathProvider();
 
         private static readonly TranslationString FormatBuiltinThemeName =
             new TranslationString("{0}");
@@ -25,6 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Text = "Colors";
+            sbOpenThemeFolder.AutoSize = false;
             InitializeComplete();
         }
 
@@ -226,6 +231,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             private bool Equals(FormattedThemeId other) =>
                 ThemeId.Equals(other.ThemeId);
+        }
+
+        private void tsmiApplicationFolder_Click(object sender, EventArgs e) => OpenFolder(_themePathProvider.AppThemesDirectory);
+
+        private void tsmiUserFolder_Click(object sender, EventArgs e) => OpenFolder(_themePathProvider.UserThemesDirectory);
+
+        private void OpenFolder(string folderPath)
+        {
+            if (Directory.Exists(folderPath))
+            {
+                Process.Start(folderPath);
+            }
         }
     }
 }

@@ -739,6 +739,18 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Restart required to apply changes</source>
         <target />
       </trans-unit>
+      <trans-unit id="sbOpenThemeFolder.Text">
+        <source>Open theme folder</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiApplicationFolder.Text">
+        <source>Application folder</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiUserFolder.Text">
+        <source>User folder</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="CommitDialogSettingsPage" source-language="en">
