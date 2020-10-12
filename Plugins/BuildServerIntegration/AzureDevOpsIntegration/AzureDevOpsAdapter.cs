@@ -13,6 +13,7 @@ using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft.VisualStudio.Threading;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace AzureDevOpsIntegration
@@ -61,9 +62,11 @@ The build server integration has been disabled for this session.");
 As a consequence, the build server integration has been disabled for this session.
 
 Detail of the error:");
+
+        private Action _openSettings;
         private string CacheKey => _projectUrl + "|" + _settings.BuildDefinitionFilter;
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<ObjectId, bool> isCommitInRevisionGrid = null)
+        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
             if (_buildServerWatcher != null)
             {
@@ -71,6 +74,7 @@ Detail of the error:");
             }
 
             _buildServerWatcher = buildServerWatcher;
+            _openSettings = openSettings;
             _settings = IntegrationSettings.ReadFrom(config);
 
             if (!_settings.IsValid())
@@ -149,12 +153,48 @@ Detail of the error:");
                     }
                     catch (UnauthorizedAccessException)
                     {
-                        ManageError(_badTokenErrorMessage.Text);
+                        string errorMessage = _badTokenErrorMessage.Text;
+                        ManageError(errorMessage);
+
+                        if (ProjectOnErrorKey == null || ProjectOnErrorKey != CacheKey)
+                        {
+                            ProjectOnErrorKey = CacheKey;
+
+                            var btnOpenSettings = new TaskDialogButton("btnOpenSettings", "Open settings");
+                            var btnIgnore = new TaskDialogButton("btnIgnoreError", "Ignore");
+                            using var errorDialog = new TaskDialog
+                            {
+                                InstructionText = errorMessage,
+                                Icon = TaskDialogStandardIcon.Error,
+                                Cancelable = true,
+                                Caption = _buildIntegrationErrorCaption.Text,
+                                Controls = { btnOpenSettings, btnIgnore }
+                            };
+
+                            btnOpenSettings.Click += (sender, e) => errorDialog.Close(TaskDialogResult.Yes);
+                            btnIgnore.Click += (sender, e) => errorDialog.Close(TaskDialogResult.No);
+
+                            var result = errorDialog.Show();
+                            if (result == TaskDialogResult.Yes)
+                            {
+                                ProjectOnErrorKey = null;
+                                _openSettings.Invoke();
+                            }
+                        }
+
                         return;
                     }
                     catch (Exception ex)
                     {
-                        ManageError(_genericErrorMessage.Text + ex.Message);
+                        string errorMessage = _genericErrorMessage.Text + ex.Message;
+                        ManageError(errorMessage);
+
+                        if (ProjectOnErrorKey == null || ProjectOnErrorKey != CacheKey)
+                        {
+                            ProjectOnErrorKey = CacheKey;
+                            MessageBox.Show(errorMessage, _buildIntegrationErrorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+
                         return;
                     }
                 }
@@ -164,12 +204,6 @@ Detail of the error:");
                     _apiClient = null;
                     observer.OnNext(new BuildInfo { CommitHashList = new[] { ObjectId.WorkTreeId }, Description = errorMessage, Status = BuildInfo.BuildStatus.Failure });
                     observer.OnCompleted();
-
-                    if (ProjectOnErrorKey == null || ProjectOnErrorKey != CacheKey)
-                    {
-                        ProjectOnErrorKey = CacheKey;
-                        MessageBox.Show(errorMessage, _buildIntegrationErrorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
                 }
 
                 if (_buildDefinitions == null)

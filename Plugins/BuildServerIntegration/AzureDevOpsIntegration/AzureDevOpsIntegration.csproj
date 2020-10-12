@@ -4,6 +4,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Core" Version="$(MicrosoftWindowsAPICodePackVersion)" />
     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
     <PackageReference Include="System.Reactive.Linq" Version="$(SystemReactiveVersion)" />
   </ItemGroup>

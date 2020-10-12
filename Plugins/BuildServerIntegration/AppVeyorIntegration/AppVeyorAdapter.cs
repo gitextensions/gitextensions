@@ -65,6 +65,7 @@ namespace AppVeyorIntegration
         public void Initialize(
             IBuildServerWatcher buildServerWatcher,
             ISettingsSource config,
+            Action openSettings,
             Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
             if (_buildServerWatcher != null)
