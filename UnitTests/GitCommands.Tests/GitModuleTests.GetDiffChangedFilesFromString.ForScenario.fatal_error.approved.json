@@ -18,7 +18,8 @@
         "IsSkipWorktree": false,
         "IsSubmodule": false,
         "IsDirty": false,
-        "IsStatusOnly": false
+        "IsStatusOnly": false,
+        "IsRangeDiff": false
     },
     {
         "Name": "testfile2.txt",
@@ -39,6 +40,7 @@
         "IsSkipWorktree": false,
         "IsSubmodule": false,
         "IsDirty": false,
-        "IsStatusOnly": false
+        "IsStatusOnly": false,
+        "IsRangeDiff": false
     }
 ]

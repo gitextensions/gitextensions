@@ -17,6 +17,7 @@ namespace GitUI.CommandsDialogs
         bool ShouldShowMenuFileHistory(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuSaveAs(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuCopyFileName(ContextMenuSelectionInfo selectionInfo);
+        bool ShouldShowMenuShowInFolder(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuShowInFileTree(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuStage(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuUnstage(ContextMenuSelectionInfo selectionInfo);
@@ -29,7 +30,8 @@ namespace GitUI.CommandsDialogs
         // Defaults are set to simplify test cases, the defaults enables most
         public ContextMenuSelectionInfo(
             GitRevision selectedRevision,
-            bool isAnyCombinedDiff,
+            bool isDisplayOnlyDiff,
+            bool isStatusOnly,
             int selectedGitItemCount,
             bool isAnyItemIndex,
             bool isAnyItemWorkTree,
@@ -40,7 +42,8 @@ namespace GitUI.CommandsDialogs
             bool isAnySubmodule)
         {
             SelectedRevision = selectedRevision;
-            IsAnyCombinedDiff = isAnyCombinedDiff;
+            IsDisplayOnlyDiff = isDisplayOnlyDiff;
+            IsStatusOnly = isStatusOnly;
             SelectedGitItemCount = selectedGitItemCount;
             IsAnyItemIndex = isAnyItemIndex;
             IsAnyItemWorkTree = isAnyItemWorkTree;
@@ -53,7 +56,8 @@ namespace GitUI.CommandsDialogs
 
         [CanBeNull]
         public GitRevision SelectedRevision { get; }
-        public bool IsAnyCombinedDiff { get; }
+        public bool IsDisplayOnlyDiff { get; }
+        public bool IsStatusOnly { get; }
         public int SelectedGitItemCount { get; }
         public bool IsAnyItemIndex { get; }
         public bool IsAnyItemWorkTree { get; }
@@ -77,25 +81,29 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowDifftoolMenus(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.SelectedGitItemCount > 0 && !selectionInfo.IsAnyCombinedDiff;
+            return selectionInfo.SelectedGitItemCount > 0 && !selectionInfo.IsDisplayOnlyDiff;
         }
 
         public bool ShouldShowResetFileMenus(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.SelectedGitItemCount > 0 && !selectionInfo.IsBareRepository && selectionInfo.IsAnyTracked;
+            return selectionInfo.SelectedGitItemCount > 0
+                && !selectionInfo.IsBareRepository
+                && selectionInfo.IsAnyTracked
+                && !selectionInfo.IsDisplayOnlyDiff;
         }
 
         #region Main menu items
         public bool ShouldShowMenuSaveAs(ContextMenuSelectionInfo selectionInfo)
         {
             return selectionInfo.SelectedGitItemCount == 1 && !selectionInfo.IsAnySubmodule
-                && !(selectionInfo.SelectedRevision?.IsArtificial ?? false);
+                && !(selectionInfo.SelectedRevision?.IsArtificial ?? false)
+                && !selectionInfo.IsDisplayOnlyDiff;
         }
 
         public bool ShouldShowMenuCherryPick(ContextMenuSelectionInfo selectionInfo)
         {
             return selectionInfo.SelectedGitItemCount == 1 && !selectionInfo.IsAnySubmodule
-                && !selectionInfo.IsAnyCombinedDiff && !selectionInfo.IsBareRepository
+                && !selectionInfo.IsDisplayOnlyDiff && !selectionInfo.IsBareRepository
                 && !(selectionInfo.SelectedRevision?.IsArtificial ?? false);
         }
 
@@ -127,18 +135,27 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuOpenRevision(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.SelectedGitItemCount == 1 && !selectionInfo.IsAnySubmodule &&
-                   !(selectionInfo.SelectedRevision?.IsArtificial ?? false);
+            return selectionInfo.SelectedGitItemCount == 1
+                && !selectionInfo.IsAnySubmodule
+                && !selectionInfo.IsDisplayOnlyDiff
+                && !(selectionInfo.SelectedRevision?.IsArtificial ?? false);
         }
 
         public bool ShouldShowMenuCopyFileName(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.SelectedGitItemCount != 0;
+            return selectionInfo.SelectedGitItemCount > 0 && !selectionInfo.IsStatusOnly;
+        }
+
+        public bool ShouldShowMenuShowInFolder(ContextMenuSelectionInfo selectionInfo)
+        {
+            return selectionInfo.SelectedGitItemCount > 0 && !selectionInfo.IsStatusOnly;
         }
 
         public bool ShouldShowMenuShowInFileTree(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.SelectedGitItemCount == 1 && !(selectionInfo.SelectedRevision?.IsArtificial ?? false);
+            return selectionInfo.SelectedGitItemCount == 1
+                && !(selectionInfo.SelectedRevision?.IsArtificial ?? false)
+                && !selectionInfo.IsStatusOnly;
         }
 
         public bool ShouldShowMenuFileHistory(ContextMenuSelectionInfo selectionInfo)

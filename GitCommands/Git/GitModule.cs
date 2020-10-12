@@ -818,6 +818,23 @@ namespace GitCommands
             return null;
         }
 
+        public int? GetCommitDiffCount(string parentHash, string childHash)
+        {
+            var args = new GitArgumentBuilder("rev-list")
+            {
+                $"{parentHash}...{childHash}",
+                "--count"
+            };
+            var output = _gitExecutable.GetOutput(args);
+
+            if (int.TryParse(output, out var commitCount))
+            {
+                return commitCount;
+            }
+
+            return null;
+        }
+
         public string GetCommitCountString(string from, string to)
         {
             int? removed = GetCommitCount(from, to);
@@ -2312,6 +2329,40 @@ namespace GitCommands
             var patches = PatchProcessor.CreatePatchesFromString(patch, new Lazy<Encoding>(() => encoding)).ToList();
 
             return GetPatch(patches, fileName, oldFileName);
+        }
+
+        [NotNull]
+        public string GetRangeDiff(
+            [NotNull] ObjectId firstId,
+            [NotNull] ObjectId secondId,
+            [CanBeNull] ObjectId firstBase,
+            [CanBeNull] ObjectId secondBase,
+            [NotNull] string extraDiffArguments)
+        {
+            if (firstId.IsArtificial
+                || secondId.IsArtificial
+                || (firstBase?.IsArtificial ?? false)
+                || (secondBase?.IsArtificial ?? false))
+            {
+                throw new ArgumentException($"Tried to get range diff for artificial commit: {firstId} and file: {secondId}");
+            }
+
+            // Supported since Git 2.19 (checks when adding the command)
+            var args = new GitArgumentBuilder("range-diff")
+            {
+                "--no-color",
+                extraDiffArguments,
+                { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
+                "-M -C",
+                { firstBase is null || secondBase is null,  $"{firstId}...{secondId}", $"{firstBase}..{firstId} {secondBase}..{secondId}" }
+            };
+
+            var patch = _gitExecutable.GetOutput(
+                args,
+                cache: GitCommandCache,
+                outputEncoding: LosslessEncoding);
+
+            return patch;
         }
 
         [CanBeNull]

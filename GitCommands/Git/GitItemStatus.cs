@@ -38,7 +38,10 @@ namespace GitCommands
             IsSkipWorktree = 1 << 10,
             IsSubmodule = 1 << 11,
             IsDirty = 1 << 12,
-            IsStatusOnly = 1 << 13
+
+            // Other flags are parsed from Git status, set fake flags for special uses
+            IsStatusOnly = 1 << 13,
+            IsRangeDiff = 1 << 14
         }
 
         private JoinableTask<GitSubmoduleStatus> _submoduleStatus;
@@ -136,14 +139,24 @@ namespace GitCommands
             set => SetFlag(value, Flags.IsDirty);
         }
 
-        /// <summary>
+        /// <remarks>
         /// This item is not a Git item, just status information
         /// If ErrorMessage is set, this is an error from Git, otherwise just a marker that nothing is changed
-        /// </summary>
+        /// </remarks>
         public bool IsStatusOnly
         {
             get => _flags.HasFlag(Flags.IsStatusOnly);
             set => SetFlag(value, Flags.IsStatusOnly);
+        }
+
+        /// <remarks>
+        /// This item is not a native git item, but a status information
+        /// calculated with git range-diff command.
+        /// </remarks>
+        public bool IsRangeDiff
+        {
+            get => _flags.HasFlag(Flags.IsRangeDiff);
+            set => SetFlag(value, Flags.IsRangeDiff);
         }
 
         private void SetFlag(bool isSet, Flags flag)
