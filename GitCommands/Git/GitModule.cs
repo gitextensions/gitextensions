@@ -1945,14 +1945,14 @@ namespace GitCommands
         private static readonly Regex HeadersMatch = new Regex(@"^(?<header_key>[-A-Za-z0-9]+)(?::[ \t]*)(?<header_value>.*)$", RegexOptions.Compiled);
         private static readonly Regex QuotedText = new Regex(@"=\?([\w-]+)\?q\?(.*)\?=$", RegexOptions.Compiled);
 
-        public bool InTheMiddleOfInteractiveRebase()
-        {
-            return File.Exists(GetRebaseDir() + "git-rebase-todo");
-        }
+        private string RebaseTodoFilePath => GetRebaseDir() + "git-rebase-todo.backup";
+        private string CurrentFilePath => GetRebaseDir() + "stopped-sha";
+
+        public bool InTheMiddleOfInteractiveRebase() => File.Exists(RebaseTodoFilePath);
 
         public IReadOnlyList<PatchFile> GetInteractiveRebasePatchFiles()
         {
-            string todoFile = GetRebaseDir() + "git-rebase-todo";
+            string todoFile = RebaseTodoFilePath;
             string[] todoCommits = File.Exists(todoFile) ? File.ReadAllText(todoFile).Trim().Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries) : null;
 
             var patchFiles = new List<PatchFile>();
@@ -1961,6 +1961,8 @@ namespace GitCommands
             {
                 string commentChar = EffectiveConfigFile.GetString("core.commentChar", "#");
 
+                string currentCommitShortHash = File.Exists(CurrentFilePath) ? File.ReadAllText(CurrentFilePath).Trim() : null;
+                var isCurrentFound = false;
                 foreach (string todoCommit in todoCommits)
                 {
                     if (todoCommit.StartsWith(commentChar))
@@ -1970,19 +1972,25 @@ namespace GitCommands
 
                     string[] parts = todoCommit.Split(' ');
 
-                    if (parts.Length >= 3)
+                    if (parts.Length < 3)
                     {
-                        CommitData data = _commitDataManager.GetCommitData(parts[1], out var error);
-
-                        patchFiles.Add(new PatchFile
-                        {
-                            Author = error ?? data.Author,
-                            Subject = error ?? data.Body,
-                            Name = parts[0],
-                            Date = error ?? data.CommitDate.LocalDateTime.ToString(),
-                            IsNext = patchFiles.Count == 0
-                        });
+                        continue;
                     }
+
+                    string commitHash = parts[1];
+                    CommitData data = _commitDataManager.GetCommitData(commitHash, out var error);
+                    var isApplying = currentCommitShortHash != null && commitHash.StartsWith(currentCommitShortHash);
+                    isCurrentFound |= isApplying;
+
+                    patchFiles.Add(new PatchFile
+                    {
+                        Author = error ?? data.Author,
+                        Subject = error ?? data.Body,
+                        Name = parts[0],
+                        Date = error ?? data.CommitDate.LocalDateTime.ToString(),
+                        IsNext = isApplying,
+                        IsApplied = !isCurrentFound,
+                    });
                 }
             }
 
