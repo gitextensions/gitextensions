@@ -146,7 +146,6 @@
             this.Controls.Add(this.Browse);
             this.Controls.Add(this.Directory);
             this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormAddSubmodule";
