@@ -1923,7 +1923,7 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
       </trans-unit>
       <trans-unit id="_strCouldNotFetchReposOfUser.Text">
         <source>Could not fetch repositories of user!</source>
-        <target>Fetch der Repositorys des Benutzers fehlgeschlagen!</target>
+        <target>Fetch der Repositories des Benutzers fehlgeschlagen!</target>
         
       </trans-unit>
       <trans-unit id="_strFailedToFork.Text">
@@ -1933,7 +1933,7 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
       </trans-unit>
       <trans-unit id="_strFailedToGetRepos.Text">
         <source>Failed to get repositories. This most likely means you didn't configure {0}, please do so via the menu &quot;Plugins/{0}&quot;.</source>
-        <target>Fehler bei Abfrage des Repositorys. Benutzername/ApiToken korrekt?</target>
+        <target>Fehler bei Abfrage des Repositories. Benutzername/ApiToken korrekt?</target>
         
       </trans-unit>
       <trans-unit id="_strLoading.Text">
@@ -2071,7 +2071,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="helpTextLbl.Text">
         <source>If you want to fork a repository owned by somebody else, go to the Search for repositories tab.</source>
-        <target>Wenn Sie ein Repository forken möchten, welches jemanden anderem gehört, wechseln Sie auf den 'Nach Repositorys suchen&quot; Tab.</target>
+        <target>Wenn Sie ein Repository forken möchten, welches jemanden anderem gehört, wechseln Sie auf den 'Nach Repositories suchen&quot; Tab.</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -2086,7 +2086,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="myReposPage.Text">
         <source>My repositories</source>
-        <target>Meine Repositorys</target>
+        <target>Meine Repositories</target>
         
       </trans-unit>
       <trans-unit id="openGitupPageBtn.Text">
@@ -2106,7 +2106,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="searchReposPage.Text">
         <source>Search for repositories</source>
-        <target>Nach Repositorys suchen</target>
+        <target>Nach Repositories suchen</target>
         
       </trans-unit>
     </body>
@@ -3201,7 +3201,7 @@ Wollen Sie weiter machen?</target>
       </trans-unit>
       <trans-unit id="tsmiRecentRepositories.Text">
         <source>Recent Repositories</source>
-        <target>Kürzlich verwendete Repositorys</target>
+        <target>Kürzlich verwendete Repositories</target>
         
       </trans-unit>
       <trans-unit id="tsmiRecentRepositoriesClear.Text">
@@ -7374,7 +7374,7 @@ Stashen Sie die Änderungen zuvor wenn Sie diese nicht verlieren wollen.</target
     <body>
       <trans-unit id="$this.Text">
         <source>Remote repositories</source>
-        <target>Remote Repositorys</target>
+        <target>Remote Repositories</target>
         
       </trans-unit>
       <trans-unit id="BranchName.HeaderText">
@@ -7590,7 +7590,7 @@ Wert wurde mit leerem Wert ersetzt.</target>
       </trans-unit>
       <trans-unit id="tabPage1.Text">
         <source>Remote repositories</source>
-        <target>Remote Repositorys</target>
+        <target>Remote Repositories</target>
         
       </trans-unit>
       <trans-unit id="tabPage2.Text">
@@ -9730,7 +9730,7 @@ Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</target>
         <target>Shell nicht gefunden</target>
         
       </trans-unit>
-      <trans-unit id="_theRepositorySubmodules.Text">
+      <trans-unit id="_theRepositoriesubmodules.Text">
         <source>Update submodules on checkout?</source>
         <target>Untermodule beim Checkout updaten ?</target>
         
@@ -9884,7 +9884,7 @@ Die Aktion kann nicht rückgängig gemacht werden.</target>
       </trans-unit>
       <trans-unit id="lblRecentRepositories.Text">
         <source>Recent Repositories</source>
-        <target>Kürzlich verwendete Repositorys</target>
+        <target>Kürzlich verwendete Repositories</target>
         
       </trans-unit>
       <trans-unit id="mnuConfigure.Text">
@@ -11730,7 +11730,7 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
       </trans-unit>
       <trans-unit id="_removeAllInvalidRepositories.Text">
         <source>Remove all {0} invalid repositories</source>
-        <target>Alle {0} ungültigen Repositorys entfernen.</target>
+        <target>Alle {0} ungültigen Repositories entfernen.</target>
         
       </trans-unit>
       <trans-unit id="_removeSelectedInvalidRepository.Text">
