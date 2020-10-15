@@ -1484,15 +1484,21 @@ namespace GitUI.CommandsDialogs
 
                     ScriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
 
-                    Message.Text = string.Empty; // Message.Text has been used and stored
+                    // Message.Text has been used and stored
                     _commitMessageManager.ResetCommitMessage();
                     CommitKind = CommitKind.Normal;
-
                     bool pushCompleted = true;
-                    if (push)
+                    try
                     {
-                        bool pushForced = AppSettings.CommitAndPushForcedWhenAmend && amend;
-                        UICommands.StartPushDialog(this, true, pushForced, out pushCompleted);
+                        if (push)
+                        {
+                            bool pushForced = AppSettings.CommitAndPushForcedWhenAmend && amend;
+                            UICommands.StartPushDialog(this, true, pushForced, out pushCompleted);
+                        }
+                    }
+                    finally
+                    {
+                        Message.Text = string.Empty;
                     }
 
                     if (pushCompleted && Module.SuperprojectModule != null && AppSettings.StageInSuperprojectAfterCommit)
