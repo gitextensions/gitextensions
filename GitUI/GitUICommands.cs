@@ -1381,8 +1381,10 @@ namespace GitUI
                 });
         }
 
-        public bool RunCommand(IReadOnlyList<string> args)
+        public bool RunCommand(IReadOnlyList<string> args, out bool saveAppSettings)
         {
+            saveAppSettings = false;
+
             var arguments = InitializeArguments(args);
 
             if (args.Count <= 1)
@@ -1422,12 +1424,13 @@ namespace GitUI
                 return false;
             }
 
-            return RunCommandBasedOnArgument(args, arguments);
+            return RunCommandBasedOnArgument(args, arguments, out saveAppSettings);
         }
 
         // Please update FormCommandlineHelp if you add or change commands
-        private bool RunCommandBasedOnArgument(IReadOnlyList<string> args, IReadOnlyDictionary<string, string> arguments)
+        private bool RunCommandBasedOnArgument(IReadOnlyList<string> args, IReadOnlyDictionary<string, string> arguments, out bool saveAppSettings)
         {
+            saveAppSettings = false;
 #pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
             var command = args[1];
             switch (command)
@@ -1449,6 +1452,7 @@ namespace GitUI
                 case "branch":
                     return StartCreateBranchDialog();
                 case "browse":      // [path] [-filter]
+                    saveAppSettings = true;
                     return RunBrowseCommand(args);
                 case "checkout":
                 case "checkoutbranch":
@@ -1936,7 +1940,7 @@ namespace GitUI
 
             internal string NormalizeFileName(string fileName) => _commands.NormalizeFileName(fileName);
 
-            internal bool RunCommandBasedOnArgument(string[] args) => _commands.RunCommandBasedOnArgument(args, InitializeArguments(args));
+            internal bool RunCommandBasedOnArgument(string[] args) => _commands.RunCommandBasedOnArgument(args, InitializeArguments(args), out var saveAppSettings);
         }
     }
 }
