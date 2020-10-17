@@ -202,8 +202,24 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 }
 
                 // Draw the summary text
-                var bounds = messageBounds.ReduceLeft(offset);
-                _grid.DrawColumnText(e, text, revision.ObjectId == _grid.CurrentCheckout ? style.BoldFont : normalFont, style.ForeColor, bounds);
+                var textBounds = messageBounds.ReduceLeft(offset);
+
+                var lines = text.SplitLines();
+                var commitTitle = lines.FirstOrDefault();
+                var commitDescriptionBuilder = new StringBuilder();
+                foreach (var line in lines.Skip(1))
+                {
+                    commitDescriptionBuilder.Append(' ').Append(line);
+                }
+
+                Font font = revision.ObjectId == _grid.CurrentCheckout ? style.BoldFont : normalFont;
+                int titleOffset = _grid.DrawColumnText(e, commitTitle, font, style.ForeColor, textBounds);
+
+                if (commitDescriptionBuilder.Length > 0)
+                {
+                    textBounds.Offset(titleOffset, y: 0);
+                    _grid.DrawColumnText(e, commitDescriptionBuilder.ToString(), font, style.GrayForeColor, textBounds);
+                }
 
                 // Draw the multi-line indicator
                 indicator.Render();
@@ -274,15 +290,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         {
             if (!revision.IsArtificial)
             {
-                if (revision.HasMultiLineMessage && revision.Body != null)
-                {
-                    e.Value = Regex.Replace(revision.Body.Trim(), "[\r\n]", " ");
-                }
-                else
-                {
-                    e.Value = revision.Subject.Trim();
-                }
-
+                e.Value = revision.Body?.Trim() ?? string.Empty;
                 e.FormattingApplied = true;
             }
         }

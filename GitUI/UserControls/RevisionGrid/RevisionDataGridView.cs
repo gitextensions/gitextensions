@@ -236,14 +236,31 @@ namespace GitUI.UserControls.RevisionGrid
 
         private Color GetForeground(DataGridViewElementStates state, int rowIndex)
         {
-            if (state.HasFlag(DataGridViewElementStates.Selected))
+            bool isGray = AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(rowIndex);
+            bool isSelected = state.HasFlag(DataGridViewElementStates.Selected);
+            return (isGray, isSelected) switch
             {
-                return SystemColors.HighlightText;
-            }
+                (isGray: false, isSelected: false) => SystemColors.ControlText,
+                (isGray: false, isSelected: true) => SystemColors.HighlightText,
 
-            return AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(rowIndex)
-                ? SystemColors.GrayText
-                : SystemColors.ControlText;
+                (isGray: true, isSelected: false) => SystemColors.GrayText,
+
+                // (isGray: true, isSelected: true)
+                _ => ColorHelper.GetHighlightGrayTextColor(
+                    backgroundColorName: KnownColor.Control,
+                    textColorName: KnownColor.ControlText,
+                    highlightColorName: KnownColor.Highlight)
+            };
+        }
+
+        private Color GetGrayForeground(DataGridViewElementStates state)
+        {
+            return state.HasFlag(DataGridViewElementStates.Selected)
+                ? ColorHelper.GetHighlightGrayTextColor(
+                    backgroundColorName: KnownColor.Control,
+                    textColorName: KnownColor.ControlText,
+                    highlightColorName: KnownColor.Highlight)
+                : SystemColors.GrayText;
         }
 
         private Brush GetBackground(DataGridViewElementStates state, int rowIndex, GitRevision revision)
@@ -284,9 +301,11 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 var backBrush = GetBackground(e.State, e.RowIndex, revision);
                 var foreColor = GetForeground(e.State, e.RowIndex);
+                var grayForeColor = GetGrayForeground(e.State);
 
                 e.Graphics.FillRectangle(backBrush, e.CellBounds);
-                provider.OnCellPainting(e, revision, _rowHeight, new CellStyle(backBrush, foreColor, _normalFont, _boldFont, _monospaceFont));
+                var cellStyle = new CellStyle(backBrush, foreColor, grayForeColor, _normalFont, _boldFont, _monospaceFont);
+                provider.OnCellPainting(e, revision, _rowHeight, cellStyle);
 
                 e.Handled = true;
             }
