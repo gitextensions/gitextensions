@@ -956,6 +956,7 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.Select();
 
             UpdateFormTitleAndButton();
+            DisableMergeOptionsWhenCurrentBranchIsLocal();
         }
 
         private void UpdateFormTitleAndButton()
@@ -1161,6 +1162,17 @@ namespace GitUI.CommandsDialogs
         {
             Prune.Checked = Prune.Checked || PruneTags.Checked;
             AllTags.Checked = AllTags.Checked || PruneTags.Checked;
+        }
+
+        private void DisableMergeOptionsWhenCurrentBranchIsLocal()
+        {
+            var isLocalBranch = string.IsNullOrEmpty(Module.GetRemoteBranch(localBranch.Text));
+
+            Rebase.Enabled =
+                Merge.Enabled =
+                Merge.Checked = !isLocalBranch;
+
+            Fetch.Checked = isLocalBranch;
         }
 
         internal TestAccessor GetTestAccessor() => new TestAccessor(this);
