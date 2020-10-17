@@ -109,9 +109,9 @@ namespace GitExtensions.UITests.CommandsDialogs
                 AppSettings.PullAction.Merge);
         }
 
-        [TestCase(AppSettings.PullAction.None, true, false, false, false, false, false, false, false)]
-        [TestCase(AppSettings.PullAction.Merge, true, false, false, false, false, false, false, false)]
-        [TestCase(AppSettings.PullAction.Rebase, false, false, false, true, false, false, false, false)]
+        [TestCase(AppSettings.PullAction.None, false, false, false, false, true, false, true, true)]
+        [TestCase(AppSettings.PullAction.Merge, false, false, false, false, true, false, true, true)]
+        [TestCase(AppSettings.PullAction.Rebase, false, false, false, false, true, false, true, true)]
         [TestCase(AppSettings.PullAction.Fetch, false, false, false, false, true, false, true, true)]
         [TestCase(AppSettings.PullAction.FetchAll, false, false, false, false, true, false, true, true)]
         [TestCase(AppSettings.PullAction.FetchPruneAll, false, true, false, false, true, false, true, true)]
@@ -136,9 +136,9 @@ namespace GitExtensions.UITests.CommandsDialogs
                 null, null, pullAction);
         }
 
-        [TestCase(AppSettings.PullAction.None, true, false, false, false, false, false, false, false)]
-        [TestCase(AppSettings.PullAction.Merge, true, false, false, false, false, false, false, false)]
-        [TestCase(AppSettings.PullAction.Rebase, false, false, false, true, false, false, false, false)]
+        [TestCase(AppSettings.PullAction.None, false, false, false, false, true, false, true, true)]
+        [TestCase(AppSettings.PullAction.Merge, false, false, false, false, true, false, true, true)]
+        [TestCase(AppSettings.PullAction.Rebase, false, false, false, false, true, false, true, true)]
         [TestCase(AppSettings.PullAction.Fetch, false, false, false, false, true, false, true, true)]
         [TestCase(AppSettings.PullAction.FetchAll, false, false, false, false, true, false, true, true)]
         [TestCase(AppSettings.PullAction.FetchPruneAll, false, true, false, false, true, false, true, true)]
@@ -201,6 +201,35 @@ namespace GitExtensions.UITests.CommandsDialogs
                     accessor.UpdateSettingsDuringPull();
 
                     AppSettings.AutoStash.Should().Be(autoStashChecked);
+                },
+                null, null,
+                //// select an action different from None/fetch
+                AppSettings.PullAction.Merge);
+        }
+
+        [Test]
+        public void Should_disable_enable_merge_options_when_no_tracking()
+        {
+            RunFormTest(
+                form =>
+                {
+                    /* Since we're using _commands.StartPullDialog, later FormPullLoad gets called and
+                       in it we call DisableMergeOptionsWhenCurrentBranchIsNotTracking(),
+                       so no need to call it again after the accessor initialization.
+                       Thus, control states are:
+                       Rebase.Enabled = false
+                       Merge.Enabled = false
+                       Fetch.Enabled = true
+                       Fetch.Checked = true
+                    */
+                    var accessor = form.GetTestAccessor();
+
+                    accessor.Merge.Enabled.Should().Be(false);
+                    accessor.Merge.Checked.Should().Be(false);
+                    accessor.Rebase.Enabled.Should().Be(false);
+                    accessor.Rebase.Checked.Should().Be(false);
+                    accessor.Fetch.Enabled.Should().Be(true);
+                    accessor.Fetch.Checked.Should().Be(true);
                 },
                 null, null,
                 //// select an action different from None/fetch
