@@ -937,6 +937,11 @@ namespace GitUI
             return StartSettingsDialog(null, new SettingsPageReferenceByPlugin(gitPlugin));
         }
 
+        public bool StartSettingsDialog(Type pageType)
+        {
+            return StartSettingsDialog(null, new SettingsPageReferenceByType(pageType));
+        }
+
         /// <summary>
         /// Open the archive dialog
         /// </summary>

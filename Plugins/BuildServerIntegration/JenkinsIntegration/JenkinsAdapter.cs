@@ -61,7 +61,7 @@ namespace JenkinsIntegration
         private readonly Dictionary<string, long> _lastProjectBuildTime = new Dictionary<string, long>();
         private Regex _ignoreBuilds;
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<ObjectId, bool> isCommitInRevisionGrid = null)
+        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
             if (_buildServerWatcher != null)
             {
