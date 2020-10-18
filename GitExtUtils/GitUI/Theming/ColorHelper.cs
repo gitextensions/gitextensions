@@ -72,7 +72,8 @@ namespace GitExtUtils.GitUI.Theming
         public static Color GetHighlightGrayTextColor(
             KnownColor backgroundColorName,
             KnownColor textColorName,
-            KnownColor highlightColorName)
+            KnownColor highlightColorName,
+            float degreeOfGrayness = 1f)
         {
             var grayTextHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(KnownColor.GrayText));
             var textHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(textColorName));
@@ -80,12 +81,28 @@ namespace GitExtUtils.GitUI.Theming
             var backgroundHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(backgroundColorName));
             var highlightBackgroundHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(highlightColorName));
 
+            double grayTextL = textHsl.L + (degreeOfGrayness * (grayTextHsl.L - textHsl.L));
+
             double highlightGrayTextL = Transform(
-                grayTextHsl.L,
+                grayTextL,
                 textHsl.L, backgroundHsl.L,
                 highlightTextHsl.L, highlightBackgroundHsl.L);
 
             var highlightGrayTextHsl = grayTextHsl.WithLuminosity(highlightGrayTextL);
+            return AdaptTextColor(highlightGrayTextHsl.ToColor());
+        }
+
+        /// <summary>
+        /// Get a color to be used instead of SystemColors.GrayText which is more ore less gray than
+        /// the usual SystemColors.GrayText
+        /// </summary>
+        public static Color GetGrayTextColor(KnownColor textColorName, float degreeOfGrayness = 1f)
+        {
+            var grayTextHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(KnownColor.GrayText));
+            var textHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(textColorName));
+
+            double grayTextL = textHsl.L + (degreeOfGrayness * (grayTextHsl.L - textHsl.L));
+            var highlightGrayTextHsl = grayTextHsl.WithLuminosity(grayTextL);
             return AdaptTextColor(highlightGrayTextHsl.ToColor());
         }
 

@@ -236,31 +236,33 @@ namespace GitUI.UserControls.RevisionGrid
 
         private Color GetForeground(DataGridViewElementStates state, int rowIndex)
         {
-            bool isGray = AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(rowIndex);
+            bool isNonRelativeGray = AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(rowIndex);
             bool isSelected = state.HasFlag(DataGridViewElementStates.Selected);
-            return (isGray, isSelected) switch
+            return (isNonRelativeGray, isSelected) switch
             {
-                (isGray: false, isSelected: false) => SystemColors.ControlText,
-                (isGray: false, isSelected: true) => SystemColors.HighlightText,
-
-                (isGray: true, isSelected: false) => SystemColors.GrayText,
+                (isNonRelativeGray: false, isSelected: false) => SystemColors.ControlText,
+                (isNonRelativeGray: false, isSelected: true) => SystemColors.HighlightText,
+                (isNonRelativeGray: true, isSelected: false) => SystemColors.GrayText,
 
                 // (isGray: true, isSelected: true)
-                _ => ColorHelper.GetHighlightGrayTextColor(
-                    backgroundColorName: KnownColor.Control,
-                    textColorName: KnownColor.ControlText,
-                    highlightColorName: KnownColor.Highlight)
+                _ => getHighlightedGrayTextColor()
             };
         }
 
-        private Color GetGrayForeground(DataGridViewElementStates state)
+        private Color GetCommitBodyForeground(DataGridViewElementStates state, int rowIndex)
         {
-            return state.HasFlag(DataGridViewElementStates.Selected)
-                ? ColorHelper.GetHighlightGrayTextColor(
-                    backgroundColorName: KnownColor.Control,
-                    textColorName: KnownColor.ControlText,
-                    highlightColorName: KnownColor.Highlight)
-                : SystemColors.GrayText;
+            bool isNonRelativeGray = AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(rowIndex);
+            bool isSelected = state.HasFlag(DataGridViewElementStates.Selected);
+
+            return (isNonRelativeGray, isSelected) switch
+            {
+                (isNonRelativeGray: false, isSelected: false) => SystemColors.GrayText,
+                (isNonRelativeGray: false, isSelected: true) => getHighlightedGrayTextColor(),
+                (isNonRelativeGray: true, isSelected: false) => getGrayTextColor(degreeOfGrayness: 1.75f),
+
+                // (isGray: true, isSelected: true)
+                _ => getHighlightedGrayTextColor(degreeOfGrayness: 1.75f)
+            };
         }
 
         private Brush GetBackground(DataGridViewElementStates state, int rowIndex, GitRevision revision)
@@ -301,10 +303,10 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 var backBrush = GetBackground(e.State, e.RowIndex, revision);
                 var foreColor = GetForeground(e.State, e.RowIndex);
-                var grayForeColor = GetGrayForeground(e.State);
+                var commitBodyForeColor = GetCommitBodyForeground(e.State, e.RowIndex);
 
                 e.Graphics.FillRectangle(backBrush, e.CellBounds);
-                var cellStyle = new CellStyle(backBrush, foreColor, grayForeColor, _normalFont, _boldFont, _monospaceFont);
+                var cellStyle = new CellStyle(backBrush, foreColor, commitBodyForeColor, _normalFont, _boldFont, _monospaceFont);
                 provider.OnCellPainting(e, revision, _rowHeight, cellStyle);
 
                 e.Handled = true;
@@ -745,5 +747,15 @@ namespace GitUI.UserControls.RevisionGrid
                 base.OnMouseWheel(e);
             }
         }
+
+        private static Color getHighlightedGrayTextColor(float degreeOfGrayness = 1f) =>
+            ColorHelper.GetHighlightGrayTextColor(
+                backgroundColorName: KnownColor.Control,
+                textColorName: KnownColor.ControlText,
+                highlightColorName: KnownColor.Highlight,
+                degreeOfGrayness);
+
+        private static Color getGrayTextColor(float degreeOfGrayness = 1f) =>
+            ColorHelper.GetGrayTextColor(textColorName: KnownColor.ControlText, degreeOfGrayness);
     }
 }
