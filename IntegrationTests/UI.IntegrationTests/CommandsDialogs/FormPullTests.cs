@@ -231,9 +231,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     accessor.Fetch.Enabled.Should().Be(true);
                     accessor.Fetch.Checked.Should().Be(true);
                 },
-                null, null,
-                //// select an action different from None/fetch
-                AppSettings.PullAction.Merge);
+                null, null, AppSettings.PullAction.None);
         }
 
         private void RunFormTest(Action<FormPull> testDriver, string remoteBranch, string remote, AppSettings.PullAction pullAction)
