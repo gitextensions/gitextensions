@@ -883,6 +883,14 @@ namespace GitUI.CommandsDialogs
                         pluginsToolStripMenuItem.DropDownItems.Insert(0, item);
                     }
                 }
+
+                if (_dashboard?.Visible ?? false)
+                {
+                    // now that plugins are registered, populate Git-host-plugin actions on Dashboard, like "Clone GitHub repository"
+                    _dashboard.RefreshContent();
+                }
+
+                menuStrip1?.Refresh();
             }
 
             // Allow the plugin to perform any self-registration actions
@@ -1930,7 +1938,6 @@ namespace GitUI.CommandsDialogs
                 RevisionInfo.SetRevisionWithChildren(null, Array.Empty<ObjectId>());
                 UICommands.RepoChangedNotifier.Notify();
                 RevisionGrid.IndexWatcher.Reset();
-                RegisterPlugins();
             }
             else
             {
@@ -1940,6 +1947,8 @@ namespace GitUI.CommandsDialogs
                 MainSplitContainer.Visible = false;
                 ShowDashboard();
             }
+
+            RegisterPlugins();
         }
 
         private void TranslateToolStripMenuItemClick(object sender, EventArgs e)
