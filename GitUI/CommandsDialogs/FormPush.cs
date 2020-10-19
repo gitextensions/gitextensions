@@ -66,10 +66,13 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _updateTrackingReference =
             new TranslationString("The branch {0} does not have a tracking reference. Do you want to add a tracking reference to {1}?");
 
-        private readonly TranslationString _pullRepositoryMainInstruction = new TranslationString("Pull latest changes from remote repository");
-        private readonly TranslationString _pullRepository =
+        private readonly TranslationString _pullRepositoryMainMergeInstruction = new TranslationString("Pull latest changes from remote repository");
+        private readonly TranslationString _pullRepositoryMainForceInstruction = new TranslationString("Push rejected");
+        private readonly TranslationString _pullRepositoryMergeInstruction =
             new TranslationString("The push was rejected because the tip of your current branch is behind its remote counterpart. " +
                 "Merge the remote changes before pushing again.");
+        private readonly TranslationString _pullRepositoryForceInstruction =
+            new TranslationString("The push was rejected because the tip of your current branch is behind its remote counterpart");
         private readonly TranslationString _pullDefaultButton = new TranslationString("Pull with the default pull action ({0})");
         private readonly TranslationString _pullRebaseButton = new TranslationString("Pull with rebase");
         private readonly TranslationString _pullMergeButton = new TranslationString("Pull with merge");
@@ -516,12 +519,14 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            // auto pull only if current branch was rejected
-            var isRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranchName) + ".*", RegexOptions.Compiled);
-            if (isRejected.IsMatch(form.GetOutputString()) && !Module.IsBareRepository())
+            // if push was rejected, offer force push and for current branch also pull/merge
+            // Note that the Git output contains color codes etc too
+            var isRejected = new Regex($"! \\[rejected\\] .* ((?<currBranch>{Regex.Escape(_currentBranchName)})|.*) -> ");
+            Match match = isRejected.Match(form.GetOutputString());
+            if (match.Success && !Module.IsBareRepository())
             {
                 IWin32Window owner = form.Owner;
-                (var onRejectedPullAction, var forcePush) = AskForAutoPullOnPushRejectedAction(owner);
+                (var onRejectedPullAction, var forcePush) = AskForAutoPullOnPushRejectedAction(owner, match.Groups["currBranch"].Success);
 
                 if (forcePush)
                 {
@@ -581,7 +586,7 @@ namespace GitUI.CommandsDialogs
             return false;
         }
 
-        private (AppSettings.PullAction pullAction, bool forcePush) AskForAutoPullOnPushRejectedAction(IWin32Window owner)
+        private (AppSettings.PullAction pullAction, bool forcePush) AskForAutoPullOnPushRejectedAction(IWin32Window owner, bool allOptions)
         {
             bool forcePush = false;
             AppSettings.PullAction? onRejectedPullAction = AppSettings.AutoPullOnPushRejectedAction;
@@ -612,8 +617,8 @@ namespace GitUI.CommandsDialogs
                 using var dialog = new TaskDialog
                 {
                     OwnerWindowHandle = owner.Handle,
-                    Text = _pullRepository.Text,
-                    InstructionText = _pullRepositoryMainInstruction.Text,
+                    Text = allOptions ? _pullRepositoryMergeInstruction.Text : _pullRepositoryForceInstruction.Text,
+                    InstructionText = allOptions ? _pullRepositoryMainMergeInstruction.Text : _pullRepositoryMainForceInstruction.Text,
                     Caption = string.Format(_pullRepositoryCaption.Text, destination),
                     StandardButtons = TaskDialogStandardButtons.Cancel,
                     Icon = TaskDialogStandardIcon.Error,
@@ -646,9 +651,13 @@ namespace GitUI.CommandsDialogs
                     dialogResult = 3;
                     dialog.Close();
                 };
-                dialog.Controls.Add(btnPullDefault);
-                dialog.Controls.Add(btnPullRebase);
-                dialog.Controls.Add(btnPullMerge);
+                if (allOptions)
+                {
+                    dialog.Controls.Add(btnPullDefault);
+                    dialog.Controls.Add(btnPullRebase);
+                    dialog.Controls.Add(btnPullMerge);
+                }
+
                 dialog.Controls.Add(btnPushForce);
 
                 dialog.Show();
