@@ -6117,7 +6117,7 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
         <target />
       </trans-unit>
       <trans-unit id="btnReset.Text">
-        <source>&amp;Reset</source>
+        <source>R&amp;eset</source>
         <target />
       </trans-unit>
       <trans-unit id="cbDeleteNewFilesAndDirectories.Text">
