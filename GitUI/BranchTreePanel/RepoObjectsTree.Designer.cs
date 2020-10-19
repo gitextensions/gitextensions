@@ -106,6 +106,7 @@ namespace GitUI.BranchTreePanel
             this.mnubtnMoveDown = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnManageSubmodules = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnSynchronizeSubmodules = new System.Windows.Forms.ToolStripMenuItem();
+            this.runScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBtnOpenRemoteUrlInBrowser = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.menuBranch.SuspendLayout();
@@ -175,7 +176,8 @@ namespace GitUI.BranchTreePanel
             // menuBranch
             // 
             this.menuBranch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnubtnFilterLocalBranchInRevisionGrid});
+            this.mnubtnFilterLocalBranchInRevisionGrid,
+            this.runScriptToolStripMenuItem});
             this.menuBranch.Name = "contextmenuBranch";
             this.menuBranch.Size = new System.Drawing.Size(192, 76);
             this.menuBranch.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
@@ -607,6 +609,13 @@ namespace GitUI.BranchTreePanel
             this.mnubtnSynchronizeSubmodules.Text = "Synchronize";
             this.mnubtnSynchronizeSubmodules.ToolTipText = "Synchronize selected submodule recursively";
             // 
+            // runScriptToolStripMenuItem
+            // 
+            this.runScriptToolStripMenuItem.Image = global::GitUI.Properties.Images.Console;
+            this.runScriptToolStripMenuItem.Name = "runScriptToolStripMenuItem";
+            this.runScriptToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.runScriptToolStripMenuItem.Text = "Run script";
+            // 
             // RepoObjectsTree
             // 
             this.Controls.Add(this.repoTreePanel);
@@ -684,6 +693,7 @@ namespace GitUI.BranchTreePanel
         private ToolStripMenuItem mnubtnSynchronizeSubmodules;
         private ToolStripMenuItem mnubtnUpdateSubmodule;
         private ToolStripMenuItem mnubtnOpenSubmodule;
+        private ToolStripMenuItem runScriptToolStripMenuItem;
         private ToolStripMenuItem mnubtnMoveUp;
         private ToolStripMenuItem mnubtnMoveDown;
         private ToolStripMenuItem mnuBtnOpenRemoteUrlInBrowser;
