@@ -3134,6 +3134,11 @@ namespace GitUI.CommandsDialogs
 
             RevisionInfo.Parent.BackColor = RevisionInfo.BackColor;
             RevisionInfo.ResumeLayout(performLayout: true);
+
+            MainSplitContainer.Panel1.BackColor = Color.LightGray.AdaptBackColor();
+            RevisionsSplitContainer.Panel1.BackColor = Color.LightGray.AdaptBackColor();
+            RevisionsSplitContainer.Panel2.BackColor = Color.LightGray.AdaptBackColor();
+
             CommitInfoTabControl.ResumeLayout(performLayout: true);
             RevisionsSplitContainer.ResumeLayout(performLayout: true);
         }

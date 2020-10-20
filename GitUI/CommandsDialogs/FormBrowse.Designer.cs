@@ -670,6 +670,8 @@ namespace GitUI.CommandsDialogs
             // MainSplitContainer.Panel1
             // 
             this.MainSplitContainer.Panel1.Controls.Add(this.repoObjectsTree);
+            this.MainSplitContainer.Panel1.Padding = new System.Windows.Forms.Padding(1);
+            this.MainSplitContainer.Panel1MinSize = 192;
             // 
             // MainSplitContainer.Panel2
             // 
@@ -717,6 +719,8 @@ namespace GitUI.CommandsDialogs
             this.RevisionsSplitContainer.Location = new System.Drawing.Point(0, 0);
             this.RevisionsSplitContainer.Margin = new System.Windows.Forms.Padding(0);
             this.RevisionsSplitContainer.Name = "RevisionsSplitContainer";
+            this.RevisionsSplitContainer.Panel1.Padding = new System.Windows.Forms.Padding(1);
+            this.RevisionsSplitContainer.Panel2.Padding = new System.Windows.Forms.Padding(1);
             // 
             // RevisionsSplitContainer.Panel1
             // 
@@ -740,7 +744,6 @@ namespace GitUI.CommandsDialogs
             // 
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
-            this.RevisionGrid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.RevisionGrid.Name = "RevisionGrid";
             this.RevisionGrid.Size = new System.Drawing.Size(350, 209);
             this.RevisionGrid.TabIndex = 0;
@@ -1737,14 +1740,15 @@ namespace GitUI.CommandsDialogs
             // 
             this.toolPanel.ContentPanel.Controls.Add(this.MainSplitContainer);
             this.toolPanel.ContentPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.toolPanel.ContentPanel.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
+            this.toolPanel.ContentPanel.Padding = new System.Windows.Forms.Padding(8);
             this.toolPanel.ContentPanel.Size = new System.Drawing.Size(1846, 1023);
             this.toolPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolPanel.LeftToolStripPanelVisible = false;
             this.toolPanel.Location = new System.Drawing.Point(0, 24);
             this.toolPanel.Margin = new System.Windows.Forms.Padding(0);
             this.toolPanel.Name = "toolPanel";
-            this.toolPanel.Padding = new System.Windows.Forms.Padding(0, 2, 0, 0);
+            this.toolPanel.Padding = new System.Windows.Forms.Padding(0);
+            this.toolPanel.TopToolStripPanel.Padding = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.toolPanel.RightToolStripPanelVisible = false;
             this.toolPanel.Size = new System.Drawing.Size(923, 527);
             this.toolPanel.TabIndex = 1;
