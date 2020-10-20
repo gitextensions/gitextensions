@@ -65,6 +65,7 @@ namespace GitUI
             this.ClientSize = new System.Drawing.Size(553, 337);
             this.Controls.Add(this.MainPanel);
             this.Controls.Add(this.ControlsPanel);
+            this.DoubleBuffered = true;
             this.Name = "GitExtensionsDialog";
             this.ResumeLayout(false);
             this.PerformLayout();

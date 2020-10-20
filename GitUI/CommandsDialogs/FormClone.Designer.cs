@@ -378,6 +378,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(647, 351);
+            this.HelpButton = true;
+            this.ManualSectionAnchorName = "clone-repository";
+            this.ManualSectionSubfolder = "getting_started";
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormClone";
