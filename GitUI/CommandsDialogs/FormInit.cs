@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
-using GitExtUtils;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -33,6 +32,7 @@ namespace GitUI.CommandsDialogs
 
             // work-around the designer bug that can't add controls to FlowLayoutPanel
             ControlsPanel.Controls.Add(Init);
+            AcceptButton = Init;
 
             InitializeComplete();
 

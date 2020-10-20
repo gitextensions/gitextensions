@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace GitUI.CommandsDialogs
+﻿namespace GitUI.CommandsDialogs
 {
     partial class FormClone
     {
@@ -53,10 +51,10 @@ namespace GitUI.CommandsDialogs
             // 
             // MainPanel
             // 
+            this.MainPanel.Controls.Add(this.Ok);
             this.MainPanel.Controls.Add(this.LoadSSHKey);
             this.MainPanel.Controls.Add(this.tpnlMain);
-            this.MainPanel.Controls.Add(this.Ok);
-            this.MainPanel.Size = new System.Drawing.Size(676, 343);
+            this.MainPanel.Size = new System.Drawing.Size(647, 319);
             // 
             // Central
             // 
@@ -83,9 +81,12 @@ namespace GitUI.CommandsDialogs
             // Ok
             // 
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Ok.Location = new System.Drawing.Point(23, 3);
+            this.Ok.AutoSize = true;
+            this.Ok.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Ok.Location = new System.Drawing.Point(10, 3);
+            this.Ok.MinimumSize = new System.Drawing.Size(75, 23);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(118, 25);
+            this.Ok.Size = new System.Drawing.Size(75, 23);
             this.Ok.TabIndex = 0;
             this.Ok.Text = "Clone";
             this.Ok.UseVisualStyleBackColor = true;
@@ -116,7 +117,7 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(622, 122);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(625, 125);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // repositoryLabel
@@ -125,7 +126,7 @@ namespace GitUI.CommandsDialogs
             this.repositoryLabel.Dock = System.Windows.Forms.DockStyle.Left;
             this.repositoryLabel.Location = new System.Drawing.Point(3, 0);
             this.repositoryLabel.Name = "repositoryLabel";
-            this.repositoryLabel.Size = new System.Drawing.Size(101, 30);
+            this.repositoryLabel.Size = new System.Drawing.Size(101, 31);
             this.repositoryLabel.TabIndex = 0;
             this.repositoryLabel.Text = "Repository to &clone:";
             this.repositoryLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -138,7 +139,7 @@ namespace GitUI.CommandsDialogs
             this._NO_TRANSLATE_From.FormattingEnabled = true;
             this._NO_TRANSLATE_From.Location = new System.Drawing.Point(123, 3);
             this._NO_TRANSLATE_From.Name = "_NO_TRANSLATE_From";
-            this._NO_TRANSLATE_From.Size = new System.Drawing.Size(396, 21);
+            this._NO_TRANSLATE_From.Size = new System.Drawing.Size(399, 21);
             this._NO_TRANSLATE_From.TabIndex = 1;
             this._NO_TRANSLATE_From.SelectedIndexChanged += new System.EventHandler(this.FromSelectedIndexChanged);
             this._NO_TRANSLATE_From.TextUpdate += new System.EventHandler(this.FromTextUpdate);
@@ -146,7 +147,7 @@ namespace GitUI.CommandsDialogs
             // FromBrowse
             // 
             this.FromBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.FromBrowse.Location = new System.Drawing.Point(525, 3);
+            this.FromBrowse.Location = new System.Drawing.Point(528, 3);
             this.FromBrowse.Name = "FromBrowse";
             this.FromBrowse.Size = new System.Drawing.Size(94, 24);
             this.FromBrowse.TabIndex = 2;
@@ -158,9 +159,9 @@ namespace GitUI.CommandsDialogs
             // 
             this.destinationLabel.AutoSize = true;
             this.destinationLabel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.destinationLabel.Location = new System.Drawing.Point(3, 30);
+            this.destinationLabel.Location = new System.Drawing.Point(3, 31);
             this.destinationLabel.Name = "destinationLabel";
-            this.destinationLabel.Size = new System.Drawing.Size(63, 30);
+            this.destinationLabel.Size = new System.Drawing.Size(63, 31);
             this.destinationLabel.TabIndex = 3;
             this.destinationLabel.Text = "&Destination:";
             this.destinationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -172,9 +173,9 @@ namespace GitUI.CommandsDialogs
             this._NO_TRANSLATE_To.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this._NO_TRANSLATE_To.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this._NO_TRANSLATE_To.FormattingEnabled = true;
-            this._NO_TRANSLATE_To.Location = new System.Drawing.Point(123, 33);
+            this._NO_TRANSLATE_To.Location = new System.Drawing.Point(123, 34);
             this._NO_TRANSLATE_To.Name = "_NO_TRANSLATE_To";
-            this._NO_TRANSLATE_To.Size = new System.Drawing.Size(396, 21);
+            this._NO_TRANSLATE_To.Size = new System.Drawing.Size(399, 21);
             this._NO_TRANSLATE_To.TabIndex = 4;
             this._NO_TRANSLATE_To.SelectedIndexChanged += new System.EventHandler(this.ToSelectedIndexChanged);
             this._NO_TRANSLATE_To.TextUpdate += new System.EventHandler(this.ToTextUpdate);
@@ -182,7 +183,7 @@ namespace GitUI.CommandsDialogs
             // ToBrowse
             // 
             this.ToBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ToBrowse.Location = new System.Drawing.Point(525, 33);
+            this.ToBrowse.Location = new System.Drawing.Point(528, 34);
             this.ToBrowse.Name = "ToBrowse";
             this.ToBrowse.Size = new System.Drawing.Size(94, 24);
             this.ToBrowse.TabIndex = 5;
@@ -194,9 +195,9 @@ namespace GitUI.CommandsDialogs
             // 
             this.subdirectoryLabel.AutoSize = true;
             this.subdirectoryLabel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.subdirectoryLabel.Location = new System.Drawing.Point(3, 60);
+            this.subdirectoryLabel.Location = new System.Drawing.Point(3, 62);
             this.subdirectoryLabel.Name = "subdirectoryLabel";
-            this.subdirectoryLabel.Size = new System.Drawing.Size(114, 30);
+            this.subdirectoryLabel.Size = new System.Drawing.Size(114, 31);
             this.subdirectoryLabel.TabIndex = 6;
             this.subdirectoryLabel.Text = "&Subdirectory to create:";
             this.subdirectoryLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -205,9 +206,9 @@ namespace GitUI.CommandsDialogs
             // 
             this._NO_TRANSLATE_NewDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_NewDirectory.Location = new System.Drawing.Point(123, 63);
+            this._NO_TRANSLATE_NewDirectory.Location = new System.Drawing.Point(123, 65);
             this._NO_TRANSLATE_NewDirectory.Name = "_NO_TRANSLATE_NewDirectory";
-            this._NO_TRANSLATE_NewDirectory.Size = new System.Drawing.Size(396, 20);
+            this._NO_TRANSLATE_NewDirectory.Size = new System.Drawing.Size(399, 20);
             this._NO_TRANSLATE_NewDirectory.TabIndex = 7;
             this._NO_TRANSLATE_NewDirectory.TextChanged += new System.EventHandler(this.NewDirectoryTextChanged);
             // 
@@ -215,7 +216,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.brachLabel.AutoSize = true;
             this.brachLabel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.brachLabel.Location = new System.Drawing.Point(3, 90);
+            this.brachLabel.Location = new System.Drawing.Point(3, 93);
             this.brachLabel.Name = "brachLabel";
             this.brachLabel.Size = new System.Drawing.Size(44, 32);
             this.brachLabel.TabIndex = 8;
@@ -227,9 +228,9 @@ namespace GitUI.CommandsDialogs
             this._NO_TRANSLATE_Branches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_Branches.FormattingEnabled = true;
-            this._NO_TRANSLATE_Branches.Location = new System.Drawing.Point(123, 93);
+            this._NO_TRANSLATE_Branches.Location = new System.Drawing.Point(123, 96);
             this._NO_TRANSLATE_Branches.Name = "_NO_TRANSLATE_Branches";
-            this._NO_TRANSLATE_Branches.Size = new System.Drawing.Size(396, 21);
+            this._NO_TRANSLATE_Branches.Size = new System.Drawing.Size(399, 21);
             this._NO_TRANSLATE_Branches.TabIndex = 9;
             this._NO_TRANSLATE_Branches.DropDown += new System.EventHandler(this.Branches_DropDown);
             // 
@@ -265,10 +266,10 @@ namespace GitUI.CommandsDialogs
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Info.BackColor = System.Drawing.SystemColors.Info;
             this.Info.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Info.Location = new System.Drawing.Point(3, 135);
+            this.Info.Location = new System.Drawing.Point(3, 138);
             this.Info.Margin = new System.Windows.Forms.Padding(3, 13, 3, 0);
             this.Info.Name = "Info";
-            this.Info.Size = new System.Drawing.Size(616, 42);
+            this.Info.Size = new System.Drawing.Size(619, 42);
             this.Info.TabIndex = 1;
             this.Info.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -278,10 +279,10 @@ namespace GitUI.CommandsDialogs
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.CentralRepository);
             this.groupBox1.Controls.Add(this.PersonalRepository);
-            this.groupBox1.Location = new System.Drawing.Point(3, 181);
+            this.groupBox1.Location = new System.Drawing.Point(3, 184);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(616, 78);
+            this.groupBox1.Size = new System.Drawing.Size(619, 78);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Repository type";
@@ -315,6 +316,7 @@ namespace GitUI.CommandsDialogs
             this.LoadSSHKey.Image = global::GitUI.Properties.Images.Putty;
             this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LoadSSHKey.Location = new System.Drawing.Point(101, 3);
+            this.LoadSSHKey.MinimumSize = new System.Drawing.Size(75, 23);
             this.LoadSSHKey.Name = "LoadSSHKey";
             this.LoadSSHKey.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
             this.LoadSSHKey.Size = new System.Drawing.Size(118, 23);
@@ -334,7 +336,8 @@ namespace GitUI.CommandsDialogs
             this.tpnlMain.Controls.Add(this.Info);
             this.tpnlMain.Controls.Add(this.groupBox1);
             this.tpnlMain.Controls.Add(this.optionsPanel);
-            this.tpnlMain.Location = new System.Drawing.Point(24, 24);
+            this.tpnlMain.Location = new System.Drawing.Point(12, 12);
+            this.tpnlMain.Margin = new System.Windows.Forms.Padding(0);
             this.tpnlMain.Name = "tpnlMain";
             this.tpnlMain.RowCount = 5;
             this.tpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -342,7 +345,7 @@ namespace GitUI.CommandsDialogs
             this.tpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpnlMain.Size = new System.Drawing.Size(622, 292);
+            this.tpnlMain.Size = new System.Drawing.Size(625, 295);
             this.tpnlMain.TabIndex = 0;
             // 
             // optionsPanel
@@ -352,10 +355,10 @@ namespace GitUI.CommandsDialogs
             this.optionsPanel.Controls.Add(this.cbDownloadFullHistory);
             this.optionsPanel.Controls.Add(this.cbLfs);
             this.optionsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.optionsPanel.Location = new System.Drawing.Point(0, 269);
+            this.optionsPanel.Location = new System.Drawing.Point(0, 272);
             this.optionsPanel.Margin = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.optionsPanel.Name = "optionsPanel";
-            this.optionsPanel.Size = new System.Drawing.Size(622, 23);
+            this.optionsPanel.Size = new System.Drawing.Size(625, 23);
             this.optionsPanel.TabIndex = 2;
             // 
             // cbLfs
@@ -374,8 +377,7 @@ namespace GitUI.CommandsDialogs
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(676, 388);
+            this.ClientSize = new System.Drawing.Size(647, 351);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormClone";
@@ -421,8 +423,8 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.Label destinationLabel;
         private System.Windows.Forms.Label subdirectoryLabel;
         private System.Windows.Forms.TableLayoutPanel tpnlMain;
-        private ToolTip ttHints;
-        private FlowLayoutPanel optionsPanel;
-        private CheckBox cbLfs;
+        private System.Windows.Forms.ToolTip ttHints;
+        private System.Windows.Forms.FlowLayoutPanel optionsPanel;
+        private System.Windows.Forms.CheckBox cbLfs;
     }
 }

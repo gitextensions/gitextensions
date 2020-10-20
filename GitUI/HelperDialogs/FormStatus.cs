@@ -57,6 +57,8 @@ namespace GitUI.HelperDialogs
             ControlsPanel.Controls.Add(Abort);
             ControlsPanel.Controls.Add(Ok);
             ControlsPanel.Controls.Add(KeepDialogOpen);
+            AcceptButton = Ok;
+            CancelButton = Abort;
 
             Controls.SetChildIndex(ProgressBar, 1);
             ProgressBar.Dock = DockStyle.Bottom;

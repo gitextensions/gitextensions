@@ -46,12 +46,12 @@
             this.MainPanel.Controls.Add(this.Browse);
             this.MainPanel.Controls.Add(this._NO_TRANSLATE_Directory);
             this.MainPanel.Controls.Add(this.label1);
-            this.MainPanel.Size = new System.Drawing.Size(572, 146);
+            this.MainPanel.Size = new System.Drawing.Size(542, 141);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(27, 24);
+            this.label1.Location = new System.Drawing.Point(12, 17);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(49, 13);
             this.label1.TabIndex = 0;
@@ -62,14 +62,14 @@
             this._NO_TRANSLATE_Directory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this._NO_TRANSLATE_Directory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this._NO_TRANSLATE_Directory.FormattingEnabled = true;
-            this._NO_TRANSLATE_Directory.Location = new System.Drawing.Point(110, 21);
+            this._NO_TRANSLATE_Directory.Location = new System.Drawing.Point(95, 14);
             this._NO_TRANSLATE_Directory.Name = "_NO_TRANSLATE_Directory";
             this._NO_TRANSLATE_Directory.Size = new System.Drawing.Size(323, 21);
             this._NO_TRANSLATE_Directory.TabIndex = 1;
             // 
             // Browse
             // 
-            this.Browse.Location = new System.Drawing.Point(439, 19);
+            this.Browse.Location = new System.Drawing.Point(424, 12);
             this.Browse.Name = "Browse";
             this.Browse.PathShowingControl = this._NO_TRANSLATE_Directory;
             this.Browse.Size = new System.Drawing.Size(106, 25);
@@ -80,7 +80,7 @@
             // 
             this.groupBox1.Controls.Add(this.Central);
             this.groupBox1.Controls.Add(this.Personal);
-            this.groupBox1.Location = new System.Drawing.Point(27, 48);
+            this.groupBox1.Location = new System.Drawing.Point(12, 41);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(518, 78);
             this.groupBox1.TabIndex = 3;
@@ -111,9 +111,12 @@
             // 
             // Init
             // 
-            this.Init.Location = new System.Drawing.Point(451, 106);
+            this.Init.AutoSize = true;
+            this.Init.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Init.Location = new System.Drawing.Point(31, 7);
+            this.Init.MinimumSize = new System.Drawing.Size(75, 23);
             this.Init.Name = "Init";
-            this.Init.Size = new System.Drawing.Size(118, 25);
+            this.Init.Size = new System.Drawing.Size(75, 23);
             this.Init.TabIndex = 4;
             this.Init.Text = "Create";
             this.Init.UseVisualStyleBackColor = true;
@@ -124,7 +127,7 @@
             this.AcceptButton = this.Init;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(572, 191);
+            this.ClientSize = new System.Drawing.Size(542, 173);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

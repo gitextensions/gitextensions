@@ -52,6 +52,7 @@ namespace GitUI.CommandsDialogs
             // work-around the designer bug that can't add controls to FlowLayoutPanel
             ControlsPanel.Controls.Add(Ok);
             ControlsPanel.Controls.Add(LoadSSHKey);
+            AcceptButton = Ok;
 
             InitializeComplete();
             _openedFromProtocolHandler = openedFromProtocolHandler;
@@ -74,8 +75,8 @@ namespace GitUI.CommandsDialogs
             base.OnRuntimeLoad(e);
 
             // scale up for hi DPI
-            MaximumSize = DpiUtil.Scale(new Size(950, 425));
-            MinimumSize = DpiUtil.Scale(new Size(450, 425));
+            MaximumSize = DpiUtil.Scale(new Size(950, 398));
+            MinimumSize = DpiUtil.Scale(new Size(450, 398));
             Size = new Size((tpnlMain.Left * 2) + tpnlMain.Width + /* right margin */DpiUtil.Scale(16), Height);
             tpnlMain.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
