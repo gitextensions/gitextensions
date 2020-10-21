@@ -236,14 +236,33 @@ namespace GitUI.UserControls.RevisionGrid
 
         private Color GetForeground(DataGridViewElementStates state, int rowIndex)
         {
-            if (state.HasFlag(DataGridViewElementStates.Selected))
+            bool isNonRelativeGray = AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(rowIndex);
+            bool isSelected = state.HasFlag(DataGridViewElementStates.Selected);
+            return (isNonRelativeGray, isSelected) switch
             {
-                return SystemColors.HighlightText;
-            }
+                (isNonRelativeGray: false, isSelected: false) => SystemColors.ControlText,
+                (isNonRelativeGray: false, isSelected: true) => SystemColors.HighlightText,
+                (isNonRelativeGray: true, isSelected: false) => SystemColors.GrayText,
 
-            return AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(rowIndex)
-                ? SystemColors.GrayText
-                : SystemColors.ControlText;
+                // (isGray: true, isSelected: true)
+                _ => getHighlightedGrayTextColor()
+            };
+        }
+
+        private Color GetCommitBodyForeground(DataGridViewElementStates state, int rowIndex)
+        {
+            bool isNonRelativeGray = AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(rowIndex);
+            bool isSelected = state.HasFlag(DataGridViewElementStates.Selected);
+
+            return (isNonRelativeGray, isSelected) switch
+            {
+                (isNonRelativeGray: false, isSelected: false) => SystemColors.GrayText,
+                (isNonRelativeGray: false, isSelected: true) => getHighlightedGrayTextColor(),
+                (isNonRelativeGray: true, isSelected: false) => getGrayTextColor(degreeOfGrayness: 1.75f),
+
+                // (isGray: true, isSelected: true)
+                _ => getHighlightedGrayTextColor(degreeOfGrayness: 1.75f)
+            };
         }
 
         private Brush GetBackground(DataGridViewElementStates state, int rowIndex, GitRevision revision)
@@ -284,9 +303,11 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 var backBrush = GetBackground(e.State, e.RowIndex, revision);
                 var foreColor = GetForeground(e.State, e.RowIndex);
+                var commitBodyForeColor = GetCommitBodyForeground(e.State, e.RowIndex);
 
                 e.Graphics.FillRectangle(backBrush, e.CellBounds);
-                provider.OnCellPainting(e, revision, _rowHeight, new CellStyle(backBrush, foreColor, _normalFont, _boldFont, _monospaceFont));
+                var cellStyle = new CellStyle(backBrush, foreColor, commitBodyForeColor, _normalFont, _boldFont, _monospaceFont);
+                provider.OnCellPainting(e, revision, _rowHeight, cellStyle);
 
                 e.Handled = true;
             }
@@ -726,5 +747,15 @@ namespace GitUI.UserControls.RevisionGrid
                 base.OnMouseWheel(e);
             }
         }
+
+        private static Color getHighlightedGrayTextColor(float degreeOfGrayness = 1f) =>
+            ColorHelper.GetHighlightGrayTextColor(
+                backgroundColorName: KnownColor.Control,
+                textColorName: KnownColor.ControlText,
+                highlightColorName: KnownColor.Highlight,
+                degreeOfGrayness);
+
+        private static Color getGrayTextColor(float degreeOfGrayness = 1f) =>
+            ColorHelper.GetGrayTextColor(textColorName: KnownColor.ControlText, degreeOfGrayness);
     }
 }

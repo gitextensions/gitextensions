@@ -334,22 +334,18 @@ namespace GitUI
 
         internal int DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color, Rectangle bounds, bool useEllipsis = true)
         {
-            var flags = TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding;
+            var flags =
+                TextFormatFlags.NoPrefix |
+                TextFormatFlags.VerticalCenter |
+                TextFormatFlags.NoPadding |
+                TextFormatFlags.SingleLine;
 
             if (useEllipsis)
             {
                 flags |= TextFormatFlags.EndEllipsis;
             }
 
-            var size = TextRenderer.MeasureText(
-                e.Graphics,
-                text,
-                font,
-                new Size(
-                    bounds.Width + 16,
-                    bounds.Height),
-                flags);
-
+            var size = TextRenderer.MeasureText(e.Graphics, text, font, bounds.Size, flags);
             TextRenderer.DrawText(e.Graphics, text, font, bounds, color, flags);
 
             _toolTipProvider.SetTruncation(e.ColumnIndex, e.RowIndex, truncated: size.Width > bounds.Width);
