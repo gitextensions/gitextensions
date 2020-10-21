@@ -144,3 +144,4 @@ YYYY/MM/DD, github id, Full name, email
 2020/10/07, JurjenBiewenga, Jurjen Biewenga, me@jurjenbiewenga.com
 2020/10/10, vrubleg, Evgeny Vrublevsky, me@veg.by
 2020/10/07, BrianFreemanAtlanta, Brian Freeman, freeman(at)carnegie.com
+2020/10/21, wischi-chr, Christian Wischenbart, christian.wischenbart@gmail.com
