@@ -129,6 +129,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(542, 173);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.HelpButton = true;
+            this.ManualSectionAnchorName = "create-new-repository";
+            this.ManualSectionSubfolder = "getting_started";
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormInit";

@@ -411,7 +411,9 @@ namespace GitUI.CommandsDialogs
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(626, 260);
-            this.DoubleBuffered = true;
+            this.HelpButton = true;
+            this.ManualSectionAnchorName = "checkout-branch";
+            this.ManualSectionSubfolder = "branches";
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormCheckoutBranch";
