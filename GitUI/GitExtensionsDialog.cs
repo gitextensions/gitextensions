@@ -13,6 +13,8 @@ namespace GitUI
     /// <remarks>Includes support for font, hotkey, icon, translation, and position restore.</remarks>
     public partial class GitExtensionsDialog : GitModuleForm
     {
+        private static readonly Pen FooterDividerPen = new Pen(KnownColor.ControlLight.MakeBackgroundDarkerBy(0.04));
+
         /// <summary>Creates a new <see cref="GitExtensionsForm"/> without position restore.</summary>
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         protected GitExtensionsDialog()
@@ -31,6 +33,10 @@ namespace GitUI
 
             // Lighten up the control panel
             ControlsPanel.BackColor = KnownColor.ControlLight.MakeBackgroundDarkerBy(-0.04);
+
+            // Draw a separator line at the top of the footer panel, similar to what Task Dialog does
+            ControlsPanel.Paint += (s, e)
+                => e.Graphics.DrawLine(FooterDividerPen, new Point(e.ClipRectangle.Left, 0), new Point(e.ClipRectangle.Right, 0));
         }
 
         /// <summary>
