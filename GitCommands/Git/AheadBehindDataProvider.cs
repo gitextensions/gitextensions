@@ -88,6 +88,7 @@ namespace GitCommands.Git
                     {
                         // The information is displayed in the push button, so the push info is preferred (may differ from upstream)
                         Branch = branch,
+                        RemoteRef = remoteRef,
                         AheadCount =
                             // Prefer push to upstream for the count
                             match.Groups["ahead_p"].Success

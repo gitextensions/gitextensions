@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs
         private const string AllRefs = "[ All ]";
         private const string LocalColumnName = "Local";
         private const string RemoteColumnName = "Remote";
-        private const string NewColumnName = "New";
+        private const string AheadColumnName = "New";
         private const string PushColumnName = "Push";
         private const string ForceColumnName = "Force";
         private const string DeleteColumnName = "Delete";
@@ -425,14 +425,25 @@ namespace GitUI.CommandsDialogs
                     var push = Convert.ToBoolean(row[PushColumnName]);
                     var force = Convert.ToBoolean(row[ForceColumnName]);
                     var delete = Convert.ToBoolean(row[DeleteColumnName]);
+                    var localBranch = row[LocalColumnName].ToString();
+                    var remoteBranch = row[RemoteColumnName].ToString();
+                    if (string.IsNullOrWhiteSpace(remoteBranch))
+                    {
+                        remoteBranch = localBranch;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(remoteBranch))
+                    {
+                        continue;
+                    }
 
                     if (push || force)
                     {
-                        pushActions.Add(new GitPushAction(row[LocalColumnName].ToString(), row[RemoteColumnName].ToString(), force));
+                        pushActions.Add(new GitPushAction(localBranch, remoteBranch, force));
                     }
                     else if (delete)
                     {
-                        pushActions.Add(GitPushAction.DeleteRemoteBranch(row[RemoteColumnName].ToString()));
+                        pushActions.Add(GitPushAction.DeleteRemoteBranch(remoteBranch));
                     }
                 }
 
@@ -951,14 +962,14 @@ namespace GitUI.CommandsDialogs
             _branchTable = new DataTable();
             _branchTable.Columns.Add(LocalColumnName, typeof(string));
             _branchTable.Columns.Add(RemoteColumnName, typeof(string));
-            _branchTable.Columns.Add(NewColumnName, typeof(string));
+            _branchTable.Columns.Add(AheadColumnName, typeof(string));
             _branchTable.Columns.Add(PushColumnName, typeof(bool));
             _branchTable.Columns.Add(ForceColumnName, typeof(bool));
             _branchTable.Columns.Add(DeleteColumnName, typeof(bool));
             _branchTable.ColumnChanged += BranchTable_ColumnChanged;
             LocalColumn.DataPropertyName = LocalColumnName;
             RemoteColumn.DataPropertyName = RemoteColumnName;
-            NewColumn.DataPropertyName = NewColumnName;
+            NewColumn.DataPropertyName = AheadColumnName;
             PushColumn.DataPropertyName = PushColumnName;
             ForceColumn.DataPropertyName = ForceColumnName;
             DeleteColumn.DataPropertyName = DeleteColumnName;
@@ -1033,27 +1044,42 @@ namespace GitUI.CommandsDialogs
             void ProcessHeads(IReadOnlyList<IGitRef> remoteHeads)
             {
                 var localHeads = GetLocalBranches().ToList();
-                var remoteBranches = remoteHeads.ToHashSet(h => h.LocalName);
+                var remoteBranches = remoteHeads.ToDictionary(h => h.LocalName, h => h);
 
                 _branchTable.BeginLoadData();
+                AheadBehindDataProvider aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData
+                    ? new AheadBehindDataProvider(() => Module.GitExecutable)
+                    : null;
+                var aheadBehindData = aheadBehindDataProvider?.GetData();
 
                 // Add all the local branches.
                 foreach (var head in localHeads)
                 {
                     var remoteName = head.Remote == remote
                         ? head.MergeWith ?? head.Name
-                        : head.Name;
-                    var isKnownAtRemote = remoteBranches.Contains(remoteName);
-
+                        : string.Empty;
+                    var isKnownAtRemote = remoteBranches.ContainsKey(head.Name);
                     var row = _branchTable.NewRow();
+
+                    // Check if aheadBehind is relevant for this branch
+                    var isAheadRemote = (aheadBehindData?.ContainsKey(head.Name) ?? false)
+                        && GitRefName.GetRemoteName(aheadBehindData[head.Name].RemoteRef) == remote;
 
                     row[ForceColumnName] = false;
                     row[DeleteColumnName] = false;
                     row[LocalColumnName] = head.Name;
-                    row[RemoteColumnName] = remoteName;
-                    row[NewColumnName] = isKnownAtRemote ? Strings.No : Strings.Yes;
-                    row[PushColumnName] = false;
+                    row[RemoteColumnName] = isAheadRemote
+                        ? GitRefName.GetRemoteBranch(aheadBehindData[head.Name].RemoteRef)
+                        : remoteName;
 
+                    row[AheadColumnName] = isAheadRemote
+                        ? aheadBehindData[head.Name].ToDisplay()
+                        : !isKnownAtRemote
+                        ? string.Empty
+                        : head.ObjectId == remoteBranches[head.Name].ObjectId
+                        ? "="
+                        : "<>";
+                    row[PushColumnName] = false;
                     _branchTable.Rows.Add(row);
                 }
 
@@ -1066,7 +1092,7 @@ namespace GitUI.CommandsDialogs
 
                         row[LocalColumnName] = null;
                         row[RemoteColumnName] = remoteHead.LocalName;
-                        row[NewColumnName] = Strings.No;
+                        row[AheadColumnName] = string.Empty;
                         row[PushColumnName] = false;
                         row[ForceColumnName] = false;
                         row[DeleteColumnName] = false;

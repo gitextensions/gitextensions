@@ -5,6 +5,7 @@
         // gone: "plumbing" expression, see https://git-scm.com/docs/git-for-each-ref#Documentation/git-for-each-ref.txt-upstream
         public static readonly string Gone = "gone";
         public string Branch { get; set; }
+        public string RemoteRef { get; set; }
         public string AheadCount { get; set; }
         public string BehindCount { get; set; }
 

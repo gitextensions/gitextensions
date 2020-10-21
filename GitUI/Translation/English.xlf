@@ -5308,7 +5308,7 @@ This will initialize and update all submodules recursive.</source>
         <target />
       </trans-unit>
       <trans-unit id="NewColumn.HeaderText">
-        <source>New at Remote</source>
+        <source>Ahead/Behind</source>
         <target />
       </trans-unit>
       <trans-unit id="Pull.Text">
