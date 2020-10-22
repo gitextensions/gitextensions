@@ -91,7 +91,7 @@ namespace GitUI.CommandsDialogs
                         }
                         catch (Exception ex)
                         {
-                            if (MessageBox.Show(this, _cannotSaveFile.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
+                            if (MessageBox.Show(this, $"{_cannotSaveFile.Text}{Environment.NewLine}{ex.Message}", Strings.Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
                             {
                                 e.Cancel = true;
                                 return;
@@ -116,13 +116,18 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripSaveButton_Click(object sender, EventArgs e)
         {
+            SaveChangesShowException();
+        }
+
+        private void SaveChangesShowException()
+        {
             try
             {
                 SaveChanges();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _cannotSaveFile.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.ShowError(this, $"{_cannotSaveFile.Text}{Environment.NewLine}{ex.Message}");
             }
         }
 
@@ -132,7 +137,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (fileViewer.FilePreamble is null || Module.FilesEncoding.GetPreamble().SequenceEqual(fileViewer.FilePreamble))
                 {
-                    File.WriteAllText(_fileName, fileViewer.GetText(), Module.FilesEncoding);
+                    FileUtility.SafeWriteAllText(_fileName, fileViewer.GetText(), Module.FilesEncoding);
                 }
                 else
                 {
@@ -161,7 +166,7 @@ namespace GitUI.CommandsDialogs
                     Close();
                     return true;
                 case Keys.Control | Keys.S:
-                    SaveChanges();
+                    SaveChangesShowException();
                     return true;
                 default:
                     return base.ProcessCmdKey(ref msg, keyData);
