@@ -291,7 +291,6 @@ namespace GitUI.CommitInfo
 
             if (_revision != null && !_revision.IsArtificial)
             {
-                UpdateRevisionInfo();
                 StartAsyncDataLoad();
             }
 
@@ -321,37 +320,46 @@ namespace GitUI.CommitInfo
             void StartAsyncDataLoad()
             {
                 var cancellationToken = _asyncLoadCancellation.Next();
-
                 var initialRevision = _revision;
-
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () => { await LoadLinksForRevisionAsync(initialRevision); }).FileAndForget();
 
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
+                    var tasks = new List<Task>();
+
+                    tasks.Add(LoadLinksForRevisionAsync(initialRevision));
+
                     // No branch/tag data for artificial commands
                     if (AppSettings.CommitInfoShowContainedInBranches)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-                        await LoadBranchInfoAsync(initialRevision.ObjectId);
+
+                        tasks.Add(LoadBranchInfoAsync(initialRevision.ObjectId));
                     }
 
                     if (AppSettings.ShowAnnotatedTagsMessages)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-                        await LoadAnnotatedTagInfoAsync(initialRevision.Refs);
+
+                        tasks.Add(LoadAnnotatedTagInfoAsync(initialRevision.Refs));
                     }
 
                     if (AppSettings.CommitInfoShowContainedInTags)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-                        await LoadTagInfoAsync(initialRevision.ObjectId);
+
+                        tasks.Add(LoadTagInfoAsync(initialRevision.ObjectId));
                     }
 
                     if (AppSettings.CommitInfoShowTagThisCommitDerivesFrom)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-                        await LoadDescribeInfoAsync(initialRevision.ObjectId);
+
+                        tasks.Add(LoadDescribeInfoAsync(initialRevision.ObjectId));
                     }
+
+                    await Task.WhenAll(tasks);
+
+                    UpdateRevisionInfo();
                 }).FileAndForget();
 
                 return;
@@ -374,7 +382,6 @@ namespace GitUI.CommitInfo
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
                     _linksInfo = linksInfo;
-                    UpdateRevisionInfo();
 
                     return;
 
@@ -400,7 +407,6 @@ namespace GitUI.CommitInfo
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
                     _annotatedTagsMessages = annotatedTagsMessages;
-                    UpdateRevisionInfo();
 
                     return;
 
@@ -463,7 +469,6 @@ namespace GitUI.CommitInfo
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
                     _tags = tags;
-                    UpdateRevisionInfo();
                 }
 
                 async Task LoadBranchInfoAsync(ObjectId revision)
@@ -481,7 +486,6 @@ namespace GitUI.CommitInfo
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
                     _branches = branches;
-                    UpdateRevisionInfo();
                 }
 
                 async Task LoadDescribeInfoAsync(ObjectId commitId)
@@ -492,7 +496,6 @@ namespace GitUI.CommitInfo
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
                     _gitDescribeInfo = info;
-                    UpdateRevisionInfo();
 
                     return;
 
