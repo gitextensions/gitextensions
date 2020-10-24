@@ -274,8 +274,8 @@ namespace GitUI.CommandsDialogs
             var toolForeColor = SystemColors.WindowText;
             BackColor = toolBackColor;
             ForeColor = toolForeColor;
-            ToolStrip.BackColor = toolBackColor;
-            ToolStrip.ForeColor = toolForeColor;
+            ToolStripMain.BackColor = toolBackColor;
+            ToolStripMain.ForeColor = toolForeColor;
             toolStripRevisionFilterDropDownButton.BackColor = toolBackColor;
             toolStripRevisionFilterDropDownButton.ForeColor = toolForeColor;
             menuStrip1.BackColor = toolBackColor;
@@ -1076,11 +1076,11 @@ namespace GitUI.CommandsDialogs
                     .Where(script => script.Enabled && script.OnEvent == ScriptEvent.ShowInUserMenuBar)
                     .ToList();
 
-                for (int i = ToolStrip.Items.Count - 1; i >= 0; i--)
+                for (int i = ToolStripMain.Items.Count - 1; i >= 0; i--)
                 {
-                    if (ToolStrip.Items[i].Tag as string == "userscript")
+                    if (ToolStripMain.Items[i].Tag as string == "userscript")
                     {
-                        ToolStrip.Items.RemoveAt(i);
+                        ToolStripMain.Items.RemoveAt(i);
                     }
                 }
 
@@ -1089,7 +1089,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                ToolStrip.Items.Add(new ToolStripSeparator { Tag = "userscript" });
+                ToolStripMain.Items.Add(new ToolStripSeparator { Tag = "userscript" });
 
                 foreach (var script in scripts)
                 {
@@ -1113,7 +1113,7 @@ namespace GitUI.CommandsDialogs
                     };
 
                     // add to toolstrip
-                    ToolStrip.Items.Add(button);
+                    ToolStripMain.Items.Add(button);
                 }
             }
 
