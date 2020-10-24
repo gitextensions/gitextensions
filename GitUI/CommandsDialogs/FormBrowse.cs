@@ -152,6 +152,8 @@ namespace GitUI.CommandsDialogs
             MainSplitContainer.Visible = false;
             MainSplitContainer.SplitterDistance = DpiUtil.Scale(260);
 
+            ToolStripManager.LoadSettings(this, "toolsettings");
+
             // set tab page images
             CommitInfoTabControl.ImageList = new ImageList
             {
@@ -660,7 +662,9 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            ToolStripManager.SaveSettings(this, "toolsettings");
             SaveApplicationSettings();
+
             foreach (var control in this.FindDescendants())
             {
                 control.DragEnter -= FormBrowse_DragEnter;
