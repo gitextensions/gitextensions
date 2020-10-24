@@ -57,7 +57,6 @@ namespace GitUI.CommandsDialogs
             this.toolStripFileExplorer = new System.Windows.Forms.ToolStripButton();
             this.userShell = new System.Windows.Forms.ToolStripSplitButton();
             this.EditSettings = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripBranchFilterComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripBranchFilterDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
@@ -263,8 +262,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator2,
             this.toolStripFileExplorer,
             this.userShell,
-            this.EditSettings,
-            this.toolStripSeparator5});
+            this.EditSettings});
             this.ToolStripMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.ToolStripMain.Location = new System.Drawing.Point(3, 0);
             this.ToolStripMain.Name = "ToolStripMain";
@@ -599,11 +597,6 @@ namespace GitUI.CommandsDialogs
             this.EditSettings.Size = new System.Drawing.Size(23, 22);
             this.EditSettings.ToolTipText = "Settings";
             this.EditSettings.Click += new System.EventHandler(this.OnShowSettingsClick);
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripLabel1
             // 
@@ -1843,7 +1836,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripButton EditSettings;
         private ToolStripButton RefreshButton;
-        private ToolStripSeparator toolStripSeparator5;
         private ToolStripTextBox toolStripRevisionFilterTextBox;
         private ToolStripPushButton toolStripButtonPush;
         private ToolStripLabel toolStripRevisionFilterLabel;
