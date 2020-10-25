@@ -277,6 +277,14 @@ namespace GitUI.CommandsDialogs
             mainMenuStrip.BackColor = toolBackColor;
             mainMenuStrip.ForeColor = toolForeColor;
 
+            toolPanel.TopToolStripPanel.MouseClick += (s, e) =>
+            {
+                if (e.Button == MouseButtons.Right)
+                {
+                    _formBrowseMenus.ShowToolStripContextMenu(Cursor.Position);
+                }
+            };
+
             InitToolStripStyles(toolForeColor, toolBackColor);
 
             foreach (var control in this.FindDescendants())
@@ -607,7 +615,10 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnLoad(EventArgs e)
         {
+            toolPanel.TopToolStripPanel.SuspendLayout();
             ToolStripManager.LoadSettings(this, "toolsettings");
+            toolPanel.TopToolStripPanel.ResumeLayout();
+
             _formBrowseMenus.CreateToolbarsMenus(ToolStripMain, ToolStripFilters);
 
             HideVariableMainMenuItems();
@@ -3233,14 +3244,6 @@ namespace GitUI.CommandsDialogs
         private void HelpToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             tsmiTelemetryEnabled.Checked = AppSettings.TelemetryEnabled ?? false;
-        }
-
-        private void toolPanel_TopToolStripPanel_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                _formBrowseMenus.ShowToolStripContextMenu(Cursor.Position);
-            }
         }
     }
 }

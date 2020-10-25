@@ -1753,7 +1753,6 @@ namespace GitUI.CommandsDialogs
             // 
             this.toolPanel.TopToolStripPanel.Controls.Add(this.ToolStripMain);
             this.toolPanel.TopToolStripPanel.Controls.Add(this.ToolStripFilters);
-            this.toolPanel.TopToolStripPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.toolPanel_TopToolStripPanel_MouseClick);
             // 
             // addUpstreamRemoteToolStripMenuItem
             //

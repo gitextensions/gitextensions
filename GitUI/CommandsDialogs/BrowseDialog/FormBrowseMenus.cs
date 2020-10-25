@@ -177,7 +177,7 @@ namespace GitUI.CommandsDialogs
             _mainMenuStrip.Items.Insert(_mainMenuStrip.Items.IndexOf(insertAfterMenuItem) + 1, _navigateToolStripMenuItem);
             _mainMenuStrip.Items.Insert(_mainMenuStrip.Items.IndexOf(_navigateToolStripMenuItem) + 1, _viewToolStripMenuItem);
 
-            // We're a bit lying here - "Toolbars" is not a RevisionGrid emenu item,
+            // We're a bit lying here - "Toolbars" is not a RevisionGrid menu item,
             // however it is the logical place to add it to the "View" menu
             if (_toolbarsMenuItem.DropDownItems.Count > 0)
             {
@@ -190,7 +190,8 @@ namespace GitUI.CommandsDialogs
         }
 
         /// <summary>
-        /// Creates menu items to be added to the main mene of the <see cref="FormBrowse"/>.
+        /// Creates menu items to be added to the main menu of the <see cref="FormBrowse"/>
+        /// (represented by <see cref="_mainMenuStrip"/>).
         /// </summary>
         /// <remarks>
         /// Call in ctor before translation.
