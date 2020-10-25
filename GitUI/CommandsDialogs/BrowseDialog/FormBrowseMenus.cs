@@ -23,9 +23,9 @@ namespace GitUI.CommandsDialogs
         private readonly ToolStrip _mainMenuStrip;
 
         /// <summary>
-        /// The context menu that be shown to allow toggle visibilty of toolbars in <see cref="FormBrowse"/>.
+        /// The menu items that be shown to allow toggle visibilty of toolbars in <see cref="FormBrowse"/>.
         /// </summary>
-        private readonly ContextMenuStrip _toolStripContextMenu = new ContextMenuStrip();
+        private ToolStripItem[] _toolsMenuItems = Array.Empty<ToolStripItem>();
 
         private List<MenuCommand> _navigateMenuCommands;
         private List<MenuCommand> _viewMenuCommands;
@@ -79,7 +79,7 @@ namespace GitUI.CommandsDialogs
 
         /// <summary>
         /// Creates menu items for each toolbar supplied in <paramref name="toolStrips"/>. These menus will
-        /// be surfaced in <see cref="_mainMenuStrip"/>, and <see cref="_toolStripContextMenu"/>,
+        /// be surfaced in <see cref="_mainMenuStrip"/>, and <see cref="_toolsMenuItems"/>,
         /// and will allow to toggle visibility of the toolbars.
         /// </summary>
         /// <param name="toolStrips">The list of toobars to toggle visibility for.</param>
@@ -87,13 +87,10 @@ namespace GitUI.CommandsDialogs
         {
             Debug.Assert(_toolbarsMenuItem != null, "Toolbars menu item must be already created.");
 
-            foreach (ToolStrip toolStrip in toolStrips)
-            {
-                Debug.Assert(!string.IsNullOrEmpty(toolStrip.Text), "Toolstrip must specify its name via Text property");
-
-                _toolStripContextMenu.Items.Add(CreateItem(toolStrip));
-                _toolbarsMenuItem.DropDownItems.Add(CreateItem(toolStrip));
-            }
+            _toolsMenuItems = toolStrips
+                .Where(x => !string.IsNullOrEmpty(x.Text))
+                .Select(CreateItem)
+                .ToArray();
 
             static ToolStripItem CreateItem(ToolStrip senderToolStrip)
             {
@@ -102,6 +99,7 @@ namespace GitUI.CommandsDialogs
                     Checked = senderToolStrip.Visible,
                     CheckOnClick = true
                 };
+
                 toolStripItem.CheckedChanged += (s, e) =>
                 {
                     senderToolStrip.Visible = !senderToolStrip.Visible;
@@ -111,7 +109,15 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public void ShowToolStripContextMenu(Point point) => _toolStripContextMenu.Show(point);
+        public void ShowToolStripContextMenu(Point point)
+        {
+            var contextMenu = new ContextMenuStrip();
+
+            contextMenu.Items
+                .AddRange(_toolsMenuItems);
+
+            contextMenu.Show(point);
+        }
 
         public void ResetMenuCommandSets()
         {
@@ -179,7 +185,7 @@ namespace GitUI.CommandsDialogs
 
             // We're a bit lying here - "Toolbars" is not a RevisionGrid menu item,
             // however it is the logical place to add it to the "View" menu
-            if (_toolbarsMenuItem.DropDownItems.Count > 0)
+            if (_toolsMenuItems.Length > 0)
             {
                 _viewToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
                 _viewToolStripMenuItem.DropDownItems.Add(_toolbarsMenuItem);
@@ -222,6 +228,15 @@ namespace GitUI.CommandsDialogs
                 {
                     Name = "toolbarsMenuItem",
                     Text = "Toolbars",
+                };
+
+                _toolbarsMenuItem.MouseEnter += (sender, args) =>
+                {
+                    if (_toolsMenuItems.Length > 0 && _toolbarsMenuItem.DropDownItems.Count == 0)
+                    {
+                        _toolbarsMenuItem.DropDownItems
+                            .AddRange(_toolsMenuItems);
+                    }
                 };
             }
         }
