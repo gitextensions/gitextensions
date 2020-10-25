@@ -12,7 +12,7 @@
 .ControlLightLight       { color: #292c2c; }
 .ControlText             { color: #afb1b3; }
 .Desktop                 { color: #2b2b2b; }
-.GrayText                { color: #727272; }
+.GrayText                { color: #767676; }
 .Highlight               { color: #6290e6; }
 .HighlightText           { color: #000000; }
 .HotTrack                { color: #98b7ef; }
@@ -34,7 +34,7 @@
 
 /* Application colors */
 .OtherTag                    { color: #a1a1a1; }
-.AuthoredHighlight           { color: #373832; }
+.AuthoredHighlight           { color: #2a2b26; }
 .HighlightAllOccurences      { color: #606020; }
 .Tag                         { color: #408080; }
 .Graph                       { color: #882d00; }

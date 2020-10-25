@@ -258,10 +258,10 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 (isNonRelativeGray: false, isSelected: false) => SystemColors.GrayText,
                 (isNonRelativeGray: false, isSelected: true) => getHighlightedGrayTextColor(),
-                (isNonRelativeGray: true, isSelected: false) => getGrayTextColor(degreeOfGrayness: 1.75f),
+                (isNonRelativeGray: true, isSelected: false) => getGrayTextColor(degreeOfGrayness: 1.4f),
 
                 // (isGray: true, isSelected: true)
-                _ => getHighlightedGrayTextColor(degreeOfGrayness: 1.75f)
+                _ => getHighlightedGrayTextColor(degreeOfGrayness: 1.4f)
             };
         }
 
