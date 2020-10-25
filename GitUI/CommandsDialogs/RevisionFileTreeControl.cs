@@ -675,7 +675,10 @@ See the changes in the commit form.");
             if (tvGitTree.SelectedNode?.Tag is GitItem gitItem && gitItem.ObjectType == GitObjectType.Blob)
             {
                 var fileName = _fullPathResolver.Resolve(gitItem.FileName);
-                OsShellUtil.OpenAs(fileName.ToNativePath());
+                if (File.Exists(fileName))
+                {
+                    OsShellUtil.OpenAs(fileName.ToNativePath());
+                }
             }
         }
 

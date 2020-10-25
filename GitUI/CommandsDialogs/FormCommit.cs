@@ -2598,6 +2598,12 @@ namespace GitUI.CommandsDialogs
             var fileNames = new StringBuilder();
             foreach (var item in list.SelectedItems)
             {
+                var fileName = _fullPathResolver.Resolve(item.Item.Name);
+                if (string.IsNullOrWhiteSpace(fileName))
+                {
+                    continue;
+                }
+
                 // Only use append line when multiple items are selected.
                 // This to make it easier to use the text from clipboard when 1 file is selected.
                 if (fileNames.Length > 0)
@@ -2605,7 +2611,7 @@ namespace GitUI.CommandsDialogs
                     fileNames.AppendLine();
                 }
 
-                fileNames.Append(_fullPathResolver.Resolve(item.Item.Name).ToNativePath());
+                fileNames.Append(fileName.ToNativePath());
             }
 
             ClipboardUtil.TrySetText(fileNames.ToString());
@@ -2700,12 +2706,17 @@ namespace GitUI.CommandsDialogs
             }
 
             var item = list.SelectedGitItem;
-            if (item == null)
+            if (item is null)
             {
                 return;
             }
 
             var fileName = _fullPathResolver.Resolve(item.Name);
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                return;
+            }
+
             UICommands.StartFileEditorDialog(fileName);
 
             UnstagedSelectionChanged(null, null);
@@ -3184,13 +3195,10 @@ namespace GitUI.CommandsDialogs
         {
             foreach (var item in list.SelectedItems)
             {
-                var fileNames = new StringBuilder();
-                fileNames.Append(_fullPathResolver.Resolve(item.Item.Name).ToNativePath());
-
-                string filePath = fileNames.ToString();
+                string filePath = _fullPathResolver.Resolve(item.Item.Name);
                 if (File.Exists(filePath))
                 {
-                    OsShellUtil.SelectPathInFileExplorer(filePath);
+                    OsShellUtil.SelectPathInFileExplorer(filePath.ToNativePath());
                 }
             }
         }

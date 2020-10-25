@@ -348,16 +348,13 @@ namespace GitUI.CommandsDialogs
         private void UseMergeWithScript(string fileName, string mergeScript, string baseFileName, string localFileName, string remoteFileName)
         {
             // get timestamp of file before merge. This is an extra check to verify if merge was successfully
-            DateTime lastWriteTimeBeforeMerge = DateTime.Now;
-            if (File.Exists(Path.Combine(Module.WorkingDir, fileName)))
-            {
-                lastWriteTimeBeforeMerge = File.GetLastWriteTime(_fullPathResolver.Resolve(fileName));
-            }
+            var filePath = _fullPathResolver.Resolve(fileName);
+            DateTime lastWriteTimeBeforeMerge = File.Exists(filePath) ? File.GetLastWriteTime(filePath) : DateTime.Now;
 
             var args = new ArgumentBuilder
             {
                 mergeScript.Quote(),
-                FixPath(_fullPathResolver.Resolve(fileName)).Quote(),
+                FixPath(filePath).Quote(),
                 FixPath(remoteFileName).Quote(),
                 FixPath(localFileName).Quote(),
                 FixPath(baseFileName).Quote()
@@ -366,14 +363,10 @@ namespace GitUI.CommandsDialogs
             new Executable("wscript", Module.WorkingDir).Start(args);
 
             if (MessageBox.Show(this, string.Format(_askMergeConflictSolvedAfterCustomMergeScript.Text,
-                FixPath(_fullPathResolver.Resolve(fileName))), _askMergeConflictSolvedCaption.Text,
+                FixPath(filePath)), _askMergeConflictSolvedCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
-                if (File.Exists(_fullPathResolver.Resolve(fileName)))
-                {
-                    lastWriteTimeAfterMerge = File.GetLastWriteTime(_fullPathResolver.Resolve(fileName));
-                }
+                DateTime lastWriteTimeAfterMerge = File.Exists(filePath) ? File.GetLastWriteTime(filePath) : lastWriteTimeBeforeMerge;
 
                 // The file is not modified, do not stage file and present warning
                 if (lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge)
@@ -546,11 +539,8 @@ namespace GitUI.CommandsDialogs
                     arguments = arguments.Replace("$MERGED", item.Filename);
 
                     // get timestamp of file before merge. This is an extra check to verify if merge was successful
-                    DateTime lastWriteTimeBeforeMerge = DateTime.Now;
-                    if (File.Exists(_fullPathResolver.Resolve(item.Filename)))
-                    {
-                        lastWriteTimeBeforeMerge = File.GetLastWriteTime(_fullPathResolver.Resolve(item.Filename));
-                    }
+                    var filePath = _fullPathResolver.Resolve(item.Filename);
+                    DateTime lastWriteTimeBeforeMerge = File.Exists(filePath) ? File.GetLastWriteTime(filePath) : DateTime.Now;
 
                     GitUIPluginInterfaces.ExecutionResult res;
                     try
@@ -565,11 +555,7 @@ namespace GitUI.CommandsDialogs
                         return;
                     }
 
-                    DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
-                    if (File.Exists(_fullPathResolver.Resolve(item.Filename)))
-                    {
-                        lastWriteTimeAfterMerge = File.GetLastWriteTime(_fullPathResolver.Resolve(item.Filename));
-                    }
+                    DateTime lastWriteTimeAfterMerge = File.Exists(filePath) ? File.GetLastWriteTime(filePath) : lastWriteTimeBeforeMerge;
 
                     // Check exitcode AND timestamp of the file. If exitcode is success and
                     // time timestamp is changed, we are pretty sure the merge was done.
@@ -1316,13 +1302,13 @@ namespace GitUI.CommandsDialogs
             using (WaitCursorScope.Enter())
             {
                 var conflictData = GetConflict();
-                string fileName = conflictData.Filename;
-                fileName = PathUtil.GetFileName(fileName);
+                string fileName = PathUtil.GetFileName(conflictData.Filename);
+                var initialDirectory = _fullPathResolver.Resolve(Path.GetDirectoryName(conflictData.Filename));
 
                 using (var fileDialog = new SaveFileDialog
                 {
                     FileName = fileName,
-                    InitialDirectory = _fullPathResolver.Resolve(Path.GetDirectoryName(conflictData.Filename)),
+                    InitialDirectory = initialDirectory,
                     AddExtension = true
                 })
                 {
