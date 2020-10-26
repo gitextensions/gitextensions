@@ -954,6 +954,8 @@ namespace GitUI.CommandsDialogs
         private void InternalInitialize(bool hard)
         {
             toolPanel.SuspendLayout();
+            toolPanel.TopToolStripPanel.SuspendLayout();
+
             using (WaitCursorScope.Enter())
             {
                 // check for updates
@@ -1074,6 +1076,7 @@ namespace GitUI.CommandsDialogs
                 UICommands.RaisePostBrowseInitialize(this);
             }
 
+            toolPanel.TopToolStripPanel.ResumeLayout();
             toolPanel.ResumeLayout();
 
             return;

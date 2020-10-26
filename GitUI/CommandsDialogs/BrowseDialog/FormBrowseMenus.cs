@@ -44,6 +44,8 @@ namespace GitUI.CommandsDialogs
 
             CreateMenuItems();
             Translate();
+
+            _toolStripContextMenu.Opening += (s, e) => RefreshToolbarsMenuItemCheckedState(_toolStripContextMenu.Items);
         }
 
         public void Dispose()
@@ -89,7 +91,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (ToolStrip toolStrip in toolStrips)
             {
-                Debug.Assert(!string.IsNullOrEmpty(toolStrip.Text), "Toolstrip must specify its name via Text property");
+                Debug.Assert(!string.IsNullOrEmpty(toolStrip.Text), "Toolstrip must specify its name via Text property.");
 
                 _toolStripContextMenu.Items.Add(CreateItem(toolStrip));
                 _toolbarsMenuItem.DropDownItems.Add(CreateItem(toolStrip));
@@ -100,9 +102,10 @@ namespace GitUI.CommandsDialogs
                 var toolStripItem = new ToolStripMenuItem(senderToolStrip.Text)
                 {
                     Checked = senderToolStrip.Visible,
-                    CheckOnClick = true
+                    CheckOnClick = true,
+                    Tag = senderToolStrip
                 };
-                toolStripItem.CheckedChanged += (s, e) =>
+                toolStripItem.Click += (s, e) =>
                 {
                     senderToolStrip.Visible = !senderToolStrip.Visible;
                 };
@@ -223,6 +226,7 @@ namespace GitUI.CommandsDialogs
                     Name = "toolbarsMenuItem",
                     Text = "Toolbars",
                 };
+                _toolbarsMenuItem.DropDownOpening += (s, e) => RefreshToolbarsMenuItemCheckedState(_toolbarsMenuItem.DropDownItems);
             }
         }
 
@@ -298,6 +302,15 @@ namespace GitUI.CommandsDialogs
             else
             {
                 throw new ApplicationException("this case is not allowed");
+            }
+        }
+
+        private void RefreshToolbarsMenuItemCheckedState(ToolStripItemCollection toolStripItems)
+        {
+            foreach (ToolStripMenuItem item in toolStripItems)
+            {
+                Debug.Assert(item.Tag is ToolStrip, "Toolbars context menu items must reference Toolstrips via Tag property.");
+                item.Checked = ((ToolStrip)item.Tag).Visible;
             }
         }
     }
