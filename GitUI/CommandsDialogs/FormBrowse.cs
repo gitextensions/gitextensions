@@ -264,7 +264,7 @@ namespace GitUI.CommandsDialogs
             FillBuildReport(revision: null); // Ensure correct page visibility
             RevisionGrid.ShowBuildServerInfo = true;
 
-            _formBrowseMenus = new FormBrowseMenus(menuStrip1);
+            _formBrowseMenus = new FormBrowseMenus(mainMenuStrip);
             RevisionGrid.MenuCommands.MenuChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
             SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
 
@@ -274,24 +274,18 @@ namespace GitUI.CommandsDialogs
             var toolForeColor = SystemColors.WindowText;
             BackColor = toolBackColor;
             ForeColor = toolForeColor;
-            ToolStrip.BackColor = toolBackColor;
-            ToolStrip.ForeColor = toolForeColor;
-            toolStripRevisionFilterDropDownButton.BackColor = toolBackColor;
-            toolStripRevisionFilterDropDownButton.ForeColor = toolForeColor;
-            menuStrip1.BackColor = toolBackColor;
-            menuStrip1.ForeColor = toolForeColor;
-            toolPanel.TopToolStripPanel.BackColor = toolBackColor;
-            toolPanel.TopToolStripPanel.ForeColor = toolForeColor;
+            mainMenuStrip.BackColor = toolBackColor;
+            mainMenuStrip.ForeColor = toolForeColor;
 
-            var toolTextBoxBackColor = SystemColors.Window;
-            toolStripBranchFilterComboBox.BackColor = toolTextBoxBackColor;
-            toolStripBranchFilterComboBox.ForeColor = toolForeColor;
-            toolStripRevisionFilterTextBox.BackColor = toolTextBoxBackColor;
-            toolStripRevisionFilterTextBox.ForeColor = toolForeColor;
+            toolPanel.TopToolStripPanel.MouseClick += (s, e) =>
+            {
+                if (e.Button == MouseButtons.Right)
+                {
+                    _formBrowseMenus.ShowToolStripContextMenu(Cursor.Position);
+                }
+            };
 
-            // Scale tool strip items according to DPI
-            toolStripBranchFilterComboBox.Size = DpiUtil.Scale(toolStripBranchFilterComboBox.Size);
-            toolStripRevisionFilterTextBox.Size = DpiUtil.Scale(toolStripRevisionFilterTextBox.Size);
+            InitToolStripStyles(toolForeColor, toolBackColor);
 
             foreach (var control in this.FindDescendants())
             {
@@ -435,6 +429,29 @@ namespace GitUI.CommandsDialogs
                         }
                     }
                 };
+            }
+
+            void InitToolStripStyles(Color toolForeColor, Color toolBackColor)
+            {
+                toolPanel.TopToolStripPanel.BackColor = toolBackColor;
+                toolPanel.TopToolStripPanel.ForeColor = toolForeColor;
+
+                ToolStripMain.BackColor = toolBackColor;
+                ToolStripMain.ForeColor = toolForeColor;
+                ToolStripFilters.BackColor = toolBackColor;
+                ToolStripFilters.ForeColor = toolForeColor;
+                toolStripRevisionFilterDropDownButton.BackColor = toolBackColor;
+                toolStripRevisionFilterDropDownButton.ForeColor = toolForeColor;
+
+                var toolTextBoxBackColor = SystemColors.Window;
+                toolStripBranchFilterComboBox.BackColor = toolTextBoxBackColor;
+                toolStripBranchFilterComboBox.ForeColor = toolForeColor;
+                toolStripRevisionFilterTextBox.BackColor = toolTextBoxBackColor;
+                toolStripRevisionFilterTextBox.ForeColor = toolForeColor;
+
+                // Scale tool strip items according to DPI
+                toolStripBranchFilterComboBox.Size = DpiUtil.Scale(toolStripBranchFilterComboBox.Size);
+                toolStripRevisionFilterTextBox.Size = DpiUtil.Scale(toolStripRevisionFilterTextBox.Size);
             }
 
             Brush UpdateCommitButtonAndGetBrush(IReadOnlyList<GitItemStatus> status, bool showCount)
@@ -598,7 +615,12 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnLoad(EventArgs e)
         {
-            SetSplitterPositions();
+            toolPanel.TopToolStripPanel.SuspendLayout();
+            ToolStripManager.LoadSettings(this, "toolsettings");
+            toolPanel.TopToolStripPanel.ResumeLayout();
+
+            _formBrowseMenus.CreateToolbarsMenus(ToolStripMain, ToolStripFilters);
+
             HideVariableMainMenuItems();
             RefreshSplitViewLayout();
             LayoutRevisionInfo();
@@ -660,7 +682,9 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            ToolStripManager.SaveSettings(this, "toolsettings");
             SaveApplicationSettings();
+
             foreach (var control in this.FindDescendants())
             {
                 control.DragEnter -= FormBrowse_DragEnter;
@@ -890,7 +914,7 @@ namespace GitUI.CommandsDialogs
                     _dashboard.RefreshContent();
                 }
 
-                menuStrip1?.Refresh();
+                mainMenuStrip?.Refresh();
             }
 
             // Allow the plugin to perform any self-registration actions
@@ -923,13 +947,15 @@ namespace GitUI.CommandsDialogs
             refreshToolStripMenuItem.ShortcutKeys = Keys.None;
             refreshDashboardToolStripMenuItem.ShortcutKeys = Keys.None;
             _repositoryHostsToolStripMenuItem.Visible = false;
-            _formBrowseMenus.RemoveAdditionalMainMenuItems();
-            menuStrip1.Refresh();
+            _formBrowseMenus.RemoveRevisionGridMainMenuItems();
+            mainMenuStrip.Refresh();
         }
 
         private void InternalInitialize(bool hard)
         {
             toolPanel.SuspendLayout();
+            toolPanel.TopToolStripPanel.SuspendLayout();
+
             using (WaitCursorScope.Enter())
             {
                 // check for updates
@@ -1040,7 +1066,7 @@ namespace GitUI.CommandsDialogs
                     _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, RevisionGrid.MenuCommands.NavigateMenuCommands);
                     _formBrowseMenus.AddMenuCommandSet(MainMenuItem.ViewMenu, RevisionGrid.MenuCommands.ViewMenuCommands);
 
-                    _formBrowseMenus.InsertAdditionalMainMenuItems(repositoryToolStripMenuItem);
+                    _formBrowseMenus.InsertRevisionGridMainMenuItems(repositoryToolStripMenuItem);
                 }
                 else
                 {
@@ -1050,6 +1076,7 @@ namespace GitUI.CommandsDialogs
                 UICommands.RaisePostBrowseInitialize(this);
             }
 
+            toolPanel.TopToolStripPanel.ResumeLayout();
             toolPanel.ResumeLayout();
 
             return;
@@ -1076,11 +1103,11 @@ namespace GitUI.CommandsDialogs
                     .Where(script => script.Enabled && script.OnEvent == ScriptEvent.ShowInUserMenuBar)
                     .ToList();
 
-                for (int i = ToolStrip.Items.Count - 1; i >= 0; i--)
+                for (int i = ToolStripMain.Items.Count - 1; i >= 0; i--)
                 {
-                    if (ToolStrip.Items[i].Tag as string == "userscript")
+                    if (ToolStripMain.Items[i].Tag as string == "userscript")
                     {
-                        ToolStrip.Items.RemoveAt(i);
+                        ToolStripMain.Items.RemoveAt(i);
                     }
                 }
 
@@ -1089,7 +1116,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                ToolStrip.Items.Add(new ToolStripSeparator { Tag = "userscript" });
+                ToolStripMain.Items.Add(new ToolStripSeparator { Tag = "userscript" });
 
                 foreach (var script in scripts)
                 {
@@ -1113,7 +1140,7 @@ namespace GitUI.CommandsDialogs
                     };
 
                     // add to toolstrip
-                    ToolStrip.Items.Add(button);
+                    ToolStripMain.Items.Add(button);
                 }
             }
 

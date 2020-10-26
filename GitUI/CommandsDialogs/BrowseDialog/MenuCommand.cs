@@ -82,6 +82,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         public Image Image { get; set; }
 
         public Keys ShortcutKeys { get; set; }
+
         public string ShortcutKeyDisplayString { get; set; }
 
         /// <summary>
