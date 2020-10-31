@@ -36,7 +36,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             foreach (string translation in translations)
             {
-                var imagePath = Path.Combine(Translator.GetTranslationDir(), translation + ".gif");
+                var imagePath = PathUtil.Combine(Translator.GetTranslationDir(), translation + ".gif");
                 if (File.Exists(imagePath))
                 {
                     var image = Image.FromFile(imagePath);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using GitCommands;
 
 namespace GitStatistics
 {
@@ -53,7 +54,7 @@ namespace GitStatistics
             {
                 foreach (var file in filesToCheck)
                 {
-                    if (extensions.Contains(Path.GetExtension(file)))
+                    if (extensions.Contains(PathUtil.GetExtension(file)))
                     {
                         FileInfo fileInfo;
                         try

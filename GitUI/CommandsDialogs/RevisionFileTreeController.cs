@@ -120,7 +120,8 @@ namespace GitUI.CommandsDialogs
 
                     case GitObjectType.Blob:
                         {
-                            var extension = Path.GetExtension(gitItem.FileName);
+                            var extension = PathUtil.GetExtension(gitItem.FileName);
+
                             if (string.IsNullOrWhiteSpace(extension))
                             {
                                 continue;
@@ -128,8 +129,8 @@ namespace GitUI.CommandsDialogs
 
                             if (!imageCollection.ContainsKey(extension))
                             {
-                                // a little optimisation - initialise the first time it is required
-                                workingDir = workingDir ?? _getWorkingDir();
+                                // lazy - initialise the first time used
+                                workingDir ??= _getWorkingDir();
 
                                 var fileIcon = _iconProvider.Get(workingDir, gitItem.FileName);
                                 if (fileIcon == null)

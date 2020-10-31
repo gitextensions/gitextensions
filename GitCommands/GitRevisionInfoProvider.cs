@@ -59,9 +59,7 @@ namespace GitCommands
                 {
                     if (subItem is GitItem gitItem)
                     {
-                        gitItem.FileName = Path.Combine(
-                            basePath,
-                            gitItem.FileName ?? string.Empty);
+                        gitItem.FileName = PathUtil.Combine(basePath, gitItem.FileName) ?? string.Empty;
                     }
 
                     yield return subItem;
