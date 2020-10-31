@@ -6,12 +6,15 @@ using System.Windows.Forms;
 using AutoCompileSubmodules.Properties;
 using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.Events;
 using ResourceManager;
 
 namespace AutoCompileSubmodules
 {
     [Export(typeof(IGitPlugin))]
-    public class AutoCompileSubModulesPlugin : GitPluginBase, IGitPluginForRepository
+    public class AutoCompileSubModulesPlugin : GitPluginBase,
+        IGitPluginForRepository,
+        IPostUpdateSubmodulesHandler
     {
         private readonly TranslationString _doYouWantBuild =
             new TranslationString("Do you want to build {0}?\n\n{1}");
@@ -47,14 +50,10 @@ namespace AutoCompileSubmodules
 
         public override void Register(IGitUICommands gitUiCommands)
         {
-            // Connect to events
-            gitUiCommands.PostUpdateSubmodules += GitUiCommandsPostUpdateSubmodules;
         }
 
         public override void Unregister(IGitUICommands gitUiCommands)
         {
-            // Connect to events
-            gitUiCommands.PostUpdateSubmodules -= GitUiCommandsPostUpdateSubmodules;
         }
 
         public override bool Execute(GitUIEventArgs args)
@@ -111,7 +110,7 @@ namespace AutoCompileSubmodules
         /// <summary>
         ///   Automatically compile all solution files found in any submodule
         /// </summary>
-        private void GitUiCommandsPostUpdateSubmodules(object sender, GitUIPostActionEventArgs e)
+        public void OnPostUpdateSubmodules(GitUIPostActionEventArgs e)
         {
             if (e.ActionDone && _msBuildEnabled.ValueOrDefault(Settings))
             {

@@ -11,6 +11,7 @@ using GitExtensions.Extensibility.Settings.UserControls;
 using GitExtUtils.GitUI;
 using GitUI;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.Events;
 using JiraCommitHintPlugin.Properties;
 using NString;
 using ResourceManager;
@@ -18,7 +19,12 @@ using ResourceManager;
 namespace JiraCommitHintPlugin
 {
     [Export(typeof(IGitPlugin))]
-    public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForRepository
+    public class JiraCommitHintPlugin : GitPluginBase,
+        IGitPluginForRepository,
+        IPostSettingsHandler,
+        IPreCommitHandler,
+        IPostCommitHandler,
+        IPostRepositoryChangedHandler
     {
         private static readonly TranslationString JiraFieldsLabel = new TranslationString("Jira fields");
         private static readonly TranslationString QueryHelperLinkText = new TranslationString("Open the query helper inside Jira");
@@ -168,11 +174,9 @@ namespace JiraCommitHintPlugin
         public override void Register(IGitUICommands gitUiCommands)
         {
             base.Register(gitUiCommands);
+
             _gitModule = gitUiCommands.GitModule;
-            gitUiCommands.PostSettings += gitUiCommands_PostSettings;
-            gitUiCommands.PreCommit += gitUiCommands_PreCommit;
-            gitUiCommands.PostCommit += gitUiCommands_PostRepositoryChanged;
-            gitUiCommands.PostRepositoryChanged += gitUiCommands_PostRepositoryChanged;
+
             UpdateJiraSettings();
         }
 
@@ -203,21 +207,12 @@ namespace JiraCommitHintPlugin
             _btnPreview = null;
         }
 
-        private void gitUiCommands_PostSettings(object sender, GitUIPostActionEventArgs e)
+        public void OnPostSettings(GitUIPostActionEventArgs e)
         {
             UpdateJiraSettings();
         }
 
-        public override void Unregister(IGitUICommands gitUiCommands)
-        {
-            base.Unregister(gitUiCommands);
-            gitUiCommands.PreCommit -= gitUiCommands_PreCommit;
-            gitUiCommands.PostCommit -= gitUiCommands_PostRepositoryChanged;
-            gitUiCommands.PostSettings -= gitUiCommands_PostSettings;
-            gitUiCommands.PostRepositoryChanged -= gitUiCommands_PostRepositoryChanged;
-        }
-
-        private void gitUiCommands_PreCommit(object sender, GitUIEventArgs e)
+        public void OnPreCommit(GitUIEventArgs e)
         {
             if (!_enabledSettings.ValueOrDefault(Settings))
             {
@@ -243,7 +238,12 @@ namespace JiraCommitHintPlugin
             });
         }
 
-        private void gitUiCommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
+        public void OnPostCommit(GitUIPostActionEventArgs e)
+        {
+            OnPostRepositoryChanged(e);
+        }
+
+        public void OnPostRepositoryChanged(GitUIEventArgs e)
         {
             if (!_enabledSettings.ValueOrDefault(Settings))
             {

@@ -9,12 +9,15 @@ using GitCommands;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.Events;
 using ResourceManager;
 
 namespace BackgroundFetch
 {
     [Export(typeof(IGitPlugin))]
-    public class BackgroundFetchPlugin : GitPluginBase, IGitPluginForRepository
+    public class BackgroundFetchPlugin : GitPluginBase,
+        IGitPluginForRepository,
+        IPostSettingsHandler
     {
         public BackgroundFetchPlugin() : base(true)
         {
@@ -51,12 +54,11 @@ namespace BackgroundFetch
             base.Register(gitUiCommands);
 
             _currentGitUiCommands = gitUiCommands;
-            _currentGitUiCommands.PostSettings += OnPostSettings;
 
             RecreateObservable();
         }
 
-        private void OnPostSettings(object sender, GitUIPostActionEventArgs e)
+        public void OnPostSettings(GitUIPostActionEventArgs e)
         {
             RecreateObservable();
         }
@@ -160,7 +162,6 @@ namespace BackgroundFetch
 
             if (_currentGitUiCommands != null)
             {
-                _currentGitUiCommands.PostSettings -= OnPostSettings;
                 _currentGitUiCommands = null;
             }
 

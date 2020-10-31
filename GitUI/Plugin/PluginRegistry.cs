@@ -2,6 +2,7 @@
 using System.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.Events;
 using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
 
@@ -73,6 +74,14 @@ namespace GitUI
             lock (Plugins)
             {
                 Plugins.ForEach(p => p.Register(gitUiCommands));
+
+                gitUiCommands.PostCommit += OnPostCommit;
+                gitUiCommands.PostRepositoryChanged += OnPostRepositoryChanged;
+                gitUiCommands.PostSettings += OnPostSettings;
+                gitUiCommands.PostUpdateSubmodules += OnPostUpdateSubmodules;
+                gitUiCommands.PostBrowseInitialize += OnPostBrowseInitialize;
+                gitUiCommands.PostRegisterPlugin += OnPostRegisterPlugin;
+                gitUiCommands.PreCommit += OnPreCommit;
             }
         }
 
@@ -86,9 +95,98 @@ namespace GitUI
             lock (Plugins)
             {
                 Plugins.ForEach(p => p.Unregister(gitUiCommands));
+
+                gitUiCommands.PostCommit -= OnPostCommit;
+                gitUiCommands.PostRepositoryChanged -= OnPostRepositoryChanged;
+                gitUiCommands.PostSettings -= OnPostSettings;
+                gitUiCommands.PostUpdateSubmodules -= OnPostUpdateSubmodules;
+                gitUiCommands.PostBrowseInitialize -= OnPostBrowseInitialize;
+                gitUiCommands.PostRegisterPlugin -= OnPostRegisterPlugin;
+                gitUiCommands.PreCommit -= OnPreCommit;
             }
 
             PluginsRegistered = false;
         }
+
+        #region Events
+
+        private static void OnPostCommit(object sender, GitUIPostActionEventArgs e)
+        {
+            foreach (var plugin in Plugins)
+            {
+                if (plugin is IPostCommitHandler handler)
+                {
+                    handler.OnPostCommit(e);
+                }
+            }
+        }
+
+        private static void OnPostRepositoryChanged(object sender, GitUIEventArgs e)
+        {
+            foreach (var plugin in Plugins)
+            {
+                if (plugin is IPostRepositoryChangedHandler handler)
+                {
+                    handler.OnPostRepositoryChanged(e);
+                }
+            }
+        }
+
+        private static void OnPostSettings(object sender, GitUIPostActionEventArgs e)
+        {
+            foreach (var plugin in Plugins)
+            {
+                if (plugin is IPostSettingsHandler handler)
+                {
+                    handler.OnPostSettings(e);
+                }
+            }
+        }
+
+        private static void OnPostUpdateSubmodules(object sender, GitUIPostActionEventArgs e)
+        {
+            foreach (var plugin in Plugins)
+            {
+                if (plugin is IPostUpdateSubmodulesHandler handler)
+                {
+                    handler.OnPostUpdateSubmodules(e);
+                }
+            }
+        }
+
+        private static void OnPostBrowseInitialize(object sender, GitUIEventArgs e)
+        {
+            foreach (var plugin in Plugins)
+            {
+                if (plugin is IPostBrowseInitializeHandler handler)
+                {
+                    handler.OnPostBrowseInitialize(e);
+                }
+            }
+        }
+
+        private static void OnPostRegisterPlugin(object sender, GitUIEventArgs e)
+        {
+            foreach (var plugin in Plugins)
+            {
+                if (plugin is IPostRegisterPluginHandler handler)
+                {
+                    handler.OnPostRegisterPlugin(e);
+                }
+            }
+        }
+
+        private static void OnPreCommit(object sender, GitUIEventArgs e)
+        {
+            foreach (var plugin in Plugins)
+            {
+                if (plugin is IPreCommitHandler handler)
+                {
+                    handler.OnPreCommit(e);
+                }
+            }
+        }
+
+        #endregion Events
     }
 }
