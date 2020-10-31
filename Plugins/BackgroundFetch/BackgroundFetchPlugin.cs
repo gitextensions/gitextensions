@@ -21,7 +21,7 @@ namespace BackgroundFetch
         IUnloadHandler,
         IPostSettingsHandler
     {
-        public BackgroundFetchPlugin() : base(true)
+        public BackgroundFetchPlugin()
         {
             SetNameAndDescription("Periodic background fetch");
             Translate();

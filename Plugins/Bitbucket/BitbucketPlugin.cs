@@ -17,7 +17,7 @@ namespace Bitbucket
 
         private readonly TranslationString _yourRepositoryIsNotInBitbucket = new TranslationString("Your repository is not hosted in BitBucket Server.");
 
-        public BitbucketPlugin() : base(true)
+        public BitbucketPlugin()
         {
             SetNameAndDescription("Bitbucket Server");
             Translate();

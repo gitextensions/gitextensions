@@ -91,7 +91,7 @@ namespace GitHub3
         private IGitUICommands _currentGitUiCommands;
         private IReadOnlyList<IHostedRemote> _hostedRemotesForModule;
 
-        public GitHub3Plugin() : base(true)
+        public GitHub3Plugin()
         {
             SetNameAndDescription("GitHub");
             Translate();

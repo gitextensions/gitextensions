@@ -18,7 +18,7 @@ namespace GitStatistics
         private readonly StringSetting _ignoreDirectories = new StringSetting("Directories to ignore (EndsWith)", @"\Debug;\Release;\obj;\bin;\lib");
         private readonly BoolSetting _ignoreSubmodules = new BoolSetting("Ignore submodules", defaultValue: true);
 
-        public GitStatisticsPlugin() : base(true)
+        public GitStatisticsPlugin()
         {
             SetNameAndDescription("Statistics");
             Translate();

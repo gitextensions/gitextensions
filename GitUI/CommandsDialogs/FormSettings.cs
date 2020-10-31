@@ -177,7 +177,7 @@ namespace GitUI.CommandsDialogs
             lock (PluginRegistry.Plugins)
             {
                 var pluginEntries = PluginRegistry.Plugins
-                    .Where(p => p.HasSettings)
+                    .Where(p => p.GetSettings()?.Any() ?? false)
                     .Select(plugin => (Plugin: plugin, Page: PluginSettingsPage.CreateSettingsPageFromPlugin(this, plugin)))
                     .OrderBy(entry => entry.Page.GetTitle(), StringComparer.CurrentCultureIgnoreCase);
 

@@ -52,7 +52,7 @@ namespace JiraCommitHintPlugin
         private JiraTaskDTO[] _currentMessages;
         private Button _btnPreview;
 
-        public JiraCommitHintPlugin() : base(true)
+        public JiraCommitHintPlugin()
         {
             SetNameAndDescription("Jira Commit Hint");
             Translate();

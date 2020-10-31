@@ -17,17 +17,6 @@ namespace ResourceManager
         public string Name { get; protected set; }
         public Image Icon { get; protected set; }
 
-        protected GitPluginBase(bool hasSettings)
-        {
-            HasSettings = hasSettings;
-        }
-
-        // required for the TranslationApp to work
-        protected GitPluginBase()
-            : this(false)
-        {
-        }
-
         protected void SetNameAndDescription(string name)
         {
             Name = name;
@@ -37,8 +26,6 @@ namespace ResourceManager
         void IDisposable.Dispose()
         {
         }
-
-        public bool HasSettings { get; }
 
         // Store settings to use later
         public ISettingsSource Settings => SettingsContainer.GetSettingsSource();
