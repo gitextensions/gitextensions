@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using GitExtensions.Core.Settings;
 
-namespace GitUIPluginInterfaces
+namespace GitExtensions.Extensibility.Settings
 {
     public class StringSetting : ISetting
     {

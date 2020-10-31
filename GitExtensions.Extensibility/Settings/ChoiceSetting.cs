@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitExtensions.Core.Settings;
 
-namespace GitUIPluginInterfaces
+namespace GitExtensions.Extensibility.Settings
 {
     public class ChoiceSetting : ISetting
     {

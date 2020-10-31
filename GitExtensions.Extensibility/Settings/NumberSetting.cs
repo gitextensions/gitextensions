@@ -2,7 +2,7 @@
 using GitExtensions.Core.Settings;
 using JetBrains.Annotations;
 
-namespace GitUIPluginInterfaces
+namespace GitExtensions.Extensibility.Settings
 {
     public class NumberSetting<T> : ISetting
     {

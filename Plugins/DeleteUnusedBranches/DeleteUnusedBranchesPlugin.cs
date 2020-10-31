@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using DeleteUnusedBranches.Properties;
+using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces;
 using ResourceManager;
 

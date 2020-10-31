@@ -6,7 +6,7 @@ using AdysTech.CredentialManager;
 using GitExtensions.Core.Settings;
 using JetBrains.Annotations;
 
-namespace GitUIPluginInterfaces
+namespace GitExtensions.Extensibility.Settings
 {
     public interface ICredentialsManager
     {

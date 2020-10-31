@@ -1,4 +1,5 @@
 ﻿using System;
+using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 

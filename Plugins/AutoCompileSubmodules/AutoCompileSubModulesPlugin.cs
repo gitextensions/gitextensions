@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using AutoCompileSubmodules.Properties;
+using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces;
 using ResourceManager;
 

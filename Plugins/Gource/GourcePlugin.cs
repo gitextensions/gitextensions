@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces;
 using Gource.Properties;
 using ICSharpCode.SharpZipLib.Zip;

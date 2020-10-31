@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using GitExtensions.Extensibility.Settings;
 using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces

@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace GitUIPluginInterfaces
+﻿namespace GitExtensions.Extensibility.Settings
 {
     public interface ISetting
     {

@@ -5,8 +5,8 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Core.Settings;
+using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 

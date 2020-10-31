@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
 using GitExtensions.Core.Settings;
-using GitUI;
+using GitExtensions.Extensibility.Settings.UserControls;
 
-namespace GitUIPluginInterfaces
+namespace GitExtensions.Extensibility.Settings
 {
     public class BoolSetting : ISetting
     {

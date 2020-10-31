@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GitExtensions.Core.Settings;
+using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Plugins

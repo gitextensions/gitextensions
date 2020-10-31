@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace GitUIPluginInterfaces.UserControls
+namespace GitExtensions.Extensibility.Settings.UserControls
 {
     public partial class CredentialsControl : UserControl
     {

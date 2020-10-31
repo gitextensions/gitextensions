@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Git.hub;
 using GitCommands.Config;
 using GitCommands.Remotes;
+using GitExtensions.Extensibility.Settings;
 using GitHub3.Properties;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
