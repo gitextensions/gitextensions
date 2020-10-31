@@ -1,10 +1,11 @@
 ﻿using System;
+using GitExtensions.Core.Settings;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands.Settings
 {
-    public class SettingsPath : ISettingsSource
+    public class SettingsPath : SettingsSource
     {
         [CanBeNull] private readonly ISettingsSource _parent;
         [NotNull] private readonly string _pathName;

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Windows.Forms;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Settings;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using ResourceManager;
 

@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace GitCommands.Settings
 {
-    public class SettingsContainer<TLowerPriority, TCache> : ISettingsSource where TLowerPriority : SettingsContainer<TLowerPriority, TCache> where TCache : SettingsCache
+    public class SettingsContainer<TLowerPriority, TCache> : SettingsSource where TLowerPriority : SettingsContainer<TLowerPriority, TCache> where TCache : SettingsCache
     {
         private readonly ICredentialsManager _credentialsManager = new CredentialsManager();
 

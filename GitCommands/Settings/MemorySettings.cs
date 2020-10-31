@@ -1,8 +1,8 @@
-﻿using GitUIPluginInterfaces;
+﻿using GitExtensions.Core.Settings;
 
 namespace GitCommands.Settings
 {
-    public class MemorySettings : SettingsContainer<MemorySettings, MemorySettingsCache>
+    public sealed class MemorySettings : SettingsContainer<MemorySettings, MemorySettingsCache>
     {
         public MemorySettings()
             : base(null, new MemorySettingsCache())

@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Config;
+using GitExtensions.Core.Settings;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 

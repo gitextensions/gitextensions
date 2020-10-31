@@ -1,4 +1,4 @@
-﻿namespace GitUIPluginInterfaces
+﻿namespace GitExtensions.Core.Settings
 {
     public enum SettingLevel
     {

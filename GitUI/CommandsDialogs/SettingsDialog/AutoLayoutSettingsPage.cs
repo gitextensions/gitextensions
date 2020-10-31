@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using GitExtensions.Core.Settings;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 

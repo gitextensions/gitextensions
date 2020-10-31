@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using GitExtensions.Core.Settings;
 using GitUIPluginInterfaces.UserControls;
 
 namespace GitUIPluginInterfaces

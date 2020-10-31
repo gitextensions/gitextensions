@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using GitExtensions.Core.Settings;
 using GitUI;
 
 namespace GitUIPluginInterfaces

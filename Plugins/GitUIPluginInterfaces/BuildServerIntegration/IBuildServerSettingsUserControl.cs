@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GitExtensions.Core.Settings;
 
 namespace GitUIPluginInterfaces.BuildServerIntegration
 {

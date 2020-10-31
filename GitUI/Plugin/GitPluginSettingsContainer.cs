@@ -1,10 +1,11 @@
 ﻿using System;
 using GitCommands;
+using GitExtensions.Core.Settings;
 using GitUIPluginInterfaces;
 
 namespace GitUI
 {
-    public class GitPluginSettingsContainer : ISettingsSource, IGitPluginSettingsContainer
+    public class GitPluginSettingsContainer : SettingsSource, IGitPluginSettingsContainer
     {
         private readonly string _pluginName;
         private ISettingsSource _settingsSource;

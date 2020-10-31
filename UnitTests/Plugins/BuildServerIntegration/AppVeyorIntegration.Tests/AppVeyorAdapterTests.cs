@@ -7,6 +7,7 @@ using ApprovalTests;
 using AppVeyorIntegration;
 using CommonTestUtils;
 using FluentAssertions;
+using GitExtensions.Core.Settings;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using NSubstitute;

@@ -1,5 +1,6 @@
 using System;
 using System.Reactive.Concurrency;
+using GitExtensions.Core.Settings;
 
 namespace GitUIPluginInterfaces.BuildServerIntegration
 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using GitExtensions.Core.Settings;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 

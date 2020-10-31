@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Settings;
 using JetBrains.Annotations;
 using Microsoft.Win32;
 using ResourceManager;

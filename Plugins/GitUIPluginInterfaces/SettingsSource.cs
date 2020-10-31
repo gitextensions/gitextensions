@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Drawing;
 using System.Globalization;
+using GitExtensions.Core.Settings;
 using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
 {
-    public abstract class ISettingsSource
+    public abstract class SettingsSource : ISettingsSource
     {
         public virtual SettingLevel SettingLevel { get; set; } = SettingLevel.Unknown;
 

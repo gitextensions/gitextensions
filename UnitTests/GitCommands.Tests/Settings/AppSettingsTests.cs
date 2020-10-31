@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using GitCommands;
 using GitCommands.Settings;
+using GitExtensions.Core.Settings;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
 

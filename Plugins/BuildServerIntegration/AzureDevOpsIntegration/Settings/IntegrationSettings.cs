@@ -1,4 +1,4 @@
-﻿using GitUIPluginInterfaces;
+﻿using GitExtensions.Core.Settings;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace AzureDevOpsIntegration.Settings

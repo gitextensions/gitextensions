@@ -1,4 +1,6 @@
-﻿namespace GitUIPluginInterfaces
+﻿using GitExtensions.Core.Settings;
+
+namespace GitUIPluginInterfaces
 {
     public interface IGitPluginSettingsContainer
     {

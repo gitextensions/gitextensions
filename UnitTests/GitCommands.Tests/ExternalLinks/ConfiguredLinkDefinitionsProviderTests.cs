@@ -5,7 +5,7 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.ExternalLinks;
 using GitCommands.Settings;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Settings;
 using NSubstitute;
 using NUnit.Framework;
 

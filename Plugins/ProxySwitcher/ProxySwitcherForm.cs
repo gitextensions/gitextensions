@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Core.Settings;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 using ResourceManager;

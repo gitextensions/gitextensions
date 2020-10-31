@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using GitCommands;
 using GitCommands.Settings;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Settings;
 using NUnit.Framework;
 
 namespace GitCommandsTests.Settings

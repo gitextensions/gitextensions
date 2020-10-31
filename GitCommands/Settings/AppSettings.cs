@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands.Settings;
+using GitExtensions.Core.Settings;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
