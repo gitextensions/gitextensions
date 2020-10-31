@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using GitExtensions.Extensibility;
 using GitImpact.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -6,7 +7,8 @@ using ResourceManager;
 namespace GitImpact
 {
     [Export(typeof(IGitPlugin))]
-    public class GitImpactPlugin : GitPluginBase, IGitPluginForRepository
+    public class GitImpactPlugin : GitPluginBase,
+        IGitPluginForRepository
     {
         public GitImpactPlugin()
         {
