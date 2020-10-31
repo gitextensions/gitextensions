@@ -50,16 +50,6 @@ namespace ResourceManager
             return Enumerable.Empty<ISetting>();
         }
 
-        public virtual void Register(IGitUICommands gitUiCommands)
-        {
-            SettingsContainer.SetSettingsSource(gitUiCommands.GitModule.GetEffectiveSettings());
-        }
-
-        public virtual void Unregister(IGitUICommands gitUiCommands)
-        {
-            SettingsContainer.SetSettingsSource(null);
-        }
-
         /// <summary>
         /// Run the plugin Execute method
         /// </summary>

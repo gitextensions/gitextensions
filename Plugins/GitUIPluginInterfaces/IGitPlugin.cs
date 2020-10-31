@@ -20,10 +20,6 @@ namespace GitUIPluginInterfaces
 
         IEnumerable<ISetting> GetSettings();
 
-        void Register(IGitUICommands gitUiCommands);
-
-        void Unregister(IGitUICommands gitUiCommands);
-
         /// <summary>
         /// Runs the plugin and returns whether the RevisionGrid should be refreshed.
         /// </summary>

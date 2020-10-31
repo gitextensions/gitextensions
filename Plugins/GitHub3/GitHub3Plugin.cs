@@ -11,6 +11,7 @@ using GitCommands.Remotes;
 using GitExtensions.Extensibility.Settings;
 using GitHub3.Properties;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.Events;
 using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager;
 
@@ -69,7 +70,9 @@ namespace GitHub3
     }
 
     [Export(typeof(IGitPlugin))]
-    public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin
+    public class GitHub3Plugin : GitPluginBase,
+        IRepositoryHostPlugin,
+        ILoadHandler
     {
         private readonly TranslationString _viewInWebSite = new TranslationString("View in {0}");
         private readonly TranslationString _tokenAlreadyExist = new TranslationString("You already have an OAuth token. To get a new one, delete your old one in Plugins > Settings first.");
@@ -106,9 +109,10 @@ namespace GitHub3
             yield return OAuthToken;
         }
 
-        public override void Register(IGitUICommands gitUiCommands)
+        public void OnLoad(IGitUICommands gitUiCommands)
         {
             _currentGitUiCommands = gitUiCommands;
+
             if (!string.IsNullOrEmpty(GitHubLoginInfo.OAuthToken))
             {
                 GitHub.setOAuth2Token(GitHubLoginInfo.OAuthToken);

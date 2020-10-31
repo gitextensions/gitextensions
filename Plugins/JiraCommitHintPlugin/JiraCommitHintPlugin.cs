@@ -21,6 +21,7 @@ namespace JiraCommitHintPlugin
     [Export(typeof(IGitPlugin))]
     public class JiraCommitHintPlugin : GitPluginBase,
         IGitPluginForRepository,
+        ILoadHandler,
         IPostSettingsHandler,
         IPreCommitHandler,
         IPostCommitHandler,
@@ -171,10 +172,8 @@ namespace JiraCommitHintPlugin
             }
         }
 
-        public override void Register(IGitUICommands gitUiCommands)
+        public void OnLoad(IGitUICommands gitUiCommands)
         {
-            base.Register(gitUiCommands);
-
             _gitModule = gitUiCommands.GitModule;
 
             UpdateJiraSettings();

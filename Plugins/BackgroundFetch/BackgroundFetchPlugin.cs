@@ -17,6 +17,8 @@ namespace BackgroundFetch
     [Export(typeof(IGitPlugin))]
     public class BackgroundFetchPlugin : GitPluginBase,
         IGitPluginForRepository,
+        ILoadHandler,
+        IUnloadHandler,
         IPostSettingsHandler
     {
         public BackgroundFetchPlugin() : base(true)
@@ -49,13 +51,21 @@ namespace BackgroundFetch
             yield return _warningForceWithLease;
         }
 
-        public override void Register(IGitUICommands gitUiCommands)
+        public void OnLoad(IGitUICommands gitUiCommands)
         {
-            base.Register(gitUiCommands);
-
             _currentGitUiCommands = gitUiCommands;
 
             RecreateObservable();
+        }
+
+        public void OnUnload(IGitUICommands gitUiCommands)
+        {
+            CancelBackgroundOperation();
+
+            if (_currentGitUiCommands != null)
+            {
+                _currentGitUiCommands = null;
+            }
         }
 
         public void OnPostSettings(GitUIPostActionEventArgs e)
@@ -154,18 +164,6 @@ namespace BackgroundFetch
                 _cancellationToken.Dispose();
                 _cancellationToken = null;
             }
-        }
-
-        public override void Unregister(IGitUICommands gitUiCommands)
-        {
-            CancelBackgroundOperation();
-
-            if (_currentGitUiCommands != null)
-            {
-                _currentGitUiCommands = null;
-            }
-
-            base.Unregister(gitUiCommands);
         }
 
         public override bool Execute(GitUIEventArgs args)

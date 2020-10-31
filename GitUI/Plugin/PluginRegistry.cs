@@ -73,7 +73,15 @@ namespace GitUI
 
             lock (Plugins)
             {
-                Plugins.ForEach(p => p.Register(gitUiCommands));
+                foreach (var plugin in Plugins)
+                {
+                    plugin.SettingsContainer.SetSettingsSource(gitUiCommands.GitModule.GetEffectiveSettings());
+
+                    if (plugin is ILoadHandler handler)
+                    {
+                        handler.OnLoad(gitUiCommands);
+                    }
+                }
 
                 gitUiCommands.PostCommit += OnPostCommit;
                 gitUiCommands.PostRepositoryChanged += OnPostRepositoryChanged;
@@ -94,8 +102,6 @@ namespace GitUI
 
             lock (Plugins)
             {
-                Plugins.ForEach(p => p.Unregister(gitUiCommands));
-
                 gitUiCommands.PostCommit -= OnPostCommit;
                 gitUiCommands.PostRepositoryChanged -= OnPostRepositoryChanged;
                 gitUiCommands.PostSettings -= OnPostSettings;
@@ -103,6 +109,16 @@ namespace GitUI
                 gitUiCommands.PostBrowseInitialize -= OnPostBrowseInitialize;
                 gitUiCommands.PostRegisterPlugin -= OnPostRegisterPlugin;
                 gitUiCommands.PreCommit -= OnPreCommit;
+
+                foreach (var plugin in Plugins)
+                {
+                    if (plugin is IUnloadHandler handler)
+                    {
+                        handler.OnUnload(gitUiCommands);
+                    }
+
+                    plugin.SettingsContainer.SetSettingsSource(null);
+                }
             }
 
             PluginsRegistered = false;

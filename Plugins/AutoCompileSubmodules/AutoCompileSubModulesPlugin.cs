@@ -48,14 +48,6 @@ namespace AutoCompileSubmodules
             yield return _msBuildArguments;
         }
 
-        public override void Register(IGitUICommands gitUiCommands)
-        {
-        }
-
-        public override void Unregister(IGitUICommands gitUiCommands)
-        {
-        }
-
         public override bool Execute(GitUIEventArgs args)
         {
             // Only build when plugin is enabled
