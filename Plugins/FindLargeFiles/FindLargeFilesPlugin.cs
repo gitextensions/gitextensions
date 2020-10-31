@@ -11,7 +11,8 @@ namespace FindLargeFiles
     [Export(typeof(IGitPlugin))]
     public class FindLargeFilesPlugin : GitPluginBase,
         IGitPluginForRepository,
-        IGitPluginConfigurable
+        IGitPluginConfigurable,
+        IGitPluginExecutable
     {
         public FindLargeFilesPlugin()
         {
@@ -28,12 +29,11 @@ namespace FindLargeFiles
             yield return _sizeLargeFile;
         }
 
-        public override bool Execute(GitUIEventArgs args)
+        public bool Execute(GitUIEventArgs args)
         {
-            using (var frm = new FindLargeFilesForm(_sizeLargeFile.ValueOrDefault(Settings), args))
-            {
-                frm.ShowDialog(args.OwnerForm);
-            }
+            using var frm = new FindLargeFilesForm(_sizeLargeFile.ValueOrDefault(Settings), args);
+
+            frm.ShowDialog(args.OwnerForm);
 
             return true;
         }

@@ -16,6 +16,7 @@ namespace AutoCompileSubmodules
     public class AutoCompileSubModulesPlugin : GitPluginBase,
         IGitPluginForRepository,
         IGitPluginConfigurable,
+        IGitPluginExecutable,
         IPostUpdateSubmodulesHandler
     {
         private readonly TranslationString _doYouWantBuild =
@@ -50,7 +51,7 @@ namespace AutoCompileSubmodules
             yield return _msBuildArguments;
         }
 
-        public override bool Execute(GitUIEventArgs args)
+        public bool Execute(GitUIEventArgs args)
         {
             // Only build when plugin is enabled
             if (string.IsNullOrEmpty(args.GitModule.WorkingDir))

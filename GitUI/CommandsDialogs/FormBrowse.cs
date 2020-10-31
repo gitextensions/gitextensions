@@ -890,13 +890,17 @@ namespace GitUI.CommandsDialogs
                         Image = plugin.Icon,
                         Tag = plugin
                     };
-                    item.Click += delegate
+
+                    if (plugin is IGitPluginExecutable executablePlugin)
                     {
-                        if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
+                        item.Click += delegate
                         {
-                            RefreshRevisions();
-                        }
-                    };
+                            if (executablePlugin.Execute(new GitUIEventArgs(this, UICommands)))
+                            {
+                                RefreshRevisions();
+                            }
+                        };
+                    }
 
                     if (plugin.Name == PluginManagerName)
                     {

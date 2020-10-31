@@ -23,6 +23,7 @@ namespace JiraCommitHintPlugin
     public class JiraCommitHintPlugin : GitPluginBase,
         IGitPluginForRepository,
         IGitPluginConfigurable,
+        IGitPluginExecutable,
         ILoadHandler,
         IPostSettingsHandler,
         IPreCommitHandler,
@@ -63,7 +64,7 @@ namespace JiraCommitHintPlugin
             _credentialsSettings = new CredentialsSetting("JiraCredentials", "Jira credentials", () => _gitModule?.WorkingDir);
         }
 
-        public override bool Execute(GitUIEventArgs args)
+        public bool Execute(GitUIEventArgs args)
         {
             if (!_enabledSettings.ValueOrDefault(Settings))
             {

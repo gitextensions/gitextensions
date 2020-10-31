@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace GitUIPluginInterfaces.RepositoryHosts
 {
-    public interface IRepositoryHostPlugin : IGitPlugin
+    public interface IRepositoryHostPlugin : IGitPlugin, IGitPluginExecutable
     {
         IReadOnlyList<IHostedRepository> SearchForRepository(string search);
         IReadOnlyList<IHostedRepository> GetRepositoriesOfUser(string user);

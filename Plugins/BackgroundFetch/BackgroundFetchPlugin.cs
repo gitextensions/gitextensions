@@ -19,6 +19,7 @@ namespace BackgroundFetch
     public class BackgroundFetchPlugin : GitPluginBase,
         IGitPluginForRepository,
         IGitPluginConfigurable,
+        IGitPluginExecutable,
         ILoadHandler,
         IUnloadHandler,
         IPostSettingsHandler
@@ -168,9 +169,10 @@ namespace BackgroundFetch
             }
         }
 
-        public override bool Execute(GitUIEventArgs args)
+        public bool Execute(GitUIEventArgs args)
         {
             args.GitUICommands.StartSettingsDialog(this);
+
             return false;
         }
     }

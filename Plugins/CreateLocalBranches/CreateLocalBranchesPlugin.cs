@@ -8,7 +8,8 @@ namespace CreateLocalBranches
 {
     [Export(typeof(IGitPlugin))]
     public class CreateLocalBranchesPlugin : GitPluginBase,
-        IGitPluginForRepository
+        IGitPluginForRepository,
+        IGitPluginExecutable
     {
         public CreateLocalBranchesPlugin()
         {
@@ -17,12 +18,11 @@ namespace CreateLocalBranches
             Icon = Resources.IconCreateLocalBranches;
         }
 
-        public override bool Execute(GitUIEventArgs args)
+        public bool Execute(GitUIEventArgs args)
         {
-            using (var frm = new CreateLocalBranchesForm(args))
-            {
-                frm.ShowDialog(args.OwnerForm);
-            }
+            using var frm = new CreateLocalBranchesForm(args);
+
+            frm.ShowDialog(args.OwnerForm);
 
             return true;
         }

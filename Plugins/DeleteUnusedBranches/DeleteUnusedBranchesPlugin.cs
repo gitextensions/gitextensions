@@ -11,7 +11,8 @@ namespace DeleteUnusedBranches
     [Export(typeof(IGitPlugin))]
     public class DeleteUnusedBranchesPlugin : GitPluginBase,
         IGitPluginForRepository,
-        IGitPluginConfigurable
+        IGitPluginConfigurable,
+        IGitPluginExecutable
     {
         public DeleteUnusedBranchesPlugin()
         {
@@ -43,7 +44,7 @@ namespace DeleteUnusedBranches
             yield return _includeUnmergedBranchesFlag;
         }
 
-        public override bool Execute(GitUIEventArgs args)
+        public bool Execute(GitUIEventArgs args)
         {
             var settings = new DeleteUnusedBranchesFormSettings(
                 _daysOlderThan.ValueOrDefault(Settings),
@@ -56,10 +57,9 @@ namespace DeleteUnusedBranches
                 _regexInvertedFlag.ValueOrDefault(Settings),
                 _includeUnmergedBranchesFlag.ValueOrDefault(Settings));
 
-            using (var frm = new DeleteUnusedBranchesForm(settings, args.GitModule, args.GitUICommands, this))
-            {
-                frm.ShowDialog(args.OwnerForm);
-            }
+            using var frm = new DeleteUnusedBranchesForm(settings, args.GitModule, args.GitUICommands, this);
+
+            frm.ShowDialog(args.OwnerForm);
 
             return true;
         }

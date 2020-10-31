@@ -7,7 +7,8 @@ using ResourceManager;
 namespace ReleaseNotesGenerator
 {
     [Export(typeof(IGitPlugin))]
-    public class ReleaseNotesGeneratorPlugin : GitPluginBase
+    public class ReleaseNotesGeneratorPlugin : GitPluginBase,
+        IGitPluginExecutable
     {
         public ReleaseNotesGeneratorPlugin()
         {
@@ -16,14 +17,13 @@ namespace ReleaseNotesGenerator
             Icon = Resources.IconReleaseNotesGenerator;
         }
 
-        public override bool Execute(GitUIEventArgs args)
+        public bool Execute(GitUIEventArgs args)
         {
-            using (var form = new ReleaseNotesGeneratorForm(args))
+            using var form = new ReleaseNotesGeneratorForm(args);
+
+            if (form.ShowDialog(args.OwnerForm) == DialogResult.OK)
             {
-                if (form.ShowDialog(args.OwnerForm) == DialogResult.OK)
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;

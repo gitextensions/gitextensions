@@ -18,7 +18,8 @@ namespace Gource
     [Export(typeof(IGitPlugin))]
     public class GourcePlugin : GitPluginBase,
         IGitPluginForRepository,
-        IGitPluginConfigurable
+        IGitPluginConfigurable,
+        IGitPluginExecutable
     {
         #region Translation
         private readonly TranslationString _currentDirectoryIsNotValidGit = new TranslationString("The current directory is not a valid git repository.\n\n" +
@@ -56,7 +57,7 @@ namespace Gource
             yield return _gourceArguments;
         }
 
-        public override bool Execute(GitUIEventArgs args)
+        public bool Execute(GitUIEventArgs args)
         {
             if (!args.GitModule.IsValidGitWorkingDir())
             {
@@ -116,12 +117,11 @@ namespace Gource
                 }
             }
 
-            using (var gourceStart = new GourceStart(pathToGource, args, _gourceArguments.ValueOrDefault(Settings)))
-            {
-                gourceStart.ShowDialog(args.OwnerForm);
-                Settings.SetValue(_gourceArguments.Name, gourceStart.GourceArguments, s => s);
-                Settings.SetValue(_gourcePath.Name, gourceStart.PathToGource, s => s);
-            }
+            using var gourceStart = new GourceStart(pathToGource, args, _gourceArguments.ValueOrDefault(Settings));
+
+            gourceStart.ShowDialog(args.OwnerForm);
+            Settings.SetValue(_gourceArguments.Name, gourceStart.GourceArguments, s => s);
+            Settings.SetValue(_gourcePath.Name, gourceStart.PathToGource, s => s);
 
             return false;
         }

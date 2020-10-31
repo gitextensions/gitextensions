@@ -8,7 +8,8 @@ namespace GitFlow
 {
     [Export(typeof(IGitPlugin))]
     public class GitFlowPlugin : GitPluginBase,
-        IGitPluginForRepository
+        IGitPluginForRepository,
+        IGitPluginExecutable
     {
         public GitFlowPlugin()
         {
@@ -17,13 +18,13 @@ namespace GitFlow
             Icon = Resource.IconGitFlow;
         }
 
-        public override bool Execute(GitUIEventArgs args)
+        public bool Execute(GitUIEventArgs args)
         {
-            using (var frm = new GitFlowForm(args))
-            {
-                frm.ShowDialog(args.OwnerForm);
-                return frm.IsRefreshNeeded;
-            }
+            using var frm = new GitFlowForm(args);
+
+            frm.ShowDialog(args.OwnerForm);
+
+            return frm.IsRefreshNeeded;
         }
     }
 }

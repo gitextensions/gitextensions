@@ -8,7 +8,8 @@ namespace GitImpact
 {
     [Export(typeof(IGitPlugin))]
     public class GitImpactPlugin : GitPluginBase,
-        IGitPluginForRepository
+        IGitPluginForRepository,
+        IGitPluginExecutable
     {
         public GitImpactPlugin()
         {
@@ -19,17 +20,16 @@ namespace GitImpact
 
         #region IGitPlugin Members
 
-        public override bool Execute(GitUIEventArgs args)
+        public bool Execute(GitUIEventArgs args)
         {
             if (string.IsNullOrEmpty(args.GitModule.WorkingDir))
             {
                 return false;
             }
 
-            using (var form = new FormImpact(args.GitModule))
-            {
-                form.ShowDialog(args.OwnerForm);
-            }
+            using var form = new FormImpact(args.GitModule);
+
+            form.ShowDialog(args.OwnerForm);
 
             return false;
         }

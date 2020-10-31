@@ -10,7 +10,8 @@ namespace ProxySwitcher
 {
     [Export(typeof(IGitPlugin))]
     public class ProxySwitcherPlugin : GitPluginBase,
-        IGitPluginConfigurable
+        IGitPluginConfigurable,
+        IGitPluginExecutable
     {
         public readonly StringSetting Username = new StringSetting("Username", string.Empty);
         public readonly StringSetting Password = new StringSetting("Password", string.Empty);
@@ -32,12 +33,11 @@ namespace ProxySwitcher
             yield return HttpProxyPort;
         }
 
-        public override bool Execute(GitUIEventArgs args)
+        public bool Execute(GitUIEventArgs args)
         {
-            using (var form = new ProxySwitcherForm(this, Settings, args))
-            {
-                form.ShowDialog(args.OwnerForm);
-            }
+            using var form = new ProxySwitcherForm(this, Settings, args);
+
+            form.ShowDialog(args.OwnerForm);
 
             return false;
         }

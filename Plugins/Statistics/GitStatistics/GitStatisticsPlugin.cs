@@ -11,7 +11,8 @@ namespace GitStatistics
     [Export(typeof(IGitPlugin))]
     public class GitStatisticsPlugin : GitPluginBase,
         IGitPluginForRepository,
-        IGitPluginConfigurable
+        IGitPluginConfigurable,
+        IGitPluginExecutable
     {
         private const string _defaultCodeFiles =
             "*.c;*.cpp;*.cc;*.cxx;*.h;*.hpp;*.hxx;*.inl;*.idl;*.asm;*.inc;*.cs;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;" +
@@ -35,7 +36,7 @@ namespace GitStatistics
             yield return _ignoreSubmodules;
         }
 
-        public override bool Execute(GitUIEventArgs args)
+        public bool Execute(GitUIEventArgs args)
         {
             if (string.IsNullOrEmpty(args.GitModule.WorkingDir))
             {

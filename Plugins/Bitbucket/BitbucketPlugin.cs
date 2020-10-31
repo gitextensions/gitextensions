@@ -11,7 +11,8 @@ namespace Bitbucket
 {
     [Export(typeof(IGitPlugin))]
     public class BitbucketPlugin : GitPluginBase,
-        IGitPluginConfigurable
+        IGitPluginConfigurable,
+        IGitPluginExecutable
     {
         public readonly StringSetting BitbucketUsername = new StringSetting("Bitbucket Username", string.Empty);
         public readonly PasswordSetting BitbucketPassword = new PasswordSetting("Bitbucket Password", string.Empty);
@@ -28,7 +29,15 @@ namespace Bitbucket
             Icon = Resources.IconPluginBitbucket;
         }
 
-        public override bool Execute(GitUIEventArgs args)
+        public IEnumerable<ISetting> GetSettings()
+        {
+            yield return BitbucketUsername;
+            yield return BitbucketPassword;
+            yield return BitbucketBaseUrl;
+            yield return BitbucketDisableSsl;
+        }
+
+        public bool Execute(GitUIEventArgs args)
         {
             Settings settings = Bitbucket.Settings.Parse(args.GitModule, Settings, this);
             if (settings == null)
@@ -41,20 +50,11 @@ namespace Bitbucket
                 return false;
             }
 
-            using (var frm = new BitbucketPullRequestForm(settings, args.GitModule))
-            {
-                frm.ShowDialog(args.OwnerForm);
-            }
+            using var frm = new BitbucketPullRequestForm(settings, args.GitModule);
+
+            frm.ShowDialog(args.OwnerForm);
 
             return true;
-        }
-
-        public IEnumerable<ISetting> GetSettings()
-        {
-            yield return BitbucketUsername;
-            yield return BitbucketPassword;
-            yield return BitbucketBaseUrl;
-            yield return BitbucketDisableSsl;
         }
     }
 }
