@@ -6,6 +6,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using BackgroundFetch.Properties;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils;
 using GitUIPluginInterfaces;
@@ -17,6 +18,7 @@ namespace BackgroundFetch
     [Export(typeof(IGitPlugin))]
     public class BackgroundFetchPlugin : GitPluginBase,
         IGitPluginForRepository,
+        IGitPluginConfigurable,
         ILoadHandler,
         IUnloadHandler,
         IPostSettingsHandler
@@ -41,7 +43,7 @@ namespace BackgroundFetch
         private readonly BoolSetting _autoRefresh = new BoolSetting("Refresh view after fetch", false);
         private readonly BoolSetting _fetchAllSubmodules = new BoolSetting("Fetch all submodules", false);
 
-        public override IEnumerable<ISetting> GetSettings()
+        public IEnumerable<ISetting> GetSettings()
         {
             // return all settings or introduce implementation based on reflection on GitPluginBase level
             yield return _gitCommand;

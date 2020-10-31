@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.Composition;
+﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using DeleteUnusedBranches.Properties;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -7,7 +9,9 @@ using ResourceManager;
 namespace DeleteUnusedBranches
 {
     [Export(typeof(IGitPlugin))]
-    public class DeleteUnusedBranchesPlugin : GitPluginBase, IGitPluginForRepository
+    public class DeleteUnusedBranchesPlugin : GitPluginBase,
+        IGitPluginForRepository,
+        IGitPluginConfigurable
     {
         public DeleteUnusedBranchesPlugin()
         {
@@ -26,7 +30,7 @@ namespace DeleteUnusedBranches
         private readonly BoolSetting _regexInvertedFlag = new BoolSetting("Search branches that does not match regex", false);
         private readonly BoolSetting _includeUnmergedBranchesFlag = new BoolSetting("Delete unmerged branches", false);
 
-        public override System.Collections.Generic.IEnumerable<ISetting> GetSettings()
+        public IEnumerable<ISetting> GetSettings()
         {
             yield return _daysOlderThan;
             yield return _mergedInBranch;

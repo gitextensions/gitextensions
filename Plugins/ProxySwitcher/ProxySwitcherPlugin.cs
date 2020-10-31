@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.Composition;
+﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces;
 using ProxySwitcher.Properties;
@@ -7,7 +9,8 @@ using ResourceManager;
 namespace ProxySwitcher
 {
     [Export(typeof(IGitPlugin))]
-    public class ProxySwitcherPlugin : GitPluginBase
+    public class ProxySwitcherPlugin : GitPluginBase,
+        IGitPluginConfigurable
     {
         public readonly StringSetting Username = new StringSetting("Username", string.Empty);
         public readonly StringSetting Password = new StringSetting("Password", string.Empty);
@@ -21,7 +24,7 @@ namespace ProxySwitcher
             Icon = Resources.IconProxySwitcher;
         }
 
-        public override System.Collections.Generic.IEnumerable<ISetting> GetSettings()
+        public IEnumerable<ISetting> GetSettings()
         {
             yield return Username;
             yield return Password;

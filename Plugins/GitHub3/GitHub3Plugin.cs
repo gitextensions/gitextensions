@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Git.hub;
 using GitCommands.Config;
 using GitCommands.Remotes;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 using GitHub3.Properties;
 using GitUIPluginInterfaces;
@@ -72,6 +73,7 @@ namespace GitHub3
     [Export(typeof(IGitPlugin))]
     public class GitHub3Plugin : GitPluginBase,
         IRepositoryHostPlugin,
+        IGitPluginConfigurable,
         ILoadHandler
     {
         private readonly TranslationString _viewInWebSite = new TranslationString("View in {0}");
@@ -104,7 +106,7 @@ namespace GitHub3
             Icon = Resources.IconGitHub;
         }
 
-        public override IEnumerable<ISetting> GetSettings()
+        public IEnumerable<ISetting> GetSettings()
         {
             yield return OAuthToken;
         }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 using GitStatistics.Properties;
 using GitUIPluginInterfaces;
@@ -8,7 +9,9 @@ using ResourceManager;
 namespace GitStatistics
 {
     [Export(typeof(IGitPlugin))]
-    public class GitStatisticsPlugin : GitPluginBase, IGitPluginForRepository
+    public class GitStatisticsPlugin : GitPluginBase,
+        IGitPluginForRepository,
+        IGitPluginConfigurable
     {
         private const string _defaultCodeFiles =
             "*.c;*.cpp;*.cc;*.cxx;*.h;*.hpp;*.hxx;*.inl;*.idl;*.asm;*.inc;*.cs;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;" +
@@ -25,7 +28,7 @@ namespace GitStatistics
             Icon = Resources.IconGitStatistics;
         }
 
-        public override IEnumerable<ISetting> GetSettings()
+        public IEnumerable<ISetting> GetSettings()
         {
             yield return _codeFiles;
             yield return _ignoreDirectories;

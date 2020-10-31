@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
 using GitCommands.Utils;
+using GitExtensions.Extensibility;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -177,7 +178,7 @@ namespace GitUI.CommandsDialogs
             lock (PluginRegistry.Plugins)
             {
                 var pluginEntries = PluginRegistry.Plugins
-                    .Where(p => p.GetSettings()?.Any() ?? false)
+                    .Where(x => x is IGitPluginConfigurable)
                     .Select(plugin => (Plugin: plugin, Page: PluginSettingsPage.CreateSettingsPageFromPlugin(this, plugin)))
                     .OrderBy(entry => entry.Page.GetTitle(), StringComparer.CurrentCultureIgnoreCase);
 

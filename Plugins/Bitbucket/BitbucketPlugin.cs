@@ -1,6 +1,8 @@
-﻿using System.ComponentModel.Composition;
+﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Windows.Forms;
 using Bitbucket.Properties;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -8,7 +10,8 @@ using ResourceManager;
 namespace Bitbucket
 {
     [Export(typeof(IGitPlugin))]
-    public class BitbucketPlugin : GitPluginBase
+    public class BitbucketPlugin : GitPluginBase,
+        IGitPluginConfigurable
     {
         public readonly StringSetting BitbucketUsername = new StringSetting("Bitbucket Username", string.Empty);
         public readonly PasswordSetting BitbucketPassword = new PasswordSetting("Bitbucket Password", string.Empty);
@@ -46,7 +49,7 @@ namespace Bitbucket
             return true;
         }
 
-        public override System.Collections.Generic.IEnumerable<ISetting> GetSettings()
+        public IEnumerable<ISetting> GetSettings()
         {
             yield return BitbucketUsername;
             yield return BitbucketPassword;

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using GitExtensions.Extensibility.Settings;
+﻿using System.Drawing;
 using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
@@ -15,8 +13,6 @@ namespace GitUIPluginInterfaces
         Image Icon { get; }
 
         IGitPluginSettingsContainer SettingsContainer { get; set; }
-
-        IEnumerable<ISetting> GetSettings();
 
         /// <summary>
         /// Runs the plugin and returns whether the RevisionGrid should be refreshed.

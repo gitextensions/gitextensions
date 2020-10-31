@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces;
 using Gource.Properties;
@@ -15,7 +16,9 @@ using ResourceManager;
 namespace Gource
 {
     [Export(typeof(IGitPlugin))]
-    public class GourcePlugin : GitPluginBase, IGitPluginForRepository
+    public class GourcePlugin : GitPluginBase,
+        IGitPluginForRepository,
+        IGitPluginConfigurable
     {
         #region Translation
         private readonly TranslationString _currentDirectoryIsNotValidGit = new TranslationString("The current directory is not a valid git repository.\n\n" +
@@ -46,7 +49,7 @@ namespace Gource
 
         #region IGitPlugin Members
 
-        public override IEnumerable<ISetting> GetSettings()
+        public IEnumerable<ISetting> GetSettings()
         {
             // return all settings or introduce implementation based on reflection on GitPluginBase level
             yield return _gourcePath;

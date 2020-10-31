@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GitExtensions.Core.Settings;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces;
 
@@ -60,14 +61,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
                 throw new ApplicationException();
             }
 
-            return _gitPlugin.GetSettings() ?? Array.Empty<ISetting>();
+            if (_gitPlugin is IGitPluginConfigurable configurablePlugin)
+            {
+                return configurablePlugin.GetSettings() ?? Enumerable.Empty<ISetting>();
+            }
+
+            return Enumerable.Empty<ISetting>();
         }
 
         public override SettingsPageReference PageReference => new SettingsPageReferenceByType(_gitPlugin.GetType());
 
         protected override ISettingsLayout CreateSettingsLayout()
         {
-            labelNoSettings.Visible = !_gitPlugin.GetSettings()?.Any() ?? false;
+            labelNoSettings.Visible = !(_gitPlugin is IGitPluginConfigurable);
 
             var layout = base.CreateSettingsLayout();
 

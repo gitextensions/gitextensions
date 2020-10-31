@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using GitCommands;
 using GitExtensions.Core.Settings;
-using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
@@ -31,11 +28,6 @@ namespace ResourceManager
         public ISettingsSource Settings => SettingsContainer.GetSettingsSource();
 
         public IGitPluginSettingsContainer SettingsContainer { get; set; }
-
-        public virtual IEnumerable<ISetting> GetSettings()
-        {
-            return Enumerable.Empty<ISetting>();
-        }
 
         /// <summary>
         /// Run the plugin Execute method

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using AutoCompileSubmodules.Properties;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.Events;
@@ -14,6 +15,7 @@ namespace AutoCompileSubmodules
     [Export(typeof(IGitPlugin))]
     public class AutoCompileSubModulesPlugin : GitPluginBase,
         IGitPluginForRepository,
+        IGitPluginConfigurable,
         IPostUpdateSubmodulesHandler
     {
         private readonly TranslationString _doYouWantBuild =
@@ -41,7 +43,7 @@ namespace AutoCompileSubmodules
 
         #region IGitPlugin Members
 
-        public override IEnumerable<ISetting> GetSettings()
+        public IEnumerable<ISetting> GetSettings()
         {
             yield return _msBuildEnabled;
             yield return _msBuildPath;

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Atlassian.Jira;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Settings.UserControls;
 using GitExtUtils.GitUI;
@@ -21,6 +22,7 @@ namespace JiraCommitHintPlugin
     [Export(typeof(IGitPlugin))]
     public class JiraCommitHintPlugin : GitPluginBase,
         IGitPluginForRepository,
+        IGitPluginConfigurable,
         ILoadHandler,
         IPostSettingsHandler,
         IPreCommitHandler,
@@ -85,7 +87,7 @@ namespace JiraCommitHintPlugin
             return false;
         }
 
-        public override IEnumerable<ISetting> GetSettings()
+        public IEnumerable<ISetting> GetSettings()
         {
             yield return _enabledSettings;
 

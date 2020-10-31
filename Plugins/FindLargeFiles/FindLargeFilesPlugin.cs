@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using FindLargeFiles.Properties;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -8,7 +9,9 @@ using ResourceManager;
 namespace FindLargeFiles
 {
     [Export(typeof(IGitPlugin))]
-    public class FindLargeFilesPlugin : GitPluginBase, IGitPluginForRepository
+    public class FindLargeFilesPlugin : GitPluginBase,
+        IGitPluginForRepository,
+        IGitPluginConfigurable
     {
         public FindLargeFilesPlugin()
         {
@@ -19,7 +22,7 @@ namespace FindLargeFiles
 
         private readonly NumberSetting<float> _sizeLargeFile = new NumberSetting<float>("Find large files bigger than (Mb)", 1);
 
-        public override IEnumerable<ISetting> GetSettings()
+        public IEnumerable<ISetting> GetSettings()
         {
             // return all settings or introduce implementation based on reflection on GitPluginBase level
             yield return _sizeLargeFile;
