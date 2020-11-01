@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\..\GitCommands\GitCommands.csproj" />
-    <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj" />
     <ProjectReference Include="..\..\GitUI\GitUI.csproj" />
     <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj" />
     <ProjectReference Include="..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />

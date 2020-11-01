@@ -14,4 +14,7 @@
     <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
     <PackageReference Include="System.ValueTuple" Version="$(SystemValueTupleVersion)" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GitExtensions.Core\GitExtensions.Core.csproj" />
+  </ItemGroup>
 </Project>

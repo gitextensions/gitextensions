@@ -1,6 +1,7 @@
 ﻿using System;
 using GitCommands.Git.Extensions;
 using GitCommands.Git.Tag;
+using GitExtensions.Core.Commands;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;

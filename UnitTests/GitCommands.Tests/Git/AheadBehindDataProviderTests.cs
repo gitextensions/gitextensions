@@ -6,6 +6,7 @@ using System.Text;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Core.Commands;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;

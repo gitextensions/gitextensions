@@ -6,6 +6,7 @@ using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using GitCommands.Logging;
+using GitExtensions.Core.Commands;
 using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;

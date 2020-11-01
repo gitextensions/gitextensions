@@ -1,4 +1,5 @@
 ﻿using System;
+using GitExtensions.Core.Commands;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 

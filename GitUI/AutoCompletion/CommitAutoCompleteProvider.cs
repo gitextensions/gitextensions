@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
+using GitExtensions.Core.Commands;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;

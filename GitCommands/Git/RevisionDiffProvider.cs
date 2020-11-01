@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using GitExtUtils;
+using GitExtensions.Core.Commands;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 

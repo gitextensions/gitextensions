@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitExtensions.Core.Commands;
 using JetBrains.Annotations;
 
 namespace GitExtUtils

@@ -6,6 +6,7 @@ using ConEmu.WinForms;
 using GitCommands;
 using GitCommands.Logging;
 using GitCommands.Utils;
+using GitExtensions.Core.Commands;
 using GitExtUtils;
 
 namespace GitUI.UserControls

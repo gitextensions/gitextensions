@@ -6,8 +6,8 @@ using System.Text;
 using CommonTestUtils;
 using GitCommands;
 using GitCommands.Settings;
+using GitExtensions.Core.Commands;
 using GitExtensions.Core.Settings;
-using GitExtUtils;
 using NUnit.Framework;
 
 namespace GitCommandsTests.Git

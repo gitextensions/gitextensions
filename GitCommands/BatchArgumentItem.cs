@@ -1,4 +1,6 @@
-﻿namespace GitCommands
+﻿using GitExtensions.Core.Commands;
+
+namespace GitCommands
 {
     /// <summary>
     /// Result model for batch processing arguments and count of items for batch progress

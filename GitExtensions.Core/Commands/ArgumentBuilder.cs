@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
 
-namespace GitExtUtils
+namespace GitExtensions.Core.Commands
 {
     /// <summary>
     /// Builds a command line argument string from zero or more arguments.

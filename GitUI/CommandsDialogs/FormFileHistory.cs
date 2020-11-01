@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Core.Commands;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.Properties;

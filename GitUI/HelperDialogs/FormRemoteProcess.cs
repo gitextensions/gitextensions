@@ -2,6 +2,7 @@ using System;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
+using GitExtensions.Core.Commands;
 using GitUI.UserControls;
 using JetBrains.Annotations;
 using ResourceManager;

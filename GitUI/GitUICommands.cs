@@ -9,6 +9,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitCommands.Settings;
+using GitExtensions.Core.Commands;
 using GitExtensions.Extensibility;
 using GitExtUtils;
 using GitUI.CommandsDialogs;

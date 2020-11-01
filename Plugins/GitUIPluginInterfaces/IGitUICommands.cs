@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Core.Commands;
 using GitExtensions.Extensibility;
 using JetBrains.Annotations;
 

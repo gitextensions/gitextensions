@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Core.Commands;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 using NUnit.Framework;

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Core.Commands;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitFlow.Properties;

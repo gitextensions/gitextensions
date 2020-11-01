@@ -5,7 +5,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Externals\Git.hub\Git.hub\Git.hub.csproj" />
-    <ProjectReference Include="..\..\GitCommands\GitCommands.csproj" />
     <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj" />
     <ProjectReference Include="..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
   </ItemGroup>

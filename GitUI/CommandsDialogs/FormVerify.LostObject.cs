@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitExtensions.Core.Commands;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
