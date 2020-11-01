@@ -1446,6 +1446,11 @@ namespace GitUI
         {
             var hti = _gridView.HitTest(e.X, e.Y);
             _latestSelectedRowIndex = hti.RowIndex;
+
+            if (Control.ModifierKeys == Keys.Alt)
+            {
+                ToggleHighlightSelectedBranch();
+            }
         }
 
         private void OnGridViewCellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
@@ -2337,13 +2342,14 @@ namespace GitUI
                 return;
             }
 
-            var revision = GetSelectedRevisions().FirstOrDefault();
-
-            if (revision != null)
+            GitRevision revision = GetSelectedRevisions().FirstOrDefault();
+            if (revision is null)
             {
-                HighlightBranch(revision.ObjectId);
-                Refresh();
+                return;
             }
+
+            HighlightBranch(revision.ObjectId);
+            Refresh();
         }
 
         private void renameBranchToolStripMenuItem_Click(object sender, EventArgs e)
