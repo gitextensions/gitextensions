@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.Events;
 using GitUIPluginInterfaces.RepositoryHosts;

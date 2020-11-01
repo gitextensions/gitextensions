@@ -1,10 +1,11 @@
 ﻿using GitExtensions.Core.Settings;
 
-namespace GitUIPluginInterfaces
+namespace GitExtensions.Extensibility.Settings
 {
     public interface IGitPluginSettingsContainer
     {
         ISettingsSource GetSettingsSource();
+
         void SetSettingsSource(ISettingsSource settingsSource);
     }
 }

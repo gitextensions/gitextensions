@@ -1,7 +1,8 @@
 ﻿using System.Drawing;
+using GitExtensions.Extensibility.Settings;
 using JetBrains.Annotations;
 
-namespace GitUIPluginInterfaces
+namespace GitExtensions.Extensibility
 {
     public interface IGitPlugin
     {

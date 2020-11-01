@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Extensibility;
 using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces

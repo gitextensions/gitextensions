@@ -1,6 +1,7 @@
 ﻿using System;
 using GitCommands;
 using GitExtensions.Core.Settings;
+using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces;
 
 namespace GitUI
