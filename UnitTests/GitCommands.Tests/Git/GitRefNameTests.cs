@@ -33,6 +33,16 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
+        public void GetRemoteBranch()
+        {
+            Assert.AreEqual("master", GitRefName.GetRemoteBranch("refs/remotes/foo/master"));
+            Assert.AreEqual("tmp/master", GitRefName.GetRemoteBranch("refs/remotes/foo/tmp/master"));
+
+            Assert.AreEqual("", GitRefName.GetRemoteBranch("refs/remotes/foo"));
+            Assert.AreEqual("", GitRefName.GetRemoteBranch("short"));
+        }
+
+        [Test]
         public void GetFullBranchName()
         {
             Assert.AreEqual("refs/heads/foo", GitRefName.GetFullBranchName("foo"));

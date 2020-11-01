@@ -115,6 +115,7 @@ namespace GitCommandsTests.Git
             aheadBehindData.AheadCount.Should().Be(string.Empty);
             aheadBehindData.BehindCount.Should().Be(string.Empty);
             aheadBehindData.Branch.Should().Be("my-branch");
+            aheadBehindData.RemoteRef.Should().Be("refs/remotes/upstream/branch");
             aheadBehindData.ToDisplay().Should().Be(string.Empty);
         }
 
@@ -130,6 +131,7 @@ namespace GitCommandsTests.Git
             aheadBehindData.AheadCount.Should().Be("10");
             aheadBehindData.BehindCount.Should().Be(string.Empty);
             aheadBehindData.Branch.Should().Be("my-branch");
+            aheadBehindData.RemoteRef.Should().Be("refs/remotes/upstream/branch");
             aheadBehindData.ToDisplay().Should().Be("10↑");
         }
 
@@ -145,6 +147,7 @@ namespace GitCommandsTests.Git
             aheadBehindData.AheadCount.Should().Be("0");
             aheadBehindData.BehindCount.Should().Be("2");
             aheadBehindData.Branch.Should().Be("my-branch");
+            aheadBehindData.RemoteRef.Should().Be("refs/remotes/upstream/my-branch");
             aheadBehindData.ToDisplay().Should().Be("2↓");
         }
 
@@ -163,8 +166,8 @@ namespace GitCommandsTests.Git
             aheadBehindData.ToDisplay().Should().Be("0↑↓");
         }
 
-        [TestCase("::ahead 99, behind 3::::refs/remotes/upstream/my-branch::my-branch")]
-        [TestCase("ahead 99, behind 3::::refs/remotes/upstream/my-branch::::my-branch")]
+        [TestCase("::ahead 99, behind 3::::refs/remotes/upstream/branch::my-branch")]
+        [TestCase("ahead 99, behind 3::::refs/remotes/upstream/branch::::my-branch")]
         public void GetData_should_return_ahead_and_behind_for_a_branch(string result)
         {
             SetResultOfGitCommand(result);
@@ -176,6 +179,7 @@ namespace GitCommandsTests.Git
             aheadBehindData.AheadCount.Should().Be("99");
             aheadBehindData.BehindCount.Should().Be("3");
             aheadBehindData.Branch.Should().Be("my-branch");
+            aheadBehindData.RemoteRef.Should().Be("refs/remotes/upstream/branch");
             aheadBehindData.ToDisplay().Should().Be("99↑ 3↓");
         }
 
@@ -191,6 +195,7 @@ namespace GitCommandsTests.Git
             aheadBehindData.AheadCount.Should().Be("99");
             aheadBehindData.BehindCount.Should().Be("97");
             aheadBehindData.Branch.Should().Be("my-branch");
+            aheadBehindData.RemoteRef.Should().Be("refs/remotes/upstream/push-branch");
             aheadBehindData.ToDisplay().Should().Be("99↑ 97↓");
         }
 
@@ -206,6 +211,7 @@ namespace GitCommandsTests.Git
             aheadBehindData.AheadCount.Should().Be("99");
             aheadBehindData.BehindCount.Should().Be("");
             aheadBehindData.Branch.Should().Be("my-branch");
+            aheadBehindData.RemoteRef.Should().Be("refs/remotes/upstream/push-branch");
             aheadBehindData.ToDisplay().Should().Be("99↑");
         }
 
@@ -221,6 +227,7 @@ namespace GitCommandsTests.Git
             aheadBehindData.AheadCount.Should().Be("");
             aheadBehindData.BehindCount.Should().Be("97");
             aheadBehindData.Branch.Should().Be("my-branch");
+            aheadBehindData.RemoteRef.Should().Be("refs/remotes/upstream/push-branch");
             aheadBehindData.ToDisplay().Should().Be("97↓");
         }
 
@@ -239,10 +246,10 @@ namespace GitCommandsTests.Git
             data.Should().BeEquivalentTo(
                 new Dictionary<string, AheadBehindData>
                 {
-                    { "branch-with-no-more-remote", new AheadBehindData { AheadCount = "gone", BehindCount = "", Branch = "branch-with-no-more-remote" } },
-                    { "ahead-behind-branch", new AheadBehindData { AheadCount = "99", BehindCount = "3", Branch = "ahead-behind-branch" } },
-                    { "ahead-branch", new AheadBehindData { AheadCount = "3", BehindCount = string.Empty, Branch = "ahead-branch" } },
-                    { "behind-branch", new AheadBehindData { AheadCount = "0", BehindCount = "4", Branch = "behind-branch" } },
+                    { "branch-with-no-more-remote", new AheadBehindData { AheadCount = "gone", BehindCount = "", Branch = "branch-with-no-more-remote", RemoteRef = "refs/remotes/upstream/branch" } },
+                    { "ahead-behind-branch", new AheadBehindData { AheadCount = "99", BehindCount = "3", Branch = "ahead-behind-branch", RemoteRef = "refs/remotes/upstream/branch" } },
+                    { "ahead-branch", new AheadBehindData { AheadCount = "3", BehindCount = string.Empty, Branch = "ahead-branch", RemoteRef = "refs/remotes/upstream/branch" } },
+                    { "behind-branch", new AheadBehindData { AheadCount = "0", BehindCount = "4", Branch = "behind-branch", RemoteRef = "refs/remotes/upstream/branch" } },
                 });
         }
 

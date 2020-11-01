@@ -411,7 +411,7 @@
             // NewColumn
             // 
             this.NewColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.NewColumn.HeaderText = "New at Remote";
+            this.NewColumn.HeaderText = "Ahead/Behind";
             this.NewColumn.Name = "NewColumn";
             this.NewColumn.ReadOnly = true;
             this.NewColumn.Width = 97;
