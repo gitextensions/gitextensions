@@ -93,21 +93,39 @@ namespace BackgroundFetch
                                       GitArgumentBuilder args;
                                       if (_fetchAllSubmodules.ValueOrDefault(Settings))
                                       {
-                                        args = new GitArgumentBuilder("submodule")
-                                        {
+                                          // The Git command is hardcoded compared, not using _gitCommand
+                                          args = new GitArgumentBuilder("submodule")
+                                          {
                                             "foreach",
                                             "--recursive",
                                             "git",
                                             "fetch",
                                             "--all"
-                                        };
+                                          };
 
-                                        _currentGitUiCommands.GitModule.GitExecutable.GetOutput(args);
+                                          try
+                                          {
+                                              _currentGitUiCommands.GitModule.GitExecutable.GetOutput(args);
+                                          }
+                                          catch
+                                          {
+                                              // Ignore background errors
+                                          }
                                       }
 
                                       var gitCmd = _gitCommand.ValueOrDefault(Settings).Trim().SplitBySpace();
                                       args = new GitArgumentBuilder(gitCmd[0]) { gitCmd.Skip(1) };
-                                      var msg = _currentGitUiCommands.GitModule.GitExecutable.GetOutput(args);
+                                      string msg;
+                                      try
+                                      {
+                                          msg = _currentGitUiCommands.GitModule.GitExecutable.GetOutput(args);
+                                      }
+                                      catch
+                                      {
+                                          // Ignore background errors
+                                          return;
+                                      }
+
                                       if (_autoRefresh.ValueOrDefault(Settings))
                                       {
                                           if (gitCmd[0].Equals("fetch", StringComparison.InvariantCultureIgnoreCase))

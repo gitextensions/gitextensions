@@ -416,8 +416,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                             {
                                 // No action
                             }
-
-                            throw;
                         }
                         finally
                         {

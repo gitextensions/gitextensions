@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 using GitCommands.Git.Commands;
 using GitExtUtils.GitUI.Theming;
@@ -56,7 +57,17 @@ namespace GitUI.UserControls
                 return;
             }
 
-            bool hasConflicts = Module.InTheMiddleOfConflictedMerge();
+            bool hasConflicts;
+            try
+            {
+                hasConflicts = Module.InTheMiddleOfConflictedMerge();
+            }
+            catch (Win32Exception)
+            {
+                // This command can be executed seemingly in the background (selecting Browse),
+                // do not notify the user (this can occur if Git is upgraded)
+                hasConflicts = false;
+            }
 
             if (Module.InTheMiddleOfRebase())
             {
