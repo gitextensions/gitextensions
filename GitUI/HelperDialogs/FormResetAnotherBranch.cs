@@ -2,12 +2,11 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
+using GitExtensions.Core.Module;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.HelperDialogs

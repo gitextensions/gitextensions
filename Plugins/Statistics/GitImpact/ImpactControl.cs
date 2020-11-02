@@ -6,8 +6,8 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Statistics;
+using GitExtensions.Core.Module;
 using GitExtUtils.GitUI;
-using GitUIPluginInterfaces;
 
 namespace GitImpact
 {

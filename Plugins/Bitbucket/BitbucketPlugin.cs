@@ -2,9 +2,9 @@
 using System.ComponentModel.Composition;
 using System.Windows.Forms;
 using Bitbucket.Properties;
+using GitExtensions.Core.Commands.Events;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace Bitbucket

@@ -2,14 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Management;
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
-using GitCommands.Patches;
+using GitExtensions.Core.Module;
 using GitExtUtils.GitUI;
-using GitUIPluginInterfaces;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 

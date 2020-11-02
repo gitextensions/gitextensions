@@ -1,5 +1,4 @@
 ﻿using GitExtensions.Core.Commands;
-using GitUIPluginInterfaces;
 
 namespace GitCommands.Git.Commands
 {

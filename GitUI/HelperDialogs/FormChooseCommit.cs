@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
-using GitCommands;
+using GitExtensions.Core.Module;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitUI.HelperDialogs

@@ -7,11 +7,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands.Git;
+using GitExtensions.Core.Module;
 using GitExtUtils.GitUI.Theming;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.Properties;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 

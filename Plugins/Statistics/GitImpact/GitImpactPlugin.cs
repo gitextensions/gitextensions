@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.Composition;
+using GitExtensions.Core.Commands.Events;
 using GitExtensions.Extensibility;
 using GitImpact.Properties;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitImpact

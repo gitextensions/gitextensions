@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using GitExtensions.Core.Commands;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using JetBrains.Annotations;
 
 namespace GitCommands.Git

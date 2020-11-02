@@ -6,10 +6,11 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Core.Commands.Events;
+using GitExtensions.Core.Module;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace FindLargeFiles

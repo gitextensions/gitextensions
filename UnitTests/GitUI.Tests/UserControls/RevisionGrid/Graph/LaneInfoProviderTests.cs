@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using GitCommands;
+using GitExtensions.Core.Module;
 using GitUI;
 using GitUI.UserControls.RevisionGrid.Graph;
-using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
 

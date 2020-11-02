@@ -4,7 +4,8 @@ using System.IO.Abstractions;
 using System.Windows.Forms;
 using GitCommands.Git.Commands;
 using GitCommands.Git.Tag;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Commands;
+using GitExtensions.Core.Module;
 using NSubstitute;
 using NUnit.Framework;
 

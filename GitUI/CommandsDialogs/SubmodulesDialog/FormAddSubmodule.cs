@@ -6,9 +6,9 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Commands;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Core.Commands;
 using GitExtUtils;
 using GitUI.HelperDialogs;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SubmodulesDialog

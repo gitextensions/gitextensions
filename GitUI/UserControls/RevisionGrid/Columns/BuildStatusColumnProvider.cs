@@ -3,10 +3,10 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Core.Build;
+using GitExtensions.Core.Module;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace GitUI.UserControls.RevisionGrid.Columns
 {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using FluentAssertions;
 using GitCommands;
+using GitExtensions.Core.Module;
 using GitUI;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 using NUnit.Framework;
 
 namespace GitExtensions.UITests.UserControls.RevisionGrid

@@ -7,10 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Core.Module;
 using GitExtUtils.GitUI;
 using GitStatistics.PieChart;
 using GitUI;
-using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 

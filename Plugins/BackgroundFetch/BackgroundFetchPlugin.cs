@@ -6,11 +6,12 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using BackgroundFetch.Properties;
 using GitCommands;
+using GitExtensions.Core.Commands;
+using GitExtensions.Core.Commands.Events;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Events;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Events;
 using ResourceManager;
 
 namespace BackgroundFetch
@@ -171,7 +172,7 @@ namespace BackgroundFetch
 
         public bool Execute(GitUIEventArgs args)
         {
-            args.GitUICommands.StartSettingsDialog(this);
+            args.GitUICommands.StartSettingsDialog(GetType());
 
             return false;
         }

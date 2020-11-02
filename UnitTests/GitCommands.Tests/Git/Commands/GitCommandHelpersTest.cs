@@ -5,6 +5,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitCommands.Utils;
+using GitExtensions.Core.Module;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
 using ResourceManager;

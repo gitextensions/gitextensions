@@ -1,7 +1,5 @@
-﻿using GitCommands;
-using GitCommands.Git;
-using GitUI.UserControls;
-using GitUIPluginInterfaces;
+﻿using GitCommands.Git;
+using GitExtensions.Core.Module;
 using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs

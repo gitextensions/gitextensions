@@ -3,11 +3,11 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitExtensions.Core.Module;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 

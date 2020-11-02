@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using GitCommands.Git.Extensions;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using NUnit.Framework;
 
 namespace GitCommandsTests.Git.Extensions

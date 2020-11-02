@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 
 namespace GitUI.Script
 {

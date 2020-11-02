@@ -10,10 +10,10 @@ using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Core.Module;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

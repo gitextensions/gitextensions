@@ -8,11 +8,12 @@ using System.Windows.Forms;
 using Git.hub;
 using GitCommands.Config;
 using GitCommands.Remotes;
+using GitExtensions.Core.Commands;
+using GitExtensions.Core.Commands.Events;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Events;
 using GitExtensions.Extensibility.Settings;
 using GitHub3.Properties;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Events;
 using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager;
 

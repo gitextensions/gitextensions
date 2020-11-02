@@ -3,8 +3,8 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Commands;
+using GitExtensions.Core.Module;
 using GitExtUtils.GitUI.Theming;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.HelperDialogs

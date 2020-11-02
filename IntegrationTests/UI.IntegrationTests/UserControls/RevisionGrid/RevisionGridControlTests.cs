@@ -6,9 +6,9 @@ using System.Windows.Forms;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
+using GitExtensions.Core.Module;
 using GitUI;
 using GitUI.CommandsDialogs;
-using GitUIPluginInterfaces;
 using NUnit.Framework;
 
 namespace GitExtensions.UITests.UserControls.RevisionGrid

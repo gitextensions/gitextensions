@@ -1,8 +1,6 @@
-using System.Drawing;
 using System.Windows.Forms;
-using GitCommands;
+using GitExtensions.Core.Module;
 using GitExtUtils.GitUI;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid.Columns

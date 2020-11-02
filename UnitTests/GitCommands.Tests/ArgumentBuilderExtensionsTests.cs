@@ -4,8 +4,8 @@ using System.Linq;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Core.Commands;
+using GitExtensions.Core.Module;
 using GitExtUtils;
-using GitUIPluginInterfaces;
 using NUnit.Framework;
 
 namespace GitCommandsTests

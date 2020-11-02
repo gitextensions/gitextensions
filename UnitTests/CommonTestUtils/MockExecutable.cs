@@ -5,10 +5,8 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using GitCommands;
 using GitExtensions.Core.Commands;
 using GitUI;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using NUnit.Framework;
 

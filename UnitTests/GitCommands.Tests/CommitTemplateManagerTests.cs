@@ -6,7 +6,7 @@ using System.Linq;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using NSubstitute;
 using NUnit.Framework;
 

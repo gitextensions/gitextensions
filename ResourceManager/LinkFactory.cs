@@ -2,7 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using JetBrains.Annotations;
 
 namespace ResourceManager

@@ -7,8 +7,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\GitExtensions.Extensibility\GitExtensions.Extensibility.csproj" />
     <ProjectReference Include="..\..\GitUI\GitUI.csproj" />
-    <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
     <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj" />
   </ItemGroup>
 

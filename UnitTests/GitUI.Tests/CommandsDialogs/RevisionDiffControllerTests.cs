@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using GitCommands.Git;
+using GitExtensions.Core.Module;
 using GitUI.CommandsDialogs;
-using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
 

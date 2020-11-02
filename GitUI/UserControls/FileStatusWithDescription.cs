@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using JetBrains.Annotations;
 
 namespace GitUI

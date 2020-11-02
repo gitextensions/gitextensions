@@ -220,7 +220,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "setup", "setup", "{2786EE4D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Core", "GitExtensions.Core\GitExtensions.Core.csproj", "{CEE4EEC9-088A-4E67-8818-F6DB1F185D16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensions.Extensibility", "GitExtensions.Extensibility\GitExtensions.Extensibility.csproj", "{BF6F832D-7DD4-4AF5-A535-36CA8649160C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Extensibility", "GitExtensions.Extensibility\GitExtensions.Extensibility.csproj", "{BF6F832D-7DD4-4AF5-A535-36CA8649160C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

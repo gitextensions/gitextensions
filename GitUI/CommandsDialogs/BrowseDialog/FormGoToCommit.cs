@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs.BrowseDialog

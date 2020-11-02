@@ -1,8 +1,7 @@
 using System;
 using FluentAssertions;
-using GitCommands;
 using GitCommands.Git;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using NUnit.Framework;
 
 namespace GitCommandsTests.Git

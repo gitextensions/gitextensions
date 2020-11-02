@@ -5,8 +5,8 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
+using GitExtensions.Core.Module;
 using GitUI.HelperDialogs;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using CreateLocalBranches.Properties;
+using GitExtensions.Core.Commands.Events;
 using GitExtensions.Extensibility;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace CreateLocalBranches

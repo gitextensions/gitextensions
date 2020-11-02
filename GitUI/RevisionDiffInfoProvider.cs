@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using JetBrains.Annotations;
 
 namespace GitUI

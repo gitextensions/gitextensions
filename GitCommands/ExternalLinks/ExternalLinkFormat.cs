@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 
 namespace GitCommands.ExternalLinks
 {

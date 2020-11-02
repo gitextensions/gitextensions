@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using GitCommands.Git;
 using GitExtensions.Core.Commands;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using JetBrains.Annotations;
 
 namespace GitCommands

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GitExtensions.Core.Commands;
+using GitExtensions.Core.Module;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;

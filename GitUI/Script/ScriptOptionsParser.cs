@@ -6,8 +6,8 @@ using System.Windows.Forms;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Core.Module;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitUI.Script

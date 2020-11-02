@@ -5,11 +5,11 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git.Commands;
+using GitExtensions.Core.Module;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SubmodulesDialog;
 using GitUI.HelperDialogs;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

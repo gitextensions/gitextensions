@@ -6,9 +6,9 @@ using System.Windows.Forms;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Core.Module;
 using GitUI.CommandsDialogs;
 using GitUI.UserControls;
-using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
 

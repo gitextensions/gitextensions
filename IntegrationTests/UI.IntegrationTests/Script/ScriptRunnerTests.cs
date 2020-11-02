@@ -6,10 +6,11 @@ using System.Windows.Forms;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
+using GitExtensions.Core.Commands;
+using GitExtensions.Core.Module;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Script;
-using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
 

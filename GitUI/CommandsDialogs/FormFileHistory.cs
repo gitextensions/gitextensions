@@ -9,11 +9,11 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtensions.Core.Commands;
+using GitExtensions.Core.Module;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
 using GitUI.UserControls;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GitExtensions.Core.Module;
 using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces.RepositoryHosts

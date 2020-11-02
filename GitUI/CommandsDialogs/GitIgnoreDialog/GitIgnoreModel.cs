@@ -1,6 +1,6 @@
 ﻿using System;
 using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.GitIgnoreDialog

@@ -1,5 +1,5 @@
 using GitCommands.Git.Tag;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 
 namespace GitCommands.Git.Commands
 {

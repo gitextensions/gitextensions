@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs

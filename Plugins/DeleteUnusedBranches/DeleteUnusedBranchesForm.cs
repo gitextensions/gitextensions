@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DeleteUnusedBranches.Properties;
 using GitCommands;
+using GitExtensions.Core.Commands;
+using GitExtensions.Core.Module;
 using GitExtensions.Extensibility;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI;
-using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 namespace DeleteUnusedBranches
@@ -223,7 +224,7 @@ namespace DeleteUnusedBranches
         {
             Hide();
             Close();
-            _gitUiCommands.StartSettingsDialog(_gitPlugin);
+            _gitUiCommands.StartSettingsDialog(_gitPlugin.GetType());
         }
 
         private void includeUnmergedBranches_CheckedChanged(object sender, EventArgs e)

@@ -3,8 +3,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Core.Commands;
+using GitExtensions.Core.Commands.Events;
+using GitExtensions.Core.Module;
+using GitExtensions.Extensibility;
 using GitUI.HelperDialogs;
-using GitUIPluginInterfaces;
 
 namespace GitUI.Script
 {

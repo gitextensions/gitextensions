@@ -19,6 +19,8 @@ using GitCommands.Gpg;
 using GitCommands.Submodules;
 using GitCommands.UserRepositoryHistory;
 using GitCommands.Utils;
+using GitExtensions.Core.Commands.Events;
+using GitExtensions.Core.Module;
 using GitExtensions.Extensibility;
 using GitExtUtils;
 using GitExtUtils.GitUI;

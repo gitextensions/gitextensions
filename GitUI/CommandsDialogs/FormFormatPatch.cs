@@ -5,8 +5,8 @@ using System.Net.Mail;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
+using GitExtensions.Core.Module;
 using GitUI.CommandsDialogs.FormatPatchDialog;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

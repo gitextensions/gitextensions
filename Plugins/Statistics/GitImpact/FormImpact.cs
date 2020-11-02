@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitCommands.Statistics;
+using GitExtensions.Core.Module;
 using GitUI;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitImpact

@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 
 namespace ResourceManager.CommitDataRenders
 {

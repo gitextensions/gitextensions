@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Remotes;
+using GitExtensions.Core.Module;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.Properties;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft.VisualStudio.Threading;
 

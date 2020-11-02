@@ -4,10 +4,10 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using AutoCompileSubmodules.Properties;
+using GitExtensions.Core.Commands.Events;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Events;
 using GitExtensions.Extensibility.Settings;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Events;
 using ResourceManager;
 
 namespace AutoCompileSubmodules

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using GitExtensions.Core.Module;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 

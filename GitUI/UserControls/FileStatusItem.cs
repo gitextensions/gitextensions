@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls

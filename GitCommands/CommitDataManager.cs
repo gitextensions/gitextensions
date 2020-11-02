@@ -4,8 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using GitCommands.Git.Extensions;
+using GitExtensions.Core.Module;
 using GitExtUtils;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands

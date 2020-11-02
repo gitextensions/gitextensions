@@ -6,13 +6,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Atlassian.Jira;
+using GitExtensions.Core.Commands;
+using GitExtensions.Core.Commands.Events;
+using GitExtensions.Core.Module;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Events;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Settings.UserControls;
 using GitExtUtils.GitUI;
 using GitUI;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Events;
 using JiraCommitHintPlugin.Properties;
 using NString;
 using ResourceManager;
@@ -68,7 +70,7 @@ namespace JiraCommitHintPlugin
         {
             if (!_enabledSettings.ValueOrDefault(Settings))
             {
-                args.GitUICommands.StartSettingsDialog(this);
+                args.GitUICommands.StartSettingsDialog(GetType());
                 return false;
             }
 

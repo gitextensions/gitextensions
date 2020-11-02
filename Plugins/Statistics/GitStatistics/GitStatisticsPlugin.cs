@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using GitExtensions.Core.Commands.Events;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 using GitStatistics.Properties;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitStatistics

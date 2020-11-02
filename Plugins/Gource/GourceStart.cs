@@ -5,10 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitExtensions.Core.Commands.Events;
 using GitExtUtils;
 using GitUI;
 using GitUI.Avatars;
-using GitUIPluginInterfaces;
 
 namespace Gource
 {

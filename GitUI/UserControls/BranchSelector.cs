@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GitCommands;
 using GitCommands.Git;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.UserControls

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 
 namespace GitUI.HelperDialogs
 {

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Config;
+using GitExtensions.Core.Module;
 using GitUI.Script;
-using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
 

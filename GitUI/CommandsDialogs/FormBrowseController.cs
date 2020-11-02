@@ -6,7 +6,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Gpg;
 using GitCommands.UserRepositoryHistory;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs

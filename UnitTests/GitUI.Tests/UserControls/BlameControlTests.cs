@@ -6,8 +6,8 @@ using System.Text;
 using System.Threading;
 using FluentAssertions;
 using GitCommands;
+using GitExtensions.Core.Module;
 using GitUI.Blame;
-using GitUIPluginInterfaces;
 using NUnit.Framework;
 
 namespace GitUITests.UserControls

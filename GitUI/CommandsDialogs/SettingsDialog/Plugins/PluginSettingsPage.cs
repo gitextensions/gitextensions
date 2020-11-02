@@ -4,7 +4,6 @@ using System.Linq;
 using GitExtensions.Core.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
-using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 {

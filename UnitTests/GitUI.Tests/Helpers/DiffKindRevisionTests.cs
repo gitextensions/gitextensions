@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using GitCommands;
+using GitExtensions.Core.Module;
 using GitUI;
-using GitUIPluginInterfaces;
 using NUnit.Framework;
 
 namespace GitUITests.Helpers

@@ -6,10 +6,10 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtensions.Core.Commands;
+using GitExtensions.Core.Commands.Events;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitFlow.Properties;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitFlow

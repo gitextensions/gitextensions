@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using FluentAssertions;
 using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using NSubstitute;
 using NUnit.Framework;
 using ResourceManager;

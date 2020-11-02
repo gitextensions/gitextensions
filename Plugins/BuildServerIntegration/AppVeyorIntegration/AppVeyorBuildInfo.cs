@@ -1,5 +1,6 @@
 using System;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Build;
+using GitExtensions.Core.Module;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace AppVeyorIntegration

@@ -9,7 +9,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitCommands.Submodules;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using NUnit.Framework;
 
 namespace GitCommandsTests.Submodules

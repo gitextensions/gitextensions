@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Core.Module;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
@@ -15,7 +16,6 @@ using GitUI.Properties;
 using GitUI.Script;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 

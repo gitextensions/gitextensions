@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using GitCommands.Settings;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 
 namespace GitCommands.ExternalLinks
 {

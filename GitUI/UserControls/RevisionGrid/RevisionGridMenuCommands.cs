@@ -6,7 +6,6 @@ using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 

@@ -4,7 +4,6 @@ using GitCommands;
 using GitExtensions.Core.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace ResourceManager

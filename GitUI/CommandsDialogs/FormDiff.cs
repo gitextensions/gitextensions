@@ -5,11 +5,11 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Core.Module;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUI.Theming;
 using GitUI.UserControls;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 

@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using FluentAssertions;
 using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using NSubstitute;
 using NUnit.Framework;
 

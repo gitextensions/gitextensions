@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Linq;
-using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {

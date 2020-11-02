@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GitExtensions.Core.Commands;
+using GitExtensions.Core.Module;
 using GitExtUtils;
 using GitUI;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 

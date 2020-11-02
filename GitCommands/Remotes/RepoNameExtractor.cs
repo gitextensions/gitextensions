@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using GitCommands.Config;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 
 namespace GitCommands.Remotes
 {

@@ -10,6 +10,8 @@ using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitCommands.Settings;
 using GitExtensions.Core.Commands;
+using GitExtensions.Core.Commands.Events;
+using GitExtensions.Core.Module;
 using GitExtensions.Extensibility;
 using GitExtUtils;
 using GitUI.CommandsDialogs;

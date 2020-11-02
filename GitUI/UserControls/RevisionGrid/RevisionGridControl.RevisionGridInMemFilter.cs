@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using JetBrains.Annotations;
 
 namespace GitUI

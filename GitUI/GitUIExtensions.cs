@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Patches;
+using GitExtensions.Core.Module;
 using GitUI.Editor;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 

@@ -3,7 +3,7 @@ using System.IO.Abstractions;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 using NSubstitute;
 using NUnit.Framework;
 

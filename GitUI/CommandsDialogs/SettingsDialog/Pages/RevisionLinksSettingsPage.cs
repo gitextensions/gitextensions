@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands.ExternalLinks;
+using GitExtensions.Core.Module;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.SettingsDialog.RevisionLinks;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 

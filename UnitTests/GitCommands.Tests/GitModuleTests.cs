@@ -11,10 +11,10 @@ using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
-using GitCommands.Utils;
+using GitExtensions.Core.Commands;
+using GitExtensions.Core.Module;
 using GitExtUtils;
 using GitUI;
-using GitUIPluginInterfaces;
 using Newtonsoft.Json;
 using NUnit.Framework;
 

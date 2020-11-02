@@ -8,13 +8,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Core.Module;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUI.UserControls.RevisionGrid.Graph;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 

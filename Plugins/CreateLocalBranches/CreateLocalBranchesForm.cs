@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
-using GitCommands;
+using GitExtensions.Core.Commands.Events;
 using GitExtUtils;
-using GitUIPluginInterfaces;
 
 namespace CreateLocalBranches
 {

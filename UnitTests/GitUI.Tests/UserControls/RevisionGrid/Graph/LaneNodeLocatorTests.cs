@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using GitExtensions.Core.Module;
 using GitUI.UserControls.RevisionGrid.Graph;
 using NSubstitute;
 using NUnit.Framework;
@@ -22,7 +23,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
 
         private RevisionGraphRevision SetupLaneRow(int row, int lane, int laneCount, int nodeLane = -1, RevisionGraphSegment firstSegment = null)
         {
-            var node = new RevisionGraphRevision(GitUIPluginInterfaces.ObjectId.WorkTreeId, 0);
+            var node = new RevisionGraphRevision(ObjectId.WorkTreeId, 0);
             var revisionGraphRow = Substitute.For<IRevisionGraphRow>();
 
             var segments = new List<RevisionGraphSegment>();
@@ -128,8 +129,8 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
         {
             const int row = 100;
             const int lane = 3;
-            var parentNode = new RevisionGraphRevision(GitUIPluginInterfaces.ObjectId.WorkTreeId, 0);
-            var childNode = new RevisionGraphRevision(GitUIPluginInterfaces.ObjectId.WorkTreeId, 0);
+            var parentNode = new RevisionGraphRevision(ObjectId.WorkTreeId, 0);
+            var childNode = new RevisionGraphRevision(ObjectId.WorkTreeId, 0);
             var segment = new RevisionGraphSegment(parentNode, childNode);
             var laneNode = SetupLaneRow(row, lane, laneCount: lane + 1, firstSegment: segment);
 

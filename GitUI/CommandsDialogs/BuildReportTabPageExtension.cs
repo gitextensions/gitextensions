@@ -7,10 +7,9 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitCommands;
 using GitCommands.Settings;
+using GitExtensions.Core.Module;
 using GitUI.UserControls;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs

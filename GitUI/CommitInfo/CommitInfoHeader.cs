@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Core.Module;
 using GitExtUtils;
 using GitUI.Editor.RichTextBoxExtension;
 using GitUI.UserControls;
-using GitUIPluginInterfaces;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
 

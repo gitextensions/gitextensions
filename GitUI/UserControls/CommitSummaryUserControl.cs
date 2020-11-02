@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using GitExtensions.Core.Module;
 using GitExtUtils.GitUI.Theming;
-using GitUIPluginInterfaces;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
 

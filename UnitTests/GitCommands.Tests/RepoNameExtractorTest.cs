@@ -1,7 +1,8 @@
 ﻿using FluentAssertions;
 using GitCommands.Config;
 using GitCommands.Remotes;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
+using GitExtensions.Core.Settings;
 using NSubstitute;
 using NUnit.Framework;
 

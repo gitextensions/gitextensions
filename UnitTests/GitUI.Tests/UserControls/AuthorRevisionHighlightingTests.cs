@@ -3,8 +3,8 @@ using System.IO;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Config;
+using GitExtensions.Core.Module;
 using GitUI.UserControls;
-using GitUIPluginInterfaces;
 using NUnit.Framework;
 
 namespace GitUITests.UserControls

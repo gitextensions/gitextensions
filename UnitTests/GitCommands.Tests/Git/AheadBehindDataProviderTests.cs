@@ -4,10 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
-using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Core.Commands;
-using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
 

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using FluentAssertions;
+﻿using FluentAssertions;
+using GitExtensions.Core.Commands;
 using GitExtUtils;
 using GitUI.CommandsDialogs.SubmodulesDialog;
-using GitUI.CommitInfo;
-using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
 

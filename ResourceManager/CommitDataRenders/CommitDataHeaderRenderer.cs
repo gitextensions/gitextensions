@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 
 namespace ResourceManager.CommitDataRenders
 {

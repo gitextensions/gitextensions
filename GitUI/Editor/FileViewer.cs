@@ -11,6 +11,8 @@ using GitCommands;
 using GitCommands.Patches;
 using GitCommands.Settings;
 using GitExtensions.Core.Commands;
+using GitExtensions.Core.Commands.Events;
+using GitExtensions.Core.Module;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
@@ -19,7 +21,6 @@ using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Editor.Diff;
 using GitUI.Hotkey;
 using GitUI.Properties;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 

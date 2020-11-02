@@ -1,5 +1,5 @@
 ﻿using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Commands;
 
 namespace GitUI.Script
 {

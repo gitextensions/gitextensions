@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GitCommands;
 using GitCommands.Git;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 
 namespace GitUI
 {

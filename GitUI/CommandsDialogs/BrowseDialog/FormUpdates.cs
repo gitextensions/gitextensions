@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using Git.hub;
 using GitCommands;
 using GitCommands.Config;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Settings;
 using JetBrains.Annotations;
 using ResourceManager;
 

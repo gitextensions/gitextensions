@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using GitCommands.Git;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Module;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {

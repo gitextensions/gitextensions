@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using GitCommands.Git;
+using GitExtensions.Core.Module;
 
 namespace GitUI.CommandsDialogs
 {
@@ -70,7 +71,7 @@ namespace GitUI.CommandsDialogs
             // 
             // gitRevisionBindingSource
             // 
-            this.gitRevisionBindingSource.DataSource = typeof(GitUIPluginInterfaces.GitRevision);
+            this.gitRevisionBindingSource.DataSource = typeof(GitRevision);
             // 
             // gitItemBindingSource
             // 

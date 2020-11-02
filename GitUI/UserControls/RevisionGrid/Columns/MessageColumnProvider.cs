@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Core.Module;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using GitUI.Theming;
-using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Columns
 {

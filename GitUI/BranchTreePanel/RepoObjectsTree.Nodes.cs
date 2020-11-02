@@ -5,9 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Core.Commands.Events;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.UserControls;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitUI.BranchTreePanel

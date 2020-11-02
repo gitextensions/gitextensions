@@ -4,8 +4,8 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Commands;
 using GitExtensions.Core.Commands;
+using GitExtensions.Core.Module;
 using GitUI.HelperDialogs;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 

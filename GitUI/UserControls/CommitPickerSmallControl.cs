@@ -3,8 +3,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitExtensions.Core.Module;
 using GitUI.HelperDialogs;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 

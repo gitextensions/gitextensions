@@ -4,10 +4,10 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Git.Commands;
 using GitCommands.Git.Tag;
+using GitExtensions.Core.Module;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 

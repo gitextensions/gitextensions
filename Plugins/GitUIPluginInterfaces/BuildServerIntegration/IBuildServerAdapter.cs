@@ -1,5 +1,7 @@
 using System;
 using System.Reactive.Concurrency;
+using GitExtensions.Core.Build;
+using GitExtensions.Core.Module;
 using GitExtensions.Core.Settings;
 
 namespace GitUIPluginInterfaces.BuildServerIntegration

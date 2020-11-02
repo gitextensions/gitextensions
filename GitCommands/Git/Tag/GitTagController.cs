@@ -4,7 +4,7 @@ using System.IO.Abstractions;
 using System.Windows.Forms;
 using GitCommands.Git.Commands;
 using GitCommands.Git.Extensions;
-using GitUIPluginInterfaces;
+using GitExtensions.Core.Commands;
 
 namespace GitCommands.Git.Tag
 {

@@ -1,8 +1,9 @@
 ﻿using System;
 using FluentAssertions;
 using GitCommands;
+using GitExtensions.Core.Module;
+using GitExtensions.Core.Settings;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
 

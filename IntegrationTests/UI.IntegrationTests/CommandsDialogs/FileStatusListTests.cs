@@ -5,9 +5,9 @@ using System.Threading;
 using System.Windows.Forms;
 using FluentAssertions;
 using GitCommands;
+using GitExtensions.Core.Module;
 using GitUI;
 using GitUI.UserControls;
-using GitUIPluginInterfaces;
 using NUnit.Framework;
 
 namespace GitExtensions.UITests.CommandsDialogs
