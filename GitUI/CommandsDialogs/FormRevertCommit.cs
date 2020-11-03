@@ -80,11 +80,10 @@ namespace GitUI.CommandsDialogs
             }
 
             var command = GitCommandHelpers.RevertCmd(Revision.ObjectId, AutoCommit.Checked, parentIndex);
-            bool success = FormProcess.ShowDialog(this, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
-            if (!success)
-            {
-                return;
-            }
+
+            // Don't verify whether the command is successful.
+            // If it fails, likely there is a conflict that needs to be resolved.
+            FormProcess.ShowDialog(this, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
 
             MergeConflictHandler.HandleMergeConflicts(UICommands, this, AutoCommit.Checked);
             DialogResult = DialogResult.OK;
