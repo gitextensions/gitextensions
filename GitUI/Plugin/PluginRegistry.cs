@@ -5,6 +5,7 @@ using GitExtensions.Core.Commands;
 using GitExtensions.Core.Commands.Events;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Events;
+using GitUI.Avatars;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
@@ -79,6 +80,11 @@ namespace GitUI
                 foreach (var plugin in Plugins)
                 {
                     plugin.SettingsContainer.SetSettingsSource(gitUiCommands.GitModule.GetEffectiveSettings());
+
+                    if (plugin is IGitPluginForAvatars pluginForAvatars)
+                    {
+                        pluginForAvatars.AvatarProvider = AvatarService.Default;
+                    }
 
                     if (plugin is ILoadHandler handler)
                     {

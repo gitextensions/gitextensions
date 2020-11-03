@@ -1,4 +1,5 @@
-﻿using GitUI.Properties;
+﻿using GitExtensions.Core.Avatars;
+using GitUI.Properties;
 
 namespace GitUI.Avatars
 {

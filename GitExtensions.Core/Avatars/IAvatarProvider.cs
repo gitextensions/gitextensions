@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 
-namespace GitUI.Avatars
+namespace GitExtensions.Core.Avatars
 {
     public interface IAvatarProvider
     {

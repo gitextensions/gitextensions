@@ -5,16 +5,16 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitExtensions.Core.Avatars;
 using GitExtensions.Core.Commands.Events;
 using GitExtUtils;
 using GitUI;
-using GitUI.Avatars;
 
 namespace Gource
 {
     public partial class GourceStart : ResourceManager.GitExtensionsFormBase
     {
-        public GourceStart(string pathToGource, GitUIEventArgs gitUIArgs, string gourceArguments)
+        public GourceStart(string pathToGource, GitUIEventArgs gitUIArgs, string gourceArguments, IAvatarProvider avatarProvider)
         {
             InitializeComponent();
             InitializeComplete();
@@ -22,6 +22,7 @@ namespace Gource
             GitUIArgs = gitUIArgs;
             GitWorkingDir = gitUIArgs?.GitModule.WorkingDir;
             GourceArguments = gourceArguments;
+            AvatarProvider = avatarProvider;
 
             WorkingDir.Text = GitWorkingDir;
             GourcePath.Text = pathToGource;
@@ -35,6 +36,8 @@ namespace Gource
         public string GitWorkingDir { get; set; }
 
         public string GourceArguments { get; set; }
+
+        private IAvatarProvider AvatarProvider { get; }
 
         private void RunRealCmdDetached(string cmd, string arguments)
         {
@@ -112,7 +115,7 @@ namespace Gource
             {
                 try
                 {
-                    var image = await AvatarService.Default.GetAvatarAsync(author.email, author.name, imageSize: 90);
+                    var image = await AvatarProvider.GetAvatarAsync(author.email, author.name, imageSize: 90);
                     var filename = author.name + ".png";
 
                     if (filename.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)

@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands;
+using GitExtensions.Core.Avatars;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.Avatars

@@ -2,7 +2,7 @@
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
-using GitUI.Avatars;
+using GitExtensions.Core.Avatars;
 using NSubstitute;
 using NUnit.Framework;
 

@@ -3,9 +3,9 @@ using System.Drawing.Drawing2D;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Core.Avatars;
 using GitExtensions.Core.Module;
 using GitExtUtils.GitUI;
-using GitUI.Avatars;
 using GitUI.Properties;
 
 namespace GitUI.UserControls.RevisionGrid.Columns

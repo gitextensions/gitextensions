@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
 using GitCommands;
+using GitExtensions.Core.Avatars;
 
 namespace GitUI.Avatars
 {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
+using GitExtensions.Core.Avatars;
 using GitExtUtils.GitUI;
 using GitUI.Avatars;
 using GitUI.Properties;

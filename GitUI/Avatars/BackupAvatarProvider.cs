@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
+using GitExtensions.Core.Avatars;
 
 namespace GitUI.Avatars
 {

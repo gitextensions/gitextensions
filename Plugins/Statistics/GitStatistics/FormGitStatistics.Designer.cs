@@ -20,7 +20,7 @@ namespace GitStatistics
 
         private void InitializeComponent()
         {
-            this.Tabs = new GitUI.CommandsDialogs.FullBleedTabControl();
+            this.Tabs = new FullBleedTabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.TotalCommits = new System.Windows.Forms.Label();
@@ -503,7 +503,7 @@ namespace GitStatistics
 
         #endregion
 
-        private GitUI.CommandsDialogs.FullBleedTabControl Tabs;
+        private FullBleedTabControl Tabs;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private PieChartControl LinesOfCodePie;

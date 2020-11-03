@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using GitExtensions.Core.Avatars;
 using GitExtensions.Core.Commands.Events;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
@@ -19,7 +20,8 @@ namespace Gource
     public class GourcePlugin : GitPluginBase,
         IGitPluginForRepository,
         IGitPluginConfigurable,
-        IGitPluginExecutable
+        IGitPluginExecutable,
+        IGitPluginForAvatars
     {
         #region Translation
         private readonly TranslationString _currentDirectoryIsNotValidGit = new TranslationString("The current directory is not a valid git repository.\n\n" +
@@ -117,7 +119,7 @@ namespace Gource
                 }
             }
 
-            using var gourceStart = new GourceStart(pathToGource, args, _gourceArguments.ValueOrDefault(Settings));
+            using var gourceStart = new GourceStart(pathToGource, args, _gourceArguments.ValueOrDefault(Settings), AvatarProvider);
 
             gourceStart.ShowDialog(args.OwnerForm);
             Settings.SetValue(_gourceArguments.Name, gourceStart.GourceArguments, s => s);
@@ -125,6 +127,8 @@ namespace Gource
 
             return false;
         }
+
+        public IAvatarProvider AvatarProvider { get; set; }
 
         #endregion
 

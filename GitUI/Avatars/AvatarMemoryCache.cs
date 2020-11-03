@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Threading.Tasks;
+using GitExtensions.Core.Avatars;
 using GitExtUtils;
 using JetBrains.Annotations;
 
