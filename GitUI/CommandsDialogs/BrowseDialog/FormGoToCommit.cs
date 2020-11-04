@@ -131,6 +131,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 _selectedRevision = _selectedBranch != null ? _selectedBranch.Guid : "";
             }
+            else
+            {
+                textboxCommitExpression.Focus();
+            }
         }
 
         private void comboBoxTags_TextChanged(object sender, EventArgs e)
