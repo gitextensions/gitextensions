@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
@@ -144,6 +145,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RefsSortBy = (GitRefsSortBy)_NO_TRANSLATE_cmbBranchesSortBy.SelectedIndex;
 
             AppSettings.Translation = Language.Text;
+            Thread.CurrentThread.CurrentUICulture = AppSettings.CurrentCultureInfo;
             ResourceManager.Strings.Reinitialize();
             Strings.Reinitialize();
 
