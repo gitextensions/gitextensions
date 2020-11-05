@@ -1,22 +1,24 @@
 ﻿using System.ComponentModel.Composition;
+using System.Drawing;
 using System.Windows.Forms;
 using GitExtensions.Core.Commands.Events;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Settings;
 using ReleaseNotesGenerator.Properties;
-using ResourceManager;
 
 namespace ReleaseNotesGenerator
 {
     [Export(typeof(IGitPlugin))]
-    public class ReleaseNotesGeneratorPlugin : GitPluginBase,
+    public sealed class Plugin : IGitPlugin,
         IGitPluginExecutable
     {
-        public ReleaseNotesGeneratorPlugin()
-        {
-            SetNameAndDescription("Release Notes Generator");
-            Translate();
-            Icon = Resources.IconReleaseNotesGenerator;
-        }
+        public string Name => "Release Notes Generator";
+
+        public string Description => Strings.Description;
+
+        public Image Icon => Images.IconReleaseNotesGenerator;
+
+        public IGitPluginSettingsContainer SettingsContainer { get; set; }
 
         public bool Execute(GitUIEventArgs args)
         {

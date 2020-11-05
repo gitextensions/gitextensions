@@ -1729,15 +1729,6 @@ noms de branche, noms de tag)</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="fr">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Release Notes Generator</source>
-        <target>Générateur de Notes de Release</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="fr">
     <body>
       <trans-unit id="ExtractLink.Text">

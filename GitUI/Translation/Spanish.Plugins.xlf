@@ -1731,15 +1731,6 @@ nombres de ramas, ó nombres de tags)</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="es">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Release Notes Generator</source>
-        <target>Generador de Notas de Versión.</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="es">
     <body>
       <trans-unit id="ExtractLink.Text">

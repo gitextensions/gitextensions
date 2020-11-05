@@ -1733,15 +1733,6 @@ branch names, tag names)</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="ru">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Release Notes Generator</source>
-        <target>Генератор примечаний к выпуску</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="ru">
     <body>
       <trans-unit id="ExtractLink.Text">

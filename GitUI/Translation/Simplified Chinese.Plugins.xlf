@@ -1732,15 +1732,6 @@ branch names, tag names)</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="zh-Hans">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Release Notes Generator</source>
-        <target>发行注记</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="zh-Hans">
     <body>
       <trans-unit id="ExtractLink.Text">
