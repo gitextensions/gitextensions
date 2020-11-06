@@ -120,4 +120,77 @@
   <data name="Description" xml:space="preserve">
     <value>Generador de Notas de Versión.</value>
   </data>
+  <data name="FormText" xml:space="preserve">
+    <value>Generador de Notas de Versión.</value>
+  </data>
+  <data name="CommitLogFrom" xml:space="preserve">
+    <value>Log de commit desde '{0}' a '{1}' ({2}):</value>
+  </data>
+  <data name="FromCommitNotSpecified" xml:space="preserve">
+    <value>El campo 'Desde' debe ser especificado</value>
+  </data>
+  <data name="ToCommitNotSpecified" xml:space="preserve">
+    <value>El campo 'Hacia' debe ser especificado</value>
+  </data>
+  <data name="Caption" xml:space="preserve">
+    <value>Entrada no válida</value>
+  </data>
+  <data name="ButtonCopyAsHtmlText" xml:space="preserve">
+    <value>como tabla HTML</value>
+  </data>
+  <data name="ButtonCopyAsTextTableSpaceText" xml:space="preserve">
+    <value>como tabla de texto (espacios)</value>
+  </data>
+  <data name="ButtonCopyAsTextTableTabText" xml:space="preserve">
+    <value>como tabla de texto (tabulaciones)</value>
+  </data>
+  <data name="ButtonCopyOrigOutputText" xml:space="preserve">
+    <value>resultado original</value>
+  </data>
+  <data name="ButtonGenerateText" xml:space="preserve">
+    <value>Generar</value>
+  </data>
+  <data name="GroupBox1Text" xml:space="preserve">
+    <value>Resultado</value>
+  </data>
+  <data name="GroupBoxCopyText" xml:space="preserve">
+    <value>Copiar al portapapeles</value>
+  </data>
+  <data name="LabelRevCountText" xml:space="preserve">
+    <value>n/d</value>
+  </data>
+  <data name="Label1Text" xml:space="preserve">
+    <value>Expresión de commit 'Hasta' (inclusive):</value>
+  </data>
+  <data name="Label2Text" xml:space="preserve">
+    <value>Expresión de commit 'Desde' (exclusive):</value>
+  </data>
+  <data name="Label3Text" xml:space="preserve">
+    <value>argumentos para git log</value>
+  </data>
+  <data name="Label4Text" xml:space="preserve">
+    <value>{0} = desde; {1} = hasta</value>
+  </data>
+  <data name="Label5Text" xml:space="preserve">
+    <value>Orden: Las revisiones más recientes aparecen arriba.</value>
+  </data>
+  <data name="Label6Text" xml:space="preserve">
+    <value>Número de revisiones = </value>
+  </data>
+  <data name="Label7Text" xml:space="preserve">
+    <value>(Las expresiones de commit pueden ser: hashes de commits,
+nombres de ramas, ó nombres de tags)</value>
+  </data>
+  <data name="Label8Text" xml:space="preserve">
+    <value>sin modificaciones</value>
+  </data>
+  <data name="Label9Text" xml:space="preserve">
+    <value>separar columnas con tabulaciones</value>
+  </data>
+  <data name="Label10Text" xml:space="preserve">
+    <value>separar columnas con espacios</value>
+  </data>
+  <data name="Label11Text" xml:space="preserve">
+    <value>El portapapeles tendrá código HTML (texto plano) y formato HTML que puede ser pegado en programas como MS Word o LibreOffice Writer.</value>
+  </data>
 </root>

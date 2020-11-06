@@ -120,4 +120,77 @@
   <data name="Description" xml:space="preserve">
     <value>Генератор примечаний к выпуску</value>
   </data>
+  <data name="FormText" xml:space="preserve">
+    <value>Генератор примечаний к выпуску</value>
+  </data>
+  <data name="CommitLogFrom" xml:space="preserve">
+    <value>Закоммитить лог из '{0}' в '{1}' ({2}):</value>
+  </data>
+  <data name="FromCommitNotSpecified" xml:space="preserve">
+    <value>Должен быть указан коммит 'из'</value>
+  </data>
+  <data name="ToCommitNotSpecified" xml:space="preserve">
+    <value>Должен быть указан коммит 'в'</value>
+  </data>
+  <data name="Caption" xml:space="preserve">
+    <value>Недопустимый ввод</value>
+  </data>
+  <data name="ButtonCopyAsHtmlText" xml:space="preserve">
+    <value>как HTML таблица</value>
+  </data>
+  <data name="ButtonCopyAsTextTableSpaceText" xml:space="preserve">
+    <value>как текстовая таблица (пробелы)</value>
+  </data>
+  <data name="ButtonCopyAsTextTableTabText" xml:space="preserve">
+    <value>как текстовая таблица (табы)</value>
+  </data>
+  <data name="ButtonCopyOrigOutputText" xml:space="preserve">
+    <value>исходный вывод</value>
+  </data>
+  <data name="ButtonGenerateText" xml:space="preserve">
+    <value>Генерировать</value>
+  </data>
+  <data name="GroupBox1Text" xml:space="preserve">
+    <value>Результат</value>
+  </data>
+  <data name="GroupBoxCopyText" xml:space="preserve">
+    <value>Копировать в буфер</value>
+  </data>
+  <data name="LabelRevCountText" xml:space="preserve">
+    <value>недоступно</value>
+  </data>
+  <data name="Label1Text" xml:space="preserve">
+    <value>Выражение коммита 'To' (включая):</value>
+  </data>
+  <data name="Label2Text" xml:space="preserve">
+    <value>Выражение коммита 'From' (исключая):</value>
+  </data>
+  <data name="Label3Text" xml:space="preserve">
+    <value>аргументы git log:</value>
+  </data>
+  <data name="Label4Text" xml:space="preserve">
+    <value>{0} = из; {1} = в</value>
+  </data>
+  <data name="Label5Text" xml:space="preserve">
+    <value>Сортировка: последние ревизии указаны сверху.</value>
+  </data>
+  <data name="Label6Text" xml:space="preserve">
+    <value>Кол-во ревизий</value>
+  </data>
+  <data name="Label7Text" xml:space="preserve">
+    <value>(Выражения коммита могут быть хешами,
+именами веток, тегами)</value>
+  </data>
+  <data name="Label8Text" xml:space="preserve">
+    <value>как</value>
+  </data>
+  <data name="Label9Text" xml:space="preserve">
+    <value>отдельные колонки с табами</value>
+  </data>
+  <data name="Label10Text" xml:space="preserve">
+    <value>разделить колонки пробелами</value>
+  </data>
+  <data name="Label11Text" xml:space="preserve">
+    <value>Буфер обмена будет содержать код HTML (голый текст) и формат HTML, который можно вставить в программы как MS Word или LibreOffice Writer.</value>
+  </data>
 </root>

@@ -120,4 +120,78 @@
   <data name="Description" xml:space="preserve">
     <value>Generátor poznámek k vydání</value>
   </data>
+  <data name="FormText" xml:space="preserve">
+    <value>Generátor poznámek k vydání</value>
+  </data>
+  <data name="CommitLogFrom" xml:space="preserve">
+    <value>Záznam odevzdání od '{0}' do '{1}' ({2}):</value>
+  </data>
+  <data name="FromCommitNotSpecified" xml:space="preserve">
+    <value>'From' commit must be specified</value>
+  </data>
+  <data name="ToCommitNotSpecified" xml:space="preserve">
+    <value>'To' commit must be specified</value>
+  </data>
+  <data name="Caption" xml:space="preserve">
+    <value>Neplatný vstup</value>
+  </data>
+  <data name="ButtonCopyAsHtmlText" xml:space="preserve">
+    <value>jako HTML tabulka</value>
+  </data>
+  <data name="ButtonCopyAsTextTableSpaceText" xml:space="preserve">
+    <value>jako textová tabulka (mezery)</value>
+  </data>
+  <data name="ButtonCopyAsTextTableTabText" xml:space="preserve">
+    <value>jako textová tabulka (tabelátory)</value>
+  </data>
+  <data name="ButtonCopyOrigOutputText" xml:space="preserve">
+    <value>původní výstup</value>
+  </data>
+  <data name="ButtonGenerateText" xml:space="preserve">
+    <value>Generovat</value>
+  </data>
+  <data name="GroupBox1Text" xml:space="preserve">
+    <value>Výsledek</value>
+  </data>
+  <data name="GroupBoxCopyText" xml:space="preserve">
+    <value>Kopírovat do schránky</value>
+  </data>
+  <data name="LabelRevCountText" xml:space="preserve">
+    <value>není k dispozici</value>
+  </data>
+  <data name="Label1Text" xml:space="preserve">
+    <value>Koncové odevzdání (včetně):</value>
+  </data>
+  <data name="Label2Text" xml:space="preserve">
+    <value>Počáteční odevzdání (mimo):</value>
+  </data>
+  <data name="Label3Text" xml:space="preserve">
+    <value>parametry příkazu git log:</value>
+  </data>
+  <data name="Label4Text" xml:space="preserve">
+    <value>{0} = začátek; {1} = konec</value>
+  </data>
+  <data name="Label5Text" xml:space="preserve">
+    <value>Třídění: Nejnovější revize jsou navrchu.</value>
+  </data>
+  <data name="Label6Text" xml:space="preserve">
+    <value>Počet revizí =</value>
+  </data>
+  <data name="Label7Text" xml:space="preserve">
+    <value>(Výraz může být hash odevzdání,
+název větve, nebo značky)</value>
+  </data>
+  <data name="Label8Text" xml:space="preserve">
+    <value>tak jak je</value>
+  </data>
+  <data name="Label9Text" xml:space="preserve">
+    <value>oddělit sloupce tabelátory</value>
+  </data>
+  <data name="Label10Text" xml:space="preserve">
+    <value>oddělovat sloupce mezerami</value>
+  </data>
+  <data name="Label11Text" xml:space="preserve">
+    <value>Do schránky bude zkopírován HTML kód (čistý text) a HTML formát
+který můžete vložit do programů jako MS Word nebo LibreOffice Writer.</value>
+  </data>
 </root>

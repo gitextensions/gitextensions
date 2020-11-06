@@ -120,4 +120,78 @@
   <data name="Description" xml:space="preserve">
     <value>Release Notes Generator</value>
   </data>
+  <data name="FormText" xml:space="preserve">
+    <value>Release Notes Generator</value>
+  </data>
+  <data name="CommitLogFrom" xml:space="preserve">
+    <value>Commit log van '{0}' tot '{1}' ({2}):</value>
+  </data>
+  <data name="FromCommitNotSpecified" xml:space="preserve">
+    <value>Specificeer de van-commit</value>
+  </data>
+  <data name="ToCommitNotSpecified" xml:space="preserve">
+    <value>Specificeer de naar-commit</value>
+  </data>
+  <data name="Caption" xml:space="preserve">
+    <value>Ongeldige invoer</value>
+  </data>
+  <data name="ButtonCopyAsHtmlText" xml:space="preserve">
+    <value>als HTML tabel</value>
+  </data>
+  <data name="ButtonCopyAsTextTableSpaceText" xml:space="preserve">
+    <value>als tekst tabel (spaties)</value>
+  </data>
+  <data name="ButtonCopyAsTextTableTabText" xml:space="preserve">
+    <value>als tekst tabel (tabs)</value>
+  </data>
+  <data name="ButtonCopyOrigOutputText" xml:space="preserve">
+    <value>originele output</value>
+  </data>
+  <data name="ButtonGenerateText" xml:space="preserve">
+    <value>Genereer</value>
+  </data>
+  <data name="GroupBox1Text" xml:space="preserve">
+    <value>Resultaat</value>
+  </data>
+  <data name="GroupBoxCopyText" xml:space="preserve">
+    <value>Kopiëren naar het klembord</value>
+  </data>
+  <data name="LabelRevCountText" xml:space="preserve">
+    <value>n/b</value>
+  </data>
+  <data name="Label1Text" xml:space="preserve">
+    <value>Commit expressie 'Naar' (inclusief):</value>
+  </data>
+  <data name="Label2Text" xml:space="preserve">
+    <value>Commit expressie 'Van' (exclusief):</value>
+  </data>
+  <data name="Label3Text" xml:space="preserve">
+    <value>git log argumenten:</value>
+  </data>
+  <data name="Label4Text" xml:space="preserve">
+    <value>{0} = van; {1} = naar</value>
+  </data>
+  <data name="Label5Text" xml:space="preserve">
+    <value>Sortering: Meest recente revisies bovenaan.</value>
+  </data>
+  <data name="Label6Text" xml:space="preserve">
+    <value>Aantal revisies =</value>
+  </data>
+  <data name="Label7Text" xml:space="preserve">
+    <value>(Commit expressies kunnen commit hashes,
+branch namen of tag namen zijn)</value>
+  </data>
+  <data name="Label8Text" xml:space="preserve">
+    <value>as is</value>
+  </data>
+  <data name="Label9Text" xml:space="preserve">
+    <value>scheid kolommen met tabs</value>
+  </data>
+  <data name="Label10Text" xml:space="preserve">
+    <value>scheid kolommen met spaties</value>
+  </data>
+  <data name="Label11Text" xml:space="preserve">
+    <value>Het klembord zal HTML code (platte tekst) en HTML formaat bevatten.
+Dit kan geplakt worden in programma's als MS Word en LibreOffice Writer.</value>
+  </data>
 </root>

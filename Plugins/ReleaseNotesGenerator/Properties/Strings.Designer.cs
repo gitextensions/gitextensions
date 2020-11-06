@@ -61,11 +61,229 @@ namespace ReleaseNotesGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to as HTML table.
+        /// </summary>
+        internal static string ButtonCopyAsHtmlText {
+            get {
+                return ResourceManager.GetString("ButtonCopyAsHtmlText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to as text table (spaces).
+        /// </summary>
+        internal static string ButtonCopyAsTextTableSpaceText {
+            get {
+                return ResourceManager.GetString("ButtonCopyAsTextTableSpaceText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to as text table (tabs).
+        /// </summary>
+        internal static string ButtonCopyAsTextTableTabText {
+            get {
+                return ResourceManager.GetString("ButtonCopyAsTextTableTabText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to original output.
+        /// </summary>
+        internal static string ButtonCopyOrigOutputText {
+            get {
+                return ResourceManager.GetString("ButtonCopyOrigOutputText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate.
+        /// </summary>
+        internal static string ButtonGenerateText {
+            get {
+                return ResourceManager.GetString("ButtonGenerateText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid input.
+        /// </summary>
+        internal static string Caption {
+            get {
+                return ResourceManager.GetString("Caption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Commit log from &apos;{0}&apos; to &apos;{1}&apos; ({2}):.
+        /// </summary>
+        internal static string CommitLogFrom {
+            get {
+                return ResourceManager.GetString("CommitLogFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Release Notes Generator.
         /// </summary>
         internal static string Description {
             get {
                 return ResourceManager.GetString("Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Release Notes Generator.
+        /// </summary>
+        internal static string FormText {
+            get {
+                return ResourceManager.GetString("FormText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;From&apos; commit must be specified.
+        /// </summary>
+        internal static string FromCommitNotSpecified {
+            get {
+                return ResourceManager.GetString("FromCommitNotSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Result.
+        /// </summary>
+        internal static string GroupBox1Text {
+            get {
+                return ResourceManager.GetString("GroupBox1Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy to clipboard.
+        /// </summary>
+        internal static string GroupBoxCopyText {
+            get {
+                return ResourceManager.GetString("GroupBoxCopyText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to separate columns with spaces.
+        /// </summary>
+        internal static string Label10Text {
+            get {
+                return ResourceManager.GetString("Label10Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clipboard will contain HTML code (plain text) and HTML format
+        ///which can be pasted to programs like MS Word or LibreOffice Writer..
+        /// </summary>
+        internal static string Label11Text {
+            get {
+                return ResourceManager.GetString("Label11Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Commit expression &quot;To&quot; (including):.
+        /// </summary>
+        internal static string Label1Text {
+            get {
+                return ResourceManager.GetString("Label1Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Commit expression &quot;From&quot; (excluding):.
+        /// </summary>
+        internal static string Label2Text {
+            get {
+                return ResourceManager.GetString("Label2Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to git log arguments:.
+        /// </summary>
+        internal static string Label3Text {
+            get {
+                return ResourceManager.GetString("Label3Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} = from; {1} = to.
+        /// </summary>
+        internal static string Label4Text {
+            get {
+                return ResourceManager.GetString("Label4Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorting: Most recent revisions are listed on top..
+        /// </summary>
+        internal static string Label5Text {
+            get {
+                return ResourceManager.GetString("Label5Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Revisions count =.
+        /// </summary>
+        internal static string Label6Text {
+            get {
+                return ResourceManager.GetString("Label6Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (Commit expressions can be commit hashes,
+        ///branch names, tag names).
+        /// </summary>
+        internal static string Label7Text {
+            get {
+                return ResourceManager.GetString("Label7Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to as is.
+        /// </summary>
+        internal static string Label8Text {
+            get {
+                return ResourceManager.GetString("Label8Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to separate columns with tabs.
+        /// </summary>
+        internal static string Label9Text {
+            get {
+                return ResourceManager.GetString("Label9Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to n/a.
+        /// </summary>
+        internal static string LabelRevCountText {
+            get {
+                return ResourceManager.GetString("LabelRevCountText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;To&apos; commit must be specified.
+        /// </summary>
+        internal static string ToCommitNotSpecified {
+            get {
+                return ResourceManager.GetString("ToCommitNotSpecified", resourceCulture);
             }
         }
     }

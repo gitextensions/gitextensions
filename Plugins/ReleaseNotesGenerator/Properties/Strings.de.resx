@@ -120,4 +120,78 @@
   <data name="Description" xml:space="preserve">
     <value>Release Notes Generator</value>
   </data>
+  <data name="FormText" xml:space="preserve">
+    <value>Release Notes Generator</value>
+  </data>
+  <data name="CommitLogFrom" xml:space="preserve">
+    <value>Commit-Log von '{0}' bis '{1}' ({2}):</value>
+  </data>
+  <data name="FromCommitNotSpecified" xml:space="preserve">
+    <value>'Von' Commit muss angegeben werden</value>
+  </data>
+  <data name="ToCommitNotSpecified" xml:space="preserve">
+    <value>'Zu' Commit muss angegeben werden</value>
+  </data>
+  <data name="Caption" xml:space="preserve">
+    <value>Ungültige Eingabe</value>
+  </data>
+  <data name="ButtonCopyAsHtmlText" xml:space="preserve">
+    <value>als HTML-Tabelle</value>
+  </data>
+  <data name="ButtonCopyAsTextTableSpaceText" xml:space="preserve">
+    <value>als textuelle Tabelle (Leerzeichen)</value>
+  </data>
+  <data name="ButtonCopyAsTextTableTabText" xml:space="preserve">
+    <value>als textuelle Tabelle (Tabulatoren)</value>
+  </data>
+  <data name="ButtonCopyOrigOutputText" xml:space="preserve">
+    <value>Originalausgabe</value>
+  </data>
+  <data name="ButtonGenerateText" xml:space="preserve">
+    <value>Generieren</value>
+  </data>
+  <data name="GroupBox1Text" xml:space="preserve">
+    <value>Ergebnis</value>
+  </data>
+  <data name="GroupBoxCopyText" xml:space="preserve">
+    <value>In Zwischenablage kopieren</value>
+  </data>
+  <data name="LabelRevCountText" xml:space="preserve">
+    <value>n.a.</value>
+  </data>
+  <data name="Label1Text" xml:space="preserve">
+    <value>Commit Ausdruck 'To' (einschließend):</value>
+  </data>
+  <data name="Label2Text" xml:space="preserve">
+    <value>Commit Ausdruck 'From' (ausschließend):</value>
+  </data>
+  <data name="Label3Text" xml:space="preserve">
+    <value>git log Parameter:</value>
+  </data>
+  <data name="Label4Text" xml:space="preserve">
+    <value>{0} = von; {1} = zu</value>
+  </data>
+  <data name="Label5Text" xml:space="preserve">
+    <value>Sortierung: Die aktuellsten Revisionen sind zuoberst.</value>
+  </data>
+  <data name="Label6Text" xml:space="preserve">
+    <value>Revisionszähler =</value>
+  </data>
+  <data name="Label7Text" xml:space="preserve">
+    <value>(Commit Ausdrücke können Commit Hahes,
+Branchnamen oder Tag-Namen sein.)</value>
+  </data>
+  <data name="Label8Text" xml:space="preserve">
+    <value>im Original</value>
+  </data>
+  <data name="Label9Text" xml:space="preserve">
+    <value>Trenne Spalten mit Tabulatoren</value>
+  </data>
+  <data name="Label10Text" xml:space="preserve">
+    <value>Trenne Spalten mit Leerzeichen</value>
+  </data>
+  <data name="Label11Text" xml:space="preserve">
+    <value>Die Zwischenablage wird HTML Code (Klartext) und HTML Formatierung enthalten.
+Diese kann in Programmen wie MS Word oder LibreOffice Writer eingefügt werden.</value>
+  </data>
 </root>

@@ -120,4 +120,78 @@
   <data name="Description" xml:space="preserve">
     <value>Release Notes Generator</value>
   </data>
+  <data name="FormText" xml:space="preserve">
+    <value>Release Notes Generator</value>
+  </data>
+  <data name="CommitLogFrom" xml:space="preserve">
+    <value>Commit log from '{0}' to '{1}' ({2}):</value>
+  </data>
+  <data name="FromCommitNotSpecified" xml:space="preserve">
+    <value>'From' commit must be specified</value>
+  </data>
+  <data name="ToCommitNotSpecified" xml:space="preserve">
+    <value>'To' commit must be specified</value>
+  </data>
+  <data name="Caption" xml:space="preserve">
+    <value>Invalid input</value>
+  </data>
+  <data name="ButtonCopyAsHtmlText" xml:space="preserve">
+    <value>as HTML table</value>
+  </data>
+  <data name="ButtonCopyAsTextTableSpaceText" xml:space="preserve">
+    <value>as text table (spaces)</value>
+  </data>
+  <data name="ButtonCopyAsTextTableTabText" xml:space="preserve">
+    <value>as text table (tabs)</value>
+  </data>
+  <data name="ButtonCopyOrigOutputText" xml:space="preserve">
+    <value>original output</value>
+  </data>
+  <data name="ButtonGenerateText" xml:space="preserve">
+    <value>Generate</value>
+  </data>
+  <data name="GroupBox1Text" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="GroupBoxCopyText" xml:space="preserve">
+    <value>Copy to clipboard</value>
+  </data>
+  <data name="LabelRevCountText" xml:space="preserve">
+    <value>n/a</value>
+  </data>
+  <data name="Label1Text" xml:space="preserve">
+    <value>Commit expression "To" (including):</value>
+  </data>
+  <data name="Label2Text" xml:space="preserve">
+    <value>Commit expression "From" (excluding):</value>
+  </data>
+  <data name="Label3Text" xml:space="preserve">
+    <value>git log arguments:</value>
+  </data>
+  <data name="Label4Text" xml:space="preserve">
+    <value>{0} = from; {1} = to</value>
+  </data>
+  <data name="Label5Text" xml:space="preserve">
+    <value>Sorting: Most recent revisions are listed on top.</value>
+  </data>
+  <data name="Label6Text" xml:space="preserve">
+    <value>Revisions count =</value>
+  </data>
+  <data name="Label7Text" xml:space="preserve">
+    <value>(Commit expressions can be commit hashes,
+branch names, tag names)</value>
+  </data>
+  <data name="Label8Text" xml:space="preserve">
+    <value>as is</value>
+  </data>
+  <data name="Label9Text" xml:space="preserve">
+    <value>separate columns with tabs</value>
+  </data>
+  <data name="Label10Text" xml:space="preserve">
+    <value>separate columns with spaces</value>
+  </data>
+  <data name="Label11Text" xml:space="preserve">
+    <value>Clipboard will contain HTML code (plain text) and HTML format
+which can be pasted to programs like MS Word or LibreOffice Writer.</value>
+  </data>
 </root>

@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\GitExtensions.Extensibility\GitExtensions.Extensibility.csproj" />
-    <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj" />
   </ItemGroup>
 
   <ItemGroup>

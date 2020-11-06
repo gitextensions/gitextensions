@@ -120,4 +120,77 @@
   <data name="Description" xml:space="preserve">
     <value>リリースノートジェネレータ</value>
   </data>
+  <data name="FormText" xml:space="preserve">
+    <value>リリースノートジェネレータ</value>
+  </data>
+  <data name="CommitLogFrom" xml:space="preserve">
+    <value>'{0}'から'{1}'へのコミットログ ({2}):</value>
+  </data>
+  <data name="FromCommitNotSpecified" xml:space="preserve">
+    <value>'From'コミットは必ず指定する必要があります</value>
+  </data>
+  <data name="ToCommitNotSpecified" xml:space="preserve">
+    <value>'To'コミットは必ず指定する必要があります</value>
+  </data>
+  <data name="Caption" xml:space="preserve">
+    <value>無効な入力</value>
+  </data>
+  <data name="ButtonCopyAsHtmlText" xml:space="preserve">
+    <value>HTMLテーブルとして</value>
+  </data>
+  <data name="ButtonCopyAsTextTableSpaceText" xml:space="preserve">
+    <value>テキストテーブル(スペース区切り)として</value>
+  </data>
+  <data name="ButtonCopyAsTextTableTabText" xml:space="preserve">
+    <value>テキストテーブル(タブ区切り)として</value>
+  </data>
+  <data name="ButtonCopyOrigOutputText" xml:space="preserve">
+    <value>オリジナルの出力</value>
+  </data>
+  <data name="ButtonGenerateText" xml:space="preserve">
+    <value>生成</value>
+  </data>
+  <data name="GroupBox1Text" xml:space="preserve">
+    <value>結果</value>
+  </data>
+  <data name="GroupBoxCopyText" xml:space="preserve">
+    <value>クリップボードにコピー</value>
+  </data>
+  <data name="LabelRevCountText" xml:space="preserve">
+    <value>n/a</value>
+  </data>
+  <data name="Label1Text" xml:space="preserve">
+    <value>コミット参照 'To' (含む):</value>
+  </data>
+  <data name="Label2Text" xml:space="preserve">
+    <value>コミット参照 'From' (除外):</value>
+  </data>
+  <data name="Label3Text" xml:space="preserve">
+    <value>gitログ引数：</value>
+  </data>
+  <data name="Label4Text" xml:space="preserve">
+    <value>{0} = 元; {1} = 先</value>
+  </data>
+  <data name="Label5Text" xml:space="preserve">
+    <value>整列：最新のリビジョンを上に表示。</value>
+  </data>
+  <data name="Label6Text" xml:space="preserve">
+    <value>リビジョン数 = </value>
+  </data>
+  <data name="Label7Text" xml:space="preserve">
+    <value>(コミットの参照式はコミットハッシュ、
+ブランチ名、タグ名があり得ます)</value>
+  </data>
+  <data name="Label8Text" xml:space="preserve">
+    <value>として</value>
+  </data>
+  <data name="Label9Text" xml:space="preserve">
+    <value>行をタブで分割</value>
+  </data>
+  <data name="Label10Text" xml:space="preserve">
+    <value>行をスペースで分割</value>
+  </data>
+  <data name="Label11Text" xml:space="preserve">
+    <value>クリップボードはHTMLコード(プレーンテキスト)やHTMLフォーマットを含んでおり、MS WordやLibreOffice Writerに貼り付けることが可能です。</value>
+  </data>
 </root>

@@ -120,4 +120,78 @@
   <data name="Description" xml:space="preserve">
     <value>Generator informacji o wydaniu</value>
   </data>
+  <data name="FormText" xml:space="preserve">
+    <value>Generator informacji o wydaniu</value>
+  </data>
+  <data name="CommitLogFrom" xml:space="preserve">
+    <value>Dziennik zatwierdzeń od '{0}' do '{1}' ({2}):</value>
+  </data>
+  <data name="FromCommitNotSpecified" xml:space="preserve">
+    <value>Zatwierdzenie 'Od' musi zostać określone</value>
+  </data>
+  <data name="ToCommitNotSpecified" xml:space="preserve">
+    <value>Zatwierdzenie 'Do' musi zostać określone</value>
+  </data>
+  <data name="Caption" xml:space="preserve">
+    <value>Błędne dane</value>
+  </data>
+  <data name="ButtonCopyAsHtmlText" xml:space="preserve">
+    <value>Tabela HTML</value>
+  </data>
+  <data name="ButtonCopyAsTextTableSpaceText" xml:space="preserve">
+    <value>Tabela tekstowa (spacje)</value>
+  </data>
+  <data name="ButtonCopyAsTextTableTabText" xml:space="preserve">
+    <value>Tabela tekstowa (tabulatory)</value>
+  </data>
+  <data name="ButtonCopyOrigOutputText" xml:space="preserve">
+    <value>Pierwotny wynik</value>
+  </data>
+  <data name="ButtonGenerateText" xml:space="preserve">
+    <value>Wygeneruj</value>
+  </data>
+  <data name="GroupBox1Text" xml:space="preserve">
+    <value>Wynik</value>
+  </data>
+  <data name="GroupBoxCopyText" xml:space="preserve">
+    <value>Skopiuj do schowka</value>
+  </data>
+  <data name="LabelRevCountText" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Label1Text" xml:space="preserve">
+    <value>Formuła zatwierdzenia 'Do' (dołączona):</value>
+  </data>
+  <data name="Label2Text" xml:space="preserve">
+    <value>Formuła zatwierdzenia 'Od' (wykluczona):</value>
+  </data>
+  <data name="Label3Text" xml:space="preserve">
+    <value>Polecenia dziennika git:</value>
+  </data>
+  <data name="Label4Text" xml:space="preserve">
+    <value>{0} = od; {1} = do</value>
+  </data>
+  <data name="Label5Text" xml:space="preserve">
+    <value>Sortowanie: Ostatnie rewizje są na górze listy.</value>
+  </data>
+  <data name="Label6Text" xml:space="preserve">
+    <value>Liczba rewizji =</value>
+  </data>
+  <data name="Label7Text" xml:space="preserve">
+    <value>(Formuły zatwierdzeń mogą być numerami
+zatwierdzeń, nazwami gałęzi lub tagów)</value>
+  </data>
+  <data name="Label8Text" xml:space="preserve">
+    <value>Tak jak jest.</value>
+  </data>
+  <data name="Label9Text" xml:space="preserve">
+    <value>Rozdziel kolumny tabulatorami.</value>
+  </data>
+  <data name="Label10Text" xml:space="preserve">
+    <value>Rozdziel kolumny spacjami.</value>
+  </data>
+  <data name="Label11Text" xml:space="preserve">
+    <value>Kopiuje do schowka kod HTML (zwykły tekst) oraz formatowanie,
+które mogą zostać wklejone do programów takich jak MS Word lub LibreOffice Writer.</value>
+  </data>
 </root>

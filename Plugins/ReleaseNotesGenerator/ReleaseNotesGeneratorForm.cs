@@ -7,20 +7,15 @@ using System.Windows.Forms;
 using GitExtensions.Core.Commands;
 using GitExtensions.Core.Commands.Events;
 using GitExtensions.Core.Utils;
-using ResourceManager;
+using ReleaseNotesGenerator.Properties;
 
 namespace ReleaseNotesGenerator
 {
     /// <summary>
     /// Test on GE repository from "2.00" to "2.10". Should display 687 items.
     /// </summary>
-    public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
+    public partial class ReleaseNotesGeneratorForm : Form
     {
-        private readonly TranslationString _commitLogFrom = new TranslationString("Commit log from '{0}' to '{1}' ({2}):");
-        private readonly TranslationString _fromCommitNotSpecified = new TranslationString("'From' commit must be specified");
-        private readonly TranslationString _toCommitNotSpecified = new TranslationString("'To' commit must be specified");
-        private readonly TranslationString _caption = new TranslationString("Invalid input");
-
         private const string MostRecentHint = "most recent changes are listed on top";
         private readonly GitUIEventArgs _gitUiCommands;
         private IEnumerable<LogLine> _lastGeneratedLogLines;
@@ -29,7 +24,27 @@ namespace ReleaseNotesGenerator
         public ReleaseNotesGeneratorForm(GitUIEventArgs gitUiCommands)
         {
             InitializeComponent();
-            InitializeComplete();
+
+            Text = Strings.FormText;
+            buttonCopyAsHtml.Text = Strings.ButtonCopyAsHtmlText;
+            buttonCopyAsTextTableSpace.Text = Strings.ButtonCopyAsTextTableSpaceText;
+            buttonCopyAsTextTableTab.Text = Strings.ButtonCopyAsTextTableTabText;
+            buttonCopyOrigOutput.Text = Strings.ButtonCopyOrigOutputText;
+            buttonGenerate.Text = Strings.ButtonGenerateText;
+            groupBox1.Text = Strings.GroupBox1Text;
+            groupBoxCopy.Text = Strings.GroupBoxCopyText;
+            labelRevCount.Text = Strings.LabelRevCountText;
+            label1.Text = Strings.Label1Text;
+            label2.Text = Strings.Label2Text;
+            label3.Text = Strings.Label3Text;
+            label4.Text = Strings.Label4Text;
+            label5.Text = Strings.Label5Text;
+            label6.Text = Strings.Label6Text;
+            label7.Text = Strings.Label7Text;
+            label8.Text = Strings.Label8Text;
+            label9.Text = Strings.Label9Text;
+            label10.Text = Strings.Label10Text;
+            label11.Text = Strings.Label11Text;
 
             _gitUiCommands = gitUiCommands;
             _gitLogLineParser = new GitLogLineParser();
@@ -47,14 +62,14 @@ namespace ReleaseNotesGenerator
 
             if (string.IsNullOrWhiteSpace(textBoxRevFrom.Text))
             {
-                MessageBox.Show(this, _fromCommitNotSpecified.Text, _caption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Strings.FromCommitNotSpecified, Strings.Caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 textBoxRevFrom.Focus();
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(_NO_TRANSLATE_textBoxRevTo.Text))
             {
-                MessageBox.Show(this, _toCommitNotSpecified.Text, _caption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Strings.ToCommitNotSpecified, Strings.Caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 _NO_TRANSLATE_textBoxRevTo.Focus();
                 return;
             }
@@ -116,7 +131,7 @@ namespace ReleaseNotesGenerator
 
         private string CreateTextTable(IEnumerable<LogLine> logLines, bool suppressEmptyLines = true, bool separateColumnWithTabInsteadOfSpaces = true)
         {
-            string headerText = string.Format(_commitLogFrom.Text,
+            string headerText = string.Format(Strings.CommitLogFrom,
                 textBoxRevFrom.Text, _NO_TRANSLATE_textBoxRevTo.Text, MostRecentHint);
 
             string colSeparatorFirstLine = separateColumnWithTabInsteadOfSpaces ? "\t" : " ";

@@ -120,4 +120,78 @@
   <data name="Description" xml:space="preserve">
     <value>发行注记</value>
   </data>
+  <data name="FormText" xml:space="preserve">
+    <value>发行注记</value>
+  </data>
+  <data name="CommitLogFrom" xml:space="preserve">
+    <value>提交历史从 '{0}' 到 '{1}' ({2})：</value>
+  </data>
+  <data name="FromCommitNotSpecified" xml:space="preserve">
+    <value>必须指定“发件人”提交</value>
+  </data>
+  <data name="ToCommitNotSpecified" xml:space="preserve">
+    <value>必须指定'目标'提交</value>
+  </data>
+  <data name="Caption" xml:space="preserve">
+    <value>无效输入</value>
+  </data>
+  <data name="ButtonCopyAsHtmlText" xml:space="preserve">
+    <value>像网页表格</value>
+  </data>
+  <data name="ButtonCopyAsTextTableSpaceText" xml:space="preserve">
+    <value>as text table (spaces)</value>
+  </data>
+  <data name="ButtonCopyAsTextTableTabText" xml:space="preserve">
+    <value>as text table (tabs)</value>
+  </data>
+  <data name="ButtonCopyOrigOutputText" xml:space="preserve">
+    <value>原始输出</value>
+  </data>
+  <data name="ButtonGenerateText" xml:space="preserve">
+    <value>产生</value>
+  </data>
+  <data name="GroupBox1Text" xml:space="preserve">
+    <value>结果</value>
+  </data>
+  <data name="GroupBoxCopyText" xml:space="preserve">
+    <value>复制到剪贴板</value>
+  </data>
+  <data name="LabelRevCountText" xml:space="preserve">
+    <value>n/a</value>
+  </data>
+  <data name="Label1Text" xml:space="preserve">
+    <value>Commit expression "To" (including):</value>
+  </data>
+  <data name="Label2Text" xml:space="preserve">
+    <value>Commit expression "From" (excluding):</value>
+  </data>
+  <data name="Label3Text" xml:space="preserve">
+    <value>git log 参数：</value>
+  </data>
+  <data name="Label4Text" xml:space="preserve">
+    <value>{0} = 从; {1} = 到</value>
+  </data>
+  <data name="Label5Text" xml:space="preserve">
+    <value>分类: 最近的修订列在最上面。</value>
+  </data>
+  <data name="Label6Text" xml:space="preserve">
+    <value>修订次数=</value>
+  </data>
+  <data name="Label7Text" xml:space="preserve">
+    <value>(提交信息可以是提交码,
+分支名称, 标签名称)</value>
+  </data>
+  <data name="Label8Text" xml:space="preserve">
+    <value>就这样</value>
+  </data>
+  <data name="Label9Text" xml:space="preserve">
+    <value>用制表符来分隔列</value>
+  </data>
+  <data name="Label10Text" xml:space="preserve">
+    <value>用空格分隔列</value>
+  </data>
+  <data name="Label11Text" xml:space="preserve">
+    <value>剪贴板将包含HTML代码(纯文本)和HTML格式。
+可以粘贴到Word或LibreOffice里。</value>
+  </data>
 </root>
