@@ -6,8 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitExtensions.Core.Avatars;
+using GitExtensions.Core.Commands;
 using GitExtensions.Core.Commands.Events;
-using GitExtUtils;
+using GitExtensions.Core.Utils.UI;
 using GitUI;
 
 namespace Gource

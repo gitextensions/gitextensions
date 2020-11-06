@@ -13,7 +13,7 @@ using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitExtensions.Core.Commands;
 using GitExtensions.Core.Module;
-using GitExtUtils;
+using GitExtensions.Core.Utils.UI;
 using GitUI;
 using Newtonsoft.Json;
 using NUnit.Framework;

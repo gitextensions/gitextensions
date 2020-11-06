@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtensions.Core.Commands;
 using GitExtensions.Core.Module;
-using GitExtUtils;
 using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs

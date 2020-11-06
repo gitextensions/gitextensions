@@ -9,7 +9,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitExtensions.Core.Module;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils.UI;
 using GitUI.Script;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.WindowsAPICodePack.Dialogs;

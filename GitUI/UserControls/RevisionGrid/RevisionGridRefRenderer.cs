@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using GitExtensions.Core.Module;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils.UI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid;

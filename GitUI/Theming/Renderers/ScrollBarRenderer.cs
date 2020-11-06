@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms.VisualStyles;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils.UI;
 
 namespace GitUI.Theming
 {

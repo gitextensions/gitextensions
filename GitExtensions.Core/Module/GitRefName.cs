@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-using GitExtensions.Core.Module;
 using JetBrains.Annotations;
 
-namespace GitCommands
+namespace GitExtensions.Core.Module
 {
     public static class GitRefName
     {

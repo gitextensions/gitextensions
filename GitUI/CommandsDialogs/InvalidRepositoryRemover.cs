@@ -1,6 +1,7 @@
 using System.Linq;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Core.Utils.UI;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace GitUI.CommandsDialogs

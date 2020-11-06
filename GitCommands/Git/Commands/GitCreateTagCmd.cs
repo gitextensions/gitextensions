@@ -2,7 +2,6 @@
 using GitCommands.Git.Extensions;
 using GitCommands.Git.Tag;
 using GitExtensions.Core.Commands;
-using GitExtUtils;
 using JetBrains.Annotations;
 
 namespace GitCommands.Git.Commands

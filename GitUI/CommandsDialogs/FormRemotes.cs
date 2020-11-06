@@ -8,7 +8,7 @@ using GitCommands.Config;
 using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Core.Module;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils.UI;
 using GitUI.Properties;
 using JetBrains.Annotations;
 using ResourceManager;

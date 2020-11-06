@@ -4,7 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils.UI;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages

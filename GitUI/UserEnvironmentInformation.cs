@@ -2,8 +2,8 @@
 using System.Runtime.InteropServices;
 using System.Text;
 using GitCommands;
-using GitExtUtils;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils;
+using GitExtensions.Core.Utils.UI;
 
 namespace GitUI
 {

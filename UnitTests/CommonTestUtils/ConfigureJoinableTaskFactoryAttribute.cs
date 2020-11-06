@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Windows.Forms;
+using GitExtensions.Core.Utils.UI;
 using GitUI;
 using Microsoft.VisualStudio.Threading;
 using NUnit.Framework;

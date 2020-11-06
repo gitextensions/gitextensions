@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Core.Utils.UI;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {

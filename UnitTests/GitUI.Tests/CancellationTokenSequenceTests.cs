@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using GitUI;
+using GitExtensions.Core.Utils.UI;
 using NUnit.Framework;
 
 namespace GitUITests

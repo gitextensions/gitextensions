@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using GitCommands;
+using GitExtensions.Core.Utils;
 using NUnit.Framework;
 
 namespace GitCommandsTests

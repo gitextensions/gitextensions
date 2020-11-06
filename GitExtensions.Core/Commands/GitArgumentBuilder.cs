@@ -4,11 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using GitCommands;
-using GitExtensions.Core.Commands;
+using GitExtensions.Core.Utils;
 using JetBrains.Annotations;
 
-namespace GitExtUtils
+namespace GitExtensions.Core.Commands
 {
     /// <summary>
     /// Builds a git command line string from config items, a command name and that command's arguments.

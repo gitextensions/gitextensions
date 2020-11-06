@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Core.Utils.UI;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI

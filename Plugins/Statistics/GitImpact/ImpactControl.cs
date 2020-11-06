@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Statistics;
 using GitExtensions.Core.Module;
+using GitExtensions.Core.Utils.UI;
 using GitExtUtils.GitUI;
 
 namespace GitImpact

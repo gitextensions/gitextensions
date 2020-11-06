@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
 using GitCommands.Utils;
+using GitExtensions.Core.Utils;
 using GitExtensions.Extensibility;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SettingsDialog;

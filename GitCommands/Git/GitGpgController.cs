@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using GitExtensions.Core.Commands;
 using GitExtensions.Core.Module;
-using GitExtUtils;
 
 namespace GitCommands.Gpg
 {

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Extensions;
 using GitCommands.Logging;
+using GitExtensions.Core.Utils.UI;
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls

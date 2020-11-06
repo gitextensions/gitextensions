@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Core.Utils.UI;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

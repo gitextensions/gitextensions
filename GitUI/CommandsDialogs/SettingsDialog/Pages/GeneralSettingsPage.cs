@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Core.Utils.UI;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages

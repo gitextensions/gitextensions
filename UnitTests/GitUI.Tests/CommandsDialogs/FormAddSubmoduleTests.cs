@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using GitExtensions.Core.Commands;
-using GitExtUtils;
 using GitUI.CommandsDialogs.SubmodulesDialog;
 using NSubstitute;
 using NUnit.Framework;

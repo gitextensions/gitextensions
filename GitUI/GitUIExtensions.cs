@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Patches;
 using GitExtensions.Core.Module;
+using GitExtensions.Core.Utils.UI;
 using GitUI.Editor;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;

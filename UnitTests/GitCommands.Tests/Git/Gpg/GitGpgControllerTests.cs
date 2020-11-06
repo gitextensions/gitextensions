@@ -6,7 +6,6 @@ using GitCommands;
 using GitCommands.Gpg;
 using GitExtensions.Core.Commands;
 using GitExtensions.Core.Module;
-using GitExtUtils;
 using NSubstitute;
 using NUnit.Framework;
 

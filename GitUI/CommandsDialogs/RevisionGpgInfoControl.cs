@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using GitCommands.Gpg;
-using GitCommands.Utils;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils;
+using GitExtensions.Core.Utils.UI;
 using GitUI.Properties;
 using JetBrains.Annotations;
 using ResourceManager;

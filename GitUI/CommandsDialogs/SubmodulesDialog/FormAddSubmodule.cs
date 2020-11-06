@@ -7,7 +7,8 @@ using GitCommands;
 using GitCommands.Git.Commands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Core.Commands;
-using GitExtUtils;
+using GitExtensions.Core.Module;
+using GitExtensions.Core.Utils.UI;
 using GitUI.HelperDialogs;
 using ResourceManager;
 

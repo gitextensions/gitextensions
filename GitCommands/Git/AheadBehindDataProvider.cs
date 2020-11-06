@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitExtensions.Core.Commands;
-using GitExtUtils;
 using JetBrains.Annotations;
 
 namespace GitCommands.Git

@@ -8,6 +8,7 @@ using ApprovalTests.Utilities;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
+using GitExtensions.Core.Utils.UI;
 using GitExtensions.UITests;
 using GitUI;
 using GitUI.CommandsDialogs;

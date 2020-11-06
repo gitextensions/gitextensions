@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using JetBrains.Annotations;
 using Microsoft.Win32.SafeHandles;
 
-namespace GitExtUtils.GitUI
+namespace GitExtensions.Core.Utils.UI
 {
     /// <summary>
     /// Utility class related to DPI settings, primarily used for scaling dimensions on high-DPI displays.

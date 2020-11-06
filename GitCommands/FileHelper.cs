@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GitExtUtils;
+using GitExtensions.Core.Commands;
 using JetBrains.Annotations;
 
 namespace GitCommands

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Core.Utils.UI;
 using GitUI.Properties;
 using GitUI.UserControls;
 using JetBrains.Annotations;

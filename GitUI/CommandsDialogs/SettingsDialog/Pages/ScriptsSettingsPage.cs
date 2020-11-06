@@ -8,11 +8,10 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Utils;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils;
+using GitExtensions.Core.Utils.UI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Script;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages

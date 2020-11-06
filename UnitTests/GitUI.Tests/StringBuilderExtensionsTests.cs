@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using GitCommands;
+using GitExtensions.Core.Utils;
 using NUnit.Framework;
 
 namespace GitUITests

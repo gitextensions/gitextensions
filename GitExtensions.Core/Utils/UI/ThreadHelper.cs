@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Threading;
 
-namespace GitUI
+namespace GitExtensions.Core.Utils.UI
 {
     public static class ThreadHelper
     {

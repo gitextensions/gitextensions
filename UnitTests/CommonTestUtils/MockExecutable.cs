@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using GitExtensions.Core.Commands;
+using GitExtensions.Core.Utils.UI;
 using GitUI;
 using JetBrains.Annotations;
 using NUnit.Framework;

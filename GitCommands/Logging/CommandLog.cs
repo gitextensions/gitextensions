@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using GitExtensions.Core.Utils.UI;
 using GitUI;
 using JetBrains.Annotations;
 

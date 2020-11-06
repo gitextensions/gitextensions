@@ -12,6 +12,7 @@ using AzureDevOpsIntegration.Settings;
 using GitExtensions.Core.Build;
 using GitExtensions.Core.Module;
 using GitExtensions.Core.Settings;
+using GitExtensions.Core.Utils.UI;
 using GitUI;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft.VisualStudio.Threading;

@@ -7,6 +7,7 @@ using System.Text;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitCommands.Utils;
+using GitExtensions.Core.Utils;
 using JetBrains.Annotations;
 using Microsoft.WindowsAPICodePack.Taskbar;
 

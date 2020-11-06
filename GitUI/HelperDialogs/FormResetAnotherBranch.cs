@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitExtensions.Core.Module;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils.UI;
 using GitExtUtils.GitUI.Theming;
 using ResourceManager;
 

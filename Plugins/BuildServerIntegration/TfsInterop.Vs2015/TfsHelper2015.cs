@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using GitExtensions.Core.Utils.UI;
 using GitUI;
 using Microsoft.TeamFoundation.Build.Client;
 using Microsoft.TeamFoundation.Build.WebApi;

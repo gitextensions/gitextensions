@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommonTestUtils;
+using GitExtensions.Core.Utils.UI;
 using GitUI;
 using Microsoft.VisualStudio.Threading;
 using NUnit.Framework;

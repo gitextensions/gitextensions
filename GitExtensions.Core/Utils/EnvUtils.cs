@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using Microsoft.Win32;
 
-namespace GitCommands.Utils
+namespace GitExtensions.Core.Utils
 {
     public static class EnvUtils
     {

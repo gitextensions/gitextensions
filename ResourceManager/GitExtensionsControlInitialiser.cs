@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Core.Utils.UI;
 using GitUI;
 
 namespace ResourceManager

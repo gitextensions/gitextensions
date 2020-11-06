@@ -3,10 +3,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Core.Commands;
 using GitExtensions.Core.Commands.Events;
 using GitExtensions.Core.Module;
 using GitExtensions.Core.Settings;
-using GitExtUtils;
 using ResourceManager;
 
 namespace ProxySwitcher

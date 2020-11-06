@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GitCommands.Logging;
 using GitExtensions.Core.Commands;
+using GitExtensions.Core.Utils.UI;
 using GitUI;
 using JetBrains.Annotations;
 

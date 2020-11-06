@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using GitCommands;
 using GitCommands.Config;
-using GitExtUtils;
+using GitExtensions.Core.Commands;
 using NUnit.Framework;
 
 namespace GitCommandsTests.Config

@@ -9,6 +9,8 @@ using GitCommands.Git.Commands;
 using GitCommands.Utils;
 using GitExtensions.Core.Commands.Events;
 using GitExtensions.Core.Module;
+using GitExtensions.Core.Utils;
+using GitExtensions.Core.Utils.UI;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {

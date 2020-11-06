@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtensions.Core.Commands.Events;
+using GitExtensions.Core.Utils.UI;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.UserControls;
 using JetBrains.Annotations;

@@ -12,7 +12,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils.UI;
 using GitUI.NBugReports.Info;
 using GitUI.NBugReports.Serialization;
 using GitUI.Properties;

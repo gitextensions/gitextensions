@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace GitUI
+namespace GitExtensions.Core.Utils.UI
 {
     /// <summary>
     /// Supports sequences of actions where the commencement of an action cancels any

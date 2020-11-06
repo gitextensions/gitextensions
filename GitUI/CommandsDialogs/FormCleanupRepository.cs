@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Commands;
 using GitCommands.Utils;
+using GitExtensions.Core.Utils;
 using GitUI.HelperDialogs;
 using JetBrains.Annotations;
 using Microsoft.WindowsAPICodePack.Dialogs;

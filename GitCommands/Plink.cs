@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using GitExtensions.Core.Utils.UI;
 using GitUI;
 
 namespace GitCommands

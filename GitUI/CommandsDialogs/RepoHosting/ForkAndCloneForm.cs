@@ -9,7 +9,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitCommands.UserRepositoryHistory;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils.UI;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;

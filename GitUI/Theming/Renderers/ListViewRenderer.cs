@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils.UI;
 using GitExtUtils.GitUI.Theming;
 
 namespace GitUI.Theming

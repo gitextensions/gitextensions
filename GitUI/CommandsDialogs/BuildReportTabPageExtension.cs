@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands.Settings;
 using GitExtensions.Core.Module;
+using GitExtensions.Core.Utils.UI;
 using GitUI.UserControls;
 using JetBrains.Annotations;
 

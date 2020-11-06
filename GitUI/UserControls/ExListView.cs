@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using GitCommands.Utils;
+using GitExtensions.Core.Utils;
 using JetBrains.Annotations;
 using static System.NativeMethods;
 

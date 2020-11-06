@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Windows.Forms;
 using GitExtensions.Core.Settings;
+using GitExtensions.Core.Utils.UI;
 using GitUI;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using ResourceManager;

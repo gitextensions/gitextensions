@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitExtensions.Core.Commands;
+using GitExtensions.Core.Utils.UI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
@@ -24,7 +25,7 @@ namespace GitCommands
         /// Launches a process for the executable and returns its output.
         /// </summary>
         /// <remarks>
-        /// This method uses <see cref="GitUI.ThreadHelper.JoinableTaskFactory"/> to allow the calling thread to
+        /// This method uses <see cref="ThreadHelper.JoinableTaskFactory"/> to allow the calling thread to
         /// do useful work while waiting for the process to exit. Internally, this method delegates to
         /// <see cref="GetOutputAsync"/>.
         /// </remarks>
@@ -45,7 +46,7 @@ namespace GitCommands
             CommandCache cache = null,
             bool stripAnsiEscapeCodes = true)
         {
-            return GitUI.ThreadHelper.JoinableTaskFactory.Run(
+            return ThreadHelper.JoinableTaskFactory.Run(
                 () => executable.GetOutputAsync(arguments, input, outputEncoding, cache, stripAnsiEscapeCodes));
         }
 
@@ -154,7 +155,7 @@ namespace GitCommands
         /// Launches a process for the executable and returns <c>true</c> if its exit code is zero.
         /// </summary>
         /// <remarks>
-        /// This method uses <see cref="GitUI.ThreadHelper.JoinableTaskFactory"/> to allow the calling thread to
+        /// This method uses <see cref="ThreadHelper.JoinableTaskFactory"/> to allow the calling thread to
         /// do useful work while waiting for the process to exit. Internally, this method delegates to
         /// <see cref="RunCommandAsync"/>.
         /// </remarks>
@@ -170,7 +171,7 @@ namespace GitCommands
             byte[] input = null,
             bool createWindow = false)
         {
-            return GitUI.ThreadHelper.JoinableTaskFactory.Run(
+            return ThreadHelper.JoinableTaskFactory.Run(
                 () => executable.RunCommandAsync(arguments, input, createWindow));
         }
 
@@ -319,7 +320,7 @@ namespace GitCommands
         /// Launches a process for the executable and returns an object detailing exit code, standard output and standard error values.
         /// </summary>
         /// <remarks>
-        /// This method uses <see cref="GitUI.ThreadHelper.JoinableTaskFactory"/> to allow the calling thread to
+        /// This method uses <see cref="ThreadHelper.JoinableTaskFactory"/> to allow the calling thread to
         /// do useful work while waiting for the process to exit. Internally, this method delegates to
         /// <see cref="ExecuteAsync"/>.
         /// </remarks>
@@ -337,7 +338,7 @@ namespace GitCommands
             Encoding outputEncoding = null,
             bool stripAnsiEscapeCodes = true)
         {
-            return GitUI.ThreadHelper.JoinableTaskFactory.Run(
+            return ThreadHelper.JoinableTaskFactory.Run(
                 () => executable.ExecuteAsync(arguments, writeInput, outputEncoding, stripAnsiEscapeCodes));
         }
 

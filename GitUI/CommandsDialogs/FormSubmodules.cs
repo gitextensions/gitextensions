@@ -6,7 +6,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git.Commands;
 using GitExtensions.Core.Module;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils.UI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SubmodulesDialog;
 using GitUI.HelperDialogs;

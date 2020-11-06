@@ -15,6 +15,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remotes;
 using GitExtensions.Core.Build;
+using GitExtensions.Core.Utils.UI;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.HelperDialogs;
 using GitUI.UserControls;

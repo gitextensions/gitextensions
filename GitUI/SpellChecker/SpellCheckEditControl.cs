@@ -5,8 +5,8 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Utils;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils;
+using GitExtensions.Core.Utils.UI;
 
 namespace GitUI.SpellChecker
 {

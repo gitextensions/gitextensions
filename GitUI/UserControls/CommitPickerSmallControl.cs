@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitExtensions.Core.Module;
+using GitExtensions.Core.Utils.UI;
 using GitUI.HelperDialogs;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;

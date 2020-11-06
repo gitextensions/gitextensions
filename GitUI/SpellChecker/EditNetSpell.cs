@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
+using GitExtensions.Core.Utils.UI;
 using GitUI.AutoCompletion;
 using Microsoft.VisualStudio.Threading;
 using NetSpell.SpellChecker;

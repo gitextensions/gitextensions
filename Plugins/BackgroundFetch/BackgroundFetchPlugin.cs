@@ -11,7 +11,6 @@ using GitExtensions.Core.Commands.Events;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Events;
 using GitExtensions.Extensibility.Settings;
-using GitExtUtils;
 using ResourceManager;
 
 namespace BackgroundFetch

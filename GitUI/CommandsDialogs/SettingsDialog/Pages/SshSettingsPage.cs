@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using GitCommands;
 using GitCommands.Utils;
+using GitExtensions.Core.Utils;
 using GitExtUtils.GitUI.Theming;
 using Microsoft.Win32;
 

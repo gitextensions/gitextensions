@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Logging;
+using GitExtensions.Core.Utils.UI;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {

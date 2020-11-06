@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using JetBrains.Annotations;
 
-namespace GitCommands
+namespace GitExtensions.Core.Utils
 {
     public static class StringBuilderExtensions
     {

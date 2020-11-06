@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
 using GitExtensions.Core.Avatars;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils.UI;
 using GitUI.Avatars;
 using GitUI.Properties;
 using JetBrains.Annotations;

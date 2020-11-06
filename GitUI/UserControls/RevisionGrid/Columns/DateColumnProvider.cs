@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using GitCommands;
 using GitExtensions.Core.Module;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils.UI;
 using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid.Columns

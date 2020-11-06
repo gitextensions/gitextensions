@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands.Git;
 using GitExtensions.Core.Module;
-using GitExtUtils;
-using GitUI;
+using GitExtensions.Core.Utils;
+using GitExtensions.Core.Utils.UI;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
@@ -49,7 +49,7 @@ namespace Bitbucket
             {
                 var repoUrl = _NO_TRANSLATE_RepoUrl = string.Format(_NO_TRANSLATE_RepoUrl,
                                           _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
-                var branch = GitCommands.GitRefName.GetFullBranchName(module.GetSelectedBranch());
+                var branch = GitRefName.GetFullBranchName(module.GetSelectedBranch());
 
                 _NO_TRANSLATE_lblLinkCreatePull.Text = repoUrl +
                     ((string.IsNullOrEmpty(branch) || branch.Equals(DetachedHeadParser.DetachedBranch)) ?

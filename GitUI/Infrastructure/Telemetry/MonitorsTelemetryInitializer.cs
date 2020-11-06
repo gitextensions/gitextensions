@@ -1,5 +1,5 @@
 ﻿using System.Windows.Forms;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils.UI;
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.Extensibility;
 

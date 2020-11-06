@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
+using GitExtensions.Core.Utils;
 using JetBrains.Annotations;
 
 namespace GitUI

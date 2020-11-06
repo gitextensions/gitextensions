@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Git;
 using GitExtensions.Core.Module;
-using GitUI;
+using GitExtensions.Core.Utils.UI;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 

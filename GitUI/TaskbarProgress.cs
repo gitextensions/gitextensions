@@ -1,5 +1,6 @@
 using System;
 using GitCommands.Utils;
+using GitExtensions.Core.Utils;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI

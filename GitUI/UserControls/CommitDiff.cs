@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using GitExtensions.Core.Module;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils.UI;
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls

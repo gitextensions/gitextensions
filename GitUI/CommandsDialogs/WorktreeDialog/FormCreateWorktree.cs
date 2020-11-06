@@ -4,8 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Core.Commands;
 using GitExtensions.Core.Module;
-using GitExtUtils;
+using GitExtensions.Core.Utils.UI;
 
 namespace GitUI.CommandsDialogs.WorktreeDialog
 {

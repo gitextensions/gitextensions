@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommonTestUtils;
 using GitCommands;
+using GitExtensions.Core.Utils.UI;
 using GitUI;
 using NUnit.Framework;
 

@@ -7,8 +7,8 @@ using System.Windows.Forms;
 using GitCommands;
 using GitExtensions.Core.Commands;
 using GitExtensions.Core.Commands.Events;
-using GitExtUtils;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Module;
+using GitExtensions.Core.Utils.UI;
 using GitFlow.Properties;
 using ResourceManager;
 

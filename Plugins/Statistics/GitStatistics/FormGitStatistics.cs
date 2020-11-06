@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtensions.Core.Module;
+using GitExtensions.Core.Utils.UI;
 using GitExtUtils.GitUI;
 using GitStatistics.PieChart;
 using GitUI;

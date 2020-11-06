@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Submodules;
+using GitExtensions.Core.Utils.UI;
 using GitUI.Properties;
 using Microsoft.VisualStudio.Threading;
 

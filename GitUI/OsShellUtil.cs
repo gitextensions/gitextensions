@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Windows.Forms;
+using GitExtensions.Core.Utils;
 using Microsoft.WindowsAPICodePack.Dialogs;
 namespace GitUI
 {
@@ -45,7 +46,7 @@ namespace GitUI
         /// <returns>The path selected by the user, or null if the user cancels the dialog.</returns>
         public static string PickFolder(IWin32Window ownerWindow, string selectedPath = null)
         {
-            if (GitCommands.Utils.EnvUtils.IsWindowsVistaOrGreater())
+            if (EnvUtils.IsWindowsVistaOrGreater())
             {
                 // use Vista+ dialog
                 using (var dialog = new CommonOpenFileDialog())

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommonTestUtils;
+using GitExtensions.Core.Utils.UI;
 using GitUI;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;

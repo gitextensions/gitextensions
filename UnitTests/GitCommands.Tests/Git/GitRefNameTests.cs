@@ -1,4 +1,4 @@
-﻿using GitCommands;
+﻿using GitExtensions.Core.Module;
 using NUnit.Framework;
 
 namespace GitCommandsTests.Git

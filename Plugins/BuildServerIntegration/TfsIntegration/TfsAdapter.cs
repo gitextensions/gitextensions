@@ -11,6 +11,7 @@ using GitCommands.Utils;
 using GitExtensions.Core.Build;
 using GitExtensions.Core.Module;
 using GitExtensions.Core.Settings;
+using GitExtensions.Core.Utils;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using JetBrains.Annotations;
 using TfsInterop.Interface;

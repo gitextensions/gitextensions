@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
+using GitExtensions.Core.Utils.UI;
 using GitUI;
 using Microsoft.VisualStudio.Composition;
 

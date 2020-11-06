@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GitExtensions.Core.Module;
+using GitExtensions.Core.Utils.UI;
 using GitUI;
 using Microsoft.VisualStudio.Threading;
 

@@ -12,6 +12,7 @@ using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitExtensions.Core.Commands.Events;
 using GitExtensions.Core.Module;
+using GitExtensions.Core.Utils.UI;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;

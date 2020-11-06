@@ -14,7 +14,7 @@ using GitCommands.Git.Commands;
 using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Core.Module;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils.UI;
 using GitUI.HelperDialogs;
 using GitUI.Script;
 using JetBrains.Annotations;

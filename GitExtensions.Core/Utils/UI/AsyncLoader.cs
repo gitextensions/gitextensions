@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using GitUI;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
-namespace GitCommands
+namespace GitExtensions.Core.Utils.UI
 {
     public sealed class AsyncLoader : IDisposable
     {

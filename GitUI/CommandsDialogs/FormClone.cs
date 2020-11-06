@@ -11,7 +11,7 @@ using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Core.Module;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils.UI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using ResourceManager;

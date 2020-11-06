@@ -2,8 +2,8 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitExtensions.Core.Settings;
+using GitExtensions.Core.Utils.UI;
 using GitExtensions.Extensibility.Settings;
-using GitExtUtils.GitUI;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {

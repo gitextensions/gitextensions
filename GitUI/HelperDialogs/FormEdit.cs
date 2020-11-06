@@ -1,4 +1,5 @@
 ﻿using System;
+using GitExtensions.Core.Utils.UI;
 
 namespace GitUI.HelperDialogs
 {

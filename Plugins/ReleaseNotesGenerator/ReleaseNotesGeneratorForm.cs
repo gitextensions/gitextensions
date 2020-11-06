@@ -4,9 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
-using GitCommands.Utils;
+using GitExtensions.Core.Commands;
 using GitExtensions.Core.Commands.Events;
-using GitExtUtils;
+using GitExtensions.Core.Utils;
 using ResourceManager;
 
 namespace ReleaseNotesGenerator

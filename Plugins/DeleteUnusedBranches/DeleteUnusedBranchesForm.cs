@@ -9,10 +9,8 @@ using DeleteUnusedBranches.Properties;
 using GitCommands;
 using GitExtensions.Core.Commands;
 using GitExtensions.Core.Module;
+using GitExtensions.Core.Utils.UI;
 using GitExtensions.Extensibility;
-using GitExtUtils;
-using GitExtUtils.GitUI;
-using GitUI;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 namespace DeleteUnusedBranches

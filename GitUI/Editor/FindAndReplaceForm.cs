@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitExtensions.Core.Utils.UI;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using JetBrains.Annotations;

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using FluentAssertions;
+using GitExtensions.Core.Utils.UI;
 using GitExtUtils.GitUI;
 using GitUI;
 using NSubstitute;

@@ -3,6 +3,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Threading;
 using System.Threading.Tasks;
+using GitExtensions.Core.Utils.UI;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.UserControls

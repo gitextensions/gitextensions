@@ -6,7 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtensions.Core.Module;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils.UI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using GitUI.Theming;

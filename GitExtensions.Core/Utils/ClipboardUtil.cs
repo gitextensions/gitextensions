@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using JetBrains.Annotations;
 
-namespace GitExtUtils
+namespace GitExtensions.Core.Utils
 {
     public static class ClipboardUtil
     {

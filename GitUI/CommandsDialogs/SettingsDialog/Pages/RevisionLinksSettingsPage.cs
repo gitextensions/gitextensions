@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands.ExternalLinks;
 using GitExtensions.Core.Module;
-using GitExtUtils.GitUI;
+using GitExtensions.Core.Utils.UI;
 using GitUI.CommandsDialogs.SettingsDialog.RevisionLinks;
 using JetBrains.Annotations;
 using ResourceManager;

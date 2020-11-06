@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using ExCSS;
 using GitCommands;
+using GitExtensions.Core.Utils;
 using GitExtUtils.GitUI.Theming;
 
 namespace GitUI.Theming

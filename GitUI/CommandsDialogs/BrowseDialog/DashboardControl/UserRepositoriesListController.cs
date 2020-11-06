@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Core.Utils.UI;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {

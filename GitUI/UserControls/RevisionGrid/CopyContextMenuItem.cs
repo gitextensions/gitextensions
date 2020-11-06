@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitExtensions.Core.Module;
-using GitExtUtils;
+using GitExtensions.Core.Utils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using JetBrains.Annotations;

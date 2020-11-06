@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using GitExtensions.Core.Commands;
 using GitExtensions.Core.Module;
-using GitExtUtils;
+using GitExtensions.Core.Utils.UI;
 using GitUI.HelperDialogs;
 using ResourceManager;
 

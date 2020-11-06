@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using GitCommands.Utils;
+using GitExtensions.Core.Utils;
 
 namespace GitCommands.Git.Extensions
 {
