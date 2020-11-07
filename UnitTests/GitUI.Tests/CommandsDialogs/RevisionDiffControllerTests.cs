@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using GitCommands;
 using GitCommands.Git;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;
@@ -32,6 +31,7 @@ namespace GitUITests.CommandsDialogs
             bool allFilesExist = true,
             bool allFilesOrUntrackedDirectoriesExist = false,
             bool isAnyTracked = true,
+            bool isDeleted = false,
             bool isAnySubmodule = false)
         {
             return new ContextMenuSelectionInfo(selectedRevision,
@@ -44,6 +44,7 @@ namespace GitUITests.CommandsDialogs
                 allFilesExist,
                 allFilesOrUntrackedDirectoriesExist,
                 isAnyTracked,
+                isDeleted,
                 isAnySubmodule);
         }
 
@@ -274,6 +275,17 @@ namespace GitUITests.CommandsDialogs
             var selectionInfo = CreateContextMenuSelectionInfo(rev, isStatusOnly: t);
             _controller.ShouldShowMenuCopyFileName(selectionInfo).Should().Be(!t);
             _controller.ShouldShowMenuShowInFolder(selectionInfo).Should().Be(!t);
+            _controller.ShouldShowMenuShowInFileTree(selectionInfo).Should().Be(!t);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void BrowseDiff_ShowInFileTree(bool t)
+        {
+            var rev = new GitRevision(ObjectId.Random());
+            var selectionInfo = CreateContextMenuSelectionInfo(rev, isDeleted: t);
+            _controller.ShouldShowMenuCopyFileName(selectionInfo).Should().Be(true);
+            _controller.ShouldShowMenuShowInFolder(selectionInfo).Should().Be(true);
             _controller.ShouldShowMenuShowInFileTree(selectionInfo).Should().Be(!t);
         }
 

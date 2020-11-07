@@ -39,6 +39,7 @@ namespace GitUI.CommandsDialogs
             bool allFilesExist,
             bool allFilesOrUntrackedDirectoriesExist,
             bool isAnyTracked,
+            bool isDeleted,
             bool isAnySubmodule)
         {
             SelectedRevision = selectedRevision;
@@ -51,6 +52,7 @@ namespace GitUI.CommandsDialogs
             AllFilesExist = allFilesExist;
             AllFilesOrUntrackedDirectoriesExist = allFilesOrUntrackedDirectoriesExist;
             IsAnyTracked = isAnyTracked;
+            IsDeleted = isDeleted;
             IsAnySubmodule = isAnySubmodule;
         }
 
@@ -65,6 +67,7 @@ namespace GitUI.CommandsDialogs
         public bool AllFilesExist { get; }
         public bool AllFilesOrUntrackedDirectoriesExist { get; }
         public bool IsAnyTracked { get; }
+        public bool IsDeleted { get; }
         public bool IsAnySubmodule { get; }
     }
 
@@ -155,6 +158,7 @@ namespace GitUI.CommandsDialogs
         {
             return selectionInfo.SelectedGitItemCount == 1
                 && !(selectionInfo.SelectedRevision?.IsArtificial ?? false)
+                && !selectionInfo.IsDeleted
                 && !selectionInfo.IsStatusOnly;
         }
 
