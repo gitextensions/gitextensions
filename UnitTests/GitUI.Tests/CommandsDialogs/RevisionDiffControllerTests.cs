@@ -31,6 +31,7 @@ namespace GitUITests.CommandsDialogs
             bool allFilesExist = true,
             bool allFilesOrUntrackedDirectoriesExist = false,
             bool isAnyTracked = true,
+            bool supportPatches = true,
             bool isDeleted = false,
             bool isAnySubmodule = false)
         {
@@ -44,6 +45,7 @@ namespace GitUITests.CommandsDialogs
                 allFilesExist,
                 allFilesOrUntrackedDirectoriesExist,
                 isAnyTracked,
+                supportPatches,
                 isDeleted,
                 isAnySubmodule);
         }
@@ -254,6 +256,17 @@ namespace GitUITests.CommandsDialogs
             var rev = new GitRevision(ObjectId.Random());
             var selectionInfo = CreateContextMenuSelectionInfo(rev, isDisplayOnlyDiff: true);
             _controller.ShouldShowMenuOpenRevision(selectionInfo).Should().BeFalse();
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void BrowseDiff_SupportLinePatches(bool t)
+        {
+            var rev = new GitRevision(ObjectId.Random());
+            var selectionInfo = CreateContextMenuSelectionInfo(rev, supportPatches: t);
+            _controller.ShouldShowMenuSaveAs(selectionInfo).Should().BeTrue();
+            _controller.ShouldShowMenuCherryPick(selectionInfo).Should().Be(t);
+            _controller.ShouldShowMenuOpenRevision(selectionInfo).Should().BeTrue();
         }
 
         [TestCase(true)]
