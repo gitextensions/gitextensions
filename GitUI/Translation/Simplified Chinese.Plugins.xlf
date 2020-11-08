@@ -275,34 +275,6 @@
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="zh-Hans">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Create local tracking branches</source>
-        <target>创建本地跟踪分支</target>
-        
-      </trans-unit>
-      <trans-unit id="button1.Text">
-        <source>Create local tracking branches</source>
-        <target>创建本地跟踪分支</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Remote to create tracking branches for</source>
-        <target>创建远程存储库跟踪分支</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="zh-Hans">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Create local tracking branches</source>
-        <target>创建本地跟踪分支</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="zh-Hans">
     <body>
       <trans-unit id="$this.Text">

@@ -275,34 +275,6 @@
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="nl">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Create local tracking branches</source>
-        <target>Maak lokale tracking branches</target>
-        
-      </trans-unit>
-      <trans-unit id="button1.Text">
-        <source>Create local tracking branches</source>
-        <target>Maak lokale tracking branches</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Remote to create tracking branches for</source>
-        <target>Remote waarvoor tracking branches gemaakt moeten worden</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="nl">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Create local tracking branches</source>
-        <target>Maak lokale tracking branches</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="nl">
     <body>
       <trans-unit id="$this.Text">

@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Windows.Forms;
+using CreateLocalBranches.Properties;
 using GitExtensions.Core.Commands;
 using GitExtensions.Core.Commands.Events;
 
 namespace CreateLocalBranches
 {
-    public partial class CreateLocalBranchesForm : ResourceManager.GitExtensionsFormBase
+    public partial class CreateLocalBranchesForm : Form
     {
         private readonly GitUIEventArgs _gitUiCommands;
 
         public CreateLocalBranchesForm(GitUIEventArgs gitUiCommands)
         {
             InitializeComponent();
-            InitializeComplete();
+
+            Text = Strings.FormText;
+            button1.Text = Strings.Button1Text;
+            label1.Text = Strings.Label1Text;
 
             _gitUiCommands = gitUiCommands;
         }
