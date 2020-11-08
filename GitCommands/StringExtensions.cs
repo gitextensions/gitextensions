@@ -179,18 +179,18 @@ namespace System
         }
 
         /// <summary>
-        /// Quotes this string with the specified <paramref name="quotationMark"/>
+        /// Quotes this string with the specified <paramref name="q"/>
         /// </summary>
         [Pure]
         [NotNull]
-        public static string Quote([CanBeNull] this string s, [NotNull] string quotationMark = "\"")
+        public static string Quote([CanBeNull] this string s, [NotNull] string q = "\"")
         {
             if (s == null)
             {
                 return "";
             }
 
-            return quotationMark + s + quotationMark;
+            return $"{q}{s.Replace(q, "\\" + q)}{q}";
         }
 
         /// <summary>

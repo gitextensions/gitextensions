@@ -188,6 +188,24 @@ namespace GitCommandsTests.Helpers
             PathUtil.NormalizePath(path).Should().Be(expected);
         }
 
+        [TestCase(@"C:\work\t.txt", "whatever", @"C:\work\t.txt\whatever")]
+        [TestCase(@"C:\wor""k\t.txt", "whatever", null)]
+        [TestCase(@"\\WSL$\Ubuntu\home\jack\.\work\", "whatever", @"\\WSL$\Ubuntu\home\jack\.\work\whatever")]
+        public void Combine(string path1, string path2, string expected)
+        {
+            PathUtil.Combine(path1, path2).Should().Be(expected);
+        }
+
+        [TestCase(@"C:\work\t.txt", @".txt")]
+        [TestCase(@"C:\work\t.", @"")]
+        [TestCase(@"work/t.bmp", @".bmp")]
+        [TestCase(@"work""/t.bmp", @"")]
+        [TestCase(@"\\WSL$\Ubuntu\home\jack\.\work", @"")]
+        public void GetExtension(string path, string expected)
+        {
+            PathUtil.GetExtension(path).Should().Be(expected);
+        }
+
         [TestCase(@"C:\WORK\GitExtensions\", @"C:\WORK\GitExtensions\")]
         [TestCase(@"\\my-pc\Work\GitExtensions\", @"\\my-pc\Work\GitExtensions\")]
         [TestCase(@"\\wsl$\Ubuntu\home\jack\work\", @"\\wsl$\Ubuntu\home\jack\work\")]

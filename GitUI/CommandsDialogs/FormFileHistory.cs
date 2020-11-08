@@ -446,8 +446,13 @@ namespace GitUI.CommandsDialogs
                     orgFileName = FileName;
                 }
 
-                string fullName = _fullPathResolver.Resolve(orgFileName.ToNativePath());
+                string fullName = _fullPathResolver.Resolve(orgFileName);
+                if (string.IsNullOrWhiteSpace(fullName))
+                {
+                    return;
+                }
 
+                fullName = fullName.ToNativePath();
                 using (var fileDialog = new SaveFileDialog
                 {
                     InitialDirectory = Path.GetDirectoryName(fullName),

@@ -41,7 +41,7 @@ namespace GitCommandsTests
         public void GetEnvironmentValidPaths_quoted()
         {
             var paths = GetValidPaths().Concat(GetInvalidPaths());
-            var quotedPaths = paths.Select(path => path.Quote(" ")).Select(path => path.Quote());
+            var quotedPaths = paths.Select(path => path.Quote());
             string pathVariable = string.Join(_separator, quotedPaths);
             _environment.GetEnvironmentVariable("PATH").Returns(pathVariable);
 

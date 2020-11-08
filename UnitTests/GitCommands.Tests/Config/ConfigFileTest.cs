@@ -54,19 +54,6 @@ namespace GitCommandsTests.Config
             return content.ToString();
         }
 
-        private void AddConfigValue(string cfgFile, string section, string value)
-        {
-            var args = new GitArgumentBuilder("config")
-            {
-                "-f",
-                cfgFile.Quote(),
-                "--add",
-                section,
-                value
-            };
-            Module.GitExecutable.GetOutput(args);
-        }
-
         private string GetConfigValue(string cfgFile, string key)
         {
             var args = new GitArgumentBuilder("config")
@@ -74,7 +61,9 @@ namespace GitCommandsTests.Config
                 "-f",
                 cfgFile.Quote(),
                 "--get",
-                key.Quote()
+
+                // Quote the key without unescaping internal quotes
+                $"\"{key}\""
             };
             return Module.GitExecutable.GetOutput(args).TrimEnd('\n');
         }

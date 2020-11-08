@@ -21,9 +21,12 @@ namespace GitCommandsTests
         [TestCase(null)]
         [TestCase("")]
         [TestCase(" ")]
-        public void Resolve_should_throw_if_path_null_or_empty(string path)
+
+        // A few samples from Path.GetInvalidFileNameChars() and Path.GetInvalidPathChars()
+        [TestCase("\"\r\t*\\|<>")]
+        public void Resolve_should_return_null_if_path_null_or_illegal_chars(string path)
         {
-            ((Action)(() => _resolver.Resolve(path))).Should().Throw<ArgumentNullException>();
+            _resolver.Resolve(path).Should().BeNull();
         }
 
         [TestCase(@"c:\")]

@@ -567,7 +567,7 @@ namespace GitUI.Editor
             {
                 // File system access for other than Worktree,
                 // to handle that git-status does not detect details for untracked (git-diff --no-index will not give info)
-                var fullPath = Path.Combine(Module.WorkingDir, file.Name);
+                var fullPath = PathUtil.Combine(Module.WorkingDir, file.Name);
                 if (Directory.Exists(fullPath) && GitModule.IsValidGitWorkingDir(fullPath))
                 {
                     isSubmodule = true;
@@ -613,7 +613,7 @@ namespace GitUI.Editor
         /// <returns>Task</returns>
         public Task ViewFileAsync(string fileName, bool isSubmodule = false, [CanBeNull] Action openWithDifftool = null)
         {
-            string fullPath = Path.GetFullPath(_fullPathResolver.Resolve(fileName));
+            string fullPath = _fullPathResolver.Resolve(fileName);
 
             if (isSubmodule && !GitModule.IsValidGitWorkingDir(fullPath))
             {
@@ -828,7 +828,6 @@ namespace GitUI.Editor
         {
             bool changePhysicalFile = (viewMode == ViewMode.Diff || viewMode == ViewMode.FixedDiff)
                                       && !Module.IsBareRepository()
-                                      && !string.IsNullOrWhiteSpace(fileName)
                                       && File.Exists(_fullPathResolver.Resolve(fileName));
 
             cherrypickSelectedLinesToolStripMenuItem.Visible = changePhysicalFile;
@@ -879,10 +878,11 @@ namespace GitUI.Editor
             {
                 try
                 {
-                    var file = GetFileInfo(fileName);
+                    var resolvedPath = _fullPathResolver.Resolve(fileName);
 
-                    if (file.Exists)
+                    if (File.Exists(resolvedPath))
                     {
+                        var file = new FileInfo(resolvedPath);
                         return file.Length;
                     }
                 }
@@ -1073,12 +1073,6 @@ namespace GitUI.Editor
                     text => ThreadHelper.JoinableTaskFactory.Run(
                         () => ViewTextAsync(fileName, text, openWithDifftool, checkGitAttributes: true)));
             }
-        }
-
-        private FileInfo GetFileInfo(string fileName)
-        {
-            var resolvedPath = _fullPathResolver.Resolve(fileName);
-            return new FileInfo(resolvedPath);
         }
 
         private static string ToHexDump(byte[] bytes, StringBuilder str, int columnWidth = 8, int columnCount = 2)

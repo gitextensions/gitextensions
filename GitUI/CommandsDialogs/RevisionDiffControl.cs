@@ -537,7 +537,7 @@ namespace GitUI.CommandsDialogs
             foreach (var item in DiffFiles.SelectedItems)
             {
                 string filePath = _fullPathResolver.Resolve(item.Item.Name);
-                if (FormBrowseUtil.FileOrParentDirectoryExists(filePath))
+                if (filePath != null && FormBrowseUtil.FileOrParentDirectoryExists(filePath))
                 {
                     openContainingFolderToolStripMenuItem.Enabled = true;
                     break;
@@ -979,8 +979,7 @@ namespace GitUI.CommandsDialogs
                 foreach (var item in items)
                 {
                     var path = _fullPathResolver.Resolve(item.Item.Name);
-                    bool isDir = (File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory;
-                    if (isDir)
+                    if (Directory.Exists(path))
                     {
                         Directory.Delete(path, recursive: true);
                     }

@@ -32,6 +32,11 @@ namespace GitCommands
         /// <summary>
         /// Resolves the provided path (folder or file) against the current working directory.
         /// </summary>
+        /// <remarks>
+        /// Behaves similar to the .NET Core 2.1 version that do not throw on paths with illegal
+        /// Windows characters (that could be OK in Git paths or for cross platform) but returns
+        /// null instead of an possible path.
+        /// but </remarks>
         /// <param name="path">Folder or file path to resolve.</param>
         /// <returns>
         /// <paramref name="path" /> if <paramref name="path" /> is rooted; otherwise resolved path from working directory of the current repository.
@@ -41,12 +46,21 @@ namespace GitCommands
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException(nameof(path));
+                return null;
             }
 
-            if (Path.IsPathRooted(path))
+            try
             {
-                return path;
+                if (Path.IsPathRooted(path))
+                {
+                    return path;
+                }
+            }
+            catch (ArgumentException)
+            {
+                // Illegal characters in path.
+                // This is used for Git paths that may not be possible in the host file system
+                return null;
             }
 
             var workingDir = _getWorkingDir();

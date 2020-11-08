@@ -1431,7 +1431,10 @@ namespace GitUI
                     {
                         string fileName = _fullPathResolver.Resolve(item.Item.Name);
 
-                        fileList.Add(fileName.ToNativePath());
+                        if (!string.IsNullOrWhiteSpace(fileName))
+                        {
+                            fileList.Add(fileName.ToNativePath());
+                        }
                     }
 
                     var obj = new DataObject();

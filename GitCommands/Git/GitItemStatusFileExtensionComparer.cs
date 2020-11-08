@@ -28,8 +28,8 @@ namespace GitCommands.Git
 
             var lhsPath = GetPrimarySortingPath(x);
             var rhsPath = GetPrimarySortingPath(y);
-            var lhsExt = Path.GetExtension(lhsPath);
-            var rhsExt = Path.GetExtension(rhsPath);
+            var lhsExt = PathUtil.GetExtension(lhsPath);
+            var rhsExt = PathUtil.GetExtension(rhsPath);
 
             var comparisonResult = StringComparer.InvariantCulture.Compare(lhsExt, rhsExt);
             if (comparisonResult == 0)

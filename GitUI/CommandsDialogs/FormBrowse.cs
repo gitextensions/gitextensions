@@ -2015,6 +2015,12 @@ namespace GitUI.CommandsDialogs
             var fileNames = new StringBuilder();
             foreach (var item in diffFiles.SelectedItems)
             {
+                var path = PathUtil.Combine(module.WorkingDir, item.Item.Name);
+                if (string.IsNullOrWhiteSpace(path))
+                {
+                    continue;
+                }
+
                 // Only use append line when multiple items are selected.
                 // This to make it easier to use the text from clipboard when 1 file is selected.
                 if (fileNames.Length > 0)
@@ -2022,7 +2028,7 @@ namespace GitUI.CommandsDialogs
                     fileNames.AppendLine();
                 }
 
-                fileNames.Append(Path.Combine(module.WorkingDir, item.Item.Name).ToNativePath());
+                fileNames.Append(path.ToNativePath());
             }
 
             ClipboardUtil.TrySetText(fileNames.ToString());
@@ -2423,7 +2429,12 @@ namespace GitUI.CommandsDialogs
 
             foreach (var item in diffFiles.SelectedItems)
             {
-                string filePath = Path.Combine(module.WorkingDir, item.Item.Name.ToNativePath());
+                string filePath = PathUtil.Combine(module.WorkingDir, item.Item.Name.ToNativePath());
+                if (string.IsNullOrWhiteSpace(filePath))
+                {
+                    continue;
+                }
+
                 FormBrowseUtil.ShowFileOrParentFolderInFileExplorer(filePath);
             }
         }

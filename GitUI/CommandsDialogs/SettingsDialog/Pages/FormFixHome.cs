@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     try
                     {
                         if (!string.IsNullOrEmpty(candidate) &&
-                            File.Exists(Path.Combine(candidate, ".gitconfig")))
+                            File.Exists(PathUtil.Combine(candidate, ".gitconfig")))
                         {
                             return true;
                         }
@@ -138,7 +138,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             try
             {
                 string userHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
-                if (!string.IsNullOrEmpty(userHomeDir) && File.Exists(Path.Combine(userHomeDir, ".gitconfig")))
+                if (!string.IsNullOrEmpty(userHomeDir) && File.Exists(PathUtil.Combine(userHomeDir, ".gitconfig")))
                 {
                     MessageBox.Show(this, string.Format(_gitconfigFoundHome.Text, userHomeDir), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     defaultHome.Checked = true;
@@ -156,7 +156,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 var path = Environment.GetEnvironmentVariable("HOMEDRIVE") +
                            Environment.GetEnvironmentVariable("HOMEPATH");
-                if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, ".gitconfig")))
+                if (!string.IsNullOrEmpty(path) && File.Exists(PathUtil.Combine(path, ".gitconfig")))
                 {
                     MessageBox.Show(this, string.Format(_gitconfigFoundHomedrive.Text, path), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     defaultHome.Checked = true;
@@ -173,7 +173,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             try
             {
                 var path = Environment.GetEnvironmentVariable("USERPROFILE");
-                if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, ".gitconfig")))
+                if (!string.IsNullOrEmpty(path) && File.Exists(PathUtil.Combine(path, ".gitconfig")))
                 {
                     MessageBox.Show(this, string.Format(_gitconfigFoundUserprofile.Text, path), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     userprofileHome.Checked = true;
@@ -190,7 +190,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             try
             {
                 var path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-                if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, ".gitconfig")))
+                if (!string.IsNullOrEmpty(path) && File.Exists(PathUtil.Combine(path, ".gitconfig")))
                 {
                     MessageBox.Show(this, string.Format(_gitconfigFoundPersonalFolder.Text, Environment.GetFolderPath(Environment.SpecialFolder.Personal)),
                         "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
