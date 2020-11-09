@@ -335,6 +335,8 @@ namespace GitUI.CommandsDialogs
             bool isAnyTracked = selectedItems.Any(item => item.Item.IsTracked);
             bool isAnyIndex = selectedItems.Any(item => item.Item.Staged == StagedStatus.Index);
             bool isAnyWorkTree = selectedItems.Any(item => item.Item.Staged == StagedStatus.WorkTree);
+            bool supportPatches = selectedGitItemCount == 1 && DiffText.HasAnyPatches();
+            bool isDeleted = selectedItems.Any(item => item.Item.IsDeleted);
             bool isAnySubmodule = selectedItems.Any(item => item.Item.IsSubmodule);
             (bool allFilesExist, bool allFilesOrUntrackedDirectoriesExist) = FileOrUntrackedDirExists(selectedItems, _fullPathResolver);
 
@@ -349,6 +351,8 @@ namespace GitUI.CommandsDialogs
                 allFilesExist: allFilesExist,
                 allFilesOrUntrackedDirectoriesExist: allFilesOrUntrackedDirectoriesExist,
                 isAnyTracked: isAnyTracked,
+                supportPatches: supportPatches,
+                isDeleted: isDeleted,
                 isAnySubmodule: isAnySubmodule);
             return selectionInfo;
 

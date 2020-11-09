@@ -39,6 +39,8 @@ namespace GitUI.CommandsDialogs
             bool allFilesExist,
             bool allFilesOrUntrackedDirectoriesExist,
             bool isAnyTracked,
+            bool supportPatches,
+            bool isDeleted,
             bool isAnySubmodule)
         {
             SelectedRevision = selectedRevision;
@@ -51,6 +53,8 @@ namespace GitUI.CommandsDialogs
             AllFilesExist = allFilesExist;
             AllFilesOrUntrackedDirectoriesExist = allFilesOrUntrackedDirectoriesExist;
             IsAnyTracked = isAnyTracked;
+            SupportPatches = supportPatches;
+            IsDeleted = isDeleted;
             IsAnySubmodule = isAnySubmodule;
         }
 
@@ -65,6 +69,8 @@ namespace GitUI.CommandsDialogs
         public bool AllFilesExist { get; }
         public bool AllFilesOrUntrackedDirectoriesExist { get; }
         public bool IsAnyTracked { get; }
+        public bool SupportPatches { get; }
+        public bool IsDeleted { get; }
         public bool IsAnySubmodule { get; }
     }
 
@@ -102,8 +108,12 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuCherryPick(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.SelectedGitItemCount == 1 && !selectionInfo.IsAnySubmodule
-                && !selectionInfo.IsDisplayOnlyDiff && !selectionInfo.IsBareRepository
+            return selectionInfo.SelectedGitItemCount == 1
+                && !selectionInfo.IsAnySubmodule
+                && !selectionInfo.IsDisplayOnlyDiff
+                && !selectionInfo.IsBareRepository
+                && selectionInfo.AllFilesExist
+                && selectionInfo.SupportPatches
                 && !(selectionInfo.SelectedRevision?.IsArtificial ?? false);
         }
 
@@ -155,6 +165,7 @@ namespace GitUI.CommandsDialogs
         {
             return selectionInfo.SelectedGitItemCount == 1
                 && !(selectionInfo.SelectedRevision?.IsArtificial ?? false)
+                && !selectionInfo.IsDeleted
                 && !selectionInfo.IsStatusOnly;
         }
 

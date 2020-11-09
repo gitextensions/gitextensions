@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using GitCommands;
 using GitCommands.Git;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;
@@ -32,6 +31,8 @@ namespace GitUITests.CommandsDialogs
             bool allFilesExist = true,
             bool allFilesOrUntrackedDirectoriesExist = false,
             bool isAnyTracked = true,
+            bool supportPatches = true,
+            bool isDeleted = false,
             bool isAnySubmodule = false)
         {
             return new ContextMenuSelectionInfo(selectedRevision,
@@ -44,6 +45,8 @@ namespace GitUITests.CommandsDialogs
                 allFilesExist,
                 allFilesOrUntrackedDirectoriesExist,
                 isAnyTracked,
+                supportPatches,
+                isDeleted,
                 isAnySubmodule);
         }
 
@@ -257,6 +260,17 @@ namespace GitUITests.CommandsDialogs
 
         [TestCase(true)]
         [TestCase(false)]
+        public void BrowseDiff_SupportLinePatches(bool t)
+        {
+            var rev = new GitRevision(ObjectId.Random());
+            var selectionInfo = CreateContextMenuSelectionInfo(rev, supportPatches: t);
+            _controller.ShouldShowMenuSaveAs(selectionInfo).Should().BeTrue();
+            _controller.ShouldShowMenuCherryPick(selectionInfo).Should().Be(t);
+            _controller.ShouldShowMenuOpenRevision(selectionInfo).Should().BeTrue();
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
         public void BrowseDiff_DisplayOnlyDiff(bool t)
         {
             var rev = new GitRevision(ObjectId.Random());
@@ -274,6 +288,17 @@ namespace GitUITests.CommandsDialogs
             var selectionInfo = CreateContextMenuSelectionInfo(rev, isStatusOnly: t);
             _controller.ShouldShowMenuCopyFileName(selectionInfo).Should().Be(!t);
             _controller.ShouldShowMenuShowInFolder(selectionInfo).Should().Be(!t);
+            _controller.ShouldShowMenuShowInFileTree(selectionInfo).Should().Be(!t);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void BrowseDiff_ShowInFileTree(bool t)
+        {
+            var rev = new GitRevision(ObjectId.Random());
+            var selectionInfo = CreateContextMenuSelectionInfo(rev, isDeleted: t);
+            _controller.ShouldShowMenuCopyFileName(selectionInfo).Should().Be(true);
+            _controller.ShouldShowMenuShowInFolder(selectionInfo).Should().Be(true);
             _controller.ShouldShowMenuShowInFileTree(selectionInfo).Should().Be(!t);
         }
 
