@@ -1268,8 +1268,10 @@ namespace GitUI.CommandsDialogs
             SetBranchesPushCheckboxesState(row =>
                 {
                     // Check if the branch is tracked (i.e. not new)
-                    var isNewAtRemote = row.Cells[NewColumn.Name] as DataGridViewTextBoxCell;
-                    return isNewAtRemote != null && isNewAtRemote.Value.ToString() == Strings.No;
+                    var localColumn = row.Cells[LocalColumn.Name] as DataGridViewTextBoxCell;
+                    var remoteColumn = row.Cells[RemoteColumn.Name] as DataGridViewTextBoxCell;
+                    return localColumn != null && remoteColumn != null
+                           && !string.IsNullOrEmpty(localColumn.Value.ToString()) && !string.IsNullOrEmpty(remoteColumn.Value.ToString());
                 });
         }
 
