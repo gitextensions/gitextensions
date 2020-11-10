@@ -2,25 +2,19 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using GitCommands;
 using GitExtensions.Core.Commands;
 using GitExtensions.Core.Commands.Events;
 using GitExtensions.Core.Module;
 using GitExtensions.Core.Settings;
-using ResourceManager;
+using ProxySwitcher.Properties;
 
 namespace ProxySwitcher
 {
-    public partial class ProxySwitcherForm : GitExtensionsFormBase
+    public partial class ProxySwitcherForm : Form
     {
-        private readonly ProxySwitcherPlugin _plugin;
+        private readonly Plugin _plugin;
         private readonly ISettingsSource _settings;
         private readonly IGitModule _gitCommands;
-
-        #region Translation
-        private readonly TranslationString _pluginDescription = new TranslationString("Proxy Switcher");
-        private readonly TranslationString _pleaseSetProxy = new TranslationString("There is no proxy configured. Please set the proxy host in the plugin settings.");
-        #endregion
 
         /// <summary>
         /// Default constructor added to register all strings to be translated
@@ -32,12 +26,17 @@ namespace ProxySwitcher
             InitializeComponent();
         }
 
-        public ProxySwitcherForm(ProxySwitcherPlugin plugin, ISettingsSource settings, GitUIEventArgs gitUiCommands)
+        public ProxySwitcherForm(Plugin plugin, ISettingsSource settings, GitUIEventArgs gitUiCommands)
         {
             InitializeComponent();
-            InitializeComplete();
 
-            Text = _pluginDescription.Text;
+            Text = Strings.FormText;
+            ApplyGlobally_CheckBox.Text = Strings.ApplyGloballyCheckBoxText;
+            GlobalHttpProxy_Label.Text = Strings.GlobalHttpProxyLabelText;
+            LocalHttpProxy_Label.Text = Strings.LocalHttpProxyLabelText;
+            SetProxy_Button.Text = Strings.SetProxyButtonText;
+            UnsetProxy_Button.Text = Strings.UnsetProxyButtonText;
+
             _plugin = plugin;
             _settings = settings;
             _gitCommands = gitUiCommands.GitModule;
@@ -47,7 +46,7 @@ namespace ProxySwitcher
         {
             if (string.IsNullOrEmpty(_plugin.HttpProxy.ValueOrDefault(_settings)))
             {
-                MessageBox.Show(this, _pleaseSetProxy.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Strings.PleaseSetProxyText, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
             }
             else
