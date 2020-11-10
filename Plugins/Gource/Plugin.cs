@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -12,45 +13,26 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 using Gource.Properties;
 using ICSharpCode.SharpZipLib.Zip;
-using ResourceManager;
 
 namespace Gource
 {
     [Export(typeof(IGitPlugin))]
-    public class GourcePlugin : GitPluginBase,
+    public sealed class Plugin : IGitPlugin,
         IGitPluginForRepository,
         IGitPluginConfigurable,
         IGitPluginExecutable,
         IGitPluginForAvatars
     {
-        #region Translation
-        private readonly TranslationString _currentDirectoryIsNotValidGit = new TranslationString("The current directory is not a valid git repository.\n\n" +
-            "Gource can be only be started from a valid git repository.");
-        private readonly TranslationString _resetConfigPath = new TranslationString("Cannot find Gource in the configured path: {0}.\n\n" +
-            "Do you want to reset the configured path?");
-        private readonly TranslationString _gource = new TranslationString("Gource");
-        private readonly TranslationString _doYouWantDownloadGource = new TranslationString("There is no path to Gource configured.\n\n" +
-            "Do you want to automatically download Gource?");
-        private readonly TranslationString _download = new TranslationString("Download");
-        private readonly TranslationString _cannotFindGource = new TranslationString("Cannot find Gource.\n" +
-            "Please download Gource and set the path in the plugins settings dialog.");
-        private readonly TranslationString _bytesDownloaded = new TranslationString("{0} bytes downloaded.");
-        private readonly TranslationString _gourceDownloadedAndUnzipped = new TranslationString("Gource has been downloaded and unzipped.");
-        private readonly TranslationString _downloadingFailed = new TranslationString("Downloading failed.\n" +
-            "Please download Gource and set the path in the plugins settings dialog.");
-        #endregion
+        private readonly StringSetting _gourcePath = new StringSetting("Path to Gource", Strings.GourcePath, string.Empty);
+        private readonly StringSetting _gourceArguments = new StringSetting("Arguments", Strings.GourceArguments, "--hide filenames --user-image-dir \"$(AVATARS)\"");
 
-        public GourcePlugin()
-        {
-            SetNameAndDescription("Gource");
-            Translate();
-            Icon = Resources.IconGource;
-        }
+        public string Name => "Gource";
 
-        private readonly StringSetting _gourcePath = new StringSetting("Path to Gource", "");
-        private readonly StringSetting _gourceArguments = new StringSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
+        public string Description => Strings.Description;
 
-        #region IGitPlugin Members
+        public Image Icon => Images.IconGource;
+
+        public IGitPluginSettingsContainer SettingsContainer { get; set; }
 
         public IEnumerable<ISetting> GetSettings()
         {
@@ -63,21 +45,21 @@ namespace Gource
         {
             if (!args.GitModule.IsValidGitWorkingDir())
             {
-                MessageBox.Show(args.OwnerForm, _currentDirectoryIsNotValidGit.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(args.OwnerForm, Strings.CurrentDirectoryIsNotValidGit, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
-            var pathToGource = _gourcePath.ValueOrDefault(Settings);
+            var pathToGource = _gourcePath.ValueOrDefault(SettingsContainer.GetSettingsSource());
 
             if (!File.Exists(pathToGource))
             {
                 var result = MessageBox.Show(
                     args.OwnerForm,
-                    string.Format(_resetConfigPath.Text, pathToGource), _gource.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    string.Format(Strings.ResetConfigPath, pathToGource), Strings.Gource, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (result == DialogResult.Yes)
                 {
-                    Settings.SetValue(_gourcePath.Name, _gourcePath.DefaultValue, s => s);
+                    SettingsContainer.GetSettingsSource().SetValue(_gourcePath.Name, _gourcePath.DefaultValue, s => s);
                     pathToGource = _gourcePath.DefaultValue;
                 }
             }
@@ -85,14 +67,14 @@ namespace Gource
             if (string.IsNullOrEmpty(pathToGource))
             {
                 if (MessageBox.Show(
-                        args.OwnerForm, _doYouWantDownloadGource.Text, _download.Text,
+                        args.OwnerForm, Strings.DoYouWantDownloadGource, Strings.Download,
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     var gourceUrl = SearchForGourceUrl();
 
                     if (string.IsNullOrEmpty(gourceUrl))
                     {
-                        MessageBox.Show(args.OwnerForm, _cannotFindGource.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(args.OwnerForm, Strings.CannotFindGource, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return false;
                     }
 
@@ -101,36 +83,34 @@ namespace Gource
                     var downloadSize = DownloadFile(gourceUrl, fileName);
                     if (downloadSize > 0)
                     {
-                        MessageBox.Show(string.Format(_bytesDownloaded.Text, downloadSize), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(string.Format(Strings.BytesDownloaded, downloadSize), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         Directory.CreateDirectory(Path.Combine(downloadDir, "gource"));
                         UnZipFiles(fileName, Path.Combine(downloadDir, "gource"), true);
 
                         var newGourcePath = Path.Combine(downloadDir, "gource\\gource.exe");
                         if (File.Exists(newGourcePath))
                         {
-                            MessageBox.Show(args.OwnerForm, _gourceDownloadedAndUnzipped.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(args.OwnerForm, Strings.GourceDownloadedAndUnzipped, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             pathToGource = newGourcePath;
                         }
                     }
                     else
                     {
-                        MessageBox.Show(args.OwnerForm, _downloadingFailed.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(args.OwnerForm, Strings.DownloadingFailed, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
 
-            using var gourceStart = new GourceStart(pathToGource, args, _gourceArguments.ValueOrDefault(Settings), AvatarProvider);
+            using var gourceStart = new GourceStart(pathToGource, args, _gourceArguments.ValueOrDefault(SettingsContainer.GetSettingsSource()), AvatarProvider);
 
             gourceStart.ShowDialog(args.OwnerForm);
-            Settings.SetValue(_gourceArguments.Name, gourceStart.GourceArguments, s => s);
-            Settings.SetValue(_gourcePath.Name, gourceStart.PathToGource, s => s);
+            SettingsContainer.GetSettingsSource().SetValue(_gourceArguments.Name, gourceStart.GourceArguments, s => s);
+            SettingsContainer.GetSettingsSource().SetValue(_gourcePath.Name, gourceStart.PathToGource, s => s);
 
             return false;
         }
 
         public IAvatarProvider AvatarProvider { get; set; }
-
-        #endregion
 
         private static void UnZipFiles(string zipPathAndFile, string outputFolder, bool deleteZipFile)
         {

@@ -9,16 +9,15 @@ using GitExtensions.Core.Avatars;
 using GitExtensions.Core.Commands;
 using GitExtensions.Core.Commands.Events;
 using GitExtensions.Core.Utils.UI;
-using GitUI;
+using Gource.Properties;
 
 namespace Gource
 {
-    public partial class GourceStart : ResourceManager.GitExtensionsFormBase
+    public partial class GourceStart : Form
     {
         public GourceStart(string pathToGource, GitUIEventArgs gitUIArgs, string gourceArguments, IAvatarProvider avatarProvider)
         {
             InitializeComponent();
-            InitializeComplete();
             PathToGource = pathToGource;
             GitUIArgs = gitUIArgs;
             GitWorkingDir = gitUIArgs?.GitModule.WorkingDir;
@@ -28,6 +27,16 @@ namespace Gource
             WorkingDir.Text = GitWorkingDir;
             GourcePath.Text = pathToGource;
             Arguments.Text = GourceArguments;
+
+            Text = Strings.FormText;
+            ArgumentsLabel.Text = Strings.ArgumentsLabel;
+            GourceBrowse.Text = Strings.GourceBrowse;
+            WorkingDirBrowse.Text = Strings.WorkingDirBrowse;
+            button1.Text = Strings.Button1;
+            label1.Text = Strings.Label1;
+            label2.Text = Strings.Label2;
+            linkLabel1.Text = Strings.LinkLabel1;
+            linkLabel2.Text = Strings.LinkLabel2;
         }
 
         private GitUIEventArgs GitUIArgs { get; }
