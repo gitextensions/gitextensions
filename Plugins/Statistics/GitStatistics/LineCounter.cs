@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using GitCommands;
 
 namespace GitStatistics
 {
@@ -54,7 +53,7 @@ namespace GitStatistics
             {
                 foreach (var file in filesToCheck)
                 {
-                    if (extensions.Contains(PathUtil.GetExtension(file)))
+                    if (extensions.Contains(GetExtension(file)))
                     {
                         FileInfo fileInfo;
                         try
@@ -68,6 +67,20 @@ namespace GitStatistics
 
                         yield return fileInfo;
                     }
+                }
+            }
+
+            static string GetExtension(string path)
+            {
+                try
+                {
+                    return Path.GetExtension(path);
+                }
+                catch (ArgumentException)
+                {
+                    // This could return part after a '.' using string commands,
+                    // but wait for .NET Core with this edge case
+                    return string.Empty;
                 }
             }
 

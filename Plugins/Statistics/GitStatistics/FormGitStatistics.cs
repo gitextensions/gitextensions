@@ -6,31 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitCommands;
 using GitExtensions.Core.Module;
 using GitExtensions.Core.Utils.UI;
-using GitExtUtils.GitUI;
 using GitStatistics.PieChart;
-using GitUI;
+using GitStatistics.Properties;
 using Microsoft.VisualStudio.Threading;
-using ResourceManager;
 
 namespace GitStatistics
 {
-    public partial class FormGitStatistics : GitExtensionsFormBase
+    public partial class FormGitStatistics : Form
     {
-        private readonly TranslationString _commits = new TranslationString("{0:N0} Commits");
-        private readonly TranslationString _commitsBy = new TranslationString("{0:N0} Commits by {1}");
-        private readonly TranslationString _linesOfCodeInFiles = new TranslationString("{0:N0} Lines of code in {1} files ({2:P1})");
-        private readonly TranslationString _linesOfCode = new TranslationString("{0:N0} Lines of code");
-        private readonly TranslationString _linesOfCodeP = new TranslationString("{0:N0} Lines of code ({1:P1})");
-        private readonly TranslationString _linesOfTestCode = new TranslationString("{0:N0} Lines of test code");
-        private readonly TranslationString _linesOfTestCodeP = new TranslationString("{0:N0} Lines of test code ({1:P1})");
-        private readonly TranslationString _linesOfProductionCodeP = new TranslationString("{0:N0} Lines of production code ({1:P1})");
-        private readonly TranslationString _blankLinesP = new TranslationString("{0:N0} Blank lines ({1:P1})");
-        private readonly TranslationString _commentLinesP = new TranslationString("{0:N0} Comment lines ({1:P1})");
-        private readonly TranslationString _linesOfDesignerFilesP = new TranslationString("{0:N0} Lines in designer files ({1:P1})");
-
         private readonly string _codeFilePattern;
         private readonly bool _countSubmodules;
         private readonly IGitModule _module;
@@ -80,7 +65,20 @@ namespace GitStatistics
             TotalCommits.Font = TotalLinesOfCode.Font;
             LoadingLabel.Font = TotalLinesOfCode.Font;
 
-            InitializeComplete();
+            Text = Strings.FormText;
+            CommitStatistics.Text = Strings.CommitStatisticsText;
+            LinesOfCodePerLanguageText.Text = Strings.LinesOfCodePerLanguageText;
+            LinesOfCodePerTypeText.Text = Strings.LinesOfCodePerTypeText;
+            LoadingLabel.Text = Strings.LoadingLabelText;
+            TestCodeText.Text = Strings.TestCodeText;
+            TotalCommits.Text = Strings.TotalCommitsText;
+            TotalLinesOfCode.Text = Strings.TotalLinesOfCodeText;
+            TotalLinesOfCode2.Text = Strings.TotalLinesOfCode2Text;
+            TotalLinesOfTestCode.Text = Strings.TotalLinesOfTestCodeText;
+            tabPage1.Text = Strings.TabPage1Text;
+            tabPage2.Text = Strings.TabPage2Text;
+            tabPage3.Text = Strings.TabPage3Text;
+            tabPage4.Text = Strings.TabPage4Text;
         }
 
         private void FormGitStatisticsSizeChanged(object sender, EventArgs e)
@@ -108,19 +106,19 @@ namespace GitStatistics
 
                     await this.SwitchToMainThreadAsync();
 
-                    TotalCommits.Text = string.Format(_commits.Text, totalCommits);
+                    TotalCommits.Text = string.Format(Strings.CommitsText, totalCommits);
 
                     var builder = new StringBuilder();
 
                     var commitCountValues = new decimal[commitsPerUser.Count];
                     var commitCountLabels = new string[commitsPerUser.Count];
                     var n = 0;
-                    foreach (var (user, commits) in commitsPerUser)
+                    foreach (var item in commitsPerUser)
                     {
-                        builder.AppendLine($"{commits:N0} {user}");
+                        builder.AppendLine($"{item.Value:N0} {item.Key}");
 
-                        commitCountValues[n] = commits;
-                        commitCountLabels[n] = string.Format(_commitsBy.Text, commits, user);
+                        commitCountValues[n] = item.Value;
+                        commitCountLabels[n] = string.Format(Strings.CommitsByText, item.Value, item.Key);
                         n++;
                     }
 
@@ -176,7 +174,7 @@ namespace GitStatistics
             {
                 var submodules = _module.GetSubmodulesInfo()
                     .Where(submodule => submodule != null)
-                    .Select(submodule => new GitModule(Path.Combine(_module.WorkingDir, submodule.LocalPath)));
+                    .Select(submodule => _module.GetSubmodule(submodule.Name));
 
                 foreach (var submodule in submodules)
                 {
@@ -211,12 +209,12 @@ namespace GitStatistics
 
             var n = 0;
             var linesOfCodePerLanguageText = new StringBuilder();
-            foreach (var (extension, loc) in linesOfCodePerExtension)
+            foreach (var item in linesOfCodePerExtension)
             {
-                var percent = (double)loc / _lineCounter.CodeLineCount;
-                var line = string.Format(_linesOfCodeInFiles.Text, loc, extension, percent);
+                var percent = (double)item.Value / _lineCounter.CodeLineCount;
+                var line = string.Format(Strings.LinesOfCodeInFilesText, item.Value, item.Key, percent);
                 linesOfCodePerLanguageText.AppendLine(line);
-                extensionValues[n] = loc;
+                extensionValues[n] = item.Value;
                 extensionLabels[n] = line;
                 n++;
             }
@@ -232,7 +230,7 @@ namespace GitStatistics
         private void UpdateUI(LineCounter lineCounter, string linesOfCodePerLanguageText, decimal[] extensionValues,
                               string[] extensionLabels)
         {
-            TotalLinesOfTestCode.Text = string.Format(_linesOfTestCode.Text, lineCounter.TestCodeLineCount);
+            TotalLinesOfTestCode.Text = string.Format(Strings.LinesOfTestCodeText, lineCounter.TestCodeLineCount);
 
             TestCodePie.SetValues(new decimal[]
                 {
@@ -245,12 +243,12 @@ namespace GitStatistics
             TestCodePie.ToolTips =
                 new[]
                     {
-                        string.Format(_linesOfTestCodeP.Text, lineCounter.TestCodeLineCount, percentTest),
-                        string.Format(_linesOfProductionCodeP.Text, lineCounter.CodeLineCount - lineCounter.TestCodeLineCount, percentProd)
+                        string.Format(Strings.LinesOfTestCodePText, lineCounter.TestCodeLineCount, percentTest),
+                        string.Format(Strings.LinesOfProductionCodePText, lineCounter.CodeLineCount - lineCounter.TestCodeLineCount, percentProd)
                     };
 
-            TestCodeText.Text = string.Format(_linesOfTestCodeP.Text, lineCounter.TestCodeLineCount, percentTest) + Environment.NewLine +
-                string.Format(_linesOfProductionCodeP.Text, lineCounter.CodeLineCount - lineCounter.TestCodeLineCount, percentProd);
+            TestCodeText.Text = string.Format(Strings.LinesOfTestCodePText, lineCounter.TestCodeLineCount, percentTest) + Environment.NewLine +
+                string.Format(Strings.LinesOfProductionCodePText, lineCounter.CodeLineCount - lineCounter.TestCodeLineCount, percentProd);
 
             var percentBlank = (double)lineCounter.BlankLineCount / lineCounter.TotalLineCount;
             var percentComments = (double)lineCounter.CommentLineCount / lineCounter.TotalLineCount;
@@ -267,10 +265,10 @@ namespace GitStatistics
             LinesOfCodePie.ToolTips =
                 new[]
                     {
-                        string.Format(_blankLinesP.Text, lineCounter.BlankLineCount, percentBlank),
-                        string.Format(_commentLinesP.Text, lineCounter.CommentLineCount, percentComments),
-                        string.Format(_linesOfCodeP.Text, lineCounter.CodeLineCount, percentCode),
-                        string.Format(_linesOfDesignerFilesP.Text, lineCounter.DesignerLineCount, percentDesigner)
+                        string.Format(Strings.BlankLinesPText, lineCounter.BlankLineCount, percentBlank),
+                        string.Format(Strings.CommentLinesPText, lineCounter.CommentLineCount, percentComments),
+                        string.Format(Strings.LinesOfCodePText, lineCounter.CodeLineCount, percentCode),
+                        string.Format(Strings.LinesOfDesignerFilesPText, lineCounter.DesignerLineCount, percentDesigner)
                     };
 
             LinesOfCodePerTypeText.Text = string.Join(Environment.NewLine, LinesOfCodePie.ToolTips);
@@ -280,7 +278,7 @@ namespace GitStatistics
             LinesOfCodeExtensionPie.SetValues(extensionValues);
             LinesOfCodeExtensionPie.ToolTips = extensionLabels;
 
-            TotalLinesOfCode2.Text = TotalLinesOfCode.Text = string.Format(_linesOfCode.Text, lineCounter.CodeLineCount);
+            TotalLinesOfCode2.Text = TotalLinesOfCode.Text = string.Format(Strings.LinesOfCodeText, lineCounter.CodeLineCount);
         }
 
         private void FormGitStatisticsShown(object sender, EventArgs e)

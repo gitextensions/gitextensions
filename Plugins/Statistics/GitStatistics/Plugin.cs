@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Drawing;
 using GitExtensions.Core.Commands.Events;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 using GitStatistics.Properties;
-using ResourceManager;
 
 namespace GitStatistics
 {
     [Export(typeof(IGitPlugin))]
-    public class GitStatisticsPlugin : GitPluginBase,
+    public sealed class Plugin : IGitPlugin,
         IGitPluginForRepository,
         IGitPluginConfigurable,
         IGitPluginExecutable
@@ -18,16 +18,17 @@ namespace GitStatistics
             "*.c;*.cpp;*.cc;*.cxx;*.h;*.hpp;*.hxx;*.inl;*.idl;*.asm;*.inc;*.cs;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;" +
             "*.vbs;*.vb;*.sql;*.aspx;*.asp;*.php;*.nav;*.pas;*.py;*.rb;*.js;*.jsm;*.ts;*.mk;*.java";
 
-        private readonly StringSetting _codeFiles = new StringSetting("Code files", _defaultCodeFiles);
-        private readonly StringSetting _ignoreDirectories = new StringSetting("Directories to ignore (EndsWith)", @"\Debug;\Release;\obj;\bin;\lib");
-        private readonly BoolSetting _ignoreSubmodules = new BoolSetting("Ignore submodules", defaultValue: true);
+        private readonly StringSetting _codeFiles = new StringSetting("Code files", Strings.CodeFiles, _defaultCodeFiles);
+        private readonly StringSetting _ignoreDirectories = new StringSetting("Directories to ignore (EndsWith)", Strings.IgnoreDirectories, @"\Debug;\Release;\obj;\bin;\lib");
+        private readonly BoolSetting _ignoreSubmodules = new BoolSetting("Ignore submodules", Strings.IgnoreSubmodules, defaultValue: true);
 
-        public GitStatisticsPlugin()
-        {
-            SetNameAndDescription("Statistics");
-            Translate();
-            Icon = Resources.IconGitStatistics;
-        }
+        public string Name => "Statistics";
+
+        public string Description => Strings.Description;
+
+        public Image Icon => Images.IconGitStatistics;
+
+        public IGitPluginSettingsContainer SettingsContainer { get; set; }
 
         public IEnumerable<ISetting> GetSettings()
         {
@@ -43,11 +44,11 @@ namespace GitStatistics
                 return false;
             }
 
-            var countSubmodule = !_ignoreSubmodules.ValueOrDefault(Settings);
+            var countSubmodule = !_ignoreSubmodules.ValueOrDefault(SettingsContainer.GetSettingsSource());
 
-            var formStatistics = new FormGitStatistics(args.GitModule, _codeFiles.ValueOrDefault(Settings), countSubmodule)
+            var formStatistics = new FormGitStatistics(args.GitModule, _codeFiles.ValueOrDefault(SettingsContainer.GetSettingsSource()), countSubmodule)
             {
-                DirectoriesToIgnore = _ignoreDirectories.ValueOrDefault(Settings).Replace("/", "\\")
+                DirectoriesToIgnore = _ignoreDirectories.ValueOrDefault(SettingsContainer.GetSettingsSource()).Replace("/", "\\")
             };
 
             using (formStatistics)
