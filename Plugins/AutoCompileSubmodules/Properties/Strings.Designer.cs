@@ -22,14 +22,14 @@ namespace AutoCompileSubmodules.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    internal class Strings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources() {
+        internal Strings() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace AutoCompileSubmodules.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AutoCompileSubmodules.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AutoCompileSubmodules.Properties.Strings", typeof(Strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,12 +61,58 @@ namespace AutoCompileSubmodules.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        ///   Looks up a localized string similar to Auto compile SubModules.
         /// </summary>
-        internal static System.Drawing.Bitmap IconAutoCompileSubmodules {
+        internal static string Description {
             get {
-                object obj = ResourceManager.GetObject("IconAutoCompileSubmodules", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ResourceManager.GetString("Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to build {0}?
+        ///
+        ///{1}.
+        /// </summary>
+        internal static string DoYouWantBuild {
+            get {
+                return ResourceManager.GetString("DoYouWantBuild", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter correct MSBuild path in the plugin settings dialog and try again..
+        /// </summary>
+        internal static string EnterCorrectMsBuildPath {
+            get {
+                return ResourceManager.GetString("EnterCorrectMsBuildPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to msbuild.exe arguments.
+        /// </summary>
+        internal static string MsBuildArguments {
+            get {
+                return ResourceManager.GetString("MsBuildArguments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enabled.
+        /// </summary>
+        internal static string MsBuildEnabled {
+            get {
+                return ResourceManager.GetString("MsBuildEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path to msbuild.exe.
+        /// </summary>
+        internal static string MsBuildPath {
+            get {
+                return ResourceManager.GetString("MsBuildPath", resourceCulture);
             }
         }
     }

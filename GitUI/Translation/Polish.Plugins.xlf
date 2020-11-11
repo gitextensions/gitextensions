@@ -7,44 +7,6 @@
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="pl">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Auto compile SubModules</source>
-        <target>Automatycznie kompiluj moduły zależne</target>
-        
-      </trans-unit>
-      <trans-unit id="_doYouWantBuild.Text">
-        <source>Do you want to build {0}?
-
-{1}</source>
-        <target>Chcesz stworzyć {0}?
-
-{1}</target>
-        
-      </trans-unit>
-      <trans-unit id="_enterCorrectMsBuildPath.Text">
-        <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
-        <target>Proszę podać poprawną ścieżkę MSBuild w oknie ustawień wtyczki i spróbuj ponownie.</target>
-        
-      </trans-unit>
-      <trans-unit id="_msBuildArguments.Caption">
-        <source>msbuild.exe arguments</source>
-        <target>Argumenty msbuild.exe</target>
-        
-      </trans-unit>
-      <trans-unit id="_msBuildEnabled.Caption">
-        <source>Enabled</source>
-        <target>Włączone</target>
-        
-      </trans-unit>
-      <trans-unit id="_msBuildPath.Caption">
-        <source>Path to msbuild.exe</source>
-        <target>Ścieżka do msbuild.exe</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="pl">
     <body>
       <trans-unit id="BitbucketBaseUrl.Caption">
