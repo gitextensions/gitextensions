@@ -46,35 +46,6 @@
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="de">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Periodic background fetch</source>
-        <target>Periodischer fetch im Hintergrund</target>
-        
-      </trans-unit>
-      <trans-unit id="_autoRefresh.Caption">
-        <source>Refresh view after fetch</source>
-        <target>Ansicht neu laden nach Fetch</target>
-        
-      </trans-unit>
-      <trans-unit id="_fetchAllSubmodules.Caption">
-        <source>Fetch all submodules</source>
-        <target>Alle Untermodule holen</target>
-        
-      </trans-unit>
-      <trans-unit id="_fetchInterval.Caption">
-        <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>Fetch alle x (Sekunden) ausführen - 0 zum abschalten</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitCommand.Caption">
-        <source>Arguments of git command to run</source>
-        <target>Parameter des Git Befehls zum Ausführen</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="de">
     <body>
       <trans-unit id="BitbucketBaseUrl.Caption">

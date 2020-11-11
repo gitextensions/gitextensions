@@ -46,35 +46,6 @@
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="zh-Hans">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Periodic background fetch</source>
-        <target>周期性背景提取</target>
-        
-      </trans-unit>
-      <trans-unit id="_autoRefresh.Caption">
-        <source>Refresh view after fetch</source>
-        <target>拉取后刷新视图</target>
-        
-      </trans-unit>
-      <trans-unit id="_fetchAllSubmodules.Caption">
-        <source>Fetch all submodules</source>
-        <target>拉取所有子模块</target>
-        
-      </trans-unit>
-      <trans-unit id="_fetchInterval.Caption">
-        <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>每（几）秒自动拉取一次 - 设为 0 以禁用</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitCommand.Caption">
-        <source>Arguments of git command to run</source>
-        <target>git 命令运行参数</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="zh-Hans">
     <body>
       <trans-unit id="BitbucketBaseUrl.Caption">

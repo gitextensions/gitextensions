@@ -1,22 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Drawing;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using BackgroundFetch.Properties;
-using GitCommands;
 using GitExtensions.Core.Commands;
 using GitExtensions.Core.Commands.Events;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Events;
 using GitExtensions.Extensibility.Settings;
-using ResourceManager;
 
 namespace BackgroundFetch
 {
     [Export(typeof(IGitPlugin))]
-    public class BackgroundFetchPlugin : GitPluginBase,
+    public sealed class Plugin : IGitPlugin,
         IGitPluginForRepository,
         IGitPluginConfigurable,
         IGitPluginExecutable,
@@ -24,13 +23,6 @@ namespace BackgroundFetch
         IUnloadHandler,
         IPostSettingsHandler
     {
-        public BackgroundFetchPlugin()
-        {
-            SetNameAndDescription("Periodic background fetch");
-            Translate();
-            Icon = Resources.IconBackgroundFetch;
-        }
-
         private IDisposable _cancellationToken;
         private IGitUICommands _currentGitUiCommands;
 
@@ -39,10 +31,18 @@ namespace BackgroundFetch
             tb.Multiline = true;
             tb.Height = 500;
         });
-        private readonly StringSetting _gitCommand = new StringSetting("Arguments of git command to run", "fetch --all");
-        private readonly NumberSetting<int> _fetchInterval = new NumberSetting<int>("Fetch every (seconds) - set to 0 to disable", 0);
-        private readonly BoolSetting _autoRefresh = new BoolSetting("Refresh view after fetch", false);
-        private readonly BoolSetting _fetchAllSubmodules = new BoolSetting("Fetch all submodules", false);
+        private readonly StringSetting _gitCommand = new StringSetting("Arguments of git command to run", Strings.GitCommand, "fetch --all");
+        private readonly NumberSetting<int> _fetchInterval = new NumberSetting<int>("Fetch every (seconds) - set to 0 to disable", Strings.FetchInterval, 0);
+        private readonly BoolSetting _autoRefresh = new BoolSetting("Refresh view after fetch", Strings.AutoRefresh, false);
+        private readonly BoolSetting _fetchAllSubmodules = new BoolSetting("Fetch all submodules", Strings.FetchAllSubmodules, false);
+
+        public string Name => "Periodic background fetch";
+
+        public string Description => Strings.Description;
+
+        public Image Icon => Images.IconBackgroundFetch;
+
+        public IGitPluginSettingsContainer SettingsContainer { get; set; }
 
         public IEnumerable<ISetting> GetSettings()
         {
@@ -80,7 +80,7 @@ namespace BackgroundFetch
         {
             CancelBackgroundOperation();
 
-            int fetchInterval = _fetchInterval.ValueOrDefault(Settings);
+            int fetchInterval = _fetchInterval.ValueOrDefault(SettingsContainer.GetSettingsSource());
 
             var gitModule = _currentGitUiCommands.GitModule;
             if (fetchInterval > 0 && gitModule.IsValidGitWorkingDir())
@@ -107,7 +107,7 @@ namespace BackgroundFetch
                               .Subscribe(i =>
                                   {
                                       GitArgumentBuilder args;
-                                      if (_fetchAllSubmodules.ValueOrDefault(Settings))
+                                      if (_fetchAllSubmodules.ValueOrDefault(SettingsContainer.GetSettingsSource()))
                                       {
                                           // The Git command is hardcoded compared, not using _gitCommand
                                           args = new GitArgumentBuilder("submodule")
@@ -129,7 +129,7 @@ namespace BackgroundFetch
                                           }
                                       }
 
-                                      var gitCmd = _gitCommand.ValueOrDefault(Settings).Trim().SplitBySpace();
+                                      var gitCmd = _gitCommand.ValueOrDefault(SettingsContainer.GetSettingsSource()).Trim().SplitBySpace();
                                       args = new GitArgumentBuilder(gitCmd[0]) { gitCmd.Skip(1) };
                                       string msg;
                                       try
@@ -142,7 +142,7 @@ namespace BackgroundFetch
                                           return;
                                       }
 
-                                      if (_autoRefresh.ValueOrDefault(Settings))
+                                      if (_autoRefresh.ValueOrDefault(SettingsContainer.GetSettingsSource()))
                                       {
                                           if (gitCmd[0].Equals("fetch", StringComparison.InvariantCultureIgnoreCase))
                                           {
