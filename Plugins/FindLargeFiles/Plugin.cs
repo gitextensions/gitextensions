@@ -1,27 +1,28 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Drawing;
 using FindLargeFiles.Properties;
 using GitExtensions.Core.Commands.Events;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
-using ResourceManager;
 
 namespace FindLargeFiles
 {
     [Export(typeof(IGitPlugin))]
-    public class FindLargeFilesPlugin : GitPluginBase,
+    public sealed class Plugin : IGitPlugin,
         IGitPluginForRepository,
         IGitPluginConfigurable,
         IGitPluginExecutable
     {
-        public FindLargeFilesPlugin()
-        {
-            SetNameAndDescription("Find large files");
-            Translate();
-            Icon = Resources.IconFindLargeFiles;
-        }
+        private readonly NumberSetting<float> _sizeLargeFile = new NumberSetting<float>("Find large files bigger than (Mb)", Strings.SizeLargeFile, 1);
 
-        private readonly NumberSetting<float> _sizeLargeFile = new NumberSetting<float>("Find large files bigger than (Mb)", 1);
+        public string Name => "Find large files";
+
+        public string Description => Strings.Description;
+
+        public Image Icon => Images.IconFindLargeFiles;
+
+        public IGitPluginSettingsContainer SettingsContainer { get; set; }
 
         public IEnumerable<ISetting> GetSettings()
         {
@@ -31,7 +32,7 @@ namespace FindLargeFiles
 
         public bool Execute(GitUIEventArgs args)
         {
-            using var frm = new FindLargeFilesForm(_sizeLargeFile.ValueOrDefault(Settings), args);
+            using var frm = new FindLargeFilesForm(_sizeLargeFile.ValueOrDefault(SettingsContainer.GetSettingsSource()), args);
 
             frm.ShowDialog(args.OwnerForm);
 

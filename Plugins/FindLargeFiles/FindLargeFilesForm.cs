@@ -5,22 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using GitCommands;
+using FindLargeFiles.Properties;
 using GitExtensions.Core.Commands;
 using GitExtensions.Core.Commands.Events;
 using GitExtensions.Core.Module;
 using GitExtensions.Core.Utils.UI;
-using GitExtUtils.GitUI;
-using GitUI;
-using ResourceManager;
 
 namespace FindLargeFiles
 {
-    public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
+    public sealed partial class FindLargeFilesForm : Form
     {
-        private readonly TranslationString _areYouSureToDelete = new TranslationString("Are you sure to delete the selected files?");
-        private readonly TranslationString _deleteCaption = new TranslationString("Delete");
-
         private readonly float _threshold;
         private readonly GitUIEventArgs _gitUiCommands;
         private readonly IGitModule _gitCommands;
@@ -37,7 +31,17 @@ namespace FindLargeFiles
             commitCountDataGridViewTextBoxColumn.Width = DpiUtil.Scale(88);
             lastCommitDateDataGridViewTextBoxColumn.Width = DpiUtil.Scale(103);
 
-            InitializeComplete();
+            Text = Strings.FormText;
+            Cancel.Text = Strings.Cancel;
+            CompressedSize.HeaderText = Strings.CompressedSize;
+            Delete.Text = Strings.Delete;
+            commitCountDataGridViewTextBoxColumn.HeaderText = Strings.CommitCountDataGridViewTextBoxColumn;
+            dataGridViewCheckBoxColumn1.HeaderText = Strings.DataGridViewCheckBoxColumn1;
+            label1.Text = Strings.Label1;
+            lastCommitDateDataGridViewTextBoxColumn.HeaderText = Strings.LastCommitDateDataGridViewTextBoxColumn;
+            pathDataGridViewTextBoxColumn.HeaderText = Strings.PathDataGridViewTextBoxColumn;
+            sHADataGridViewTextBoxColumn.HeaderText = Strings.SHADataGridViewTextBoxColumn;
+            sizeDataGridViewTextBoxColumn.HeaderText = Strings.SizeDataGridViewTextBoxColumn;
 
             sHADataGridViewTextBoxColumn.DataPropertyName = nameof(GitObject.SHA);
             pathDataGridViewTextBoxColumn.DataPropertyName = nameof(GitObject.Path);
@@ -206,21 +210,21 @@ namespace FindLargeFiles
 
         private void Delete_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, _areYouSureToDelete.Text, _deleteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (MessageBox.Show(this, Strings.AreYouSureToDelete, Strings.DeleteCaption, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 var sb = new StringBuilder();
                 foreach (GitObject gitObject in _gitObjects.Where(gitObject => gitObject.Delete))
                 {
                     sb.AppendLine(string.Format("\"{0}\" filter-branch --index-filter \"git rm -r -f --cached --ignore-unmatch {1}\" --prune-empty -- --all",
-                        AppSettings.GitCommand, gitObject.Path));
+                        "git", gitObject.Path));
                 }
 
                 sb.AppendLine(string.Format("for /f %%a IN ('\"{0}\" for-each-ref --format=%%^(refname^) refs/original/') DO \"{0}\" update-ref -d %%a",
-                    AppSettings.GitCommand));
+                    "git"));
                 sb.AppendLine(string.Format("\"{0}\" reflog expire --expire=now --all",
-                    AppSettings.GitCommand));
+                    "git"));
                 sb.AppendLine(string.Format("\"{0}\" gc --aggressive --prune=now",
-                    AppSettings.GitCommand));
+                    "git"));
                 _gitUiCommands.GitUICommands.StartBatchFileProcessDialog(sb.ToString());
             }
 
