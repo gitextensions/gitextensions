@@ -1,7 +1,5 @@
 ﻿using System.Linq;
 using System.Text.RegularExpressions;
-using GitCommands;
-using GitCommands.Config;
 using GitExtensions.Core.Module;
 using GitExtensions.Core.Settings;
 using JetBrains.Annotations;
@@ -15,8 +13,11 @@ namespace Bitbucket
         private const string BitbucketSshRegex =
             @"ssh:\/\/([\w\.]+\@)(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/(?<project>~?([\w\-]+))\/(?<repo>([\w\-]+)).git";
 
+        // Extract from GitCommands.Config.SettingKeyString
+        private const string RemoteUrl = "remote.{0}.url";
+
         [CanBeNull]
-        public static Settings Parse(IGitModule gitModule, ISettingsSource settings, BitbucketPlugin plugin)
+        public static Settings Parse(IGitModule gitModule, ISettingsSource settings, Plugin plugin)
         {
             var result = new Settings
             {
@@ -26,12 +27,12 @@ namespace Bitbucket
                 DisableSSL = plugin.BitbucketDisableSsl.ValueOrDefault(settings)
             };
 
-            var module = (GitModule)gitModule;
+            var module = (IGitModule)gitModule;
 
             var remotes = module.GetRemoteNames()
                 .Where(s => !string.IsNullOrWhiteSpace(s))
                 .Distinct()
-                .Select(r => module.GetSetting(string.Format(SettingKeyString.RemoteUrl, r)))
+                .Select(r => module.GetSetting(string.Format(RemoteUrl, r)))
                 .ToArray();
 
             foreach (var url in remotes)

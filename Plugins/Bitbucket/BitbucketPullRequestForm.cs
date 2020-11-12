@@ -5,22 +5,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitCommands.Git;
+using Bitbucket.Properties;
 using GitExtensions.Core.Module;
 using GitExtensions.Core.Utils;
 using GitExtensions.Core.Utils.UI;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
-using ResourceManager;
 
 namespace Bitbucket
 {
-    public partial class BitbucketPullRequestForm : GitExtensionsFormBase
+    public partial class BitbucketPullRequestForm : Form
     {
-        private readonly TranslationString _committed = new TranslationString("{0} committed\n{1}");
-        private readonly TranslationString _success = new TranslationString("Success");
-        private readonly TranslationString _error = new TranslationString("Error");
-        private readonly TranslationString _linkLabelToolTip = new TranslationString("Right-click to copy link");
+        // Extract from GitCommands.Git.DetachedHeadParser
+        private const string DetachedBranch = "(no branch)";
+
         private readonly string _NO_TRANSLATE_RepoUrl = "{0}/projects/{1}/repos/{2}/";
         private readonly string _NO_TRANSLATE_LinkCreatePull = "compare/commits?sourceBranch={0}";
         private readonly string _NO_TRANSLATE_LinkCreatePullNoBranch = "pull-requests?create";
@@ -52,16 +50,43 @@ namespace Bitbucket
                 var branch = GitRefName.GetFullBranchName(module.GetSelectedBranch());
 
                 _NO_TRANSLATE_lblLinkCreatePull.Text = repoUrl +
-                    ((string.IsNullOrEmpty(branch) || branch.Equals(DetachedHeadParser.DetachedBranch)) ?
+                    ((string.IsNullOrEmpty(branch) || branch.Equals(DetachedBranch)) ?
                     _NO_TRANSLATE_LinkCreatePullNoBranch :
                     string.Format(_NO_TRANSLATE_LinkCreatePull, branch));
-                toolTipLink.SetToolTip(_NO_TRANSLATE_lblLinkCreatePull, _linkLabelToolTip.Text);
+                toolTipLink.SetToolTip(_NO_TRANSLATE_lblLinkCreatePull, Strings.LinkLabelToolTip);
 
                 _NO_TRANSLATE_lblLinkViewPull.Text = repoUrl + _NO_TRANSLATE_LinkViewPull;
-                toolTipLink.SetToolTip(_NO_TRANSLATE_lblLinkViewPull, _linkLabelToolTip.Text);
+                toolTipLink.SetToolTip(_NO_TRANSLATE_lblLinkViewPull, Strings.LinkLabelToolTip);
             }
 
-            InitializeComplete();
+            Text = Strings.FormText;
+            btnApprove.Text = Strings.BtnApprove;
+            btnCreate.Text = Strings.BtnCreate;
+            btnMerge.Text = Strings.BtnMerge;
+            groupBoxCreatePullRequest.Text = Strings.GroupBoxCreatePullRequest;
+            groupBoxInformation.Text = Strings.GroupBoxInformation;
+            groupBoxPullRequestInfo.Text = Strings.GroupBoxPullRequestInfo;
+            groupBoxSource.Text = Strings.GroupBoxSource;
+            groupBoxSourceRepoView.Text = Strings.GroupBoxSourceRepoView;
+            groupBoxTarget.Text = Strings.GroupBoxTarget;
+            groupBoxTargetRepoView.Text = Strings.GroupBoxTargetRepoView;
+            lblAuthor.Text = Strings.LblAuthor;
+            lblBranchView.Text = Strings.LblBranchView;
+            lblDescription.Text = Strings.LblDescription;
+            lblDescriptionView.Text = Strings.LblDescriptionView;
+            lblRepositoryView.Text = Strings.LblRepositoryView;
+            lblReviewerView.Text = Strings.LblReviewerView;
+            lblSourceBranch.Text = Strings.LblSourceBranch;
+            lblSourceRepoView.Text = Strings.LblSourceRepoView;
+            lblSourceRepository.Text = Strings.LblSourceRepository;
+            lblState.Text = Strings.LblState;
+            lblTargetBranch.Text = Strings.LblTargetBranch;
+            lblTargetRepoView.Text = Strings.LblTargetRepoView;
+            lblTargetRepository.Text = Strings.LblTargetRepository;
+            lblTitle.Text = Strings.LblTitle;
+            lblTitleView.Text = Strings.LblTitleView;
+            tabCreate.Text = Strings.TabCreate;
+            tabView.Text = Strings.TabView;
         }
 
         private void ReloadRepositories()
@@ -157,13 +182,13 @@ namespace Bitbucket
                 await this.SwitchToMainThreadAsync();
                 if (response.Success)
                 {
-                    MessageBox.Show(_success.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(Strings.Success, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     ReloadPullRequests();
                 }
                 else
                 {
                     MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
-                        _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             });
         }
@@ -277,7 +302,7 @@ namespace Bitbucket
             }
             else
             {
-                label.Text = string.Format(_committed.Text, commit.AuthorName, commit.Message);
+                label.Text = string.Format(Strings.Committed, commit.AuthorName, commit.Message);
             }
         }
 
@@ -354,14 +379,14 @@ namespace Bitbucket
                 var response = ThreadHelper.JoinableTaskFactory.Run(() => mergeRequest.SendAsync());
                 if (response.Success)
                 {
-                    MessageBox.Show(_success.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(Strings.Success, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     ReloadPullRequests();
                 }
                 else
                 {
                     MessageBox.Show(
                         string.Join(Environment.NewLine, response.Messages),
-                        _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -383,14 +408,14 @@ namespace Bitbucket
                 var response = ThreadHelper.JoinableTaskFactory.Run(() => approveRequest.SendAsync());
                 if (response.Success)
                 {
-                    MessageBox.Show(_success.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(Strings.Success, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     ReloadPullRequests();
                 }
                 else
                 {
                     MessageBox.Show(
                         string.Join(Environment.NewLine, response.Messages),
-                        _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

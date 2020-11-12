@@ -117,8 +117,118 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="IconPluginBitbucket" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\..\GitUI\Resources\Icons\BitBucket.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="BitbucketBaseUrl" xml:space="preserve">
+    <value>BitbucketのベースURLを指定してください</value>
+  </data>
+  <data name="BitbucketDisableSsl" xml:space="preserve">
+    <value>SSL認証を無効化</value>
+  </data>
+  <data name="BitbucketPassword" xml:space="preserve">
+    <value>Bitbucketパスワード</value>
+  </data>
+  <data name="BitbucketUsername" xml:space="preserve">
+    <value>Bitbucketユーザ名</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Bitbucketサーバ</value>
+  </data>
+  <data name="YourRepositoryIsNotInBitbucket" xml:space="preserve">
+    <value>あなたのリポジトリはBitbucketのサーバーにホストされていません。</value>
+  </data>
+  <data name="FormText" xml:space="preserve">
+    <value>Bitbucketサーバ</value>
+  </data>
+  <data name="Committed" xml:space="preserve">
+    <value>{0}は{1}をコミットした</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>エラー</value>
+  </data>
+  <data name="LinkLabelToolTip" xml:space="preserve">
+    <value>右クリックしてURLをコピー</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>成功</value>
+  </data>
+  <data name="BtnApprove" xml:space="preserve">
+    <value>承認</value>
+  </data>
+  <data name="BtnCreate" xml:space="preserve">
+    <value>作成</value>
+  </data>
+  <data name="BtnMerge" xml:space="preserve">
+    <value>マージ</value>
+  </data>
+  <data name="GroupBoxCreatePullRequest" xml:space="preserve">
+    <value>プルリクエストの情報</value>
+  </data>
+  <data name="GroupBoxInformation" xml:space="preserve">
+    <value>情報</value>
+  </data>
+  <data name="GroupBoxPullRequestInfo" xml:space="preserve">
+    <value>プルリクエストの情報</value>
+  </data>
+  <data name="GroupBoxSource" xml:space="preserve">
+    <value>ソース</value>
+  </data>
+  <data name="GroupBoxSourceRepoView" xml:space="preserve">
+    <value>ソース</value>
+  </data>
+  <data name="GroupBoxTarget" xml:space="preserve">
+    <value>対象</value>
+  </data>
+  <data name="GroupBoxTargetRepoView" xml:space="preserve">
+    <value>対象</value>
+  </data>
+  <data name="LblAuthor" xml:space="preserve">
+    <value>作者</value>
+  </data>
+  <data name="LblBranchView" xml:space="preserve">
+    <value>ブランチ</value>
+  </data>
+  <data name="LblDescription" xml:space="preserve">
+    <value>注釈</value>
+  </data>
+  <data name="LblDescriptionView" xml:space="preserve">
+    <value>注釈</value>
+  </data>
+  <data name="LblRepositoryView" xml:space="preserve">
+    <value>リポジトリ</value>
+  </data>
+  <data name="LblReviewerView" xml:space="preserve">
+    <value>レビュアー(承認済み)</value>
+  </data>
+  <data name="LblSourceBranch" xml:space="preserve">
+    <value>ブランチ</value>
+  </data>
+  <data name="LblSourceRepoView" xml:space="preserve">
+    <value>リポジトリ</value>
+  </data>
+  <data name="LblSourceRepository" xml:space="preserve">
+    <value>リポジトリ</value>
+  </data>
+  <data name="LblState" xml:space="preserve">
+    <value>状態</value>
+  </data>
+  <data name="LblTargetBranch" xml:space="preserve">
+    <value>ブランチ</value>
+  </data>
+  <data name="LblTargetRepoView" xml:space="preserve">
+    <value>ブランチ</value>
+  </data>
+  <data name="LblTargetRepository" xml:space="preserve">
+    <value>リポジトリ</value>
+  </data>
+  <data name="LblTitle" xml:space="preserve">
+    <value>タイトル</value>
+  </data>
+  <data name="LblTitleView" xml:space="preserve">
+    <value>タイトル</value>
+  </data>
+  <data name="TabCreate" xml:space="preserve">
+    <value>プルリクエストを作成</value>
+  </data>
+  <data name="TabView" xml:space="preserve">
+    <value>Pull Requestの表示</value>
   </data>
 </root>

@@ -1,33 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Drawing;
 using System.Windows.Forms;
 using Bitbucket.Properties;
 using GitExtensions.Core.Commands.Events;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
-using ResourceManager;
 
 namespace Bitbucket
 {
     [Export(typeof(IGitPlugin))]
-    public class BitbucketPlugin : GitPluginBase,
+    public sealed class Plugin : IGitPlugin,
         IGitPluginConfigurable,
         IGitPluginExecutable
     {
-        public readonly StringSetting BitbucketUsername = new StringSetting("Bitbucket Username", string.Empty);
-        public readonly PasswordSetting BitbucketPassword = new PasswordSetting("Bitbucket Password", string.Empty);
-        public readonly StringSetting BitbucketBaseUrl = new StringSetting("Specify the base URL to Bitbucket", "https://example.bitbucket.com");
-        public readonly BoolSetting BitbucketDisableSsl = new BoolSetting("Disable SSL verification", false);
+        public readonly StringSetting BitbucketUsername = new StringSetting("Bitbucket Username", Strings.BitbucketUsername, string.Empty);
+        public readonly PasswordSetting BitbucketPassword = new PasswordSetting("Bitbucket Password", Strings.BitbucketPassword, string.Empty);
+        public readonly StringSetting BitbucketBaseUrl = new StringSetting("Specify the base URL to Bitbucket", Strings.BitbucketBaseUrl, "https://example.bitbucket.com");
+        public readonly BoolSetting BitbucketDisableSsl = new BoolSetting("Disable SSL verification", Strings.BitbucketDisableSsl, false);
 
-        private readonly TranslationString _yourRepositoryIsNotInBitbucket = new TranslationString("Your repository is not hosted in BitBucket Server.");
+        public string Name => "Bitbucket Server";
 
-        public BitbucketPlugin()
-        {
-            SetNameAndDescription("Bitbucket Server");
-            Translate();
+        public string Description => Strings.Description;
 
-            Icon = Resources.IconPluginBitbucket;
-        }
+        public Image Icon => Images.IconPluginBitbucket;
+
+        public IGitPluginSettingsContainer SettingsContainer { get; set; }
 
         public IEnumerable<ISetting> GetSettings()
         {
@@ -39,11 +37,11 @@ namespace Bitbucket
 
         public bool Execute(GitUIEventArgs args)
         {
-            Settings settings = Bitbucket.Settings.Parse(args.GitModule, Settings, this);
+            Settings settings = Bitbucket.Settings.Parse(args.GitModule, SettingsContainer.GetSettingsSource(), this);
             if (settings == null)
             {
                 MessageBox.Show(args.OwnerForm,
-                                _yourRepositoryIsNotInBitbucket.Text,
+                                Strings.YourRepositoryIsNotInBitbucket,
                                 string.Empty,
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
