@@ -1,24 +1,24 @@
 ﻿using System.ComponentModel.Composition;
+using System.Drawing;
 using GitExtensions.Core.Commands.Events;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Settings;
 using GitImpact.Properties;
-using ResourceManager;
 
 namespace GitImpact
 {
     [Export(typeof(IGitPlugin))]
-    public class GitImpactPlugin : GitPluginBase,
+    public sealed class Plugin : IGitPlugin,
         IGitPluginForRepository,
         IGitPluginExecutable
     {
-        public GitImpactPlugin()
-        {
-            SetNameAndDescription("Impact Graph");
-            Translate();
-            Icon = Resources.IconGitImpact;
-        }
+        public string Name => "Impact Graph";
 
-        #region IGitPlugin Members
+        public string Description => Strings.Description;
+
+        public Image Icon => Images.IconGitImpact;
+
+        public IGitPluginSettingsContainer SettingsContainer { get; set; }
 
         public bool Execute(GitUIEventArgs args)
         {
@@ -33,7 +33,5 @@ namespace GitImpact
 
             return false;
         }
-
-        #endregion
     }
 }

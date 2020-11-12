@@ -279,6 +279,8 @@ namespace GitCommands
             }
         }
 
+        public Encoding Encoding => SystemEncoding;
+
         // Encoding that let us read all bytes without replacing any char
         // It is using to read output of commands, which may consist of:
         // 1) commit header (message, author, ...) encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of

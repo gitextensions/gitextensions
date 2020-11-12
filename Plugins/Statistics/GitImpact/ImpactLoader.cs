@@ -5,10 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using GitExtensions.Core.Module;
 using GitExtensions.Core.Utils.UI;
-using GitUI;
 using Microsoft.VisualStudio.Threading;
 
-namespace GitCommands.Statistics
+namespace GitImpact
 {
     public sealed class ImpactLoader : IDisposable
     {
@@ -146,7 +145,7 @@ namespace GitCommands.Statistics
 
         private void LoadModuleInfo(string command, IGitModule module, CancellationToken token)
         {
-            using (var lineEnumerator = module.GitExecutable.GetOutputLines(command).GetEnumerator())
+            using (var lineEnumerator = module.GitExecutable.GetOutputLines(module.Encoding, command).GetEnumerator())
             {
                 // Analyze commit listing
                 while (!token.IsCancellationRequested && lineEnumerator.MoveNext())
@@ -234,17 +233,17 @@ namespace GitCommands.Statistics
                 var end = new DateTime();
                 var startFound = false;
 
-                foreach (var (weekDate, weekDataByAuthor) in impact)
+                foreach (var item in impact)
                 {
-                    if (weekDataByAuthor.ContainsKey(author))
+                    if (item.Value.ContainsKey(author))
                     {
                         if (!startFound)
                         {
-                            start = weekDate;
+                            start = item.Key;
                             startFound = true;
                         }
 
-                        end = weekDate;
+                        end = item.Key;
                     }
                 }
 
@@ -254,12 +253,12 @@ namespace GitCommands.Statistics
                 }
 
                 // Add 0 commits weeks in between
-                foreach (var (weekDate, weekDataByAuthor) in impact)
+                foreach (var item in impact)
                 {
-                    if (!weekDataByAuthor.ContainsKey(author) &&
-                        weekDate > start && weekDate < end)
+                    if (!item.Value.ContainsKey(author) &&
+                        item.Key > start && item.Key < end)
                     {
-                        weekDataByAuthor.Add(author, new DataPoint(0, 0, 0));
+                        item.Value.Add(author, new DataPoint(0, 0, 0));
                     }
                 }
             }

@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Windows.Forms;
-using GitCommands.Statistics;
 using GitExtensions.Core.Module;
 using GitExtensions.Core.Utils.UI;
-using GitUI;
-using ResourceManager;
+using GitImpact.Properties;
 
 namespace GitImpact
 {
-    public sealed partial class FormImpact : GitExtensionsFormBase
+    public sealed partial class FormImpact : Form
     {
-        private readonly TranslationString _authorCommits = new TranslationString("{0} ({1} Commits, {2} Changed Lines)");
-
         public FormImpact(IGitModule module)
         {
             InitializeComponent();
-            InitializeComplete();
+
+            Text = Strings.FormText;
+            cbIncludingSubmodules.Text = Strings.CbIncludingSubmodulesText;
+            lblAuthor.Text = Strings.LblAuthorText;
+
             UpdateAuthorInfo("");
             if (module != null)
             {
@@ -49,7 +49,7 @@ namespace GitImpact
             if (lblAuthor.Visible)
             {
                 ImpactLoader.DataPoint data = Impact.GetAuthorInfo(author);
-                lblAuthor.Text = string.Format(_authorCommits.Text, author, data.Commits, data.ChangedLines);
+                lblAuthor.Text = string.Format(Strings.AuthorCommitsText, author, data.Commits, data.ChangedLines);
                 pnlAuthorColor.BackColor = Impact.GetAuthorColor(author);
 
                 lblAuthor.Refresh();

@@ -730,30 +730,6 @@ defaultrebase=0</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="pl">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Impact</source>
-        <target>Wkład</target>
-        
-      </trans-unit>
-      <trans-unit id="_authorCommits.Text">
-        <source>{0} ({1} Commits, {2} Changed Lines)</source>
-        <target>{0} (zatwierdzenia: {1}, zmodyfikowane linie: {2})</target>
-        
-      </trans-unit>
-      <trans-unit id="cbIncludingSubmodules.Text">
-        <source>Including submodules</source>
-        <target>Dołącz moduły zależne</target>
-        
-      </trans-unit>
-      <trans-unit id="lblAuthor.Text">
-        <source>Author</source>
-        <target>Autor</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="FormPluginInformation" source-language="en" target-language="pl">
     <body>
       <trans-unit id="$this.Text">
@@ -1042,15 +1018,6 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       <trans-unit id="_viewInWebSite.Text">
         <source>View in {0}</source>
         <target>Zobacz na {0}</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="pl">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Impact Graph</source>
-        <target>Wykres wkładu</target>
         
       </trans-unit>
     </body>

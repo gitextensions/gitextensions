@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using GitExtensions.Core.Commands;
 using GitExtensions.Core.Settings;
@@ -12,6 +13,8 @@ namespace GitExtensions.Core.Module
     {
         [NotNull]
         IConfigFileSettings LocalConfigFile { get; }
+
+        Encoding Encoding { get; }
 
         string AddRemote(string remoteName, string path);
         IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true);

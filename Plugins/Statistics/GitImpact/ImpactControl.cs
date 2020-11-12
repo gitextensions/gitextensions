@@ -5,10 +5,8 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
-using GitCommands.Statistics;
 using GitExtensions.Core.Module;
 using GitExtensions.Core.Utils.UI;
-using GitExtUtils.GitUI;
 
 namespace GitImpact
 {
@@ -329,30 +327,30 @@ namespace GitImpact
                 _weekLabels.Clear();
 
                 // Iterate through weeks
-                foreach (var (weekDate, dataByAuthor) in _impact)
+                foreach (var item in _impact)
                 {
                     int y = 0;
 
                     // Iterate through authors
-                    foreach (var (author, data) in from entry in dataByAuthor orderby entry.Value.ChangedLines descending select entry)
+                    foreach (var author in from entry in item.Value orderby entry.Value.ChangedLines descending select entry)
                     {
                         // Calculate week-author-rectangle
-                        int height = Math.Max(1, (int)Math.Round(Math.Pow(Math.Log(data.ChangedLines), 1.5) * 4));
+                        int height = Math.Max(1, (int)Math.Round(Math.Pow(Math.Log(author.Value.ChangedLines), 1.5) * 4));
                         var rc = new Rectangle(x, y, BlockWidth, height);
 
                         // Add rectangle to temporary list
-                        if (!author_points_dict.ContainsKey(author))
+                        if (!author_points_dict.ContainsKey(author.Key))
                         {
-                            author_points_dict.Add(author, new List<(Rectangle, int)>());
+                            author_points_dict.Add(author.Key, new List<(Rectangle, int)>());
                         }
 
-                        author_points_dict[author].Add((rc, data.ChangedLines));
+                        author_points_dict[author.Key].Add((rc, author.Value.ChangedLines));
 
                         // Create a new random brush for the author if none exists yet
-                        if (!_brushes.ContainsKey(author))
+                        if (!_brushes.ContainsKey(author.Key))
                         {
                             var color = Color.FromArgb((int)(author.GetHashCode() | 0xFF000000));
-                            _brushes.Add(author, new SolidBrush(color));
+                            _brushes.Add(author.Key, new SolidBrush(color));
                         }
 
                         // Increase y for next block
@@ -363,7 +361,7 @@ namespace GitImpact
                     h_max = Math.Max(h_max, y);
 
                     // Add week date label
-                    _weekLabels.Add((new PointF(x + (BlockWidth / 2f), y), weekDate));
+                    _weekLabels.Add((new PointF(x + (BlockWidth / 2f), y), item.Key));
 
                     // Increase x for next week
                     x += BlockWidth + TransitionWidth;
@@ -389,80 +387,80 @@ namespace GitImpact
                 _lineLabels.Clear();
 
                 // Add points to each author's GraphicsPath
-                foreach (var (author, points) in author_points_dict)
+                foreach (var authorPoint in author_points_dict)
                 {
                     // Scale heights
-                    for (int i = 0; i < points.Count; i++)
+                    for (int i = 0; i < authorPoint.Value.Count; i++)
                     {
-                        var (unscaledRect, num) = points[i];
+                        var (unscaledRect, num) = authorPoint.Value[i];
 
                         var rect = new Rectangle(unscaledRect.Left, (int)(unscaledRect.Top * height_factor),
                             unscaledRect.Width, Math.Max(1, (int)(unscaledRect.Height * height_factor)));
 
-                        points[i] = (rect, num);
+                        authorPoint.Value[i] = (rect, num);
 
                         // Add lines-changed-labels
-                        if (!_lineLabels.ContainsKey(author))
+                        if (!_lineLabels.ContainsKey(authorPoint.Key))
                         {
-                            _lineLabels.Add(author, new List<(PointF, int)>());
+                            _lineLabels.Add(authorPoint.Key, new List<(PointF, int)>());
                         }
 
                         if (rect.Height > LinesFontSize * 1.5)
                         {
                             var adjustedPoint = new PointF(rect.Left + (BlockWidth / 2), rect.Top + (rect.Height / 2));
 
-                            _lineLabels[author].Add((adjustedPoint, num));
+                            _lineLabels[authorPoint.Key].Add((adjustedPoint, num));
                         }
                     }
 
-                    _paths.Add(author, new GraphicsPath());
+                    _paths.Add(authorPoint.Key, new GraphicsPath());
 
-                    var (firstRect, _) = points[0];
+                    var (firstRect, _) = authorPoint.Value[0];
 
                     // Left border
-                    _paths[author].AddLine(firstRect.Left, firstRect.Bottom,
+                    _paths[authorPoint.Key].AddLine(firstRect.Left, firstRect.Bottom,
                                            firstRect.Left, firstRect.Top);
 
                     // Top borders
-                    for (int i = 0; i < points.Count; i++)
+                    for (int i = 0; i < authorPoint.Value.Count; i++)
                     {
-                        var (rect, _) = points[i];
+                        var (rect, _) = authorPoint.Value[i];
 
-                        _paths[author].AddLine(rect.Left, rect.Top,
+                        _paths[authorPoint.Key].AddLine(rect.Left, rect.Top,
                                                rect.Right, rect.Top);
 
-                        if (i < points.Count - 1)
+                        if (i < authorPoint.Value.Count - 1)
                         {
-                            var (nextRect, _) = points[i + 1];
+                            var (nextRect, _) = authorPoint.Value[i + 1];
 
-                            _paths[author].AddBezier(rect.Right, rect.Top,
+                            _paths[authorPoint.Key].AddBezier(rect.Right, rect.Top,
                                                      rect.Right + (TransitionWidth / 2), rect.Top,
                                                      rect.Right + (TransitionWidth / 2), nextRect.Top,
                                                      nextRect.Left, nextRect.Top);
                         }
                     }
 
-                    var (lastRect, _) = points[points.Count - 1];
+                    var (lastRect, _) = authorPoint.Value[authorPoint.Value.Count - 1];
 
                     // Right border
-                    _paths[author].AddLine(lastRect.Right,
+                    _paths[authorPoint.Key].AddLine(lastRect.Right,
                                            lastRect.Top,
                                            lastRect.Right,
                                            lastRect.Bottom);
 
                     // Bottom borders
-                    for (int i = points.Count - 1; i >= 0; i--)
+                    for (int i = authorPoint.Value.Count - 1; i >= 0; i--)
                     {
-                        var (rect, _) = points[i];
+                        var (rect, _) = authorPoint.Value[i];
 
-                        _paths[author].AddLine(rect.Right, rect.Bottom,
+                        _paths[authorPoint.Key].AddLine(rect.Right, rect.Bottom,
                                                rect.Left, rect.Bottom);
 
                         if (i > 0)
                         {
-                            var (prevRect, _) = points[i - 1];
+                            var (prevRect, _) = authorPoint.Value[i - 1];
 
-                            _paths[author].AddBezier(rect.Left, rect.Bottom,
+                            _paths[authorPoint.Key].AddBezier(rect.Left, rect.Bottom,
                                                      rect.Left - (TransitionWidth / 2), rect.Bottom,
                                                      rect.Left - (TransitionWidth / 2), prevRect.Bottom,
                                                      prevRect.Right, prevRect.Bottom);
