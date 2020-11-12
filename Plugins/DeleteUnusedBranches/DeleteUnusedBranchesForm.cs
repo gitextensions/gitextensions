@@ -6,42 +6,29 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DeleteUnusedBranches.Properties;
-using GitCommands;
 using GitExtensions.Core.Commands;
 using GitExtensions.Core.Module;
 using GitExtensions.Core.Utils.UI;
 using GitExtensions.Extensibility;
 using Microsoft.VisualStudio.Threading;
-using ResourceManager;
+
 namespace DeleteUnusedBranches
 {
-    public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
+    public sealed partial class DeleteUnusedBranchesForm : Form
     {
-        private readonly TranslationString _deleteCaption = new TranslationString("Delete");
-        private readonly TranslationString _selectBranchesToDelete = new TranslationString("Select branches to delete using checkboxes in '{0}' column.");
-        private readonly TranslationString _areYouSureToDelete = new TranslationString("Are you sure to delete {0} selected branches?");
-        private readonly TranslationString _dangerousAction = new TranslationString("DANGEROUS ACTION!\nBranches will be deleted on the remote '{0}'. This can not be undone.\nAre you sure you want to continue?");
-        private readonly TranslationString _deletingBranches = new TranslationString("Deleting branches...");
-        private readonly TranslationString _deletingUnmergedBranches = new TranslationString("Deleting unmerged branches will result in dangling commits. Use with caution!");
-        private readonly TranslationString _chooseBranchesToDelete = new TranslationString("Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.");
-        private readonly TranslationString _pressToSearch = new TranslationString("Press '{0}' to search for branches to delete.");
-        private readonly TranslationString _cancel = new TranslationString("Cancel");
-        private readonly TranslationString _searchBranches = new TranslationString("Search branches");
-        private readonly TranslationString _loading = new TranslationString("Loading...");
-        private readonly TranslationString _branchesSelected = new TranslationString("{0}/{1} branches selected.");
         private readonly DeleteUnusedBranchesFormSettings _settings;
 
         private readonly SortableBranchesList _branches = new SortableBranchesList();
-        private readonly IGitModule _gitCommands;
+        private readonly IGitModule _gitModule;
         private readonly IGitUICommands _gitUiCommands;
         private readonly IGitPlugin _gitPlugin;
         private readonly GitBranchOutputCommandParser _commandOutputParser;
         private CancellationTokenSource _refreshCancellation;
 
-        public DeleteUnusedBranchesForm(DeleteUnusedBranchesFormSettings settings, IGitModule gitCommands, IGitUICommands gitUiCommands, IGitPlugin gitPlugin)
+        public DeleteUnusedBranchesForm(DeleteUnusedBranchesFormSettings settings, IGitModule gitModule, IGitUICommands gitUiCommands, IGitPlugin gitPlugin)
         {
             _settings = settings;
-            _gitCommands = gitCommands;
+            _gitModule = gitModule;
             _gitUiCommands = gitUiCommands;
             _gitPlugin = gitPlugin;
             _commandOutputParser = new GitBranchOutputCommandParser();
@@ -52,7 +39,7 @@ namespace DeleteUnusedBranches
             dateDataGridViewTextBoxColumn.Width = DpiUtil.Scale(175);
             Author.Width = DpiUtil.Scale(91);
 
-            imgLoading.Image = Resources.loadingpanel;
+            imgLoading.Image = Images.loadingpanel;
 
             _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.DataPropertyName = nameof(Branch.Delete);
             nameDataGridViewTextBoxColumn.DataPropertyName = nameof(Branch.Name);
@@ -60,14 +47,30 @@ namespace DeleteUnusedBranches
             Author.DataPropertyName = nameof(Branch.Author);
             Message.DataPropertyName = nameof(Branch.Message);
 
-            InitializeComplete();
+            Text = Strings.FormText;
+            Author.HeaderText = Strings.Author;
+            Cancel.Text = Strings.Cancel;
+            Delete.Text = Strings.Delete;
+            IncludeRemoteBranches.Text = Strings.IncludeRemoteBranches;
+            Message.HeaderText = Strings.Message;
+            RefreshBtn.Text = Strings.RefreshBtn;
+            buttonSettings.Text = Strings.ButtonSettingsText;
+            dateDataGridViewTextBoxColumn.HeaderText = Strings.DateDataGridViewTextBoxColumn;
+            includeUnmergedBranches.Text = Strings.IncludeUnmergedBranchesText;
+            label1.Text = Strings.Label1Text;
+            label2.Text = Strings.Label2Text;
+            nameDataGridViewTextBoxColumn.HeaderText = Strings.NameDataGridViewTextBoxColumn;
+            regexDoesNotMatch.Text = Strings.RegexDoesNotMatch;
+            regexFilter.Text = Strings.RegexFilter;
+            useRegexCaseInsensitive.Text = Strings.UseRegexCaseInsensitive;
+            useRegexFilter.Text = Strings.UseRegexFilter;
 
             if (gitUiCommands == null)
             {
                 return;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => RefreshObsoleteBranchesAsync());
+            ThreadHelper.JoinableTaskFactory.RunAsync(RefreshObsoleteBranchesAsync);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -134,7 +137,7 @@ namespace DeleteUnusedBranches
                  context.ReferenceBranch
             };
 
-            var result = context.Commands.GitExecutable.Execute(args);
+            var result = context.Commands.GitExecutable.Execute(args, _gitModule.Encoding);
 
             if (!result.ExitedSuccessfully)
             {
@@ -153,11 +156,11 @@ namespace DeleteUnusedBranches
             var selectedBranches = _branches.Where(branch => branch.Delete).ToList();
             if (selectedBranches.Count == 0)
             {
-                MessageBox.Show(string.Format(_selectBranchesToDelete.Text, _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.HeaderText), _deleteCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format(Strings.SelectBranchesToDeleteText, _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.HeaderText), Strings.DeleteCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if (MessageBox.Show(this, string.Format(_areYouSureToDelete.Text, selectedBranches.Count), _deleteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            if (MessageBox.Show(this, string.Format(Strings.AreYouSureToDelete, selectedBranches.Count), Strings.DeleteCaption, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
             {
                 return;
             }
@@ -171,8 +174,8 @@ namespace DeleteUnusedBranches
 
             if (remoteBranches.Count > 0)
             {
-                var message = string.Format(_dangerousAction.Text, remoteName);
-                if (MessageBox.Show(this, message, _deleteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                var message = string.Format(Strings.DangerousActionText, remoteName);
+                if (MessageBox.Show(this, message, Strings.DeleteCaption, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                 {
                     return;
                 }
@@ -181,7 +184,7 @@ namespace DeleteUnusedBranches
             var localBranches = selectedBranches.Except(remoteBranches).ToList();
             tableLayoutPanel2.Enabled = tableLayoutPanel3.Enabled = false;
             imgLoading.Visible = true;
-            lblStatus.Text = _deletingBranches.Text;
+            lblStatus.Text = Strings.DeletingBranchesText;
 
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
@@ -195,7 +198,7 @@ namespace DeleteUnusedBranches
                         remoteName,
                         $":{remoteBranch.Name.Substring(remoteBranchNameOffset)}"
                     };
-                    _gitCommands.GitExecutable.GetOutput(args);
+                    _gitModule.GitExecutable.GetOutput(args);
                 }
 
                 foreach (var localBranch in localBranches)
@@ -205,10 +208,10 @@ namespace DeleteUnusedBranches
                         "-d",
                         localBranch.Name
                     };
-                    _gitCommands.GitExecutable.GetOutput(args);
+                    _gitModule.GitExecutable.GetOutput(args);
 
                     // Delete branches one by one, because it is possible one fails
-                    _gitCommands.GitExecutable.GetOutput(args);
+                    _gitModule.GitExecutable.GetOutput(args);
                 }
 
                 await this.SwitchToMainThreadAsync();
@@ -231,14 +234,14 @@ namespace DeleteUnusedBranches
 
             if (includeUnmergedBranches.Checked)
             {
-                MessageBox.Show(this, _deletingUnmergedBranches.Text, _deleteCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, Strings.DeletingUnmergedBranchesText, Strings.DeleteCaption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
         private void ClearResults(object sender, EventArgs e)
         {
-            instructionLabel.Text = string.Format(_chooseBranchesToDelete.Text, mergedIntoBranch.Text);
-            lblStatus.Text = string.Format(_pressToSearch.Text, RefreshBtn.Text);
+            instructionLabel.Text = string.Format(Strings.ChooseBranchesToDeleteText, mergedIntoBranch.Text);
+            lblStatus.Text = string.Format(Strings.PressToSearchText, RefreshBtn.Text);
             _branches.Clear();
             _branches.ResetBindings();
         }
@@ -288,7 +291,7 @@ namespace DeleteUnusedBranches
             IsRefreshing = true;
             var curBranch = _gitUiCommands.GitModule.GetSelectedBranch();
             var context = new RefreshContext(
-                _gitCommands,
+                _gitModule,
                 IncludeRemoteBranches.Checked,
                 includeUnmergedBranches.Checked,
                 mergedIntoBranch.Text,
@@ -342,15 +345,15 @@ namespace DeleteUnusedBranches
                 }
 
                 _refreshCancellation = value ? new CancellationTokenSource() : null;
-                RefreshBtn.Text = value ? _cancel.Text : _searchBranches.Text;
+                RefreshBtn.Text = value ? Strings.CancelText : Strings.SearchBranchesText;
                 imgLoading.Visible = value;
-                lblStatus.Text = value ? _loading.Text : GetDefaultStatusText();
+                lblStatus.Text = value ? Strings.LoadingText : GetDefaultStatusText();
             }
         }
 
         private string GetDefaultStatusText()
         {
-            return string.Format(_branchesSelected.Text, _branches.Count(b => b.Delete), _branches.Count);
+            return string.Format(Strings.BranchesSelected, _branches.Count(b => b.Delete), _branches.Count);
         }
 
         private readonly struct RefreshContext

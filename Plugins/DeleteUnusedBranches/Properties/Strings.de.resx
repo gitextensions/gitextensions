@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Description" xml:space="preserve">
+    <value>Obsolete Branches löschen</value>
+  </data>
+  <data name="DaysOlderThan" xml:space="preserve">
+    <value>Lösche obsolete Branches älter als x (Tage)</value>
+  </data>
+  <data name="DeleteRemoteBranchesFromFlag" xml:space="preserve">
+    <value>Veraltete Branches von der Remote löschen</value>
+  </data>
+  <data name="IncludeUnmergedBranchesFlag" xml:space="preserve">
+    <value>Lösche nicht gemergte Branches</value>
+  </data>
+  <data name="MergedInBranch" xml:space="preserve">
+    <value>Branch in dem alle Branches gemerged werden sollen</value>
+  </data>
+  <data name="RegexCaseInsensitiveFlag" xml:space="preserve">
+    <value>Berücksichtigt der Regex Filter Groß-/Kleinschreibung?</value>
+  </data>
+  <data name="RegexFilter" xml:space="preserve">
+    <value>Regex Filter zum Löschen von Branches</value>
+  </data>
+  <data name="RegexInvertedFlag" xml:space="preserve">
+    <value>Suche Branches die nicht auf den Regex passen</value>
+  </data>
+  <data name="RemoteName" xml:space="preserve">
+    <value>Veraltete Remote Name Branches sollten gelöscht werden von</value>
+  </data>
+  <data name="UseRegexToFilterBranchesFlag" xml:space="preserve">
+    <value>Verwende Regex, um Branches für Löschung zu filtern</value>
+  </data>
+  <data name="FormText" xml:space="preserve">
+    <value>Obsolete Branches löschen</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Letzter Autor</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="IncludeRemoteBranches" xml:space="preserve">
+    <value>Remote Branches löschen von</value>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>Letzte Nachricht</value>
+  </data>
+  <data name="RefreshBtn" xml:space="preserve">
+    <value>Suche Branches</value>
+  </data>
+  <data name="AreYouSureToDelete" xml:space="preserve">
+    <value>Sind Sie sich sicher {0} ausgewählte Branches zu löschen?</value>
+  </data>
+  <data name="BranchesSelected" xml:space="preserve">
+    <value>{0}/{1} Branches ausgewählt.</value>
+  </data>
+  <data name="CancelText" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="ChooseBranchesToDeleteText" xml:space="preserve">
+    <value>Wählen Sie die Branches zur Löschung aus. Nur Branches die vollständig in '{0}' gemerged wurden, werden gelöscht.</value>
+  </data>
+  <data name="DangerousActionText" xml:space="preserve">
+    <value>GEFÄHRLICHE AKTION!
+Branches werden auf der Remote '{0}' gelöscht. Dies kann nicht rückgängig gemacht werden.
+Sind Sie sich sicher und wollen damit fortfahren?</value>
+  </data>
+  <data name="DeleteCaption" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="DeletingBranchesText" xml:space="preserve">
+    <value>Branches werden gelöscht...</value>
+  </data>
+  <data name="DeletingUnmergedBranchesText" xml:space="preserve">
+    <value>Nicht germergte Branches zu löschen resultiert in hängenden Commits. Mit Vorsicht verwenden!</value>
+  </data>
+  <data name="LoadingText" xml:space="preserve">
+    <value>Lade...</value>
+  </data>
+  <data name="PressToSearchText" xml:space="preserve">
+    <value>Drücken Sie '{0}', um nach Branches für die Löschung zu suchen.</value>
+  </data>
+  <data name="SearchBranchesText" xml:space="preserve">
+    <value>Suche Branches</value>
+  </data>
+  <data name="SelectBranchesToDeleteText" xml:space="preserve">
+    <value>Wählen Sie Branches zur Löschung aus per Checkbox in der Spalte ''{0}.</value>
+  </data>
+  <data name="ButtonSettingsText" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="DateDataGridViewTextBoxColumn" xml:space="preserve">
+    <value>Letzte Aktivität</value>
+  </data>
+  <data name="IncludeUnmergedBranchesText" xml:space="preserve">
+    <value>Schließe nicht gemergte Branches ein</value>
+  </data>
+  <data name="Label1Text" xml:space="preserve">
+    <value>Lösche Branches älter als x Tage</value>
+  </data>
+  <data name="Label2Text" xml:space="preserve">
+    <value>Lösche Branches die vollständig in den Branch gemerged wurden</value>
+  </data>
+  <data name="NameDataGridViewTextBoxColumn" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="RegexDoesNotMatch" xml:space="preserve">
+    <value>Stimmt nicht überein</value>
+  </data>
+  <data name="RegexFilter" xml:space="preserve">
+    <value>/(feature|develop)/</value>
+  </data>
+  <data name="UseRegexCaseInsensitive" xml:space="preserve">
+    <value>Ohne Beachtung von Groß-/Kleinschreibung.</value>
+  </data>
+  <data name="UseRegexFilter" xml:space="preserve">
+    <value>Benutze reguläre Ausdrücke zum Filtern von Branches</value>
+  </data>
+</root>
