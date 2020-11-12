@@ -1,22 +1,24 @@
 ﻿using System.ComponentModel.Composition;
+using System.Drawing;
 using GitExtensions.Core.Commands.Events;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Settings;
 using GitFlow.Properties;
-using ResourceManager;
 
 namespace GitFlow
 {
     [Export(typeof(IGitPlugin))]
-    public class GitFlowPlugin : GitPluginBase,
+    public sealed class Plugin : IGitPlugin,
         IGitPluginForRepository,
         IGitPluginExecutable
     {
-        public GitFlowPlugin()
-        {
-            SetNameAndDescription("GitFlow");
-            Translate();
-            Icon = Resource.IconGitFlow;
-        }
+        public string Name => "GitFlow";
+
+        public string Description => Strings.Description;
+
+        public Image Icon => Images.IconGitFlow;
+
+        public IGitPluginSettingsContainer SettingsContainer { get; set; }
 
         public bool Execute(GitUIEventArgs args)
         {

@@ -2,25 +2,32 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\GitExtensions.Extensibility\GitExtensions.Extensibility.csproj" />
-    <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\..\GitUI\Resources\Icons\error.png">
-      <Link>Properties\error.png</Link>
-    </Content>
-    <Content Include="..\..\GitUI\Resources\Icons\StatusHourglass.png">
-      <Link>Properties\StatusHourglass.png</Link>
-    </Content>
-    <Content Include="..\..\GitUI\Resources\Icons\success.png">
-      <Link>Properties\success.png</Link>
-    </Content>
     <None Include="Resources\IconGitFlow.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Properties\Images.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Images.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Resources -->
-    <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
+    <EmbeddedResource Update="Properties\Images.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Images.Designer.cs" />
+    <EmbeddedResource Update="Properties\Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

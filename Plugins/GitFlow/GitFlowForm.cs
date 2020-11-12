@@ -4,22 +4,16 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using GitCommands;
 using GitExtensions.Core.Commands;
 using GitExtensions.Core.Commands.Events;
 using GitExtensions.Core.Module;
 using GitExtensions.Core.Utils.UI;
 using GitFlow.Properties;
-using ResourceManager;
 
 namespace GitFlow
 {
-    public partial class GitFlowForm : GitExtensionsFormBase
+    public partial class GitFlowForm : Form
     {
-        private readonly TranslationString _gitFlowTooltip = new TranslationString("A good branch model for your project with Git...");
-        private readonly TranslationString _loading = new TranslationString("Loading...");
-        private readonly TranslationString _noBranchExist = new TranslationString("No {0} branches exist.");
-
         private readonly GitUIEventArgs _gitUiCommands;
 
         private Dictionary<string, IReadOnlyList<string>> Branches { get; } = new Dictionary<string, IReadOnlyList<string>>();
@@ -60,12 +54,33 @@ namespace GitFlow
         public GitFlowForm(GitUIEventArgs gitUiCommands)
         {
             InitializeComponent();
-            InitializeComplete();
+
+            Text = Strings.FotmText;
+            btnClose.Text = Strings.BtnClose;
+            btnCreateBranch.Text = Strings.BtnCreateBranch;
+            btnFinish.Text = Strings.BtnFinish;
+            btnInit.Text = Strings.BtnInit;
+            btnPublish.Text = Strings.BtnPublish;
+            btnPull.Text = Strings.BtnPull;
+            cbBasedOn.Text = Strings.CbBasedOn;
+            cbPushAfterFinish.Text = Strings.CbPushAfterFinish;
+            cbSquash.Text = Strings.CbSquash;
+            gbManage.Text = Strings.GbManage;
+            gbStart.Text = Strings.GbStart;
+            label1.Text = Strings.Label1;
+            label10.Text = Strings.Label10;
+            label2.Text = Strings.Label2;
+            label9.Text = Strings.Label9;
+            lblCaptionHead.Text = Strings.LblCaptionHead;
+            lblHead.Text = Strings.LblHead;
+            lblPrefixName.Text = Strings.LblPrefixName;
+            lnkGitFlow.Text = Strings.LnkGitFlow;
+            panel3.Text = Strings.Panel3;
 
             _gitUiCommands = gitUiCommands;
 
             lblPrefixManage.Text = string.Empty;
-            ttGitFlow.SetToolTip(lnkGitFlow, _gitFlowTooltip.Text);
+            ttGitFlow.SetToolTip(lnkGitFlow, Strings.GitFlowTooltip);
 
             if (_gitUiCommands != null)
             {
@@ -130,7 +145,7 @@ namespace GitFlow
             cbManageType.Enabled = false;
             btnFinish.Enabled = false;
 
-            cbBranches.DataSource = new List<string> { _loading.Text };
+            cbBranches.DataSource = new List<string> { Strings.Loading };
             if (!Branches.ContainsKey(branchType))
             {
                 _task.LoadAsync(() => GetBranches(branchType), branches =>
@@ -150,7 +165,7 @@ namespace GitFlow
         private IReadOnlyList<string> GetBranches(string typeBranch)
         {
             var args = new GitArgumentBuilder("flow") { typeBranch };
-            var result = _gitUiCommands.GitModule.GitExecutable.Execute(args);
+            var result = _gitUiCommands.GitModule.GitExecutable.Execute(args, _gitUiCommands.GitModule.Encoding);
 
             if (result.ExitCode != 0 || result.StandardOutput == null)
             {
@@ -170,7 +185,7 @@ namespace GitFlow
             var isThereABranch = branches.Any();
 
             cbManageType.Enabled = true;
-            cbBranches.DataSource = isThereABranch ? branches : new[] { string.Format(_noBranchExist.Text, branchType) };
+            cbBranches.DataSource = isThereABranch ? branches : new[] { string.Format(Strings.NoBranchExist, branchType) };
             cbBranches.Enabled = isThereABranch;
             if (isThereABranch && CurrentBranch != null)
             {
@@ -307,7 +322,7 @@ namespace GitFlow
 
         private bool RunCommand(ArgumentString commandText)
         {
-            pbResultCommand.Image = DpiUtil.Scale(Resource.StatusHourglass);
+            pbResultCommand.Image = DpiUtil.Scale(Images.StatusHourglass);
             ShowToolTip(pbResultCommand, "running command : git " + commandText);
             ForceRefresh(pbResultCommand);
             lblRunCommand.Text = "git " + commandText;
@@ -315,7 +330,7 @@ namespace GitFlow
             txtResult.Text = "running...";
             ForceRefresh(txtResult);
 
-            var result = _gitUiCommands.GitModule.GitExecutable.Execute(commandText);
+            var result = _gitUiCommands.GitModule.GitExecutable.Execute(commandText, _gitUiCommands.GitModule.Encoding);
 
             IsRefreshNeeded = true;
 
@@ -326,13 +341,13 @@ namespace GitFlow
 
             if (result.ExitCode == 0)
             {
-                pbResultCommand.Image = DpiUtil.Scale(Resource.success);
+                pbResultCommand.Image = DpiUtil.Scale(Images.success);
                 ShowToolTip(pbResultCommand, resultText);
                 DisplayHead();
             }
             else
             {
-                pbResultCommand.Image = DpiUtil.Scale(Resource.error);
+                pbResultCommand.Image = DpiUtil.Scale(Images.error);
                 ShowToolTip(pbResultCommand, "error: " + resultText);
             }
 
