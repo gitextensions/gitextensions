@@ -1,6 +1,6 @@
 ﻿using GitExtensions.Core.Module;
 
-namespace GitUIPluginInterfaces.RepositoryHosts
+namespace GitExtensions.Extensibility.RepositoryHosts
 {
     // This is stored in ContextMenuStrip.Tag, so converting to a struct won't be benefitial
     public class GitBlameContext

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GitUIPluginInterfaces.RepositoryHosts
+namespace GitExtensions.Extensibility.RepositoryHosts
 {
     public static class GitProtocolExtensions
     {

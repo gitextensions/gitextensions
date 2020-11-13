@@ -2,110 +2,56 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Git.hub;
-using GitCommands.Config;
-using GitCommands.Remotes;
 using GitExtensions.Core.Commands;
 using GitExtensions.Core.Commands.Events;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Events;
+using GitExtensions.Extensibility.RepositoryHosts;
 using GitExtensions.Extensibility.Settings;
 using GitHub3.Properties;
-using GitUIPluginInterfaces.RepositoryHosts;
-using ResourceManager;
 
 namespace GitHub3
 {
-    internal static class GitHubLoginInfo
-    {
-        private static string _username;
-
-        public static string Username
-        {
-            get
-            {
-                if (_username == "")
-                {
-                    return null;
-                }
-
-                if (_username != null)
-                {
-                    return _username;
-                }
-
-                try
-                {
-                    var user = GitHub3Plugin.GitHub.getCurrentUser();
-                    if (user != null)
-                    {
-                        _username = user.Login;
-                        return _username;
-                    }
-                    else
-                    {
-                        _username = "";
-                    }
-
-                    return null;
-                }
-                catch
-                {
-                    return null;
-                }
-            }
-        }
-
-        public static string OAuthToken
-        {
-            get => GitHub3Plugin.Instance.OAuthToken.ValueOrDefault(GitHub3Plugin.Instance.Settings);
-            set
-            {
-                _username = null;
-                GitHub3Plugin.Instance.OAuthToken[GitHub3Plugin.Instance.Settings] = value;
-                GitHub3Plugin.GitHub.setOAuth2Token(value);
-            }
-        }
-    }
-
     [Export(typeof(IGitPlugin))]
-    public class GitHub3Plugin : GitPluginBase,
+    public sealed class Plugin : IGitPlugin,
         IRepositoryHostPlugin,
         IGitPluginConfigurable,
         ILoadHandler
     {
-        private readonly TranslationString _viewInWebSite = new TranslationString("View in {0}");
-        private readonly TranslationString _tokenAlreadyExist = new TranslationString("You already have an OAuth token. To get a new one, delete your old one in Plugins > Settings first.");
+        // Extract from GitCommands.Config.SettingKeyString
+        private const string RemoteUrl = "remote.{0}.url";
 
         public static string GitHubAuthorizationRelativeUrl = "authorizations";
         public static string UpstreamConventionName = "upstream";
-        public readonly StringSetting GitHubHost = new StringSetting("GitHub (Enterprise) hostname", "github.com");
-        public readonly StringSetting OAuthToken = new StringSetting("OAuth Token", "");
-        public string GitHubApiEndpoint => $"https://api.{GitHubHost.ValueOrDefault(Settings)}";
-        public string GitHubEndpoint => $"https://{GitHubHost.ValueOrDefault(Settings)}";
+        public readonly StringSetting GitHubHost = new StringSetting("GitHub (Enterprise) hostname", Strings.GitHubHost, "github.com");
+        public readonly StringSetting OAuthToken = new StringSetting("OAuth Token", Strings.OAuthToken, string.Empty);
+        public string GitHubApiEndpoint => $"https://api.{GitHubHost.ValueOrDefault(SettingsContainer.GetSettingsSource())}";
+        public string GitHubEndpoint => $"https://{GitHubHost.ValueOrDefault(SettingsContainer.GetSettingsSource())}";
 
-        internal static GitHub3Plugin Instance;
+        internal static Plugin Instance;
         internal static Client _gitHub;
-        internal static Client GitHub => _gitHub ?? (_gitHub = new Client(Instance.GitHubApiEndpoint));
+        internal static Client GitHub => _gitHub ??= new Client(Instance.GitHubApiEndpoint);
 
         private IGitUICommands _currentGitUiCommands;
         private IReadOnlyList<IHostedRemote> _hostedRemotesForModule;
 
-        public GitHub3Plugin()
+        public Plugin()
         {
-            SetNameAndDescription("GitHub");
-            Translate();
-
-            if (Instance == null)
-            {
-                Instance = this;
-            }
-
-            Icon = Resources.IconGitHub;
+            Instance ??= this;
         }
+
+        public string Name => "GitHub";
+
+        public string Description => Strings.Description;
+
+        public Image Icon => Images.IconGitHub;
+
+        public IGitPluginSettingsContainer SettingsContainer { get; set; }
 
         public IEnumerable<ISetting> GetSettings()
         {
@@ -134,7 +80,7 @@ namespace GitHub3
             }
             else
             {
-                MessageBox.Show(args.OwnerForm, _tokenAlreadyExist.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(args.OwnerForm, Strings.TokenAlreadyExist, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return false;
@@ -214,7 +160,7 @@ namespace GitHub3
 
                 foreach (string remote in gitModule.GetRemoteNames())
                 {
-                    var url = gitModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                    var url = gitModule.GetSetting(string.Format(RemoteUrl, remote));
 
                     if (string.IsNullOrEmpty(url))
                     {
@@ -242,7 +188,7 @@ namespace GitHub3
                 return;
             }
 
-            var toolStripMenuItem = new ToolStripMenuItem(string.Format(_viewInWebSite.Text, Name), Icon);
+            var toolStripMenuItem = new ToolStripMenuItem(string.Format(Strings.ViewInWebSite, Name), Icon);
             contextMenu.Items.Add(toolStripMenuItem);
             toolStripMenuItem.Click += (s, e) => Process.Start(_hostedRemotesForModule.First().Data);
 
@@ -260,6 +206,58 @@ namespace GitHub3
                     Process.Start(hostedRemote.GetBlameUrl(blameContext.BlameId.ToString(), blameContext.FileName,
                         blameContext.LineIndex + 1));
                 };
+            }
+        }
+    }
+
+    internal static class GitHubLoginInfo
+    {
+        private static string _username;
+
+        public static string Username
+        {
+            get
+            {
+                if (_username == "")
+                {
+                    return null;
+                }
+
+                if (_username != null)
+                {
+                    return _username;
+                }
+
+                try
+                {
+                    var user = Plugin.GitHub.getCurrentUser();
+                    if (user != null)
+                    {
+                        _username = user.Login;
+                        return _username;
+                    }
+                    else
+                    {
+                        _username = "";
+                    }
+
+                    return null;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+        }
+
+        public static string OAuthToken
+        {
+            get => Plugin.Instance.OAuthToken.ValueOrDefault(Plugin.Instance.SettingsContainer.GetSettingsSource());
+            set
+            {
+                _username = null;
+                Plugin.Instance.OAuthToken[Plugin.Instance.SettingsContainer.GetSettingsSource()] = value;
+                Plugin.GitHub.setOAuth2Token(value);
             }
         }
     }

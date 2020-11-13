@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitExtensions.Extensibility;
 
-namespace GitUIPluginInterfaces.RepositoryHosts
+namespace GitExtensions.Extensibility.RepositoryHosts
 {
     public interface IRepositoryHostPlugin : IGitPlugin, IGitPluginExecutable
     {

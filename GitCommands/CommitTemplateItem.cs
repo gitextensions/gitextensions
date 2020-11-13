@@ -3,7 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using GitCommands.Utils;
+using GitExtensions.Core.Utils;
 using JetBrains.Annotations;
 
 namespace GitCommands

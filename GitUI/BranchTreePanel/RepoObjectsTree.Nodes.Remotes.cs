@@ -8,10 +8,10 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Remotes;
 using GitExtensions.Core.Module;
+using GitExtensions.Extensibility.RepositoryHosts;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.Properties;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.BranchTreePanel

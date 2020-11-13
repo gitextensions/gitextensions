@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace GitCommands.Utils
+namespace GitExtensions.Core.Utils
 {
     public static class JsonSerializer
     {

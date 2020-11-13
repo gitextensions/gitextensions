@@ -9,12 +9,12 @@ using GitCommands;
 using GitExtensions.Core.Module;
 using GitExtensions.Core.Utils;
 using GitExtensions.Core.Utils.UI;
+using GitExtensions.Extensibility.RepositoryHosts;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Avatars;
 using GitUI.Editor;
 using GitUI.HelperDialogs;
 using GitUI.Properties;
-using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
 using ResourceManager;
 

@@ -4,7 +4,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Git.hub;
-using GitUIPluginInterfaces.RepositoryHosts;
+using GitExtensions.Extensibility.RepositoryHosts;
 
 namespace GitHub3
 {

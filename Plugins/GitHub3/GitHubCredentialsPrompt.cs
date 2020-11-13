@@ -6,9 +6,8 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitCommands.Utils;
+using GitExtensions.Core.Utils;
 using Microsoft.VisualStudio.Threading;
-using ResourceManager;
 
 namespace GitHub3
 {
@@ -19,9 +18,9 @@ namespace GitHub3
         private readonly JoinableTaskFactory _joinableTaskFactory;
         private readonly HttpClient _httpClient = new HttpClient();
 
-        private readonly TranslationString _generationFailed = new TranslationString("Fail to generate token due to error:");
-        private readonly TranslationString _ask2ndFactorCode = new TranslationString("Please enter your GitHub validation code (from {0})");
-        private readonly TranslationString _generationSucceed = new TranslationString("Successfully retrieved OAuth token.");
+        private readonly string _generationFailed = "Fail to generate token due to error:";
+        private readonly string _ask2ndFactorCode = "Please enter your GitHub validation code (from {0})";
+        private readonly string _generationSucceed = "Successfully retrieved OAuth token.";
 
         public GitHubCredentialsPrompt(string authorizationApiUrl)
         {
@@ -40,7 +39,7 @@ namespace GitHub3
             {
                 GitHubLoginInfo.OAuthToken = token;
 
-                MessageBox.Show(this, _generationSucceed.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(this, _generationSucceed, Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = DialogResult.OK;
                 Close();
             }
@@ -107,7 +106,7 @@ namespace GitHub3
                     var otpTypeHeader = response.Headers.GetValues(otpHeaderKey).First();
                     var otpType = otpTypeHeader.Substring(otpTypeHeader.Length - 3);
 
-                    lblError.Text = string.Format(_ask2ndFactorCode.Text, otpType);
+                    lblError.Text = string.Format(_ask2ndFactorCode, otpType);
                 }
                 else
                 {
@@ -123,7 +122,7 @@ namespace GitHub3
                         message = response.ReasonPhrase;
                     }
 
-                    lblError.Text = _generationFailed.Text + Environment.NewLine + message;
+                    lblError.Text = _generationFailed + Environment.NewLine + message;
                 }
 
                 return null;

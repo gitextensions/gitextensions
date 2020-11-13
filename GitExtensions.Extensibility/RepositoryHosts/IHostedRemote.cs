@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace GitUIPluginInterfaces.RepositoryHosts
+namespace GitExtensions.Extensibility.RepositoryHosts
 {
     public interface IHostedRemote
     {

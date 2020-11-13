@@ -14,12 +14,12 @@ using GitExtensions.Core.Commands.Events;
 using GitExtensions.Core.Module;
 using GitExtensions.Core.Utils.UI;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.RepositoryHosts;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
 
 namespace GitUI

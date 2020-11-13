@@ -302,30 +302,6 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitHub3Plugin" source-language="en">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>GitHub</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="GitHubHost.Caption">
-        <source>GitHub (Enterprise) hostname</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="OAuthToken.Caption">
-        <source>OAuth Token</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_tokenAlreadyExist.Text">
-        <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_viewInWebSite.Text">
-        <source>View in {0}</source>
-        <target />
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en">
     <body>
       <trans-unit id="lblIgnoreBuildBranch.Text">

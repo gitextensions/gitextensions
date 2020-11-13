@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using GitUIPluginInterfaces.RepositoryHosts;
+using GitExtensions.Extensibility.RepositoryHosts;
 
 namespace GitUI.CommandsDialogs.RepoHosting
 {

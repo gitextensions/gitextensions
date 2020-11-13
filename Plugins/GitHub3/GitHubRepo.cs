@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Git.hub;
-using GitUIPluginInterfaces.RepositoryHosts;
+using GitExtensions.Extensibility.RepositoryHosts;
 
 namespace GitHub3
 {
@@ -40,7 +40,7 @@ namespace GitHub3
                         return null;
                     }
 
-                    _repo = GitHub3Plugin.GitHub.getRepository(Owner, Name);
+                    _repo = Plugin.GitHub.getRepository(Owner, Name);
                 }
 
                 return CloneProtocol == GitProtocol.Ssh ? _repo.Parent?.GitUrl : _repo.Parent?.CloneUrl;
@@ -63,7 +63,7 @@ namespace GitHub3
                         return null;
                     }
 
-                    _repo = GitHub3Plugin.GitHub.getRepository(Owner, Name);
+                    _repo = Plugin.GitHub.getRepository(Owner, Name);
                 }
 
                 return _repo.Parent?.Owner.Login;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GitUIPluginInterfaces.RepositoryHosts
+namespace GitExtensions.Extensibility.RepositoryHosts
 {
     public interface IPullRequestInformation
     {

@@ -2,7 +2,7 @@
 using GitExtensions.Core.Module;
 using JetBrains.Annotations;
 
-namespace GitUIPluginInterfaces.RepositoryHosts
+namespace GitExtensions.Extensibility.RepositoryHosts
 {
     public interface IHostedRepository
     {

@@ -1,4 +1,4 @@
-﻿using GitUIPluginInterfaces.RepositoryHosts;
+﻿using GitExtensions.Extensibility.RepositoryHosts;
 
 namespace GitHub3
 {
@@ -19,7 +19,7 @@ namespace GitHub3
         {
             if (_repo == null)
             {
-                _repo = new GitHubRepo(GitHub3Plugin.GitHub.getRepository(Owner, RemoteRepositoryName))
+                _repo = new GitHubRepo(Plugin.GitHub.getRepository(Owner, RemoteRepositoryName))
                 {
                     CloneProtocol = CloneProtocol
                 };
@@ -55,7 +55,7 @@ namespace GitHub3
 
         public string GetBlameUrl(string commitHash, string fileName, int lineIndex)
         {
-            return $"{GitHub3Plugin.Instance.GitHubEndpoint}/{Data}/blame/{commitHash}/{fileName}#L{lineIndex}";
+            return $"{Plugin.Instance.GitHubEndpoint}/{Data}/blame/{commitHash}/{fileName}#L{lineIndex}";
         }
     }
 }

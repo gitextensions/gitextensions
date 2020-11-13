@@ -379,35 +379,6 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="de">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>GitHub</source>
-        <target>GitHub</target>
-        
-      </trans-unit>
-      <trans-unit id="GitHubHost.Caption">
-        <source>GitHub (Enterprise) hostname</source>
-        <target>GitHub (Enterprise) Hostname</target>
-        
-      </trans-unit>
-      <trans-unit id="OAuthToken.Caption">
-        <source>OAuth Token</source>
-        <target>OAuth Token</target>
-        
-      </trans-unit>
-      <trans-unit id="_tokenAlreadyExist.Text">
-        <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
-        <target>Sie haben schon ein OAuth Token. Um ein neues anzufordern, löschen Sie das alte zuerst unter Plugins &gt; Einstellungen.</target>
-        
-      </trans-unit>
-      <trans-unit id="_viewInWebSite.Text">
-        <source>View in {0}</source>
-        <target>Anzeigen in {0}</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="de">
     <body>
       <trans-unit id="lblIgnoreBuildBranch.Text">
