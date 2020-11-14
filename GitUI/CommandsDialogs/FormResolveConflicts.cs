@@ -403,6 +403,7 @@ namespace GitUI.CommandsDialogs
             {
                 case "kdiff3":
                 case "diffmerge":
+                case "smerge":
                     arguments = arguments.Replace("\"$BASE\"", "");
                     break;
                 case "tortoisemerge":
