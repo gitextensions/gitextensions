@@ -12,7 +12,7 @@ namespace GitCommandsTests.DiffMergeTools
         {
             var tools = RegisteredDiffMergeTools.All(DiffMergeToolType.Diff);
 
-            tools.Should().BeEquivalentTo("araxis", "bc", "bc3", "diffmerge", "kdiff3", "meld", "p4merge", "semanticmerge", "tortoisediff", "tortoisemerge", "vscode", "vsdiffmerge", "winmerge");
+            tools.Should().BeEquivalentTo("araxis", "bc", "bc3", "diffmerge", "kdiff3", "meld", "p4merge", "semanticmerge", "tortoisediff", "vscode", "vsdiffmerge", "winmerge");
         }
 
         [Test]

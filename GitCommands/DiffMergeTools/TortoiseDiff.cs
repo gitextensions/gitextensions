@@ -9,6 +9,9 @@ namespace GitCommands.DiffMergeTools
     internal class TortoiseDiff : TortoiseGitMerge
     {
         /// <inheritdoc />
+        public override bool IsDiffTool => true;
+
+        /// <inheritdoc />
         public override string Name => "tortoisediff";
     }
 }
