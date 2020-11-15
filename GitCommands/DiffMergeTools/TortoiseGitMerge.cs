@@ -8,6 +8,9 @@ namespace GitCommands.DiffMergeTools
         public override string ExeFileName => "TortoiseGitMerge.exe";
 
         /// <inheritdoc />
+        public override bool IsDiffTool => false;
+
+        /// <inheritdoc />
         public override string MergeCommand => "-base:\"$BASE\" -mine:\"$LOCAL\" -theirs:\"$REMOTE\" -merged:\"$MERGED\"";
 
         /// <inheritdoc />
