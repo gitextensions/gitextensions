@@ -13,3 +13,7 @@
 [submodule "Externals/EasyHook"]
 	path = Externals/EasyHook
 	url = ../../gitextensions/EasyHook.git
+[submodule "Extensibility"]
+	path = Extensibility
+	url = https://github.com/ivangrek/gitextensions.extensibility
+	branch = plugins

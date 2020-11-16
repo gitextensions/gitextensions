@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\GitExtensions.Extensibility\GitExtensions.Extensibility.csproj" />
+    <ProjectReference Include="..\..\..\Extensibility\src\GitExtensions.Extensibility\GitExtensions.Extensibility.csproj" />
   </ItemGroup>
 
   <ItemGroup>

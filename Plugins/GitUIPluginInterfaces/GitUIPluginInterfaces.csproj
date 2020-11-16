@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\GitExtensions.Core\GitExtensions.Core.csproj" />
-    <ProjectReference Include="..\..\GitExtensions.Extensibility\GitExtensions.Extensibility.csproj" />
+    <ProjectReference Include="..\..\Extensibility\src\GitExtensions.Core\GitExtensions.Core.csproj" />
+    <ProjectReference Include="..\..\Extensibility\src\GitExtensions.Extensibility\GitExtensions.Extensibility.csproj" />
     <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj" />
   </ItemGroup>
 </Project>
