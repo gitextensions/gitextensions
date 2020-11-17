@@ -293,8 +293,8 @@ namespace GitUI
                 Hide();
 
                 // Discard search region
-                _search.ClearScanRegion();
-                _editor.Refresh(); // must repaint manually
+                _search?.ClearScanRegion();
+                _editor?.Refresh(); // must repaint manually
             }
         }
 
