@@ -69,7 +69,7 @@ namespace GitUI.UserControls
             }
         }
 
-        private static TreeNode GetNodeFromPath(TreeNode node, string path)
+        public static TreeNode GetNodeFromPath(this TreeNode node, string path)
         {
             if (GetFullNamePath(node) == path)
             {

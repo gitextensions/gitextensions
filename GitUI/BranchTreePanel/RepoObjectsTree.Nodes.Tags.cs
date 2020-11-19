@@ -107,6 +107,15 @@ namespace GitUI.BranchTreePanel
                 return ReloadNodesAsync(LoadNodesAsync);
             }
 
+            /// <inheritdoc/>
+            protected internal override void Refresh()
+            {
+                // Break the local cache to ensure the data is requeried to reflect the required sort order.
+                _loadedTags = null;
+
+                base.Refresh();
+            }
+
             protected override async Task<Nodes> LoadNodesAsync(CancellationToken token)
             {
                 await TaskScheduler.Default;

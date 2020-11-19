@@ -221,7 +221,16 @@ namespace GitUI.BranchTreePanel
             /// <summary>
             /// Requests to refresh the data tree and to apply filtering, if necessary.
             /// </summary>
-            internal void Refresh() => Refresh(_isCurrentlyFiltering);
+            protected internal virtual void Refresh()
+            {
+                // NOTE: descendants may need to break their local caches to ensure the latest data is loaded.
+
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    IsFiltering.Value = _isCurrentlyFiltering;
+                    await ReloadNodesAsync(LoadNodesAsync);
+                });
+            }
 
             /// <summary>
             /// Requests to refresh the data tree and to apply filtering, if necessary.
@@ -229,7 +238,7 @@ namespace GitUI.BranchTreePanel
             /// <param name="isFiltering">
             ///  <see langword="true"/>, if the data is being filtered; otherwise <see langword="false"/>.
             /// </param>
-            public void Refresh(bool isFiltering)
+            internal void ToggleFilterMode(bool isFiltering)
             {
                 // If we're not currently filtering and no need to filter now -> exit.
                 // Else we need to iterate over the list and rebind the tree - whilst there

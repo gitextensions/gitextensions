@@ -189,7 +189,7 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        [DebuggerDisplay("(Local) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {IsVisible}")]
+        [DebuggerDisplay("(Local) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
         private sealed class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICanRename, ICanDelete
         {
             public LocalBranchNode(Tree tree, in ObjectId objectId, string fullPath, bool isCurrent, bool visible)
@@ -341,6 +341,15 @@ namespace GitUI.BranchTreePanel
                 }
 
                 return FillBranchTree(_loadedBranches, token);
+            }
+
+            /// <inheritdoc/>
+            protected internal override void Refresh()
+            {
+                // Break the local cache to ensure the data is requeried to reflect the required sort order.
+                _loadedBranches = null;
+
+                base.Refresh();
             }
 
             private Nodes FillBranchTree(IReadOnlyList<IGitRef> branches, CancellationToken token)

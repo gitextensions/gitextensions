@@ -61,6 +61,15 @@ namespace GitUI.BranchTreePanel
                 return await FillBranchTreeAsync(_loadedBranches, token);
             }
 
+            /// <inheritdoc/>
+            protected internal override void Refresh()
+            {
+                // Break the local cache to ensure the data is requeried to reflect the required sort order.
+                _loadedBranches = null;
+
+                base.Refresh();
+            }
+
             private async Task<Nodes> FillBranchTreeAsync(IReadOnlyList<IGitRef> branches, CancellationToken token)
             {
                 var nodes = new Nodes(this);
