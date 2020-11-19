@@ -282,7 +282,7 @@ namespace GitUI.BranchTreePanel
                     return;
                 }
 
-                var newNodes = await loadNodesTask(token);
+                Nodes newNodes = await loadNodesTask(token);
 
                 await treeView.SwitchToMainThreadAsync(token);
 
@@ -291,9 +291,11 @@ namespace GitUI.BranchTreePanel
 
                 try
                 {
+                    string originalSelectedNodeFullNamePath = treeView.SelectedNode?.GetFullNamePath();
+
                     treeView.BeginUpdate();
                     IgnoreSelectionChangedEvent = true;
-                    FillTreeViewNode(_firstReloadNodesSinceModuleChanged);
+                    FillTreeViewNode(originalSelectedNodeFullNamePath, _firstReloadNodesSinceModuleChanged);
                 }
                 finally
                 {
@@ -304,13 +306,32 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            private void FillTreeViewNode(bool firstTime)
+            private void FillTreeViewNode(string originalSelectedNodeFullNamePath, bool firstTime)
             {
                 ThreadHelper.ThrowIfNotOnUIThread();
 
                 var expandedNodesState = firstTime ? new HashSet<string>() : TreeViewNode.GetExpandedNodesState();
                 Nodes.FillTreeViewNode(TreeViewNode);
+
+                var selectedNode = TreeViewNode.TreeView.SelectedNode;
+                if (originalSelectedNodeFullNamePath != selectedNode?.GetFullNamePath())
+                {
+                    var node = TreeViewNode.GetNodeFromPath(originalSelectedNodeFullNamePath);
+                    if (node != null)
+                    {
+                        if (((BaseBranchNode)node.Tag).Visible)
+                        {
+                            TreeViewNode.TreeView.SelectedNode = node;
+                        }
+                        else
+                        {
+                            TreeViewNode.TreeView.SelectedNode = null;
+                        }
+                    }
+                }
+
                 PostFillTreeViewNode(firstTime);
+
                 TreeViewNode.RestoreExpandedNodesState(expandedNodesState);
             }
 
