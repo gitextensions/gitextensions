@@ -131,7 +131,15 @@ namespace GitCommands.Git.Commands
                 }
 
                 // Sort by dereferenced data
-                return $"--sort={order}{sortBy} --sort={order}*{sortBy}";
+                //
+                // NOTE: This will cause tags to be sorted in a strange way, all tags will come first
+                // then all dereferences even though then may be pointing to commits that are younger
+                // then those of pointed by actual tags.
+                // If we swap the sort order, i.e. do "ref, deref" then we will be breaking the normal
+                // ref ordering (i.e. local and remote branches), and this is generally a significantly
+                // greater of two evils.
+                // Refer to https://github.com/gitextensions/gitextensions/issues/8621 for more info.
+                return $"--sort={order}*{sortBy} --sort={order}{sortBy}";
             }
         }
 

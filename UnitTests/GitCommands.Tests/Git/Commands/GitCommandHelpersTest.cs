@@ -665,9 +665,9 @@ namespace GitCommandsTests.Git.Commands
                         }
 
                         yield return new TestCaseData(/* tags */ true, /* branches */ true, /* noLocks */ false, sortBy, sortOrder,
-                            /* expected */ $@"for-each-ref{sortCondition}{sortConditionRef}{format} refs/heads/ refs/remotes/ refs/tags/");
+                            /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/");
                         yield return new TestCaseData(/* tags */ true, /* branches */ false, /* noLocks */ false, sortBy, sortOrder,
-                            /* expected */ $@"for-each-ref{sortCondition}{sortConditionRef}{format} refs/tags/");
+                            /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/tags/");
                         yield return new TestCaseData(/* tags */ false, /* branches */ true, /* noLocks */ false, sortBy, sortOrder,
                             /* expected */ $@"for-each-ref{sortCondition} --format=""%(objectname) %(refname)"" refs/heads/");
                         yield return new TestCaseData(/* tags */ false, /* branches */ true, /* noLocks */ true, sortBy, sortOrder,
