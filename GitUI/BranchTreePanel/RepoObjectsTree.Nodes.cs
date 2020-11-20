@@ -221,7 +221,16 @@ namespace GitUI.BranchTreePanel
             /// <summary>
             /// Requests to refresh the data tree and to apply filtering, if necessary.
             /// </summary>
-            internal void Refresh() => Refresh(_isCurrentlyFiltering);
+            protected internal virtual void Refresh()
+            {
+                // NOTE: descendants may need to break their local caches to ensure the latest data is loaded.
+
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    IsFiltering.Value = _isCurrentlyFiltering;
+                    await ReloadNodesAsync(LoadNodesAsync);
+                });
+            }
 
             /// <summary>
             /// Requests to refresh the data tree and to apply filtering, if necessary.
@@ -229,7 +238,7 @@ namespace GitUI.BranchTreePanel
             /// <param name="isFiltering">
             ///  <see langword="true"/>, if the data is being filtered; otherwise <see langword="false"/>.
             /// </param>
-            public void Refresh(bool isFiltering)
+            internal void ToggleFilterMode(bool isFiltering)
             {
                 // If we're not currently filtering and no need to filter now -> exit.
                 // Else we need to iterate over the list and rebind the tree - whilst there
@@ -273,7 +282,7 @@ namespace GitUI.BranchTreePanel
                     return;
                 }
 
-                var newNodes = await loadNodesTask(token);
+                Nodes newNodes = await loadNodesTask(token);
 
                 await treeView.SwitchToMainThreadAsync(token);
 
@@ -282,9 +291,11 @@ namespace GitUI.BranchTreePanel
 
                 try
                 {
+                    string originalSelectedNodeFullNamePath = treeView.SelectedNode?.GetFullNamePath();
+
                     treeView.BeginUpdate();
                     IgnoreSelectionChangedEvent = true;
-                    FillTreeViewNode(_firstReloadNodesSinceModuleChanged);
+                    FillTreeViewNode(originalSelectedNodeFullNamePath, _firstReloadNodesSinceModuleChanged);
                 }
                 finally
                 {
@@ -295,13 +306,32 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            private void FillTreeViewNode(bool firstTime)
+            private void FillTreeViewNode(string originalSelectedNodeFullNamePath, bool firstTime)
             {
                 ThreadHelper.ThrowIfNotOnUIThread();
 
                 var expandedNodesState = firstTime ? new HashSet<string>() : TreeViewNode.GetExpandedNodesState();
                 Nodes.FillTreeViewNode(TreeViewNode);
+
+                var selectedNode = TreeViewNode.TreeView.SelectedNode;
+                if (originalSelectedNodeFullNamePath != selectedNode?.GetFullNamePath())
+                {
+                    var node = TreeViewNode.GetNodeFromPath(originalSelectedNodeFullNamePath);
+                    if (node != null)
+                    {
+                        if (((BaseBranchNode)node.Tag).Visible)
+                        {
+                            TreeViewNode.TreeView.SelectedNode = node;
+                        }
+                        else
+                        {
+                            TreeViewNode.TreeView.SelectedNode = null;
+                        }
+                    }
+                }
+
                 PostFillTreeViewNode(firstTime);
+
                 TreeViewNode.RestoreExpandedNodesState(expandedNodesState);
             }
 

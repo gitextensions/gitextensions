@@ -226,7 +226,7 @@ namespace GitUI.CommandsDialogs
                 //      b) filter on specific branch
                 bool isFiltering = !AppSettings.ShowReflogReferences
                                 && (AppSettings.ShowCurrentBranchOnly || AppSettings.BranchFilterEnabled);
-                repoObjectsTree.RefreshRefs(isFiltering);
+                repoObjectsTree.ToggleFilterMode(isFiltering);
             };
 
             _filterRevisionsHelper.SetFilter(filter);

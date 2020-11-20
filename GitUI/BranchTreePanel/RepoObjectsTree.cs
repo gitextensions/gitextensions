@@ -243,11 +243,18 @@ namespace GitUI.BranchTreePanel
             _ = UICommandsSource;
         }
 
-        public void RefreshRefs(bool isFiltering)
+        /// <summary>
+        /// Toggles filtering mode on or off to the git refs present in the left panel depending on the app's global filtering rules .
+        /// These rules include: show all branches / show current branch / show filtered branches, etc.
+        /// </summary>
+        /// <param name="isFiltering">
+        ///  <see langword="true"/>, if the data is being filtered; otherwise <see langword="false"/>.
+        /// </param>
+        public void ToggleFilterMode(bool isFiltering)
         {
-            _branchesTree.Refresh(isFiltering);
-            _remotesTree.Refresh(isFiltering);
-            _tagTree.Refresh(isFiltering);
+            _branchesTree.ToggleFilterMode(isFiltering);
+            _remotesTree.ToggleFilterMode(isFiltering);
+            _tagTree.ToggleFilterMode(isFiltering);
         }
 
         public void SelectionChanged(IReadOnlyList<GitRevision> selectedRevisions)
