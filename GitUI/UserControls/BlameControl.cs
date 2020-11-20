@@ -320,6 +320,11 @@ namespace GitUI.Blame
 
         private (string gutter, string body, List<GitBlameEntry> gitBlameDisplays) BuildBlameContents(string filename, int avatarSize)
         {
+            if (_blame.Lines.Count == 0)
+            {
+                return ("", "", new List<GitBlameEntry>(0));
+            }
+
             var body = new StringBuilder(capacity: 4096);
 
             GitBlameCommit lastCommit = null;
