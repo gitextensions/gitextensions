@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils;
 using GitExtUtils.GitUI;
+using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -731,6 +732,11 @@ namespace GitUI.CommandsDialogs
             AppSettings.BlameShowAuthorAvatar = !AppSettings.BlameShowAuthorAvatar;
             showAuthorAvatarToolStripMenuItem.Checked = AppSettings.BlameShowAuthorAvatar;
             UpdateSelectedFileViewers(true);
+        }
+
+        private void GitcommandLogToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            FormGitCommandLog.ShowOrActivate(this);
         }
     }
 }

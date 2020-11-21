@@ -4234,6 +4234,10 @@ If you are not sure just close this window.</source>
         <source>Full history</source>
         <target />
       </trans-unit>
+      <trans-unit id="gitcommandLogToolStripMenuItem.ToolTipText">
+        <source>Git command log</source>
+        <target />
+      </trans-unit>
       <trans-unit id="ignoreWhitespaceToolStripMenuItem.Text">
         <source>Ignore whitespace</source>
         <target />
