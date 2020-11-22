@@ -68,6 +68,7 @@ namespace GitUI.CommandsDialogs
             this.showLineNumbersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showOriginalFilePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showAuthorAvatarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gitcommandLogToolStripMenuItem = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -347,7 +348,8 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator3,
             this.toolStripSplitLoad,
             this.ShowFullHistory,
-            this.toolStripBlameOptions});
+            this.toolStripBlameOptions,
+            this.gitcommandLogToolStripMenuItem});
             this.ToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.ToolStrip.Location = new System.Drawing.Point(0, 0);
             this.ToolStrip.Name = "ToolStrip";
@@ -584,6 +586,14 @@ namespace GitUI.CommandsDialogs
             this.showAuthorAvatarToolStripMenuItem.Text = "Show author avatar";
             this.showAuthorAvatarToolStripMenuItem.Click += new System.EventHandler(this.showAuthorAvatarToolStripMenuItem_Click);
             // 
+            // gitcommandLogToolStripMenuItem
+            // 
+            this.gitcommandLogToolStripMenuItem.Image = global::GitUI.Properties.Images.GitCommandLog;
+            this.gitcommandLogToolStripMenuItem.Name = "gitcommandLogToolStripMenuItem";
+            this.gitcommandLogToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.gitcommandLogToolStripMenuItem.ToolTipText = "Git command log";
+            this.gitcommandLogToolStripMenuItem.Click += new System.EventHandler(this.GitcommandLogToolStripMenuItemClick);
+            // 
             // FormFileHistory
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -671,5 +681,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripMenuItem showAuthorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showOriginalFilePathToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showAuthorAvatarToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton gitcommandLogToolStripMenuItem;
     }
 }
