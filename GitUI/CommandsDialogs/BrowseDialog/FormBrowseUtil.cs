@@ -7,7 +7,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         public static bool FileOrParentDirectoryExists(string path)
         {
             var fileInfo = new FileInfo(path);
-            return fileInfo.Exists || fileInfo.Directory.Exists;
+            return fileInfo.Exists || (fileInfo.Directory != null && fileInfo.Directory.Exists);
         }
 
         public static bool IsFileOrDirectory(string path)
