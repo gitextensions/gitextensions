@@ -26,6 +26,7 @@ namespace GitUI.Commands
         private const string FormatPatchCommandName = "formatpatch";
         private const string GitIgnoreCommandName = "gitignore";
         private const string InitCommandName = "init";
+        private const string MergeCommandName = "merge";
         private const string RemotesCommandName = "remotes";
         private const string RevertCommandName = "revert";
         private const string ResetCommandName = "reset";
@@ -88,6 +89,9 @@ namespace GitUI.Commands
 
                 // [path]
                 [InitCommandName] = CreateInitCommand,
+
+                // [--branch name]
+                [MergeCommandName] = CreateMergeCommand,
                 [RemotesCommandName] = CreateRemotesCommand,
 
                 // [filename]
@@ -270,6 +274,19 @@ namespace GitUI.Commands
         private IGitExtensionCommand CreateInitCommand()
         {
             return new InitGitExtensionCommand(_gitUICommands, dir: _arguments.Length > 2 ? _arguments[2] : null);
+        }
+
+        private IGitExtensionCommand CreateMergeCommand()
+        {
+            var arguments = InitializeArguments(_arguments);
+            string branch = null;
+
+            if (arguments.ContainsKey("branch"))
+            {
+                branch = arguments["branch"];
+            }
+
+            return new MergeGitExtensionCommand(_gitUICommands, branch);
         }
 
         private IGitExtensionCommand CreateRemotesCommand()

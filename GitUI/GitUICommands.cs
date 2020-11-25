@@ -1375,8 +1375,6 @@ namespace GitUI
                     }
 
                     return RunFileHistoryCommand(args, showBlame: command == BlameHistoryCommand);
-                case "merge":       // [--branch name]
-                    return RunMergeCommand(arguments);
                 case "mergeconflicts":
                 case "mergetool":   // [--quiet]
                     return RunMergeToolOrConflictCommand(arguments);
@@ -1395,17 +1393,6 @@ namespace GitUI
 
             Application.Run(new FormCommandlineHelp { StartPosition = FormStartPosition.CenterScreen });
             return true;
-        }
-
-        private bool RunMergeCommand(IReadOnlyDictionary<string, string> arguments)
-        {
-            string branch = null;
-            if (arguments.ContainsKey("branch"))
-            {
-                branch = arguments["branch"];
-            }
-
-            return StartMergeBranchDialog(null, branch);
         }
 
         private static string GetParameterOrEmptyStringAsDefault(IReadOnlyList<string> args, string paramName)
