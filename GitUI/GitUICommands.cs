@@ -1355,8 +1355,6 @@ namespace GitUI
             var command = args[1];
             switch (command)
             {
-                case "push":        // [--quiet]
-                    return Push(arguments);
                 case "synchronize": // [--rebase] [--merge] [--fetch] [--quiet]
                     return RunSynchronizeCommand(arguments);
             }

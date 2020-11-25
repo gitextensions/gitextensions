@@ -37,6 +37,7 @@ namespace GitUI.Commands
         private const string MergeToolCommandName = "mergetool";
         private const string OpenRepoCommandName = "openrepo";
         private const string PullCommandName = "pull";
+        private const string PushCommandName = "push";
         private const string RebaseCommandName = "rebase";
         private const string RemotesCommandName = "remotes";
         private const string RevertCommandName = "revert";
@@ -121,6 +122,9 @@ namespace GitUI.Commands
 
                 // [--rebase] [--merge] [--fetch] [--quiet] [--remotebranch name]
                 [PullCommandName] = CreatePullCommand,
+
+                // [--quiet]
+                [PushCommandName] = CreatePushCommand,
 
                 // [--branch name]
                 [RebaseCommandName] = CreateRebaseCommand,
@@ -412,6 +416,14 @@ namespace GitUI.Commands
             var isQuiet = arguments.ContainsKey("quiet");
 
             return new PullGitExtensionCommand(_gitUICommands, isQuiet, remoteBranch);
+        }
+
+        private IGitExtensionCommand CreatePushCommand()
+        {
+            var arguments = InitializeArguments(_arguments);
+            var quiet = arguments.ContainsKey("quiet");
+
+            return new PushGitExtensionCommand(_gitUICommands, quiet);
         }
 
         private IGitExtensionCommand CreateRebaseCommand()
