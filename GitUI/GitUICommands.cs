@@ -709,55 +709,6 @@ namespace GitUI
             return DoActionOnRepo(owner, Action);
         }
 
-        private bool StartResetChangesDialog(string fileName)
-        {
-            // Show a form asking the user if they want to reset the changes.
-            FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(null, true, false);
-
-            if (resetAction == FormResetChanges.ActionEnum.Cancel)
-            {
-                return false;
-            }
-
-            using (WaitCursorScope.Enter())
-            {
-                // Reset all changes.
-                Module.ResetFile(fileName);
-
-                // Also delete new files, if requested.
-                if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
-                {
-                    string errorCaption = null;
-                    string errorMessage = null;
-                    string path = _fullPathResolver.Resolve(fileName);
-                    if (File.Exists(path))
-                    {
-                        try
-                        {
-                            File.Delete(path);
-                        }
-                        catch (Exception ex)
-                        {
-                            errorCaption = Strings.ErrorCaptionFailedDeleteFile;
-                            errorMessage = ex.Message;
-                        }
-                    }
-                    else
-                    {
-                        errorCaption = Strings.ErrorCaptionFailedDeleteFolder;
-                        path.TryDeleteDirectory(out errorMessage);
-                    }
-
-                    if (errorMessage != null)
-                    {
-                        MessageBox.Show(null, errorMessage, errorCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-
-            return true;
-        }
-
         public bool StartRevertCommitDialog(IWin32Window owner, GitRevision revision)
         {
             bool Action()
@@ -1417,12 +1368,6 @@ namespace GitUI
                 return false;
             }
 
-            if (command == "revert" && args.Count <= 2)
-            {
-                MessageBox.Show("Cannot open revert, there is no file selected.", "Revert", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
             return RunCommandBasedOnArgument(args, arguments);
         }
 
@@ -1482,9 +1427,6 @@ namespace GitUI
                     return RunRebaseCommand(arguments);
                 case "remotes":
                     return StartRemotesDialog(owner: null);
-                case "revert":
-                case "reset":
-                    return StartResetChangesDialog(args.Count == 3 ? args[2] : "");
                 case "settings":
                     return StartSettingsDialog();
                 case "synchronize": // [--rebase] [--merge] [--fetch] [--quiet]

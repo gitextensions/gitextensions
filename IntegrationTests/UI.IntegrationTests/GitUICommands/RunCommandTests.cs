@@ -258,10 +258,21 @@ namespace GitUITests.GitUICommandsTests
         public void RunCommandBasedOnArgument_remotes()
             => RunCommandBasedOnArgument<FormRemotes>(new string[] { "ge.exe", "remotes" });
 
-        [TestCase("revert")]
-        [TestCase("reset")]
-        public void RunCommandBasedOnArgument_reset(string command)
-            => RunCommandBasedOnArgument<FormResetChanges>(new string[] { "ge.exe", command }, expectedResult: false);
+        [Test]
+        public void RunCommandBasedOnArgument_revert()
+        {
+            ((Action)(() =>
+            {
+                var factory = new GitExtensionCommandFactory(new string[] { "ge.exe", "revert" }, _commands);
+
+                factory.Create();
+            }))
+                .Should().Throw<InvalidOperationException>();
+        }
+
+        [Test]
+        public void RunCommandBasedOnArgument_reset()
+            => RunCommandBasedOnArgument<FormResetChanges>(new string[] { "ge.exe", "reset" }, expectedResult: false);
 
         [Test]
         public void RunCommandBasedOnArgument_searchfile()

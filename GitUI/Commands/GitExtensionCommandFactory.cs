@@ -13,6 +13,8 @@ namespace GitUI.Commands
         private const string ApplyPatchCommandName = "applypatch";
         private const string BlameCommandName = "blame";
         private const string BrowseCommandName = "browse";
+        private const string RevertCommandName = "revert";
+        private const string ResetCommandName = "reset";
         private const string SearchFileCommandName = "searchfile";
         private const string StashCommandName = "stash";
         private const string TagCommandName = "tag";
@@ -48,6 +50,10 @@ namespace GitUI.Commands
 
                 // [path] [-filter]
                 [BrowseCommandName] = CreateBrowseCommand,
+
+                // [filename]
+                [RevertCommandName] = CreateRevertCommand,
+                [ResetCommandName] = CreateResetCommand,
                 [SearchFileCommandName] = CreateSearchFileCommand,
                 [StashCommandName] = CreateStashCommand,
                 [TagCommandName] = CreateTagCommand,
@@ -128,6 +134,21 @@ namespace GitUI.Commands
             Console.Error.WriteLine($"No commit found matching: {_arguments}.");
 
             throw new InvalidOperationException($"No commit found matching: {_arguments}.");
+        }
+
+        private IGitExtensionCommand CreateRevertCommand()
+        {
+            if (_arguments.Length <= 2)
+            {
+                throw new InvalidOperationException("Cannot open revert, there is no file selected.|Revert");
+            }
+
+            return new ResetGitExtensionCommand(_gitUICommands, fileName: _arguments[2]);
+        }
+
+        private IGitExtensionCommand CreateResetCommand()
+        {
+            return new ResetGitExtensionCommand(_gitUICommands, fileName: string.Empty);
         }
 
         private IGitExtensionCommand CreateSearchFileCommand()
