@@ -10,6 +10,7 @@ using FluentAssertions;
 using GitCommands;
 using GitExtensions.UITests;
 using GitUI;
+using GitUI.Commands;
 using GitUI.CommandsDialogs;
 using NUnit.Framework;
 
@@ -58,18 +59,8 @@ namespace GitUITests.GitUICommandsTests
         [Test]
         public void RunCommandBasedOnArgument_should_throw_on_null_args()
         {
-            ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(null)))
-                .Should().Throw<NullReferenceException>();
-        }
-
-        [Test]
-        public void RunCommandBasedOnArgument_should_throw_on_empty_args()
-        {
-            ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { })))
-                .Should().Throw<ArgumentOutOfRangeException>();
-
-            ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { "ge.exe" })))
-                .Should().Throw<ArgumentOutOfRangeException>();
+            ((Action)(() => new GitExtensionCommandFactory(null, null)))
+                .Should().Throw<ArgumentNullException>();
         }
 
         [Test]
