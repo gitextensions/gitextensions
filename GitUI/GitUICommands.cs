@@ -1382,8 +1382,6 @@ namespace GitUI
                     return Pull(arguments);
                 case "push":        // [--quiet]
                     return Push(arguments);
-                case "rebase":      // [--branch name]
-                    return RunRebaseCommand(arguments);
                 case "synchronize": // [--rebase] [--merge] [--fetch] [--quiet]
                     return RunSynchronizeCommand(arguments);
             }
@@ -1416,17 +1414,6 @@ namespace GitUI
             successful = Pull(arguments) && successful;
             successful = Push(arguments) && successful;
             return successful;
-        }
-
-        private bool RunRebaseCommand(IReadOnlyDictionary<string, string> arguments)
-        {
-            string branch = null;
-            if (arguments.ContainsKey("branch"))
-            {
-                branch = arguments["branch"];
-            }
-
-            return StartRebaseDialog(owner: null, onto: branch);
         }
 
         public bool StartFileEditorDialog(string filename, bool showWarning = false)

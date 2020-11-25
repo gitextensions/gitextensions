@@ -30,6 +30,7 @@ namespace GitUI.Commands
         private const string InitCommandName = "init";
         private const string MergeCommandName = "merge";
         private const string OpenRepoCommandName = "openrepo";
+        private const string RebaseCommandName = "rebase";
         private const string RemotesCommandName = "remotes";
         private const string RevertCommandName = "revert";
         private const string ResetCommandName = "reset";
@@ -98,6 +99,9 @@ namespace GitUI.Commands
 
                 // [path]
                 [OpenRepoCommandName] = CreateOpenRepoCommand,
+
+                // [--branch name]
+                [RebaseCommandName] = CreateRebaseCommand,
                 [RemotesCommandName] = CreateRemotesCommand,
 
                 // [filename]
@@ -313,6 +317,19 @@ namespace GitUI.Commands
             }
 
             return new BrowseGitExtensionCommand(gitUICommands, GetParameterOrEmptyStringAsDefault(_arguments, paramName: "-filter"));
+        }
+
+        private IGitExtensionCommand CreateRebaseCommand()
+        {
+            var arguments = InitializeArguments(_arguments);
+            string branch = null;
+
+            if (arguments.ContainsKey("branch"))
+            {
+                branch = arguments["branch"];
+            }
+
+            return new RebaseGitExtensionCommand(_gitUICommands, onto: branch);
         }
 
         private IGitExtensionCommand CreateRemotesCommand()
