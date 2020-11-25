@@ -1375,8 +1375,6 @@ namespace GitUI
                     }
 
                     return RunFileHistoryCommand(args, showBlame: command == BlameHistoryCommand);
-                case "init":        // [path]
-                    return RunInitCommand(args);
                 case "merge":       // [--branch name]
                     return RunMergeCommand(arguments);
                 case "mergeconflicts":
@@ -1523,9 +1521,6 @@ namespace GitUI
 
             return true;
         }
-
-        private bool RunInitCommand(IReadOnlyList<string> args)
-            => StartInitializeDialog(null, args.Count > 2 ? args[2] : null);
 
         private bool RunMergeToolOrConflictCommand(IReadOnlyDictionary<string, string> arguments)
         {
