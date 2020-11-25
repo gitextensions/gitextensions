@@ -1378,8 +1378,6 @@ namespace GitUI
             var command = args[1];
             switch (command)
             {
-                case "cleanup":
-                    return StartCleanupRepositoryDialog();
                 case "clone":       // [path]
                     return RunCloneCommand(args);
                 case "commit":      // [--quiet]

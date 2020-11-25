@@ -18,6 +18,7 @@ namespace GitUI.Commands
         private const string CheckoutBranchCommandName = "checkoutbranch";
         private const string CheckoutRevisionCommandName = "checkoutrevision";
         private const string CherryCommandName = "cherry";
+        private const string CleanupCommandName = "cleanup";
         private const string RemotesCommandName = "remotes";
         private const string RevertCommandName = "revert";
         private const string ResetCommandName = "reset";
@@ -62,6 +63,7 @@ namespace GitUI.Commands
                 [CheckoutBranchCommandName] = CreateCheckoutCommand,
                 [CheckoutRevisionCommandName] = CreateCheckoutRevisionCommand,
                 [CherryCommandName] = CreateCherryCommand,
+                [CleanupCommandName] = CreateCleanupCommand,
                 [RemotesCommandName] = CreateRemotesCommand,
 
                 // [filename]
@@ -168,6 +170,11 @@ namespace GitUI.Commands
         private IGitExtensionCommand CreateCherryCommand()
         {
             return new CherryGitExtensionCommand(_gitUICommands);
+        }
+
+        private IGitExtensionCommand CreateCleanupCommand()
+        {
+            return new CleanupGitExtensionCommand(_gitUICommands);
         }
 
         private IGitExtensionCommand CreateRemotesCommand()
