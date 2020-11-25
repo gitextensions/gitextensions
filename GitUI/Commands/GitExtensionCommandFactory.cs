@@ -5,6 +5,7 @@ namespace GitUI.Commands
 {
     public sealed class GitExtensionCommandFactory : IGitExtensionCommandFactory
     {
+        private const string AboutCommandName = "about";
         private const string BrowseCommandName = "browse";
 
         private readonly string[] _arguments;
@@ -20,6 +21,8 @@ namespace GitUI.Commands
 
             _factories = new Dictionary<string, Func<IGitExtensionCommand>>
             {
+                [AboutCommandName] = CreateAboutCommand,
+
                 // [path] [-filter]
                 [BrowseCommandName] = CreateBrowseCommand
             };
@@ -41,6 +44,11 @@ namespace GitUI.Commands
 
             // until we complete the migration
             return null;
+        }
+
+        private IGitExtensionCommand CreateAboutCommand()
+        {
+            return new AboutGitExtensionCommand();
         }
 
         private IGitExtensionCommand CreateBrowseCommand()

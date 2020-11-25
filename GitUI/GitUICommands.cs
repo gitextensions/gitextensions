@@ -1437,12 +1437,6 @@ namespace GitUI
             var command = args[1];
             switch (command)
             {
-                case "about":
-                    Application.Run(new FormAbout
-                    {
-                        StartPosition = FormStartPosition.CenterScreen
-                    });
-                    return true;
                 case "add":
                 case "addfiles":
                     return StartAddFilesDialog(null, args.Count == 3 ? args[2] : ".");
