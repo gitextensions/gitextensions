@@ -1336,25 +1336,6 @@ namespace GitUI
                 });
         }
 
-        public bool RunCommand(IReadOnlyList<string> args)
-        {
-            var arguments = InitializeArguments(args);
-
-            if (args.Count <= 1)
-            {
-                return false;
-            }
-
-            return RunCommandBasedOnArgument(args, arguments);
-        }
-
-        // Please update FormCommandlineHelp if you add or change commands
-        private bool RunCommandBasedOnArgument(IReadOnlyList<string> args, IReadOnlyDictionary<string, string> arguments)
-        {
-            Application.Run(new FormCommandlineHelp { StartPosition = FormStartPosition.CenterScreen });
-            return true;
-        }
-
         public bool StartFileEditorDialog(string filename, bool showWarning = false)
         {
             using (var formEditor = new FormEditor(this, filename, showWarning))
@@ -1371,25 +1352,6 @@ namespace GitUI
         {
             fileName = fileName.ToPosixPath();
             return string.IsNullOrEmpty(Module.WorkingDir) ? fileName : fileName.Replace(Module.WorkingDir.ToPosixPath(), "");
-        }
-
-        private static IReadOnlyDictionary<string, string> InitializeArguments(IReadOnlyList<string> args)
-        {
-            var arguments = new Dictionary<string, string>();
-
-            for (int i = 2; i < args.Count; i++)
-            {
-                if (args[i].StartsWith("--") && i + 1 < args.Count && !args[i + 1].StartsWith("--"))
-                {
-                    arguments.Add(args[i].TrimStart('-'), args[++i]);
-                }
-                else if (args[i].StartsWith("--"))
-                {
-                    arguments.Add(args[i].TrimStart('-'), null);
-                }
-            }
-
-            return arguments;
         }
 
         internal void RaisePostBrowseInitialize(IWin32Window owner)
@@ -1496,10 +1458,6 @@ namespace GitUI
             {
                 _commands = commands;
             }
-
-            internal string NormalizeFileName(string fileName) => _commands.NormalizeFileName(fileName);
-
-            internal bool RunCommandBasedOnArgument(string[] args) => _commands.RunCommandBasedOnArgument(args, InitializeArguments(args));
         }
     }
 }

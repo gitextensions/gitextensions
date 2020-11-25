@@ -375,17 +375,8 @@ namespace GitUITests.GitUICommandsTests
                     var factory = new GitExtensionCommandFactory(args, _commands);
                     var сommand = factory.Create();
 
-                    // until we complete the migration
-                    if (сommand is null)
-                    {
-                        _commands.GetTestAccessor().RunCommandBasedOnArgument(args)
-                            .Should().Be(expectedResult);
-                    }
-                    else
-                    {
-                        сommand.Execute()
-                            .Should().Be(expectedResult);
-                    }
+                    сommand.Execute()
+                        .Should().Be(expectedResult);
                 },
                 runTestAsync: form =>
                 {

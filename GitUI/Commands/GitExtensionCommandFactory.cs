@@ -8,6 +8,7 @@ using GitUIPluginInterfaces;
 
 namespace GitUI.Commands
 {
+    // Please update FormCommandlineHelp if you add or change commands
     public sealed class GitExtensionCommandFactory : IGitExtensionCommandFactory
     {
         private const string AboutCommandName = "about";
@@ -178,8 +179,7 @@ namespace GitUI.Commands
                 return CreateCloneCommand(url: _arguments[1].Replace("github-mac://openRepo/", string.Empty), openedFromProtocolHandler: true);
             }
 
-            // until we complete the migration
-            return null;
+            return CreateCommandlineHelpCommand();
         }
 
         private IGitExtensionCommand CreateAboutCommand()
@@ -507,6 +507,11 @@ namespace GitUI.Commands
             return new UninstallGitExtensionCommand();
         }
 
+        private IGitExtensionCommand CreateCommandlineHelpCommand()
+        {
+            return new CommandlineHelpGitExtensionCommand();
+        }
+
         private static string GetParameterOrEmptyStringAsDefault(IReadOnlyList<string> args, string paramName)
         {
             var withEquals = paramName + "=";
@@ -577,6 +582,20 @@ namespace GitUI.Commands
             {
                 AppSettings.AutoStash = true;
             }
+        }
+
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal struct TestAccessor
+        {
+            private readonly GitExtensionCommandFactory _factory;
+
+            internal TestAccessor(GitExtensionCommandFactory factory)
+            {
+                _factory = factory;
+            }
+
+            internal string NormalizeFileName(string fileName) => _factory.NormalizeFileName(fileName);
         }
     }
 }

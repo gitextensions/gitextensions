@@ -1,6 +1,8 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using GitCommands;
 using GitUI;
+using GitUI.Commands;
 using NUnit.Framework;
 
 namespace GitUITests.GitUICommandsTests
@@ -23,8 +25,9 @@ namespace GitUITests.GitUICommandsTests
         {
             var module = new GitModule(@"c:\working\dir");
             var commands = new GitUICommands(module);
+            var factory = new GitExtensionCommandFactory(Array.Empty<string>(), commands);
 
-            commands.GetTestAccessor().NormalizeFileName(fileName).Should().Be(expected);
+            factory.GetTestAccessor().NormalizeFileName(fileName).Should().Be(expected);
         }
     }
 }

@@ -186,17 +186,6 @@ namespace GitExtensions
                 return;
             }
 
-            // until we complete the migration
-            if (сommand is null)
-            {
-                if (commands.RunCommand(arguments))
-                {
-                    Environment.ExitCode = 0;
-                }
-
-                return;
-            }
-
             if (сommand.Execute())
             {
                 Environment.ExitCode = 0;
