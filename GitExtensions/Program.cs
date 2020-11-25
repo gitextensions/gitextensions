@@ -7,6 +7,7 @@ using GitCommands;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI;
+using GitUI.Commands;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Infrastructure.Telemetry;
@@ -152,26 +153,54 @@ namespace GitExtensions
                 MouseWheelRedirector.Active = true;
             }
 
-            var commands = new GitUICommands(GetWorkingDir(args));
+            RunCommand(args);
 
-            if (args.Length <= 1)
+            AppSettings.SaveSettings();
+        }
+
+        private static void RunCommand(string[] arguments)
+        {
+            var commands = new GitUICommands(GetWorkingDir(arguments));
+            var factory = new GitExtensionCommandFactory(arguments, commands);
+            IGitExtensionCommand сommand;
+
+            // Avoid replacing the ExitCode eventually set while parsing arguments,
+            // i.e. assume -1 and afterwards, only set it to 0 if no error is indicated.
+            Environment.ExitCode = -1;
+
+            try
             {
-                commands.StartBrowseDialog();
+                сommand = factory.Create();
             }
-            else
+            catch (InvalidOperationException ex)
             {
-                // if we are here args.Length > 1
+                // perhaps a more specific exception is needed
+                var strings = (ex.Message ?? string.Empty)
+                    .Split('|');
 
-                // Avoid replacing the ExitCode eventually set while parsing arguments,
-                // i.e. assume -1 and afterwards, only set it to 0 if no error is indicated.
-                Environment.ExitCode = -1;
-                if (commands.RunCommand(args))
+                if (strings.Length == 2)
+                {
+                    MessageBox.Show(text: strings[0], caption: strings[1], MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                return;
+            }
+
+            // until we complete the migration
+            if (сommand is null)
+            {
+                if (commands.RunCommand(arguments))
                 {
                     Environment.ExitCode = 0;
                 }
+
+                return;
             }
 
-            AppSettings.SaveSettings();
+            if (сommand.Execute())
+            {
+                Environment.ExitCode = 0;
+            }
         }
 
         [CanBeNull]

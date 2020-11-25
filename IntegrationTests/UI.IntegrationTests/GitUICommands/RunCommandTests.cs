@@ -330,7 +330,23 @@ namespace GitUITests.GitUICommandsTests
         private void RunCommandBasedOnArgument<TForm>(string[] args, bool expectedResult = true, Action<TForm> runTest = null) where TForm : Form
         {
             UITest.RunForm<TForm>(
-                showForm: () => _commands.GetTestAccessor().RunCommandBasedOnArgument(args).Should().Be(expectedResult),
+                showForm: () =>
+                {
+                    var factory = new GitExtensionCommandFactory(args, _commands);
+                    var сommand = factory.Create();
+
+                    // until we complete the migration
+                    if (сommand is null)
+                    {
+                        _commands.GetTestAccessor().RunCommandBasedOnArgument(args)
+                            .Should().Be(expectedResult);
+                    }
+                    else
+                    {
+                        сommand.Execute()
+                            .Should().Be(expectedResult);
+                    }
+                },
                 runTestAsync: form =>
                 {
                     if (runTest != null)

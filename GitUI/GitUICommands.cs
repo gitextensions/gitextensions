@@ -1453,8 +1453,6 @@ namespace GitUI
                     return RunBlameCommand(args);
                 case "branch":
                     return StartCreateBranchDialog();
-                case "browse":      // [path] [-filter]
-                    return RunBrowseCommand(args);
                 case "checkout":
                 case "checkoutbranch":
                     return StartCheckoutBranch(null);
@@ -1583,23 +1581,6 @@ namespace GitUI
                 return true;
             }
 
-            return false;
-        }
-
-        private bool RunBrowseCommand(IReadOnlyList<string> args)
-        {
-            var arg = GetParameterOrEmptyStringAsDefault(args, "-commit");
-            if (arg == "")
-            {
-                return StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"));
-            }
-
-            if (Module.TryResolvePartialCommitId(arg, out var objectId))
-            {
-                return StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"), objectId);
-            }
-
-            Console.Error.WriteLine($"No commit found matching: {arg}");
             return false;
         }
 
