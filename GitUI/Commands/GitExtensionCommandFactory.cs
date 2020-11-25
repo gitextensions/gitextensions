@@ -20,6 +20,7 @@ namespace GitUI.Commands
         private const string CherryCommandName = "cherry";
         private const string CleanupCommandName = "cleanup";
         private const string CloneCommandName = "clone";
+        private const string CommitCommandName = "commit";
         private const string RemotesCommandName = "remotes";
         private const string RevertCommandName = "revert";
         private const string ResetCommandName = "reset";
@@ -68,6 +69,9 @@ namespace GitUI.Commands
 
                 // [path]
                 [CloneCommandName] = CreateCloneCommand,
+
+                // [--quiet]
+                [CommitCommandName] = CreateCommitCommand,
                 [RemotesCommandName] = CreateRemotesCommand,
 
                 // [filename]
@@ -206,6 +210,17 @@ namespace GitUI.Commands
             return new CloneGitExtensionCommand(_gitUICommands, url ?? (_arguments.Length > 2 ? _arguments[2] : null), openedFromProtocolHandler);
         }
 
+        private IGitExtensionCommand CreateCommitCommand()
+        {
+            var arguments = InitializeArguments(_arguments);
+
+            arguments.TryGetValue("message", out string overridingMessage);
+
+            var showOnlyWhenChanges = arguments.ContainsKey("quiet");
+
+            return new CommitGitExtensionCommand(_gitUICommands, overridingMessage, showOnlyWhenChanges);
+        }
+
         private IGitExtensionCommand CreateRemotesCommand()
         {
             return new RemotesGitExtensionCommand(_gitUICommands);
@@ -289,6 +304,25 @@ namespace GitUI.Commands
             return string.IsNullOrEmpty(_gitUICommands.Module.WorkingDir)
                 ? fileName
                 : fileName.Replace(_gitUICommands.Module.WorkingDir.ToPosixPath(), string.Empty);
+        }
+
+        private static IReadOnlyDictionary<string, string> InitializeArguments(IReadOnlyList<string> args)
+        {
+            var arguments = new Dictionary<string, string>();
+
+            for (int i = 2; i < args.Count; i++)
+            {
+                if (args[i].StartsWith("--") && i + 1 < args.Count && !args[i + 1].StartsWith("--"))
+                {
+                    arguments.Add(args[i].TrimStart('-'), args[++i]);
+                }
+                else if (args[i].StartsWith("--"))
+                {
+                    arguments.Add(args[i].TrimStart('-'), null);
+                }
+            }
+
+            return arguments;
         }
     }
 }

@@ -1378,8 +1378,6 @@ namespace GitUI
             var command = args[1];
             switch (command)
             {
-                case "commit":      // [--quiet]
-                    return Commit(arguments);
                 case "difftool":    // filename
                     return Module.OpenWithDifftool(args[2]) == "";
                 case BlameHistoryCommand:
