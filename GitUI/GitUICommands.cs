@@ -1375,8 +1375,6 @@ namespace GitUI
                     }
 
                     return RunFileHistoryCommand(args, showBlame: command == BlameHistoryCommand);
-                case "formatpatch":
-                    return StartFormatPatchDialog();
                 case "gitignore":
                     return StartEditGitIgnoreDialog(null, false);
                 case "init":        // [path]
