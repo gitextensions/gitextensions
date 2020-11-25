@@ -1499,8 +1499,6 @@ namespace GitUI
                     return StartCreateTagDialog();
                 case "viewdiff":
                     return StartCompareRevisionsDialog();
-                case "viewpatch":   // [filename]
-                    return StartViewPatchDialog(args.Count == 3 ? args[2] : "");
                 default:
                     if (args[1].StartsWith("git://") || args[1].StartsWith("http://") || args[1].StartsWith("https://"))
                     {
