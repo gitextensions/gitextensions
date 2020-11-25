@@ -45,6 +45,7 @@ namespace GitUI.Commands
         private const string SearchFileCommandName = "searchfile";
         private const string SettingsCommandName = "settings";
         private const string StashCommandName = "stash";
+        private const string SynchronizeCommandName = "synchronize";
         private const string TagCommandName = "tag";
         private const string ViewDiffCommandName = "viewdiff";
         private const string ViewPatchCommandName = "viewpatch";
@@ -136,6 +137,9 @@ namespace GitUI.Commands
                 [SearchFileCommandName] = CreateSearchFileCommand,
                 [SettingsCommandName] = CreateSettingsCommand,
                 [StashCommandName] = CreateStashCommand,
+
+                // [--rebase] [--merge] [--fetch] [--quiet]
+                [SynchronizeCommandName] = CreateSynchronizeCommand,
                 [TagCommandName] = CreateTagCommand,
                 [ViewDiffCommandName] = CreateViewDiffCommand,
 
@@ -472,6 +476,15 @@ namespace GitUI.Commands
         private IGitExtensionCommand CreateStashCommand()
         {
             return new StashGitExtensionCommand(_gitUICommands);
+        }
+
+        private IGitExtensionCommand CreateSynchronizeCommand()
+        {
+            var commitCommand = CreateCommitCommand();
+            var pullCommand = CreatePullCommand();
+            var pushCommand = CreatePushCommand();
+
+            return new SynchronizeGitExtensionCommand(commitCommand, pullCommand, pushCommand);
         }
 
         private IGitExtensionCommand CreateTagCommand()

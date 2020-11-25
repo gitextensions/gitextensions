@@ -1351,42 +1351,8 @@ namespace GitUI
         // Please update FormCommandlineHelp if you add or change commands
         private bool RunCommandBasedOnArgument(IReadOnlyList<string> args, IReadOnlyDictionary<string, string> arguments)
         {
-#pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
-            var command = args[1];
-            switch (command)
-            {
-                case "synchronize": // [--rebase] [--merge] [--fetch] [--quiet]
-                    return RunSynchronizeCommand(arguments);
-            }
-#pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
-
             Application.Run(new FormCommandlineHelp { StartPosition = FormStartPosition.CenterScreen });
             return true;
-        }
-
-        private static string GetParameterOrEmptyStringAsDefault(IReadOnlyList<string> args, string paramName)
-        {
-            var withEquals = paramName + "=";
-
-            for (var i = 2; i < args.Count; i++)
-            {
-                var arg = args[i];
-                if (arg.StartsWith(withEquals))
-                {
-                    return arg.Replace(withEquals, "");
-                }
-            }
-
-            return "";
-        }
-
-        private bool RunSynchronizeCommand(IReadOnlyDictionary<string, string> arguments)
-        {
-            bool successful = true;
-            successful = Commit(arguments) && successful;
-            successful = Pull(arguments) && successful;
-            successful = Push(arguments) && successful;
-            return successful;
         }
 
         public bool StartFileEditorDialog(string filename, bool showWarning = false)
@@ -1424,59 +1390,6 @@ namespace GitUI
             }
 
             return arguments;
-        }
-
-        private bool Commit(IReadOnlyDictionary<string, string> arguments)
-        {
-            arguments.TryGetValue("message", out string overridingMessage);
-            var showOnlyWhenChanges = arguments.ContainsKey("quiet");
-            return StartCommitDialog(null, overridingMessage, showOnlyWhenChanges);
-        }
-
-        private bool Push(IReadOnlyDictionary<string, string> arguments)
-            => StartPushDialog(null, arguments.ContainsKey("quiet"));
-
-        private bool Pull(IReadOnlyDictionary<string, string> arguments)
-        {
-            UpdateSettingsBasedOnArguments(arguments);
-
-            string remoteBranch = null;
-            if (arguments.ContainsKey("remotebranch"))
-            {
-                remoteBranch = arguments["remotebranch"];
-            }
-
-            var isQuiet = arguments.ContainsKey("quiet");
-
-            if (isQuiet)
-            {
-                return StartPullDialogAndPullImmediately(remoteBranch: remoteBranch);
-            }
-
-            return StartPullDialog(remoteBranch: remoteBranch);
-        }
-
-        private static void UpdateSettingsBasedOnArguments(IReadOnlyDictionary<string, string> arguments)
-        {
-            if (arguments.ContainsKey("merge"))
-            {
-                AppSettings.DefaultPullAction = AppSettings.PullAction.Merge;
-            }
-
-            if (arguments.ContainsKey("rebase"))
-            {
-                AppSettings.DefaultPullAction = AppSettings.PullAction.Rebase;
-            }
-
-            if (arguments.ContainsKey("fetch"))
-            {
-                AppSettings.DefaultPullAction = AppSettings.PullAction.Fetch;
-            }
-
-            if (arguments.ContainsKey("autostash"))
-            {
-                AppSettings.AutoStash = true;
-            }
         }
 
         internal void RaisePostBrowseInitialize(IWin32Window owner)
