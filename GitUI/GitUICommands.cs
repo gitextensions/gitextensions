@@ -1497,8 +1497,6 @@ namespace GitUI
                     return RunSynchronizeCommand(arguments);
                 case "tag":
                     return StartCreateTagDialog();
-                case "viewdiff":
-                    return StartCompareRevisionsDialog();
                 default:
                     if (args[1].StartsWith("git://") || args[1].StartsWith("http://") || args[1].StartsWith("https://"))
                     {
