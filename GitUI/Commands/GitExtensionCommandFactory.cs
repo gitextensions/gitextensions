@@ -29,6 +29,8 @@ namespace GitUI.Commands
         private const string GitIgnoreCommandName = "gitignore";
         private const string InitCommandName = "init";
         private const string MergeCommandName = "merge";
+        private const string MergeConflictsCommandName = "mergeconflicts";
+        private const string MergeToolCommandName = "mergetool";
         private const string OpenRepoCommandName = "openrepo";
         private const string RebaseCommandName = "rebase";
         private const string RemotesCommandName = "remotes";
@@ -96,6 +98,12 @@ namespace GitUI.Commands
 
                 // [--branch name]
                 [MergeCommandName] = CreateMergeCommand,
+
+                // [--quiet]
+                [MergeConflictsCommandName] = CreateMergeToolCommand,
+
+                // [--quiet]
+                [MergeToolCommandName] = CreateMergeToolCommand,
 
                 // [path]
                 [OpenRepoCommandName] = CreateOpenRepoCommand,
@@ -297,6 +305,14 @@ namespace GitUI.Commands
             }
 
             return new MergeGitExtensionCommand(_gitUICommands, branch);
+        }
+
+        private IGitExtensionCommand CreateMergeToolCommand()
+        {
+            var arguments = InitializeArguments(_arguments);
+            var quiet = arguments.ContainsKey("quiet");
+
+            return new MergeToolGitExtensionCommand(_gitUICommands, quiet);
         }
 
         private IGitExtensionCommand CreateOpenRepoCommand()

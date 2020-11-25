@@ -1375,9 +1375,6 @@ namespace GitUI
                     }
 
                     return RunFileHistoryCommand(args, showBlame: command == BlameHistoryCommand);
-                case "mergeconflicts":
-                case "mergetool":   // [--quiet]
-                    return RunMergeToolOrConflictCommand(arguments);
                 case "pull":        // [--rebase] [--merge] [--fetch] [--quiet] [--remotebranch name]
                     return Pull(arguments);
                 case "push":        // [--quiet]
@@ -1472,16 +1469,6 @@ namespace GitUI
 
             ShowModelessForm(owner: null, requiresValidWorkingDir: true, preEvent: null, postEvent: null,
                 () => new FormFileHistory(commands: this, fileHistoryFileName, revision, filterByRevision, showBlame));
-
-            return true;
-        }
-
-        private bool RunMergeToolOrConflictCommand(IReadOnlyDictionary<string, string> arguments)
-        {
-            if (!arguments.ContainsKey("quiet") || Module.InTheMiddleOfConflictedMerge())
-            {
-                return StartResolveConflictsDialog();
-            }
 
             return true;
         }
