@@ -1437,9 +1437,6 @@ namespace GitUI
             var command = args[1];
             switch (command)
             {
-                case "apply":       // [filename]
-                case "applypatch":
-                    return StartApplyPatchDialog(null, args.Count == 3 ? args[2] : "");
                 case "blame":       // filename
                     return RunBlameCommand(args);
                 case "branch":

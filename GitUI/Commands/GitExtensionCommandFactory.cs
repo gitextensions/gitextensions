@@ -8,6 +8,8 @@ namespace GitUI.Commands
         private const string AboutCommandName = "about";
         private const string AddCommandName = "add";
         private const string AddFilesCommandName = "addfiles";
+        private const string ApplyCommandName = "apply";
+        private const string ApplyPatchCommandName = "applypatch";
         private const string BrowseCommandName = "browse";
 
         private readonly string[] _arguments;
@@ -28,6 +30,10 @@ namespace GitUI.Commands
                 // [filename]
                 [AddCommandName] = CreateAddFilesCommand,
                 [AddFilesCommandName] = CreateAddFilesCommand,
+
+                // [filename]
+                [ApplyCommandName] = CreateApplyPatchCommand,
+                [ApplyPatchCommandName] = CreateApplyPatchCommand,
 
                 // [path] [-filter]
                 [BrowseCommandName] = CreateBrowseCommand
@@ -60,6 +66,11 @@ namespace GitUI.Commands
         private IGitExtensionCommand CreateAddFilesCommand()
         {
             return new AddFilesGitExtensionCommand(_gitUICommands, filter: _arguments.Length == 3 ? _arguments[2] : ".");
+        }
+
+        private IGitExtensionCommand CreateApplyPatchCommand()
+        {
+            return new ApplyPatchGitExtensionCommand(_gitUICommands, fileName: _arguments.Length == 3 ? _arguments[2] : string.Empty);
         }
 
         private IGitExtensionCommand CreateBrowseCommand()
