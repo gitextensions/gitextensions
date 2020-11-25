@@ -1491,8 +1491,6 @@ namespace GitUI
                     return RunSearchFileCommand();
                 case "settings":
                     return StartSettingsDialog();
-                case "stash":
-                    return StartStashDialog();
                 case "synchronize": // [--rebase] [--merge] [--fetch] [--quiet]
                     return RunSynchronizeCommand(arguments);
                 default:
