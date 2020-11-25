@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using GitCommands;
 
 namespace GitUI.Commands
@@ -27,6 +29,7 @@ namespace GitUI.Commands
         private const string GitIgnoreCommandName = "gitignore";
         private const string InitCommandName = "init";
         private const string MergeCommandName = "merge";
+        private const string OpenRepoCommandName = "openrepo";
         private const string RemotesCommandName = "remotes";
         private const string RevertCommandName = "revert";
         private const string ResetCommandName = "reset";
@@ -92,6 +95,9 @@ namespace GitUI.Commands
 
                 // [--branch name]
                 [MergeCommandName] = CreateMergeCommand,
+
+                // [path]
+                [OpenRepoCommandName] = CreateOpenRepoCommand,
                 [RemotesCommandName] = CreateRemotesCommand,
 
                 // [filename]
@@ -287,6 +293,26 @@ namespace GitUI.Commands
             }
 
             return new MergeGitExtensionCommand(_gitUICommands, branch);
+        }
+
+        private IGitExtensionCommand CreateOpenRepoCommand()
+        {
+            var gitUICommands = _gitUICommands;
+
+            if (_arguments.Length > 2)
+            {
+                if (File.Exists(_arguments[2]))
+                {
+                    string path = File.ReadAllText(_arguments[2]).Trim().Split(new[] { '\n' }, 1).FirstOrDefault();
+
+                    if (Directory.Exists(path))
+                    {
+                        gitUICommands = new GitUICommands(path);
+                    }
+                }
+            }
+
+            return new BrowseGitExtensionCommand(gitUICommands, GetParameterOrEmptyStringAsDefault(_arguments, paramName: "-filter"));
         }
 
         private IGitExtensionCommand CreateRemotesCommand()

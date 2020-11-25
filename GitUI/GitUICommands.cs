@@ -1378,8 +1378,6 @@ namespace GitUI
                 case "mergeconflicts":
                 case "mergetool":   // [--quiet]
                     return RunMergeToolOrConflictCommand(arguments);
-                case "openrepo":    // [path]
-                    return RunOpenRepoCommand(args);
                 case "pull":        // [--rebase] [--merge] [--fetch] [--quiet] [--remotebranch name]
                     return Pull(arguments);
                 case "push":        // [--quiet]
@@ -1409,24 +1407,6 @@ namespace GitUI
             }
 
             return "";
-        }
-
-        private bool RunOpenRepoCommand(IReadOnlyList<string> args)
-        {
-            GitUICommands c = this;
-            if (args.Count > 2)
-            {
-                if (File.Exists(args[2]))
-                {
-                    string path = File.ReadAllText(args[2]).Trim().Split(new[] { '\n' }, 1).FirstOrDefault();
-                    if (Directory.Exists(path))
-                    {
-                        c = new GitUICommands(path);
-                    }
-                }
-            }
-
-            return c.StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"));
         }
 
         private bool RunSynchronizeCommand(IReadOnlyDictionary<string, string> arguments)
