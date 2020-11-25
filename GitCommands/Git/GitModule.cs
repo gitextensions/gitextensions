@@ -1985,8 +1985,9 @@ namespace GitCommands
                     patchFiles.Add(new PatchFile
                     {
                         Author = error ?? data.Author,
+                        ObjectId = data?.ObjectId,
                         Subject = error ?? data.Body,
-                        Name = parts[0],
+                        Action = parts[0],
                         Date = error ?? data.CommitDate.LocalDateTime.ToString(),
                         IsNext = isApplying,
                         IsApplied = !isCurrentFound,

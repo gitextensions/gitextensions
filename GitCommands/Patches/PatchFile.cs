@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.Patches
 {
@@ -8,7 +9,9 @@ namespace GitCommands.Patches
     {
         public string FullName { get; set; }
 
+        public string Action { get; set; }
         public string Name { get; set; }
+        public ObjectId ObjectId { get; set; }
 
         public string Author { get; set; }
 
