@@ -19,6 +19,7 @@ namespace GitUI.Commands
         private const string CheckoutRevisionCommandName = "checkoutrevision";
         private const string CherryCommandName = "cherry";
         private const string CleanupCommandName = "cleanup";
+        private const string CloneCommandName = "clone";
         private const string RemotesCommandName = "remotes";
         private const string RevertCommandName = "revert";
         private const string ResetCommandName = "reset";
@@ -64,6 +65,9 @@ namespace GitUI.Commands
                 [CheckoutRevisionCommandName] = CreateCheckoutRevisionCommand,
                 [CherryCommandName] = CreateCherryCommand,
                 [CleanupCommandName] = CreateCleanupCommand,
+
+                // [path]
+                [CloneCommandName] = CreateCloneCommand,
                 [RemotesCommandName] = CreateRemotesCommand,
 
                 // [filename]
@@ -93,6 +97,21 @@ namespace GitUI.Commands
             if (_factories.TryGetValue(command, out Func<IGitExtensionCommand> factory))
             {
                 return factory();
+            }
+
+            if (_arguments[1].StartsWith("git://") || _arguments[1].StartsWith("http://") || _arguments[1].StartsWith("https://"))
+            {
+                return CreateCloneCommand(url: _arguments[1], openedFromProtocolHandler: true);
+            }
+
+            if (_arguments[1].StartsWith("github-windows://openRepo/"))
+            {
+                return CreateCloneCommand(url: _arguments[1].Replace("github-windows://openRepo/", string.Empty), openedFromProtocolHandler: true);
+            }
+
+            if (_arguments[1].StartsWith("github-mac://openRepo/"))
+            {
+                return CreateCloneCommand(url: _arguments[1].Replace("github-mac://openRepo/", string.Empty), openedFromProtocolHandler: true);
             }
 
             // until we complete the migration
@@ -175,6 +194,16 @@ namespace GitUI.Commands
         private IGitExtensionCommand CreateCleanupCommand()
         {
             return new CleanupGitExtensionCommand(_gitUICommands);
+        }
+
+        private IGitExtensionCommand CreateCloneCommand()
+        {
+            return CreateCloneCommand(url: null, openedFromProtocolHandler: false);
+        }
+
+        private IGitExtensionCommand CreateCloneCommand(string url = null, bool openedFromProtocolHandler = false)
+        {
+            return new CloneGitExtensionCommand(_gitUICommands, url ?? (_arguments.Length > 2 ? _arguments[2] : null), openedFromProtocolHandler);
         }
 
         private IGitExtensionCommand CreateRemotesCommand()

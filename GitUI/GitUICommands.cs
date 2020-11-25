@@ -1378,8 +1378,6 @@ namespace GitUI
             var command = args[1];
             switch (command)
             {
-                case "clone":       // [path]
-                    return RunCloneCommand(args);
                 case "commit":      // [--quiet]
                     return Commit(arguments);
                 case "difftool":    // filename
@@ -1416,23 +1414,6 @@ namespace GitUI
                     return RunRebaseCommand(arguments);
                 case "synchronize": // [--rebase] [--merge] [--fetch] [--quiet]
                     return RunSynchronizeCommand(arguments);
-                default:
-                    if (args[1].StartsWith("git://") || args[1].StartsWith("http://") || args[1].StartsWith("https://"))
-                    {
-                        return StartCloneDialog(null, args[1], true);
-                    }
-
-                    if (args[1].StartsWith("github-windows://openRepo/"))
-                    {
-                        return StartCloneDialog(null, args[1].Replace("github-windows://openRepo/", ""), true);
-                    }
-
-                    if (args[1].StartsWith("github-mac://openRepo/"))
-                    {
-                        return StartCloneDialog(null, args[1].Replace("github-mac://openRepo/", ""), true);
-                    }
-
-                    break;
             }
 #pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
 
@@ -1564,9 +1545,6 @@ namespace GitUI
 
             return true;
         }
-
-        private bool RunCloneCommand(IReadOnlyList<string> args)
-            => StartCloneDialog(null, args.Count > 2 ? args[2] : null);
 
         private bool RunInitCommand(IReadOnlyList<string> args)
             => StartInitializeDialog(null, args.Count > 2 ? args[2] : null);
