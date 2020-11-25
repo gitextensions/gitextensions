@@ -83,8 +83,13 @@ namespace GitUITests.GitUICommandsTests
         [Test]
         public void RunCommandBasedOnArgument_blame_throws()
         {
-            ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { "ge.exe", "blame" })))
-                .Should().Throw<ArgumentOutOfRangeException>();
+            ((Action)(() =>
+            {
+                var factory = new GitExtensionCommandFactory(new string[] { "ge.exe", "blame" }, _commands);
+
+                factory.Create();
+            }))
+                .Should().Throw<InvalidOperationException>();
         }
 
         [Test]

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GitCommands;
 
 namespace GitUI.Commands
 {
@@ -10,6 +11,7 @@ namespace GitUI.Commands
         private const string AddFilesCommandName = "addfiles";
         private const string ApplyCommandName = "apply";
         private const string ApplyPatchCommandName = "applypatch";
+        private const string BlameCommandName = "blame";
         private const string BrowseCommandName = "browse";
 
         private readonly string[] _arguments;
@@ -34,6 +36,9 @@ namespace GitUI.Commands
                 // [filename]
                 [ApplyCommandName] = CreateApplyPatchCommand,
                 [ApplyPatchCommandName] = CreateApplyPatchCommand,
+
+                // [filename]
+                [BlameCommandName] = CreateBlameCommand,
 
                 // [path] [-filter]
                 [BrowseCommandName] = CreateBrowseCommand
@@ -73,6 +78,24 @@ namespace GitUI.Commands
             return new ApplyPatchGitExtensionCommand(_gitUICommands, fileName: _arguments.Length == 3 ? _arguments[2] : string.Empty);
         }
 
+        private IGitExtensionCommand CreateBlameCommand()
+        {
+            if (_arguments.Length <= 2)
+            {
+                throw new InvalidOperationException("Cannot open blame, there is no file selected.|Blame");
+            }
+
+            string blameFileName = NormalizeFileName(fileName: _arguments[2]);
+            int? initialLine = null;
+
+            if (_arguments.Length > 3 && int.TryParse(_arguments[3], out var temp))
+            {
+                initialLine = temp;
+            }
+
+            return new BlameGitExtensionCommand(_gitUICommands, blameFileName, initialLine);
+        }
+
         private IGitExtensionCommand CreateBrowseCommand()
         {
             var filterParameter = GetParameterOrEmptyStringAsDefault(_arguments, paramName: "-filter");
@@ -108,6 +131,19 @@ namespace GitUI.Commands
             }
 
             return string.Empty;
+        }
+
+        /// <summary>
+        /// Remove working directory from filename and convert to POSIX path.
+        /// This is to prevent filenames that are too long while there is room left when the workingdir was not in the path.
+        /// </summary>
+        private string NormalizeFileName(string fileName)
+        {
+            fileName = fileName.ToPosixPath();
+
+            return string.IsNullOrEmpty(_gitUICommands.Module.WorkingDir)
+                ? fileName
+                : fileName.Replace(_gitUICommands.Module.WorkingDir.ToPosixPath(), string.Empty);
         }
     }
 }

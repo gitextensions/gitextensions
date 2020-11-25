@@ -326,6 +326,11 @@ namespace GitUI
             return DoActionOnRepo(owner: null, action, requiresValidWorkingDir: false);
         }
 
+        public bool DoActionOnRepoWithNoChanges(Func<bool> action, bool requiresValidWorkingDir = true)
+        {
+            return DoActionOnRepo(owner: null, action, requiresValidWorkingDir, changesRepo: false);
+        }
+
         #region Checkout
 
         public bool StartCheckoutBranch([CanBeNull] IWin32Window owner, string branch = "", bool remote = false, IReadOnlyList<ObjectId> containRevisions = null)
@@ -1397,12 +1402,6 @@ namespace GitUI
 
             var command = args[1];
 
-            if (command == "blame" && args.Count <= 2)
-            {
-                MessageBox.Show("Cannot open blame, there is no file selected.", "Blame", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
             if (command == "difftool" && args.Count <= 2)
             {
                 MessageBox.Show("Cannot open difftool, there is no file selected.", "Difftool", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1437,8 +1436,6 @@ namespace GitUI
             var command = args[1];
             switch (command)
             {
-                case "blame":       // filename
-                    return RunBlameCommand(args);
                 case "branch":
                     return StartCreateBranchDialog();
                 case "checkout":
@@ -1691,31 +1688,6 @@ namespace GitUI
 
         private bool RunInitCommand(IReadOnlyList<string> args)
             => StartInitializeDialog(null, args.Count > 2 ? args[2] : null);
-
-        /// <returns>false on error</returns>
-        private bool RunBlameCommand(IReadOnlyList<string> args)
-        {
-            string blameFileName = NormalizeFileName(args[2]);
-
-            int? initialLine = null;
-            if (args.Count > 3)
-            {
-                if (int.TryParse(args[3], out var temp))
-                {
-                    initialLine = temp;
-                }
-            }
-
-            return DoActionOnRepo(owner: null, action: () =>
-            {
-                using (var frm = new FormBlame(this, blameFileName, null, initialLine))
-                {
-                    frm.ShowDialog(null);
-                }
-
-                return true;
-            }, changesRepo: false);
-        }
 
         private bool RunMergeToolOrConflictCommand(IReadOnlyDictionary<string, string> arguments)
         {
