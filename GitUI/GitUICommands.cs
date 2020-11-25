@@ -29,7 +29,6 @@ namespace GitUI
 
         private readonly ICommitTemplateManager _commitTemplateManager;
         private readonly IFullPathResolver _fullPathResolver;
-        private readonly IFindFilePredicateProvider _findFilePredicateProvider;
 
         [NotNull]
         public GitModule Module { get; private set; }
@@ -45,7 +44,6 @@ namespace GitUI
                 () => InvokeEvent(null, PostRepositoryChanged));
 
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
-            _findFilePredicateProvider = new FindFilePredicateProvider();
         }
 
         public GitUICommands([CanBeNull] string workingDir)
@@ -1487,8 +1485,6 @@ namespace GitUI
                 case "revert":
                 case "reset":
                     return StartResetChangesDialog(args.Count == 3 ? args[2] : "");
-                case "searchfile":
-                    return RunSearchFileCommand();
                 case "settings":
                     return StartSettingsDialog();
                 case "synchronize": // [--rebase] [--merge] [--fetch] [--quiet]
@@ -1526,21 +1522,6 @@ namespace GitUI
             }
 
             return StartMergeBranchDialog(null, branch);
-        }
-
-        private bool RunSearchFileCommand()
-        {
-            var searchWindow = new SearchWindow<string>(FindFileMatches);
-            Application.Run(searchWindow);
-            if (searchWindow.SelectedItem != null)
-            {
-                // We need to return the file that has been found, the visual studio plugin uses the return value
-                // to open the selected file.
-                Console.WriteLine(Path.Combine(Module.WorkingDir, searchWindow.SelectedItem));
-                return true;
-            }
-
-            return false;
         }
 
         private static string GetParameterOrEmptyStringAsDefault(IReadOnlyList<string> args, string paramName)
@@ -1690,15 +1671,6 @@ namespace GitUI
             }
 
             return arguments;
-        }
-
-        private IEnumerable<string> FindFileMatches(string name)
-        {
-            var candidates = Module.GetFullTree("HEAD");
-
-            var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
-
-            return candidates.Where(predicate);
         }
 
         private bool Commit(IReadOnlyDictionary<string, string> arguments)

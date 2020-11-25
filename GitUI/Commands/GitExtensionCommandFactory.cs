@@ -13,6 +13,7 @@ namespace GitUI.Commands
         private const string ApplyPatchCommandName = "applypatch";
         private const string BlameCommandName = "blame";
         private const string BrowseCommandName = "browse";
+        private const string SearchFileCommandName = "searchfile";
         private const string StashCommandName = "stash";
         private const string TagCommandName = "tag";
         private const string ViewDiffCommandName = "viewdiff";
@@ -47,6 +48,7 @@ namespace GitUI.Commands
 
                 // [path] [-filter]
                 [BrowseCommandName] = CreateBrowseCommand,
+                [SearchFileCommandName] = CreateSearchFileCommand,
                 [StashCommandName] = CreateStashCommand,
                 [TagCommandName] = CreateTagCommand,
                 [ViewDiffCommandName] = CreateViewDiffCommand,
@@ -126,6 +128,11 @@ namespace GitUI.Commands
             Console.Error.WriteLine($"No commit found matching: {_arguments}.");
 
             throw new InvalidOperationException($"No commit found matching: {_arguments}.");
+        }
+
+        private IGitExtensionCommand CreateSearchFileCommand()
+        {
+            return new SearchFileGitExtensionCommand(_gitUICommands);
         }
 
         private IGitExtensionCommand CreateStashCommand()
