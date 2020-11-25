@@ -1356,12 +1356,6 @@ namespace GitUI
                 return false;
             }
 
-            if (command == "fileeditor" && args.Count <= 2)
-            {
-                MessageBox.Show("Cannot open file editor, there is no file selected.", "File editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
             return RunCommandBasedOnArgument(args, arguments);
         }
 
@@ -1381,8 +1375,6 @@ namespace GitUI
                     }
 
                     return RunFileHistoryCommand(args, showBlame: command == BlameHistoryCommand);
-                case "fileeditor":  // filename
-                    return StartFileEditorDialog(args[2]);
                 case "formatpatch":
                     return StartFormatPatchDialog();
                 case "gitignore":

@@ -220,8 +220,13 @@ namespace GitUITests.GitUICommandsTests
         [Test]
         public void RunCommandBasedOnArgument_fileeditor_throws()
         {
-            ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { "ge.exe", "fileeditor" })))
-                .Should().Throw<ArgumentOutOfRangeException>();
+            ((Action)(() =>
+            {
+                var factory = new GitExtensionCommandFactory(new string[] { "ge.exe", "fileeditor" }, _commands);
+
+                factory.Create();
+            }))
+                .Should().Throw<InvalidOperationException>();
         }
 
         [Test]

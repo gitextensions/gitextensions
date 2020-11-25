@@ -22,6 +22,7 @@ namespace GitUI.Commands
         private const string CloneCommandName = "clone";
         private const string CommitCommandName = "commit";
         private const string DifftoolCommandName = "difftool";
+        private const string FileEditorCommandName = "fileeditor";
         private const string RemotesCommandName = "remotes";
         private const string RevertCommandName = "revert";
         private const string ResetCommandName = "reset";
@@ -76,6 +77,9 @@ namespace GitUI.Commands
 
                 // filename
                 [DifftoolCommandName] = CreateDifftoolCommand,
+
+                // filename
+                [FileEditorCommandName] = CreateFileEditorCommand,
                 [RemotesCommandName] = CreateRemotesCommand,
 
                 // [filename]
@@ -233,6 +237,16 @@ namespace GitUI.Commands
             }
 
             return new DifftoolGitExtensionCommand(_gitUICommands, fileName: _arguments[2]);
+        }
+
+        private IGitExtensionCommand CreateFileEditorCommand()
+        {
+            if (_arguments.Length <= 2)
+            {
+                throw new InvalidOperationException("Cannot open file editor, there is no file selected.|File editor");
+            }
+
+            return new FileEditorGitExtensionCommand(_gitUICommands, fileName: _arguments[2]);
         }
 
         private IGitExtensionCommand CreateRemotesCommand()
