@@ -1495,8 +1495,6 @@ namespace GitUI
                     return StartStashDialog();
                 case "synchronize": // [--rebase] [--merge] [--fetch] [--quiet]
                     return RunSynchronizeCommand(arguments);
-                case "tag":
-                    return StartCreateTagDialog();
                 default:
                     if (args[1].StartsWith("git://") || args[1].StartsWith("http://") || args[1].StartsWith("https://"))
                     {
