@@ -13,6 +13,7 @@ namespace GitUI.Commands
         private const string ApplyPatchCommandName = "applypatch";
         private const string BlameCommandName = "blame";
         private const string BrowseCommandName = "browse";
+        private const string UninstallCommandName = "uninstall";
 
         private readonly string[] _arguments;
         private readonly GitUICommands _gitUICommands;
@@ -41,7 +42,8 @@ namespace GitUI.Commands
                 [BlameCommandName] = CreateBlameCommand,
 
                 // [path] [-filter]
-                [BrowseCommandName] = CreateBrowseCommand
+                [BrowseCommandName] = CreateBrowseCommand,
+                [UninstallCommandName] = CreateUninstallCommand
             };
         }
 
@@ -114,6 +116,11 @@ namespace GitUI.Commands
             Console.Error.WriteLine($"No commit found matching: {_arguments}.");
 
             throw new InvalidOperationException($"No commit found matching: {_arguments}.");
+        }
+
+        private IGitExtensionCommand CreateUninstallCommand()
+        {
+            return new UninstallGitExtensionCommand();
         }
 
         private static string GetParameterOrEmptyStringAsDefault(IReadOnlyList<string> args, string paramName)

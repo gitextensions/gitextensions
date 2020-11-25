@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
-using GitCommands.Settings;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.RepoHosting;
@@ -1502,8 +1501,6 @@ namespace GitUI
                     return StartCompareRevisionsDialog();
                 case "viewpatch":   // [filename]
                     return StartViewPatchDialog(args.Count == 3 ? args[2] : "");
-                case "uninstall":
-                    return UninstallEditor();
                 default:
                     if (args[1].StartsWith("git://") || args[1].StartsWith("http://") || args[1].StartsWith("https://"))
                     {
@@ -1525,21 +1522,6 @@ namespace GitUI
 #pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
 
             Application.Run(new FormCommandlineHelp { StartPosition = FormStartPosition.CenterScreen });
-            return true;
-        }
-
-        private static bool UninstallEditor()
-        {
-            var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
-
-            var coreEditor = configFileGlobalSettings.GetValue("core.editor");
-            if (coreEditor.ToLowerInvariant().Contains(AppSettings.GetInstallDir().ToPosixPath().ToLowerInvariant()))
-            {
-                configFileGlobalSettings.SetValue("core.editor", "");
-            }
-
-            configFileGlobalSettings.Save();
-
             return true;
         }
 
