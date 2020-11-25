@@ -28,7 +28,6 @@ namespace GitUI
         private const string FilterByRevisionArg = "--filter-by-revision";
 
         private readonly ICommitTemplateManager _commitTemplateManager;
-        private readonly IFullPathResolver _fullPathResolver;
 
         [NotNull]
         public GitModule Module { get; private set; }
@@ -42,8 +41,6 @@ namespace GitUI
             _commitTemplateManager = new CommitTemplateManager(() => module);
             RepoChangedNotifier = new ActionNotifier(
                 () => InvokeEvent(null, PostRepositoryChanged));
-
-            _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
         public GitUICommands([CanBeNull] string workingDir)
@@ -1348,14 +1345,6 @@ namespace GitUI
                 return false;
             }
 
-            var command = args[1];
-
-            if ((command == BlameHistoryCommand || command == FileHistoryCommand) && args.Count <= 2)
-            {
-                MessageBox.Show("Cannot open blame / file history, there is no file selected.", "Blame / file history", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
             return RunCommandBasedOnArgument(args, arguments);
         }
 
@@ -1366,15 +1355,6 @@ namespace GitUI
             var command = args[1];
             switch (command)
             {
-                case BlameHistoryCommand:
-                case FileHistoryCommand:
-                    // filename [revision [--filter-by-revision]]
-                    if (Module.WorkingDir.TrimEnd('\\') == Path.GetFullPath(args[2]) && Module.SuperprojectModule != null)
-                    {
-                        Module = Module.SuperprojectModule;
-                    }
-
-                    return RunFileHistoryCommand(args, showBlame: command == BlameHistoryCommand);
                 case "pull":        // [--rebase] [--merge] [--fetch] [--quiet] [--remotebranch name]
                     return Pull(arguments);
                 case "push":        // [--quiet]
@@ -1429,48 +1409,6 @@ namespace GitUI
         {
             fileName = fileName.ToPosixPath();
             return string.IsNullOrEmpty(Module.WorkingDir) ? fileName : fileName.Replace(Module.WorkingDir.ToPosixPath(), "");
-        }
-
-        /// <returns>false on error</returns>
-        private bool RunFileHistoryCommand(IReadOnlyList<string> args, bool showBlame)
-        {
-            string fileHistoryFileName = args[2];
-            if (new FormFileHistoryController().TryGetExactPath(_fullPathResolver.Resolve(fileHistoryFileName), out var exactFileName))
-            {
-                fileHistoryFileName = NormalizeFileName(exactFileName);
-            }
-
-            if (string.IsNullOrWhiteSpace(fileHistoryFileName))
-            {
-                return false;
-            }
-
-            GitRevision revision = null;
-            if (args.Count > 3)
-            {
-                if (!ObjectId.TryParse(args[3], out var objectId))
-                {
-                    return false;
-                }
-
-                revision = new GitRevision(objectId);
-            }
-
-            bool filterByRevision = false;
-            if (args.Count > 4)
-            {
-                if (args[4] != FilterByRevisionArg)
-                {
-                    return false;
-                }
-
-                filterByRevision = true;
-            }
-
-            ShowModelessForm(owner: null, requiresValidWorkingDir: true, preEvent: null, postEvent: null,
-                () => new FormFileHistory(commands: this, fileHistoryFileName, revision, filterByRevision, showBlame));
-
-            return true;
         }
 
         private static IReadOnlyDictionary<string, string> InitializeArguments(IReadOnlyList<string> args)
@@ -1568,6 +1506,11 @@ namespace GitUI
         public IGitRemoteCommand CreateRemoteCommand()
         {
             return new GitRemoteCommand(this);
+        }
+
+        public void SetModuleAsSuperprojectModule()
+        {
+            Module = Module.SuperprojectModule;
         }
 
         #region Nested class: GitRemoteCommand

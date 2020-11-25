@@ -164,10 +164,14 @@ namespace GitUITests.GitUICommandsTests
 
         [Test]
         public void RunCommandBasedOnArgument_history_throws(
-            [Values("blamehistory", "filehistory")] string command)
+            [Values("blamehistory", "filehistory")] string commandName)
         {
-            ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { "ge.exe", command })))
-                .Should().Throw<ArgumentOutOfRangeException>();
+            ((Action)(() =>
+            {
+                var factory = new GitExtensionCommandFactory(new string[] { "ge.exe", commandName }, _commands);
+                var command = factory.Create();
+            }))
+                .Should().Throw<InvalidOperationException>();
         }
 
         [Test]
@@ -194,7 +198,7 @@ namespace GitUITests.GitUICommandsTests
 
         [Test]
         public void RunCommandBasedOnArgument_history_returns_false(
-            [Values("blamehistory", "filehistory")] string command,
+            [Values("blamehistory", "filehistory")] string commandName,
             [Values(0, 1, 2, 3)] int invalidVariant)
         {
             const bool ignored = false;
@@ -207,14 +211,18 @@ namespace GitUITests.GitUICommandsTests
             };
             (bool commitValid, bool filter, bool filterValid) = invalidVariants[invalidVariant];
 
-            var args = new System.Collections.Generic.List<string> { "ge.exe", command, "filename" };
+            var args = new System.Collections.Generic.List<string> { "ge.exe", commandName, "filename" };
             args.Add(commitValid ? _referenceRepository.CommitHash : "no-commit");
             if (filter)
             {
                 args.Add(filterValid ? "--filter-by-revision" : "invalid");
             }
 
-            _commands.GetTestAccessor().RunCommandBasedOnArgument(args.ToArray()).Should().BeFalse();
+            var factory = new GitExtensionCommandFactory(args.ToArray(), _commands);
+            var command = factory.Create();
+
+            command.Execute()
+                .Should().BeFalse();
         }
 
         [Test]

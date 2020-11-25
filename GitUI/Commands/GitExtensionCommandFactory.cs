@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using GitCommands;
+using GitUI.CommandsDialogs;
+using GitUIPluginInterfaces;
 
 namespace GitUI.Commands
 {
@@ -24,6 +26,8 @@ namespace GitUI.Commands
         private const string CloneCommandName = "clone";
         private const string CommitCommandName = "commit";
         private const string DifftoolCommandName = "difftool";
+        private const string BlameHistoryCommandName = "blamehistory";
+        private const string FileHistoryCommandName = "filehistory";
         private const string FileEditorCommandName = "fileeditor";
         private const string FormatPatchCommandName = "formatpatch";
         private const string GitIgnoreCommandName = "gitignore";
@@ -87,6 +91,12 @@ namespace GitUI.Commands
 
                 // filename
                 [DifftoolCommandName] = CreateDifftoolCommand,
+
+                // filename [revision [--filter-by-revision]]
+                [BlameHistoryCommandName] = CreateBlameHistoryCommand,
+
+                // filename [revision [--filter-by-revision]]
+                [FileHistoryCommandName] = CreateFileHistoryCommand,
 
                 // filename
                 [FileEditorCommandName] = CreateFileEditorCommand,
@@ -267,6 +277,53 @@ namespace GitUI.Commands
             }
 
             return new DifftoolGitExtensionCommand(_gitUICommands, fileName: _arguments[2]);
+        }
+
+        private IGitExtensionCommand CreateBlameHistoryCommand()
+        {
+            return CreateFileHistoryCommand(showBlame: true);
+        }
+
+        private IGitExtensionCommand CreateFileHistoryCommand()
+        {
+            return CreateFileHistoryCommand(showBlame: false);
+        }
+
+        private IGitExtensionCommand CreateFileHistoryCommand(bool showBlame = false)
+        {
+            if (_arguments.Length <= 2)
+            {
+                throw new InvalidOperationException("Cannot open blame / file history, there is no file selected.|Blame / file history");
+            }
+
+            if (_gitUICommands.Module.WorkingDir.TrimEnd('\\') == Path.GetFullPath(_arguments[2]) && _gitUICommands.Module.SuperprojectModule != null)
+            {
+                _gitUICommands.SetModuleAsSuperprojectModule();
+            }
+
+            string fileHistoryFileName = _arguments[2];
+            var fullPathResolver = new FullPathResolver(() => _gitUICommands.Module.WorkingDir);
+
+            if (new FormFileHistoryController().TryGetExactPath(fullPathResolver.Resolve(fileHistoryFileName), out var exactFileName))
+            {
+                fileHistoryFileName = NormalizeFileName(exactFileName);
+            }
+
+            string revision = null;
+
+            if (_arguments.Length > 3)
+            {
+                revision = _arguments[3];
+            }
+
+            string filterByRevision = null;
+
+            if (_arguments.Length > 4)
+            {
+                filterByRevision = _arguments[4];
+            }
+
+            return new FileHistoryGitExtensionCommand(_gitUICommands, fileHistoryFileName, revision, filterByRevision, showBlame);
         }
 
         private IGitExtensionCommand CreateFileEditorCommand()
