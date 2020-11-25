@@ -1425,8 +1425,6 @@ namespace GitUI
                     return Push(arguments);
                 case "rebase":      // [--branch name]
                     return RunRebaseCommand(arguments);
-                case "remotes":
-                    return StartRemotesDialog(owner: null);
                 case "synchronize": // [--rebase] [--merge] [--fetch] [--quiet]
                     return RunSynchronizeCommand(arguments);
                 default:
