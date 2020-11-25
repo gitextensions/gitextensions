@@ -24,6 +24,7 @@ namespace GitUI.Commands
         private const string DifftoolCommandName = "difftool";
         private const string FileEditorCommandName = "fileeditor";
         private const string FormatPatchCommandName = "formatpatch";
+        private const string GitIgnoreCommandName = "gitignore";
         private const string RemotesCommandName = "remotes";
         private const string RevertCommandName = "revert";
         private const string ResetCommandName = "reset";
@@ -82,6 +83,7 @@ namespace GitUI.Commands
                 // filename
                 [FileEditorCommandName] = CreateFileEditorCommand,
                 [FormatPatchCommandName] = CreateFormatPatchCommand,
+                [GitIgnoreCommandName] = CreateGitIgnoreCommand,
                 [RemotesCommandName] = CreateRemotesCommand,
 
                 // [filename]
@@ -254,6 +256,11 @@ namespace GitUI.Commands
         private IGitExtensionCommand CreateFormatPatchCommand()
         {
             return new FormatPatchGitExtensionCommand(_gitUICommands);
+        }
+
+        private IGitExtensionCommand CreateGitIgnoreCommand()
+        {
+            return new GitIgnoreGitExtensionCommand(_gitUICommands);
         }
 
         private IGitExtensionCommand CreateRemotesCommand()

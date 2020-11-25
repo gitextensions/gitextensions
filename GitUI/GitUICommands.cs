@@ -1375,8 +1375,6 @@ namespace GitUI
                     }
 
                     return RunFileHistoryCommand(args, showBlame: command == BlameHistoryCommand);
-                case "gitignore":
-                    return StartEditGitIgnoreDialog(null, false);
                 case "init":        // [path]
                     return RunInitCommand(args);
                 case "merge":       // [--branch name]
