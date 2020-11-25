@@ -36,6 +36,7 @@ namespace GitUI.Commands
         private const string MergeConflictsCommandName = "mergeconflicts";
         private const string MergeToolCommandName = "mergetool";
         private const string OpenRepoCommandName = "openrepo";
+        private const string PullCommandName = "pull";
         private const string RebaseCommandName = "rebase";
         private const string RemotesCommandName = "remotes";
         private const string RevertCommandName = "revert";
@@ -117,6 +118,9 @@ namespace GitUI.Commands
 
                 // [path]
                 [OpenRepoCommandName] = CreateOpenRepoCommand,
+
+                // [--rebase] [--merge] [--fetch] [--quiet] [--remotebranch name]
+                [PullCommandName] = CreatePullCommand,
 
                 // [--branch name]
                 [RebaseCommandName] = CreateRebaseCommand,
@@ -392,6 +396,24 @@ namespace GitUI.Commands
             return new BrowseGitExtensionCommand(gitUICommands, GetParameterOrEmptyStringAsDefault(_arguments, paramName: "-filter"));
         }
 
+        private IGitExtensionCommand CreatePullCommand()
+        {
+            var arguments = InitializeArguments(_arguments);
+
+            UpdateSettingsBasedOnArguments(arguments);
+
+            string remoteBranch = null;
+
+            if (arguments.ContainsKey("remotebranch"))
+            {
+                remoteBranch = arguments["remotebranch"];
+            }
+
+            var isQuiet = arguments.ContainsKey("quiet");
+
+            return new PullGitExtensionCommand(_gitUICommands, isQuiet, remoteBranch);
+        }
+
         private IGitExtensionCommand CreateRebaseCommand()
         {
             var arguments = InitializeArguments(_arguments);
@@ -507,6 +529,29 @@ namespace GitUI.Commands
             }
 
             return arguments;
+        }
+
+        private static void UpdateSettingsBasedOnArguments(IReadOnlyDictionary<string, string> arguments)
+        {
+            if (arguments.ContainsKey("merge"))
+            {
+                AppSettings.DefaultPullAction = AppSettings.PullAction.Merge;
+            }
+
+            if (arguments.ContainsKey("rebase"))
+            {
+                AppSettings.DefaultPullAction = AppSettings.PullAction.Rebase;
+            }
+
+            if (arguments.ContainsKey("fetch"))
+            {
+                AppSettings.DefaultPullAction = AppSettings.PullAction.Fetch;
+            }
+
+            if (arguments.ContainsKey("autostash"))
+            {
+                AppSettings.AutoStash = true;
+            }
         }
     }
 }
