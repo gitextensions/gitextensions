@@ -6,6 +6,8 @@ namespace GitUI.Commands
     public sealed class GitExtensionCommandFactory : IGitExtensionCommandFactory
     {
         private const string AboutCommandName = "about";
+        private const string AddCommandName = "add";
+        private const string AddFilesCommandName = "addfiles";
         private const string BrowseCommandName = "browse";
 
         private readonly string[] _arguments;
@@ -22,6 +24,10 @@ namespace GitUI.Commands
             _factories = new Dictionary<string, Func<IGitExtensionCommand>>
             {
                 [AboutCommandName] = CreateAboutCommand,
+
+                // [filename]
+                [AddCommandName] = CreateAddFilesCommand,
+                [AddFilesCommandName] = CreateAddFilesCommand,
 
                 // [path] [-filter]
                 [BrowseCommandName] = CreateBrowseCommand
@@ -49,6 +55,11 @@ namespace GitUI.Commands
         private IGitExtensionCommand CreateAboutCommand()
         {
             return new AboutGitExtensionCommand();
+        }
+
+        private IGitExtensionCommand CreateAddFilesCommand()
+        {
+            return new AddFilesGitExtensionCommand(_gitUICommands, filter: _arguments.Length == 3 ? _arguments[2] : ".");
         }
 
         private IGitExtensionCommand CreateBrowseCommand()
