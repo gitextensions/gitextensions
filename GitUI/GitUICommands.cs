@@ -1378,8 +1378,6 @@ namespace GitUI
             var command = args[1];
             switch (command)
             {
-                case "branch":
-                    return StartCreateBranchDialog();
                 case "checkout":
                 case "checkoutbranch":
                     return StartCheckoutBranch(null);

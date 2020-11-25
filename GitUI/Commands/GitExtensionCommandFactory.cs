@@ -12,6 +12,7 @@ namespace GitUI.Commands
         private const string ApplyCommandName = "apply";
         private const string ApplyPatchCommandName = "applypatch";
         private const string BlameCommandName = "blame";
+        private const string BranchCommandName = "branch";
         private const string BrowseCommandName = "browse";
         private const string RemotesCommandName = "remotes";
         private const string RevertCommandName = "revert";
@@ -49,6 +50,7 @@ namespace GitUI.Commands
 
                 // [filename]
                 [BlameCommandName] = CreateBlameCommand,
+                [BranchCommandName] = CreateBranchCommand,
 
                 // [path] [-filter]
                 [BrowseCommandName] = CreateBrowseCommand,
@@ -118,6 +120,11 @@ namespace GitUI.Commands
             }
 
             return new BlameGitExtensionCommand(_gitUICommands, blameFileName, initialLine);
+        }
+
+        private IGitExtensionCommand CreateBranchCommand()
+        {
+            return new BranchGitExtensionCommand(_gitUICommands);
         }
 
         private IGitExtensionCommand CreateBrowseCommand()
