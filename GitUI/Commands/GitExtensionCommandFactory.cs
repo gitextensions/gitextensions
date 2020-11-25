@@ -16,6 +16,7 @@ namespace GitUI.Commands
         private const string RevertCommandName = "revert";
         private const string ResetCommandName = "reset";
         private const string SearchFileCommandName = "searchfile";
+        private const string SettingsCommandName = "settings";
         private const string StashCommandName = "stash";
         private const string TagCommandName = "tag";
         private const string ViewDiffCommandName = "viewdiff";
@@ -55,6 +56,7 @@ namespace GitUI.Commands
                 [RevertCommandName] = CreateRevertCommand,
                 [ResetCommandName] = CreateResetCommand,
                 [SearchFileCommandName] = CreateSearchFileCommand,
+                [SettingsCommandName] = CreateSettingsCommand,
                 [StashCommandName] = CreateStashCommand,
                 [TagCommandName] = CreateTagCommand,
                 [ViewDiffCommandName] = CreateViewDiffCommand,
@@ -154,6 +156,11 @@ namespace GitUI.Commands
         private IGitExtensionCommand CreateSearchFileCommand()
         {
             return new SearchFileGitExtensionCommand(_gitUICommands);
+        }
+
+        private IGitExtensionCommand CreateSettingsCommand()
+        {
+            return new SettingsGitExtensionCommand(_gitUICommands);
         }
 
         private IGitExtensionCommand CreateStashCommand()
