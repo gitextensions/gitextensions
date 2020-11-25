@@ -61,8 +61,12 @@ namespace GitUI.HelperDialogs
             var currentBranch = Module.GetSelectedBranch();
             var isDetachedHead = currentBranch == DetachedHeadParser.DetachedBranch;
 
+            var selectedRevisionRemotes = _revision.Refs.Where(r => r.IsRemote).ToList();
+
             return Module.GetRefs(false)
-                .Where(r => r.IsHead && (isDetachedHead || r.LocalName != currentBranch))
+                .Where(r => r.IsHead)
+                .Where(r => isDetachedHead || r.LocalName != currentBranch)
+                .OrderByDescending(r => selectedRevisionRemotes.Any(r.IsTrackingRemote)) // Put local branches that track these remotes first
                 .ToArray();
         }
 

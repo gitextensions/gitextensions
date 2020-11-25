@@ -204,5 +204,15 @@ namespace GitCommands
                 .Where(group => group.Count() > 1)
                 .ToHashSet(e => e.Key);
         }
+
+        public bool IsTrackingRemote(IGitRef remote)
+        {
+            if (remote == null || IsRemote || !remote.IsRemote)
+            {
+                return false;
+            }
+
+            return MergeWith == remote.LocalName && TrackingRemote == remote.Remote;
+        }
     }
 }
