@@ -14,6 +14,8 @@ namespace GitUI.Commands
         private const string BlameCommandName = "blame";
         private const string BranchCommandName = "branch";
         private const string BrowseCommandName = "browse";
+        private const string CheckoutCommandName = "checkout";
+        private const string CheckoutBranchCommandName = "checkoutbranch";
         private const string RemotesCommandName = "remotes";
         private const string RevertCommandName = "revert";
         private const string ResetCommandName = "reset";
@@ -54,6 +56,8 @@ namespace GitUI.Commands
 
                 // [path] [-filter]
                 [BrowseCommandName] = CreateBrowseCommand,
+                [CheckoutCommandName] = CreateCheckoutCommand,
+                [CheckoutBranchCommandName] = CreateCheckoutCommand,
                 [RemotesCommandName] = CreateRemotesCommand,
 
                 // [filename]
@@ -145,6 +149,11 @@ namespace GitUI.Commands
             Console.Error.WriteLine($"No commit found matching: {_arguments}.");
 
             throw new InvalidOperationException($"No commit found matching: {_arguments}.");
+        }
+
+        private IGitExtensionCommand CreateCheckoutCommand()
+        {
+            return new CheckoutGitExtensionCommand(_gitUICommands);
         }
 
         private IGitExtensionCommand CreateRemotesCommand()
