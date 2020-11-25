@@ -143,13 +143,24 @@ namespace GitUITests.GitUICommandsTests
         [Test]
         public void RunCommandBasedOnArgument_difftool_throws()
         {
-            ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { "ge.exe", "difftool" })))
-                .Should().Throw<ArgumentOutOfRangeException>();
+            ((Action)(() =>
+            {
+                var factory = new GitExtensionCommandFactory(new string[] { "ge.exe", "difftool" }, _commands);
+
+                factory.Create();
+            }))
+                .Should().Throw<InvalidOperationException>();
         }
 
         [Test]
         public void RunCommandBasedOnArgument_difftool()
-            => _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { "ge.exe", "difftool", "filename" }).Should().BeTrue();
+        {
+            var factory = new GitExtensionCommandFactory(new string[] { "ge.exe", "difftool", "filename" }, _commands);
+            var command = factory.Create();
+
+            command.Execute()
+                .Should().BeTrue();
+        }
 
         [Test]
         public void RunCommandBasedOnArgument_history_throws(

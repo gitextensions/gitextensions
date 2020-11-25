@@ -21,6 +21,7 @@ namespace GitUI.Commands
         private const string CleanupCommandName = "cleanup";
         private const string CloneCommandName = "clone";
         private const string CommitCommandName = "commit";
+        private const string DifftoolCommandName = "difftool";
         private const string RemotesCommandName = "remotes";
         private const string RevertCommandName = "revert";
         private const string ResetCommandName = "reset";
@@ -72,6 +73,9 @@ namespace GitUI.Commands
 
                 // [--quiet]
                 [CommitCommandName] = CreateCommitCommand,
+
+                // filename
+                [DifftoolCommandName] = CreateDifftoolCommand,
                 [RemotesCommandName] = CreateRemotesCommand,
 
                 // [filename]
@@ -219,6 +223,16 @@ namespace GitUI.Commands
             var showOnlyWhenChanges = arguments.ContainsKey("quiet");
 
             return new CommitGitExtensionCommand(_gitUICommands, overridingMessage, showOnlyWhenChanges);
+        }
+
+        private IGitExtensionCommand CreateDifftoolCommand()
+        {
+            if (_arguments.Length <= 2)
+            {
+                throw new InvalidOperationException("Cannot open difftool, there is no file selected.|Difftool");
+            }
+
+            return new DifftoolGitExtensionCommand(_gitUICommands, fileName: _arguments[2]);
         }
 
         private IGitExtensionCommand CreateRemotesCommand()

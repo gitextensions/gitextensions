@@ -1350,12 +1350,6 @@ namespace GitUI
 
             var command = args[1];
 
-            if (command == "difftool" && args.Count <= 2)
-            {
-                MessageBox.Show("Cannot open difftool, there is no file selected.", "Difftool", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
             if ((command == BlameHistoryCommand || command == FileHistoryCommand) && args.Count <= 2)
             {
                 MessageBox.Show("Cannot open blame / file history, there is no file selected.", "Blame / file history", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1378,8 +1372,6 @@ namespace GitUI
             var command = args[1];
             switch (command)
             {
-                case "difftool":    // filename
-                    return Module.OpenWithDifftool(args[2]) == "";
                 case BlameHistoryCommand:
                 case FileHistoryCommand:
                     // filename [revision [--filter-by-revision]]
