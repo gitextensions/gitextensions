@@ -1378,8 +1378,6 @@ namespace GitUI
             var command = args[1];
             switch (command)
             {
-                case "checkoutrevision":
-                    return StartCheckoutRevisionDialog(null);
                 case "cherry":
                     return StartCherryPickDialog();
                 case "cleanup":
