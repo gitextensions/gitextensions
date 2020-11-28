@@ -818,11 +818,11 @@ namespace GitCommands
             return null;
         }
 
-        public int? GetCommitDiffCount(string parentHash, string childHash)
+        public int? GetCommitDiffCount(ObjectId baseId, ObjectId parentId)
         {
             var args = new GitArgumentBuilder("rev-list")
             {
-                $"{parentHash}...{childHash}",
+                $"{baseId} {parentId}",
                 "--count"
             };
             var output = _gitExecutable.GetOutput(args);
@@ -833,6 +833,25 @@ namespace GitCommands
             }
 
             return null;
+        }
+
+        public (int? first, int? second) GetCommitRangeDiffCount(ObjectId firstId, ObjectId secondId)
+        {
+            var args = new GitArgumentBuilder("rev-list")
+            {
+                $"{firstId}...{secondId}",
+                "--count",
+                "--left-right"
+            };
+            var output = _gitExecutable.GetOutput(args);
+
+            var counts = output.Split('\t');
+            if (counts.Length == 2 && int.TryParse(counts[0], out var first) && int.TryParse(counts[1], out var second))
+            {
+                return (first, second);
+            }
+
+            return (null, null);
         }
 
         public string GetCommitCountString(string from, string to)
