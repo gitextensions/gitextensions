@@ -338,7 +338,7 @@ namespace GitUI.CommandsDialogs
             bool supportPatches = selectedGitItemCount == 1 && DiffText.HasAnyPatches();
             bool isDeleted = selectedItems.Any(item => item.Item.IsDeleted);
             bool isAnySubmodule = selectedItems.Any(item => item.Item.IsSubmodule);
-            (bool allFilesExist, bool allFilesOrUntrackedDirectoriesExist) = FileOrUntrackedDirExists(selectedItems, _fullPathResolver);
+            (bool allFilesExist, bool allDirectoriesExist, bool allFilesOrUntrackedDirectoriesExist) = FileOrUntrackedDirExists(selectedItems, _fullPathResolver);
 
             var selectionInfo = new ContextMenuSelectionInfo(
                 selectedRevision: selectedRev,
@@ -349,6 +349,7 @@ namespace GitUI.CommandsDialogs
                 isAnyItemWorkTree: isAnyWorkTree,
                 isBareRepository: isBareRepository,
                 allFilesExist: allFilesExist,
+                allDirectoriesExist: allDirectoriesExist,
                 allFilesOrUntrackedDirectoriesExist: allFilesOrUntrackedDirectoriesExist,
                 isAnyTracked: isAnyTracked,
                 supportPatches: supportPatches,
@@ -356,25 +357,28 @@ namespace GitUI.CommandsDialogs
                 isAnySubmodule: isAnySubmodule);
             return selectionInfo;
 
-            static (bool allFilesExist, bool allFilesOrUntrackedDirectoriesExist) FileOrUntrackedDirExists(List<FileStatusItem> items, IFullPathResolver fullPathResolver)
+            static (bool allFilesExist, bool allDirectoriesExist, bool allFilesOrUntrackedDirectoriesExist) FileOrUntrackedDirExists(List<FileStatusItem> items, IFullPathResolver fullPathResolver)
             {
                 bool allFilesExist = items.Any();
-                bool allFilesOrUntrackedDirectoriesExist = items.Any();
+                bool allDirectoriesExist = allFilesExist;
+                bool allFilesOrUntrackedDirectoriesExist = allFilesExist;
                 foreach (var item in items)
                 {
                     var path = fullPathResolver.Resolve(item.Item.Name);
                     var fileExists = File.Exists(path);
-                    allFilesExist = allFilesExist && fileExists;
-                    var fileOrUntrackedDirectoryExists = fileExists || (!item.Item.IsTracked && Directory.Exists(path));
-                    allFilesOrUntrackedDirectoriesExist = allFilesOrUntrackedDirectoriesExist && fileOrUntrackedDirectoryExists;
+                    var directoryExists = Directory.Exists(path);
+                    allFilesExist &= fileExists;
+                    allDirectoriesExist &= directoryExists;
+                    var fileOrUntrackedDirectoryExists = fileExists || (!item.Item.IsTracked && allDirectoriesExist);
+                    allFilesOrUntrackedDirectoriesExist &= fileOrUntrackedDirectoryExists;
 
-                    if (allFilesExist == false && allFilesOrUntrackedDirectoriesExist == false)
+                    if (!allFilesExist && !allDirectoriesExist && !allFilesOrUntrackedDirectoriesExist)
                     {
                         break;
                     }
                 }
 
-                return (allFilesExist, allFilesOrUntrackedDirectoriesExist);
+                return (allFilesExist, allDirectoriesExist, allFilesOrUntrackedDirectoriesExist);
             }
         }
 

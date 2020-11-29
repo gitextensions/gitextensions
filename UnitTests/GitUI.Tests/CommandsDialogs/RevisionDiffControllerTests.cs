@@ -29,6 +29,7 @@ namespace GitUITests.CommandsDialogs
             bool isAnyItemWorkTree = false,
             bool isBareRepository = false,
             bool allFilesExist = true,
+            bool allDirectoriesExist = false,
             bool allFilesOrUntrackedDirectoriesExist = false,
             bool isAnyTracked = true,
             bool supportPatches = true,
@@ -43,6 +44,7 @@ namespace GitUITests.CommandsDialogs
                 isAnyItemWorkTree,
                 isBareRepository,
                 allFilesExist,
+                allDirectoriesExist,
                 allFilesOrUntrackedDirectoriesExist,
                 isAnyTracked,
                 supportPatches,
@@ -318,6 +320,17 @@ namespace GitUITests.CommandsDialogs
             var rev = new GitRevision(ObjectId.IndexId);
             var selectionInfo = CreateContextMenuSelectionInfo(rev, allFilesOrUntrackedDirectoriesExist: t);
             _controller.ShouldShowMenuDeleteFile(selectionInfo).Should().Be(t);
+        }
+
+        [TestCase(true, true, true)]
+        [TestCase(true, false, false)]
+        [TestCase(false, true, false)]
+        [TestCase(false, false, false)]
+        public void BrowseDiff_Submodules_WorkTree(bool isAnySubmodule, bool submodulesExist, bool expected)
+        {
+            var rev = new GitRevision(ObjectId.WorkTreeId);
+            var selectionInfo = CreateContextMenuSelectionInfo(rev, isAnySubmodule: isAnySubmodule, allDirectoriesExist: submodulesExist);
+            _controller.ShouldShowSubmoduleMenus(selectionInfo).Should().Be(expected);
         }
 
         #endregion
