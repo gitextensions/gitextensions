@@ -127,7 +127,7 @@ namespace GitUI.Editor
                         {
                             var idLength = index - idStartIndex;
 
-                            if (idLength <= 5)
+                            if (idLength < 4)
                             {
                                 return false;
                             }
