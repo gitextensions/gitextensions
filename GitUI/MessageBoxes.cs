@@ -56,10 +56,6 @@ namespace GitUI
 
         private static MessageBoxes Instance => instance ?? (instance = new MessageBoxes());
 
-        public static void FailedToExecuteScript(IWin32Window owner, string scriptKey, Exception ex)
-            => ShowError(owner, $"{Instance._failedToExecuteScript.Text} {scriptKey.Quote()}.{Environment.NewLine}"
-                                + $"{Instance._reason.Text}: {ex.Message}");
-
         public static void FailedToRunShell(IWin32Window owner, string shell, Exception ex)
             => ShowError(owner, $"{Instance._failedToRunShell.Text} {shell.Quote()}.{Environment.NewLine}"
                                 + $"{Instance._reason.Text}: {ex.Message}");

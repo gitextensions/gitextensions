@@ -128,7 +128,8 @@ namespace GitCommandsTests.Git
                     GenerateStringByLength(Math.Max(1, arg2Len - _appPath.Length - 4))
                 }, _appPath.Length + 3, maxLength);
 
-            Assert.Throws(typeof(Win32Exception), () => _gitExecutable.RunBatchCommand(args));
+            var ex = Assert.Throws<ExternalOperationException>(() => _gitExecutable.RunBatchCommand(args));
+            Assert.IsInstanceOf<Win32Exception>(ex.InnerException);
         }
 
         private string GenerateStringByLength(int length)

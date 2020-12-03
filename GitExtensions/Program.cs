@@ -37,6 +37,11 @@ namespace GitExtensions
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            // If an error happens before we had a chance to init the environment information
+            // the call to GetInformation() from BugReporter.ShowNBug() will fail.
+            // There's no perf hit calling Initialise() multiple times.
+            UserEnvironmentInformation.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty);
+
             ThemeModule.Load();
             Application.ApplicationExit += (s, e) => ThemeModule.Unload();
 
@@ -48,8 +53,8 @@ namespace GitExtensions
 
                 if (!Debugger.IsAttached)
                 {
-                    AppDomain.CurrentDomain.UnhandledException += (s, e) => ReportBug((Exception)e.ExceptionObject);
-                    Application.ThreadException += (s, e) => ReportBug(e.Exception);
+                    AppDomain.CurrentDomain.UnhandledException += (s, e) => BugReporter.Report((Exception)e.ExceptionObject, e.IsTerminating);
+                    Application.ThreadException += (s, e) => BugReporter.Report(e.Exception, isTerminating: false);
                 }
             }
             catch (TypeInitializationException tie)
@@ -354,23 +359,6 @@ namespace GitExtensions
                     {
                         return false;
                     }
-            }
-        }
-
-        private static void ReportBug(Exception ex)
-        {
-            // if the error happens before we had a chance to init the environment information
-            // the call to GetInformation() will fail. A double Initialise() call is safe.
-            UserEnvironmentInformation.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty);
-            var envInfo = UserEnvironmentInformation.GetInformation();
-
-            using (var form = new GitUI.NBugReports.BugReportForm())
-            {
-                var result = form.ShowDialog(ex, envInfo);
-                if (result == DialogResult.Abort)
-                {
-                    Environment.Exit(-1);
-                }
             }
         }
     }

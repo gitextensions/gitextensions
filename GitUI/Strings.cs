@@ -15,7 +15,13 @@ namespace GitUI
 
         private readonly TranslationString _buttonCheckoutBranch = new TranslationString("Checkout branch");
         private readonly TranslationString _buttonContinue = new TranslationString("Continue");
+        private readonly TranslationString _buttonCloseApp = new TranslationString("Close application");
         private readonly TranslationString _buttonCreateBranch = new TranslationString("Create branch");
+        private readonly TranslationString _buttonIgnore = new TranslationString("Ignore");
+        private readonly TranslationString _buttonReportBug = new TranslationString("Report bug!");
+
+        private readonly TranslationString _captionFailedExecute = new TranslationString("Failed to execute");
+        private readonly TranslationString _instructionOperationFailed = new TranslationString("Operation failed");
 
         private readonly TranslationString _containedInCurrentCommitText = new TranslationString("'{0}' is contained in the currently selected commit");
         private readonly TranslationString _containedInBranchesText = new TranslationString("Contained in branches:");
@@ -86,6 +92,11 @@ namespace GitUI
 
         private readonly TranslationString _rotInactive = new TranslationString("[ Inactive ]");
 
+        private readonly TranslationString _argumentsText = new TranslationString("Arguments");
+        private readonly TranslationString _commandText = new TranslationString("Command");
+        private readonly TranslationString _workingDirectoryText = new TranslationString("Working directory");
+        private readonly TranslationString _reportBugText = new TranslationString("If you think this was caused by Git Extensions, you can report a bug for the team to investigate.");
+
         // public only because of FormTranslate
         public Strings()
         {
@@ -111,7 +122,13 @@ namespace GitUI
 
         public static string ButtonContinue => _instance.Value._buttonContinue.Text;
         public static string ButtonCheckoutBranch => _instance.Value._buttonCheckoutBranch.Text;
+        public static string ButtonCloseApp => _instance.Value._buttonCloseApp.Text;
         public static string ButtonCreateBranch => _instance.Value._buttonCreateBranch.Text;
+        public static string ButtonIgnore => _instance.Value._buttonIgnore.Text;
+        public static string ButtonReportBug => _instance.Value._buttonReportBug.Text;
+
+        public static string CaptionFailedExecute => _instance.Value._captionFailedExecute.Text;
+        public static string InstructionOperationFailed => _instance.Value._instructionOperationFailed.Text;
 
         public static string ContainedInCurrentCommit => _instance.Value._containedInCurrentCommitText.Text;
         public static string ContainedInBranches => _instance.Value._containedInBranchesText.Text;
@@ -177,5 +194,10 @@ namespace GitUI
         public static string ShowDiffForAllParentsTooltip => _instance.Value._showDiffForAllParentsTooltip.Text;
 
         public static string Inactive => _instance.Value._rotInactive.Text;
+
+        public static string Arguments => _instance.Value._argumentsText.Text;
+        public static string Command => _instance.Value._commandText.Text;
+        public static string WorkingDirectory => _instance.Value._workingDirectoryText.Text;
+        public static string ReportBug => _instance.Value._reportBugText.Text;
     }
 }

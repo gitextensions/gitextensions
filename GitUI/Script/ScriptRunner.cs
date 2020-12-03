@@ -37,10 +37,9 @@ namespace GitUI.Script
                 return RunScript(owner, module, scriptKey, uiCommands, revisionGrid,
                     msg => MessageBox.Show(owner, msg, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error));
             }
-            catch (Exception ex)
+            catch (ExternalOperationException ex)
             {
-                MessageBoxes.FailedToExecuteScript(owner, scriptKey, ex);
-                return new CommandStatus(false, false);
+                throw new UserExternalOperationException(ex.Command, ex.Arguments, ex.WorkingDirectory, ex.InnerException ?? ex);
             }
         }
 

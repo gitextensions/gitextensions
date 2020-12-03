@@ -9230,6 +9230,10 @@ When OpenSSH is used, command line dialogs are shown!
   </file>
   <file datatype="plaintext" original="Strings" source-language="en">
     <body>
+      <trans-unit id="_argumentsText.Text">
+        <source>Arguments</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_authorDateText.Text">
         <source>{0:Author date|Author dates}</source>
         <target />
@@ -9265,6 +9269,10 @@ Select this commit to populate the full message.</source>
         <source>Checkout branch</source>
         <target />
       </trans-unit>
+      <trans-unit id="_buttonCloseApp.Text">
+        <source>Close application</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_buttonContinue.Text">
         <source>Continue</source>
         <target />
@@ -9273,8 +9281,20 @@ Select this commit to populate the full message.</source>
         <source>Create branch</source>
         <target />
       </trans-unit>
+      <trans-unit id="_buttonIgnore.Text">
+        <source>Ignore</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_buttonReportBug.Text">
+        <source>Report bug!</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_cancelText.Text">
         <source>Cancel</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_captionFailedExecute.Text">
+        <source>Failed to execute</source>
         <target />
       </trans-unit>
       <trans-unit id="_childrenText.Text">
@@ -9283,6 +9303,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_combinedDiff.Text">
         <source>Combined diff</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_commandText.Text">
+        <source>Command</source>
         <target />
       </trans-unit>
       <trans-unit id="_commitDateText.Text">
@@ -9413,6 +9437,10 @@ Select this commit to populate the full message.</source>
         <source>Install git...</source>
         <target />
       </trans-unit>
+      <trans-unit id="_instructionOperationFailed.Text">
+        <source>Operation failed</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_invisibleCommitText.Text">
         <source>'{0}' is not currently visible</source>
         <target />
@@ -9501,6 +9529,10 @@ Select this commit to populate the full message.</source>
         <source>Remove the selected invalid repository</source>
         <target />
       </trans-unit>
+      <trans-unit id="_reportBugText.Text">
+        <source>If you think this was caused by Git Extensions, you can report a bug for the team to investigate.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_rotInactive.Text">
         <source>[ Inactive ]</source>
         <target />
@@ -9581,6 +9613,10 @@ Yes, I allow telemetry!</source>
       </trans-unit>
       <trans-unit id="_weeksAgo.Text">
         <source>{0} {1:week|weeks} ago</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_workingDirectoryText.Text">
+        <source>Working directory</source>
         <target />
       </trans-unit>
       <trans-unit id="_workspaceText.Text">
