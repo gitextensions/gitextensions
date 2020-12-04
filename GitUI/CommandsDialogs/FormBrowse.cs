@@ -1807,6 +1807,7 @@ namespace GitUI.CommandsDialogs
             var module = e.GitModule;
             HideVariableMainMenuItems();
             PluginRegistry.Unregister(UICommands);
+            RevisionGrid.OnRepositoryChanged();
             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
             _submoduleStatusProvider.Init();
 
