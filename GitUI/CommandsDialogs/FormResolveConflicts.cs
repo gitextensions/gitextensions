@@ -112,13 +112,11 @@ namespace GitUI.CommandsDialogs
         private ConflictResolutionPreference _solveMergeConflictDialogResult;
         private bool _solveMergeConflictApplyToAll;
         private string _solveMergeConflictDialogCheckboxText;
-        private ConflictResolutionPreference _solveMergeConflictLastAction;
         private int _filesDeletedLocallyAndModifiedRemotelyCount;
         private int _filesModifiedLocallyAndDeletedRemotelyCount;
         private int _filesRemainedCount;
         private int _filesDeletedLocallyAndModifiedRemotelySolved;
         private int _filesModifiedLocallyAndDeletedRemotelySolved;
-        private int _filesRemainedCountSolved;
         private int _conflictItemsCount;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
@@ -260,6 +258,8 @@ namespace GitUI.CommandsDialogs
 
                     Close();
                 }
+
+                LoadCustomMergetools();
             }
         }
 
@@ -293,6 +293,24 @@ namespace GitUI.CommandsDialogs
         private static string FixPath(string path)
         {
             return (path ?? "").ToNativePath();
+        }
+
+        private void LoadCustomMergetools()
+        {
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                var tools = await Module.GetCustomDiffMergeTools(isDiff: false);
+                customMergetool.DropDown = null;
+                ContextMenuStrip customDiffToolDropDown = new ContextMenuStrip();
+                foreach (var tool in tools)
+                {
+                    var toolStripItem = new ToolStripMenuItem(tool) { Tag = tool };
+                    toolStripItem.Click += customMergetool_Click;
+                    customDiffToolDropDown.Items.Add(toolStripItem);
+                }
+
+                customMergetool.DropDown = customDiffToolDropDown;
+            }).FileAndForget();
         }
 
         private readonly Dictionary<string, string> _mergeScripts = new Dictionary<string, string>
@@ -741,6 +759,7 @@ namespace GitUI.CommandsDialogs
         private void SetAvailableCommands(bool enabled)
         {
             OpenMergetool.Enabled = enabled;
+            customMergetool.Enabled = enabled;
             openMergeToolBtn.Enabled = enabled;
             ContextOpenLocalWith.Enabled = enabled;
             ContextOpenRemoteWith.Enabled = enabled;
@@ -946,7 +965,6 @@ namespace GitUI.CommandsDialogs
 
                 dialog.Show();
                 _solveMergeConflictApplyToAll = dialog.FooterCheckBoxChecked ?? false;
-                _solveMergeConflictLastAction = _solveMergeConflictDialogResult; // The value of _solveMergeConflictDialogResult is changed in the method CreateSolveMergeConflictTaskDialog(...)
             }
 
             selectedMergeAction(_solveMergeConflictDialogResult);
@@ -1199,12 +1217,10 @@ namespace GitUI.CommandsDialogs
                     _filesRemainedCount = filesRemaining.Count;
                     _filesDeletedLocallyAndModifiedRemotelySolved = _filesDeletedLocallyAndModifiedRemotelyCount;
                     _filesModifiedLocallyAndDeletedRemotelySolved = _filesModifiedLocallyAndDeletedRemotelyCount;
-                    _filesRemainedCountSolved = _filesRemainedCount;
 
                     StartProgressBarWithMaxValue(_conflictItemsCount);
 
                     _solveMergeConflictApplyToAll = false;
-                    _solveMergeConflictLastAction = ConflictResolutionPreference.None;
                     foreach (var conflictData in filesDeletedLocallyAndModifiedRemotely)
                     {
                         IncrementProgressBarValue();
@@ -1212,7 +1228,6 @@ namespace GitUI.CommandsDialogs
                     }
 
                     _solveMergeConflictApplyToAll = false;
-                    _solveMergeConflictLastAction = ConflictResolutionPreference.None;
                     foreach (var conflictData in filesModifiedLocallyAndDeletedRemotely)
                     {
                         IncrementProgressBarValue();
@@ -1221,7 +1236,6 @@ namespace GitUI.CommandsDialogs
 
                     _solveMergeConflictDialogCheckboxText = string.Empty; // Hide checkbox "apply to all"
                     _solveMergeConflictApplyToAll = false;
-                    _solveMergeConflictLastAction = ConflictResolutionPreference.None;
                     foreach (var conflictData in filesRemaining)
                     {
                         IncrementProgressBarValue();
@@ -1231,7 +1245,6 @@ namespace GitUI.CommandsDialogs
                 finally
                 {
                     _solveMergeConflictApplyToAll = false;
-                    _solveMergeConflictLastAction = ConflictResolutionPreference.None;
                     StopAndHideProgressBar();
                     Initialize();
                 }
@@ -1241,6 +1254,28 @@ namespace GitUI.CommandsDialogs
         private void OpenMergetool_Click(object sender, EventArgs e)
         {
             OpenMergeTool();
+        }
+
+        private void customMergetool_Click(object sender, EventArgs e)
+        {
+            if (sender == customMergetool)
+            {
+                // "main menu" clicked, cancel dropdown manually, invoke default mergetool
+                customMergetool.HideDropDown();
+                ConflictedFilesContextMenu.Hide();
+            }
+
+            using (WaitCursorScope.Enter())
+            {
+                string customTool = (sender as ToolStripMenuItem)?.Tag as string;
+
+                foreach (var item in GetConflicts())
+                {
+                    Directory.SetCurrentDirectory(Module.WorkingDir);
+                    Module.RunMergeTool(fileName: item.Filename, customTool: customTool);
+                    Initialize();
+                }
+            }
         }
 
         private void ContextOpenBaseWith_Click(object sender, EventArgs e)
