@@ -1883,8 +1883,12 @@ namespace GitCommands
                 AddEncoding(Encoding.Default);
                 AddEncoding(new ASCIIEncoding());
                 AddEncoding(new UnicodeEncoding());
-                AddEncoding(new UTF7Encoding());
+
+                // UTF-7 is no longer supported, see: https://github.com/dotnet/docs/issues/19274
+                // AddEncoding(new UTF7Encoding());
+
                 AddEncoding(new UTF8Encoding(false));
+
                 try
                 {
                     AddEncoding(Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.OEMCodePage));
@@ -1899,6 +1903,12 @@ namespace GitCommands
                 var utf8 = new UTF8Encoding(false);
                 foreach (var encodingName in availableEncodings.Split(';'))
                 {
+                    if (encodingName == "utf-7")
+                    {
+                        // UTF-7 is no longer supported, see: https://github.com/dotnet/docs/issues/19274
+                        continue;
+                    }
+
                     // create utf-8 without BOM
                     if (encodingName == utf8.HeaderName)
                     {

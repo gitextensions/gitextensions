@@ -30,6 +30,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
 
             var availableEncoding = Encoding.GetEncodings()
+                .Where(ei => ei.Name != "utf-7") // UTF-7 is no longer supported, see: https://github.com/dotnet/docs/issues/19274
                 .Select(ei => ei.GetEncoding())
                 .Where(e => !includedEncoding.ContainsKey(e.HeaderName))
                 .ToList();
