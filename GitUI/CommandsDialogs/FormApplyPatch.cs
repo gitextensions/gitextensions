@@ -52,10 +52,13 @@ namespace GitUI.CommandsDialogs
 
             patchGrid1.SetSkipped(Skipped);
 
-            EnableButtons();
-
             SolveMergeConflicts.BackColor = AppColor.Branch.GetThemeColor();
             SolveMergeConflicts.SetForeColorForBackColor();
+        }
+
+        private void FormApplyPatchLoad(object sender, EventArgs e)
+        {
+            EnableButtons();
         }
 
         public void SetPatchFile(string name)
