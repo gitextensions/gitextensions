@@ -1903,7 +1903,7 @@ namespace GitCommands
                 var utf8 = new UTF8Encoding(false);
                 foreach (var encodingName in availableEncodings.Split(';'))
                 {
-                    if (encodingName == "utf-7")
+                    if (encodingName == Encoding.UTF7.HeaderName)
                     {
                         // UTF-7 is no longer supported, see: https://github.com/dotnet/docs/issues/19274
                         continue;
