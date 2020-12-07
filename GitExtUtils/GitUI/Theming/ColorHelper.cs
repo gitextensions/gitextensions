@@ -186,7 +186,7 @@ namespace GitExtUtils.GitUI.Theming
         }
 
         public static Color GetSplitterColor() =>
-            KnownColor.ControlLight.MakeBackgroundDarkerBy(0.035);
+            KnownColor.Window.MakeBackgroundDarkerBy(0);
 
         public static void AdaptImageLightness(this ToolStripItem item) =>
             item.Image = ((Bitmap)item.Image)?.AdaptLightness();

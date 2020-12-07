@@ -134,7 +134,7 @@ namespace GitUI.BranchTreePanel
             this.treeMain.Name = "treeMain";
             this.treeMain.PathSeparator = "/";
             this.treeMain.ShowNodeToolTips = true;
-            this.treeMain.Size = new System.Drawing.Size(300, 350);
+            this.treeMain.Size = new System.Drawing.Size(300, 150);
             this.treeMain.TabIndex = 3;
             // 
             // menuMain
