@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Documents;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Commands;
+using GitCommands.Patches;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUI.Theming;
@@ -13,6 +16,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormRebase : GitModuleForm
     {
+        private static readonly List<PatchFile> Skipped = new List<PatchFile>();
         private readonly TranslationString _continueRebaseText = new TranslationString("Continue rebase");
         private readonly TranslationString _solveConflictsText = new TranslationString("Solve conflicts");
 
@@ -48,6 +52,7 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
+            patchGrid1.SetSkipped(Skipped);
             if (AppSettings.AlwaysShowAdvOpt)
             {
                 ShowOptions_LinkClicked(null, null);
@@ -231,6 +236,7 @@ namespace GitUI.CommandsDialogs
                 if (applyingPatch != null)
                 {
                     applyingPatch.IsSkipped = true;
+                    Skipped.Add(applyingPatch);
                 }
 
                 FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.SkipRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
@@ -254,6 +260,7 @@ namespace GitUI.CommandsDialogs
 
                 if (!Module.InTheMiddleOfRebase())
                 {
+                    Skipped.Clear();
                     Close();
                 }
 
@@ -273,6 +280,8 @@ namespace GitUI.CommandsDialogs
                 }
 
                 AppSettings.RebaseAutoStash = chkStash.Checked;
+
+                Skipped.Clear();
 
                 string rebaseCmd;
                 if (chkSpecificRange.Checked && !string.IsNullOrWhiteSpace(txtFrom.Text) && !string.IsNullOrWhiteSpace(cboTo.Text))

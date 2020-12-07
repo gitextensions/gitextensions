@@ -15,6 +15,7 @@ namespace GitUI
     {
         private readonly TranslationString _unableToShowPatchDetails = new TranslationString("Unable to show details of patch file.");
 
+        private List<PatchFile> _skipped;
         private bool _isManagingRebase;
 
         public IReadOnlyList<PatchFile> PatchFiles { get; private set; }
@@ -75,9 +76,25 @@ namespace GitUI
 
         private IReadOnlyList<PatchFile> GetPatches()
         {
-            return Module.InTheMiddleOfInteractiveRebase()
+            var patches = Module.InTheMiddleOfInteractiveRebase()
                             ? Module.GetInteractiveRebasePatchFiles()
                             : Module.GetRebasePatchFiles();
+
+            if (!_skipped.Any())
+            {
+                return patches;
+            }
+
+            // Select commits with `ObjectId` and patches with `Name`
+            var skippedPatches = patches
+                .TakeWhile(p => !p.IsNext)
+                .Where(p => _skipped.Any(s => p.ObjectId == s.ObjectId && p.Name == s.Name));
+            foreach (var patchFile in skippedPatches)
+            {
+                patchFile.IsSkipped = true;
+            }
+
+            return patches;
         }
 
         public void Initialize()
@@ -145,6 +162,11 @@ namespace GitUI
                 dataGridViewRow.DefaultCellStyle.ForeColor = Color.OrangeRed.AdaptTextColor();
                 dataGridViewRow.Selected = true;
             }
+        }
+
+        public void SetSkipped(List<PatchFile> skipped)
+        {
+            _skipped = skipped;
         }
     }
 }

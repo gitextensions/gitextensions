@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Commands;
+using GitCommands.Patches;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUI.Theming;
@@ -34,6 +36,8 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
+        private static readonly List<PatchFile> Skipped = new List<PatchFile>();
+
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormApplyPatch()
         {
@@ -45,6 +49,9 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             InitializeComplete();
+
+            patchGrid1.SetSkipped(Skipped);
+
             EnableButtons();
 
             SolveMergeConflicts.BackColor = AppColor.Branch.GetThemeColor();
@@ -171,6 +178,8 @@ namespace GitUI.CommandsDialogs
 
             using (WaitCursorScope.Enter())
             {
+                Skipped.Clear();
+
                 if (PatchFileMode.Checked)
                 {
                     var arguments = IsDiffFile(patchFile)
@@ -231,6 +240,7 @@ namespace GitUI.CommandsDialogs
                 if (applyingPatch != null)
                 {
                     applyingPatch.IsSkipped = true;
+                    Skipped.Add(applyingPatch);
                 }
 
                 FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.SkipCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
@@ -252,6 +262,7 @@ namespace GitUI.CommandsDialogs
             using (WaitCursorScope.Enter())
             {
                 FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.AbortCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                Skipped.Clear();
                 EnableButtons();
             }
         }
