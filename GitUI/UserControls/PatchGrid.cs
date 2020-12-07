@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Patches;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using ResourceManager;
 
 namespace GitUI
@@ -139,7 +141,9 @@ namespace GitUI
             if (shouldSelectIndex >= 0)
             {
                 Patches.ClearSelection();
-                Patches.Rows[shouldSelectIndex].Selected = true;
+                DataGridViewRow dataGridViewRow = Patches.Rows[shouldSelectIndex];
+                dataGridViewRow.DefaultCellStyle.ForeColor = Color.OrangeRed.AdaptTextColor();
+                dataGridViewRow.Selected = true;
             }
         }
     }
