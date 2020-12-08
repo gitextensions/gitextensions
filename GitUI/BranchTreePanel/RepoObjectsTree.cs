@@ -168,6 +168,12 @@ namespace GitUI.BranchTreePanel
                 search.TextChanged += OnBranchCriterionChanged;
                 search.KeyDown += TxtBranchCriterion_KeyDown;
                 search.PreviewKeyDown += OnPreviewKeyDown;
+
+                search.SearchBoxBorderStyle = BorderStyle.FixedSingle;
+                search.SearchBoxBorderDefaultColor = Color.LightGray.AdaptBackColor();
+                search.SearchBoxBorderHoveredColor = SystemColors.Highlight.AdaptBackColor();
+                search.SearchBoxBorderFocusedColor = SystemColors.HotTrack.AdaptBackColor();
+
                 return search;
 
                 IEnumerable<string> SearchForBranch(string arg)
