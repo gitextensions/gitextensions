@@ -47,31 +47,6 @@ namespace GitUI.BranchTreePanel
             AppSettings.RepoObjectsTreeSubmodulesIndex = treeToPositionIndex[_submoduleTree];
         }
 
-        private void RebuildMenuSettings()
-        {
-            var indexToTree = GetTreeToPositionIndex().ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
-
-            treeMain.BeginUpdate();
-
-            // For now, the only items in menuSettings are the "show" items, so just clear it all,
-            // and re-add them in current index order.
-            menuSettings.Items.Clear();
-            var treeToShowMenuItem = new Dictionary<Tree, ToolStripMenuItem>
-            {
-                [_branchesTree] = tsmiShowBranches,
-                [_remotesTree] = tsmiShowRemotes,
-                [_tagTree] = tsmiShowTags,
-                [_submoduleTree] = tsmiShowSubmodules
-            };
-            for (int i = 0; i < treeToShowMenuItem.Count(); ++i)
-            {
-                var tsmi = treeToShowMenuItem[indexToTree[i]];
-                menuSettings.Items.Add(tsmi);
-            }
-
-            treeMain.EndUpdate();
-        }
-
         private void ReorderTreeNode(TreeNode node, bool up)
         {
             var tree = (Tree)node.Tag;
@@ -109,39 +84,36 @@ namespace GitUI.BranchTreePanel
             RemoveTree(_tagTree);
             RemoveTree(_submoduleTree);
             ShowEnabledTrees();
-
-            // Update order of "show" menuSettings to match tree order
-            RebuildMenuSettings();
         }
 
         private void ShowEnabledTrees()
         {
-            if (tsmiShowBranches.Checked)
+            if (tsbShowBranches.Checked)
             {
                 AddTree(_branchesTree);
             }
 
-            if (tsmiShowRemotes.Checked)
+            if (tsbShowRemotes.Checked)
             {
                 AddTree(_remotesTree);
             }
 
-            if (tsmiShowTags.Checked)
+            if (tsbShowTags.Checked)
             {
                 AddTree(_tagTree);
             }
 
-            if (tsmiShowSubmodules.Checked)
+            if (tsbShowSubmodules.Checked)
             {
                 AddTree(_submoduleTree);
             }
         }
 
-        private void tsmiShowBranches_Click(object sender, EventArgs e)
+        private void tsbShowBranches_Click(object sender, EventArgs e)
         {
-            AppSettings.RepoObjectsTreeShowBranches = tsmiShowBranches.Checked;
+            AppSettings.RepoObjectsTreeShowBranches = tsbShowBranches.Checked;
             _searchResult = null;
-            if (tsmiShowBranches.Checked)
+            if (tsbShowBranches.Checked)
             {
                 AddTree(_branchesTree);
                 _searchResult = null;
@@ -152,11 +124,11 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private void tsmiShowRemotes_Click(object sender, EventArgs e)
+        private void tsbShowRemotes_Click(object sender, EventArgs e)
         {
-            AppSettings.RepoObjectsTreeShowRemotes = tsmiShowRemotes.Checked;
+            AppSettings.RepoObjectsTreeShowRemotes = tsbShowRemotes.Checked;
             _searchResult = null;
-            if (tsmiShowRemotes.Checked)
+            if (tsbShowRemotes.Checked)
             {
                 AddTree(_remotesTree);
                 _searchResult = null;
@@ -167,11 +139,11 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private void tsmiShowTags_Click(object sender, EventArgs e)
+        private void tsbShowTags_Click(object sender, EventArgs e)
         {
-            AppSettings.RepoObjectsTreeShowTags = tsmiShowTags.Checked;
+            AppSettings.RepoObjectsTreeShowTags = tsbShowTags.Checked;
             _searchResult = null;
-            if (tsmiShowTags.Checked)
+            if (tsbShowTags.Checked)
             {
                 AddTree(_tagTree);
                 _searchResult = null;
@@ -182,11 +154,11 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private void tsmiShowSubmodules_Click(object sender, EventArgs e)
+        private void tsbShowSubmodules_Click(object sender, EventArgs e)
         {
-            AppSettings.RepoObjectsTreeShowSubmodules = tsmiShowSubmodules.Checked;
+            AppSettings.RepoObjectsTreeShowSubmodules = tsbShowSubmodules.Checked;
             _searchResult = null;
-            if (tsmiShowSubmodules.Checked)
+            if (tsbShowSubmodules.Checked)
             {
                 AddTree(_submoduleTree);
                 _searchResult = null;
