@@ -957,17 +957,17 @@ namespace GitUI.CommandsDialogs
 
             UpdateFormTitleAndButton();
             DisableMergeOptionsWhenCurrentBranchIsLocal();
+        }
 
-            void DisableMergeOptionsWhenCurrentBranchIsLocal()
-            {
-                var isLocalBranch = string.IsNullOrEmpty(Module.GetRemoteBranch(localBranch.Text));
+        private void DisableMergeOptionsWhenCurrentBranchIsLocal()
+        {
+            var isLocalBranch = string.IsNullOrEmpty(Module.GetRemoteBranch(localBranch.Text));
 
-                Rebase.Enabled =
-                    Merge.Enabled =
-                    Merge.Checked = !isLocalBranch;
+            Rebase.Enabled =
+                Merge.Enabled =
+                Merge.Checked = !isLocalBranch;
 
-                Fetch.Checked = isLocalBranch;
-            }
+            Fetch.Checked = isLocalBranch;
         }
 
         private void UpdateFormTitleAndButton()
@@ -1002,6 +1002,8 @@ namespace GitUI.CommandsDialogs
 
             Merge.Enabled = !IsPullAll();
             Rebase.Enabled = !IsPullAll();
+
+            DisableMergeOptionsWhenCurrentBranchIsLocal();
         }
 
         private bool IsPullAll()
@@ -1023,9 +1025,6 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.Enabled = false;
             AddRemote.Enabled = false;
 
-            Merge.Enabled = true;
-            Rebase.Enabled = true;
-
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync();
@@ -1036,6 +1035,8 @@ namespace GitUI.CommandsDialogs
                 comboBoxPullSource.DisplayMember = nameof(Repository.Path);
                 comboBoxPullSource.Text = prevUrl;
             });
+
+            DisableMergeOptionsWhenCurrentBranchIsLocal();
         }
 
         private void AddRemoteClick(object sender, EventArgs e)
@@ -1077,6 +1078,8 @@ namespace GitUI.CommandsDialogs
             {
                 ReachableTags.Checked = true;
             }
+
+            DisableMergeOptionsWhenCurrentBranchIsLocal();
         }
 
         private void RebaseCheckedChanged(object sender, EventArgs e)
@@ -1099,6 +1102,8 @@ namespace GitUI.CommandsDialogs
             {
                 ReachableTags.Checked = true;
             }
+
+            DisableMergeOptionsWhenCurrentBranchIsLocal();
         }
 
         private void FetchCheckedChanged(object sender, EventArgs e)
@@ -1118,6 +1123,8 @@ namespace GitUI.CommandsDialogs
             PruneTags.Enabled = true;
 
             UpdateFormTitleAndButton();
+
+            DisableMergeOptionsWhenCurrentBranchIsLocal();
         }
 
         private void PullSourceValidating(object sender, CancelEventArgs e)
@@ -1148,6 +1155,8 @@ namespace GitUI.CommandsDialogs
             {
                 Fetch.Checked = true;
             }
+
+            DisableMergeOptionsWhenCurrentBranchIsLocal();
         }
 
         private void ResetRemoteHeads()
@@ -1167,12 +1176,16 @@ namespace GitUI.CommandsDialogs
         private void Prune_CheckedChanged(object sender, EventArgs e)
         {
             PruneTags.Checked = Prune.Checked && PruneTags.Checked;
+
+            DisableMergeOptionsWhenCurrentBranchIsLocal();
         }
 
         private void PruneTags_CheckedChanged(object sender, EventArgs e)
         {
             Prune.Checked = Prune.Checked || PruneTags.Checked;
             AllTags.Checked = AllTags.Checked || PruneTags.Checked;
+
+            DisableMergeOptionsWhenCurrentBranchIsLocal();
         }
 
         internal TestAccessor GetTestAccessor() => new TestAccessor(this);
