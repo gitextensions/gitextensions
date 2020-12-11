@@ -1723,6 +1723,16 @@ namespace GitUI.CommandsDialogs
             stagedEditFileToolStripMenuItem11.Visible = singleFileExists;
         }
 
+        private void UnstagedSubmoduleContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Separate menu for single submodule items
+            bool allDirectoriesExist = Directory.Exists(_fullPathResolver.Resolve(Unstaged?.SelectedGitItem?.Name));
+            updateSubmoduleMenuItem.Enabled = allDirectoriesExist;
+            resetSubmoduleChanges.Enabled = allDirectoriesExist;
+            stashSubmoduleChangesToolStripMenuItem.Enabled = allDirectoriesExist;
+            commitSubmoduleChanges.Enabled = allDirectoriesExist;
+        }
+
         private void Unstaged_Enter(object sender, EnterEventArgs e)
         {
             if (_currentFilesList != Unstaged)

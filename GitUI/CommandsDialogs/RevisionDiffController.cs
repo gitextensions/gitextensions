@@ -37,6 +37,7 @@ namespace GitUI.CommandsDialogs
             bool isAnyItemWorkTree,
             bool isBareRepository,
             bool allFilesExist,
+            bool allDirectoriesExist,
             bool allFilesOrUntrackedDirectoriesExist,
             bool isAnyTracked,
             bool supportPatches,
@@ -51,6 +52,7 @@ namespace GitUI.CommandsDialogs
             IsAnyItemWorkTree = isAnyItemWorkTree;
             IsBareRepository = isBareRepository;
             AllFilesExist = allFilesExist;
+            AllDirectoriesExist = allDirectoriesExist;
             AllFilesOrUntrackedDirectoriesExist = allFilesOrUntrackedDirectoriesExist;
             IsAnyTracked = isAnyTracked;
             SupportPatches = supportPatches;
@@ -67,6 +69,7 @@ namespace GitUI.CommandsDialogs
         public bool IsAnyItemWorkTree { get; }
         public bool IsBareRepository { get; }
         public bool AllFilesExist { get; }
+        public bool AllDirectoriesExist { get; }
         public bool AllFilesOrUntrackedDirectoriesExist { get; }
         public bool IsAnyTracked { get; }
         public bool SupportPatches { get; }
@@ -130,7 +133,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowSubmoduleMenus(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsAnySubmodule && selectionInfo.SelectedRevision?.ObjectId == ObjectId.WorkTreeId;
+            return selectionInfo.IsAnySubmodule && selectionInfo.SelectedRevision?.ObjectId == ObjectId.WorkTreeId && selectionInfo.AllDirectoriesExist;
         }
 
         public bool ShouldShowMenuEditWorkingDirectoryFile(ContextMenuSelectionInfo selectionInfo)
