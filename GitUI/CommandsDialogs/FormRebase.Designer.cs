@@ -398,6 +398,7 @@ namespace GitUI.CommandsDialogs
             // patchGrid1
             // 
             this.patchGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.patchGrid1.IsManagingRebase = true;
             this.patchGrid1.Location = new System.Drawing.Point(3, 172);
             this.patchGrid1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.patchGrid1.Name = "patchGrid1";

@@ -603,6 +603,21 @@ namespace GitUI
             return DoActionOnRepo(owner, Action, requiresValidWorkingDir: false, changesRepo: false);
         }
 
+        public bool StartFormCommitDiff(ObjectId objectId)
+        {
+            bool Action()
+            {
+                using (var viewPatch = new FormCommitDiff(this, objectId))
+                {
+                    viewPatch.ShowDialog(null);
+                }
+
+                return true;
+            }
+
+            return DoActionOnRepo(null, Action, requiresValidWorkingDir: false, changesRepo: false);
+        }
+
         public bool StartViewPatchDialog(string patchFile)
         {
             return StartViewPatchDialog(null, patchFile);

@@ -347,6 +347,7 @@
             this.ClientSize = new System.Drawing.Size(711, 436);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MinimumSize = new System.Drawing.Size(720, 410);
+            this.Load += new System.EventHandler(this.FormApplyPatchLoad);
             this.Name = "FormApplyPatch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Apply patch";
