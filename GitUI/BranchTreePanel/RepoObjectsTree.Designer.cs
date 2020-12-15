@@ -99,7 +99,6 @@ namespace GitUI.BranchTreePanel
             this.tsbShowTags = new System.Windows.Forms.ToolStripButton();
             this.tsbShowSubmodules = new System.Windows.Forms.ToolStripButton();
             this.branchSearchPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.lblSearchBranch = new System.Windows.Forms.Label();
             this.btnSearch = new System.Windows.Forms.Button();
             this.menuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -515,7 +514,6 @@ namespace GitUI.BranchTreePanel
             this.branchSearchPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.branchSearchPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.branchSearchPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.branchSearchPanel.Controls.Add(this.lblSearchBranch, 0, 0);
             this.branchSearchPanel.Controls.Add(this.btnSearch, 2, 0);
             this.branchSearchPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.branchSearchPanel.Location = new System.Drawing.Point(0, 25);
@@ -524,16 +522,6 @@ namespace GitUI.BranchTreePanel
             this.branchSearchPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.branchSearchPanel.Size = new System.Drawing.Size(300, 26);
             this.branchSearchPanel.TabIndex = 4;
-            // 
-            // lblSearchBranch
-            // 
-            this.lblSearchBranch.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblSearchBranch.AutoSize = true;
-            this.lblSearchBranch.Location = new System.Drawing.Point(3, 6);
-            this.lblSearchBranch.Name = "lblSearchBranch";
-            this.lblSearchBranch.Size = new System.Drawing.Size(44, 13);
-            this.lblSearchBranch.TabIndex = 0;
-            this.lblSearchBranch.Text = "Search:";
             // 
             // btnSearch
             // 
@@ -651,7 +639,6 @@ namespace GitUI.BranchTreePanel
         private ToolStripMenuItem mnubtnFetchOneBranch;
         private TableLayoutPanel repoTreePanel;
         private TableLayoutPanel branchSearchPanel;
-        private Label lblSearchBranch;
         private Button btnSearch;
         private ContextMenuStrip menuSettings;
         private ToolStripSeparator toolStripSeparator1;

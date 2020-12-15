@@ -8020,10 +8020,6 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>&amp;Sort order...</source>
         <target />
       </trans-unit>
-      <trans-unit id="lblSearchBranch.Text">
-        <source>Search:</source>
-        <target />
-      </trans-unit>
       <trans-unit id="mnuBtnFetchAllRemotes.Text">
         <source>Fetch all remotes</source>
         <target />
