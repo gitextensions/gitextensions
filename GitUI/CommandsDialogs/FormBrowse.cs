@@ -3227,15 +3227,20 @@ namespace GitUI.CommandsDialogs
 
         private void FormBrowse_DragDrop(object sender, DragEventArgs e)
         {
-            CommitInfoTabControl.SelectedTab = TreeTabPage;
             HandleDrop(e);
         }
 
         private void HandleDrop(DragEventArgs e)
         {
-            var itemPath = (e.Data.GetData(DataFormats.Text) ?? e.Data.GetData(DataFormats.UnicodeText)) as string;
-            if (itemPath != null && (File.Exists(itemPath) || Directory.Exists(itemPath)))
+            if (TreeTabPage.Parent == null)
             {
+                return;
+            }
+
+            var itemPath = (e.Data.GetData(DataFormats.Text) ?? e.Data.GetData(DataFormats.UnicodeText)) as string;
+            if (IsFileExistingInRepo(itemPath))
+            {
+                CommitInfoTabControl.SelectedTab = TreeTabPage;
                 fileTree.SelectFileOrFolder(itemPath);
                 return;
             }
@@ -3248,11 +3253,25 @@ namespace GitUI.CommandsDialogs
 
             foreach (string path in paths)
             {
+                if (!IsFileExistingInRepo(path))
+                {
+                    continue;
+                }
+
+                if (CommitInfoTabControl.SelectedTab != TreeTabPage)
+                {
+                    CommitInfoTabControl.SelectedTab = TreeTabPage;
+                }
+
                 if (fileTree.SelectFileOrFolder(path))
                 {
                     return;
                 }
             }
+
+            bool IsPathExists(string path) => path != null && (File.Exists(path) || Directory.Exists(path));
+
+            bool IsFileExistingInRepo(string path) => IsPathExists(path) && path.StartsWith(Module.WorkingDir, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private void FormBrowse_DragEnter(object sender, DragEventArgs e)
