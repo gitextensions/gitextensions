@@ -615,9 +615,16 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnLoad(EventArgs e)
         {
+            // Removing the main menu before restoring the toolstrip layouts
+            // as it *does* randomly change the order of the defined items in the menu
+            Controls.Remove(mainMenuStrip);
+
             toolPanel.TopToolStripPanel.SuspendLayout();
             ToolStripManager.LoadSettings(this, "toolsettings");
             toolPanel.TopToolStripPanel.ResumeLayout();
+
+            // Add the menu back
+            Controls.Add(mainMenuStrip);
 
             _formBrowseMenus.CreateToolbarsMenus(ToolStripMain, ToolStripFilters);
 
@@ -682,6 +689,9 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            // Remove the main menu to prevent its state being persisted
+            Controls.Remove(mainMenuStrip);
+
             ToolStripManager.SaveSettings(this, "toolsettings");
             SaveApplicationSettings();
 
