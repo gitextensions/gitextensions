@@ -1727,7 +1727,7 @@ namespace GitUI.CommandsDialogs
             this.toolsToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.mainMenuStrip.Location = new System.Drawing.Point(0, 0);
-            this.mainMenuStrip.Name = "menuStrip1";
+            this.mainMenuStrip.Name = "mainMenuStrip";
             this.mainMenuStrip.Size = new System.Drawing.Size(923, 24);
             this.mainMenuStrip.Padding = new System.Windows.Forms.Padding(4);
             this.mainMenuStrip.TabIndex = 0;
