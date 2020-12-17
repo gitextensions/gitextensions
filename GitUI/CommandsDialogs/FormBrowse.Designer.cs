@@ -1714,7 +1714,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator7.Name = "toolStripSeparator7";
             this.toolStripSeparator7.Size = new System.Drawing.Size(214, 6);
             // 
-            // menuStrip1
+            // mainMenuStrip
             // 
             this.mainMenuStrip.ClickThrough = true;
             this.mainMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {

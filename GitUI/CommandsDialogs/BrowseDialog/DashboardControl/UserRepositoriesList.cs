@@ -662,7 +662,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             }
 
             var menus = new ToolStripItem[] { mnuConfigure };
-            var menuStrip = form.FindDescendantOfType<MenuStrip>(p => p.Name == "menuStrip1");
+            var menuStrip = form.FindDescendantOfType<MenuStrip>(p => p.Name == "mainMenuStrip");
             var dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");
             dashboardMenu?.DropDownItems.AddRange(menus);
         }
