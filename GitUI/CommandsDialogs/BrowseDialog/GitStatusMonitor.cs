@@ -281,6 +281,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     oldCommands.PreCheckoutRevision -= GitUICommands_PreCheckout;
                     oldCommands.PostCheckoutBranch -= GitUICommands_PostCheckout;
                     oldCommands.PostCheckoutRevision -= GitUICommands_PostCheckout;
+                    oldCommands.PostRepositoryChanged -= GitUICommands_PostRepositoryChanged;
                 }
 
                 commandsSource_activate(sender as IGitUICommandsSource);
@@ -293,6 +294,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 newCommands.PreCheckoutRevision += GitUICommands_PreCheckout;
                 newCommands.PostCheckoutBranch += GitUICommands_PostCheckout;
                 newCommands.PostCheckoutRevision += GitUICommands_PostCheckout;
+                newCommands.PostRepositoryChanged += GitUICommands_PostRepositoryChanged;
 
                 var module = newCommands.Module;
                 StartWatchingChanges(module.WorkingDir, module.WorkingDirGitDir);
@@ -305,6 +307,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             void GitUICommands_PostCheckout(object sender, GitUIPostActionEventArgs e)
             {
+                CurrentStatus = GitStatusMonitorState.Running;
+            }
+
+            void GitUICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
+            {
+                CurrentStatus = GitStatusMonitorState.Inactive;
                 CurrentStatus = GitStatusMonitorState.Running;
             }
         }
