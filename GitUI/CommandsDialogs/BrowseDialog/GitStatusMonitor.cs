@@ -164,7 +164,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public void InvalidateGitWorkingDirectoryStatus()
         {
-            GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs());
+            GitWorkingDirectoryStatusChanged?.Invoke(this, null);
         }
 
         public void RequestRefresh()
