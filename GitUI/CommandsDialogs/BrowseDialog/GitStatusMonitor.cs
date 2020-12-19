@@ -191,6 +191,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             get { return _currentStatus; }
             set
             {
+                var prevStatus = _currentStatus;
                 _currentStatus = value;
                 switch (_currentStatus)
                 {
@@ -212,8 +213,25 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                         break;
 
+                    case GitStatusMonitorState.Inactive:
+                        {
+                            if (prevStatus != GitStatusMonitorState.Inactive)
+                            {
+                                InvalidateGitWorkingDirectoryStatus();
+                            }
+                        }
+
+                        break;
+
                     case GitStatusMonitorState.Running:
                         {
+                            if (prevStatus == GitStatusMonitorState.Inactive)
+                            {
+                                // Timer is already running, schedule new update
+                                ScheduleNextInteractiveTime();
+                                break;
+                            }
+
                             _workTreeWatcher.EnableRaisingEvents = Directory.Exists(_workTreeWatcher.Path);
                             _gitDirWatcher.EnableRaisingEvents = GitDirWatcherEnableRaisingEvents();
 
@@ -337,16 +355,31 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             ThreadHelper.AssertOnUIThread();
 
             if (CurrentStatus != GitStatusMonitorState.Running
-                || _nextUpdateTime - Environment.TickCount > 0
-                || IsMinimized())
+                && CurrentStatus != GitStatusMonitorState.Inactive)
             {
                 return;
             }
 
-            // don't update status while repository is being modified by GitExt,
-            // repository status may change after these actions.
-            if (UICommandsSource.UICommands.RepoChangedNotifier.IsLocked ||
+            if (IsMinimized()
+                || UICommandsSource.UICommands.RepoChangedNotifier.IsLocked ||
                 (GitVersion.Current.RaceConditionWhenGitStatusIsUpdatingIndex && Module.IsRunningGitProcess()))
+            {
+                // No run for minimized,
+                // don't update status while repository is being modified by GitExt,
+                // repository status may change after these actions.
+                if (CurrentStatus == GitStatusMonitorState.Running)
+                {
+                    CurrentStatus = GitStatusMonitorState.Inactive;
+                }
+
+                return;
+            }
+            else if (CurrentStatus == GitStatusMonitorState.Inactive)
+            {
+                CurrentStatus = GitStatusMonitorState.Running;
+            }
+
+            if (_nextUpdateTime - Environment.TickCount > 0)
             {
                 return;
             }
