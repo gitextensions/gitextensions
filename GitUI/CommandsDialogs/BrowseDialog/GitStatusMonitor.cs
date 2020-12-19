@@ -39,6 +39,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private readonly FileSystemWatcher _gitDirWatcher = new FileSystemWatcher();
         private readonly System.Windows.Forms.Timer _timerRefresh;
         private bool _commandIsRunning;
+        private bool _isFirstPostRepoChanged;
         private string _gitPath;
         private string _submodulesPath;
         private readonly CancellationTokenSequence _statusSequence = new CancellationTokenSequence();
@@ -314,6 +315,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 CurrentStatus = GitStatusMonitorState.Inactive;
                 CurrentStatus = GitStatusMonitorState.Running;
+                _isFirstPostRepoChanged = true;
             }
         }
 
@@ -430,7 +432,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         try
                         {
                             var cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default,
-                                noLocks: true);
+                                noLocks: !_isFirstPostRepoChanged);
+                            _isFirstPostRepoChanged = false;
                             var output = await module.GitExecutable.GetOutputAsync(cmd).ConfigureAwait(false);
                             IReadOnlyList<GitItemStatus> changedFiles = _getAllChangedFilesOutputParser.Parse(output);
 
