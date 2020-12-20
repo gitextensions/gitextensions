@@ -39,7 +39,7 @@
     <ProjectReference Include="..\Externals\ICSharpCode.TextEditor\Project\ICSharpCode.TextEditor.csproj" />
     <ProjectReference Include="..\GitCommands\GitCommands.csproj" />
     <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj" />
-    <ProjectReference Include="..\NetSpell.SpellChecker\SpellChecker.csproj" />
+    <ProjectReference Include="..\Externals\NetSpell.SpellChecker\SpellChecker.csproj" />
     <ProjectReference Include="..\ResourceManager\ResourceManager.csproj" />
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
   </ItemGroup>
