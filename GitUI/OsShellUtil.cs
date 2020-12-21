@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitCommands;
-using GitExtUtils;
-using Microsoft.WindowsAPICodePack.Dialogs;
 namespace GitUI
 {
     public static class OsShellUtil

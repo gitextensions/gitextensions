@@ -8,12 +8,12 @@
     ============================================================
     -->
   <Target Name="_PublishTranslations">
-    <_GetAvailableTranslationsCodeTask
+    <!-- <_GetAvailableTranslationsCodeTask
           TranslationFolder="$(TargetDir)Translation\">
       <Output ItemName="Translations" TaskParameter="Output"/>
     </_GetAvailableTranslationsCodeTask>
 
-    <Copy SourceFiles="@(Translations)" DestinationFolder="$(PublishDir)Translation" ContinueOnError="false" />
+    <Copy SourceFiles="@(Translations)" DestinationFolder="$(PublishDir)Translation" ContinueOnError="false" /> -->
   </Target>
 
   <!--

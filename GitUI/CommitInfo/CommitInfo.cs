@@ -784,7 +784,7 @@ namespace GitUI.CommitInfo
             {
                 int priorityA = GetBranchPriority(a);
                 int priorityB = GetBranchPriority(b);
-                return priorityA == priorityB ? Comparer<string>.Default.Compare(a, b)
+                return priorityA == priorityB ? StringComparer.Ordinal.Compare(a, b)
                     : priorityA - priorityB;
             }
 

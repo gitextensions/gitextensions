@@ -7,7 +7,8 @@
     <JetBrainsAnnotationsVersion>2020.1.0</JetBrainsAnnotationsVersion>
     <LibGit2SharpVersion>0.26.2</LibGit2SharpVersion>
     <MicrosoftVisualStudioCompositionVersion>16.4.11</MicrosoftVisualStudioCompositionVersion>
-    <MicrosoftVisualStudioThreadingVersion>16.6.13</MicrosoftVisualStudioThreadingVersion>
+    <MicrosoftVisualStudioThreadingVersion>16.7.56</MicrosoftVisualStudioThreadingVersion>
+    <MicrosoftWindowsAPICodePackVersion>1.1.4</MicrosoftWindowsAPICodePackVersion>
     <NewtonsoftJsonVersion>12.0.3</NewtonsoftJsonVersion>
     <RestSharpVersion>106.11.4</RestSharpVersion>
     <SmartFormatNETVersion>2.5.0</SmartFormatNETVersion>

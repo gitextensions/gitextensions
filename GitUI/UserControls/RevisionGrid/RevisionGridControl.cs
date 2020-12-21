@@ -1887,7 +1887,7 @@ namespace GitUI
                 return;
             }
 
-            using var dialog = new TaskDialog
+            using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
             {
                 OwnerWindowHandle = Handle,
                 Text = _areYouSureRebase.Text,
@@ -1897,7 +1897,7 @@ namespace GitUI
                 Icon = TaskDialogStandardIcon.Information,
                 FooterCheckBoxText = _dontShowAgain.Text,
                 FooterIcon = TaskDialogStandardIcon.Information,
-                StartupLocation = TaskDialogStartupLocation.CenterOwner,
+                StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
             };
 
             TaskDialogResult result = dialog.Show();
@@ -1926,7 +1926,7 @@ namespace GitUI
                 return;
             }
 
-            using var dialog = new TaskDialog
+            using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
             {
                 OwnerWindowHandle = Handle,
                 Text = _areYouSureRebase.Text,
@@ -1936,7 +1936,7 @@ namespace GitUI
                 Icon = TaskDialogStandardIcon.Information,
                 FooterCheckBoxText = _dontShowAgain.Text,
                 FooterIcon = TaskDialogStandardIcon.Information,
-                StartupLocation = TaskDialogStartupLocation.CenterOwner,
+                StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
             };
 
             TaskDialogResult result = dialog.Show();

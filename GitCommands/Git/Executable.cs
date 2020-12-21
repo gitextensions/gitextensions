@@ -29,7 +29,6 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public IProcess Start(ArgumentString arguments = default,
                               bool createWindow = false,
                               bool redirectInput = false,

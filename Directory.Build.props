@@ -1,5 +1,5 @@
 <Project>
-  <Import Project=".\scripts\sdk\Sdk.props" />
+  <Import Project="Solution.Versions.props" />
 
   <PropertyGroup>
     <LangVersion>9</LangVersion>
@@ -14,6 +14,8 @@
 
     <!-- TODO once all project migrated to SDK-style, remove this and move properties to Directory.Build.props -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 
     <IsPublishable>false</IsPublishable>
   </PropertyGroup>
@@ -45,5 +47,7 @@
       <Visible>False</Visible>
     </AdditionalFiles>
   </ItemGroup>
+
+  <Import Project="scripts\tools\Tests.props" />
 
 </Project>

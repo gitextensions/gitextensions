@@ -2029,7 +2029,9 @@ namespace GitCommands
                 var utf8 = new UTF8Encoding(false);
                 foreach (var encodingName in availableEncodings.LazySplit(';'))
                 {
+#pragma warning disable SYSLIB0001 // Type or member is obsolete
                     if (encodingName == Encoding.UTF7.HeaderName)
+#pragma warning restore SYSLIB0001 // Type or member is obsolete
                     {
                         // UTF-7 is no longer supported, see: https://github.com/dotnet/docs/issues/19274
                         continue;

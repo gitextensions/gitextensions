@@ -15,9 +15,9 @@
   <!--
       Direct unit test artifacts to be placed under tests/UnitTests folder
     -->
-  <PropertyGroup>
+  <!-- <PropertyGroup>
     <BaseOutputPath>$([MSBuild]::NormalizeDirectory('$(ArtifactsUnitTestsDir)', '$(OutDirName)'))</BaseOutputPath>
     <OutputPath>$(BaseOutputPath)</OutputPath>
-  </PropertyGroup>
+  </PropertyGroup> -->
 
 </Project>

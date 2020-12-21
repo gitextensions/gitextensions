@@ -16,7 +16,6 @@ namespace ResourceManagerTests.CommitDataRenders
     [TestFixture]
     public class CommitDataHeaderRendererTests
     {
-        private const int MultipleCommits = 2;
         private IHeaderLabelFormatter _labelFormatter;
         private IHeaderRenderStyleProvider _headerRendererStyleProvider;
         private ILinkFactory _linkFactory;

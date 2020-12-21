@@ -385,7 +385,7 @@ namespace GitUI.CommandsDialogs
                     bool? messageBoxResult = AppSettings.AutoPopStashAfterCheckoutBranch;
                     if (messageBoxResult is null)
                     {
-                        using var dialog = new TaskDialog
+                        using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
                         {
                             OwnerWindowHandle = Handle,
                             Text = _applyStashedItemsAgain.Text,
@@ -394,7 +394,7 @@ namespace GitUI.CommandsDialogs
                             StandardButtons = TaskDialogStandardButtons.Yes | TaskDialogStandardButtons.No,
                             FooterCheckBoxText = _dontShowAgain.Text,
                             FooterIcon = TaskDialogStandardIcon.Information,
-                            StartupLocation = TaskDialogStartupLocation.CenterOwner
+                            StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner
                         };
 
                         messageBoxResult = dialog.Show() == TaskDialogResult.Yes;

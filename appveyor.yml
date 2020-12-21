@@ -51,39 +51,36 @@ build_script:
     }
 
     # build
-    & .\cibuild.cmd -restore -build -buildNative -logFileName build.binlog
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    dotnet build -c Release --nologo /bl:build.binlog
 
-    # if we have reset above, we need to restore the merge commit, otherwise the loc verification step will fail
-    # refer to https://github.com/gitextensions/gitextensions/issues/7979
-    if ($env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT) {
-      git config user.email "gitextensions@github.com"
-      git config user.name "Git Extensions"
-      git commit -m "restore merge commit"
-    }
-
-    # it would be nice to run '.\cibuild.cmd -loc -logFileName localise.binlog /p:NoBuild=true' but it doesn't work without `-build` switch :\
-    Push-Location .\GitExtensions
-    msbuild /p:Configuration=Release /t:_UpdateEnglishTranslations /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true /v:m /bl:..\artifacts\log\localise.binlog
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-    Pop-Location
-
+    # if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    # 
+    # # if we have reset above, we need to restore the merge commit, otherwise the loc verification step will fail
+    # # refer to https://github.com/gitextensions/gitextensions/issues/7979
+    # if ($env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT) {
+    #   git config user.email "gitextensions@github.com"
+    #   git config user.name "Git Extensions"
+    #   git commit -m "restore merge commit"
+    # }
+    # 
+    # # it would be nice to run '.\cibuild.cmd -loc -logFileName localise.binlog /p:NoBuild=true' but it doesn't work without `-build` switch :\
+    # Push-Location .\GitExtensions
+    # msbuild /p:Configuration=Release /t:_UpdateEnglishTranslations /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true /v:m /bl:..\artifacts\log\localise.binlog
+    # if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    # Pop-Location
 
 # to run your custom scripts instead of automatic tests
 test_script:
 - ps: |
-    & .\cibuild.cmd /p:NoBuild=true -test -logFileName UnitTest.binlog
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-    & .\cibuild.cmd /p:NoBuild=true -integrationTest -logFileName IntegrationTest.binlog
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    dotnet test --no-restore --nologo /bl:tests.binlog
 
 
 # scripts to run after tests
 after_test:
 - ps: |
     Write-Host "Preparing build artifacts..."
-    & .\cibuild.cmd -publish -logFileName publish.binlog
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    # & .\cibuild.cmd -publish -logFileName publish.binlog
+    # if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 
 artifacts:

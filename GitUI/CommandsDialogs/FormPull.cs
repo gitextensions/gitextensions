@@ -374,7 +374,7 @@ namespace GitUI.CommandsDialogs
             {
                 int dialogResult = -1;
 
-                using var dialog = new TaskDialog
+                using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
                 {
                     OwnerWindowHandle = owner?.Handle ?? default,
                     Text = _notOnBranch.Text,
@@ -573,7 +573,7 @@ namespace GitUI.CommandsDialogs
                 bool? messageBoxResult = AppSettings.AutoPopStashAfterPull;
                 if (messageBoxResult is null)
                 {
-                    using var dialog = new TaskDialog
+                    using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
                     {
                         OwnerWindowHandle = owner?.Handle ?? IntPtr.Zero,
                         Text = _applyStashedItemsAgain.Text,
@@ -582,7 +582,7 @@ namespace GitUI.CommandsDialogs
                         Icon = TaskDialogStandardIcon.Information,
                         FooterCheckBoxText = _dontShowAgain.Text,
                         FooterIcon = TaskDialogStandardIcon.Information,
-                        StartupLocation = TaskDialogStartupLocation.CenterOwner,
+                        StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
                     };
 
                     messageBoxResult = dialog.Show() == TaskDialogResult.Yes;
@@ -705,7 +705,7 @@ namespace GitUI.CommandsDialogs
 
                 if (isRefRemoved.IsMatch(form.GetOutputString()))
                 {
-                    using var dialog = new TaskDialog
+                    using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
                     {
                         OwnerWindowHandle = form.Handle,
                         Text = _pruneBranchesBranch.Text,
@@ -714,7 +714,7 @@ namespace GitUI.CommandsDialogs
                         StandardButtons = TaskDialogStandardButtons.Yes | TaskDialogStandardButtons.No | TaskDialogStandardButtons.Cancel,
                         Icon = TaskDialogStandardIcon.Information,
                         DefaultButton = TaskDialogDefaultButton.No,
-                        StartupLocation = TaskDialogStartupLocation.CenterOwner,
+                        StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
                     };
                     TaskDialogResult result = dialog.Show();
 
@@ -775,7 +775,7 @@ namespace GitUI.CommandsDialogs
             {
                 int dialogResult = -1;
 
-                using var dialog = new TaskDialog
+                using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
                 {
                     OwnerWindowHandle = Handle,
                     Text = string.Format(_noRemoteBranchMainInstruction.Text, remote),
@@ -785,7 +785,7 @@ namespace GitUI.CommandsDialogs
                     Icon = TaskDialogStandardIcon.Information,
                     FooterCheckBoxText = _dontShowAgain.Text,
                     FooterIcon = TaskDialogStandardIcon.Information,
-                    StartupLocation = TaskDialogStartupLocation.CenterOwner,
+                    StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
                     Cancelable = false
                 };
 
@@ -822,7 +822,7 @@ namespace GitUI.CommandsDialogs
 
                 int dialogResult = -1;
 
-                using var dialog = new TaskDialog
+                using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
                 {
                     OwnerWindowHandle = Handle,
                     Text = string.Format(_noRemoteBranchForFetchMainInstruction.Text, remote),
@@ -830,7 +830,7 @@ namespace GitUI.CommandsDialogs
                     InstructionText = _noRemoteBranch.Text,
                     StandardButtons = TaskDialogStandardButtons.Cancel,
                     Icon = TaskDialogStandardIcon.Information,
-                    StartupLocation = TaskDialogStartupLocation.CenterOwner,
+                    StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
                     Cancelable = false
                 };
 

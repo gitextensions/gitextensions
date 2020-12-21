@@ -270,7 +270,7 @@ namespace GitUI.CommandsDialogs
                 var stashName = GetStashName();
                 if (AppSettings.StashConfirmDropShow)
                 {
-                    using var dialog = new TaskDialog
+                    using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
                     {
                         OwnerWindowHandle = Handle,
                         Text = _areYouSure.Text,
@@ -280,7 +280,7 @@ namespace GitUI.CommandsDialogs
                         Icon = TaskDialogStandardIcon.Information,
                         FooterCheckBoxText = _dontShowAgain.Text,
                         FooterIcon = TaskDialogStandardIcon.Information,
-                        StartupLocation = TaskDialogStartupLocation.CenterOwner,
+                        StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
                     };
 
                     TaskDialogResult result = dialog.Show();

@@ -461,7 +461,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                 try
                 {
-                    CancellationToken timeoutToken = default;
+                    CancellationToken timeoutToken = CancellationToken.None;
                     Func<CancellationToken, Task> backgroundOperation;
                     CancellationToken backgroundOperationCancellation;
                     try

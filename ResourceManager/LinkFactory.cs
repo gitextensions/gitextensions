@@ -135,7 +135,7 @@ namespace ResourceManager
             using var process = new Process
             {
                 EnableRaisingEvents = false,
-                StartInfo = { FileName = uri.AbsoluteUri }
+                StartInfo = { FileName = uri.AbsoluteUri, UseShellExecute = true },
             };
             process.Start();
         }
