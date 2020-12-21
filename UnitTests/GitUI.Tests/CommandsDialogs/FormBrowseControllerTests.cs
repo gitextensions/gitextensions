@@ -36,7 +36,7 @@ namespace GitUITests.CommandsDialogs
             const string caption = "CAPTION";
             var repository = new Repository(path);
 
-            _controller.AddRecentRepositories(containerMenu, repository, caption, (s, e) => { });
+            _controller.AddRecentRepositories(containerMenu, repository, caption, RepoType.Common, (s, e) => { });
 
             containerMenu.DropDownItems.Count.Should().Be(1);
         }
@@ -50,7 +50,7 @@ namespace GitUITests.CommandsDialogs
             const string caption = "CAPTION";
             var repository = new Repository(path);
 
-            _controller.AddRecentRepositories(containerMenu, repository, caption, (s, e) => { });
+            _controller.AddRecentRepositories(containerMenu, repository, caption, RepoType.Common, (s, e) => { });
 
             ToolStripMenuItem item = (ToolStripMenuItem)containerMenu.DropDownItems[0];
             item.Text.Should().Be(caption);
@@ -72,7 +72,7 @@ namespace GitUITests.CommandsDialogs
             const string caption = "CAPTION";
             var repository = new Repository(path);
 
-            _controller.AddRecentRepositories(containerMenu, repository, caption, (s, e) => { });
+            _controller.AddRecentRepositories(containerMenu, repository, caption, RepoType.Common, (s, e) => { });
 
             ToolStripMenuItem item = (ToolStripMenuItem)containerMenu.DropDownItems[0];
             item.ShortcutKeyDisplayString.Should().Be(branch);
@@ -87,7 +87,7 @@ namespace GitUITests.CommandsDialogs
             const string caption = "CAPTION";
             var repository = new Repository(path);
 
-            _controller.AddRecentRepositories(containerMenu, repository, caption, (s, e) => { });
+            _controller.AddRecentRepositories(containerMenu, repository, caption, RepoType.Common, (s, e) => { });
 
             ToolStripMenuItem item = (ToolStripMenuItem)containerMenu.DropDownItems[0];
             item.PerformClick();

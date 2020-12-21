@@ -14,6 +14,7 @@ namespace GitCommands.UserRepositoryHistory
         public DirectoryInfo? DirInfo { get; set; }
         public string? ShortName { get; set; }
         public string DirName { get; set; }
+        public RepoType Type { get; set; }
 
         public RecentRepoInfo(Repository repo, bool mostRecent)
         {
@@ -43,6 +44,30 @@ namespace GitCommands.UserRepositoryHistory
         public override string ToString() => Repo.ToString();
     }
 
+    public enum RepoType
+    {
+        Common,
+        Current,
+        Deleted,
+
+        Submodule,
+        SubmoduleRevisionUpDirty,
+        SubmoduleRevisionUp,
+        SubmoduleRevisionDownDirty,
+        SubmoduleRevisionDown,
+        SubmoduleRevisionSemiUpDirty,
+        SubmoduleRevisionSemiUp,
+        SubmoduleRevisionSemiDownDirty,
+        SubmoduleRevisionSemiDown,
+        SubmoduleDirty,
+        FileStatusModified,
+
+        Superproject,
+
+        Worktree,
+        WorktreeDeleted
+    }
+
     public class RecentRepoSplitter
     {
         public int MaxRecentRepositories { get; set; }
@@ -64,7 +89,8 @@ namespace GitCommands.UserRepositoryHistory
             RecentReposComboMinWidth = AppSettings.RecentReposComboMinWidth;
         }
 
-        public void SplitRecentRepos(IList<Repository> recentRepositories, List<RecentRepoInfo> mostRecentRepoList, List<RecentRepoInfo> lessRecentRepoList)
+        public void SplitRecentRepos(IList<Repository> recentRepositories, List<RecentRepoInfo> mostRecentRepoList, List<RecentRepoInfo> lessRecentRepoList,
+            string workingDir, SubmoduleInfoResult submoduleInfoResult, WorktreeInfoResult worktreeInfoResult)
         {
             var orderedRepos = new SortedList<string, List<RecentRepoInfo>>();
             var mostRecentRepos = new List<RecentRepoInfo>();
@@ -77,11 +103,21 @@ namespace GitCommands.UserRepositoryHistory
 
             // the maxRecentRepositories repositories will be added at beginning
             // rest will be added in alphabetical order
+
+            var ourSubmodules = submoduleInfoResult?.OurSubmodules.ToDictionary(module => module.Path);
+            var worktrees = worktreeInfoResult?.Worktrees.ToDictionary(worktree => worktree.Path);
+
             foreach (Repository repository in recentRepositories)
             {
-                bool mostRecent = (mostRecentRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None) ||
+                bool mostRecent =
+                    (mostRecentRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None) ||
                     repository.Anchor == Repository.RepositoryAnchor.MostRecent;
-                var ri = new RecentRepoInfo(repository, mostRecent);
+                var ri = new RecentRepoInfo(repository, mostRecent)
+                {
+                    Type = GetRepoType(workingDir, repository.Path,
+                        submoduleInfoResult?.SuperProject?.Path, ourSubmodules, worktrees)
+                };
+
                 if (ri.MostRecent)
                 {
                     mostRecentRepos.Add(ri);
@@ -154,6 +190,67 @@ namespace GitCommands.UserRepositoryHistory
             {
                 AddNotSortedRepos(lessRecentRepos, lessRecentRepoList);
             }
+        }
+
+        private static RepoType GetRepoType(string workingDir, string repoPath, string superProjectPath,
+            Dictionary<string, SubmoduleInfo> submodules, Dictionary<string, WorkTreeInfo> worktrees)
+        {
+            if (workingDir == repoPath)
+            {
+                return RepoType.Current;
+            }
+
+            if (superProjectPath == repoPath)
+            {
+                return RepoType.Superproject;
+            }
+
+            SubmoduleInfo submoduleInfo = null;
+            if (submodules?.TryGetValue(repoPath, out submoduleInfo) == true)
+            {
+                var detailed = submoduleInfo.Detailed;
+                var submoduleStatus = detailed?.Status;
+                if (submoduleStatus == null)
+                {
+                    return RepoType.Submodule;
+                }
+
+                if (submoduleStatus == SubmoduleStatus.FastForward)
+                {
+                    return detailed.IsDirty ? RepoType.SubmoduleRevisionUpDirty : RepoType.SubmoduleRevisionUp;
+                }
+
+                if (submoduleStatus == SubmoduleStatus.Rewind)
+                {
+                    return detailed.IsDirty
+                        ? RepoType.SubmoduleRevisionDownDirty
+                        : RepoType.SubmoduleRevisionDown;
+                }
+
+                if (submoduleStatus == SubmoduleStatus.NewerTime)
+                {
+                    return detailed.IsDirty
+                        ? RepoType.SubmoduleRevisionSemiUpDirty
+                        : RepoType.SubmoduleRevisionSemiUp;
+                }
+
+                if (submoduleStatus == SubmoduleStatus.OlderTime)
+                {
+                    return detailed.IsDirty
+                        ? RepoType.SubmoduleRevisionSemiDownDirty
+                        : RepoType.SubmoduleRevisionSemiDown;
+                }
+
+                return detailed.IsDirty ? RepoType.SubmoduleDirty : RepoType.FileStatusModified;
+            }
+
+            WorkTreeInfo workTreeInfo = null;
+            if (worktrees?.TryGetValue(repoPath, out workTreeInfo) == true)
+            {
+                return workTreeInfo.IsDeleted ? RepoType.WorktreeDeleted : RepoType.Worktree;
+            }
+
+            return Directory.Exists(repoPath) ? RepoType.Common : RepoType.Deleted;
         }
 
         private static void AddToOrderedSignDir(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)

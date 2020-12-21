@@ -19,6 +19,7 @@ using GitCommands.Gpg;
 using GitCommands.Submodules;
 using GitCommands.UserRepositoryHistory;
 using GitCommands.Utils;
+using GitCommands.Worktrees;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
@@ -95,11 +96,17 @@ namespace GitUI.CommandsDialogs
         [CanBeNull] private readonly IAheadBehindDataProvider _aheadBehindDataProvider;
         private readonly WindowsJumpListManager _windowsJumpListManager;
         private readonly ISubmoduleStatusProvider _submoduleStatusProvider;
+        private SubmoduleInfoResult _submoduleInfoResult;
+        private readonly ISWorktreeStatusProvider _worktreeStatusProvider;
+        private WorktreeInfoResult _worktreeInfoResult;
         private readonly FormBrowseDiagnosticsReporter _formBrowseDiagnosticsReporter;
         [CanBeNull] private BuildReportTabPageExtension _buildReportTabPageExtension;
         private readonly ShellProvider _shellProvider = new();
         private ConEmuControl _terminal;
         private Dashboard _dashboard;
+
+        // Do not update combo box twice or more if several git commands are executed (submodules, worktrees)
+        private bool _notUpdateWorkingDirComboText;
 
         [CanBeNull] private TabPage _consoleTabPage;
 
@@ -268,6 +275,9 @@ namespace GitUI.CommandsDialogs
             _submoduleStatusProvider = SubmoduleStatusProvider.Default;
             _submoduleStatusProvider.StatusUpdating += SubmoduleStatusProvider_StatusUpdating;
             _submoduleStatusProvider.StatusUpdated += SubmoduleStatusProvider_StatusUpdated;
+
+            _worktreeStatusProvider = WorktreeStatusProvider.Default;
+            _worktreeStatusProvider.StatusUpdated += WorktreeStatusProvider_StatusUpdated;
 
             FillBuildReport(revision: null); // Ensure correct page visibility
             RevisionGrid.ShowBuildServerInfo = true;
@@ -668,7 +678,10 @@ namespace GitUI.CommandsDialogs
                         })
                     .FileAndForget();
             };
+
+            _notUpdateWorkingDirComboText = true;
             UpdateSubmodulesStructure();
+            UpdateWorktrees();
             UpdateStashCount();
 
             toolStripButtonPush.Initialize(_aheadBehindDataProvider);
@@ -765,7 +778,9 @@ namespace GitUI.CommandsDialogs
         private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
         {
             this.InvokeAsync(RefreshRevisions).FileAndForget();
+            _notUpdateWorkingDirComboText = true;
             UpdateSubmodulesStructure();
+            UpdateWorktrees();
             UpdateStashCount();
             revisionDiff.UICommands_PostRepositoryChanged(sender, e);
         }
@@ -1207,6 +1222,12 @@ namespace GitUI.CommandsDialogs
         /// <summary>Updates the text shown on the combo button itself.</summary>
         private void RefreshWorkingDirComboText()
         {
+            if (_notUpdateWorkingDirComboText)
+            {
+                _notUpdateWorkingDirComboText = false;
+                return;
+            }
+
             var path = Module.WorkingDir;
 
             // it appears at times Module.WorkingDir path is an empty string, this caused issues like #4874
@@ -1228,7 +1249,8 @@ namespace GitUI.CommandsDialogs
                     Graphics = graphics
                 };
 
-                splitter.SplitRecentRepos(recentRepositoryHistory, mostRecentRepos, mostRecentRepos);
+                splitter.SplitRecentRepos(recentRepositoryHistory, mostRecentRepos, mostRecentRepos,
+                    path, _submoduleInfoResult, _worktreeInfoResult);
 
                 var ri = mostRecentRepos.Find(e => e.Repo.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase));
 
@@ -1870,7 +1892,8 @@ namespace GitUI.CommandsDialogs
                     Graphics = graphics
                 };
 
-                splitter.SplitRecentRepos(repositoryHistory, mostRecentRepos, lessRecentRepos);
+                splitter.SplitRecentRepos(repositoryHistory, mostRecentRepos, lessRecentRepos,
+                    Module.WorkingDir, _submoduleInfoResult, _worktreeInfoResult);
             }
 
             foreach (var repo in mostRecentRepos.Union(lessRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
@@ -1893,7 +1916,7 @@ namespace GitUI.CommandsDialogs
 
                 foreach (var r in repos)
                 {
-                    _controller.AddRecentRepositories(menuItemCategory, r.Repo, r.Caption, SetGitModule);
+                    _controller.AddRecentRepositories(menuItemCategory, r.Repo, r.Caption, r.Type, SetGitModule);
                 }
             }
         }
@@ -1917,12 +1940,13 @@ namespace GitUI.CommandsDialogs
                     Graphics = graphics
                 };
 
-                splitter.SplitRecentRepos(repositoryHistory, mostRecentRepos, lessRecentRepos);
+                splitter.SplitRecentRepos(repositoryHistory, mostRecentRepos, lessRecentRepos,
+                    Module.WorkingDir, _submoduleInfoResult, _worktreeInfoResult);
             }
 
             foreach (var repo in mostRecentRepos)
             {
-                _controller.AddRecentRepositories(container, repo.Repo, repo.Caption, SetGitModule);
+                _controller.AddRecentRepositories(container, repo.Repo, repo.Caption, repo.Type, SetGitModule);
             }
 
             if (lessRecentRepos.Count > 0)
@@ -1934,7 +1958,7 @@ namespace GitUI.CommandsDialogs
 
                 foreach (var repo in lessRecentRepos)
                 {
-                    _controller.AddRecentRepositories(container, repo.Repo, repo.Caption, SetGitModule);
+                    _controller.AddRecentRepositories(container, repo.Repo, repo.Caption, repo.Type, SetGitModule);
                 }
             }
         }
@@ -1954,6 +1978,7 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.InvalidateCount();
             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
             _submoduleStatusProvider.Init();
+            _worktreeStatusProvider.Init();
             _filterBranchHelper.SetBranchFilter(string.Empty, refresh: false);
 
             UICommands = new GitUICommands(module);
@@ -2786,7 +2811,9 @@ namespace GitUI.CommandsDialogs
         {
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
+                _submoduleInfoResult = e.Info;
                 await PopulateToolbarAsync(e.Info, e.Token);
+                RefreshWorkingDirComboText();
             }).FileAndForget();
         }
 
@@ -2871,6 +2898,33 @@ namespace GitUI.CommandsDialogs
             }
 
             toolStripButtonLevelUp.DropDownItems.Clear();
+        }
+
+        private void UpdateWorktrees()
+        {
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                try
+                {
+                    await TaskScheduler.Default;
+                    await _worktreeStatusProvider.UpdateWorktreesAsync(Module.WorkingDir);
+                }
+                catch (GitConfigurationException ex)
+                {
+                    await this.SwitchToMainThreadAsync();
+                    MessageBoxes.ShowGitConfigurationExceptionMessage(this, ex);
+                }
+            });
+        }
+
+        private void WorktreeStatusProvider_StatusUpdated(object sender, WorktreeStatusEventArgs e)
+        {
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                _worktreeInfoResult = e.Info;
+                await this.SwitchToMainThreadAsync(e.Token);
+                RefreshWorkingDirComboText();
+            }).FileAndForget();
         }
 
         #endregion

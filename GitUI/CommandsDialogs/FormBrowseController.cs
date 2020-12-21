@@ -13,9 +13,10 @@ namespace GitUI.CommandsDialogs
     public interface IFormBrowseController
     {
         void AddRecentRepositories([NotNull] ToolStripDropDownItem menuItemContainer,
-                                   [NotNull] Repository repo,
-                                   [NotNull] string caption,
-                                   [NotNull] Action<object, GitModuleEventArgs> setGitModule);
+            [NotNull] Repository repo,
+            [NotNull] string caption,
+            RepoType type,
+            [NotNull] Action<object, GitModuleEventArgs> setGitModule);
         Task<GpgInfo> LoadGpgInfoAsync(GitRevision revision);
     }
 
@@ -24,6 +25,26 @@ namespace GitUI.CommandsDialogs
         private readonly IGitGpgController _gitGpgController;
         private readonly IRepositoryCurrentBranchNameProvider _repositoryCurrentBranchNameProvider;
         private readonly IInvalidRepositoryRemover _invalidRepositoryRemover;
+
+        private static readonly Dictionary<RepoType, Bitmap> _repoTypeBitmaps = new Dictionary<RepoType, Bitmap>()
+        {
+            { RepoType.Current, Properties.Images.FolderOpen },
+            { RepoType.Deleted, Properties.Images.DeleteFile },
+            { RepoType.Superproject, Properties.Images.NavigateUp },
+            { RepoType.Submodule, Properties.Images.FolderSubmodule },
+            { RepoType.SubmoduleRevisionUpDirty, Properties.Images.SubmoduleRevisionUpDirty },
+            { RepoType.SubmoduleRevisionUp, Properties.Images.SubmoduleRevisionUp },
+            { RepoType.SubmoduleRevisionDownDirty, Properties.Images.SubmoduleRevisionDownDirty },
+            { RepoType.SubmoduleRevisionDown, Properties.Images.SubmoduleRevisionDown },
+            { RepoType.SubmoduleRevisionSemiUpDirty, Properties.Images.SubmoduleRevisionSemiUpDirty },
+            { RepoType.SubmoduleRevisionSemiUp, Properties.Images.SubmoduleRevisionSemiUp },
+            { RepoType.SubmoduleRevisionSemiDownDirty, Properties.Images.SubmoduleRevisionSemiDownDirty },
+            { RepoType.SubmoduleRevisionSemiDown, Properties.Images.SubmoduleRevisionSemiDown },
+            { RepoType.SubmoduleDirty, Properties.Images.SubmoduleDirty },
+            { RepoType.FileStatusModified, Properties.Images.FileStatusModified },
+            { RepoType.Worktree, Properties.Images.WorkTree },
+            { RepoType.WorktreeDeleted, Properties.Images.WorkTreeDeleted }
+        };
 
         public FormBrowseController(IGitGpgController gitGpgController,
                                     IRepositoryCurrentBranchNameProvider repositoryCurrentBranchNameProvider,
@@ -35,15 +56,18 @@ namespace GitUI.CommandsDialogs
         }
 
         public void AddRecentRepositories([NotNull] ToolStripDropDownItem menuItemContainer,
-                                          [NotNull] Repository repo,
-                                          [NotNull] string caption,
-                                          [NotNull] Action<object, GitModuleEventArgs> setGitModule)
+            [NotNull] Repository repo,
+            [NotNull] string caption,
+            RepoType type,
+            [NotNull] Action<object, GitModuleEventArgs> setGitModule)
         {
             string branchName = _repositoryCurrentBranchNameProvider.GetCurrentBranchName(repo.Path);
+            _repoTypeBitmaps.TryGetValue(type, out Bitmap repoBitmap);
             var item = new ToolStripMenuItem(caption)
             {
                 DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
-                ShortcutKeyDisplayString = branchName
+                ShortcutKeyDisplayString = branchName,
+                Image = repoBitmap
             };
 
             menuItemContainer.DropDownItems.Add(item);

@@ -71,13 +71,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             };
 
             var repositories = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadRecentHistoryAsync());
-            splitter.SplitRecentRepos(repositories, mostRecentRepos, lessRecentRepos);
+            splitter.SplitRecentRepos(repositories, mostRecentRepos, lessRecentRepos, null, null, null);
             var recentRepositories = mostRecentRepos.Union(lessRecentRepos).ToList();
 
             repositories = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync());
             mostRecentRepos.Clear();
             lessRecentRepos.Clear();
-            splitter.SplitRecentRepos(repositories, mostRecentRepos, lessRecentRepos);
+            splitter.SplitRecentRepos(repositories, mostRecentRepos, lessRecentRepos, null, null, null);
             var favouriteRepositories = mostRecentRepos.Union(lessRecentRepos).ToList();
 
             return (recentRepositories, favouriteRepositories);
