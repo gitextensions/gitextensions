@@ -3575,69 +3575,20 @@ namespace GitCommands
 
         /// <summary>
         /// Get a list of diff/merge tools known by Git.
+        /// This normally requires long time (up to tenths of seconds)
         /// </summary>
         /// <param name="isDiff">diff or merge.</param>
-        /// <returns>the list.</returns>
-        public async Task<IEnumerable<string>> GetCustomDiffMergeTools(bool isDiff)
+        /// <returns>the Git output.</returns>
+        public string GetCustomDiffMergeTools(bool isDiff)
         {
             // Note that --gui has no effect here
             var args = new GitArgumentBuilder(isDiff ? "difftool" : "mergetool") { "--tool-help" };
-            string output = await _gitExecutable.GetOutputAsync(args);
-            return ParseCustomDiffMergeTool(output);
+            return _gitExecutable.GetOutput(args);
         }
 
-        /// <summary>
-        /// Parse the output from 'git difftool --tool-help'.
-        /// </summary>
-        /// <param name="output">The output string.</param>
-        /// <returns>list with tool names.</returns>
-        private static IEnumerable<string> ParseCustomDiffMergeTool(string output)
+        public string OpenWithDifftoolDirDiff(string firstRevision, string secondRevision, string? customTool = null)
         {
-            var tools = new List<string>();
-
-            // Simple parsing of the textual output opposite to porcelain format
-            // https://github.com/git/git/blob/main/git-mergetool--lib.sh#L298
-            // An alternative is to parse "git config --get-regexp difftool'\..*\.cmd'" and see show_tool_names()
-
-            // The sections to parse in the text has a 'header', then break parsing at first non match
-
-            foreach (var l in output.Split('\n'))
-            {
-                if (l == "The following tools are valid, but not currently available:")
-                {
-                    // No more usable tools
-                    break;
-                }
-
-                if (!l.StartsWith("\t\t"))
-                {
-                    continue;
-                }
-
-                // two tabs, then toolname, cmd (if split in 3) in second
-                // cmd is unreliable for diff and not needed but could be used for mergetool special handling
-                string[] delimit = { " ", ".cmd" };
-                var tool = l.Substring(2).Split(delimit, 2, StringSplitOptions.None);
-                if (tool.Length == 0)
-                {
-                    continue;
-                }
-
-                // Ignore tools that must run in a terminal
-                string[] ignoredTools = { "vimdiff", "vimdiff2", "vimdiff3" };
-                var toolName = tool[0];
-                if (!string.IsNullOrWhiteSpace(toolName) && !tools.Contains(toolName) && !ignoredTools.Contains(toolName))
-                {
-                    tools.Add(toolName);
-                }
-            }
-
-            return tools.OrderBy(i => i);
-        }
-
-        public string OpenWithDifftoolDirDiff(string firstRevision, string secondRevision)
-        {
-            return OpenWithDifftool(null, firstRevision: firstRevision, secondRevision: secondRevision, extraDiffArguments: "--dir-diff");
+            return OpenWithDifftool(null, firstRevision: firstRevision, secondRevision: secondRevision, extraDiffArguments: "--dir-diff", customTool: customTool);
         }
 
         public string OpenWithDifftool(string? filename, string oldFileName = "", string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.WorkTreeGuid, string? extraDiffArguments = null, bool isTracked = true, string? customTool = null)
@@ -3662,7 +3613,7 @@ namespace GitCommands
         /// <param name="firstGitCommit">commitish.</param>
         /// <param name="secondGitCommit">commitish.</param>
         /// <returns>empty string, or null if either input is null.</returns>
-        public string? OpenFilesWithDifftool(string? firstGitCommit, string? secondGitCommit)
+        public string? OpenFilesWithDifftool(string? firstGitCommit, string? secondGitCommit, string? customTool = null)
         {
             if (Strings.IsNullOrWhiteSpace(firstGitCommit) || Strings.IsNullOrWhiteSpace(secondGitCommit))
             {
@@ -3671,7 +3622,7 @@ namespace GitCommands
 
             _gitCommandRunner.RunDetached(new GitArgumentBuilder("difftool")
             {
-                "--gui",
+                { Strings.IsNullOrWhiteSpace(customTool), "--gui", $"--tool={customTool}" },
                 "--no-prompt",
                 "-M -C",
                 firstGitCommit.QuoteNE(),
@@ -4300,9 +4251,6 @@ namespace GitCommands
 
             public StagedStatus GetStagedStatus(ObjectId? firstId, ObjectId? secondId, ObjectId? parentToSecond)
                 => GitModule.GetStagedStatus(firstId, secondId, parentToSecond);
-
-            public IEnumerable<string> ParseCustomDiffMergeTool(string output)
-                => GitModule.ParseCustomDiffMergeTool(output);
         }
     }
 }

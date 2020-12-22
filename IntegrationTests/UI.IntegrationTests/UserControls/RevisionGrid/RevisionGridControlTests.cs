@@ -159,7 +159,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     DoEvents();
 
                     // Confirm the filter has been reset, all commits are shown
-                    revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_headCommit);
+                    revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_branch1Commit);
                     ta.VisibleRevisionCount.Should().Be(6);
                 });
         }
