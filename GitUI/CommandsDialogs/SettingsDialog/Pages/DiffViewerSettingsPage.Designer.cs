@@ -40,6 +40,7 @@
             this.chkRememberShowSyntaxHighlightingInDiff = new System.Windows.Forms.CheckBox();
             this.chkOmitUninterestingDiff = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.chkShowAllCustomDiffTools = new UserControls.Settings.SettingsCheckBox();
             this.VerticalRulerPosition = new System.Windows.Forms.NumericUpDown();
             this.tableLayoutPanelForDiffViewer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.VerticalRulerPosition)).BeginInit();
@@ -60,12 +61,13 @@
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkContScrollToNextFileOnlyWithAlt, 0, 6);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkOpenSubmoduleDiffInSeparateWindow, 0, 7);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkShowDiffForAllParents, 0, 8);
-            this.tableLayoutPanelForDiffViewer.Controls.Add(this.label1, 0, 9);
-            this.tableLayoutPanelForDiffViewer.Controls.Add(this.VerticalRulerPosition, 1, 9);
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkShowAllCustomDiffTools, 0, 9);
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.label1, 0, 10);
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.VerticalRulerPosition, 1, 10);
             this.tableLayoutPanelForDiffViewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelForDiffViewer.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanelForDiffViewer.Name = "tableLayoutPanelForDiffViewer";
-            this.tableLayoutPanelForDiffViewer.RowCount = 11;
+            this.tableLayoutPanelForDiffViewer.RowCount = 12;
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -163,12 +165,23 @@
             this.chkShowDiffForAllParents.AutoSize = true;
             this.chkShowDiffForAllParents.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.chkShowDiffForAllParents.Checked = false;
-            this.chkShowDiffForAllParents.Location = new System.Drawing.Point(3, 184);
+            this.chkShowDiffForAllParents.Location = new System.Drawing.Point(3, 187);
             this.chkShowDiffForAllParents.Name = "chkShowDiffForAllParents";
             this.chkShowDiffForAllParents.Size = new System.Drawing.Size(271, 17);
-            this.chkShowDiffForAllParents.TabIndex = 11;
+            this.chkShowDiffForAllParents.TabIndex = 12;
             this.chkShowDiffForAllParents.Text = "Show file differences for all parents in browse dialog";
             this.chkShowDiffForAllParents.ToolTipText = null;
+            // 
+            // chkShowAllCustomDiffTools
+            // 
+            this.chkShowAllCustomDiffTools.AutoSize = true;
+            this.chkShowDiffForAllParents.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.chkShowAllCustomDiffTools.Location = new System.Drawing.Point(3, 210);
+            this.chkShowAllCustomDiffTools.Name = "chkShowAllCustomDiffTools";
+            this.chkShowAllCustomDiffTools.Size = new System.Drawing.Size(280, 17);
+            this.chkShowAllCustomDiffTools.TabIndex = 13;
+            this.chkShowAllCustomDiffTools.Text = "Show all available difftools";
+            this.chkShowAllCustomDiffTools.ToolTipText = "Show all configured difftools in a dropdown.\nThe primary difftool can still be selected by clicking the main menu entry.";
             // 
             // label1
             // 
@@ -177,7 +190,7 @@
             this.label1.Location = new System.Drawing.Point(3, 191);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(144, 13);
-            this.label1.TabIndex = 13;
+            this.label1.TabIndex = 14;
             this.label1.Text = "Vertical ruler position [chars]";
             // 
             // VerticalRulerPosition
@@ -223,6 +236,7 @@
         private System.Windows.Forms.CheckBox chkOpenSubmoduleDiffInSeparateWindow;
         private System.Windows.Forms.CheckBox chkContScrollToNextFileOnlyWithAlt;
         private UserControls.Settings.SettingsCheckBox chkShowDiffForAllParents;
+        private UserControls.Settings.SettingsCheckBox chkShowAllCustomDiffTools;
         private System.Windows.Forms.NumericUpDown VerticalRulerPosition;
         private System.Windows.Forms.Label label1;
     }

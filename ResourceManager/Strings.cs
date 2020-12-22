@@ -48,6 +48,8 @@ Yes, I allow telemetry!");
         private readonly TranslationString _generalGitConfigExceptionMessage = new("Failed to read \"{0}\" due to the following error:{1}{1}{2}{1}{1}Due to the nature of this problem, the behavior of the application cannot be guaranteed and it must be closed.{1}{1}Please correct this issue and re-open Git Extensions.");
         private readonly TranslationString _generalGitConfigExceptionCaption = new("Repository Configuration Error");
 
+        private readonly TranslationString _disableMenuItem = new TranslationString("Disable this dropdown");
+
         // public only because of FormTranslate
         public Strings()
         {
@@ -83,6 +85,7 @@ Yes, I allow telemetry!");
 
         public static string GeneralGitConfigExceptionMessage => _instance.Value._generalGitConfigExceptionMessage.Text;
         public static string GeneralGitConfigExceptionCaption => _instance.Value._generalGitConfigExceptionCaption.Text;
+        public static string DisableMenuItem => _instance.Value._disableMenuItem.Text;
 
         public static string GetParents(int value)
         {
