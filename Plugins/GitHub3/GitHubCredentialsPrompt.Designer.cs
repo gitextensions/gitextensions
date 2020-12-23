@@ -180,7 +180,7 @@
             this.ClientSize = new System.Drawing.Size(409, 206);
             this.Controls.Add(this.btn_OK);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Icon = ResourceManager.GitExtensionsFormBase.ActiveForm.Icon;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(297, 177);
