@@ -61,6 +61,17 @@ namespace GitCommands.Git.Commands
             };
         }
 
+        public static ArgumentString AddWorktreeCmd(string path, string branch, bool force)
+        {
+            return new GitArgumentBuilder("worktree")
+            {
+                "add",
+                { force, "-f" },
+                { !string.IsNullOrEmpty(branch), $"-b \"{branch?.Trim()}\"" },
+                path.ToPosixPath().Quote()
+            };
+        }
+
         public static ArgumentString GetCurrentChangesCmd(string? fileName, string? oldFileName, bool staged,
             string extraDiffArguments, bool noLocks)
         {

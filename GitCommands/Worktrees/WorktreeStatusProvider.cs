@@ -1,13 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using GitUI;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands.Worktrees
 {
-    public interface ISWorktreeStatusProvider : IDisposable
+    public interface IWorktreeStatusProvider : IDisposable
     {
         event EventHandler<WorktreeStatusEventArgs> StatusUpdated;
 
@@ -16,20 +18,20 @@ namespace GitCommands.Worktrees
         Task UpdateWorktreesAsync(string workingDirectory);
     }
 
-    public sealed class WorktreeStatusProvider : ISWorktreeStatusProvider
+    public sealed class WorktreeStatusProvider : IWorktreeStatusProvider
     {
         private readonly CancellationTokenSequence _worktreesSequence = new CancellationTokenSequence();
 
-        private WorktreeInfoResult _worktreeInfoResult;
+        private WorktreeInfoResult? _worktreeInfoResult;
 
         // Singleton accessor
         public static WorktreeStatusProvider Default { get; } = new WorktreeStatusProvider();
 
         // Invoked when status update is requested (use to clear/lock UI)
-        public event EventHandler StatusUpdating;
+        public event EventHandler? StatusUpdating;
 
         // Invoked when status update is complete
-        public event EventHandler<WorktreeStatusEventArgs> StatusUpdated;
+        public event EventHandler<WorktreeStatusEventArgs>? StatusUpdated;
 
         public void Dispose()
         {
@@ -55,18 +57,18 @@ namespace GitCommands.Worktrees
 
             // Start gathering worktrees asynchronously.
             var currentModule = new GitModule(workingDirectory);
-            _worktreeInfoResult = GetWorktrees(currentModule);
+            _worktreeInfoResult = await GetWorktrees(currentModule);
 
             OnStatusUpdated(_worktreeInfoResult, cancelToken);
         }
 
-        private WorktreeInfoResult GetWorktrees(GitModule currentModule)
+        private async Task<WorktreeInfoResult> GetWorktrees(IGitModule currentModule)
         {
-            var lines = currentModule.GitExecutable.GetOutput("worktree list --porcelain")
-                .Split('\n').GetEnumerator();
+            var output = await currentModule.GitExecutable.GetOutputAsync("worktree list --porcelain");
+            var lines = output.Split('\n').GetEnumerator();
 
-            var result = new WorktreeInfoResult();
-            WorkTreeInfo worktree = null;
+            var worktreeInfos = new List<WorkTreeInfo>();
+            WorkTreeInfo? worktree = null, currentWorktree = null;
             while (lines.MoveNext())
             {
                 var current = (string)lines.Current;
@@ -84,11 +86,11 @@ namespace GitCommands.Worktrees
                     var normalizedPath = current.Substring(worktreeWord.Length + 1).NormalizePath() + "\\";
                     worktree = new WorkTreeInfo { Path = normalizedPath };
                     worktree.IsDeleted = !Directory.Exists(worktree.Path);
-                    result.Worktrees.Add(worktree);
+                    worktreeInfos.Add(worktree);
 
                     if (currentModule.WorkingDir == normalizedPath)
                     {
-                        result.CurrentWorktree = worktree;
+                        currentWorktree = worktree;
                     }
                 }
                 else if (worktree != null)
@@ -100,22 +102,22 @@ namespace GitCommands.Worktrees
                             break;
 
                         case "bare":
-                            worktree.Type = HeadType.Bare;
+                            worktree.Type = WorktreeHeadType.Bare;
                             break;
 
                         case "branch":
-                            worktree.Type = HeadType.Branch;
+                            worktree.Type = WorktreeHeadType.Branch;
                             worktree.Branch = strings[1];
                             break;
 
                         case "detached":
-                            worktree.Type = HeadType.Detached;
+                            worktree.Type = WorktreeHeadType.Detached;
                             break;
                     }
                 }
             }
 
-            return result;
+            return new WorktreeInfoResult(worktreeInfos, currentWorktree);
         }
 
         private void OnStatusUpdating()

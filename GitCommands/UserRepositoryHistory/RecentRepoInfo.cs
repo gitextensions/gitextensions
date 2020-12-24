@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using GitCommands.Git;
+using GitCommands.Submodules;
+using GitCommands.Worktrees;
 
 namespace GitCommands.UserRepositoryHistory
 {
@@ -46,9 +49,9 @@ namespace GitCommands.UserRepositoryHistory
 
     public enum RepoType
     {
-        Common,
+        Unrelated,
         Current,
-        Deleted,
+        Invalid,
 
         Submodule,
         SubmoduleRevisionUpDirty,
@@ -60,7 +63,7 @@ namespace GitCommands.UserRepositoryHistory
         SubmoduleRevisionSemiDownDirty,
         SubmoduleRevisionSemiDown,
         SubmoduleDirty,
-        FileStatusModified,
+        SubmoduleModified,
 
         Superproject,
 
@@ -90,7 +93,7 @@ namespace GitCommands.UserRepositoryHistory
         }
 
         public void SplitRecentRepos(IList<Repository> recentRepositories, List<RecentRepoInfo> mostRecentRepoList, List<RecentRepoInfo> lessRecentRepoList,
-            string workingDir, SubmoduleInfoResult submoduleInfoResult, WorktreeInfoResult worktreeInfoResult)
+            string workingDir, SubmoduleInfoResult? submoduleInfoResult, WorktreeInfoResult? worktreeInfoResult)
         {
             var orderedRepos = new SortedList<string, List<RecentRepoInfo>>();
             var mostRecentRepos = new List<RecentRepoInfo>();
@@ -192,8 +195,8 @@ namespace GitCommands.UserRepositoryHistory
             }
         }
 
-        private static RepoType GetRepoType(string workingDir, string repoPath, string superProjectPath,
-            Dictionary<string, SubmoduleInfo> submodules, Dictionary<string, WorkTreeInfo> worktrees)
+        private static RepoType GetRepoType(string workingDir, string repoPath, string? superProjectPath,
+            Dictionary<string?, SubmoduleInfo>? submodules, Dictionary<string?, WorkTreeInfo>? worktrees)
         {
             if (workingDir == repoPath)
             {
@@ -205,10 +208,11 @@ namespace GitCommands.UserRepositoryHistory
                 return RepoType.Superproject;
             }
 
-            SubmoduleInfo submoduleInfo = null;
+            SubmoduleInfo? submoduleInfo = null;
             if (submodules?.TryGetValue(repoPath, out submoduleInfo) == true)
             {
-                var detailed = submoduleInfo.Detailed;
+                var detailed = submoduleInfo?.Detailed;
+                var isDirty = detailed?.IsDirty ?? false;
                 var submoduleStatus = detailed?.Status;
                 if (submoduleStatus == null)
                 {
@@ -217,40 +221,42 @@ namespace GitCommands.UserRepositoryHistory
 
                 if (submoduleStatus == SubmoduleStatus.FastForward)
                 {
-                    return detailed.IsDirty ? RepoType.SubmoduleRevisionUpDirty : RepoType.SubmoduleRevisionUp;
+                    return isDirty
+                        ? RepoType.SubmoduleRevisionUpDirty
+                        : RepoType.SubmoduleRevisionUp;
                 }
 
                 if (submoduleStatus == SubmoduleStatus.Rewind)
                 {
-                    return detailed.IsDirty
+                    return isDirty
                         ? RepoType.SubmoduleRevisionDownDirty
                         : RepoType.SubmoduleRevisionDown;
                 }
 
                 if (submoduleStatus == SubmoduleStatus.NewerTime)
                 {
-                    return detailed.IsDirty
+                    return isDirty
                         ? RepoType.SubmoduleRevisionSemiUpDirty
                         : RepoType.SubmoduleRevisionSemiUp;
                 }
 
                 if (submoduleStatus == SubmoduleStatus.OlderTime)
                 {
-                    return detailed.IsDirty
+                    return isDirty
                         ? RepoType.SubmoduleRevisionSemiDownDirty
                         : RepoType.SubmoduleRevisionSemiDown;
                 }
 
-                return detailed.IsDirty ? RepoType.SubmoduleDirty : RepoType.FileStatusModified;
+                return isDirty ? RepoType.SubmoduleDirty : RepoType.SubmoduleModified;
             }
 
-            WorkTreeInfo workTreeInfo = null;
+            WorkTreeInfo? workTreeInfo = null;
             if (worktrees?.TryGetValue(repoPath, out workTreeInfo) == true)
             {
-                return workTreeInfo.IsDeleted ? RepoType.WorktreeDeleted : RepoType.Worktree;
+                return workTreeInfo?.IsDeleted == true ? RepoType.WorktreeDeleted : RepoType.Worktree;
             }
 
-            return Directory.Exists(repoPath) ? RepoType.Common : RepoType.Deleted;
+            return Directory.Exists(repoPath) ? RepoType.Unrelated : RepoType.Invalid;
         }
 
         private static void AddToOrderedSignDir(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)

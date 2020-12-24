@@ -96,9 +96,9 @@ namespace GitUI.CommandsDialogs
         [CanBeNull] private readonly IAheadBehindDataProvider _aheadBehindDataProvider;
         private readonly WindowsJumpListManager _windowsJumpListManager;
         private readonly ISubmoduleStatusProvider _submoduleStatusProvider;
-        private SubmoduleInfoResult _submoduleInfoResult;
-        private readonly ISWorktreeStatusProvider _worktreeStatusProvider;
-        private WorktreeInfoResult _worktreeInfoResult;
+        [CanBeNull] private SubmoduleInfoResult _submoduleInfoResult;
+        private readonly IWorktreeStatusProvider _worktreeStatusProvider;
+        [CanBeNull] private WorktreeInfoResult _worktreeInfoResult;
         private readonly FormBrowseDiagnosticsReporter _formBrowseDiagnosticsReporter;
         [CanBeNull] private BuildReportTabPageExtension _buildReportTabPageExtension;
         private readonly ShellProvider _shellProvider = new();

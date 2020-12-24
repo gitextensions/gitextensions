@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -28,8 +30,8 @@ namespace GitUI.CommandsDialogs
 
         private static readonly Dictionary<RepoType, Bitmap> _repoTypeBitmaps = new Dictionary<RepoType, Bitmap>()
         {
-            { RepoType.Current, Properties.Images.FolderOpen },
-            { RepoType.Deleted, Properties.Images.DeleteFile },
+            { RepoType.Current, Properties.Images.DashboardFolderGit },
+            { RepoType.Invalid, Properties.Images.DashboardFolderError },
             { RepoType.Superproject, Properties.Images.NavigateUp },
             { RepoType.Submodule, Properties.Images.FolderSubmodule },
             { RepoType.SubmoduleRevisionUpDirty, Properties.Images.SubmoduleRevisionUpDirty },
@@ -41,7 +43,7 @@ namespace GitUI.CommandsDialogs
             { RepoType.SubmoduleRevisionSemiDownDirty, Properties.Images.SubmoduleRevisionSemiDownDirty },
             { RepoType.SubmoduleRevisionSemiDown, Properties.Images.SubmoduleRevisionSemiDown },
             { RepoType.SubmoduleDirty, Properties.Images.SubmoduleDirty },
-            { RepoType.FileStatusModified, Properties.Images.FileStatusModified },
+            { RepoType.SubmoduleModified, Properties.Images.FileStatusModified },
             { RepoType.Worktree, Properties.Images.WorkTree },
             { RepoType.WorktreeDeleted, Properties.Images.WorkTreeDeleted }
         };
