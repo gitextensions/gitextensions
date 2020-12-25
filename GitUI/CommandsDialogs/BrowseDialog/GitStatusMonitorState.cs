@@ -4,6 +4,7 @@
     {
         Stopped = 0,
         Running,
+        Inactive,
         Paused
     }
 }

@@ -39,6 +39,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private readonly FileSystemWatcher _gitDirWatcher = new FileSystemWatcher();
         private readonly System.Windows.Forms.Timer _timerRefresh;
         private bool _commandIsRunning;
+        private bool _isFirstPostRepoChanged;
         private string _gitPath;
         private string _submodulesPath;
         private readonly CancellationTokenSequence _statusSequence = new CancellationTokenSequence();
@@ -164,7 +165,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public void InvalidateGitWorkingDirectoryStatus()
         {
-            GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs());
+            GitWorkingDirectoryStatusChanged?.Invoke(this, null);
         }
 
         public void RequestRefresh()
@@ -191,6 +192,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             get { return _currentStatus; }
             set
             {
+                var prevStatus = _currentStatus;
                 _currentStatus = value;
                 switch (_currentStatus)
                 {
@@ -212,8 +214,25 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                         break;
 
+                    case GitStatusMonitorState.Inactive:
+                        {
+                            if (prevStatus != GitStatusMonitorState.Inactive)
+                            {
+                                InvalidateGitWorkingDirectoryStatus();
+                            }
+                        }
+
+                        break;
+
                     case GitStatusMonitorState.Running:
                         {
+                            if (prevStatus == GitStatusMonitorState.Inactive)
+                            {
+                                // Timer is already running, schedule new update
+                                ScheduleNextInteractiveTime();
+                                break;
+                            }
+
                             _workTreeWatcher.EnableRaisingEvents = Directory.Exists(_workTreeWatcher.Path);
                             _gitDirWatcher.EnableRaisingEvents = GitDirWatcherEnableRaisingEvents();
 
@@ -263,6 +282,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     oldCommands.PreCheckoutRevision -= GitUICommands_PreCheckout;
                     oldCommands.PostCheckoutBranch -= GitUICommands_PostCheckout;
                     oldCommands.PostCheckoutRevision -= GitUICommands_PostCheckout;
+                    oldCommands.PostRepositoryChanged -= GitUICommands_PostRepositoryChanged;
                 }
 
                 commandsSource_activate(sender as IGitUICommandsSource);
@@ -275,6 +295,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 newCommands.PreCheckoutRevision += GitUICommands_PreCheckout;
                 newCommands.PostCheckoutBranch += GitUICommands_PostCheckout;
                 newCommands.PostCheckoutRevision += GitUICommands_PostCheckout;
+                newCommands.PostRepositoryChanged += GitUICommands_PostRepositoryChanged;
 
                 var module = newCommands.Module;
                 StartWatchingChanges(module.WorkingDir, module.WorkingDirGitDir);
@@ -288,6 +309,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             void GitUICommands_PostCheckout(object sender, GitUIPostActionEventArgs e)
             {
                 CurrentStatus = GitStatusMonitorState.Running;
+            }
+
+            void GitUICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
+            {
+                CurrentStatus = GitStatusMonitorState.Inactive;
+                CurrentStatus = GitStatusMonitorState.Running;
+                _isFirstPostRepoChanged = true;
             }
         }
 
@@ -337,16 +365,31 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             ThreadHelper.AssertOnUIThread();
 
             if (CurrentStatus != GitStatusMonitorState.Running
-                || _nextUpdateTime - Environment.TickCount > 0
-                || IsMinimized())
+                && CurrentStatus != GitStatusMonitorState.Inactive)
             {
                 return;
             }
 
-            // don't update status while repository is being modified by GitExt,
-            // repository status may change after these actions.
-            if (UICommandsSource.UICommands.RepoChangedNotifier.IsLocked ||
+            if (IsMinimized()
+                || UICommandsSource.UICommands.RepoChangedNotifier.IsLocked ||
                 (GitVersion.Current.RaceConditionWhenGitStatusIsUpdatingIndex && Module.IsRunningGitProcess()))
+            {
+                // No run for minimized,
+                // don't update status while repository is being modified by GitExt,
+                // repository status may change after these actions.
+                if (CurrentStatus == GitStatusMonitorState.Running)
+                {
+                    CurrentStatus = GitStatusMonitorState.Inactive;
+                }
+
+                return;
+            }
+            else if (CurrentStatus == GitStatusMonitorState.Inactive)
+            {
+                CurrentStatus = GitStatusMonitorState.Running;
+            }
+
+            if (_nextUpdateTime - Environment.TickCount > 0)
             {
                 return;
             }
@@ -389,7 +432,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         try
                         {
                             var cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default,
-                                noLocks: true);
+                                noLocks: !_isFirstPostRepoChanged);
+                            _isFirstPostRepoChanged = false;
                             var output = await module.GitExecutable.GetOutputAsync(cmd).ConfigureAwait(false);
                             IReadOnlyList<GitItemStatus> changedFiles = _getAllChangedFilesOutputParser.Parse(output);
 
