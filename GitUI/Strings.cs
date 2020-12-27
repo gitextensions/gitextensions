@@ -199,5 +199,23 @@ namespace GitUI
         public static string Command => _instance.Value._commandText.Text;
         public static string WorkingDirectory => _instance.Value._workingDirectoryText.Text;
         public static string ReportBug => _instance.Value._reportBugText.Text;
+
+        #region Scripts
+
+        private readonly TranslationString _scriptConfirmExecuteText = new TranslationString("Do you want to execute script");
+        private readonly TranslationString _scriptErrorCantFindText = new TranslationString("Unable to find script");
+        private readonly TranslationString _scriptErrorFailedToExecuteText = new TranslationString("Failed to execute script");
+        private readonly TranslationString _scriptErrorOptionWithoutRevisionGridText = new TranslationString("option is only supported when invoked from the revision grid");
+        private readonly TranslationString _scriptErrorOptionWithoutRevisionText = new TranslationString("A valid revision is required to substitute the argument options");
+        private readonly TranslationString _scriptText = new TranslationString("Script");
+
+        public static string ScriptConfirmExecute => _instance.Value._scriptConfirmExecuteText.Text;
+        public static string ScriptErrorCantFind => _instance.Value._scriptErrorCantFindText.Text;
+        public static string ScriptErrorFailedToExecute => _instance.Value._scriptErrorFailedToExecuteText.Text;
+        public static string ScriptErrorOptionWithoutRevisionGridText => _instance.Value._scriptErrorOptionWithoutRevisionGridText.Text;
+        public static string ScriptErrorOptionWithoutRevisionText => _instance.Value._scriptErrorOptionWithoutRevisionText.Text;
+        public static string ScriptText => _instance.Value._scriptText.Text;
+
+        #endregion
     }
 }

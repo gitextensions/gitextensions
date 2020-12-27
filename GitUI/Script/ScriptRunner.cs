@@ -54,7 +54,7 @@ namespace GitUI.Script
             var scriptInfo = ScriptManager.GetScript(scriptKey);
             if (scriptInfo is null)
             {
-                showError("Cannot find script: " + scriptKey);
+                showError($"{Strings.ScriptErrorCantFind}: '{scriptKey}'");
                 return false;
             }
 
@@ -71,12 +71,14 @@ namespace GitUI.Script
                                                                         && ScriptOptionsParser.Contains(arguments, option));
                 if (optionDependingOnSelectedRevision is object)
                 {
-                    showError($"Option {optionDependingOnSelectedRevision} is only supported when started with revision grid available.");
+                    showError($"{Strings.ScriptText}: '{scriptKey}'{Environment.NewLine}'{optionDependingOnSelectedRevision}' {Strings.ScriptErrorOptionWithoutRevisionGridText}");
                     return false;
                 }
             }
 
-            if (scriptInfo.AskConfirmation && MessageBox.Show(owner, $"Do you want to execute '{scriptInfo.Name}'?", "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            if (scriptInfo.AskConfirmation &&
+                MessageBox.Show(owner, $"{Strings.ScriptConfirmExecute}: '{scriptInfo.Name}'?", Strings.ScriptText,
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
                 return false;
             }
@@ -85,7 +87,7 @@ namespace GitUI.Script
             (string argument, bool abort) = ScriptOptionsParser.Parse(scriptInfo.Arguments, module, owner, revisionGrid);
             if (abort)
             {
-                showError($"There must be a revision in order to substitute the argument option(s) for the script to run.");
+                showError($"{Strings.ScriptText}: '{scriptKey}'{Environment.NewLine}{Strings.ScriptErrorOptionWithoutRevisionText}");
                 return false;
             }
 
@@ -103,7 +105,7 @@ namespace GitUI.Script
 
             if (command.StartsWith(PluginPrefix))
             {
-                command = command.Replace(PluginPrefix, "");
+                command = command.Replace(PluginPrefix, string.Empty);
 
                 lock (PluginRegistry.Plugins)
                 {
