@@ -22,7 +22,10 @@ namespace GitExtensions
             StringBuilder sb = new StringBuilder();
 
             // Command: <command>
-            sb.AppendLine($"{Strings.Command}: {ex.Command}");
+            if (!string.IsNullOrWhiteSpace(ex.Command))
+            {
+                sb.AppendLine($"{Strings.Command}: {ex.Command}");
+            }
 
             // Arguments: <args>
             if (!string.IsNullOrWhiteSpace(ex.Arguments))
@@ -113,14 +116,11 @@ namespace GitExtensions
 
         private static void ReportUserException(UserExternalOperationException ex, bool isTerminating)
         {
-            // UserExternalOperationException wraps an actual exception, but be cautious just in case
-            string instructionText = ex.InnerException?.Message ?? Strings.InstructionOperationFailed;
-
             using var dialog = new TaskDialog
             {
                 OwnerWindowHandle = OwnerFormHandle,
                 Text = FormatText(ex, canRaiseBug: false),
-                InstructionText = instructionText,
+                InstructionText = ex.Context,
                 Caption = Strings.CaptionFailedExecute,
                 Icon = TaskDialogStandardIcon.Error,
                 Cancelable = true,

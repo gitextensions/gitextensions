@@ -34,28 +34,29 @@ namespace GitUI.Script
         {
             try
             {
-                return RunScript(owner, module, scriptKey, uiCommands, revisionGrid,
-                    msg => MessageBox.Show(owner, msg, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error));
+                return RunScriptInternal(owner, module, scriptKey, uiCommands, revisionGrid);
             }
-            catch (ExternalOperationException ex)
+            catch (ExternalOperationException ex) when (!(ex is UserExternalOperationException))
             {
-                throw new UserExternalOperationException(ex.Command, ex.Arguments, ex.WorkingDirectory, ex.InnerException ?? ex);
+                ThreadHelper.AssertOnUIThread();
+                throw new UserExternalOperationException($"{Strings.ScriptErrorFailedToExecute}: '{scriptKey}'", ex);
             }
         }
 
-        private static CommandStatus RunScript(IWin32Window owner, IGitModule module, string scriptKey, IGitUICommands uiCommands,
-            RevisionGridControl revisionGrid, Action<string> showError)
+        private static CommandStatus RunScriptInternal(IWin32Window owner, IGitModule module, string scriptKey, IGitUICommands uiCommands,
+            RevisionGridControl revisionGrid)
         {
             if (string.IsNullOrEmpty(scriptKey))
             {
                 return false;
             }
 
-            var scriptInfo = ScriptManager.GetScript(scriptKey);
+            ScriptInfo scriptInfo = ScriptManager.GetScript(scriptKey);
             if (scriptInfo is null)
             {
-                showError($"{Strings.ScriptErrorCantFind}: '{scriptKey}'");
-                return false;
+                ThreadHelper.AssertOnUIThread();
+                throw new UserExternalOperationException($"{Strings.ScriptErrorCantFind}: '{scriptKey}'",
+                    new ExternalOperationException(command: null, arguments: null, module.WorkingDir, innerException: null));
             }
 
             if (string.IsNullOrEmpty(scriptInfo.Command))
@@ -71,8 +72,9 @@ namespace GitUI.Script
                                                                         && ScriptOptionsParser.Contains(arguments, option));
                 if (optionDependingOnSelectedRevision is object)
                 {
-                    showError($"{Strings.ScriptText}: '{scriptKey}'{Environment.NewLine}'{optionDependingOnSelectedRevision}' {Strings.ScriptErrorOptionWithoutRevisionGridText}");
-                    return false;
+                    ThreadHelper.AssertOnUIThread();
+                    throw new UserExternalOperationException($"{Strings.ScriptText}: '{scriptKey}'{Environment.NewLine}'{optionDependingOnSelectedRevision}' {Strings.ScriptErrorOptionWithoutRevisionGridText}",
+                        new ExternalOperationException(scriptInfo.Command, arguments, module.WorkingDir, innerException: null));
                 }
             }
 
@@ -87,8 +89,9 @@ namespace GitUI.Script
             (string argument, bool abort) = ScriptOptionsParser.Parse(scriptInfo.Arguments, module, owner, revisionGrid);
             if (abort)
             {
-                showError($"{Strings.ScriptText}: '{scriptKey}'{Environment.NewLine}{Strings.ScriptErrorOptionWithoutRevisionText}");
-                return false;
+                ThreadHelper.AssertOnUIThread();
+                throw new UserExternalOperationException($"{Strings.ScriptText}: '{scriptKey}'{Environment.NewLine}{Strings.ScriptErrorOptionWithoutRevisionText}",
+                    new ExternalOperationException(scriptInfo.Command, arguments, module.WorkingDir, innerException: null));
             }
 
             string command = OverrideCommandWhenNecessary(originalCommand);
