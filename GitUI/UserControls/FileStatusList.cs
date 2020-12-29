@@ -790,18 +790,29 @@ namespace GitUI
             return text;
         }
 
-        private async Task OpenSubmoduleAsync()
+        /// <summary>
+        /// Open the currently selected submodule (no checks done) in a new Browse instance
+        /// If the submodule is a diff, both first and currently selected commits are initially selected
+        /// </summary>
+        /// <returns>async Task</returns>
+        public async Task OpenSubmoduleAsync()
         {
             var submoduleName = SelectedItem.Item.Name;
 
             var status = await SelectedItem.Item.GetSubmoduleStatusAsync().ConfigureAwait(false);
+            var selected = SelectedItem.SecondRevision.ObjectId == ObjectId.WorkTreeId
+                ? SelectedItem.SecondRevision.ObjectId.ToString()
+                : status?.Commit.ToString() ?? string.Empty;
+            var first = string.IsNullOrWhiteSpace(status?.OldCommit?.ToString())
+                ? string.Empty
+                : $",{status.OldCommit}";
 
             var process = new Process
             {
                 StartInfo =
                 {
                     FileName = Application.ExecutablePath,
-                    Arguments = "browse -commit=" + status.Commit,
+                    Arguments = $"browse -commit={selected}{first}",
                     WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator())
                 }
             };

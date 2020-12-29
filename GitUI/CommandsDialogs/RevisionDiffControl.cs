@@ -451,24 +451,10 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.OpenSubmoduleDiffInSeparateWindow && item.Item.IsSubmodule)
             {
-                var submoduleName = item.Item.Name;
-
                 ThreadHelper.JoinableTaskFactory.RunAsync(
                     async () =>
                     {
-                        var status = await item.Item.GetSubmoduleStatusAsync().ConfigureAwait(false);
-
-                        var process = new Process
-                        {
-                            StartInfo =
-                            {
-                                FileName = Application.ExecutablePath,
-                                Arguments = "browse -commit=" + status.Commit,
-                                WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator())
-                            }
-                        };
-
-                        process.Start();
+                        await DiffFiles.OpenSubmoduleAsync();
                     });
             }
             else

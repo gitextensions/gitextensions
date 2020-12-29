@@ -122,7 +122,14 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
         }
 
-        public FormBrowse([NotNull] GitUICommands commands, string filter, ObjectId selectCommit = null)
+        /// <summary>
+        /// Open Browse - main GUI including dashboard
+        /// </summary>
+        /// <param name="commands">commands in the current form</param>
+        /// <param name="filter">filter to apply to browse</param>
+        /// <param name="selectedId">Currently (last) selected commit id</param>
+        /// <param name="firstId">First selected commit id (as in a diff)</param>
+        public FormBrowse([NotNull] GitUICommands commands, string filter, ObjectId selectedId = null, ObjectId firstId = null)
             : base(commands)
         {
             InitializeComponent();
@@ -294,10 +301,8 @@ namespace GitUI.CommandsDialogs
                 control.DragDrop += FormBrowse_DragDrop;
             }
 
-            if (selectCommit != null)
-            {
-                RevisionGrid.InitialObjectId = selectCommit;
-            }
+            RevisionGrid.SelectedId = selectedId;
+            RevisionGrid.FirstId = firstId;
 
             InitializeComplete();
             UpdateCommitButtonAndGetBrush(null, AppSettings.ShowGitStatusInBrowseToolbar);

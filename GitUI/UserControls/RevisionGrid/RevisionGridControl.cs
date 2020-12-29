@@ -161,8 +161,16 @@ namespace GitUI
         internal bool ShowBuildServerInfo { get; set; }
         internal bool DoubleClickDoesNotOpenCommitInfo { get; set; }
 
+        /// <summary>
+        /// The last selected commit in the grid (with related CommitInfo in Browse)
+        /// </summary>
         [CanBeNull]
-        internal ObjectId InitialObjectId { private get; set; }
+        internal ObjectId SelectedId { private get; set; }
+
+        /// <summary>
+        /// The first selected, the first commit in a diff
+        /// </summary>
+        internal ObjectId FirstId { private get; set; }
 
         internal RevisionGridMenuCommands MenuCommands { get; }
         internal bool IsShowCurrentBranchOnlyChecked { get; private set; }
@@ -1198,16 +1206,30 @@ namespace GitUI
                      string.IsNullOrEmpty(InMemMessageFilter));
         }
 
+        /// <summary>
+        /// Select initial revision(s) in the grid
+        /// The SelectedId is the last selected commit in the grid (with related CommitInfo in Browse)
+        /// The FirstId is first selected, the first commit in a diff
+        /// </summary>
         private void SelectInitialRevision()
         {
             var toBeSelectedObjectIds = _selectedObjectIds;
 
             if (toBeSelectedObjectIds == null || toBeSelectedObjectIds.Count == 0)
             {
-                if (InitialObjectId != null)
+                if (SelectedId != null)
                 {
-                    toBeSelectedObjectIds = new ObjectId[] { InitialObjectId };
-                    InitialObjectId = null;
+                    if (FirstId != null)
+                    {
+                        toBeSelectedObjectIds = new ObjectId[] { FirstId, SelectedId };
+                        FirstId = null;
+                    }
+                    else
+                    {
+                        toBeSelectedObjectIds = new ObjectId[] { SelectedId };
+                    }
+
+                    SelectedId = null;
                 }
                 else
                 {
@@ -2447,7 +2469,7 @@ namespace GitUI
             {
                 if (_isReadingRevisions || !SetSelectedRevision(revisionGuid, toggleSelection))
                 {
-                    InitialObjectId = revisionGuid;
+                    SelectedId = revisionGuid;
                     _selectedObjectIds = null;
                 }
             }

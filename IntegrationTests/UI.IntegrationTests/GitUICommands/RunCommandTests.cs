@@ -11,6 +11,7 @@ using GitCommands;
 using GitExtensions.UITests;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUIPluginInterfaces;
 using NUnit.Framework;
 
 namespace GitUITests.GitUICommandsTests
@@ -117,7 +118,12 @@ namespace GitUITests.GitUICommandsTests
 
         [Test]
         public void RunCommandBasedOnArgument_browse()
-            => RunCommandBasedOnArgument<FormBrowse>(new string[] { "ge.exe", "browse" });
+        {
+            var selected = ObjectId.Random();
+            var first = ObjectId.Random();
+            var otherIgnored = ObjectId.Random();
+            RunCommandBasedOnArgument<FormBrowse>(new string[] { "ge.exe", "browse", $"-commit={selected},{first},,{otherIgnored}" });
+        }
 
         [TestCase("checkout")]
         [TestCase("checkoutbranch")]

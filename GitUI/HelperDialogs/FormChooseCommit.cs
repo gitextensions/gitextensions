@@ -33,7 +33,7 @@ namespace GitUI.HelperDialogs
                 var objectId = Module.RevParse(preselectCommit);
                 if (objectId != null)
                 {
-                    revisionGrid.InitialObjectId = objectId;
+                    revisionGrid.SelectedId = objectId;
                 }
             }
         }

@@ -1160,9 +1160,16 @@ namespace GitUI
             return StartSettingsDialog(owner, CommandsDialogs.SettingsDialog.Pages.GitConfigSettingsPage.GetPageReference());
         }
 
-        public bool StartBrowseDialog(IWin32Window owner = null, string filter = "", ObjectId selectedCommit = null)
+        /// <summary>
+        /// Open Browse - main GUI including dashboard
+        /// </summary>
+        /// <param name="owner">curent window owner</param>
+        /// <param name="filter">filter to apply to browse</param>
+        /// <param name="selectedId">Currently (last) selected commit id</param>
+        /// <param name="firstId">First selected commit id (as in a diff)</param>
+        public bool StartBrowseDialog(IWin32Window owner = null, string filter = "", ObjectId selectedId = null, ObjectId firstId = null)
         {
-            var form = new FormBrowse(this, filter, selectedCommit);
+            var form = new FormBrowse(this, filter, selectedId, firstId);
 
             if (Application.MessageLoop)
             {
@@ -1609,13 +1616,40 @@ namespace GitUI
                 return StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"));
             }
 
-            if (Module.TryResolvePartialCommitId(arg, out var objectId))
+            if (TryGetObjectIds(arg, Module, out var selectedId, out var firstId))
             {
-                return StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"), objectId);
+                return StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"), selectedId, firstId);
             }
 
             Console.Error.WriteLine($"No commit found matching: {arg}");
             return false;
+
+            static bool TryGetObjectIds(string arg, GitModule module, out ObjectId selectedId, out ObjectId firstId)
+            {
+                selectedId = null;
+                firstId = null;
+                foreach (string part in arg.Split(','))
+                {
+                    if (!module.TryResolvePartialCommitId(part, out var objectId))
+                    {
+                        return false;
+                    }
+
+                    if (selectedId == null)
+                    {
+                        selectedId = objectId;
+                    }
+                    else if (firstId == null)
+                    {
+                        firstId = objectId;
+
+                        // just ignore further commits
+                        break;
+                    }
+                }
+
+                return true;
+            }
         }
 
         private static string GetParameterOrEmptyStringAsDefault(IReadOnlyList<string> args, string paramName)
