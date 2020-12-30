@@ -32,33 +32,59 @@ namespace GitUI.Avatars
 
         protected internal (string initials, int hashCode) GetInitialsAndHashCode(string email, string name)
         {
-            string initials;
-            int hashCode;
+            string initials = null;
+            int hashCode = _unkownCounter;
             if (!string.IsNullOrWhiteSpace(name))
             {
-                var trimmedName = name.Trim();
-                var indexSpace = trimmedName.IndexOf(' ');
-                initials = trimmedName[0].ToString().ToUpper();
-                if (indexSpace != -1)
+                initials = GetInitials(name.Trim().Split());
+                if (!string.IsNullOrWhiteSpace(initials))
                 {
-                    initials += trimmedName[indexSpace + 1].ToString().ToUpper();
+                    hashCode = name.GetHashCode();
+                    return (initials, hashCode);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(email))
+            {
+                var e = email.TrimStart();
+                if (e.Contains("@"))
+                {
+                    e = e.Split('@')[0];
                 }
 
-                hashCode = string.IsNullOrWhiteSpace(email) ? name.GetHashCode() : email.GetHashCode();
-            }
-            else if (!string.IsNullOrWhiteSpace(email))
-            {
-                initials = ("" + email.TrimStart().First()).ToUpper();
-                hashCode = email.GetHashCode();
-            }
-            else
-            {
-                initials = "?";
-                hashCode = _unkownCounter;
-                _unkownCounter++;
+                initials = GetInitials(e.Split('.', '-', '_'));
+                if (!string.IsNullOrWhiteSpace(initials))
+                {
+                    hashCode = email.GetHashCode();
+                    return (initials, hashCode);
+                }
             }
 
+            initials = "?";
+            hashCode = _unkownCounter;
+            _unkownCounter++;
+
             return (initials, hashCode);
+
+            static string GetInitials(string[] names)
+            {
+                var names2 = names?.Where(s => !string.IsNullOrWhiteSpace(s) && char.IsLetter(s[0])).ToList();
+                if (names2 == null || names2.Count == 0)
+                {
+                    return null;
+                }
+                else if (names2.Count == 1)
+                {
+                    if (names2[0].Length == 1)
+                    {
+                        return names2[0][0].ToString().ToUpper();
+                    }
+
+                    return new string(new char[] { char.ToUpper(names2[0][0]), names2[0][1] });
+                }
+
+                return new string(new char[] { names2[0][0], names2[names2.Count - 1][0] }).ToUpper();
+            }
         }
 
         private readonly Graphics _graphics = Graphics.FromImage(new Bitmap(1, 1));
