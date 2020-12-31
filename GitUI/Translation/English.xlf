@@ -3136,10 +3136,6 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <source>Stage &amp;in Superproject</source>
         <target />
       </trans-unit>
-      <trans-unit id="_addSelectionToCommitMessage.Text">
-        <source>Add selection to commit message</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_amendCommit.Text">
         <source>You are about to rewrite history.
 Only use amend if the commit is not published yet!

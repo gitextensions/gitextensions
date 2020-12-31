@@ -207,45 +207,6 @@ namespace GitExtensions.UITests.CommandsDialogs
             });
         }
 
-        [Test, TestCaseSource(typeof(CommitMessageTestData), "TestCases")]
-        public void AddSelectionToCommitMessage_shall_be_ignored_unless_diff_is_focused(
-            string message,
-            int selectionStart,
-            int selectionLength,
-            string expectedMessage,
-            int expectedSelectionStart)
-        {
-            TestAddSelectionToCommitMessage(focusSelectedDiff: false, CommitMessageTestData.SelectedText,
-                message, selectionStart, selectionLength,
-                expectedResult: false, expectedMessage: message, expectedSelectionStart: selectionStart);
-        }
-
-        [Test, TestCaseSource(typeof(CommitMessageTestData), "TestCases")]
-        public void AddSelectionToCommitMessage_shall_be_ignored_if_no_difftext_is_selected(
-            string message,
-            int selectionStart,
-            int selectionLength,
-            string expectedMessage,
-            int expectedSelectionStart)
-        {
-            TestAddSelectionToCommitMessage(focusSelectedDiff: true, selectedText: "",
-                message, selectionStart, selectionLength,
-                expectedResult: false, expectedMessage: message, expectedSelectionStart: selectionStart);
-        }
-
-        [Test, TestCaseSource(typeof(CommitMessageTestData), "TestCases")]
-        public void AddSelectionToCommitMessage_shall_modify_the_commit_message(
-            string message,
-            int selectionStart,
-            int selectionLength,
-            string expectedMessage,
-            int expectedSelectionStart)
-        {
-            TestAddSelectionToCommitMessage(focusSelectedDiff: true, CommitMessageTestData.SelectedText,
-                message, selectionStart, selectionLength,
-                expectedResult: true, expectedMessage, expectedSelectionStart);
-        }
-
         [Test]
         public void editFileToolStripMenuItem_Click_no_selection_should_not_throw()
         {
@@ -303,39 +264,6 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunGeometryMemoryTest(
                 form => form.GetTestAccessor().SelectedDiff.Bounds,
                 (bounds1, bounds2) => bounds2.Should().Be(bounds1));
-        }
-
-        private void TestAddSelectionToCommitMessage(
-            bool focusSelectedDiff,
-            string selectedText,
-            string message,
-            int selectionStart,
-            int selectionLength,
-            bool expectedResult,
-            string expectedMessage,
-            int expectedSelectionStart)
-        {
-            RunFormTest(form =>
-            {
-                var ta = form.GetTestAccessor();
-
-                var selectedDiff = ta.SelectedDiff.GetTestAccessor().FileViewerInternal;
-                selectedDiff.SetText(selectedText, openWithDifftool: null);
-                selectedDiff.GetTestAccessor().TextEditor.ActiveTextAreaControl.SelectionManager.SetSelection(
-                    new TextLocation(0, 0), new TextLocation(selectedText.Length, 0));
-                if (focusSelectedDiff)
-                {
-                    selectedDiff.Focus();
-                }
-
-                ta.Message.Text = message;
-                ta.Message.SelectionStart = selectionStart;
-                ta.Message.SelectionLength = selectionLength;
-                ta.ExecuteCommand(FormCommit.Command.AddSelectionToCommitMessage).Should().Be((GitCommands.CommandStatus)expectedResult);
-                ta.Message.Text.Should().Be(expectedMessage);
-                ta.Message.SelectionStart.Should().Be(expectedSelectionStart);
-                ta.Message.SelectionLength.Should().Be(expectedResult ? 0 : selectionLength);
-            });
         }
 
         private void RunGeometryMemoryTest(Func<FormCommit, Rectangle> boundsAccessor, Action<Rectangle, Rectangle> testDriver)
