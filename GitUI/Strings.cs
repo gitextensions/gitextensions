@@ -90,6 +90,12 @@ namespace GitUI
 - For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
 - For more than four selected commits, show the difference from the first to the last selected commit.");
 
+        private readonly TranslationString _stageSelectedLines = new TranslationString("Stage selected line(s)");
+        private readonly TranslationString _unstageSelectedLines = new TranslationString("Unstage selected line(s)");
+        private readonly TranslationString _resetSelectedLines = new TranslationString("Reset selected line(s)");
+        private readonly TranslationString _resetSelectedLinesConfirmation = new TranslationString("Are you sure you want to reset the changes to the selected lines?");
+        private readonly TranslationString _resetChangesCaption = new TranslationString("Reset changes");
+
         private readonly TranslationString _rotInactive = new TranslationString("[ Inactive ]");
 
         private readonly TranslationString _argumentsText = new TranslationString("Arguments");
@@ -192,6 +198,12 @@ namespace GitUI
         public static string CombinedDiff => _instance.Value._combinedDiff.Text;
         public static string ShowDiffForAllParentsText => _instance.Value._showDiffForAllParentsText.Text;
         public static string ShowDiffForAllParentsTooltip => _instance.Value._showDiffForAllParentsTooltip.Text;
+
+        public static string StageSelectedLines => _instance.Value._stageSelectedLines.Text;
+        public static string UnstageSelectedLines => _instance.Value._unstageSelectedLines.Text;
+        public static string ResetSelectedLines => _instance.Value._resetSelectedLines.Text;
+        public static string ResetSelectedLinesConfirmation => _instance.Value._resetSelectedLinesConfirmation.Text;
+        public static string ResetChangesCaption => _instance.Value._resetChangesCaption.Text;
 
         public static string Inactive => _instance.Value._rotInactive.Text;
 

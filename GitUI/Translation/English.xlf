@@ -1337,7 +1337,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target />
       </trans-unit>
       <trans-unit id="cherrypickSelectedLinesToolStripMenuItem.Text">
-        <source>Cherry pick selected lines</source>
+        <source>Stage selected line(s)</source>
         <target />
       </trans-unit>
       <trans-unit id="copyNewVersionToolStripMenuItem.Text">
@@ -1413,7 +1413,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target />
       </trans-unit>
       <trans-unit id="revertSelectedLinesToolStripMenuItem.Text">
-        <source>Revert selected lines</source>
+        <source>Reset selected line(s)</source>
         <target />
       </trans-unit>
       <trans-unit id="settingsButton.ToolTipText">
@@ -3284,20 +3284,8 @@ Do you want to continue?</source>
         <source>You can only use this option when selecting a single file</source>
         <target />
       </trans-unit>
-      <trans-unit id="_resetChangesCaption.Text">
-        <source>Reset changes</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_resetSelectedChangesText.Text">
         <source>Are you sure you want to reset all selected files?</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_resetSelectedLines.Text">
-        <source>Reset selected line(s)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_resetSelectedLinesConfirmation.Text">
-        <source>Are you sure you want to reset the changes to the selected lines?</source>
         <target />
       </trans-unit>
       <trans-unit id="_resetStageChunkOfFileCaption.Text">
@@ -3329,10 +3317,6 @@ Suitable for some config files modified locally.</source>
         <source>Stage {0} files</source>
         <target />
       </trans-unit>
-      <trans-unit id="_stageSelectedLines.Text">
-        <source>Stage selected line(s)</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_statusBarBranchWithoutRemote.Text">
         <source>(remote not configured)</source>
         <target />
@@ -3356,10 +3340,6 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="_templateNotFoundCaption.Text">
         <source>Template Error</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_unstageSelectedLines.Text">
-        <source>Unstage selected line(s)</source>
         <target />
       </trans-unit>
       <trans-unit id="_untrackedRemote.Text">
@@ -9533,6 +9513,18 @@ Select this commit to populate the full message.</source>
         <source>If you think this was caused by Git Extensions, you can report a bug for the team to investigate.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_resetChangesCaption.Text">
+        <source>Reset changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_resetSelectedLines.Text">
+        <source>Reset selected line(s)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_resetSelectedLinesConfirmation.Text">
+        <source>Are you sure you want to reset the changes to the selected lines?</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_rotInactive.Text">
         <source>[ Inactive ]</source>
         <target />
@@ -9598,6 +9590,10 @@ Select this commit to populate the full message.</source>
         <source>&amp;Sort order...</source>
         <target />
       </trans-unit>
+      <trans-unit id="_stageSelectedLines.Text">
+        <source>Stage selected line(s)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_submodulesText.Text">
         <source>Submodules</source>
         <target />
@@ -9625,6 +9621,10 @@ Yes, I allow telemetry!</source>
       </trans-unit>
       <trans-unit id="_uninterestingDiffOmitted.Text">
         <source>Uninteresting diff hunks are omitted.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_unstageSelectedLines.Text">
+        <source>Unstage selected line(s)</source>
         <target />
       </trans-unit>
       <trans-unit id="_viewPullRequest.Text">
