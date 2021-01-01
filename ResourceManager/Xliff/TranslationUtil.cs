@@ -248,6 +248,8 @@ namespace ResourceManager.Xliff
 
         private static readonly HashSet<string> _translatableItemInComponentNames = new HashSet<string>(StringComparer.Ordinal)
         {
+            "AccessibleDescription",
+            "AccessibleName",
             "Caption",
             "Text",
             "ToolTipText",
