@@ -98,9 +98,18 @@ namespace GitCommands
 
                 _process.Exited += OnProcessExit;
 
-                _process.Start();
+                try
+                {
+                    _process.Start();
+                    _logOperation.SetProcessId(_process.Id);
+                }
+                catch (Exception ex)
+                {
+                    Dispose();
 
-                _logOperation.SetProcessId(_process.Id);
+                    _logOperation.LogProcessEnd(ex);
+                    throw new ExternalOperationException(fileName, arguments, workDir, ex);
+                }
             }
 
             private void OnProcessExit(object sender, EventArgs eventArgs)

@@ -17,6 +17,8 @@ namespace GitExtensions.UITests.Script
 {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
+    [SetCulture("en-US")]
+    [SetUICulture("en-US")]
     public class ScriptRunnerTests
     {
         // The scripts available during the tests are created by ScriptManager's GetDefaultScripts().
@@ -28,7 +30,7 @@ namespace GitExtensions.UITests.Script
 
         // perf optimisation: get hold of the static ScriptRunner.RunScript method for test invocations
         // we could have used TestAccessor, but it would involve more code.
-        private static MethodInfo s_miRunScript = typeof(ScriptRunner).GetMethod("RunScript", BindingFlags.NonPublic | BindingFlags.Static);
+        private static MethodInfo s_miRunScript = typeof(ScriptRunner).GetMethod("RunScriptInternal", BindingFlags.NonPublic | BindingFlags.Static);
 
         // Created once for each test
         private GitUICommands _uiCommands;
@@ -80,12 +82,13 @@ namespace GitExtensions.UITests.Script
         public void RunScript_with_invalid_scriptKey_shall_display_error_and_return_false()
         {
             const string invalidScriptKey = "InVaLid ScRiPt KeY";
-            string errorMessage = null;
 
-            var result = ExecuteRunScript(null, _module, invalidScriptKey, uiCommands: null, revisionGrid: null, error => errorMessage = error);
-
-            result.Executed.Should().BeFalse();
-            errorMessage.Should().Be("Cannot find script: " + invalidScriptKey);
+            var ex = ((Action)(() => ExecuteRunScript(null, _module, invalidScriptKey, uiCommands: null, revisionGrid: null))).Should()
+                .Throw<UserExternalOperationException>();
+            ex.And.Context.Should().Be($"Unable to find script: '{invalidScriptKey}'");
+            ex.And.Command.Should().BeNull();
+            ex.And.Arguments.Should().BeNull();
+            ex.And.WorkingDirectory.Should().Be(_module.WorkingDir);
         }
 
         [Test]
@@ -142,12 +145,12 @@ namespace GitExtensions.UITests.Script
 
             _module.GetCurrentCheckout().Returns((ObjectId)null);
 
-            string errorMessage = null;
-
-            var result = ExecuteRunScript(null, _module, _keyOfExampleScript, uiCommands: null, revisionGrid: null, error => errorMessage = error);
-
-            result.Should().BeEquivalentTo(new CommandStatus(executed: false, needsGridRefresh: false));
-            errorMessage.Should().Be($"There must be a revision in order to substitute the argument option(s) for the script to run.");
+            var ex = ((Action)(() => ExecuteRunScript(null, _module, _keyOfExampleScript, uiCommands: null, revisionGrid: null))).Should()
+                .Throw<UserExternalOperationException>();
+            ex.And.Context.Should().Be($"Script: '{_keyOfExampleScript}'\r\nA valid revision is required to substitute the argument options");
+            ex.And.Command.Should().Be(_exampleScript.Command);
+            ex.And.Arguments.Should().Be(_exampleScript.Arguments);
+            ex.And.WorkingDirectory.Should().Be(_module.WorkingDir);
         }
 
         [Test]
@@ -156,12 +159,12 @@ namespace GitExtensions.UITests.Script
             _exampleScript.Command = "cmd";
             _exampleScript.Arguments = "/c echo {sHash}";
 
-            string errorMessage = null;
-
-            var result = ExecuteRunScript(null, _module, _keyOfExampleScript, uiCommands: null, revisionGrid: null, error => errorMessage = error);
-
-            result.Executed.Should().BeFalse();
-            errorMessage.Should().Be($"Option sHash is only supported when started with revision grid available.");
+            var ex = ((Action)(() => ExecuteRunScript(null, _module, _keyOfExampleScript, uiCommands: null, revisionGrid: null))).Should()
+                .Throw<UserExternalOperationException>();
+            ex.And.Context.Should().Be($"Script: '{_keyOfExampleScript}'\r\n'sHash' option is only supported when invoked from the revision grid");
+            ex.And.Command.Should().Be(_exampleScript.Command);
+            ex.And.Arguments.Should().Be(_exampleScript.Arguments);
+            ex.And.WorkingDirectory.Should().Be(_module.WorkingDir);
         }
 
         [Test]
@@ -172,15 +175,16 @@ namespace GitExtensions.UITests.Script
 
             _uiCommands = new GitUICommands("C:\\");
 
-            string errorMessage = null;
-
             RunFormTest(formBrowse =>
             {
-                var result = ExecuteRunScript(null, _module, _keyOfExampleScript, _uiCommands, formBrowse.RevisionGridControl, error => errorMessage = error);
                 formBrowse.RevisionGridControl.LatestSelectedRevision.Should().BeNull(); // check for correct test setup
 
-                result.Should().BeEquivalentTo(new CommandStatus(executed: false, needsGridRefresh: false));
-                errorMessage.Should().Be($"There must be a revision in order to substitute the argument option(s) for the script to run.");
+                var ex = ((Action)(() => ExecuteRunScript(null, _module, _keyOfExampleScript, _uiCommands, formBrowse.RevisionGridControl))).Should()
+                    .Throw<UserExternalOperationException>();
+                ex.And.Context.Should().Be($"Script: '{_keyOfExampleScript}'\r\nA valid revision is required to substitute the argument options");
+                ex.And.Command.Should().Be(_exampleScript.Command);
+                ex.And.Arguments.Should().Be(_exampleScript.Arguments);
+                ex.And.WorkingDirectory.Should().Be(_module.WorkingDir);
             });
         }
 
@@ -200,7 +204,7 @@ namespace GitExtensions.UITests.Script
 
                 string errorMessage = null;
                 var result = ExecuteRunScript(formBrowse, _referenceRepository.Module, _keyOfExampleScript, _uiCommands,
-                                              formBrowse.RevisionGridControl, error => errorMessage = error);
+                                              formBrowse.RevisionGridControl);
 
                 errorMessage.Should().BeNull();
                 result.Should().BeEquivalentTo(new CommandStatus(executed: true, needsGridRefresh: false));
@@ -208,19 +212,25 @@ namespace GitExtensions.UITests.Script
         }
 
         private CommandStatus ExecuteRunScript(IWin32Window owner, IGitModule module, string scriptKey, IGitUICommands uiCommands,
-            RevisionGridControl revisionGrid, Action<string> showError)
+            RevisionGridControl revisionGrid)
         {
-            var result = (CommandStatus)s_miRunScript.Invoke(null,
-                                                             new object[]
-                                                             {
-                                                               owner,
-                                                               module,
-                                                               scriptKey,
-                                                               uiCommands,
-                                                               revisionGrid,
-                                                               showError
-                                                             });
-            return result;
+            try
+            {
+                var result = (CommandStatus)s_miRunScript.Invoke(null,
+                                                                 new object[]
+                                                                 {
+                                                                     owner,
+                                                                     module,
+                                                                     scriptKey,
+                                                                     uiCommands,
+                                                                     revisionGrid
+                                                                 });
+                return result;
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
         }
 
         private void RunFormTest(Action<FormBrowse> testDriver)

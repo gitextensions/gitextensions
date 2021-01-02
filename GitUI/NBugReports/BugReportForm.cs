@@ -71,7 +71,7 @@ Send report anyway?");
             mainTabs.TabPages.Remove(mainTabs.TabPages["reportContentsTabPage"]);
         }
 
-        public DialogResult ShowDialog(Exception exception, string environmentInfo)
+        public DialogResult ShowDialog(IWin32Window owner, Exception exception, string environmentInfo)
         {
             _lastException = new SerializableException(exception);
             _lastReport = new Report(_lastException);
@@ -95,7 +95,7 @@ Send report anyway?");
             DialogResult = DialogResult.None;
 
             // ToDo: Fill in the 'Report Contents' tab);
-            var result = ShowDialog();
+            var result = ShowDialog(owner);
 
             // Write back the user description (as we passed 'report' as a reference since it is a reference object anyway)
             _lastReport.GeneralInfo.UserDescription = descriptionTextBox.Text;

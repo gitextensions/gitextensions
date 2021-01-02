@@ -34,29 +34,29 @@ namespace GitUI.Script
         {
             try
             {
-                return RunScript(owner, module, scriptKey, uiCommands, revisionGrid,
-                    msg => MessageBox.Show(owner, msg, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error));
+                return RunScriptInternal(owner, module, scriptKey, uiCommands, revisionGrid);
             }
-            catch (Exception ex)
+            catch (ExternalOperationException ex) when (!(ex is UserExternalOperationException))
             {
-                MessageBoxes.FailedToExecuteScript(owner, scriptKey, ex);
-                return new CommandStatus(false, false);
+                ThreadHelper.AssertOnUIThread();
+                throw new UserExternalOperationException($"{Strings.ScriptErrorFailedToExecute}: '{scriptKey}'", ex);
             }
         }
 
-        private static CommandStatus RunScript(IWin32Window owner, IGitModule module, string scriptKey, IGitUICommands uiCommands,
-            RevisionGridControl revisionGrid, Action<string> showError)
+        private static CommandStatus RunScriptInternal(IWin32Window owner, IGitModule module, string scriptKey, IGitUICommands uiCommands,
+            RevisionGridControl revisionGrid)
         {
             if (string.IsNullOrEmpty(scriptKey))
             {
                 return false;
             }
 
-            var scriptInfo = ScriptManager.GetScript(scriptKey);
+            ScriptInfo scriptInfo = ScriptManager.GetScript(scriptKey);
             if (scriptInfo is null)
             {
-                showError("Cannot find script: " + scriptKey);
-                return false;
+                ThreadHelper.AssertOnUIThread();
+                throw new UserExternalOperationException($"{Strings.ScriptErrorCantFind}: '{scriptKey}'",
+                    new ExternalOperationException(command: null, arguments: null, module.WorkingDir, innerException: null));
             }
 
             if (string.IsNullOrEmpty(scriptInfo.Command))
@@ -72,12 +72,15 @@ namespace GitUI.Script
                                                                         && ScriptOptionsParser.Contains(arguments, option));
                 if (optionDependingOnSelectedRevision is object)
                 {
-                    showError($"Option {optionDependingOnSelectedRevision} is only supported when started with revision grid available.");
-                    return false;
+                    ThreadHelper.AssertOnUIThread();
+                    throw new UserExternalOperationException($"{Strings.ScriptText}: '{scriptKey}'{Environment.NewLine}'{optionDependingOnSelectedRevision}' {Strings.ScriptErrorOptionWithoutRevisionGridText}",
+                        new ExternalOperationException(scriptInfo.Command, arguments, module.WorkingDir, innerException: null));
                 }
             }
 
-            if (scriptInfo.AskConfirmation && MessageBox.Show(owner, $"Do you want to execute '{scriptInfo.Name}'?", "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            if (scriptInfo.AskConfirmation &&
+                MessageBox.Show(owner, $"{Strings.ScriptConfirmExecute}: '{scriptInfo.Name}'?", Strings.ScriptText,
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
                 return false;
             }
@@ -86,8 +89,9 @@ namespace GitUI.Script
             (string argument, bool abort) = ScriptOptionsParser.Parse(scriptInfo.Arguments, module, owner, revisionGrid);
             if (abort)
             {
-                showError($"There must be a revision in order to substitute the argument option(s) for the script to run.");
-                return false;
+                ThreadHelper.AssertOnUIThread();
+                throw new UserExternalOperationException($"{Strings.ScriptText}: '{scriptKey}'{Environment.NewLine}{Strings.ScriptErrorOptionWithoutRevisionText}",
+                    new ExternalOperationException(scriptInfo.Command, arguments, module.WorkingDir, innerException: null));
             }
 
             string command = OverrideCommandWhenNecessary(originalCommand);
@@ -104,7 +108,7 @@ namespace GitUI.Script
 
             if (command.StartsWith(PluginPrefix))
             {
-                command = command.Replace(PluginPrefix, "");
+                command = command.Replace(PluginPrefix, string.Empty);
 
                 lock (PluginRegistry.Plugins)
                 {
