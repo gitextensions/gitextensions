@@ -220,11 +220,10 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                if (!InitMergetool())
-                {
-                    Close();
-                    return;
-                }
+                InitMergetool();
+
+                // Update UI after tool configuration is known
+                UpdateConflictedFilesMenu();
 
                 ConflictedFilesContextMenu.Text = _conflictedFilesContextMenuText.Text;
                 OpenMergetool.Text = _openMergeToolItemText.Text + " " + _mergetool;
@@ -664,13 +663,17 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                if (!PathUtil.TryFindFullPath(_mergetoolPath, out string fullPath))
+                if (!string.IsNullOrEmpty(_mergetoolPath) && !PathUtil.TryFindFullPath(_mergetoolPath, out string fullPath))
                 {
-                    MessageBox.Show(this, _noMergeToolConfigured.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, _noMergeToolConfigured.Text, Strings.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return false;
                 }
+                else
+                {
+                    fullPath = string.Empty;
+                }
 
-                _mergetoolPath = fullPath;
+                _mergetoolPath = fullPath ?? string.Empty;
             }
 
             return true;
@@ -728,6 +731,11 @@ namespace GitUI.CommandsDialogs
 
         private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)
         {
+            UpdateConflictedFilesMenu();
+        }
+
+        private void UpdateConflictedFilesMenu()
+        {
             // NOTE we cannot use WaitCursorScope here as there is no lexical scope for the operation
             Cursor.Current = Cursors.WaitCursor;
             baseFileName.Text = localFileName.Text = remoteFileName.Text = "";
@@ -758,9 +766,11 @@ namespace GitUI.CommandsDialogs
 
         private void SetAvailableCommands(bool enabled)
         {
-            OpenMergetool.Enabled = enabled;
+            // Disable extra GE processing if path or cmd is not set
+            var mergeToolExtrasConfigured = !string.IsNullOrWhiteSpace(_mergetoolPath) || !string.IsNullOrWhiteSpace(_mergetoolCmd);
+            OpenMergetool.Enabled = enabled && mergeToolExtrasConfigured;
             customMergetool.Enabled = enabled;
-            openMergeToolBtn.Enabled = enabled;
+            openMergeToolBtn.Enabled = enabled && mergeToolExtrasConfigured;
             ContextOpenLocalWith.Enabled = enabled;
             ContextOpenRemoteWith.Enabled = enabled;
             ContextOpenBaseWith.Enabled = enabled;
