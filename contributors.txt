@@ -146,3 +146,4 @@ YYYY/MM/DD, github id, Full name, email
 2020/10/07, BrianFreemanAtlanta, Brian Freeman, freeman(at)carnegie.com
 2020/10/21, wischi-chr, Christian Wischenbart, christian.wischenbart@gmail.com
 2020/11/05, cristianst85, Cristian Stoica, cristianstoica85(at)gmail.com
+2021/01/02, matyasbach, Matyáš Bach, matyasbach(at)centrum.cz
