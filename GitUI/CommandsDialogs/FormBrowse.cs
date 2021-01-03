@@ -54,7 +54,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _superprojectModuleFormat = new TranslationString("Superproject: {0}");
         private readonly TranslationString _goToSuperProject = new TranslationString("Go to superproject");
 
-        private readonly TranslationString _indexLockCantDelete = new TranslationString("Failed to delete index.lock.");
+        private readonly TranslationString _indexLockCantDelete = new TranslationString("Failed to delete index.lock");
 
         private readonly TranslationString _loading = new TranslationString("Loading...");
 
@@ -2045,7 +2045,9 @@ namespace GitUI.CommandsDialogs
             }
             catch (FileDeleteException ex)
             {
-                MessageBox.Show(this, $@"{_indexLockCantDelete.Text}: {ex.FileName}{Environment.NewLine}{ex.Message}", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ThreadHelper.AssertOnUIThread();
+                throw new UserExternalOperationException(_indexLockCantDelete.Text,
+                    new ExternalOperationException(command: null, arguments: ex.FileName, Module.WorkingDir, ex));
             }
         }
 
