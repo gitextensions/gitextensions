@@ -50,6 +50,30 @@ namespace GitUI.CommandsDialogs
             listBoxSearchResult.Visible = false;
         }
 
+        public BorderStyle SearchBoxBorderStyle
+        {
+            get => txtSearchBox.BorderStyle;
+            set => txtSearchBox.BorderStyle = value;
+        }
+
+        public Color SearchBoxBorderDefaultColor
+        {
+            get => txtSearchBox.BorderDefaultColor;
+            set => txtSearchBox.BorderDefaultColor = value;
+        }
+
+        public Color SearchBoxBorderHoveredColor
+        {
+            get => txtSearchBox.BorderHoveredColor;
+            set => txtSearchBox.BorderHoveredColor = value;
+        }
+
+        public Color SearchBoxBorderFocusedColor
+        {
+            get => txtSearchBox.BorderFocusedColor;
+            set => txtSearchBox.BorderFocusedColor = value;
+        }
+
         private void SearchForCandidates(IEnumerable<T> candidates)
         {
             var selectionStart = txtSearchBox.SelectionStart;

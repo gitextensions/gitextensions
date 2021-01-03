@@ -59,8 +59,11 @@ namespace GitUI.BranchTreePanel
             PreviewKeyDown += OnPreviewKeyDown;
 
             mnubtnCollapseAll.AdaptImageLightness();
-            btnCollapseAll.AdaptImageLightness();
-            btnSettings.AdaptImageLightness();
+            tsbCollapseAll.AdaptImageLightness();
+            tsbShowBranches.AdaptImageLightness();
+            tsbShowRemotes.AdaptImageLightness();
+            tsbShowTags.AdaptImageLightness();
+            tsbShowSubmodules.AdaptImageLightness();
             mnubtnExpandAll.AdaptImageLightness();
             mnubtnFetchAllBranchesFromARemote.AdaptImageLightness();
             mnuBtnPruneAllBranchesFromARemote.AdaptImageLightness();
@@ -75,13 +78,13 @@ namespace GitUI.BranchTreePanel
             treeMain.ShowNodeToolTips = true;
             treeMain.HideSelection = false;
 
-            toolTip.SetToolTip(btnCollapseAll, mnubtnCollapseAll.ToolTipText);
             toolTip.SetToolTip(btnSearch, _searchTooltip.Text);
-            toolTip.SetToolTip(btnSettings, _showHideRefsTooltip.Text);
-            tsmiShowBranches.Checked = AppSettings.RepoObjectsTreeShowBranches;
-            tsmiShowRemotes.Checked = AppSettings.RepoObjectsTreeShowRemotes;
-            tsmiShowTags.Checked = AppSettings.RepoObjectsTreeShowTags;
-            tsmiShowSubmodules.Checked = AppSettings.RepoObjectsTreeShowSubmodules;
+            tsbCollapseAll.ToolTipText = mnubtnCollapseAll.ToolTipText;
+
+            tsbShowBranches.Checked = AppSettings.RepoObjectsTreeShowBranches;
+            tsbShowRemotes.Checked = AppSettings.RepoObjectsTreeShowRemotes;
+            tsbShowTags.Checked = AppSettings.RepoObjectsTreeShowTags;
+            tsbShowSubmodules.Checked = AppSettings.RepoObjectsTreeShowSubmodules;
 
             _doubleClickDecorator = new NativeTreeViewDoubleClickDecorator(treeMain);
             _doubleClickDecorator.BeforeDoubleClickExpandCollapse += BeforeDoubleClickExpandCollapse;
@@ -168,6 +171,12 @@ namespace GitUI.BranchTreePanel
                 search.TextChanged += OnBranchCriterionChanged;
                 search.KeyDown += TxtBranchCriterion_KeyDown;
                 search.PreviewKeyDown += OnPreviewKeyDown;
+
+                search.SearchBoxBorderStyle = BorderStyle.FixedSingle;
+                search.SearchBoxBorderDefaultColor = Color.LightGray.AdaptBackColor();
+                search.SearchBoxBorderHoveredColor = SystemColors.Highlight.AdaptBackColor();
+                search.SearchBoxBorderFocusedColor = SystemColors.HotTrack.AdaptBackColor();
+
                 return search;
 
                 IEnumerable<string> SearchForBranch(string arg)
@@ -314,7 +323,6 @@ namespace GitUI.BranchTreePanel
 
             FixInvalidTreeToPositionIndices();
             ShowEnabledTrees();
-            RebuildMenuSettings();
         }
 
         private static void AddTreeNodeToSearchResult(ICollection<TreeNode> ret, TreeNode node)
@@ -491,11 +499,6 @@ namespace GitUI.BranchTreePanel
 
                 return ret;
             }
-        }
-
-        private void OnBtnSettingsClicked(object sender, EventArgs e)
-        {
-            btnSettings.ContextMenuStrip.Show(btnSettings, 0, btnSettings.Height);
         }
 
         private void OnBtnSearchClicked(object sender, EventArgs e)
