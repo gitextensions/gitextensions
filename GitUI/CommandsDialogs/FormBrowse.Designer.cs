@@ -243,6 +243,7 @@ namespace GitUI.CommandsDialogs
             this.ToolStripMain.ClickThrough = true;
             this.ToolStripMain.Dock = System.Windows.Forms.DockStyle.None;
             this.ToolStripMain.GripMargin = new System.Windows.Forms.Padding(0);
+            this.ToolStripMain.GripStyle = ToolStripGripStyle.Hidden;
             this.ToolStripMain.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.ToolStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.RefreshButton,
@@ -276,6 +277,7 @@ namespace GitUI.CommandsDialogs
             this.ToolStripFilters.ClickThrough = true;
             this.ToolStripFilters.Dock = System.Windows.Forms.DockStyle.None;
             this.ToolStripFilters.GripMargin = new System.Windows.Forms.Padding(0);
+            this.ToolStripFilters.GripStyle = ToolStripGripStyle.Hidden;
             this.ToolStripFilters.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.ToolStripFilters.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
