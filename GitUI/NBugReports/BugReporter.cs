@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI;
+using GitUI.NBugReports;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace GitExtensions

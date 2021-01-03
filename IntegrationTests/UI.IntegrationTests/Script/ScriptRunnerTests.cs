@@ -8,6 +8,7 @@ using FluentAssertions;
 using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.NBugReports;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using NSubstitute;

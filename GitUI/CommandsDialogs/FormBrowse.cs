@@ -29,6 +29,7 @@ using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Infrastructure.Telemetry;
+using GitUI.NBugReports;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUI.Shells;
