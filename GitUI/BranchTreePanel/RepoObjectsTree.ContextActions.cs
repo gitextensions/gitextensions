@@ -231,9 +231,13 @@ namespace GitUI.BranchTreePanel
 
                 bool bareRepository = Module.IsBareRepository();
                 mnubtnOpenSubmodule.Visible = submoduleNode.CanOpen;
+                mnubtnOpenGESubmodule.Visible = submoduleNode.CanOpen;
                 mnubtnUpdateSubmodule.Visible = true;
                 mnubtnManageSubmodules.Visible = !bareRepository && submoduleNode.IsCurrent;
                 mnubtnSynchronizeSubmodules.Visible = !bareRepository && submoduleNode.IsCurrent;
+                mnubtnResetSubmodule.Visible = !bareRepository;
+                mnubtnStashSubmodule.Visible = !bareRepository;
+                mnubtnCommitSubmodule.Visible = !bareRepository;
             }
         }
 
@@ -317,7 +321,11 @@ namespace GitUI.BranchTreePanel
             RegisterClick<SubmoduleNode>(mnubtnManageSubmodules, _ => _submoduleTree.ManageSubmodules(this));
             RegisterClick<SubmoduleNode>(mnubtnSynchronizeSubmodules, _ => _submoduleTree.SynchronizeSubmodules(this));
             RegisterClick<SubmoduleNode>(mnubtnOpenSubmodule, node => _submoduleTree.OpenSubmodule(this, node));
+            RegisterClick<SubmoduleNode>(mnubtnOpenGESubmodule, node => _submoduleTree.OpenSubmoduleInGitExtensions(this, node));
             RegisterClick<SubmoduleNode>(mnubtnUpdateSubmodule, node => _submoduleTree.UpdateSubmodule(this, node));
+            RegisterClick<SubmoduleNode>(mnubtnResetSubmodule, node => _submoduleTree.ResetSubmodule(this, node));
+            RegisterClick<SubmoduleNode>(mnubtnStashSubmodule, node => _submoduleTree.StashSubmodule(this, node));
+            RegisterClick<SubmoduleNode>(mnubtnCommitSubmodule, node => _submoduleTree.CommitSubmodule(this, node));
             Node.RegisterContextMenu(typeof(SubmoduleNode), menuSubmodule);
         }
 

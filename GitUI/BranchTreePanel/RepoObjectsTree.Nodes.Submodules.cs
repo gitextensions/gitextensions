@@ -10,9 +10,11 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Submodules;
+using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
+using ResourceManager;
 
 namespace GitUI.BranchTreePanel
 {
@@ -99,6 +101,11 @@ namespace GitUI.BranchTreePanel
                 }
 
                 UICommands.BrowseSetWorkingDir(Info.Path);
+            }
+
+            public void LaunchGitExtensions()
+            {
+                GitUICommands.LaunchBrowse(workingDir: Info.Path.EnsureTrailingPathSeparator(), ObjectId.WorkTreeId, Info?.Detailed?.RawStatus?.OldCommit);
             }
 
             internal override void OnSelected()
@@ -415,6 +422,11 @@ namespace GitUI.BranchTreePanel
                 node.Open();
             }
 
+            public void OpenSubmoduleInGitExtensions(IWin32Window owner, SubmoduleNode node)
+            {
+                node.LaunchGitExtensions();
+            }
+
             public void ManageSubmodules(IWin32Window owner)
             {
                 UICommands.StartSubmodulesDialog(owner);
@@ -423,6 +435,38 @@ namespace GitUI.BranchTreePanel
             public void SynchronizeSubmodules(IWin32Window owner)
             {
                 UICommands.StartSyncSubmodulesDialog(owner);
+            }
+
+            public void ResetSubmodule(IWin32Window owner, SubmoduleNode node)
+            {
+                FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(owner, true, true);
+                if (resetType == FormResetChanges.ActionEnum.Cancel)
+                {
+                    return;
+                }
+
+                GitModule module = new GitModule(node.Info.Path);
+
+                // Reset all changes.
+                module.Reset(ResetMode.Hard);
+
+                // Also delete new files, if requested.
+                if (resetType == FormResetChanges.ActionEnum.ResetAndDelete)
+                {
+                    module.Clean(CleanMode.OnlyNonIgnored, directories: true);
+                }
+            }
+
+            public void StashSubmodule(IWin32Window owner, SubmoduleNode node)
+            {
+                var uiCmds = new GitUICommands(new GitModule(node.Info.Path));
+                uiCmds.StashSave(owner, AppSettings.IncludeUntrackedFilesInManualStash);
+            }
+
+            public void CommitSubmodule(IWin32Window owner, SubmoduleNode node)
+            {
+                var submodulCommands = new GitUICommands(node.Info.Path.EnsureTrailingPathSeparator());
+                submodulCommands.StartCommitDialog(owner);
             }
         }
     }
