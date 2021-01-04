@@ -1931,9 +1931,9 @@ namespace GitUI
             BrowseRepo?.GoToRef(refName, showNoRevisionMsg, toggleSelection);
         }
 
-        public void BrowseSetWorkingDir(string path)
+        public void BrowseSetWorkingDir(string path, ObjectId selectedId = null, ObjectId firstId = null)
         {
-            BrowseRepo?.SetWorkingDir(path);
+            BrowseRepo?.SetWorkingDir(path, selectedId, firstId);
         }
 
         public IGitRemoteCommand CreateRemoteCommand()

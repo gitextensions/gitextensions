@@ -1939,8 +1939,10 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public void SetWorkingDir(string path)
+        public void SetWorkingDir(string path, ObjectId selectedId = null, ObjectId firstId = null)
         {
+            RevisionGrid.SelectedId = selectedId;
+            RevisionGrid.FirstId = firstId;
             SetGitModule(this, new GitModuleEventArgs(new GitModule(path)));
         }
 

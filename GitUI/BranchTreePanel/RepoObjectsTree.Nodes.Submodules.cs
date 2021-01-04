@@ -11,6 +11,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Submodules;
 using GitUI.Properties;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.BranchTreePanel
@@ -91,6 +92,12 @@ namespace GitUI.BranchTreePanel
 
             public void Open()
             {
+                if (Info?.Detailed?.RawStatus != null)
+                {
+                    UICommands.BrowseSetWorkingDir(Info.Path, ObjectId.WorkTreeId, Info.Detailed.RawStatus.OldCommit);
+                    return;
+                }
+
                 UICommands.BrowseSetWorkingDir(Info.Path);
             }
 

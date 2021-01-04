@@ -357,9 +357,8 @@ namespace GitCommands.Submodules
             {
                 _submoduleInfos[path].Detailed = new DetailedSubmoduleInfo
                 {
-                    Status = SubmoduleStatus.Unknown,
                     IsDirty = true,
-                    AddedAndRemovedText = ""
+                    RawStatus = null
                 };
             }
             else
@@ -434,9 +433,8 @@ namespace GitCommands.Submodules
                 null :
                 new DetailedSubmoduleInfo
                 {
-                    Status = submoduleStatus.Status,
                     IsDirty = submoduleStatus.IsDirty,
-                    AddedAndRemovedText = submoduleStatus.AddedAndRemovedString()
+                    RawStatus = submoduleStatus
                 };
 
             // Recursively update submodules
