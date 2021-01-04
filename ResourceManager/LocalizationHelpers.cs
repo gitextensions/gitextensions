@@ -111,8 +111,7 @@ namespace ResourceManager
 
         public static string ProcessSubmodulePatch(GitModule module, string fileName, Patch patch)
         {
-            string text = patch?.Text;
-            var status = SubmoduleHelpers.ParseSubmoduleStatus(text, module, fileName);
+            var status = SubmoduleHelpers.ParseSubmoduleStatus(patch?.Text, module, fileName);
             if (status is null)
             {
                 return "";

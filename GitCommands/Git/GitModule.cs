@@ -2635,15 +2635,8 @@ namespace GitCommands
                     var localItem = item;
                     localItem.SetSubmoduleStatus(ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
-                        var submoduleStatus = await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(this, localItem.Name, localItem.OldName, localItem.Staged == StagedStatus.Index)
-                        .ConfigureAwait(false);
-                        if (submoduleStatus is not null && submoduleStatus.Commit != submoduleStatus.OldCommit)
-                        {
-                            var submodule = submoduleStatus.GetSubmodule(this);
-                            submoduleStatus.CheckSubmoduleStatus(submodule);
-                        }
-
-                        return submoduleStatus;
+                        return await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(this, localItem.Name, localItem.OldName, localItem.Staged == StagedStatus.Index)
+                            .ConfigureAwait(false);
                     }));
                 }
             }
@@ -2658,17 +2651,7 @@ namespace GitCommands
                         async () =>
                         {
                             await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-
-                            Patch? patch = GetSingleDiff(firstId, secondId, item.Name, item.OldName, "", SystemEncoding, true);
-                            string? text = patch is not null ? patch.Text : "";
-                            var submoduleStatus = SubmoduleHelpers.ParseSubmoduleStatus(text, this, item.Name);
-                            if (submoduleStatus is not null && submoduleStatus.Commit != submoduleStatus.OldCommit)
-                            {
-                                var submodule = submoduleStatus.GetSubmodule(this);
-                                submoduleStatus.CheckSubmoduleStatus(submodule);
-                            }
-
-                            return submoduleStatus;
+                            return SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(this, item.Name, item.OldName, firstId, secondId);
                         }));
             }
         }

@@ -427,13 +427,9 @@ namespace GitCommands.Submodules
             cancelToken.ThrowIfCancellationRequested();
 
             var submoduleStatus = await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(superModule, submoduleName, noLocks: true)
-            .ConfigureAwait(false);
-            if (submoduleStatus is not null && submoduleStatus.Commit != submoduleStatus.OldCommit)
-            {
-                submoduleStatus.CheckSubmoduleStatus(submoduleStatus.GetSubmodule(superModule));
-            }
+                .ConfigureAwait(false);
 
-            // If no changes, set info.Detailed set to null
+            // If no changes, set info.Detailed to null
             info.Detailed = submoduleStatus is null ?
                 null :
                 new DetailedSubmoduleInfo
