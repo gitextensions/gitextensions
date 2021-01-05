@@ -110,9 +110,9 @@ namespace GitUI.BuildServerIntegration
                                                         anyRunningBuilds = true;
                                                         shouldLookForNewlyFinishedBuilds = true;
                                                     })
-                                               .Retry()
-                                               .Concat(delayObservable)
+                                               .OnErrorResumeNext(delayObservable)
                                                .Finally(() => anyRunningBuilds = false)
+                                               .Retry()
                                                .Repeat()
                                                .ObserveOn(MainThreadScheduler.Instance)
                                                .Subscribe(OnBuildInfoUpdate)
