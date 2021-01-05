@@ -99,7 +99,7 @@ namespace GitUI.Editor
             this.cherrypickSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.CherryPick;
             this.cherrypickSelectedLinesToolStripMenuItem.Name = "cherrypickSelectedLinesToolStripMenuItem";
             this.cherrypickSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.cherrypickSelectedLinesToolStripMenuItem.Text = "Cherry pick selected lines";
+            this.cherrypickSelectedLinesToolStripMenuItem.Text = Strings.StageSelectedLines;
             this.cherrypickSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.cherrypickSelectedLinesToolStripMenuItem_Click);
             // 
             // copyPatchToolStripMenuItem
@@ -379,7 +379,7 @@ namespace GitUI.Editor
             this.revertSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetFileTo;
             this.revertSelectedLinesToolStripMenuItem.Name = "revertSelectedLinesToolStripMenuItem";
             this.revertSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.revertSelectedLinesToolStripMenuItem.Text = "Revert selected lines";
+            this.revertSelectedLinesToolStripMenuItem.Text = Strings.ResetSelectedLines;
             this.revertSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.revertSelectedLinesToolStripMenuItem_Click);
             //
             // llShowPreview
