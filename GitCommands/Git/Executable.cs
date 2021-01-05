@@ -31,7 +31,12 @@ namespace GitCommands
 
         /// <inheritdoc />
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        public IProcess Start(ArgumentString arguments = default, bool createWindow = false, bool redirectInput = false, bool redirectOutput = false, Encoding outputEncoding = null)
+        public IProcess Start(ArgumentString arguments = default,
+                              bool createWindow = false,
+                              bool redirectInput = false,
+                              bool redirectOutput = false,
+                              Encoding outputEncoding = null,
+                              bool useShellExecute = false)
         {
             // TODO should we set these on the child process only?
             EnvironmentConfiguration.SetEnvironmentVariables();
@@ -40,7 +45,7 @@ namespace GitCommands
 
             var fileName = _fileNameProvider();
 
-            return new ProcessWrapper(fileName, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding);
+            return new ProcessWrapper(fileName, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute);
         }
 
         public string GetOutput(ArgumentString arguments)
@@ -69,7 +74,14 @@ namespace GitCommands
             private bool _disposed;
 
             [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-            public ProcessWrapper(string fileName, string arguments, string workDir, bool createWindow, bool redirectInput, bool redirectOutput, [CanBeNull] Encoding outputEncoding)
+            public ProcessWrapper(string fileName,
+                                  string arguments,
+                                  string workDir,
+                                  bool createWindow,
+                                  bool redirectInput,
+                                  bool redirectOutput,
+                                  [CanBeNull] Encoding outputEncoding,
+                                  bool useShellExecute)
             {
                 Debug.Assert(redirectOutput == (outputEncoding != null), "redirectOutput == (outputEncoding != null)");
                 _redirectInput = redirectInput;
@@ -80,7 +92,7 @@ namespace GitCommands
                     EnableRaisingEvents = true,
                     StartInfo =
                     {
-                        UseShellExecute = false,
+                        UseShellExecute = useShellExecute,
                         ErrorDialog = false,
                         CreateNoWindow = !createWindow,
                         RedirectStandardInput = redirectInput,
