@@ -140,7 +140,8 @@ namespace GitUI.BranchTreePanel
                     TreeViewNode.ToolTipText = LocalizationHelpers.ProcessSubmoduleStatus(
                         new GitModule(Info.Path),
                         Info.Detailed.RawStatus,
-                        moduleIsParent: false);
+                        moduleIsParent: false,
+                        limitOutput: true);
                 }
                 else
                 {
