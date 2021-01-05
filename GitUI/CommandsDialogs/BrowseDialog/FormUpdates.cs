@@ -165,10 +165,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             switch (launchType)
             {
                 case LaunchType.ChangeLog:
-                    Process.Start("https://github.com/gitextensions/gitextensions/blob/master/GitUI/Resources/ChangeLog.md");
+                    OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/blob/master/GitUI/Resources/ChangeLog.md");
                     break;
                 case LaunchType.DirectDownload:
-                    Process.Start(UpdateUrl);
+                    OsShellUtil.OpenUrlInDefaultBrowser(UpdateUrl);
                     break;
             }
         }

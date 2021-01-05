@@ -179,14 +179,7 @@ namespace GitUI
 
         private void OnRegisterGravatarClick(object sender, EventArgs e)
         {
-            try
-            {
-                Process.Start("https://www.gravatar.com");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            OsShellUtil.OpenUrlInDefaultBrowser(@"https://www.gravatar.com");
         }
 
         private void OnDefaultImageDropDownOpening(object sender, EventArgs e)

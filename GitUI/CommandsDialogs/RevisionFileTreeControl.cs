@@ -648,17 +648,10 @@ See the changes in the commit form.");
 
         private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            try
+            var fileName = SaveSelectedItemToTempFile();
+            if (fileName != null)
             {
-                var fileName = SaveSelectedItemToTempFile();
-                if (fileName != null)
-                {
-                    Process.Start(fileName);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                OsShellUtil.Open(fileName);
             }
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -39,7 +38,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (!string.IsNullOrWhiteSpace(_url))
                 {
-                    Process.Start(_url);
+                    OsShellUtil.OpenUrlInDefaultBrowser(_url);
                 }
             };
             _openReportLink.Font = new Font(_openReportLink.Font.Name, 16F);

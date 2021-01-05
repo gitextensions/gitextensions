@@ -319,7 +319,7 @@ namespace GitUI.BranchTreePanel
                     return;
                 }
 
-                Process.Start(_remote.FetchUrl);
+                OsShellUtil.OpenUrlInDefaultBrowser(_remote.FetchUrl);
             }
 
             public bool IsRemoteUrlUsingHttp => _remote.FetchUrl.IsUrlUsingHttp();

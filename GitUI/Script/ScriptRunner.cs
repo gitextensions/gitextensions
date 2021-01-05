@@ -154,7 +154,7 @@ namespace GitUI.Script
             {
                 if (originalCommand.Equals("{openurl}", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    Process.Start(argument);
+                    OsShellUtil.OpenUrlInDefaultBrowser(argument);
                 }
                 else
                 {

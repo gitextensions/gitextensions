@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -71,7 +70,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void linkGitRevParse_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"https://git-scm.com/docs/git-rev-parse#_specifying_revisions");
+            OsShellUtil.OpenUrlInDefaultBrowser(@"https://git-scm.com/docs/git-rev-parse#_specifying_revisions");
         }
 
         private Task LoadTagsAsync()
