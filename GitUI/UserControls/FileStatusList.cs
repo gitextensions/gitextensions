@@ -803,24 +803,12 @@ namespace GitUI
             var submoduleName = SelectedItem.Item.Name;
 
             var status = await SelectedItem.Item.GetSubmoduleStatusAsync().ConfigureAwait(false);
-            var selected = SelectedItem.SecondRevision.ObjectId == ObjectId.WorkTreeId
-                ? SelectedItem.SecondRevision.ObjectId.ToString()
-                : status?.Commit.ToString() ?? string.Empty;
-            var first = string.IsNullOrWhiteSpace(status?.OldCommit?.ToString())
-                ? string.Empty
-                : $",{status.OldCommit}";
+            ObjectId selectedId = SelectedItem.SecondRevision?.ObjectId == ObjectId.WorkTreeId
+                ? ObjectId.WorkTreeId
+                : status?.Commit;
+            ObjectId firstId = status?.OldCommit;
 
-            var process = new Process
-            {
-                StartInfo =
-                {
-                    FileName = Application.ExecutablePath,
-                    Arguments = $"browse -commit={selected}{first}",
-                    WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator())
-                }
-            };
-
-            process.Start();
+            GitUICommands.LaunchBrowse(workingDir: _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator()), selectedId, firstId);
         }
 
         private void SelectItems(Func<ListViewItem, bool> predicate)
