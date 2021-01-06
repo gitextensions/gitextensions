@@ -2091,23 +2091,6 @@ namespace GitUI
 
         #region Artificial commit change counters
 
-        public class ChangeCount
-        {
-            // Count for artificial commits
-            public IReadOnlyList<GitItemStatus> Changed { get; set; }
-            public IReadOnlyList<GitItemStatus> New { get; set; }
-            public IReadOnlyList<GitItemStatus> Deleted { get; set; }
-            public IReadOnlyList<GitItemStatus> SubmodulesChanged { get; set; }
-            public IReadOnlyList<GitItemStatus> SubmodulesDirty { get; set; }
-
-            public bool HasChanges
-                => (Changed?.Count ?? 0) > 0
-                   || (New?.Count ?? 0) > 0
-                   || (Deleted?.Count ?? 0) > 0
-                   || (SubmodulesChanged?.Count ?? 0) > 0
-                   || (SubmodulesDirty?.Count ?? 0) > 0;
-        }
-
         [CanBeNull]
         public ChangeCount GetChangeCount(ObjectId objectId)
         {
@@ -2136,14 +2119,12 @@ namespace GitUI
 
             if (workTreeRev is not null)
             {
-                var items = status.Where(item => item.Staged == StagedStatus.WorkTree);
-                UpdateChangeCount(ObjectId.WorkTreeId, items.ToList());
+                UpdateChangeCount(ObjectId.WorkTreeId, status);
             }
 
             if (indexRev is not null)
             {
-                var items = status.Where(item => item.Staged == StagedStatus.Index);
-                UpdateChangeCount(ObjectId.IndexId, items.ToList());
+                UpdateChangeCount(ObjectId.IndexId, status);
             }
 
             // cache the status for a refresh
@@ -2152,17 +2133,14 @@ namespace GitUI
             _gridView.Invalidate();
             return;
 
-            void UpdateChangeCount(ObjectId objectId, IReadOnlyList<GitItemStatus> items)
+            void UpdateChangeCount(ObjectId objectId, IReadOnlyList<GitItemStatus> status)
             {
+                Debug.Assert(objectId == ObjectId.WorkTreeId || objectId == ObjectId.IndexId,
+                    $"Unexpected Git object id {objectId}");
                 var changeCount = GetChangeCount(objectId);
-                if (changeCount is not null)
-                {
-                    changeCount.Changed = items.Where(item => !item.IsNew && !item.IsDeleted && !item.IsSubmodule).ToList();
-                    changeCount.New = items.Where(item => item.IsNew && !item.IsSubmodule).ToList();
-                    changeCount.Deleted = items.Where(item => item.IsDeleted && !item.IsSubmodule).ToList();
-                    changeCount.SubmodulesChanged = items.Where(item => item.IsSubmodule && item.IsChanged).ToList();
-                    changeCount.SubmodulesDirty = items.Where(item => item.IsSubmodule && item.IsDirty).ToList();
-                }
+                var staged = objectId == ObjectId.WorkTreeId ? StagedStatus.WorkTree : StagedStatus.Index;
+                var items = status.Where(item => item.Staged == staged).ToList();
+                changeCount.UpdateChangeCount(items);
             }
         }
 

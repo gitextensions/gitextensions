@@ -141,57 +141,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                 if (stats is not null)
                 {
-                    void Append(IReadOnlyList<GitItemStatus> items, string singular)
-                    {
-                        if (items is null || items.Count == 0)
-                        {
-                            return;
-                        }
-
-                        if (_toolTipBuilder.Length != 0)
-                        {
-                            _toolTipBuilder.AppendLine();
-                        }
-
-                        _toolTipBuilder.Append(items.Count).Append(' ');
-
-                        if (items.Count == 1)
-                        {
-                            _toolTipBuilder.AppendLine(singular);
-                        }
-                        else
-                        {
-                            _toolTipBuilder.Append(singular).AppendLine("s");
-                        }
-
-                        const int maxItems = 5;
-
-                        for (var i = 0; i < maxItems && i < items.Count; i++)
-                        {
-                            _toolTipBuilder.Append("- ").AppendLine(items[i].Name);
-                        }
-
-                        if (items.Count > maxItems)
-                        {
-                            var unlistedCount = items.Count - maxItems;
-                            _toolTipBuilder.Append("- (").Append(unlistedCount).Append(" more file");
-                            if (unlistedCount != 1)
-                            {
-                                _toolTipBuilder.Append('s');
-                            }
-
-                            _toolTipBuilder.Append(')').AppendLine();
-                        }
-                    }
-
-                    // TODO use translation strings here
-                    Append(stats.Changed, "changed file");
-                    Append(stats.Deleted, "deleted file");
-                    Append(stats.New, "new file");
-                    Append(stats.SubmodulesChanged, "changed submodule");
-                    Append(stats.SubmodulesDirty, "dirty submodule");
-
-                    toolTip = _toolTipBuilder.ToString();
+                    toolTip = _toolTipBuilder.Append(stats.GetSummary()).ToString();
                     return true;
                 }
             }
