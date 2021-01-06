@@ -134,6 +134,19 @@ namespace GitUI.BranchTreePanel
                     TreeViewNode.NodeFont = new Font(AppSettings.Font, FontStyle.Bold);
                 }
 
+                if (Info.Detailed?.RawStatus is not null)
+                {
+                    // Prefer submodule status, shows ahead/behind
+                    TreeViewNode.ToolTipText = LocalizationHelpers.ProcessSubmoduleStatus(
+                        new GitModule(Info.Path),
+                        Info.Detailed.RawStatus,
+                        moduleIsParent: false);
+                }
+                else
+                {
+                    TreeViewNode.ToolTipText = DisplayText();
+                }
+
                 TreeViewNode.ImageKey = GetSubmoduleItemImage(Info.Detailed);
                 TreeViewNode.SelectedImageKey = TreeViewNode.ImageKey;
 

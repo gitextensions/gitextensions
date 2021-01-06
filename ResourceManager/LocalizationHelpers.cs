@@ -120,7 +120,7 @@ namespace ResourceManager
             return ProcessSubmoduleStatus(module, status);
         }
 
-        public static string ProcessSubmoduleStatus([NotNull] GitModule module, [NotNull] GitSubmoduleStatus status)
+        public static string ProcessSubmoduleStatus([NotNull] GitModule module, [NotNull] GitSubmoduleStatus status, bool moduleIsParent = true)
         {
             if (module is null)
             {
@@ -132,7 +132,7 @@ namespace ResourceManager
                 throw new ArgumentNullException(nameof(status));
             }
 
-            GitModule gitModule = module.GetSubmodule(status.Name);
+            GitModule gitModule = moduleIsParent ? module.GetSubmodule(status.Name) : module;
             var sb = new StringBuilder();
             sb.AppendLine("Submodule " + status.Name + " Change");
 
