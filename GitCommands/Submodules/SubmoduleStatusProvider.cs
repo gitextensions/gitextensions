@@ -152,7 +152,15 @@ namespace GitCommands.Submodules
                 cancelToken.ThrowIfCancellationRequested();
             }
 
+            _submoduleInfoResult.CurrentSubmoduleStatus = gitStatus;
+
             TimeSpan remaining = _previousSubmoduleUpdateTime - DateTime.Now.AddSeconds(-MinRefreshInterval);
+            const int extraStatusRefreshLimit = 1;
+            if (!forceUpdate && remaining.TotalSeconds > extraStatusRefreshLimit)
+            {
+                OnStatusUpdated(_submoduleInfoResult, cancelToken);
+            }
+
             if (!forceUpdate && remaining > TimeSpan.Zero)
             {
                 await Task.Delay(remaining, cancelToken);
