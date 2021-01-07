@@ -133,10 +133,8 @@ namespace GitUI.NBugReports
 
         private void ExceptionDetailsListView_DoubleClick(object sender, EventArgs e)
         {
-            using (var detailView = new ExceptionDetailView())
-            {
-                detailView.ShowDialog(exceptionDetailsListView.SelectedItems[0].Text, exceptionDetailsListView.SelectedItems[0].SubItems[1].Text);
-            }
+            using var detailView = new ExceptionDetailView();
+            detailView.ShowDialog(exceptionDetailsListView.SelectedItems[0].Text, exceptionDetailsListView.SelectedItems[0].SubItems[1].Text);
         }
 
         private void ExceptionDetailsListView_ItemMouseHover(object sender, ListViewItemMouseHoverEventArgs e)

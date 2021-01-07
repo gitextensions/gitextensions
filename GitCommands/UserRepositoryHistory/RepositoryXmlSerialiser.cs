@@ -30,12 +30,10 @@ namespace GitCommands.UserRepositoryHistory
             try
             {
                 var serializer = new XmlSerializer(typeof(RepositoryHistorySurrogate));
-                using (TextReader reader = new StringReader(serialised))
+                using TextReader reader = new StringReader(serialised);
+                if (serializer.Deserialize(reader) is RepositoryHistorySurrogate obj)
                 {
-                    if (serializer.Deserialize(reader) is RepositoryHistorySurrogate obj)
-                    {
-                        return obj.Repositories;
-                    }
+                    return obj.Repositories;
                 }
             }
             catch (Exception ex)
@@ -64,14 +62,12 @@ namespace GitCommands.UserRepositoryHistory
             try
             {
                 var surrogate = new RepositoryHistorySurrogate(repositories);
-                using (var sw = new StringWriter())
-                {
-                    var serializer = new XmlSerializer(typeof(RepositoryHistorySurrogate));
-                    var ns = new XmlSerializerNamespaces();
-                    ns.Add(string.Empty, string.Empty);
-                    serializer.Serialize(sw, surrogate, ns);
-                    return sw.ToString();
-                }
+                using var sw = new StringWriter();
+                var serializer = new XmlSerializer(typeof(RepositoryHistorySurrogate));
+                var ns = new XmlSerializerNamespaces();
+                ns.Add(string.Empty, string.Empty);
+                serializer.Serialize(sw, surrogate, ns);
+                return sw.ToString();
             }
             catch (Exception ex)
             {

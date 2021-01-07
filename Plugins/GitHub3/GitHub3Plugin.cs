@@ -119,10 +119,9 @@ namespace GitHub3
             if (string.IsNullOrEmpty(GitHubLoginInfo.OAuthToken))
             {
                 var authorizationApiUrl = new Uri(new Uri(GitHubApiEndpoint), GitHubAuthorizationRelativeUrl).ToString();
-                using (var gitHubCredentialsPrompt = new GitHubCredentialsPrompt(authorizationApiUrl))
-                {
-                    gitHubCredentialsPrompt.ShowDialog(args.OwnerForm);
-                }
+                using var gitHubCredentialsPrompt = new GitHubCredentialsPrompt(authorizationApiUrl);
+
+                gitHubCredentialsPrompt.ShowDialog(args.OwnerForm);
             }
             else
             {

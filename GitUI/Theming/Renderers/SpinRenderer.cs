@@ -11,19 +11,17 @@ namespace GitUI.Theming
         public override int RenderBackground(IntPtr hdc, int partId, int stateId, Rectangle prect,
             NativeMethods.RECTCLS pcliprect)
         {
-            using (var ctx = CreateRenderContext(hdc, pcliprect))
+            using var ctx = CreateRenderContext(hdc, pcliprect);
+            switch ((Parts)partId)
             {
-                switch ((Parts)partId)
-                {
-                    case Parts.SPNP_UP:
-                        return RenderUpButton(ctx, stateId, prect);
+                case Parts.SPNP_UP:
+                    return RenderUpButton(ctx, stateId, prect);
 
-                    case Parts.SPNP_DOWN:
-                        return RenderDownButton(ctx, stateId, prect);
+                case Parts.SPNP_DOWN:
+                    return RenderDownButton(ctx, stateId, prect);
 
-                    default:
-                        return Unhandled;
-                }
+                default:
+                    return Unhandled;
             }
         }
 
@@ -143,9 +141,9 @@ namespace GitUI.Theming
             Point[] arrowPolygon)
         {
             ctx.Graphics.FillRectangle(backBrush, prect);
-            using (var pen = new Pen(foreColor, DpiUtil.Scale(2)))
             using (ctx.HighQuality())
             {
+                using var pen = new Pen(foreColor, DpiUtil.Scale(2));
                 ctx.Graphics.DrawLines(pen, arrowPolygon);
             }
         }

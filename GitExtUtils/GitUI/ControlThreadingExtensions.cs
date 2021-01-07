@@ -14,11 +14,9 @@ namespace GitUI
 
         static ControlThreadingExtensions()
         {
-            using (var cts = new CancellationTokenSource())
-            {
-                cts.Cancel();
-                _preCancelledToken = cts.Token;
-            }
+            using var cts = new CancellationTokenSource();
+            cts.Cancel();
+            _preCancelledToken = cts.Token;
 
             _controlDisposed = new ConditionalWeakTable<IComponent, StrongBox<CancellationToken>>();
         }

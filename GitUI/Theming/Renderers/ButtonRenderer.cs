@@ -164,10 +164,10 @@ namespace GitUI.Theming
                         new Point(x3, y1),
                     };
                     using (var checkPen = new Pen(foreColor, DpiUtil.Scale(1.5f)))
-                    using (ctx.HighQuality())
-                    {
-                        ctx.Graphics.DrawLines(checkPen, points);
-                    }
+                        using (ctx.HighQuality())
+                        {
+                            ctx.Graphics.DrawLines(checkPen, points);
+                        }
 
                     break;
             }

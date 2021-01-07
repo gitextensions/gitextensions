@@ -110,37 +110,35 @@ namespace GitCommands
                 return ComposeOutput();
             }
 
-            using (var process = executable.Start(
+            using var process = executable.Start(
                 arguments,
                 createWindow: false,
                 redirectInput: input != null,
                 redirectOutput: true,
-                outputEncoding))
+                outputEncoding);
+            if (input != null)
             {
-                if (input != null)
-                {
-                    await process.StandardInput.BaseStream.WriteAsync(input, 0, input.Length);
-                    process.StandardInput.Close();
-                }
-
-                var outputBuffer = new MemoryStream();
-                var errorBuffer = new MemoryStream();
-                var outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);
-                var errorTask = process.StandardError.BaseStream.CopyToAsync(errorBuffer);
-                var exitTask = process.WaitForExitAsync();
-
-                await Task.WhenAll(outputTask, errorTask, exitTask);
-
-                output = outputBuffer.ToArray();
-                error = errorBuffer.ToArray();
-
-                if (cache != null && await exitTask == 0)
-                {
-                    cache.Add(arguments, output, error);
-                }
-
-                return ComposeOutput();
+                await process.StandardInput.BaseStream.WriteAsync(input, 0, input.Length);
+                process.StandardInput.Close();
             }
+
+            var outputBuffer = new MemoryStream();
+            var errorBuffer = new MemoryStream();
+            var outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);
+            var errorTask = process.StandardError.BaseStream.CopyToAsync(errorBuffer);
+            var exitTask = process.WaitForExitAsync();
+
+            await Task.WhenAll(outputTask, errorTask, exitTask);
+
+            output = outputBuffer.ToArray();
+            error = errorBuffer.ToArray();
+
+            if (cache != null && await exitTask == 0)
+            {
+                cache.Add(arguments, output, error);
+            }
+
+            return ComposeOutput();
 
             string ComposeOutput()
             {
@@ -224,16 +222,14 @@ namespace GitCommands
             byte[] input = null,
             bool createWindow = false)
         {
-            using (var process = executable.Start(arguments, createWindow: createWindow, redirectInput: input != null))
+            using var process = executable.Start(arguments, createWindow: createWindow, redirectInput: input != null);
+            if (input != null)
             {
-                if (input != null)
-                {
-                    await process.StandardInput.BaseStream.WriteAsync(input, 0, input.Length);
-                    process.StandardInput.Close();
-                }
-
-                return await process.WaitForExitAsync() == 0;
+                await process.StandardInput.BaseStream.WriteAsync(input, 0, input.Length);
+                process.StandardInput.Close();
             }
+
+            return await process.WaitForExitAsync() == 0;
         }
 
         /// <summary>
@@ -258,40 +254,38 @@ namespace GitCommands
                 outputEncoding = _defaultOutputEncoding.Value;
             }
 
-            using (var process = executable.Start(arguments, createWindow: false, redirectInput: input != null, redirectOutput: true, outputEncoding))
+            using var process = executable.Start(arguments, createWindow: false, redirectInput: input != null, redirectOutput: true, outputEncoding);
+            if (input != null)
             {
-                if (input != null)
-                {
-                    process.StandardInput.BaseStream.Write(input, 0, input.Length);
-                    process.StandardInput.Close();
-                }
-
-                while (true)
-                {
-                    var line = process.StandardOutput.ReadLine();
-
-                    if (line == null)
-                    {
-                        break;
-                    }
-
-                    yield return CleanString(stripAnsiEscapeCodes, line);
-                }
-
-                while (true)
-                {
-                    var line = process.StandardError.ReadLine();
-
-                    if (line == null)
-                    {
-                        break;
-                    }
-
-                    yield return CleanString(stripAnsiEscapeCodes, line);
-                }
-
-                process.WaitForExit();
+                process.StandardInput.BaseStream.Write(input, 0, input.Length);
+                process.StandardInput.Close();
             }
+
+            while (true)
+            {
+                var line = process.StandardOutput.ReadLine();
+
+                if (line == null)
+                {
+                    break;
+                }
+
+                yield return CleanString(stripAnsiEscapeCodes, line);
+            }
+
+            while (true)
+            {
+                var line = process.StandardError.ReadLine();
+
+                if (line == null)
+                {
+                    break;
+                }
+
+                yield return CleanString(stripAnsiEscapeCodes, line);
+            }
+
+            process.WaitForExit();
         }
 
         /// <summary>
@@ -362,34 +356,32 @@ namespace GitCommands
                 outputEncoding = _defaultOutputEncoding.Value;
             }
 
-            using (var process = executable.Start(arguments, createWindow: false, redirectInput: writeInput != null, redirectOutput: true, outputEncoding))
+            using var process = executable.Start(arguments, createWindow: false, redirectInput: writeInput != null, redirectOutput: true, outputEncoding);
+            var outputBuffer = new MemoryStream();
+            var errorBuffer = new MemoryStream();
+            var outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);
+            var errorTask = process.StandardError.BaseStream.CopyToAsync(errorBuffer);
+
+            if (writeInput != null)
             {
-                var outputBuffer = new MemoryStream();
-                var errorBuffer = new MemoryStream();
-                var outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);
-                var errorTask = process.StandardError.BaseStream.CopyToAsync(errorBuffer);
-
-                if (writeInput != null)
-                {
-                    // TODO do we want to make this async?
-                    writeInput(process.StandardInput);
-                    process.StandardInput.Close();
-                }
-
-                var exitTask = process.WaitForExitAsync();
-
-                await Task.WhenAll(outputTask, errorTask, exitTask);
-
-                var output = outputEncoding.GetString(outputBuffer.GetBuffer(), 0, (int)outputBuffer.Length);
-                var error = outputEncoding.GetString(errorBuffer.GetBuffer(), 0, (int)errorBuffer.Length);
-
-                var exitCode = await process.WaitForExitAsync();
-
-                return new ExecutionResult(
-                    CleanString(stripAnsiEscapeCodes, output),
-                    CleanString(stripAnsiEscapeCodes, error),
-                    exitCode);
+                // TODO do we want to make this async?
+                writeInput(process.StandardInput);
+                process.StandardInput.Close();
             }
+
+            var exitTask = process.WaitForExitAsync();
+
+            await Task.WhenAll(outputTask, errorTask, exitTask);
+
+            var output = outputEncoding.GetString(outputBuffer.GetBuffer(), 0, (int)outputBuffer.Length);
+            var error = outputEncoding.GetString(errorBuffer.GetBuffer(), 0, (int)errorBuffer.Length);
+
+            var exitCode = await process.WaitForExitAsync();
+
+            return new ExecutionResult(
+                CleanString(stripAnsiEscapeCodes, output),
+                CleanString(stripAnsiEscapeCodes, error),
+                exitCode);
         }
 
         [Pure]

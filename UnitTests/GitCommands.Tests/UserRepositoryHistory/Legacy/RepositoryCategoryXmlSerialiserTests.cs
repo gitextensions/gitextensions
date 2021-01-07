@@ -95,14 +95,12 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
             };
 
             string xml;
-            using (var sw = new StringWriter())
-            {
-                var serializer = new XmlSerializer(typeof(List<RepositoryCategory>));
-                var ns = new XmlSerializerNamespaces();
-                ns.Add(string.Empty, string.Empty);
-                serializer.Serialize(sw, surrogate, ns);
-                xml = sw.ToString();
-            }
+            using var sw = new StringWriter();
+            var serializer = new XmlSerializer(typeof(List<RepositoryCategory>));
+            var ns = new XmlSerializerNamespaces();
+            ns.Add(string.Empty, string.Empty);
+            serializer.Serialize(sw, surrogate, ns);
+            xml = sw.ToString();
 
             Approvals.VerifyXml(xml);
         }

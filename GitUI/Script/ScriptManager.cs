@@ -90,11 +90,9 @@ namespace GitUI.Script
 
             try
             {
-                using (var stringReader = new StringReader(xml))
-                using (var xmlReader = new XmlTextReader(stringReader))
-                {
-                    return (BindingList<ScriptInfo>)_serializer.Deserialize(xmlReader);
-                }
+                using var stringReader = new StringReader(xml);
+                using var xmlReader = new XmlTextReader(stringReader);
+                return (BindingList<ScriptInfo>)_serializer.Deserialize(xmlReader);
             }
             catch (Exception ex)
             {

@@ -29,73 +29,63 @@ namespace GitUITests
         [Test]
         public async Task FileAndForgetReportsThreadException()
         {
-            using (var helper = new ThreadExceptionHelper())
-            {
-                var ex = new Exception();
+            using var helper = new ThreadExceptionHelper();
+            var ex = new Exception();
 
-                ThrowExceptionAsync(ex).FileAndForget();
+            ThrowExceptionAsync(ex).FileAndForget();
 
-                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
-                Assert.AreSame(ex, helper.Exception);
-            }
+            await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+            Assert.AreSame(ex, helper.Exception);
         }
 
         [Test]
         public async Task FileAndForgetIgnoresCancellationExceptions()
         {
-            using (var helper = new ThreadExceptionHelper())
-            {
-                var form = new Form();
-                form.Dispose();
+            using var helper = new ThreadExceptionHelper();
+            var form = new Form();
+            form.Dispose();
 
-                YieldOntoControlMainThreadAsync(form).FileAndForget();
+            YieldOntoControlMainThreadAsync(form).FileAndForget();
 
-                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
-                Assert.Null(helper.Exception, helper.Message);
-            }
+            await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+            Assert.Null(helper.Exception, helper.Message);
         }
 
         [Test]
         public async Task FileAndForgetFilterCanAllowExceptions()
         {
-            using (var helper = new ThreadExceptionHelper())
-            {
-                var ex = new Exception();
+            using var helper = new ThreadExceptionHelper();
+            var ex = new Exception();
 
-                ThrowExceptionAsync(ex).FileAndForget(fileOnlyIf: e => e == ex);
+            ThrowExceptionAsync(ex).FileAndForget(fileOnlyIf: e => e == ex);
 
-                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
-                Assert.AreSame(ex, helper.Exception);
-            }
+            await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+            Assert.AreSame(ex, helper.Exception);
         }
 
         [Test]
         public async Task FileAndForgetFilterCanIgnoreExceptions()
         {
-            using (var helper = new ThreadExceptionHelper())
-            {
-                var ex = new Exception();
+            using var helper = new ThreadExceptionHelper();
+            var ex = new Exception();
 
-                ThrowExceptionAsync(ex).FileAndForget(fileOnlyIf: e => e != ex);
+            ThrowExceptionAsync(ex).FileAndForget(fileOnlyIf: e => e != ex);
 
-                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
-                Assert.Null(helper.Exception, helper.Message);
-            }
+            await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+            Assert.Null(helper.Exception, helper.Message);
         }
 
         [Test]
         public async Task FileAndForgetFilterIgnoresCancellationExceptions()
         {
-            using (var helper = new ThreadExceptionHelper())
-            {
-                var form = new Form();
-                form.Dispose();
+            using var helper = new ThreadExceptionHelper();
+            var form = new Form();
+            form.Dispose();
 
-                YieldOntoControlMainThreadAsync(form).FileAndForget(fileOnlyIf: ex => true);
+            YieldOntoControlMainThreadAsync(form).FileAndForget(fileOnlyIf: ex => true);
 
-                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
-                Assert.Null(helper.Exception, helper.Message);
-            }
+            await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+            Assert.Null(helper.Exception, helper.Message);
         }
 
         [Test]

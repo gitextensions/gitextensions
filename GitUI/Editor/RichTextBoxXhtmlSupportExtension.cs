@@ -1250,13 +1250,11 @@ namespace GitUI.Editor.RichTextBoxExtension
 
             try
             {
-                using (var stringreader = new StringReader(EscapeNonXMLChars(xhtmlText)))
+                using var stringreader = new StringReader(EscapeNonXMLChars(xhtmlText));
+                XmlReader reader = XmlReader.Create(stringreader, settings);
+                while (reader.Read())
                 {
-                    XmlReader reader = XmlReader.Create(stringreader, settings);
-                    while (reader.Read())
-                    {
-                        ProcessNode(rtb, handleRef, reader, cs);
-                    }
+                    ProcessNode(rtb, handleRef, reader, cs);
                 }
             }
             catch (XmlException ex)
@@ -1560,27 +1558,25 @@ namespace GitUI.Editor.RichTextBoxExtension
 
             try
             {
-                using (var strReader = new StringReader(xhtmlText))
+                using var strReader = new StringReader(xhtmlText);
+                XmlReader reader = XmlReader.Create(strReader, settings);
+                while (reader.Read())
                 {
-                    XmlReader reader = XmlReader.Create(strReader, settings);
-                    while (reader.Read())
+                    switch (reader.NodeType)
                     {
-                        switch (reader.NodeType)
-                        {
-                            case XmlNodeType.Text:
-                            case XmlNodeType.Whitespace:
-                            case XmlNodeType.SignificantWhitespace:
-                                rtb.SelectedText = reader.Value;
-                                break;
-                            case XmlNodeType.Element:
-                            case XmlNodeType.EndElement:
-                                break;
-                            case XmlNodeType.XmlDeclaration:
-                            case XmlNodeType.ProcessingInstruction:
-                                break;
-                            case XmlNodeType.Comment:
-                                break;
-                        }
+                        case XmlNodeType.Text:
+                        case XmlNodeType.Whitespace:
+                        case XmlNodeType.SignificantWhitespace:
+                            rtb.SelectedText = reader.Value;
+                            break;
+                        case XmlNodeType.Element:
+                        case XmlNodeType.EndElement:
+                            break;
+                        case XmlNodeType.XmlDeclaration:
+                        case XmlNodeType.ProcessingInstruction:
+                            break;
+                        case XmlNodeType.Comment:
+                            break;
                     }
                 }
             }

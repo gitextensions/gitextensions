@@ -30,10 +30,8 @@ namespace ProxySwitcher
 
         public override bool Execute(GitUIEventArgs args)
         {
-            using (var form = new ProxySwitcherForm(this, Settings, args))
-            {
-                form.ShowDialog(args.OwnerForm);
-            }
+            using var form = new ProxySwitcherForm(this, Settings, args);
+            form.ShowDialog(args.OwnerForm);
 
             return false;
         }

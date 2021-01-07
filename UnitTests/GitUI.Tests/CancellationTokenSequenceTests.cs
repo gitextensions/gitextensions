@@ -117,64 +117,62 @@ namespace GitUITests
             var logicalProcessorCount = Environment.ProcessorCount;
             var threadCount = Math.Max(2, logicalProcessorCount);
 
-            using (var sequence = new CancellationTokenSequence())
-            using (var barrier = new Barrier(threadCount))
-            using (var countdown = new CountdownEvent(loopCount * threadCount))
+            using var sequence = new CancellationTokenSequence();
+            using var barrier = new Barrier(threadCount);
+            using var countdown = new CountdownEvent(loopCount * threadCount);
+            var completedCount = 0;
+
+            var completionTokenSource = new CancellationTokenSource();
+            var completionToken = completionTokenSource.Token;
+            var winnerByIndex = new int[threadCount];
+
+            var tasks = Enumerable
+                .Range(0, threadCount)
+                .Select(i => Task.Run(() => ThreadMethod(i)))
+                .ToList();
+
+            Assert.True(
+                countdown.Wait(TimeSpan.FromSeconds(10)),
+                "Test should have completed within a reasonable amount of time");
+
+            await Task.WhenAll(tasks);
+
+            Assert.AreEqual(loopCount, completedCount);
+
+            await Console.Out.WriteLineAsync("Winner by index: " + string.Join(",", winnerByIndex));
+
+            // Assume hyper threading, so halve logical processors (could use WMI or P/Invoke for more robust answer)
+            if (logicalProcessorCount <= 2)
             {
-                var completedCount = 0;
+                Assert.Inconclusive("This test requires more than one physical processor to run.");
+            }
 
-                var completionTokenSource = new CancellationTokenSource();
-                var completionToken = completionTokenSource.Token;
-                var winnerByIndex = new int[threadCount];
+            return;
 
-                var tasks = Enumerable
-                    .Range(0, threadCount)
-                    .Select(i => Task.Run(() => ThreadMethod(i)))
-                    .ToList();
-
-                Assert.True(
-                    countdown.Wait(TimeSpan.FromSeconds(10)),
-                    "Test should have completed within a reasonable amount of time");
-
-                await Task.WhenAll(tasks);
-
-                Assert.AreEqual(loopCount, completedCount);
-
-                await Console.Out.WriteLineAsync("Winner by index: " + string.Join(",", winnerByIndex));
-
-                // Assume hyper threading, so halve logical processors (could use WMI or P/Invoke for more robust answer)
-                if (logicalProcessorCount <= 2)
+            void ThreadMethod(int i)
+            {
+                while (true)
                 {
-                    Assert.Inconclusive("This test requires more than one physical processor to run.");
-                }
+                    barrier.SignalAndWait();
 
-                return;
-
-                void ThreadMethod(int i)
-                {
-                    while (true)
+                    if (completionToken.IsCancellationRequested)
                     {
-                        barrier.SignalAndWait();
+                        return;
+                    }
 
-                        if (completionToken.IsCancellationRequested)
-                        {
-                            return;
-                        }
+                    var token = sequence.Next();
 
-                        var token = sequence.Next();
+                    barrier.SignalAndWait();
 
-                        barrier.SignalAndWait();
+                    if (!token.IsCancellationRequested)
+                    {
+                        Interlocked.Increment(ref completedCount);
+                        Interlocked.Increment(ref winnerByIndex[i]);
+                    }
 
-                        if (!token.IsCancellationRequested)
-                        {
-                            Interlocked.Increment(ref completedCount);
-                            Interlocked.Increment(ref winnerByIndex[i]);
-                        }
-
-                        if (countdown.Signal())
-                        {
-                            completionTokenSource.Cancel();
-                        }
+                    if (countdown.Signal())
+                    {
+                        completionTokenSource.Cancel();
                     }
                 }
             }

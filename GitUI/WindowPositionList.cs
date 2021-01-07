@@ -73,10 +73,8 @@ namespace GitUI
 
             try
             {
-                using (var stream = File.Open(ConfigFilePath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite))
-                {
-                    return (WindowPositionList)_serializer.Deserialize(stream);
-                }
+                using var stream = File.Open(ConfigFilePath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite);
+                return (WindowPositionList)_serializer.Deserialize(stream);
             }
             catch
             {
@@ -86,10 +84,8 @@ namespace GitUI
 
         public void Save()
         {
-            using (var stream = File.Open(ConfigFilePath, FileMode.Create, FileAccess.Write))
-            {
-                _serializer.Serialize(stream, this);
-            }
+            using var stream = File.Open(ConfigFilePath, FileMode.Create, FileAccess.Write);
+            _serializer.Serialize(stream, this);
         }
     }
 }
