@@ -662,17 +662,13 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                if (!string.IsNullOrEmpty(_mergetoolPath) && !PathUtil.TryFindFullPath(_mergetoolPath, out string fullPath))
+                if (!PathUtil.TryFindFullPath(_mergetoolPath, out string fullPath))
                 {
                     MessageBox.Show(this, _noMergeToolConfigured.Text, Strings.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return false;
                 }
-                else
-                {
-                    fullPath = string.Empty;
-                }
 
-                _mergetoolPath = fullPath ?? string.Empty;
+                _mergetoolPath = fullPath;
             }
 
             return true;

@@ -259,7 +259,7 @@ namespace GitCommands
 
         [ContractAnnotation("=>false,fullPath:null")]
         [ContractAnnotation("=>true,fullPath:notnull")]
-        public static bool TryFindFullPath([NotNull] string fileName, out string fullPath)
+        public static bool TryFindFullPath([CanBeNull] string fileName, out string fullPath)
         {
             try
             {
