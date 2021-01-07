@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using GitCommands;
@@ -169,7 +168,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void LlblTelemetryPrivacyLink_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://github.com/gitextensions/gitextensions/blob/master/PrivacyPolicy.md");
+            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/blob/master/PrivacyPolicy.md");
         }
 
         private void lblCommitsLimit_CheckedChanged(object sender, EventArgs e)

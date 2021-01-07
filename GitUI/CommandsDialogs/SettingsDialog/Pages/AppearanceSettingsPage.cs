@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -209,17 +208,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"https://github.com/gitextensions/gitextensions/wiki/Translations");
+            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/wiki/Translations");
         }
 
         private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"https://github.com/gitextensions/gitextensions/wiki/Spelling");
+            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/wiki/Spelling");
         }
 
         private void pictureAvatarHelp_Click(object sender, EventArgs e)
         {
-            Process.Start(@"http://en.gravatar.com/site/implement/images#default-image");
+            OsShellUtil.OpenUrlInDefaultBrowser(@"http://en.gravatar.com/site/implement/images#default-image");
         }
 
         private void AvatarProvider_SelectedIndexChanged(object sender, EventArgs e)

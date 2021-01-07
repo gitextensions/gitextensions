@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -340,7 +339,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
             else
             {
-                Process.Start(CurrentySelectedGitRepo.Homepage);
+                OsShellUtil.OpenUrlInDefaultBrowser(CurrentySelectedGitRepo.Homepage);
             }
         }
 

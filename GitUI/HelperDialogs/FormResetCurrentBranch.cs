@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Commands;
@@ -147,7 +146,7 @@ namespace GitUI.HelperDialogs
                 helpSection = "--hard";
             }
 
-            Process.Start($"https://git-scm.com/docs/git-reset#Documentation/git-reset.txt-{helpSection}");
+            OsShellUtil.OpenUrlInDefaultBrowser(@$"https://git-scm.com/docs/git-reset#Documentation/git-reset.txt-{helpSection}");
         }
     }
 }

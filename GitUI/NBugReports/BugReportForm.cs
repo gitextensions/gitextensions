@@ -8,7 +8,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -138,7 +137,7 @@ Send report anyway?");
             }
 
             string url = UrlBuilder.Build("https://github.com/gitextensions/gitextensions/issues/new", _lastException.OriginalException, _environmentInfo, descriptionTextBox.Text);
-            Process.Start(url);
+            OsShellUtil.OpenUrlInDefaultBrowser(url);
 
             DialogResult = DialogResult.Abort;
             Close();
