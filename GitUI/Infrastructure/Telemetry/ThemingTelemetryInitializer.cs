@@ -7,11 +7,11 @@ namespace GitUI.Infrastructure.Telemetry
     {
         public void Initialize(ITelemetry telemetry)
         {
-            ////var properties = telemetry.Context.GlobalProperties;
-            ////var themeSettings = Theming.ThemeModule.Settings;
-            ////properties["Theme dark"] = FlagString(themeSettings.Theme.Id.Name == "dark");
-            ////properties["Theme builtin"] = FlagString(themeSettings.Theme.Id.IsBuiltin);
-            ////properties["Theme systemstyles"] = FlagString(themeSettings.UseSystemVisualStyle);
+            var properties = telemetry.Context.GlobalProperties;
+            var themeSettings = Theming.ThemeModule.Settings;
+            properties["Theme dark"] = FlagString(themeSettings.Theme.Id.Name == "dark");
+            properties["Theme builtin"] = FlagString(themeSettings.Theme.Id.IsBuiltin);
+            properties["Theme systemstyles"] = FlagString(themeSettings.UseSystemVisualStyle);
         }
 
         private static string FlagString(bool value) =>

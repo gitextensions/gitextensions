@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor.Diff
@@ -37,13 +39,13 @@ namespace GitUI.Editor.Diff
 
                 line = TryHighlightAddedAndDeletedLines(document, line, lineSegment);
 
-                ////ProcessLineSegment(document, ref line, lineSegment, "    ", AppColor.AuthoredHighlight.GetThemeColor(), true);
-                ////ProcessLineSegment(document, ref line, lineSegment, "    @@", AppColor.DiffSection.GetThemeColor());
-                ////ProcessLineSegment(document, ref line, lineSegment, "     @@", AppColor.DiffSection.GetThemeColor());
-                ////ProcessLineSegment(document, ref line, lineSegment, "    -@@", AppColor.DiffSection.GetThemeColor());
-                ////ProcessLineSegment(document, ref line, lineSegment, "    +@@", AppColor.DiffSection.GetThemeColor());
-                ////ProcessLineSegment(document, ref line, lineSegment, "      ## ", AppColor.DiffSection.GetThemeColor());
-                ////ProcessLineSegment(document, ref line, lineSegment, "       ##", AppColor.DiffSection.GetThemeColor());
+                ProcessLineSegment(document, ref line, lineSegment, "    ", AppColor.AuthoredHighlight.GetThemeColor(), true);
+                ProcessLineSegment(document, ref line, lineSegment, "    @@", AppColor.DiffSection.GetThemeColor());
+                ProcessLineSegment(document, ref line, lineSegment, "     @@", AppColor.DiffSection.GetThemeColor());
+                ProcessLineSegment(document, ref line, lineSegment, "    -@@", AppColor.DiffSection.GetThemeColor());
+                ProcessLineSegment(document, ref line, lineSegment, "    +@@", AppColor.DiffSection.GetThemeColor());
+                ProcessLineSegment(document, ref line, lineSegment, "      ## ", AppColor.DiffSection.GetThemeColor());
+                ProcessLineSegment(document, ref line, lineSegment, "       ##", AppColor.DiffSection.GetThemeColor());
             }
         }
 
@@ -52,14 +54,14 @@ namespace GitUI.Editor.Diff
             // part of range-diff dual-color
 
             // Only changed in selected
-            ////ProcessLineSegment(document, ref line, lineSegment, "    ++", AppColor.DiffAddedExtra.GetThemeColor());
-            ////ProcessLineSegment(document, ref line, lineSegment, "    +-", AppColor.DiffRemovedExtra.GetThemeColor());
+            ProcessLineSegment(document, ref line, lineSegment, "    ++", AppColor.DiffAddedExtra.GetThemeColor());
+            ProcessLineSegment(document, ref line, lineSegment, "    +-", AppColor.DiffRemovedExtra.GetThemeColor());
 
             // Only changed in first or same change in both
-            ////ProcessLineSegment(document, ref line, lineSegment, "    -+", AppColor.DiffAdded.GetThemeColor());
-            ////ProcessLineSegment(document, ref line, lineSegment, "    --", AppColor.DiffRemoved.GetThemeColor());
-            ////ProcessLineSegment(document, ref line, lineSegment, "     -", AppColor.DiffRemoved.GetThemeColor());
-            ////ProcessLineSegment(document, ref line, lineSegment, "     +", AppColor.DiffAdded.GetThemeColor());
+            ProcessLineSegment(document, ref line, lineSegment, "    -+", AppColor.DiffAdded.GetThemeColor());
+            ProcessLineSegment(document, ref line, lineSegment, "    --", AppColor.DiffRemoved.GetThemeColor());
+            ProcessLineSegment(document, ref line, lineSegment, "     -", AppColor.DiffRemoved.GetThemeColor());
+            ProcessLineSegment(document, ref line, lineSegment, "     +", AppColor.DiffAdded.GetThemeColor());
 
             // No highlight for lines removed in both first/selected
             return line;

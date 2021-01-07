@@ -39,6 +39,8 @@ namespace GitUITests.Theming
         private const string MockAppThemesDirectory = "c:\\gitextensions\\themes";
         private const string MockUserThemesDirectory = "c:\\appdata\\gitextensions\\themes";
 
+#if SUPPORT_THEMES
+
         [Test]
         public void Should_load_any_themable_system_color(
             [ValueSource(nameof(ThemableSystemColorNames))] KnownColor colorName,
@@ -192,6 +194,7 @@ namespace GitUITests.Theming
             var theme = loader.LoadTheme(themePath, new ThemeId("theme", isBuiltin: true), allowedClasses: ThemeVariations.None);
             theme.GetColor(colorName).ToArgb().Should().Be(colorOverride.ToArgb());
         }
+#endif
 
         [Test]
         public void Should_throw_When_cyclic_css_imports()

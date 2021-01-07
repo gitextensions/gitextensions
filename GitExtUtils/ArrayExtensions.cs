@@ -14,7 +14,7 @@ namespace GitExtUtils
         }
 
         [MustUseReturnValue]
-        public static T[] Append<T>(this T[] array, T element)
+        public static T[] AppendTo<T>(this T[] array, T element)
         {
             var larger = new T[array.Length + 1];
             Array.Copy(array, larger, array.Length);

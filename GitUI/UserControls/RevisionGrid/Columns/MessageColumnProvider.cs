@@ -7,7 +7,9 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
+using GitUI.Theming;
 using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Columns
@@ -163,7 +165,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 style.NormalFont,
                 ref offset,
                 revision.Subject,
-                Color.Red, ////AppColor.OtherTag.GetThemeColor(),
+                AppColor.OtherTag.GetThemeColor(),
                 RefArrowType.None,
                 messageBounds,
                 e.Graphics,

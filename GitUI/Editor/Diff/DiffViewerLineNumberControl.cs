@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
 using ICSharpCode.TextEditor;
 
 namespace GitUI.Editor.Diff
@@ -85,20 +87,20 @@ namespace GitUI.Editor.Diff
                 var diffLine = _diffLines[curLine + 1];
                 if (diffLine.LineType != DiffLineType.Context)
                 {
-                    var brush = SystemBrushes.ControlText; //// default(Brush);
+                    var brush = default(Brush);
                     switch (diffLine.LineType)
                     {
                         case DiffLineType.Context:
                             break;
-                        ////case DiffLineType.Plus:
-                        ////    brush = new SolidBrush(AppColor.DiffAdded.GetThemeColor());
-                        ////    break;
-                        ////case DiffLineType.Minus:
-                        ////    brush = new SolidBrush(AppColor.DiffRemoved.GetThemeColor());
-                        ////    break;
-                        ////case DiffLineType.Header:
-                        ////    brush = new SolidBrush(AppColor.DiffSection.GetThemeColor());
-                        ////    break;
+                        case DiffLineType.Plus:
+                            brush = new SolidBrush(AppColor.DiffAdded.GetThemeColor());
+                            break;
+                        case DiffLineType.Minus:
+                            brush = new SolidBrush(AppColor.DiffRemoved.GetThemeColor());
+                            break;
+                        case DiffLineType.Header:
+                            brush = new SolidBrush(AppColor.DiffSection.GetThemeColor());
+                            break;
                     }
 
                     Debug.Assert(brush is not null, string.Format("brush is not null, unknow diff line style {0}", diffLine.LineType));

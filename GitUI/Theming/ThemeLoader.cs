@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using ExCSS;
-using GitCommands;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using Color = System.Drawing.Color;
@@ -42,14 +41,17 @@ namespace GitUI.Theming
         private void LoadThemeColors(string themeFileName, string[] cssImportChain, in IReadOnlyList<string> allowedClasses, ThemeColors themeColors)
         {
             string content = _themeFileReader.ReadThemeFile(themeFileName);
-            var stylesheet = _parser.Parse(content);
+            Stylesheet stylesheet = _parser.Parse(content);
+
+#if SUPPORT_THEMES
             if (stylesheet.Errors.Count > 0)
             {
                 throw new ThemeException(
                     $"Error parsing CSS:{Environment.NewLine}{string.Join(Environment.NewLine, stylesheet.Errors)}", themeFileName);
             }
+#endif
 
-            foreach (var importDirective in stylesheet.ImportDirectives)
+            foreach (var importDirective in stylesheet.ImportRules)
             {
                 ImportTheme(themeFileName, importDirective, allowedClasses, cssImportChain, themeColors);
             }
@@ -60,7 +62,7 @@ namespace GitUI.Theming
             }
         }
 
-        private void ImportTheme(string themeFileName, ImportRule importRule, in IReadOnlyList<string> allowedClasses, string[] cssImportChain, ThemeColors themeColors)
+        private void ImportTheme(string themeFileName, IImportRule importRule, in IReadOnlyList<string> allowedClasses, string[] cssImportChain, ThemeColors themeColors)
         {
             string importFilePath;
             try
@@ -82,13 +84,14 @@ namespace GitUI.Theming
                 throw new ThemeException($"Cycling CSS import {importRule.Href}{importChainText}", themeFileName);
             }
 
-            LoadThemeColors(importFilePath, cssImportChain.Append(importFilePath), allowedClasses, themeColors);
+            LoadThemeColors(importFilePath, cssImportChain.AppendTo(importFilePath), allowedClasses, themeColors);
         }
 
         private static void ParseRule(string themeFileName, StyleRule rule, in IReadOnlyList<string> allowedClasses, ThemeColors themeColors)
         {
             var color = GetColor(themeFileName, rule);
 
+#if SUPPORT_THEMES
             var classNames = GetClassNames(themeFileName, rule);
 
             var colorName = classNames[0];
@@ -118,8 +121,10 @@ namespace GitUI.Theming
             }
 
             throw new ThemeException($"Unknown color name \"{colorName}\"", themeFileName);
+#endif
         }
 
+#if SUPPORT_THEMES
         private static string[] GetClassNames(string themeFileName, StyleRule rule)
         {
             var selector = rule.Selector;
@@ -138,25 +143,47 @@ namespace GitUI.Theming
                 .Substring(ClassSelector.Length)
                 .Split(new[] { ClassSelector }, StringSplitOptions.RemoveEmptyEntries);
         }
+#endif
 
         private static Color GetColor(string themeFileName, StyleRule rule)
         {
-            if (rule.Declarations is null || rule.Declarations.Count != 1)
+            string cssColorValue = rule.Style.Color;
+            if (string.IsNullOrWhiteSpace(cssColorValue) || !cssColorValue.StartsWith("rgb("))
             {
                 throw StyleRuleThemeException(rule, themeFileName);
             }
 
-            var style = rule.Declarations[0];
-            if (style.Name != ColorProperty || !(style.Term is HtmlColor htmlColor))
+            // Wish we could write the following:
+            //
+            //      Property colorProperty = rule.Style.Declarations.FirstOrDefault(d => d.Name == ColorProperty);
+            //      Color color = ColorTranslator.FromHtml(colorProperty.DeclaredValue.Original.Text);
+            //
+            // colorProperty.DeclaredValue.Original.Text contains the required information, e.g. #f9f9f9
+            // but none of the properties nor types are public, thus leaving us with either atempting to
+            // access the data via the reflection, or parsing the raw text.
+            // Prefer the latter option - less magic.
+
+            // cssColorValue is something like 'rgb(180, 180, 180)'
+            int[] rgbValues = cssColorValue.Split('(', ')', ',')
+                .Select(sa => new
+                {
+                    Success = int.TryParse(sa, out int value),
+                    Value = value
+                })
+                .Where(v => v.Success)
+                .Select(v => v.Value)
+                .ToArray();
+
+            if (rgbValues.Length != 3)
             {
                 throw StyleRuleThemeException(rule, themeFileName);
             }
 
-            return Color.FromArgb(htmlColor.A, htmlColor.R, htmlColor.G, htmlColor.B);
+            return Color.FromArgb(rgbValues[0], rgbValues[1], rgbValues[2]);
         }
 
         private static ThemeException StyleRuleThemeException(StyleRule styleRule, string themePath)
-            => new ThemeException($"Invalid CSS rule '{styleRule.Value}'", themePath);
+            => new ThemeException($"Invalid CSS rule '{styleRule.SelectorText}'", themePath);
 
         private class ThemeColors
         {

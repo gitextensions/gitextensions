@@ -43,8 +43,9 @@ namespace GitExtensions
 
             AppSettings.SetDocumentationBaseUrl(ThisAssembly.Git.Branch);
 
-            ////ThemeModule.Load();
-            ////Application.ApplicationExit += (s, e) => ThemeModule.Unload();
+#if SUPPORT_THEMES
+            ThemeModule.Load();
+            Application.ApplicationExit += (s, e) => ThemeModule.Unload();
 
             SystemEvents.UserPreferenceChanged += (s, e) =>
             {
@@ -52,13 +53,14 @@ namespace GitExtensions
                 // reload the theme, and repaint all forms
                 if (e.Category == UserPreferenceCategory.Desktop || e.Category == UserPreferenceCategory.VisualStyle)
                 {
-                    ////ThemeModule.ReloadWin32ThemeData();
+                    ThemeModule.ReloadWin32ThemeData();
                     foreach (Form form in Application.OpenForms)
                     {
                         form.BeginInvoke((MethodInvoker)(() => form.Invalidate()));
                     }
                 }
             };
+#endif
 
             HighDpiMouseCursors.Enable();
 

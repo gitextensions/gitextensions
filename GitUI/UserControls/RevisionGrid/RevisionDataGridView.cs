@@ -12,6 +12,7 @@ using GitCommands;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
