@@ -15,32 +15,32 @@ namespace GitUI.Theming
             switch ((Parts)partId)
             {
                 case Parts.None:
-                    {
-                        ctx.Graphics.FillRectangle(SystemBrushes.Control, prect);
-                        return Handled;
-                    }
+                {
+                    ctx.Graphics.FillRectangle(SystemBrushes.Control, prect);
+                    return Handled;
+                }
 
                 case Parts.HP_HEADERITEM:
-                    {
-                        var backBrush = GetBackBrush((State.Item)stateId);
-                        ctx.Graphics.FillRectangle(backBrush, prect);
-                        ctx.Graphics.DrawLine(SystemPens.ControlDark,
-                            new Point(prect.Right - 1, prect.Top),
-                            new Point(prect.Right - 1, prect.Bottom - 1));
-                        return Handled;
-                    }
+                {
+                    var backBrush = GetBackBrush((State.Item)stateId);
+                    ctx.Graphics.FillRectangle(backBrush, prect);
+                    ctx.Graphics.DrawLine(SystemPens.ControlDark,
+                        new Point(prect.Right - 1, prect.Top),
+                        new Point(prect.Right - 1, prect.Bottom - 1));
+                    return Handled;
+                }
 
                 case Parts.HP_HEADERSORTARROW:
+                {
+                    var arrowPoints = GetArrowPolygon((State.SortArrow)stateId, prect);
+                    ctx.Graphics.FillRectangle(SystemBrushes.Control, prect);
+                    using (ctx.HighQuality())
                     {
-                        var arrowPoints = GetArrowPolygon((State.SortArrow)stateId, prect);
-                        ctx.Graphics.FillRectangle(SystemBrushes.Control, prect);
-                        using (ctx.HighQuality())
-                        {
-                            ctx.Graphics.FillPolygon(SystemBrushes.ControlDarkDark, arrowPoints);
-                        }
-
-                        return Handled;
+                        ctx.Graphics.FillPolygon(SystemBrushes.ControlDarkDark, arrowPoints);
                     }
+
+                    return Handled;
+                }
 
                 // case Parts.HP_HEADERITEMLEFT:
                 // case Parts.HP_HEADERITEMRIGHT:
@@ -48,9 +48,9 @@ namespace GitUI.Theming
                 // case Parts.HP_HEADERDROPDOWNFILTER:
                 // case Parts.HP_HEADEROVERFLOW:
                 default:
-                    {
-                        return Unhandled;
-                    }
+                {
+                    return Unhandled;
+                }
             }
         }
 
