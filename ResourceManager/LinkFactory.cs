@@ -48,7 +48,7 @@ namespace ResourceManager
         private string AddLink(string? caption, string uri)
         {
             string htmlUri = WebUtility.HtmlEncode(uri);
-            string rtfLinkText = caption + "#" + htmlUri;
+            string rtfLinkText = caption;
             _linksMap[rtfLinkText] = htmlUri;
 
             string htmlLink = "<a href=" + htmlUri.Quote("'") + ">" + WebUtility.HtmlEncode(caption) + "</a>";
