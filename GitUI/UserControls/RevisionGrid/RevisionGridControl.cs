@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reactive.Concurrency;
@@ -1049,8 +1050,8 @@ namespace GitUI
 
                 void AddArtificialRevisions(ObjectId filteredCurrentCheckout)
                 {
-                    _indexChangeCount = new ChangeCount();
-                    _workTreeChangeCount = new ChangeCount();
+                    _indexChangeCount = new ArtificialCommitChangeCount();
+                    _workTreeChangeCount = new ArtificialCommitChangeCount();
 
                     var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
                     var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
@@ -2092,7 +2093,7 @@ namespace GitUI
         #region Artificial commit change counters
 
         [CanBeNull]
-        public ChangeCount GetChangeCount(ObjectId objectId)
+        public ArtificialCommitChangeCount GetChangeCount(ObjectId objectId)
         {
             return objectId == ObjectId.WorkTreeId
                 ? _workTreeChangeCount
@@ -2101,8 +2102,8 @@ namespace GitUI
                     : null;
         }
 
-        private ChangeCount _workTreeChangeCount = new ChangeCount();
-        private ChangeCount _indexChangeCount = new ChangeCount();
+        private ArtificialCommitChangeCount _workTreeChangeCount = new ArtificialCommitChangeCount();
+        private ArtificialCommitChangeCount _indexChangeCount = new ArtificialCommitChangeCount();
 
         public void UpdateArtificialCommitCount(
             [CanBeNull] IReadOnlyList<GitItemStatus> status,
@@ -2140,7 +2141,7 @@ namespace GitUI
                 var changeCount = GetChangeCount(objectId);
                 var staged = objectId == ObjectId.WorkTreeId ? StagedStatus.WorkTree : StagedStatus.Index;
                 var items = status.Where(item => item.Staged == staged).ToList();
-                changeCount.UpdateChangeCount(items);
+                changeCount.Update(items);
             }
         }
 

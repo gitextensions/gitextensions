@@ -143,6 +143,12 @@ namespace GitUI.BranchTreePanel
                         moduleIsParent: false,
                         limitOutput: true);
                 }
+                else if (GitStatus is not null)
+                {
+                    var changeCount = new ArtificialCommitChangeCount();
+                    changeCount.Update(GitStatus);
+                    TreeViewNode.ToolTipText = changeCount.GetSummary();
+                }
                 else
                 {
                     TreeViewNode.ToolTipText = DisplayText();
