@@ -93,6 +93,7 @@ namespace GitCommands
                     StartInfo =
                     {
                         UseShellExecute = useShellExecute,
+                        Verb = useShellExecute ? "open" : string.Empty,
                         ErrorDialog = false,
                         CreateNoWindow = !createWindow,
                         RedirectStandardInput = redirectInput,
