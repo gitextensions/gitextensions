@@ -51,6 +51,8 @@ namespace CommonTestUtils
             }
         }
 
+        public string CreateRepoFile(string fileName, string fileContent) => _moduleTestHelper.CreateRepoFile(fileName, fileContent);
+
         public void CreateTag(string tagName, string commitHash, bool allowOverwrite = false)
         {
             using (var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir))

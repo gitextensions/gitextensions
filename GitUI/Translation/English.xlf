@@ -3262,6 +3262,10 @@ Are you sure you want to commit?</source>
         <source>There are no files staged for this commit.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_noFilesStagedButSuggestToCommitAllFilteredUnstaged.Text">
+        <source>There are no files staged for this commit. Stage and commit the unstaged files that match your filter?</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_noFilesStagedButSuggestToCommitAllUnstaged.Text">
         <source>There are no files staged for this commit. Stage and commit all unstaged files?</source>
         <target />
@@ -3309,12 +3313,20 @@ Do you want to continue?</source>
 Suitable for some config files modified locally.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_stageAll.Text">
+        <source>Stage all</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_stageDetails.Text">
         <source>Stage Details</source>
         <target />
       </trans-unit>
       <trans-unit id="_stageFiles.Text">
         <source>Stage {0} files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_stageFiltered.Text">
+        <source>Stage filtered</source>
         <target />
       </trans-unit>
       <trans-unit id="_statusBarBranchWithoutRemote.Text">
@@ -3340,6 +3352,14 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="_templateNotFoundCaption.Text">
         <source>Template Error</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_unstageAll.Text">
+        <source>Unstage all</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_unstageFiltered.Text">
+        <source>Unstage filtered</source>
         <target />
       </trans-unit>
       <trans-unit id="_untrackedRemote.Text">
@@ -3591,7 +3611,7 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="toolStageAllItem.Text">
-        <source>Stage All</source>
+        <source>Stage all</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStageItem.Text">
@@ -3607,7 +3627,7 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="toolUnstageAllItem.Text">
-        <source>Unstage All</source>
+        <source>Unstage all</source>
         <target />
       </trans-unit>
       <trans-unit id="toolUnstageItem.Text">

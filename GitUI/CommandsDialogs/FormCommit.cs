@@ -81,6 +81,8 @@ namespace GitUI.CommandsDialogs
             new TranslationString("There are no files staged for this commit.");
         private readonly TranslationString _noFilesStagedButSuggestToCommitAllUnstaged =
             new TranslationString("There are no files staged for this commit. Stage and commit all unstaged files?");
+        private readonly TranslationString _noFilesStagedButSuggestToCommitAllFilteredUnstaged =
+            new TranslationString("There are no files staged for this commit. Stage and commit the unstaged files that match your filter?");
         private readonly TranslationString _noFilesStagedAndConfirmAnEmptyMergeCommit =
             new TranslationString("There are no files staged for this commit.\nAre you sure you want to commit?");
 
@@ -101,6 +103,11 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _stageDetails = new TranslationString("Stage Details");
         private readonly TranslationString _stageFiles = new TranslationString("Stage {0} files");
         private readonly TranslationString _selectOnlyOneFile = new TranslationString("You must have only one file selected.");
+
+        private readonly TranslationString _stageAll = new TranslationString("Stage all");
+        private readonly TranslationString _stageFiltered = new TranslationString("Stage filtered");
+        private readonly TranslationString _unstageAll = new TranslationString("Unstage all");
+        private readonly TranslationString _unstageFiltered = new TranslationString("Unstage filtered");
 
         private readonly TranslationString _addSelectionToCommitMessage = new TranslationString("Add selection to commit message");
 
@@ -230,6 +237,8 @@ namespace GitUI.CommandsDialogs
 
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
             Unstaged.DisableSubmoduleMenuItemBold = true;
+            Unstaged.FilterChanged += Unstaged_FilterChanged;
+            Staged.FilterChanged += Staged_FilterChanged;
             Staged.SetNoFilesText(_noStagedChanges.Text);
             Staged.DisableSubmoduleMenuItemBold = true;
 
@@ -267,6 +276,8 @@ namespace GitUI.CommandsDialogs
             commitAuthorStatus.ToolTipText = _commitCommitterToolTip.Text;
             skipWorktreeToolStripMenuItem.ToolTipText = _skipWorktreeToolTip.Text;
             assumeUnchangedToolStripMenuItem.ToolTipText = _assumeUnchangedToolTip.Text;
+            toolStageAllItem.ToolTipText = _stageAll.Text;
+            toolUnstageAllItem.ToolTipText = _unstageAll.Text;
             stageToolStripMenuItem.Text = toolStageItem.Text;
             stageSubmoduleToolStripMenuItem.Text = toolStageItem.Text;
             stagedUnstageToolStripMenuItem.Text = toolUnstageItem.Text;
@@ -1345,7 +1356,8 @@ namespace GitUI.CommandsDialogs
                     }
 
                     // there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
-                    if (MessageBox.Show(this, _noFilesStagedButSuggestToCommitAllUnstaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                    string message = Unstaged.IsFilterActive ? _noFilesStagedButSuggestToCommitAllFilteredUnstaged.Text : _noFilesStagedButSuggestToCommitAllUnstaged.Text;
+                    if (MessageBox.Show(this, message, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                     {
                         return false;
                     }
@@ -1653,6 +1665,12 @@ namespace GitUI.CommandsDialogs
                 Staged.SelectAll();
                 Unstage(canUseUnstageAll: false);
             }
+            else if (Staged.IsFilterActive)
+            {
+                Staged.SelectedGitItems = Staged.AllItems.Items();
+                Unstage(canUseUnstageAll: false);
+                Staged.SetFilter(string.Empty);
+            }
             else
             {
                 Module.Reset(ResetMode.Mixed);
@@ -1739,6 +1757,34 @@ namespace GitUI.CommandsDialogs
                 }
 
                 UnstagedSelectionChanged(Unstaged, null);
+            }
+        }
+
+        private void Unstaged_FilterChanged(object sender, EventArgs e)
+        {
+            if (Unstaged.IsFilterActive)
+            {
+                toolStageAllItem.ToolTipText = _stageFiltered.Text;
+                toolStageAllItem.Image = Images.StageAllFiltered;
+            }
+            else
+            {
+                toolStageAllItem.ToolTipText = _stageAll.Text;
+                toolStageAllItem.Image = Images.StageAll;
+            }
+        }
+
+        private void Staged_FilterChanged(object sender, EventArgs e)
+        {
+            if (Staged.IsFilterActive)
+            {
+                toolUnstageAllItem.ToolTipText = _unstageFiltered.Text;
+                toolUnstageAllItem.Image = Images.UnstageAllFiltered;
+            }
+            else
+            {
+                toolUnstageAllItem.ToolTipText = _unstageAll.Text;
+                toolUnstageAllItem.Image = Images.UnstageAll;
             }
         }
 
@@ -3324,7 +3370,13 @@ namespace GitUI.CommandsDialogs
 
             internal ToolStripMenuItem EditFileToolStripMenuItem => _formCommit.editFileToolStripMenuItem;
 
+            internal ToolStripButton StageAllToolItem => _formCommit.toolStageAllItem;
+
+            internal ToolStripButton UnstageAllToolItem => _formCommit.toolUnstageAllItem;
+
             internal FileStatusList UnstagedList => _formCommit.Unstaged;
+
+            internal FileStatusList StagedList => _formCommit.Staged;
 
             internal EditNetSpell Message => _formCommit.Message;
 
