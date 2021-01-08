@@ -4,14 +4,6 @@ namespace GitCommands.Git
 {
     public class FileDeleteException : Exception
     {
-        private const string DefaultMessage = "Could not delete the file";
-
-        public FileDeleteException(string fileName)
-            : base(DefaultMessage)
-        {
-            FileName = fileName;
-        }
-
         public FileDeleteException(string fileName, Exception inner)
             : base(inner.Message, inner)
         {

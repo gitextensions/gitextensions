@@ -2138,7 +2138,7 @@ compare with first:</source>
         <target />
       </trans-unit>
       <trans-unit id="_indexLockCantDelete.Text">
-        <source>Failed to delete index.lock.</source>
+        <source>Failed to delete index.lock</source>
         <target />
       </trans-unit>
       <trans-unit id="_loading.Text">
