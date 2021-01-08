@@ -11,29 +11,27 @@ namespace GitUI.Theming
         public override int RenderBackground(IntPtr hdc, int partid, int stateid, Rectangle prect,
             NativeMethods.RECTCLS pcliprect)
         {
-            using (var ctx = CreateRenderContext(hdc, pcliprect))
+            using var ctx = CreateRenderContext(hdc, pcliprect);
+            switch ((Parts)partid)
             {
-                switch ((Parts)partid)
-                {
-                    case Parts.CP_BACKGROUND:
-                    case Parts.CP_CUEBANNER:
-                        return RenderBackground(ctx, prect);
+                case Parts.CP_BACKGROUND:
+                case Parts.CP_CUEBANNER:
+                    return RenderBackground(ctx, prect);
 
-                    case Parts.CP_BORDER:
-                        return RenderBorder(ctx, stateid, prect);
+                case Parts.CP_BORDER:
+                    return RenderBorder(ctx, stateid, prect);
 
-                    case Parts.CP_DROPDOWNBUTTON:
-                    case Parts.CP_DROPDOWNBUTTONRIGHT:
-                    case Parts.CP_DROPDOWNBUTTONLEFT:
-                        return RenderDropDownButton(ctx, (State.DropDown)stateid, prect);
+                case Parts.CP_DROPDOWNBUTTON:
+                case Parts.CP_DROPDOWNBUTTONRIGHT:
+                case Parts.CP_DROPDOWNBUTTONLEFT:
+                    return RenderDropDownButton(ctx, (State.DropDown)stateid, prect);
 
-                    case Parts.CP_READONLY:
-                        return RenderReadonlyDropDown(ctx, stateid, prect);
+                case Parts.CP_READONLY:
+                    return RenderReadonlyDropDown(ctx, stateid, prect);
 
-                    // case Parts.CP_TRANSPARENTBACKGROUND:
-                    default:
-                        return Unhandled;
-                }
+                // case Parts.CP_TRANSPARENTBACKGROUND:
+                default:
+                    return Unhandled;
             }
         }
 
@@ -213,8 +211,8 @@ namespace GitUI.Theming
             }
 
             using (ctx.HighQuality())
-            using (var pen = new Pen(arrowColor, DpiUtil.Scale(2)))
             {
+                using var pen = new Pen(arrowColor, DpiUtil.Scale(2));
                 ctx.Graphics.DrawLines(pen, arrowPoints);
             }
         }

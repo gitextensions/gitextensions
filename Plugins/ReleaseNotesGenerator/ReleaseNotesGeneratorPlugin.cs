@@ -18,12 +18,10 @@ namespace ReleaseNotesGenerator
 
         public override bool Execute(GitUIEventArgs args)
         {
-            using (var form = new ReleaseNotesGeneratorForm(args))
+            using var form = new ReleaseNotesGeneratorForm(args);
+            if (form.ShowDialog(args.OwnerForm) == DialogResult.OK)
             {
-                if (form.ShowDialog(args.OwnerForm) == DialogResult.OK)
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;

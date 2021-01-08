@@ -73,12 +73,10 @@ namespace GitCommandsTests
 
                 Assert.False(callerThread.IsThreadPoolThread);
 
-                using (var loader = new AsyncLoader())
-                {
-                    await loader.LoadAsync(
-                        () => loadThread = Thread.CurrentThread,
-                        () => continuationThread = Thread.CurrentThread);
-                }
+                using var loader = new AsyncLoader();
+                await loader.LoadAsync(
+                    () => loadThread = Thread.CurrentThread,
+                    () => continuationThread = Thread.CurrentThread);
 
                 Assert.True(loadThread.IsThreadPoolThread);
                 Assert.AreNotSame(loadThread, callerThread);

@@ -160,23 +160,21 @@ namespace System.Linq
                 }
             }
 
-            using (var e = source.GetEnumerator())
+            using var e = source.GetEnumerator();
+            if (!e.MoveNext())
             {
-                if (!e.MoveNext())
-                {
-                    return Array.Empty<T>();
-                }
-
-                var list = new List<T>();
-
-                do
-                {
-                    list.Add(e.Current);
-                }
-                while (e.MoveNext());
-
-                return list;
+                return Array.Empty<T>();
             }
+
+            var list = new List<T>();
+
+            do
+            {
+                list.Add(e.Current);
+            }
+            while (e.MoveNext());
+
+            return list;
         }
 
         [Pure]

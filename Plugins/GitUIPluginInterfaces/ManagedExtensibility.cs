@@ -63,10 +63,8 @@ namespace GitUIPluginInterfaces
             IExportProviderFactory exportProviderFactory;
             if (applicationDataFolder != null && File.Exists(cacheFile))
             {
-                using (var cacheStream = File.OpenRead(cacheFile))
-                {
-                    exportProviderFactory = ThreadHelper.JoinableTaskFactory.Run(() => new CachedComposition().LoadExportProviderFactoryAsync(cacheStream, Resolver.DefaultInstance));
-                }
+                using var cacheStream = File.OpenRead(cacheFile);
+                exportProviderFactory = ThreadHelper.JoinableTaskFactory.Run(() => new CachedComposition().LoadExportProviderFactoryAsync(cacheStream, Resolver.DefaultInstance));
             }
             else
             {
@@ -84,10 +82,8 @@ namespace GitUIPluginInterfaces
                 {
 #if false // Composition caching currently disabled
                     Directory.CreateDirectory(Path.Combine(applicationDataFolder, "Plugins"));
-                    using (var cacheStream = File.OpenWrite(cacheFile))
-                    {
-                        ThreadHelper.JoinableTaskFactory.Run(() => new CachedComposition().SaveAsync(runtimeComposition, cacheStream));
-                    }
+                    using var cacheStream = File.OpenWrite(cacheFile);
+                    ThreadHelper.JoinableTaskFactory.Run(() => new CachedComposition().SaveAsync(runtimeComposition, cacheStream));
 #endif
                 }
 

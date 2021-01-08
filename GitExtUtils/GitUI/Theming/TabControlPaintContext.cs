@@ -72,10 +72,8 @@ namespace GitExtUtils.GitUI.Theming
                 return;
             }
 
-            using (var canvasBrush = new SolidBrush(_parentBackColor))
-            {
-                _graphics.FillRectangle(canvasBrush, _clipRectangle);
-            }
+            using var canvasBrush = new SolidBrush(_parentBackColor);
+            _graphics.FillRectangle(canvasBrush, _clipRectangle);
 
             RenderSelectedPageBackground();
 
@@ -101,27 +99,25 @@ namespace GitExtUtils.GitUI.Theming
 
         private void RenderTabBackground(int index)
         {
-            using (var borderPen = GetBorderPen())
+            using var borderPen = GetBorderPen();
+            var outerRect = GetOuterTabRect(index);
+            _graphics.FillRectangle(GetBackgroundBrush(index), outerRect);
+
+            var points = new List<Point>(4);
+            if (index <= _selectedIndex)
             {
-                var outerRect = GetOuterTabRect(index);
-                _graphics.FillRectangle(GetBackgroundBrush(index), outerRect);
-
-                var points = new List<Point>(4);
-                if (index <= _selectedIndex)
-                {
-                    points.Add(new Point(outerRect.Left, outerRect.Bottom - 1));
-                }
-
-                points.Add(new Point(outerRect.Left, outerRect.Top));
-                points.Add(new Point(outerRect.Right - 1, outerRect.Top));
-
-                if (index >= _selectedIndex)
-                {
-                    points.Add(new Point(outerRect.Right - 1, outerRect.Bottom - 1));
-                }
-
-                _graphics.DrawLines(borderPen, points.ToArray());
+                points.Add(new Point(outerRect.Left, outerRect.Bottom - 1));
             }
+
+            points.Add(new Point(outerRect.Left, outerRect.Top));
+            points.Add(new Point(outerRect.Right - 1, outerRect.Top));
+
+            if (index >= _selectedIndex)
+            {
+                points.Add(new Point(outerRect.Right - 1, outerRect.Bottom - 1));
+            }
+
+            _graphics.DrawLines(borderPen, points.ToArray());
         }
 
         private void RenderTabImage(int index)
@@ -262,7 +258,7 @@ namespace GitExtUtils.GitUI.Theming
             }
 
             _graphics.FillRectangle(GetBackgroundBrush(_selectedIndex), pageRect);
-            using (var borderPen = GetBorderPen())
+            using var borderPen = GetBorderPen();
             {
                 _graphics.DrawRectangle(borderPen, pageRect);
             }

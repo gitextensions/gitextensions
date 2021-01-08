@@ -32,11 +32,9 @@ namespace GitHub3
             if (_diffData == null)
             {
                 var request = (HttpWebRequest)WebRequest.Create(_pullRequest.DiffUrl);
-                using (var response = await request.GetResponseAsync())
-                using (var reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
-                {
-                    _diffData = await reader.ReadToEndAsync();
-                }
+                using var response = await request.GetResponseAsync();
+                using var reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+                _diffData = await reader.ReadToEndAsync();
             }
 
             return _diffData;

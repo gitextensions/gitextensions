@@ -42,25 +42,23 @@ namespace GitUI.Theming
         public override int RenderBackground(IntPtr hdc, int partid, int stateid, Rectangle prect,
             NativeMethods.RECTCLS pcliprect)
         {
-            using (var ctx = CreateRenderContext(hdc, pcliprect))
+            using var ctx = CreateRenderContext(hdc, pcliprect);
+            switch ((Parts)partid)
             {
-                switch ((Parts)partid)
-                {
-                    case Parts.LVP_GROUPHEADERLINE:
-                        return RenderGroupHeaderLine(ctx, prect);
+                case Parts.LVP_GROUPHEADERLINE:
+                    return RenderGroupHeaderLine(ctx, prect);
 
-                    case Parts.LVP_EXPANDBUTTON:
-                        return RenderExpandButton(ctx, (State.ExpandButton)stateid, prect);
+                case Parts.LVP_EXPANDBUTTON:
+                    return RenderExpandButton(ctx, (State.ExpandButton)stateid, prect);
 
-                    case Parts.LVP_COLLAPSEBUTTON:
-                        return RenderCollapseButton(ctx, (State.CollapseButton)stateid, prect);
+                case Parts.LVP_COLLAPSEBUTTON:
+                    return RenderCollapseButton(ctx, (State.CollapseButton)stateid, prect);
 
-                    case Parts.LVP_LISTITEM:
-                        return RenderItemBackground(ctx, (State.ListItem)stateid, prect);
+                case Parts.LVP_LISTITEM:
+                    return RenderItemBackground(ctx, (State.ListItem)stateid, prect);
 
-                    default:
-                        return Unhandled;
-                }
+                default:
+                    return Unhandled;
             }
         }
 
@@ -213,10 +211,8 @@ namespace GitUI.Theming
                     ctx.Graphics.FillEllipse(backBrush, prect.Inclusive());
                 }
 
-                using (var forePen = new Pen(foreColor, DpiUtil.Scale(2)))
-                {
-                    ctx.Graphics.DrawLines(forePen, arrowPoints);
-                }
+                using var forePen = new Pen(foreColor, DpiUtil.Scale(2));
+                ctx.Graphics.DrawLines(forePen, arrowPoints);
             }
         }
 

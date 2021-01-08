@@ -137,13 +137,9 @@ namespace GitCommandsTests.ExternalLinks
         private static IReadOnlyList<ExternalLinkDefinition> Parse(string xml)
         {
             var serializer = new XmlSerializer(typeof(List<ExternalLinkDefinition>));
-            using (var stringReader = new StringReader(xml))
-            {
-                using (var xmlReader = new XmlTextReader(stringReader))
-                {
-                    return serializer.Deserialize(xmlReader) as List<ExternalLinkDefinition>;
-                }
-            }
+            using var stringReader = new StringReader(xml);
+            using var xmlReader = new XmlTextReader(stringReader);
+            return serializer.Deserialize(xmlReader) as List<ExternalLinkDefinition>;
         }
 
         private static string GetGitHubIssuesXmlDef()

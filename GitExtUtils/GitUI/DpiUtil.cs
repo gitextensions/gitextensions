@@ -22,27 +22,25 @@ namespace GitExtUtils.GitUI
 
         static DpiUtil()
         {
-            using (var hdc = GetDC(IntPtr.Zero))
+            using var hdc = GetDC(IntPtr.Zero);
+            try
             {
-                try
-                {
-                    const int LOGPIXELSX = 88;
-                    const int LOGPIXELSY = 90;
+                const int LOGPIXELSX = 88;
+                const int LOGPIXELSY = 90;
 
-                    DpiX = GetDeviceCaps(hdc, LOGPIXELSX);
-                    DpiY = GetDeviceCaps(hdc, LOGPIXELSY);
+                DpiX = GetDeviceCaps(hdc, LOGPIXELSX);
+                DpiY = GetDeviceCaps(hdc, LOGPIXELSY);
 
-                    ScaleX = DpiX / 96.0f;
-                    ScaleY = DpiY / 96.0f;
-                }
-                catch
-                {
-                    DpiX = 96;
-                    DpiY = 96;
+                ScaleX = DpiX / 96.0f;
+                ScaleY = DpiY / 96.0f;
+            }
+            catch
+            {
+                DpiX = 96;
+                DpiY = 96;
 
-                    ScaleX = 1.0f;
-                    ScaleY = 1.0f;
-                }
+                ScaleX = 1.0f;
+                ScaleY = 1.0f;
             }
         }
 
@@ -177,17 +175,16 @@ namespace GitExtUtils.GitUI
             var size = Scale(new Size(image.Width, image.Height));
             var bitmap = new Bitmap(size.Width, size.Height);
 
-            using (var g = Graphics.FromImage(bitmap))
-            {
-                // NearestNeighbor is better for 200% and above
-                // http://blogs.msdn.com/b/visualstudio/archive/2014/03/19/improving-high-dpi-support-for-visual-studio-2013.aspx
+            using var g = Graphics.FromImage(bitmap);
 
-                g.InterpolationMode = ScaleX >= 2
-                    ? InterpolationMode.NearestNeighbor
-                    : InterpolationMode.HighQualityBicubic;
+            // NearestNeighbor is better for 200% and above
+            // http://blogs.msdn.com/b/visualstudio/archive/2014/03/19/improving-high-dpi-support-for-visual-studio-2013.aspx
 
-                g.DrawImage(image, new Rectangle(Point.Empty, size));
-            }
+            g.InterpolationMode = ScaleX >= 2
+                ? InterpolationMode.NearestNeighbor
+                : InterpolationMode.HighQualityBicubic;
+
+            g.DrawImage(image, new Rectangle(Point.Empty, size));
 
             bitmap.Tag = dpiScaled;
 

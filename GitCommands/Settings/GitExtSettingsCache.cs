@@ -40,13 +40,11 @@ namespace GitCommands.Settings
 
         protected override void WriteSettings(string fileName)
         {
-            using (var xtw = new XmlTextWriter(fileName, Encoding.UTF8) { Formatting = Formatting.Indented })
-            {
-                xtw.WriteStartDocument();
-                xtw.WriteStartElement("dictionary");
-                _encodedNameMap.WriteXml(xtw);
-                xtw.WriteEndElement();
-            }
+            using var xtw = new XmlTextWriter(fileName, Encoding.UTF8) { Formatting = Formatting.Indented };
+            xtw.WriteStartDocument();
+            xtw.WriteStartElement("dictionary");
+            _encodedNameMap.WriteXml(xtw);
+            xtw.WriteEndElement();
         }
 
         protected override void ReadSettings(string fileName)
@@ -57,16 +55,14 @@ namespace GitCommands.Settings
                 CheckCharacters = false
             };
 
-            using (var xr = XmlReader.Create(fileName, readerSettings))
+            using var xr = XmlReader.Create(fileName, readerSettings);
+            try
             {
-                try
-                {
-                    _encodedNameMap.ReadXml(xr);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception($"Exception reading XML file \"{fileName}\": {e.Message}", e);
-                }
+                _encodedNameMap.ReadXml(xr);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Exception reading XML file \"{fileName}\": {e.Message}", e);
             }
         }
 

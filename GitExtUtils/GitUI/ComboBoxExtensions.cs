@@ -47,13 +47,11 @@ namespace GitUI
         private static int GetPreferredDropDownWidth(dynamic comboBox)
         {
             var calculatedWidth = 0;
-            using (var graphics = comboBox.CreateGraphics())
+            using var graphics = comboBox.CreateGraphics();
+            foreach (object obj in comboBox.Items)
             {
-                foreach (object obj in comboBox.Items)
-                {
-                    var area = graphics.MeasureString(obj.ToString(), comboBox.Font);
-                    calculatedWidth = Math.Max((int)area.Width, calculatedWidth);
-                }
+                var area = graphics.MeasureString(obj.ToString(), comboBox.Font);
+                calculatedWidth = Math.Max((int)area.Width, calculatedWidth);
             }
 
             return calculatedWidth;

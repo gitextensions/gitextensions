@@ -10,16 +10,14 @@ namespace GitUI.Theming
         public override int RenderBackground(IntPtr hdc, int partid, int stateid, Rectangle prect,
             NativeMethods.RECTCLS pcliprect)
         {
-            using (var ctx = CreateRenderContext(hdc, pcliprect))
+            using var ctx = CreateRenderContext(hdc, pcliprect);
+            switch ((Parts)partid)
             {
-                switch ((Parts)partid)
-                {
-                    case Parts.EP_EDITTEXT:
-                        return RenderEditText(ctx, stateid, prect);
+                case Parts.EP_EDITTEXT:
+                    return RenderEditText(ctx, stateid, prect);
 
-                    case Parts.EP_EDITBORDER_NOSCROLL:
-                        return RenderEditBorderNoScroll(ctx, stateid, prect);
-                }
+                case Parts.EP_EDITBORDER_NOSCROLL:
+                    return RenderEditBorderNoScroll(ctx, stateid, prect);
             }
 
             return Unhandled;

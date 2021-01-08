@@ -26,17 +26,13 @@ namespace GitCommandsTests.ExternalLinks
         {
             var content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.{fileName}.settings.xml");
 
-            using (var testHelper = new GitModuleTestHelper())
-            {
-                var settingsFile = testHelper.CreateRepoFile(".git", "GitExtensions.settings", content);
-                using (var settingsCache = new GitExtSettingsCache(settingsFile))
-                {
-                    var settings = new RepoDistSettings(null, settingsCache, SettingLevel.Unknown);
+            using var testHelper = new GitModuleTestHelper();
+            var settingsFile = testHelper.CreateRepoFile(".git", "GitExtensions.settings", content);
+            using var settingsCache = new GitExtSettingsCache(settingsFile);
+            var settings = new RepoDistSettings(null, settingsCache, SettingLevel.Unknown);
 
-                    var definitions = _externalLinksStorage.Load(settings);
-                    definitions.Count.Should().Be(expected);
-                }
-            }
+            var definitions = _externalLinksStorage.Load(settings);
+            definitions.Count.Should().Be(expected);
         }
     }
 }

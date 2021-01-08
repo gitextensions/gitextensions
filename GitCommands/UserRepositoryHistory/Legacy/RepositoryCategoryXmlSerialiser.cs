@@ -31,12 +31,10 @@ namespace GitCommands.UserRepositoryHistory.Legacy
             try
             {
                 var serializer = new XmlSerializer(typeof(List<RepositoryCategory>));
-                using (TextReader reader = new StringReader(serialised))
+                using TextReader reader = new StringReader(serialised);
+                if (serializer.Deserialize(reader) is List<RepositoryCategory> obj)
                 {
-                    if (serializer.Deserialize(reader) is List<RepositoryCategory> obj)
-                    {
-                        return obj;
-                    }
+                    return obj;
                 }
             }
             catch (Exception ex)

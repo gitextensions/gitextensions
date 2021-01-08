@@ -156,26 +156,24 @@ namespace GitUI.SpellChecker
 
         private void DrawWave(Point start, Point end)
         {
-            using (var pen = new Pen(Color.Red, DpiUtil.ScaleX))
+            using var pen = new Pen(Color.Red, DpiUtil.ScaleX);
+            var waveWidth = DpiUtil.Scale(4);
+            var waveHalfWidth = waveWidth >> 1;
+            if ((end.X - start.X) > waveWidth)
             {
-                var waveWidth = DpiUtil.Scale(4);
-                var waveHalfWidth = waveWidth >> 1;
-                if ((end.X - start.X) > waveWidth)
+                var pl = new List<Point>();
+                for (var i = start.X; i <= (end.X - waveHalfWidth); i += waveWidth)
                 {
-                    var pl = new List<Point>();
-                    for (var i = start.X; i <= (end.X - waveHalfWidth); i += waveWidth)
-                    {
-                        pl.Add(new Point(i, start.Y));
-                        pl.Add(new Point(i + waveHalfWidth, start.Y + waveHalfWidth));
-                    }
+                    pl.Add(new Point(i, start.Y));
+                    pl.Add(new Point(i + waveHalfWidth, start.Y + waveHalfWidth));
+                }
 
-                    var p = pl.ToArray();
-                    _bufferGraphics.DrawLines(pen, p);
-                }
-                else
-                {
-                    _bufferGraphics.DrawLine(pen, start, end);
-                }
+                var p = pl.ToArray();
+                _bufferGraphics.DrawLines(pen, p);
+            }
+            else
+            {
+                _bufferGraphics.DrawLine(pen, start, end);
             }
         }
 
@@ -183,12 +181,10 @@ namespace GitUI.SpellChecker
         {
             var col = Color.FromArgb(120, 255, 255, 0);
             var lineHeight = LineHeight();
-            using (var pen = new Pen(col, lineHeight))
-            {
-                start.Offset(0, -lineHeight / 2);
-                end.Offset(0, -lineHeight / 2);
-                _bufferGraphics.DrawLine(pen, start, end);
-            }
+            using var pen = new Pen(col, lineHeight);
+            start.Offset(0, -lineHeight / 2);
+            end.Offset(0, -lineHeight / 2);
+            _bufferGraphics.DrawLine(pen, start, end);
         }
 
         private int LineHeight()
