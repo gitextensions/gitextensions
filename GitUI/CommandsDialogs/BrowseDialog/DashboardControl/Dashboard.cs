@@ -180,7 +180,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     linkLabel.MouseHover += (s, e) => linkLabel.LinkColor = _selectedTheme.AccentedText;
                     linkLabel.MouseLeave += (s, e) => linkLabel.LinkColor = _selectedTheme.PrimaryText;
 
-                    if (handler != null)
+                    if (handler is not null)
                     {
                         linkLabel.Click += handler;
                     }
@@ -228,7 +228,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void openItem_Click(object sender, EventArgs e)
         {
             GitModule module = FormOpenDirectory.OpenModule(this, currentModule: null);
-            if (module != null)
+            if (module is not null)
             {
                 OnModuleChanged(this, new GitModuleEventArgs(module));
             }

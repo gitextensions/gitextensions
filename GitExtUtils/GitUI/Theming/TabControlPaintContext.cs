@@ -93,7 +93,7 @@ namespace GitExtUtils.GitUI.Theming
             {
                 RenderTabBackground(index);
                 RenderTabImage(index);
-                RenderTabText(index, _tabImages[index] != null);
+                RenderTabText(index, _tabImages[index] is not null);
             }
         }
 

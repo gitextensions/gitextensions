@@ -74,9 +74,9 @@ namespace GitUI.CommandsDialogs
                 mergeBase = Module.GetMergeBase(_baseRevision.ObjectId, _headRevision.ObjectId);
             }
 
-            _mergeBase = mergeBase != null ? new GitRevision(mergeBase) : null;
+            _mergeBase = mergeBase is not null ? new GitRevision(mergeBase) : null;
             ckCompareToMergeBase.Text = $"{_ckCompareToMergeBase} ({_mergeBase?.ObjectId.ToShortString()})";
-            ckCompareToMergeBase.Enabled = _mergeBase != null;
+            ckCompareToMergeBase.Enabled = _mergeBase is not null;
 
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();
@@ -228,7 +228,7 @@ namespace GitUI.CommandsDialogs
                 selectedItem = searchWindow.SelectedItem;
             }
 
-            if (selectedItem != null)
+            if (selectedItem is not null)
             {
                 DiffFiles.SelectedGitItem = selectedItem;
             }

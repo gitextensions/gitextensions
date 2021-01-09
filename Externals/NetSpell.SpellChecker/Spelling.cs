@@ -1216,7 +1216,7 @@ namespace NetSpell.SpellChecker
             }
             set
             {
-                if (value != null)
+                if (value is not null)
                 {
                     _dictionary = value;
                 }

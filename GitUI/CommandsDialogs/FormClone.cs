@@ -286,7 +286,7 @@ namespace GitUI.CommandsDialogs
                     var uiCommands = new GitUICommands(dirTo);
                     uiCommands.StartBrowseDialog();
                 }
-                else if (ShowInTaskbar == false && _gitModuleChanged != null &&
+                else if (ShowInTaskbar == false && _gitModuleChanged is not null &&
                     AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
                     _gitModuleChanged(this, new GitModuleEventArgs(new GitModule(dirTo)));
@@ -310,7 +310,7 @@ namespace GitUI.CommandsDialogs
         {
             var userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_From.Text);
 
-            if (userSelectedPath != null)
+            if (userSelectedPath is not null)
             {
                 _NO_TRANSLATE_From.Text = userSelectedPath;
             }
@@ -322,7 +322,7 @@ namespace GitUI.CommandsDialogs
         {
             var userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_To.Text);
 
-            if (userSelectedPath != null)
+            if (userSelectedPath is not null)
             {
                 _NO_TRANSLATE_To.Text = userSelectedPath;
             }
@@ -459,7 +459,7 @@ namespace GitUI.CommandsDialogs
             {
                 _branchListLoader.Dispose();
 
-                if (components != null)
+                if (components is not null)
                 {
                     components.Dispose();
                 }

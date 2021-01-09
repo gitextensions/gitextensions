@@ -76,7 +76,7 @@ namespace DeleteUnusedBranches
                 p.Y <= _checkBoxLocation.Y + _checkBoxSize.Height)
             {
                 Checked = !Checked;
-                if (CheckBoxClicked != null)
+                if (CheckBoxClicked is not null)
                 {
                     OnCheckBoxClicked(new CheckBoxHeaderCellEventArgs(Checked));
                     DataGridView.InvalidateCell(this);

@@ -94,7 +94,7 @@ namespace GitCommands.Patches
         public static byte[] GetSelectedLinesAsNewPatch([NotNull] GitModule module, [NotNull] string newFileName, [NotNull] string text, int selectionPosition, int selectionLength, [NotNull] Encoding fileContentEncoding, bool reset, byte[] filePreamble, string treeGuid)
         {
             var selectedChunks = FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreamble, fileContentEncoding);
-            var isTracked = treeGuid != null;
+            var isTracked = treeGuid is not null;
             string body = ToIndexPatch(selectedChunks, isIndex: isTracked, isWholeFile: true);
 
             if (body is null)
@@ -175,7 +175,7 @@ namespace GitCommands.Patches
                 if (currentPos + chunkStr.Length >= selectionPosition)
                 {
                     Chunk chunk = Chunk.ParseChunk(chunkStr, currentPos, selectionPosition, selectionLength);
-                    if (chunk != null)
+                    if (chunk is not null)
                     {
                         selectedChunks.Add(chunk);
                     }
@@ -643,7 +643,7 @@ namespace GitCommands.Patches
                             // if the last line is selected to be reset and there is no new line at the end of file
                             // then we also have to remove the last not selected line in order to add it right again with the "No newline.." indicator
                             PatchLine lastNotSelectedLine = result.CurrentSubChunk.RemovedLines.LastOrDefault(l => !l.Selected);
-                            if (lastNotSelectedLine != null)
+                            if (lastNotSelectedLine is not null)
                             {
                                 lastNotSelectedLine.Selected = true;
                                 PatchLine clonedLine = lastNotSelectedLine.Clone();

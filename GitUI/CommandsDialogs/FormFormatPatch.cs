@@ -57,7 +57,7 @@ namespace GitUI.CommandsDialogs
         {
             var userSelectedPath = OsShellUtil.PickFolder(this);
 
-            if (userSelectedPath != null)
+            if (userSelectedPath is not null)
             {
                 OutputPath.Text = userSelectedPath;
             }

@@ -37,7 +37,7 @@ namespace GitUI
 
         private void LoadBranches()
         {
-            if (_branchesToSelect != null)
+            if (_branchesToSelect is not null)
             {
                 branches.Items.AddRange(_branchesToSelect.ToArray());
             }

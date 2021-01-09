@@ -218,7 +218,7 @@ namespace GitUI.CommandsDialogs
             }
 
             var currentBranchRemote = remotes.FirstOrDefault(x => x.Name.Equals(selectedRemoteName, StringComparison.OrdinalIgnoreCase));
-            if (currentBranchRemote != null)
+            if (currentBranchRemote is not null)
             {
                 _NO_TRANSLATE_Remotes.SelectedItem = currentBranchRemote;
             }

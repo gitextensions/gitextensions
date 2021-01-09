@@ -94,7 +94,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public bool IsRowRelative(int row)
         {
             var node = GetNodeForRow(row);
-            return node != null && node.IsRelative;
+            return node is not null && node.IsRelative;
         }
 
         public bool IsRevisionRelative(ObjectId objectId)
@@ -190,7 +190,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             // No build the revisions parent/child structure. The parents need to added here. The child structure is kept in synch in
             // the RevisionGraphRevision class.
-            if (revision.ParentIds != null)
+            if (revision.ParentIds is not null)
             {
                 foreach (ObjectId parentObjectId in revision.ParentIds)
                 {
@@ -321,7 +321,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         [NotNull]
         private List<RevisionGraphRevision> BuildOrderedNodesCache(int currentRowIndex)
         {
-            if (_orderedNodesCache != null && !_reorder && _orderedNodesCache.Count >= Math.Min(Count, currentRowIndex))
+            if (_orderedNodesCache is not null && !_reorder && _orderedNodesCache.Count >= Math.Min(Count, currentRowIndex))
             {
                 return _orderedNodesCache;
             }

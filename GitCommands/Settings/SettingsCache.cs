@@ -73,7 +73,7 @@ namespace GitCommands
                 {
                     foreach (var (key, value) in keyValuePairs)
                     {
-                        if (value != null)
+                        if (value is not null)
                         {
                             SetValueImpl(key, value);
                         }
@@ -124,25 +124,25 @@ namespace GitCommands
 
         public bool HasValue(string name)
         {
-            return GetValue(name) != null;
+            return GetValue(name) is not null;
         }
 
         public bool HasADifferentValue<T>(string name, T value, Func<T, string> encode)
         {
-            var s = value != null
+            var s = value is not null
                 ? encode(value)
                 : null;
 
             return LockedAction(() =>
             {
                 string inMemValue = GetValue(name);
-                return inMemValue != null && !string.Equals(inMemValue, s);
+                return inMemValue is not null && !string.Equals(inMemValue, s);
             });
         }
 
         public void SetValue<T>(string name, T value, Func<T, string> encode)
         {
-            var s = value != null
+            var s = value is not null
                 ? encode(value)
                 : null;
 

@@ -109,7 +109,7 @@ namespace GitUI.Blame
 
             var scrollPos = BlameFile.VScrollPosition;
 
-            var line = _clickedBlameLine != null && _clickedBlameLine.Commit.ObjectId == objectId
+            var line = _clickedBlameLine is not null && _clickedBlameLine.Commit.ObjectId == objectId
                 ? _clickedBlameLine.OriginLineNumber
                 : initialLine ?? 0;
 
@@ -365,7 +365,7 @@ namespace GitUI.Blame
                     var authorEmail = line.Commit.AuthorMail?.Trim('<', '>');
                     if (showAuthorAvatar)
                     {
-                        if (authorEmail != null)
+                        if (authorEmail is not null)
                         {
                             if (cacheAvatars.ContainsKey(authorEmail))
                             {
@@ -487,7 +487,7 @@ namespace GitUI.Blame
                 return;
             }
 
-            if (_revGrid != null)
+            if (_revGrid is not null)
             {
                 _clickedBlameLine = _lastBlameLine;
                 _revGrid.SetSelectedRevision(_lastBlameLine.Commit.ObjectId);
@@ -583,7 +583,7 @@ namespace GitUI.Blame
             }
 
             selectedRevision = _revGrid?.GetRevision(blameCommit.ObjectId);
-            return selectedRevision != null;
+            return selectedRevision is not null;
         }
 
         private void blameRevisionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -608,7 +608,7 @@ namespace GitUI.Blame
 
         private void BlameRevision(ObjectId revisionId)
         {
-            if (_revGrid != null)
+            if (_revGrid is not null)
             {
                 _revGrid.SetSelectedRevision(revisionId);
                 return;

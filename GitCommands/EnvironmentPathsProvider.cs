@@ -87,7 +87,7 @@ namespace GitCommands
             {
             }
 
-            return fi != null;
+            return fi is not null;
         }
     }
 }

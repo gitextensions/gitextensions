@@ -88,7 +88,7 @@ namespace ReleaseNotesGenerator
 
         private void textBoxResult_TextChanged(object sender, EventArgs e)
         {
-            groupBoxCopy.Enabled = _lastGeneratedLogLines != null && _lastGeneratedLogLines.Any();
+            groupBoxCopy.Enabled = _lastGeneratedLogLines is not null && _lastGeneratedLogLines.Any();
         }
 
         private void buttonCopyOrigOutput_Click(object sender, EventArgs e)

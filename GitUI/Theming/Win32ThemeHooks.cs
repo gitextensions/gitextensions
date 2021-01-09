@@ -145,7 +145,7 @@ namespace GitUI.Theming
             _drawThemeTextExHook?.Dispose();
             _createWindowExHook?.Dispose();
 
-            if (_renderers != null)
+            if (_renderers is not null)
             {
                 foreach (var renderer in _renderers)
                 {
@@ -257,7 +257,7 @@ namespace GitUI.Theming
             if (!BypassThemeRenderers)
             {
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
-                if (renderer != null && renderer.GetThemeColor(ipartid, istateid, ipropid, out pcolor) == ThemeRenderer.Handled)
+                if (renderer is not null && renderer.GetThemeColor(ipartid, istateid, ipropid, out pcolor) == ThemeRenderer.Handled)
                 {
                     return ThemeRenderer.Handled;
                 }
@@ -275,7 +275,7 @@ namespace GitUI.Theming
             if (!BypassThemeRenderers)
             {
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
-                if (renderer != null && renderer.ForceUseRenderTextEx)
+                if (renderer is not null && renderer.ForceUseRenderTextEx)
                 {
                     NativeMethods.DTTOPTS poptions = new NativeMethods.DTTOPTS
                     {
@@ -307,7 +307,7 @@ namespace GitUI.Theming
             if (!BypassThemeRenderers)
             {
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
-                if (renderer != null && renderer.RenderTextEx(
+                if (renderer is not null && renderer.RenderTextEx(
                     htheme, hdc,
                     partid, stateid,
                     psztext, cchtext,

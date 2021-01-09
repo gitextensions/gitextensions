@@ -195,12 +195,12 @@ namespace GitUI.CommandsDialogs
             panelCurrentSettingsPage.Controls.Clear();
 
             var settingsPage = e.SettingsPage;
-            if (settingsPage != null)
+            if (settingsPage is not null)
             {
                 _lastSelectedSettingsPageType = settingsPage.GetType();
             }
 
-            if (settingsPage?.GuiControl != null)
+            if (settingsPage?.GuiControl is not null)
             {
                 panelCurrentSettingsPage.Controls.Add(settingsPage.GuiControl);
                 e.SettingsPage.GuiControl.Dock = DockStyle.Fill;
@@ -257,7 +257,7 @@ namespace GitUI.CommandsDialogs
 
                 return true;
             }
-            catch (SaveSettingsException ex) when (ex.InnerException != null)
+            catch (SaveSettingsException ex) when (ex.InnerException is not null)
             {
                 using var dialog = new TaskDialog
                 {
@@ -281,7 +281,7 @@ namespace GitUI.CommandsDialogs
             {
                 LoadSettings();
 
-                if (_initialPage is null && _lastSelectedSettingsPageType != null)
+                if (_initialPage is null && _lastSelectedSettingsPageType is not null)
                 {
                     _initialPage = new SettingsPageReferenceByType(_lastSelectedSettingsPageType);
                 }

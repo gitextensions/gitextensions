@@ -124,11 +124,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
             else if (comboBoxTags.Focused)
             {
-                _selectedRevision = _selectedTag != null ? _selectedTag.Guid : "";
+                _selectedRevision = _selectedTag is not null ? _selectedTag.Guid : "";
             }
             else if (comboBoxBranches.Focused)
             {
-                _selectedRevision = _selectedBranch != null ? _selectedBranch.Guid : "";
+                _selectedRevision = _selectedBranch is not null ? _selectedBranch.Guid : "";
             }
             else
             {
@@ -209,7 +209,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
 
             var guid = Module.RevParse(text);
-            if (guid != null)
+            if (guid is not null)
             {
                 textboxCommitExpression.Text = text;
                 textboxCommitExpression.SelectAll();

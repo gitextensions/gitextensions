@@ -254,12 +254,12 @@ namespace GitCommands.Git
 
                 var staged = isIndex ? StagedStatus.Index : StagedStatus.WorkTree;
                 GitItemStatus gitItemStatus = GitItemStatusConverter.FromStatusCharacter(staged, fileName, x);
-                if (oldFileName != null)
+                if (oldFileName is not null)
                 {
                     gitItemStatus.OldName = oldFileName;
                 }
 
-                if (renamePercent != null)
+                if (renamePercent is not null)
                 {
                     gitItemStatus.RenameCopyPercentage = renamePercent;
                 }

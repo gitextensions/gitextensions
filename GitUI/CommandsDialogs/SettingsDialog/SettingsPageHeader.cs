@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             label1.Font = new System.Drawing.Font(label1.Font, System.Drawing.FontStyle.Bold);
 
-            if (page != null)
+            if (page is not null)
             {
                 settingsPagePanel.Controls.Add(page);
                 page.Dock = DockStyle.Fill;

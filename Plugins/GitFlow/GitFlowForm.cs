@@ -66,7 +66,7 @@ namespace GitFlow
             lblPrefixManage.Text = string.Empty;
             ttGitFlow.SetToolTip(lnkGitFlow, _gitFlowTooltip.Text);
 
-            if (_gitUiCommands != null)
+            if (_gitUiCommands is not null)
             {
                 Init();
             }
@@ -171,7 +171,7 @@ namespace GitFlow
             cbManageType.Enabled = true;
             cbBranches.DataSource = isThereABranch ? branches : new[] { string.Format(_noBranchExist.Text, branchType) };
             cbBranches.Enabled = isThereABranch;
-            if (isThereABranch && CurrentBranch != null)
+            if (isThereABranch && CurrentBranch is not null)
             {
                 cbBranches.SelectedItem = CurrentBranch;
                 CurrentBranch = null;

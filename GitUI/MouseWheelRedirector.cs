@@ -62,7 +62,7 @@ namespace GitUI
                 return false;
             }
 
-            while (control != null && !(control is GitExtensionsControl))
+            while (control is not null && !(control is GitExtensionsControl))
             {
                 bool nonScrollableRtbx = isNonScrollableRichTextBox(control);
 

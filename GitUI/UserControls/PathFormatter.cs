@@ -111,7 +111,7 @@ namespace GitUI
 
         private static (string prefix, string text, string suffix) FormatString(string name, string oldName, int step, bool isNameTruncated)
         {
-            if (oldName != null)
+            if (oldName is not null)
             {
                 int numberOfTruncatedChars = step / 2;
                 int nameTruncatedChars = isNameTruncated ? step - numberOfTruncatedChars : numberOfTruncatedChars;

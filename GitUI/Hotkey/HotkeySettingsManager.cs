@@ -92,7 +92,7 @@ namespace GitUI.Hotkey
             {
                 foreach (var command in setting.Commands)
                 {
-                    if (command != null)
+                    if (command is not null)
                     {
                         _usedKeys.Add(command.KeyData);
                     }
@@ -136,11 +136,11 @@ namespace GitUI.Hotkey
             {
                 foreach (var setting in loadedSettings)
                 {
-                    if (setting != null)
+                    if (setting is not null)
                     {
                         foreach (var command in setting.Commands)
                         {
-                            if (command != null)
+                            if (command is not null)
                             {
                                 string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
                                 if (defaultCommands.TryGetValue(dictKey, out var defaultCommand))
@@ -159,7 +159,7 @@ namespace GitUI.Hotkey
                 {
                     foreach (var command in setting.Commands)
                     {
-                        if (command != null)
+                        if (command is not null)
                         {
                             string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
                             defaultCommands.Add(dictKey, command);

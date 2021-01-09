@@ -122,7 +122,7 @@ namespace GitUI.CommandsDialogs
                         if (logPatternMatch.Groups.Count >= 5)
                         {
                             var parentId = logPatternMatch.Groups[5].Value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
-                            if (parentId != null)
+                            if (parentId is not null)
                             {
                                 result.Parent = ObjectId.Parse(parentId);
                             }

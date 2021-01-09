@@ -238,7 +238,7 @@ namespace GitCommands
         {
             string name = "";
 
-            if (repositoryUrl != null)
+            if (repositoryUrl is not null)
             {
                 const string standardRepositorySuffix = ".git";
                 string path = repositoryUrl.TrimEnd('\\', '/');
@@ -377,7 +377,7 @@ namespace GitCommands
                 if (Path.IsPathRooted(location))
                 {
                     fullName = FindFile(location, fileName);
-                    if (fullName != null)
+                    if (fullName is not null)
                     {
                         return fullName;
                     }
@@ -386,13 +386,13 @@ namespace GitCommands
                 }
 
                 fullName = FindFileInEnvVarFolder("ProgramFiles", location, fileName);
-                if (fullName != null)
+                if (fullName is not null)
                 {
                     return fullName;
                 }
 
                 fullName = FindFileInEnvVarFolder("ProgramW6432", location, fileName);
-                if (fullName != null)
+                if (fullName is not null)
                 {
                     return fullName;
                 }
@@ -400,7 +400,7 @@ namespace GitCommands
                 if (IntPtr.Size == 8 || (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
                 {
                     fullName = FindFileInEnvVarFolder("ProgramFiles(x86)", location, fileName);
-                    if (fullName != null)
+                    if (fullName is not null)
                     {
                         return fullName;
                     }

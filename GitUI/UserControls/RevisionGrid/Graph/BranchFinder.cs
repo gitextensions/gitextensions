@@ -57,7 +57,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             string mergedWith;
             (mergedInto, mergedWith) = ParseMergeMessage(node.GitRevision.Subject, appendPullRequest: isTheFirstBranch);
 
-            if (mergedInto != null)
+            if (mergedInto is not null)
             {
                 CommittedTo = isTheFirstBranch ? mergedInto : mergedWith;
             }
@@ -67,7 +67,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 MergedWith = mergedWith ?? string.Empty;
             }
 
-            return CommittedTo != null;
+            return CommittedTo is not null;
         }
 
         private static (string into, string with) ParseMergeMessage([NotNull] string commitSubject, bool appendPullRequest)

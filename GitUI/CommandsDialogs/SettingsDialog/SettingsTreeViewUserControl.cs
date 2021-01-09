@@ -101,14 +101,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private void FireSettingsPageSelectedEvent(TreeNode node)
         {
-            if (SettingsPageSelected != null)
+            if (SettingsPageSelected is not null)
             {
                 var page = (ISettingsPage)node.Tag;
 
                 if (page.GuiControl is null)
                 {
                     var firstSubNode = node.FirstNode;
-                    if (firstSubNode != null)
+                    if (firstSubNode is not null)
                     {
                         treeView1.SelectedNode = firstSubNode;
                         return;
@@ -237,7 +237,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 _pages2NodeMap.TryGetValue(settingsPageReference, out node);
             }
 
-            if (node != null)
+            if (node is not null)
             {
                 _isSelectionChangeTriggeredByGoto = true;
                 treeView1.SelectedNode = node;
@@ -259,7 +259,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 if (indexOfSelectedNode == -1 || indexOfSelectedNode + 1 == _nodesFoundByTextBox.Count)
                 {
                     var firstFoundNode = _nodesFoundByTextBox.FirstOrDefault();
-                    if (firstFoundNode != null)
+                    if (firstFoundNode is not null)
                     {
                         treeView1.SelectedNode = firstFoundNode;
                     }

@@ -67,12 +67,12 @@ namespace GitCommandsTests
         {
             var args = _revisionReader.GetTestAccessor().BuildArgumentsBuildArguments(refFilterOptions, "my_*", "my_revision", "my_path");
 
-            if (expectedToContain != null)
+            if (expectedToContain is not null)
             {
                 args.ToString().Should().Contain(expectedToContain);
             }
 
-            if (notExpectedToContain != null)
+            if (notExpectedToContain is not null)
             {
                 args.ToString().Should().NotContain(notExpectedToContain);
             }

@@ -523,7 +523,7 @@ namespace GitUIPluginInterfaces
         /// <inheritdoc />
         public bool Equals(ObjectId other)
         {
-            return other != null &&
+            return other is not null &&
                    _i1 == other._i1 &&
                    _i2 == other._i2 &&
                    _i3 == other._i3 &&

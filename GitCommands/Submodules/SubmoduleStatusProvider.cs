@@ -99,7 +99,7 @@ namespace GitCommands.Submodules
             // Structure is updated
             OnStatusUpdated(result, cancelToken);
 
-            if (updateStatus && currentModule.SuperprojectModule != null)
+            if (updateStatus && currentModule.SuperprojectModule is not null)
             {
                 // For the top module, use git-status information to update the status
                 // If a submodule is current, update once from top module to give an overview
@@ -114,7 +114,7 @@ namespace GitCommands.Submodules
                 {
                     var path = topModule.GetSubmoduleFullPath(name);
 
-                    if (_submoduleInfos.ContainsKey(path) && _submoduleInfos[path].Detailed != null)
+                    if (_submoduleInfos.ContainsKey(path) && _submoduleInfos[path].Detailed is not null)
                     {
                         SetModuleAsDirtyUpwards(topModule);
                         break;
@@ -290,13 +290,13 @@ namespace GitCommands.Submodules
             // For the current module git-status has information to set and clear the IsDirty flag
             // but cannot evaluate or change the ahead/behind information
             // The top module can only be dirty, but a submodule will only update the tree below current module
-            if (gitStatus != null && gitStatus.Count > 0)
+            if (gitStatus is not null && gitStatus.Count > 0)
             {
                 // If changes this and all super projects are at least dirty
                 // (changed commit can be missed, but top module can only be dirty)
                 SetModuleAsDirtyUpwards(module);
             }
-            else if (_submoduleInfos[module.WorkingDir].Detailed != null)
+            else if (_submoduleInfos[module.WorkingDir].Detailed is not null)
             {
                 // No Git changes for this module, clear dirty status (but unknown for super projects)
                 if (_submoduleInfos[module.WorkingDir].Detailed.Status == SubmoduleStatus.Unknown)
@@ -371,7 +371,7 @@ namespace GitCommands.Submodules
         /// <param name="module">module</param>
         private void SetModuleAsDirtyUpwards(GitModule module)
         {
-            while (module != null)
+            while (module is not null)
             {
                 SetModuleAsDirty(module.WorkingDir);
 
@@ -425,7 +425,7 @@ namespace GitCommands.Submodules
 
             var submoduleStatus = await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(superModule, submoduleName, noLocks: true)
             .ConfigureAwait(false);
-            if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
+            if (submoduleStatus is not null && submoduleStatus.Commit != submoduleStatus.OldCommit)
             {
                 submoduleStatus.CheckSubmoduleStatus(submoduleStatus.GetSubmodule(superModule));
             }
@@ -442,7 +442,7 @@ namespace GitCommands.Submodules
 
             // Recursively update submodules
             var module = new GitModule(path);
-            if (submoduleStatus != null && submoduleStatus.IsDirty)
+            if (submoduleStatus is not null && submoduleStatus.IsDirty)
             {
                 await GetSubmoduleDetailedStatusAsync(module, cancelToken);
                 return;

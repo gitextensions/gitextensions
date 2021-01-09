@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             if (!string.IsNullOrWhiteSpace(currentModule?.WorkingDir))
             {
                 var di = new DirectoryInfo(currentModule.WorkingDir);
-                if (di.Parent != null)
+                if (di.Parent is not null)
                 {
                     directories.Add(di.Parent.FullName.EnsureTrailingPathSeparator());
                 }
@@ -94,7 +94,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _NO_TRANSLATE_Directory.Text = _NO_TRANSLATE_Directory.Text.Trim();
 
             _chosenModule = OpenGitRepository(_NO_TRANSLATE_Directory.Text, RepositoryHistoryManager.Locals);
-            if (_chosenModule != null)
+            if (_chosenModule is not null)
             {
                 Close();
                 return;
@@ -148,7 +148,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             try
             {
                 var currentDirectory = new DirectoryInfo(_NO_TRANSLATE_Directory.Text);
-                folderGoUpButton.Enabled = currentDirectory.Exists && currentDirectory.Parent != null;
+                folderGoUpButton.Enabled = currentDirectory.Exists && currentDirectory.Parent is not null;
             }
             catch
             {

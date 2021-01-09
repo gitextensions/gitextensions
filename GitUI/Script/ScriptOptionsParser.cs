@@ -141,7 +141,7 @@ namespace GitUI.Script
                         }
                     }
                 }
-                else if (selectedRevision is null && scriptHostControl != null && DependsOnSelectedRevision(option))
+                else if (selectedRevision is null && scriptHostControl is not null && DependsOnSelectedRevision(option))
                 {
                     allSelectedRevisions = scriptHostControl.GetSelectedRevisions() ?? Array.Empty<GitRevision>();
                     selectedRevision = CalculateSelectedRevision(scriptHostControl, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
@@ -493,7 +493,7 @@ namespace GitUI.Script
                     break;
             }
 
-            if (newString != null)
+            if (newString is not null)
             {
                 string newStringQuoted = Regex.Replace(newString, @"(?<!\\)""", "\\\"");
                 newStringQuoted = "\"" + newStringQuoted;

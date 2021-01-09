@@ -70,7 +70,7 @@ namespace GitUI.BranchTreePanel
 
             public void RefreshDetails()
             {
-                if (Info.Detailed != null && Tree.TreeViewNode.TreeView != null)
+                if (Info.Detailed is not null && Tree.TreeViewNode.TreeView is not null)
                 {
                     ApplyText();
                     ApplyStyle();
@@ -113,7 +113,7 @@ namespace GitUI.BranchTreePanel
             {
                 base.ApplyStyle();
 
-                Trace.Assert(TreeViewNode != null);
+                Trace.Assert(TreeViewNode is not null);
 
                 if (IsCurrent)
                 {
@@ -180,7 +180,7 @@ namespace GitUI.BranchTreePanel
             protected override Task OnAttachedAsync()
             {
                 var e = _currentSubmoduleInfo;
-                if (e != null)
+                if (e is not null)
                 {
                     OnStatusUpdated(e);
                 }
@@ -211,7 +211,7 @@ namespace GitUI.BranchTreePanel
                         return loadNodesTask;
                     }).ConfigureAwait(false);
 
-                    if (cts != null && loadNodesTask != null)
+                    if (cts is not null && loadNodesTask is not null)
                     {
                         var loadedNodes = await loadNodesTask;
                         await LoadNodeDetailsAsync(cts.Token, loadedNodes).ConfigureAwaitRunInline();
@@ -234,7 +234,7 @@ namespace GitUI.BranchTreePanel
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
                 token.ThrowIfCancellationRequested();
 
-                if (TreeViewNode.TreeView != null)
+                if (TreeViewNode.TreeView is not null)
                 {
                     TreeViewNode.TreeView.BeginUpdate();
                     try
@@ -278,7 +278,7 @@ namespace GitUI.BranchTreePanel
 
                 // Add current and parent module paths
                 var parentModule = threadModule;
-                while (parentModule != null)
+                while (parentModule is not null)
                 {
                     modulePaths.Add(parentModule.WorkingDir);
                     parentModule = parentModule.SuperprojectModule;
@@ -301,7 +301,7 @@ namespace GitUI.BranchTreePanel
                 string GetSubmoduleSuperPath(string submodulePath)
                 {
                     var superPath = modulePaths.Find(path => submodulePath != path && submodulePath.Contains(path));
-                    Trace.Assert(superPath != null);
+                    Trace.Assert(superPath is not null);
                     return superPath;
                 }
             }

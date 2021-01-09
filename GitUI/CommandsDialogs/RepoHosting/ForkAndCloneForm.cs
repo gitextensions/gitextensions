@@ -313,7 +313,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             var userSelectedPath = OsShellUtil.PickFolder(this, initialDir);
 
-            if (userSelectedPath != null)
+            if (userSelectedPath is not null)
             {
                 destinationTB.Text = userSelectedPath;
                 _destinationTB_TextChanged(sender, e);
@@ -445,7 +445,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             var repo = CurrentySelectedGitRepo;
 
-            if (repo != null)
+            if (repo is not null)
             {
                 bool multipleProtocols = repo.SupportedCloneProtocols.Any();
 
@@ -468,7 +468,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     createDirTB.Text = repo.Name;
                     addUpstreamRemoteAsCB.Text = "";
                     addUpstreamRemoteAsCB.Items.Clear();
-                    if (repo.ParentOwner != null)
+                    if (repo.ParentOwner is not null)
                     {
                         var upstreamRemoteName = repo.ParentOwner ?? "";
                         addUpstreamRemoteAsCB.Items.Add(upstreamRemoteName);
@@ -479,7 +479,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         }
                     }
 
-                    addUpstreamRemoteAsCB.Enabled = repo.ParentOwner != null;
+                    addUpstreamRemoteAsCB.Enabled = repo.ParentOwner is not null;
                 }
 
                 cloneBtn.Enabled = true;

@@ -46,7 +46,7 @@ namespace GitUI.CommandsDialogs
 
                 var checkedOutObjectId = Module.GetCurrentCheckout();
 
-                Debug.Assert(checkedOutObjectId != null, "checkedOutObjectId != null");
+                Debug.Assert(checkedOutObjectId is not null, "checkedOutObjectId is not null");
 
                 ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
 

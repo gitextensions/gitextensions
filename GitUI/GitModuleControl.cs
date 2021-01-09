@@ -73,7 +73,7 @@ namespace GitUI
             }
             set
             {
-                if (_uiCommandsSource != null)
+                if (_uiCommandsSource is not null)
                 {
                     throw new ArgumentException($"{nameof(UICommandsSource)} is already set.");
                 }
@@ -102,7 +102,7 @@ namespace GitUI
         public bool TryGetUICommands(out GitUICommands commands)
         {
             commands = _uiCommandsSource?.UICommands;
-            return commands != null;
+            return commands is not null;
         }
 
         /// <summary>Gets the <see cref="UICommands"/>' <see cref="GitModule"/> reference.</summary>
@@ -122,7 +122,7 @@ namespace GitUI
                 return;
             }
 
-            if (_uiCommandsSource != null)
+            if (_uiCommandsSource is not null)
             {
                 DisposeUICommandsSource();
             }

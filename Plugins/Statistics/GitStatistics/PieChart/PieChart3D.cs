@@ -349,7 +349,7 @@ namespace GitStatistics.PieChart
         /// </summary>
         public void SetValues(decimal[] value)
         {
-            Debug.Assert(value != null && value.Length > 0, "value != null && value.Length > 0");
+            Debug.Assert(value is not null && value.Length > 0, "value is not null && value.Length > 0");
             Values = value;
         }
 
@@ -420,7 +420,7 @@ namespace GitStatistics.PieChart
         /// </param>
         public void Draw(Graphics graphics)
         {
-            Debug.Assert(Values != null && Values.Length > 0, "Values != null && Values.Length > 0");
+            Debug.Assert(Values is not null && Values.Length > 0, "Values is not null && Values.Length > 0");
             InitializePieSlices();
             if (FitToBoundingRectangle)
             {
@@ -573,7 +573,7 @@ namespace GitStatistics.PieChart
         /// </returns>
         private static int GetForemostPieSlice(IReadOnlyList<PieSlice> pieSlices)
         {
-            Debug.Assert(pieSlices != null && pieSlices.Count > 0, "pieSlices != null && pieSlices.Count > 0");
+            Debug.Assert(pieSlices is not null && pieSlices.Count > 0, "pieSlices is not null && pieSlices.Count > 0");
             for (var i = 0; i < pieSlices.Count; ++i)
             {
                 var pieSlice = pieSlices[i];

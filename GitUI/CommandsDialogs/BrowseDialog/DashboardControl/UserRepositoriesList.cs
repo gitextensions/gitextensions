@@ -237,7 +237,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     return;
                 }
 
-                if (_hoveredItem != null)
+                if (_hoveredItem is not null)
                 {
                     // The previously hovered item may be already removed from the view, example:
                     // user locates mouse pointer over an item and triggers data refresh by pressing F5
@@ -247,7 +247,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     }
                 }
 
-                if (value != null)
+                if (value is not null)
                 {
                     listView1.Invalidate(listView1.GetItemRect(value.Index));
                 }
@@ -360,7 +360,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             return listView1.Items.Cast<ListViewItem>()
                 .Select(lvi => (Repository)lvi.Tag)
-                .Where(_ => _ != null);
+                .Where(_ => _ is not null);
         }
 
         [CanBeNull]
@@ -438,7 +438,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private static void RepositoryContextAction(ToolStripItem menuItem, Action<SelectedRepositoryItem> action)
         {
             var selected = GetSelectedRepositoryItem(menuItem);
-            if (selected != null)
+            if (selected is not null)
             {
                 action(selected);
             }
@@ -518,7 +518,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 toolStripMenuItem1.Visible =
                     tsmiCategories.Visible =
                         toolStripMenuItem2.Visible =
-                            tsmiOpenFolder.Visible = selected != null;
+                            tsmiOpenFolder.Visible = selected is not null;
 
             tsmiRemoveMissingReposFromList.Visible = _hasInvalidRepos;
 
@@ -608,7 +608,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             else if (e.Button == MouseButtons.Right)
             {
                 _rightClickedItem = listView1.GetItemAt(e.X, e.Y);
-                if (_rightClickedItem != null)
+                if (_rightClickedItem is not null)
                 {
                     _rightClickedItem.Selected = true;
                 }

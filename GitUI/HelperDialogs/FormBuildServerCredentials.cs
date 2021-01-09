@@ -31,7 +31,7 @@ namespace GitUI.HelperDialogs
 
         private void FormBuildServerCredentials_Load(object sender, EventArgs e)
         {
-            if (BuildServerCredentials != null)
+            if (BuildServerCredentials is not null)
             {
                 radioButtonGuestAccess.Checked = BuildServerCredentials.UseGuestAccess;
                 radioButtonAuthenticatedUser.Checked = !BuildServerCredentials.UseGuestAccess;

@@ -85,7 +85,7 @@ namespace GitUI.UserControls.RevisionGrid
                 if (Columns[e.ColumnIndex].Tag is ColumnProvider provider)
                 {
                     var revision = GetRevision(e.RowIndex);
-                    if (revision != null)
+                    if (revision is not null)
                     {
                         provider.OnCellFormatting(e, revision);
                     }
@@ -214,7 +214,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     var row = _revisionGraph.GetNodeForRow(SelectedRows[i].Index);
 
-                    if (row != null && row.GitRevision != null)
+                    if (row is not null && row.GitRevision is not null)
                     {
                         // NOTE returned collection has reverse order of SelectedRows
                         data[SelectedRows.Count - 1 - i] = row.GitRevision.ObjectId;
@@ -272,7 +272,7 @@ namespace GitUI.UserControls.RevisionGrid
                 return SystemBrushes.Highlight;
             }
 
-            if (AppSettings.HighlightAuthoredRevisions && revision != null && !revision.IsArtificial && AuthorHighlighting.IsHighlighted(revision))
+            if (AppSettings.HighlightAuthoredRevisions && revision is not null && !revision.IsArtificial && AuthorHighlighting.IsHighlighted(revision))
             {
                 return new SolidBrush(AppColor.AuthoredHighlight.GetThemeColor());
             }
@@ -649,7 +649,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public int? TryGetRevisionIndex([CanBeNull] ObjectId objectId)
         {
-            return objectId != null && _revisionGraph.TryGetRowIndex(objectId, out var index) ? (int?)index : null;
+            return objectId is not null && _revisionGraph.TryGetRowIndex(objectId, out var index) ? (int?)index : null;
         }
 
         public IReadOnlyList<ObjectId> GetRevisionChildren(ObjectId objectId)
@@ -691,7 +691,7 @@ namespace GitUI.UserControls.RevisionGrid
                     break;
                 case Keys.Control | Keys.C:
                     var selectedRevisions = SelectedObjectIds;
-                    if (selectedRevisions != null && selectedRevisions.Count != 0)
+                    if (selectedRevisions is not null && selectedRevisions.Count != 0)
                     {
                         ClipboardUtil.TrySetText(string.Join(Environment.NewLine, selectedRevisions));
                     }

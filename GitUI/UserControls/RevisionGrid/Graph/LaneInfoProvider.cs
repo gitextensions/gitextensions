@@ -55,7 +55,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 laneInfoText.AppendLine();
             }
 
-            if (node.GitRevision.Body != null)
+            if (node.GitRevision.Body is not null)
             {
                 laneInfoText.Append(_gitRevisionSummaryBuilder.BuildSummary(node.GitRevision.Body));
             }

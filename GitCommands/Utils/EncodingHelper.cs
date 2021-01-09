@@ -21,17 +21,17 @@ namespace GitCommands
 
             var sb = new StringBuilder();
 
-            if (output != null && output.Length > 0)
+            if (output is not null && output.Length > 0)
             {
                 sb.Append(encoding.GetString(output));
             }
 
-            if (error != null && error.Length > 0 && output != null && output.Length > 0)
+            if (error is not null && error.Length > 0 && output is not null && output.Length > 0)
             {
                 sb.AppendLine();
             }
 
-            if (error != null && error.Length > 0)
+            if (error is not null && error.Length > 0)
             {
                 sb.Append(encoding.GetString(error));
             }
@@ -58,7 +58,7 @@ namespace GitCommands
             }
 
             string outputString = "";
-            if (output != null && output.Length > 0)
+            if (output is not null && output.Length > 0)
             {
                 Stream ms = null;
                 try
@@ -83,7 +83,7 @@ namespace GitCommands
             }
 
             string errorString = null;
-            if (error != null && error.Length > 0)
+            if (error is not null && error.Length > 0)
             {
                 Stream ms = null;
                 try

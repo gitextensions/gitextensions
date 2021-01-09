@@ -249,9 +249,9 @@ namespace GitCommandsTests.Git
         {
             var sourceBytes = Encoding.ASCII.GetBytes(source);
 
-            Assert.AreEqual(expected != null, ObjectId.TryParseAsciiHexBytes(sourceBytes, offset, out var id));
+            Assert.AreEqual(expected is not null, ObjectId.TryParseAsciiHexBytes(sourceBytes, offset, out var id));
 
-            if (expected != null)
+            if (expected is not null)
             {
                 Assert.AreEqual(ObjectId.Parse(expected), id);
             }

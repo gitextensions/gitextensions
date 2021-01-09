@@ -297,7 +297,7 @@ namespace GitUITests.GitUICommandsTests
                 {
                     await UITest.WaitForIdleAsync();
                     var formPull = Application.OpenForms.OfType<FormPull>().FirstOrDefault();
-                    if (formPull != null)
+                    if (formPull is not null)
                     {
                         formPull.Close();
                         break;
@@ -308,7 +308,7 @@ namespace GitUITests.GitUICommandsTests
                 {
                     await UITest.WaitForIdleAsync();
                     var formPush = Application.OpenForms.OfType<FormPush>().FirstOrDefault();
-                    if (formPush != null)
+                    if (formPush is not null)
                     {
                         formPush.Close();
                         break;
@@ -348,7 +348,7 @@ namespace GitUITests.GitUICommandsTests
                 showForm: () => _commands.GetTestAccessor().RunCommandBasedOnArgument(args).Should().Be(expectedResult),
                 runTestAsync: form =>
                 {
-                    if (runTest != null)
+                    if (runTest is not null)
                     {
                         runTest(form);
                     }

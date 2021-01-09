@@ -224,7 +224,7 @@ namespace GitUI.BranchTreePanel
             var node = treeMain.SelectedNode?.Tag as Node;
 
             // If node is an inner node, and overrides OnDoubleClick, then disable expand/collapse
-            if (node != null
+            if (node is not null
                 && node.Nodes.Count > 0
                 && IsOverride(node.GetType().GetMethod("OnDoubleClick", BindingFlags.Instance | BindingFlags.NonPublic)))
             {
@@ -235,7 +235,7 @@ namespace GitUI.BranchTreePanel
 
             bool IsOverride(MethodInfo m)
             {
-                return m != null && m.GetBaseDefinition().DeclaringType != m.DeclaringType;
+                return m is not null && m.GetBaseDefinition().DeclaringType != m.DeclaringType;
             }
         }
 
@@ -417,7 +417,7 @@ namespace GitUI.BranchTreePanel
         {
             _txtBranchCriterion.CloseDropdown();
 
-            if (_searchCriteriaChanged && _searchResult != null && _searchResult.Any())
+            if (_searchCriteriaChanged && _searchResult is not null && _searchResult.Any())
             {
                 _searchCriteriaChanged = false;
                 foreach (var coloredNode in _searchResult)

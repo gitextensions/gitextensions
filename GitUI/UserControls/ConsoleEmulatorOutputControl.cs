@@ -61,7 +61,7 @@ namespace GitUI.UserControls
                 IsStatusbarVisible = false
             };
 
-            if (oldTerminal != null)
+            if (oldTerminal is not null)
             {
                 KillProcess(oldTerminal);
                 _panel.Controls.Remove(oldTerminal);
@@ -165,7 +165,7 @@ namespace GitUI.UserControls
         {
             var text = args.GetText(GitModule.SystemEncoding);
             string filtered = FilterOutConsoleCommandLine(text);
-            if (filtered != null)
+            if (filtered is not null)
             {
                 SendAsLines(filtered);
             }
@@ -173,7 +173,7 @@ namespace GitUI.UserControls
 
         private void SendAsLines(string output)
         {
-            if (_lineChunk != null)
+            if (_lineChunk is not null)
             {
                 output = _lineChunk + output;
                 _lineChunk = null;
@@ -208,7 +208,7 @@ namespace GitUI.UserControls
 
         public void Flush()
         {
-            if (_lineChunk != null)
+            if (_lineChunk is not null)
             {
                 _fireDataReceived(new TextEventArgs(_lineChunk));
                 _lineChunk = null;

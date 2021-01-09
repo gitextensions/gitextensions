@@ -166,7 +166,7 @@ namespace GitUI.Editor
 
             TextMarker marker =
                 markers.FirstOrDefault(x => x.Offset > offset && x.Color == AppColor.HighlightAllOccurences.GetThemeColor());
-            if (marker != null)
+            if (marker is not null)
             {
                 TextLocation position = TextEditor.ActiveTextAreaControl.TextArea.Document.OffsetToPosition(marker.Offset);
                 TextEditor.ActiveTextAreaControl.Caret.Position = position;
@@ -184,7 +184,7 @@ namespace GitUI.Editor
 
             TextMarker marker =
                 markers.LastOrDefault(x => x.Offset < offset && x.Color == AppColor.HighlightAllOccurences.GetThemeColor());
-            if (marker != null)
+            if (marker is not null)
             {
                 TextLocation position = TextEditor.ActiveTextAreaControl.TextArea.Document.OffsetToPosition(marker.Offset);
                 TextEditor.ActiveTextAreaControl.Caret.Position = position;
@@ -199,7 +199,7 @@ namespace GitUI.Editor
 
         public async Task FindNextAsync(bool searchForwardOrOpenWithDifftool)
         {
-            if (searchForwardOrOpenWithDifftool && OpenWithDifftool != null && string.IsNullOrEmpty(_findAndReplaceForm.LookFor))
+            if (searchForwardOrOpenWithDifftool && OpenWithDifftool is not null && string.IsNullOrEmpty(_findAndReplaceForm.LookFor))
             {
                 OpenWithDifftool.Invoke();
                 return;
@@ -468,7 +468,7 @@ namespace GitUI.Editor
                 for (int line = 0; line < TotalNumberOfLines; ++line)
                 {
                     DiffLineInfo diffLineNum = _lineNumbersControl.GetLineInfo(line);
-                    if (diffLineNum != null)
+                    if (diffLineNum is not null)
                     {
                         int diffLine = rightFile ? diffLineNum.RightLineNumber : diffLineNum.LeftLineNumber;
                         if (diffLine != DiffLineInfo.NotApplicableLineNum && diffLine >= lineNumber)
@@ -674,7 +674,7 @@ namespace GitUI.Editor
                         _viewer.FirstVisibleLine = viewPosition.FirstVisibleLine;
                     }
                 }
-                else if (isDiff && _viewer.GetLineText(0) == viewPosition.FirstLine && viewPosition.ActiveLineNum != null)
+                else if (isDiff && _viewer.GetLineText(0) == viewPosition.FirstLine && viewPosition.ActiveLineNum is not null)
                 {
                     // prefer the LeftLineNum because the base revision will not change
                     int line = viewPosition.ActiveLineNum.LeftLineNumber != DiffLineInfo.NotApplicableLineNum

@@ -79,7 +79,7 @@ namespace GitExtensions
         {
             // This exception is arbitrary, see if there's additional information
             string? moreInfo = exception.InnerException?.Message;
-            if (moreInfo != null)
+            if (moreInfo is not null)
             {
                 moreInfo += Environment.NewLine + Environment.NewLine;
             }
@@ -102,7 +102,7 @@ namespace GitExtensions
                 Cancelable = true,
             };
 
-            if (exception != null)
+            if (exception is not null)
             {
                 var btnReport = new TaskDialogCommandLink("Report", Strings.ButtonReportBug);
                 btnReport.Click += (s, e) =>

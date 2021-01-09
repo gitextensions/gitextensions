@@ -396,13 +396,13 @@ namespace GitUI.BranchTreePanel
                     bool isVisible = !IsFiltering.Value || _refsSource.Contains(branch.ObjectId);
                     var localBranchNode = new LocalBranchNode(this, branch.ObjectId, branch.Name, branch.Name == currentBranch, isVisible);
 
-                    if (aheadBehindData != null && aheadBehindData.ContainsKey(localBranchNode.FullPath))
+                    if (aheadBehindData is not null && aheadBehindData.ContainsKey(localBranchNode.FullPath))
                     {
                         localBranchNode.UpdateAheadBehind(aheadBehindData[localBranchNode.FullPath].ToDisplay());
                     }
 
                     var parent = localBranchNode.CreateRootNode(pathToNode, (tree, parentPath) => new BranchPathNode(tree, parentPath));
-                    if (parent != null)
+                    if (parent is not null)
                     {
                         nodes.AddNode(parent);
                     }
@@ -418,7 +418,7 @@ namespace GitUI.BranchTreePanel
                     TreeViewNode.Expand();
                 }
 
-                if (TreeViewNode.TreeView.SelectedNode != null)
+                if (TreeViewNode.TreeView.SelectedNode is not null)
                 {
                     // If there's a selected treenode, don't stomp over it
                     return;

@@ -165,7 +165,7 @@ namespace GitUI.BuildServerIntegration
 
                                 var section = credentialsConfig.FindConfigSection(CredentialsConfigName);
 
-                                if (section != null)
+                                if (section is not null)
                                 {
                                     buildServerCredentials.UseGuestAccess = section.GetValueAsBool(UseGuestAccessKey,
                                         true);
@@ -196,7 +196,7 @@ namespace GitUI.BuildServerIntegration
                 {
                     buildServerCredentials = ThreadHelper.JoinableTaskFactory.Run(() => ShowBuildServerCredentialsFormAsync(buildServerAdapter.UniqueKey, buildServerCredentials));
 
-                    if (buildServerCredentials != null)
+                    if (buildServerCredentials is not null)
                     {
                         var credentialsConfig = new ConfigFile("", true);
 
@@ -321,7 +321,7 @@ namespace GitUI.BuildServerIntegration
             var exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
             var export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerType);
 
-            if (export != null)
+            if (export is not null)
             {
                 try
                 {
@@ -342,7 +342,7 @@ namespace GitUI.BuildServerIntegration
                             {
                                 _revisionGrid.UICommands.StartSettingsDialog(typeof(BuildServerIntegrationSettingsPage));
                             }));
-                        }, objectId => _revisionGrid.GetRevision(objectId) != null);
+                        }, objectId => _revisionGrid.GetRevision(objectId) is not null);
                     return buildServerAdapter;
                 }
                 catch (InvalidOperationException ex)

@@ -29,7 +29,7 @@ namespace ResourceManager.Xliff
 
         public static IEnumerable<(string name, object item)> GetObjFields(object obj, string objName)
         {
-            if (objName != null)
+            if (objName is not null)
             {
                 yield return (objName, obj);
             }
@@ -340,7 +340,7 @@ namespace ResourceManager.Xliff
                 obj = parameterConstructor.Invoke(new object[parameters.Length]);
             }
 
-            Debug.Assert(obj != null, "obj != null");
+            Debug.Assert(obj is not null, "obj is not null");
             return obj;
         }
     }

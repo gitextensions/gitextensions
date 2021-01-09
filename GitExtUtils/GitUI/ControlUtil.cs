@@ -78,7 +78,7 @@ namespace GitUI
         {
             var parent = control.Parent;
 
-            while (parent != null)
+            while (parent is not null)
             {
                 yield return parent;
                 parent = parent.Parent;

@@ -96,7 +96,7 @@ namespace AzureDevOpsIntegration
         [CanBeNull]
         private static string GetBuildDefinitionsIds(IEnumerable<BuildDefinition> buildDefinitions)
         {
-            if (buildDefinitions != null && buildDefinitions.Any())
+            if (buildDefinitions is not null && buildDefinitions.Any())
             {
                 return string.Join(",", buildDefinitions.Select(b => b.Id));
             }

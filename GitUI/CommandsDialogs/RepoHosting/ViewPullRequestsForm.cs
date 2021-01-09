@@ -150,7 +150,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             if (_isFirstLoad)
             {
                 _isFirstLoad = false;
-                if (infos != null && infos.Count == 0 && _hostedRemotes.Count > 0)
+                if (infos is not null && infos.Count == 0 && _hostedRemotes.Count > 0)
                 {
                     SelectNextHostedRepository();
                     return;
@@ -271,7 +271,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
 
             _currentPullRequestInfo = _pullRequestsList.SelectedItems[0].Tag as IPullRequestInformation;
-            if (prevPri != null && prevPri.Equals(_currentPullRequestInfo))
+            if (prevPri is not null && prevPri.Equals(_currentPullRequestInfo))
             {
                 return;
             }
@@ -324,9 +324,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _discussionWB_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            if (_discussionWB.Document != null)
+            if (_discussionWB.Document is not null)
             {
-                if (_discussionWB.Document.Window != null && _discussionWB.Document.Body != null)
+                if (_discussionWB.Document.Window is not null && _discussionWB.Document.Body is not null)
                 {
                     _discussionWB.Document.Window.ScrollTo(0, _discussionWB.Document.Body.ScrollRectangle.Height);
                 }
@@ -358,7 +358,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             _diffCache = new Dictionary<string, string>();
 
-            var fileParts = Regex.Split(diffData, @"(?:\n|^)diff --git ").Where(el => el != null && el.Trim().Length > 10).ToList();
+            var fileParts = Regex.Split(diffData, @"(?:\n|^)diff --git ").Where(el => el is not null && el.Trim().Length > 10).ToList();
             var giss = new List<GitItemStatus>();
 
             // baseSha is the sha of the merge to ("master") sha, the commit to be firstId
@@ -432,7 +432,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 var remoteRef = _currentPullRequestInfo.HeadRef;
 
                 var existingRepo = _hostedRemotes.FirstOrDefault(el => el.Name == remoteName);
-                if (existingRepo != null)
+                if (existingRepo is not null)
                 {
                     var hostedRepository = existingRepo.GetHostedRepository();
                     hostedRepository.CloneProtocol = _cloneGitProtocol;

@@ -237,7 +237,7 @@ Current Branch:
                 if (selectedScript is object)
                 {
                     ListViewItem lvi = lvScripts.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Tag == selectedScript);
-                    if (lvi != null)
+                    if (lvi is not null)
                     {
                         lvi.Selected = true;
                         lvScripts.FocusedItem = lvi;

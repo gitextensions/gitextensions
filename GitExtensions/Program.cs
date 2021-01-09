@@ -60,7 +60,7 @@ namespace GitExtensions
             catch (TypeInitializationException tie)
             {
                 // is this exception caused by the configuration?
-                if (tie.InnerException != null
+                if (tie.InnerException is not null
                     && tie.InnerException.GetType()
                         .IsSubclassOf(typeof(ConfigurationException)))
                 {

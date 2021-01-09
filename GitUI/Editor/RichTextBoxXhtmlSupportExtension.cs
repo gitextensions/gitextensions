@@ -1509,7 +1509,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                 case "a":
                     int length = rtb.TextLength - cs.hyperlinkStart;
 
-                    if (cs.hyperlink != null)
+                    if (cs.hyperlink is not null)
                     {
                         rtb.Select(cs.hyperlinkStart, length);
                         if (cs.hyperlink != rtb.SelectedText)

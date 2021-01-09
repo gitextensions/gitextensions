@@ -340,7 +340,7 @@ namespace GitUI.UserControls
 
         private static int GetGroupId(ListViewGroup listViewGroup)
         {
-            if (ListViewGroupIdProperty != null)
+            if (ListViewGroupIdProperty is not null)
             {
                 try
                 {

@@ -46,7 +46,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
         {
             var userSelectedPath = OsShellUtil.PickFolder(this, Directory.Text);
 
-            if (userSelectedPath != null)
+            if (userSelectedPath is not null)
             {
                 Directory.Text = userSelectedPath;
             }
@@ -110,7 +110,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
                             int branchIndex = head.IndexOf(GitRefName.RefsHeadsPrefix);
                             return branchIndex == -1 ? null : head.Substring(branchIndex + GitRefName.RefsHeadsPrefix.Length);
                         })
-                        .Where(branch => branch != null)
+                        .Where(branch => branch is not null)
                         .ToImmutableList();
         }
 

@@ -214,7 +214,7 @@ namespace GitCommands
         {
             var selectedRef = refs.FirstOrDefault(head => head.Name == branchName);
 
-            if (selectedRef != null)
+            if (selectedRef is not null)
             {
                 selectedRef.IsSelected = true;
 
@@ -224,7 +224,7 @@ namespace GitCommands
                          && selectedRef.GetTrackingRemote(localConfigFile) == head.Remote
                          && selectedRef.GetMergeWith(localConfigFile) == head.LocalName);
 
-                if (selectedHeadMergeSource != null)
+                if (selectedHeadMergeSource is not null)
                 {
                     selectedHeadMergeSource.IsSelectedHeadMergeSource = true;
                 }
@@ -517,7 +517,7 @@ namespace GitCommands
                     _index = endIndex + 1;
                 }
 
-                return pool != null
+                return pool is not null
                     ? pool.Intern(_s, startIndex, endIndex - startIndex)
                     : _s.Substring(startIndex, endIndex - startIndex);
             }

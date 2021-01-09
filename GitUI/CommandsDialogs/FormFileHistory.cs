@@ -153,7 +153,7 @@ namespace GitUI.CommandsDialogs
                 showOriginalFilePathToolStripMenuItem.Checked = AppSettings.BlameShowOriginalFilePath;
             }
 
-            if (filterByRevision && revision?.ObjectId != null)
+            if (filterByRevision && revision?.ObjectId is not null)
             {
                 _filterBranchHelper.SetBranchFilter(revision.Guid, false);
             }
@@ -610,7 +610,7 @@ namespace GitUI.CommandsDialogs
             else if (e.Command == "gotobranch" || e.Command == "gototag")
             {
                 CommitData commit = _commitDataManager.GetCommitData(e.Data, out _);
-                if (commit != null)
+                if (commit is not null)
                 {
                     FileChanges.SetSelectedRevision(commit.ObjectId);
                 }

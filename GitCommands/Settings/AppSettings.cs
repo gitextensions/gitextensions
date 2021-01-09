@@ -1755,7 +1755,7 @@ namespace GitCommands
             {
                 object value = oldSettings.GetValue(name, null);
 
-                if (value != null)
+                if (value is not null)
                 {
                     yield return (name, value.ToString());
                 }

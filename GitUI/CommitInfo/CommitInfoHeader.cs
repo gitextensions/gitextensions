@@ -62,7 +62,7 @@ namespace GitUI.CommitInfo
             this.InvokeAsync(() =>
             {
                 var data = _commitDataManager.CreateFromRevision(revision, children);
-                var header = _commitDataHeaderRenderer.Render(data, showRevisionsAsLinks: CommandClicked != null);
+                var header = _commitDataHeaderRenderer.Render(data, showRevisionsAsLinks: CommandClicked is not null);
 
                 rtbRevisionHeader.SuspendLayout();
 

@@ -95,7 +95,7 @@ namespace GitUI
             var allAToB = fileStatusDescs[0].Statuses;
 
             // Get base commit, add as parent if unique
-            Lazy<ObjectId> head = getRevision != null
+            Lazy<ObjectId> head = getRevision is not null
                 ? new Lazy<ObjectId>(() => getRevision(ObjectId.IndexId).FirstParentId)
                 : new Lazy<ObjectId>(() => module.RevParse("HEAD"));
             var firstRevHead = GetRevisionOrHead(firstRev, head);
@@ -213,7 +213,7 @@ namespace GitUI
                 => rev.IsArtificial ? head.Value : rev.ObjectId;
 
             static string GetDescriptionForRevision(Func<ObjectId, string> describeRevision, ObjectId objectId)
-                => describeRevision != null ? describeRevision(objectId) : objectId?.ToShortString();
+                => describeRevision is not null ? describeRevision(objectId) : objectId?.ToShortString();
         }
 
         private GitModule GetModule()

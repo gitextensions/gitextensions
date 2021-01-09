@@ -146,7 +146,7 @@ namespace BackgroundFetch
 
         private void CancelBackgroundOperation()
         {
-            if (_cancellationToken != null)
+            if (_cancellationToken is not null)
             {
                 _cancellationToken.Dispose();
                 _cancellationToken = null;
@@ -157,7 +157,7 @@ namespace BackgroundFetch
         {
             CancelBackgroundOperation();
 
-            if (_currentGitUiCommands != null)
+            if (_currentGitUiCommands is not null)
             {
                 _currentGitUiCommands.PostSettings -= OnPostSettings;
                 _currentGitUiCommands = null;

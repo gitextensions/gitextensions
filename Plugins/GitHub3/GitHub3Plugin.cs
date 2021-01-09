@@ -28,7 +28,7 @@ namespace GitHub3
                     return null;
                 }
 
-                if (_username != null)
+                if (_username is not null)
                 {
                     return _username;
                 }
@@ -36,7 +36,7 @@ namespace GitHub3
                 try
                 {
                     var user = GitHub3Plugin.GitHub.getCurrentUser();
-                    if (user != null)
+                    if (user is not null)
                     {
                         _username = user.Login;
                         return _username;

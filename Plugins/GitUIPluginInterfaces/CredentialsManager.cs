@@ -36,7 +36,7 @@ namespace GitUIPluginInterfaces
 
             Credentials.Clear();
 
-            foreach (var networkCredentials in credentials.Where(c => c.Value != null))
+            foreach (var networkCredentials in credentials.Where(c => c.Value is not null))
             {
                 AdysTechCredentialManagerWrapper.UpdateCredentials(networkCredentials.Key,
                     networkCredentials.Value.UserName,
@@ -94,7 +94,7 @@ namespace GitUIPluginInterfaces
             public static bool TryGetCredentials(string target, out NetworkCredential credentials)
             {
                 credentials = CredentialManager.GetCredentials(GetTarget(target));
-                return credentials != null;
+                return credentials is not null;
             }
 
             public static bool SaveCredentials(string target, string userName, string password)

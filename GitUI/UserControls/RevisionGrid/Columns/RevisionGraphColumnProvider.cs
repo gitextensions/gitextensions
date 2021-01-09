@@ -237,7 +237,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     var currentRow = _revisionGraph.GetSegmentsForRow(index);
                     var nextRow = _revisionGraph.GetSegmentsForRow(index + 1);
 
-                    if (currentRow != null)
+                    if (currentRow is not null)
                     {
                         int startY = top - rowHeight + (rowHeight / 2);
                         int centerY = top + (rowHeight / 2);
@@ -370,7 +370,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         private static int GetLaneForRow(IRevisionGraphRow row, RevisionGraphSegment revisionGraphRevision)
         {
-            if (row != null)
+            if (row is not null)
             {
                 return row.GetLaneIndexForSegment(revisionGraphRevision);
             }
@@ -455,7 +455,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         private int CalculateGraphColumnWidth(in VisibleRowRange range, int currentWidth, int minimumWidth)
         {
             int laneCount = range.Select(index => _revisionGraph.GetSegmentsForRow(index))
-                                 .Where(laneRow => laneRow != null)
+                                 .Where(laneRow => laneRow is not null)
                                  .Select(laneRow => laneRow.GetLaneCount())
                                  .DefaultIfEmpty()
                                  .Max();
@@ -524,18 +524,18 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public void Allocate(int width, int height, int laneWidth)
         {
-            if (_graphBitmap != null && _graphBitmap.Width >= width && _graphBitmap.Height == height)
+            if (_graphBitmap is not null && _graphBitmap.Width >= width && _graphBitmap.Height == height)
             {
                 return;
             }
 
-            if (_graphBitmap != null)
+            if (_graphBitmap is not null)
             {
                 _graphBitmap.Dispose();
                 _graphBitmap = null;
             }
 
-            if (_graphBitmapGraphics != null)
+            if (_graphBitmapGraphics is not null)
             {
                 _graphBitmapGraphics.Dispose();
                 _graphBitmapGraphics = null;

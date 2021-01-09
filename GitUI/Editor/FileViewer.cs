@@ -162,7 +162,7 @@ namespace GitUI.Editor
             internalFileViewer.MouseLeave += (_, e) =>
             {
                 if (GetChildAtPoint(PointToClient(MousePosition)) != fileviewerToolbar &&
-                    fileviewerToolbar != null)
+                    fileviewerToolbar is not null)
                 {
                     fileviewerToolbar.Visible = false;
                 }
@@ -246,7 +246,7 @@ namespace GitUI.Editor
 
                 this.InvokeAsync(() =>
                 {
-                    if (_encoding != null)
+                    if (_encoding is not null)
                     {
                         encodingToolStripComboBox.Text = _encoding.EncodingName;
                     }
@@ -410,7 +410,7 @@ namespace GitUI.Editor
                     if (item.IsSubmodule)
                     {
                         var getStatusTask = item.GetSubmoduleStatusAsync();
-                        if (getStatusTask != null)
+                        if (getStatusTask is not null)
                         {
                             var status = await getStatusTask;
                             if (status is null)
@@ -585,7 +585,7 @@ namespace GitUI.Editor
             string GetFileTextIfBlobExists()
             {
                 FilePreamble = new byte[] { };
-                return file.TreeGuid != null ? Module.GetFileText(file.TreeGuid, Encoding) : string.Empty;
+                return file.TreeGuid is not null ? Module.GetFileText(file.TreeGuid, Encoding) : string.Empty;
             }
 
             Image GetImage()
@@ -692,7 +692,7 @@ namespace GitUI.Editor
 
         public bool HasAnyPatches()
         {
-            return internalFileViewer.GetText() != null && internalFileViewer.GetText().Contains("@@");
+            return internalFileViewer.GetText() is not null && internalFileViewer.GetText().Contains("@@");
         }
 
         public void SetFileLoader(GetNextFileFnc fileLoader)
@@ -1003,7 +1003,7 @@ namespace GitUI.Editor
             PictureBox.Visible = _viewMode == ViewMode.Image;
             internalFileViewer.Visible = _viewMode != ViewMode.Image;
 
-            if (((ShowSyntaxHighlightingInDiff && IsDiffView(_viewMode)) || _viewMode == ViewMode.Text) && fileName != null)
+            if (((ShowSyntaxHighlightingInDiff && IsDiffView(_viewMode)) || _viewMode == ViewMode.Text) && fileName is not null)
             {
                 internalFileViewer.SetHighlightingForFile(fileName);
             }
@@ -1180,13 +1180,13 @@ namespace GitUI.Editor
 
         private void OnUICommandsChanged(object sender, [CanBeNull] GitUICommandsChangedEventArgs e)
         {
-            if (e?.OldCommands != null)
+            if (e?.OldCommands is not null)
             {
                 e.OldCommands.PostSettings -= UICommands_PostSettings;
             }
 
             var commandSource = sender as IGitUICommandsSource;
-            if (commandSource?.UICommands != null)
+            if (commandSource?.UICommands is not null)
             {
                 commandSource.UICommands.PostSettings += UICommands_PostSettings;
                 UICommands_PostSettings(commandSource.UICommands, null);
@@ -1550,7 +1550,7 @@ namespace GitUI.Editor
         {
             if (fileviewerToolbar.Visible)
             {
-                if (Encoding != null)
+                if (Encoding is not null)
                 {
                     encodingToolStripComboBox.Text = Encoding.EncodingName;
                 }
@@ -1604,7 +1604,7 @@ namespace GitUI.Editor
                     false, Encoding, false);
             }
 
-            if (patch != null && patch.Length > 0)
+            if (patch is not null && patch.Length > 0)
             {
                 string output = Module.GitExecutable.GetOutput(args, patch);
 

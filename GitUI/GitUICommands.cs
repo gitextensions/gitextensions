@@ -761,7 +761,7 @@ namespace GitUI
                         path.TryDeleteDirectory(out errorMessage);
                     }
 
-                    if (errorMessage != null)
+                    if (errorMessage is not null)
                     {
                         MessageBox.Show(null, errorMessage, errorCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
@@ -832,7 +832,7 @@ namespace GitUI
                     foreach (var r in revisions)
                     {
                         var frm = new FormCherryPick(this, r);
-                        if (prevForm != null)
+                        if (prevForm is not null)
                         {
                             frm.CopyOptions(prevForm);
                             prevForm.Dispose();
@@ -1322,7 +1322,7 @@ namespace GitUI
 
         private void InvokePostEvent([CanBeNull] IWin32Window ownerForm, bool actionDone, EventHandler<GitUIPostActionEventArgs> gitUIEventHandler)
         {
-            if (gitUIEventHandler != null)
+            if (gitUIEventHandler is not null)
             {
                 var e = new GitUIPostActionEventArgs(ownerForm, this, actionDone);
                 gitUIEventHandler(this, e);
@@ -1495,7 +1495,7 @@ namespace GitUI
                 case BlameHistoryCommand:
                 case FileHistoryCommand:
                     // filename [revision [--filter-by-revision]]
-                    if (Module.WorkingDir.TrimEnd('\\') == Path.GetFullPath(args[2]) && Module.SuperprojectModule != null)
+                    if (Module.WorkingDir.TrimEnd('\\') == Path.GetFullPath(args[2]) && Module.SuperprojectModule is not null)
                     {
                         Module = Module.SuperprojectModule;
                     }
@@ -1597,7 +1597,7 @@ namespace GitUI
         {
             var searchWindow = new SearchWindow<string>(FindFileMatches);
             Application.Run(searchWindow);
-            if (searchWindow.SelectedItem != null)
+            if (searchWindow.SelectedItem is not null)
             {
                 // We need to return the file that has been found, the visual studio plugin uses the return value
                 // to open the selected file.
@@ -1942,12 +1942,12 @@ namespace GitUI
 
                 using (var form = new FormRemoteProcess(_commands, process: null, CommandText))
                 {
-                    if (Title != null)
+                    if (Title is not null)
                     {
                         form.Text = Title;
                     }
 
-                    if (Remote != null)
+                    if (Remote is not null)
                     {
                         form.Remote = Remote;
                     }

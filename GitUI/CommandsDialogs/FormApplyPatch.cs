@@ -220,7 +220,7 @@ namespace GitUI.CommandsDialogs
                 {
                     string line = sr.ReadLine();
 
-                    return line != null && (line.StartsWith("diff ") || line.StartsWith("Index: "));
+                    return line is not null && (line.StartsWith("diff ") || line.StartsWith("Index: "));
                 }
             }
             catch
@@ -240,7 +240,7 @@ namespace GitUI.CommandsDialogs
             using (WaitCursorScope.Enter())
             {
                 var applyingPatch = patchGrid1.PatchFiles.FirstOrDefault(p => p.IsNext);
-                if (applyingPatch != null)
+                if (applyingPatch is not null)
                 {
                     applyingPatch.IsSkipped = true;
                     Skipped.Add(applyingPatch);
@@ -288,7 +288,7 @@ namespace GitUI.CommandsDialogs
         {
             var userSelectedPath = OsShellUtil.PickFolder(this);
 
-            if (userSelectedPath != null)
+            if (userSelectedPath is not null)
             {
                 PatchDir.Text = userSelectedPath;
             }

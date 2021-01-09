@@ -176,7 +176,7 @@ namespace GitCommands
         public GitModule GetTopModule()
         {
             GitModule topModule = this;
-            while (topModule.SuperprojectModule != null)
+            while (topModule.SuperprojectModule is not null)
             {
                 topModule = topModule.SuperprojectModule;
             }
@@ -364,7 +364,7 @@ namespace GitCommands
             {
                 // Get a cache of the common dir
                 // Lock needed as the command is called rapidly when creating the module
-                if (_gitCommonDirectory != null)
+                if (_gitCommonDirectory is not null)
                 {
                     return _gitCommonDirectory;
                 }
@@ -661,7 +661,7 @@ namespace GitCommands
 
             string CheckoutPart(int part, string fileName, string unmerged)
             {
-                if (unmerged != null)
+                if (unmerged is not null)
                 {
                     var args = new GitArgumentBuilder("checkout-index")
                     {
@@ -749,7 +749,7 @@ namespace GitCommands
                 if (fileStage.Length > 2 && int.TryParse(fileStage[0].ToString(), out var stage) && stage >= 1 && stage <= 3)
                 {
                     var itemName = fileStage.Substring(2);
-                    if (prevItemName != itemName && prevItemName != null)
+                    if (prevItemName != itemName && prevItemName is not null)
                     {
                         list.Add(new ConflictData(item[0], item[1], item[2]));
                         item = new ConflictedFileData[3];
@@ -760,7 +760,7 @@ namespace GitCommands
                 }
             }
 
-            if (prevItemName != null)
+            if (prevItemName is not null)
             {
                 list.Add(new ConflictData(item[0], item[1], item[2]));
             }
@@ -1296,7 +1296,7 @@ namespace GitCommands
 
                 var configSection = configFile.ConfigSections.FirstOrDefault(section => section.GetValue("path").Trim() == localPath);
 
-                Trace.Assert(configSection != null, $"`git submodule status` returned submodule \"{localPath}\" that was not found in .gitmodules");
+                Trace.Assert(configSection is not null, $"`git submodule status` returned submodule \"{localPath}\" that was not found in .gitmodules");
 
                 var name = configSection.SubSection.Trim();
                 var remotePath = configFile.GetPathValue($"submodule.{name}.url").Trim();
@@ -1370,7 +1370,7 @@ namespace GitCommands
                 new GitArgumentBuilder("format-patch")
                 {
                     "-M -C -B",
-                    { start != null, $"--start-number {start}" },
+                    { start is not null, $"--start-number {start}" },
                     { !string.IsNullOrEmpty(from), $"{from.Quote()}..{to.Quote()}", $"--root {to.Quote()}" },
                     $"-o {output.ToPosixPath().Quote()}"
                 });
@@ -1957,7 +1957,7 @@ namespace GitCommands
 
             var patchFiles = new List<PatchFile>();
 
-            if (todoCommits != null)
+            if (todoCommits is not null)
             {
                 string commentChar = EffectiveConfigFile.GetString("core.commentChar", "#");
 
@@ -1979,7 +1979,7 @@ namespace GitCommands
 
                     string commitHash = parts[1];
                     CommitData data = _commitDataManager.GetCommitData(commitHash, out var error);
-                    var isApplying = currentCommitShortHash != null && commitHash.StartsWith(currentCommitShortHash);
+                    var isApplying = currentCommitShortHash is not null && commitHash.StartsWith(currentCommitShortHash);
                     isCurrentFound |= isApplying;
 
                     patchFiles.Add(new PatchFile
@@ -2460,8 +2460,8 @@ namespace GitCommands
             {
                 staged = StagedStatus.Index;
             }
-            else if (firstId != null && !firstId.IsArtificial &&
-                     secondId != null && !secondId.IsArtificial)
+            else if (firstId is not null && !firstId.IsArtificial &&
+                     secondId is not null && !secondId.IsArtificial)
             {
                 // This cannot be a worktree/index file
                 staged = StagedStatus.None;
@@ -2649,7 +2649,7 @@ namespace GitCommands
                     {
                         var submoduleStatus = await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(this, localItem.Name, localItem.OldName, localItem.Staged == StagedStatus.Index)
                         .ConfigureAwait(false);
-                        if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
+                        if (submoduleStatus is not null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                         {
                             var submodule = submoduleStatus.GetSubmodule(this);
                             submoduleStatus.CheckSubmoduleStatus(submodule);
@@ -2672,9 +2672,9 @@ namespace GitCommands
                             await TaskScheduler.Default.SwitchTo(alwaysYield: true);
 
                             Patch patch = GetSingleDiff(firstId, secondId, item.Name, item.OldName, "", SystemEncoding, true);
-                            string text = patch != null ? patch.Text : "";
+                            string text = patch is not null ? patch.Text : "";
                             var submoduleStatus = SubmoduleHelpers.ParseSubmoduleStatus(text, this, item.Name);
-                            if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
+                            if (submoduleStatus is not null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                             {
                                 var submodule = submoduleStatus.GetSubmodule(this);
                                 submoduleStatus.CheckSubmoduleStatus(submodule);
@@ -2800,15 +2800,15 @@ namespace GitCommands
             var contents = new StringBuilder();
 
             string currentContents = await GetFileContentsAsync(file.Name).ConfigureAwaitRunInline();
-            if (currentContents != null)
+            if (currentContents is not null)
             {
                 contents.Append(currentContents);
             }
 
-            if (file.OldName != null)
+            if (file.OldName is not null)
             {
                 string oldContents = await GetFileContentsAsync(file.OldName).ConfigureAwaitRunInline();
-                if (oldContents != null)
+                if (oldContents is not null)
                 {
                     contents.Append(oldContents);
                 }
@@ -3244,7 +3244,7 @@ namespace GitCommands
                 { AppSettings.DetectCopyInAllOnBlame, "-C" },
                 { AppSettings.IgnoreWhitespaceOnBlame, "-w" },
                 "-l",
-                { lines != null, $"-L {lines}" },
+                { lines is not null, $"-L {lines}" },
                 from.ToPosixPath().Quote(),
                 "--",
                 fileName.ToPosixPath().Quote()
@@ -4319,7 +4319,7 @@ namespace GitCommands
 
             string GetDateParameter(string param, DateTime? date)
             {
-                return date != null
+                return date is not null
                     ? $"{param}=\"{date:yyyy-MM-dd hh:mm:ss}\""
                     : "";
             }

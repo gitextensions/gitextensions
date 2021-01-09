@@ -214,7 +214,7 @@ namespace GitUI.CommandsDialogs
             DiffFiles.SetDiffs(revisions, _revisionGrid.GetRevision);
 
             // Try to restore previous item
-            if (oldDiffItem != null && DiffFiles.FirstGroupItems.Any(i => i.Item.Name.Equals(oldDiffItem.Item.Name)))
+            if (oldDiffItem is not null && DiffFiles.FirstGroupItems.Any(i => i.Item.Name.Equals(oldDiffItem.Item.Name)))
             {
                 DiffFiles.SelectedGitItem = oldDiffItem.Item;
             }
@@ -531,7 +531,7 @@ namespace GitUI.CommandsDialogs
             foreach (var item in DiffFiles.SelectedItems)
             {
                 string filePath = _fullPathResolver.Resolve(item.Item.Name);
-                if (filePath != null && FormBrowseUtil.FileOrParentDirectoryExists(filePath))
+                if (filePath is not null && FormBrowseUtil.FileOrParentDirectoryExists(filePath))
                 {
                     openContainingFolderToolStripMenuItem.Enabled = true;
                     break;
@@ -614,7 +614,7 @@ namespace GitUI.CommandsDialogs
                 selectedItem = searchWindow.SelectedItem;
             }
 
-            if (selectedItem != null)
+            if (selectedItem is not null)
             {
                 DiffFiles.SelectedGitItem = selectedItem;
             }
@@ -850,13 +850,13 @@ namespace GitUI.CommandsDialogs
                 && _rememberFileContextMenuController.ShouldEnableFirstItemDiff(diffFiles[firstIndex])
                 && _rememberFileContextMenuController.ShouldEnableSecondItemDiff(DiffFiles.SelectedItem);
 
-            diffWithRememberedDifftoolToolStripMenuItem.Visible = diffFiles.Count == 1 && _rememberFileContextMenuController.RememberedDiffFileItem != null;
+            diffWithRememberedDifftoolToolStripMenuItem.Visible = diffFiles.Count == 1 && _rememberFileContextMenuController.RememberedDiffFileItem is not null;
             diffWithRememberedDifftoolToolStripMenuItem.Enabled =
                 diffFiles.Count == 1
                 && diffFiles[0] != _rememberFileContextMenuController.RememberedDiffFileItem
                 && _rememberFileContextMenuController.ShouldEnableSecondItemDiff(diffFiles[0]);
             diffWithRememberedDifftoolToolStripMenuItem.Text =
-                _rememberFileContextMenuController.RememberedDiffFileItem != null
+                _rememberFileContextMenuController.RememberedDiffFileItem is not null
                     ? string.Format(Strings.DiffSelectedWithRememberedFile, _rememberFileContextMenuController.RememberedDiffFileItem.Item.Name)
                     : string.Empty;
 

@@ -94,7 +94,7 @@ namespace GitUI.CommandsDialogs
                     Branches.SelectedItem = branch;
                 }
 
-                if (containRevisions != null)
+                if (containRevisions is not null)
                 {
                     if (Branches.Items.Count == 0)
                     {
@@ -229,7 +229,7 @@ namespace GitUI.CommandsDialogs
 
             Branches.Items.AddRange(branchNames.Where(name => !string.IsNullOrWhiteSpace(name)).ToArray<object>());
 
-            if (_containRevisions != null && Branches.Items.Count == 1)
+            if (_containRevisions is not null && Branches.Items.Count == 1)
             {
                 Branches.SelectedIndex = 0;
             }
@@ -309,7 +309,7 @@ namespace GitUI.CommandsDialogs
                 {
                     IGitRef localBranchRef = GetLocalBranchRef(_localBranchName);
                     IGitRef remoteBranchRef = GetRemoteBranchRef(branchName);
-                    if (localBranchRef != null && remoteBranchRef != null)
+                    if (localBranchRef is not null && remoteBranchRef is not null)
                     {
                         var mergeBaseGuid = Module.GetMergeBase(localBranchRef.ObjectId, remoteBranchRef.ObjectId);
                         var isResetFastForward = localBranchRef.ObjectId == mergeBaseGuid;
@@ -369,7 +369,7 @@ namespace GitUI.CommandsDialogs
 
             var originalId = Module.GetCurrentCheckout();
 
-            Debug.Assert(originalId != null, "originalId != null");
+            Debug.Assert(originalId is not null, "originalId is not null");
 
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
 
@@ -502,7 +502,7 @@ namespace GitUI.CommandsDialogs
 
                         var currentCheckout = Module.GetCurrentCheckout();
 
-                        Debug.Assert(currentCheckout != null, "currentCheckout != null");
+                        Debug.Assert(currentCheckout is not null, "currentCheckout is not null");
 
                         var text = Module.GetCommitCountString(currentCheckout.ToString(), branch);
 

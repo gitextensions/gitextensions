@@ -240,7 +240,7 @@ namespace GitUI.CommandsDialogs
             }
 
             _currentBranchRemote = UserGitRemotes.FirstOrDefault(x => x.Name.Equals(selectedRemoteName, StringComparison.OrdinalIgnoreCase));
-            if (_currentBranchRemote != null)
+            if (_currentBranchRemote is not null)
             {
                 _NO_TRANSLATE_Remotes.SelectedItem = _currentBranchRemote;
             }
@@ -349,7 +349,7 @@ namespace GitUI.CommandsDialogs
                 if (!track && !string.IsNullOrWhiteSpace(RemoteBranch.Text))
                 {
                     GitRef selectedLocalBranch = _NO_TRANSLATE_Branch.SelectedItem as GitRef;
-                    track = selectedLocalBranch != null && string.IsNullOrEmpty(selectedLocalBranch.TrackingRemote) &&
+                    track = selectedLocalBranch is not null && string.IsNullOrEmpty(selectedLocalBranch.TrackingRemote) &&
                             !UserGitRemotes.Any(x => _NO_TRANSLATE_Branch.Text.StartsWith(x.Name, StringComparison.OrdinalIgnoreCase));
                     var autoSetupMerge = Module.EffectiveConfigFile.GetValue("branch.autoSetupMerge");
                     if (!string.IsNullOrWhiteSpace(autoSetupMerge) && autoSetupMerge.ToLowerInvariant() == "false")
@@ -753,7 +753,7 @@ namespace GitUI.CommandsDialogs
                 RemoteBranch.Items.Add(_NO_TRANSLATE_Branch.Text);
             }
 
-            if (_selectedRemote != null)
+            if (_selectedRemote is not null)
             {
                 foreach (var head in GetRemoteBranches(_selectedRemote.Name))
                 {
@@ -792,7 +792,7 @@ namespace GitUI.CommandsDialogs
                 {
                     if (_NO_TRANSLATE_Branch.SelectedItem is GitRef branch)
                     {
-                        if (_selectedRemote != null)
+                        if (_selectedRemote is not null)
                         {
                             string defaultRemote = _remotesManager.GetDefaultPushRemote(_selectedRemote,
                                 branch.Name);
@@ -825,7 +825,7 @@ namespace GitUI.CommandsDialogs
             Text = string.Concat(_pushCaption.Text, " (", Module.WorkingDir, ")");
 
             var gitHoster = PluginRegistry.TryGetGitHosterForModule(Module);
-            _createPullRequestCB.Enabled = gitHoster != null;
+            _createPullRequestCB.Enabled = gitHoster is not null;
         }
 
         private void AddRemoteClick(object sender, EventArgs e)
@@ -1270,7 +1270,7 @@ namespace GitUI.CommandsDialogs
                     // Check if the branch is tracked (i.e. not new)
                     var localColumn = row.Cells[LocalColumn.Name] as DataGridViewTextBoxCell;
                     var remoteColumn = row.Cells[RemoteColumn.Name] as DataGridViewTextBoxCell;
-                    return localColumn != null && remoteColumn != null
+                    return localColumn is not null && remoteColumn is not null
                            && !string.IsNullOrEmpty(localColumn.Value.ToString()) && !string.IsNullOrEmpty(remoteColumn.Value.ToString());
                 });
         }

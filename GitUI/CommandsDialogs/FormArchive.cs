@@ -62,7 +62,7 @@ namespace GitUI.CommandsDialogs
 
         public void SetDiffSelectedRevision(GitRevision revision)
         {
-            checkboxRevisionFilter.Checked = revision != null;
+            checkboxRevisionFilter.Checked = revision is not null;
             DiffSelectedRevision = revision;
         }
 
@@ -181,7 +181,7 @@ namespace GitUI.CommandsDialogs
         {
             using (var chooseForm = new FormChooseCommit(UICommands, SelectedRevision.Guid))
             {
-                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
+                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
                 {
                     SelectedRevision = chooseForm.SelectedRevision;
                 }
@@ -199,9 +199,9 @@ namespace GitUI.CommandsDialogs
 
         private void btnDiffChooseRevision_Click(object sender, EventArgs e)
         {
-            using (var chooseForm = new FormChooseCommit(UICommands, DiffSelectedRevision != null ? DiffSelectedRevision.Guid : string.Empty))
+            using (var chooseForm = new FormChooseCommit(UICommands, DiffSelectedRevision is not null ? DiffSelectedRevision.Guid : string.Empty))
             {
-                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
+                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
                 {
                     DiffSelectedRevision = chooseForm.SelectedRevision;
                 }

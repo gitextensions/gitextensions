@@ -289,7 +289,7 @@ namespace GitUI.CommitInfo
             _tagInfo = "";
             _gitDescribeInfo = "";
 
-            if (_revision != null && !_revision.IsArtificial)
+            if (_revision is not null && !_revision.IsArtificial)
             {
                 StartAsyncDataLoad();
             }
@@ -313,7 +313,7 @@ namespace GitUI.CommitInfo
                     _revision.HasNotes = true;
                 }
 
-                var commitMessage = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent != null);
+                var commitMessage = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent is not null);
                 rtbxCommitMessage.SetXHTMLText(commitMessage);
             }
 
@@ -450,7 +450,7 @@ namespace GitUI.CommitInfo
                             {
                                 string content = WebUtility.HtmlEncode(Module.GetTagMessage(gitRef.LocalName));
 
-                                if (content != null)
+                                if (content is not null)
                                 {
                                     result.Add(gitRef.LocalName, content);
                                 }
@@ -526,12 +526,12 @@ namespace GitUI.CommitInfo
 
         private void UpdateRevisionInfo()
         {
-            if (_tagsOrderDict != null)
+            if (_tagsOrderDict is not null)
             {
-                if (_annotatedTagsMessages != null &&
+                if (_annotatedTagsMessages is not null &&
                     _annotatedTagsMessages.Count > 0 &&
                     string.IsNullOrEmpty(_annotatedTagsInfo) &&
-                    Revision != null)
+                    Revision is not null)
                 {
                     // having both lightweight & annotated tags in thisRevisionTagNames,
                     // but GetAnnotatedTagsInfo will process annotated only:
@@ -546,14 +546,14 @@ namespace GitUI.CommitInfo
                     _annotatedTagsInfo = GetAnnotatedTagsInfo(thisRevisionTagNames, _annotatedTagsMessages);
                 }
 
-                if (_tags != null && string.IsNullOrEmpty(_tagInfo))
+                if (_tags is not null && string.IsNullOrEmpty(_tagInfo))
                 {
                     _tags.Sort(new TagsComparer(_tagsOrderDict));
                     _tagInfo = _refsFormatter.FormatTags(_tags, ShowBranchesAsLinks, limit: !_showAllTags);
                 }
             }
 
-            if (_branches != null && string.IsNullOrEmpty(_branchInfo))
+            if (_branches is not null && string.IsNullOrEmpty(_branchInfo))
             {
                 _branches.Sort(new BranchComparer(Module.GetSelectedBranch()));
                 _branchInfo = _refsFormatter.FormatBranches(_branches, ShowBranchesAsLinks, limit: !_showAllBranches);
@@ -595,7 +595,7 @@ namespace GitUI.CommitInfo
 
             int charIndex = rtb.GetCharIndexFromPosition(rtb.PointToClient(MousePosition));
             string link = rtb.GetLink(charIndex);
-            copyLinkToolStripMenuItem.Visible = link != null;
+            copyLinkToolStripMenuItem.Visible = link is not null;
             copyLinkToolStripMenuItem.Text = string.Format(_copyLink.Text, link);
             copyLinkToolStripMenuItem.Tag = link;
         }

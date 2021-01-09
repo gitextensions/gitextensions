@@ -68,7 +68,7 @@ namespace AppVeyorIntegration
             Action openSettings,
             Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
-            if (_buildServerWatcher != null)
+            if (_buildServerWatcher is not null)
             {
                 throw new InvalidOperationException("Already initialized");
             }
@@ -278,14 +278,14 @@ namespace AppVeyorIntegration
                         StartDate = b["started"]?.ToObject<DateTime>() ?? DateTime.MinValue,
                         BaseWebUrl = baseWebUrl,
                         Url = WebSiteUrl + "/project/" + project.Id + "/build/" + version,
-                        PullRequestUrl = repositoryType != null && repositoryName != null && pullRequestId != null
+                        PullRequestUrl = repositoryType is not null && repositoryName is not null && pullRequestId is not null
                             ? BuildPullRequetUrl(repositoryType.Value<string>(), repositoryName.Value<string>(),
                                 pullRequestId.Value<string>())
                             : null,
                         BaseApiUrl = baseApiUrl,
                         AppVeyorBuildReportUrl = baseApiUrl + "/build/" + version,
-                        PullRequestText = pullRequestId != null ? "PR#" + pullRequestId.Value<string>() : string.Empty,
-                        PullRequestTitle = pullRequestTitle != null ? pullRequestTitle.Value<string>() : string.Empty,
+                        PullRequestText = pullRequestId is not null ? "PR#" + pullRequestId.Value<string>() : string.Empty,
+                        PullRequestTitle = pullRequestTitle is not null ? pullRequestTitle.Value<string>() : string.Empty,
                         Duration = duration,
                         TestsResultText = string.Empty
                     });

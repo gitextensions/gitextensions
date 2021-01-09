@@ -43,7 +43,7 @@ namespace GitUI.NBugReports.Info
 
             DateTime = System.DateTime.UtcNow.ToString();
 
-            if (serializableException != null)
+            if (serializableException is not null)
             {
                 ExceptionType = serializableException.Type;
 
@@ -51,7 +51,7 @@ namespace GitUI.NBugReports.Info
                 {
                     TargetSite = serializableException.TargetSite;
                 }
-                else if (serializableException.InnerException != null && !string.IsNullOrEmpty(serializableException.InnerException.TargetSite))
+                else if (serializableException.InnerException is not null && !string.IsNullOrEmpty(serializableException.InnerException.TargetSite))
                 {
                     TargetSite = serializableException.InnerException.TargetSite;
                 }

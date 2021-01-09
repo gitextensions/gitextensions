@@ -52,13 +52,13 @@ namespace GitUI.UserControls
             // but the parents in the filtered list.
             GitRevision revision = Module.GetRevision(objectId);
 
-            if (revision != null)
+            if (revision is not null)
             {
                 DiffFiles.SetDiffs(new[] { revision });
-                if (fileToSelect != null)
+                if (fileToSelect is not null)
                 {
                     var itemToSelect = DiffFiles.AllItems.FirstOrDefault(i => i.Item.Name == fileToSelect);
-                    if (itemToSelect != null)
+                    if (itemToSelect is not null)
                     {
                         DiffFiles.SelectedGitItem = itemToSelect.Item;
                     }

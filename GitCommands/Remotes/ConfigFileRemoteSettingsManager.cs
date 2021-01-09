@@ -260,7 +260,7 @@ namespace GitCommands.Remotes
         /// <returns>True if input remote exists and is enabled.</returns>
         public bool EnabledRemoteExists(string remoteName)
         {
-            return GetEnabledRemoteNames().FirstOrDefault(r => r == remoteName) != null;
+            return GetEnabledRemoteNames().FirstOrDefault(r => r == remoteName) is not null;
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace GitCommands.Remotes
         /// <returns>True if input remote exists and is disabled.</returns>
         public bool DisabledRemoteExists(string remoteName)
         {
-            return GetDisabledRemoteNames().FirstOrDefault(r => r == remoteName) != null;
+            return GetDisabledRemoteNames().FirstOrDefault(r => r == remoteName) is not null;
         }
 
         /// <summary>
@@ -391,7 +391,7 @@ namespace GitCommands.Remotes
             // - then added a remote with the same name from a command line or via UI
             // - then attempted to deactivate the new remote
             var dupSection = sections.FirstOrDefault(s => s.SectionName == newSectionName && s.SubSection == remoteName);
-            if (dupSection != null)
+            if (dupSection is not null)
             {
                 module.LocalConfigFile.RemoveConfigSection($"{newSectionName}.{remoteName}");
             }

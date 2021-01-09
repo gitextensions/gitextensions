@@ -75,7 +75,7 @@ namespace GitUITests.Avatars
 
             _inner.Received(1).GetAvatarAsync(email, name, _size);
 
-            if (expected != null)
+            if (expected is not null)
             {
                 Assert.AreSame(expected, actual);
             }
@@ -89,7 +89,7 @@ namespace GitUITests.Avatars
 
             _inner.Received(0).GetAvatarAsync(email, name, _size);
 
-            if (expected != null)
+            if (expected is not null)
             {
                 Assert.AreSame(expected, actual);
             }

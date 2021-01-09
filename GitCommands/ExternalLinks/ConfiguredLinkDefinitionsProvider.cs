@@ -42,7 +42,7 @@ namespace GitCommands.ExternalLinks
             var cachedSettings = new RepoDistSettings(null, settings.SettingsCache, SettingLevel.Unknown);
             IEnumerable<ExternalLinkDefinition> effective = _externalLinksStorage.Load(cachedSettings);
 
-            if (settings.LowerPriority != null)
+            if (settings.LowerPriority is not null)
             {
                 var lowerPriorityLoader = new ConfiguredLinkDefinitionsProvider(_externalLinksStorage);
                 effective = effective.Union(lowerPriorityLoader.Get(settings.LowerPriority));

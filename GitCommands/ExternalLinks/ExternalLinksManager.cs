@@ -19,7 +19,7 @@ namespace GitCommands.ExternalLinks
             _cachedSettings = new RepoDistSettings(null, settings.SettingsCache, settings.SettingLevel);
             _definitions = _externalLinksStorage.Load(_cachedSettings).ToList();
 
-            if (settings.LowerPriority != null)
+            if (settings.LowerPriority is not null)
             {
                 _lowerPriority = new ExternalLinksManager(settings.LowerPriority);
             }

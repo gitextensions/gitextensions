@@ -241,7 +241,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             var userSelectedPath = OsShellUtil.PickFolder(this, Environment.GetEnvironmentVariable("USERPROFILE"));
 
-            if (userSelectedPath != null)
+            if (userSelectedPath is not null)
             {
                 otherHomeDir.Text = userSelectedPath;
             }

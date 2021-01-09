@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// Tells whether the rules have been edited in the UI against what's on disk.
         /// </summary>
-        public bool IsRulesTextChanged => (_rulesText != null) && (_rulesText != (_sRulesTextAsOnDisk ?? ""));
+        public bool IsRulesTextChanged => (_rulesText is not null) && (_rulesText != (_sRulesTextAsOnDisk ?? ""));
 
         /// <summary>
         /// Current UI state of the Git sparse option.

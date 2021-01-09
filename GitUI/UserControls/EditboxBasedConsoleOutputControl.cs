@@ -39,7 +39,7 @@ namespace GitUI.UserControls
 
             void AppendMessage(string text)
             {
-                Debug.Assert(text != null, "text != null");
+                Debug.Assert(text is not null, "text is not null");
                 if (IsDisposed)
                 {
                     return;
@@ -184,7 +184,7 @@ namespace GitUI.UserControls
         protected override void Dispose(bool disposing)
         {
             KillProcess();
-            if (disposing && _outputThrottle != null)
+            if (disposing && _outputThrottle is not null)
             {
                 _outputThrottle.Dispose();
                 _outputThrottle = null;

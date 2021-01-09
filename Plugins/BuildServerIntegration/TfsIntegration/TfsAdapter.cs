@@ -53,7 +53,7 @@ namespace TfsIntegration
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
-            if (_buildServerWatcher != null)
+            if (_buildServerWatcher is not null)
             {
                 throw new InvalidOperationException("Already initialized");
             }
@@ -96,7 +96,7 @@ namespace TfsIntegration
                 var tfsHelper = loadedAssembly.CreateInstance("TfsInterop.TfsHelper") as ITfsHelper;
                 Trace.WriteLine("Create instance... OK");
 
-                if (tfsHelper != null && tfsHelper.IsDependencyOk())
+                if (tfsHelper is not null && tfsHelper.IsDependencyOk())
                 {
                     tfsHelper.ConnectToTfsServer(_tfsServer, _tfsTeamCollectionName, _projectName, _tfsBuildDefinitionNameFilter);
                     Trace.WriteLine("Connection... OK");

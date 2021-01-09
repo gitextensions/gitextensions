@@ -149,7 +149,7 @@ namespace GitUI.HelperDialogs
         /// <returns>if handled</returns>
         protected virtual bool HandleOnExit(ref bool isError)
         {
-            return HandleOnExitCallback != null && HandleOnExitCallback(ref isError, this);
+            return HandleOnExitCallback is not null && HandleOnExitCallback(ref isError, this);
         }
 
         private void OnExit(int exitcode)

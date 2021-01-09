@@ -221,7 +221,7 @@ namespace GitCommands.Git.Commands
                 "-v",
                 { central, "--bare" },
                 { initSubmodules, "--recurse-submodules" },
-                { depth != null, $"--depth {depth}" },
+                { depth is not null, $"--depth {depth}" },
                 { isSingleBranch == true, "--single-branch" },
                 { isSingleBranch == false, "--no-single-branch" },
                 "--progress",
@@ -442,7 +442,7 @@ namespace GitCommands.Git.Commands
             builder.Add(autoStash, "--autostash");
             builder.Add(from.QuoteNE());
             builder.Add(branch.Quote());
-            builder.Add(onto != null, $"--onto {onto}");
+            builder.Add(onto is not null, $"--onto {onto}");
 
             return builder;
         }
@@ -548,7 +548,7 @@ namespace GitCommands.Git.Commands
                 { noCommit, "--no-commit" },
                 { allowUnrelatedHistories, "--allow-unrelated-histories" },
                 { !string.IsNullOrWhiteSpace(mergeCommitFilePath), $"-F \"{mergeCommitFilePath}\"" }, // let git fail, if the file doesn't exist
-                { log != null && log.Value > 0, $"--log={log}" },
+                { log is not null && log.Value > 0, $"--log={log}" },
                 branch
             };
         }

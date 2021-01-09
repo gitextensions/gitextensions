@@ -156,7 +156,7 @@ namespace GitImpact
 
         public void UpdateData()
         {
-            if (_impactLoader != null)
+            if (_impactLoader is not null)
             {
                 _impactLoader.ShowSubmodules = _showSubmodules;
                 _impactLoader.Execute();

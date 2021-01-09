@@ -205,7 +205,7 @@ namespace GitCommands.Config
 
         public void AddConfigSection(IConfigSection configSection)
         {
-            if (FindConfigSection(configSection) != null)
+            if (FindConfigSection(configSection) is not null)
             {
                 throw new ArgumentException("Can not add a section that already exists: " + configSection.SectionName);
             }

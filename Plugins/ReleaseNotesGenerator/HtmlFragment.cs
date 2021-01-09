@@ -192,7 +192,7 @@ namespace ReleaseNotesGenerator
 
             sb.Append(header);
 
-            if (sourceUri != null)
+            if (sourceUri is not null)
             {
                 sb.AppendFormat("SourceURL:{0}", sourceUri);
             }

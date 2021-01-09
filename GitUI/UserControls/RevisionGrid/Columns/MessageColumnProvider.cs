@@ -54,7 +54,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 // Draw super project references (for submodules)
                 DrawSuperprojectInfo(e, spi, revision, style, messageBounds, ref offset);
 
-                if (spi.Refs != null && revision.ObjectId != null &&
+                if (spi.Refs is not null && revision.ObjectId is not null &&
                     spi.Refs.TryGetValue(revision.ObjectId, out var refs))
                 {
                     superprojectRefs.AddRange(refs.Where(RevisionGridControl.ShowRemoteRef));
@@ -73,7 +73,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     }
 
                     var superprojectRef = superprojectRefs.FirstOrDefault(superGitRef => gitRef.CompleteName == superGitRef.CompleteName);
-                    if (superprojectRef != null)
+                    if (superprojectRef is not null)
                     {
                         superprojectRefs.Remove(superprojectRef);
                     }
@@ -139,7 +139,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             {
                 var stats = _grid.GetChangeCount(revision.ObjectId);
 
-                if (stats != null)
+                if (stats is not null)
                 {
                     void Append(IReadOnlyList<GitItemStatus> items, string singular)
                     {
@@ -229,7 +229,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             // Summary of changes
             var changes = _grid.GetChangeCount(revision.ObjectId);
-            if (changes != null)
+            if (changes is not null)
             {
                 DrawArtificialCount(e, changes.Changed, Images.FileStatusModified, style, messageBounds, ref offset);
                 DrawArtificialCount(e, changes.New, Images.FileStatusAdded, style, messageBounds, ref offset);
@@ -362,7 +362,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 arrowType,
                 messageBounds,
                 e.Graphics,
-                dashedLine: superprojectRef != null,
+                dashedLine: superprojectRef is not null,
                 fill: true);
         }
 

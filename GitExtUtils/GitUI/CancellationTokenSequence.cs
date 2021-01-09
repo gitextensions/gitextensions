@@ -59,7 +59,7 @@ namespace GitUI
             // made if the current field value is null (latch on null).
             var prior = Volatile.Read(ref _cancellationTokenSource);
 
-            while (prior != null)
+            while (prior is not null)
             {
                 var candidate = Interlocked.CompareExchange(ref _cancellationTokenSource, next, prior);
 

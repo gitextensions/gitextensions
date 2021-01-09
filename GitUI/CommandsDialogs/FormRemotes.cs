@@ -160,7 +160,7 @@ Inactive remote is completely invisible to git.");
                 if (!string.IsNullOrEmpty(preselectRemote))
                 {
                     var lvi = Remotes.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Text == preselectRemote);
-                    if (lvi != null)
+                    if (lvi is not null)
                     {
                         lvi.Selected = true;
                         flpnlRemoteManagement.Enabled = !((ConfigFileRemote)lvi.Tag).Disabled;
@@ -216,7 +216,7 @@ Inactive remote is completely invisible to git.");
 
             InitialiseTabRemotes(preselectRemote);
 
-            if (preselectLocal != null && UserGitRemotes.Count != 0)
+            if (preselectLocal is not null && UserGitRemotes.Count != 0)
             {
                 ActivateTabDefaultPullBehaviors();
             }
@@ -289,7 +289,7 @@ Inactive remote is completely invisible to git.");
             RemoteBranches.SelectionChanged += RemoteBranchesSelectionChanged;
             var preselectLocalRow = RemoteBranches.Rows.Cast<DataGridViewRow>().
                 FirstOrDefault(r => r.DataBoundItem is IGitRef gitRef ? gitRef.LocalName == preselectLocal : false);
-            if (preselectLocalRow != null)
+            if (preselectLocalRow is not null)
             {
                 preselectLocalRow.Selected = true;
             }
@@ -305,7 +305,7 @@ Inactive remote is completely invisible to git.");
             Application.Idle -= application_Idle;
 
             // make sure only single load option is given
-            if (PreselectRemoteOnLoad != null && PreselectLocalOnLoad != null)
+            if (PreselectRemoteOnLoad is not null && PreselectLocalOnLoad is not null)
             {
                 throw new ArgumentException($"Only one option allowed:" +
                     $" Either {nameof(PreselectRemoteOnLoad)} or {nameof(PreselectLocalOnLoad)}");

@@ -103,7 +103,7 @@ namespace GitUI.Editor.Diff
                             break;
                     }
 
-                    Debug.Assert(brush != null, string.Format("brush != null, unknow diff line style {0}", diffLine.LineType));
+                    Debug.Assert(brush is not null, string.Format("brush is not null, unknow diff line style {0}", diffLine.LineType));
                     g.FillRectangle(brush, new Rectangle(0, backgroundRectangle.Top, leftWidth, backgroundRectangle.Height));
 
                     g.FillRectangle(brush, new Rectangle(leftWidth, backgroundRectangle.Top, rightWidth, backgroundRectangle.Height));

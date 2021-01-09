@@ -98,7 +98,7 @@ namespace GitUI.Editor
                 int y = negativeOffset + (i * _lineHeight);
                 g.FillRectangle(_brushs[_blameLines[lineStart + i].AgeBucketIndex], 0, y, AgeBucketMarkerWidth, _lineHeight);
 
-                if (_avatars[lineStart + i] != null)
+                if (_avatars[lineStart + i] is not null)
                 {
                     g.DrawImage(_avatars[lineStart + i], new Point(AgeBucketMarkerWidth, y));
                 }

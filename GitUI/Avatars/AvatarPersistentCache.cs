@@ -43,7 +43,7 @@ namespace GitUI.Avatars
                 ?? await _inner.GetAvatarAsync(email, name, imageSize)
                 ?? _avatarGenerator.GetAvatarImage(email, name, imageSize);
 
-            if (image != null)
+            if (image is not null)
             {
                 WriteImage();
             }

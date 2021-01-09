@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             html.Append(CssData);
             AddLine(html, "</style>");
 
-            if (entries != null)
+            if (entries is not null)
             {
                 foreach (var entry in entries)
                 {
@@ -27,7 +27,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     AddLine(html, "<div class='heading'>");
                     AddLine(html, "<span class='created'>{0}</span>\r\n", entry.Created);
                     AddLine(html, "<span class='author'>{0}</span>\r\n", entry.Author);
-                    if (cde != null)
+                    if (cde is not null)
                     {
                         AddLine(html, "<span class='commit'>Commit:  {0}</span>\r\n", cde.Sha);
                     }

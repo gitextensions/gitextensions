@@ -68,7 +68,7 @@ Detail of the error:");
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
-            if (_buildServerWatcher != null)
+            if (_buildServerWatcher is not null)
             {
                 throw new InvalidOperationException("Already initialized");
             }
@@ -257,7 +257,7 @@ Detail of the error:");
         {
             string duration = string.Empty;
 
-            if (buildDetail.Status != null
+            if (buildDetail.Status is not null
                 && buildDetail.Status != "none"
                 && buildDetail.Status != "notStarted"
                 && buildDetail.Status != "postponed"

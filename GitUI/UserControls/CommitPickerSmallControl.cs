@@ -64,7 +64,7 @@ namespace GitUI.UserControls
 
                         var currentCheckout = Module.GetCurrentCheckout();
 
-                        Debug.Assert(currentCheckout != null, "currentCheckout != null");
+                        Debug.Assert(currentCheckout is not null, "currentCheckout is not null");
 
                         var text = Module.GetCommitCountString(currentCheckout.ToString(), SelectedObjectId.ToString());
 
@@ -79,7 +79,7 @@ namespace GitUI.UserControls
         {
             using (var chooseForm = new FormChooseCommit(UICommands, SelectedObjectId?.ToString()))
             {
-                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
+                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
                 {
                     SetSelectedCommitHash(chooseForm.SelectedRevision.Guid);
                 }

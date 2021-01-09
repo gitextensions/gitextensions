@@ -108,7 +108,7 @@ namespace GitUI.CommandsDialogs
             listBoxSearchResult.Visible = true;
 
             var txtBoxOnScreen = PointToScreen(txtSearchBox.Location + new Size(0, txtSearchBox.Height));
-            if (ParentForm != null && !ParentForm.Controls.Contains(listBoxSearchResult))
+            if (ParentForm is not null && !ParentForm.Controls.Contains(listBoxSearchResult))
             {
                 ParentForm.Controls.Add(listBoxSearchResult);
                 var listBoxLocationOnScreen = txtBoxOnScreen;
@@ -176,7 +176,7 @@ namespace GitUI.CommandsDialogs
         private void ItemSelectedFromList()
         {
             _isUpdatingTextFromCode = true;
-            if (listBoxSearchResult.SelectedItem != null)
+            if (listBoxSearchResult.SelectedItem is not null)
             {
                 txtSearchBox.Text = listBoxSearchResult.SelectedItem.ToString();
             }

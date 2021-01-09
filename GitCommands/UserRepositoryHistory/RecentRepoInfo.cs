@@ -30,7 +30,7 @@ namespace GitCommands.UserRepositoryHistory
                 Caption = Repo.Path;
             }
 
-            if (DirInfo != null)
+            if (DirInfo is not null)
             {
                 ShortName = DirInfo.Name;
                 DirInfo = DirInfo.Parent;
@@ -101,7 +101,7 @@ namespace GitCommands.UserRepositoryHistory
                     AddToOrderedSignDir(orderedRepos, ri, signDir);
                 }
 
-                if (ri.Caption != null)
+                if (ri.Caption is not null)
                 {
                     ri.Caption = PathUtil.GetDisplayPath(ri.Caption);
                 }
@@ -160,7 +160,7 @@ namespace GitCommands.UserRepositoryHistory
         private static void AddToOrderedSignDir(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)
         {
             // if there is no short name for a repo, then try to find unique caption extending short directory path
-            if (shortenPath && repoInfo.DirInfo != null)
+            if (shortenPath && repoInfo.DirInfo is not null)
             {
                 string s = repoInfo.DirName.Substring(repoInfo.DirInfo.FullName.Length);
                 if (!string.IsNullOrEmpty(s))
@@ -258,7 +258,7 @@ namespace GitCommands.UserRepositoryHistory
                 string repository = null;
                 string workingDir = dirInfo.Name;
                 dirInfo = dirInfo.Parent;
-                if (dirInfo != null)
+                if (dirInfo is not null)
                 {
                     repository = dirInfo.Name;
                     dirInfo = dirInfo.Parent;
@@ -266,16 +266,16 @@ namespace GitCommands.UserRepositoryHistory
 
                 bool addDots = false;
 
-                if (dirInfo != null)
+                if (dirInfo is not null)
                 {
-                    while (dirInfo.Parent?.Parent != null)
+                    while (dirInfo.Parent?.Parent is not null)
                     {
                         dirInfo = dirInfo.Parent;
                         addDots = true;
                     }
 
                     company = dirInfo.Name;
-                    if (dirInfo.Parent != null)
+                    if (dirInfo.Parent is not null)
                     {
                         root = dirInfo.Parent.Name;
                     }
@@ -312,7 +312,7 @@ namespace GitCommands.UserRepositoryHistory
                     string path = repoInfo.Repo.Path;
                     string fistDir = (root ?? company) ?? repository;
                     string lastDir = workingDir;
-                    if (fistDir != null && path.Length - lastDir.Length - fistDir.Length - skipCount > 0)
+                    if (fistDir is not null && path.Length - lastDir.Length - fistDir.Length - skipCount > 0)
                     {
                         int middle = ((path.Length - lastDir.Length) / 2) + ((path.Length - lastDir.Length) % 2);
                         int leftEnd = middle - (skipCount / 2);

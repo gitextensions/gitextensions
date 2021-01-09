@@ -48,7 +48,7 @@ namespace GitCommands.UserRepositoryHistory
                 var repositoryHistory = await LoadRecentHistoryAsync();
 
                 var repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase));
-                if (repository != null)
+                if (repository is not null)
                 {
                     if (repositoryHistory[0] == repository)
                     {

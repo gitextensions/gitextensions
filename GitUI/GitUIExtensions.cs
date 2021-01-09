@@ -31,7 +31,7 @@ namespace GitUI
             [NotNull] Encoding encoding)
         {
             // Files with tree guid should be presented with normal diff
-            var isTracked = file.IsTracked || (file.TreeGuid != null && secondId != null);
+            var isTracked = file.IsTracked || (file.TreeGuid is not null && secondId is not null);
 
             return module.GetSingleDiff(firstId, secondId, file.Name, file.OldName, diffArgs, encoding, true, isTracked);
         }
@@ -129,11 +129,11 @@ namespace GitUI
                         : diffOfConflict;
                 }
 
-                if (file.IsSubmodule && file.GetSubmoduleStatusAsync() != null)
+                if (file.IsSubmodule && file.GetSubmoduleStatusAsync() is not null)
                 {
                     // Patch already evaluated
                     var status = ThreadHelper.JoinableTaskFactory.Run(file.GetSubmoduleStatusAsync);
-                    return status != null
+                    return status is not null
                         ? LocalizationHelpers.ProcessSubmoduleStatus(fileViewer.Module, status)
                         : $"Failed to get status for submodule \"{file.Name}\"";
                 }
@@ -181,7 +181,7 @@ namespace GitUI
         public static void UnMask(this Control control)
         {
             var panel = FindMaskPanel(control);
-            if (panel != null)
+            if (panel is not null)
             {
                 control.Controls.Remove(panel);
                 panel.Dispose();

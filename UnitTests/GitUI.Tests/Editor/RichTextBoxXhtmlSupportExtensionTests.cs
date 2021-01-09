@@ -31,12 +31,12 @@ namespace GitUITests.Editor
         {
             var text = new StringBuilder();
 
-            if (prefix != null)
+            if (prefix is not null)
             {
                 text.Append(prefix);
             }
 
-            if (uri != null)
+            if (uri is not null)
             {
                 if (linkText is null)
                 {
@@ -48,7 +48,7 @@ namespace GitUITests.Editor
                 }
             }
 
-            if (suffix != null)
+            if (suffix is not null)
             {
                 text.Append(suffix);
             }

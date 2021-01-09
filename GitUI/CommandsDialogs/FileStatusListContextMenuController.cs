@@ -45,12 +45,12 @@ namespace GitUI.CommandsDialogs
     {
         public bool ShouldShowMenuFirstToSelected(ContextMenuDiffToolInfo selectionInfo)
         {
-            return selectionInfo.SelectedRevision != null;
+            return selectionInfo.SelectedRevision is not null;
         }
 
         public bool ShouldShowMenuFirstToLocal(ContextMenuDiffToolInfo selectionInfo)
         {
-            return selectionInfo.SelectedRevision != null && selectionInfo.LocalExists
+            return selectionInfo.SelectedRevision is not null && selectionInfo.LocalExists
 
                 // First (A) exists (Can only determine that A does not exist if A is parent and B is new)
                 && (!selectionInfo.FirstIsParent || !selectionInfo.AllAreNew)
@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuSelectedToLocal(ContextMenuDiffToolInfo selectionInfo)
         {
-            return selectionInfo.SelectedRevision != null && selectionInfo.LocalExists
+            return selectionInfo.SelectedRevision is not null && selectionInfo.LocalExists
 
                 // Selected (B) exists
                 && !selectionInfo.AllAreDeleted

@@ -16,7 +16,7 @@ namespace GitUI.Shells
         public string? ExecutablePath { get; protected set; } = null!;
 
         /// <inheritdoc/>
-        public bool HasExecutable => ExecutablePath != null;
+        public bool HasExecutable => ExecutablePath is not null;
 
         /// <inheritdoc/>
         public Image Icon { get; protected set; } = null!;

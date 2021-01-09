@@ -47,7 +47,7 @@ namespace GitUI.UserControls
             _containRevisions = containRevisions;
 
             Branches.Items.Clear();
-            Branches.Items.AddRange(_containRevisions != null
+            Branches.Items.AddRange(_containRevisions is not null
                 ? GetContainsRevisionBranches()
                 : LocalBranch.Checked
                     ? GetLocalBranches()
@@ -55,7 +55,7 @@ namespace GitUI.UserControls
 
             Branches.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
 
-            if (_containRevisions != null && Branches.Items.Count == 1)
+            if (_containRevisions is not null && Branches.Items.Count == 1)
             {
                 Branches.SelectedIndex = 0;
             }

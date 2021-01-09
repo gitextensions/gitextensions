@@ -46,7 +46,7 @@ namespace Bitbucket
                 ReloadRepositories();
             };
 
-            if (module != null)
+            if (module is not null)
             {
                 var repoUrl = _NO_TRANSLATE_RepoUrl = string.Format(_NO_TRANSLATE_RepoUrl,
                                           _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);

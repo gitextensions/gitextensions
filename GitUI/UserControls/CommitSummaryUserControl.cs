@@ -57,7 +57,7 @@ namespace GitUI.UserControls
                 labelTagsCaption.Text = _tagsCaption;
                 labelBranchesCaption.Text = _branchesCaption;
 
-                if (Revision != null)
+                if (Revision is not null)
                 {
                     groupBox1.Text = Revision.ObjectId.ToShortString();
                     labelAuthor.Text = Revision.Author;

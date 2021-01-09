@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (_defaultBranches != null)
+            if (_defaultBranches is not null)
             {
                 Branches.SetSelectedText(_defaultBranches.Join(" "));
             }
@@ -70,7 +70,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                if (_currentBranch != null && selectedBranches.Any(branch => branch.Name == _currentBranch))
+                if (_currentBranch is not null && selectedBranches.Any(branch => branch.Name == _currentBranch))
                 {
                     MessageBox.Show(this, string.Format(_cannotDeleteCurrentBranchMessage.Text, _currentBranch), _deleteBranchCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;

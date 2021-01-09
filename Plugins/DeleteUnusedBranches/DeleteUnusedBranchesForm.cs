@@ -333,7 +333,7 @@ namespace DeleteUnusedBranches
 
         private bool IsRefreshing
         {
-            get => _refreshCancellation != null;
+            get => _refreshCancellation is not null;
             set
             {
                 if (value == IsRefreshing)

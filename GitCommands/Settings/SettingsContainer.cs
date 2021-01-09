@@ -23,7 +23,7 @@ namespace GitCommands.Settings
         {
             SettingsCache.LockedAction(() =>
                 {
-                    if (LowerPriority != null)
+                    if (LowerPriority is not null)
                     {
                         LowerPriority.LockedAction(action);
                     }
@@ -69,7 +69,7 @@ namespace GitCommands.Settings
                 return true;
             }
 
-            if (LowerPriority != null && LowerPriority.TryGetValue(name, defaultValue, decode, out value))
+            if (LowerPriority is not null && LowerPriority.TryGetValue(name, defaultValue, decode, out value))
             {
                 return true;
             }

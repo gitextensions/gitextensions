@@ -79,7 +79,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _pullReqTargetsCB.Items.Clear();
             _pullReqTargetsCB.Items.AddRange(foreignHostedRemotes);
 
-            if (_chooseRemote != null)
+            if (_chooseRemote is not null)
             {
                 for (int i = 0; i < _pullReqTargetsCB.Items.Count; i++)
                 {
@@ -163,7 +163,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _yourBranchCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_prevTitle == _titleTB.Text && !string.IsNullOrWhiteSpace(_yourBranchesCB.Text) && MyRemote != null)
+            if (_prevTitle == _titleTB.Text && !string.IsNullOrWhiteSpace(_yourBranchesCB.Text) && MyRemote is not null)
             {
                 var lastMsg = Module.GetPreviousCommitMessages(1, MyRemote.Name.Combine("/", _yourBranchesCB.Text)).FirstOrDefault();
                 _titleTB.Text = lastMsg?.SubstringUntil('\n');

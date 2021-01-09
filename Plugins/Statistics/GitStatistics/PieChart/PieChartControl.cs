@@ -223,7 +223,7 @@ namespace GitStatistics.PieChart
             }
 
             _pieChart?.Dispose();
-            if (_colors != null && _colors.Length > 0)
+            if (_colors is not null && _colors.Length > 0)
             {
                 _pieChart = new PieChart3D(_leftMargin, _topMargin, width, height, _values, _colors,
                                            _sliceRelativeHeight);
@@ -295,7 +295,7 @@ namespace GitStatistics.PieChart
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            if (_pieChart != null)
+            if (_pieChart is not null)
             {
                 var index = _pieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
                 if (index != -1)

@@ -181,7 +181,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
         {
-            if (revision.BuildStatus != null)
+            if (revision.BuildStatus is not null)
             {
                 toolTip = revision.BuildStatus.Tooltip ?? revision.BuildStatus.Description;
                 return true;
