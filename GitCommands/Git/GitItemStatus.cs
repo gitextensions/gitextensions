@@ -219,7 +219,7 @@ namespace GitCommands
                 str.Append(" (Conflict)");
             }
 
-            if (Staged != StagedStatus.None && Staged != StagedStatus.Unset)
+            if (Staged is not (StagedStatus.None or StagedStatus.Unset))
             {
                 str.Append($" {Staged}");
             }

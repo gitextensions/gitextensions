@@ -236,7 +236,7 @@ namespace GitUI.UserControls
             switch (_action)
             {
                 case GitAction.Bisect:
-                    if (!(Form is FormBrowse))
+                    if (Form is not FormBrowse)
                     {
                         return;
                     }

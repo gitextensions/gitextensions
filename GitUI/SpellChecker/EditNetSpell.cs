@@ -898,7 +898,7 @@ namespace GitUI.SpellChecker
         {
             if (AutoComplete.Visible)
             {
-                if (keyData == Keys.Tab || keyData == Keys.Enter)
+                if (keyData is (Keys.Tab or Keys.Enter))
                 {
                     AcceptAutoComplete();
                     return true;

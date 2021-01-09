@@ -321,7 +321,7 @@ namespace GitUI.Script
                               bounds.Width - _dropDownRectangle.Width - internalBorder,
                               bounds.Height - (internalBorder * 2) + 2);
 
-            bool drawSplitLine = State == PushButtonState.Hot || State == PushButtonState.Pressed || !Application.RenderWithVisualStyles;
+            bool drawSplitLine = State is (PushButtonState.Hot or PushButtonState.Pressed) || !Application.RenderWithVisualStyles;
 
             if (RightToLeft == RightToLeft.Yes)
             {
@@ -619,7 +619,7 @@ namespace GitUI.Script
             {
                 offset = excess_width;
             }
-            else if (h_image == HorizontalAlignment.Center && (h_text == HorizontalAlignment.Left || h_text == HorizontalAlignment.Center))
+            else if (h_image == HorizontalAlignment.Center && h_text is (HorizontalAlignment.Left or HorizontalAlignment.Center))
             {
                 offset += excess_width / 3;
             }
@@ -682,7 +682,7 @@ namespace GitUI.Script
             {
                 offset = excess_height;
             }
-            else if (v_image == VerticalAlignment.Center && (v_text == VerticalAlignment.Top || v_text == VerticalAlignment.Center))
+            else if (v_image == VerticalAlignment.Center && v_text is (VerticalAlignment.Top or VerticalAlignment.Center))
             {
                 offset += excess_height / 3;
             }
@@ -758,28 +758,28 @@ namespace GitUI.Script
             int x = 0;
             int y = 0;
 
-            if (align == ContentAlignment.BottomLeft || align == ContentAlignment.MiddleLeft || align == ContentAlignment.TopLeft)
+            if (align is (ContentAlignment.BottomLeft or ContentAlignment.MiddleLeft or ContentAlignment.TopLeft))
             {
                 x = outer.X;
             }
-            else if (align == ContentAlignment.BottomCenter || align == ContentAlignment.MiddleCenter || align == ContentAlignment.TopCenter)
+            else if (align is (ContentAlignment.BottomCenter or ContentAlignment.MiddleCenter or ContentAlignment.TopCenter))
             {
                 x = Math.Max(outer.X + ((outer.Width - inner.Width) / 2), outer.Left);
             }
-            else if (align == ContentAlignment.BottomRight || align == ContentAlignment.MiddleRight || align == ContentAlignment.TopRight)
+            else if (align is (ContentAlignment.BottomRight or ContentAlignment.MiddleRight or ContentAlignment.TopRight))
             {
                 x = outer.Right - inner.Width;
             }
 
-            if (align == ContentAlignment.TopCenter || align == ContentAlignment.TopLeft || align == ContentAlignment.TopRight)
+            if (align is (ContentAlignment.TopCenter or ContentAlignment.TopLeft or ContentAlignment.TopRight))
             {
                 y = outer.Y;
             }
-            else if (align == ContentAlignment.MiddleCenter || align == ContentAlignment.MiddleLeft || align == ContentAlignment.MiddleRight)
+            else if (align is (ContentAlignment.MiddleCenter or ContentAlignment.MiddleLeft or ContentAlignment.MiddleRight))
             {
                 y = outer.Y + ((outer.Height - inner.Height) / 2);
             }
-            else if (align == ContentAlignment.BottomCenter || align == ContentAlignment.BottomRight || align == ContentAlignment.BottomLeft)
+            else if (align is (ContentAlignment.BottomCenter or ContentAlignment.BottomRight or ContentAlignment.BottomLeft))
             {
                 y = outer.Bottom - inner.Height;
             }

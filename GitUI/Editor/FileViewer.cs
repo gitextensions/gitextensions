@@ -740,9 +740,7 @@ namespace GitUI.Editor
 
         private static bool IsDiffView(ViewMode viewMode)
         {
-            return viewMode == ViewMode.Diff
-                   || viewMode == ViewMode.FixedDiff
-                   || viewMode == ViewMode.RangeDiff;
+            return viewMode is (ViewMode.Diff or ViewMode.FixedDiff or ViewMode.RangeDiff);
         }
 
         private async Task ViewPrivateAsync(string fileName, string text, Action openWithDifftool, ViewMode viewMode = ViewMode.Diff)
@@ -835,29 +833,29 @@ namespace GitUI.Editor
             resetSelectedLinesToolStripMenuItem.Visible = SupportLinePatching;
 
             // RangeDiff patch is undefined, could be new/old commit or to parents
-            copyPatchToolStripMenuItem.Visible = viewMode == ViewMode.Diff || viewMode == ViewMode.FixedDiff;
-            copyNewVersionToolStripMenuItem.Visible = viewMode == ViewMode.Diff || viewMode == ViewMode.FixedDiff;
-            copyOldVersionToolStripMenuItem.Visible = viewMode == ViewMode.Diff || viewMode == ViewMode.FixedDiff;
+            copyPatchToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.FixedDiff);
+            copyNewVersionToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.FixedDiff);
+            copyOldVersionToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.FixedDiff);
 
-            ignoreWhitespaceAtEolToolStripMenuItem.Visible = viewMode == ViewMode.Diff || viewMode == ViewMode.RangeDiff;
-            ignoreWhitespaceChangesToolStripMenuItem.Visible = viewMode == ViewMode.Diff || viewMode == ViewMode.RangeDiff;
-            ignoreAllWhitespaceChangesToolStripMenuItem.Visible = viewMode == ViewMode.Diff || viewMode == ViewMode.RangeDiff;
-            increaseNumberOfLinesToolStripMenuItem.Visible = viewMode == ViewMode.Diff || viewMode == ViewMode.RangeDiff;
-            decreaseNumberOfLinesToolStripMenuItem.Visible = viewMode == ViewMode.Diff || viewMode == ViewMode.RangeDiff;
-            showEntireFileToolStripMenuItem.Visible = viewMode == ViewMode.Diff || viewMode == ViewMode.RangeDiff;
+            ignoreWhitespaceAtEolToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
+            ignoreWhitespaceChangesToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
+            ignoreAllWhitespaceChangesToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
+            increaseNumberOfLinesToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
+            decreaseNumberOfLinesToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
+            showEntireFileToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
             toolStripSeparator2.Visible = IsDiffView(viewMode);
             treatAllFilesAsTextToolStripMenuItem.Visible = IsDiffView(viewMode);
 
             // toolbar
             nextChangeButton.Visible = IsDiffView(viewMode);
             previousChangeButton.Visible = IsDiffView(viewMode);
-            increaseNumberOfLines.Visible = viewMode == ViewMode.Diff || viewMode == ViewMode.RangeDiff;
-            decreaseNumberOfLines.Visible = viewMode == ViewMode.Diff || viewMode == ViewMode.RangeDiff;
-            showEntireFileButton.Visible = viewMode == ViewMode.Diff || viewMode == ViewMode.RangeDiff;
+            increaseNumberOfLines.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
+            decreaseNumberOfLines.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
+            showEntireFileButton.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
             showSyntaxHighlighting.Visible = IsDiffView(viewMode);
-            ignoreWhitespaceAtEol.Visible = viewMode == ViewMode.Diff || viewMode == ViewMode.RangeDiff;
-            ignoreWhiteSpaces.Visible = viewMode == ViewMode.Diff || viewMode == ViewMode.RangeDiff;
-            ignoreAllWhitespaces.Visible = viewMode == ViewMode.Diff || viewMode == ViewMode.RangeDiff;
+            ignoreWhitespaceAtEol.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
+            ignoreWhiteSpaces.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
+            ignoreAllWhitespaces.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
         }
 
         private void OnExtraDiffArgumentsChanged()

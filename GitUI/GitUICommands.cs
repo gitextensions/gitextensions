@@ -1459,7 +1459,7 @@ namespace GitUI
                 return false;
             }
 
-            if ((command == BlameHistoryCommand || command == FileHistoryCommand) && args.Count <= 2)
+            if (command is (BlameHistoryCommand or FileHistoryCommand) && args.Count <= 2)
             {
                 MessageBox.Show("Cannot open blame / file history, there is no file selected.", "Blame / file history", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;

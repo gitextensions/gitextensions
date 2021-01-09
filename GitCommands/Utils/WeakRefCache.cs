@@ -39,7 +39,7 @@ namespace GitCommands.Utils
                 }
                 else
                 {
-                    if (!(cached is T))
+                    if (cached is not T)
                     {
                         throw new InvalidCastException("Incompatible class for object: " + objectUniqueKey + ". Expected: " + typeof(T).FullName + ", found: " + cached.GetType().FullName);
                     }

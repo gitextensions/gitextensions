@@ -563,7 +563,7 @@ namespace GitUI.CommandsDialogs
                     return false;
                 }
 
-                if (onRejectedPullAction != AppSettings.PullAction.Merge && onRejectedPullAction != AppSettings.PullAction.Rebase)
+                if (onRejectedPullAction is not (AppSettings.PullAction.Merge or AppSettings.PullAction.Rebase))
                 {
                     form.AppendOutput(Environment.NewLine +
                         "Automatical pull can only be performed, when the default pull action is either set to Merge or Rebase." +

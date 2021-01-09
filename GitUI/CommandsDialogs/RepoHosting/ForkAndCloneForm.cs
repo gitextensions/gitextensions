@@ -128,7 +128,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                         ResizeColumnToFitContent(myReposLV.Columns[0]);
                     }
-                    catch (Exception ex) when (!(ex is OperationCanceledException))
+                    catch (Exception ex) when (ex is not OperationCanceledException)
                     {
                         await this.SwitchToMainThreadAsync();
 
@@ -174,7 +174,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                         HandleSearchResult(repositories);
                     }
-                    catch (Exception ex) when (!(ex is OperationCanceledException))
+                    catch (Exception ex) when (ex is not OperationCanceledException)
                     {
                         await this.SwitchToMainThreadAsync();
 
@@ -208,7 +208,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                         HandleSearchResult(repositories);
                     }
-                    catch (Exception ex) when (!(ex is OperationCanceledException))
+                    catch (Exception ex) when (ex is not OperationCanceledException)
                     {
                         await this.SwitchToMainThreadAsync();
 

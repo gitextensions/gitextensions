@@ -123,7 +123,10 @@ namespace ResourceManager
             keys &= ~Keys.Shift; // ignore the SHIFT key as modifier
             switch (keys)
             {
-                case Keys key when (key >= Keys.A && key <= Keys.Z) || (key >= Keys.D0 && key <= Keys.D9) || (key >= Keys.Oem1 && key <= Keys.Oem102):
+                case Keys key when key is
+                    (>= Keys.A and <= Keys.Z)
+                    or (>= Keys.D0 and <= Keys.D9)
+                    or (>= Keys.Oem1 and <= Keys.Oem102):
                 case Keys.Space:
                 case Keys.Back:
                 case Keys.Delete:

@@ -953,28 +953,17 @@ namespace GitStatistics.PieChart
         /// </summary>
         private void InitializeSides()
         {
-            if (StartAngle > 90 && StartAngle < 270)
-            {
-                StartSide =
-                    new Quadrilateral(
+            StartSide = StartAngle is (> 90 and < 270)
+                ? new Quadrilateral(
                         Center, PointStart, PointStartBelow, CenterBelow,
-                        SweepAngle != 180);
-            }
-            else
-            {
-                StartSide = Quadrilateral.Empty;
-            }
+                        SweepAngle != 180)
+                : Quadrilateral.Empty;
 
-            if (EndAngle > 270 || EndAngle < 90)
-            {
-                EndSide = new Quadrilateral(
+            EndSide = EndAngle is (> 270 or < 90)
+                ? new Quadrilateral(
                     Center, PointEnd, PointEndBelow, CenterBelow,
-                    SweepAngle != 180);
-            }
-            else
-            {
-                EndSide = Quadrilateral.Empty;
-            }
+                    SweepAngle != 180)
+                : Quadrilateral.Empty;
         }
 
         /// <summary>
