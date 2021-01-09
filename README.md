@@ -36,7 +36,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Development
     </td>
     <td>
-      MS VS 2019, C# 8<br />
+      MS VS 2019 (v16.8+), C# 9<br />
       VC++ (inc. ATL for x86/x64 for installer)
     </td>
   </tr>
