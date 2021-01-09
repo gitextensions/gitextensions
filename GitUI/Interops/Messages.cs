@@ -46,6 +46,11 @@
         public const int WM_NULL = 0x0000;
 
         /// <summary>
+        /// The WM_SIZE message is sent to a window after its size has changed.
+        /// </summary>
+        public const int WM_SIZE = 0x0005;
+
+        /// <summary>
         /// The WM_PAINT message is sent when the system or another application makes a request to paint a portion of an application's window. The message is sent when the UpdateWindow or RedrawWindow function is called, or by the DispatchMessage function when the application obtains a WM_PAINT message by using the GetMessage or PeekMessage function.
         /// </summary>
         public const int WM_PAINT = 0x000F;
@@ -74,5 +79,10 @@
         /// The WM_NCMOUSELEAVE message is posted to a window when the cursor leaves the nonclient area of the window specified in a prior call to TrackMouseEvent.
         /// </summary>
         public const int WM_NCMOUSELEAVE = 0x02A2;
+
+        /// <summary>
+        /// Sent to a window whose size, position, or place in the Z order has changed as a result of a call to the SetWindowPos function or another window-management function.
+        /// </summary>
+        public const int WM_WINDOWPOSCHANGED = 0x0047;
     }
 }

@@ -670,7 +670,7 @@ namespace GitUI.CommandsDialogs
             // MainSplitContainer.Panel1
             // 
             this.MainSplitContainer.Panel1.Controls.Add(this.repoObjectsTree);
-            this.MainSplitContainer.Panel1.Padding = new System.Windows.Forms.Padding(1);
+            this.MainSplitContainer.Panel1.Padding = new System.Windows.Forms.Padding(0);
             this.MainSplitContainer.Panel1MinSize = 192;
             // 
             // MainSplitContainer.Panel2
@@ -689,6 +689,7 @@ namespace GitUI.CommandsDialogs
             this.repoObjectsTree.Name = "repoObjectsTree";
             this.repoObjectsTree.Size = new System.Drawing.Size(267, 502);
             this.repoObjectsTree.TabIndex = 0;
+            this.repoObjectsTree.BorderStyle = BorderStyle.FixedSingle;
             // 
             // RightSplitContainer
             // 
@@ -719,8 +720,8 @@ namespace GitUI.CommandsDialogs
             this.RevisionsSplitContainer.Location = new System.Drawing.Point(0, 0);
             this.RevisionsSplitContainer.Margin = new System.Windows.Forms.Padding(0);
             this.RevisionsSplitContainer.Name = "RevisionsSplitContainer";
-            this.RevisionsSplitContainer.Panel1.Padding = new System.Windows.Forms.Padding(1);
-            this.RevisionsSplitContainer.Panel2.Padding = new System.Windows.Forms.Padding(1);
+            this.RevisionsSplitContainer.Panel1.Padding = new System.Windows.Forms.Padding(0);
+            this.RevisionsSplitContainer.Panel2.Padding = new System.Windows.Forms.Padding(0);
             // 
             // RevisionsSplitContainer.Panel1
             // 
@@ -747,6 +748,7 @@ namespace GitUI.CommandsDialogs
             this.RevisionGrid.Name = "RevisionGrid";
             this.RevisionGrid.Size = new System.Drawing.Size(350, 209);
             this.RevisionGrid.TabIndex = 0;
+            this.RevisionGrid.BorderStyle = BorderStyle.FixedSingle;
             // 
             // RevisionHeader
             // 
@@ -797,6 +799,7 @@ namespace GitUI.CommandsDialogs
             this.RevisionInfo.Size = new System.Drawing.Size(646, 264);
             this.RevisionInfo.TabIndex = 0;
             this.RevisionInfo.CommandClicked += new System.EventHandler<ResourceManager.CommandEventArgs>(this.RevisionInfo_CommandClicked);
+            this.RevisionInfo.BorderStyle = BorderStyle.FixedSingle;
             // 
             // TreeTabPage
             // 

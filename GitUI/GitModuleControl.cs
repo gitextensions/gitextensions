@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -26,6 +27,7 @@ namespace GitUI
     public class GitModuleControl : GitExtensionsControl
     {
         private readonly object _lock = new object();
+        private Color _borderColor = SystemColors.WindowFrame;
 
         private int _isDisposed;
 
@@ -113,6 +115,7 @@ namespace GitUI
 
         protected GitModuleControl()
         {
+            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
         }
 
         protected override void Dispose(bool disposing)
@@ -167,6 +170,42 @@ namespace GitUI
         protected virtual void OnUICommandsSourceSet([NotNull] IGitUICommandsSource source)
         {
             UICommandsSourceSet?.Invoke(this, new GitUICommandsSourceEventArgs(source));
+        }
+
+        public Color BorderColor
+        {
+            get => _borderColor;
+            set
+            {
+                _borderColor = value;
+                Invalidate();
+            }
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+
+            if (BorderStyle != BorderStyle.FixedSingle)
+            {
+                return;
+            }
+
+            switch (m.Msg)
+            {
+                case NativeMethods.WM_NCPAINT:
+                case NativeMethods.WM_PAINT:
+                case NativeMethods.WM_SIZE:
+                case NativeMethods.WM_WINDOWPOSCHANGED:
+                {
+                    var windowDC = NativeMethods.GetWindowDC(Handle);
+                    using var graphics = Graphics.FromHdc(windowDC);
+
+                    ControlPaint.DrawBorder(graphics, new Rectangle(0, 0, Width, Height), _borderColor, ButtonBorderStyle.Solid);
+
+                    break;
+                }
+            }
         }
     }
 }
