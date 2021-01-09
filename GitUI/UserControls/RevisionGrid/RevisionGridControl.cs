@@ -2131,8 +2131,8 @@ namespace GitUI
                 status = new List<GitItemStatus>();
             }
 
-            workTreeRev = workTreeRev ?? GetRevision(ObjectId.WorkTreeId);
-            indexRev = indexRev ?? GetRevision(ObjectId.IndexId);
+            workTreeRev ??= GetRevision(ObjectId.WorkTreeId);
+            indexRev ??= GetRevision(ObjectId.IndexId);
 
             if (workTreeRev != null)
             {

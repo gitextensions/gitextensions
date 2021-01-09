@@ -67,7 +67,7 @@ namespace GitExtUtils
 
             _command = command;
             _gitArgs = gitOptions;
-            commandConfiguration = commandConfiguration ?? GitCommandConfiguration.Default;
+            commandConfiguration ??= GitCommandConfiguration.Default;
 
             var defaultConfig = commandConfiguration.Get(command);
             _configItems = new List<GitConfigItem>(capacity: defaultConfig.Count + 2);
