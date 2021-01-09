@@ -69,7 +69,7 @@ namespace GitUI
         {
             try
             {
-                if (_windowPositionList == null)
+                if (_windowPositionList is null)
                 {
                     _windowPositionList = WindowPositionList.Load();
                 }
@@ -105,10 +105,10 @@ namespace GitUI
                     ? FormWindowState.Maximized
                     : FormWindowState.Normal;
 
-                if (_windowPositionList == null)
+                if (_windowPositionList is null)
                 {
                     _windowPositionList = WindowPositionList.Load();
-                    if (_windowPositionList == null)
+                    if (_windowPositionList is null)
                     {
                         return;
                     }

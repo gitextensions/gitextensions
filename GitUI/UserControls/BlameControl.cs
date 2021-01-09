@@ -82,7 +82,7 @@ namespace GitUI.Blame
         public void ConfigureRepositoryHostPlugin(IRepositoryHostPlugin gitHoster)
         {
             _gitHoster = gitHoster;
-            if (_gitHoster == null)
+            if (_gitHoster is null)
             {
                 return;
             }
@@ -138,7 +138,7 @@ namespace GitUI.Blame
                 BlameFile.Focus();
             }
 
-            if (_blame == null)
+            if (_blame is null)
             {
                 return;
             }
@@ -151,7 +151,7 @@ namespace GitUI.Blame
 
             HighlightLinesForCommit(blameCommit);
 
-            if (blameCommit == null)
+            if (blameCommit is null)
             {
                 return;
             }
@@ -170,7 +170,7 @@ namespace GitUI.Blame
 
         private void BlameFile_MouseMove(object sender, MouseEventArgs e)
         {
-            if (_blame == null)
+            if (_blame is null)
             {
                 return;
             }
@@ -196,7 +196,7 @@ namespace GitUI.Blame
             BlameAuthor.ClearHighlighting();
             BlameFile.ClearHighlighting();
 
-            if (commit == null)
+            if (commit is null)
             {
                 return;
             }
@@ -236,7 +236,7 @@ namespace GitUI.Blame
         {
             int selectedLine = e.SelectedLine;
 
-            if (_blame == null || selectedLine >= _blame.Lines.Count)
+            if (_blame is null || selectedLine >= _blame.Lines.Count)
             {
                 return;
             }
@@ -482,7 +482,7 @@ namespace GitUI.Blame
 
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
         {
-            if (_lastBlameLine == null)
+            if (_lastBlameLine is null)
             {
                 return;
             }
@@ -503,7 +503,7 @@ namespace GitUI.Blame
 
         private int GetBlameLine()
         {
-            if (_blame == null)
+            if (_blame is null)
             {
                 return -1;
             }
@@ -523,7 +523,7 @@ namespace GitUI.Blame
         {
             contextMenu.Tag = new GitBlameContext(_fileName, _lineIndex, GetBlameLine(), _blameId);
 
-            if (_revGrid == null || !TryGetSelectedRevision(out var selectedRevision))
+            if (_revGrid is null || !TryGetSelectedRevision(out var selectedRevision))
             {
                 blameRevisionToolStripMenuItem.Enabled = false;
                 blamePreviousRevisionToolStripMenuItem.Enabled = false;
@@ -555,7 +555,7 @@ namespace GitUI.Blame
         {
             var commit = GetBlameCommit();
 
-            if (commit == null)
+            if (commit is null)
             {
                 return;
             }
@@ -576,7 +576,7 @@ namespace GitUI.Blame
         private bool TryGetSelectedRevision(out GitRevision selectedRevision)
         {
             var blameCommit = GetBlameCommit();
-            if (blameCommit == null)
+            if (blameCommit is null)
             {
                 selectedRevision = null;
                 return false;
@@ -624,7 +624,7 @@ namespace GitUI.Blame
         {
             var commit = GetBlameCommit();
 
-            if (commit == null)
+            if (commit is null)
             {
                 return;
             }

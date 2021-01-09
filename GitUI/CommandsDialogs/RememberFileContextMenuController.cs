@@ -85,7 +85,7 @@ namespace GitUI.CommandsDialogs
         [Pure]
         public string GetGitCommit([CanBeNull] Func<string, ObjectId, ObjectId> getFileBlobHash, [CanBeNull] FileStatusItem item, bool isSecondRevision)
         {
-            if (item == null)
+            if (item is null)
             {
                 return null;
             }
@@ -95,7 +95,7 @@ namespace GitUI.CommandsDialogs
                     : item.Item.Name)
                 ?.ToPosixPath();
             var id = (isSecondRevision ? item.SecondRevision : item.FirstRevision)?.ObjectId;
-            if (string.IsNullOrWhiteSpace(name) || id == null)
+            if (string.IsNullOrWhiteSpace(name) || id is null)
             {
                 return null;
             }

@@ -20,7 +20,7 @@ namespace GitUI
             Func<ObjectId, GitRevision> getRevision = null)
         {
             var selectedRev = revisions?.FirstOrDefault();
-            if (selectedRev == null)
+            if (selectedRev is null)
             {
                 return Array.Empty<FileStatusWithDescription>();
             }
@@ -30,7 +30,7 @@ namespace GitUI
             var fileStatusDescs = new List<FileStatusWithDescription>();
             if (revisions.Count == 1)
             {
-                if (selectedRev.ParentIds == null || selectedRev.ParentIds.Count == 0)
+                if (selectedRev.ParentIds is null || selectedRev.ParentIds.Count == 0)
                 {
                     // No parent for the initial commit
                     fileStatusDescs.Add(new FileStatusWithDescription(
@@ -186,7 +186,7 @@ namespace GitUI
 
             // Git range-diff has cubic runtime complexity and can be slow and memory consuming, so just skip if diff is large
             // to avoid that GE seem to hang when selecting the range diff
-            int count = (baseA == null || baseB == null
+            int count = (baseA is null || baseB is null
                 ? baseToFirstCount + baseToSecondCount
                 : module.GetCommitDiffCount(baseA, firstRevHead)
                 + module.GetCommitDiffCount(baseB, selectedRevHead))
@@ -220,7 +220,7 @@ namespace GitUI
         {
             var module = _getModule();
 
-            if (module == null)
+            if (module is null)
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(GitModule)}");
             }

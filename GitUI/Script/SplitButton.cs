@@ -273,7 +273,7 @@ namespace GitUI.Script
             {
                 ShowContextMenuStrip();
             }
-            else if (_splitMenuStrip == null || !_isSplitMenuVisible)
+            else if (_splitMenuStrip is null || !_isSplitMenuVisible)
             {
                 SetButtonDrawState();
 

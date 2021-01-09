@@ -65,7 +65,7 @@ namespace GitCommands.Git
         /// <exception cref="ArgumentNullException"><paramref name="repositoryPath"/> is <see langword="null"/>.</exception>
         public string Resolve(string repositoryPath)
         {
-            if (repositoryPath == null)
+            if (repositoryPath is null)
             {
                 throw new ArgumentNullException(nameof(repositoryPath));
             }

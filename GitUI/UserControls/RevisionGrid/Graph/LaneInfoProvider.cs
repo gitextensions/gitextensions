@@ -22,12 +22,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public string GetLaneInfo(int rowIndex, int lane)
         {
             (var node, bool isAtNode) = _nodeLocator.FindPrevNode(rowIndex, lane);
-            if (node == null)
+            if (node is null)
             {
                 return string.Empty;
             }
 
-            if (node.GitRevision == null)
+            if (node.GitRevision is null)
             {
                 return NoInfoText.Text;
             }

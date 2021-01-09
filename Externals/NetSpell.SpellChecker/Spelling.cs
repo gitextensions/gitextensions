@@ -235,7 +235,7 @@ namespace NetSpell.SpellChecker
 
         private void Initialize()
         {
-            if (_dictionary == null)
+            if (_dictionary is null)
             {
                 _dictionary = new WordDictionary();
             }
@@ -427,7 +427,7 @@ namespace NetSpell.SpellChecker
         /// </remarks>
         public void DeleteWord()
         {
-            if (_words == null || _words.Count == 0)
+            if (_words is null || _words.Count == 0)
             {
                 TraceWriter.TraceWarning("No Words to Delete");
                 return;
@@ -600,7 +600,7 @@ namespace NetSpell.SpellChecker
         /// </returns>
         public int GetWordIndexFromTextIndex(int textIndex)
         {
-            if (_words == null || _words.Count == 0 || textIndex < 1)
+            if (_words is null || _words.Count == 0 || textIndex < 1)
             {
                 TraceWriter.TraceWarning("No words to get text index from.");
                 return 0;
@@ -670,7 +670,7 @@ namespace NetSpell.SpellChecker
         /// </remarks>
         public void IgnoreWord()
         {
-            if (_words == null || _words.Count == 0 || CurrentWord.Length == 0)
+            if (_words is null || _words.Count == 0 || CurrentWord.Length == 0)
             {
                 TraceWriter.TraceWarning("No text or current word");
                 return;
@@ -724,7 +724,7 @@ namespace NetSpell.SpellChecker
         /// </summary>
         public void ReplaceWord()
         {
-            if (_words == null || _words.Count == 0 || CurrentWord.Length == 0)
+            if (_words is null || _words.Count == 0 || CurrentWord.Length == 0)
             {
                 TraceWriter.TraceWarning("No text or current word");
                 return;
@@ -835,7 +835,7 @@ namespace NetSpell.SpellChecker
         /// <seealso cref="WordIndex"/>
         public bool SpellCheck(int startWordIndex, int endWordIndex)
         {
-            if (startWordIndex > endWordIndex || _words == null || _words.Count == 0)
+            if (startWordIndex > endWordIndex || _words is null || _words.Count == 0)
             {
                 // make sure end index is not greater then word count
                 OnEndOfText(EventArgs.Empty);
@@ -1207,7 +1207,7 @@ namespace NetSpell.SpellChecker
         {
             get
             {
-                if (!DesignMode && _dictionary == null)
+                if (!DesignMode && _dictionary is null)
                 {
                     _dictionary = new WordDictionary();
                 }
@@ -1340,7 +1340,7 @@ namespace NetSpell.SpellChecker
         {
             get
             {
-                if (_words == null || _words.Count == 0)
+                if (_words is null || _words.Count == 0)
                 {
                     return 0;
                 }
@@ -1358,7 +1358,7 @@ namespace NetSpell.SpellChecker
         {
             get
             {
-                if (_words == null)
+                if (_words is null)
                 {
                     return 0;
                 }
@@ -1376,7 +1376,7 @@ namespace NetSpell.SpellChecker
         {
             get
             {
-                if (_words == null)
+                if (_words is null)
                 {
                     return 0;
                 }
@@ -1388,7 +1388,7 @@ namespace NetSpell.SpellChecker
             {
                 _wordIndex = value;
 
-                if (_words == null || _words.Count == 0)
+                if (_words is null || _words.Count == 0)
                 {
                     CurrentWord = string.Empty;
                 }

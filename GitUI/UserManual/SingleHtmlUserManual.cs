@@ -11,7 +11,7 @@ namespace GitUI.UserManual
         {
             get
             {
-                if (_location == null)
+                if (_location is null)
                 {
                     var path = Path.Combine(AppSettings.GetInstallDir(), "help");
                     var uri = new Uri(path);

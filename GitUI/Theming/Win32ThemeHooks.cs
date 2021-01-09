@@ -237,7 +237,7 @@ namespace GitUI.Theming
             if (!BypassThemeRenderers)
             {
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
-                if (renderer == null && InitializingListViews.Any(_ => _.CheckBoxes))
+                if (renderer is null && InitializingListViews.Any(_ => _.CheckBoxes))
                 {
                     renderer = _renderers.OfType<ListViewRenderer>().SingleOrDefault();
                 }

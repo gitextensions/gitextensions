@@ -183,7 +183,7 @@ namespace GitUI.Editor
 
             HotkeysEnabled = true;
 
-            if (!IsDesignModeActive && ContextMenuStrip == null)
+            if (!IsDesignModeActive && ContextMenuStrip is null)
             {
                 ContextMenuStrip = contextMenu;
             }
@@ -233,7 +233,7 @@ namespace GitUI.Editor
         {
             get
             {
-                if (_encoding == null)
+                if (_encoding is null)
                 {
                     _encoding = Module.FilesEncoding;
                 }
@@ -413,7 +413,7 @@ namespace GitUI.Editor
                         if (getStatusTask != null)
                         {
                             var status = await getStatusTask;
-                            if (status == null)
+                            if (status is null)
                             {
                                 await ViewTextAsync(item.Name, $"Submodule \"{item.Name}\" has unresolved conflicts");
                                 return;
@@ -544,7 +544,7 @@ namespace GitUI.Editor
                 return ViewFileAsync(file.Name, file.IsSubmodule, openWithDifftool);
             }
 
-            if (file.TreeGuid == null)
+            if (file.TreeGuid is null)
             {
                 file.TreeGuid = Module.GetFileBlobHash(file.Name, revision);
             }
@@ -1018,7 +1018,7 @@ namespace GitUI.Editor
             {
                 PictureBox.ImageLocation = "";
 
-                if (PictureBox.Image == null)
+                if (PictureBox.Image is null)
                 {
                     return;
                 }
@@ -1044,7 +1044,7 @@ namespace GitUI.Editor
                 return _async.LoadAsync(getImage,
                             image =>
                             {
-                                if (image == null)
+                                if (image is null)
                                 {
                                     ResetView(ViewMode.Text, null);
                                     internalFileViewer.SetText(string.Format(_cannotViewImage.Text, fileName), openWithDifftool);

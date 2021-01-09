@@ -109,7 +109,7 @@ namespace GitUIPluginInterfaces
 
             private static bool RemoveCredentials(string target)
             {
-                if (string.IsNullOrWhiteSpace(target) || CredentialManager.GetCredentials(GetTarget(target)) == null)
+                if (string.IsNullOrWhiteSpace(target) || CredentialManager.GetCredentials(GetTarget(target)) is null)
                 {
                     return false;
                 }

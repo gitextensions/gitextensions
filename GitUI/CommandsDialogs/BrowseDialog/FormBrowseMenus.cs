@@ -138,7 +138,7 @@ namespace GitUI.CommandsDialogs
             switch (mainMenuItem)
             {
                 case MainMenuItem.NavigateMenu:
-                    if (_navigateMenuCommands == null)
+                    if (_navigateMenuCommands is null)
                     {
                         _navigateMenuCommands = new List<MenuCommand>();
                     }
@@ -151,7 +151,7 @@ namespace GitUI.CommandsDialogs
                     break;
 
                 case MainMenuItem.ViewMenu:
-                    if (_viewMenuCommands == null)
+                    if (_viewMenuCommands is null)
                     {
                         _viewMenuCommands = new List<MenuCommand>();
                     }
@@ -291,7 +291,7 @@ namespace GitUI.CommandsDialogs
 
         private IEnumerable<MenuCommand> GetNavigateAndViewMenuCommands()
         {
-            if (_navigateMenuCommands == null && _viewMenuCommands == null)
+            if (_navigateMenuCommands is null && _viewMenuCommands is null)
             {
                 return Enumerable.Empty<MenuCommand>();
             }

@@ -17,7 +17,7 @@ namespace GitUI.HelperDialogs
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            if (BuildServerCredentials == null)
+            if (BuildServerCredentials is null)
             {
                 BuildServerCredentials = new BuildServerCredentials();
             }

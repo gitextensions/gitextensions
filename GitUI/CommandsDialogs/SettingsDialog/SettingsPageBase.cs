@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             get
             {
-                if (_pageHost == null)
+                if (_pageHost is null)
                 {
                     throw new InvalidOperationException("PageHost instance was not passed to page: " + GetType().FullName);
                 }

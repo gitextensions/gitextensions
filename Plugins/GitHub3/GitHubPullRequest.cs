@@ -29,7 +29,7 @@ namespace GitHub3
 
         public async Task<string> GetDiffDataAsync()
         {
-            if (_diffData == null)
+            if (_diffData is null)
             {
                 var request = (HttpWebRequest)WebRequest.Create(_pullRequest.DiffUrl);
                 using var response = await request.GetResponseAsync();
@@ -45,7 +45,7 @@ namespace GitHub3
         {
             get
             {
-                if (_baseRepo == null)
+                if (_baseRepo is null)
                 {
                     _baseRepo = new GitHubRepo(_pullRequest.Base.Repo);
                 }
@@ -59,7 +59,7 @@ namespace GitHub3
         {
             get
             {
-                if (_headRepo == null)
+                if (_headRepo is null)
                 {
                     _headRepo = new GitHubRepo(_pullRequest.Head.Repo);
                 }
@@ -90,7 +90,7 @@ namespace GitHub3
 
         public IPullRequestDiscussion GetDiscussion()
         {
-            if (_discussion == null)
+            if (_discussion is null)
             {
                 _discussion = new GitHubPullRequestDiscussion(_pullRequest);
             }

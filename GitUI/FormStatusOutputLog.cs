@@ -12,7 +12,7 @@ namespace GitUI
 
         public void Append([NotNull] string text)
         {
-            if (text == null)
+            if (text is null)
             {
                 throw new ArgumentNullException(nameof(text));
             }

@@ -79,7 +79,7 @@ namespace TfsIntegration
                     ?? LoadAssemblyAndConnectToServer("TfsInterop.Vs2013")
                     ?? LoadAssemblyAndConnectToServer("TfsInterop.Vs2012");
 
-                if (_tfsHelper == null)
+                if (_tfsHelper is null)
                 {
                     Trace.WriteLine("fail to load the good interop assembly :(");
                 }
@@ -128,7 +128,7 @@ namespace TfsIntegration
 
         public IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
         {
-            if (_tfsHelper == null)
+            if (_tfsHelper is null)
             {
                 return Observable.Empty<BuildInfo>();
             }

@@ -78,7 +78,7 @@ namespace GitUI.SpellChecker
         {
             get
             {
-                if (TextBox == null)
+                if (TextBox is null)
                 {
                     return string.Empty;
                 }
@@ -355,7 +355,7 @@ namespace GitUI.SpellChecker
 
             string dictionaryFile = string.Concat(Path.Combine(AppSettings.GetDictionaryDir(), Settings.Dictionary), ".dic");
 
-            if (_wordDictionary == null || _wordDictionary.DictionaryFile != dictionaryFile)
+            if (_wordDictionary is null || _wordDictionary.DictionaryFile != dictionaryFile)
             {
                 _wordDictionary =
                     new WordDictionary(components)
@@ -946,7 +946,7 @@ namespace GitUI.SpellChecker
                 return;
             }
 
-            if (_autoCompleteListTask == null || !AppSettings.ProvideAutocompletion)
+            if (_autoCompleteListTask is null || !AppSettings.ProvideAutocompletion)
             {
                 return;
             }
@@ -972,7 +972,7 @@ namespace GitUI.SpellChecker
 
             var word = GetWordAtCursor();
 
-            if (word == null || (word.Length <= 1 && !calledByUser && !_autoCompleteWasUserActivated))
+            if (word is null || (word.Length <= 1 && !calledByUser && !_autoCompleteWasUserActivated))
             {
                 if (AutoComplete.Visible)
                 {

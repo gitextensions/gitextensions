@@ -78,7 +78,7 @@ namespace GitUI.AutoCompletion
         {
             var module = _getModule();
 
-            if (module == null)
+            if (module is null)
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }
@@ -102,7 +102,7 @@ namespace GitUI.AutoCompletion
             }
 
             Stream s = Assembly.GetEntryAssembly()?.GetManifestResourceStream("GitExtensions.AutoCompleteRegexes.txt");
-            if (s == null)
+            if (s is null)
             {
                 throw new NotImplementedException("Please add AutoCompleteRegexes.txt file into .csproj");
             }

@@ -306,7 +306,7 @@ namespace GitUI
 
         [Browsable(false)]
         [DefaultValue(true)]
-        public bool IsEmpty => GitItemStatuses == null || !GitItemStatuses.Any();
+        public bool IsEmpty => GitItemStatuses is null || !GitItemStatuses.Any();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -338,7 +338,7 @@ namespace GitUI
 
                 ListViewItem GetItemByStatus(GitItemStatus status)
                 {
-                    if (status == null)
+                    if (status is null)
                     {
                         return null;
                     }
@@ -352,7 +352,7 @@ namespace GitUI
                             return item;
                         }
 
-                        if (status.CompareName(gitItemStatus.Item) == 0 && newSelected == null)
+                        if (status.CompareName(gitItemStatus.Item) == 0 && newSelected is null)
                         {
                             newSelected = item;
                         }
@@ -369,7 +369,7 @@ namespace GitUI
         {
             set
             {
-                if (value == null)
+                if (value is null)
                 {
                     ClearSelected();
                     return;
@@ -390,7 +390,7 @@ namespace GitUI
             get => FileStatusListView.SelectedItemTags<FileStatusItem>();
             set
             {
-                if (value == null)
+                if (value is null)
                 {
                     ClearSelected();
                     return;
@@ -437,7 +437,7 @@ namespace GitUI
         {
             if (FileStatusListView.Items.Count > 0)
             {
-                if (SelectedItem == null)
+                if (SelectedItem is null)
                 {
                     SelectedIndex = 0;
                 }
@@ -476,7 +476,7 @@ namespace GitUI
             if (searchBackward)
             {
                 var nextItem = FindPrevItemInGroups();
-                if (nextItem == null)
+                if (nextItem is null)
                 {
                     return loop ? GetLastIndex() : curIdx;
                 }
@@ -486,7 +486,7 @@ namespace GitUI
             else
             {
                 var nextItem = FindNextItemInGroups();
-                if (nextItem == null)
+                if (nextItem is null)
                 {
                     return loop ? 0 : curIdx;
                 }
@@ -830,7 +830,7 @@ namespace GitUI
                 foreach (var item in FileStatusListView.Items())
                 {
                     item.Selected = predicate(item);
-                    if (item.Selected && firstSelectedItem == null)
+                    if (item.Selected && firstSelectedItem is null)
                     {
                         firstSelectedItem = item;
                     }
@@ -971,7 +971,7 @@ namespace GitUI
 
             void EnsureSelectedIndexChangeSubscription()
             {
-                if (_selectedIndexChangeSubscription == null)
+                if (_selectedIndexChangeSubscription is null)
                 {
                     _selectedIndexChangeSubscription = Observable.FromEventPattern(
                             h => FileStatusListView.SelectedIndexChanged += h,
@@ -1021,14 +1021,14 @@ namespace GitUI
 
                 if (gitItemStatus.IsSubmodule)
                 {
-                    if (gitItemStatus.GetSubmoduleStatusAsync() == null ||
+                    if (gitItemStatus.GetSubmoduleStatusAsync() is null ||
                         !gitItemStatus.GetSubmoduleStatusAsync().IsCompleted)
                     {
                         return gitItemStatus.IsDirty ? nameof(Images.SubmoduleDirty) : nameof(Images.SubmodulesManage);
                     }
 
                     var status = gitItemStatus.GetSubmoduleStatusAsync().CompletedResult();
-                    if (status == null)
+                    if (status is null)
                     {
                         return gitItemStatus.IsDirty ? nameof(Images.SubmoduleDirty) : nameof(Images.SubmodulesManage);
                     }
@@ -1277,9 +1277,9 @@ namespace GitUI
 
         private void FileStatusListView_DoubleClick(object sender, EventArgs e)
         {
-            if (DoubleClick == null)
+            if (DoubleClick is null)
             {
-                if (SelectedItem?.Item == null)
+                if (SelectedItem?.Item is null)
                 {
                     return;
                 }
@@ -1556,7 +1556,7 @@ namespace GitUI
 
         private bool IsFilterMatch(GitItemStatus item)
         {
-            if (_filter == null)
+            if (_filter is null)
             {
                 return true;
             }
@@ -1735,11 +1735,11 @@ namespace GitUI
                 {
                     return 0;
                 }
-                else if (x == null)
+                else if (x is null)
                 {
                     return -1;
                 }
-                else if (y == null)
+                else if (y is null)
                 {
                     return 1;
                 }

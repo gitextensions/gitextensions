@@ -73,7 +73,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
         {
-            if (revision.BuildStatus == null)
+            if (revision.BuildStatus is null)
             {
                 return;
             }

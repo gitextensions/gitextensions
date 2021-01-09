@@ -143,7 +143,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 {
                     void Append(IReadOnlyList<GitItemStatus> items, string singular)
                     {
-                        if (items == null || items.Count == 0)
+                        if (items is null || items.Count == 0)
                         {
                             return;
                         }
@@ -389,7 +389,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             Rectangle messageBounds,
             ref int offset)
         {
-            if (items == null || items.Count == 0)
+            if (items is null || items.Count == 0)
             {
                 return;
             }

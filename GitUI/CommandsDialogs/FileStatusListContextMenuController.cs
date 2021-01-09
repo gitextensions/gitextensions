@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs
                 && (!selectionInfo.FirstIsParent || !selectionInfo.AllAreNew)
 
                 // First (A) is not local
-                && (selectionInfo.SelectedItemParentRevs == null || !selectionInfo.SelectedItemParentRevs.Contains(ObjectId.WorkTreeId));
+                && (selectionInfo.SelectedItemParentRevs is null || !selectionInfo.SelectedItemParentRevs.Contains(ObjectId.WorkTreeId));
         }
 
         public bool ShouldShowMenuSelectedToLocal(ContextMenuDiffToolInfo selectionInfo)

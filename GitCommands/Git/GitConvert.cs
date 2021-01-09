@@ -11,7 +11,7 @@ namespace GitCommands
         [CanBeNull]
         public static byte[] ConvertCrLfToWorktree([CanBeNull] byte[] buf)
         {
-            if (buf == null)
+            if (buf is null)
             {
                 return buf;
             }

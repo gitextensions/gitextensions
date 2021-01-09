@@ -196,7 +196,7 @@ namespace GitUI.CommandsDialogs
         private void Pull_Click(object sender, EventArgs e)
         {
             var submodule = Module.GetSubmodule(SubModuleLocalPath.Text);
-            if (submodule == null)
+            if (submodule is null)
             {
                 return;
             }

@@ -62,7 +62,7 @@ namespace GitCommands
         /// <param name="values">A sequence of strings to add.</param>
         public static void Add(this ArgumentBuilder builder, [CanBeNull, ItemCanBeNull] IEnumerable<string> values)
         {
-            if (values == null)
+            if (values is null)
             {
                 return;
             }
@@ -88,7 +88,7 @@ namespace GitCommands
         /// <param name="ifConditionTrue">A sequence of strings to add if <paramref name="condition"/> is <c>true</c>.</param>
         public static void Add(this ArgumentBuilder builder, bool condition, [CanBeNull, ItemCanBeNull] IEnumerable<string> ifConditionTrue)
         {
-            if (!condition || ifConditionTrue == null)
+            if (!condition || ifConditionTrue is null)
             {
                 return;
             }
@@ -272,7 +272,7 @@ namespace GitCommands
         /// <exception cref="ArgumentException"><paramref name="objectId"/> represents an artificial commit.</exception>
         public static void Add(this ArgumentBuilder builder, [CanBeNull] ObjectId objectId)
         {
-            if (objectId == null)
+            if (objectId is null)
             {
                 return;
             }
@@ -296,7 +296,7 @@ namespace GitCommands
         /// <exception cref="ArgumentException"><paramref name="objectIds"/> contains an artificial commit.</exception>
         public static void Add(this ArgumentBuilder builder, [CanBeNull, ItemCanBeNull] IEnumerable<ObjectId> objectIds)
         {
-            if (objectIds == null)
+            if (objectIds is null)
             {
                 return;
             }

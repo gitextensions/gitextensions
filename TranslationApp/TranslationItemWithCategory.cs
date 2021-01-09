@@ -59,7 +59,7 @@ namespace TranslationApp
 
         public bool IsSourceEqual(string value)
         {
-            if (NeutralValue == null)
+            if (NeutralValue is null)
             {
                 return true;
             }

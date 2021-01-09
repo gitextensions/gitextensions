@@ -133,7 +133,7 @@ namespace GitCommands
 
                     if (TryParseRevision(module, chunk, stringPool, logOutputEncoding, out var revision))
                     {
-                        if (revisionPredicate == null || revisionPredicate(revision))
+                        if (revisionPredicate is null || revisionPredicate(revision))
                         {
                             // The full commit message body is used initially in InMemFilter, after which it isn't
                             // strictly needed and can be re-populated asynchronously.
@@ -401,7 +401,7 @@ namespace GitCommands
 
             var subject = reader.ReadLine(advance: false);
 
-            if (author == null || authorEmail == null || committer == null || committerEmail == null || subject == null)
+            if (author is null || authorEmail is null || committer is null || committerEmail is null || subject is null)
             {
                 // TODO log this parse error
                 Debug.Fail("Unable to read an entry from the log -- this should not happen");
@@ -413,7 +413,7 @@ namespace GitCommands
             // Therefore we read the subject twice.
             // If there are not enough characters remaining for a body, then just assign the subject string directly.
             var (body, additionalData) = ParseCommitBody(reader, subject);
-            if (body == null)
+            if (body is null)
             {
                 // TODO log this parse error
                 Debug.Fail("Unable to read body from the log -- this should not happen");

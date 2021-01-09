@@ -361,19 +361,19 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                if (CommitInfoTabPage.Parent == null)
+                if (CommitInfoTabPage.Parent is null)
                 {
                     tabControl1.TabPages.Insert(0, CommitInfoTabPage);
                 }
 
-                if (ViewTab.Parent == null)
+                if (ViewTab.Parent is null)
                 {
                     var index = tabControl1.TabPages.IndexOf(DiffTab);
                     Debug.Assert(index != -1, "TabControl should contain diff tab page");
                     tabControl1.TabPages.Insert(index + 1, ViewTab);
                 }
 
-                if (BlameTab.Parent == null)
+                if (BlameTab.Parent is null)
                 {
                     var index = tabControl1.TabPages.IndexOf(ViewTab);
                     Debug.Assert(index != -1, "TabControl should contain view tab page");
@@ -413,7 +413,7 @@ namespace GitUI.CommandsDialogs
                 CommitDiff.SetRevision(revision.ObjectId, fileName);
             }
 
-            if (_buildReportTabPageExtension == null)
+            if (_buildReportTabPageExtension is null)
             {
                 _buildReportTabPageExtension = new BuildReportTabPageExtension(() => Module, tabControl1, _buildReportTabCaption.Text);
             }

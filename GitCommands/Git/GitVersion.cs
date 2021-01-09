@@ -32,7 +32,7 @@ namespace GitCommands
         {
             get
             {
-                if (_current == null || _current.IsUnknown)
+                if (_current is null || _current.IsUnknown)
                 {
                     var output = new Executable(AppSettings.GitCommand).GetOutput("--version");
                     _current = new GitVersion(output);
@@ -60,7 +60,7 @@ namespace GitCommands
 
             string Fix()
             {
-                if (version == null)
+                if (version is null)
                 {
                     return "";
                 }
@@ -152,7 +152,7 @@ namespace GitCommands
         // outside ASCII (7bit) range.
         public bool IsRegExStringCmdPassable(string s)
         {
-            if (s == null)
+            if (s is null)
             {
                 return true;
             }
@@ -170,17 +170,17 @@ namespace GitCommands
 
         private static int Compare(GitVersion left, GitVersion right)
         {
-            if (left == null && right == null)
+            if (left is null && right is null)
             {
                 return 0;
             }
 
-            if (right == null)
+            if (right is null)
             {
                 return 1;
             }
 
-            if (left == null)
+            if (left is null)
             {
                 return -1;
             }

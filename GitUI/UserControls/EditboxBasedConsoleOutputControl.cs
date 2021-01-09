@@ -70,7 +70,7 @@ namespace GitUI.UserControls
                 throw new InvalidOperationException("This operation is to be executed on the home thread.");
             }
 
-            if (_process == null)
+            if (_process is null)
             {
                 return;
             }
@@ -138,7 +138,7 @@ namespace GitUI.UserControls
                     this.InvokeAsync(
                         () =>
                         {
-                            if (_process == null)
+                            if (_process is null)
                             {
                                 operation.LogProcessEnd(new Exception("Process instance is null in Exited event"));
                                 return;

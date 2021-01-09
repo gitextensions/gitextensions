@@ -33,7 +33,7 @@ namespace TeamCityIntegration.Settings
 
         private void ReselectPreviouslySelectedBuild()
         {
-            if (_previouslySelectedProject == null)
+            if (_previouslySelectedProject is null)
             {
                 return;
             }
@@ -81,12 +81,12 @@ namespace TeamCityIntegration.Settings
         private void LoadProjectBuilds(TreeNode treeNode)
         {
             var project = (Project)treeNode.Tag;
-            if (project.Builds == null)
+            if (project.Builds is null)
             {
                 project.Builds = _teamCityAdapter.GetProjectBuilds(project.Id);
 
                 // Remove "Loading..." node
-                if (treeNode.Nodes.Count == 1 && treeNode.Nodes[0].Tag == null)
+                if (treeNode.Nodes.Count == 1 && treeNode.Nodes[0].Tag is null)
                 {
                     treeNode.Nodes.RemoveAt(0);
                 }

@@ -23,7 +23,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [SetUp]
         public void SetUp()
         {
-            if (_referenceRepository == null)
+            if (_referenceRepository is null)
             {
                 _referenceRepository = new ReferenceRepository();
                 AppSettings.LoadSettings();

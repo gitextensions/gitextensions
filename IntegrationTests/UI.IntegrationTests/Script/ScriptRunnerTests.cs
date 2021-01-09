@@ -41,7 +41,7 @@ namespace GitExtensions.UITests.Script
         [SetUp]
         public void Setup()
         {
-            if (_referenceRepository == null)
+            if (_referenceRepository is null)
             {
                 _referenceRepository = new ReferenceRepository();
             }
@@ -59,7 +59,7 @@ namespace GitExtensions.UITests.Script
             _exampleScript.AskConfirmation = false; // avoid any dialogs popping up
             _exampleScript.RunInBackground = true; // avoid any dialogs popping up
 
-            if (s_miRunScript == null)
+            if (s_miRunScript is null)
             {
                 throw new InvalidOperationException();
             }

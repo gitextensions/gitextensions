@@ -36,7 +36,7 @@ namespace GitUI.UserControls
             }
 
             // if we do not use the DirectoryInfo then a path with slashes instead of backslashes won't work
-            if (directoryInfoPath == null)
+            if (directoryInfoPath is null)
             {
                 directoryInfoPath = getter();
             }

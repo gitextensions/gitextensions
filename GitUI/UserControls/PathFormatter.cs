@@ -49,7 +49,7 @@ namespace GitUI
                     return (prefix, text, suffix, width);
 
                 default:
-                    int maxStep = oldName == null
+                    int maxStep = oldName is null
                         ? name.Length
                         : Math.Max(name.Length, oldName.Length) * 2;
 
@@ -163,7 +163,7 @@ namespace GitUI
 
         private static (string path, string fileName) SplitPathName(string name)
         {
-            if (name == null)
+            if (name is null)
             {
                 return (null, null);
             }

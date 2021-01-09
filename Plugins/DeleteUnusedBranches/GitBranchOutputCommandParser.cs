@@ -7,7 +7,7 @@ namespace DeleteUnusedBranches
     {
         public IEnumerable<string> GetBranchNames(string commandOutput)
         {
-            if (commandOutput == null)
+            if (commandOutput is null)
             {
                 yield break;
             }

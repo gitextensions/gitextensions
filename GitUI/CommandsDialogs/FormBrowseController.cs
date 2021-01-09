@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs
         [ItemCanBeNull]
         public async Task<GpgInfo> LoadGpgInfoAsync(GitRevision revision)
         {
-            if (!AppSettings.ShowGpgInformation.Value || revision?.ObjectId == null)
+            if (!AppSettings.ShowGpgInformation.Value || revision?.ObjectId is null)
             {
                 return null;
             }

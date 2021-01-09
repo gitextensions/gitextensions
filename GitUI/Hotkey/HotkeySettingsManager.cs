@@ -24,7 +24,7 @@ namespace GitUI.Hotkey
         {
             get
             {
-                if (_serializer == null)
+                if (_serializer is null)
                 {
                     _serializer = new XmlSerializer(typeof(HotkeySettings[]), new[] { typeof(HotkeyCommand) });
                 }
@@ -122,7 +122,7 @@ namespace GitUI.Hotkey
 
         internal static void MergeIntoDefaultSettings(HotkeySettings[] defaultSettings, HotkeySettings[] loadedSettings)
         {
-            if (loadedSettings == null)
+            if (loadedSettings is null)
             {
                 return;
             }
@@ -202,13 +202,13 @@ namespace GitUI.Hotkey
 
         private static void MigrateSettings()
         {
-            if (AppSettings.SerializedHotkeys == null)
+            if (AppSettings.SerializedHotkeys is null)
             {
                 Properties.Settings.Default.Upgrade();
                 if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.Hotkeys))
                 {
                     HotkeySettings[] settings = LoadSerializedSettings(Properties.Settings.Default.Hotkeys);
-                    if (settings == null)
+                    if (settings is null)
                     {
                         AppSettings.SerializedHotkeys = " "; // mark settings as migrated
                     }

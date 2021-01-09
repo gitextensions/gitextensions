@@ -17,7 +17,7 @@ namespace System.Linq
             [NotNull] this IEnumerable<TSource> source,
             [NotNull] Func<TSource, TKey> keySelector)
         {
-            if (keySelector == null)
+            if (keySelector is null)
             {
                 throw new ArgumentNullException(nameof(keySelector));
             }
@@ -28,7 +28,7 @@ namespace System.Linq
             {
                 var key = keySelector(element);
 
-                if (key == null)
+                if (key is null)
                 {
                     throw new ArgumentException(
                         "Key selector produced a key that is null. See exception data for source.",
@@ -97,12 +97,12 @@ namespace System.Linq
             [NotNull] this TSource[] source,
             [NotNull, InstantHandle] Func<TSource, TSource> transformer)
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (transformer == null)
+            if (transformer is null)
             {
                 throw new ArgumentNullException(nameof(transformer));
             }

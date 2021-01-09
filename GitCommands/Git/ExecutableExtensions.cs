@@ -100,7 +100,7 @@ namespace GitCommands
             CommandCache cache = null,
             bool stripAnsiEscapeCodes = true)
         {
-            if (outputEncoding == null)
+            if (outputEncoding is null)
             {
                 outputEncoding = _defaultOutputEncoding.Value;
             }
@@ -249,7 +249,7 @@ namespace GitCommands
             Encoding outputEncoding = null,
             bool stripAnsiEscapeCodes = true)
         {
-            if (outputEncoding == null)
+            if (outputEncoding is null)
             {
                 outputEncoding = _defaultOutputEncoding.Value;
             }
@@ -265,7 +265,7 @@ namespace GitCommands
             {
                 var line = process.StandardOutput.ReadLine();
 
-                if (line == null)
+                if (line is null)
                 {
                     break;
                 }
@@ -277,7 +277,7 @@ namespace GitCommands
             {
                 var line = process.StandardError.ReadLine();
 
-                if (line == null)
+                if (line is null)
                 {
                     break;
                 }
@@ -351,7 +351,7 @@ namespace GitCommands
             Encoding outputEncoding = null,
             bool stripAnsiEscapeCodes = true)
         {
-            if (outputEncoding == null)
+            if (outputEncoding is null)
             {
                 outputEncoding = _defaultOutputEncoding.Value;
             }

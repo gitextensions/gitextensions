@@ -27,7 +27,7 @@ namespace GitUI
         {
             // NOTE Order in revisions is that first clicked is last in array
 
-            if (revisions == null)
+            if (revisions is null)
             {
                 error = "Unexpected null revision argument to difftool";
                 firstRevision = null;
@@ -43,7 +43,7 @@ namespace GitUI
                 return false;
             }
 
-            if (revisions[0] == null)
+            if (revisions[0] is null)
             {
                 error = "Unexpected single null argument to difftool";
                 firstRevision = null;
@@ -51,7 +51,7 @@ namespace GitUI
                 return false;
             }
 
-            if (revisions.Count == 2 && revisions[1] == null && diffKind == RevisionDiffKind.DiffBLocal)
+            if (revisions.Count == 2 && revisions[1] is null && diffKind == RevisionDiffKind.DiffBLocal)
             {
                 error = "Unexpected second null argument to difftool for DiffB";
                 firstRevision = null;

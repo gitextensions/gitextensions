@@ -277,7 +277,7 @@ namespace GitUI.BranchTreePanel
                 var token = _reloadCancellationTokenSequence.Next();
 
                 var treeView = TreeViewNode.TreeView;
-                if (treeView == null || !IsAttached)
+                if (treeView is null || !IsAttached)
                 {
                     return;
                 }
@@ -455,7 +455,7 @@ namespace GitUI.BranchTreePanel
                     }
 
                     // If non-null, our font is already valid, otherwise create a new one
-                    if (TreeViewNode.NodeFont == null)
+                    if (TreeViewNode.NodeFont is null)
                     {
                         TreeViewNode.NodeFont = new Font(AppSettings.Font, style);
                     }

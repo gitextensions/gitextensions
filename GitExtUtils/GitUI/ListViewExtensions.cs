@@ -27,7 +27,7 @@ namespace GitUI
 
         public static Image Image(this ListViewItem item)
         {
-            if (item.ImageList == null || item.ImageIndex == -1)
+            if (item.ImageList is null || item.ImageIndex == -1)
             {
                 return null;
             }

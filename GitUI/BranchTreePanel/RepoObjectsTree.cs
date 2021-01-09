@@ -282,7 +282,7 @@ namespace GitUI.BranchTreePanel
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                HashSet<string> mergedBranches = selectedGuid == null
+                HashSet<string> mergedBranches = selectedGuid is null
                     ? new HashSet<string>()
                     : (await Module.GetMergedBranchesAsync(includeRemote: true, fullRefname: true, commit: selectedGuid)).ToHashSet();
 
@@ -433,7 +433,7 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            if (_searchResult == null || !_searchResult.Any())
+            if (_searchResult is null || !_searchResult.Any())
             {
                 if (!string.IsNullOrWhiteSpace(_txtBranchCriterion.Text))
                 {
@@ -443,7 +443,7 @@ namespace GitUI.BranchTreePanel
 
             var node = GetNextSearchResult();
 
-            if (node == null)
+            if (node is null)
             {
                 return;
             }
@@ -457,7 +457,7 @@ namespace GitUI.BranchTreePanel
             {
                 var first = _searchResult?.FirstOrDefault();
 
-                if (first == null)
+                if (first is null)
                 {
                     return null;
                 }

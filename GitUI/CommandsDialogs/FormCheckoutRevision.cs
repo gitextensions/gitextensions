@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs
             {
                 var selectedObjectId = commitPickerSmallControl1.SelectedObjectId;
 
-                if (selectedObjectId == null)
+                if (selectedObjectId is null)
                 {
                     MessageBox.Show(this, _noRevisionSelectedMsgBox.Text, _noRevisionSelectedMsgBoxCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;

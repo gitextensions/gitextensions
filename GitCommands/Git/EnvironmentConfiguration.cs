@@ -30,7 +30,7 @@ namespace GitCommands
                 // Ensure the git binary dir is on the path
                 string path = Env.GetEnvironmentVariable("PATH");
 
-                if (path == null)
+                if (path is null)
                 {
                     Env.SetEnvironmentVariable("PATH", AppSettings.GitBinDir);
                 }

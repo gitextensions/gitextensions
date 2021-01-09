@@ -55,7 +55,7 @@ namespace GitUI
                 return fileViewer.ViewTextAsync(item.Item.Name, item.Item.ErrorMessage);
             }
 
-            if (item?.Item == null || item.SecondRevision?.ObjectId == null)
+            if (item?.Item is null || item.SecondRevision?.ObjectId is null)
             {
                 if (!string.IsNullOrWhiteSpace(defaultText))
                 {
@@ -70,7 +70,7 @@ namespace GitUI
 
             openWithDiffTool ??= OpenWithDiffTool;
 
-            if (item.Item.IsNew || firstId == null || FileHelper.IsImage(item.Item.Name))
+            if (item.Item.IsNew || firstId is null || FileHelper.IsImage(item.Item.Name))
             {
                 // View blob guid from revision, or file for worktree
                 return fileViewer.ViewGitItemRevisionAsync(item.Item, item.SecondRevision.ObjectId, openWithDiffTool);
@@ -165,7 +165,7 @@ namespace GitUI
 
         public static void Mask(this Control control)
         {
-            if (FindMaskPanel(control) == null)
+            if (FindMaskPanel(control) is null)
             {
                 var panel = new LoadingControl
                 {

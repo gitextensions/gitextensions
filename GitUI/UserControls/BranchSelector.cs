@@ -66,7 +66,7 @@ namespace GitUI.UserControls
 
             string[] GetLocalBranches()
             {
-                if (_localBranches == null)
+                if (_localBranches is null)
                 {
                     _localBranches = Module.GetRefs(false).Select(b => b.Name).ToArray();
                 }
@@ -76,7 +76,7 @@ namespace GitUI.UserControls
 
             string[] GetRemoteBranches()
             {
-                if (_remoteBranches == null)
+                if (_remoteBranches is null)
                 {
                     _remoteBranches = Module.GetRefs(true, true).Where(h => h.IsRemote && !h.IsTag).Select(b => b.Name).ToArray();
                 }
@@ -126,7 +126,7 @@ namespace GitUI.UserControls
                 var branchName = SelectedBranchName;
                 var currentCheckout = CommitToCompare ?? Module.GetCurrentCheckout();
 
-                if (currentCheckout == null)
+                if (currentCheckout is null)
                 {
                     lbChanges.Text = "";
                     return;

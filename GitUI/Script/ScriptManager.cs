@@ -20,7 +20,7 @@ namespace GitUI.Script
         [NotNull]
         public static BindingList<ScriptInfo> GetScripts()
         {
-            if (_scripts == null)
+            if (_scripts is null)
             {
                 _scripts = DeserializeFromXml(AppSettings.OwnScripts);
                 FixAmbiguousHotkeyCommandIdentifiers();

@@ -138,7 +138,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void comboBoxTags_TextChanged(object sender, EventArgs e)
         {
-            if (comboBoxTags.DataSource == null)
+            if (comboBoxTags.DataSource is null)
             {
                 return;
             }
@@ -149,7 +149,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void comboBoxBranches_TextChanged(object sender, EventArgs e)
         {
-            if (comboBoxBranches.DataSource == null)
+            if (comboBoxBranches.DataSource is null)
             {
                 return;
             }
@@ -160,7 +160,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void comboBoxTags_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (comboBoxTags.SelectedValue == null)
+            if (comboBoxTags.SelectedValue is null)
             {
                 return;
             }
@@ -172,7 +172,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void comboBoxBranches_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (comboBoxBranches.SelectedValue == null)
+            if (comboBoxBranches.SelectedValue is null)
             {
                 return;
             }

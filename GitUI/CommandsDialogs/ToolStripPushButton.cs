@@ -32,7 +32,7 @@ namespace GitUI.CommandsDialogs
             ResetToDefaultState();
 
             var aheadBehindData = _aheadBehindDataProvider?.GetData(branchName);
-            if (aheadBehindData == null || aheadBehindData.Count < 1 || !aheadBehindData.ContainsKey(branchName))
+            if (aheadBehindData is null || aheadBehindData.Count < 1 || !aheadBehindData.ContainsKey(branchName))
             {
                 return;
             }

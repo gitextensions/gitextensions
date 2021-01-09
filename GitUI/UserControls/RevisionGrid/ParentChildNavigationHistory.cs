@@ -71,7 +71,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public void RevisionsSelectionChanged()
         {
-            if (_direction == null)
+            if (_direction is null)
             {
                 Clear();
             }

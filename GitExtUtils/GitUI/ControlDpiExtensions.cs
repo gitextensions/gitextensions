@@ -12,7 +12,7 @@ namespace GitUI
     {
         public static void AdjustForDpiScaling([NotNull] this Control control)
         {
-            if (control == null)
+            if (control is null)
             {
                 throw new ArgumentNullException(nameof(control));
             }

@@ -16,12 +16,12 @@ namespace GitCommands.Git
                 return 0;
             }
 
-            if (x == null)
+            if (x is null)
             {
                 return -1;
             }
 
-            if (y == null)
+            if (y is null)
             {
                 return 1;
             }

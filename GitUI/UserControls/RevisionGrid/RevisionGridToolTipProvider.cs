@@ -30,7 +30,7 @@ namespace GitUI
         {
             var revision = _gridView.GetRevision(e.RowIndex);
 
-            if (revision == null)
+            if (revision is null)
             {
                 return;
             }

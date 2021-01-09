@@ -103,7 +103,7 @@ namespace TranslationApp
                                   oldItem.Property == item.Property);
                     var curItem = curItems.FirstOrDefault();
 
-                    if (curItem == null)
+                    if (curItem is null)
                     {
                         curItem = item.Clone();
                         transItems.Add(curItem);

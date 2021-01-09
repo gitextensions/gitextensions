@@ -117,7 +117,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             var myRemote = MyRemote;
 
-            if (myRemote == null)
+            if (myRemote is null)
             {
                 return;
             }
@@ -173,7 +173,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _createBtn_Click(object sender, EventArgs e)
         {
-            if (_currentHostedRemote == null)
+            if (_currentHostedRemote is null)
             {
                 return;
             }

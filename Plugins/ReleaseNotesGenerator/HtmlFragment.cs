@@ -119,7 +119,7 @@ namespace ReleaseNotesGenerator
                 }
             }
 
-            if (Context == null && Fragment == null)
+            if (Context is null && Fragment is null)
             {
                 throw new FormatException("No data specified");
             }

@@ -52,7 +52,7 @@ namespace GitUI
             }
 
             Control control = Control.FromHandle(hwnd);
-            if (control == null)
+            if (control is null)
             {
                 return false;
             }
@@ -73,7 +73,7 @@ namespace GitUI
                 }
             }
 
-            if (control == null)
+            if (control is null)
             {
                 return false;
             }

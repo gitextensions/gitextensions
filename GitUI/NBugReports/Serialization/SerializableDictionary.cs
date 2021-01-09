@@ -27,7 +27,7 @@ namespace GitUI.NBugReports.Serialization
 
         public SerializableDictionary(IDictionary<TKey, TValue> dictionary)
         {
-            if (dictionary == null)
+            if (dictionary is null)
             {
                 throw new ArgumentNullException();
             }

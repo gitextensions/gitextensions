@@ -207,8 +207,8 @@ namespace GitUI.CommandsDialogs
             {
                 var firstId = Module.RevParse(gitStash.Name + "^");
                 var selectedId = Module.RevParse(gitStash.Name);
-                var firstRev = firstId == null ? null : new GitRevision(firstId);
-                var secondRev = selectedId == null ? null : new GitRevision(selectedId)
+                var firstRev = firstId is null ? null : new GitRevision(firstId);
+                var secondRev = selectedId is null ? null : new GitRevision(selectedId)
                 {
                     ParentIds = new[] { firstId }
                 };

@@ -123,7 +123,7 @@ namespace GitExtUtils.GitUI.Theming
         private void RenderTabImage(int index)
         {
             var image = _tabImages[index];
-            if (image == null)
+            if (image is null)
             {
                 return;
             }
@@ -152,7 +152,7 @@ namespace GitExtUtils.GitUI.Theming
         private static Image GetTabImage(TabControl tabs, int index)
         {
             var images = tabs.ImageList?.Images;
-            if (images == null)
+            if (images is null)
             {
                 return null;
             }

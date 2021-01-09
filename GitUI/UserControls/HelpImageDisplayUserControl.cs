@@ -171,7 +171,7 @@ namespace GitUI.Help
             Size size;
             if (IsExpanded)
             {
-                if (_image1 != null && _image2 == null)
+                if (_image1 != null && _image2 is null)
                 {
                     size = Image1.Size;
                 }

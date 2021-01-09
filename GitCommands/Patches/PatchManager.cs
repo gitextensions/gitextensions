@@ -17,14 +17,14 @@ namespace GitCommands.Patches
         {
             var selectedChunks = GetSelectedChunks(text, selectionPosition, selectionLength, out var header);
 
-            if (selectedChunks == null)
+            if (selectedChunks is null)
             {
                 return null;
             }
 
             string body = ToResetWorkTreeLinesPatch(selectedChunks);
 
-            if (header == null || body == null)
+            if (header is null || body is null)
             {
                 return null;
             }
@@ -39,7 +39,7 @@ namespace GitCommands.Patches
         {
             var selectedChunks = GetSelectedChunks(text, selectionPosition, selectionLength, out var header);
 
-            if (selectedChunks == null)
+            if (selectedChunks is null)
             {
                 return null;
             }
@@ -52,7 +52,7 @@ namespace GitCommands.Patches
 
             string body = ToIndexPatch(selectedChunks, isIndex, isWholeFile: false);
 
-            if (header == null || body == null)
+            if (header is null || body is null)
             {
                 return null;
             }
@@ -97,7 +97,7 @@ namespace GitCommands.Patches
             var isTracked = treeGuid != null;
             string body = ToIndexPatch(selectedChunks, isIndex: isTracked, isWholeFile: true);
 
-            if (body == null)
+            if (body is null)
             {
                 return null;
             }
@@ -466,7 +466,7 @@ namespace GitCommands.Patches
         {
             get
             {
-                if (_currentSubChunk == null)
+                if (_currentSubChunk is null)
                 {
                     _currentSubChunk = new SubChunk();
                     _subChunks.Add(_currentSubChunk);

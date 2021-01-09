@@ -67,7 +67,7 @@ namespace GitUIPluginInterfaces
 
         private static string ConvertToString(object value)
         {
-            if (value == null)
+            if (value is null)
             {
                 return string.Empty;
             }
@@ -126,7 +126,7 @@ namespace GitUIPluginInterfaces
         public T ValueOrDefault(ISettingsSource settings)
         {
             object settingVal = this[settings];
-            if (settingVal == null)
+            if (settingVal is null)
             {
                 return DefaultValue;
             }

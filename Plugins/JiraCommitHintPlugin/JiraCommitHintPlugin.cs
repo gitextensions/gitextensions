@@ -61,7 +61,7 @@ namespace JiraCommitHintPlugin
                 return false;
             }
 
-            if (_jira == null)
+            if (_jira is null)
             {
                 return false;
             }
@@ -152,7 +152,7 @@ namespace JiraCommitHintPlugin
                         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                         var preview = message.FirstOrDefault();
 
-                        MessageBox.Show(null, preview == null ? EmptyQueryResultMessage.Text : preview.Text, EmptyQueryResultCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(null, preview is null ? EmptyQueryResultMessage.Text : preview.Text, EmptyQueryResultCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         _btnPreview.Enabled = true;
                     });
@@ -193,7 +193,7 @@ namespace JiraCommitHintPlugin
             _jira = Jira.CreateRestClient(url, credentials.UserName, credentials.Password);
             _query = _jqlQuerySettings.ValueOrDefault(Settings);
             _stringTemplate = _stringTemplateSetting.ValueOrDefault(Settings);
-            if (_btnPreview == null)
+            if (_btnPreview is null)
             {
                 return;
             }
@@ -223,7 +223,7 @@ namespace JiraCommitHintPlugin
                 return;
             }
 
-            if (_jira?.Issues == null)
+            if (_jira?.Issues is null)
             {
                 return;
             }
@@ -249,7 +249,7 @@ namespace JiraCommitHintPlugin
                 return;
             }
 
-            if (_currentMessages == null)
+            if (_currentMessages is null)
             {
                 return;
             }

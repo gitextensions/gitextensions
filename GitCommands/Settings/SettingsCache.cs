@@ -159,7 +159,7 @@ namespace GitCommands
         // called. GetValue will set the lock.
         public bool TryGetValue<T>([NotNull] string name, T defaultValue, [NotNull] Func<string, T> decode, out T value)
         {
-            if (decode == null)
+            if (decode is null)
             {
                 throw new ArgumentNullException(nameof(decode), $"The decode parameter for setting {name} is null.");
             }
@@ -184,7 +184,7 @@ namespace GitCommands
 
             string s = GetValue(name);
 
-            if (s == null)
+            if (s is null)
             {
                 value = defaultValue;
                 return false;

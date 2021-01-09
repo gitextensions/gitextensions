@@ -154,7 +154,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void _searchBtn_Click(object sender, EventArgs e)
         {
             var search = searchTB.Text;
-            if (search == null || search.Trim().Length == 0)
+            if (search is null || search.Trim().Length == 0)
             {
                 return;
             }
@@ -188,7 +188,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void _getFromUserBtn_Click(object sender, EventArgs e)
         {
             var search = searchTB.Text;
-            if (search == null || search.Trim().Length == 0)
+            if (search is null || search.Trim().Length == 0)
             {
                 return;
             }
@@ -327,7 +327,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _openGitupPageBtn_Click(object sender, EventArgs e)
         {
-            if (CurrentySelectedGitRepo == null)
+            if (CurrentySelectedGitRepo is null)
             {
                 return;
             }
@@ -381,7 +381,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void Clone(IHostedRepository repo)
         {
             string targetDir = GetTargetDir();
-            if (targetDir == null)
+            if (targetDir is null)
             {
                 return;
             }

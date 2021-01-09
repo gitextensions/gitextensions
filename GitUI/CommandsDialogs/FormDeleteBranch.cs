@@ -77,7 +77,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 // always treat branches as unmerged if there is no current branch (HEAD is detached)
-                var hasUnmergedBranches = _currentBranch == null || selectedBranches.Any(branch => !_mergedBranches.Contains(branch.Name));
+                var hasUnmergedBranches = _currentBranch is null || selectedBranches.Any(branch => !_mergedBranches.Contains(branch.Name));
 
                 // we could show yes/no dialog and set forcing checkbox automatically, but more safe way is asking user to do it himself
                 if (hasUnmergedBranches && !ForceDelete.Checked)

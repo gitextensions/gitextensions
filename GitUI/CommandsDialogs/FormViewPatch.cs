@@ -51,7 +51,7 @@ namespace GitUI.CommandsDialogs
 
             var patch = (Patch)GridChangedFiles.SelectedRows[0].DataBoundItem;
 
-            if (patch == null)
+            if (patch is null)
             {
                 return;
             }

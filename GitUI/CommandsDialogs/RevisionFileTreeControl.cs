@@ -96,7 +96,7 @@ See the changes in the commit form.");
                     return false;
                 });
 
-                if (currentFoundNode == null)
+                if (currentFoundNode is null)
                 {
                     isIncompleteMatch = true;
                     break;
@@ -189,7 +189,7 @@ See the changes in the commit form.");
                             break;
                         }
 
-                        if (matchedNode == null)
+                        if (matchedNode is null)
                         {
                             currentNodes = null;
                         }
@@ -203,7 +203,7 @@ See the changes in the commit form.");
                     tvGitTree.SelectedNode = lastMatchedNode;
                 }
 
-                if (tvGitTree.SelectedNode == null)
+                if (tvGitTree.SelectedNode is null)
                 {
                     FileText.Clear();
                 }
@@ -289,7 +289,7 @@ See the changes in the commit form.");
 
         private IEnumerable<string> FindFileMatches(string name)
         {
-            var candidates = _revision == null ? Enumerable.Empty<string>() : Module.GetFullTree(_revision.TreeGuid.ToString());
+            var candidates = _revision is null ? Enumerable.Empty<string>() : Module.GetFullTree(_revision.TreeGuid.ToString());
             var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
 
             return candidates.Where(predicate);
@@ -427,7 +427,7 @@ See the changes in the commit form.");
 
         private void tvGitTree_KeyDown(object sender, KeyEventArgs e)
         {
-            if (tvGitTree.SelectedNode == null || e.KeyCode != Keys.Enter)
+            if (tvGitTree.SelectedNode is null || e.KeyCode != Keys.Enter)
             {
                 return;
             }
@@ -486,7 +486,7 @@ See the changes in the commit form.");
             for (var i = 0; i < items.Length - 1; i++)
             {
                 var selectedNode = _revisionFileTreeController.Find(nodes, items[i]);
-                if (selectedNode == null)
+                if (selectedNode is null)
                 {
                     return; // Item does not exist in the tree
                 }
@@ -685,7 +685,7 @@ See the changes in the commit form.");
 
         private void diffWithRememberedFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!(tvGitTree.SelectedNode?.Tag is GitItem gitItem) || _revision == null)
+            if (!(tvGitTree.SelectedNode?.Tag is GitItem gitItem) || _revision is null)
             {
                 return;
             }
@@ -700,7 +700,7 @@ See the changes in the commit form.");
 
         private void rememberFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!(tvGitTree.SelectedNode?.Tag is GitItem gitItem) || _revision == null)
+            if (!(tvGitTree.SelectedNode?.Tag is GitItem gitItem) || _revision is null)
             {
                 return;
             }
@@ -763,7 +763,7 @@ See the changes in the commit form.");
         {
             var selectedFile = GetSelectedFile();
 
-            if (selectedFile == null)
+            if (selectedFile is null)
             {
                 return;
             }
@@ -792,7 +792,7 @@ See the changes in the commit form.");
         private void stopTrackingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var filename = GetSelectedFile();
-            if (filename == null)
+            if (filename is null)
             {
                 return;
             }
@@ -836,7 +836,7 @@ See the changes in the commit form.");
 
         public bool SelectFileOrFolder(string filePath)
         {
-            if (filePath == null || filePath.IndexOf(Module.WorkingDir) != 0)
+            if (filePath is null || filePath.IndexOf(Module.WorkingDir) != 0)
             {
                 return false;
             }

@@ -14,7 +14,7 @@ namespace GitCommands
         [Pure]
         public static string GetString([CanBeNull] byte[] output, [CanBeNull] byte[] error, [NotNull] Encoding encoding)
         {
-            if (encoding == null)
+            if (encoding is null)
             {
                 throw new ArgumentNullException(nameof(encoding));
             }
@@ -52,7 +52,7 @@ namespace GitCommands
         [Pure]
         public static string DecodeString([CanBeNull] byte[] output, [CanBeNull] byte[] error, [NotNull] ref Encoding encoding)
         {
-            if (encoding == null)
+            if (encoding is null)
             {
                 throw new ArgumentNullException(nameof(encoding));
             }
@@ -69,7 +69,7 @@ namespace GitCommands
                     reader.Peek();
                     encoding = reader.CurrentEncoding;
                     outputString = reader.ReadToEnd();
-                    if (error == null || error.Length == 0)
+                    if (error is null || error.Length == 0)
                     {
                         return outputString;
                     }
@@ -96,7 +96,7 @@ namespace GitCommands
                     // .Net automatically detect Unicode encoding in StreamReader
                     encoding = reader.CurrentEncoding;
                     errorString = reader.ReadToEnd();
-                    if (output == null || output.Length == 0)
+                    if (output is null || output.Length == 0)
                     {
                         return errorString;
                     }

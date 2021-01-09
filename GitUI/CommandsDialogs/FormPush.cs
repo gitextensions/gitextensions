@@ -251,7 +251,7 @@ namespace GitUI.CommandsDialogs
                 // we couldn't find the default assigned remote for the selected branch
                 // it is usually gets mapped via FormRemotes -> "default pull behavior" tab
                 // so pick the default user remote
-                if (defaultRemote == null)
+                if (defaultRemote is null)
                 {
                     _NO_TRANSLATE_Remotes.SelectedIndex = 0;
                 }
@@ -601,7 +601,7 @@ namespace GitUI.CommandsDialogs
         {
             bool forcePush = false;
             AppSettings.PullAction? onRejectedPullAction = AppSettings.AutoPullOnPushRejectedAction;
-            if (onRejectedPullAction == null)
+            if (onRejectedPullAction is null)
             {
                 string destination = _NO_TRANSLATE_Remotes.Text;
                 string pullDefaultButtonText;
@@ -864,7 +864,7 @@ namespace GitUI.CommandsDialogs
         private void RemotesUpdated(object sender, EventArgs e)
         {
             _selectedRemote = _NO_TRANSLATE_Remotes.SelectedItem as ConfigFileRemote;
-            if (_selectedRemote == null)
+            if (_selectedRemote is null)
             {
                 return;
             }
@@ -975,7 +975,7 @@ namespace GitUI.CommandsDialogs
             DeleteColumn.DataPropertyName = DeleteColumnName;
             BranchGrid.DataSource = new BindingSource { DataSource = _branchTable };
 
-            if (_selectedRemote == null)
+            if (_selectedRemote is null)
             {
                 return;
             }
@@ -1283,7 +1283,7 @@ namespace GitUI.CommandsDialogs
             foreach (DataGridViewRow row in BranchGrid.Rows)
             {
                 var pushCheckBox = row.Cells[PushColumn.Name] as DataGridViewCheckBoxCell;
-                if (pushCheckBox == null || !pushCheckBox.Visible)
+                if (pushCheckBox is null || !pushCheckBox.Visible)
                 {
                     continue;
                 }

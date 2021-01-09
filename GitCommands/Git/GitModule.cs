@@ -76,7 +76,7 @@ namespace GitCommands
                 // If we didn't find it, but there's a .git file in the current folder, look for a gitdir:
                 // line in that file that points to the location of the .git folder
                 var gitDir = Path.Combine(WorkingDir, ".git");
-                if (superprojectPath == null && File.Exists(gitDir))
+                if (superprojectPath is null && File.Exists(gitDir))
                 {
                     foreach (var line in File.ReadLines(gitDir))
                     {
@@ -191,11 +191,11 @@ namespace GitCommands
         {
             get
             {
-                if (_effectiveSettings == null)
+                if (_effectiveSettings is null)
                 {
                     lock (_lock)
                     {
-                        if (_effectiveSettings == null)
+                        if (_effectiveSettings is null)
                         {
                             _effectiveSettings = RepoDistSettings.CreateEffective(this);
                         }
@@ -218,11 +218,11 @@ namespace GitCommands
         {
             get
             {
-                if (_localSettings == null)
+                if (_localSettings is null)
                 {
                     lock (_lock)
                     {
-                        if (_localSettings == null)
+                        if (_localSettings is null)
                         {
                             _localSettings = new RepoDistSettings(null, EffectiveSettings.SettingsCache, SettingLevel.Local);
                         }
@@ -240,11 +240,11 @@ namespace GitCommands
         {
             get
             {
-                if (_effectiveConfigFile == null)
+                if (_effectiveConfigFile is null)
                 {
                     lock (_lock)
                     {
-                        if (_effectiveConfigFile == null)
+                        if (_effectiveConfigFile is null)
                         {
                             _effectiveConfigFile = ConfigFileSettings.CreateEffective(this);
                         }
@@ -267,7 +267,7 @@ namespace GitCommands
         {
             get
             {
-                if (_systemEncoding == null)
+                if (_systemEncoding is null)
                 {
                     _systemEncoding = new SystemEncodingReader().Read();
                 }
@@ -371,7 +371,7 @@ namespace GitCommands
 
                 lock (_gitCommonLock)
                 {
-                    if (_gitCommonDirectory == null)
+                    if (_gitCommonDirectory is null)
                     {
                         var args = new GitArgumentBuilder("rev-parse") { "--git-common-dir" };
                         var result = _gitExecutable.Execute(args);
@@ -772,7 +772,7 @@ namespace GitCommands
         {
             string command = GitCommandHelpers.GetSortedRefsCommand(noLocks: noLocks);
 
-            if (command == null)
+            if (command is null)
             {
                 return new Dictionary<IGitRef, IGitItem>();
             }
@@ -859,7 +859,7 @@ namespace GitCommands
             int? removed = GetCommitCount(from, to);
             int? added = GetCommitCount(to, from);
 
-            if (removed == null || added == null)
+            if (removed is null || added is null)
             {
                 return "";
             }
@@ -1122,7 +1122,7 @@ namespace GitCommands
 
         public async Task<(char code, ObjectId currentCommitId)> GetSuperprojectCurrentCheckoutAsync()
         {
-            if (SuperprojectModule == null)
+            if (SuperprojectModule is null)
             {
                 return (' ', null);
             }
@@ -1183,7 +1183,7 @@ namespace GitCommands
         [CanBeNull]
         public string GetCurrentSubmoduleLocalPath()
         {
-            if (SuperprojectModule == null)
+            if (SuperprojectModule is null)
             {
                 return null;
             }
@@ -1196,7 +1196,7 @@ namespace GitCommands
 
         public string GetSubmoduleFullPath(string localPath)
         {
-            if (localPath == null)
+            if (localPath is null)
             {
                 Debug.Fail("No path for submodule - incorrectly parsed status?");
                 return "";
@@ -1229,7 +1229,7 @@ namespace GitCommands
                 configFile = null;
             }
 
-            if (configFile == null)
+            if (configFile is null)
             {
                 yield return null;
             }
@@ -1338,7 +1338,7 @@ namespace GitCommands
 
         public string ResetFiles(IReadOnlyList<string> files)
         {
-            if (files == null || files.Count == 0)
+            if (files is null || files.Count == 0)
             {
                 return string.Empty;
             }
@@ -2036,7 +2036,7 @@ namespace GitCommands
                     foreach (var line in File.ReadLines(rebaseDir + file))
                     {
                         var m = HeadersMatch.Match(line);
-                        if (key == null)
+                        if (key is null)
                         {
                             if (!string.IsNullOrWhiteSpace(line) && !m.Success)
                             {
@@ -3753,12 +3753,12 @@ namespace GitCommands
         public SubmoduleStatus CheckSubmoduleStatus([CanBeNull] ObjectId commit, [CanBeNull] ObjectId oldCommit, CommitData data, CommitData oldData, bool loadData = false)
         {
             // Submodule directory must exist to run commands, unknown otherwise
-            if (!IsValidGitWorkingDir() || oldCommit == null)
+            if (!IsValidGitWorkingDir() || oldCommit is null)
             {
                 return SubmoduleStatus.NewSubmodule;
             }
 
-            if (commit == null)
+            if (commit is null)
             {
                 // Actually removed submodule, no special status for this uncommon status
                 return SubmoduleStatus.Unknown;
@@ -3770,7 +3770,7 @@ namespace GitCommands
             }
 
             ObjectId baseOid = GetMergeBase(commit, oldCommit);
-            if (baseOid == null)
+            if (baseOid is null)
             {
                 return SubmoduleStatus.Unknown;
             }
@@ -3790,7 +3790,7 @@ namespace GitCommands
                 oldData = _commitDataManager.GetCommitData(oldCommit.ToString(), out _);
             }
 
-            if (oldData == null)
+            if (oldData is null)
             {
                 return SubmoduleStatus.NewSubmodule;
             }
@@ -3800,7 +3800,7 @@ namespace GitCommands
                 data = _commitDataManager.GetCommitData(commit.ToString(), out _);
             }
 
-            if (data == null)
+            if (data is null)
             {
                 return SubmoduleStatus.Unknown;
             }
@@ -3833,7 +3833,7 @@ namespace GitCommands
         /// <returns>true if <paramref name="branchName"/> is valid reference name, otherwise false.</returns>
         public bool CheckBranchFormat([NotNull] string branchName)
         {
-            if (branchName == null)
+            if (branchName is null)
             {
                 throw new ArgumentNullException(nameof(branchName));
             }
@@ -3860,14 +3860,14 @@ namespace GitCommands
         [CanBeNull]
         private string FormatBranchName([NotNull] string branchName)
         {
-            if (branchName == null)
+            if (branchName is null)
             {
                 throw new ArgumentNullException(nameof(branchName));
             }
 
             string fullBranchName = GitRefName.GetFullBranchName(branchName);
 
-            if (RevParse(fullBranchName) == null)
+            if (RevParse(fullBranchName) is null)
             {
                 return branchName;
             }
@@ -3932,7 +3932,7 @@ namespace GitCommands
         [ContractAnnotation("s:null=>null")]
         public static string UnescapeOctalCodePoints([CanBeNull] string s)
         {
-            if (s == null)
+            if (s is null)
             {
                 return null;
             }
@@ -3971,7 +3971,7 @@ namespace GitCommands
         /// <returns>The escaped string, or <c>""</c> if <paramref name="s"/> is <c>null</c>.</returns>
         public static string EscapeOctalCodePoints([CanBeNull] string s)
         {
-            if (s == null)
+            if (s is null)
             {
                 return null;
             }
@@ -4010,7 +4010,7 @@ namespace GitCommands
         [ContractAnnotation("s:notnull=>notnull")]
         public static string ReEncodeString([CanBeNull] string s, [NotNull] Encoding fromEncoding, [NotNull] Encoding toEncoding)
         {
-            if (s == null || fromEncoding.HeaderName == toEncoding.HeaderName)
+            if (s is null || fromEncoding.HeaderName == toEncoding.HeaderName)
             {
                 return s;
             }
@@ -4026,7 +4026,7 @@ namespace GitCommands
         [ContractAnnotation("s:notnull=>notnull")]
         public static string ReEncodeStringFromLossless([CanBeNull] string s, [CanBeNull] Encoding toEncoding)
         {
-            if (toEncoding == null)
+            if (toEncoding is null)
             {
                 return s;
             }

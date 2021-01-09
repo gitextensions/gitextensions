@@ -32,7 +32,7 @@ namespace GitCommands.Utils
                     cached = weakReference.Target;
                 }
 
-                if (cached == null)
+                if (cached is null)
                 {
                     cached = provideObject.Value;
                     _weakMap[objectUniqueKey] = new WeakReference(cached);

@@ -68,7 +68,7 @@ namespace GitUI.BuildServerIntegration
 
             await TaskScheduler.Default;
 
-            if (buildServerAdapter == null || launchToken.IsCancellationRequested)
+            if (buildServerAdapter is null || launchToken.IsCancellationRequested)
             {
                 return;
             }
@@ -264,7 +264,7 @@ namespace GitUI.BuildServerIntegration
 
         private void OnBuildInfoUpdate(BuildInfo buildInfo)
         {
-            if (_buildStatusCancellationToken == null)
+            if (_buildStatusCancellationToken is null)
             {
                 return;
             }
@@ -280,12 +280,12 @@ namespace GitUI.BuildServerIntegration
 
                 var revision = _revisionGridView.GetRevision(index.Value);
 
-                if (revision == null)
+                if (revision is null)
                 {
                     continue;
                 }
 
-                if (revision.BuildStatus == null || buildInfo.StartDate >= revision.BuildStatus.StartDate)
+                if (revision.BuildStatus is null || buildInfo.StartDate >= revision.BuildStatus.StartDate)
                 {
                     revision.BuildStatus = buildInfo;
 

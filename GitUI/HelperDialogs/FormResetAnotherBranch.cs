@@ -85,7 +85,7 @@ namespace GitUI.HelperDialogs
         private void Ok_Click(object sender, EventArgs e)
         {
             var gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == Branches.Text);
-            if (gitRefToReset == null)
+            if (gitRefToReset is null)
             {
                 MessageBox.Show(string.Format(_localRefInvalid.Text, Branches.Text), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;

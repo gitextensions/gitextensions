@@ -35,7 +35,7 @@ namespace ReleaseNotesGenerator
         public IEnumerable<LogLine> Parse(IEnumerable<string> lines)
         {
             var resultList = new List<LogLine>();
-            if (lines == null)
+            if (lines is null)
             {
                 return resultList;
             }

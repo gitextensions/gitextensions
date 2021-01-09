@@ -116,7 +116,7 @@ namespace GitUI.CommandsDialogs
                 Abort.Enabled = false;
             }
 
-            if (patchGrid1.PatchFiles == null || patchGrid1.PatchFiles.Count == 0)
+            if (patchGrid1.PatchFiles is null || patchGrid1.PatchFiles.Count == 0)
             {
                 patchGrid1.Initialize();
             }

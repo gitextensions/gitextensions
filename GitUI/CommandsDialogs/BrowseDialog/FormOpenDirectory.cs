@@ -126,7 +126,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             try
             {
                 var currentDirectory = new DirectoryInfo(_NO_TRANSLATE_Directory.Text);
-                if (currentDirectory.Parent == null)
+                if (currentDirectory.Parent is null)
                 {
                     return;
                 }

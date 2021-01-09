@@ -144,7 +144,7 @@ namespace CommonTestUtils
 
             internal void ThrowIfSwitchOccurred()
             {
-                if (_failedTransfer.Value == null)
+                if (_failedTransfer.Value is null)
                 {
                     return;
                 }
@@ -156,7 +156,7 @@ namespace CommonTestUtils
             {
                 try
                 {
-                    if (_failedTransfer.Value == null)
+                    if (_failedTransfer.Value is null)
                     {
                         ThrowFailedTransferExceptionForCapture();
                     }
@@ -175,7 +175,7 @@ namespace CommonTestUtils
             {
                 try
                 {
-                    if (_failedTransfer.Value == null)
+                    if (_failedTransfer.Value is null)
                     {
                         ThrowFailedTransferExceptionForCapture();
                     }

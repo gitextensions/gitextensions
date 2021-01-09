@@ -179,7 +179,7 @@ namespace GitUI.CommitInfo
             _revision = revision;
             _children = children;
 
-            if (revision == null)
+            if (revision is null)
             {
                 tableLayout.Visible = false;
                 return;
@@ -298,7 +298,7 @@ namespace GitUI.CommitInfo
 
             void UpdateCommitMessage()
             {
-                if (_revision == null)
+                if (_revision is null)
                 {
                     rtbxCommitMessage.SetXHTMLText(string.Empty);
                     return;
@@ -306,7 +306,7 @@ namespace GitUI.CommitInfo
 
                 var data = _commitDataManager.CreateFromRevision(_revision, _children);
 
-                if (_revision.Body == null || (AppSettings.ShowGitNotes && !_revision.HasNotes))
+                if (_revision.Body is null || (AppSettings.ShowGitNotes && !_revision.HasNotes))
                 {
                     _commitDataManager.UpdateBody(data, out _);
                     _revision.Body = data.Body;
@@ -366,7 +366,7 @@ namespace GitUI.CommitInfo
 
                 async Task LoadLinksForRevisionAsync(GitRevision revision)
                 {
-                    if (revision == null)
+                    if (revision is null)
                     {
                         return;
                     }
@@ -412,7 +412,7 @@ namespace GitUI.CommitInfo
 
                     IDictionary<string, string> GetAnnotatedTagsMessages()
                     {
-                        if (refs == null)
+                        if (refs is null)
                         {
                             return null;
                         }
@@ -587,7 +587,7 @@ namespace GitUI.CommitInfo
         private void commitInfoContextMenuStrip_Opening(object sender, CancelEventArgs e)
         {
             var rtb = (sender as ContextMenuStrip)?.SourceControl as RichTextBox;
-            if (rtb == null)
+            if (rtb is null)
             {
                 copyLinkToolStripMenuItem.Visible = false;
                 return;
@@ -737,7 +737,7 @@ namespace GitUI.CommitInfo
         private void RichTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             var rtb = sender as RichTextBox;
-            if (rtb == null || !e.Control || e.KeyCode != Keys.C)
+            if (rtb is null || !e.Control || e.KeyCode != Keys.C)
             {
                 return;
             }

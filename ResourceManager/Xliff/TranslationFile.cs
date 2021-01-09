@@ -40,7 +40,7 @@ namespace ResourceManager.Xliff
         public TranslationCategory FindOrAddTranslationCategory(string translationCategory)
         {
             TranslationCategory tc = GetTranslationCategory(translationCategory);
-            if (tc == null)
+            if (tc is null)
             {
                 tc = new TranslationCategory(translationCategory, SourceLanguage, TargetLanguage);
                 AddTranslationCategory(tc);
@@ -84,7 +84,7 @@ namespace ResourceManager.Xliff
 
             TranslationItem ti = tc.Body.GetTranslationItem(item, property);
 
-            if (ti == null)
+            if (ti is null)
             {
                 // if an item is not translated, then store its default value
                 // to be able to retrieve it later (eg. when to a caption

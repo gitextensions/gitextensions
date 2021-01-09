@@ -65,7 +65,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public int GetCachedCount()
         {
-            if (_orderedRowCache == null)
+            if (_orderedRowCache is null)
             {
                 return 0;
             }
@@ -140,7 +140,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             // Use a local variable, because the cached list can be reset
             var localOrderedRowCache = _orderedRowCache;
-            if (localOrderedRowCache == null || row >= localOrderedRowCache.Count)
+            if (localOrderedRowCache is null || row >= localOrderedRowCache.Count)
             {
                 return null;
             }
@@ -252,7 +252,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             // Ensure we keep using the same instance of the rowcache from here on
             var localOrderedRowCache = _orderedRowCache;
 
-            if (localOrderedRowCache == null || CheckRowCacheIsDirty(localOrderedRowCache, orderedNodesCache))
+            if (localOrderedRowCache is null || CheckRowCacheIsDirty(localOrderedRowCache, orderedNodesCache))
             {
                 localOrderedRowCache = new List<RevisionGraphRow>(currentRowIndex);
             }

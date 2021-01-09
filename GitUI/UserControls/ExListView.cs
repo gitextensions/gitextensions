@@ -251,7 +251,7 @@ namespace GitUI.UserControls
             {
                 var hitInfo = GetGroupHitInfo(message.LParam.ToPoint());
 
-                if (hitInfo == null)
+                if (hitInfo is null)
                 {
                     return false;
                 }

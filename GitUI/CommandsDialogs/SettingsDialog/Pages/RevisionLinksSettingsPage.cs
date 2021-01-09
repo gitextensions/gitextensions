@@ -71,7 +71,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void CategoryChanged()
         {
-            if (SelectedLinkDefinition == null)
+            if (SelectedLinkDefinition is null)
             {
                 splitContainer1.Panel2.Enabled = false;
                 _NO_TRANSLATE_Name.Text = string.Empty;
@@ -141,7 +141,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private Remote FindRemoteByPreference(IList<Remote> remotes)
         {
-            if (remotes == null)
+            if (remotes is null)
             {
                 return default;
             }
@@ -174,7 +174,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void Remove_Click(object sender, EventArgs e)
         {
-            if (SelectedLinkDefinition == null)
+            if (SelectedLinkDefinition is null)
             {
                 return;
             }

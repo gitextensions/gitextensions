@@ -185,7 +185,7 @@ namespace System
         [NotNull]
         public static string Quote([CanBeNull] this string s, [NotNull] string q = "\"")
         {
-            if (s == null)
+            if (s is null)
             {
                 return "";
             }

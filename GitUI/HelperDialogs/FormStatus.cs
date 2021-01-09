@@ -256,12 +256,12 @@ namespace GitUI.HelperDialogs
 
         private void Start()
         {
-            if (ProcessCallback == null)
+            if (ProcessCallback is null)
             {
                 throw new InvalidOperationException("You can't load the form without a ProcessCallback");
             }
 
-            if (AbortCallback == null)
+            if (AbortCallback is null)
             {
                 Abort.Visible = false;
             }

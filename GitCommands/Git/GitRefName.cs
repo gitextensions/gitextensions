@@ -92,7 +92,7 @@ namespace GitCommands
         [Pure, CanBeNull]
         public static string GetFullBranchName([CanBeNull] string branch)
         {
-            if (branch == null)
+            if (branch is null)
             {
                 return null;
             }

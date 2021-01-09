@@ -93,7 +93,7 @@ namespace GitCommands.Gpg
         /// <returns>Enum value that indicate the gpg status for current git revision.</returns>
         public async Task<CommitStatus> GetRevisionCommitSignatureStatusAsync(GitRevision revision)
         {
-            if (revision == null)
+            if (revision is null)
             {
                 throw new ArgumentNullException(nameof(revision));
             }
@@ -144,7 +144,7 @@ namespace GitCommands.Gpg
         /// <returns>Enum value that indicate if current git revision has one tag with good signature, one tag with bad signature or more than one tag.</returns>
         public async Task<TagStatus> GetRevisionTagSignatureStatusAsync(GitRevision revision)
         {
-            if (revision == null)
+            if (revision is null)
             {
                 throw new ArgumentNullException(nameof(revision));
             }
@@ -198,7 +198,7 @@ namespace GitCommands.Gpg
         /// <returns>Full string coming from GPG analysis on current revision.</returns>
         public string GetCommitVerificationMessage(GitRevision revision)
         {
-            if (revision == null)
+            if (revision is null)
             {
                 throw new ArgumentNullException(nameof(revision));
             }
@@ -219,7 +219,7 @@ namespace GitCommands.Gpg
         /// <returns>Full string coming from GPG analysis on current revision.</returns>
         public string GetTagVerifyMessage(GitRevision revision)
         {
-            if (revision == null)
+            if (revision is null)
             {
                 throw new ArgumentNullException(nameof(revision));
             }
@@ -273,7 +273,7 @@ namespace GitCommands.Gpg
         private IGitModule GetModule()
         {
             var module = _getModule();
-            if (module == null)
+            if (module is null)
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }

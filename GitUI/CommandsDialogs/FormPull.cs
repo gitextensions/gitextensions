@@ -303,7 +303,7 @@ namespace GitUI.CommandsDialogs
             {
                 LoadPuttyKey();
 
-                if (_heads == null)
+                if (_heads is null)
                 {
                     if (PullFromUrl.Checked)
                     {
@@ -569,7 +569,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 bool? messageBoxResult = AppSettings.AutoPopStashAfterPull;
-                if (messageBoxResult == null)
+                if (messageBoxResult is null)
                 {
                     using var dialog = new TaskDialog
                     {

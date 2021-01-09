@@ -78,7 +78,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 var configData = gitExtRepo?.GetRef("heads/configdata");
 
                 var tree = configData?.GetTree();
-                if (tree == null)
+                if (tree is null)
                 {
                     return;
                 }

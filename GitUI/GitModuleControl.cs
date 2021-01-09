@@ -54,12 +54,12 @@ namespace GitUI
         {
             get
             {
-                if (_uiCommandsSource == null)
+                if (_uiCommandsSource is null)
                 {
                     lock (_lock)
                     {
                         // Double check locking
-                        if (_uiCommandsSource == null)
+                        if (_uiCommandsSource is null)
                         {
                             // Search ancestors for an implementation of IGitUICommandsSource
                             UICommandsSource = this.FindAncestors().OfType<IGitUICommandsSource>().FirstOrDefault()
@@ -154,7 +154,7 @@ namespace GitUI
             CommandStatus ExecuteScriptCommand()
             {
                 var revisionGridControl = this as RevisionGridControl;
-                if (revisionGridControl == null)
+                if (revisionGridControl is null)
                 {
                     revisionGridControl = (FindForm() as GitModuleForm)?.RevisionGridControl;
                 }

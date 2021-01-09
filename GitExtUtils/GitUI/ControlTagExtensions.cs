@@ -10,7 +10,7 @@ namespace GitExtUtils.GitUI
 
         public static bool HasTag<TValue>(this Control control, string key)
         {
-            if (control.Tag == null)
+            if (control.Tag is null)
             {
                 return false;
             }
@@ -25,7 +25,7 @@ namespace GitExtUtils.GitUI
 
         public static TValue GetTag<TValue>(this Control control, string key)
         {
-            if (control.Tag == null ||
+            if (control.Tag is null ||
                 !(control.Tag is Dictionary<string, object> dict) ||
                 !dict.TryGetValue(key, out var result))
             {

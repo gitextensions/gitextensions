@@ -17,12 +17,12 @@ namespace GitUI
     {
         public Func<string, bool> Get(string searchPattern, string workingDir)
         {
-            if (searchPattern == null)
+            if (searchPattern is null)
             {
                 throw new ArgumentNullException(nameof(searchPattern));
             }
 
-            if (workingDir == null)
+            if (workingDir is null)
             {
                 throw new ArgumentNullException(nameof(workingDir));
             }

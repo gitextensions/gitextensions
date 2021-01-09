@@ -200,7 +200,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void dashboard_ParentChanged(object sender, EventArgs e)
         {
-            if (Parent == null)
+            if (Parent is null)
             {
                 Visible = false;
                 return;

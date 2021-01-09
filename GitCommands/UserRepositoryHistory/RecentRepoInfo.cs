@@ -39,7 +39,7 @@ namespace GitCommands.UserRepositoryHistory
             DirName = DirInfo?.FullName ?? "";
         }
 
-        public bool FullPath => DirInfo == null;
+        public bool FullPath => DirInfo is null;
 
         public override string ToString() => Repo.ToString();
     }
@@ -221,7 +221,7 @@ namespace GitCommands.UserRepositoryHistory
 
         private static string MakePath(string l, string r)
         {
-            if (l == null)
+            if (l is null)
             {
                 return r;
             }
@@ -247,7 +247,7 @@ namespace GitCommands.UserRepositoryHistory
                 dirInfo = null;
             }
 
-            if (dirInfo == null)
+            if (dirInfo is null)
             {
                 repoInfo.Caption = repoInfo.Repo.Path;
             }

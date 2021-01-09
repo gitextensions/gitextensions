@@ -102,7 +102,7 @@ namespace GitUI.HelperDialogs
 
             var parents = SelectedRevision.ParentIds;
 
-            if (parents == null || parents.Count == 0)
+            if (parents is null || parents.Count == 0)
             {
                 return;
             }

@@ -90,7 +90,7 @@ namespace ResourceManager
                 ICommitDataManager commitDataManager = new CommitDataManager(() => module);
 
                 CommitData data = commitDataManager.GetCommitData(hash, out _);
-                if (data == null)
+                if (data is null)
                 {
                     sb.AppendLine("Commit hash:\t" + hash);
                     return sb.ToString();
@@ -113,7 +113,7 @@ namespace ResourceManager
         {
             string text = patch?.Text;
             var status = SubmoduleHelpers.ParseSubmoduleStatus(text, module, fileName);
-            if (status == null)
+            if (status is null)
             {
                 return "";
             }
@@ -123,12 +123,12 @@ namespace ResourceManager
 
         public static string ProcessSubmoduleStatus([NotNull] GitModule module, [NotNull] GitSubmoduleStatus status)
         {
-            if (module == null)
+            if (module is null)
             {
                 throw new ArgumentNullException(nameof(module));
             }
 
-            if (status == null)
+            if (status is null)
             {
                 throw new ArgumentNullException(nameof(status));
             }

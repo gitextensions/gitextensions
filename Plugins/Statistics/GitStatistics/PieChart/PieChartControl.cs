@@ -207,7 +207,7 @@ namespace GitStatistics.PieChart
         /// </param>
         protected void DoDraw(Graphics graphics)
         {
-            if (_values == null || _values.Length <= 0 || !HasNonZeroValue())
+            if (_values is null || _values.Length <= 0 || !HasNonZeroValue())
             {
                 return;
             }
@@ -267,7 +267,7 @@ namespace GitStatistics.PieChart
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-            if (_pieChart == null)
+            if (_pieChart is null)
             {
                 return;
             }
@@ -275,7 +275,7 @@ namespace GitStatistics.PieChart
             var index = _pieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
             if (index != -1)
             {
-                if (ToolTips == null || ToolTips.Length <= index || ToolTips[index].Length == 0)
+                if (ToolTips is null || ToolTips.Length <= index || ToolTips[index].Length == 0)
                 {
                     _toolTip.SetToolTip(this, _values[index].ToString());
                 }
@@ -300,7 +300,7 @@ namespace GitStatistics.PieChart
                 var index = _pieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
                 if (index != -1)
                 {
-                    if (ToolTips == null || ToolTips.Length <= index || ToolTips[index].Length == 0)
+                    if (ToolTips is null || ToolTips.Length <= index || ToolTips[index].Length == 0)
                     {
                         _toolTip.SetToolTip(this, _values[index].ToString());
                     }

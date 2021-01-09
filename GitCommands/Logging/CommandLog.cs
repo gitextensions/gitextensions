@@ -44,7 +44,7 @@ namespace GitCommands.Logging
 
         public void NotifyDisposed()
         {
-            if (_entry.Duration == null)
+            if (_entry.Duration is null)
             {
                 LogProcessEnd();
             }
@@ -92,7 +92,7 @@ namespace GitCommands.Logging
         {
             get
             {
-                var duration = Duration == null
+                var duration = Duration is null
                     ? "running"
                     : $"{((TimeSpan)Duration).TotalMilliseconds:0,0} ms";
 
@@ -112,7 +112,7 @@ namespace GitCommands.Logging
 
         public string FullLine(string sep)
         {
-            var duration = Duration == null ? "" : $"{((TimeSpan)Duration).TotalMilliseconds:0}";
+            var duration = Duration is null ? "" : $"{((TimeSpan)Duration).TotalMilliseconds:0}";
 
             var fileName = FileName;
 

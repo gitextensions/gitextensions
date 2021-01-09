@@ -62,7 +62,7 @@ namespace ResourceManager.CommitDataRenders
         /// </summary>
         public string Render(CommitData commitData, bool showRevisionsAsLinks)
         {
-            if (commitData == null)
+            if (commitData is null)
             {
                 throw new ArgumentNullException(nameof(commitData));
             }
@@ -119,7 +119,7 @@ namespace ResourceManager.CommitDataRenders
         /// </summary>
         public string RenderPlain(CommitData commitData)
         {
-            if (commitData == null)
+            if (commitData is null)
             {
                 throw new ArgumentNullException(nameof(commitData));
             }

@@ -233,7 +233,7 @@ namespace GitUI.CommandsDialogs
 
         private void Warnings_SelectionChanged(object sender, EventArgs e)
         {
-            if (CurrentItem == null || _previewedItem == CurrentItem)
+            if (CurrentItem is null || _previewedItem == CurrentItem)
             {
                 return;
             }
@@ -351,7 +351,7 @@ namespace GitUI.CommandsDialogs
         private void ViewCurrentItem()
         {
             var currentItem = CurrentItem;
-            if (currentItem == null)
+            if (currentItem is null)
             {
                 return;
             }
@@ -468,7 +468,7 @@ namespace GitUI.CommandsDialogs
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Warnings == null || Warnings.SelectedRows.Count == 0 || Warnings.SelectedRows[0].DataBoundItem == null)
+            if (Warnings is null || Warnings.SelectedRows.Count == 0 || Warnings.SelectedRows[0].DataBoundItem is null)
             {
                 return;
             }

@@ -145,7 +145,7 @@ namespace GitCommands.UserRepositoryHistory
         [ContractAnnotation("repository:null=>halt")]
         public async Task<IList<Repository>> AssignCategoryAsync(Repository repository, string category)
         {
-            if (repository == null)
+            if (repository is null)
             {
                 throw new ArgumentNullException(nameof(repository));
             }
@@ -155,7 +155,7 @@ namespace GitCommands.UserRepositoryHistory
             var favourites = await LoadFavouriteHistoryAsync();
             var favourite = favourites.FirstOrDefault(f => string.Equals(f.Path, repository.Path, StringComparison.OrdinalIgnoreCase));
 
-            if (favourite == null)
+            if (favourite is null)
             {
                 if (!string.IsNullOrWhiteSpace(category))
                 {
@@ -211,7 +211,7 @@ namespace GitCommands.UserRepositoryHistory
             int size = AppSettings.RecentRepositoriesHistorySize;
 
             var history = _repositoryStorage.Load(KeyRecentHistory);
-            if (history == null)
+            if (history is null)
             {
                 return Array.Empty<Repository>();
             }
@@ -236,7 +236,7 @@ namespace GitCommands.UserRepositoryHistory
             await TaskScheduler.Default;
             var repositoryHistory = await LoadFavouriteHistoryAsync();
             var repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
-            if (repository == null)
+            if (repository is null)
             {
                 return repositoryHistory;
             }
@@ -267,7 +267,7 @@ namespace GitCommands.UserRepositoryHistory
             await TaskScheduler.Default;
             var repositoryHistory = await LoadRecentHistoryAsync();
             var repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
-            if (repository == null)
+            if (repository is null)
             {
                 return repositoryHistory;
             }
@@ -290,7 +290,7 @@ namespace GitCommands.UserRepositoryHistory
         [ContractAnnotation("repositoryHistory:null=>halt")]
         public async Task SaveFavouriteHistoryAsync(IEnumerable<Repository> repositoryHistory)
         {
-            if (repositoryHistory == null)
+            if (repositoryHistory is null)
             {
                 throw new ArgumentNullException(nameof(repositoryHistory));
             }
@@ -309,7 +309,7 @@ namespace GitCommands.UserRepositoryHistory
         [ContractAnnotation("repositoryHistory:null=>halt")]
         public async Task SaveRecentHistoryAsync(IEnumerable<Repository> repositoryHistory)
         {
-            if (repositoryHistory == null)
+            if (repositoryHistory is null)
             {
                 throw new ArgumentNullException(nameof(repositoryHistory));
             }
@@ -325,7 +325,7 @@ namespace GitCommands.UserRepositoryHistory
 
         public async Task RemoveInvalidRepositoriesAsync(Func<string, bool> predicate)
         {
-            if (predicate == null)
+            if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
             }

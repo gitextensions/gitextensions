@@ -140,7 +140,7 @@ namespace Gource
                     {
                         var entry = zipInputStream.GetNextEntry();
 
-                        if (entry == null)
+                        if (entry is null)
                         {
                             break;
                         }

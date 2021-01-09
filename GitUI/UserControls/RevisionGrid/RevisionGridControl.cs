@@ -394,7 +394,7 @@ namespace GitUI
 
         private void InitiateRefAction([CanBeNull] IReadOnlyList<IGitRef> refs, Action<IGitRef> action, FormQuickGitRefSelector.Action actionLabel)
         {
-            if (refs == null || refs.Count < 1)
+            if (refs is null || refs.Count < 1)
             {
                 return;
             }
@@ -409,7 +409,7 @@ namespace GitUI
             {
                 dlg.Init(actionLabel, refs);
                 dlg.Location = GetQuickItemSelectorLocation();
-                if (dlg.ShowDialog(this) != DialogResult.OK || dlg.SelectedRef == null)
+                if (dlg.ShowDialog(this) != DialogResult.OK || dlg.SelectedRef is null)
                 {
                     return;
                 }
@@ -948,7 +948,7 @@ namespace GitUI
                     .Subscribe(OnRevisionRead, OnRevisionReaderError, OnRevisionReadCompleted);
                 _isReadingRevisions = true;
 
-                if (_revisionReader == null)
+                if (_revisionReader is null)
                 {
                     _revisionReader = new RevisionReader();
                 }
@@ -1152,7 +1152,7 @@ namespace GitUI
         [CanBeNull]
         private static async Task<SuperProjectInfo> GetSuperprojectCheckoutAsync(Func<IGitRef, bool> showRemoteRef, GitModule gitModule, bool noLocks = false)
         {
-            if (gitModule.SuperprojectModule == null)
+            if (gitModule.SuperprojectModule is null)
             {
                 return null;
             }
@@ -1214,7 +1214,7 @@ namespace GitUI
         {
             var toBeSelectedObjectIds = _selectedObjectIds;
 
-            if (toBeSelectedObjectIds == null || toBeSelectedObjectIds.Count == 0)
+            if (toBeSelectedObjectIds is null || toBeSelectedObjectIds.Count == 0)
             {
                 if (SelectedId != null)
                 {
@@ -1377,7 +1377,7 @@ namespace GitUI
         {
             var selectedRevision = LatestSelectedRevision;
 
-            if (selectedRevision == null)
+            if (selectedRevision is null)
             {
                 return;
             }
@@ -1532,7 +1532,7 @@ namespace GitUI
 
         private void ResetCurrentBranchToHereToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (LatestSelectedRevision == null)
+            if (LatestSelectedRevision is null)
             {
                 return;
             }
@@ -1546,7 +1546,7 @@ namespace GitUI
 
         private void ResetAnotherBranchToHereToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (LatestSelectedRevision == null)
+            if (LatestSelectedRevision is null)
             {
                 return;
             }
@@ -1648,7 +1648,7 @@ namespace GitUI
 
         private void ContextMenuOpening(object sender, CancelEventArgs e)
         {
-            if (LatestSelectedRevision == null)
+            if (LatestSelectedRevision is null)
             {
                 return;
             }
@@ -1696,7 +1696,7 @@ namespace GitUI
                     var toolStripItem = AddBranchMenuItem(mergeBranchDropDown, head,
                         delegate { UICommands.StartMergeBranchDialog(this, GetRefUnambiguousName(head)); });
 
-                    if (_rebaseOnTopOf == null)
+                    if (_rebaseOnTopOf is null)
                     {
                         _rebaseOnTopOf = (string)toolStripItem.Tag;
                     }
@@ -1704,7 +1704,7 @@ namespace GitUI
             }
 
             // if there is no branch to rebase on, then allow user to rebase on selected commit
-            if (_rebaseOnTopOf == null && !currentBranchPointsToRevision)
+            if (_rebaseOnTopOf is null && !currentBranchPointsToRevision)
             {
                 _rebaseOnTopOf = revision.Guid;
             }
@@ -1715,7 +1715,7 @@ namespace GitUI
                 var toolStripItem = new ToolStripMenuItem(revision.Guid);
                 toolStripItem.Click += delegate { UICommands.StartMergeBranchDialog(this, revision.Guid); };
                 mergeBranchDropDown.Items.Add(toolStripItem);
-                if (_rebaseOnTopOf == null)
+                if (_rebaseOnTopOf is null)
                 {
                     _rebaseOnTopOf = toolStripItem.Tag as string;
                 }
@@ -1881,7 +1881,7 @@ namespace GitUI
 
         private void ToolStripItemClickRebaseBranch(object sender, EventArgs e)
         {
-            if (_rebaseOnTopOf == null)
+            if (_rebaseOnTopOf is null)
             {
                 return;
             }
@@ -1920,7 +1920,7 @@ namespace GitUI
 
         private void OnRebaseInteractivelyClicked(object sender, EventArgs e)
         {
-            if (_rebaseOnTopOf == null)
+            if (_rebaseOnTopOf is null)
             {
                 return;
             }
@@ -2059,7 +2059,7 @@ namespace GitUI
 
         private void FixupCommitToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (LatestSelectedRevision == null)
+            if (LatestSelectedRevision is null)
             {
                 return;
             }
@@ -2069,7 +2069,7 @@ namespace GitUI
 
         private void SquashCommitToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (LatestSelectedRevision == null)
+            if (LatestSelectedRevision is null)
             {
                 return;
             }
@@ -2126,7 +2126,7 @@ namespace GitUI
             [CanBeNull] GitRevision workTreeRev = null,
             [CanBeNull] GitRevision indexRev = null)
         {
-            if (status == null)
+            if (status is null)
             {
                 status = new List<GitItemStatus>();
             }
@@ -2194,7 +2194,7 @@ namespace GitUI
 
         private void ContinueBisect(GitBisectOption bisectOption)
         {
-            if (LatestSelectedRevision == null)
+            if (LatestSelectedRevision is null)
             {
                 return;
             }
@@ -2502,7 +2502,7 @@ namespace GitUI
         private void CompareToBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var headCommit = GetSelectedRevisions().FirstOrDefault();
-            if (headCommit == null)
+            if (headCommit is null)
             {
                 return;
             }
@@ -2528,7 +2528,7 @@ namespace GitUI
             }
 
             var baseCommit = GetSelectedRevisions().FirstOrDefault();
-            if (baseCommit == null)
+            if (baseCommit is null)
             {
                 return;
             }
@@ -2545,14 +2545,14 @@ namespace GitUI
 
         private void compareToBaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_baseCommitToCompare == null)
+            if (_baseCommitToCompare is null)
             {
                 MessageBox.Show(this, _baseForCompareNotSelectedError.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             var headCommit = GetSelectedRevisions().FirstOrDefault();
-            if (headCommit == null)
+            if (headCommit is null)
             {
                 return;
             }
@@ -2563,7 +2563,7 @@ namespace GitUI
         private void compareToWorkingDirectoryMenuItem_Click(object sender, EventArgs e)
         {
             var baseCommit = GetSelectedRevisions().FirstOrDefault();
-            if (baseCommit == null)
+            if (baseCommit is null)
             {
                 return;
             }
@@ -2581,7 +2581,7 @@ namespace GitUI
         {
             var (first, selected) = getFirstAndSelected();
             var firstRev = GetRevision(first);
-            if (selected == null || first == null || firstRev == null)
+            if (selected is null || first is null || firstRev is null)
             {
                 MessageBox.Show(this, "You must have two commits selected to compare", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -2639,7 +2639,7 @@ namespace GitUI
 
         private void LaunchRebase(string command)
         {
-            if (LatestSelectedRevision == null)
+            if (LatestSelectedRevision is null)
             {
                 return;
             }

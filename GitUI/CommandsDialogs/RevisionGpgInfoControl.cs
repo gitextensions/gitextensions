@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs
         public void DisplayGpgInfo([CanBeNull] GpgInfo info)
         {
             // No Commit Signature and No Tag Signature
-            if (info == null)
+            if (info is null)
             {
                 commitSignPicture.Visible = false;
                 txtCommitGpgInfo.Text = _commitNotSigned.Text;

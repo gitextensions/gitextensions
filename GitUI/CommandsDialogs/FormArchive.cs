@@ -42,7 +42,7 @@ namespace GitUI.CommandsDialogs
             {
                 _diffSelectedRevision = value;
                 ////commitSummaryUserControl2.Revision = _diffSelectedRevision;
-                if (_diffSelectedRevision == null)
+                if (_diffSelectedRevision is null)
                 {
                     const string defaultString = "...";
                     labelDateCaption.Text = $"{ResourceManager.Strings.CommitDate}:";
@@ -111,7 +111,7 @@ namespace GitUI.CommandsDialogs
 
         private void Save_Click(object sender, EventArgs e)
         {
-            if (checkboxRevisionFilter.Checked && DiffSelectedRevision == null)
+            if (checkboxRevisionFilter.Checked && DiffSelectedRevision is null)
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;

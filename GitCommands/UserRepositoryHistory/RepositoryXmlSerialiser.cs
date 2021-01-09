@@ -54,7 +54,7 @@ namespace GitCommands.UserRepositoryHistory
         [ContractAnnotation("repositories:null=>halt")]
         public string Serialize([NotNull]IEnumerable<Repository> repositories)
         {
-            if (repositories == null)
+            if (repositories is null)
             {
                 throw new ArgumentNullException(nameof(repositories));
             }

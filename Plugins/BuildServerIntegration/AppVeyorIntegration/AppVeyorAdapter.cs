@@ -327,7 +327,7 @@ namespace AppVeyorIntegration
         {
             try
             {
-                if (_allBuilds == null)
+                if (_allBuilds is null)
                 {
                     return;
                 }
@@ -401,7 +401,7 @@ namespace AppVeyorIntegration
         private void UpdateDescription(AppVeyorBuildInfo buildDetails, CancellationToken cancellationToken)
         {
             var buildDetailsParsed = ThreadHelper.JoinableTaskFactory.Run(() => FetchBuildDetailsManagingVersionUpdateAsync(buildDetails, cancellationToken));
-            if (buildDetailsParsed == null)
+            if (buildDetailsParsed is null)
             {
                 return;
             }

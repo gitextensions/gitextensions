@@ -57,7 +57,7 @@ namespace GitUI.CommandsDialogs
 
                 if (buildResultPageEnabled && buildInfoIsAvailable)
                 {
-                    if (_buildReportTabPage == null)
+                    if (_buildReportTabPage is null)
                     {
                         CreateBuildReportTabPage(_tabControl);
                     }
@@ -221,7 +221,7 @@ namespace GitUI.CommandsDialogs
         {
             var module = _getModule();
 
-            if (module == null)
+            if (module is null)
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }
@@ -237,7 +237,7 @@ namespace GitUI.CommandsDialogs
                 links.Cast<HtmlElement>()
                      .SingleOrDefault(x => x.GetAttribute("rel").ToLowerInvariant() == "shortcut icon");
 
-            if (favIconLink == null || htmlDocument.Url == null)
+            if (favIconLink is null || htmlDocument.Url is null)
             {
                 return null;
             }

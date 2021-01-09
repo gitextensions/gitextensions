@@ -34,7 +34,7 @@ namespace GitCommands.ExternalLinks
         /// </summary>
         public IReadOnlyList<ExternalLinkDefinition> Get(RepoDistSettings settings)
         {
-            if (settings == null)
+            if (settings is null)
             {
                 throw new ArgumentNullException(nameof(settings));
             }

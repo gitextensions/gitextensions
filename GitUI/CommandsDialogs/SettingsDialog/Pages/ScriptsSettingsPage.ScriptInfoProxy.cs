@@ -81,7 +81,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             public static implicit operator ScriptInfoProxy(ScriptInfo script)
             {
-                if (script == null)
+                if (script is null)
                 {
                     return null;
                 }
@@ -104,7 +104,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             public static implicit operator ScriptInfo(ScriptInfoProxy proxy)
             {
-                if (proxy == null)
+                if (proxy is null)
                 {
                     return null;
                 }

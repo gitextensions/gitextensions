@@ -248,7 +248,7 @@ namespace GitUITests.Editor
             // Assert returned value
             Assert.That(actualRange, Is.EqualTo(expectedRange).Using(new SegmentComparer()));
 
-            if (expectedRange == null)
+            if (expectedRange is null)
             {
                 return;
             }

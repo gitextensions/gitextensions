@@ -332,7 +332,7 @@ Inactive remote is completely invisible to git.");
 
         private void btnToggleState_Click(object sender, EventArgs e)
         {
-            if (_selectedRemote == null)
+            if (_selectedRemote is null)
             {
                 btnToggleState.Visible = false;
                 return;
@@ -373,7 +373,7 @@ Inactive remote is completely invisible to git.");
             var remote = RemoteName.Text.Trim();
             var remoteUrl = Url.Text.Trim();
             var remotePushUrl = comboBoxPushUrl.Text.Trim();
-            bool creatingNew = _selectedRemote == null;
+            bool creatingNew = _selectedRemote is null;
 
             try
             {
@@ -453,7 +453,7 @@ Inactive remote is completely invisible to git.");
 
         private void DeleteClick(object sender, EventArgs e)
         {
-            if (_selectedRemote == null)
+            if (_selectedRemote is null)
             {
                 return;
             }
@@ -527,7 +527,7 @@ Inactive remote is completely invisible to git.");
         private void RemoteBranchesSelectionChanged(object sender, EventArgs e)
         {
             var head = GetHeadForSelectedRemoteBranch();
-            if (head == null)
+            if (head is null)
             {
                 return;
             }
@@ -535,7 +535,7 @@ Inactive remote is completely invisible to git.");
             LocalBranchNameEdit.Text = head.Name;
             LocalBranchNameEdit.ReadOnly = true;
             RemoteRepositoryCombo.SelectedItem = UserGitRemotes.FirstOrDefault(x => x.Name.Equals(head.TrackingRemote, StringComparison.OrdinalIgnoreCase));
-            if (RemoteRepositoryCombo.SelectedItem == null)
+            if (RemoteRepositoryCombo.SelectedItem is null)
             {
                 RemoteRepositoryCombo.SelectedIndex = 0;
             }
@@ -546,7 +546,7 @@ Inactive remote is completely invisible to git.");
         private void DefaultMergeWithComboDropDown(object sender, EventArgs e)
         {
             var head = GetHeadForSelectedRemoteBranch();
-            if (head == null)
+            if (head is null)
             {
                 return;
             }
@@ -579,7 +579,7 @@ Inactive remote is completely invisible to git.");
         private void RemoteRepositoryComboValidated(object sender, EventArgs e)
         {
             var head = GetHeadForSelectedRemoteBranch();
-            if (head == null)
+            if (head is null)
             {
                 return;
             }
@@ -590,7 +590,7 @@ Inactive remote is completely invisible to git.");
         private void DefaultMergeWithComboValidated(object sender, EventArgs e)
         {
             var head = GetHeadForSelectedRemoteBranch();
-            if (head == null)
+            if (head is null)
             {
                 return;
             }
@@ -634,7 +634,7 @@ Inactive remote is completely invisible to git.");
 
             // reset all controls and disable all buttons until we have a selection
             _selectedRemote = Remotes.SelectedItems[0].Tag as ConfigFileRemote;
-            if (_selectedRemote == null)
+            if (_selectedRemote is null)
             {
                 return;
             }

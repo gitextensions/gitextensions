@@ -154,7 +154,7 @@ namespace GitCommands.Statistics
                 var line = lineEnumerator.Current;
 
                 // Reached the end ?
-                if (line == null)
+                if (line is null)
                 {
                     break;
                 }

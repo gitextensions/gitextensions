@@ -563,7 +563,7 @@ namespace GitUI.CommandsDialogs
                 toolStripMenuItem.ToolTipText = shell.Name;
                 toolStripMenuItem.Click += userShell_Click;
 
-                if (selectedDefaultShell == null || string.Equals(shell.Name, defaultShell, StringComparison.InvariantCultureIgnoreCase))
+                if (selectedDefaultShell is null || string.Equals(shell.Name, defaultShell, StringComparison.InvariantCultureIgnoreCase))
                 {
                     userShellAccessible = true;
                     selectedDefaultShell = toolStripMenuItem;
@@ -779,7 +779,7 @@ namespace GitUI.CommandsDialogs
             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
             _gitStatusMonitor.RequestRefresh();
 
-            if (_dashboard == null || !_dashboard.Visible)
+            if (_dashboard is null || !_dashboard.Visible)
             {
                 revisionDiff.RefreshArtificial();
                 RevisionGrid.ForceRefreshRevisions();
@@ -834,7 +834,7 @@ namespace GitUI.CommandsDialogs
 
             MainSplitContainer.Visible = false;
 
-            if (_dashboard == null)
+            if (_dashboard is null)
             {
                 _dashboard = new Dashboard { Dock = DockStyle.Fill };
                 _dashboard.GitModuleChanged += SetGitModule;
@@ -853,7 +853,7 @@ namespace GitUI.CommandsDialogs
         private void HideDashboard()
         {
             MainSplitContainer.Visible = true;
-            if (_dashboard == null || !_dashboard.Visible)
+            if (_dashboard is null || !_dashboard.Visible)
             {
                 return;
             }
@@ -1303,7 +1303,7 @@ namespace GitUI.CommandsDialogs
 
             if (showFileTreeTab)
             {
-                if (TreeTabPage.Parent == null)
+                if (TreeTabPage.Parent is null)
                 {
                     var index = CommitInfoTabControl.TabPages.IndexOf(DiffTabPage);
                     Debug.Assert(index != -1, "TabControl should contain diff tab page");
@@ -1354,7 +1354,7 @@ namespace GitUI.CommandsDialogs
 
             _selectedRevisionUpdatedTargets |= UpdateTargets.CommitInfo;
 
-            if (revision == null)
+            if (revision is null)
             {
                 return;
             }
@@ -1370,7 +1370,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (revision == null)
+            if (revision is null)
             {
                 return;
             }
@@ -1381,7 +1381,7 @@ namespace GitUI.CommandsDialogs
 
         private void FillBuildReport(GitRevision revision)
         {
-            if (_buildReportTabPageExtension == null)
+            if (_buildReportTabPageExtension is null)
             {
                 _buildReportTabPageExtension = new BuildReportTabPageExtension(() => Module, CommitInfoTabControl, _buildReportTabCaption.Text);
             }
@@ -2160,7 +2160,7 @@ namespace GitUI.CommandsDialogs
         private bool TryGetRepositoryHost(out IRepositoryHostPlugin repoHost)
         {
             repoHost = PluginRegistry.TryGetGitHosterForModule(Module);
-            if (repoHost == null)
+            if (repoHost is null)
             {
                 MessageBox.Show(this, _noReposHostFound.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
@@ -2227,7 +2227,7 @@ namespace GitUI.CommandsDialogs
             var revision = RevisionGrid.GetSelectedRevisions().FirstOrDefault();
             var objectId = revision?.ObjectId;
 
-            if (objectId == null || objectId.IsArtificial)
+            if (objectId is null || objectId.IsArtificial)
             {
                 return;
             }
@@ -2658,7 +2658,7 @@ namespace GitUI.CommandsDialogs
 
         private void PreventToolStripSplitButtonClosing(ToolStripSplitButton control)
         {
-            if (control == null || toolStripBranchFilterComboBox.Focused || toolStripRevisionFilterTextBox.Focused)
+            if (control is null || toolStripBranchFilterComboBox.Focused || toolStripRevisionFilterTextBox.Focused)
             {
                 return;
             }
@@ -2717,7 +2717,7 @@ namespace GitUI.CommandsDialogs
 
             Image GetSubmoduleItemImage(DetailedSubmoduleInfo details)
             {
-                if (details.Status == null)
+                if (details.Status is null)
                 {
                     return Images.FolderSubmodule;
                 }
@@ -2942,7 +2942,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                if (_terminal == null)
+                if (_terminal is null)
                 {
                     // Lazy-create on first opening the tab
                     _consoleTabPage.Controls.Clear();
@@ -3227,7 +3227,7 @@ namespace GitUI.CommandsDialogs
 
         private void HandleDrop(DragEventArgs e)
         {
-            if (TreeTabPage.Parent == null)
+            if (TreeTabPage.Parent is null)
             {
                 return;
             }
@@ -3241,7 +3241,7 @@ namespace GitUI.CommandsDialogs
             }
 
             var paths = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if (paths == null)
+            if (paths is null)
             {
                 return;
             }

@@ -294,7 +294,7 @@ namespace GitUI.UserControls.RevisionGrid
             if (e.RowIndex < 0 ||
                 e.RowIndex >= RowCount ||
                 !e.State.HasFlag(DataGridViewElementStates.Visible) ||
-                revision == null)
+                revision is null)
             {
                 return;
             }
@@ -398,7 +398,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             try
             {
-                if (CurrentCell == null)
+                if (CurrentCell is null)
                 {
                     RowCount = count;
                     CurrentCell = null;
@@ -433,7 +433,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                     Rows[rowIndexToBeSelected].Selected = true;
 
-                    if (CurrentCell == null)
+                    if (CurrentCell is null)
                     {
                         CurrentCell = Rows[rowIndexToBeSelected].Cells[1];
                     }

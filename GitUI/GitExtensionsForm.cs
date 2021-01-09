@@ -102,7 +102,7 @@ namespace GitUI
             }
 
             var position = _windowPositionManager.LoadPosition(this);
-            if (position == null)
+            if (position is null)
             {
                 return;
             }
@@ -131,7 +131,7 @@ namespace GitUI
                 Size = DpiUtil.Scale(position.Rect.Size, originalDpi: position.DeviceDpi);
             }
 
-            if (Owner == null || !windowCentred)
+            if (Owner is null || !windowCentred)
             {
                 var location = DpiUtil.Scale(position.Rect.Location, originalDpi: position.DeviceDpi);
 

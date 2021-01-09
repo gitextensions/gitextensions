@@ -142,7 +142,7 @@ namespace GitUI.CommandsDialogs
 
         private void openWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (DiffFiles.SelectedGitItem == null)
+            if (DiffFiles.SelectedGitItem is null)
             {
                 return;
             }
@@ -309,7 +309,7 @@ namespace GitUI.CommandsDialogs
                 {
                     displayStr = form.BranchName;
                     var objectId = Module.RevParse(form.BranchName);
-                    revision = objectId == null ? null : new GitRevision(objectId);
+                    revision = objectId is null ? null : new GitRevision(objectId);
                     PopulateDiffFiles();
                 }
             }

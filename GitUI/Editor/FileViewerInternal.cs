@@ -379,7 +379,7 @@ namespace GitUI.Editor
             set
             {
                 var scrollBar = TextEditor.ActiveTextAreaControl.HScrollBar;
-                if (scrollBar == null)
+                if (scrollBar is null)
                 {
                     return;
                 }
@@ -396,7 +396,7 @@ namespace GitUI.Editor
             set
             {
                 var scrollBar = TextEditor.ActiveTextAreaControl.VScrollBar;
-                if (scrollBar == null)
+                if (scrollBar is null)
                 {
                     return;
                 }
@@ -569,7 +569,7 @@ namespace GitUI.Editor
                     return;
                 }
 
-                if (_authorsAvatarMargin == null)
+                if (_authorsAvatarMargin is null)
                 {
                     _authorsAvatarMargin = new BlameAuthorMargin(TextEditor.ActiveTextAreaControl.TextArea);
                     TextEditor.ActiveTextAreaControl.TextArea.InsertLeftMargin(0, _authorsAvatarMargin);
@@ -624,7 +624,7 @@ namespace GitUI.Editor
 
                 // search downwards for a code line, i.e. a line with line numbers
                 int activeLine = initialActiveLine;
-                while (activeLine < currentViewPosition.TotalNumberOfLines && currentViewPosition.ActiveLineNum == null)
+                while (activeLine < currentViewPosition.TotalNumberOfLines && currentViewPosition.ActiveLineNum is null)
                 {
                     SetActiveLineNum(activeLine);
                     ++activeLine;
@@ -632,7 +632,7 @@ namespace GitUI.Editor
 
                 // if none found, search upwards
                 activeLine = initialActiveLine - 1;
-                while (activeLine >= 0 && currentViewPosition.ActiveLineNum == null)
+                while (activeLine >= 0 && currentViewPosition.ActiveLineNum is null)
                 {
                     SetActiveLineNum(activeLine);
                     --activeLine;
@@ -644,7 +644,7 @@ namespace GitUI.Editor
                 void SetActiveLineNum(int line)
                 {
                     currentViewPosition.ActiveLineNum = _viewer._lineNumbersControl.GetLineInfo(line);
-                    if (currentViewPosition.ActiveLineNum == null)
+                    if (currentViewPosition.ActiveLineNum is null)
                     {
                         return;
                     }

@@ -446,7 +446,7 @@ namespace GitUI.CommandsDialogs
         protected override void OnLoad(EventArgs e)
         {
             showUntrackedFilesToolStripMenuItem.Checked = Module.EffectiveConfigFile.GetValue("status.showUntrackedFiles") != "no";
-            MinimizeBox = Owner == null;
+            MinimizeBox = Owner is null;
             base.OnLoad(e);
         }
 
@@ -886,7 +886,7 @@ namespace GitUI.CommandsDialogs
             }
 
             // File no longer selected
-            if (_currentItem?.Item == null)
+            if (_currentItem?.Item is null)
             {
                 return;
             }
@@ -951,7 +951,7 @@ namespace GitUI.CommandsDialogs
             }
 
             // File no longer selected
-            if (_currentItem?.Item == null)
+            if (_currentItem?.Item is null)
             {
                 return;
             }
@@ -1025,7 +1025,7 @@ namespace GitUI.CommandsDialogs
             }
 
             var currentBranch = Module.GetRefs(tags: false, branches: true).FirstOrDefault(r => r.LocalName == currentBranchName);
-            if (currentBranch == null)
+            if (currentBranch is null)
             {
                 branchNameLabel.Text = currentBranchName;
                 remoteNameLabel.Text = string.Empty;
@@ -1200,7 +1200,7 @@ namespace GitUI.CommandsDialogs
 
         private void RestoreSelectedFiles(IReadOnlyList<GitItemStatus> unstagedFiles, IReadOnlyList<GitItemStatus> stagedFiles, IReadOnlyList<GitItemStatus> lastSelection)
         {
-            if (_currentFilesList == null || _currentFilesList.IsEmpty)
+            if (_currentFilesList is null || _currentFilesList.IsEmpty)
             {
                 SelectStoredNextIndex();
                 return;
@@ -1240,7 +1240,7 @@ namespace GitUI.CommandsDialogs
             _currentItem = item;
             _currentItemStaged = staged;
 
-            if (item?.Item == null)
+            if (item?.Item is null)
             {
                 return;
             }
@@ -2035,11 +2035,11 @@ namespace GitUI.CommandsDialogs
                         unstagedFiles.RemoveAll(item => !item.IsSubmodule && unstagedItems.Contains(item));
                         unstagedFiles.RemoveAll(
                             item => item.IsSubmodule && item.GetSubmoduleStatusAsync().IsCompleted &&
-                                    (item.GetSubmoduleStatusAsync().CompletedResult() == null ||
+                                    (item.GetSubmoduleStatusAsync().CompletedResult() is null ||
                                      (!item.GetSubmoduleStatusAsync().CompletedResult().IsDirty && unstagedItems.Contains(item))));
                         foreach (var item in unstagedItems.Where(
                             item => item.IsSubmodule &&
-                                    (ThreadHelper.JoinableTaskFactory.Run(() => item.GetSubmoduleStatusAsync()) == null ||
+                                    (ThreadHelper.JoinableTaskFactory.Run(() => item.GetSubmoduleStatusAsync()) is null ||
                                      (item.GetSubmoduleStatusAsync().IsCompleted && item.GetSubmoduleStatusAsync().CompletedResult().IsDirty))))
                         {
                             item.GetSubmoduleStatusAsync().CompletedResult().Status = SubmoduleStatus.Unknown;
@@ -2083,7 +2083,7 @@ namespace GitUI.CommandsDialogs
             _shouldRescanChanges = false;
             try
             {
-                if (_currentFilesList == null || !_currentFilesList.SelectedItems.Any())
+                if (_currentFilesList is null || !_currentFilesList.SelectedItems.Any())
                 {
                     return;
                 }
@@ -2176,7 +2176,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                if (Unstaged.SelectedGitItem == null ||
+                if (Unstaged.SelectedGitItem is null ||
                     MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) !=
                     DialogResult.Yes)
                 {
@@ -2740,7 +2740,7 @@ namespace GitUI.CommandsDialogs
             ListView lv = menu?.SourceControl as ListView;
 
             list = lv?.Parent as FileStatusList;
-            if (list == null /* menu action triggered directly by hotkey */)
+            if (list is null /* menu action triggered directly by hotkey */)
             {
                 // The inactive list's selection has been cleared.
                 list = Staged.SelectedItems.Any() ? Staged :
@@ -3211,7 +3211,7 @@ namespace GitUI.CommandsDialogs
         {
             var item = Unstaged.SelectedGitItem;
 
-            if (item == null)
+            if (item is null)
             {
                 return;
             }
@@ -3293,7 +3293,7 @@ namespace GitUI.CommandsDialogs
 
         private void stopTrackingThisFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedGitItem == null || !Unstaged.SelectedGitItem.IsTracked)
+            if (Unstaged.SelectedGitItem is null || !Unstaged.SelectedGitItem.IsTracked)
             {
                 return;
             }

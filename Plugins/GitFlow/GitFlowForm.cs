@@ -151,7 +151,7 @@ namespace GitFlow
             var args = new GitArgumentBuilder("flow") { typeBranch };
             var result = _gitUiCommands.GitModule.GitExecutable.Execute(args);
 
-            if (result.ExitCode != 0 || result.StandardOutput == null)
+            if (result.ExitCode != 0 || result.StandardOutput is null)
             {
                 return Array.Empty<string>();
             }

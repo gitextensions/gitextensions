@@ -281,7 +281,7 @@ namespace GitUI.CommandsDialogs
             {
                 LoadSettings();
 
-                if (_initialPage == null && _lastSelectedSettingsPageType != null)
+                if (_initialPage is null && _lastSelectedSettingsPageType != null)
                 {
                     _initialPage = new SettingsPageReferenceByType(_lastSelectedSettingsPageType);
                 }

@@ -63,7 +63,7 @@ namespace GitCommands.Git.Commands
 
         public override void Validate()
         {
-            if (CreateTagArguments.ObjectId == null)
+            if (CreateTagArguments.ObjectId is null)
             {
                 throw new ArgumentException("Revision is required.");
             }

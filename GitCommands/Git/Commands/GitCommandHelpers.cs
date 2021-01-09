@@ -225,7 +225,7 @@ namespace GitCommands.Git.Commands
                 { isSingleBranch == true, "--single-branch" },
                 { isSingleBranch == false, "--no-single-branch" },
                 "--progress",
-                { branch == null, "--no-checkout" },
+                { branch is null, "--no-checkout" },
                 { !string.IsNullOrEmpty(branch), $"--branch {branch}" },
                 from.Trim().Quote(),
                 toPath.ToPosixPath().Trim().Quote()
@@ -350,7 +350,7 @@ namespace GitCommands.Git.Commands
 
         public static ArgumentString StashSaveCmd(bool untracked, bool keepIndex, string message, IReadOnlyList<string> selectedFiles)
         {
-            if (selectedFiles == null)
+            if (selectedFiles is null)
             {
                 selectedFiles = Array.Empty<string>();
             }
@@ -411,7 +411,7 @@ namespace GitCommands.Git.Commands
         public static ArgumentString RebaseCmd(
             string branch, bool interactive, bool preserveMerges, bool autosquash, bool autoStash, bool ignoreDate, bool committerDateIsAuthorDate, string from = null, string onto = null)
         {
-            if (from == null ^ onto == null)
+            if (from is null ^ onto is null)
             {
                 throw new ArgumentException($"For arguments \"{nameof(from)}\" and \"{nameof(onto)}\", either both must have values, or neither may.");
             }

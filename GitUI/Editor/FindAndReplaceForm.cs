@@ -206,8 +206,8 @@ namespace GitUI
                     }
                 }
             }
-            while (range == null && startIdx != currentIdx && currentIdx != -1);
-            if (range == null && messageIfNotFound != null)
+            while (range is null && startIdx != currentIdx && currentIdx != -1);
+            if (range is null && messageIfNotFound != null)
             {
                 MessageBox.Show(this, messageIfNotFound, " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -257,7 +257,7 @@ namespace GitUI
                 for (; ;)
                 {
                     TextRange range = _search.FindNext(offset, false, out var looped);
-                    if (range == null || looped)
+                    if (range is null || looped)
                     {
                         break;
                     }
@@ -568,7 +568,7 @@ namespace GitUI
             if (searchBackward)
             {
                 result = FindNextIn(startAt, curOffs, true);
-                if (result == null)
+                if (result is null)
                 {
                     loopedAround = true;
                     result = FindNextIn(curOffs, endAt, true);
@@ -577,7 +577,7 @@ namespace GitUI
             else
             {
                 result = FindNextIn(curOffs, endAt, false);
-                if (result == null)
+                if (result is null)
                 {
                     loopedAround = true;
                     result = FindNextIn(startAt, curOffs, false);

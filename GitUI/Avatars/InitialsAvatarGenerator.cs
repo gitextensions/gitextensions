@@ -69,7 +69,7 @@ namespace GitUI.Avatars
             static string GetInitials(string[] names)
             {
                 var names2 = names?.Where(s => !string.IsNullOrWhiteSpace(s) && char.IsLetter(s[0])).ToList();
-                if (names2 == null || names2.Count == 0)
+                if (names2 is null || names2.Count == 0)
                 {
                     return null;
                 }

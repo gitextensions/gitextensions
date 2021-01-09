@@ -101,7 +101,7 @@ namespace GitCommands
         [NotNull]
         internal CommitData CreateFromFormattedData([NotNull] string data)
         {
-            if (data == null)
+            if (data is null)
             {
                 throw new ArgumentNullException(nameof(data));
             }
@@ -158,12 +158,12 @@ namespace GitCommands
         /// <inheritdoc />
         public CommitData CreateFromRevision(GitRevision revision, IReadOnlyList<ObjectId> children)
         {
-            if (revision == null)
+            if (revision is null)
             {
                 throw new ArgumentNullException(nameof(revision));
             }
 
-            if (revision.ObjectId == null)
+            if (revision.ObjectId is null)
             {
                 throw new ArgumentException($"Cannot have a null {nameof(GitRevision.ObjectId)}.", nameof(revision));
             }
@@ -180,7 +180,7 @@ namespace GitCommands
         {
             var module = _getModule();
 
-            if (module == null)
+            if (module is null)
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }

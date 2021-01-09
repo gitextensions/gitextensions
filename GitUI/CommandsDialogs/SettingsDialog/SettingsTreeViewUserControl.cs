@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public void AddSettingsPage(ISettingsPage page, SettingsPageReference parentPageReference, Image icon, bool asRoot = false)
         {
             TreeNode node;
-            if (parentPageReference == null)
+            if (parentPageReference is null)
             {
                 // add one of the root nodes (e. g. "Git Extensions" or "Plugins"
                 node = AddPage(treeView1.Nodes, page, icon);
@@ -81,7 +81,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private TreeNode AddPage(TreeNodeCollection treeNodeCollection, ISettingsPage page, Image icon)
         {
             var node = treeNodeCollection.Add(page.GetTitle());
-            if (icon == null)
+            if (icon is null)
             {
                 return node;
             }
@@ -105,7 +105,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 var page = (ISettingsPage)node.Tag;
 
-                if (page.GuiControl == null)
+                if (page.GuiControl is null)
                 {
                     var firstSubNode = node.FirstNode;
                     if (firstSubNode != null)
@@ -228,7 +228,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public void GotoPage([CanBeNull] SettingsPageReference settingsPageReference)
         {
             TreeNode node;
-            if (settingsPageReference == null)
+            if (settingsPageReference is null)
             {
                 node = treeView1.Nodes.Count > 0 ? treeView1.Nodes[0] : null;
             }

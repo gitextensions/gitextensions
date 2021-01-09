@@ -38,7 +38,7 @@ namespace GitUITests.Editor
 
             if (uri != null)
             {
-                if (linkText == null)
+                if (linkText is null)
                 {
                     text.Append(WebUtility.HtmlEncode(uri));
                 }

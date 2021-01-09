@@ -207,7 +207,7 @@ namespace GitCommands
 
         public bool IsTrackingRemote(IGitRef remote)
         {
-            if (remote == null || IsRemote || !remote.IsRemote)
+            if (remote is null || IsRemote || !remote.IsRemote)
             {
                 return false;
             }

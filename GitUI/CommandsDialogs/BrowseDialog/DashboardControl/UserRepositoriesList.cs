@@ -522,7 +522,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             tsmiRemoveMissingReposFromList.Visible = _hasInvalidRepos;
 
-            if (selected == null || _rightClickedItem == null)
+            if (selected is null || _rightClickedItem is null)
             {
                 e.Cancel = true;
                 return;
@@ -707,7 +707,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void tsmiCategory_Click(object sender, EventArgs e)
         {
             var selectedRepositoryItem = GetSelectedRepositoryItem((sender as ToolStripMenuItem)?.OwnerItem);
-            if (selectedRepositoryItem == null)
+            if (selectedRepositoryItem is null)
             {
                 return;
             }
@@ -858,7 +858,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private bool TryOpenSelectedRepository()
         {
             var selected = GetSelectedRepository();
-            if (selected == null)
+            if (selected is null)
             {
                 return false;
             }

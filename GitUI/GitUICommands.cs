@@ -185,7 +185,7 @@ namespace GitUI
         public bool StartResetCurrentBranchDialog(IWin32Window owner, string branch)
         {
             var objectId = Module.RevParse(branch);
-            if (objectId == null)
+            if (objectId is null)
             {
                 MessageBox.Show($"Branch \"{branch}\" could not be resolved.", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
@@ -385,7 +385,7 @@ namespace GitUI
         public bool StartCreateBranchDialog(IWin32Window owner, string branch)
         {
             var objectId = Module.RevParse(branch);
-            if (objectId == null)
+            if (objectId is null)
             {
                 MessageBox.Show($"Branch \"{branch}\" could not be resolved.", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
@@ -525,7 +525,7 @@ namespace GitUI
         {
             bool Action()
             {
-                if (dir == null)
+                if (dir is null)
                 {
                     dir = Module.IsValidGitWorkingDir() ? Module.WorkingDir : string.Empty;
                 }
@@ -815,7 +815,7 @@ namespace GitUI
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "It seems that all prevForm variable values are different so there is not a double dispose here. However the logic is better to be rewritten")]
         public bool StartCherryPickDialog(IWin32Window owner, IEnumerable<GitRevision> revisions)
         {
-            if (revisions == null)
+            if (revisions is null)
             {
                 throw new ArgumentNullException(nameof(revisions));
             }
@@ -1635,11 +1635,11 @@ namespace GitUI
                         return false;
                     }
 
-                    if (selectedId == null)
+                    if (selectedId is null)
                     {
                         selectedId = objectId;
                     }
-                    else if (firstId == null)
+                    else if (firstId is null)
                     {
                         firstId = objectId;
 
@@ -1935,7 +1935,7 @@ namespace GitUI
 
             public void Execute()
             {
-                if (CommandText == null)
+                if (CommandText is null)
                 {
                     throw new InvalidOperationException("CommandText is required");
                 }

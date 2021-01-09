@@ -18,7 +18,7 @@ namespace GitCommands.Remotes
 
             var m = MatchRegExes(remoteUrl, GitHubRegexes);
 
-            if (m == null || !m.Success)
+            if (m is null || !m.Success)
             {
                 return false;
             }

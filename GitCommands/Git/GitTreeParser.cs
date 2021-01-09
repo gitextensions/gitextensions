@@ -48,7 +48,7 @@ namespace GitCommands.Git
 
         public GitItem ParseSingle(string rawItem)
         {
-            if (rawItem == null)
+            if (rawItem is null)
             {
                 return null;
             }

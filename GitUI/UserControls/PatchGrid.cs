@@ -148,7 +148,7 @@ namespace GitUI
 
         public void SelectCurrentlyApplyingPatch()
         {
-            if (PatchFiles == null || !PatchFiles.Any())
+            if (PatchFiles is null || !PatchFiles.Any())
             {
                 return;
             }
