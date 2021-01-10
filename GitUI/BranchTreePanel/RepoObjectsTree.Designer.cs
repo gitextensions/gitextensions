@@ -133,6 +133,7 @@ namespace GitUI.BranchTreePanel
             this.treeMain.ShowNodeToolTips = true;
             this.treeMain.Size = new System.Drawing.Size(300, 324);
             this.treeMain.TabIndex = 3;
+            this.treeMain.ShowLines = false;
             // 
             // menuMain
             // 
