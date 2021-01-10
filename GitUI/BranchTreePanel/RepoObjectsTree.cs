@@ -224,7 +224,7 @@ namespace GitUI.BranchTreePanel
             var node = treeMain.SelectedNode?.Tag as Node;
 
             // If node is an inner node, and overrides OnDoubleClick, then disable expand/collapse
-            if (node != null
+            if (node is not null
                 && node.Nodes.Count > 0
                 && IsOverride(node.GetType().GetMethod("OnDoubleClick", BindingFlags.Instance | BindingFlags.NonPublic)))
             {
@@ -235,7 +235,7 @@ namespace GitUI.BranchTreePanel
 
             bool IsOverride(MethodInfo m)
             {
-                return m != null && m.GetBaseDefinition().DeclaringType != m.DeclaringType;
+                return m is not null && m.GetBaseDefinition().DeclaringType != m.DeclaringType;
             }
         }
 
@@ -282,7 +282,7 @@ namespace GitUI.BranchTreePanel
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                HashSet<string> mergedBranches = selectedGuid == null
+                HashSet<string> mergedBranches = selectedGuid is null
                     ? new HashSet<string>()
                     : (await Module.GetMergedBranchesAsync(includeRemote: true, fullRefname: true, commit: selectedGuid)).ToHashSet();
 
@@ -417,7 +417,7 @@ namespace GitUI.BranchTreePanel
         {
             _txtBranchCriterion.CloseDropdown();
 
-            if (_searchCriteriaChanged && _searchResult != null && _searchResult.Any())
+            if (_searchCriteriaChanged && _searchResult is not null && _searchResult.Any())
             {
                 _searchCriteriaChanged = false;
                 foreach (var coloredNode in _searchResult)
@@ -433,7 +433,7 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            if (_searchResult == null || !_searchResult.Any())
+            if (_searchResult is null || !_searchResult.Any())
             {
                 if (!string.IsNullOrWhiteSpace(_txtBranchCriterion.Text))
                 {
@@ -443,7 +443,7 @@ namespace GitUI.BranchTreePanel
 
             var node = GetNextSearchResult();
 
-            if (node == null)
+            if (node is null)
             {
                 return;
             }
@@ -457,7 +457,7 @@ namespace GitUI.BranchTreePanel
             {
                 var first = _searchResult?.FirstOrDefault();
 
-                if (first == null)
+                if (first is null)
                 {
                     return null;
                 }

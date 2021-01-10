@@ -127,7 +127,7 @@ namespace GitCommands
         {
             get
             {
-                if (_overriddenCommitMessage != null)
+                if (_overriddenCommitMessage is not null)
                 {
                     return _overriddenCommitMessage;
                 }

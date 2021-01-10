@@ -44,7 +44,7 @@ namespace GitCommands.Git
         /// <inheritdoc />
         public bool AllFirstAreParentsToSelected(IEnumerable<ObjectId> firstSelected, GitRevision selectedRevision)
         {
-            if (selectedRevision?.ParentIds == null || firstSelected == null)
+            if (selectedRevision?.ParentIds is null || firstSelected is null)
             {
                 return false;
             }
@@ -63,7 +63,7 @@ namespace GitCommands.Git
         /// <inheritdoc />
         public bool AnyLocalFileExists(IEnumerable<GitItemStatus> selectedItemsWithParent)
         {
-            if (selectedItemsWithParent == null)
+            if (selectedItemsWithParent is null)
             {
                 return false;
             }
@@ -90,7 +90,7 @@ namespace GitCommands.Git
         /// <inheritdoc />
         public bool Matches(GitRevision revision, string criteria)
         {
-            if (revision == null || string.IsNullOrWhiteSpace(criteria))
+            if (revision is null || string.IsNullOrWhiteSpace(criteria))
             {
                 // don't throw exception for performance reasons
                 return false;

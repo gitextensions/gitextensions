@@ -32,7 +32,7 @@ namespace GitCommands.Utils
                     cached = weakReference.Target;
                 }
 
-                if (cached == null)
+                if (cached is null)
                 {
                     cached = provideObject.Value;
                     _weakMap[objectUniqueKey] = new WeakReference(cached);
@@ -46,7 +46,7 @@ namespace GitCommands.Utils
                 }
             }
 
-            Debug.Assert(cached != null, "cached != null -- if this is violated, the annotations on SettingsContainer<,>.ctor cache are wrong");
+            Debug.Assert(cached is not null, "cached is not null -- if this is violated, the annotations on SettingsContainer<,>.ctor cache are wrong");
 
             return (T)cached;
         }

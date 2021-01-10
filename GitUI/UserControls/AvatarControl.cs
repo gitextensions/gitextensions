@@ -205,9 +205,9 @@ namespace GitUI
                 }
             }
 
-            Debug.Assert(noneItem != null && selectedItem != null, "noneItem != null && selectedItem != null");
+            Debug.Assert(noneItem is not null && selectedItem is not null, "noneItem is not null && selectedItem is not null");
 
-            if (selectedItem == null)
+            if (selectedItem is null)
             {
                 AppSettings.GravatarFallbackAvatarType = GravatarFallbackAvatarType.None;
                 selectedItem = noneItem;
@@ -239,9 +239,9 @@ namespace GitUI
                 }
             }
 
-            Debug.Assert(defaultItem != null && selectedItem != null, "noneItem != null && selectedItem != null");
+            Debug.Assert(defaultItem is not null && selectedItem is not null, "noneItem is not null && selectedItem is not null");
 
-            if (selectedItem == null)
+            if (selectedItem is null)
             {
                 AppSettings.AvatarProvider = AvatarProvider.Gravatar;
                 selectedItem = defaultItem;

@@ -206,7 +206,7 @@ namespace GitUI.Theming
 
             using (ctx.HighQuality())
             {
-                if (backBrush != null)
+                if (backBrush is not null)
                 {
                     ctx.Graphics.FillEllipse(backBrush, prect.Inclusive());
                 }

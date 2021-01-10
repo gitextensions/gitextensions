@@ -120,13 +120,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 programFilesX86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
             }
 
-            if (programFilesX86 != null)
+            if (programFilesX86 is not null)
             {
                 yield return programFilesX86 + @"\Git\";
             }
 
             yield return programFiles + @"\Git\";
-            if (programFilesX86 != null)
+            if (programFilesX86 is not null)
             {
                 yield return programFilesX86 + @"\msysgit\";
             }
@@ -178,7 +178,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     string output = new Executable(command).GetOutput();
                     if (!string.IsNullOrEmpty(output))
                     {
-                        if (command != null)
+                        if (command is not null)
                         {
                             AppSettings.GitCommandValue = command;
                             return true;

@@ -43,7 +43,7 @@ namespace GitUI.AutoCompletion
 
                 var regex = GetRegexForExtension(PathUtil.GetExtension(file.Name));
 
-                if (regex != null)
+                if (regex is not null)
                 {
                     // HACK: need to expose require methods at IGitModule level
                     var text = await GetChangedFileTextAsync((GitModule)module, file);
@@ -78,7 +78,7 @@ namespace GitUI.AutoCompletion
         {
             var module = _getModule();
 
-            if (module == null)
+            if (module is null)
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }
@@ -102,7 +102,7 @@ namespace GitUI.AutoCompletion
             }
 
             Stream s = Assembly.GetEntryAssembly()?.GetManifestResourceStream("GitExtensions.AutoCompleteRegexes.txt");
-            if (s == null)
+            if (s is null)
             {
                 throw new NotImplementedException("Please add AutoCompleteRegexes.txt file into .csproj");
             }
@@ -143,14 +143,14 @@ namespace GitUI.AutoCompletion
             var changes = await module.GetCurrentChangesAsync(file.Name, file.OldName, file.Staged == StagedStatus.Index, "-U1000000")
                 .ConfigureAwait(false);
 
-            if (changes != null)
+            if (changes is not null)
             {
                 return changes.Text;
             }
 
             var content = await module.GetFileContentsAsync(file).ConfigureAwaitRunInline();
 
-            if (content != null)
+            if (content is not null)
             {
                 return content;
             }

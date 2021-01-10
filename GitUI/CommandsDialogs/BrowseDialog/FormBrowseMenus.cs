@@ -87,7 +87,7 @@ namespace GitUI.CommandsDialogs
         /// <param name="toolStrips">The list of toobars to toggle visibility for.</param>
         public void CreateToolbarsMenus(params ToolStripEx[] toolStrips)
         {
-            Debug.Assert(_toolbarsMenuItem != null, "Toolbars menu item must be already created.");
+            Debug.Assert(_toolbarsMenuItem is not null, "Toolbars menu item must be already created.");
 
             foreach (ToolStrip toolStrip in toolStrips)
             {
@@ -138,7 +138,7 @@ namespace GitUI.CommandsDialogs
             switch (mainMenuItem)
             {
                 case MainMenuItem.NavigateMenu:
-                    if (_navigateMenuCommands == null)
+                    if (_navigateMenuCommands is null)
                     {
                         _navigateMenuCommands = new List<MenuCommand>();
                     }
@@ -151,7 +151,7 @@ namespace GitUI.CommandsDialogs
                     break;
 
                 case MainMenuItem.ViewMenu:
-                    if (_viewMenuCommands == null)
+                    if (_viewMenuCommands is null)
                     {
                         _viewMenuCommands = new List<MenuCommand>();
                     }
@@ -268,7 +268,7 @@ namespace GitUI.CommandsDialogs
             _mainMenuStrip.Items.Remove(_viewToolStripMenuItem);
 
             // don't forget to clear old associated menu items
-            if (_itemsRegisteredWithMenuCommand != null)
+            if (_itemsRegisteredWithMenuCommand is not null)
             {
                 _navigateMenuCommands?.ForEach(mc => mc.UnregisterMenuItems(_itemsRegisteredWithMenuCommand));
 
@@ -291,11 +291,11 @@ namespace GitUI.CommandsDialogs
 
         private IEnumerable<MenuCommand> GetNavigateAndViewMenuCommands()
         {
-            if (_navigateMenuCommands == null && _viewMenuCommands == null)
+            if (_navigateMenuCommands is null && _viewMenuCommands is null)
             {
                 return Enumerable.Empty<MenuCommand>();
             }
-            else if (_navigateMenuCommands != null && _viewMenuCommands != null)
+            else if (_navigateMenuCommands is not null && _viewMenuCommands is not null)
             {
                 return _navigateMenuCommands.Concat(_viewMenuCommands);
             }

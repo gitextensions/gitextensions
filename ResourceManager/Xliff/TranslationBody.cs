@@ -33,12 +33,12 @@ namespace ResourceManager.Xliff
             }
 
             TranslationItem ti = GetTranslationItem(translationItem.Name, translationItem.Property);
-            if (ti == null)
+            if (ti is null)
             {
                 if (translationItem.Property == "ToolTipText")
                 {
                     ti = GetTranslationItem(translationItem.Name, "Text");
-                    if (ti == null || translationItem.Value != ti.Value)
+                    if (ti is null || translationItem.Value != ti.Value)
                     {
                         TranslationItems.Add(translationItem);
                     }

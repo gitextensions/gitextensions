@@ -108,7 +108,7 @@ namespace GitCommandsTests.Settings
                         yield return new object[] { property, value, defaultValue, isSetting };
                     }
 
-                    if (!(value is null))
+                    if (value is not null)
                     {
                         var valueType = Nullable.GetUnderlyingType(value.GetType()) ?? value.GetType();
                         var propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;

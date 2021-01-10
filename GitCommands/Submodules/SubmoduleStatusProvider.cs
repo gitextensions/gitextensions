@@ -99,7 +99,7 @@ namespace GitCommands.Submodules
             // Structure is updated
             OnStatusUpdated(result, cancelToken);
 
-            if (updateStatus && currentModule.SuperprojectModule != null)
+            if (updateStatus && currentModule.SuperprojectModule is not null)
             {
                 // For the top module, use git-status information to update the status
                 // If a submodule is current, update once from top module to give an overview
@@ -114,7 +114,7 @@ namespace GitCommands.Submodules
                 {
                     var path = topModule.GetSubmoduleFullPath(name);
 
-                    if (_submoduleInfos.ContainsKey(path) && _submoduleInfos[path].Detailed != null)
+                    if (_submoduleInfos.ContainsKey(path) && _submoduleInfos[path].Detailed is not null)
                     {
                         SetModuleAsDirtyUpwards(topModule);
                         break;
@@ -133,7 +133,7 @@ namespace GitCommands.Submodules
         /// <inheritdoc />
         public async Task UpdateSubmodulesStatusAsync(string workingDirectory, [CanBeNull] IReadOnlyList<GitItemStatus> gitStatus, bool forceUpdate)
         {
-            if (gitStatus == null)
+            if (gitStatus is null)
             {
                 return;
             }
@@ -142,7 +142,7 @@ namespace GitCommands.Submodules
             await TaskScheduler.Default;
             cancelToken.ThrowIfCancellationRequested();
 
-            while (_submoduleInfoResult == null)
+            while (_submoduleInfoResult is null)
             {
                 // Wait until the structure is built
                 await Task.Delay(TimeSpan.FromMilliseconds(300), cancelToken);
@@ -183,7 +183,7 @@ namespace GitCommands.Submodules
             var result = new SubmoduleInfoResult { Module = currentModule };
 
             IGitModule topProject = currentModule.GetTopModule();
-            bool isCurrentTopProject = currentModule.SuperprojectModule == null;
+            bool isCurrentTopProject = currentModule.SuperprojectModule is null;
             SetTopProjectSubmoduleInfo(result, noBranchText, topProject, isCurrentTopProject);
 
             bool isParentTopProject = currentModule.SuperprojectModule?.WorkingDir == topProject.WorkingDir;
@@ -282,7 +282,7 @@ namespace GitCommands.Submodules
             cancelToken.ThrowIfCancellationRequested();
             await TaskScheduler.Default;
 
-            if (!_submoduleInfos.ContainsKey(module.WorkingDir) || _submoduleInfos[module.WorkingDir] == null)
+            if (!_submoduleInfos.ContainsKey(module.WorkingDir) || _submoduleInfos[module.WorkingDir] is null)
             {
                 return;
             }
@@ -290,13 +290,13 @@ namespace GitCommands.Submodules
             // For the current module git-status has information to set and clear the IsDirty flag
             // but cannot evaluate or change the ahead/behind information
             // The top module can only be dirty, but a submodule will only update the tree below current module
-            if (gitStatus != null && gitStatus.Count > 0)
+            if (gitStatus is not null && gitStatus.Count > 0)
             {
                 // If changes this and all super projects are at least dirty
                 // (changed commit can be missed, but top module can only be dirty)
                 SetModuleAsDirtyUpwards(module);
             }
-            else if (_submoduleInfos[module.WorkingDir].Detailed != null)
+            else if (_submoduleInfos[module.WorkingDir].Detailed is not null)
             {
                 // No Git changes for this module, clear dirty status (but unknown for super projects)
                 if (_submoduleInfos[module.WorkingDir].Detailed.Status == SubmoduleStatus.Unknown)
@@ -345,12 +345,12 @@ namespace GitCommands.Submodules
         /// <param name="path">path to the module</param>
         private void SetModuleAsDirty(string path, bool force = false)
         {
-            if (!_submoduleInfos.ContainsKey(path) || _submoduleInfos[path] == null)
+            if (!_submoduleInfos.ContainsKey(path) || _submoduleInfos[path] is null)
             {
                 return;
             }
 
-            if (force || _submoduleInfos[path].Detailed == null)
+            if (force || _submoduleInfos[path].Detailed is null)
             {
                 _submoduleInfos[path].Detailed = new DetailedSubmoduleInfo
                 {
@@ -371,7 +371,7 @@ namespace GitCommands.Submodules
         /// <param name="module">module</param>
         private void SetModuleAsDirtyUpwards(GitModule module)
         {
-            while (module != null)
+            while (module is not null)
             {
                 SetModuleAsDirty(module.WorkingDir);
 
@@ -387,7 +387,7 @@ namespace GitCommands.Submodules
         /// <returns>The task</returns>
         private async Task GetSubmoduleDetailedStatusAsync(GitModule module, CancellationToken cancelToken)
         {
-            if (!_submoduleInfos.ContainsKey(module.WorkingDir) || _submoduleInfos[module.WorkingDir] == null)
+            if (!_submoduleInfos.ContainsKey(module.WorkingDir) || _submoduleInfos[module.WorkingDir] is null)
             {
                 return;
             }
@@ -409,13 +409,13 @@ namespace GitCommands.Submodules
         /// <returns>the task</returns>
         private async Task GetSubmoduleDetailedStatusAsync(GitModule superModule, string submoduleName, CancellationToken cancelToken)
         {
-            if (superModule == null || string.IsNullOrWhiteSpace(submoduleName))
+            if (superModule is null || string.IsNullOrWhiteSpace(submoduleName))
             {
                 return;
             }
 
             var path = superModule.GetSubmoduleFullPath(submoduleName);
-            if (!_submoduleInfos.ContainsKey(path) || _submoduleInfos[path] == null)
+            if (!_submoduleInfos.ContainsKey(path) || _submoduleInfos[path] is null)
             {
                 return;
             }
@@ -425,13 +425,13 @@ namespace GitCommands.Submodules
 
             var submoduleStatus = await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(superModule, submoduleName, noLocks: true)
             .ConfigureAwait(false);
-            if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
+            if (submoduleStatus is not null && submoduleStatus.Commit != submoduleStatus.OldCommit)
             {
                 submoduleStatus.CheckSubmoduleStatus(submoduleStatus.GetSubmodule(superModule));
             }
 
             // If no changes, set info.Detailed set to null
-            info.Detailed = submoduleStatus == null ?
+            info.Detailed = submoduleStatus is null ?
                 null :
                 new DetailedSubmoduleInfo
                 {
@@ -442,7 +442,7 @@ namespace GitCommands.Submodules
 
             // Recursively update submodules
             var module = new GitModule(path);
-            if (submoduleStatus != null && submoduleStatus.IsDirty)
+            if (submoduleStatus is not null && submoduleStatus.IsDirty)
             {
                 await GetSubmoduleDetailedStatusAsync(module, cancelToken);
                 return;
@@ -462,18 +462,18 @@ namespace GitCommands.Submodules
         /// <param name="submoduleName">Name of the submodule</param>
         private void SetSubmoduleEmptyDetailedStatus(GitModule superModule, string submoduleName)
         {
-            if (superModule == null || string.IsNullOrEmpty(submoduleName))
+            if (superModule is null || string.IsNullOrEmpty(submoduleName))
             {
                 return;
             }
 
             string path = superModule.GetSubmoduleFullPath(submoduleName);
-            if (!_submoduleInfos.ContainsKey(path) || _submoduleInfos[path] == null)
+            if (!_submoduleInfos.ContainsKey(path) || _submoduleInfos[path] is null)
             {
                 return;
             }
 
-            if (_submoduleInfos[path].Detailed == null)
+            if (_submoduleInfos[path].Detailed is null)
             {
                 // If no info, submodules are already the default
                 return;

@@ -154,7 +154,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void _searchBtn_Click(object sender, EventArgs e)
         {
             var search = searchTB.Text;
-            if (search == null || search.Trim().Length == 0)
+            if (search is null || search.Trim().Length == 0)
             {
                 return;
             }
@@ -188,7 +188,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void _getFromUserBtn_Click(object sender, EventArgs e)
         {
             var search = searchTB.Text;
-            if (search == null || search.Trim().Length == 0)
+            if (search is null || search.Trim().Length == 0)
             {
                 return;
             }
@@ -313,7 +313,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             var userSelectedPath = OsShellUtil.PickFolder(this, initialDir);
 
-            if (userSelectedPath != null)
+            if (userSelectedPath is not null)
             {
                 destinationTB.Text = userSelectedPath;
                 _destinationTB_TextChanged(sender, e);
@@ -327,7 +327,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _openGitupPageBtn_Click(object sender, EventArgs e)
         {
-            if (CurrentySelectedGitRepo == null)
+            if (CurrentySelectedGitRepo is null)
             {
                 return;
             }
@@ -381,7 +381,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void Clone(IHostedRepository repo)
         {
             string targetDir = GetTargetDir();
-            if (targetDir == null)
+            if (targetDir is null)
             {
                 return;
             }
@@ -445,7 +445,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             var repo = CurrentySelectedGitRepo;
 
-            if (repo != null)
+            if (repo is not null)
             {
                 bool multipleProtocols = repo.SupportedCloneProtocols.Any();
 
@@ -468,7 +468,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     createDirTB.Text = repo.Name;
                     addUpstreamRemoteAsCB.Text = "";
                     addUpstreamRemoteAsCB.Items.Clear();
-                    if (repo.ParentOwner != null)
+                    if (repo.ParentOwner is not null)
                     {
                         var upstreamRemoteName = repo.ParentOwner ?? "";
                         addUpstreamRemoteAsCB.Items.Add(upstreamRemoteName);
@@ -479,7 +479,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         }
                     }
 
-                    addUpstreamRemoteAsCB.Enabled = repo.ParentOwner != null;
+                    addUpstreamRemoteAsCB.Enabled = repo.ParentOwner is not null;
                 }
 
                 cloneBtn.Enabled = true;

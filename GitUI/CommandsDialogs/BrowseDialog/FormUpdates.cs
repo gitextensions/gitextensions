@@ -78,14 +78,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 var configData = gitExtRepo?.GetRef("heads/configdata");
 
                 var tree = configData?.GetTree();
-                if (tree == null)
+                if (tree is null)
                 {
                     return;
                 }
 
                 var releases = tree.Tree.FirstOrDefault(entry => "GitExtensions.releases".Equals(entry.Path, StringComparison.InvariantCultureIgnoreCase));
 
-                if (releases?.Blob.Value != null)
+                if (releases?.Blob.Value is not null)
                 {
                     CheckForNewerVersion(releases.Blob.Value.GetContent());
                 }
@@ -121,7 +121,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             var updates = ReleaseVersion.GetNewerVersions(CurrentVersion, AppSettings.CheckForReleaseCandidates, versions);
 
             var update = updates.OrderBy(version => version.Version).LastOrDefault();
-            if (update != null)
+            if (update is not null)
             {
                 UpdateFound = true;
                 UpdateUrl = update.DownloadPage;
@@ -277,7 +277,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             var sections = cfg.GetConfigSections("Version");
             sections = sections.Concat(cfg.GetConfigSections("RCVersion"));
 
-            return sections.Select(FromSection).Where(version => version != null);
+            return sections.Select(FromSection).Where(version => version is not null);
         }
 
         public static IEnumerable<ReleaseVersion> GetNewerVersions(

@@ -31,7 +31,7 @@ namespace CommonTestUtils
             Assert.IsNull(ThreadHelper.JoinableTaskContext, "Tests with joinable tasks must not be run in parallel!");
 
             IList apartmentState = null;
-            for (var scope = test; scope != null; scope = scope.Parent)
+            for (var scope = test; scope is not null; scope = scope.Parent)
             {
                 apartmentState = scope.Properties[nameof(ApartmentState)];
                 if (apartmentState.Count > 0)
@@ -86,7 +86,7 @@ namespace CommonTestUtils
                 finally
                 {
                     ThreadHelper.JoinableTaskContext = null;
-                    if (_denyExecutionSynchronizationContext != null)
+                    if (_denyExecutionSynchronizationContext is not null)
                     {
                         SynchronizationContext.SetSynchronizationContext(_denyExecutionSynchronizationContext.UnderlyingContext);
                     }
@@ -94,7 +94,7 @@ namespace CommonTestUtils
 
                 _denyExecutionSynchronizationContext?.ThrowIfSwitchOccurred();
             }
-            catch (Exception ex) when (_threadException != null)
+            catch (Exception ex) when (_threadException is not null)
             {
                 StoreThreadException(ex);
             }
@@ -110,7 +110,7 @@ namespace CommonTestUtils
 
         private void StoreThreadException(Exception ex)
         {
-            if (_threadException != null)
+            if (_threadException is not null)
             {
                 ex = new AggregateException(new Exception[] { _threadException.SourceException, ex });
             }
@@ -144,7 +144,7 @@ namespace CommonTestUtils
 
             internal void ThrowIfSwitchOccurred()
             {
-                if (_failedTransfer.Value == null)
+                if (_failedTransfer.Value is null)
                 {
                     return;
                 }
@@ -156,7 +156,7 @@ namespace CommonTestUtils
             {
                 try
                 {
-                    if (_failedTransfer.Value == null)
+                    if (_failedTransfer.Value is null)
                     {
                         ThrowFailedTransferExceptionForCapture();
                     }
@@ -175,7 +175,7 @@ namespace CommonTestUtils
             {
                 try
                 {
-                    if (_failedTransfer.Value == null)
+                    if (_failedTransfer.Value is null)
                     {
                         ThrowFailedTransferExceptionForCapture();
                     }

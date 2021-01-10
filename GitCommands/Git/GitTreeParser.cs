@@ -43,12 +43,12 @@ namespace GitCommands.Git
             // Split on \0 too, as GitModule.GetTree uses `ls-tree -z` which uses null terminators
             var items = tree.Split('\0', '\n');
 
-            return items.Select(ParseSingle).Where(item => item != null);
+            return items.Select(ParseSingle).Where(item => item is not null);
         }
 
         public GitItem ParseSingle(string rawItem)
         {
-            if (rawItem == null)
+            if (rawItem is null)
             {
                 return null;
             }

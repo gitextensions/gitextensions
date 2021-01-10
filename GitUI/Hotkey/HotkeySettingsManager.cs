@@ -24,7 +24,7 @@ namespace GitUI.Hotkey
         {
             get
             {
-                if (_serializer == null)
+                if (_serializer is null)
                 {
                     _serializer = new XmlSerializer(typeof(HotkeySettings[]), new[] { typeof(HotkeyCommand) });
                 }
@@ -92,7 +92,7 @@ namespace GitUI.Hotkey
             {
                 foreach (var command in setting.Commands)
                 {
-                    if (command != null)
+                    if (command is not null)
                     {
                         _usedKeys.Add(command.KeyData);
                     }
@@ -122,7 +122,7 @@ namespace GitUI.Hotkey
 
         internal static void MergeIntoDefaultSettings(HotkeySettings[] defaultSettings, HotkeySettings[] loadedSettings)
         {
-            if (loadedSettings == null)
+            if (loadedSettings is null)
             {
                 return;
             }
@@ -136,11 +136,11 @@ namespace GitUI.Hotkey
             {
                 foreach (var setting in loadedSettings)
                 {
-                    if (setting != null)
+                    if (setting is not null)
                     {
                         foreach (var command in setting.Commands)
                         {
-                            if (command != null)
+                            if (command is not null)
                             {
                                 string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
                                 if (defaultCommands.TryGetValue(dictKey, out var defaultCommand))
@@ -159,7 +159,7 @@ namespace GitUI.Hotkey
                 {
                     foreach (var command in setting.Commands)
                     {
-                        if (command != null)
+                        if (command is not null)
                         {
                             string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
                             defaultCommands.Add(dictKey, command);
@@ -202,13 +202,13 @@ namespace GitUI.Hotkey
 
         private static void MigrateSettings()
         {
-            if (AppSettings.SerializedHotkeys == null)
+            if (AppSettings.SerializedHotkeys is null)
             {
                 Properties.Settings.Default.Upgrade();
                 if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.Hotkeys))
                 {
                     HotkeySettings[] settings = LoadSerializedSettings(Properties.Settings.Default.Hotkeys);
-                    if (settings == null)
+                    if (settings is null)
                     {
                         AppSettings.SerializedHotkeys = " "; // mark settings as migrated
                     }

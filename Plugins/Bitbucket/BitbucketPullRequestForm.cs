@@ -46,7 +46,7 @@ namespace Bitbucket
                 ReloadRepositories();
             };
 
-            if (module != null)
+            if (module is not null)
             {
                 var repoUrl = _NO_TRANSLATE_RepoUrl = string.Format(_NO_TRANSLATE_RepoUrl,
                                           _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
@@ -67,7 +67,7 @@ namespace Bitbucket
 
         private void ReloadRepositories()
         {
-            if (_settings == null)
+            if (_settings is null)
             {
                 return;
             }
@@ -100,7 +100,7 @@ namespace Bitbucket
 
         private void ReloadPullRequests()
         {
-            if (_settings == null)
+            if (_settings is null)
             {
                 return;
             }
@@ -135,10 +135,10 @@ namespace Bitbucket
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                if (ddlBranchSource.SelectedValue == null ||
-                    ddlBranchTarget.SelectedValue == null ||
-                    ddlRepositorySource.SelectedValue == null ||
-                    ddlRepositoryTarget.SelectedValue == null)
+                if (ddlBranchSource.SelectedValue is null ||
+                    ddlBranchTarget.SelectedValue is null ||
+                    ddlRepositorySource.SelectedValue is null ||
+                    ddlRepositoryTarget.SelectedValue is null)
                 {
                     return;
                 }
@@ -260,7 +260,7 @@ namespace Bitbucket
         [ItemCanBeNull]
         private async Task<Commit> GetCommitInfoAsync(Repository repo, string branch)
         {
-            if (repo == null || string.IsNullOrWhiteSpace(branch))
+            if (repo is null || string.IsNullOrWhiteSpace(branch))
             {
                 return null;
             }
@@ -272,7 +272,7 @@ namespace Bitbucket
 
         private void UpdateCommitInfo(Label label, Commit commit)
         {
-            if (commit == null)
+            if (commit is null)
             {
                 label.Text = string.Empty;
             }
@@ -286,10 +286,10 @@ namespace Bitbucket
         {
             await this.SwitchToMainThreadAsync();
 
-            if (ddlRepositorySource.SelectedValue == null
-                || ddlRepositoryTarget.SelectedValue == null
-                || ddlBranchSource.Tag == null
-                || ddlBranchTarget.Tag == null)
+            if (ddlRepositorySource.SelectedValue is null
+                || ddlRepositoryTarget.SelectedValue is null
+                || ddlBranchSource.Tag is null
+                || ddlBranchTarget.Tag is null)
             {
                 return;
             }

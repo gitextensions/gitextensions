@@ -57,13 +57,13 @@ namespace GitCommands.UserRepositoryHistory
             }
 
             string setting = AppSettings.GetString(key, null);
-            if (setting == null)
+            if (setting is null)
             {
                 return Array.Empty<Repository>();
             }
 
             var history = _repositorySerialiser.Deserialize(setting);
-            if (history == null)
+            if (history is null)
             {
                 return Array.Empty<Repository>();
             }
@@ -86,13 +86,13 @@ namespace GitCommands.UserRepositoryHistory
                 throw new ArgumentException(nameof(key));
             }
 
-            if (repositories == null)
+            if (repositories is null)
             {
                 throw new ArgumentNullException(nameof(repositories));
             }
 
             var xml = _repositorySerialiser.Serialize(repositories);
-            if (xml == null)
+            if (xml is null)
             {
                 return;
             }

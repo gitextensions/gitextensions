@@ -94,7 +94,7 @@ namespace GitUI.CommandsDialogs
             };
             _bw.DoWork += (sender, e) =>
             {
-                foreach (var oldSubmodule in Module.GetSubmodulesInfo().Where(submodule => submodule != null))
+                foreach (var oldSubmodule in Module.GetSubmodulesInfo().Where(submodule => submodule is not null))
                 {
                     if (_bw.CancellationPending)
                     {
@@ -114,13 +114,13 @@ namespace GitUI.CommandsDialogs
                         _modules.Add(e.UserState as GitSubmoduleInfo);
                     }
 
-                    if (_oldSubmoduleInfo != null)
+                    if (_oldSubmoduleInfo is not null)
                     {
                         DataGridViewRow row = Submodules.Rows
                             .Cast<DataGridViewRow>()
                             .FirstOrDefault(r => r.DataBoundItem as GitSubmoduleInfo == _oldSubmoduleInfo);
 
-                        if (row != null)
+                        if (row is not null)
                         {
                             row.Selected = true;
                         }
@@ -196,7 +196,7 @@ namespace GitUI.CommandsDialogs
         private void Pull_Click(object sender, EventArgs e)
         {
             var submodule = Module.GetSubmodule(SubModuleLocalPath.Text);
-            if (submodule == null)
+            if (submodule is null)
             {
                 return;
             }

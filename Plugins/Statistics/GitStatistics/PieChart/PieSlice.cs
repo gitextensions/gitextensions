@@ -358,7 +358,7 @@ namespace GitStatistics.PieChart
         /// </summary>
         public virtual void Dispose()
         {
-            if (Pen != null)
+            if (Pen is not null)
             {
                 Pen.Dispose();
                 Pen = null;
@@ -712,25 +712,25 @@ namespace GitStatistics.PieChart
         /// </summary>
         protected void DisposeBrushes()
         {
-            if (BrushSurface != null)
+            if (BrushSurface is not null)
             {
                 BrushSurface.Dispose();
                 BrushSurface = null;
             }
 
-            if (BrushStartSide != null)
+            if (BrushStartSide is not null)
             {
                 BrushStartSide.Dispose();
                 BrushStartSide = null;
             }
 
-            if (BrushEndSide != null)
+            if (BrushEndSide is not null)
             {
                 BrushEndSide.Dispose();
                 BrushEndSide = null;
             }
 
-            if (BrushPeripherySurface != null)
+            if (BrushPeripherySurface is not null)
             {
                 BrushPeripherySurface.Dispose();
                 BrushPeripherySurface = null;

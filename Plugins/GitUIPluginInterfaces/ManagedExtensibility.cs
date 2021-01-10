@@ -24,7 +24,7 @@ namespace GitUIPluginInterfaces
         /// <param name="userPluginsPath">A root path to a folder where user plugins are located.</param>
         public static void SetUserPluginsPath(string userPluginsPath)
         {
-            if (UserPluginsPath != null)
+            if (UserPluginsPath is not null)
             {
                 throw new InvalidOperationException("The user plugins path has already been initialized.");
             }
@@ -61,14 +61,14 @@ namespace GitUIPluginInterfaces
 
             var cacheFile = Path.Combine(applicationDataFolder ?? "ignored", "Plugins", "composition.cache");
             IExportProviderFactory exportProviderFactory;
-            if (applicationDataFolder != null && File.Exists(cacheFile))
+            if (applicationDataFolder is not null && File.Exists(cacheFile))
             {
                 using var cacheStream = File.OpenRead(cacheFile);
                 exportProviderFactory = ThreadHelper.JoinableTaskFactory.Run(() => new CachedComposition().LoadExportProviderFactoryAsync(cacheStream, Resolver.DefaultInstance));
             }
             else
             {
-                var assemblies = pluginFiles.Select(assemblyFile => TryLoadAssembly(assemblyFile)).Where(assembly => assembly != null).ToArray();
+                var assemblies = pluginFiles.Select(assemblyFile => TryLoadAssembly(assemblyFile)).Where(assembly => assembly is not null).ToArray();
 
                 var discovery = PartDiscovery.Combine(
                     new AttributedPartDiscoveryV1(Resolver.DefaultInstance),
@@ -78,7 +78,7 @@ namespace GitUIPluginInterfaces
 
                 var configuration = CompositionConfiguration.Create(catalog.WithCompositionService());
                 var runtimeComposition = RuntimeComposition.CreateRuntimeComposition(configuration);
-                if (applicationDataFolder != null)
+                if (applicationDataFolder is not null)
                 {
 #if false // Composition caching currently disabled
                     Directory.CreateDirectory(Path.Combine(applicationDataFolder, "Plugins"));
@@ -98,7 +98,7 @@ namespace GitUIPluginInterfaces
             try
             {
                 var assemblyName = AssemblyName.GetAssemblyName(file.FullName);
-                if (assemblyName == null)
+                if (assemblyName is null)
                 {
                     return null;
                 }

@@ -60,7 +60,7 @@ namespace GitCommands.Git
             {
                 var module = _getModule();
 
-                if (module == null)
+                if (module is null)
                 {
                     throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
                 }

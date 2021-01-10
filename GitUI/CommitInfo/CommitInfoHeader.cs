@@ -62,7 +62,7 @@ namespace GitUI.CommitInfo
             this.InvokeAsync(() =>
             {
                 var data = _commitDataManager.CreateFromRevision(revision, children);
-                var header = _commitDataHeaderRenderer.Render(data, showRevisionsAsLinks: CommandClicked != null);
+                var header = _commitDataHeaderRenderer.Render(data, showRevisionsAsLinks: CommandClicked is not null);
 
                 rtbRevisionHeader.SuspendLayout();
 
@@ -93,7 +93,7 @@ namespace GitUI.CommitInfo
                 return;
             }
 
-            if (revision == null)
+            if (revision is null)
             {
                 avatarControl.LoadImage(null, null);
                 return;
@@ -110,7 +110,7 @@ namespace GitUI.CommitInfo
         private void rtbRevisionHeader_KeyDown(object sender, KeyEventArgs e)
         {
             var rtb = sender as RichTextBox;
-            if (rtb == null || !e.Control || e.KeyCode != Keys.C)
+            if (rtb is null || !e.Control || e.KeyCode != Keys.C)
             {
                 return;
             }

@@ -17,10 +17,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         protected virtual ISettingsLayout GetSettingsLayout()
         {
-            if (_settingsLayout == null)
+            if (_settingsLayout is null)
             {
                 _settingsLayout = CreateSettingsLayout();
-                if (_settingsLayout.GetControl().Parent == null)
+                if (_settingsLayout.GetControl().Parent is null)
                 {
                     Controls.Add(_settingsLayout.GetControl());
                 }
@@ -121,7 +121,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             var caption = controlBinding.Caption();
 
-            if (caption != null)
+            if (caption is not null)
             {
                 var label = new Label
                 {

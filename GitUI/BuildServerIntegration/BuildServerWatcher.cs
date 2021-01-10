@@ -68,7 +68,7 @@ namespace GitUI.BuildServerIntegration
 
             await TaskScheduler.Default;
 
-            if (buildServerAdapter == null || launchToken.IsCancellationRequested)
+            if (buildServerAdapter is null || launchToken.IsCancellationRequested)
             {
                 return;
             }
@@ -165,7 +165,7 @@ namespace GitUI.BuildServerIntegration
 
                                 var section = credentialsConfig.FindConfigSection(CredentialsConfigName);
 
-                                if (section != null)
+                                if (section is not null)
                                 {
                                     buildServerCredentials.UseGuestAccess = section.GetValueAsBool(UseGuestAccessKey,
                                         true);
@@ -196,7 +196,7 @@ namespace GitUI.BuildServerIntegration
                 {
                     buildServerCredentials = ThreadHelper.JoinableTaskFactory.Run(() => ShowBuildServerCredentialsFormAsync(buildServerAdapter.UniqueKey, buildServerCredentials));
 
-                    if (buildServerCredentials != null)
+                    if (buildServerCredentials is not null)
                     {
                         var credentialsConfig = new ConfigFile("", true);
 
@@ -264,7 +264,7 @@ namespace GitUI.BuildServerIntegration
 
         private void OnBuildInfoUpdate(BuildInfo buildInfo)
         {
-            if (_buildStatusCancellationToken == null)
+            if (_buildStatusCancellationToken is null)
             {
                 return;
             }
@@ -280,12 +280,12 @@ namespace GitUI.BuildServerIntegration
 
                 var revision = _revisionGridView.GetRevision(index.Value);
 
-                if (revision == null)
+                if (revision is null)
                 {
                     continue;
                 }
 
-                if (revision.BuildStatus == null || buildInfo.StartDate >= revision.BuildStatus.StartDate)
+                if (revision.BuildStatus is null || buildInfo.StartDate >= revision.BuildStatus.StartDate)
                 {
                     revision.BuildStatus = buildInfo;
 
@@ -321,7 +321,7 @@ namespace GitUI.BuildServerIntegration
             var exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
             var export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerType);
 
-            if (export != null)
+            if (export is not null)
             {
                 try
                 {
@@ -342,7 +342,7 @@ namespace GitUI.BuildServerIntegration
                             {
                                 _revisionGrid.UICommands.StartSettingsDialog(typeof(BuildServerIntegrationSettingsPage));
                             }));
-                        }, objectId => _revisionGrid.GetRevision(objectId) != null);
+                        }, objectId => _revisionGrid.GetRevision(objectId) is not null);
                     return buildServerAdapter;
                 }
                 catch (InvalidOperationException ex)

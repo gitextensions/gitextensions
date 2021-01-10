@@ -78,7 +78,7 @@ namespace GitUI.SpellChecker
         {
             get
             {
-                if (TextBox == null)
+                if (TextBox is null)
                 {
                     return string.Empty;
                 }
@@ -348,14 +348,14 @@ namespace GitUI.SpellChecker
         private void LoadDictionary()
         {
             // Don`t load a dictionary in Design-time
-            if (Site != null && Site.DesignMode)
+            if (Site is not null && Site.DesignMode)
             {
                 return;
             }
 
             string dictionaryFile = string.Concat(Path.Combine(AppSettings.GetDictionaryDir(), Settings.Dictionary), ".dic");
 
-            if (_wordDictionary == null || _wordDictionary.DictionaryFile != dictionaryFile)
+            if (_wordDictionary is null || _wordDictionary.DictionaryFile != dictionaryFile)
             {
                 _wordDictionary =
                     new WordDictionary(components)
@@ -369,7 +369,7 @@ namespace GitUI.SpellChecker
 
         private void ToggleAutoCompletion()
         {
-            if (!AppSettings.ProvideAutocompletion || (Site != null && Site.DesignMode))
+            if (!AppSettings.ProvideAutocompletion || (Site is not null && Site.DesignMode))
             {
                 CloseAutoComplete();
                 CancelAutoComplete();
@@ -403,7 +403,7 @@ namespace GitUI.SpellChecker
             {
                 try
                 {
-                    if (_spelling != null && TextBox.Text.Length < 5000)
+                    if (_spelling is not null && TextBox.Text.Length < 5000)
                     {
                         _spelling.Text = TextBox.Text;
                         _spelling.ShowDialog = false;
@@ -741,7 +741,7 @@ namespace GitUI.SpellChecker
 
         private void ShowWatermark()
         {
-            if (!ContainsFocus && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont != null)
+            if (!ContainsFocus && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont is not null)
             {
                 _isWatermarkShowing = true;
                 TextBox.Font = new Font(TextBox.Font, FontStyle.Italic);
@@ -752,7 +752,7 @@ namespace GitUI.SpellChecker
 
         private void HideWatermark()
         {
-            if (_isWatermarkShowing && TextBoxFont != null)
+            if (_isWatermarkShowing && TextBoxFont is not null)
             {
                 TextBox.Font = TextBoxFont;
                 _isWatermarkShowing = false;
@@ -927,7 +927,7 @@ namespace GitUI.SpellChecker
 
         private void AcceptAutoComplete(AutoCompleteWord completionWord = null)
         {
-            completionWord = completionWord ?? (AutoCompleteWord)AutoComplete.SelectedItem;
+            completionWord ??= (AutoCompleteWord)AutoComplete.SelectedItem;
             var word = GetWordAtCursor();
             TextBox.Select(TextBox.SelectionStart - word.Length, word.Length);
             TextBox.SelectedText = completionWord.Word;
@@ -946,7 +946,7 @@ namespace GitUI.SpellChecker
                 return;
             }
 
-            if (_autoCompleteListTask == null || !AppSettings.ProvideAutocompletion)
+            if (_autoCompleteListTask is null || !AppSettings.ProvideAutocompletion)
             {
                 return;
             }
@@ -972,7 +972,7 @@ namespace GitUI.SpellChecker
 
             var word = GetWordAtCursor();
 
-            if (word == null || (word.Length <= 1 && !calledByUser && !_autoCompleteWasUserActivated))
+            if (word is null || (word.Length <= 1 && !calledByUser && !_autoCompleteWasUserActivated))
             {
                 if (AutoComplete.Visible)
                 {

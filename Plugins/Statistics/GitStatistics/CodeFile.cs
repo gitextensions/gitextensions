@@ -41,7 +41,7 @@ namespace GitStatistics
                 {
                     var line = reader.ReadLine();
 
-                    if (line == null)
+                    if (line is null)
                     {
                         yield break;
                     }

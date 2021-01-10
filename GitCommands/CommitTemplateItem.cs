@@ -84,7 +84,7 @@ namespace GitCommands
                 // do nothing
             }
 
-            if (commitTemplateItem == null)
+            if (commitTemplateItem is null)
             {
                 try
                 {

@@ -142,7 +142,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 }
 
                 var dir = new DirectoryInfo(x.Path);
-                if (dir.Parent == null)
+                if (dir.Parent is null)
                 {
                     return x.Path;
                 }
@@ -155,7 +155,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             var userSelectedPath = OsShellUtil.PickFolder(this, cbDefaultCloneDestination.Text);
 
-            if (userSelectedPath != null)
+            if (userSelectedPath is not null)
             {
                 cbDefaultCloneDestination.Text = userSelectedPath;
             }

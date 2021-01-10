@@ -36,7 +36,7 @@ namespace GitUI.UserControls
             }
 
             // if we do not use the DirectoryInfo then a path with slashes instead of backslashes won't work
-            if (directoryInfoPath == null)
+            if (directoryInfoPath is null)
             {
                 directoryInfoPath = getter();
             }
@@ -44,7 +44,7 @@ namespace GitUI.UserControls
             // TODO: do we need ParentForm or is "this" ok?
             var userSelectedPath = OsShellUtil.PickFolder(ParentForm, directoryInfoPath);
 
-            if (userSelectedPath != null)
+            if (userSelectedPath is not null)
             {
                 setter(userSelectedPath);
             }

@@ -32,19 +32,19 @@ namespace GitCommands
         /// <exception cref="ArgumentException"><see cref="IGitItem.Guid"/> is not supplied.</exception>
         public IEnumerable<IGitItem> LoadChildren(IGitItem item)
         {
-            if (item == null)
+            if (item is null)
             {
                 throw new ArgumentNullException(nameof(item));
             }
 
-            if (item.ObjectId == null)
+            if (item.ObjectId is null)
             {
                 throw new ArgumentException("Item must have a valid identifier", nameof(item.Guid));
             }
 
             var module = _getModule();
 
-            if (module == null)
+            if (module is null)
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }

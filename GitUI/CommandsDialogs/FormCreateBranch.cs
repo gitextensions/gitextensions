@@ -42,7 +42,7 @@ namespace GitUI.CommandsDialogs
 
             groupBox1.AutoSize = true;
 
-            if (objectId != null && objectId.IsArtificial)
+            if (objectId is not null && objectId.IsArtificial)
             {
                 objectId = null;
             }
@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs
             commitSummaryUserControl1.Revision = null;
 
             objectId ??= Module.GetCurrentCheckout();
-            if (objectId != null)
+            if (objectId is not null)
             {
                 commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
 
@@ -108,7 +108,7 @@ namespace GitUI.CommandsDialogs
             Ok.Focus();
 
             var objectId = commitPickerSmallControl1.SelectedObjectId;
-            if (objectId == null)
+            if (objectId is null)
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.None;

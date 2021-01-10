@@ -62,14 +62,14 @@ namespace GitUI.CommandsDialogs
             {
                 var focusedControl = this.FindFocusedControl();
                 var comboBox = focusedControl as ComboBox;
-                if (comboBox != null && comboBox.DroppedDown)
+                if (comboBox is not null && comboBox.DroppedDown)
                 {
                     comboBox.DroppedDown = false;
                 }
                 else
                 {
                     var textBox = focusedControl as TextBoxBase;
-                    if (textBox != null && textBox.SelectionLength > 0)
+                    if (textBox is not null && textBox.SelectionLength > 0)
                     {
                         textBox.SelectionLength = 0;
                     }
@@ -162,7 +162,7 @@ namespace GitUI.CommandsDialogs
                 Clear.Enabled = false; // disallow Drop  (of current working directory)
                 Apply.Enabled = false; // disallow Apply (of current working directory)
             }
-            else if (gitStash != null)
+            else if (gitStash is not null)
             {
                 _asyncLoader.LoadAsync(() => Module.GetStashDiffFiles(gitStash.Name), LoadGitItemStatuses);
                 Clear.Enabled = true; // allow Drop
@@ -207,8 +207,8 @@ namespace GitUI.CommandsDialogs
             {
                 var firstId = Module.RevParse(gitStash.Name + "^");
                 var selectedId = Module.RevParse(gitStash.Name);
-                var firstRev = firstId == null ? null : new GitRevision(firstId);
-                var secondRev = selectedId == null ? null : new GitRevision(selectedId)
+                var firstRev = firstId is null ? null : new GitRevision(firstId);
+                var secondRev = selectedId is null ? null : new GitRevision(selectedId)
                 {
                     ParentIds = new[] { firstId }
                 };
@@ -324,7 +324,7 @@ namespace GitUI.CommandsDialogs
             {
                 InitializeSoft();
 
-                if (Stashes.SelectedItem != null)
+                if (Stashes.SelectedItem is not null)
                 {
                     StashMessage.Text = ((GitStash)Stashes.SelectedItem).Message;
                 }

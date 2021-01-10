@@ -45,11 +45,11 @@ namespace ResourceManager
         /// <summary>Overridden: Checks if a hotkey wants to handle the key before letting the message propagate</summary>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (HotkeysEnabled && Hotkeys != null)
+            if (HotkeysEnabled && Hotkeys is not null)
             {
                 foreach (var hotkey in Hotkeys)
                 {
-                    if (hotkey != null && hotkey.KeyData == keyData)
+                    if (hotkey is not null && hotkey.KeyData == keyData)
                     {
                         return ExecuteCommand(hotkey.CommandCode).Executed;
                     }

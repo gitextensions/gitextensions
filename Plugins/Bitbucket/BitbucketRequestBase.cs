@@ -40,7 +40,7 @@ namespace Bitbucket
             };
 
             var request = new RestRequest(ApiUrl, RequestMethod);
-            if (RequestBody != null)
+            if (RequestBody is not null)
             {
                 request.AddJsonBody(RequestBody);
             }
@@ -91,7 +91,7 @@ namespace Bitbucket
                 return errorResponse;
             }
 
-            if (json["errors"] != null)
+            if (json["errors"] is not null)
             {
                 var messages = new List<string>();
                 var errorResponse = new BitbucketResponse<T> { Success = false };
@@ -99,7 +99,7 @@ namespace Bitbucket
                 {
                     var sb = new StringBuilder();
                     sb.AppendLine(error["message"].ToString());
-                    if (error["reviewerErrors"] != null)
+                    if (error["reviewerErrors"] is not null)
                     {
                         sb.AppendLine();
                         foreach (var reviewerError in error["reviewerErrors"])
@@ -115,7 +115,7 @@ namespace Bitbucket
                 return errorResponse;
             }
 
-            if (json["message"] != null)
+            if (json["message"] is not null)
             {
                 return new BitbucketResponse<T> { Success = false, Messages = new[] { json["message"].ToString() } };
             }

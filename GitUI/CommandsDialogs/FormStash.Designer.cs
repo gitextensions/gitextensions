@@ -18,7 +18,7 @@ namespace GitUI.CommandsDialogs
         protected override void Dispose(bool disposing)
         {
             _asyncLoader.Dispose();
-            if (disposing && (components != null))
+            if (disposing && (components is not null))
             {
                 components.Dispose();
             }

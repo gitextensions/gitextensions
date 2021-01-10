@@ -51,7 +51,7 @@ namespace GitUITests.UserControls.CommitInfo
                 "remotes/z_other/b2",
             };
 
-            if (currentBranch == null)
+            if (currentBranch is null)
             {
                 expectedBranches.RemoveAt(0);
             }

@@ -14,24 +14,24 @@ namespace GitCommands
         [Pure]
         public static string GetString([CanBeNull] byte[] output, [CanBeNull] byte[] error, [NotNull] Encoding encoding)
         {
-            if (encoding == null)
+            if (encoding is null)
             {
                 throw new ArgumentNullException(nameof(encoding));
             }
 
             var sb = new StringBuilder();
 
-            if (output != null && output.Length > 0)
+            if (output is not null && output.Length > 0)
             {
                 sb.Append(encoding.GetString(output));
             }
 
-            if (error != null && error.Length > 0 && output != null && output.Length > 0)
+            if (error is not null && error.Length > 0 && output is not null && output.Length > 0)
             {
                 sb.AppendLine();
             }
 
-            if (error != null && error.Length > 0)
+            if (error is not null && error.Length > 0)
             {
                 sb.Append(encoding.GetString(error));
             }
@@ -52,13 +52,13 @@ namespace GitCommands
         [Pure]
         public static string DecodeString([CanBeNull] byte[] output, [CanBeNull] byte[] error, [NotNull] ref Encoding encoding)
         {
-            if (encoding == null)
+            if (encoding is null)
             {
                 throw new ArgumentNullException(nameof(encoding));
             }
 
             string outputString = "";
-            if (output != null && output.Length > 0)
+            if (output is not null && output.Length > 0)
             {
                 Stream ms = null;
                 try
@@ -69,7 +69,7 @@ namespace GitCommands
                     reader.Peek();
                     encoding = reader.CurrentEncoding;
                     outputString = reader.ReadToEnd();
-                    if (error == null || error.Length == 0)
+                    if (error is null || error.Length == 0)
                     {
                         return outputString;
                     }
@@ -83,7 +83,7 @@ namespace GitCommands
             }
 
             string errorString = null;
-            if (error != null && error.Length > 0)
+            if (error is not null && error.Length > 0)
             {
                 Stream ms = null;
                 try
@@ -96,7 +96,7 @@ namespace GitCommands
                     // .Net automatically detect Unicode encoding in StreamReader
                     encoding = reader.CurrentEncoding;
                     errorString = reader.ReadToEnd();
-                    if (output == null || output.Length == 0)
+                    if (output is null || output.Length == 0)
                     {
                         return errorString;
                     }

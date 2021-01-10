@@ -81,7 +81,7 @@ namespace GitCommands.Git
                 return string.Empty;
             }
 
-            if (options == null)
+            if (options is null)
             {
                 throw new ArgumentNullException(nameof(options));
             }

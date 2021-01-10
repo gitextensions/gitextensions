@@ -103,7 +103,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             var hostedRemote = _selectHostedRepoCB.SelectedItem as IHostedRemote;
 
             var hostedRepo = hostedRemote?.GetHostedRepository();
-            if (hostedRepo == null)
+            if (hostedRepo is null)
             {
                 return;
             }
@@ -150,7 +150,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             if (_isFirstLoad)
             {
                 _isFirstLoad = false;
-                if (infos != null && infos.Count == 0 && _hostedRemotes.Count > 0)
+                if (infos is not null && infos.Count == 0 && _hostedRemotes.Count > 0)
                 {
                     SelectNextHostedRepository();
                     return;
@@ -160,7 +160,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _pullRequestsInfo = infos;
             _pullRequestsList.Items.Clear();
 
-            if (_pullRequestsInfo == null)
+            if (_pullRequestsInfo is null)
             {
                 return;
             }
@@ -182,7 +182,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 Cast<IHostedRemote>().
                 FirstOrDefault(remote => remote.Name.Equals(currentRemote, StringComparison.OrdinalIgnoreCase));
 
-            if (hostedRemote == null)
+            if (hostedRemote is null)
             {
                 if (_selectHostedRepoCB.Items.Count > 0)
                 {
@@ -271,12 +271,12 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
 
             _currentPullRequestInfo = _pullRequestsList.SelectedItems[0].Tag as IPullRequestInformation;
-            if (prevPri != null && prevPri.Equals(_currentPullRequestInfo))
+            if (prevPri is not null && prevPri.Equals(_currentPullRequestInfo))
             {
                 return;
             }
 
-            if (_currentPullRequestInfo == null)
+            if (_currentPullRequestInfo is null)
             {
                 return;
             }
@@ -324,9 +324,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _discussionWB_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            if (_discussionWB.Document != null)
+            if (_discussionWB.Document is not null)
             {
-                if (_discussionWB.Document.Window != null && _discussionWB.Document.Body != null)
+                if (_discussionWB.Document.Window is not null && _discussionWB.Document.Body is not null)
                 {
                     _discussionWB.Document.Window.ScrollTo(0, _discussionWB.Document.Body.ScrollRectangle.Height);
                 }
@@ -358,13 +358,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             _diffCache = new Dictionary<string, string>();
 
-            var fileParts = Regex.Split(diffData, @"(?:\n|^)diff --git ").Where(el => el != null && el.Trim().Length > 10).ToList();
+            var fileParts = Regex.Split(diffData, @"(?:\n|^)diff --git ").Where(el => el is not null && el.Trim().Length > 10).ToList();
             var giss = new List<GitItemStatus>();
 
             // baseSha is the sha of the merge to ("master") sha, the commit to be firstId
             GitRevision firstRev = ObjectId.TryParse(baseSha, out ObjectId firstId) ? new GitRevision(firstId) : null;
             GitRevision secondRev = ObjectId.TryParse(secondSha, out ObjectId secondId) ? new GitRevision(secondId) : null;
-            if (secondRev == null)
+            if (secondRev is null)
             {
                 MessageBox.Show(this, _strUnableUnderstandPatch.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -399,7 +399,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _fetchBtn_Click(object sender, EventArgs e)
         {
-            if (_currentPullRequestInfo == null)
+            if (_currentPullRequestInfo is null)
             {
                 return;
             }
@@ -419,7 +419,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _addAsRemoteAndFetch_Click(object sender, EventArgs e)
         {
-            if (_currentPullRequestInfo == null)
+            if (_currentPullRequestInfo is null)
             {
                 return;
             }
@@ -432,7 +432,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 var remoteRef = _currentPullRequestInfo.HeadRef;
 
                 var existingRepo = _hostedRemotes.FirstOrDefault(el => el.Name == remoteName);
-                if (existingRepo != null)
+                if (existingRepo is not null)
                 {
                     var hostedRepository = existingRepo.GetHostedRepository();
                     hostedRepository.CloneProtocol = _cloneGitProtocol;
@@ -482,7 +482,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void _fileStatusList_SelectedIndexChanged(object sender, EventArgs e)
         {
             var gis = _fileStatusList.SelectedItem?.Item;
-            if (gis == null)
+            if (gis is null)
             {
                 return;
             }
@@ -501,7 +501,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _closePullRequestBtn_Click(object sender, EventArgs e)
         {
-            if (_currentPullRequestInfo == null)
+            if (_currentPullRequestInfo is null)
             {
                 return;
             }

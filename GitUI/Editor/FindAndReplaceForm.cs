@@ -73,7 +73,7 @@ namespace GitUI
         {
             string text = ReplaceMode ? _findAndReplaceString.Text : _findString.Text;
 
-            if (_editor?.FileName != null)
+            if (_editor?.FileName is not null)
             {
                 text += " - " + Path.GetFileName(_editor.FileName);
             }
@@ -173,10 +173,10 @@ namespace GitUI
                     startFrom = _search.EndOffset;
                 }
 
-                var isMultiFileSearch = _fileLoader != null && !_search.HasScanRegion;
+                var isMultiFileSearch = _fileLoader is not null && !_search.HasScanRegion;
 
                 range = _search.FindNext(startFrom, searchBackward, out _lastSearchLoopedAround);
-                if (range != null && (!_lastSearchLoopedAround || !isMultiFileSearch))
+                if (range is not null && (!_lastSearchLoopedAround || !isMultiFileSearch))
                 {
                     SelectResult(range);
                 }
@@ -206,8 +206,8 @@ namespace GitUI
                     }
                 }
             }
-            while (range == null && startIdx != currentIdx && currentIdx != -1);
-            if (range == null && messageIfNotFound != null)
+            while (range is null && startIdx != currentIdx && currentIdx != -1);
+            if (range is null && messageIfNotFound is not null)
             {
                 MessageBox.Show(this, messageIfNotFound, " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -257,7 +257,7 @@ namespace GitUI
                 for (; ;)
                 {
                     TextRange range = _search.FindNext(offset, false, out var looped);
-                    if (range == null || looped)
+                    if (range is null || looped)
                     {
                         break;
                     }
@@ -331,7 +331,7 @@ namespace GitUI
             _editor.Document.UndoStack.StartUndoGroup();
             try
             {
-                while (FindNextAsync(false, false, null) != null)
+                while (FindNextAsync(false, false, null) is not null)
                 {
                     if (_lastSearchLoopedAround)
                     {
@@ -472,14 +472,14 @@ namespace GitUI
             }
         }
 
-        public bool HasScanRegion => _region != null;
+        public bool HasScanRegion => _region is not null;
 
         /// <summary>Begins the start offset for searching</summary>
         public int BeginOffset
         {
             get
             {
-                if (_region != null)
+                if (_region is not null)
                 {
                     return _region.Offset;
                 }
@@ -493,7 +493,7 @@ namespace GitUI
         {
             get
             {
-                if (_region != null)
+                if (_region is not null)
                 {
                     return _region.EndOffset;
                 }
@@ -535,7 +535,7 @@ namespace GitUI
 
         public void ClearScanRegion()
         {
-            if (_region != null)
+            if (_region is not null)
             {
                 _document.MarkerStrategy.RemoveMarker(_region);
                 _document.TextContentChanged -= DocumentOnTextContentChanged;
@@ -568,7 +568,7 @@ namespace GitUI
             if (searchBackward)
             {
                 result = FindNextIn(startAt, curOffs, true);
-                if (result == null)
+                if (result is null)
                 {
                     loopedAround = true;
                     result = FindNextIn(curOffs, endAt, true);
@@ -577,7 +577,7 @@ namespace GitUI
             else
             {
                 result = FindNextIn(curOffs, endAt, false);
-                if (result == null)
+                if (result is null)
                 {
                     loopedAround = true;
                     result = FindNextIn(startAt, curOffs, false);

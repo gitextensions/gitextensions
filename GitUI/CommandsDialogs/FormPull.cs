@@ -218,7 +218,7 @@ namespace GitUI.CommandsDialogs
             }
 
             var currentBranchRemote = remotes.FirstOrDefault(x => x.Name.Equals(selectedRemoteName, StringComparison.OrdinalIgnoreCase));
-            if (currentBranchRemote != null)
+            if (currentBranchRemote is not null)
             {
                 _NO_TRANSLATE_Remotes.SelectedItem = currentBranchRemote;
             }
@@ -303,7 +303,7 @@ namespace GitUI.CommandsDialogs
             {
                 LoadPuttyKey();
 
-                if (_heads == null)
+                if (_heads is null)
                 {
                     if (PullFromUrl.Checked)
                     {
@@ -569,7 +569,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 bool? messageBoxResult = AppSettings.AutoPopStashAfterPull;
-                if (messageBoxResult == null)
+                if (messageBoxResult is null)
                 {
                     using var dialog = new TaskDialog
                     {

@@ -68,7 +68,7 @@ Detail of the error:");
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
-            if (_buildServerWatcher != null)
+            if (_buildServerWatcher is not null)
             {
                 throw new InvalidOperationException("Already initialized");
             }
@@ -90,7 +90,7 @@ Detail of the error:");
             }
 
             _apiClient = new ApiClient(_projectUrl, _settings.ApiToken);
-            if (CacheAzureDevOps == null || CacheAzureDevOps.Id != CacheKey)
+            if (CacheAzureDevOps is null || CacheAzureDevOps.Id != CacheKey)
             {
                 CacheAzureDevOps = null;
                 _buildDefinitionsTask = ThreadHelper.JoinableTaskFactory.RunAsync(() => _apiClient.GetBuildDefinitionsAsync(_settings.BuildDefinitionFilter));
@@ -129,7 +129,7 @@ Detail of the error:");
 
         private async Task ObserveBuildsAsync(DateTime? sinceDate, bool running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
         {
-            if (_apiClient == null)
+            if (_apiClient is null)
             {
                 observer.OnCompleted();
                 return;
@@ -137,13 +137,13 @@ Detail of the error:");
 
             try
             {
-                if (_buildDefinitions == null)
+                if (_buildDefinitions is null)
                 {
                     try
                     {
                         _buildDefinitions = await _buildDefinitionsTask.JoinAsync();
 
-                        if (_buildDefinitions == null)
+                        if (_buildDefinitions is null)
                         {
                             observer.OnCompleted();
                             return;
@@ -156,7 +156,7 @@ Detail of the error:");
                         string errorMessage = _badTokenErrorMessage.Text;
                         ManageError(errorMessage);
 
-                        if (ProjectOnErrorKey == null || ProjectOnErrorKey != CacheKey)
+                        if (ProjectOnErrorKey is null || ProjectOnErrorKey != CacheKey)
                         {
                             ProjectOnErrorKey = CacheKey;
 
@@ -189,7 +189,7 @@ Detail of the error:");
                         string errorMessage = _genericErrorMessage.Text + ex.Message;
                         ManageError(errorMessage);
 
-                        if (ProjectOnErrorKey == null || ProjectOnErrorKey != CacheKey)
+                        if (ProjectOnErrorKey is null || ProjectOnErrorKey != CacheKey)
                         {
                             ProjectOnErrorKey = CacheKey;
                             MessageBox.Show(errorMessage, _buildIntegrationErrorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -206,7 +206,7 @@ Detail of the error:");
                     observer.OnCompleted();
                 }
 
-                if (_buildDefinitions == null)
+                if (_buildDefinitions is null)
                 {
                     observer.OnCompleted();
                     return;
@@ -257,7 +257,7 @@ Detail of the error:");
         {
             string duration = string.Empty;
 
-            if (buildDetail.Status != null
+            if (buildDetail.Status is not null
                 && buildDetail.Status != "none"
                 && buildDetail.Status != "notStarted"
                 && buildDetail.Status != "postponed"

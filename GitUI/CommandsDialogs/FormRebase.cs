@@ -86,7 +86,7 @@ namespace GitUI.CommandsDialogs
             Branches.DataSource = refs;
             Branches.DisplayMember = nameof(GitRef.Name);
 
-            if (_defaultBranch != null)
+            if (_defaultBranch is not null)
             {
                 Branches.Text = _defaultBranch;
             }
@@ -233,7 +233,7 @@ namespace GitUI.CommandsDialogs
             using (WaitCursorScope.Enter())
             {
                 var applyingPatch = patchGrid1.PatchFiles.FirstOrDefault(p => p.IsNext);
-                if (applyingPatch != null)
+                if (applyingPatch is not null)
                 {
                     applyingPatch.IsSkipped = true;
                     Skipped.Add(applyingPatch);
@@ -336,7 +336,7 @@ namespace GitUI.CommandsDialogs
         {
             using (var chooseForm = new FormChooseCommit(UICommands, txtFrom.Text))
             {
-                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
+                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
                 {
                     txtFrom.Text = chooseForm.SelectedRevision.ObjectId.ToShortString();
                 }

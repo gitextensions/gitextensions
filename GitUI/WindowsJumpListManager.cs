@@ -24,7 +24,7 @@ namespace GitUI
         private ThumbnailToolBarButton _pushButton;
         private ThumbnailToolBarButton _pullButton;
         private string _deferredAddToRecent;
-        private bool ToolbarButtonsCreated => _commitButton != null;
+        private bool ToolbarButtonsCreated => _commitButton is not null;
         private readonly IRepositoryDescriptionProvider _repositoryDescriptionProvider;
 
         public WindowsJumpListManager(IRepositoryDescriptionProvider repositoryDescriptionProvider)
@@ -158,7 +158,7 @@ namespace GitUI
                 CreateTaskbarButtons(windowHandle, buttons);
             }, nameof(CreateJumpList));
 
-            if (ToolbarButtonsCreated && _deferredAddToRecent != null)
+            if (ToolbarButtonsCreated && _deferredAddToRecent is not null)
             {
                 var recentRepoAddToRecent = _deferredAddToRecent;
                 _deferredAddToRecent = null;

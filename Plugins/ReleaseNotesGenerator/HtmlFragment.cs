@@ -119,7 +119,7 @@ namespace ReleaseNotesGenerator
                 }
             }
 
-            if (Context == null && Fragment == null)
+            if (Context is null && Fragment is null)
             {
                 throw new FormatException("No data specified");
             }
@@ -192,7 +192,7 @@ namespace ReleaseNotesGenerator
 
             sb.Append(header);
 
-            if (sourceUri != null)
+            if (sourceUri is not null)
             {
                 sb.AppendFormat("SourceURL:{0}", sourceUri);
             }

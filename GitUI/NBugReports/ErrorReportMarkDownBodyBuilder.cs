@@ -12,7 +12,7 @@ namespace GitUI.NBugReports
     {
         public string Build(Exception exception, string environmentInfo, string additionalInfo)
         {
-            if (exception == null)
+            if (exception is null)
             {
                 throw new ArgumentNullException(nameof(exception));
             }

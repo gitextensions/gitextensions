@@ -28,7 +28,7 @@ namespace GitHub3
                     return null;
                 }
 
-                if (_username != null)
+                if (_username is not null)
                 {
                     return _username;
                 }
@@ -36,7 +36,7 @@ namespace GitHub3
                 try
                 {
                     var user = GitHub3Plugin.GitHub.getCurrentUser();
-                    if (user != null)
+                    if (user is not null)
                     {
                         _username = user.Login;
                         return _username;
@@ -92,7 +92,7 @@ namespace GitHub3
             SetNameAndDescription("GitHub");
             Translate();
 
-            if (Instance == null)
+            if (Instance is null)
             {
                 Instance = this;
             }
@@ -161,7 +161,7 @@ namespace GitHub3
         {
             var gitModule = _currentGitUiCommands.GitModule;
             var hostedRemote = GetHostedRemotesForModule().FirstOrDefault(r => r.IsOwnedByMe);
-            if (hostedRemote == null)
+            if (hostedRemote is null)
             {
                 return null;
             }
@@ -191,7 +191,7 @@ namespace GitHub3
         /// </summary>
         public IReadOnlyList<IHostedRemote> GetHostedRemotesForModule()
         {
-            if (_currentGitUiCommands?.GitModule == null)
+            if (_currentGitUiCommands?.GitModule is null)
             {
                 return Array.Empty<IHostedRemote>();
             }
@@ -243,7 +243,7 @@ namespace GitHub3
                 toolStripItem.Click += (s, e) =>
                 {
                     var blameContext = contextMenu?.Tag as GitBlameContext;
-                    if (blameContext == null)
+                    if (blameContext is null)
                     {
                         return;
                     }

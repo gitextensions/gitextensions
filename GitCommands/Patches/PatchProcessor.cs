@@ -51,7 +51,7 @@ namespace GitCommands.Patches
             for (; i < lines.Length; i++)
             {
                 Patch patch = CreatePatchFromString(lines, filesContentEncoding, ref i);
-                if (patch != null)
+                if (patch is not null)
                 {
                     yield return patch;
                 }

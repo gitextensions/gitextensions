@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs
                 Text = _addToLocalExcludeTitle.Text;
             }
 
-            if (filePatterns != null)
+            if (filePatterns is not null)
             {
                 FilePattern.Text = string.Join(Environment.NewLine, filePatterns);
             }

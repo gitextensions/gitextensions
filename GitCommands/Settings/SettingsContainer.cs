@@ -23,7 +23,7 @@ namespace GitCommands.Settings
         {
             SettingsCache.LockedAction(() =>
                 {
-                    if (LowerPriority != null)
+                    if (LowerPriority is not null)
                     {
                         LowerPriority.LockedAction(action);
                     }
@@ -52,7 +52,7 @@ namespace GitCommands.Settings
         /// </summary>
         public override void SetValue<T>(string name, T value, Func<T, string> encode)
         {
-            if (LowerPriority == null || SettingsCache.HasValue(name))
+            if (LowerPriority is null || SettingsCache.HasValue(name))
             {
                 SettingsCache.SetValue(name, value, encode);
             }
@@ -69,7 +69,7 @@ namespace GitCommands.Settings
                 return true;
             }
 
-            if (LowerPriority != null && LowerPriority.TryGetValue(name, defaultValue, decode, out value))
+            if (LowerPriority is not null && LowerPriority.TryGetValue(name, defaultValue, decode, out value))
             {
                 return true;
             }

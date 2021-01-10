@@ -185,7 +185,7 @@ namespace GitUI
         public bool StartResetCurrentBranchDialog(IWin32Window owner, string branch)
         {
             var objectId = Module.RevParse(branch);
-            if (objectId == null)
+            if (objectId is null)
             {
                 MessageBox.Show($"Branch \"{branch}\" could not be resolved.", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
@@ -385,7 +385,7 @@ namespace GitUI
         public bool StartCreateBranchDialog(IWin32Window owner, string branch)
         {
             var objectId = Module.RevParse(branch);
-            if (objectId == null)
+            if (objectId is null)
             {
                 MessageBox.Show($"Branch \"{branch}\" could not be resolved.", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
@@ -525,7 +525,7 @@ namespace GitUI
         {
             bool Action()
             {
-                if (dir == null)
+                if (dir is null)
                 {
                     dir = Module.IsValidGitWorkingDir() ? Module.WorkingDir : string.Empty;
                 }
@@ -761,7 +761,7 @@ namespace GitUI
                         path.TryDeleteDirectory(out errorMessage);
                     }
 
-                    if (errorMessage != null)
+                    if (errorMessage is not null)
                     {
                         MessageBox.Show(null, errorMessage, errorCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
@@ -815,7 +815,7 @@ namespace GitUI
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "It seems that all prevForm variable values are different so there is not a double dispose here. However the logic is better to be rewritten")]
         public bool StartCherryPickDialog(IWin32Window owner, IEnumerable<GitRevision> revisions)
         {
-            if (revisions == null)
+            if (revisions is null)
             {
                 throw new ArgumentNullException(nameof(revisions));
             }
@@ -832,7 +832,7 @@ namespace GitUI
                     foreach (var r in revisions)
                     {
                         var frm = new FormCherryPick(this, r);
-                        if (prevForm != null)
+                        if (prevForm is not null)
                         {
                             frm.CopyOptions(prevForm);
                             prevForm.Dispose();
@@ -1322,7 +1322,7 @@ namespace GitUI
 
         private void InvokePostEvent([CanBeNull] IWin32Window ownerForm, bool actionDone, EventHandler<GitUIPostActionEventArgs> gitUIEventHandler)
         {
-            if (gitUIEventHandler != null)
+            if (gitUIEventHandler is not null)
             {
                 var e = new GitUIPostActionEventArgs(ownerForm, this, actionDone);
                 gitUIEventHandler(this, e);
@@ -1495,7 +1495,7 @@ namespace GitUI
                 case BlameHistoryCommand:
                 case FileHistoryCommand:
                     // filename [revision [--filter-by-revision]]
-                    if (Module.WorkingDir.TrimEnd('\\') == Path.GetFullPath(args[2]) && Module.SuperprojectModule != null)
+                    if (Module.WorkingDir.TrimEnd('\\') == Path.GetFullPath(args[2]) && Module.SuperprojectModule is not null)
                     {
                         Module = Module.SuperprojectModule;
                     }
@@ -1597,7 +1597,7 @@ namespace GitUI
         {
             var searchWindow = new SearchWindow<string>(FindFileMatches);
             Application.Run(searchWindow);
-            if (searchWindow.SelectedItem != null)
+            if (searchWindow.SelectedItem is not null)
             {
                 // We need to return the file that has been found, the visual studio plugin uses the return value
                 // to open the selected file.
@@ -1635,11 +1635,11 @@ namespace GitUI
                         return false;
                     }
 
-                    if (selectedId == null)
+                    if (selectedId is null)
                     {
                         selectedId = objectId;
                     }
-                    else if (firstId == null)
+                    else if (firstId is null)
                     {
                         firstId = objectId;
 
@@ -1935,19 +1935,19 @@ namespace GitUI
 
             public void Execute()
             {
-                if (CommandText == null)
+                if (CommandText is null)
                 {
                     throw new InvalidOperationException("CommandText is required");
                 }
 
                 using (var form = new FormRemoteProcess(_commands, process: null, CommandText))
                 {
-                    if (Title != null)
+                    if (Title is not null)
                     {
                         form.Text = Title;
                     }
 
-                    if (Remote != null)
+                    if (Remote is not null)
                     {
                         form.Remote = Remote;
                     }

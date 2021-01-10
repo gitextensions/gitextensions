@@ -51,12 +51,12 @@ namespace GitUI.NBugReports
         {
             _exceptionDetailsList.Add(exceptionTreeView.Nodes.Add(exception.Type), exception);
 
-            if (exception.InnerException != null)
+            if (exception.InnerException is not null)
             {
                 FillInnerExceptionTree(exception.InnerException, exceptionTreeView.Nodes[0]);
             }
 
-            if (exception.InnerExceptions != null)
+            if (exception.InnerExceptions is not null)
             {
                 foreach (var innerException in exception.InnerExceptions)
                 {
@@ -74,42 +74,42 @@ namespace GitUI.NBugReports
             exceptionDetailsListView.SuspendLayout();
             exceptionDetailsListView.Items.Clear();
 
-            if (exception.Type != null)
+            if (exception.Type is not null)
             {
                 exceptionDetailsListView.Items.Add("Exception").SubItems.Add(exception.Type);
             }
 
-            if (exception.Message != null)
+            if (exception.Message is not null)
             {
                 exceptionDetailsListView.Items.Add("Message").SubItems.Add(exception.Message);
             }
 
-            if (exception.TargetSite != null)
+            if (exception.TargetSite is not null)
             {
                 exceptionDetailsListView.Items.Add("Target Site").SubItems.Add(exception.TargetSite);
             }
 
-            if (exception.InnerException != null)
+            if (exception.InnerException is not null)
             {
                 exceptionDetailsListView.Items.Add("Inner Exception").SubItems.Add(exception.InnerException.Type);
             }
 
-            if (exception.Source != null)
+            if (exception.Source is not null)
             {
                 exceptionDetailsListView.Items.Add("Source").SubItems.Add(exception.Source);
             }
 
-            if (exception.HelpLink != null)
+            if (exception.HelpLink is not null)
             {
                 exceptionDetailsListView.Items.Add("Help Link").SubItems.Add(exception.HelpLink);
             }
 
-            if (exception.StackTrace != null)
+            if (exception.StackTrace is not null)
             {
                 exceptionDetailsListView.Items.Add("Stack Trace").SubItems.Add(exception.StackTrace);
             }
 
-            if (exception.Data != null)
+            if (exception.Data is not null)
             {
                 foreach (var pair in exception.Data)
                 {
@@ -117,7 +117,7 @@ namespace GitUI.NBugReports
                 }
             }
 
-            if (exception.ExtendedInformation != null)
+            if (exception.ExtendedInformation is not null)
             {
                 foreach (var info in exception.ExtendedInformation)
                 {
@@ -152,7 +152,7 @@ namespace GitUI.NBugReports
         {
             _exceptionDetailsList.Add(innerNode.Nodes.Add(innerException.Type), innerException);
 
-            if (innerException.InnerException != null)
+            if (innerException.InnerException is not null)
             {
                 FillInnerExceptionTree(innerException.InnerException, innerNode.Nodes[0]);
             }

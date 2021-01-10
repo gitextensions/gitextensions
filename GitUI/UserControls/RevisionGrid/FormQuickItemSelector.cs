@@ -30,7 +30,7 @@ namespace GitUI.UserControls.RevisionGrid
             btnAction.Text = buttonText;
 
             lbxRefs.Items.Clear();
-            if (items == null || items.Count < 1)
+            if (items is null || items.Count < 1)
             {
                 DialogResult = DialogResult.Cancel;
                 Close();

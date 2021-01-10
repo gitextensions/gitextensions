@@ -65,7 +65,7 @@ namespace GitCommands.Git
         /// <exception cref="ArgumentNullException"><paramref name="repositoryPath"/> is <see langword="null"/>.</exception>
         public string Resolve(string repositoryPath)
         {
-            if (repositoryPath == null)
+            if (repositoryPath is null)
             {
                 throw new ArgumentNullException(nameof(repositoryPath));
             }
@@ -80,7 +80,7 @@ namespace GitCommands.Git
             {
                 const string gitdir = "gitdir:";
                 var line = _fileSystem.File.ReadLines(gitPath).FirstOrDefault(l => l.StartsWith(gitdir));
-                if (line != null)
+                if (line is not null)
                 {
                     string path = line.Substring(gitdir.Length).Trim().ToNativePath();
                     if (Path.IsPathRooted(path))

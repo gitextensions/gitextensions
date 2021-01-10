@@ -856,7 +856,7 @@ namespace GitCommandsTests
         {
             var arguments = new StringBuilder();
             arguments.Append("format-patch -M -C -B");
-            if (start != null)
+            if (start is not null)
             {
                 arguments.AppendFormat(" --start-number {0}", start);
             }
@@ -876,7 +876,7 @@ namespace GitCommandsTests
         {
             var arguments = new StringBuilder();
             arguments.Append("format-patch -M -C -B");
-            if (start != null)
+            if (start is not null)
             {
                 arguments.AppendFormat(" --start-number {0}", start);
             }
@@ -984,7 +984,7 @@ namespace GitCommandsTests
         /// <returns>The GitModule</returns>
         private GitModule GetGitModuleWithExecutable(IExecutable executable, string path = "", GitModule module = null)
         {
-            if (module == null)
+            if (module is null)
             {
                 module = new GitModule(path);
             }

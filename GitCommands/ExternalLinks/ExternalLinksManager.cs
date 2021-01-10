@@ -19,7 +19,7 @@ namespace GitCommands.ExternalLinks
             _cachedSettings = new RepoDistSettings(null, settings.SettingsCache, settings.SettingLevel);
             _definitions = _externalLinksStorage.Load(_cachedSettings).ToList();
 
-            if (settings.LowerPriority != null)
+            if (settings.LowerPriority is not null)
             {
                 _lowerPriority = new ExternalLinksManager(settings.LowerPriority);
             }
@@ -31,12 +31,12 @@ namespace GitCommands.ExternalLinks
         /// <param name="definition">External link definition.</param>
         public void Add(ExternalLinkDefinition definition)
         {
-            if (definition == null)
+            if (definition is null)
             {
                 throw new ArgumentNullException(nameof(definition));
             }
 
-            if (_lowerPriority == null || _lowerPriority.Contains(definition.Name))
+            if (_lowerPriority is null || _lowerPriority.Contains(definition.Name))
             {
                 if (!Contains(definition.Name))
                 {
@@ -57,7 +57,7 @@ namespace GitCommands.ExternalLinks
         /// <param name="definitions">External link definitions.</param>
         public void AddRange(IEnumerable<ExternalLinkDefinition> definitions)
         {
-            if (definitions == null)
+            if (definitions is null)
             {
                 throw new ArgumentNullException(nameof(definitions));
             }

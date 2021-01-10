@@ -39,7 +39,7 @@ namespace GitUI.UserControls
 
             void AppendMessage(string text)
             {
-                Debug.Assert(text != null, "text != null");
+                Debug.Assert(text is not null, "text is not null");
                 if (IsDisposed)
                 {
                     return;
@@ -70,7 +70,7 @@ namespace GitUI.UserControls
                 throw new InvalidOperationException("This operation is to be executed on the home thread.");
             }
 
-            if (_process == null)
+            if (_process is null)
             {
                 return;
             }
@@ -138,7 +138,7 @@ namespace GitUI.UserControls
                     this.InvokeAsync(
                         () =>
                         {
-                            if (_process == null)
+                            if (_process is null)
                             {
                                 operation.LogProcessEnd(new Exception("Process instance is null in Exited event"));
                                 return;
@@ -184,7 +184,7 @@ namespace GitUI.UserControls
         protected override void Dispose(bool disposing)
         {
             KillProcess();
-            if (disposing && _outputThrottle != null)
+            if (disposing && _outputThrottle is not null)
             {
                 _outputThrottle.Dispose();
                 _outputThrottle = null;

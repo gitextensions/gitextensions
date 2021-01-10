@@ -196,7 +196,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public static void ShowOrActivate(IWin32Window owner)
         {
-            if (instance == null)
+            if (instance is null)
             {
                 (instance = new FormGitCommandLog()).Show(owner);
             }

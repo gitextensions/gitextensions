@@ -44,7 +44,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         // we cache on demand.
         private void BuildSegmentLanes()
         {
-            if (_segmentLanes != null)
+            if (_segmentLanes is not null)
             {
                 return;
             }
@@ -53,7 +53,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             lock (Revision)
             {
                 // Another thread could be waiting for the lock, while the segmentlanes where being build. Check again if segmentslanes is null.
-                if (_segmentLanes != null)
+                if (_segmentLanes is not null)
                 {
                     return;
                 }

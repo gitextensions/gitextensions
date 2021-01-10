@@ -19,7 +19,7 @@ namespace GitUI.Design
             foreach (PropertyDescriptor pd in pdc)
             {
                 Attribute attribute = pd.Attributes[typeof(PropertyOrderAttribute)];
-                if (attribute != null)
+                if (attribute is not null)
                 {
                     PropertyOrderAttribute poa = (PropertyOrderAttribute)attribute;
                     orderedProperties.Add((pd.Name, poa.Order));

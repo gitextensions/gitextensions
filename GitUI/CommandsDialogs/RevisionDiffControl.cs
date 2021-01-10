@@ -93,7 +93,7 @@ namespace GitUI.CommandsDialogs
 
             DiffFiles.StoreNextIndexToSelect();
             SetDiffs(revisions);
-            if (DiffFiles.SelectedItem == null)
+            if (DiffFiles.SelectedItem is null)
             {
                 DiffFiles.SelectStoredNextIndex();
             }
@@ -201,7 +201,7 @@ namespace GitUI.CommandsDialogs
         public void DisplayDiffTab(IReadOnlyList<GitRevision> revisions)
         {
             SetDiffs(revisions);
-            if (DiffFiles.SelectedItem == null)
+            if (DiffFiles.SelectedItem is null)
             {
                 DiffFiles.SelectFirstVisibleItem();
             }
@@ -214,7 +214,7 @@ namespace GitUI.CommandsDialogs
             DiffFiles.SetDiffs(revisions, _revisionGrid.GetRevision);
 
             // Try to restore previous item
-            if (oldDiffItem != null && DiffFiles.FirstGroupItems.Any(i => i.Item.Name.Equals(oldDiffItem.Item.Name)))
+            if (oldDiffItem is not null && DiffFiles.FirstGroupItems.Any(i => i.Item.Name.Equals(oldDiffItem.Item.Name)))
             {
                 DiffFiles.SelectedGitItem = oldDiffItem.Item;
             }
@@ -246,7 +246,7 @@ namespace GitUI.CommandsDialogs
 
         private string DescribeRevision([CanBeNull] ObjectId objectId, int maxLength = 0)
         {
-            if (objectId == null)
+            if (objectId is null)
             {
                 // No parent at all, present as working directory
                 return ResourceManager.Strings.Workspace;
@@ -254,7 +254,7 @@ namespace GitUI.CommandsDialogs
 
             var revision = _revisionGrid.GetRevision(objectId);
 
-            if (revision == null)
+            if (revision is null)
             {
                 return objectId.ToShortString();
             }
@@ -286,7 +286,7 @@ namespace GitUI.CommandsDialogs
         {
             fileIndex = -1;
             loadFileContent = Task.CompletedTask;
-            if (DiffFiles.SelectedItem == null)
+            if (DiffFiles.SelectedItem is null)
             {
                 return false;
             }
@@ -444,7 +444,7 @@ namespace GitUI.CommandsDialogs
         private void DiffFiles_DoubleClick(object sender, EventArgs e)
         {
             FileStatusItem item = DiffFiles.SelectedItem;
-            if (item == null || !item.Item.IsTracked)
+            if (item is null || !item.Item.IsTracked)
             {
                 return;
             }
@@ -465,7 +465,7 @@ namespace GitUI.CommandsDialogs
 
         private void DiffFiles_DataSourceChanged(object sender, EventArgs e)
         {
-            if (DiffFiles.GitItemStatuses == null || !DiffFiles.GitItemStatuses.Any())
+            if (DiffFiles.GitItemStatuses is null || !DiffFiles.GitItemStatuses.Any())
             {
                 DiffText.Clear();
             }
@@ -531,7 +531,7 @@ namespace GitUI.CommandsDialogs
             foreach (var item in DiffFiles.SelectedItems)
             {
                 string filePath = _fullPathResolver.Resolve(item.Item.Name);
-                if (filePath != null && FormBrowseUtil.FileOrParentDirectoryExists(filePath))
+                if (filePath is not null && FormBrowseUtil.FileOrParentDirectoryExists(filePath))
                 {
                     openContainingFolderToolStripMenuItem.Enabled = true;
                     break;
@@ -552,7 +552,7 @@ namespace GitUI.CommandsDialogs
         private void blameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FileStatusItem item = DiffFiles.SelectedItem;
-            if (item == null || !item.Item.IsTracked)
+            if (item is null || !item.Item.IsTracked)
             {
                 return;
             }
@@ -614,7 +614,7 @@ namespace GitUI.CommandsDialogs
                 selectedItem = searchWindow.SelectedItem;
             }
 
-            if (selectedItem != null)
+            if (selectedItem is not null)
             {
                 DiffFiles.SelectedGitItem = selectedItem;
             }
@@ -623,7 +623,7 @@ namespace GitUI.CommandsDialogs
         private void fileHistoryDiffToolstripMenuItem_Click(object sender, EventArgs e)
         {
             FileStatusItem item = DiffFiles.SelectedItem;
-            if (item == null || !item.Item.IsTracked)
+            if (item is null || !item.Item.IsTracked)
             {
                 return;
             }
@@ -709,7 +709,7 @@ namespace GitUI.CommandsDialogs
 
         private void rememberFirstDiffToolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (DiffFiles.SelectedItem?.FirstRevision == null)
+            if (DiffFiles.SelectedItem?.FirstRevision is null)
             {
                 return;
             }
@@ -730,7 +730,7 @@ namespace GitUI.CommandsDialogs
 
         private void diffEditWorkingDirectoryFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (DiffFiles.SelectedItem == null)
+            if (DiffFiles.SelectedItem is null)
             {
                 return;
             }
@@ -742,7 +742,7 @@ namespace GitUI.CommandsDialogs
 
         private void diffOpenWorkingDirectoryFileWithToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (DiffFiles.SelectedItem == null)
+            if (DiffFiles.SelectedItem is null)
             {
                 return;
             }
@@ -764,7 +764,7 @@ namespace GitUI.CommandsDialogs
         private void SaveSelectedItemToTempFile(Action<string> onSaved)
         {
             var item = DiffFiles.SelectedItem;
-            if (item?.Item?.Name == null || item.SecondRevision == null)
+            if (item?.Item?.Name is null || item.SecondRevision is null)
             {
                 return;
             }
@@ -775,7 +775,7 @@ namespace GitUI.CommandsDialogs
 
                 var blob = Module.GetFileBlobHash(item.Item.Name, item.SecondRevision.ObjectId);
 
-                if (blob == null)
+                if (blob is null)
                 {
                     return;
                 }
@@ -850,13 +850,13 @@ namespace GitUI.CommandsDialogs
                 && _rememberFileContextMenuController.ShouldEnableFirstItemDiff(diffFiles[firstIndex])
                 && _rememberFileContextMenuController.ShouldEnableSecondItemDiff(DiffFiles.SelectedItem);
 
-            diffWithRememberedDifftoolToolStripMenuItem.Visible = diffFiles.Count == 1 && _rememberFileContextMenuController.RememberedDiffFileItem != null;
+            diffWithRememberedDifftoolToolStripMenuItem.Visible = diffFiles.Count == 1 && _rememberFileContextMenuController.RememberedDiffFileItem is not null;
             diffWithRememberedDifftoolToolStripMenuItem.Enabled =
                 diffFiles.Count == 1
                 && diffFiles[0] != _rememberFileContextMenuController.RememberedDiffFileItem
                 && _rememberFileContextMenuController.ShouldEnableSecondItemDiff(diffFiles[0]);
             diffWithRememberedDifftoolToolStripMenuItem.Text =
-                _rememberFileContextMenuController.RememberedDiffFileItem != null
+                _rememberFileContextMenuController.RememberedDiffFileItem is not null
                     ? string.Format(Strings.DiffSelectedWithRememberedFile, _rememberFileContextMenuController.RememberedDiffFileItem.Item.Name)
                     : string.Empty;
 
@@ -924,7 +924,7 @@ namespace GitUI.CommandsDialogs
         private void saveAsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             FileStatusItem item = DiffFiles.SelectedItem;
-            if (item == null)
+            if (item is null)
             {
                 return;
             }
@@ -957,7 +957,7 @@ namespace GitUI.CommandsDialogs
             try
             {
                 var selected = DiffFiles.SelectedItem;
-                if (selected == null || !selected.SecondRevision.IsArtificial ||
+                if (selected is null || !selected.SecondRevision.IsArtificial ||
                     MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo,
                         MessageBoxIcon.Warning) !=
                     DialogResult.Yes)

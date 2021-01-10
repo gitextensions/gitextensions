@@ -90,7 +90,7 @@ namespace ResourceManager
                 ICommitDataManager commitDataManager = new CommitDataManager(() => module);
 
                 CommitData data = commitDataManager.GetCommitData(hash, out _);
-                if (data == null)
+                if (data is null)
                 {
                     sb.AppendLine("Commit hash:\t" + hash);
                     return sb.ToString();
@@ -113,7 +113,7 @@ namespace ResourceManager
         {
             string text = patch?.Text;
             var status = SubmoduleHelpers.ParseSubmoduleStatus(text, module, fileName);
-            if (status == null)
+            if (status is null)
             {
                 return "";
             }
@@ -123,12 +123,12 @@ namespace ResourceManager
 
         public static string ProcessSubmoduleStatus([NotNull] GitModule module, [NotNull] GitSubmoduleStatus status)
         {
-            if (module == null)
+            if (module is null)
             {
                 throw new ArgumentNullException(nameof(module));
             }
 
-            if (status == null)
+            if (status is null)
             {
                 throw new ArgumentNullException(nameof(status));
             }
@@ -149,12 +149,12 @@ namespace ResourceManager
                 // Submodule directory must exist to run commands, unknown otherwise
                 if (gitModule.IsValidGitWorkingDir())
                 {
-                    if (status.OldCommit != null)
+                    if (status.OldCommit is not null)
                     {
                         oldCommitData = commitDataManager.GetCommitData(status.OldCommit.ToString(), out _);
                     }
 
-                    if (oldCommitData != null)
+                    if (oldCommitData is not null)
                     {
                         sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + " (" +
                                       GetFullDateString(oldCommitData.CommitDate) + ")");
@@ -181,12 +181,12 @@ namespace ResourceManager
             // Submodule directory must exist to run commands, unknown otherwise
             if (gitModule.IsValidGitWorkingDir())
             {
-                if (status.Commit != null)
+                if (status.Commit is not null)
                 {
                     commitData = commitDataManager.GetCommitData(status.Commit.ToString(), out _);
                 }
 
-                if (commitData != null)
+                if (commitData is not null)
                 {
                     sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + " (" +
                                   GetFullDateString(commitData.CommitDate) + ")");
@@ -237,7 +237,7 @@ namespace ResourceManager
                     break;
             }
 
-            if (status.AddedCommits != null && status.RemovedCommits != null &&
+            if (status.AddedCommits is not null && status.RemovedCommits is not null &&
                 (status.AddedCommits != 0 || status.RemovedCommits != 0))
             {
                 sb.Append("\nCommits: ");
@@ -260,7 +260,7 @@ namespace ResourceManager
                 sb.AppendLine();
             }
 
-            if (status.Commit != null && status.OldCommit != null)
+            if (status.Commit is not null && status.OldCommit is not null)
             {
                 if (status.IsDirty)
                 {

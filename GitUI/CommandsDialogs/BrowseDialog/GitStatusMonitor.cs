@@ -276,7 +276,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             void commandsSource_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
             {
                 var oldCommands = e.OldCommands;
-                if (oldCommands != null)
+                if (oldCommands is not null)
                 {
                     oldCommands.PreCheckoutBranch -= GitUICommands_PreCheckout;
                     oldCommands.PreCheckoutRevision -= GitUICommands_PreCheckout;

@@ -22,12 +22,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         public FormDashboardCategoryTitle(IEnumerable<string> existingCategories, string originalName = null)
             : this()
         {
-            if (existingCategories != null)
+            if (existingCategories is not null)
             {
                 _existingCategories.AddRange(existingCategories);
             }
 
-            if (originalName != null)
+            if (originalName is not null)
             {
                 Category = originalName;
                 txtCategoryName.Text = originalName;

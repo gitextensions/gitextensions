@@ -42,13 +42,13 @@ namespace GitUI.CommandsDialogs
 
             tagMessage.MistakeFont = new Font(tagMessage.MistakeFont, FontStyle.Underline);
 
-            if (objectId != null && objectId.IsArtificial)
+            if (objectId is not null && objectId.IsArtificial)
             {
                 objectId = null;
             }
 
-            objectId = objectId ?? Module.GetCurrentCheckout();
-            if (objectId != null)
+            objectId ??= Module.GetCurrentCheckout();
+            if (objectId is not null)
             {
                 commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
             }
@@ -89,7 +89,7 @@ namespace GitUI.CommandsDialogs
         {
             var objectId = commitPickerSmallControl1.SelectedObjectId;
 
-            if (objectId == null)
+            if (objectId is null)
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return "";

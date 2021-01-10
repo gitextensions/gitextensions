@@ -29,7 +29,7 @@ namespace AppVeyorIntegration.Settings
 
         public void LoadSettings(ISettingsSource buildServerConfig)
         {
-            if (buildServerConfig != null)
+            if (buildServerConfig is not null)
             {
                 AppVeyorProjectName.Text = buildServerConfig.GetString("AppVeyorProjectName", _defaultProjectName);
                 AppVeyorAccountName.Text = buildServerConfig.GetString("AppVeyorAccountName", string.Empty);

@@ -94,7 +94,7 @@ namespace GitUI.CommandsDialogs
                     Branches.SelectedItem = branch;
                 }
 
-                if (containRevisions != null)
+                if (containRevisions is not null)
                 {
                     if (Branches.Items.Count == 0)
                     {
@@ -216,7 +216,7 @@ namespace GitUI.CommandsDialogs
 
             IEnumerable<string> branchNames;
 
-            if (_containRevisions == null)
+            if (_containRevisions is null)
             {
                 var branches = LocalBranch.Checked ? GetLocalBranches() : GetRemoteBranches();
 
@@ -229,7 +229,7 @@ namespace GitUI.CommandsDialogs
 
             Branches.Items.AddRange(branchNames.Where(name => !string.IsNullOrWhiteSpace(name)).ToArray<object>());
 
-            if (_containRevisions != null && Branches.Items.Count == 1)
+            if (_containRevisions is not null && Branches.Items.Count == 1)
             {
                 Branches.SelectedIndex = 0;
             }
@@ -309,14 +309,14 @@ namespace GitUI.CommandsDialogs
                 {
                     IGitRef localBranchRef = GetLocalBranchRef(_localBranchName);
                     IGitRef remoteBranchRef = GetRemoteBranchRef(branchName);
-                    if (localBranchRef != null && remoteBranchRef != null)
+                    if (localBranchRef is not null && remoteBranchRef is not null)
                     {
                         var mergeBaseGuid = Module.GetMergeBase(localBranchRef.ObjectId, remoteBranchRef.ObjectId);
                         var isResetFastForward = localBranchRef.ObjectId == mergeBaseGuid;
 
                         if (!isResetFastForward)
                         {
-                            string mergeBaseText = mergeBaseGuid == null
+                            string mergeBaseText = mergeBaseGuid is null
                                 ? "merge base"
                                 : mergeBaseGuid.ToShortString();
 
@@ -355,7 +355,7 @@ namespace GitUI.CommandsDialogs
             bool stash = false;
             if (localChanges == LocalChangesAction.Stash)
             {
-                if (_isDirtyDir == null && Visible)
+                if (_isDirtyDir is null && Visible)
                 {
                     _isDirtyDir = Module.IsDirtyDir();
                 }
@@ -369,7 +369,7 @@ namespace GitUI.CommandsDialogs
 
             var originalId = Module.GetCurrentCheckout();
 
-            Debug.Assert(originalId != null, "originalId != null");
+            Debug.Assert(originalId is not null, "originalId is not null");
 
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
 
@@ -378,7 +378,7 @@ namespace GitUI.CommandsDialogs
                 if (stash)
                 {
                     bool? messageBoxResult = AppSettings.AutoPopStashAfterCheckoutBranch;
-                    if (messageBoxResult == null)
+                    if (messageBoxResult is null)
                     {
                         using var dialog = new TaskDialog
                         {
@@ -502,7 +502,7 @@ namespace GitUI.CommandsDialogs
 
                         var currentCheckout = Module.GetCurrentCheckout();
 
-                        Debug.Assert(currentCheckout != null, "currentCheckout != null");
+                        Debug.Assert(currentCheckout is not null, "currentCheckout is not null");
 
                         var text = Module.GetCommitCountString(currentCheckout.ToString(), branch);
 
@@ -522,7 +522,7 @@ namespace GitUI.CommandsDialogs
 
         private IEnumerable<IGitRef> GetLocalBranches()
         {
-            if (_localBranches == null)
+            if (_localBranches is null)
             {
                 _localBranches = Module.GetRefs(tags: false, branches: true);
             }
@@ -532,7 +532,7 @@ namespace GitUI.CommandsDialogs
 
         private IEnumerable<IGitRef> GetRemoteBranches()
         {
-            if (_remoteBranches == null)
+            if (_remoteBranches is null)
             {
                 _remoteBranches = Module.GetRefs(tags: true, branches: true).Where(h => h.IsRemote && !h.IsTag).ToList();
             }

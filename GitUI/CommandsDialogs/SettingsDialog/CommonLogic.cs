@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             Module = module;
 
-            if (module != null)
+            if (module is not null)
             {
                 var repoDistGlobalSettings = RepoDistSettings.CreateGlobal(false);
                 var repoDistPulledSettings = RepoDistSettings.CreateDistributed(Module, false);
@@ -66,7 +66,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 var registryKey = root.OpenSubKey(subkey, writable: false);
 
-                if (registryKey != null)
+                if (registryKey is not null)
                 {
                     using (registryKey)
                     {

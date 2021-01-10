@@ -32,7 +32,7 @@ namespace GitUI.CommandsDialogs
 
         private void BindSaveOnClose([NotNull] FormSparseWorkingCopyViewModel sparse)
         {
-            if (sparse == null)
+            if (sparse is null)
             {
                 throw new ArgumentNullException(nameof(sparse));
             }
@@ -75,7 +75,7 @@ namespace GitUI.CommandsDialogs
 
         private void BindToViewModelGlobal([NotNull] FormSparseWorkingCopyViewModel sparse)
         {
-            if (sparse == null)
+            if (sparse is null)
             {
                 throw new ArgumentNullException(nameof(sparse));
             }

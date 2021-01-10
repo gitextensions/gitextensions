@@ -37,7 +37,7 @@ namespace GitUI.UserControls.RevisionGrid
         private void AddItem(string displayText, Func<GitRevision, string> extractRevisionText, Image image, char? hotkey)
         {
             var textToCopy = ExtractRevisionTexts(extractRevisionText);
-            if (textToCopy == null)
+            if (textToCopy is null)
             {
                 return;
             }
@@ -78,13 +78,13 @@ namespace GitUI.UserControls.RevisionGrid
 
         private string[] ExtractRevisionTexts(Func<GitRevision, string> extractRevisionText)
         {
-            if (extractRevisionText == null)
+            if (extractRevisionText is null)
             {
                 return null;
             }
 
             var gitRevisions = _revisionFunc?.Invoke();
-            if (gitRevisions == null || gitRevisions.Count == 0)
+            if (gitRevisions is null || gitRevisions.Count == 0)
             {
                 return null;
             }
@@ -95,7 +95,7 @@ namespace GitUI.UserControls.RevisionGrid
         private void OnDropDownOpening(object sender, EventArgs e)
         {
             var revisions = _revisionFunc?.Invoke();
-            if (revisions == null || revisions.Count == 0)
+            if (revisions is null || revisions.Count == 0)
             {
                 HideDropDown();
                 return;

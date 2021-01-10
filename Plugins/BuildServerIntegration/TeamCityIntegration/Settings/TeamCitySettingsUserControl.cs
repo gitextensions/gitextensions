@@ -39,7 +39,7 @@ namespace TeamCityIntegration.Settings
 
         public void LoadSettings(ISettingsSource buildServerConfig)
         {
-            if (buildServerConfig != null)
+            if (buildServerConfig is not null)
             {
                 TeamCityServerUrl.Text = buildServerConfig.GetString("BuildServerUrl", string.Empty);
                 TeamCityProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);

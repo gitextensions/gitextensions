@@ -154,7 +154,7 @@ namespace GitCommands.Statistics
                 var line = lineEnumerator.Current;
 
                 // Reached the end ?
-                if (line == null)
+                if (line is null)
                 {
                     break;
                 }
@@ -191,7 +191,7 @@ namespace GitCommands.Statistics
                 var deleted = 0;
 
                 // Parse commit lines
-                while (lineEnumerator.MoveNext() && (line = lineEnumerator.Current) != null && !line.StartsWith("--- ") && !token.IsCancellationRequested)
+                while (lineEnumerator.MoveNext() && (line = lineEnumerator.Current) is not null && !line.StartsWith("--- ") && !token.IsCancellationRequested)
                 {
                     // Skip empty line
                     if (string.IsNullOrEmpty(line))

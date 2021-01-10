@@ -100,12 +100,12 @@ namespace GitCommands
             CommandCache cache = null,
             bool stripAnsiEscapeCodes = true)
         {
-            if (outputEncoding == null)
+            if (outputEncoding is null)
             {
                 outputEncoding = _defaultOutputEncoding.Value;
             }
 
-            if (cache != null && cache.TryGet(arguments, out var output, out var error))
+            if (cache is not null && cache.TryGet(arguments, out var output, out var error))
             {
                 return ComposeOutput();
             }
@@ -113,10 +113,10 @@ namespace GitCommands
             using var process = executable.Start(
                 arguments,
                 createWindow: false,
-                redirectInput: input != null,
+                redirectInput: input is not null,
                 redirectOutput: true,
                 outputEncoding);
-            if (input != null)
+            if (input is not null)
             {
                 await process.StandardInput.BaseStream.WriteAsync(input, 0, input.Length);
                 process.StandardInput.Close();
@@ -133,7 +133,7 @@ namespace GitCommands
             output = outputBuffer.ToArray();
             error = errorBuffer.ToArray();
 
-            if (cache != null && await exitTask == 0)
+            if (cache is not null && await exitTask == 0)
             {
                 cache.Add(arguments, output, error);
             }
@@ -222,8 +222,8 @@ namespace GitCommands
             byte[] input = null,
             bool createWindow = false)
         {
-            using var process = executable.Start(arguments, createWindow: createWindow, redirectInput: input != null);
-            if (input != null)
+            using var process = executable.Start(arguments, createWindow: createWindow, redirectInput: input is not null);
+            if (input is not null)
             {
                 await process.StandardInput.BaseStream.WriteAsync(input, 0, input.Length);
                 process.StandardInput.Close();
@@ -249,13 +249,13 @@ namespace GitCommands
             Encoding outputEncoding = null,
             bool stripAnsiEscapeCodes = true)
         {
-            if (outputEncoding == null)
+            if (outputEncoding is null)
             {
                 outputEncoding = _defaultOutputEncoding.Value;
             }
 
-            using var process = executable.Start(arguments, createWindow: false, redirectInput: input != null, redirectOutput: true, outputEncoding);
-            if (input != null)
+            using var process = executable.Start(arguments, createWindow: false, redirectInput: input is not null, redirectOutput: true, outputEncoding);
+            if (input is not null)
             {
                 process.StandardInput.BaseStream.Write(input, 0, input.Length);
                 process.StandardInput.Close();
@@ -265,7 +265,7 @@ namespace GitCommands
             {
                 var line = process.StandardOutput.ReadLine();
 
-                if (line == null)
+                if (line is null)
                 {
                     break;
                 }
@@ -277,7 +277,7 @@ namespace GitCommands
             {
                 var line = process.StandardError.ReadLine();
 
-                if (line == null)
+                if (line is null)
                 {
                     break;
                 }
@@ -351,18 +351,18 @@ namespace GitCommands
             Encoding outputEncoding = null,
             bool stripAnsiEscapeCodes = true)
         {
-            if (outputEncoding == null)
+            if (outputEncoding is null)
             {
                 outputEncoding = _defaultOutputEncoding.Value;
             }
 
-            using var process = executable.Start(arguments, createWindow: false, redirectInput: writeInput != null, redirectOutput: true, outputEncoding);
+            using var process = executable.Start(arguments, createWindow: false, redirectInput: writeInput is not null, redirectOutput: true, outputEncoding);
             var outputBuffer = new MemoryStream();
             var errorBuffer = new MemoryStream();
             var outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);
             var errorTask = process.StandardError.BaseStream.CopyToAsync(errorBuffer);
 
-            if (writeInput != null)
+            if (writeInput is not null)
             {
                 // TODO do we want to make this async?
                 writeInput(process.StandardInput);

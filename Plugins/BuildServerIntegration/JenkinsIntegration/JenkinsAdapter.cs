@@ -63,7 +63,7 @@ namespace JenkinsIntegration
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
-            if (_buildServerWatcher != null)
+            if (_buildServerWatcher is not null)
             {
                 throw new InvalidOperationException("Already initialized");
             }
@@ -133,12 +133,12 @@ namespace JenkinsIntegration
             if (!string.IsNullOrWhiteSpace(t) && !cancellationToken.IsCancellationRequested)
             {
                 JObject jobDescription = JObject.Parse(t);
-                if (jobDescription["builds"] != null)
+                if (jobDescription["builds"] is not null)
                 {
                     // Freestyle jobs
                     s = jobDescription["builds"];
                 }
-                else if (jobDescription["jobs"] != null)
+                else if (jobDescription["jobs"] is not null)
                 {
                     // Multi-branch pipeline
                     s = jobDescription["jobs"]
@@ -163,7 +163,7 @@ namespace JenkinsIntegration
                 }
 
                 // else: The server had no response (overloaded?) or a multi-branch pipeline is not configured
-                if (timestamp == 0 && jobDescription["lastBuild"]?["timestamp"] != null)
+                if (timestamp == 0 && jobDescription["lastBuild"]?["timestamp"] is not null)
                 {
                     timestamp = jobDescription["lastBuild"]["timestamp"].ToObject<long>();
                 }
@@ -246,7 +246,7 @@ namespace JenkinsIntegration
                 {
                     if (build.Task.IsFaulted)
                     {
-                        Debug.Assert(build.Task.Exception != null, "build.Task.Exception != null");
+                        Debug.Assert(build.Task.Exception is not null, "build.Task.Exception is not null");
 
                         observer.OnError(build.Task.Exception);
                         continue;
@@ -378,11 +378,11 @@ namespace JenkinsIntegration
             string testResults = string.Empty;
             foreach (var element in action)
             {
-                if (element["lastBuiltRevision"] != null)
+                if (element["lastBuiltRevision"] is not null)
                 {
                     commitHashList.Add(ObjectId.Parse(element["lastBuiltRevision"]["SHA1"].ToObject<string>()));
                     var branches = element["lastBuiltRevision"]["branch"];
-                    if (_ignoreBuilds != null && branches != null)
+                    if (_ignoreBuilds is not null && branches is not null)
                     {
                         // Ignore build events for specified branches
                         foreach (var branch in branches)

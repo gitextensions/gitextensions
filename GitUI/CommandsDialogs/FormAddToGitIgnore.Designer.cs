@@ -16,7 +16,7 @@
             if (disposing)
             {
                 _ignoredFilesLoader.Dispose();
-                if (components != null)
+                if (components is not null)
                 {
                     components.Dispose();
                 }

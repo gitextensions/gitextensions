@@ -52,7 +52,7 @@ namespace GitUI.BranchTreePanel
                 contextMenu.Items.Clear();
                 contextMenu.Items.Add(mnubtnCollapseAll);
                 contextMenu.Items.Add(mnubtnExpandAll);
-                if (treeNode != null)
+                if (treeNode is not null)
                 {
                     AddMoveUpDownMenuItems();
                 }
@@ -75,7 +75,7 @@ namespace GitUI.BranchTreePanel
                 contextMenu.Items.Add(mnubtnExpandAll);
             }
 
-            if (treeNode != null)
+            if (treeNode is not null)
             {
                 AddMoveUpDownMenuItems();
             }
@@ -99,8 +99,8 @@ namespace GitUI.BranchTreePanel
                     contextMenu.Items.Add(mnubtnMoveDown);
                 }
 
-                mnubtnMoveUp.Enabled = treeNode.TreeViewNode.PrevNode != null;
-                mnubtnMoveDown.Enabled = treeNode.TreeViewNode.NextNode != null;
+                mnubtnMoveUp.Enabled = treeNode.TreeViewNode.PrevNode is not null;
+                mnubtnMoveDown.Enabled = treeNode.TreeViewNode.NextNode is not null;
             }
         }
 
@@ -374,12 +374,12 @@ namespace GitUI.BranchTreePanel
 
         private void AddContextMenuItems(ContextMenuStrip menu, IEnumerable<ToolStripItem> items, ToolStripItem insertBefore = null, ToolStripItem insertAfter = null)
         {
-            Debug.Assert(!(insertAfter != null && insertBefore != null), $"Only {nameof(insertBefore)} or {nameof(insertAfter)} is allowed.");
+            Debug.Assert(!(insertAfter is not null && insertBefore is not null), $"Only {nameof(insertBefore)} or {nameof(insertAfter)} is allowed.");
 
             menu.SuspendLayout();
 
             int index;
-            if (insertBefore != null)
+            if (insertBefore is not null)
             {
                 index = Math.Max(0, menu.Items.IndexOf(insertBefore) - 1);
                 items.ForEach(item => menu.Items.Insert(++index, item));

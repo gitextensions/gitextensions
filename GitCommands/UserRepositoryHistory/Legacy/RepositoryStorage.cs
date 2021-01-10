@@ -47,7 +47,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
         public IReadOnlyList<RepositoryCategory> Load()
         {
             string legacySetting = AppSettings.GetString(KeyHistory, null);
-            if (legacySetting == null)
+            if (legacySetting is null)
             {
                 return Array.Empty<RepositoryCategory>();
             }
@@ -56,7 +56,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
             AppSettings.SetString(KeyHistoryBackup, legacySetting);
 
             var history = _repositoryCategorySerialiser.Deserialize(legacySetting);
-            if (history == null)
+            if (history is null)
             {
                 return Array.Empty<RepositoryCategory>();
             }

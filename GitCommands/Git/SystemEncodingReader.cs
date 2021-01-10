@@ -49,7 +49,7 @@ namespace GitCommands.Git
                 };
 
                 string s = _module.GitExecutable.GetOutput(arguments, outputEncoding: Encoding.UTF8);
-                if (s != null && s.IndexOf(controlStr) != -1)
+                if (s is not null && s.IndexOf(controlStr) != -1)
                 {
                     systemEncoding = new UTF8Encoding(false);
                 }

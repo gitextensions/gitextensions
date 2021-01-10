@@ -29,7 +29,7 @@ namespace JenkinsIntegration.Settings
 
         public void LoadSettings(ISettingsSource buildServerConfig)
         {
-            if (buildServerConfig != null)
+            if (buildServerConfig is not null)
             {
                 JenkinsServerUrl.Text = buildServerConfig.GetString("BuildServerUrl", string.Empty);
                 JenkinsProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);

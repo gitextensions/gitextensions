@@ -44,7 +44,7 @@ namespace GitUI.CommandsDialogs
                 _mergedBranches.Add(branch);
             }
 
-            if (_defaultRemoteBranch != null)
+            if (_defaultRemoteBranch is not null)
             {
                 Branches.SetSelectedText(_defaultRemoteBranch);
             }

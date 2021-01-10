@@ -87,12 +87,12 @@ namespace GitCommands.Utils
                 try
                 {
                     RegistryKey registryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full", false);
-                    if (registryKey != null)
+                    if (registryKey is not null)
                     {
                         using (registryKey)
                         {
                             var v = registryKey.GetValue("Install");
-                            return v != null && v.ToString() == "1";
+                            return v is not null && v.ToString() == "1";
                         }
                     }
                 }

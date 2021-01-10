@@ -74,7 +74,7 @@ namespace GitCommands.Settings
             {
                 LockedAction(() =>
                 {
-                    if (_saveTimer != null)
+                    if (_saveTimer is not null)
                     {
                         _saveTimer.Dispose();
                         _saveTimer = null;
@@ -176,7 +176,7 @@ namespace GitCommands.Settings
 
                 _lastFileModificationDate = GetLastFileModificationUtc();
                 _lastFileRead = DateTime.UtcNow;
-                if (_saveTimer != null)
+                if (_saveTimer is not null)
                 {
                     _fileWatcher.EnableRaisingEvents = _canEnableFileWatcher;
                 }

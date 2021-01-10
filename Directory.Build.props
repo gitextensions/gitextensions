@@ -2,7 +2,7 @@
   <Import Project=".\scripts\sdk\Sdk.props" />
 
   <PropertyGroup>
-    <LangVersion>8</LangVersion>
+    <LangVersion>9</LangVersion>
     <NoWarn>$(NoWarn);1573;1591;1712</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 

@@ -185,7 +185,7 @@ namespace System
         [NotNull]
         public static string Quote([CanBeNull] this string s, [NotNull] string q = "\"")
         {
-            if (s == null)
+            if (s is null)
             {
                 return "";
             }
@@ -222,7 +222,7 @@ namespace System
         [ContractAnnotation("value:null=>false")]
         public static bool StartsWithAny([CanBeNull] this string value, [NotNull, ItemNotNull] IEnumerable<string> starts)
         {
-            return value != null && starts.Any(s => value.StartsWith(s));
+            return value is not null && starts.Any(s => value.StartsWith(s));
         }
 
         [Pure]

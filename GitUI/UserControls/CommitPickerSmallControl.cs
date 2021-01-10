@@ -37,7 +37,7 @@ namespace GitUI.UserControls
 
             SelectedObjectId = Module.RevParse(commitHash);
 
-            if (SelectedObjectId == null && !string.IsNullOrWhiteSpace(commitHash))
+            if (SelectedObjectId is null && !string.IsNullOrWhiteSpace(commitHash))
             {
                 SelectedObjectId = oldCommitHash;
                 MessageBox.Show("The given commit hash is not valid for this repository and was therefore discarded.", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -49,7 +49,7 @@ namespace GitUI.UserControls
 
             var isArtificialCommitForEmptyRepo = commitHash == "HEAD";
 
-            if (SelectedObjectId == null || isArtificialCommitForEmptyRepo)
+            if (SelectedObjectId is null || isArtificialCommitForEmptyRepo)
             {
                 textBoxCommitHash.Text = "";
                 lbCommits.Text = "";
@@ -64,7 +64,7 @@ namespace GitUI.UserControls
 
                         var currentCheckout = Module.GetCurrentCheckout();
 
-                        Debug.Assert(currentCheckout != null, "currentCheckout != null");
+                        Debug.Assert(currentCheckout is not null, "currentCheckout is not null");
 
                         var text = Module.GetCommitCountString(currentCheckout.ToString(), SelectedObjectId.ToString());
 
@@ -79,7 +79,7 @@ namespace GitUI.UserControls
         {
             using (var chooseForm = new FormChooseCommit(UICommands, SelectedObjectId?.ToString()))
             {
-                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
+                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
                 {
                     SetSelectedCommitHash(chooseForm.SelectedRevision.Guid);
                 }

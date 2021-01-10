@@ -133,7 +133,7 @@ namespace GitCommands
 
                     if (TryParseRevision(module, chunk, stringPool, logOutputEncoding, out var revision))
                     {
-                        if (revisionPredicate == null || revisionPredicate(revision))
+                        if (revisionPredicate is null || revisionPredicate(revision))
                         {
                             // The full commit message body is used initially in InMemFilter, after which it isn't
                             // strictly needed and can be re-populated asynchronously.
@@ -214,7 +214,7 @@ namespace GitCommands
         {
             var selectedRef = refs.FirstOrDefault(head => head.Name == branchName);
 
-            if (selectedRef != null)
+            if (selectedRef is not null)
             {
                 selectedRef.IsSelected = true;
 
@@ -224,7 +224,7 @@ namespace GitCommands
                          && selectedRef.GetTrackingRemote(localConfigFile) == head.Remote
                          && selectedRef.GetMergeWith(localConfigFile) == head.LocalName);
 
-                if (selectedHeadMergeSource != null)
+                if (selectedHeadMergeSource is not null)
                 {
                     selectedHeadMergeSource.IsSelectedHeadMergeSource = true;
                 }
@@ -401,7 +401,7 @@ namespace GitCommands
 
             var subject = reader.ReadLine(advance: false);
 
-            if (author == null || authorEmail == null || committer == null || committerEmail == null || subject == null)
+            if (author is null || authorEmail is null || committer is null || committerEmail is null || subject is null)
             {
                 // TODO log this parse error
                 Debug.Fail("Unable to read an entry from the log -- this should not happen");
@@ -413,7 +413,7 @@ namespace GitCommands
             // Therefore we read the subject twice.
             // If there are not enough characters remaining for a body, then just assign the subject string directly.
             var (body, additionalData) = ParseCommitBody(reader, subject);
-            if (body == null)
+            if (body is null)
             {
                 // TODO log this parse error
                 Debug.Fail("Unable to read body from the log -- this should not happen");
@@ -517,7 +517,7 @@ namespace GitCommands
                     _index = endIndex + 1;
                 }
 
-                return pool != null
+                return pool is not null
                     ? pool.Intern(_s, startIndex, endIndex - startIndex)
                     : _s.Substring(startIndex, endIndex - startIndex);
             }

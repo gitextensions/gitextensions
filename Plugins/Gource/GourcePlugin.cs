@@ -140,7 +140,7 @@ namespace Gource
                     {
                         var entry = zipInputStream.GetNextEntry();
 
-                        if (entry == null)
+                        if (entry is null)
                         {
                             break;
                         }
@@ -154,7 +154,7 @@ namespace Gource
 
                         var fullPath = Path.Combine(outputFolder, entry.Name).Replace("\\ ", "\\");
                         var fullDirPath = Path.GetDirectoryName(fullPath);
-                        if (fullDirPath != null && !Directory.Exists(fullDirPath))
+                        if (fullDirPath is not null && !Directory.Exists(fullDirPath))
                         {
                             Directory.CreateDirectory(fullDirPath);
                         }

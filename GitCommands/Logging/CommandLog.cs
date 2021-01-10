@@ -44,7 +44,7 @@ namespace GitCommands.Logging
 
         public void NotifyDisposed()
         {
-            if (_entry.Duration == null)
+            if (_entry.Duration is null)
             {
                 LogProcessEnd();
             }
@@ -92,7 +92,7 @@ namespace GitCommands.Logging
         {
             get
             {
-                var duration = Duration == null
+                var duration = Duration is null
                     ? "running"
                     : $"{((TimeSpan)Duration).TotalMilliseconds:0,0} ms";
 
@@ -103,8 +103,8 @@ namespace GitCommands.Logging
                     fileName = "git";
                 }
 
-                var exit = ExitCode != null ? $"{ExitCode}" : Exception != null ? "exc" : string.Empty;
-                var ex = Exception != null ? $"  {Exception.GetType().Name}: {Exception.Message}" : string.Empty;
+                var exit = ExitCode is not null ? $"{ExitCode}" : Exception is not null ? "exc" : string.Empty;
+                var ex = Exception is not null ? $"  {Exception.GetType().Name}: {Exception.Message}" : string.Empty;
 
                 return $"{StartedAt:HH:mm:ss.fff} {duration,9} {ProcessId,5} {(IsOnMainThread ? "UI" : "  ")} {exit,3} {fileName} {Arguments}{ex}";
             }
@@ -112,7 +112,7 @@ namespace GitCommands.Logging
 
         public string FullLine(string sep)
         {
-            var duration = Duration == null ? "" : $"{((TimeSpan)Duration).TotalMilliseconds:0}";
+            var duration = Duration is null ? "" : $"{((TimeSpan)Duration).TotalMilliseconds:0}";
 
             var fileName = FileName;
 
@@ -121,9 +121,9 @@ namespace GitCommands.Logging
                 fileName = "git";
             }
 
-            var exit = ExitCode != null ? $"{ExitCode}" : Exception != null ? "exc" : string.Empty;
-            var ex = Exception != null ? $"{Environment.NewLine}{Exception}" : string.Empty;
-            var callStack = CallStack != null ? $"{Environment.NewLine}{CallStack}" : string.Empty;
+            var exit = ExitCode is not null ? $"{ExitCode}" : Exception is not null ? "exc" : string.Empty;
+            var ex = Exception is not null ? $"{Environment.NewLine}{Exception}" : string.Empty;
+            var callStack = CallStack is not null ? $"{Environment.NewLine}{CallStack}" : string.Empty;
 
             return $"{StartedAt:O}{sep}{duration}{sep}{ProcessId}{sep}{(IsOnMainThread ? "UI" : "")}{sep}{exit}{sep}{fileName}{sep}{Arguments}{sep}{WorkingDir}{callStack}{ex}";
         }
@@ -137,12 +137,12 @@ namespace GitCommands.Logging
                 s.Append("File name:   ").AppendLine(FileName);
                 s.Append("Arguments:   ").AppendLine(Arguments);
                 s.Append("Working dir: ").AppendLine(WorkingDir);
-                s.Append("Process ID:  ").AppendLine(ProcessId != null ? $"{ProcessId}" : "unknown");
+                s.Append("Process ID:  ").AppendLine(ProcessId is not null ? $"{ProcessId}" : "unknown");
                 s.Append("Started at:  ").AppendLine($"{StartedAt:O}");
                 s.Append("UI Thread?:  ").AppendLine($"{IsOnMainThread}");
-                s.Append("Duration:    ").AppendLine(Duration != null ? $"{Duration.Value.TotalMilliseconds:0.###} ms" : "still running");
-                s.Append("Exit code:   ").AppendLine(ExitCode != null ? $"{ExitCode}" : Exception != null ? $"{Exception}" : "unknown");
-                s.Append("Call stack:  ").Append(CallStack != null ? $"{Environment.NewLine}{CallStack}" : "not captured");
+                s.Append("Duration:    ").AppendLine(Duration is not null ? $"{Duration.Value.TotalMilliseconds:0.###} ms" : "still running");
+                s.Append("Exit code:   ").AppendLine(ExitCode is not null ? $"{ExitCode}" : Exception is not null ? $"{Exception}" : "unknown");
+                s.Append("Call stack:  ").Append(CallStack is not null ? $"{Environment.NewLine}{CallStack}" : "not captured");
 
                 return s.ToString();
             }

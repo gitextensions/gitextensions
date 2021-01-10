@@ -62,7 +62,7 @@ namespace DeleteUnusedBranches
 
             InitializeComplete();
 
-            if (gitUiCommands == null)
+            if (gitUiCommands is null)
             {
                 return;
             }
@@ -145,7 +145,7 @@ namespace DeleteUnusedBranches
             return _commandOutputParser.GetBranchNames(result.AllOutput)
                                         .Where(branchName => branchName != curBranch && branchName != context.ReferenceBranch)
                                         .Where(branchName => (!context.IncludeRemotes || branchName.StartsWith(context.RemoteRepositoryName + "/"))
-                                                            && (regex == null || regex.IsMatch(branchName) == regexMustMatch));
+                                                            && (regex is null || regex.IsMatch(branchName) == regexMustMatch));
         }
 
         private void Delete_Click(object sender, EventArgs e)
@@ -333,7 +333,7 @@ namespace DeleteUnusedBranches
 
         private bool IsRefreshing
         {
-            get => _refreshCancellation != null;
+            get => _refreshCancellation is not null;
             set
             {
                 if (value == IsRefreshing)

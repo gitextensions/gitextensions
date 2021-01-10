@@ -118,11 +118,11 @@ namespace GitUI.Script
                     continue;
                 }
 
-                if (currentRevision == null && option.StartsWith("c"))
+                if (currentRevision is null && option.StartsWith("c"))
                 {
                     currentRevision = GetCurrentRevision(module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches,
                         loadBody: Contains(arguments, currentMessage));
-                    if (currentRevision == null)
+                    if (currentRevision is null)
                     {
                         return (arguments: null, abort: true);
                     }
@@ -141,18 +141,18 @@ namespace GitUI.Script
                         }
                     }
                 }
-                else if (selectedRevision == null && scriptHostControl != null && DependsOnSelectedRevision(option))
+                else if (selectedRevision is null && scriptHostControl is not null && DependsOnSelectedRevision(option))
                 {
                     allSelectedRevisions = scriptHostControl.GetSelectedRevisions() ?? Array.Empty<GitRevision>();
                     selectedRevision = CalculateSelectedRevision(scriptHostControl, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
-                    if (selectedRevision == null)
+                    if (selectedRevision is null)
                     {
                         return (arguments: null, abort: true);
                     }
                 }
 
                 arguments = ParseScriptArguments(arguments, option, owner, scriptHostControl, module, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision, currentRemote);
-                if (arguments == null)
+                if (arguments is null)
                 {
                     return (arguments: null, abort: true);
                 }
@@ -194,7 +194,7 @@ namespace GitUI.Script
             List<IGitRef> selectedBranches, List<IGitRef> selectedTags)
         {
             GitRevision selectedRevision = scriptHostControl?.GetLatestSelectedRevision();
-            if (selectedRevision == null)
+            if (selectedRevision is null)
             {
                 return null;
             }
@@ -463,7 +463,7 @@ namespace GitUI.Script
                     break;
 
                 case "RepoName":
-                    newString = module == null ? string.Empty : new RepositoryDescriptionProvider(new GitDirectoryResolver()).Get(module.WorkingDir);
+                    newString = module is null ? string.Empty : new RepositoryDescriptionProvider(new GitDirectoryResolver()).Get(module.WorkingDir);
                     break;
 
                 case "UserInput":
@@ -489,11 +489,11 @@ namespace GitUI.Script
                     }
 
                 case "WorkingDir":
-                    newString = module == null ? string.Empty : module.WorkingDir;
+                    newString = module is null ? string.Empty : module.WorkingDir;
                     break;
             }
 
-            if (newString != null)
+            if (newString is not null)
             {
                 string newStringQuoted = Regex.Replace(newString, @"(?<!\\)""", "\\\"");
                 newStringQuoted = "\"" + newStringQuoted;

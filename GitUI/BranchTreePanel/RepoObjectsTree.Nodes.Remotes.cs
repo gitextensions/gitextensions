@@ -95,7 +95,7 @@ namespace GitUI.BranchTreePanel
                             pathToNodes,
                             (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
 
-                        if (parent != null)
+                        if (parent is not null)
                         {
                             enabledRemoteRepoNodes.Add((RemoteRepoNode)parent);
                         }

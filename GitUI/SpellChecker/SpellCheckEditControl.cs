@@ -69,7 +69,7 @@ namespace GitUI.SpellChecker
                 return;
             }
 
-            if (_bitmap == null || (_bitmap.Width != _richTextBox.Width || _bitmap.Height != _richTextBox.Height))
+            if (_bitmap is null || (_bitmap.Width != _richTextBox.Width || _bitmap.Height != _richTextBox.Height))
             {
                 _bitmap = new Bitmap(_richTextBox.Width, _richTextBox.Height, PixelFormat.Format32bppPArgb);
                 _bufferGraphics = Graphics.FromImage(_bitmap);

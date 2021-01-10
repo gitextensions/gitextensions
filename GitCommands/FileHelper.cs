@@ -139,7 +139,7 @@ namespace GitCommands
         public static bool IsBinaryFileAccordingToContent([CanBeNull] byte[] content)
         {
             // Check for binary file.
-            if (content != null && content.Length > 0)
+            if (content is not null && content.Length > 0)
             {
                 int nullCount = 0;
                 foreach (char c in content)

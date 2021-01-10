@@ -17,18 +17,18 @@ namespace GitUI.BranchTreePanel
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (components is not null))
             {
                 components.Dispose();
             }
 
-            if (_doubleClickDecorator != null)
+            if (_doubleClickDecorator is not null)
             {
                 _doubleClickDecorator.BeforeDoubleClickExpandCollapse -= BeforeDoubleClickExpandCollapse;
                 _doubleClickDecorator = null;
             }
 
-            if (_explorerNavigationDecorator != null)
+            if (_explorerNavigationDecorator is not null)
             {
                 _explorerNavigationDecorator.AfterSelect -= OnNodeSelected;
                 _explorerNavigationDecorator = null;

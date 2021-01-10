@@ -57,11 +57,11 @@ namespace GitExtUtils.GitUI.Theming
             return c.FindDescendantsOfType<Control>()
                 .Where(control => TryAddToWeakTable(control, AlreadyFixedContextMenuOwners))
                 .Select(_ => _.ContextMenuStrip)
-                .Where(_ => _ != null);
+                .Where(_ => _ is not null);
         }
 
         private static bool SkipThemeAware(Control c) =>
-            c.GetType().GetCustomAttribute<ThemeAwareAttribute>() != null;
+            c.GetType().GetCustomAttribute<ThemeAwareAttribute>() is not null;
 
         private static void SetupTextBoxBase(TextBoxBase textBox)
         {

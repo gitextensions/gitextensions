@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (_defaultBranches != null)
+            if (_defaultBranches is not null)
             {
                 Branches.SetSelectedText(_defaultBranches.Join(" "));
             }
@@ -70,14 +70,14 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                if (_currentBranch != null && selectedBranches.Any(branch => branch.Name == _currentBranch))
+                if (_currentBranch is not null && selectedBranches.Any(branch => branch.Name == _currentBranch))
                 {
                     MessageBox.Show(this, string.Format(_cannotDeleteCurrentBranchMessage.Text, _currentBranch), _deleteBranchCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // always treat branches as unmerged if there is no current branch (HEAD is detached)
-                var hasUnmergedBranches = _currentBranch == null || selectedBranches.Any(branch => !_mergedBranches.Contains(branch.Name));
+                var hasUnmergedBranches = _currentBranch is null || selectedBranches.Any(branch => !_mergedBranches.Contains(branch.Name));
 
                 // we could show yes/no dialog and set forcing checkbox automatically, but more safe way is asking user to do it himself
                 if (hasUnmergedBranches && !ForceDelete.Checked)

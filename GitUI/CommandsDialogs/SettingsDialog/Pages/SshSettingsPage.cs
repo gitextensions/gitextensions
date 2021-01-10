@@ -109,19 +109,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             yield return programFiles + @"\TortoiseGit\bin\";
-            if (programFilesX86 != null)
+            if (programFilesX86 is not null)
             {
                 yield return programFilesX86 + @"\TortoiseGit\bin\";
             }
 
             yield return programFiles + @"\TortoiseSvn\bin\";
-            if (programFilesX86 != null)
+            if (programFilesX86 is not null)
             {
                 yield return programFilesX86 + @"\TortoiseSvn\bin\";
             }
 
             yield return programFiles + @"\PuTTY\";
-            if (programFilesX86 != null)
+            if (programFilesX86 is not null)
             {
                 yield return programFilesX86 + @"\PuTTY\";
             }

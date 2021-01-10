@@ -28,8 +28,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks
                 _remoteParser.TryExtractGitHubDataFromRemoteUrl(remoteUrl, out organizationName, out repoName);
             }
 
-            organizationName = organizationName ?? "ORGANIZATION_NAME";
-            repoName = repoName ?? "REPO_NAME";
+            organizationName ??= "ORGANIZATION_NAME";
+            repoName ??= "REPO_NAME";
 
             var gitHubUrl = $"https://github.com/{organizationName}/{repoName}";
             var definition = new ExternalLinkDefinition

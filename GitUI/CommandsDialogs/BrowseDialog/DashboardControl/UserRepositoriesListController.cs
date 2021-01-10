@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public async Task AssignCategoryAsync(Repository repository, string category)
         {
-            if (repository == null)
+            if (repository is null)
             {
                 throw new ArgumentNullException(nameof(repository));
             }

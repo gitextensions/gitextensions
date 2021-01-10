@@ -36,7 +36,7 @@ namespace GitCommands
 
         public void CheckSubmoduleStatus(GitModule submodule)
         {
-            if (submodule == null)
+            if (submodule is null)
             {
                 Status = SubmoduleStatus.NewSubmodule;
                 return;
@@ -47,7 +47,7 @@ namespace GitCommands
 
         public string AddedAndRemovedString()
         {
-            if (RemovedCommits == null || AddedCommits == null ||
+            if (RemovedCommits is null || AddedCommits is null ||
                 (RemovedCommits == 0 && AddedCommits == 0))
             {
                 return "";

@@ -48,7 +48,7 @@ namespace GitCommands.UserRepositoryHistory
                 var repositoryHistory = await LoadRecentHistoryAsync();
 
                 var repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase));
-                if (repository != null)
+                if (repository is not null)
                 {
                     if (repositoryHistory[0] == repository)
                     {
@@ -82,7 +82,7 @@ namespace GitCommands.UserRepositoryHistory
             // TODO: to be addressed separately
             int size = AppSettings.RecentRepositoriesHistorySize;
             var history = _repositoryStorage.Load(KeyRemoteHistory);
-            if (history == null)
+            if (history is null)
             {
                 return Array.Empty<Repository>();
             }
@@ -107,7 +107,7 @@ namespace GitCommands.UserRepositoryHistory
             await TaskScheduler.Default;
             var repositoryHistory = await LoadRecentHistoryAsync();
             var repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
-            if (repository == null)
+            if (repository is null)
             {
                 return repositoryHistory;
             }
@@ -131,7 +131,7 @@ namespace GitCommands.UserRepositoryHistory
         [ContractAnnotation("repositoryHistory:null=>halt")]
         public async Task SaveRecentHistoryAsync(IEnumerable<Repository> repositoryHistory)
         {
-            if (repositoryHistory == null)
+            if (repositoryHistory is null)
             {
                 throw new ArgumentNullException(nameof(repositoryHistory));
             }

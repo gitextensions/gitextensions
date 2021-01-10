@@ -48,12 +48,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
         public override string GetTitle()
         {
-            return _gitPlugin == null ? string.Empty : _gitPlugin.Description;
+            return _gitPlugin is null ? string.Empty : _gitPlugin.Description;
         }
 
         private IEnumerable<ISetting> GetSettings()
         {
-            if (_gitPlugin == null)
+            if (_gitPlugin is null)
             {
                 throw new ApplicationException();
             }

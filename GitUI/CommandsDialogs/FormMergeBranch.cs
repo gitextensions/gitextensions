@@ -60,7 +60,7 @@ namespace GitUI.CommandsDialogs
 
             Branches.BranchesToSelect = Module.GetRefs(true, true);
 
-            if (_defaultBranch != null)
+            if (_defaultBranch is not null)
             {
                 Branches.SetSelectedText(_defaultBranch);
             }

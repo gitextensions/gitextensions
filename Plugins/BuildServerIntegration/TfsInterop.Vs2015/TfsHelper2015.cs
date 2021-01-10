@@ -294,7 +294,7 @@ namespace TfsInterop
         public async Task<List<IBuild>> QueryBuilds2015Async(List<IBuild> result, DateTime? sinceDate, bool? running)
         {
             ////var result = new List<IBuild>();
-            if (_buildDefinitions2015 == null)
+            if (_buildDefinitions2015 is null)
             {
                 return result;
             }

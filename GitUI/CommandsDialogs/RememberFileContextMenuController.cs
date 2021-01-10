@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs
         public bool ShouldEnableSecondItemDiff(FileStatusItem item, bool isSecondRevision)
         {
             // Git reference in this revision or work tree file existing on the file system
-            return item != null
+            return item is not null
                    && !item.Item.IsSubmodule
                    && (isSecondRevision ? !item.Item.IsDeleted : !item.Item.IsNew);
         }
@@ -85,7 +85,7 @@ namespace GitUI.CommandsDialogs
         [Pure]
         public string GetGitCommit([CanBeNull] Func<string, ObjectId, ObjectId> getFileBlobHash, [CanBeNull] FileStatusItem item, bool isSecondRevision)
         {
-            if (item == null)
+            if (item is null)
             {
                 return null;
             }
@@ -95,7 +95,7 @@ namespace GitUI.CommandsDialogs
                     : item.Item.Name)
                 ?.ToPosixPath();
             var id = (isSecondRevision ? item.SecondRevision : item.FirstRevision)?.ObjectId;
-            if (string.IsNullOrWhiteSpace(name) || id == null)
+            if (string.IsNullOrWhiteSpace(name) || id is null)
             {
                 return null;
             }
@@ -109,7 +109,7 @@ namespace GitUI.CommandsDialogs
             if (id == ObjectId.IndexId)
             {
                 // Must be referenced by blob - no commit. File name presented in difftool will be blob or the other file
-                return item.Item.TreeGuid != null
+                return item.Item.TreeGuid is not null
                     ? item.Item.TreeGuid.ToString()
                     : getFileBlobHash?.Invoke(name, id)?.ToString();
             }

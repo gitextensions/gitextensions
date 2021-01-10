@@ -179,7 +179,7 @@ namespace GitUI.CommitInfo
             _revision = revision;
             _children = children;
 
-            if (revision == null)
+            if (revision is null)
             {
                 tableLayout.Visible = false;
                 return;
@@ -289,7 +289,7 @@ namespace GitUI.CommitInfo
             _tagInfo = "";
             _gitDescribeInfo = "";
 
-            if (_revision != null && !_revision.IsArtificial)
+            if (_revision is not null && !_revision.IsArtificial)
             {
                 StartAsyncDataLoad();
             }
@@ -298,7 +298,7 @@ namespace GitUI.CommitInfo
 
             void UpdateCommitMessage()
             {
-                if (_revision == null)
+                if (_revision is null)
                 {
                     rtbxCommitMessage.SetXHTMLText(string.Empty);
                     return;
@@ -306,14 +306,14 @@ namespace GitUI.CommitInfo
 
                 var data = _commitDataManager.CreateFromRevision(_revision, _children);
 
-                if (_revision.Body == null || (AppSettings.ShowGitNotes && !_revision.HasNotes))
+                if (_revision.Body is null || (AppSettings.ShowGitNotes && !_revision.HasNotes))
                 {
                     _commitDataManager.UpdateBody(data, out _);
                     _revision.Body = data.Body;
                     _revision.HasNotes = true;
                 }
 
-                var commitMessage = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent != null);
+                var commitMessage = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent is not null);
                 rtbxCommitMessage.SetXHTMLText(commitMessage);
             }
 
@@ -366,7 +366,7 @@ namespace GitUI.CommitInfo
 
                 async Task LoadLinksForRevisionAsync(GitRevision revision)
                 {
-                    if (revision == null)
+                    if (revision is null)
                     {
                         return;
                     }
@@ -412,7 +412,7 @@ namespace GitUI.CommitInfo
 
                     IDictionary<string, string> GetAnnotatedTagsMessages()
                     {
-                        if (refs == null)
+                        if (refs is null)
                         {
                             return null;
                         }
@@ -450,7 +450,7 @@ namespace GitUI.CommitInfo
                             {
                                 string content = WebUtility.HtmlEncode(Module.GetTagMessage(gitRef.LocalName));
 
-                                if (content != null)
+                                if (content is not null)
                                 {
                                     result.Add(gitRef.LocalName, content);
                                 }
@@ -526,12 +526,12 @@ namespace GitUI.CommitInfo
 
         private void UpdateRevisionInfo()
         {
-            if (_tagsOrderDict != null)
+            if (_tagsOrderDict is not null)
             {
-                if (_annotatedTagsMessages != null &&
+                if (_annotatedTagsMessages is not null &&
                     _annotatedTagsMessages.Count > 0 &&
                     string.IsNullOrEmpty(_annotatedTagsInfo) &&
-                    Revision != null)
+                    Revision is not null)
                 {
                     // having both lightweight & annotated tags in thisRevisionTagNames,
                     // but GetAnnotatedTagsInfo will process annotated only:
@@ -546,14 +546,14 @@ namespace GitUI.CommitInfo
                     _annotatedTagsInfo = GetAnnotatedTagsInfo(thisRevisionTagNames, _annotatedTagsMessages);
                 }
 
-                if (_tags != null && string.IsNullOrEmpty(_tagInfo))
+                if (_tags is not null && string.IsNullOrEmpty(_tagInfo))
                 {
                     _tags.Sort(new TagsComparer(_tagsOrderDict));
                     _tagInfo = _refsFormatter.FormatTags(_tags, ShowBranchesAsLinks, limit: !_showAllTags);
                 }
             }
 
-            if (_branches != null && string.IsNullOrEmpty(_branchInfo))
+            if (_branches is not null && string.IsNullOrEmpty(_branchInfo))
             {
                 _branches.Sort(new BranchComparer(Module.GetSelectedBranch()));
                 _branchInfo = _refsFormatter.FormatBranches(_branches, ShowBranchesAsLinks, limit: !_showAllBranches);
@@ -587,7 +587,7 @@ namespace GitUI.CommitInfo
         private void commitInfoContextMenuStrip_Opening(object sender, CancelEventArgs e)
         {
             var rtb = (sender as ContextMenuStrip)?.SourceControl as RichTextBox;
-            if (rtb == null)
+            if (rtb is null)
             {
                 copyLinkToolStripMenuItem.Visible = false;
                 return;
@@ -595,7 +595,7 @@ namespace GitUI.CommitInfo
 
             int charIndex = rtb.GetCharIndexFromPosition(rtb.PointToClient(MousePosition));
             string link = rtb.GetLink(charIndex);
-            copyLinkToolStripMenuItem.Visible = link != null;
+            copyLinkToolStripMenuItem.Visible = link is not null;
             copyLinkToolStripMenuItem.Text = string.Format(_copyLink.Text, link);
             copyLinkToolStripMenuItem.Tag = link;
         }
@@ -737,7 +737,7 @@ namespace GitUI.CommitInfo
         private void RichTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             var rtb = sender as RichTextBox;
-            if (rtb == null || !e.Control || e.KeyCode != Keys.C)
+            if (rtb is null || !e.Control || e.KeyCode != Keys.C)
             {
                 return;
             }

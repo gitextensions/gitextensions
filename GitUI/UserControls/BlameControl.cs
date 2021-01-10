@@ -82,7 +82,7 @@ namespace GitUI.Blame
         public void ConfigureRepositoryHostPlugin(IRepositoryHostPlugin gitHoster)
         {
             _gitHoster = gitHoster;
-            if (_gitHoster == null)
+            if (_gitHoster is null)
             {
                 return;
             }
@@ -109,7 +109,7 @@ namespace GitUI.Blame
 
             var scrollPos = BlameFile.VScrollPosition;
 
-            var line = _clickedBlameLine != null && _clickedBlameLine.Commit.ObjectId == objectId
+            var line = _clickedBlameLine is not null && _clickedBlameLine.Commit.ObjectId == objectId
                 ? _clickedBlameLine.OriginLineNumber
                 : initialLine ?? 0;
 
@@ -138,7 +138,7 @@ namespace GitUI.Blame
                 BlameFile.Focus();
             }
 
-            if (_blame == null)
+            if (_blame is null)
             {
                 return;
             }
@@ -151,7 +151,7 @@ namespace GitUI.Blame
 
             HighlightLinesForCommit(blameCommit);
 
-            if (blameCommit == null)
+            if (blameCommit is null)
             {
                 return;
             }
@@ -170,7 +170,7 @@ namespace GitUI.Blame
 
         private void BlameFile_MouseMove(object sender, MouseEventArgs e)
         {
-            if (_blame == null)
+            if (_blame is null)
             {
                 return;
             }
@@ -196,7 +196,7 @@ namespace GitUI.Blame
             BlameAuthor.ClearHighlighting();
             BlameFile.ClearHighlighting();
 
-            if (commit == null)
+            if (commit is null)
             {
                 return;
             }
@@ -236,7 +236,7 @@ namespace GitUI.Blame
         {
             int selectedLine = e.SelectedLine;
 
-            if (_blame == null || selectedLine >= _blame.Lines.Count)
+            if (_blame is null || selectedLine >= _blame.Lines.Count)
             {
                 return;
             }
@@ -365,7 +365,7 @@ namespace GitUI.Blame
                     var authorEmail = line.Commit.AuthorMail?.Trim('<', '>');
                     if (showAuthorAvatar)
                     {
-                        if (authorEmail != null)
+                        if (authorEmail is not null)
                         {
                             if (cacheAvatars.ContainsKey(authorEmail))
                             {
@@ -482,12 +482,12 @@ namespace GitUI.Blame
 
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
         {
-            if (_lastBlameLine == null)
+            if (_lastBlameLine is null)
             {
                 return;
             }
 
-            if (_revGrid != null)
+            if (_revGrid is not null)
             {
                 _clickedBlameLine = _lastBlameLine;
                 _revGrid.SetSelectedRevision(_lastBlameLine.Commit.ObjectId);
@@ -503,7 +503,7 @@ namespace GitUI.Blame
 
         private int GetBlameLine()
         {
-            if (_blame == null)
+            if (_blame is null)
             {
                 return -1;
             }
@@ -523,7 +523,7 @@ namespace GitUI.Blame
         {
             contextMenu.Tag = new GitBlameContext(_fileName, _lineIndex, GetBlameLine(), _blameId);
 
-            if (_revGrid == null || !TryGetSelectedRevision(out var selectedRevision))
+            if (_revGrid is null || !TryGetSelectedRevision(out var selectedRevision))
             {
                 blameRevisionToolStripMenuItem.Enabled = false;
                 blamePreviousRevisionToolStripMenuItem.Enabled = false;
@@ -555,7 +555,7 @@ namespace GitUI.Blame
         {
             var commit = GetBlameCommit();
 
-            if (commit == null)
+            if (commit is null)
             {
                 return;
             }
@@ -576,14 +576,14 @@ namespace GitUI.Blame
         private bool TryGetSelectedRevision(out GitRevision selectedRevision)
         {
             var blameCommit = GetBlameCommit();
-            if (blameCommit == null)
+            if (blameCommit is null)
             {
                 selectedRevision = null;
                 return false;
             }
 
             selectedRevision = _revGrid?.GetRevision(blameCommit.ObjectId);
-            return selectedRevision != null;
+            return selectedRevision is not null;
         }
 
         private void blameRevisionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -608,7 +608,7 @@ namespace GitUI.Blame
 
         private void BlameRevision(ObjectId revisionId)
         {
-            if (_revGrid != null)
+            if (_revGrid is not null)
             {
                 _revGrid.SetSelectedRevision(revisionId);
                 return;
@@ -624,7 +624,7 @@ namespace GitUI.Blame
         {
             var commit = GetBlameCommit();
 
-            if (commit == null)
+            if (commit is null)
             {
                 return;
             }

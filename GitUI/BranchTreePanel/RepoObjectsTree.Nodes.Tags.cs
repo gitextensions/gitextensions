@@ -141,7 +141,7 @@ namespace GitUI.BranchTreePanel
                     bool isVisible = !IsFiltering.Value || _refsSource.Contains(tag.ObjectId);
                     var tagNode = new TagNode(this, tag.ObjectId, tag.Name, isVisible);
                     var parent = tagNode.CreateRootNode(pathToNodes, (tree, parentPath) => new BasePathNode(tree, parentPath));
-                    if (parent != null)
+                    if (parent is not null)
                     {
                         nodes.AddNode(parent);
                     }

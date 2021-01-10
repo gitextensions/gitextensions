@@ -29,7 +29,7 @@ namespace GitCommands.ExternalLinks
 
         private static IEnumerable<ConfigFileRemote> GetMatchingRemotes(ExternalLinkDefinition definition, IEnumerable<ConfigFileRemote> remotes)
         {
-            if (string.IsNullOrWhiteSpace(definition.UseRemotesPattern) || definition.UseRemotesRegex.Value == null)
+            if (string.IsNullOrWhiteSpace(definition.UseRemotesPattern) || definition.UseRemotesRegex.Value is null)
             {
                 return remotes;
             }
@@ -48,7 +48,7 @@ namespace GitCommands.ExternalLinks
         {
             var allMatches = new List<Match>();
 
-            if (string.IsNullOrWhiteSpace(definition.RemoteSearchPattern) || definition.RemoteSearchPatternRegex.Value == null)
+            if (string.IsNullOrWhiteSpace(definition.RemoteSearchPattern) || definition.RemoteSearchPatternRegex.Value is null)
             {
                 allMatches.Add(null);
                 return allMatches;
@@ -124,7 +124,7 @@ namespace GitCommands.ExternalLinks
 
         private static IEnumerable<ExternalLink> ParseRevisionPart(GitRevision revision, ExternalLinkDefinition definition, Match remoteMatch, string part)
         {
-            if (string.IsNullOrEmpty(definition.SearchPattern) || definition.SearchPatternRegex.Value == null || part == null)
+            if (string.IsNullOrEmpty(definition.SearchPattern) || definition.SearchPatternRegex.Value is null || part is null)
             {
                 yield break;
             }
@@ -141,7 +141,7 @@ namespace GitCommands.ExternalLinks
                     {
                         allMatches.Add(match);
                     }
-                    else if (definition.NestedSearchPatternRegex.Value != null)
+                    else if (definition.NestedSearchPatternRegex.Value is not null)
                     {
                         MatchCollection nestedMatches = definition.NestedSearchPatternRegex.Value.Matches(match.Value);
 

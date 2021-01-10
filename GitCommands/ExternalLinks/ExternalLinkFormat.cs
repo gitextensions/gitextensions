@@ -41,7 +41,7 @@ namespace GitCommands.ExternalLinks
 
             void AddGroupsFromMatches(Match match)
             {
-                if (match != null)
+                if (match is not null)
                 {
                     for (int i = match.Groups.Count > 1 ? 1 : 0; i < match.Groups.Count; i++)
                     {

@@ -65,7 +65,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             var userSelectedPath = OsShellUtil.PickFolder(this, AppSettings.GitBinDir);
 
-            if (userSelectedPath != null)
+            if (userSelectedPath is not null)
             {
                 GitBinPath.Text = userSelectedPath;
             }

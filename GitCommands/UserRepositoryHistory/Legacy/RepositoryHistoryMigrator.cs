@@ -55,7 +55,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
         [ContractAnnotation("currentHistory:null=>halt")]
         public async Task<(IList<Current.Repository> history, bool changed)> MigrateAsync(IEnumerable<Current.Repository> currentHistory)
         {
-            if (currentHistory == null)
+            if (currentHistory is null)
             {
                 throw new ArgumentNullException(nameof(currentHistory));
             }
@@ -86,7 +86,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
                 foreach (var repository in category.Repositories)
                 {
                     var repo = history.FirstOrDefault(hr => hr.Path == repository.Path);
-                    if (repo == null)
+                    if (repo is null)
                     {
                         repo = new Current.Repository(repository.Path);
                         history.Add(repo);

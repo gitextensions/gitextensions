@@ -72,7 +72,7 @@ namespace GitUI.HelperDialogs
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (components is not null))
             {
                 components.Dispose();
 
@@ -256,12 +256,12 @@ namespace GitUI.HelperDialogs
 
         private void Start()
         {
-            if (ProcessCallback == null)
+            if (ProcessCallback is null)
             {
                 throw new InvalidOperationException("You can't load the form without a ProcessCallback");
             }
 
-            if (AbortCallback == null)
+            if (AbortCallback is null)
             {
                 Abort.Visible = false;
             }

@@ -221,11 +221,11 @@ namespace GitCommands.Git.Commands
                 "-v",
                 { central, "--bare" },
                 { initSubmodules, "--recurse-submodules" },
-                { depth != null, $"--depth {depth}" },
+                { depth is not null, $"--depth {depth}" },
                 { isSingleBranch == true, "--single-branch" },
                 { isSingleBranch == false, "--no-single-branch" },
                 "--progress",
-                { branch == null, "--no-checkout" },
+                { branch is null, "--no-checkout" },
                 { !string.IsNullOrEmpty(branch), $"--branch {branch}" },
                 from.Trim().Quote(),
                 toPath.ToPosixPath().Trim().Quote()
@@ -350,7 +350,7 @@ namespace GitCommands.Git.Commands
 
         public static ArgumentString StashSaveCmd(bool untracked, bool keepIndex, string message, IReadOnlyList<string> selectedFiles)
         {
-            if (selectedFiles == null)
+            if (selectedFiles is null)
             {
                 selectedFiles = Array.Empty<string>();
             }
@@ -411,7 +411,7 @@ namespace GitCommands.Git.Commands
         public static ArgumentString RebaseCmd(
             string branch, bool interactive, bool preserveMerges, bool autosquash, bool autoStash, bool ignoreDate, bool committerDateIsAuthorDate, string from = null, string onto = null)
         {
-            if (from == null ^ onto == null)
+            if (from is null ^ onto is null)
             {
                 throw new ArgumentException($"For arguments \"{nameof(from)}\" and \"{nameof(onto)}\", either both must have values, or neither may.");
             }
@@ -442,7 +442,7 @@ namespace GitCommands.Git.Commands
             builder.Add(autoStash, "--autostash");
             builder.Add(from.QuoteNE());
             builder.Add(branch.Quote());
-            builder.Add(onto != null, $"--onto {onto}");
+            builder.Add(onto is not null, $"--onto {onto}");
 
             return builder;
         }
@@ -548,7 +548,7 @@ namespace GitCommands.Git.Commands
                 { noCommit, "--no-commit" },
                 { allowUnrelatedHistories, "--allow-unrelated-histories" },
                 { !string.IsNullOrWhiteSpace(mergeCommitFilePath), $"-F \"{mergeCommitFilePath}\"" }, // let git fail, if the file doesn't exist
-                { log != null && log.Value > 0, $"--log={log}" },
+                { log is not null && log.Value > 0, $"--log={log}" },
                 branch
             };
         }

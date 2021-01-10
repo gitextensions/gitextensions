@@ -138,7 +138,7 @@ namespace GitUI.Script
                 {
                     var revisionRef = new Executable(command, module.WorkingDir).GetOutputLines(argument).FirstOrDefault();
 
-                    if (revisionRef != null)
+                    if (revisionRef is not null)
                     {
                         revisionGrid.GoToRef(revisionRef, true);
                     }

@@ -37,7 +37,7 @@ namespace GitUI
 
         private void LoadBranches()
         {
-            if (_branchesToSelect != null)
+            if (_branchesToSelect is not null)
             {
                 branches.Items.AddRange(_branchesToSelect.ToArray());
             }
@@ -48,7 +48,7 @@ namespace GitUI
             foreach (string branch in branches.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 var gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branch);
-                if (gitHead == null)
+                if (gitHead is null)
                 {
                     MessageBox.Show(string.Format(_branchCheckoutError.Text, branch), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -66,7 +66,7 @@ namespace GitUI
 
         public void SetSelectedText(string text)
         {
-            if (text == null)
+            if (text is null)
             {
                 throw new ArgumentNullException(nameof(text));
             }

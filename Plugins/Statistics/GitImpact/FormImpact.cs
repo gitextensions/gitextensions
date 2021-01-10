@@ -16,7 +16,7 @@ namespace GitImpact
             InitializeComponent();
             InitializeComplete();
             UpdateAuthorInfo("");
-            if (module != null)
+            if (module is not null)
             {
                 Impact.Init(module);
                 Impact.UpdateData();

@@ -68,7 +68,7 @@ namespace GitCommands.DiffMergeTools
             }
 
             var fileSettings = _getFileSettings();
-            if (fileSettings == null)
+            if (fileSettings is null)
             {
                 return;
             }
@@ -140,7 +140,7 @@ namespace GitCommands.DiffMergeTools
             string fullPath;
 
             var diffTool = RegisteredDiffMergeTools.Get(toolName);
-            if (diffTool == null)
+            if (diffTool is null)
             {
                 var exeName = toolName + ".exe";
                 if (!string.IsNullOrWhiteSpace(userSuppliedPath))
@@ -175,7 +175,7 @@ namespace GitCommands.DiffMergeTools
         public void UnsetCurrentTool(DiffMergeToolType toolType)
         {
             var fileSettings = _getFileSettings();
-            if (fileSettings == null)
+            if (fileSettings is null)
             {
                 return;
             }

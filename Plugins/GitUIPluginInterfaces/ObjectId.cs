@@ -73,7 +73,7 @@ namespace GitUIPluginInterfaces
         [ContractAnnotation("=>true,objectId:notnull")]
         public static bool TryParse([CanBeNull] string s, out ObjectId objectId)
         {
-            if (s == null || s.Length != Sha1CharCount)
+            if (s is null || s.Length != Sha1CharCount)
             {
                 objectId = default;
                 return false;
@@ -98,7 +98,7 @@ namespace GitUIPluginInterfaces
         [ContractAnnotation("=>true,objectId:notnull")]
         public static bool TryParse([CanBeNull] string s, int offset, out ObjectId objectId)
         {
-            if (s == null || s.Length - offset < Sha1CharCount)
+            if (s is null || s.Length - offset < Sha1CharCount)
             {
                 objectId = default;
                 return false;
@@ -165,7 +165,7 @@ namespace GitUIPluginInterfaces
         [MustUseReturnValue]
         public static ObjectId Parse([NotNull] string s)
         {
-            if (s == null || s.Length != Sha1CharCount || !TryParse(s, 0, out var id))
+            if (s is null || s.Length != Sha1CharCount || !TryParse(s, 0, out var id))
             {
                 throw new FormatException($"Unable to parse object ID \"{s}\".");
             }
@@ -274,7 +274,7 @@ namespace GitUIPluginInterfaces
         {
             // TODO get rid of this overload? slice the array segment instead
 
-            if (bytes.Array == null)
+            if (bytes.Array is null)
             {
                 objectId = default;
                 return false;
@@ -378,7 +378,7 @@ namespace GitUIPluginInterfaces
         [MustUseReturnValue]
         public static ObjectId Parse([NotNull] string s, [NotNull] Capture capture)
         {
-            if (s == null || capture == null || capture.Length != Sha1CharCount || !TryParse(s, capture.Index, out var id))
+            if (s is null || capture is null || capture.Length != Sha1CharCount || !TryParse(s, capture.Index, out var id))
             {
                 throw new FormatException($"Unable to parse object ID \"{s}\".");
             }
@@ -523,7 +523,7 @@ namespace GitUIPluginInterfaces
         /// <inheritdoc />
         public bool Equals(ObjectId other)
         {
-            return other != null &&
+            return other is not null &&
                    _i1 == other._i1 &&
                    _i2 == other._i2 &&
                    _i3 == other._i3 &&
@@ -540,7 +540,7 @@ namespace GitUIPluginInterfaces
         /// </remarks>
         public bool Equals([CanBeNull] string other)
         {
-            if (other == null || other.Length != Sha1CharCount)
+            if (other is null || other.Length != Sha1CharCount)
             {
                 return false;
             }

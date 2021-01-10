@@ -138,7 +138,7 @@ namespace GitCommands.Remotes
         [CanBeNull]
         public string GetDefaultPushRemote(ConfigFileRemote remote, string branch)
         {
-            if (remote == null)
+            if (remote is null)
             {
                 throw new ArgumentNullException(nameof(remote));
             }
@@ -216,7 +216,7 @@ namespace GitCommands.Remotes
         {
             var remotes = new List<ConfigFileRemote>();
             var module = _getModule();
-            if (module == null)
+            if (module is null)
             {
                 return remotes;
             }
@@ -237,7 +237,7 @@ namespace GitCommands.Remotes
         /// <returns>Output of <see cref="IGitModule.RemoveRemote"/> operation, if the remote is active; otherwise <see cref="string.Empty"/>.</returns>
         public string RemoveRemote(ConfigFileRemote remote)
         {
-            if (remote == null)
+            if (remote is null)
             {
                 throw new ArgumentNullException(nameof(remote));
             }
@@ -260,7 +260,7 @@ namespace GitCommands.Remotes
         /// <returns>True if input remote exists and is enabled.</returns>
         public bool EnabledRemoteExists(string remoteName)
         {
-            return GetEnabledRemoteNames().FirstOrDefault(r => r == remoteName) != null;
+            return GetEnabledRemoteNames().FirstOrDefault(r => r == remoteName) is not null;
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace GitCommands.Remotes
         /// <returns>True if input remote exists and is disabled.</returns>
         public bool DisabledRemoteExists(string remoteName)
         {
-            return GetDisabledRemoteNames().FirstOrDefault(r => r == remoteName) != null;
+            return GetDisabledRemoteNames().FirstOrDefault(r => r == remoteName) is not null;
         }
 
         /// <summary>
@@ -304,7 +304,7 @@ namespace GitCommands.Remotes
             var output = string.Empty;
 
             var module = GetModule();
-            bool creatingNew = remote == null;
+            bool creatingNew = remote is null;
             bool remoteDisabled = false;
             if (creatingNew)
             {
@@ -367,7 +367,7 @@ namespace GitCommands.Remotes
             var module = GetModule();
             var sections = module.LocalConfigFile.GetConfigSections();
             var section = sections.FirstOrDefault(s => s.SectionName == sectionName && s.SubSection == remoteName);
-            if (section == null)
+            if (section is null)
             {
                 // we didn't find it, nothing we can do
                 return;
@@ -391,7 +391,7 @@ namespace GitCommands.Remotes
             // - then added a remote with the same name from a command line or via UI
             // - then attempted to deactivate the new remote
             var dupSection = sections.FirstOrDefault(s => s.SectionName == newSectionName && s.SubSection == remoteName);
-            if (dupSection != null)
+            if (dupSection is not null)
             {
                 module.LocalConfigFile.RemoveConfigSection($"{newSectionName}.{remoteName}");
             }
@@ -438,7 +438,7 @@ namespace GitCommands.Remotes
         private IGitModule GetModule()
         {
             var module = _getModule();
-            if (module == null)
+            if (module is null)
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }

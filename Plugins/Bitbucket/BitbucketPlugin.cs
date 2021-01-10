@@ -27,7 +27,7 @@ namespace Bitbucket
         public override bool Execute(GitUIEventArgs args)
         {
             Settings settings = Bitbucket.Settings.Parse(args.GitModule, Settings, this);
-            if (settings == null)
+            if (settings is null)
             {
                 MessageBox.Show(args.OwnerForm,
                                 _yourRepositoryIsNotInBitbucket.Text,

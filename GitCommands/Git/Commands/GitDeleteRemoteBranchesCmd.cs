@@ -17,7 +17,7 @@ namespace GitCommands.Git.Commands
                 throw new ArgumentNullException(nameof(remote));
             }
 
-            if (branchLocalNames == null)
+            if (branchLocalNames is null)
             {
                 throw new ArgumentNullException(nameof(branchLocalNames));
             }

@@ -85,7 +85,7 @@ namespace GitCommandsTests.Submodules
             result.SuperProject.Should().Be(null);
             result.CurrentSubmoduleName.Should().Be(null);
             result.AllSubmodules.Select(info => info.Path).Should().Contain(_repo2Module.WorkingDir, _repo3Module.WorkingDir);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
         }
 
@@ -100,7 +100,7 @@ namespace GitCommandsTests.Submodules
             result.SuperProject.Should().Be(result.TopProject);
             result.CurrentSubmoduleName.Should().Be("repo2");
             result.AllSubmodules.Select(info => info.Path).Should().Contain(_repo2Module.WorkingDir, _repo3Module.WorkingDir);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
             result.OurSubmodules.Select(info => info.Path).Should().ContainSingle(_repo3Module.WorkingDir);
         }
@@ -116,7 +116,7 @@ namespace GitCommandsTests.Submodules
             result.SuperProject.Path.Should().Be(_repo2Module.WorkingDir);
             result.CurrentSubmoduleName.Should().Be("repo3");
             result.AllSubmodules.Select(info => info.Path).Should().Contain(_repo2Module.WorkingDir, _repo3Module.WorkingDir);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Select(info => info.Path).Should().BeEmpty();
         }
 
@@ -133,7 +133,7 @@ namespace GitCommandsTests.Submodules
             var changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.Should().BeNull();
 
@@ -166,7 +166,7 @@ namespace GitCommandsTests.Submodules
             var changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.Should().BeNull();
 
@@ -200,7 +200,7 @@ namespace GitCommandsTests.Submodules
             var changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.Should().BeNull();
 
@@ -236,7 +236,7 @@ namespace GitCommandsTests.Submodules
             var changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.Should().BeNull();
 
@@ -271,7 +271,7 @@ namespace GitCommandsTests.Submodules
             var changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.Should().BeNull();
 
@@ -319,7 +319,7 @@ namespace GitCommandsTests.Submodules
             var changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.Should().BeNull();
 
@@ -354,7 +354,7 @@ namespace GitCommandsTests.Submodules
             var changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.Should().BeNull();
 
@@ -387,7 +387,7 @@ namespace GitCommandsTests.Submodules
             var changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.Should().BeNull();
 
@@ -396,7 +396,7 @@ namespace GitCommandsTests.Submodules
             changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.Should().BeNull();
 
@@ -418,7 +418,7 @@ namespace GitCommandsTests.Submodules
             var changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
             result.TopProject.Detailed.Should().BeNull();
 
@@ -427,7 +427,7 @@ namespace GitCommandsTests.Submodules
             changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
             result.TopProject.Detailed.Should().BeNull();
 
@@ -449,7 +449,7 @@ namespace GitCommandsTests.Submodules
             var changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
             result.TopProject.Detailed.Should().BeNull();
 
@@ -483,7 +483,7 @@ namespace GitCommandsTests.Submodules
             var changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
             result.TopProject.Detailed.Should().BeNull();
 
@@ -517,7 +517,7 @@ namespace GitCommandsTests.Submodules
             var changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.TopProject.Detailed.Should().BeNull();
 
             // Make a change in repo3
@@ -549,7 +549,7 @@ namespace GitCommandsTests.Submodules
             var changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.TopProject.Detailed.Should().BeNull();
 
             // Update commit in repo3
@@ -557,7 +557,7 @@ namespace GitCommandsTests.Submodules
             changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.TopProject.Detailed.Should().BeNull();
 
             // Revert the change
@@ -578,7 +578,7 @@ namespace GitCommandsTests.Submodules
             var changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.TopProject.Detailed.Should().BeNull();
 
             // Update commit in repo2
@@ -586,7 +586,7 @@ namespace GitCommandsTests.Submodules
             changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.TopProject.Detailed.Should().BeNull();
 
             // Revert the change
@@ -608,7 +608,7 @@ namespace GitCommandsTests.Submodules
             var changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.Should().BeNull();
 
@@ -642,14 +642,14 @@ namespace GitCommandsTests.Submodules
             result.Should().NotBeNull();
 
             // When top module is current, only structure is updated and no changes seen until explicit git-status
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.Should().BeNull();
 
             var changedFiles = GetStatusChangedFiles(currentModule);
             changedFiles.Should().HaveCount(1);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
             result.TopProject.Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
@@ -701,7 +701,7 @@ namespace GitCommandsTests.Submodules
 
             result.Should().NotBeNull();
 
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.TopProject.Detailed.Should().BeNull();
 
             // Revert the change
@@ -760,7 +760,7 @@ namespace GitCommandsTests.Submodules
             var changedFiles = GetStatusChangedFiles(_repo1Module);
             changedFiles.Should().HaveCount(0);
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, _repo1Module, changedFiles);
-            result.AllSubmodules.All(i => i.Detailed == null).Should().BeTrue();
+            result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.TopProject.Detailed.Should().BeNull();
         }
 

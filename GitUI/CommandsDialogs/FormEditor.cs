@@ -37,7 +37,7 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
 
             // for translation form
-            if (_fileName != null)
+            if (_fileName is not null)
             {
                 OpenFile();
             }

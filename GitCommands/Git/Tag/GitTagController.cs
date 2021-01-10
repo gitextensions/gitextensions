@@ -43,7 +43,7 @@ namespace GitCommands.Git.Tag
         /// <returns>the true if the tag is created.</returns>
         public bool CreateTag(GitCreateTagArgs args, IWin32Window parentWindow)
         {
-            if (parentWindow == null)
+            if (parentWindow is null)
             {
                 throw new ArgumentNullException(nameof(parentWindow));
             }
@@ -62,7 +62,7 @@ namespace GitCommands.Git.Tag
             }
             finally
             {
-                if (tagMessageFileName != null && _fileSystem.File.Exists(tagMessageFileName))
+                if (tagMessageFileName is not null && _fileSystem.File.Exists(tagMessageFileName))
                 {
                     _fileSystem.File.Delete(tagMessageFileName);
                 }

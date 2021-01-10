@@ -206,7 +206,7 @@ namespace GitUI.UserControls
                         return;
                 }
 
-                newValue = newValue ?? GetScrollPos(Handle, SB.VERT);
+                newValue ??= GetScrollPos(Handle, SB.VERT);
                 Scroll?.Invoke(this, new ScrollEventArgs(type, newValue.Value));
 
                 short LowWord(long number) =>
@@ -251,7 +251,7 @@ namespace GitUI.UserControls
             {
                 var hitInfo = GetGroupHitInfo(message.LParam.ToPoint());
 
-                if (hitInfo == null)
+                if (hitInfo is null)
                 {
                     return false;
                 }
@@ -340,7 +340,7 @@ namespace GitUI.UserControls
 
         private static int GetGroupId(ListViewGroup listViewGroup)
         {
-            if (ListViewGroupIdProperty != null)
+            if (ListViewGroupIdProperty is not null)
             {
                 try
                 {

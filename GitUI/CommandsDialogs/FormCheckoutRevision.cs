@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs
             {
                 var selectedObjectId = commitPickerSmallControl1.SelectedObjectId;
 
-                if (selectedObjectId == null)
+                if (selectedObjectId is null)
                 {
                     MessageBox.Show(this, _noRevisionSelectedMsgBox.Text, _noRevisionSelectedMsgBoxCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -46,7 +46,7 @@ namespace GitUI.CommandsDialogs
 
                 var checkedOutObjectId = Module.GetCurrentCheckout();
 
-                Debug.Assert(checkedOutObjectId != null, "checkedOutObjectId != null");
+                Debug.Assert(checkedOutObjectId is not null, "checkedOutObjectId is not null");
 
                 ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
 

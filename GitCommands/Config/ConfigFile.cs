@@ -161,7 +161,7 @@ namespace GitCommands.Config
 
             var configSection = FindConfigSection(configSectionName);
 
-            if (configSection == null)
+            if (configSection is null)
             {
                 return defaultValue;
             }
@@ -183,7 +183,7 @@ namespace GitCommands.Config
 
             var configSection = FindConfigSection(configSectionName);
 
-            if (configSection == null)
+            if (configSection is null)
             {
                 return Array.Empty<string>();
             }
@@ -194,7 +194,7 @@ namespace GitCommands.Config
         public IConfigSection FindOrCreateConfigSection(string name)
         {
             var result = FindConfigSection(name);
-            if (result == null)
+            if (result is null)
             {
                 result = new ConfigSection(name, true);
                 _configSections.Add(result);
@@ -205,7 +205,7 @@ namespace GitCommands.Config
 
         public void AddConfigSection(IConfigSection configSection)
         {
-            if (FindConfigSection(configSection) != null)
+            if (FindConfigSection(configSection) is not null)
             {
                 throw new ArgumentException("Can not add a section that already exists: " + configSection.SectionName);
             }
@@ -217,7 +217,7 @@ namespace GitCommands.Config
         {
             var configSection = FindConfigSection(configSectionName);
 
-            if (configSection == null)
+            if (configSection is null)
             {
                 return;
             }
@@ -283,7 +283,7 @@ namespace GitCommands.Config
                 var sectionName = _token.ToString();
                 _token.Clear();
                 _section = _configFile.FindConfigSection(sectionName);
-                if (_section == null)
+                if (_section is null)
                 {
                     _section = new ConfigSection(sectionName, false);
                     _configFile._configSections.Add(_section);
@@ -295,7 +295,7 @@ namespace GitCommands.Config
                 _key = _token.ToString().Trim();
                 _token.Clear();
 
-                if (_section == null)
+                if (_section is null)
                 {
                     throw new Exception($"Key {_key} in config file {FileName} is not in a section.");
                 }

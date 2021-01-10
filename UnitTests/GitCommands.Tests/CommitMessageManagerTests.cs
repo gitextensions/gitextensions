@@ -46,7 +46,7 @@ namespace GitCommandsTests
         [SetUp]
         public void Setup()
         {
-            if (_referenceRepository == null)
+            if (_referenceRepository is null)
             {
                 _referenceRepository = new ReferenceRepository();
             }

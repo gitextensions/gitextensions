@@ -13,7 +13,7 @@ namespace GitCommands.Git
         public static async Task<GitSubmoduleStatus> GetCurrentSubmoduleChangesAsync(GitModule module, string fileName, string oldFileName, bool staged, bool noLocks = false)
         {
             Patch patch = await module.GetCurrentChangesAsync(fileName, oldFileName, staged, "", noLocks: noLocks).ConfigureAwait(false);
-            string text = patch != null ? patch.Text : "";
+            string text = patch is not null ? patch.Text : "";
             return ParseSubmoduleStatus(text, module, fileName);
         }
 
@@ -42,7 +42,7 @@ namespace GitCommands.Git
             {
                 string line = reader.ReadLine();
 
-                if (line != null)
+                if (line is not null)
                 {
                     var match = Regex.Match(line, @"diff --git [abic]/(.+)\s[abwi]/(.+)");
                     if (match.Groups.Count > 1)
@@ -61,7 +61,7 @@ namespace GitCommands.Git
                     }
                 }
 
-                while ((line = reader.ReadLine()) != null)
+                while ((line = reader.ReadLine()) is not null)
                 {
                     // We are looking for lines resembling:
                     //
@@ -98,7 +98,7 @@ namespace GitCommands.Git
                 }
             }
 
-            if (oldCommitId != null && commitId != null)
+            if (oldCommitId is not null && commitId is not null)
             {
                 if (oldCommitId == commitId)
                 {

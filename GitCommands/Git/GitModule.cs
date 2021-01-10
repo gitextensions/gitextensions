@@ -76,7 +76,7 @@ namespace GitCommands
                 // If we didn't find it, but there's a .git file in the current folder, look for a gitdir:
                 // line in that file that points to the location of the .git folder
                 var gitDir = Path.Combine(WorkingDir, ".git");
-                if (superprojectPath == null && File.Exists(gitDir))
+                if (superprojectPath is null && File.Exists(gitDir))
                 {
                     foreach (var line in File.ReadLines(gitDir))
                     {
@@ -176,7 +176,7 @@ namespace GitCommands
         public GitModule GetTopModule()
         {
             GitModule topModule = this;
-            while (topModule.SuperprojectModule != null)
+            while (topModule.SuperprojectModule is not null)
             {
                 topModule = topModule.SuperprojectModule;
             }
@@ -191,11 +191,11 @@ namespace GitCommands
         {
             get
             {
-                if (_effectiveSettings == null)
+                if (_effectiveSettings is null)
                 {
                     lock (_lock)
                     {
-                        if (_effectiveSettings == null)
+                        if (_effectiveSettings is null)
                         {
                             _effectiveSettings = RepoDistSettings.CreateEffective(this);
                         }
@@ -218,11 +218,11 @@ namespace GitCommands
         {
             get
             {
-                if (_localSettings == null)
+                if (_localSettings is null)
                 {
                     lock (_lock)
                     {
-                        if (_localSettings == null)
+                        if (_localSettings is null)
                         {
                             _localSettings = new RepoDistSettings(null, EffectiveSettings.SettingsCache, SettingLevel.Local);
                         }
@@ -240,11 +240,11 @@ namespace GitCommands
         {
             get
             {
-                if (_effectiveConfigFile == null)
+                if (_effectiveConfigFile is null)
                 {
                     lock (_lock)
                     {
-                        if (_effectiveConfigFile == null)
+                        if (_effectiveConfigFile is null)
                         {
                             _effectiveConfigFile = ConfigFileSettings.CreateEffective(this);
                         }
@@ -267,7 +267,7 @@ namespace GitCommands
         {
             get
             {
-                if (_systemEncoding == null)
+                if (_systemEncoding is null)
                 {
                     _systemEncoding = new SystemEncodingReader().Read();
                 }
@@ -364,14 +364,14 @@ namespace GitCommands
             {
                 // Get a cache of the common dir
                 // Lock needed as the command is called rapidly when creating the module
-                if (_gitCommonDirectory != null)
+                if (_gitCommonDirectory is not null)
                 {
                     return _gitCommonDirectory;
                 }
 
                 lock (_gitCommonLock)
                 {
-                    if (_gitCommonDirectory == null)
+                    if (_gitCommonDirectory is null)
                     {
                         var args = new GitArgumentBuilder("rev-parse") { "--git-common-dir" };
                         var result = _gitExecutable.Execute(args);
@@ -661,7 +661,7 @@ namespace GitCommands
 
             string CheckoutPart(int part, string fileName, string unmerged)
             {
-                if (unmerged != null)
+                if (unmerged is not null)
                 {
                     var args = new GitArgumentBuilder("checkout-index")
                     {
@@ -749,7 +749,7 @@ namespace GitCommands
                 if (fileStage.Length > 2 && int.TryParse(fileStage[0].ToString(), out var stage) && stage >= 1 && stage <= 3)
                 {
                     var itemName = fileStage.Substring(2);
-                    if (prevItemName != itemName && prevItemName != null)
+                    if (prevItemName != itemName && prevItemName is not null)
                     {
                         list.Add(new ConflictData(item[0], item[1], item[2]));
                         item = new ConflictedFileData[3];
@@ -760,7 +760,7 @@ namespace GitCommands
                 }
             }
 
-            if (prevItemName != null)
+            if (prevItemName is not null)
             {
                 list.Add(new ConflictData(item[0], item[1], item[2]));
             }
@@ -772,7 +772,7 @@ namespace GitCommands
         {
             string command = GitCommandHelpers.GetSortedRefsCommand(noLocks: noLocks);
 
-            if (command == null)
+            if (command is null)
             {
                 return new Dictionary<IGitRef, IGitItem>();
             }
@@ -859,7 +859,7 @@ namespace GitCommands
             int? removed = GetCommitCount(from, to);
             int? added = GetCommitCount(to, from);
 
-            if (removed == null || added == null)
+            if (removed is null || added is null)
             {
                 return "";
             }
@@ -1122,7 +1122,7 @@ namespace GitCommands
 
         public async Task<(char code, ObjectId currentCommitId)> GetSuperprojectCurrentCheckoutAsync()
         {
-            if (SuperprojectModule == null)
+            if (SuperprojectModule is null)
             {
                 return (' ', null);
             }
@@ -1183,7 +1183,7 @@ namespace GitCommands
         [CanBeNull]
         public string GetCurrentSubmoduleLocalPath()
         {
-            if (SuperprojectModule == null)
+            if (SuperprojectModule is null)
             {
                 return null;
             }
@@ -1196,7 +1196,7 @@ namespace GitCommands
 
         public string GetSubmoduleFullPath(string localPath)
         {
-            if (localPath == null)
+            if (localPath is null)
             {
                 Debug.Fail("No path for submodule - incorrectly parsed status?");
                 return "";
@@ -1229,7 +1229,7 @@ namespace GitCommands
                 configFile = null;
             }
 
-            if (configFile == null)
+            if (configFile is null)
             {
                 yield return null;
             }
@@ -1296,7 +1296,7 @@ namespace GitCommands
 
                 var configSection = configFile.ConfigSections.FirstOrDefault(section => section.GetValue("path").Trim() == localPath);
 
-                Trace.Assert(configSection != null, $"`git submodule status` returned submodule \"{localPath}\" that was not found in .gitmodules");
+                Trace.Assert(configSection is not null, $"`git submodule status` returned submodule \"{localPath}\" that was not found in .gitmodules");
 
                 var name = configSection.SubSection.Trim();
                 var remotePath = configFile.GetPathValue($"submodule.{name}.url").Trim();
@@ -1338,7 +1338,7 @@ namespace GitCommands
 
         public string ResetFiles(IReadOnlyList<string> files)
         {
-            if (files == null || files.Count == 0)
+            if (files is null || files.Count == 0)
             {
                 return string.Empty;
             }
@@ -1370,7 +1370,7 @@ namespace GitCommands
                 new GitArgumentBuilder("format-patch")
                 {
                     "-M -C -B",
-                    { start != null, $"--start-number {start}" },
+                    { start is not null, $"--start-number {start}" },
                     { !string.IsNullOrEmpty(from), $"{from.Quote()}..{to.Quote()}", $"--root {to.Quote()}" },
                     $"-o {output.ToPosixPath().Quote()}"
                 });
@@ -1957,7 +1957,7 @@ namespace GitCommands
 
             var patchFiles = new List<PatchFile>();
 
-            if (todoCommits != null)
+            if (todoCommits is not null)
             {
                 string commentChar = EffectiveConfigFile.GetString("core.commentChar", "#");
 
@@ -1979,7 +1979,7 @@ namespace GitCommands
 
                     string commitHash = parts[1];
                     CommitData data = _commitDataManager.GetCommitData(commitHash, out var error);
-                    var isApplying = currentCommitShortHash != null && commitHash.StartsWith(currentCommitShortHash);
+                    var isApplying = currentCommitShortHash is not null && commitHash.StartsWith(currentCommitShortHash);
                     isCurrentFound |= isApplying;
 
                     patchFiles.Add(new PatchFile
@@ -2036,7 +2036,7 @@ namespace GitCommands
                     foreach (var line in File.ReadLines(rebaseDir + file))
                     {
                         var m = HeadersMatch.Match(line);
-                        if (key == null)
+                        if (key is null)
                         {
                             if (!string.IsNullOrWhiteSpace(line) && !m.Success)
                             {
@@ -2460,8 +2460,8 @@ namespace GitCommands
             {
                 staged = StagedStatus.Index;
             }
-            else if (firstId != null && !firstId.IsArtificial &&
-                     secondId != null && !secondId.IsArtificial)
+            else if (firstId is not null && !firstId.IsArtificial &&
+                     secondId is not null && !secondId.IsArtificial)
             {
                 // This cannot be a worktree/index file
                 staged = StagedStatus.None;
@@ -2649,7 +2649,7 @@ namespace GitCommands
                     {
                         var submoduleStatus = await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(this, localItem.Name, localItem.OldName, localItem.Staged == StagedStatus.Index)
                         .ConfigureAwait(false);
-                        if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
+                        if (submoduleStatus is not null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                         {
                             var submodule = submoduleStatus.GetSubmodule(this);
                             submoduleStatus.CheckSubmoduleStatus(submodule);
@@ -2672,9 +2672,9 @@ namespace GitCommands
                             await TaskScheduler.Default.SwitchTo(alwaysYield: true);
 
                             Patch patch = GetSingleDiff(firstId, secondId, item.Name, item.OldName, "", SystemEncoding, true);
-                            string text = patch != null ? patch.Text : "";
+                            string text = patch is not null ? patch.Text : "";
                             var submoduleStatus = SubmoduleHelpers.ParseSubmoduleStatus(text, this, item.Name);
-                            if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
+                            if (submoduleStatus is not null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                             {
                                 var submodule = submoduleStatus.GetSubmodule(this);
                                 submoduleStatus.CheckSubmoduleStatus(submodule);
@@ -2800,15 +2800,15 @@ namespace GitCommands
             var contents = new StringBuilder();
 
             string currentContents = await GetFileContentsAsync(file.Name).ConfigureAwaitRunInline();
-            if (currentContents != null)
+            if (currentContents is not null)
             {
                 contents.Append(currentContents);
             }
 
-            if (file.OldName != null)
+            if (file.OldName is not null)
             {
                 string oldContents = await GetFileContentsAsync(file.OldName).ConfigureAwaitRunInline();
-                if (oldContents != null)
+                if (oldContents is not null)
                 {
                     contents.Append(oldContents);
                 }
@@ -3244,7 +3244,7 @@ namespace GitCommands
                 { AppSettings.DetectCopyInAllOnBlame, "-C" },
                 { AppSettings.IgnoreWhitespaceOnBlame, "-w" },
                 "-l",
-                { lines != null, $"-L {lines}" },
+                { lines is not null, $"-L {lines}" },
                 from.ToPosixPath().Quote(),
                 "--",
                 fileName.ToPosixPath().Quote()
@@ -3753,12 +3753,12 @@ namespace GitCommands
         public SubmoduleStatus CheckSubmoduleStatus([CanBeNull] ObjectId commit, [CanBeNull] ObjectId oldCommit, CommitData data, CommitData oldData, bool loadData = false)
         {
             // Submodule directory must exist to run commands, unknown otherwise
-            if (!IsValidGitWorkingDir() || oldCommit == null)
+            if (!IsValidGitWorkingDir() || oldCommit is null)
             {
                 return SubmoduleStatus.NewSubmodule;
             }
 
-            if (commit == null)
+            if (commit is null)
             {
                 // Actually removed submodule, no special status for this uncommon status
                 return SubmoduleStatus.Unknown;
@@ -3770,7 +3770,7 @@ namespace GitCommands
             }
 
             ObjectId baseOid = GetMergeBase(commit, oldCommit);
-            if (baseOid == null)
+            if (baseOid is null)
             {
                 return SubmoduleStatus.Unknown;
             }
@@ -3790,7 +3790,7 @@ namespace GitCommands
                 oldData = _commitDataManager.GetCommitData(oldCommit.ToString(), out _);
             }
 
-            if (oldData == null)
+            if (oldData is null)
             {
                 return SubmoduleStatus.NewSubmodule;
             }
@@ -3800,7 +3800,7 @@ namespace GitCommands
                 data = _commitDataManager.GetCommitData(commit.ToString(), out _);
             }
 
-            if (data == null)
+            if (data is null)
             {
                 return SubmoduleStatus.Unknown;
             }
@@ -3833,7 +3833,7 @@ namespace GitCommands
         /// <returns>true if <paramref name="branchName"/> is valid reference name, otherwise false.</returns>
         public bool CheckBranchFormat([NotNull] string branchName)
         {
-            if (branchName == null)
+            if (branchName is null)
             {
                 throw new ArgumentNullException(nameof(branchName));
             }
@@ -3860,14 +3860,14 @@ namespace GitCommands
         [CanBeNull]
         private string FormatBranchName([NotNull] string branchName)
         {
-            if (branchName == null)
+            if (branchName is null)
             {
                 throw new ArgumentNullException(nameof(branchName));
             }
 
             string fullBranchName = GitRefName.GetFullBranchName(branchName);
 
-            if (RevParse(fullBranchName) == null)
+            if (RevParse(fullBranchName) is null)
             {
                 return branchName;
             }
@@ -3932,7 +3932,7 @@ namespace GitCommands
         [ContractAnnotation("s:null=>null")]
         public static string UnescapeOctalCodePoints([CanBeNull] string s)
         {
-            if (s == null)
+            if (s is null)
             {
                 return null;
             }
@@ -3971,7 +3971,7 @@ namespace GitCommands
         /// <returns>The escaped string, or <c>""</c> if <paramref name="s"/> is <c>null</c>.</returns>
         public static string EscapeOctalCodePoints([CanBeNull] string s)
         {
-            if (s == null)
+            if (s is null)
             {
                 return null;
             }
@@ -4010,7 +4010,7 @@ namespace GitCommands
         [ContractAnnotation("s:notnull=>notnull")]
         public static string ReEncodeString([CanBeNull] string s, [NotNull] Encoding fromEncoding, [NotNull] Encoding toEncoding)
         {
-            if (s == null || fromEncoding.HeaderName == toEncoding.HeaderName)
+            if (s is null || fromEncoding.HeaderName == toEncoding.HeaderName)
             {
                 return s;
             }
@@ -4026,7 +4026,7 @@ namespace GitCommands
         [ContractAnnotation("s:notnull=>notnull")]
         public static string ReEncodeStringFromLossless([CanBeNull] string s, [CanBeNull] Encoding toEncoding)
         {
-            if (toEncoding == null)
+            if (toEncoding is null)
             {
                 return s;
             }
@@ -4319,7 +4319,7 @@ namespace GitCommands
 
             string GetDateParameter(string param, DateTime? date)
             {
-                return date != null
+                return date is not null
                     ? $"{param}=\"{date:yyyy-MM-dd hh:mm:ss}\""
                     : "";
             }

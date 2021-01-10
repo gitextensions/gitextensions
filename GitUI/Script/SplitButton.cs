@@ -73,14 +73,14 @@ namespace GitUI.Script
             set
             {
                 // remove the event handlers for the old SplitMenuStrip
-                if (_splitMenuStrip != null)
+                if (_splitMenuStrip is not null)
                 {
                     _splitMenuStrip.Closing -= SplitMenuStrip_Closing;
                     _splitMenuStrip.Opening -= SplitMenuStrip_Opening;
                 }
 
                 // add the event handlers for the new SplitMenuStrip
-                if (value != null)
+                if (value is not null)
                 {
                     ShowSplit = true;
                     value.Closing += SplitMenuStrip_Closing;
@@ -273,7 +273,7 @@ namespace GitUI.Script
             {
                 ShowContextMenuStrip();
             }
-            else if (_splitMenuStrip == null || !_isSplitMenuVisible)
+            else if (_splitMenuStrip is null || !_isSplitMenuVisible)
             {
                 SetButtonDrawState();
 
@@ -365,7 +365,7 @@ namespace GitUI.Script
             CalculateButtonTextAndImageLayout(ref bounds, out var text_rectangle, out var image_rectangle);
 
             // draw the image
-            if (Image != null)
+            if (Image is not null)
             {
                 if (Enabled)
                 {
@@ -509,7 +509,7 @@ namespace GitUI.Script
                     }
 
                     // Image is dependent on ImageAlign
-                    if (Image != null)
+                    if (Image is not null)
                     {
                         imageRectangle = OverlayObjectRect(ref content_rect, ref image_size, ImageAlign);
                     }

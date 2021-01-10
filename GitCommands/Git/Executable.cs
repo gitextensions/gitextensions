@@ -83,7 +83,7 @@ namespace GitCommands
                                   [CanBeNull] Encoding outputEncoding,
                                   bool useShellExecute)
             {
-                Debug.Assert(redirectOutput == (outputEncoding != null), "redirectOutput == (outputEncoding != null)");
+                Debug.Assert(redirectOutput == (outputEncoding is not null), "redirectOutput == (outputEncoding is not null)");
                 _redirectInput = redirectInput;
                 _redirectOutput = redirectOutput;
 

@@ -68,7 +68,7 @@ namespace GitCommands
                 return substring;
             }
 
-            if (bucket == null)
+            if (bucket is null)
             {
                 Count++;
 

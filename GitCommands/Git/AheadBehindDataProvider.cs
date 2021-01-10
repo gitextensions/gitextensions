@@ -46,7 +46,7 @@ namespace GitCommands.Git
         // This method is required to facilitate unit tests
         private IDictionary<string, AheadBehindData> GetData(Encoding encoding, string branchName = "")
         {
-            if (branchName == null)
+            if (branchName is null)
             {
                 throw new ArgumentException(nameof(branchName));
             }
@@ -127,7 +127,7 @@ namespace GitCommands.Git
         {
             var executable = _getGitExecutable();
 
-            if (executable == null)
+            if (executable is null)
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IExecutable)}");
             }

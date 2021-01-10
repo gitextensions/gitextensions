@@ -28,8 +28,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks
                 _azureDevOpsRemoteParser.TryExtractAzureDevopsDataFromRemoteUrl(remoteUrl, out accountName, out _, out repoName);
             }
 
-            accountName = accountName ?? "ACCOUNT_NAME";
-            repoName = repoName ?? "REPO_NAME";
+            accountName ??= "ACCOUNT_NAME";
+            repoName ??= "REPO_NAME";
 
             var azureDevopsUrl = $"https://dev.azure.com/{accountName}";
             var definition = new ExternalLinkDefinition

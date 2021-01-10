@@ -35,7 +35,7 @@ namespace GitUI
                     return;
                 }
 
-                if (value == null)
+                if (value is null)
                 {
                     _joinableTaskContext = null;
                     _joinableTaskCollection = null;

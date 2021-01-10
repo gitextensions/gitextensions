@@ -68,7 +68,7 @@ namespace GitCommands.Settings
 
         protected override void SetValueImpl(string key, string value)
         {
-            if (value == null)
+            if (value is null)
             {
                 _encodedNameMap.Remove(key);
             }

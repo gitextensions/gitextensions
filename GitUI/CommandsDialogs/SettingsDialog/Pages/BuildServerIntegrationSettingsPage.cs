@@ -97,7 +97,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             buildServerSettingsPanel.Controls.Clear();
 
-            if (control != null)
+            if (control is not null)
             {
                 control.LoadSettings(CurrentSettings.BuildServer.TypeSettings);
 
@@ -118,7 +118,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             var exports = ManagedExtensibility.GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>();
             var selectedExport = exports.SingleOrDefault(export => export.Metadata.BuildServerType == GetSelectedBuildServerType());
-            if (selectedExport != null)
+            if (selectedExport is not null)
             {
                 var buildServerSettingsUserControl = selectedExport.Value;
                 var remoteUrls = _remotesManager.LoadRemotes(false).Select(r => string.IsNullOrEmpty(r.PushUrl) ? r.Url : r.PushUrl);

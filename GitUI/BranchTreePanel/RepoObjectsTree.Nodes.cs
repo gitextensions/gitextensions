@@ -141,7 +141,7 @@ namespace GitUI.BranchTreePanel
                 uiCommands.UICommandsChanged += (a, e) =>
                 {
                     // When GitModule has changed, clear selected node
-                    if (TreeViewNode?.TreeView != null)
+                    if (TreeViewNode?.TreeView is not null)
                     {
                         TreeViewNode.TreeView.SelectedNode = null;
                     }
@@ -277,7 +277,7 @@ namespace GitUI.BranchTreePanel
                 var token = _reloadCancellationTokenSequence.Next();
 
                 var treeView = TreeViewNode.TreeView;
-                if (treeView == null || !IsAttached)
+                if (treeView is null || !IsAttached)
                 {
                     return;
                 }
@@ -317,7 +317,7 @@ namespace GitUI.BranchTreePanel
                 if (originalSelectedNodeFullNamePath != selectedNode?.GetFullNamePath())
                 {
                     var node = TreeViewNode.GetNodeFromPath(originalSelectedNodeFullNamePath);
-                    if (node != null)
+                    if (node is not null)
                     {
                         if (((BaseBranchNode)node.Tag).Visible)
                         {
@@ -344,7 +344,7 @@ namespace GitUI.BranchTreePanel
 
             private void ExpandPathToSelectedNode()
             {
-                if (TreeViewNode.TreeView.SelectedNode != null)
+                if (TreeViewNode.TreeView.SelectedNode is not null)
                 {
                     EnsureNodeVisible(TreeViewNode.TreeView.Handle, TreeViewNode.TreeView.SelectedNode);
                 }
@@ -439,7 +439,7 @@ namespace GitUI.BranchTreePanel
                 if (style == FontStyle.Regular)
                 {
                     // For regular, set to null to use the NativeTreeView font
-                    if (TreeViewNode.NodeFont != null)
+                    if (TreeViewNode.NodeFont is not null)
                     {
                         TreeViewNode.NodeFont.Dispose();
                         TreeViewNode.NodeFont = null;
@@ -448,14 +448,14 @@ namespace GitUI.BranchTreePanel
                 else
                 {
                     // If current font doesn't have the input style, get rid of it
-                    if (TreeViewNode.NodeFont != null && !TreeViewNode.NodeFont.Style.HasFlag(style))
+                    if (TreeViewNode.NodeFont is not null && !TreeViewNode.NodeFont.Style.HasFlag(style))
                     {
                         TreeViewNode.NodeFont.Dispose();
                         TreeViewNode.NodeFont = null;
                     }
 
                     // If non-null, our font is already valid, otherwise create a new one
-                    if (TreeViewNode.NodeFont == null)
+                    if (TreeViewNode.NodeFont is null)
                     {
                         TreeViewNode.NodeFont = new Font(AppSettings.Font, style);
                     }
@@ -501,7 +501,7 @@ namespace GitUI.BranchTreePanel
             {
                 var node = GetNodeSafe<T>(treeNode);
 
-                if (node != null)
+                if (node is not null)
                 {
                     action(node);
                 }

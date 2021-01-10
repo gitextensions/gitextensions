@@ -27,7 +27,7 @@ namespace GitUI.Theming
             {
                 foreach (var word in line.Words)
                 {
-                    if (word.SyntaxColor != null)
+                    if (word.SyntaxColor is not null)
                     {
                         word.SyntaxColor = word.SyntaxColor.Transform();
                     }
@@ -42,7 +42,7 @@ namespace GitUI.Theming
             {
                 foreach (var word in line.Words)
                 {
-                    if (word.SyntaxColor != null)
+                    if (word.SyntaxColor is not null)
                     {
                         word.SyntaxColor = word.SyntaxColor.Transform();
                     }

@@ -224,7 +224,7 @@ namespace GitCommands
                 obj = null;
             }
 
-            if (obj == null)
+            if (obj is null)
             {
                 return defaultValue;
             }
@@ -1626,7 +1626,7 @@ namespace GitCommands
         {
             get
             {
-                if (_versionIndependentRegKey == null)
+                if (_versionIndependentRegKey is null)
                 {
                     _versionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
                 }
@@ -1746,7 +1746,7 @@ namespace GitCommands
         {
             RegistryKey oldSettings = VersionIndependentRegKey.OpenSubKey("GitExtensions");
 
-            if (oldSettings == null)
+            if (oldSettings is null)
             {
                 yield break;
             }
@@ -1755,7 +1755,7 @@ namespace GitCommands
             {
                 object value = oldSettings.GetValue(name, null);
 
-                if (value != null)
+                if (value is not null)
                 {
                     yield return (name, value.ToString());
                 }

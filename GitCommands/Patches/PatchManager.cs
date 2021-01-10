@@ -17,14 +17,14 @@ namespace GitCommands.Patches
         {
             var selectedChunks = GetSelectedChunks(text, selectionPosition, selectionLength, out var header);
 
-            if (selectedChunks == null)
+            if (selectedChunks is null)
             {
                 return null;
             }
 
             string body = ToResetWorkTreeLinesPatch(selectedChunks);
 
-            if (header == null || body == null)
+            if (header is null || body is null)
             {
                 return null;
             }
@@ -39,7 +39,7 @@ namespace GitCommands.Patches
         {
             var selectedChunks = GetSelectedChunks(text, selectionPosition, selectionLength, out var header);
 
-            if (selectedChunks == null)
+            if (selectedChunks is null)
             {
                 return null;
             }
@@ -52,7 +52,7 @@ namespace GitCommands.Patches
 
             string body = ToIndexPatch(selectedChunks, isIndex, isWholeFile: false);
 
-            if (header == null || body == null)
+            if (header is null || body is null)
             {
                 return null;
             }
@@ -94,10 +94,10 @@ namespace GitCommands.Patches
         public static byte[] GetSelectedLinesAsNewPatch([NotNull] GitModule module, [NotNull] string newFileName, [NotNull] string text, int selectionPosition, int selectionLength, [NotNull] Encoding fileContentEncoding, bool reset, byte[] filePreamble, string treeGuid)
         {
             var selectedChunks = FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreamble, fileContentEncoding);
-            var isTracked = treeGuid != null;
+            var isTracked = treeGuid is not null;
             string body = ToIndexPatch(selectedChunks, isIndex: isTracked, isWholeFile: true);
 
-            if (body == null)
+            if (body is null)
             {
                 return null;
             }
@@ -175,7 +175,7 @@ namespace GitCommands.Patches
                 if (currentPos + chunkStr.Length >= selectionPosition)
                 {
                     Chunk chunk = Chunk.ParseChunk(chunkStr, currentPos, selectionPosition, selectionLength);
-                    if (chunk != null)
+                    if (chunk is not null)
                     {
                         selectedChunks.Add(chunk);
                     }
@@ -466,7 +466,7 @@ namespace GitCommands.Patches
         {
             get
             {
-                if (_currentSubChunk == null)
+                if (_currentSubChunk is null)
                 {
                     _currentSubChunk = new SubChunk();
                     _subChunks.Add(_currentSubChunk);
@@ -643,7 +643,7 @@ namespace GitCommands.Patches
                             // if the last line is selected to be reset and there is no new line at the end of file
                             // then we also have to remove the last not selected line in order to add it right again with the "No newline.." indicator
                             PatchLine lastNotSelectedLine = result.CurrentSubChunk.RemovedLines.LastOrDefault(l => !l.Selected);
-                            if (lastNotSelectedLine != null)
+                            if (lastNotSelectedLine is not null)
                             {
                                 lastNotSelectedLine.Selected = true;
                                 PatchLine clonedLine = lastNotSelectedLine.Clone();

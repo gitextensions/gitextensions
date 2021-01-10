@@ -67,7 +67,7 @@ namespace GitUI
                 {
                     dialog.IsFolderPicker = true;
 
-                    if (selectedPath != null)
+                    if (selectedPath is not null)
                     {
                         dialog.InitialDirectory = selectedPath;
                     }
@@ -85,7 +85,7 @@ namespace GitUI
                 // use XP-era dialog
                 using (var dialog = new FolderBrowserDialog())
                 {
-                    if (selectedPath != null)
+                    if (selectedPath is not null)
                     {
                         dialog.SelectedPath = selectedPath;
                     }

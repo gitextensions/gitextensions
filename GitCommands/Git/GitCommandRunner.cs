@@ -24,7 +24,7 @@ namespace GitCommands
             bool redirectOutput = false,
             Encoding outputEncoding = null)
         {
-            if (outputEncoding == null && redirectOutput)
+            if (outputEncoding is null && redirectOutput)
             {
                 outputEncoding = _defaultEncoding();
             }

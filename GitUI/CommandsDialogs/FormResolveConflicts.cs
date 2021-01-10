@@ -534,7 +534,7 @@ namespace GitUI.CommandsDialogs
                     // For kdiff3 this is easy; just remove the 3rd file from the arguments. Since the
                     // filenames are quoted, this takes a little extra effort. We need to remove these
                     // quotes also. For other tools a little bit more magic is needed.
-                    if (item.Base.Filename == null)
+                    if (item.Base.Filename is null)
                     {
                         var text = string.Format(_noBaseRevision.Text, item.Filename);
                         DialogResult result = MessageBox.Show(this, text, _noBaseFileMergeCaption.Text,
@@ -605,7 +605,7 @@ namespace GitUI.CommandsDialogs
 
             void DeleteTemporaryFile(string path)
             {
-                if (path != null && File.Exists(path))
+                if (path is not null && File.Exists(path))
                 {
                     File.Delete(path);
                 }
@@ -716,7 +716,7 @@ namespace GitUI.CommandsDialogs
 
         private string GetShortHash(ConflictedFileData item)
         {
-            if (item.ObjectId == null)
+            if (item.ObjectId is null)
             {
                 return "@" + _deleted.Text;
             }
