@@ -181,6 +181,7 @@ namespace GitUI
             InitializeComponent();
             openPullRequestPageStripMenuItem.AdaptImageLightness();
             renameBranchToolStripMenuItem.AdaptImageLightness();
+            _gridView.RowTemplate.Height = DpiUtil.Scale(24);
             InitializeComplete();
 
             _loadingControlAsync = new Label

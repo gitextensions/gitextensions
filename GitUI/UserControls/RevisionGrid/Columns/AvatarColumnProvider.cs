@@ -46,7 +46,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             Column.Width = e.CellBounds.Height;
 
-            var padding = DpiUtil.Scale(2);
+            var padding = DpiUtil.Scale(4);
             var imageSize = e.CellBounds.Height - padding - padding;
 
             Image image;
@@ -86,17 +86,10 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             e.Graphics.DrawImage(image, rect);
             e.Graphics.EndContainer(container);
 
-            e.Graphics.FillRectangle(style.BackBrush, rect.Left, rect.Top, 2, 1);
-            e.Graphics.FillRectangle(style.BackBrush, rect.Left, rect.Top, 1, 2);
-
-            e.Graphics.FillRectangle(style.BackBrush, rect.Right - 2, rect.Top, 2, 1);
-            e.Graphics.FillRectangle(style.BackBrush, rect.Right - 1, rect.Top, 1, 2);
-
-            e.Graphics.FillRectangle(style.BackBrush, rect.Left, rect.Bottom - 1, 2, 1);
-            e.Graphics.FillRectangle(style.BackBrush, rect.Left, rect.Bottom - 2, 1, 2);
-
-            e.Graphics.FillRectangle(style.BackBrush, rect.Right - 2, rect.Bottom - 1, 2, 1);
-            e.Graphics.FillRectangle(style.BackBrush, rect.Right - 1, rect.Bottom - 2, 1, 2);
+            e.Graphics.FillRectangle(style.BackBrush, rect.Left, rect.Top, 1, 1);
+            e.Graphics.FillRectangle(style.BackBrush, rect.Right - 1, rect.Top, 1, 1);
+            e.Graphics.FillRectangle(style.BackBrush, rect.Left, rect.Bottom - 1, 1, 1);
+            e.Graphics.FillRectangle(style.BackBrush, rect.Right - 1, rect.Bottom - 1, 1, 1);
         }
 
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)

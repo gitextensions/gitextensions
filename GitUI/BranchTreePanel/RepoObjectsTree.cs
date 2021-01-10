@@ -71,6 +71,7 @@ namespace GitUI.BranchTreePanel
             mnuBtnPruneAllRemotes.AdaptImageLightness();
             mnubtnFetchCreateBranch.AdaptImageLightness();
             mnubtnPullFromRemoteBranch.AdaptImageLightness();
+            treeMain.ItemHeight = DpiUtil.Scale(24);
             InitializeComplete();
 
             RegisterContextActions();
