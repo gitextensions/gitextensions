@@ -117,6 +117,7 @@ namespace GitUI.CommandsDialogs
                 && !selectionInfo.IsBareRepository
                 && selectionInfo.AllFilesExist
                 && selectionInfo.SupportPatches
+                && !(selectionInfo.IsAnyItemWorkTree || selectionInfo.IsAnyItemIndex)
                 && !(selectionInfo.SelectedRevision?.IsArtificial ?? false);
         }
 

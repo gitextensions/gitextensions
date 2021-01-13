@@ -59,6 +59,7 @@ namespace GitUI.CommandsDialogs
             _revisionDiffContextMenuController = new FileStatusListContextMenuController();
             DiffText.TopScrollReached += FileViewer_TopScrollReached;
             DiffText.BottomScrollReached += FileViewer_BottomScrollReached;
+            DiffText.LinePatchingBlocksUntilReload = true;
         }
 
         private void FileViewer_TopScrollReached(object sender, EventArgs e)
@@ -335,7 +336,7 @@ namespace GitUI.CommandsDialogs
             bool isAnyTracked = selectedItems.Any(item => item.Item.IsTracked);
             bool isAnyIndex = selectedItems.Any(item => item.Item.Staged == StagedStatus.Index);
             bool isAnyWorkTree = selectedItems.Any(item => item.Item.Staged == StagedStatus.WorkTree);
-            bool supportPatches = selectedGitItemCount == 1 && DiffText.HasAnyPatches();
+            bool supportPatches = selectedGitItemCount == 1 && DiffText.SupportLinePatching;
             bool isDeleted = selectedItems.Any(item => item.Item.IsDeleted);
             bool isAnySubmodule = selectedItems.Any(item => item.Item.IsSubmodule);
             (bool allFilesExist, bool allDirectoriesExist, bool allFilesOrUntrackedDirectoriesExist) = FileOrUntrackedDirExists(selectedItems, _fullPathResolver);
@@ -477,6 +478,11 @@ namespace GitUI.CommandsDialogs
             {
                 await ShowSelectedFileDiffAsync();
             }).FileAndForget();
+        }
+
+        private void DiffText_PatchApplied(object sender, EventArgs e)
+        {
+            RefreshArtificial();
         }
 
         private void diffShowInFileTreeToolStripMenuItem_Click(object sender, EventArgs e)

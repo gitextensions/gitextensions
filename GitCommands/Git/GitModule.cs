@@ -2449,7 +2449,7 @@ namespace GitCommands
         /// <param name="secondId">to revision</param>
         /// <param name="parentToSecond">The parent for the second revision</param>
         /// <remarks>Git revisions are required to determine if <see cref="StagedStatus"/> allows stage/unstage.</remarks>
-        private static StagedStatus GetStagedStatus([CanBeNull] ObjectId firstId, [CanBeNull] ObjectId secondId, [CanBeNull] ObjectId parentToSecond)
+        public static StagedStatus GetStagedStatus([CanBeNull] ObjectId firstId, [CanBeNull] ObjectId secondId, [CanBeNull] ObjectId parentToSecond)
         {
             StagedStatus staged;
             if (firstId == ObjectId.IndexId && secondId == ObjectId.WorkTreeId)

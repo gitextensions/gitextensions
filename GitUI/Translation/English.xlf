@@ -1336,10 +1336,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Enable automatic continuous scroll (without ALT button)</source>
         <target />
       </trans-unit>
-      <trans-unit id="cherrypickSelectedLinesToolStripMenuItem.Text">
-        <source>Stage selected line(s)</source>
-        <target />
-      </trans-unit>
       <trans-unit id="copyNewVersionToolStripMenuItem.Text">
         <source>Copy new version</source>
         <target />
@@ -1412,7 +1408,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Previous change</source>
         <target />
       </trans-unit>
-      <trans-unit id="revertSelectedLinesToolStripMenuItem.Text">
+      <trans-unit id="resetSelectedLinesToolStripMenuItem.Text">
         <source>Reset selected line(s)</source>
         <target />
       </trans-unit>
@@ -1440,8 +1436,16 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Show syntax highlighting</source>
         <target />
       </trans-unit>
+      <trans-unit id="stageSelectedLinesToolStripMenuItem.Text">
+        <source>Stage selected line(s)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="treatAllFilesAsTextToolStripMenuItem.Text">
         <source>Treat all files as text</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="unstageSelectedLinesToolStripMenuItem.Text">
+        <source>Unstage selected line(s)</source>
         <target />
       </trans-unit>
     </body>

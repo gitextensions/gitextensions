@@ -100,7 +100,7 @@ index 62a5c2f08..2bc482714 100644
                 testAccessor.ShowSyntaxHighlightingInDiff = true;
 
                 // act
-                _fileViewer.ViewPatch("FileViewerInternal.cs", sampleCsharpPatch);
+                testAccessor.ViewPatch("FileViewerInternal.cs", sampleCsharpPatch);
 
                 // assert
                 IHighlightingStrategy csharpHighlighting = HighlightingManager.Manager.FindHighlighterForFile("anycsharpfile.cs");
@@ -135,7 +135,7 @@ index 62a5c2f08..2bc482714 100644
                 testAccessor.ShowSyntaxHighlightingInDiff = false;
 
                 // act
-                _fileViewer.ViewPatch("FileViewerInternal.cs", sampleCsharpPatch, null);
+                testAccessor.ViewPatch("FileViewerInternal.cs", sampleCsharpPatch, null);
 
                 // assert
                 _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.Document.HighlightingStrategy.Should().Be(HighlightingManager.Manager.DefaultHighlighting);
@@ -157,17 +157,19 @@ Binary files a/binaryfile.bin and b/binaryfile.bin differ";
                 _uiCommandsSource.UICommands.Returns(x => uiCommands);
                 _fileViewer.UICommandsSource = _uiCommandsSource;
 
+                FileViewer.TestAccessor testAccessor = _fileViewer.GetTestAccessor();
+
                 // act
-                _fileViewer.ViewPatch("binaryfile.bin", sampleBinaryPatch, null);
+                testAccessor.ViewPatch("binaryfile.bin", sampleBinaryPatch, null);
 
                 // assert
-                _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.Document.HighlightingStrategy.Should().Be(HighlightingManager.Manager.DefaultHighlighting);
+                testAccessor.FileViewerInternal.GetTestAccessor().TextEditor.Document.HighlightingStrategy.Should().Be(HighlightingManager.Manager.DefaultHighlighting);
 
                 const string sampleRandomText =
                 @"fldaksjflkdsjlfj";
 
                 // act
-                _fileViewer.ViewPatch(null, sampleRandomText, null);
+                testAccessor.ViewPatch(null, sampleRandomText, null);
 
                 // assert
                 _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.Document.HighlightingStrategy.Should().Be(HighlightingManager.Manager.DefaultHighlighting);
