@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -204,6 +205,95 @@ namespace GitExtensions.UITests.CommandsDialogs
                 commitMessageToolStripMenuItem.ShowDropDown();
                 Assert.AreEqual("Too long commit message that should be shorten because first line of ...", commitMessageToolStripMenuItem.DropDownItems[0].Text);
                 Assert.AreEqual("Only first line", commitMessageToolStripMenuItem.DropDownItems[1].Text);
+            });
+        }
+
+        [SetCulture("en-US")]
+        [SetUICulture("en-US")]
+        [Test]
+        public void Should_stage_only_filtered_on_StageAll()
+        {
+            _referenceRepository.Reset();
+            _referenceRepository.CreateRepoFile("file1A.txt", "Test");
+            _referenceRepository.CreateRepoFile("file1B.txt", "Test");
+            _referenceRepository.CreateRepoFile("file2.txt", "Test");
+
+            RunFormTest(async form =>
+            {
+                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
+                {
+                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
+                }
+
+                Assert.AreEqual("Stage all", form.GetTestAccessor().StageAllToolItem.ToolTipText);
+            });
+
+            RunFormTest(async form =>
+            {
+                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
+                {
+                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
+                }
+
+                var testform = form.GetTestAccessor();
+
+                testform.UnstagedList.ClearSelected();
+                testform.UnstagedList.SetFilter("file1");
+
+                Assert.AreEqual("Stage filtered", testform.StageAllToolItem.ToolTipText);
+
+                testform.StageAllToolItem.PerformClick();
+
+                var fileNotMatchedByFilterIsStillUnstaged = testform.UnstagedList.AllItems.Where(i => i.Item.Name == "file2.txt").Any();
+
+                Assert.AreEqual(2, testform.StagedList.AllItemsCount);
+                Assert.AreEqual(1, testform.UnstagedList.AllItemsCount);
+                Assert.IsTrue(fileNotMatchedByFilterIsStillUnstaged);
+            });
+        }
+
+        [SetCulture("en-US")]
+        [SetUICulture("en-US")]
+        [Test]
+        public void Should_unstage_only_filtered_on_UnstageAll()
+        {
+            _referenceRepository.Reset();
+            _referenceRepository.CreateRepoFile("file1A.txt", "Test");
+            _referenceRepository.CreateRepoFile("file1B.txt", "Test");
+            _referenceRepository.CreateRepoFile("file2.txt", "Test");
+
+            RunFormTest(async form =>
+            {
+                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
+                {
+                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
+                }
+
+                Assert.AreEqual("Unstage all", form.GetTestAccessor().UnstageAllToolItem.ToolTipText);
+            });
+
+            RunFormTest(async form =>
+            {
+                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
+                {
+                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
+                }
+
+                var testform = form.GetTestAccessor();
+
+                testform.StageAllToolItem.PerformClick();
+                testform.StagedList.ClearSelected();
+                testform.StagedList.SetFilter("file1");
+
+                Assert.AreEqual("Unstage filtered", testform.UnstageAllToolItem.ToolTipText);
+
+                testform.UnstageAllToolItem.PerformClick();
+
+                var fileNotMatchedByFilterIsStillStaged = testform.StagedList.AllItems.Where(i => i.Item.Name == "file2.txt").Any();
+
+                Assert.AreEqual(2, testform.UnstagedList.AllItemsCount);
+                Assert.AreEqual(1, testform.StagedList.AllItemsCount);
+                Assert.IsTrue(fileNotMatchedByFilterIsStillStaged);
             });
         }
 
