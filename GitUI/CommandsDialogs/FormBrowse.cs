@@ -2856,13 +2856,19 @@ namespace GitUI.CommandsDialogs
 
         private void InitTerminals()
         {
-            InitTerminalTab();
             FillUserShellMenu();
+            InitTerminalTab();
 
             AppSettings.Shells.Updated += (s, e) =>
             {
                 FillUserShellMenu();
-                CloseTerminal();
+                ////CloseTerminal();
+                InitTerminalTab();
+            };
+
+            AppSettings.ShowConEmuTab.Updated += (s, e) =>
+            {
+                InitTerminalTab();
             };
         }
 
@@ -2877,26 +2883,30 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (AppSettings.ShowConEmuTab.Value)
+            var defauldShell = _shellService
+                .FindDefault();
+
+            ////?? _shellService
+            ////        .EnabledShells()
+            ////        .FirstOrDefault();
+
+            if (AppSettings.ShowConEmuTab.Value && defauldShell is not null)
             {
                 AddTerminalTab();
             }
-
-            AppSettings.ShowConEmuTab.Updated += (s, e) =>
+            else
             {
-                if (AppSettings.ShowConEmuTab.Value)
-                {
-                    AddTerminalTab();
-                }
-                else
-                {
-                    RemoveTerminalTab();
-                }
-            };
+                RemoveTerminalTab();
+            }
         }
 
         private void AddTerminalTab()
         {
+            if (_consoleTabPage is not null)
+            {
+                return;
+            }
+
             _consoleTabPage = new TabPage
             {
                 Text = _consoleTabCaption.Text,
@@ -2924,6 +2934,8 @@ namespace GitUI.CommandsDialogs
                 }
 
                 AddConsoleControl();
+                ////Lazy-create on first opening the tab
+                ////_consoleTabPage.Controls.Clear();
                 RefreshShell();
             };
 
@@ -2941,6 +2953,18 @@ namespace GitUI.CommandsDialogs
 
             void RefreshShell()
             {
+                var defauldShell = _shellService
+                    .FindDefault();
+
+                ////?? _shellService
+                ////        .EnabledShells()
+                ////        .FirstOrDefault();
+
+                if (defauldShell is null)
+                {
+                    return;
+                }
+
                 if (_terminal == null)
                 {
                     return;
@@ -2958,14 +2982,6 @@ namespace GitUI.CommandsDialogs
                     StartupDirectory = Module.WorkingDir,
                     WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator
                 };
-
-                var defauldShell = _shellService
-                    .FindDefault();
-
-                if (defauldShell is null)
-                {
-                    return;
-                }
 
                 startInfo.ConsoleProcessCommandLine = $"{defauldShell.Command} {defauldShell.Arguments}";
 
@@ -3003,6 +3019,11 @@ namespace GitUI.CommandsDialogs
 
         private void RemoveTerminalTab()
         {
+            if (_consoleTabPage is null)
+            {
+                return;
+            }
+
             CommitInfoTabControl.Controls.Remove(_consoleTabPage);
 
             _consoleTabPage.Controls.Clear();
