@@ -71,7 +71,8 @@ namespace GitUI.CommandsDialogs
             this.RevisionsSplitContainer = new System.Windows.Forms.SplitContainer();
             this.RevisionGridContainer = new System.Windows.Forms.Panel();
             this.RevisionGrid = new GitUI.RevisionGridControl();
-            this.RevisionHeader = new GitUI.UserControls.InteractiveGitActionControl();
+            this.notificationBarBisectInProgress = new GitUI.UserControls.InteractiveGitActionControl();
+            this.notificationBarGitActionInProgress = new GitUI.UserControls.InteractiveGitActionControl();
             this.CommitInfoTabControl = new GitUI.CommandsDialogs.FullBleedTabControl();
             this.CommitInfoTabPage = new System.Windows.Forms.TabPage();
             this.RevisionInfo = new GitUI.CommitInfo.CommitInfo();
@@ -733,7 +734,8 @@ namespace GitUI.CommandsDialogs
             // RevisionGridContainer
             // 
             this.RevisionGridContainer.Controls.Add(this.RevisionGrid);
-            this.RevisionGridContainer.Controls.Add(this.RevisionHeader);
+            this.RevisionGridContainer.Controls.Add(this.notificationBarBisectInProgress);
+            this.RevisionGridContainer.Controls.Add(this.notificationBarGitActionInProgress);
             this.RevisionGridContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGridContainer.Location = new System.Drawing.Point(0, 0);
             this.RevisionGridContainer.Name = "RevisionGridContainer";
@@ -746,17 +748,27 @@ namespace GitUI.CommandsDialogs
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Name = "RevisionGrid";
             this.RevisionGrid.Size = new System.Drawing.Size(350, 209);
-            this.RevisionGrid.TabIndex = 0;
+            this.RevisionGrid.TabIndex = 2;
             // 
-            // RevisionHeader
+            // notificationBarBisectInProgress
             // 
-            this.RevisionHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.RevisionHeader.Location = new System.Drawing.Point(0, 0);
-            this.RevisionHeader.MinimumSize = new System.Drawing.Size(0, 33);
-            this.RevisionHeader.Name = "RevisionHeader";
-            this.RevisionHeader.Size = new System.Drawing.Size(561, 33);
-            this.RevisionHeader.TabIndex = 1;
-            this.RevisionHeader.Visible = false;
+            this.notificationBarBisectInProgress.Dock = System.Windows.Forms.DockStyle.Top;
+            this.notificationBarBisectInProgress.Location = new System.Drawing.Point(0, 33);
+            this.notificationBarBisectInProgress.MinimumSize = new System.Drawing.Size(0, 33);
+            this.notificationBarBisectInProgress.Name = "notificationBarBisectInProgress";
+            this.notificationBarBisectInProgress.Size = new System.Drawing.Size(561, 33);
+            this.notificationBarBisectInProgress.TabIndex = 1;
+            this.notificationBarBisectInProgress.Visible = false;
+            // 
+            // notificationBarGitActionInProgress
+            // 
+            this.notificationBarGitActionInProgress.Dock = System.Windows.Forms.DockStyle.Top;
+            this.notificationBarGitActionInProgress.Location = new System.Drawing.Point(0, 0);
+            this.notificationBarGitActionInProgress.MinimumSize = new System.Drawing.Size(0, 33);
+            this.notificationBarGitActionInProgress.Name = "notificationBarGitActionInProgress";
+            this.notificationBarGitActionInProgress.Size = new System.Drawing.Size(561, 33);
+            this.notificationBarGitActionInProgress.TabIndex = 0;
+            this.notificationBarGitActionInProgress.Visible = false;
             // 
             // CommitInfoTabControl
             // 
@@ -1980,6 +1992,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem commitInfoRightwardMenuItem;
         private ToolStripMenuItem tsmiTelemetryEnabled;
         private Panel RevisionGridContainer;
-        private UserControls.InteractiveGitActionControl RevisionHeader;
+        private UserControls.InteractiveGitActionControl notificationBarBisectInProgress;
+        private UserControls.InteractiveGitActionControl notificationBarGitActionInProgress;
     }
 }
