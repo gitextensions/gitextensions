@@ -1173,8 +1173,11 @@ namespace GitUI.CommandsDialogs
 
         private void OnActivate()
         {
-            // check if we are in the middle of an action (merge/rebase/bisect)
-            RevisionHeader.RefreshGitAction();
+            // check if we are in the middle of bisect
+            notificationBarBisectInProgress.RefreshBisect();
+
+            // check if we are in the middle of an action (merge/rebase/etc.)
+            notificationBarGitActionInProgress.RefreshGitAction();
         }
 
         private void UpdateStashCount()

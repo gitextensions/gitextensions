@@ -42,10 +42,11 @@ namespace GitUI.UserControls
             InitializeComplete();
         }
 
-        public void RefreshGitAction()
+        // It is possible for a repo to be in a middle of a bisect operation and
+        // be in a conflicted state. Hence detect bisect separately from the rest
+        // of git actions
+        public void RefreshBisect()
         {
-            // get the current state of the repo
-
             if (!Module.IsValidGitWorkingDir())
             {
                 return;
@@ -54,6 +55,18 @@ namespace GitUI.UserControls
             if (Module.InTheMiddleOfBisect())
             {
                 SetGitAction(GitAction.Bisect, false);
+                return;
+            }
+
+            SetGitAction(GitAction.None, false);
+        }
+
+        public void RefreshGitAction()
+        {
+            // get the current state of the repo
+
+            if (!Module.IsValidGitWorkingDir())
+            {
                 return;
             }
 
