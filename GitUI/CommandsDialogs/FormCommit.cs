@@ -1022,7 +1022,7 @@ namespace GitUI.CommandsDialogs
             {
                 var fc = this.FindFocusedControl();
 
-                if (fc == Ok)
+                if (fc is null || fc == Ok)
                 {
                     if (Unstaged.GitItemStatuses.Any())
                     {
