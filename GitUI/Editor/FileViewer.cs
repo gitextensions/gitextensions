@@ -1354,49 +1354,52 @@ namespace GitUI.Editor
         /// <summary>
         /// Use implementation matching the current viewItem
         /// </summary>
-        private void StageSelectedLines()
+        private bool StageSelectedLines()
         {
             if (!SupportLinePatching)
             {
                 // Hotkey executed when menu is disabled
-                return;
+                return false;
             }
 
             if (ViewItemIsWorkTree())
             {
                 StageSelectedLines(stage: true);
-                return;
+                return true;
             }
 
             ApplySelectedLines(allFile: false, reverse: false);
+            return true;
         }
 
-        private void UnstageSelectedLines()
+        private bool UnstageSelectedLines()
         {
             if (!ViewItemIsIndex())
             {
                 // Hotkey executed when menu is disabled
-                return;
+                return false;
             }
 
             StageSelectedLines(stage: false);
+            return true;
         }
 
-        private void ResetSelectedLines()
+        private bool ResetSelectedLines()
         {
             if (!SupportLinePatching)
             {
                 // Hotkey executed when menu is disabled
-                return;
+                return false;
             }
 
             if (ViewItemIsWorkTree() || ViewItemIsIndex())
             {
                 ResetNoncommittedSelectedLines();
-                return;
+                return true;
             }
 
             ApplySelectedLines(allFile: false, reverse: true);
+            return true;
         }
 
         /// <summary>
@@ -1901,9 +1904,9 @@ namespace GitUI.Editor
                 case Command.PreviousChange: PreviousChangeButtonClick(null, null); break;
                 case Command.NextOccurrence: internalFileViewer.GoToNextOccurrence(); break;
                 case Command.PreviousOccurrence: internalFileViewer.GoToPreviousOccurrence(); break;
-                case Command.StageLines: StageSelectedLines(); break;
-                case Command.UnstageLines: UnstageSelectedLines(); break;
-                case Command.ResetLines: ResetSelectedLines(); break;
+                case Command.StageLines: return StageSelectedLines();
+                case Command.UnstageLines: return UnstageSelectedLines();
+                case Command.ResetLines: return ResetSelectedLines();
                 default: return base.ExecuteCommand(cmd);
             }
 
