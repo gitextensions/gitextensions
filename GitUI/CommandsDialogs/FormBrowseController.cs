@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -107,17 +106,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var process = new Process
-            {
-                StartInfo =
-                {
-                    FileName = AppSettings.GetGitExtensionsFullPath(),
-                    Arguments = "browse",
-                    WorkingDirectory = repoPath,
-                    UseShellExecute = false
-                }
-            };
-            process.Start();
+            GitUICommands.LaunchBrowse(repoPath);
         }
     }
 }

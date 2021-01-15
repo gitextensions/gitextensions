@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
@@ -355,6 +355,44 @@ namespace GitUI
         }
 
         #endregion
+
+        /// <summary>
+        /// Launches a new GE instance.
+        /// </summary>
+        /// <param name="arguments">The command line arguments.</param>
+        /// <param name="workingDir">The working directory for the new process.</param>
+        /// <returns>The <see cref="IProcess"/> object for controlling the launched instance.</returns>
+        public static IProcess Launch(string arguments, string workingDir = "")
+            => new Executable(Application.ExecutablePath, workingDir).Start(arguments);
+
+        /// <summary>
+        /// Launch FormBrowse in a new GE instance.
+        /// </summary>
+        /// <param name="workingDir">The working directory for the new process.</param>
+        /// <param name="selectedId">The optional commit to be selected.</param>
+        /// <param name="firstId">The first commit to be selected, the first commit in a diff.</param>
+        /// <returns>The <see cref="IProcess"/> object for controlling the launched instance.</returns>
+        public static IProcess LaunchBrowse(string workingDir = "", ObjectId selectedId = null, ObjectId firstId = null)
+        {
+            StringBuilder arguments = new StringBuilder("browse");
+
+            if (selectedId is null)
+            {
+                selectedId = firstId;
+                firstId = null;
+            }
+
+            if (selectedId is not null)
+            {
+                arguments.Append(" -commit=").Append(selectedId);
+                if (firstId is not null)
+                {
+                    arguments.Append(',').Append(firstId);
+                }
+            }
+
+            return Launch(arguments.ToString(), workingDir);
+        }
 
         public bool StartCompareRevisionsDialog(IWin32Window owner = null)
         {
@@ -1186,17 +1224,7 @@ namespace GitUI
         public void StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision = null, bool filterByRevision = false, bool showBlame = false)
         {
             string arguments = $"{(showBlame ? BlameHistoryCommand : FileHistoryCommand)} {fileName.Quote()} {revision?.ObjectId} {(filterByRevision ? FilterByRevisionArg : string.Empty)}";
-            var process = new Process
-            {
-                StartInfo =
-                {
-                    FileName = Application.ExecutablePath,
-                    Arguments = arguments,
-                    WorkingDirectory = Module.WorkingDir
-                }
-            };
-
-            process.Start();
+            Launch(arguments, Module.WorkingDir);
         }
 
         public void OpenWithDifftool(IWin32Window owner, IReadOnlyList<GitRevision> revisions, string fileName, string oldFileName, RevisionDiffKind diffKind, bool isTracked, string customTool = null)
