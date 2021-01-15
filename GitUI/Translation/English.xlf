@@ -26,6 +26,11 @@
         <source>Auto normalise branch name</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkAutoNormaliseBranchName.ToolTipText">
+        <source>Controls whether branch name should be automatically normalised as per git branch naming rules.
+If enabled, any illegal symbols will be replaced with the replacement symbol of your choice.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkCheckForRCVersions.Text">
         <source>Check for release candidate versions</source>
         <target />
@@ -40,6 +45,15 @@
       </trans-unit>
       <trans-unit id="chkConsoleEmulator.Text">
         <source>Use Console Emulator for console output in command dialogs</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkConsoleEmulator.ToolTipText">
+        <source>Controls how console programs output is displayed in command progress dialogs, like Clone or Pull.
+
+If yes, embeds the fully functional console emulator. This is experimental and might have side-effects.
+If no, redirects select strings from stdout/stderr into an edit box. This is the classic mode.
+
+Turn off if you experience problems with the console emulator.</source>
         <target />
       </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
@@ -1224,6 +1238,19 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Show file differences for all parents in browse dialog</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkShowDiffForAllParents.ToolTipText">
+        <source>Show all differences between the selected commits, not limiting to only one difference.
+
+- For a single selected commit, show the difference with its parent commit.
+- For a single selected merge commit, show the difference with all parents.
+- For two selected commits with a common ancestor (BASE):
+   - Show the difference between the commits.
+   - The difference of unique files from BASE to each of the selected commits.
+   - The difference of common files (identical changes) from BASE to the commits.
+- For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
+- For more than four selected commits, show the difference from the first to the last selected commit.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="label1.Text">
         <source>Vertical ruler position [chars]</source>
         <target />
@@ -2239,6 +2266,10 @@ Do you want to continue?</source>
         <source>Branch</source>
         <target />
       </trans-unit>
+      <trans-unit id="branchSelect.ToolTipText">
+        <source>Change current branch</source>
+        <target />
+      </trans-unit>
       <trans-unit id="branchToolStripMenuItem.Text">
         <source>Create branch...</source>
         <target />
@@ -2355,12 +2386,24 @@ Do you want to continue?</source>
         <source>Fetch all</source>
         <target />
       </trans-unit>
+      <trans-unit id="fetchAllToolStripMenuItem.ToolTipText">
+        <source>Fetch branches and tags from all remote repositories</source>
+        <target />
+      </trans-unit>
       <trans-unit id="fetchPruneAllToolStripMenuItem.Text">
         <source>Fetch and prune all</source>
         <target />
       </trans-unit>
+      <trans-unit id="fetchPruneAllToolStripMenuItem.ToolTipText">
+        <source>Fetch branches and tags from all remote repositories also prune deleted refs</source>
+        <target />
+      </trans-unit>
       <trans-unit id="fetchToolStripMenuItem.Text">
         <source>Fetch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="fetchToolStripMenuItem.ToolTipText">
+        <source>Fetch branches and tags</source>
         <target />
       </trans-unit>
       <trans-unit id="fileExplorerToolStripMenuItem.Text">
@@ -2413,6 +2456,10 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="manageStashesToolStripMenuItem.Text">
         <source>Manage stashes...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="manageStashesToolStripMenuItem.ToolTipText">
+        <source>Manage stashes</source>
         <target />
       </trans-unit>
       <trans-unit id="manageSubmodulesToolStripMenuItem.Text">
@@ -2527,8 +2574,16 @@ Do you want to continue?</source>
         <source>Stash</source>
         <target />
       </trans-unit>
+      <trans-unit id="stashChangesToolStripMenuItem.ToolTipText">
+        <source>Stash changes</source>
+        <target />
+      </trans-unit>
       <trans-unit id="stashPopToolStripMenuItem.Text">
         <source>Stash pop</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="stashPopToolStripMenuItem.ToolTipText">
+        <source>Apply and drop single stash</source>
         <target />
       </trans-unit>
       <trans-unit id="stashToolStripMenuItem.Text">
@@ -3422,12 +3477,20 @@ You can unset the template:
         <source>Commit &amp;templates</source>
         <target />
       </trans-unit>
+      <trans-unit id="commitTemplatesToolStripMenuItem.ToolTipText">
+        <source>Commit templates</source>
+        <target />
+      </trans-unit>
       <trans-unit id="copyFolderNameMenuItem.Text">
         <source>Copy folder name</source>
         <target />
       </trans-unit>
       <trans-unit id="createBranchToolStripButton.Text">
         <source>Create &amp;branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="createBranchToolStripButton.ToolTipText">
+        <source>Create branch</source>
         <target />
       </trans-unit>
       <trans-unit id="deleteAllUntrackedFilesToolStripMenuItem.Text">
@@ -5287,6 +5350,10 @@ This will initialize and update all submodules recursive.</source>
         <source>Push branches</source>
         <target />
       </trans-unit>
+      <trans-unit id="BranchTab.ToolTipText">
+        <source>Push branches and commits to remote repository.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="DeleteColumn.HeaderText">
         <source>Delete Remote Branch</source>
         <target />
@@ -5365,6 +5432,10 @@ This will initialize and update all submodules recursive.</source>
       </trans-unit>
       <trans-unit id="TagTab.Text">
         <source>Push tags</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="TagTab.ToolTipText">
+        <source>Push tags to remote repository</source>
         <target />
       </trans-unit>
       <trans-unit id="_branchNewForRemote.Text">
@@ -6826,6 +6897,10 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <source>Custom stash message</source>
         <target />
       </trans-unit>
+      <trans-unit id="toolStripButton_customMessage.ToolTipText">
+        <source>Write custom stash message</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="FormStatus" source-language="en">
@@ -8032,8 +8107,16 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>&amp;Manage...</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnuBtnManageRemotesFromRootNode.ToolTipText">
+        <source>Manage remotes</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnuBtnOpenRemoteUrlInBrowser.Text">
         <source>Open remote Url</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnuBtnOpenRemoteUrlInBrowser.ToolTipText">
+        <source>Redirects you to the actual repository page</source>
         <target />
       </trans-unit>
       <trans-unit id="mnuBtnPruneAllBranchesFromARemote.Text">
@@ -8048,12 +8131,24 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Collapse All</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnubtnCollapseAll.ToolTipText">
+        <source>Collapse all nodes</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnubtnCreateBranch.Text">
         <source>Create Branch...</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnubtnCreateBranch.ToolTipText">
+        <source>Create a local branch</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnubtnDeleteAllBranches.Text">
         <source>Delete All</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnDeleteAllBranches.ToolTipText">
+        <source>Delete all child branchs, which must all be fully merged in its upstream branch or in HEAD</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnDisableRemote.Text">
@@ -8072,6 +8167,10 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Expand All</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnubtnExpandAll.ToolTipText">
+        <source>Expand all nodes</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnubtnFetchAllBranchesFromARemote.Text">
         <source>&amp;Fetch</source>
         <target />
@@ -8080,40 +8179,82 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Fetc&amp;h &amp;&amp; Create Branch</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnubtnFetchCreateBranch.ToolTipText">
+        <source>Fetch then create a local branch from the remote branch</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnubtnFetchOneBranch.Text">
         <source>Fe&amp;tch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnFetchOneBranch.ToolTipText">
+        <source>Fetch the new remote branch</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnFetchRebase.Text">
         <source>Fetch &amp;&amp; Re&amp;base</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnubtnFetchRebase.ToolTipText">
+        <source>Fetch &amp; Rebase current branch to this branch</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnubtnFilterLocalBranchInRevisionGrid.Text">
         <source>Show this branch only</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnFilterLocalBranchInRevisionGrid.ToolTipText">
+        <source>Filter the revision grid to show this branch only
+To show all branches, right click the revision grid, select 'view' and then the 'show all branches'</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnFilterRemoteBranchInRevisionGrid.Text">
         <source>Show this branch only</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnubtnFilterRemoteBranchInRevisionGrid.ToolTipText">
+        <source>Filter the revision grid to show this branch only
+To show all branches, right click the revision grid, select 'view' and then the 'show all branches'</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnubtnManageRemotes.Text">
         <source>&amp;Manage...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnManageRemotes.ToolTipText">
+        <source>Manage remotes</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnManageSubmodules.Text">
         <source>&amp;Manage...</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnubtnManageSubmodules.ToolTipText">
+        <source>Manage submodules</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnubtnMoveDown.Text">
         <source>Move Down</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnMoveDown.ToolTipText">
+        <source>Move node down</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnMoveUp.Text">
         <source>Move Up</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnubtnMoveUp.ToolTipText">
+        <source>Move node up</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnubtnOpenSubmodule.Text">
         <source>&amp;Open</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnOpenSubmodule.ToolTipText">
+        <source>Open selected submodule</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnPullFromRemoteBranch.Text">
@@ -8124,12 +8265,24 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>&amp;Fetch &amp;&amp; Checkout</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnubtnRemoteBranchFetchAndCheckout.ToolTipText">
+        <source>Checkout this branch</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnubtnSynchronizeSubmodules.Text">
         <source>Synchronize</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnubtnSynchronizeSubmodules.ToolTipText">
+        <source>Synchronize selected submodule recursively</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnubtnUpdateSubmodule.Text">
         <source>&amp;Update</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnUpdateSubmodule.ToolTipText">
+        <source>Update selected submodule recursively</source>
         <target />
       </trans-unit>
       <trans-unit id="runScriptToolStripMenuItem.Text">
@@ -8144,16 +8297,32 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>&amp;Branches</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsbShowBranches.ToolTipText">
+        <source>Branches</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsbShowRemotes.Text">
         <source>&amp;Remotes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsbShowRemotes.ToolTipText">
+        <source>Remotes</source>
         <target />
       </trans-unit>
       <trans-unit id="tsbShowSubmodules.Text">
         <source>&amp;Submodules</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsbShowSubmodules.ToolTipText">
+        <source>Submodules</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsbShowTags.Text">
         <source>&amp;Tags</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsbShowTags.ToolTipText">
+        <source>Tags</source>
         <target />
       </trans-unit>
     </body>
@@ -8506,6 +8675,10 @@ See the changes in the commit form.</source>
         <source>Go to common ancestor (merge base)</source>
         <target />
       </trans-unit>
+      <trans-unit id="GotoMergeBaseCommit.ToolTipText">
+        <source>Selects the common ancestor commit (merge base), which is the most recent shared ancestor of the selected commits (or if only one commit is selected, between it and the checked out commit (HEAD))</source>
+        <target />
+      </trans-unit>
       <trans-unit id="GotoParentCommit.Text">
         <source>Go to parent commit</source>
         <target />
@@ -8528,6 +8701,10 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="QuickSearch.Text">
         <source>Quick search</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="QuickSearch.ToolTipText">
+        <source>Start typing in revision grid to start quick search.</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowAllBranches.Text">
