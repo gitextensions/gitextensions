@@ -319,14 +319,9 @@ namespace GitUI.BranchTreePanel
                     var node = TreeViewNode.GetNodeFromPath(originalSelectedNodeFullNamePath);
                     if (node is not null)
                     {
-                        if (((BaseBranchNode)node.Tag).Visible)
-                        {
-                            TreeViewNode.TreeView.SelectedNode = node;
-                        }
-                        else
-                        {
-                            TreeViewNode.TreeView.SelectedNode = null;
-                        }
+                        TreeViewNode.TreeView.SelectedNode = !(node.Tag is BaseBranchNode branchNode) || branchNode.Visible
+                            ? node
+                            : null;
                     }
                 }
 
