@@ -320,6 +320,7 @@ namespace GitUI.CommandsDialogs
                 // if the 1st one becomes longer than the 2nd toolbar's Location.X
                 // the layout engine will be place the 2nd toolbar first
                 toolPanel.TopToolStripPanel.Controls.Clear();
+                toolPanel.TopToolStripPanel.Controls.Add(ToolStripScripts);
                 toolPanel.TopToolStripPanel.Controls.Add(ToolStripFilters);
                 toolPanel.TopToolStripPanel.Controls.Add(ToolStripMain);
             }
@@ -452,6 +453,9 @@ namespace GitUI.CommandsDialogs
                 ToolStripMain.ForeColor = toolForeColor;
                 ToolStripFilters.BackColor = toolBackColor;
                 ToolStripFilters.ForeColor = toolForeColor;
+                ToolStripScripts.BackColor = toolBackColor;
+                ToolStripScripts.ForeColor = toolForeColor;
+
                 toolStripRevisionFilterDropDownButton.BackColor = toolBackColor;
                 toolStripRevisionFilterDropDownButton.ForeColor = toolForeColor;
 
@@ -627,7 +631,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnLoad(EventArgs e)
         {
-            _formBrowseMenus.CreateToolbarsMenus(ToolStripMain, ToolStripFilters, toolStripScripts);
+            _formBrowseMenus.CreateToolbarsMenus(ToolStripMain, ToolStripFilters, ToolStripScripts);
 
             HideVariableMainMenuItems();
             RefreshSplitViewLayout();
@@ -1110,11 +1114,11 @@ namespace GitUI.CommandsDialogs
                     .Where(script => script.Enabled && script.OnEvent == ScriptEvent.ShowInUserMenuBar)
                     .ToList();
 
-                for (int i = ToolStripMain.Items.Count - 1; i >= 0; i--)
+                for (int i = ToolStripScripts.Items.Count - 1; i >= 0; i--)
                 {
-                    if (ToolStripMain.Items[i].Tag as string == "userscript")
+                    if (ToolStripScripts.Items[i].Tag as string == "userscript")
                     {
-                        ToolStripMain.Items.RemoveAt(i);
+                        ToolStripScripts.Items.RemoveAt(i);
                     }
                 }
 
@@ -1122,8 +1126,6 @@ namespace GitUI.CommandsDialogs
                 {
                     return;
                 }
-
-                ToolStripMain.Items.Add(new ToolStripSeparator { Tag = "userscript" });
 
                 foreach (var script in scripts)
                 {
@@ -1147,7 +1149,7 @@ namespace GitUI.CommandsDialogs
                     };
 
                     // add to toolstrip
-                    ToolStripMain.Items.Add(button);
+                    ToolStripScripts.Items.Add(button);
                 }
             }
 

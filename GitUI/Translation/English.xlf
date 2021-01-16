@@ -2101,6 +2101,10 @@ compare with first:</source>
         <source>Standard</source>
         <target />
       </trans-unit>
+      <trans-unit id="ToolStripScripts.Text">
+        <source>Scripts</source>
+        <target />
+      </trans-unit>
       <trans-unit id="TreeTabPage.Text">
         <source>File tree</source>
         <target />
