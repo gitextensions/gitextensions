@@ -24,7 +24,7 @@ namespace GitCommands
         private static readonly GitVersion v2_20_0 = new GitVersion("2.20.0");
 
         public static readonly GitVersion LastSupportedVersion = v2_19_0;
-        public static readonly GitVersion LastRecommendedVersion = new GitVersion("2.28.0");
+        public static readonly GitVersion LastRecommendedVersion = new GitVersion("2.30.0");
 
         private static GitVersion _current;
 
