@@ -785,11 +785,20 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                var fileName = PathUtil.GetFileName(item.Item.Name);
-                fileName = (Path.GetTempPath() + fileName).ToNativePath();
-                Module.SaveBlobAs(fileName, blob.ToString());
+                var originalName = blob.ToString();
+                var saveAsName = PathUtil.GetFileName(item.Item.Name);
+                saveAsName = (Path.GetTempPath() + saveAsName).ToNativePath();
+                try
+                {
+                    Module.SaveBlobAs(saveAsName, originalName);
+                }
+                catch (IOException ex)
+                {
+                    MessageBoxes.FailedToSaveAs(this, originalName, saveAsName, ex);
+                    return; // TODO: is return appropriate here? Look into what onSaved can potentially be doing
+                }
 
-                onSaved(fileName);
+                onSaved(saveAsName);
             }).FileAndForget();
         }
 
@@ -952,7 +961,16 @@ namespace GitUI.CommandsDialogs
 
                 if (fileDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    Module.SaveBlobAs(fileDialog.FileName, $"{item.SecondRevision.Guid}:\"{item.Item.Name}\"");
+                    var saveAsName = fileDialog.FileName;
+                    var originalName = $"{item.SecondRevision.Guid}:\"{item.Item.Name}\"";
+                    try
+                    {
+                        Module.SaveBlobAs(saveAsName, originalName);
+                    }
+                    catch (IOException ex)
+                    {
+                        MessageBoxes.FailedToSaveAs(this, originalName, saveAsName, ex);
+                    }
                 }
             }
         }

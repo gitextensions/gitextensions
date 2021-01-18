@@ -489,7 +489,16 @@ namespace GitUI.CommandsDialogs
                 {
                     if (fileDialog.ShowDialog(this) == DialogResult.OK)
                     {
-                        Module.SaveBlobAs(fileDialog.FileName, lostObject.ObjectId.ToString());
+                        var saveAsName = fileDialog.FileName;
+                        var originalName = lostObject.ObjectId.ToString();
+                        try
+                        {
+                            Module.SaveBlobAs(saveAsName, originalName);
+                        }
+                        catch (System.IO.IOException ex)
+                        {
+                            MessageBoxes.FailedToSaveAs(this, originalName, saveAsName, ex);
+                        }
                     }
                 }
             }

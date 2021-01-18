@@ -477,7 +477,16 @@ namespace GitUI.CommandsDialogs
                         "|All files (*.*)|*.*";
                     if (fileDialog.ShowDialog(this) == DialogResult.OK)
                     {
-                        Module.SaveBlobAs(fileDialog.FileName, selectedRows[0].Guid + ":\"" + orgFileName + "\"");
+                        var originalName = $"{selectedRows[0].Guid}:\"{orgFileName}\"";
+                        var saveAsName = fileDialog.FileName;
+                        try
+                        {
+                            Module.SaveBlobAs(saveAsName, originalName);
+                        }
+                        catch (IOException ex)
+                        {
+                            MessageBoxes.FailedToSaveAs(this, originalName, saveAsName, ex);
+                        }
                     }
                 }
             }
