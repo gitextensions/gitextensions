@@ -191,12 +191,14 @@ namespace GitUI.CommandsDialogs
             this.toolPanel = new System.Windows.Forms.ToolStripContainer();
             this._addUpstreamRemoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripFilters = new GitUI.ToolStripEx();
+            this.ToolStripScripts = new GitUI.ToolStripEx();
             toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolStripMain.SuspendLayout();
             this.ToolStripFilters.SuspendLayout();
+            this.ToolStripScripts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainSplitContainer)).BeginInit();
             this.MainSplitContainer.Panel1.SuspendLayout();
             this.MainSplitContainer.Panel2.SuspendLayout();
@@ -244,6 +246,7 @@ namespace GitUI.CommandsDialogs
             this.ToolStripMain.ClickThrough = true;
             this.ToolStripMain.Dock = System.Windows.Forms.DockStyle.None;
             this.ToolStripMain.GripMargin = new System.Windows.Forms.Padding(0);
+            this.ToolStripMain.GripStyle = ToolStripGripStyle.Hidden;
             this.ToolStripMain.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.ToolStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.RefreshButton,
@@ -271,12 +274,13 @@ namespace GitUI.CommandsDialogs
             this.ToolStripMain.Size = new System.Drawing.Size(479, 25);
             this.ToolStripMain.TabIndex = 0;
             this.ToolStripMain.Text = "Standard";
-            //
+            // 
             // ToolStripFilters
             // 
             this.ToolStripFilters.ClickThrough = true;
             this.ToolStripFilters.Dock = System.Windows.Forms.DockStyle.None;
             this.ToolStripFilters.GripMargin = new System.Windows.Forms.Padding(0);
+            this.ToolStripFilters.GripStyle = ToolStripGripStyle.Hidden;
             this.ToolStripFilters.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.ToolStripFilters.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
@@ -1002,7 +1006,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.fileExplorerToolStripMenuItem.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
             this.fileExplorerToolStripMenuItem.Name = "fileExplorerToolStripMenuItem";
-            this.fileExplorerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.fileExplorerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.O)));
             this.fileExplorerToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.fileExplorerToolStripMenuItem.Text = "File Explorer";
@@ -1769,13 +1773,29 @@ namespace GitUI.CommandsDialogs
             // 
             this.toolPanel.TopToolStripPanel.Controls.Add(this.ToolStripMain);
             this.toolPanel.TopToolStripPanel.Controls.Add(this.ToolStripFilters);
+            this.toolPanel.TopToolStripPanel.Controls.Add(this.ToolStripScripts);
             // 
             // addUpstreamRemoteToolStripMenuItem
-            //
+            // 
             this._addUpstreamRemoteToolStripMenuItem.Name = "_addUpstreamRemoteToolStripMenuItem";
             this._addUpstreamRemoteToolStripMenuItem.Size = new System.Drawing.Size(360, 38);
             this._addUpstreamRemoteToolStripMenuItem.Text = "Add upstream remote";
             this._addUpstreamRemoteToolStripMenuItem.Click += new System.EventHandler(this._addUpstreamRemoteToolStripMenuItem_Click);
+            // 
+            // toolStripScripts
+            // 
+            this.ToolStripScripts.ClickThrough = true;
+            this.ToolStripScripts.Dock = System.Windows.Forms.DockStyle.None;
+            this.ToolStripScripts.GripMargin = new System.Windows.Forms.Padding(0);
+            this.ToolStripScripts.GripStyle = ToolStripGripStyle.Hidden;
+            this.ToolStripScripts.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.ToolStripScripts.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.ToolStripScripts.Location = new System.Drawing.Point(3, 50);
+            this.ToolStripScripts.Name = "toolStripScripts";
+            this.ToolStripScripts.Padding = new System.Windows.Forms.Padding(0);
+            this.ToolStripScripts.Size = new System.Drawing.Size(43, 25);
+            this.ToolStripScripts.TabIndex = 2;
+            this.ToolStripScripts.Text = "Scripts";
             // 
             // FormBrowse
             // 
@@ -1817,6 +1837,8 @@ namespace GitUI.CommandsDialogs
             this.toolPanel.PerformLayout();
             this.ToolStripFilters.ResumeLayout(false);
             this.ToolStripFilters.PerformLayout();
+            this.ToolStripScripts.ResumeLayout(false);
+            this.ToolStripScripts.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
         }
@@ -1836,9 +1858,6 @@ namespace GitUI.CommandsDialogs
         private BindingSource gitRevisionBindingSource;
         private BindingSource gitItemBindingSource;
         private GitUI.RevisionGridControl RevisionGrid;
-        private MenuStripEx mainMenuStrip;
-        private ToolStripEx ToolStripMain;
-        private ToolStripEx ToolStripFilters;
         private CommitInfo.CommitInfo RevisionInfo;
         private GitUI.BranchTreePanel.RepoObjectsTree repoObjectsTree;
         private ToolTip FilterToolTip;
@@ -1846,6 +1865,11 @@ namespace GitUI.CommandsDialogs
         private RevisionDiffControl revisionDiff;
         private ToolStripContainer toolPanel;
         private RevisionGpgInfoControl revisionGpgInfo1;
+
+        private MenuStripEx mainMenuStrip;
+        private ToolStripEx ToolStripMain;
+        private ToolStripEx ToolStripFilters;
+        private ToolStripEx ToolStripScripts;
 
         private ToolStripButton toolStripButtonCommit;
         private ToolStripSplitButton _NO_TRANSLATE_WorkingDir;

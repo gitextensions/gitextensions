@@ -278,6 +278,8 @@ namespace GitUI.CommandsDialogs
 
             ManageWorktreeSupport();
 
+            WorkaroundToolbarLocationBug();
+
             var toolBackColor = SystemColors.Window;
             var toolForeColor = SystemColors.WindowText;
             BackColor = toolBackColor;
@@ -317,6 +319,17 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.ToggledBetweenArtificialAndHeadCommits += (s, e) => FocusRevisionDiffFileStatusList();
 
             return;
+
+            void WorkaroundToolbarLocationBug()
+            {
+                // Layout engine bug (?) which may change the order of toolbars
+                // if the 1st one becomes longer than the 2nd toolbar's Location.X
+                // the layout engine will be place the 2nd toolbar first
+                toolPanel.TopToolStripPanel.Controls.Clear();
+                toolPanel.TopToolStripPanel.Controls.Add(ToolStripScripts);
+                toolPanel.TopToolStripPanel.Controls.Add(ToolStripFilters);
+                toolPanel.TopToolStripPanel.Controls.Add(ToolStripMain);
+            }
 
             void FocusRevisionDiffFileStatusList()
             {
@@ -446,6 +459,9 @@ namespace GitUI.CommandsDialogs
                 ToolStripMain.ForeColor = toolForeColor;
                 ToolStripFilters.BackColor = toolBackColor;
                 ToolStripFilters.ForeColor = toolForeColor;
+                ToolStripScripts.BackColor = toolBackColor;
+                ToolStripScripts.ForeColor = toolForeColor;
+
                 toolStripRevisionFilterDropDownButton.BackColor = toolBackColor;
                 toolStripRevisionFilterDropDownButton.ForeColor = toolForeColor;
 
@@ -621,18 +637,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnLoad(EventArgs e)
         {
-            // Removing the main menu before restoring the toolstrip layouts
-            // as it *does* randomly change the order of the defined items in the menu
-            Controls.Remove(mainMenuStrip);
-
-            toolPanel.TopToolStripPanel.SuspendLayout();
-            ToolStripManager.LoadSettings(this, "toolsettings");
-            toolPanel.TopToolStripPanel.ResumeLayout();
-
-            // Add the menu back
-            Controls.Add(mainMenuStrip);
-
-            _formBrowseMenus.CreateToolbarsMenus(ToolStripMain, ToolStripFilters);
+            _formBrowseMenus.CreateToolbarsMenus(ToolStripMain, ToolStripFilters, ToolStripScripts);
 
             HideVariableMainMenuItems();
             RefreshSplitViewLayout();
@@ -695,10 +700,6 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            // Remove the main menu to prevent its state being persisted
-            Controls.Remove(mainMenuStrip);
-
-            ToolStripManager.SaveSettings(this, "toolsettings");
             SaveApplicationSettings();
 
             foreach (var control in this.FindDescendants())
@@ -1119,11 +1120,11 @@ namespace GitUI.CommandsDialogs
                     .Where(script => script.Enabled && script.OnEvent == ScriptEvent.ShowInUserMenuBar)
                     .ToList();
 
-                for (int i = ToolStripMain.Items.Count - 1; i >= 0; i--)
+                for (int i = ToolStripScripts.Items.Count - 1; i >= 0; i--)
                 {
-                    if (ToolStripMain.Items[i].Tag as string == "userscript")
+                    if (ToolStripScripts.Items[i].Tag as string == "userscript")
                     {
-                        ToolStripMain.Items.RemoveAt(i);
+                        ToolStripScripts.Items.RemoveAt(i);
                     }
                 }
 
@@ -1131,8 +1132,6 @@ namespace GitUI.CommandsDialogs
                 {
                     return;
                 }
-
-                ToolStripMain.Items.Add(new ToolStripSeparator { Tag = "userscript" });
 
                 foreach (var script in scripts)
                 {
@@ -1156,7 +1155,7 @@ namespace GitUI.CommandsDialogs
                     };
 
                     // add to toolstrip
-                    ToolStripMain.Items.Add(button);
+                    ToolStripScripts.Items.Add(button);
                 }
             }
 
