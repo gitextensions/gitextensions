@@ -1525,23 +1525,11 @@ namespace GitUI
         private readonly Subject<string> _filterSubject = new Subject<string>();
         [CanBeNull] private Regex _filter;
         private bool _filterVisible = false;
-        private bool _filterActive = false;
 
         public void SetFilter(string value)
         {
             FilterComboBox.Text = value;
             FilterFiles(value);
-        }
-
-        private void OnFilterChanged()
-        {
-            if (_filterActive == IsFilterActive)
-            {
-                return;
-            }
-
-            _filterActive = IsFilterActive;
-            FilterChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void DeleteFilterButton_Click(object sender, EventArgs e)
@@ -1554,7 +1542,7 @@ namespace GitUI
             StoreFilter(value);
 
             UpdateFileStatusListView(updateCausedByFilter: true);
-            OnFilterChanged();
+            FilterChanged?.Invoke(this, EventArgs.Empty);
             return FileStatusListView.Items.Count;
         }
 

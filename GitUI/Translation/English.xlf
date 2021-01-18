@@ -3677,10 +3677,6 @@ You can unset the template:
         <source>Refresh</source>
         <target />
       </trans-unit>
-      <trans-unit id="toolStageAllItem.Text">
-        <source>Stage all</source>
-        <target />
-      </trans-unit>
       <trans-unit id="toolStageItem.Text">
         <source>&amp;Stage</source>
         <target />
@@ -3691,10 +3687,6 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="toolStripMenuItem3.Text">
         <source>&amp;Options</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolUnstageAllItem.Text">
-        <source>Unstage all</source>
         <target />
       </trans-unit>
       <trans-unit id="toolUnstageItem.Text">
