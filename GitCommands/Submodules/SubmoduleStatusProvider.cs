@@ -20,19 +20,19 @@ namespace GitCommands.Submodules
         void Init();
 
         /// <summary>
-        /// Update the submodule structure; find superprojects and submodules
+        /// Update the submodule structure; find superprojects and submodules.
         /// </summary>
-        /// <param name="workingDirectory">Current module working directory</param>
-        /// <param name="noBranchText">The text where no branch is checked out for the submodule</param>
-        /// <param name="updateStatus">Update the detailed submodule status (set when current module is not top project)</param>
+        /// <param name="workingDirectory">Current module working directory.</param>
+        /// <param name="noBranchText">The text where no branch is checked out for the submodule.</param>
+        /// <param name="updateStatus">Update the detailed submodule status (set when current module is not top project).</param>
         Task UpdateSubmodulesStructureAsync(string workingDirectory, string noBranchText, bool updateStatus);
 
         /// <summary>
-        /// Update the submodule status
+        /// Update the submodule status.
         /// </summary>
-        /// <param name="workingDirectory">Current module working directory</param>
-        /// <param name="gitStatus">The Git status for the changes (also other than submodules)</param>
-        /// <param name="forceUpdate">Suppress the usual delay of 15 seconds between consecutive updates</param>
+        /// <param name="workingDirectory">Current module working directory.</param>
+        /// <param name="gitStatus">The Git status for the changes (also other than submodules).</param>
+        /// <param name="forceUpdate">Suppress the usual delay of 15 seconds between consecutive updates.</param>
         Task UpdateSubmodulesStatusAsync(string workingDirectory, IReadOnlyList<GitItemStatus>? gitStatus, bool forceUpdate = false);
     }
 
@@ -177,10 +177,10 @@ namespace GitCommands.Submodules
         }
 
         /// <summary>
-        /// Get the result submodule structure
+        /// Get the result submodule structure.
         /// </summary>
-        /// <param name="currentModule">The current module</param>
-        /// <param name="noBranchText">text with no branches</param>
+        /// <param name="currentModule">The current module.</param>
+        /// <param name="noBranchText">text with no branches.</param>
         private SubmoduleInfoResult GetSuperProjectRepositorySubmodulesStructure(GitModule currentModule, string noBranchText)
         {
             var result = new SubmoduleInfoResult { Module = currentModule };
@@ -273,12 +273,12 @@ namespace GitCommands.Submodules
         }
 
         /// <summary>
-        /// Update the detailed status from the git status
+        /// Update the detailed status from the git status.
         /// </summary>
-        /// <param name="module">Current module</param>
-        /// <param name="gitStatus">git status</param>
-        /// <param name="cancelToken">Cancellation token</param>
-        /// <returns>The task</returns>
+        /// <param name="module">Current module.</param>
+        /// <param name="gitStatus">git status.</param>
+        /// <param name="cancelToken">Cancellation token.</param>
+        /// <returns>The task.</returns>
         private async Task UpdateSubmodulesStatusAsync(GitModule module, IReadOnlyList<GitItemStatus>? gitStatus, CancellationToken cancelToken)
         {
             _previousSubmoduleUpdateTime = DateTime.Now;
@@ -343,9 +343,9 @@ namespace GitCommands.Submodules
 
         /// <summary>
         /// Set the module (normally top module) as dirty (if changes in module or any submodule)
-        /// If status is already set, use that (so no change from changed commits to dirty)
+        /// If status is already set, use that (so no change from changed commits to dirty).
         /// </summary>
-        /// <param name="path">path to the module</param>
+        /// <param name="path">path to the module.</param>
         private void SetModuleAsDirty(string path, bool force = false)
         {
             if (!_submoduleInfos.ContainsKey(path) || _submoduleInfos[path] is null)
@@ -369,9 +369,9 @@ namespace GitCommands.Submodules
         }
 
         /// <summary>
-        /// Set the status to 'dirty' recursively to super projects
+        /// Set the status to 'dirty' recursively to super projects.
         /// </summary>
-        /// <param name="module">module</param>
+        /// <param name="module">module.</param>
         private void SetModuleAsDirtyUpwards(GitModule? module)
         {
             while (module is not null)
@@ -383,11 +383,11 @@ namespace GitCommands.Submodules
         }
 
         /// <summary>
-        /// Get the detailed submodule status submodules below 'module' (but not this module)
+        /// Get the detailed submodule status submodules below 'module' (but not this module).
         /// </summary>
-        /// <param name="module">Module to compare to</param>
-        /// <param name="cancelToken">Cancellation token</param>
-        /// <returns>The task</returns>
+        /// <param name="module">Module to compare to.</param>
+        /// <param name="cancelToken">Cancellation token.</param>
+        /// <returns>The task.</returns>
         private async Task GetSubmoduleDetailedStatusAsync(GitModule module, CancellationToken cancelToken)
         {
             if (!_submoduleInfos.ContainsKey(module.WorkingDir) || _submoduleInfos[module.WorkingDir] is null)
@@ -404,12 +404,12 @@ namespace GitCommands.Submodules
         }
 
         /// <summary>
-        /// Get the detailed submodule status for 'submoduleName' and below
+        /// Get the detailed submodule status for 'submoduleName' and below.
         /// </summary>
-        /// <param name="superModule">Module to compare to</param>
-        /// <param name="submoduleName">Name of the submodule</param>
-        /// <param name="cancelToken">Cancellation token</param>
-        /// <returns>the task</returns>
+        /// <param name="superModule">Module to compare to.</param>
+        /// <param name="submoduleName">Name of the submodule.</param>
+        /// <param name="cancelToken">Cancellation token.</param>
+        /// <returns>the task.</returns>
         private async Task GetSubmoduleDetailedStatusAsync(GitModule? superModule, string? submoduleName, CancellationToken cancelToken)
         {
             if (superModule is null || Strings.IsNullOrWhiteSpace(submoduleName))
@@ -459,10 +459,10 @@ namespace GitCommands.Submodules
         }
 
         /// <summary>
-        /// Set empty submodule status for 'submoduleName' and below
+        /// Set empty submodule status for 'submoduleName' and below.
         /// </summary>
-        /// <param name="superModule">The module to compare to</param>
-        /// <param name="submoduleName">Name of the submodule</param>
+        /// <param name="superModule">The module to compare to.</param>
+        /// <param name="submoduleName">Name of the submodule.</param>
         private void SetSubmoduleEmptyDetailedStatus(GitModule superModule, string submoduleName)
         {
             if (superModule is null || string.IsNullOrEmpty(submoduleName))

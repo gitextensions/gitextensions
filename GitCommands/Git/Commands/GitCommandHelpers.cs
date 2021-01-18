@@ -153,12 +153,12 @@ namespace GitCommands.Git.Commands
         }
 
         /// <summary>
-        /// The Git command line for reset
+        /// The Git command line for reset.
         /// </summary>
-        /// <param name="mode">Reset mode</param>
-        /// <param name="commit">Optional commit-ish (for reset-index this is tree-ish and mandatory)</param>
-        /// <param name="file">Optional file to reset</param>
-        /// <returns>Argument string</returns>
+        /// <param name="mode">Reset mode.</param>
+        /// <param name="commit">Optional commit-ish (for reset-index this is tree-ish and mandatory).</param>
+        /// <param name="file">Optional file to reset.</param>
+        /// <returns>Argument string.</returns>
         public static ArgumentString ResetCmd(ResetMode mode, string? commit = null, string? file = null)
         {
             if (mode == ResetMode.ResetIndex && string.IsNullOrWhiteSpace(commit))
@@ -177,13 +177,13 @@ namespace GitCommands.Git.Commands
 
         /// <summary>
         /// Push a local reference to a new commit
-        /// This is similar to "git branch --force "branch" "commit", except that you get a warning if commits are lost
+        /// This is similar to "git branch --force "branch" "commit", except that you get a warning if commits are lost.
         /// </summary>
-        /// <param name="repoPath">Full path to the repo</param>
-        /// <param name="gitRef">The branch to move</param>
-        /// <param name="targetId">The commit to move to</param>
-        /// <param name="force">Push the reference also if commits are lost</param>
-        /// <returns>The Git command to execute</returns>
+        /// <param name="repoPath">Full path to the repo.</param>
+        /// <param name="gitRef">The branch to move.</param>
+        /// <param name="targetId">The commit to move to.</param>
+        /// <param name="force">Push the reference also if commits are lost.</param>
+        /// <returns>The Git command to execute.</returns>
         public static ArgumentString PushLocalCmd(string repoPath, string gitRef, ObjectId targetId, bool force = false)
         {
             return new GitArgumentBuilder("push")
@@ -499,12 +499,12 @@ namespace GitCommands.Git.Commands
         }
 
         /// <summary>
-        /// Arguments for git-clean
+        /// Arguments for git-clean.
         /// </summary>
-        /// <param name="mode">The cleanup mode what to delete</param>
-        /// <param name="dryRun">Only show what would be deleted</param>
-        /// <param name="directories">Delete untracked directories too</param>
-        /// <param name="paths">Limit to specific paths</param>
+        /// <param name="mode">The cleanup mode what to delete.</param>
+        /// <param name="dryRun">Only show what would be deleted.</param>
+        /// <param name="directories">Delete untracked directories too.</param>
+        /// <param name="paths">Limit to specific paths.</param>
         public static ArgumentString CleanCmd(CleanMode mode, bool dryRun, bool directories, string? paths = null)
         {
             return new GitArgumentBuilder("clean")

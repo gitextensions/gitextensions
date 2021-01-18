@@ -129,7 +129,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Wrapper for Path.Combine
+        /// Wrapper for Path.Combine.
         /// </summary>
         /// <remark>
         /// Similar to the .NET Core 2.1 variant, except that null is returned if Windows
@@ -137,9 +137,9 @@ namespace GitCommands
         /// are in the paths instead of a possible path (the OS or file system will throw
         /// if the paths are invalid).
         /// </remark>
-        /// <param name="path1">initial part</param>
-        /// <param name="path2">second part</param>
-        /// <returns>path if it can be combined, null otherwise</returns>
+        /// <param name="path1">initial part.</param>
+        /// <param name="path2">second part.</param>
+        /// <returns>path if it can be combined, null otherwise.</returns>
         public static string? Combine(string path1, string path2)
         {
             try
@@ -153,13 +153,13 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Wrapper for Path.GetExtension
+        /// Wrapper for Path.GetExtension.
         /// </summary>
         /// <remark>
         /// <see cref="Combine"/> for motivation.
         /// </remark>
-        /// <param name="path">path to check</param>
-        /// <returns>path if it can be combined, empty otherwise</returns>
+        /// <param name="path">path to check.</param>
+        /// <returns>path if it can be combined, empty otherwise.</returns>
         public static string GetExtension(string? path)
         {
             if (path == null)
@@ -190,7 +190,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Special handling of on purpose invalid WSL machine name in Windows 10
+        /// Special handling of on purpose invalid WSL machine name in Windows 10.
         /// </summary>
         internal static string ResolveWsl(string path, string relativePath = "")
         {

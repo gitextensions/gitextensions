@@ -11,28 +11,28 @@ namespace GitCommands
         private static readonly Regex _remoteHeadRegex = new Regex("^refs/remotes/[^/]+/HEAD$", RegexOptions.Compiled);
         private static readonly Regex _remoteNameRegex = new Regex("^refs/remotes/([^/]+)", RegexOptions.Compiled);
 
-        /// <summary>"refs/tags/"</summary>
+        /// <summary>"refs/tags/".</summary>
         public static string RefsTagsPrefix { get; } = "refs/tags/";
 
-        /// <summary>"refs/heads/"</summary>
+        /// <summary>"refs/heads/".</summary>
         public static string RefsHeadsPrefix { get; } = "refs/heads/";
 
-        /// <summary>"refs/remotes/"</summary>
+        /// <summary>"refs/remotes/".</summary>
         public static string RefsRemotesPrefix { get; } = "refs/remotes/";
 
-        /// <summary>"refs/bisect/"</summary>
+        /// <summary>"refs/bisect/".</summary>
         public static string RefsBisectPrefix { get; } = "refs/bisect/";
 
-        /// <summary>"refs/bisect/good"</summary>
+        /// <summary>"refs/bisect/good".</summary>
         public static string RefsBisectGoodPrefix { get; } = "refs/bisect/good";
 
-        /// <summary>"refs/bisect/bad"</summary>
+        /// <summary>"refs/bisect/bad".</summary>
         public static string RefsBisectBadPrefix { get; } = "refs/bisect/bad";
 
-        /// <summary>"refs/stash"</summary>
+        /// <summary>"refs/stash".</summary>
         public static string RefsStashPrefix { get; } = "refs/stash";
 
-        /// <summary>"^{}"</summary>
+        /// <summary>"^{}".</summary>
         public static string TagDereferenceSuffix { get; } = "^{}";
 
         [Pure]

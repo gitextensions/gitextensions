@@ -86,7 +86,7 @@ namespace GitUI
         }
 
         /// <summary>
-        /// Calls protected method <see cref="Control.SetStyle"/>
+        /// Calls protected method <see cref="Control.SetStyle"/>.
         /// </summary>
         public static void SetStyle(this Control control, ControlStyles styles, bool value) =>
             SetStyleMethod.Invoke(control, new object[] { styles, value });

@@ -64,9 +64,9 @@ namespace GitExtUtils
         }
 
         /// <summary>
-        /// Adds a range of arguments
+        /// Adds a range of arguments.
         /// </summary>
-        /// <param name="args">The arguments to add to this builder</param>
+        /// <param name="args">The arguments to add to this builder.</param>
         public void AddRange(IEnumerable<string> args)
         {
             args = args.Where(a => !string.IsNullOrEmpty(a));

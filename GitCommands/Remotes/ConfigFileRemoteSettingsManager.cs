@@ -67,7 +67,7 @@ namespace GitCommands.Remotes
         void ToggleRemoteState(string remoteName, bool disabled);
 
         /// <summary>
-        /// Retrieves disabled remotes from .git/config file
+        /// Retrieves disabled remotes from .git/config file.
         /// </summary>
         IReadOnlyList<Remote> GetDisabledRemotes();
 
@@ -77,12 +77,12 @@ namespace GitCommands.Remotes
         IReadOnlyList<string> GetDisabledRemoteNames();
 
         /// <summary>
-        /// Retrieves enabled remote names
+        /// Retrieves enabled remote names.
         /// </summary>
         IReadOnlyList<string> GetEnabledRemoteNames();
 
         /// <summary>
-        /// Retrieves enabled remote names of remotes without branches (i.e. that require a fetch)
+        /// Retrieves enabled remote names of remotes without branches (i.e. that require a fetch).
         /// </summary>
         IReadOnlyList<string> GetEnabledRemoteNamesWithoutBranches();
     }
@@ -159,7 +159,7 @@ namespace GitCommands.Remotes
         }
 
         /// <summary>
-        /// Retrieves disabled remotes from .git/config file
+        /// Retrieves disabled remotes from .git/config file.
         /// </summary>
         public IReadOnlyList<Remote> GetDisabledRemotes()
         {
@@ -185,7 +185,7 @@ namespace GitCommands.Remotes
         }
 
         /// <summary>
-        /// Retrieves enabled remote names
+        /// Retrieves enabled remote names.
         /// </summary>
         public IReadOnlyList<string> GetEnabledRemoteNames()
         {
@@ -193,7 +193,7 @@ namespace GitCommands.Remotes
         }
 
         /// <summary>
-        /// Retrieves enabled remote names of remotes without branches (i.e. that require a fetch)
+        /// Retrieves enabled remote names of remotes without branches (i.e. that require a fetch).
         /// </summary>
         public IReadOnlyList<string> GetEnabledRemoteNamesWithoutBranches()
         {

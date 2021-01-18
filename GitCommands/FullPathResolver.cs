@@ -36,8 +36,7 @@ namespace GitCommands
         /// <remarks>
         /// Behaves similar to the .NET Core 2.1 version that do not throw on paths with illegal
         /// Windows characters (that could be OK in Git paths or for cross platform) but returns
-        /// null instead of an possible path.
-        /// but </remarks>
+        /// null instead of an possible path.</remarks>
         /// <param name="path">Folder or file path to resolve.</param>
         /// <returns>
         /// <paramref name="path" /> if <paramref name="path" /> is rooted; otherwise resolved path from working directory of the current repository.
