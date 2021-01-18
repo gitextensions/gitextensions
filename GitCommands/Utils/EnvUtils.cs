@@ -86,7 +86,7 @@ namespace GitCommands.Utils
 
                 try
                 {
-                    RegistryKey registryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full", false);
+                    RegistryKey? registryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full", false);
                     if (registryKey is not null)
                     {
                         using (registryKey)
@@ -105,9 +105,9 @@ namespace GitCommands.Utils
             return false;
         }
 
-        public static string ReplaceLinuxNewLinesDependingOnPlatform(string s)
+        public static string? ReplaceLinuxNewLinesDependingOnPlatform(string? s)
         {
-            if (string.IsNullOrEmpty(s))
+            if (Strings.IsNullOrEmpty(s))
             {
                 return s;
             }

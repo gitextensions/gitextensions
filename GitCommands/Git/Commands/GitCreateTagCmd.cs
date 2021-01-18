@@ -2,18 +2,15 @@
 using GitCommands.Git.Extensions;
 using GitCommands.Git.Tag;
 using GitExtUtils;
-using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands.Git.Commands
 {
     public sealed class GitCreateTagCmd : GitCommand
     {
-        [CanBeNull]
-        public string TagMessageFileName { get; }
+        public string? TagMessageFileName { get; }
         public GitCreateTagArgs CreateTagArguments { get; }
 
-        public GitCreateTagCmd(GitCreateTagArgs args, [CanBeNull] string tagMessageFileName)
+        public GitCreateTagCmd(GitCreateTagArgs args, string? tagMessageFileName)
         {
             CreateTagArguments = args;
             TagMessageFileName = tagMessageFileName;
@@ -34,7 +31,7 @@ namespace GitCommands.Git.Commands
                 CreateTagArguments.ObjectId
             };
 
-            string GetArgumentForOperation()
+            string? GetArgumentForOperation()
             {
                 switch (CreateTagArguments.Operation)
                 {

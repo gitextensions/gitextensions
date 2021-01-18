@@ -2,19 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GitCommands.Utils;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands.Git
 {
     public interface IGitTreeParser
     {
-        [NotNull]
-        [ItemNotNull]
-        IEnumerable<GitItem> Parse([CanBeNull] string tree);
+        IEnumerable<GitItem> Parse(string? tree);
 
-        [CanBeNull]
-        GitItem ParseSingle([CanBeNull] string rawItem);
+        GitItem? ParseSingle(string? rawItem);
     }
 
     public sealed class GitTreeParser : IGitTreeParser
@@ -23,9 +20,9 @@ namespace GitCommands.Git
             @"^(?<mode>\d{6}) (?<type>(blob|tree|commit)+) (?<objectid>[0-9a-f]{40})\s+(?<name>.+)$",
             RegexOptions.Compiled);
 
-        public IEnumerable<GitItem> Parse(string tree)
+        public IEnumerable<GitItem> Parse(string? tree)
         {
-            if (string.IsNullOrWhiteSpace(tree))
+            if (Strings.IsNullOrWhiteSpace(tree))
             {
                 return Enumerable.Empty<GitItem>();
             }
@@ -43,10 +40,10 @@ namespace GitCommands.Git
             // Split on \0 too, as GitModule.GetTree uses `ls-tree -z` which uses null terminators
             var items = tree.Split('\0', '\n');
 
-            return items.Select(ParseSingle).Where(item => item is not null);
+            return items.Select(ParseSingle).Where(item => item is not null)!;
         }
 
-        public GitItem ParseSingle(string rawItem)
+        public GitItem? ParseSingle(string? rawItem)
         {
             if (rawItem is null)
             {

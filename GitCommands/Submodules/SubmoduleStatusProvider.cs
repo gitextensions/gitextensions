@@ -5,9 +5,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Git;
+using GitCommands.Utils;
 using GitUI;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands.Submodules
@@ -32,7 +33,7 @@ namespace GitCommands.Submodules
         /// <param name="workingDirectory">Current module working directory</param>
         /// <param name="gitStatus">The Git status for the changes (also other than submodules)</param>
         /// <param name="forceUpdate">Suppress the usual delay of 15 seconds between consecutive updates</param>
-        Task UpdateSubmodulesStatusAsync(string workingDirectory, [CanBeNull] IReadOnlyList<GitItemStatus> gitStatus, bool forceUpdate = false);
+        Task UpdateSubmodulesStatusAsync(string workingDirectory, IReadOnlyList<GitItemStatus>? gitStatus, bool forceUpdate = false);
     }
 
     public sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
@@ -43,17 +44,17 @@ namespace GitCommands.Submodules
         private readonly CancellationTokenSequence _submodulesStructureSequence = new CancellationTokenSequence();
         private readonly CancellationTokenSequence _submodulesStatusSequence = new CancellationTokenSequence();
         private DateTime _previousSubmoduleUpdateTime;
-        private SubmoduleInfoResult _submoduleInfoResult;
+        private SubmoduleInfoResult? _submoduleInfoResult;
         private readonly Dictionary<string, SubmoduleInfo> _submoduleInfos = new Dictionary<string, SubmoduleInfo>();
 
         // Singleton accessor
         public static SubmoduleStatusProvider Default { get; } = new SubmoduleStatusProvider();
 
         // Invoked when status update is requested (use to clear/lock UI)
-        public event EventHandler StatusUpdating;
+        public event EventHandler? StatusUpdating;
 
         // Invoked when status update is complete
-        public event EventHandler<SubmoduleStatusEventArgs> StatusUpdated;
+        public event EventHandler<SubmoduleStatusEventArgs>? StatusUpdated;
 
         public void Dispose()
         {
@@ -90,9 +91,11 @@ namespace GitCommands.Submodules
             var result = GetSuperProjectRepositorySubmodulesStructure(currentModule, noBranchText);
 
             // Prepare info for status updates
+            Assumes.NotNull(result.TopProject?.Path);
             _submoduleInfos[result.TopProject.Path] = result.TopProject;
             foreach (var info in result.AllSubmodules)
             {
+                Assumes.NotNull(info.Path);
                 _submoduleInfos[info.Path] = info;
             }
 
@@ -131,7 +134,7 @@ namespace GitCommands.Submodules
         }
 
         /// <inheritdoc />
-        public async Task UpdateSubmodulesStatusAsync(string workingDirectory, [CanBeNull] IReadOnlyList<GitItemStatus> gitStatus, bool forceUpdate)
+        public async Task UpdateSubmodulesStatusAsync(string workingDirectory, IReadOnlyList<GitItemStatus>? gitStatus, bool forceUpdate)
         {
             if (gitStatus is null)
             {
@@ -276,7 +279,7 @@ namespace GitCommands.Submodules
         /// <param name="gitStatus">git status</param>
         /// <param name="cancelToken">Cancellation token</param>
         /// <returns>The task</returns>
-        private async Task UpdateSubmodulesStatusAsync(GitModule module, [CanBeNull] IReadOnlyList<GitItemStatus> gitStatus, CancellationToken cancelToken)
+        private async Task UpdateSubmodulesStatusAsync(GitModule module, IReadOnlyList<GitItemStatus>? gitStatus, CancellationToken cancelToken)
         {
             _previousSubmoduleUpdateTime = DateTime.Now;
             cancelToken.ThrowIfCancellationRequested();
@@ -299,13 +302,13 @@ namespace GitCommands.Submodules
             else if (_submoduleInfos[module.WorkingDir].Detailed is not null)
             {
                 // No Git changes for this module, clear dirty status (but unknown for super projects)
-                if (_submoduleInfos[module.WorkingDir].Detailed.Status == SubmoduleStatus.Unknown)
+                if (_submoduleInfos[module.WorkingDir].Detailed!.Status == SubmoduleStatus.Unknown)
                 {
                     _submoduleInfos[module.WorkingDir].Detailed = null;
                 }
                 else
                 {
-                    _submoduleInfos[module.WorkingDir].Detailed.IsDirty = false;
+                    _submoduleInfos[module.WorkingDir].Detailed!.IsDirty = false;
                 }
             }
 
@@ -361,7 +364,7 @@ namespace GitCommands.Submodules
             }
             else
             {
-                _submoduleInfos[path].Detailed.IsDirty = true;
+                _submoduleInfos[path].Detailed!.IsDirty = true;
             }
         }
 
@@ -369,7 +372,7 @@ namespace GitCommands.Submodules
         /// Set the status to 'dirty' recursively to super projects
         /// </summary>
         /// <param name="module">module</param>
-        private void SetModuleAsDirtyUpwards(GitModule module)
+        private void SetModuleAsDirtyUpwards(GitModule? module)
         {
             while (module is not null)
             {
@@ -383,7 +386,7 @@ namespace GitCommands.Submodules
         /// Get the detailed submodule status submodules below 'module' (but not this module)
         /// </summary>
         /// <param name="module">Module to compare to</param>
-        /// <param name="cancelToken">Cancelation token</param>
+        /// <param name="cancelToken">Cancellation token</param>
         /// <returns>The task</returns>
         private async Task GetSubmoduleDetailedStatusAsync(GitModule module, CancellationToken cancelToken)
         {
@@ -405,11 +408,11 @@ namespace GitCommands.Submodules
         /// </summary>
         /// <param name="superModule">Module to compare to</param>
         /// <param name="submoduleName">Name of the submodule</param>
-        /// <param name="cancelToken">Cancelation token</param>
+        /// <param name="cancelToken">Cancellation token</param>
         /// <returns>the task</returns>
-        private async Task GetSubmoduleDetailedStatusAsync(GitModule superModule, string submoduleName, CancellationToken cancelToken)
+        private async Task GetSubmoduleDetailedStatusAsync(GitModule? superModule, string? submoduleName, CancellationToken cancelToken)
         {
-            if (superModule is null || string.IsNullOrWhiteSpace(submoduleName))
+            if (superModule is null || Strings.IsNullOrWhiteSpace(submoduleName))
             {
                 return;
             }

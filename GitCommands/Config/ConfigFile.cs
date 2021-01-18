@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using GitCommands.Utils;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands.Config
 {
@@ -225,16 +225,14 @@ namespace GitCommands.Config
             _configSections.Remove(configSection);
         }
 
-        [CanBeNull]
-        public IConfigSection FindConfigSection(string name)
+        public IConfigSection? FindConfigSection(string name)
         {
             var configSectionToFind = new ConfigSection(name, true);
 
             return FindConfigSection(configSectionToFind);
         }
 
-        [CanBeNull]
-        private IConfigSection FindConfigSection(IConfigSection configSectionToFind)
+        private IConfigSection? FindConfigSection(IConfigSection configSectionToFind)
         {
             return ConfigSections.FirstOrDefault(configSectionToFind.Equals);
         }
@@ -246,9 +244,9 @@ namespace GitCommands.Config
             private delegate ParsePart ParsePart(char c);
 
             private readonly ConfigFile _configFile;
-            private string _fileContent;
-            private IConfigSection _section;
-            private string _key;
+            private string? _fileContent;
+            private IConfigSection? _section;
+            private string? _key;
             private string FileName => _configFile.FileName;
 
             // parsed char
@@ -261,7 +259,7 @@ namespace GitCommands.Config
                 _configFile = configFile;
             }
 
-            public void Parse(string fileContent = null)
+            public void Parse(string? fileContent = null)
             {
                 _fileContent = fileContent ?? File.ReadAllText(FileName, GetEncoding());
 
@@ -308,12 +306,12 @@ namespace GitCommands.Config
 
                 string value = _token.ToString();
 
-                if (string.IsNullOrEmpty(_key))
+                if (Strings.IsNullOrEmpty(_key))
                 {
                     throw new Exception($"Value {value} for empty key in config file {FileName}.");
                 }
 
-                _section.AddValue(_key, value);
+                _section?.AddValue(_key, value);
 
                 _key = null;
             }

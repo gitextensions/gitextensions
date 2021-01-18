@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using GitCommands.Utils;
 
 namespace GitCommands.Git
 {
@@ -18,7 +19,7 @@ namespace GitCommands.Git
         /// <param name="branchName">Name of the branch.</param>
         /// <param name="options">The options.</param>
         /// <returns>Normalised branch name.</returns>
-        string Normalise(string branchName, GitBranchNameOptions options);
+        string Normalise(string? branchName, GitBranchNameOptions options);
     }
 
     /*
@@ -74,9 +75,9 @@ namespace GitCommands.Git
         /// <param name="branchName">Name of the branch.</param>
         /// <param name="options">The options.</param>
         /// <returns>Normalised branch name.</returns>
-        public string Normalise(string branchName, GitBranchNameOptions options)
+        public string Normalise(string? branchName, GitBranchNameOptions options)
         {
-            if (string.IsNullOrWhiteSpace(branchName))
+            if (Strings.IsNullOrWhiteSpace(branchName))
             {
                 return string.Empty;
             }

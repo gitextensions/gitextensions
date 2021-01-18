@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace GitCommands.Remotes
 {
     public sealed class GitHubRemoteParser : RemoteParser
@@ -11,7 +13,7 @@ namespace GitCommands.Remotes
             return TryExtractGitHubDataFromRemoteUrl(remoteUrl, out _, out _);
         }
 
-        public bool TryExtractGitHubDataFromRemoteUrl(string remoteUrl, out string owner, out string repository)
+        public bool TryExtractGitHubDataFromRemoteUrl(string remoteUrl, [NotNullWhen(returnValue: true)] out string? owner, [NotNullWhen(returnValue: true)] out string? repository)
         {
             owner = null;
             repository = null;

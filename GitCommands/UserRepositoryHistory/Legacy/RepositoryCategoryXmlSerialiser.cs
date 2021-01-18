@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml.Serialization;
-using JetBrains.Annotations;
 
 namespace GitCommands.UserRepositoryHistory.Legacy
 {
@@ -20,8 +19,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
         /// <param name="serialised">A serialised list of categorised user's git repositories.</param>
         /// <returns>A list of categorised user's git repositories.</returns>
         /// <exception cref="ArgumentException"><paramref name="serialised"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
-        [CanBeNull]
-        public IReadOnlyList<RepositoryCategory> Deserialize([NotNull] string serialised)
+        public IReadOnlyList<RepositoryCategory>? Deserialize(string serialised)
         {
             if (string.IsNullOrEmpty(serialised))
             {

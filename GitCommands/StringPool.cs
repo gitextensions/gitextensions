@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Text.RegularExpressions;
-using JetBrains.Annotations;
 
 // ReSharper disable SuggestBaseTypeForParameter
 // ReSharper disable ForCanBeConvertedToForeach
@@ -23,9 +23,9 @@ namespace GitCommands
         /// </summary>
         public int Count { get; private set; }
 
-        public string Intern(string source, Capture capture) => Intern(source, capture.Index, capture.Length);
+        public string? Intern(string source, Capture capture) => Intern(source, capture.Index, capture.Length);
 
-        public string Intern(string source, int index, int length)
+        public string? Intern(string source, int index, int length)
         {
             if (Count >= _capacity)
             {

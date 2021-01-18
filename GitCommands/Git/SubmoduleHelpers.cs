@@ -1,46 +1,47 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitCommands.Patches;
+using GitCommands.Utils;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
+using Microsoft;
 
 namespace GitCommands.Git
 {
     public static class SubmoduleHelpers
     {
-        [CanBeNull]
-        public static async Task<GitSubmoduleStatus> GetCurrentSubmoduleChangesAsync(GitModule module, string fileName, string oldFileName, bool staged, bool noLocks = false)
+        public static async Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(GitModule module, string? fileName, string? oldFileName, bool staged, bool noLocks = false)
         {
-            Patch patch = await module.GetCurrentChangesAsync(fileName, oldFileName, staged, "", noLocks: noLocks).ConfigureAwait(false);
-            string text = patch is not null ? patch.Text : "";
+            Patch? patch = await module.GetCurrentChangesAsync(fileName, oldFileName, staged, "", noLocks: noLocks).ConfigureAwait(false);
+            string? text = patch is not null ? patch.Text : "";
             return ParseSubmoduleStatus(text, module, fileName);
         }
 
-        [CanBeNull]
-        public static Task<GitSubmoduleStatus> GetCurrentSubmoduleChangesAsync(GitModule module, string submodule, bool noLocks = false)
+        public static Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(GitModule module, string submodule, bool noLocks = false)
         {
             return GetCurrentSubmoduleChangesAsync(module, submodule, submodule, false, noLocks: noLocks);
         }
 
-        public static GitSubmoduleStatus ParseSubmoduleStatus(string text, GitModule module, string fileName)
+        [return: NotNullIfNotNull("text")]
+        public static GitSubmoduleStatus? ParseSubmoduleStatus(string? text, GitModule module, string? fileName)
         {
-            if (string.IsNullOrEmpty(text))
+            if (Strings.IsNullOrEmpty(text))
             {
                 return null;
             }
 
-            string name = null;
-            string oldName = null;
+            string? name = null;
+            string? oldName = null;
             bool isDirty = false;
-            ObjectId commitId = null;
-            ObjectId oldCommitId = null;
+            ObjectId? commitId = null;
+            ObjectId? oldCommitId = null;
             int? addedCommits = null;
             int? removedCommits = null;
 
             using (var reader = new StringReader(text))
             {
-                string line = reader.ReadLine();
+                string? line = reader.ReadLine();
 
                 if (line is not null)
                 {
@@ -112,6 +113,8 @@ namespace GitCommands.Git
                     removedCommits = submodule.GetCommitCount(oldCommitId.ToString(), commitId.ToString());
                 }
             }
+
+            Assumes.NotNull(name);
 
             return new GitSubmoduleStatus(name, oldName, isDirty, commitId, oldCommitId, addedCommits, removedCommits);
         }

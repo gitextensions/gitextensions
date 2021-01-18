@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using JetBrains.Annotations;
 
 namespace GitCommands.UserRepositoryHistory
 {
     public class RecentRepoInfo
     {
         public Repository Repo { get; set; }
-        [CanBeNull] public string Caption { get; set; }
+        public string? Caption { get; set; }
         public bool MostRecent { get; set; }
-        [CanBeNull] public DirectoryInfo DirInfo { get; set; }
-        [CanBeNull] public string ShortName { get; set; }
+        public DirectoryInfo? DirInfo { get; set; }
+        public string? ShortName { get; set; }
         public string DirName { get; set; }
 
         public RecentRepoInfo(Repository repo, bool mostRecent)
@@ -53,8 +52,8 @@ namespace GitCommands.UserRepositoryHistory
         public int RecentReposComboMinWidth { get; set; }
 
         // need to be set before shortening using middleDots strategy
-        public Graphics Graphics { get; set; }
-        public Font MeasureFont { get; set; }
+        public Graphics? Graphics { get; set; }
+        public Font? MeasureFont { get; set; }
 
         public RecentRepoSplitter()
         {
@@ -182,11 +181,11 @@ namespace GitCommands.UserRepositoryHistory
                 repoInfo.Caption = repoInfo.Repo.Path;
             }
 
-            var existsShortName = orderedRepos.TryGetValue(repoInfo.Caption, out var list);
+            var existsShortName = orderedRepos.TryGetValue(repoInfo.Caption!, out var list);
             if (!existsShortName)
             {
                 list = new List<RecentRepoInfo>();
-                orderedRepos.Add(repoInfo.Caption, list);
+                orderedRepos.Add(repoInfo.Caption!, list);
             }
 
             var tmpList = new List<RecentRepoInfo>();
@@ -219,7 +218,7 @@ namespace GitCommands.UserRepositoryHistory
             }
         }
 
-        private static string MakePath(string l, string r)
+        private static string MakePath(string? l, string r)
         {
             if (l is null)
             {
@@ -231,7 +230,7 @@ namespace GitCommands.UserRepositoryHistory
 
         private void AddToOrderedMiddleDots(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo)
         {
-            DirectoryInfo dirInfo;
+            DirectoryInfo? dirInfo;
             try
             {
                 dirInfo = new DirectoryInfo(repoInfo.Repo.Path);
@@ -253,9 +252,9 @@ namespace GitCommands.UserRepositoryHistory
             }
             else
             {
-                string root = null;
-                string company = null;
-                string repository = null;
+                string? root = null;
+                string? company = null;
+                string? repository = null;
                 string workingDir = dirInfo.Name;
                 dirInfo = dirInfo.Parent;
                 if (dirInfo is not null)
@@ -283,8 +282,8 @@ namespace GitCommands.UserRepositoryHistory
 
                 void ShortenPathWithCompany(int skipCount)
                 {
-                    string c = null;
-                    string r = null;
+                    string? c = null;
+                    string? r = null;
 
                     if (company?.Length > skipCount)
                     {
@@ -296,21 +295,21 @@ namespace GitCommands.UserRepositoryHistory
                         r = repository.Substring(skipCount, repository.Length - skipCount);
                     }
 
-                    repoInfo.Caption = MakePath(root, c);
+                    repoInfo.Caption = MakePath(root, c!);
 
                     if (addDots)
                     {
                         repoInfo.Caption = MakePath(repoInfo.Caption, "..");
                     }
 
-                    repoInfo.Caption = MakePath(repoInfo.Caption, r);
+                    repoInfo.Caption = MakePath(repoInfo.Caption, r!);
                     repoInfo.Caption = MakePath(repoInfo.Caption, workingDir);
                 }
 
                 bool ShortenPath(int skipCount)
                 {
                     string path = repoInfo.Repo.Path;
-                    string fistDir = (root ?? company) ?? repository;
+                    string? fistDir = (root ?? company) ?? repository;
                     string lastDir = workingDir;
                     if (fistDir is not null && path.Length - lastDir.Length - fistDir.Length - skipCount > 0)
                     {
@@ -352,16 +351,16 @@ namespace GitCommands.UserRepositoryHistory
                     {
                         canShorten = ShortenPath(skipCount);
                         skipCount++;
-                        captionSize = Graphics.MeasureString(repoInfo.Caption, MeasureFont);
+                        captionSize = Graphics!.MeasureString(repoInfo.Caption, MeasureFont);
                     }
                     while (captionSize.Width > RecentReposComboMinWidth - 10 && canShorten);
                 }
             }
 
-            if (!orderedRepos.TryGetValue(repoInfo.Caption, out var list))
+            if (!orderedRepos.TryGetValue(repoInfo.Caption!, out var list))
             {
                 list = new List<RecentRepoInfo>();
-                orderedRepos.Add(repoInfo.Caption, list);
+                orderedRepos.Add(repoInfo.Caption!, list);
             }
 
             list.Add(repoInfo);

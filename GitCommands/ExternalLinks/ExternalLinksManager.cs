@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using GitCommands.Settings;
-using GitUIPluginInterfaces;
 
 namespace GitCommands.ExternalLinks
 {
@@ -10,7 +9,7 @@ namespace GitCommands.ExternalLinks
     public sealed class ExternalLinksManager
     {
         private readonly RepoDistSettings _cachedSettings;
-        private readonly ExternalLinksManager _lowerPriority;
+        private readonly ExternalLinksManager? _lowerPriority;
         private readonly IExternalLinksStorage _externalLinksStorage = new ExternalLinksStorage();
         private readonly List<ExternalLinkDefinition> _definitions;
 
@@ -73,7 +72,7 @@ namespace GitCommands.ExternalLinks
         /// </summary>
         /// <param name="definitionName">The name of the definition to find.</param>
         /// <returns><see langword="true"/> if a definition already exists; otherwise <see langword="false"/>.</returns>
-        public bool Contains(string definitionName)
+        public bool Contains(string? definitionName)
         {
             return _definitions.Any(linkDef => linkDef.Name == definitionName);
         }

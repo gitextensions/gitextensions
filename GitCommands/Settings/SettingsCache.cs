@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
     public abstract class SettingsCache : IDisposable
     {
-        private readonly ConcurrentDictionary<string, object> _byNameMap = new ConcurrentDictionary<string, object>();
+        private readonly ConcurrentDictionary<string, object?> _byNameMap = new ConcurrentDictionary<string, object?>();
 
         public void Dispose()
         {
@@ -21,7 +20,7 @@ namespace GitCommands
 
         public void LockedAction(Action action)
         {
-            LockedAction<object>(() =>
+            LockedAction<object?>(() =>
             {
                 action();
                 return default;
@@ -38,9 +37,8 @@ namespace GitCommands
 
         protected abstract void SaveImpl();
         protected abstract void LoadImpl();
-        protected abstract void SetValueImpl(string key, string value);
-        [CanBeNull]
-        protected abstract string GetValueImpl(string key);
+        protected abstract void SetValueImpl(string key, string? value);
+        protected abstract string? GetValueImpl(string key);
         protected abstract bool NeedRefresh();
         protected abstract void ClearImpl();
 
@@ -95,12 +93,12 @@ namespace GitCommands
         {
         }
 
-        private void SetValue(string name, string value)
+        private void SetValue(string name, string? value)
         {
             LockedAction(() =>
             {
                 // will refresh EncodedNameMap if needed
-                string inMemValue = GetValue(name);
+                string? inMemValue = GetValue(name);
 
                 if (string.Equals(inMemValue, value))
                 {
@@ -113,7 +111,7 @@ namespace GitCommands
             });
         }
 
-        private string GetValue(string name)
+        private string? GetValue(string name)
         {
             return LockedAction(() =>
             {
@@ -127,7 +125,7 @@ namespace GitCommands
             return GetValue(name) is not null;
         }
 
-        public bool HasADifferentValue<T>(string name, T value, Func<T, string> encode)
+        public bool HasADifferentValue<T>(string name, T value, Func<T, string?> encode)
         {
             var s = value is not null
                 ? encode(value)
@@ -135,12 +133,12 @@ namespace GitCommands
 
             return LockedAction(() =>
             {
-                string inMemValue = GetValue(name);
+                string? inMemValue = GetValue(name);
                 return inMemValue is not null && !string.Equals(inMemValue, s);
             });
         }
 
-        public void SetValue<T>(string name, T value, Func<T, string> encode)
+        public void SetValue<T>(string name, T value, Func<T, string?> encode)
         {
             var s = value is not null
                 ? encode(value)
@@ -157,7 +155,7 @@ namespace GitCommands
         // This method will attempt to get the value from cache first. If the setting is not cached, it will call GetValue.
         // GetValue will not look in the cache. This method doesn't require a lock. A lock is only required when GetValue is
         // called. GetValue will set the lock.
-        public bool TryGetValue<T>([NotNull] string name, T defaultValue, [NotNull] Func<string, T> decode, out T value)
+        public bool TryGetValue<T>(string name, T defaultValue, Func<string, T> decode, out T value)
         {
             if (decode is null)
             {
@@ -168,7 +166,7 @@ namespace GitCommands
 
             EnsureSettingsAreUpToDate();
 
-            if (_byNameMap.TryGetValue(name, out object o))
+            if (_byNameMap.TryGetValue(name, out object? o))
             {
                 switch (o)
                 {
@@ -182,7 +180,7 @@ namespace GitCommands
                 }
             }
 
-            string s = GetValue(name);
+            string? s = GetValue(name);
 
             if (s is null)
             {

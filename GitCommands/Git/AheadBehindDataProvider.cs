@@ -4,13 +4,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using GitExtUtils;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands.Git
 {
     public interface IAheadBehindDataProvider
     {
-        IDictionary<string, AheadBehindData> GetData(string branchName = "");
+        IDictionary<string, AheadBehindData>? GetData(string branchName = "");
     }
 
     public class AheadBehindDataProvider : IAheadBehindDataProvider
@@ -32,8 +31,7 @@ namespace GitCommands.Git
             _getGitExecutable = getGitExecutable;
         }
 
-        [CanBeNull]
-        public IDictionary<string, AheadBehindData> GetData(string branchName = "")
+        public IDictionary<string, AheadBehindData>? GetData(string branchName = "")
         {
             if (!AppSettings.ShowAheadBehindData)
             {
@@ -44,7 +42,7 @@ namespace GitCommands.Git
         }
 
         // This method is required to facilitate unit tests
-        private IDictionary<string, AheadBehindData> GetData(Encoding encoding, string branchName = "")
+        private IDictionary<string, AheadBehindData>? GetData(Encoding? encoding, string branchName = "")
         {
             if (branchName is null)
             {
@@ -122,7 +120,6 @@ namespace GitCommands.Git
             return aheadBehindForBranchesData;
         }
 
-        [NotNull]
         private IExecutable GetGitExecutable()
         {
             var executable = _getGitExecutable();
@@ -147,7 +144,7 @@ namespace GitCommands.Git
                 _provider = provider;
             }
 
-            public IDictionary<string, AheadBehindData> GetData(Encoding encoding, string branchName) => _provider.GetData(encoding, branchName);
+            public IDictionary<string, AheadBehindData>? GetData(Encoding encoding, string branchName) => _provider.GetData(encoding, branchName);
         }
     }
 }

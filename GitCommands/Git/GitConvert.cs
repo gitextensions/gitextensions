@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using JetBrains.Annotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace GitCommands
 {
@@ -8,8 +8,8 @@ namespace GitCommands
         private const byte lf = 0x0A;
         private const byte cr = 0x0D;
 
-        [CanBeNull]
-        public static byte[] ConvertCrLfToWorktree([CanBeNull] byte[] buf)
+        [return: NotNullIfNotNull("buf")]
+        public static byte[]? ConvertCrLfToWorktree(byte[]? buf)
         {
             if (buf is null)
             {

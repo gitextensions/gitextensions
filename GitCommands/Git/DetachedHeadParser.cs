@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -15,7 +16,7 @@ namespace GitCommands.Git
             return DetachedPrefixes.Any(a => branch.StartsWith(a, StringComparison.Ordinal));
         }
 
-        public static bool TryParse(string text, out string sha1)
+        public static bool TryParse(string text, [NotNullWhen(returnValue: true)] out string? sha1)
         {
             sha1 = null;
             if (!IsDetachedHead(text))

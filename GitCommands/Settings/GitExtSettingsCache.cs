@@ -66,7 +66,7 @@ namespace GitCommands.Settings
             }
         }
 
-        protected override void SetValueImpl(string key, string value)
+        protected override void SetValueImpl(string key, string? value)
         {
             if (value is null)
             {

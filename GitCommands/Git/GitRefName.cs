@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Text.RegularExpressions;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -35,8 +35,8 @@ namespace GitCommands
         /// <summary>"^{}"</summary>
         public static string TagDereferenceSuffix { get; } = "^{}";
 
-        [Pure, NotNull]
-        public static string GetRemoteName([NotNull] string refName)
+        [Pure]
+        public static string GetRemoteName(string refName)
         {
             var match = _remoteNameRegex.Match(refName);
 
@@ -53,8 +53,8 @@ namespace GitCommands
             return string.Empty;
         }
 
-        [Pure, NotNull]
-        public static string GetRemoteName([NotNull] string refName, [NotNull, ItemNotNull] IEnumerable<string> remotes)
+        [Pure]
+        public static string GetRemoteName(string refName, IEnumerable<string> remotes)
         {
             if (refName.StartsWith("refs/"))
             {
@@ -72,8 +72,8 @@ namespace GitCommands
             return string.Empty;
         }
 
-        [Pure, NotNull]
-        public static string GetRemoteBranch([NotNull] string refName)
+        [Pure]
+        public static string GetRemoteBranch(string refName)
         {
             if (refName.Length <= GitRefName.RefsRemotesPrefix.Length)
             {
@@ -89,8 +89,8 @@ namespace GitCommands
             return refName.Substring(1 + startBranch);
         }
 
-        [Pure, CanBeNull]
-        public static string GetFullBranchName([CanBeNull] string branch)
+        [Pure]
+        public static string? GetFullBranchName(string? branch)
         {
             if (branch is null)
             {
@@ -115,7 +115,7 @@ namespace GitCommands
         }
 
         [Pure]
-        public static bool IsRemoteHead([NotNull] string refName)
+        public static bool IsRemoteHead(string refName)
         {
             return _remoteHeadRegex.IsMatch(refName);
         }

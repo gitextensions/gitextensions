@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Text;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -10,9 +10,8 @@ namespace GitCommands
     /// </summary>
     public static class EncodingHelper
     {
-        [NotNull]
         [Pure]
-        public static string GetString([CanBeNull] byte[] output, [CanBeNull] byte[] error, [NotNull] Encoding encoding)
+        public static string GetString(byte[]? output, byte[]? error, Encoding encoding)
         {
             if (encoding is null)
             {
@@ -39,18 +38,16 @@ namespace GitCommands
             return sb.ToString();
         }
 
-        [NotNull]
         [Pure]
-        public static byte[] ConvertTo([NotNull] Encoding encoding, [NotNull] string s)
+        public static byte[] ConvertTo(Encoding encoding, string s)
         {
             byte[] unicodeBytes = Encoding.Unicode.GetBytes(s);
 
             return Encoding.Convert(Encoding.Unicode, encoding, unicodeBytes);
         }
 
-        [NotNull]
         [Pure]
-        public static string DecodeString([CanBeNull] byte[] output, [CanBeNull] byte[] error, [NotNull] ref Encoding encoding)
+        public static string DecodeString(byte[]? output, byte[]? error, ref Encoding encoding)
         {
             if (encoding is null)
             {
@@ -60,7 +57,7 @@ namespace GitCommands
             string outputString = "";
             if (output is not null && output.Length > 0)
             {
-                Stream ms = null;
+                Stream? ms = null;
                 try
                 {
                     ms = new MemoryStream(output);
@@ -82,10 +79,10 @@ namespace GitCommands
                 outputString = outputString + Environment.NewLine;
             }
 
-            string errorString = null;
+            string? errorString = null;
             if (error is not null && error.Length > 0)
             {
-                Stream ms = null;
+                Stream? ms = null;
                 try
                 {
                     ms = new MemoryStream(error);

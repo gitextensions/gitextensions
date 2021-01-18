@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -19,14 +18,12 @@ namespace GitCommands
 
     public sealed class GitBlameLine
     {
-        [NotNull]
         public GitBlameCommit Commit { get; }
         public int FinalLineNumber { get; }
         public int OriginLineNumber { get; }
-        [NotNull]
         public string Text { get; }
 
-        public GitBlameLine([NotNull] GitBlameCommit commit, int finalLineNumber, int originLineNumber, [NotNull] string text)
+        public GitBlameLine(GitBlameCommit commit, int finalLineNumber, int originLineNumber, string text)
         {
             Commit = commit;
             FinalLineNumber = finalLineNumber;

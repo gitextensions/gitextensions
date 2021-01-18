@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 
 namespace GitCommands.Git
 {
@@ -7,7 +8,7 @@ namespace GitCommands.Git
     {
         private static readonly Regex _regex = new Regex(@"^stash@\{(?<index>\d+)\}: (?<message>.+)$", RegexOptions.Compiled);
 
-        public static bool TryParse(string s, out GitStash stash)
+        public static bool TryParse(string s, [NotNullWhen(returnValue: true)] out GitStash? stash)
         {
             // "stash@{i}: WIP on {branch}: {PreviousCommitMiniSHA} {PreviousCommitMessage}"
             // "stash@{i}: On {branch}: {Message}"

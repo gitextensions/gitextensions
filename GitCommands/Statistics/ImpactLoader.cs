@@ -54,8 +54,8 @@ namespace GitCommands.Statistics
         /// </summary>
         public bool RespectMailmap { get; set; }
 
-        public event EventHandler Exited;
-        public event Action<Commit> CommitLoaded;
+        public event EventHandler? Exited;
+        public event Action<Commit>? CommitLoaded;
 
         private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
         private readonly IGitModule _module;

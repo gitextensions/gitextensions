@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -11,7 +12,7 @@ using System.Windows.Forms;
 using GitCommands.Settings;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
+using Microsoft;
 using Microsoft.Win32;
 
 namespace GitCommands
@@ -61,8 +62,8 @@ namespace GitCommands
         private static string _applicationExecutablePath = Application.ExecutablePath;
         private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
 
-        public static Lazy<string> ApplicationDataPath { get; private set; }
-        public static readonly Lazy<string> LocalApplicationDataPath;
+        public static Lazy<string?> ApplicationDataPath { get; private set; }
+        public static readonly Lazy<string?> LocalApplicationDataPath;
         public static string SettingsFilePath => Path.Combine(ApplicationDataPath.Value, SettingsFileName);
         public static string UserPluginsPath => Path.Combine(LocalApplicationDataPath.Value, UserPluginsDirectoryName);
 
@@ -73,11 +74,11 @@ namespace GitCommands
         public static readonly int BranchDropDownMinWidth = 300;
         public static readonly int BranchDropDownMaxWidth = 600;
 
-        public static event Action Saved;
+        public static event Action? Saved;
 
         static AppSettings()
         {
-            ApplicationDataPath = new Lazy<string>(() =>
+            ApplicationDataPath = new Lazy<string?>(() =>
             {
                 if (IsPortable())
                 {
@@ -89,7 +90,7 @@ namespace GitCommands
                                                   .Replace(ApplicationName, ApplicationId); // 'GitExtensions' has been changed to 'Git Extensions' in v3.0
             });
 
-            LocalApplicationDataPath = new Lazy<string>(() =>
+            LocalApplicationDataPath = new Lazy<string?>(() =>
             {
                 if (IsPortable())
                 {
@@ -170,8 +171,7 @@ namespace GitCommands
                 });
         }
 
-        [CanBeNull]
-        public static string GetInstallDir()
+        public static string? GetInstallDir()
         {
             if (IsPortable())
             {
@@ -187,11 +187,10 @@ namespace GitCommands
             return dir;
         }
 
-        [CanBeNull]
-        public static string GetResourceDir()
+        public static string? GetResourceDir()
         {
 #if DEBUG
-            string gitExtDir = GetGitExtensionsDirectory().TrimEnd('\\').TrimEnd('/');
+            string gitExtDir = GetGitExtensionsDirectory()!.TrimEnd('\\').TrimEnd('/');
             const string debugPath = @"GitExtensions\bin\Debug";
             int len = debugPath.Length;
             if (gitExtDir.Length > len)
@@ -218,8 +217,8 @@ namespace GitCommands
 
         private static bool ReadBoolRegKey(string key, bool defaultValue)
         {
-            object obj = VersionIndependentRegKey.GetValue(key);
-            if (!(obj is string))
+            object? obj = VersionIndependentRegKey.GetValue(key);
+            if (obj is not string)
             {
                 obj = null;
             }
@@ -237,9 +236,10 @@ namespace GitCommands
             VersionIndependentRegKey.SetValue(key, value ? "true" : "false");
         }
 
-        private static string ReadStringRegValue(string key, string defaultValue)
+        [return: NotNullIfNotNull("defaultValue")]
+        private static string? ReadStringRegValue(string key, string? defaultValue)
         {
-            return (string)VersionIndependentRegKey.GetValue(key, defaultValue);
+            return (string?)VersionIndependentRegKey.GetValue(key, defaultValue);
         }
 
         private static void WriteStringRegValue(string key, string value)
@@ -255,14 +255,13 @@ namespace GitCommands
             set => WriteBoolRegKey("CheckSettings", value);
         }
 
-        [NotNull]
         public static string CascadeShellMenuItems
         {
             get => ReadStringRegValue("CascadeShellMenuItems", "110111000111111111");
             set => WriteStringRegValue("CascadeShellMenuItems", value);
         }
 
-        [CanBeNull]
+        [MaybeNull]
         public static string SshPath
         {
             get => ReadStringRegValue("gitssh", null);
@@ -283,7 +282,6 @@ namespace GitCommands
             set => WriteBoolRegKey("ShowCurrentBranchInVS", value);
         }
 
-        [NotNull]
         public static string GitCommandValue
         {
             get
@@ -310,7 +308,6 @@ namespace GitCommands
             }
         }
 
-        [NotNull]
         public static string GitCommand
         {
             get
@@ -508,7 +505,6 @@ namespace GitCommands
 
         #region Avatars
 
-        [NotNull]
         public static string AvatarImageCachePath => Path.Combine(ApplicationDataPath.Value, "Images\\");
 
         public static GravatarFallbackAvatarType GravatarFallbackAvatarType
@@ -545,16 +541,14 @@ namespace GitCommands
 
         #endregion
 
-        [NotNull]
         public static string Translation
         {
             get => GetString("translation", "");
             set => SetString("translation", value);
         }
 
-        private static string _currentTranslation;
+        private static string? _currentTranslation;
 
-        [NotNull]
         public static string CurrentTranslation
         {
             get => _currentTranslation ?? Translation;
@@ -1164,6 +1158,7 @@ namespace GitCommands
             set => SetInt("diffverticalrulerposition", value);
         }
 
+        [MaybeNull]
         public static string RecentWorkingDir
         {
             get => GetString("RecentWorkingDir", null);
@@ -1470,6 +1465,7 @@ namespace GitCommands
             set => SetInt("RecentReposComboMinWidth", value);
         }
 
+        [MaybeNull]
         public static string SerializedHotkeys
         {
             get => GetString("SerializedHotkeys", null);
@@ -1613,15 +1609,13 @@ namespace GitCommands
             return _applicationExecutablePath;
         }
 
-        [CanBeNull]
-        public static string GetGitExtensionsDirectory()
+        public static string? GetGitExtensionsDirectory()
         {
             return Path.GetDirectoryName(GetGitExtensionsFullPath());
         }
 
-        private static RegistryKey _versionIndependentRegKey;
+        private static RegistryKey? _versionIndependentRegKey;
 
-        [CanBeNull]
         private static RegistryKey VersionIndependentRegKey
         {
             get
@@ -1629,6 +1623,7 @@ namespace GitCommands
                 if (_versionIndependentRegKey is null)
                 {
                     _versionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
+                    Assumes.NotNull(_versionIndependentRegKey);
                 }
 
                 return _versionIndependentRegKey;
@@ -1853,7 +1848,7 @@ namespace GitCommands
             SettingsContainer.SetString(name, value);
         }
 
-        public static string GetString(string name, string defaultValue)
+        public static string GetString(string name, string? defaultValue)
         {
             return SettingsContainer.GetString(name, defaultValue);
         }
@@ -1947,7 +1942,7 @@ namespace GitCommands
                 set => _applicationExecutablePath = value;
             }
 
-            public Lazy<string> ApplicationDataPath
+            public Lazy<string?> ApplicationDataPath
             {
                 get => AppSettings.ApplicationDataPath;
                 set => AppSettings.ApplicationDataPath = value;
@@ -1957,7 +1952,7 @@ namespace GitCommands
 
     public class AppSettingsPath : SettingsPath
     {
-        public AppSettingsPath([NotNull] string pathName) : base(null, pathName)
+        public AppSettingsPath(string pathName) : base(null, pathName)
         {
         }
 
@@ -1966,7 +1961,7 @@ namespace GitCommands
             return AppSettings.SettingsContainer.GetValue(PathFor(name), defaultValue, decode);
         }
 
-        public override void SetValue<T>(string name, T value, Func<T, string> encode)
+        public override void SetValue<T>(string name, T value, Func<T, string?> encode)
         {
             AppSettings.SettingsContainer.SetValue(PathFor(name), value, encode);
         }

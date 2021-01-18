@@ -57,14 +57,14 @@ namespace GitCommands.Settings
             _configFile = new Lazy<ConfigFile>(() => new ConfigFile(fileName, local));
         }
 
-        protected override void SetValueImpl(string key, string value)
+        protected override void SetValueImpl(string key, string? value)
         {
-            _configFile.Value.SetValue(key, value);
+            _configFile.Value.SetValue(key, value!); // TODO propagate nullability
         }
 
         protected override string GetValueImpl(string key)
         {
-            return _configFile.Value.GetValue(key, null);
+            return _configFile.Value.GetValue(key, null!); // TODO revisit null suppression
         }
 
         /// <summary>

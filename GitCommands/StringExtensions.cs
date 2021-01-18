@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
-using JetBrains.Annotations;
+using GitCommands.Utils;
 
 // ReSharper disable once CheckNamespace
 
@@ -19,8 +21,7 @@ namespace System
         /// If <paramref name="prefix"/> is not found, <paramref name="str"/> is returned unchanged.
         /// </summary>
         [Pure]
-        [NotNull]
-        public static string RemovePrefix([NotNull] this string str, [NotNull] string prefix, StringComparison comparison = StringComparison.Ordinal)
+        public static string RemovePrefix(this string str, string prefix, StringComparison comparison = StringComparison.Ordinal)
         {
             return str.StartsWith(prefix, comparison)
                 ? str.Substring(prefix.Length)
@@ -32,8 +33,7 @@ namespace System
         /// If <paramref name="suffix"/> is not found, <paramref name="str"/> is returned unchanged.
         /// </summary>
         [Pure]
-        [NotNull]
-        public static string RemoveSuffix([NotNull] this string str, [NotNull] string suffix, StringComparison comparison = StringComparison.Ordinal)
+        public static string RemoveSuffix(this string str, string suffix, StringComparison comparison = StringComparison.Ordinal)
         {
             return str.EndsWith(suffix, comparison)
                 ? str.Substring(0, str.Length - suffix.Length)
@@ -46,8 +46,7 @@ namespace System
         /// If <paramref name="c"/> is not found, <paramref name="str"/> is returned unchanged.
         /// </summary>
         [Pure]
-        [NotNull]
-        public static string SubstringUntil([NotNull] this string str, char c)
+        public static string SubstringUntil(this string str, char c)
         {
             var index = str.IndexOf(c);
 
@@ -62,8 +61,7 @@ namespace System
         /// If <paramref name="c"/> is not found, <paramref name="str"/> is returned unchanged.
         /// </summary>
         [Pure]
-        [NotNull]
-        public static string SubstringUntilLast([NotNull] this string str, char c)
+        public static string SubstringUntilLast(this string str, char c)
         {
             var index = str.LastIndexOf(c);
 
@@ -78,8 +76,7 @@ namespace System
         /// If <paramref name="c"/> is not found, <paramref name="str"/> is returned unchanged.
         /// </summary>
         [Pure]
-        [NotNull]
-        public static string SubstringAfter([NotNull] this string str, char c)
+        public static string SubstringAfter(this string str, char c)
         {
             var index = str.IndexOf(c);
 
@@ -94,8 +91,7 @@ namespace System
         /// If <paramref name="s"/> is not found, <paramref name="str"/> is returned unchanged.
         /// </summary>
         [Pure]
-        [NotNull]
-        public static string SubstringAfter([NotNull] this string str, string s, StringComparison comparison = StringComparison.Ordinal)
+        public static string SubstringAfter(this string str, string s, StringComparison comparison = StringComparison.Ordinal)
         {
             var index = str.IndexOf(s, comparison);
 
@@ -110,8 +106,7 @@ namespace System
         /// If <paramref name="c"/> is not found, <paramref name="str"/> is returned unchanged.
         /// </summary>
         [Pure]
-        [NotNull]
-        public static string SubstringAfterLast([NotNull] this string str, char c)
+        public static string SubstringAfterLast(this string str, char c)
         {
             var index = str.LastIndexOf(c);
 
@@ -126,8 +121,7 @@ namespace System
         /// If <paramref name="s"/> is not found, <paramref name="str"/> is returned unchanged.
         /// </summary>
         [Pure]
-        [NotNull]
-        public static string SubstringAfterLast([NotNull] this string str, string s, StringComparison comparison = StringComparison.Ordinal)
+        public static string SubstringAfterLast(this string str, string s, StringComparison comparison = StringComparison.Ordinal)
         {
             var index = str.LastIndexOf(s, comparison);
 
@@ -137,10 +131,9 @@ namespace System
         }
 
         [Pure]
-        [NotNull]
-        public static string CommonPrefix([CanBeNull] this string s, [CanBeNull] string other)
+        public static string CommonPrefix(this string? s, string? other)
         {
-            if (string.IsNullOrEmpty(s) || string.IsNullOrEmpty(other))
+            if (Strings.IsNullOrEmpty(s) || Strings.IsNullOrEmpty(other))
             {
                 return string.Empty;
             }
@@ -161,8 +154,7 @@ namespace System
         }
 
         [Pure]
-        [CanBeNull]
-        public static string Combine([CanBeNull] this string left, [NotNull] string sep, [CanBeNull] string right)
+        public static string? Combine(this string? left, string sep, string? right)
         {
             if (string.IsNullOrEmpty(left))
             {
@@ -182,8 +174,7 @@ namespace System
         /// Quotes this string with the specified <paramref name="q"/>
         /// </summary>
         [Pure]
-        [NotNull]
-        public static string Quote([CanBeNull] this string s, [NotNull] string q = "\"")
+        public static string Quote(this string? s, string q = "\"")
         {
             if (s is null)
             {
@@ -197,8 +188,8 @@ namespace System
         /// Quotes this string if it is not null and not empty
         /// </summary>
         [Pure]
-        [ContractAnnotation("s:null=>null")]
-        public static string QuoteNE([CanBeNull] this string s)
+        [return: NotNullIfNotNull("s")]
+        public static string? QuoteNE(this string? s)
         {
             return string.IsNullOrEmpty(s) ? s : s.Quote();
         }
@@ -207,8 +198,8 @@ namespace System
         /// Adds parentheses if string is not null and not empty
         /// </summary>
         [Pure]
-        [ContractAnnotation("s:null=>null")]
-        public static string AddParenthesesNE([CanBeNull] this string s)
+        [return: NotNullIfNotNull("s")]
+        public static string? AddParenthesesNE(this string? s)
         {
             return string.IsNullOrEmpty(s) ? s : "(" + s + ")";
         }
@@ -219,17 +210,16 @@ namespace System
         /// <param name="starts">array of strings to compare</param>
         /// <returns>true if any starts element matches the beginning of this string; otherwise, false.</returns>
         [Pure]
-        [ContractAnnotation("value:null=>false")]
-        public static bool StartsWithAny([CanBeNull] this string value, [NotNull, ItemNotNull] IEnumerable<string> starts)
+        public static bool StartsWithAny(this string? value, IEnumerable<string> starts)
         {
             return value is not null && starts.Any(s => value.StartsWith(s));
         }
 
         [Pure]
-        [ContractAnnotation("value:null=>null")]
-        public static string RemoveLines([CanBeNull] this string value, [NotNull] Func<string, bool> shouldRemoveLine)
+        [return: NotNullIfNotNull("value")]
+        public static string? RemoveLines(this string? value, Func<string, bool> shouldRemoveLine)
         {
-            if (string.IsNullOrEmpty(value))
+            if (Strings.IsNullOrEmpty(value))
             {
                 return value;
             }
@@ -254,22 +244,19 @@ namespace System
 
         /// <summary>Split a string, delimited by line-breaks, excluding empty entries.</summary>
         [Pure]
-        [NotNull]
-        public static string[] SplitLines([NotNull] this string value) => value.Split(_newLine, StringSplitOptions.RemoveEmptyEntries);
+        public static string[] SplitLines(this string value) => value.Split(_newLine, StringSplitOptions.RemoveEmptyEntries);
 
         /// <summary>Split a string, delimited by the space character, excluding empty entries.</summary>
         [Pure]
-        [NotNull]
-        public static string[] SplitBySpace([NotNull] this string value) => value.Split(_space, StringSplitOptions.RemoveEmptyEntries);
+        public static string[] SplitBySpace(this string value) => value.Split(_space, StringSplitOptions.RemoveEmptyEntries);
 
         /// <summary>
         /// Shortens <paramref name="str"/> if necessary, so that the resulting string has fewer than <paramref name="maxLength"/> characters.
         /// If shortened, ellipsis are appended to the truncated string.
         /// </summary>
-        [NotNull]
-        public static string ShortenTo([CanBeNull] this string str, int maxLength)
+        public static string ShortenTo(this string? str, int maxLength)
         {
-            if (string.IsNullOrEmpty(str))
+            if (Strings.IsNullOrEmpty(str))
             {
                 return string.Empty;
             }
@@ -296,7 +283,7 @@ namespace System
         /// true if the <paramref name="other"/> parameter occurs within <paramref name="str"/>,
         /// or if <paramref name="other"/> is the empty string (""); otherwise, false.
         /// </returns>
-        public static bool Contains([NotNull] this string str, [NotNull] string other, StringComparison stringComparison)
+        public static bool Contains(this string str, string other, StringComparison stringComparison)
         {
             return str.IndexOf(other, stringComparison) != -1;
         }

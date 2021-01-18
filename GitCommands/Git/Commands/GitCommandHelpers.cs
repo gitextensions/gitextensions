@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using GitExtUtils;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands.Git.Commands
 {
@@ -19,7 +18,7 @@ namespace GitCommands.Git.Commands
             };
         }
 
-        public static ArgumentString SubmoduleUpdateCmd([CanBeNull] string name)
+        public static ArgumentString SubmoduleUpdateCmd(string? name)
         {
             return SubmoduleUpdateCommand((name ?? "").Trim().QuoteNE());
         }
@@ -41,7 +40,7 @@ namespace GitCommands.Git.Commands
             };
         }
 
-        public static ArgumentString SubmoduleSyncCmd([CanBeNull] string name)
+        public static ArgumentString SubmoduleSyncCmd(string? name)
         {
             return new GitArgumentBuilder("submodule")
             {
@@ -62,7 +61,7 @@ namespace GitCommands.Git.Commands
             };
         }
 
-        public static ArgumentString GetCurrentChangesCmd(string fileName, [CanBeNull] string oldFileName, bool staged,
+        public static ArgumentString GetCurrentChangesCmd(string? fileName, string? oldFileName, bool staged,
             string extraDiffArguments, bool noLocks)
         {
             return new GitArgumentBuilder("diff", gitOptions:
@@ -160,7 +159,7 @@ namespace GitCommands.Git.Commands
         /// <param name="commit">Optional commit-ish (for reset-index this is tree-ish and mandatory)</param>
         /// <param name="file">Optional file to reset</param>
         /// <returns>Argument string</returns>
-        public static ArgumentString ResetCmd(ResetMode mode, string commit = null, string file = null)
+        public static ArgumentString ResetCmd(ResetMode mode, string? commit = null, string? file = null)
         {
             if (mode == ResetMode.ResetIndex && string.IsNullOrWhiteSpace(commit))
             {
@@ -211,7 +210,7 @@ namespace GitCommands.Git.Commands
         /// <para><c>NULL</c>: don't pass any such param to git.</para>
         /// </param>
         /// <param name="lfs">True to use the <c>git lfs clone</c> command instead of <c>git clone</c>.</param>
-        public static ArgumentString CloneCmd(string fromPath, string toPath, bool central = false, bool initSubmodules = false, [CanBeNull] string branch = "", int? depth = null, bool? isSingleBranch = null, bool lfs = false)
+        public static ArgumentString CloneCmd(string fromPath, string toPath, bool central = false, bool initSubmodules = false, string? branch = "", int? depth = null, bool? isSingleBranch = null, bool lfs = false)
         {
             var from = PathUtil.IsLocalFile(fromPath) ? fromPath.ToPosixPath() : fromPath;
 
@@ -243,7 +242,7 @@ namespace GitCommands.Git.Commands
         }
 
         /// <summary>Create a new orphan branch from <paramref name="startPoint"/> and switch to it.</summary>
-        public static ArgumentString CreateOrphanCmd(string newBranchName, ObjectId startPoint = null)
+        public static ArgumentString CreateOrphanCmd(string newBranchName, ObjectId? startPoint = null)
         {
             return new GitArgumentBuilder("checkout")
             {
@@ -278,7 +277,7 @@ namespace GitCommands.Git.Commands
             };
         }
 
-        public static ArgumentString MergedBranchesCmd(bool includeRemote = false, bool fullRefname = false, [CanBeNull] string commit = null)
+        public static ArgumentString MergedBranchesCmd(bool includeRemote = false, bool fullRefname = false, string? commit = null)
         {
             return new GitArgumentBuilder("branch")
             {
@@ -409,7 +408,7 @@ namespace GitCommands.Git.Commands
         }
 
         public static ArgumentString RebaseCmd(
-            string branch, bool interactive, bool preserveMerges, bool autosquash, bool autoStash, bool ignoreDate, bool committerDateIsAuthorDate, string from = null, string onto = null)
+            string branch, bool interactive, bool preserveMerges, bool autosquash, bool autoStash, bool ignoreDate, bool committerDateIsAuthorDate, string? from = null, string? onto = null)
         {
             if (from is null ^ onto is null)
             {
@@ -479,7 +478,7 @@ namespace GitCommands.Git.Commands
             };
         }
 
-        public static ArgumentString ApplyMailboxPatchCmd(bool signOff, bool ignoreWhiteSpace, string patchFile = null)
+        public static ArgumentString ApplyMailboxPatchCmd(bool signOff, bool ignoreWhiteSpace, string? patchFile = null)
         {
             return new GitArgumentBuilder("am")
             {
@@ -490,7 +489,7 @@ namespace GitCommands.Git.Commands
             };
         }
 
-        public static ArgumentString ApplyDiffPatchCmd(bool ignoreWhiteSpace, [NotNull] string patchFile)
+        public static ArgumentString ApplyDiffPatchCmd(bool ignoreWhiteSpace, string patchFile)
         {
             return new GitArgumentBuilder("apply")
             {
@@ -506,7 +505,7 @@ namespace GitCommands.Git.Commands
         /// <param name="dryRun">Only show what would be deleted</param>
         /// <param name="directories">Delete untracked directories too</param>
         /// <param name="paths">Limit to specific paths</param>
-        public static ArgumentString CleanCmd(CleanMode mode, bool dryRun, bool directories, string paths = null)
+        public static ArgumentString CleanCmd(CleanMode mode, bool dryRun, bool directories, string? paths = null)
         {
             return new GitArgumentBuilder("clean")
             {

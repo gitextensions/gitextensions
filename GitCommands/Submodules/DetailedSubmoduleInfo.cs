@@ -6,6 +6,6 @@ namespace GitCommands.Submodules
     {
         public bool IsDirty { get; set; }
         public SubmoduleStatus? Status { get; set; }
-        public string AddedAndRemovedText { get; set; }
+        public string? AddedAndRemovedText { get; set; }
     }
 }

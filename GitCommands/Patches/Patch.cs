@@ -1,40 +1,34 @@
 ﻿using System;
-using JetBrains.Annotations;
 
 namespace GitCommands.Patches
 {
     public sealed class Patch
     {
-        [NotNull]
         public string Header { get; }
 
-        [CanBeNull]
-        public string Index { get; }
+        public string? Index { get; }
 
         public PatchFileType FileType { get; }
 
-        [NotNull]
         public string FileNameA { get; }
 
-        [CanBeNull]
-        public string FileNameB { get; }
+        public string? FileNameB { get; }
 
         public bool IsCombinedDiff { get; }
 
         public PatchChangeType ChangeType { get; }
 
-        [CanBeNull]
-        public string Text { get; }
+        public string? Text { get; }
 
         public Patch(
-            [NotNull] string header,
-            [CanBeNull] string index,
+            string header,
+            string? index,
             PatchFileType fileType,
-            [NotNull] string fileNameA,
-            [CanBeNull] string fileNameB,
+            string fileNameA,
+            string? fileNameB,
             bool isCombinedDiff,
             PatchChangeType changeType,
-            [CanBeNull] string text)
+            string? text)
         {
             Header = header ?? throw new ArgumentNullException(nameof(header));
             Index = index;

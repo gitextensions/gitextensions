@@ -1,6 +1,6 @@
 ﻿namespace GitCommands
 {
-    public struct CommandStatus
+    public readonly struct CommandStatus
     {
         public CommandStatus(bool executed, bool needsGridRefresh)
         {

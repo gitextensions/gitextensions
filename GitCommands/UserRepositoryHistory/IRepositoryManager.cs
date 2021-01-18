@@ -16,7 +16,6 @@ namespace GitCommands.UserRepositoryHistory
         /// <param name="repositoryPath">A repository path to be save as "most recent".</param>
         /// <returns>The current version of the list of recently used git repositories after the update.</returns>
         /// <exception cref="ArgumentException"><paramref name="repositoryPath"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
-        [ContractAnnotation("repositoryPath:null=>halt")]
         Task<IList<Repository>> AddAsMostRecentAsync(string repositoryPath);
 
         /// <summary>

@@ -50,7 +50,7 @@ namespace GitCommands.Gpg
         /// Obtain the tag verification message for all the tag in current git revision
         /// </summary>
         /// <returns>Full concatenated string coming from GPG analysis on all tags on current git revision.</returns>
-        string GetTagVerifyMessage(GitRevision revision);
+        string? GetTagVerifyMessage(GitRevision revision);
     }
 
     public class GitGpgController : IGitGpgController
@@ -166,7 +166,7 @@ namespace GitCommands.Gpg
                 }
 
                 /* Raw message to be checked */
-                string rawGpgMessage = GetTagVerificationMessage(usefulTagRefs[0], true);
+                string? rawGpgMessage = GetTagVerificationMessage(usefulTagRefs[0], true);
 
                 /* Look for icon to be shown */
                 if (GoodSignatureTagRegex.IsMatch(rawGpgMessage) && ValidSignatureTagRegex.IsMatch(rawGpgMessage))
@@ -217,7 +217,7 @@ namespace GitCommands.Gpg
         /// Obtain the tag verification message for all the tag on the revision
         /// </summary>
         /// <returns>Full string coming from GPG analysis on current revision.</returns>
-        public string GetTagVerifyMessage(GitRevision revision)
+        public string? GetTagVerifyMessage(GitRevision revision)
         {
             if (revision is null)
             {
@@ -228,7 +228,7 @@ namespace GitCommands.Gpg
             return EvaluateTagVerifyMessage(usefulTagRefs);
         }
 
-        private string GetTagVerificationMessage(IGitRef tagRef, bool raw = true)
+        private string? GetTagVerificationMessage(IGitRef tagRef, bool raw = true)
         {
             string tagName = tagRef.LocalName;
             if (string.IsNullOrWhiteSpace(tagName))
@@ -245,7 +245,7 @@ namespace GitCommands.Gpg
             return module.GitExecutable.GetOutput(args);
         }
 
-        private string EvaluateTagVerifyMessage(IReadOnlyList<IGitRef> usefulTagRefs)
+        private string? EvaluateTagVerifyMessage(IReadOnlyList<IGitRef> usefulTagRefs)
         {
             if (usefulTagRefs.Count == 0)
             {

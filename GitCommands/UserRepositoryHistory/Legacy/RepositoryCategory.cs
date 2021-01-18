@@ -10,8 +10,8 @@ namespace GitCommands.UserRepositoryHistory.Legacy
     /// </remarks>
     public class RepositoryCategory
     {
-        public List<Repository> Repositories { get; set; }
-        public string Description { get; set; }
-        public string CategoryType { get; set; }
+        public List<Repository>? Repositories { get; set; }
+        public string? Description { get; set; }
+        public string? CategoryType { get; set; }
     }
 }
