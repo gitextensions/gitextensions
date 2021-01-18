@@ -8876,7 +8876,7 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="archiveRevisionToolStripMenuItem.Text">
-        <source>Archive this commit...</source>
+        <source>Arch&amp;ive this commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="bisectSkipRevisionToolStripMenuItem.Text">
@@ -8884,39 +8884,39 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="checkoutBranchToolStripMenuItem.Text">
-        <source>Checkout branch...</source>
+        <source>Chec&amp;kout branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="checkoutRevisionToolStripMenuItem.Text">
-        <source>Checkout this commit...</source>
+        <source>Checkout &amp;this commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="cherryPickCommitToolStripMenuItem.Text">
-        <source>Cherry pick this commit...</source>
+        <source>Cherr&amp;y pick this commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="compareSelectedCommitsMenuItem.Text">
-        <source>Compare selected commits</source>
+        <source>Compare &amp;selected commits</source>
         <target />
       </trans-unit>
       <trans-unit id="compareToBaseToolStripMenuItem.Text">
-        <source>Compare to BASE</source>
+        <source>Compare to &amp;BASE</source>
         <target />
       </trans-unit>
       <trans-unit id="compareToBranchToolStripMenuItem.Text">
-        <source>Compare to branch...</source>
+        <source>Compare &amp;to branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="compareToWorkingDirectoryMenuItem.Text">
-        <source>Compare to working directory</source>
+        <source>Compare to &amp;working directory</source>
         <target />
       </trans-unit>
       <trans-unit id="compareToolStripMenuItem.Text">
-        <source>Compare</source>
+        <source>Com&amp;pare</source>
         <target />
       </trans-unit>
       <trans-unit id="compareWithCurrentBranchToolStripMenuItem.Text">
-        <source>Compare with current branch</source>
+        <source>Compare with &amp;current branch</source>
         <target />
       </trans-unit>
       <trans-unit id="copyToClipboardToolStripMenuItem.Text">
@@ -8924,35 +8924,35 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="createNewBranchToolStripMenuItem.Text">
-        <source>Create new branch here...</source>
+        <source>Create new branc&amp;h here...</source>
         <target />
       </trans-unit>
       <trans-unit id="createTagToolStripMenuItem.Text">
-        <source>Create new tag here...</source>
+        <source>Create new ta&amp;g here...</source>
         <target />
       </trans-unit>
       <trans-unit id="deleteBranchToolStripMenuItem.Text">
-        <source>Delete branch...</source>
+        <source>&amp;Delete branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="deleteTagToolStripMenuItem.Text">
-        <source>Delete tag...</source>
+        <source>De&amp;lete tag...</source>
         <target />
       </trans-unit>
       <trans-unit id="editCommitToolStripMenuItem.Text">
-        <source>Edit commit</source>
+        <source>&amp;Edit commit</source>
         <target />
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
-        <source>Create a fixup commit...</source>
+        <source>Create a &amp;fixup commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Text">
-        <source>Get help on how to use these features</source>
+        <source>Get &amp;help on how to use these features</source>
         <target />
       </trans-unit>
       <trans-unit id="manipulateCommitToolStripMenuItem.Text">
-        <source>Advanced</source>
+        <source>&amp;Advanced</source>
         <target />
       </trans-unit>
       <trans-unit id="markRevisionAsBadToolStripMenuItem.Text">
@@ -8964,15 +8964,15 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="mergeBranchToolStripMenuItem.Text">
-        <source>Merge into current branch...</source>
+        <source>&amp;Merge into current branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="navigateToolStripMenuItem.Text">
-        <source>Navigate</source>
+        <source>&amp;Navigate</source>
         <target />
       </trans-unit>
       <trans-unit id="openBuildReportToolStripMenuItem.Text">
-        <source>View build report in a browser</source>
+        <source>View &amp;build report in a browser</source>
         <target />
       </trans-unit>
       <trans-unit id="openCommitsWithDiffToolMenuItem.Text">
@@ -8980,55 +8980,55 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="openPullRequestPageStripMenuItem.Text">
-        <source>View pull request in a browser</source>
+        <source>Vie&amp;w pull request in a browser</source>
         <target />
       </trans-unit>
       <trans-unit id="rebaseInteractivelyToolStripMenuItem.Text">
-        <source>Selected commit interactively...</source>
+        <source>Selected commit &amp;interactively...</source>
         <target />
       </trans-unit>
       <trans-unit id="rebaseOnToolStripMenuItem.Text">
-        <source>Rebase current branch on</source>
+        <source>&amp;Rebase current branch on</source>
         <target />
       </trans-unit>
       <trans-unit id="rebaseToolStripMenuItem.Text">
-        <source>Selected commit</source>
+        <source>&amp;Selected commit</source>
         <target />
       </trans-unit>
       <trans-unit id="rebaseWithAdvOptionsToolStripMenuItem.Text">
-        <source>Selected commit with advanced options...</source>
+        <source>Selected commit with &amp;advanced options...</source>
         <target />
       </trans-unit>
       <trans-unit id="renameBranchToolStripMenuItem.Text">
-        <source>Rename branch...</source>
+        <source>R&amp;ename branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="resetAnotherBranchToHereToolStripMenuItem.Text">
-        <source>Reset another branch to here...</source>
+        <source>Reset an&amp;other branch to here...</source>
         <target />
       </trans-unit>
       <trans-unit id="resetCurrentBranchToHereToolStripMenuItem.Text">
-        <source>Reset current branch to here...</source>
+        <source>Reset c&amp;urrent branch to here...</source>
         <target />
       </trans-unit>
       <trans-unit id="revertCommitToolStripMenuItem.Text">
-        <source>Revert this commit...</source>
+        <source>Re&amp;vert this commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="rewordCommitToolStripMenuItem.Text">
-        <source>Reword commit</source>
+        <source>&amp;Reword commit</source>
         <target />
       </trans-unit>
       <trans-unit id="runScriptToolStripMenuItem.Text">
-        <source>Run script</source>
+        <source>Run &amp;script</source>
         <target />
       </trans-unit>
       <trans-unit id="selectAsBaseToolStripMenuItem.Text">
-        <source>Select as BASE to compare</source>
+        <source>Select &amp;as BASE to compare</source>
         <target />
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
-        <source>Create a squash commit...</source>
+        <source>Create a &amp;squash commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="stopBisectToolStripMenuItem.Text">

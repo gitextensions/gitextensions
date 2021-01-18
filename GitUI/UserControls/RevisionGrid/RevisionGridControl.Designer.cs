@@ -199,7 +199,7 @@ namespace GitUI
             this.checkoutBranchToolStripMenuItem.Image = global::GitUI.Properties.Images.BranchCheckout;
             this.checkoutBranchToolStripMenuItem.Name = "checkoutBranchToolStripMenuItem";
             this.checkoutBranchToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
-            this.checkoutBranchToolStripMenuItem.Text = "Checkout branch...";
+            this.checkoutBranchToolStripMenuItem.Text = "Chec&kout branch...";
             this.checkoutBranchToolStripMenuItem.Click += new System.EventHandler(this.deleteBranchTagToolStripMenuItem_Click);
             // 
             // mergeBranchToolStripMenuItem
@@ -207,7 +207,7 @@ namespace GitUI
             this.mergeBranchToolStripMenuItem.Image = global::GitUI.Properties.Images.Merge;
             this.mergeBranchToolStripMenuItem.Name = "mergeBranchToolStripMenuItem";
             this.mergeBranchToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
-            this.mergeBranchToolStripMenuItem.Text = "Merge into current branch...";
+            this.mergeBranchToolStripMenuItem.Text = "&Merge into current branch...";
             this.mergeBranchToolStripMenuItem.Click += new System.EventHandler(this.deleteBranchTagToolStripMenuItem_Click);
             // 
             // rebaseOnToolStripMenuItem
@@ -220,14 +220,14 @@ namespace GitUI
             this.rebaseOnToolStripMenuItem.Image = global::GitUI.Properties.Images.Rebase;
             this.rebaseOnToolStripMenuItem.Name = "rebaseOnToolStripMenuItem";
             this.rebaseOnToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
-            this.rebaseOnToolStripMenuItem.Text = "Rebase current branch on";
+            this.rebaseOnToolStripMenuItem.Text = "&Rebase current branch on";
             // 
             // resetCurrentBranchToHereToolStripMenuItem
             // 
             this.resetCurrentBranchToHereToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetCurrentBranchToHere;
             this.resetCurrentBranchToHereToolStripMenuItem.Name = "resetCurrentBranchToHereToolStripMenuItem";
             this.resetCurrentBranchToHereToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
-            this.resetCurrentBranchToHereToolStripMenuItem.Text = "Reset current branch to here...";
+            this.resetCurrentBranchToHereToolStripMenuItem.Text = "Reset c&urrent branch to here...";
             this.resetCurrentBranchToHereToolStripMenuItem.Click += new System.EventHandler(this.ResetCurrentBranchToHereToolStripMenuItemClick);
             // 
             // resetAnotherBranchToHereToolStripMenuItem
@@ -235,7 +235,7 @@ namespace GitUI
             this.resetAnotherBranchToHereToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetCurrentBranchToHere;
             this.resetAnotherBranchToHereToolStripMenuItem.Name = "resetAnotherBranchToHereToolStripMenuItem";
             this.resetAnotherBranchToHereToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
-            this.resetAnotherBranchToHereToolStripMenuItem.Text = "Reset another branch to here...";
+            this.resetAnotherBranchToHereToolStripMenuItem.Text = "Reset an&other branch to here...";
             this.resetAnotherBranchToHereToolStripMenuItem.Click += new System.EventHandler(this.ResetAnotherBranchToHereToolStripMenuItemClick);
             // 
             // toolStripSeparator3
@@ -249,7 +249,7 @@ namespace GitUI
             this.createNewBranchToolStripMenuItem.Name = "createNewBranchToolStripMenuItem";
             this.createNewBranchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
             this.createNewBranchToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
-            this.createNewBranchToolStripMenuItem.Text = "Create new branch here...";
+            this.createNewBranchToolStripMenuItem.Text = "Create new branc&h here...";
             this.createNewBranchToolStripMenuItem.Click += new System.EventHandler(this.CreateNewBranchToolStripMenuItemClick);
             // 
             // renameBranchToolStripMenuItem
@@ -257,7 +257,7 @@ namespace GitUI
             this.renameBranchToolStripMenuItem.Image = global::GitUI.Properties.Images.Renamed;
             this.renameBranchToolStripMenuItem.Name = "renameBranchToolStripMenuItem";
             this.renameBranchToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
-            this.renameBranchToolStripMenuItem.Text = "Rename branch...";
+            this.renameBranchToolStripMenuItem.Text = "R&ename branch...";
             this.renameBranchToolStripMenuItem.Click += new System.EventHandler(this.renameBranchToolStripMenuItem_Click);
             // 
             // deleteBranchToolStripMenuItem
@@ -265,7 +265,7 @@ namespace GitUI
             this.deleteBranchToolStripMenuItem.Image = global::GitUI.Properties.Images.BranchDelete;
             this.deleteBranchToolStripMenuItem.Name = "deleteBranchToolStripMenuItem";
             this.deleteBranchToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
-            this.deleteBranchToolStripMenuItem.Text = "Delete branch...";
+            this.deleteBranchToolStripMenuItem.Text = "&Delete branch...";
             this.deleteBranchToolStripMenuItem.Click += new System.EventHandler(this.deleteBranchTagToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
@@ -289,28 +289,28 @@ namespace GitUI
             // 
             this.compareToBranchToolStripMenuItem.Name = "compareToBranchToolStripMenuItem";
             this.compareToBranchToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-            this.compareToBranchToolStripMenuItem.Text = "Compare to branch...";
+            this.compareToBranchToolStripMenuItem.Text = "Compare &to branch...";
             this.compareToBranchToolStripMenuItem.Click += new System.EventHandler(this.CompareToBranchToolStripMenuItem_Click);
             // 
             // compareWithCurrentBranchToolStripMenuItem
             // 
             this.compareWithCurrentBranchToolStripMenuItem.Name = "compareWithCurrentBranchToolStripMenuItem";
             this.compareWithCurrentBranchToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-            this.compareWithCurrentBranchToolStripMenuItem.Text = "Compare with current branch";
+            this.compareWithCurrentBranchToolStripMenuItem.Text = "Compare with &current branch";
             this.compareWithCurrentBranchToolStripMenuItem.Click += new System.EventHandler(this.CompareWithCurrentBranchToolStripMenuItem_Click);
             // 
             // selectAsBaseToolStripMenuItem
             // 
             this.selectAsBaseToolStripMenuItem.Name = "selectAsBaseToolStripMenuItem";
             this.selectAsBaseToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-            this.selectAsBaseToolStripMenuItem.Text = "Select as BASE to compare";
+            this.selectAsBaseToolStripMenuItem.Text = "Select &as BASE to compare";
             this.selectAsBaseToolStripMenuItem.Click += new System.EventHandler(this.selectAsBaseToolStripMenuItem_Click);
             // 
             // compareToBaseToolStripMenuItem
             // 
             this.compareToBaseToolStripMenuItem.Name = "compareToBaseToolStripMenuItem";
             this.compareToBaseToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-            this.compareToBaseToolStripMenuItem.Text = "Compare to BASE";
+            this.compareToBaseToolStripMenuItem.Text = "Compare to &BASE";
             this.compareToBaseToolStripMenuItem.Enabled = false;
             this.compareToBaseToolStripMenuItem.Click += new System.EventHandler(this.compareToBaseToolStripMenuItem_Click);
             // 
@@ -318,14 +318,14 @@ namespace GitUI
             // 
             this.compareToWorkingDirectoryMenuItem.Name = "compareToWorkingDirectoryMenuItem";
             this.compareToWorkingDirectoryMenuItem.Size = new System.Drawing.Size(230, 22);
-            this.compareToWorkingDirectoryMenuItem.Text = "Compare to working directory";
+            this.compareToWorkingDirectoryMenuItem.Text = "Compare to &working directory";
             this.compareToWorkingDirectoryMenuItem.Click += new System.EventHandler(this.compareToWorkingDirectoryMenuItem_Click);
             // 
             // compareSelectedCommitsMenuItem
             // 
             this.compareSelectedCommitsMenuItem.Name = "compareSelectedCommitsMenuItem";
             this.compareSelectedCommitsMenuItem.Size = new System.Drawing.Size(230, 22);
-            this.compareSelectedCommitsMenuItem.Text = "Compare selected commits";
+            this.compareSelectedCommitsMenuItem.Text = "Compare &selected commits";
             this.compareSelectedCommitsMenuItem.Click += new System.EventHandler(this.compareSelectedCommitsMenuItem_Click);
             // 
             // compareToolStripMenuItem
@@ -333,7 +333,7 @@ namespace GitUI
             this.compareToolStripMenuItem.Image = global::GitUI.Properties.Images.Diff;
             this.compareToolStripMenuItem.Name = "compareToolStripMenuItem";
             this.compareToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-            this.compareToolStripMenuItem.Text = "Compare";
+            this.compareToolStripMenuItem.Text = "Com&pare";
             this.compareToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
             {
                 openCommitsWithDiffToolMenuItem,
@@ -357,7 +357,7 @@ namespace GitUI
             this.createTagToolStripMenuItem.Name = "createTagToolStripMenuItem";
             this.createTagToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
             this.createTagToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
-            this.createTagToolStripMenuItem.Text = "Create new tag here...";
+            this.createTagToolStripMenuItem.Text = "Create new ta&g here...";
             this.createTagToolStripMenuItem.Click += new System.EventHandler(this.CreateTagToolStripMenuItemClick);
             // 
             // deleteTagToolStripMenuItem
@@ -365,7 +365,7 @@ namespace GitUI
             this.deleteTagToolStripMenuItem.Image = global::GitUI.Properties.Images.TagDelete;
             this.deleteTagToolStripMenuItem.Name = "deleteTagToolStripMenuItem";
             this.deleteTagToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
-            this.deleteTagToolStripMenuItem.Text = "Delete tag...";
+            this.deleteTagToolStripMenuItem.Text = "De&lete tag...";
             this.deleteTagToolStripMenuItem.Click += new System.EventHandler(this.deleteBranchTagToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
@@ -378,7 +378,7 @@ namespace GitUI
             this.checkoutRevisionToolStripMenuItem.Image = global::GitUI.Properties.Images.Checkout;
             this.checkoutRevisionToolStripMenuItem.Name = "checkoutRevisionToolStripMenuItem";
             this.checkoutRevisionToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
-            this.checkoutRevisionToolStripMenuItem.Text = "Checkout this commit...";
+            this.checkoutRevisionToolStripMenuItem.Text = "Checkout &this commit...";
             this.checkoutRevisionToolStripMenuItem.Click += new System.EventHandler(this.CheckoutRevisionToolStripMenuItemClick);
             // 
             // revertCommitToolStripMenuItem
@@ -386,7 +386,7 @@ namespace GitUI
             this.revertCommitToolStripMenuItem.Image = global::GitUI.Properties.Images.RevertCommit;
             this.revertCommitToolStripMenuItem.Name = "revertCommitToolStripMenuItem";
             this.revertCommitToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
-            this.revertCommitToolStripMenuItem.Text = "Revert this commit...";
+            this.revertCommitToolStripMenuItem.Text = "Re&vert this commit...";
             this.revertCommitToolStripMenuItem.Click += new System.EventHandler(this.RevertCommitToolStripMenuItemClick);
             // 
             // cherryPickCommitToolStripMenuItem
@@ -394,7 +394,7 @@ namespace GitUI
             this.cherryPickCommitToolStripMenuItem.Image = global::GitUI.Properties.Images.CherryPick;
             this.cherryPickCommitToolStripMenuItem.Name = "cherryPickCommitToolStripMenuItem";
             this.cherryPickCommitToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
-            this.cherryPickCommitToolStripMenuItem.Text = "Cherry pick this commit...";
+            this.cherryPickCommitToolStripMenuItem.Text = "Cherr&y pick this commit...";
             this.cherryPickCommitToolStripMenuItem.Click += new System.EventHandler(this.CherryPickCommitToolStripMenuItemClick);
             // 
             // archiveRevisionToolStripMenuItem
@@ -402,7 +402,7 @@ namespace GitUI
             this.archiveRevisionToolStripMenuItem.Image = global::GitUI.Properties.Images.ArchiveRevision;
             this.archiveRevisionToolStripMenuItem.Name = "archiveRevisionToolStripMenuItem";
             this.archiveRevisionToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
-            this.archiveRevisionToolStripMenuItem.Text = "Archive this commit...";
+            this.archiveRevisionToolStripMenuItem.Text = "Arch&ive this commit...";
             this.archiveRevisionToolStripMenuItem.Click += new System.EventHandler(this.ArchiveRevisionToolStripMenuItemClick);
             // 
             // manipulateCommitToolStripMenuItem
@@ -416,20 +416,20 @@ namespace GitUI
             this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem});
             this.manipulateCommitToolStripMenuItem.Name = "manipulateCommitToolStripMenuItem";
             this.manipulateCommitToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
-            this.manipulateCommitToolStripMenuItem.Text = "Advanced";
+            this.manipulateCommitToolStripMenuItem.Text = "&Advanced";
             //
             // fixupCommitToolStripMenuItem
             // 
             this.fixupCommitToolStripMenuItem.Name = "fixupCommitToolStripMenuItem";
             this.fixupCommitToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
-            this.fixupCommitToolStripMenuItem.Text = "Create a fixup commit...";
+            this.fixupCommitToolStripMenuItem.Text = "Create a &fixup commit...";
             this.fixupCommitToolStripMenuItem.Click += new System.EventHandler(this.FixupCommitToolStripMenuItemClick);
             // 
             // squashCommitToolStripMenuItem
             // 
             this.squashCommitToolStripMenuItem.Name = "squashCommitToolStripMenuItem";
             this.squashCommitToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
-            this.squashCommitToolStripMenuItem.Text = "Create a squash commit...";
+            this.squashCommitToolStripMenuItem.Text = "Create a &squash commit...";
             this.squashCommitToolStripMenuItem.Click += new System.EventHandler(this.SquashCommitToolStripMenuItemClick);
             // 
             // toolStripSeparator1
@@ -442,7 +442,7 @@ namespace GitUI
             this.navigateToolStripMenuItem.Image = global::GitUI.Properties.Images.GotoCommit;
             this.navigateToolStripMenuItem.Name = "navigateToolStripMenuItem";
             this.navigateToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
-            this.navigateToolStripMenuItem.Text = "Navigate";
+            this.navigateToolStripMenuItem.Text = "&Navigate";
             // 
             // viewToolStripMenuItem
             // 
@@ -456,14 +456,14 @@ namespace GitUI
             this.runScriptToolStripMenuItem.Image = global::GitUI.Properties.Images.Console;
             this.runScriptToolStripMenuItem.Name = "runScriptToolStripMenuItem";
             this.runScriptToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
-            this.runScriptToolStripMenuItem.Text = "Run script";
+            this.runScriptToolStripMenuItem.Text = "Run &script";
             // 
             // openBuildReportToolStripMenuItem
             // 
             this.openBuildReportToolStripMenuItem.Image = global::GitUI.Properties.Images.Integration;
             this.openBuildReportToolStripMenuItem.Name = "openBuildReportToolStripMenuItem";
             this.openBuildReportToolStripMenuItem.Size = new System.Drawing.Size(301, 26);
-            this.openBuildReportToolStripMenuItem.Text = "View build report in a browser";
+            this.openBuildReportToolStripMenuItem.Text = "View &build report in a browser";
             this.openBuildReportToolStripMenuItem.Click += new System.EventHandler(this.openBuildReportToolStripMenuItem_Click);
             // 
             // openBuildReportToolStripMenuItem
@@ -471,7 +471,7 @@ namespace GitUI
             this.openPullRequestPageStripMenuItem.Image = global::GitUI.Properties.Images.PullRequest;
             this.openPullRequestPageStripMenuItem.Name = "openPullRequestPageStripMenuItem";
             this.openPullRequestPageStripMenuItem.Size = new System.Drawing.Size(301, 26);
-            this.openPullRequestPageStripMenuItem.Text = "View pull request in a browser";
+            this.openPullRequestPageStripMenuItem.Text = "Vie&w pull request in a browser";
             this.openPullRequestPageStripMenuItem.Click += new System.EventHandler(this.openPullRequestPageStripMenuItem_Click);
             // 
             // toolStripSeparator9
@@ -483,34 +483,34 @@ namespace GitUI
             // 
             this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Name = "getHelpOnHowToUseTheseFeaturesToolStripMenuItem";
             this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Size = new System.Drawing.Size(333, 26);
-            this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Text = "Get help on how to use these features";
+            this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Text = "Get &help on how to use these features";
             this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Click += new System.EventHandler(this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem_Click);
             // 
             // editCommitToolStripMenuItem
             // 
             this.editCommitToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editCommitToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
-            this.editCommitToolStripMenuItem.Text = "Edit commit";
+            this.editCommitToolStripMenuItem.Text = "&Edit commit";
             this.editCommitToolStripMenuItem.Click += new System.EventHandler(this.editCommitToolStripMenuItem_Click);
             // 
             // rewordCommitToolStripMenuItem
             //
             this.rewordCommitToolStripMenuItem.Name = "rewordCommitToolStripMenuItem";
             this.rewordCommitToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
-            this.rewordCommitToolStripMenuItem.Text = "Reword commit";
+            this.rewordCommitToolStripMenuItem.Text = "&Reword commit";
             this.rewordCommitToolStripMenuItem.Click += new System.EventHandler(this.rewordCommitToolStripMenuItem_Click);
             // rebaseToolStripMenuItem
             // 
             this.rebaseToolStripMenuItem.Name = "rebaseToolStripMenuItem";
             this.rebaseToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.rebaseToolStripMenuItem.Text = "Selected commit";
+            this.rebaseToolStripMenuItem.Text = "&Selected commit";
             this.rebaseToolStripMenuItem.Click += new System.EventHandler(this.ToolStripItemClickRebaseBranch);
             // 
             // rebaseInteractivelyToolStripMenuItem
             // 
             this.rebaseInteractivelyToolStripMenuItem.Name = "rebaseInteractivelyToolStripMenuItem";
             this.rebaseInteractivelyToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.rebaseInteractivelyToolStripMenuItem.Text = "Selected commit interactively...";
+            this.rebaseInteractivelyToolStripMenuItem.Text = "Selected commit &interactively...";
             this.rebaseInteractivelyToolStripMenuItem.Click += new System.EventHandler(this.OnRebaseInteractivelyClicked);
             // 
             // toolStripSeparator10
@@ -522,7 +522,7 @@ namespace GitUI
             // 
             this.rebaseWithAdvOptionsToolStripMenuItem.Name = "rebaseWithAdvOptionsToolStripMenuItem";
             this.rebaseWithAdvOptionsToolStripMenuItem.Size = new System.Drawing.Size(307, 22);
-            this.rebaseWithAdvOptionsToolStripMenuItem.Text = "Selected commit with advanced options...";
+            this.rebaseWithAdvOptionsToolStripMenuItem.Text = "Selected commit with &advanced options...";
             this.rebaseWithAdvOptionsToolStripMenuItem.Click += OnRebaseWithAdvOptionsClicked;
             // 
             // RevisionGrid
