@@ -11,7 +11,6 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Infrastructure.Telemetry;
 using GitUI.Theming;
-using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -193,10 +192,9 @@ namespace GitExtensions
             AppSettings.SaveSettings();
         }
 
-        [CanBeNull]
-        private static string GetWorkingDir(string[] args)
+        private static string? GetWorkingDir(string[] args)
         {
-            string workingDir = null;
+            string? workingDir = null;
 
             if (args.Length >= 3)
             {
@@ -245,7 +243,7 @@ namespace GitExtensions
         }
 
         /// <summary>
-        /// Used in the rare event that the configuration file for the application is corrupted
+        /// Used in the rare event that the configuration file for the application is corrupted.
         /// </summary>
         private static void HandleConfigurationException(ConfigurationException ce)
         {
@@ -268,7 +266,7 @@ namespace GitExtensions
                         if (MessageBox.Show(messageContent, "Configuration Error",
                                             MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
                         {
-                            if (localSettingsPath.TryDeleteDirectory(out string errorMessage))
+                            if (localSettingsPath.TryDeleteDirectory(out string? errorMessage))
                             {
                                 // Restart Git Extensions with the same arguments after old config is deleted?
                                 if (DialogResult.OK.Equals(MessageBox.Show(string.Format("Files have been deleted.{0}{0}Would you like to attempt to restart Git Extensions?", Environment.NewLine), "Configuration Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)))

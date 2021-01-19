@@ -10,6 +10,8 @@
 
     <Prefer32bit>true</Prefer32bit>
 
+    <Nullable>enable</Nullable>
+
     <IsPublishable>true</IsPublishable>
     <PublishDir Condition="'$(IsPublishable)' == 'true'">$(AppPublishDir)</PublishDir>
     <ApplicationManifest>app.manifest</ApplicationManifest>
