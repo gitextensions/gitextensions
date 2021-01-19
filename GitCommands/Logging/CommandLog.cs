@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using GitUI;
-using JetBrains.Annotations;
 
 namespace GitCommands.Logging
 {
@@ -50,7 +49,7 @@ namespace GitCommands.Logging
             }
         }
 
-        private void LogProcessEnd(int? exitCode = null, Exception ex = null)
+        private void LogProcessEnd(int? exitCode = null, Exception? ex = null)
         {
             try
             {
@@ -76,8 +75,8 @@ namespace GitCommands.Logging
         public TimeSpan? Duration { get; internal set; }
         public int? ProcessId { get; set; }
         public int? ExitCode { get; set; }
-        [CanBeNull] public Exception Exception { get; set; }
-        [CanBeNull] public StackTrace CallStack { get; set; }
+        public Exception? Exception { get; set; }
+        public StackTrace? CallStack { get; set; }
 
         internal CommandLogEntry(string fileName, string arguments, string workingDir, DateTime startedAt, bool isOnMainThread)
         {
@@ -151,7 +150,7 @@ namespace GitCommands.Logging
 
     public static class CommandLog
     {
-        public static event Action CommandsChanged;
+        public static event Action? CommandsChanged;
 
         private static ConcurrentQueue<CommandLogEntry> _queue = new ConcurrentQueue<CommandLogEntry>();
 

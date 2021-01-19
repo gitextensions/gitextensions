@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Permissions;
 using System.Text;
@@ -8,7 +7,6 @@ using System.Threading.Tasks;
 using GitCommands.Logging;
 using GitUI;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -18,12 +16,12 @@ namespace GitCommands
         private readonly string _workingDir;
         private readonly Func<string> _fileNameProvider;
 
-        public Executable([NotNull] string fileName, [NotNull] string workingDir = "")
+        public Executable(string fileName, string workingDir = "")
             : this(() => fileName, workingDir)
         {
         }
 
-        public Executable([NotNull] Func<string> fileNameProvider, [NotNull] string workingDir = "")
+        public Executable(Func<string> fileNameProvider, string workingDir = "")
         {
             _workingDir = workingDir;
             _fileNameProvider = fileNameProvider;
@@ -35,7 +33,7 @@ namespace GitCommands
                               bool createWindow = false,
                               bool redirectInput = false,
                               bool redirectOutput = false,
-                              Encoding outputEncoding = null,
+                              Encoding? outputEncoding = null,
                               bool useShellExecute = false)
         {
             // TODO should we set these on the child process only?
@@ -73,14 +71,13 @@ namespace GitCommands
 
             private bool _disposed;
 
-            [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
             public ProcessWrapper(string fileName,
                                   string arguments,
                                   string workDir,
                                   bool createWindow,
                                   bool redirectInput,
                                   bool redirectOutput,
-                                  [CanBeNull] Encoding outputEncoding,
+                                  Encoding? outputEncoding,
                                   bool useShellExecute)
             {
                 Debug.Assert(redirectOutput == (outputEncoding is not null), "redirectOutput == (outputEncoding is not null)");

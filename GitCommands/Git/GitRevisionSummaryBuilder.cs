@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Text;
+using GitCommands.Utils;
 
 namespace GitCommands
 {
     public interface IGitRevisionSummaryBuilder
     {
-        string BuildSummary(string body);
+        string? BuildSummary(string? body);
     }
 
     public class GitRevisionSummaryBuilder : IGitRevisionSummaryBuilder
@@ -19,9 +20,9 @@ namespace GitCommands
         // Maximum size of the commit summary with ellipsis strings on each lines and at the end
         private const int CommitSummaryWorstCaseLength = (CommitSummaryMaxNumberOfLines * (CommitSummaryMaxLineLength + LineEllipsisLength)) + CommitSummaryEllipsisLength;
 
-        public string BuildSummary(string body)
+        public string? BuildSummary(string? body)
         {
-            if (string.IsNullOrWhiteSpace(body))
+            if (Strings.IsNullOrWhiteSpace(body))
             {
                 return null;
             }

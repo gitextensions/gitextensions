@@ -7,9 +7,8 @@ namespace GitCommands
 {
     public static class StreamExtensions
     {
-        [NotNull]
         [MustUseReturnValue]
-        public static IEnumerable<ArraySegment<byte>> ReadNullTerminatedChunks([NotNull] this Stream stream, ref byte[] buffer)
+        public static IEnumerable<ArraySegment<byte>> ReadNullTerminatedChunks(this Stream stream, ref byte[] buffer)
         {
             // Work around generator functions and ref parameters
             var buf = buffer;
@@ -104,9 +103,8 @@ namespace GitCommands
             }
         }
 
-        [NotNull]
         [MustUseReturnValue]
-        public static byte[] ReadAllBytes([NotNull] this Stream stream)
+        public static byte[] ReadAllBytes(this Stream stream)
         {
             // NOTE no need to dispose MemoryStream
             var memoryStream = new MemoryStream();

@@ -9,7 +9,7 @@ namespace GitCommands.Git
         {
         }
 
-        public GitException(string message, Exception inner)
+        public GitException(string message, Exception? inner)
             : base(message, inner)
         {
         }

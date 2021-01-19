@@ -2,7 +2,7 @@
 {
     public readonly struct DiffMergeToolConfiguration
     {
-        public DiffMergeToolConfiguration(string exeFileName, string path, string diffCommand, string mergeCommand)
+        public DiffMergeToolConfiguration(string exeFileName, string path, string? diffCommand, string? mergeCommand)
         {
             ExeFileName = exeFileName;
             Path = path.ToPosixPath();

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands.UserRepositoryHistory
@@ -32,7 +31,6 @@ namespace GitCommands.UserRepositoryHistory
         /// <param name="repositoryPathUrl">A repository URL to be save as "most recent".</param>
         /// <returns>The current version of the list of recently used git repositories after the update.</returns>
         /// <exception cref="ArgumentException"><paramref name="repositoryPathUrl"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
-        [ContractAnnotation("repositoryPathUrl:null=>halt")]
         public async Task<IList<Repository>> AddAsMostRecentAsync(string repositoryPathUrl)
         {
             if (string.IsNullOrWhiteSpace(repositoryPathUrl))
@@ -96,7 +94,6 @@ namespace GitCommands.UserRepositoryHistory
         /// <param name="repositoryPath">A repository path to remove.</param>
         /// <returns>The current version of the list of recently used git repositories after the update.</returns>
         /// <exception cref="ArgumentException"><paramref name="repositoryPath"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
-        [ContractAnnotation("repositoryPath:null=>halt")]
         public async Task<IList<Repository>> RemoveRecentAsync(string repositoryPath)
         {
             if (string.IsNullOrWhiteSpace(repositoryPath))
@@ -128,7 +125,6 @@ namespace GitCommands.UserRepositoryHistory
         /// <returns>An awaitable task.</returns>
         /// <remarks>The size of the history will be adjusted as per <see cref="AppSettings.RecentRepositoriesHistorySize"/> setting.</remarks>
         /// <exception cref="ArgumentNullException"><paramref name="repositoryHistory"/> is <see langword="null"/>.</exception>
-        [ContractAnnotation("repositoryHistory:null=>halt")]
         public async Task SaveRecentHistoryAsync(IEnumerable<Repository> repositoryHistory)
         {
             if (repositoryHistory is null)

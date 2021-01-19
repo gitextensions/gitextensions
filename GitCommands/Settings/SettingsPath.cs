@@ -1,33 +1,34 @@
 ﻿using System;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
+using Microsoft;
 
 namespace GitCommands.Settings
 {
     public class SettingsPath : ISettingsSource
     {
-        [CanBeNull] private readonly ISettingsSource _parent;
-        [NotNull] private readonly string _pathName;
+        private readonly ISettingsSource? _parent;
+        private readonly string _pathName;
 
-        public SettingsPath([CanBeNull] ISettingsSource parent, [NotNull] string pathName)
+        public SettingsPath(ISettingsSource? parent, string pathName)
         {
             _parent = parent;
             _pathName = pathName;
         }
 
-        [NotNull]
-        public string PathFor([NotNull] string subPath)
+        public string PathFor(string subPath)
         {
             return $"{_pathName}.{subPath}";
         }
 
         public override T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
         {
+            Assumes.NotNull(_parent);
             return _parent.GetValue(PathFor(name), defaultValue, decode);
         }
 
-        public override void SetValue<T>(string name, T value, Func<T, string> encode)
+        public override void SetValue<T>(string name, T value, Func<T, string?> encode)
         {
+            Assumes.NotNull(_parent);
             _parent.SetValue(PathFor(name), value, encode);
         }
     }

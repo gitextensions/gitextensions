@@ -6,7 +6,6 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using GitCommands.Settings;
-using JetBrains.Annotations;
 
 namespace GitCommands.ExternalLinks
 {
@@ -15,7 +14,7 @@ namespace GitCommands.ExternalLinks
         /// <summary>
         /// Loads external link definitions from the settings.
         /// </summary>
-        IReadOnlyList<ExternalLinkDefinition> Load(RepoDistSettings settings);
+        IReadOnlyList<ExternalLinkDefinition>? Load(RepoDistSettings settings);
 
         /// <summary>
         /// Saves the provided external link definitions to the settings.
@@ -30,7 +29,7 @@ namespace GitCommands.ExternalLinks
         /// <summary>
         /// Loads external link definitions from the settings.
         /// </summary>
-        public IReadOnlyList<ExternalLinkDefinition> Load(RepoDistSettings settings)
+        public IReadOnlyList<ExternalLinkDefinition>? Load(RepoDistSettings settings)
         {
             var cachedSettings = new RepoDistSettings(null, settings.SettingsCache, settings.SettingLevel);
             var xml = cachedSettings.GetString(SettingName, null);
@@ -44,7 +43,7 @@ namespace GitCommands.ExternalLinks
         {
             try
             {
-                string xml;
+                string? xml;
                 if (definitions.Count == 0)
                 {
                     xml = null;
@@ -74,8 +73,7 @@ namespace GitCommands.ExternalLinks
         }
 
         // TODO: refactor and outsource to the centralised SettingsSerialiser implementations.
-        [CanBeNull]
-        private static IReadOnlyList<ExternalLinkDefinition> LoadFromXmlString(string xmlString)
+        private static IReadOnlyList<ExternalLinkDefinition>? LoadFromXmlString(string xmlString)
         {
             if (string.IsNullOrWhiteSpace(xmlString))
             {

@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 
+#nullable enable
+
 namespace GitUIPluginInterfaces
 {
     public interface IConfigSection
     {
         string SectionName { get; set; }
-        string SubSection { get; set; }
+        string? SubSection { get; set; }
 
         IDictionary<string, IReadOnlyList<string>> AsDictionary();
         void AddValue(string key, string value);

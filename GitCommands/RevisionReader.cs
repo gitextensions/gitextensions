@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
@@ -65,7 +65,7 @@ namespace GitCommands
             string branchFilter,
             string revisionFilter,
             string pathFilter,
-            [CanBeNull] Func<GitRevision, bool> revisionPredicate)
+            Func<GitRevision, bool>? revisionPredicate)
         {
             ThreadHelper.JoinableTaskFactory
                 .RunAsync(() => ExecuteAsync(module, refs, subject, refFilterOptions, branchFilter, revisionFilter, pathFilter, revisionPredicate))
@@ -85,7 +85,7 @@ namespace GitCommands
             string branchFilter,
             string revisionFilter,
             string pathFilter,
-            [CanBeNull] Func<GitRevision, bool> revisionPredicate)
+            Func<GitRevision, bool>? revisionPredicate)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
@@ -231,9 +231,7 @@ namespace GitCommands
             }
         }
 
-        [ContractAnnotation("=>false,revision:null")]
-        [ContractAnnotation("=>true,revision:notnull")]
-        private static bool TryParseRevision(GitModule module, ArraySegment<byte> chunk, StringPool stringPool, Encoding logOutputEncoding, out GitRevision revision)
+        private static bool TryParseRevision(GitModule module, ArraySegment<byte> chunk, StringPool stringPool, Encoding logOutputEncoding, [NotNullWhen(returnValue: true)] out GitRevision? revision)
         {
             // The 'chunk' of data contains a complete git log item, encoded.
             // This method decodes that chunk and produces a revision object.
@@ -359,7 +357,7 @@ namespace GitCommands
             #region Encoding
 
             // Line is the name of the encoding used by git, or an empty string, terminated by `\n`
-            string encodingName;
+            string? encodingName;
             Encoding encoding;
 
             var encodingNameEndOffset = Array.IndexOf(array, (byte)'\n', offset);
@@ -380,7 +378,7 @@ namespace GitCommands
             else
             {
                 encodingName = logOutputEncoding.GetString(array, offset, encodingNameEndOffset - offset);
-                encoding = module.GetEncodingByGitName(encodingName);
+                encoding = module.GetEncodingByGitName(encodingName) ?? Encoding.UTF8;
             }
 
             offset = encodingNameEndOffset + 1;
@@ -444,8 +442,7 @@ namespace GitCommands
             return true;
         }
 
-        [CanBeNull]
-        private static (string body, string additionalData) ParseCommitBody([NotNull] StringLineReader reader, [NotNull] string subject)
+        private static (string? body, string? additionalData) ParseCommitBody(StringLineReader reader, string subject)
         {
             int lengthOfSubjectRepeatedInBody = subject.Length + 2/*newlines*/;
             if (reader.Remaining == lengthOfSubjectRepeatedInBody + EndOfBody.Length)
@@ -462,7 +459,7 @@ namespace GitCommands
                 return (body: null, additionalData: null);
             }
 
-            string additionalData = null;
+            string? additionalData = null;
             if (tail.Length > indexOfEndOfBody + EndOfBody.Length)
             {
                 additionalData = tail.Substring(indexOfEndOfBody + EndOfBody.Length).TrimStart();
@@ -496,8 +493,7 @@ namespace GitCommands
 
             public int Remaining => _s.Length - _index;
 
-            [CanBeNull]
-            public string ReadLine([CanBeNull] StringPool pool = null, bool advance = true)
+            public string? ReadLine(StringPool? pool = null, bool advance = true)
             {
                 if (_index == _s.Length)
                 {
@@ -522,8 +518,7 @@ namespace GitCommands
                     : _s.Substring(startIndex, endIndex - startIndex);
             }
 
-            [CanBeNull]
-            public string ReadToEnd(bool advance = true)
+            public string? ReadToEnd(bool advance = true)
             {
                 if (_index == _s.Length)
                 {
@@ -559,7 +554,7 @@ namespace GitCommands
                 string branchFilter, string revisionFilter, string pathFilter) =>
                 _revisionReader.BuildArguments(refFilterOptions, branchFilter, revisionFilter, pathFilter);
 
-            internal static (string body, string additionalData) ParseCommitBody(StringLineReader reader, string subject) =>
+            internal static (string? body, string? additionalData) ParseCommitBody(StringLineReader reader, string subject) =>
                 RevisionReader.ParseCommitBody(reader, subject);
 
             internal static StringLineReader MakeReader(string s) => new StringLineReader(s);

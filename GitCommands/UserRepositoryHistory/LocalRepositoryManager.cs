@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GitCommands.UserRepositoryHistory.Legacy;
-using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands.UserRepositoryHistory
@@ -18,7 +17,6 @@ namespace GitCommands.UserRepositoryHistory
         /// <param name="repository">The repository to categorise.</param>
         /// <param name="category">The new category, if it is supplied.</param>
         /// <returns>The current version of the list of favourite git repositories after the update.</returns>
-        [ContractAnnotation("repository:null=>halt")]
         Task<IList<Repository>> AssignCategoryAsync(Repository repository, string category);
 
         /// <summary>
@@ -32,7 +30,6 @@ namespace GitCommands.UserRepositoryHistory
         /// </summary>
         /// <param name="repositoryPath">A repository path to remove.</param>
         /// <returns>The current version of the list of favourite git repositories after the update.</returns>
-        [ContractAnnotation("repositoryPath:null=>halt")]
         Task<IList<Repository>> RemoveFavouriteAsync(string repositoryPath);
 
         /// <summary>
@@ -40,7 +37,6 @@ namespace GitCommands.UserRepositoryHistory
         /// </summary>
         /// <param name="repositoryHistory">A list of favourite git repositories.</param>
         /// <returns>An awaitable task.</returns>
-        [ContractAnnotation("repositoryHistory:null=>halt")]
         Task SaveFavouriteHistoryAsync(IEnumerable<Repository> repositoryHistory);
 
         /// <summary>
@@ -48,7 +44,6 @@ namespace GitCommands.UserRepositoryHistory
         /// </summary>
         /// <param name="predicate">A predicate to check against for the validity of the repositories.</param>
         /// <returns>An awaitable task.</returns>
-        [ContractAnnotation("predicate:null=>halt")]
         Task RemoveInvalidRepositoriesAsync(Func<string, bool> predicate);
     }
 
@@ -83,7 +78,6 @@ namespace GitCommands.UserRepositoryHistory
         /// <returns>The current version of the list of recently used git repositories after the update.</returns>
         /// <exception cref="ArgumentException"><paramref name="repositoryPath"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
         /// <exception cref="NotSupportedException"><paramref name="repositoryPath"/> is a URL.</exception>
-        [ContractAnnotation("repositoryPath:null=>halt")]
         public async Task<IList<Repository>> AddAsMostRecentAsync(string repositoryPath)
         {
             if (string.IsNullOrWhiteSpace(repositoryPath))
@@ -142,7 +136,6 @@ namespace GitCommands.UserRepositoryHistory
         /// <param name="category">The new category, if it is supplied.</param>
         /// <returns>The current version of the list of favourite git repositories after the update.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="repository"/> is <see langword="null"/>.</exception>
-        [ContractAnnotation("repository:null=>halt")]
         public async Task<IList<Repository>> AssignCategoryAsync(Repository repository, string category)
         {
             if (repository is null)
@@ -225,7 +218,6 @@ namespace GitCommands.UserRepositoryHistory
         /// <param name="repositoryPath">A repository path to remove.</param>
         /// <returns>The current version of the list of favourite git repositories after the update.</returns>
         /// <exception cref="ArgumentException"><paramref name="repositoryPath"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
-        [ContractAnnotation("repositoryPath:null=>halt")]
         public async Task<IList<Repository>> RemoveFavouriteAsync(string repositoryPath)
         {
             if (string.IsNullOrWhiteSpace(repositoryPath))
@@ -256,7 +248,6 @@ namespace GitCommands.UserRepositoryHistory
         /// <param name="repositoryPath">A repository path to remove.</param>
         /// <returns>The current version of the list of recently used git repositories after the update.</returns>
         /// <exception cref="ArgumentException"><paramref name="repositoryPath"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
-        [ContractAnnotation("repositoryPath:null=>halt")]
         public async Task<IList<Repository>> RemoveRecentAsync(string repositoryPath)
         {
             if (string.IsNullOrWhiteSpace(repositoryPath))
@@ -287,7 +278,6 @@ namespace GitCommands.UserRepositoryHistory
         /// <param name="repositoryHistory">A list of favourite git repositories.</param>
         /// <returns>An awaitable task.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="repositoryHistory"/> is <see langword="null"/>.</exception>
-        [ContractAnnotation("repositoryHistory:null=>halt")]
         public async Task SaveFavouriteHistoryAsync(IEnumerable<Repository> repositoryHistory)
         {
             if (repositoryHistory is null)
@@ -306,7 +296,6 @@ namespace GitCommands.UserRepositoryHistory
         /// <returns>An awaitable task.</returns>
         /// <remarks>The size of the history will be adjusted as per <see cref="AppSettings.RecentRepositoriesHistorySize"/> setting.</remarks>
         /// <exception cref="ArgumentNullException"><paramref name="repositoryHistory"/> is <see langword="null"/>.</exception>
-        [ContractAnnotation("repositoryHistory:null=>halt")]
         public async Task SaveRecentHistoryAsync(IEnumerable<Repository> repositoryHistory)
         {
             if (repositoryHistory is null)

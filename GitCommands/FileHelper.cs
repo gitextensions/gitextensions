@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using GitExtUtils;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -136,7 +135,7 @@ namespace GitCommands
 
         #region binary file check
 
-        public static bool IsBinaryFileAccordingToContent([CanBeNull] byte[] content)
+        public static bool IsBinaryFileAccordingToContent(byte[]? content)
         {
             // Check for binary file.
             if (content is not null && content.Length > 0)

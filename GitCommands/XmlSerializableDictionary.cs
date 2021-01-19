@@ -23,7 +23,7 @@ namespace GitCommands
 
         #region IXmlSerializable Members
 
-        public XmlSchema GetSchema()
+        public XmlSchema? GetSchema()
         {
             return null;
         }

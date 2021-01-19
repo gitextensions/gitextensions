@@ -26,7 +26,7 @@ namespace GitCommands
         public static readonly GitVersion LastSupportedVersion = v2_19_0;
         public static readonly GitVersion LastRecommendedVersion = new GitVersion("2.30.0");
 
-        private static GitVersion _current;
+        private static GitVersion? _current;
 
         public static GitVersion Current
         {
@@ -48,7 +48,7 @@ namespace GitCommands
         private readonly int _c;
         private readonly int _d;
 
-        public GitVersion(string version)
+        public GitVersion(string? version)
         {
             Full = Fix();
 

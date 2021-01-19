@@ -24,10 +24,10 @@ namespace GitCommands.ExternalLinks
             PushURL
         }
 
-        private string _searchPattern;
-        private string _nestedSearchPattern;
-        private string _remoteSearchPattern;
-        private string _useRemotesPattern;
+        private string? _searchPattern;
+        private string? _nestedSearchPattern;
+        private string? _remoteSearchPattern;
+        private string? _useRemotesPattern;
 
         /// <summary>
         /// Non-local link def can be locally disabled
@@ -40,19 +40,19 @@ namespace GitCommands.ExternalLinks
         public BindingList<ExternalLinkFormat> LinkFormats { get; } = new BindingList<ExternalLinkFormat>();
 
         /// <summary>Short name for this link def</summary>
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// RegEx for revision parts that have to be transformed into links
         /// empty string stands for unconditionally always added link
         /// </summary>
-        public string NestedSearchPattern
+        public string? NestedSearchPattern
         {
             get => _nestedSearchPattern;
             set
             {
                 _nestedSearchPattern = value;
-                NestedSearchPatternRegex = new Lazy<Regex>(() =>
+                NestedSearchPatternRegex = new Lazy<Regex?>(() =>
                 {
                     try
                     {
@@ -73,13 +73,13 @@ namespace GitCommands.ExternalLinks
         /// RegEx for remote parts that have to be transformed into links
         /// empty string stands for unconditionally always added link
         /// </summary>
-        public string RemoteSearchPattern
+        public string? RemoteSearchPattern
         {
             get => _remoteSearchPattern;
             set
             {
                 _remoteSearchPattern = value;
-                RemoteSearchPatternRegex = new Lazy<Regex>(() =>
+                RemoteSearchPatternRegex = new Lazy<Regex?>(() =>
                 {
                     try
                     {
@@ -100,13 +100,13 @@ namespace GitCommands.ExternalLinks
         /// RegEx for revision parts that have to be transformed into links
         /// empty string stands for unconditionally always added link
         /// </summary>
-        public string SearchPattern
+        public string? SearchPattern
         {
             get => _searchPattern;
             set
             {
                 _searchPattern = value;
-                SearchPatternRegex = new Lazy<Regex>(() =>
+                SearchPatternRegex = new Lazy<Regex?>(() =>
                     {
                         try
                         {
@@ -125,13 +125,13 @@ namespace GitCommands.ExternalLinks
         /// RegEx for remotes that have to be use to search in
         /// empty string stands for an unconditionally use of the all remotes
         /// </summary>
-        public string UseRemotesPattern
+        public string? UseRemotesPattern
         {
             get => _useRemotesPattern;
             set
             {
                 _useRemotesPattern = value;
-                UseRemotesRegex = new Lazy<Regex>(() =>
+                UseRemotesRegex = new Lazy<Regex?>(() =>
                     {
                         try
                         {
@@ -151,19 +151,19 @@ namespace GitCommands.ExternalLinks
 
         /// <summary>Compiled SearchPattern</summary>
         [XmlIgnore]
-        public Lazy<Regex> SearchPatternRegex { get; private set; }
+        public Lazy<Regex?>? SearchPatternRegex { get; private set; }
 
         /// <summary>Compiled SearchPattern</summary>
         [XmlIgnore]
-        public Lazy<Regex> NestedSearchPatternRegex { get; private set; }
+        public Lazy<Regex?>? NestedSearchPatternRegex { get; private set; }
 
         /// <summary>Compiled RemoteSearchPattern</summary>
         [XmlIgnore]
-        public Lazy<Regex> RemoteSearchPatternRegex { get; private set; }
+        public Lazy<Regex?>? RemoteSearchPatternRegex { get; private set; }
 
         /// <summary>Compiled UseRemotesPattern</summary>
         [XmlIgnore]
-        public Lazy<Regex> UseRemotesRegex { get; private set; }
+        public Lazy<Regex?>? UseRemotesRegex { get; private set; }
 
         public void RemoveEmptyFormats()
         {

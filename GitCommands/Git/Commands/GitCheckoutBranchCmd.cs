@@ -1,6 +1,5 @@
 ﻿using System;
 using GitExtUtils;
-using GitUIPluginInterfaces;
 
 namespace GitCommands.Git.Commands
 {
@@ -16,7 +15,7 @@ namespace GitCommands.Git.Commands
         public string BranchName { get; }
         public bool Remote { get; }
         public LocalChangesAction LocalChanges { get; }
-        public string NewBranchName { get; }
+        public string? NewBranchName { get; }
         public CheckoutNewBranchMode NewBranchMode { get; }
 
         public GitCheckoutBranchCmd(
@@ -24,7 +23,7 @@ namespace GitCommands.Git.Commands
             bool remote,
             LocalChangesAction localChanges = LocalChangesAction.DontChange,
             CheckoutNewBranchMode newBranchMode = CheckoutNewBranchMode.DontCreate,
-            string newBranchName = null)
+            string? newBranchName = null)
         {
             BranchName = branchName;
             Remote = remote;

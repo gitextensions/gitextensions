@@ -1,4 +1,6 @@
-﻿namespace GitUIPluginInterfaces
+﻿#nullable enable
+
+namespace GitUIPluginInterfaces
 {
     public interface IGitRef : IGitItem
     {
@@ -46,6 +48,6 @@
         /// <param name="remote">the expected remote ref tracked</param>
         /// <returns>true if the current ref is tracking the expected remote ref
         /// false otherwise</returns>
-        bool IsTrackingRemote(IGitRef remote);
+        bool IsTrackingRemote(IGitRef? remote);
     }
 }

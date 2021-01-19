@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands.Submodules
 {
@@ -10,7 +9,7 @@ namespace GitCommands.Submodules
     public class SubmoduleInfoResult
     {
         // Module that was used to gather submodule info
-        public IGitModule Module { get; internal set; }
+        public IGitModule? Module { get; internal set; }
 
         // List of SubmoduleInfo for all submodules (recursively) under current module.
         public IList<SubmoduleInfo> OurSubmodules { get; } = new List<SubmoduleInfo>();
@@ -19,16 +18,13 @@ namespace GitCommands.Submodules
         public IList<SubmoduleInfo> AllSubmodules { get; } = new List<SubmoduleInfo>();
 
         // Always set to the top-most module.
-        [NotNull]
-        public SubmoduleInfo TopProject { get; internal set; }
+        public SubmoduleInfo? TopProject { get; internal set; }
 
         // Set to the current module's parent, or null if current module is the top one.
         // If current module's parent is also the top-most module, then SuperProject == TopProject.
-        [CanBeNull]
-        public SubmoduleInfo SuperProject { get; internal set; }
+        public SubmoduleInfo? SuperProject { get; internal set; }
 
         // Name of current module, if it is a submodule. If current module is TopProject, will be null.
-        [CanBeNull]
-        public string CurrentSubmoduleName { get; internal set; }
+        public string? CurrentSubmoduleName { get; internal set; }
     }
 }

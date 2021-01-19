@@ -5,7 +5,7 @@ namespace GitCommands.UserRepositoryHistory
     [Serializable]
     public class Repository
     {
-        private string _path;
+        private string? _path;
 
         public enum RepositoryAnchor
         {
@@ -28,7 +28,7 @@ namespace GitCommands.UserRepositoryHistory
 
         public RepositoryAnchor Anchor { get; set; }
 
-        public string Category { get; set; }
+        public string? Category { get; set; }
 
         public string Path
         {

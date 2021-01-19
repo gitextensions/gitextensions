@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Settings;
-using JetBrains.Annotations;
+using GitCommands.Utils;
 
 namespace GitCommands.Patches
 {
@@ -31,8 +32,8 @@ namespace GitCommands.Patches
         /// <para />
         /// File paths can be quoted (see <c>core.quotepath</c>). They are unquoted by <see cref="GitModule.ReEncodeFileNameFromLossless"/>.
         /// </remarks>
-        [NotNull, ItemNotNull, Pure]
-        public static IEnumerable<Patch> CreatePatchesFromString([NotNull] string patchText, [NotNull] Lazy<Encoding> filesContentEncoding)
+        [Pure]
+        public static IEnumerable<Patch> CreatePatchesFromString(string patchText, Lazy<Encoding> filesContentEncoding)
         {
             // TODO encoding for each file in patch should be obtained separately from .gitattributes
 
@@ -50,7 +51,7 @@ namespace GitCommands.Patches
 
             for (; i < lines.Length; i++)
             {
-                Patch patch = CreatePatchFromString(lines, filesContentEncoding, ref i);
+                Patch? patch = CreatePatchFromString(lines, filesContentEncoding, ref i);
                 if (patch is not null)
                 {
                     yield return patch;
@@ -58,8 +59,7 @@ namespace GitCommands.Patches
             }
         }
 
-        [CanBeNull]
-        private static Patch CreatePatchFromString([ItemNotNull, NotNull] string[] lines, [NotNull] Lazy<Encoding> filesContentEncoding, ref int lineIndex)
+        private static Patch? CreatePatchFromString(string[] lines, Lazy<Encoding> filesContentEncoding, ref int lineIndex)
         {
             if (lineIndex >= lines.Length)
             {
@@ -79,7 +79,7 @@ namespace GitCommands.Patches
 
             var state = PatchProcessorState.InHeader;
 
-            string fileNameA, fileNameB;
+            string? fileNameA, fileNameB;
 
             var isCombinedDiff = headerMatch.Groups["type"].Value != "git";
 
@@ -110,7 +110,7 @@ namespace GitCommands.Patches
                 fileNameB = null;
             }
 
-            string index = null;
+            string? index = null;
             var changeType = PatchChangeType.ChangeFile;
             var fileType = PatchFileType.Text;
             var patchText = new StringBuilder();
@@ -291,17 +291,16 @@ namespace GitCommands.Patches
             return new Patch(header, index, fileType, fileNameA, fileNameB, isCombinedDiff, changeType, patchText.ToString());
         }
 
-        [ContractAnnotation("diff:null=>false")]
-        public static bool IsCombinedDiff([CanBeNull] string diff)
+        public static bool IsCombinedDiff(string? diff)
         {
             // diff --combined describe.c
             // diff --cc describe.c
-            return !string.IsNullOrWhiteSpace(diff) &&
+            return !Strings.IsNullOrWhiteSpace(diff) &&
                    (diff.StartsWith("diff --cc") || diff.StartsWith("diff --combined"));
         }
 
         [Pure]
-        private static bool IsStartOfANewPatch([NotNull] string input)
+        private static bool IsStartOfANewPatch(string input)
         {
             return _patchHeaderRegex.IsMatch(input);
         }

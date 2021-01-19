@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using GitCommands.Utils;
 using GitUIPluginInterfaces;
 
 namespace GitCommands
@@ -16,7 +17,7 @@ namespace GitCommands
         /// <returns>
         /// <paramref name="path"/> if <paramref name="path"/> is rooted; otherwise resolved path from <see cref="IGitModule.WorkingDir"/>.
         /// </returns>
-        string Resolve(string path);
+        string? Resolve(string? path);
     }
 
     public sealed class FullPathResolver : IFullPathResolver
@@ -42,9 +43,9 @@ namespace GitCommands
         /// <paramref name="path" /> if <paramref name="path" /> is rooted; otherwise resolved path from working directory of the current repository.
         /// </returns>
         /// <exception cref="PathTooLongException">The resolved path is too long (greater than 248 characters).</exception>
-        public string Resolve(string path)
+        public string? Resolve(string? path)
         {
-            if (string.IsNullOrWhiteSpace(path))
+            if (Strings.IsNullOrWhiteSpace(path))
             {
                 return null;
             }

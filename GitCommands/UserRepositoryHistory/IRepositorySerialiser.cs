@@ -12,13 +12,13 @@ namespace GitCommands.UserRepositoryHistory
         /// </summary>
         /// <param name="serialised">A serialised list of user's git repositories.</param>
         /// <returns>A list of user's git repositories.</returns>
-        IReadOnlyList<T> Deserialize(string serialised);
+        IReadOnlyList<T>? Deserialize(string serialised);
 
         /// <summary>
         /// Serialises the given list of user's git repositories.
         /// </summary>
         /// <param name="repositories">A list of user's git repositories.</param>
         /// <returns>A serialised list of user's git repositories.</returns>
-        string Serialize(IEnumerable<T> repositories);
+        string? Serialize(IEnumerable<T> repositories);
     }
 }

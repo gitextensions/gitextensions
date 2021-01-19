@@ -1,6 +1,5 @@
 ﻿using System;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands.Settings
 {
@@ -8,12 +7,10 @@ namespace GitCommands.Settings
     {
         private readonly ICredentialsManager _credentialsManager = new CredentialsManager();
 
-        [CanBeNull]
-        public TLowerPriority LowerPriority { get; }
-        [NotNull]
+        public TLowerPriority? LowerPriority { get; }
         public TCache SettingsCache { get; }
 
-        public SettingsContainer([CanBeNull] TLowerPriority lowerPriority, [NotNull] TCache settingsCache)
+        public SettingsContainer(TLowerPriority? lowerPriority, TCache settingsCache)
         {
             LowerPriority = lowerPriority;
             SettingsCache = settingsCache;

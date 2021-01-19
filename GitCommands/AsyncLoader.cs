@@ -2,14 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 using GitUI;
-using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
     public sealed class AsyncLoader : IDisposable
     {
-        public event EventHandler<AsyncErrorEventArgs> LoadingError;
+        public event EventHandler<AsyncErrorEventArgs>? LoadingError;
 
         private readonly CancellationTokenSequence _cancellationSequence = new CancellationTokenSequence();
 
@@ -39,13 +38,12 @@ namespace GitCommands
                 _ => onLoaded());
         }
 
-        public Task<T> LoadAsync<T>(Func<T> loadContent, Action<T> onLoaded)
+        public Task<T?> LoadAsync<T>(Func<T> loadContent, Action<T?> onLoaded)
         {
             return LoadAsync(token => loadContent(), onLoaded);
         }
 
-        [ItemCanBeNull]
-        public async Task<T> LoadAsync<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
+        public async Task<T?> LoadAsync<T>(Func<CancellationToken, T> loadContent, Action<T?> onLoaded)
         {
             if (Volatile.Read(ref _disposed) != 0)
             {
@@ -58,7 +56,7 @@ namespace GitCommands
             // Create a new cancellation token
             var token = _cancellationSequence.Next();
 
-            T result;
+            T? result;
 
             try
             {

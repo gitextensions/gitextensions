@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace GitCommands.Remotes
 {
     public sealed class AzureDevOpsRemoteParser : RemoteParser
@@ -13,7 +15,7 @@ namespace GitCommands.Remotes
             return TryExtractAzureDevopsDataFromRemoteUrl(remoteUrl, out _, out _, out _);
         }
 
-        public bool TryExtractAzureDevopsDataFromRemoteUrl(string remoteUrl, out string owner, out string project, out string repository)
+        public bool TryExtractAzureDevopsDataFromRemoteUrl(string remoteUrl, [NotNullWhen(returnValue: true)] out string? owner, [NotNullWhen(returnValue: true)] out string? project, [NotNullWhen(returnValue: true)] out string? repository)
         {
             owner = null;
             project = null;

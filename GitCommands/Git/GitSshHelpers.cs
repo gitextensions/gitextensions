@@ -1,4 +1,5 @@
 using System;
+using GitCommands.Utils;
 
 namespace GitCommands
 {
@@ -32,9 +33,9 @@ namespace GitCommands
         }
 
         /// <summary>Sets the git SSH command path.</summary>
-        public static void SetSsh(string path)
+        public static void SetSsh(string? path)
         {
-            if (!string.IsNullOrEmpty(path))
+            if (!Strings.IsNullOrEmpty(path))
             {
                 Environment.SetEnvironmentVariable("GIT_SSH", path, EnvironmentVariableTarget.Process);
             }

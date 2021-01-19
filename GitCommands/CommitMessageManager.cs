@@ -3,7 +3,6 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Text;
 using System.Windows.Forms;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -68,15 +67,14 @@ namespace GitCommands
         //  this is to have i18n.commitencoding in .git/config file, like this:...
         private readonly Encoding _commitEncoding;
 
-        [CanBeNull]
-        private string _overriddenCommitMessage;
+        private string? _overriddenCommitMessage;
 
-        public CommitMessageManager(string workingDirGitDir, Encoding commitEncoding, string overriddenCommitMessage = null)
+        public CommitMessageManager(string workingDirGitDir, Encoding commitEncoding, string? overriddenCommitMessage = null)
             : this(workingDirGitDir, commitEncoding, new FileSystem(), overriddenCommitMessage)
         {
         }
 
-        internal CommitMessageManager(string workingDirGitDir, Encoding commitEncoding, IFileSystem fileSystem, string overriddenCommitMessage = null)
+        internal CommitMessageManager(string workingDirGitDir, Encoding commitEncoding, IFileSystem fileSystem, string? overriddenCommitMessage = null)
         {
             _fileSystem = fileSystem;
             _commitEncoding = commitEncoding;

@@ -1,4 +1,5 @@
 using System;
+using GitCommands.Utils;
 
 namespace GitCommands.Git
 {
@@ -7,9 +8,9 @@ namespace GitCommands.Git
     /// </summary>
     public sealed class GitBranchNameOptions
     {
-        public GitBranchNameOptions(string replacementToken)
+        public GitBranchNameOptions(string? replacementToken)
         {
-            if (!string.IsNullOrEmpty(replacementToken))
+            if (!Strings.IsNullOrEmpty(replacementToken))
             {
                 if (replacementToken.Length > 1)
                 {

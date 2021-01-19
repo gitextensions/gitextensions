@@ -2,10 +2,10 @@
 {
     public sealed class ExternalLink
     {
-        public string Caption { get; }
+        public string? Caption { get; }
         public string Uri { get; }
 
-        public ExternalLink(string caption, string uri)
+        public ExternalLink(string? caption, string uri)
         {
             Caption = caption;
             Uri = uri;

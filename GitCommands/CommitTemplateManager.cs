@@ -25,7 +25,7 @@ namespace GitCommands
         /// Template file can be set by the following command:
         /// <c>$ git config --global commit.template ~/.git_commit_msg.txt</c>
         /// </remarks>
-        string LoadGitCommitTemplate();
+        string? LoadGitCommitTemplate();
 
         /// <summary>
         /// Allows a plugin to register a new commit template.
@@ -43,7 +43,7 @@ namespace GitCommands
 
     public sealed class CommitTemplateManager : ICommitTemplateManager
     {
-        private struct RegisteredCommitTemplateItem
+        private readonly struct RegisteredCommitTemplateItem
         {
             public readonly string Name;
 
@@ -99,9 +99,9 @@ namespace GitCommands
         /// Template file can be set by the following command:
         /// <c>$ git config --global commit.template ~/.git_commit_msg.txt</c>
         /// </remarks>
-        public string LoadGitCommitTemplate()
+        public string? LoadGitCommitTemplate()
         {
-            string fileName = GetModule().GetEffectiveSetting("commit.template");
+            string? fileName = GetModule().GetEffectiveSetting("commit.template");
             if (string.IsNullOrEmpty(fileName))
             {
                 return null;

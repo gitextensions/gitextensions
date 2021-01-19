@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Timers;
 using GitCommands.Utils;
 
 namespace GitCommands.Settings
@@ -14,7 +15,7 @@ namespace GitCommands.Settings
         private readonly FileSystemWatcher _fileWatcher = new FileSystemWatcher();
         private readonly bool _canEnableFileWatcher;
 
-        private System.Timers.Timer _saveTimer = new System.Timers.Timer(SaveTime);
+        private Timer? _saveTimer;
         private readonly bool _autoSave;
 
         public string SettingsFilePath { get; }
@@ -24,6 +25,7 @@ namespace GitCommands.Settings
             SettingsFilePath = settingsFilePath;
             _autoSave = autoSave;
 
+            _saveTimer = new Timer(SaveTime);
             _saveTimer.Enabled = false;
             _saveTimer.AutoReset = false;
             _saveTimer.Elapsed += OnSaveTimer;
@@ -33,7 +35,7 @@ namespace GitCommands.Settings
             _fileWatcher.Changed += _fileWatcher_Changed;
             _fileWatcher.Renamed += _fileWatcher_Renamed;
             _fileWatcher.Created += _fileWatcher_Created;
-            string dir;
+            string? dir;
             try
             {
                 dir = Path.GetDirectoryName(SettingsFilePath);
@@ -238,16 +240,19 @@ namespace GitCommands.Settings
         private void StartSaveTimer()
         {
             // Resets timer so that the last call will let the timer event run and will cause the settings to be saved.
-            _saveTimer.Stop();
-            _saveTimer.AutoReset = true;
-            _saveTimer.Interval = SaveTime;
-            _saveTimer.AutoReset = false;
+            if (_saveTimer != null)
+            {
+                _saveTimer.Stop();
+                _saveTimer.AutoReset = true;
+                _saveTimer.Interval = SaveTime;
+                _saveTimer.AutoReset = false;
 
-            _saveTimer.Start();
+                _saveTimer.Start();
+            }
         }
 
         internal TestAccessor GetTestAccessor()
-        => new TestAccessor(this);
+            => new TestAccessor(this);
 
         internal readonly struct TestAccessor
         {

@@ -35,14 +35,13 @@ namespace GitCommands
         /// <param name="cache">A <see cref="CommandCache"/> to use if command results may be cached, otherwise <c>null</c>.</param>
         /// <param name="stripAnsiEscapeCodes">A flag indicating whether ANSI escape codes should be removed from output strings.</param>
         /// <returns>The concatenation of standard output and standard error. To receive these outputs separately, use <see cref="Execute"/> instead.</returns>
-        [NotNull]
         [MustUseReturnValue("If output text is not required, use " + nameof(RunCommand) + " instead")]
         public static string GetOutput(
             this IExecutable executable,
             ArgumentString arguments = default,
-            byte[] input = null,
-            Encoding outputEncoding = null,
-            CommandCache cache = null,
+            byte[]? input = null,
+            Encoding? outputEncoding = null,
+            CommandCache? cache = null,
             bool stripAnsiEscapeCodes = true)
         {
             return GitUI.ThreadHelper.JoinableTaskFactory.Run(
@@ -62,14 +61,13 @@ namespace GitCommands
         /// <param name="cache">A <see cref="CommandCache"/> to use if command results may be cached, otherwise <c>null</c>.</param>
         /// <param name="stripAnsiEscapeCodes">A flag indicating whether ANSI escape codes should be removed from output strings.</param>
         /// <returns>The concatenation of standard output and standard error. To receive these outputs separately, use <see cref="Execute"/> instead.</returns>
-        [NotNull]
         [MustUseReturnValue("If output text is not required, use " + nameof(RunCommand) + " instead")]
         public static string GetBatchOutput(
             this IExecutable executable,
-            ICollection<BatchArgumentItem> batchArguments = default,
-            byte[] input = null,
-            Encoding outputEncoding = null,
-            CommandCache cache = null,
+            ICollection<BatchArgumentItem> batchArguments,
+            byte[]? input = null,
+            Encoding? outputEncoding = null,
+            CommandCache? cache = null,
             bool stripAnsiEscapeCodes = true)
         {
             var sb = new StringBuilder();
@@ -91,13 +89,12 @@ namespace GitCommands
         /// <param name="cache">A <see cref="CommandCache"/> to use if command results may be cached, otherwise <c>null</c>.</param>
         /// <param name="stripAnsiEscapeCodes">A flag indicating whether ANSI escape codes should be removed from output strings.</param>
         /// <returns>A task that yields the concatenation of standard output and standard error. To receive these outputs separately, use <see cref="ExecuteAsync"/> instead.</returns>
-        [ItemNotNull]
         public static async Task<string> GetOutputAsync(
             this IExecutable executable,
             ArgumentString arguments = default,
-            byte[] input = null,
-            Encoding outputEncoding = null,
-            CommandCache cache = null,
+            byte[]? input = null,
+            Encoding? outputEncoding = null,
+            CommandCache? cache = null,
             bool stripAnsiEscapeCodes = true)
         {
             if (outputEncoding is null)
@@ -165,7 +162,7 @@ namespace GitCommands
         public static bool RunCommand(
             this IExecutable executable,
             ArgumentString arguments = default,
-            byte[] input = null,
+            byte[]? input = null,
             bool createWindow = false)
         {
             return GitUI.ThreadHelper.JoinableTaskFactory.Run(
@@ -190,8 +187,8 @@ namespace GitCommands
         public static bool RunBatchCommand(
             this IExecutable executable,
             ICollection<BatchArgumentItem> batchArguments,
-            Action<BatchProgressEventArgs> action = null,
-            byte[] input = null,
+            Action<BatchProgressEventArgs>? action = null,
+            byte[]? input = null,
             bool createWindow = false)
         {
             int total = batchArguments.Sum(item => item.BatchItemsCount);
@@ -219,7 +216,7 @@ namespace GitCommands
         public static async Task<bool> RunCommandAsync(
             this IExecutable executable,
             ArgumentString arguments = default,
-            byte[] input = null,
+            byte[]? input = null,
             bool createWindow = false)
         {
             using var process = executable.Start(arguments, createWindow: createWindow, redirectInput: input is not null);
@@ -245,8 +242,8 @@ namespace GitCommands
         public static IEnumerable<string> GetOutputLines(
             this IExecutable executable,
             ArgumentString arguments = default,
-            byte[] input = null,
-            Encoding outputEncoding = null,
+            byte[]? input = null,
+            Encoding? outputEncoding = null,
             bool stripAnsiEscapeCodes = true)
         {
             if (outputEncoding is null)
@@ -301,8 +298,8 @@ namespace GitCommands
         public static async Task<IEnumerable<string>> GetOutputLinesAsync(
             this IExecutable executable,
             ArgumentString arguments = default,
-            Action<StreamWriter> writeInput = null,
-            Encoding outputEncoding = null,
+            Action<StreamWriter>? writeInput = null,
+            Encoding? outputEncoding = null,
             bool stripAnsiEscapeCodes = true)
         {
             var result = await executable.ExecuteAsync(arguments, writeInput, outputEncoding, stripAnsiEscapeCodes);
@@ -327,8 +324,8 @@ namespace GitCommands
         public static ExecutionResult Execute(
             this IExecutable executable,
             ArgumentString arguments,
-            Action<StreamWriter> writeInput = null,
-            Encoding outputEncoding = null,
+            Action<StreamWriter>? writeInput = null,
+            Encoding? outputEncoding = null,
             bool stripAnsiEscapeCodes = true)
         {
             return GitUI.ThreadHelper.JoinableTaskFactory.Run(
@@ -347,8 +344,8 @@ namespace GitCommands
         public static async Task<ExecutionResult> ExecuteAsync(
             this IExecutable executable,
             ArgumentString arguments,
-            Action<StreamWriter> writeInput = null,
-            Encoding outputEncoding = null,
+            Action<StreamWriter>? writeInput = null,
+            Encoding? outputEncoding = null,
             bool stripAnsiEscapeCodes = true)
         {
             if (outputEncoding is null)
@@ -385,8 +382,7 @@ namespace GitCommands
         }
 
         [Pure]
-        [NotNull]
-        private static string CleanString(bool stripAnsiEscapeCodes, [NotNull] string s)
+        private static string CleanString(bool stripAnsiEscapeCodes, string s)
         {
             // NOTE Regex returns the original string if no ANSI codes are found (no allocation)
             return stripAnsiEscapeCodes

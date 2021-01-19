@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands.Remotes
 {
@@ -16,7 +15,7 @@ namespace GitCommands.Remotes
         /// Returns the default remote for push operation.
         /// </summary>
         /// <returns>The <see cref="GitRef.Name"/> if found, otherwise <see langword="null"/>.</returns>
-        string GetDefaultPushRemote(ConfigFileRemote remote, string branch);
+        string? GetDefaultPushRemote(ConfigFileRemote remote, string branch);
 
         /// <summary>
         /// Loads the list of remotes configured in .git/config file.
@@ -59,7 +58,7 @@ namespace GitCommands.Remotes
         /// <param name="remotePushUrl">An optional alternative remote push URL.</param>
         /// <param name="remotePuttySshKey">An optional Putty SSH key.</param>
         /// <returns>Result of the operation.</returns>
-        ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote remote, string remoteName, string remoteUrl, string remotePushUrl, string remotePuttySshKey);
+        ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote? remote, string remoteName, string remoteUrl, string remotePushUrl, string remotePuttySshKey);
 
         /// <summary>
         ///  Marks the remote as enabled or disabled in .git/config file.
@@ -135,8 +134,7 @@ namespace GitCommands.Remotes
         /// </summary>
         /// <returns>The <see cref="GitRef.Name"/> if found, otherwise <see langword="null"/>.</returns>
         // TODO: moved verbatim from FormPush.cs, perhaps needs refactoring
-        [CanBeNull]
-        public string GetDefaultPushRemote(ConfigFileRemote remote, string branch)
+        public string? GetDefaultPushRemote(ConfigFileRemote remote, string branch)
         {
             if (remote is null)
             {
@@ -182,6 +180,7 @@ namespace GitCommands.Remotes
             return module.LocalConfigFile.GetConfigSections()
                 .Where(s => s.SectionName == $"{DisabledSectionPrefix}remote")
                 .Select(s => s.SubSection)
+                .WhereNotNull()
                 .ToList();
         }
 
@@ -288,7 +287,7 @@ namespace GitCommands.Remotes
         /// <param name="remotePushUrl">An optional alternative remote push URL.</param>
         /// <param name="remotePuttySshKey">An optional Putty SSH key.</param>
         /// <returns>Result of the operation.</returns>
-        public ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote remote, string remoteName, string remoteUrl, string remotePushUrl, string remotePuttySshKey)
+        public ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote? remote, string remoteName, string remoteUrl, string remotePushUrl, string remotePuttySshKey)
         {
             if (string.IsNullOrWhiteSpace(remoteName))
             {
@@ -304,9 +303,8 @@ namespace GitCommands.Remotes
             var output = string.Empty;
 
             var module = GetModule();
-            bool creatingNew = remote is null;
             bool remoteDisabled = false;
-            if (creatingNew)
+            if (remote is null)
             {
                 output = module.AddRemote(remoteName, remoteUrl);
 

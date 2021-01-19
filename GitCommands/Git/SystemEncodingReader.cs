@@ -19,7 +19,7 @@ namespace GitCommands.Git
     {
         private readonly IGitModule _module;
 
-        public SystemEncodingReader(IGitModule module)
+        public SystemEncodingReader(IGitModule? module)
         {
             _module = module ?? new GitModule("");
         }
@@ -48,7 +48,7 @@ namespace GitCommands.Git
                     controlStr
                 };
 
-                string s = _module.GitExecutable.GetOutput(arguments, outputEncoding: Encoding.UTF8);
+                string? s = _module.GitExecutable.GetOutput(arguments, outputEncoding: Encoding.UTF8);
                 if (s is not null && s.IndexOf(controlStr) != -1)
                 {
                     systemEncoding = new UTF8Encoding(false);

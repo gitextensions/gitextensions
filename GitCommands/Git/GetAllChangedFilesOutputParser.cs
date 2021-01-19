@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using GitCommands.Git.Commands;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands.Git
 {
@@ -208,8 +207,8 @@ namespace GitCommands.Git
                     char x = line[2];
                     char y = line[3];
                     string fileName;
-                    string oldFileName = null;
-                    string renamePercent = null;
+                    string? oldFileName = null;
+                    string? renamePercent = null;
                     string subm = line.Substring(5, 4);
 
                     if (entryType == '1')
@@ -245,7 +244,7 @@ namespace GitCommands.Git
 
             return diffFiles;
 
-            void UpdateItemStatus(char x, bool isIndex, string subm, string fileName, string oldFileName, string renamePercent)
+            void UpdateItemStatus(char x, bool isIndex, string subm, string fileName, string? oldFileName, string? renamePercent)
             {
                 if (x == '.')
                 {
@@ -320,7 +319,6 @@ namespace GitCommands.Git
             return gitItemStatus;
         }
 
-        [NotNull]
         private IGitModule GetModule()
         {
             var module = _getModule();

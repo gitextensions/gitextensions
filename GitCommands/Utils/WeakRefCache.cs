@@ -23,7 +23,7 @@ namespace GitCommands.Utils
 
         public T Get<T>(string objectUniqueKey, Lazy<T> provideObject)
         {
-            object cached = null;
+            object? cached = null;
 
             lock (_weakMap)
             {
@@ -48,7 +48,7 @@ namespace GitCommands.Utils
 
             Debug.Assert(cached is not null, "cached is not null -- if this is violated, the annotations on SettingsContainer<,>.ctor cache are wrong");
 
-            return (T)cached;
+            return (T)cached!;
         }
 
         private void OnClearTimer(object source, ElapsedEventArgs e)

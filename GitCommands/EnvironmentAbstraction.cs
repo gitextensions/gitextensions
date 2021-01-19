@@ -1,5 +1,4 @@
 ﻿using System;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -12,18 +11,16 @@ namespace GitCommands
         string[] GetCommandLineArgs();
 
         /// <inheritdoc cref="Environment.GetEnvironmentVariable(string)" />
-        [CanBeNull]
-        string GetEnvironmentVariable(string variable);
+        string? GetEnvironmentVariable(string variable);
 
         /// <inheritdoc cref="Environment.GetEnvironmentVariable(string,EnvironmentVariableTarget)" />
-        [CanBeNull]
-        string GetEnvironmentVariable(string variable, EnvironmentVariableTarget target);
+        string? GetEnvironmentVariable(string variable, EnvironmentVariableTarget target);
 
         /// <inheritdoc cref="Environment.GetFolderPath(Environment.SpecialFolder)" />
         string GetFolderPath(Environment.SpecialFolder folder);
 
         /// <inheritdoc cref="Environment.SetEnvironmentVariable(string,string)" />
-        void SetEnvironmentVariable(string variable, string value);
+        void SetEnvironmentVariable(string variable, string? value);
     }
 
     public sealed class EnvironmentAbstraction : IEnvironmentAbstraction
@@ -41,13 +38,13 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        public string GetEnvironmentVariable(string variable)
+        public string? GetEnvironmentVariable(string variable)
         {
             return Environment.GetEnvironmentVariable(variable);
         }
 
         /// <inheritdoc />
-        public string GetEnvironmentVariable(string variable, EnvironmentVariableTarget target)
+        public string? GetEnvironmentVariable(string variable, EnvironmentVariableTarget target)
         {
             return Environment.GetEnvironmentVariable(variable, target);
         }
@@ -59,7 +56,7 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        public void SetEnvironmentVariable(string variable, string value)
+        public void SetEnvironmentVariable(string variable, string? value)
         {
             Environment.SetEnvironmentVariable(variable, value);
         }

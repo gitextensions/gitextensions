@@ -48,7 +48,7 @@ namespace GitCommands.Git.Tag
                 throw new ArgumentNullException(nameof(parentWindow));
             }
 
-            string tagMessageFileName = null;
+            string? tagMessageFileName = null;
             if (args.Operation.CanProvideMessage())
             {
                 tagMessageFileName = Path.Combine(GetWorkingDirPath(), "TAGMESSAGE");

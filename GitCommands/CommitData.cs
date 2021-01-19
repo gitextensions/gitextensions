@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -37,8 +36,7 @@ namespace GitCommands
 
         // TODO mutable properties need review
 
-        [CanBeNull, ItemNotNull]
-        public IReadOnlyList<ObjectId> ChildIds { get; set; }
+        public IReadOnlyList<ObjectId>? ChildIds { get; set; }
 
         /// <summary>
         /// Gets and sets the commit message.

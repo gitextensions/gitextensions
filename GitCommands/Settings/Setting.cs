@@ -27,7 +27,7 @@ namespace GitCommands.Settings
         /// For "string" is the defaultValue ?? string.Empty from constructor.
         /// For non nullable is the defaultValue from constructor.
         /// </summary>
-        T Default { get; }
+        T? Default { get; }
 
         /// <summary>
         /// Value of the setting.
@@ -35,7 +35,7 @@ namespace GitCommands.Settings
         /// For "string" is the value from storage or <see cref="Default"/>.
         /// For non nullable is the value from storage or <see cref="Default"/>.
         /// </summary>
-        T Value { get; set; }
+        T? Value { get; set; }
 
         /// <summary>
         /// Value of the setting.
@@ -54,7 +54,7 @@ namespace GitCommands.Settings
 
     public static class Setting
     {
-        public static ISetting<string> Create(SettingsPath settingsSource, string name, string defaultValue)
+        public static ISetting<string> Create(SettingsPath settingsSource, string name, string? defaultValue)
         {
             return new SettingOf<string>(settingsSource, name, defaultValue ?? string.Empty);
         }
@@ -74,9 +74,9 @@ namespace GitCommands.Settings
         private sealed class SettingOf<T> : ISetting<T>
         {
             /// <inheritdoc />
-            public event EventHandler Updated;
+            public event EventHandler? Updated;
 
-            public SettingOf(SettingsPath settingsSource, string name, T defaultValue = default)
+            public SettingOf(SettingsPath settingsSource, string name, T? defaultValue = default)
             {
                 SettingsSource = settingsSource;
                 Name = name;
@@ -90,10 +90,10 @@ namespace GitCommands.Settings
             public string Name { get; }
 
             /// <inheritdoc />
-            public T Default { get; }
+            public T? Default { get; }
 
             /// <inheritdoc />
-            public T Value
+            public T? Value
             {
                 get
                 {
@@ -103,7 +103,7 @@ namespace GitCommands.Settings
                     {
                         if (Type.GetTypeCode(typeof(T)) != TypeCode.String)
                         {
-                            return (T)storedValue;
+                            return (T?)storedValue!;
                         }
                     }
 
@@ -121,7 +121,7 @@ namespace GitCommands.Settings
 
                     if (Type.GetTypeCode(typeof(T)) == TypeCode.String)
                     {
-                        if (storedValue?.Equals((object)value ?? string.Empty) ?? false)
+                        if (storedValue?.Equals((object?)value ?? string.Empty) ?? false)
                         {
                             return;
                         }
@@ -136,7 +136,7 @@ namespace GitCommands.Settings
 
                     if (Type.GetTypeCode(typeof(T)) == TypeCode.String)
                     {
-                        SetValue(Name, (object)value ?? string.Empty);
+                        SetValue(Name, (object?)value ?? string.Empty);
                     }
                     else
                     {
@@ -169,10 +169,10 @@ namespace GitCommands.Settings
             /// <inheritdoc />
             public string FullPath => SettingsSource.PathFor(Name);
 
-            private object GetValue(string name)
+            private object? GetValue(string name)
             {
                 return SettingsSource
-                    .GetValue<object>(name, null, value =>
+                    .GetValue<object?>(name, null, value =>
                     {
                         var type = typeof(T);
                         var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
@@ -209,10 +209,10 @@ namespace GitCommands.Settings
                     });
             }
 
-            private void SetValue(string name, object value)
+            private void SetValue(string name, object? value)
             {
                 SettingsSource
-                    .SetValue<object>(name, value, value =>
+                    .SetValue<object?>(name, value, value =>
                     {
                         var type = typeof(T);
                         var underlyingType = Nullable
@@ -221,7 +221,7 @@ namespace GitCommands.Settings
                         switch (Type.GetTypeCode(underlyingType))
                         {
                             case TypeCode.String:
-                                return (string)value;
+                                return (string?)value;
                             case TypeCode.Object:
                                 return JsonConvert
                                     .SerializeObject(value);
