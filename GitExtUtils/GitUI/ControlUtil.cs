@@ -65,7 +65,7 @@ namespace GitUI
         public static T FindDescendantOfType<T>(this Control control, Func<T, bool> predicate,
             Func<Control, bool> skip = null)
         {
-            return FindDescendants(control).OfType<T>().Where(predicate).FirstOrDefault();
+            return FindDescendants(control, skip).OfType<T>().Where(predicate).FirstOrDefault();
         }
 
         /// <summary>
