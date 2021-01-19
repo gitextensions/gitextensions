@@ -17,6 +17,7 @@ using GitCommands.Git.Extensions;
 using GitCommands.Patches;
 using GitCommands.Settings;
 using GitCommands.Utils;
+using GitExtensions;
 using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
@@ -760,7 +761,7 @@ namespace GitCommands
 
         public async Task<Dictionary<IGitRef, IGitItem?>> GetSubmoduleItemsForEachRefAsync(string filename, Func<IGitRef, bool> showRemoteRef, bool noLocks = false)
         {
-            string command = GitCommandHelpers.GetSortedRefsCommand(noLocks: noLocks);
+            string? command = GitCommandHelpers.GetSortedRefsCommand(noLocks: noLocks);
 
             if (command is null)
             {
@@ -2320,7 +2321,7 @@ namespace GitCommands
             string? firstRevision = firstId?.ToString().ToPosixPath();
             string? secondRevision = secondId?.ToString().ToPosixPath();
 
-            string diffOptions = _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked);
+            string? diffOptions = _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked);
 
             var args = new GitArgumentBuilder("diff")
             {
@@ -2966,7 +2967,7 @@ namespace GitCommands
             // Assume that all GetRefs() are done in the background, which may not be correct in the future.
             const bool noLocks = true;
 
-            string cmd = GitCommandHelpers.GetRefsCmd(tags: tags, branches: branches, noLocks, AppSettings.RefsSortBy, AppSettings.RefsSortOrder);
+            var cmd = GitCommandHelpers.GetRefsCmd(tags: tags, branches: branches, noLocks, AppSettings.RefsSortBy, AppSettings.RefsSortOrder);
             var refList = _gitExecutable.GetOutput(cmd);
             return ParseRefs(refList);
         }

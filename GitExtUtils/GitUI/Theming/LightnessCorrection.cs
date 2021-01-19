@@ -14,7 +14,13 @@ namespace GitExtUtils.GitUI.Theming
 
         protected override void ExecuteRaw()
         {
+            if (BgraValues is null)
+            {
+                return;
+            }
+
             ImageChanged = true;
+
             for (int i = Rect.Left; i < Rect.Right; i++)
             {
                 for (int j = Rect.Top; j < Rect.Bottom; j++)

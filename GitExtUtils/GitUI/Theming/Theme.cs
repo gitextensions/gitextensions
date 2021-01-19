@@ -18,12 +18,11 @@ namespace GitExtUtils.GitUI.Theming
                 [KnownColor.ButtonHighlight] = KnownColor.ControlLight
             };
 
-        private static Theme _default;
+        private static Theme? _default;
         public IReadOnlyDictionary<AppColor, Color> AppColorValues { get; }
         public IReadOnlyDictionary<KnownColor, Color> SysColorValues { get; }
 
-        public static Theme Default =>
-            _default ?? (_default = CreateDefaultTheme());
+        public static Theme Default => _default ??= CreateDefaultTheme();
 
         public Theme(
             IReadOnlyDictionary<AppColor, Color> appColors,

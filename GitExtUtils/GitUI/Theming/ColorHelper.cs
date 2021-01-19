@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using JetBrains.Annotations;
 
 namespace GitExtUtils.GitUI.Theming
 {
@@ -17,7 +16,6 @@ namespace GitExtUtils.GitUI.Theming
             (KnownColor.MenuHighlight, KnownColor.HighlightText),
         };
 
-        [NotNull]
         public static ThemeSettings ThemeSettings { private get; set; } = ThemeSettings.Default;
 
         public static void SetForeColorForBackColor(this Control control) =>
@@ -245,9 +243,9 @@ namespace GitExtUtils.GitUI.Theming
 
         private static Color TransformHsl(
             this Color c,
-            Func<double, double> h = null,
-            Func<double, double> s = null,
-            Func<double, double> l = null)
+            Func<double, double>? h = null,
+            Func<double, double>? s = null,
+            Func<double, double>? l = null)
         {
             var hsl = new HslColor(c);
             var transformed = new HslColor(

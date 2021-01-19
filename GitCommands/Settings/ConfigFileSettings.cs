@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
-using GitCommands.Utils;
+using GitExtensions;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.Settings

@@ -1,4 +1,8 @@
-﻿namespace System.Diagnostics.CodeAnalysis
+﻿#if NET5_0_OR_GREATER
+#error Remove this file when targeting .NET 5 and update all usages
+#endif
+
+namespace System.Diagnostics.CodeAnalysis
 {
     /// <summary>Specifies that null is allowed as an input even if the corresponding type disallows it.</summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, Inherited = false)]
