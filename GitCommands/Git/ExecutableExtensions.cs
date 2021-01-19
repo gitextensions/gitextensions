@@ -29,7 +29,7 @@ namespace GitCommands
         /// <see cref="GetOutputAsync"/>.
         /// </remarks>
         /// <param name="executable">The executable from which to launch a process.</param>
-        /// <param name="arguments">The arguments to pass to the executable</param>
+        /// <param name="arguments">The arguments to pass to the executable.</param>
         /// <param name="input">Bytes to be written to the process's standard input stream, or <c>null</c> if no input is required.</param>
         /// <param name="outputEncoding">The text encoding to use when decoding bytes read from the process's standard output and standard error streams, or <c>null</c> if the default encoding is to be used.</param>
         /// <param name="cache">A <see cref="CommandCache"/> to use if command results may be cached, otherwise <c>null</c>.</param>
@@ -55,7 +55,7 @@ namespace GitCommands
         /// This method uses <see cref="GetOutput"/> to get concatenated outputs of multiple commands in batch.
         /// </remarks>
         /// <param name="executable">The executable from which to launch processes.</param>
-        /// <param name="batchArguments">The array of batch arguments to pass to the executable</param>
+        /// <param name="batchArguments">The array of batch arguments to pass to the executable.</param>
         /// <param name="input">Bytes to be written to each process's standard input stream, or <c>null</c> if no input is required.</param>
         /// <param name="outputEncoding">The text encoding to use when decoding bytes read from each process's standard output and standard error streams, or <c>null</c> if the default encoding is to be used.</param>
         /// <param name="cache">A <see cref="CommandCache"/> to use if command results may be cached, otherwise <c>null</c>.</param>
@@ -83,7 +83,7 @@ namespace GitCommands
         /// Launches a process for the executable and returns its output.
         /// </summary>
         /// <param name="executable">The executable from which to launch a process.</param>
-        /// <param name="arguments">The arguments to pass to the executable</param>
+        /// <param name="arguments">The arguments to pass to the executable.</param>
         /// <param name="input">Bytes to be written to the process's standard input stream, or <c>null</c> if no input is required.</param>
         /// <param name="outputEncoding">The text encoding to use when decoding bytes read from the process's standard output and standard error streams, or <c>null</c> if the default encoding is to be used.</param>
         /// <param name="cache">A <see cref="CommandCache"/> to use if command results may be cached, otherwise <c>null</c>.</param>
@@ -154,7 +154,7 @@ namespace GitCommands
         /// <see cref="RunCommandAsync"/>.
         /// </remarks>
         /// <param name="executable">The executable from which to launch a process.</param>
-        /// <param name="arguments">The arguments to pass to the executable</param>
+        /// <param name="arguments">The arguments to pass to the executable.</param>
         /// <param name="input">Bytes to be written to the process's standard input stream, or <c>null</c> if no input is required.</param>
         /// <param name="createWindow">A flag indicating whether a console window should be created and bound to the process.</param>
         /// <returns><c>true</c> if the process's exit code was zero, otherwise <c>false</c>.</returns>
@@ -179,7 +179,7 @@ namespace GitCommands
         /// <see href="https://docs.microsoft.com/en-us/windows/desktop/api/processthreadsapi/nf-processthreadsapi-createprocessa"/>.
         /// </remarks>
         /// <param name="executable">The executable from which to launch processes.</param>
-        /// <param name="batchArguments">The array of batch arguments to pass to the executable</param>
+        /// <param name="batchArguments">The array of batch arguments to pass to the executable.</param>
         /// <param name="input">Bytes to be written to each process's standard input stream, or <c>null</c> if no input is required.</param>
         /// <param name="createWindow">A flag indicating whether a console window should be created and bound to each process.</param>
         /// <returns><c>true</c> if all process exit codes were zero, otherwise <c>false</c>.</returns>
@@ -209,7 +209,7 @@ namespace GitCommands
         /// Launches a process for the executable and returns <c>true</c> if its exit code is zero.
         /// </summary>
         /// <param name="executable">The executable from which to launch a process.</param>
-        /// <param name="arguments">The arguments to pass to the executable</param>
+        /// <param name="arguments">The arguments to pass to the executable.</param>
         /// <param name="input">Bytes to be written to the process's standard input stream, or <c>null</c> if no input is required.</param>
         /// <param name="createWindow">A flag indicating whether a console window should be created and bound to the process.</param>
         /// <returns>A task that yields <c>true</c> if the process's exit code was zero, otherwise <c>false</c>.</returns>
@@ -233,7 +233,7 @@ namespace GitCommands
         /// Launches a process for the executable and returns output lines as they become available.
         /// </summary>
         /// <param name="executable">The executable from which to launch a process.</param>
-        /// <param name="arguments">The arguments to pass to the executable</param>
+        /// <param name="arguments">The arguments to pass to the executable.</param>
         /// <param name="input">Bytes to be written to the process's standard input stream, or <c>null</c> if no input is required.</param>
         /// <param name="outputEncoding">The text encoding to use when decoding bytes read from the process's standard output and standard error streams, or <c>null</c> if the default encoding is to be used.</param>
         /// <param name="stripAnsiEscapeCodes">A flag indicating whether ANSI escape codes should be removed from output strings.</param>
@@ -289,7 +289,7 @@ namespace GitCommands
         /// Launches a process for the executable and returns output lines as they become available.
         /// </summary>
         /// <param name="executable">The executable from which to launch a process.</param>
-        /// <param name="arguments">The arguments to pass to the executable</param>
+        /// <param name="arguments">The arguments to pass to the executable.</param>
         /// <param name="writeInput">A callback that writes bytes to the process's standard input stream, or <c>null</c> if no input is required.</param>
         /// <param name="outputEncoding">The text encoding to use when decoding bytes read from the process's standard output and standard error streams, or <c>null</c> if the default encoding is to be used.</param>
         /// <param name="stripAnsiEscapeCodes">A flag indicating whether ANSI escape codes should be removed from output strings.</param>
@@ -315,7 +315,7 @@ namespace GitCommands
         /// <see cref="ExecuteAsync"/>.
         /// </remarks>
         /// <param name="executable">The executable from which to launch a process.</param>
-        /// <param name="arguments">The arguments to pass to the executable</param>
+        /// <param name="arguments">The arguments to pass to the executable.</param>
         /// <param name="writeInput">A callback that writes bytes to the process's standard input stream, or <c>null</c> if no input is required.</param>
         /// <param name="outputEncoding">The text encoding to use when decoding bytes read from the process's standard output and standard error streams, or <c>null</c> if the default encoding is to be used.</param>
         /// <param name="stripAnsiEscapeCodes">A flag indicating whether ANSI escape codes should be removed from output strings.</param>
@@ -336,7 +336,7 @@ namespace GitCommands
         /// Launches a process for the executable and returns an object detailing exit code, standard output and standard error values.
         /// </summary>
         /// <param name="executable">The executable from which to launch a process.</param>
-        /// <param name="arguments">The arguments to pass to the executable</param>
+        /// <param name="arguments">The arguments to pass to the executable.</param>
         /// <param name="writeInput">A callback that writes bytes to the process's standard input stream, or <c>null</c> if no input is required.</param>
         /// <param name="outputEncoding">The text encoding to use when decoding bytes read from the process's standard output and standard error streams, or <c>null</c> if the default encoding is to be used.</param>
         /// <param name="stripAnsiEscapeCodes">A flag indicating whether ANSI escape codes should be removed from output strings.</param>

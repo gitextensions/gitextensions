@@ -50,7 +50,7 @@ namespace GitExtUtils
         /// </summary>
         /// <param name="command">The git command this builder is compiling arguments for.</param>
         /// <param name="commandConfiguration">Optional source for default command configuration items. Pass <c>null</c> to use the Git Extensions defaults.</param>
-        /// <param name="gitOptions">Optional arguments that are for the git command.  EX: git --no-optional-locks status </param>
+        /// <param name="gitOptions">Optional arguments that are for the git command.  EX: git --no-optional-locks status.</param>
         /// <exception cref="ArgumentNullException"><paramref name="command"/> is <c>null</c>.</exception>
         /// <exception cref="ArgumentException"><paramref name="command"/> is an invalid string.</exception>
         public GitArgumentBuilder([NotNull] string command, [CanBeNull] GitCommandConfiguration commandConfiguration = null, [CanBeNull] ArgumentString gitOptions = default)

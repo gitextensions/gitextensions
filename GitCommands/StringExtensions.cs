@@ -171,7 +171,7 @@ namespace System
         }
 
         /// <summary>
-        /// Quotes this string with the specified <paramref name="q"/>
+        /// Quotes this string with the specified <paramref name="q"/>.
         /// </summary>
         [Pure]
         public static string Quote(this string? s, string q = "\"")
@@ -185,7 +185,7 @@ namespace System
         }
 
         /// <summary>
-        /// Quotes this string if it is not null and not empty
+        /// Quotes this string if it is not null and not empty.
         /// </summary>
         [Pure]
         [return: NotNullIfNotNull("s")]
@@ -195,7 +195,7 @@ namespace System
         }
 
         /// <summary>
-        /// Adds parentheses if string is not null and not empty
+        /// Adds parentheses if string is not null and not empty.
         /// </summary>
         [Pure]
         [return: NotNullIfNotNull("s")]
@@ -207,7 +207,7 @@ namespace System
         /// <summary>
         /// Determines whether the beginning of this instance matches any of the specified strings.
         /// </summary>
-        /// <param name="starts">array of strings to compare</param>
+        /// <param name="starts">array of strings to compare.</param>
         /// <returns>true if any starts element matches the beginning of this string; otherwise, false.</returns>
         [Pure]
         public static bool StartsWithAny(this string? value, IEnumerable<string> starts)
@@ -278,7 +278,7 @@ namespace System
         /// Returns a value indicating whether the <paramref name="other"/> occurs within <paramref name="str"/>.
         /// </summary>
         /// <param name="other">The string to seek. </param>
-        /// <param name="stringComparison">The Comparison type</param>
+        /// <param name="stringComparison">The Comparison type.</param>
         /// <returns>
         /// true if the <paramref name="other"/> parameter occurs within <paramref name="str"/>,
         /// or if <paramref name="other"/> is the empty string (""); otherwise, false.

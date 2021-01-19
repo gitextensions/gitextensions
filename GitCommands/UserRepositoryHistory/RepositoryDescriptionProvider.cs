@@ -14,7 +14,7 @@ namespace GitCommands.UserRepositoryHistory
         /// otherwise the last part of path is returned.
         /// </summary>
         /// <param name="repositoryDir">Path to repository.</param>
-        /// <returns>Short name for repository</returns>
+        /// <returns>Short name for repository.</returns>
         string Get(string repositoryDir);
     }
 
@@ -35,7 +35,7 @@ namespace GitCommands.UserRepositoryHistory
         /// otherwise the last part of path is returned.
         /// </summary>
         /// <param name="repositoryDir">Path to repository.</param>
-        /// <returns>Short name for repository</returns>
+        /// <returns>Short name for repository.</returns>
         public string Get(string repositoryDir)
         {
             var dirInfo = new DirectoryInfo(repositoryDir);

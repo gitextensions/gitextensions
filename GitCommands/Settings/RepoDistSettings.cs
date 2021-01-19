@@ -5,8 +5,8 @@ using GitUIPluginInterfaces;
 namespace GitCommands.Settings
 {
     /// <summary>
-    /// Settings that can be distributed with repository
-    /// they can be overridden for a particular repository
+    /// Settings that can be distributed with repository.
+    /// They can be overridden for a particular repository.
     /// </summary>
     public class RepoDistSettings : SettingsContainer<RepoDistSettings, GitExtSettingsCache>
     {

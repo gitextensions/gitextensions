@@ -60,14 +60,14 @@ namespace GitExtUtils.GitUI.Theming
 
         /// <summary>
         /// Get a color to be used instead of SystemColors.GrayText
-        /// when background is SystemColors.Highlight or SystemColors.MenuHighlight
+        /// when background is SystemColors.Highlight or SystemColors.MenuHighlight.
         /// </summary>
         /// <remarks>
         /// Consider a transformation of color range [SystemColors.ControlText, SystemColors.Control] to
         /// [SystemColors.HighlightText, SystemColors.Highlight].
         /// What result would such transformation produce given SystemColors.GrayText as input?
-        /// First we calculate transformed GrayText color relative to InvariantTheme
-        /// Then we apply transformation from InvariantTheme to current theme by calling AdaptTextColor
+        /// First we calculate transformed GrayText color relative to InvariantTheme.
+        /// Then we apply transformation from InvariantTheme to current theme by calling AdaptTextColor.
         /// </remarks>
         public static Color GetHighlightGrayTextColor(
             KnownColor backgroundColorName,
@@ -94,7 +94,7 @@ namespace GitExtUtils.GitUI.Theming
 
         /// <summary>
         /// Get a color to be used instead of SystemColors.GrayText which is more ore less gray than
-        /// the usual SystemColors.GrayText
+        /// the usual SystemColors.GrayText.
         /// </summary>
         public static Color GetGrayTextColor(KnownColor textColorName, float degreeOfGrayness = 1f)
         {
@@ -137,7 +137,7 @@ namespace GitExtUtils.GitUI.Theming
         /// <summary>
         /// Roughly speaking makes a linear transformation of input orig 0 &lt; orig &lt; 1
         /// The transformation is specified by how it affected a pair of values
-        /// (exampleOrig, oppositeOrig) to (example, opposite)
+        /// (exampleOrig, oppositeOrig) to (example, opposite).
         /// </summary>
         private static double Transform(double orig,
             double exampleOrig, double oppositeOrig,

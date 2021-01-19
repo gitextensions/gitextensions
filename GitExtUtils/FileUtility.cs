@@ -8,8 +8,8 @@ namespace GitUI
         /// <summary>
         /// Writes all text to a file. Works around issues with hidden files encountered by File.WriteAllText.
         /// </summary>
-        /// <param name="fileName">Destination file</param>
-        /// <param name="contents">Text to write as file contents</param>
+        /// <param name="fileName">Destination file.</param>
+        /// <param name="contents">Text to write as file contents.</param>
         public static void SafeWriteAllText(string fileName, string contents, Encoding encoding)
         {
             using (var fs = new FileStream(fileName, FileMode.Open))

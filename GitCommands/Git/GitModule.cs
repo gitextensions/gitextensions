@@ -281,7 +281,7 @@ namespace GitCommands
         public Encoding CommitEncoding => EffectiveConfigFile.CommitEncoding ?? new UTF8Encoding(false);
 
         /// <summary>
-        /// Encoding for commit header (message, notes, author, committer, emails)
+        /// Encoding for commit header (message, notes, author, committer, emails).
         /// </summary>
         public Encoding LogOutputEncoding => EffectiveConfigFile.LogOutputEncoding ?? CommitEncoding;
 
@@ -313,11 +313,11 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Asks git to resolve the given relativePath
-        /// git special folders are located in different directories depending on the kind of repo: submodule, worktree, main
-        /// See https://git-scm.com/docs/git-rev-parse#Documentation/git-rev-parse.txt---git-pathltpathgt
+        /// Asks git to resolve the given relativePath.
+        /// git special folders are located in different directories depending on the kind of repo: submodule, worktree, main.
+        /// See https://git-scm.com/docs/git-rev-parse#Documentation/git-rev-parse.txt---git-pathltpathgt.
         /// </summary>
-        /// <param name="relativePath">A path relative to the .git directory</param>
+        /// <param name="relativePath">A path relative to the .git directory.</param>
         public string ResolveGitInternalPath(string relativePath)
         {
             var args = new GitArgumentBuilder("rev-parse")
@@ -341,8 +341,8 @@ namespace GitCommands
         private readonly object _gitCommonLock = new object();
 
         /// <summary>
-        /// Returns git common directory
-        /// https://git-scm.com/docs/git-rev-parse#Documentation/git-rev-parse.txt---git-common-dir
+        /// Returns git common directory.
+        /// https://git-scm.com/docs/git-rev-parse#Documentation/git-rev-parse.txt---git-common-dir.
         /// </summary>
         public string GitCommonDirectory
         {
@@ -1800,11 +1800,11 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Batch unstage files using <see cref="ExecutableExtensions.RunBatchCommand(IExecutable, ICollection{BatchArgumentItem}, Action{BatchProgressEventArgs}, byte[], bool)"/>
+        /// Batch unstage files using <see cref="ExecutableExtensions.RunBatchCommand(IExecutable, ICollection{BatchArgumentItem}, Action{BatchProgressEventArgs}, byte[], bool)"/>.
         /// </summary>
-        /// <param name="selectedItems">Selected file items</param>
-        /// <param name="action">Progress update callback</param>
-        /// <returns><see langword="true" /> if changes should be rescanned; otherwise <see langword="false" /></returns>.
+        /// <param name="selectedItems">Selected file items.</param>
+        /// <param name="action">Progress update callback.</param>
+        /// <returns><see langword="true" /> if changes should be rescanned; otherwise <see langword="false" />.</returns>.
         public bool BatchUnstageFiles(IEnumerable<GitItemStatus> selectedItems, Action<BatchProgressEventArgs>? action = null)
         {
             var files = new List<GitItemStatus>();
@@ -2431,11 +2431,11 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// If possible, find if files in a diff are index or worktree
+        /// If possible, find if files in a diff are index or worktree.
         /// </summary>
-        /// <param name="firstId">from revision string</param>
-        /// <param name="secondId">to revision</param>
-        /// <param name="parentToSecond">The parent for the second revision</param>
+        /// <param name="firstId">from revision string.</param>
+        /// <param name="secondId">to revision.</param>
+        /// <param name="parentToSecond">The parent for the second revision.</param>
         /// <remarks>Git revisions are required to determine if <see cref="StagedStatus"/> allows stage/unstage.</remarks>
         public static StagedStatus GetStagedStatus(ObjectId? firstId, ObjectId? secondId, ObjectId? parentToSecond)
         {
@@ -2709,11 +2709,11 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Parse the output from git-diff --name-status
+        /// Parse the output from git-diff --name-status.
         /// </summary>
-        /// <param name="statusString">output from the git command</param>
+        /// <param name="statusString">output from the git command.</param>
         /// <param name="staged">required to determine if <see cref="StagedStatus"/> allows stage/unstage.</param>
-        /// <returns>list with the parsed GitItemStatus</returns>
+        /// <returns>list with the parsed GitItemStatus.</returns>
         /// <seealso href="https://git-scm.com/docs/git-diff"/>
         private List<GitItemStatus> GetDiffChangedFilesFromString(string statusString, StagedStatus staged)
         {
@@ -2864,10 +2864,10 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Gets the current branch
+        /// Gets the current branch.
         /// </summary>
-        /// <param name="setDefaultIfEmpty">Return "(no branch)" if detached</param>
-        /// <returns>Current branchname</returns>
+        /// <param name="setDefaultIfEmpty">Return "(no branch)" if detached.</param>
+        /// <returns>Current branchname.</returns>
         public string GetSelectedBranch(bool setDefaultIfEmpty)
         {
             string head = GetSelectedBranchFast(WorkingDir, setDefaultIfEmpty);
@@ -3052,11 +3052,11 @@ namespace GitCommands
         /// <summary>
         /// Gets branches which contain the given commit.
         /// If both local and remote branches are requested, remote branches are prefixed with "remotes/"
-        /// (as returned by git branch -a)
+        /// (as returned by git branch -a).
         /// </summary>
         /// <param name="objectId">The sha1.</param>
-        /// <param name="getLocal">Pass true to include local branches</param>
-        /// <param name="getRemote">Pass true to include remote branches</param>
+        /// <param name="getLocal">Pass true to include local branches.</param>
+        /// <param name="getRemote">Pass true to include remote branches.</param>
         public IReadOnlyList<string> GetAllBranchesWhichContainGivenCommit(ObjectId objectId, bool getLocal, bool getRemote)
         {
             if (!getLocal && !getRemote)
@@ -3167,9 +3167,9 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Returns list of file names which would be ignored
+        /// Returns list of file names which would be ignored.
         /// </summary>
-        /// <param name="ignorePatterns">Patterns to ignore (.gitignore syntax)</param>
+        /// <param name="ignorePatterns">Patterns to ignore (.gitignore syntax).</param>
         public IReadOnlyList<string> GetIgnoredFiles(IEnumerable<string> ignorePatterns)
         {
             var notEmptyPatterns = ignorePatterns
@@ -3590,10 +3590,10 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Get a list of diff/merge tools known by Git
+        /// Get a list of diff/merge tools known by Git.
         /// </summary>
-        /// <param name="isDiff">diff or merge</param>
-        /// <returns>the list</returns>
+        /// <param name="isDiff">diff or merge.</param>
+        /// <returns>the list.</returns>
         public async Task<IEnumerable<string>> GetCustomDiffMergeTools(bool isDiff)
         {
             // Note that --gui has no effect here
@@ -3603,10 +3603,10 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Parse the output from 'git difftool --tool-help'
+        /// Parse the output from 'git difftool --tool-help'.
         /// </summary>
-        /// <param name="output">The output string</param>
-        /// <returns>list with tool names</returns>
+        /// <param name="output">The output string.</param>
+        /// <returns>list with tool names.</returns>
         private static IEnumerable<string> ParseCustomDiffMergeTool(string output)
         {
             var tools = new List<string>();
@@ -3673,11 +3673,11 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Compare two Git commitish; blob or rev:path
+        /// Compare two Git commitish; blob or rev:path.
         /// </summary>
-        /// <param name="firstGitCommit">commitish</param>
-        /// <param name="secondGitCommit">commitish</param>
-        /// <returns>empty string</returns>
+        /// <param name="firstGitCommit">commitish.</param>
+        /// <param name="secondGitCommit">commitish.</param>
+        /// <returns>empty string, or null if either input is null.</returns>
         public string? OpenFilesWithDifftool(string? firstGitCommit, string? secondGitCommit)
         {
             if (Strings.IsNullOrWhiteSpace(firstGitCommit) || Strings.IsNullOrWhiteSpace(secondGitCommit))
@@ -3999,7 +3999,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Re-encodes string from GitCommandHelpers.LosslessEncoding to toEncoding
+        /// Re-encodes string from GitCommandHelpers.LosslessEncoding to toEncoding.
         /// </summary>
         [return: NotNullIfNotNull("s")]
         public static string? ReEncodeStringFromLossless(string? s, Encoding? toEncoding)
@@ -4069,9 +4069,9 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// header part of show result is encoded in logoutputencoding (including re-encoded commit message)
-        /// diff part is raw data in file's original encoding
-        /// s should be encoded in LosslessEncoding
+        /// header part of show result is encoded in logoutputencoding (including re-encoded commit message).
+        /// diff part is raw data in file's original encoding.
+        /// s should be encoded in LosslessEncoding.
         /// </summary>
         [return: NotNullIfNotNull("s")]
         public string? ReEncodeShowString(string? s)

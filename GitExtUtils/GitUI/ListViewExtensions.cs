@@ -43,7 +43,7 @@ namespace GitUI
 
         /// <summary>
         /// <para>For practical purposes: The last <see cref="ListViewItem"/> added to selection.</para>
-        /// <para>Actually: Focused item if selected, otherwise last item in <see cref="SelectedItems"/> list</para>
+        /// <para>Actually: Focused item if selected, otherwise last item in <see cref="SelectedItems"/> list.</para>
         /// </summary>
         public static ListViewItem LastSelectedItem(this ListView listView)
         {
@@ -62,7 +62,7 @@ namespace GitUI
 
         /// <summary>
         /// A workaround for <see cref="ListViewItem.Bounds"/> which throws <see cref="ArgumentException"/>
-        /// on item from a collapsed <see cref="ListViewGroup"/>
+        /// on item from a collapsed <see cref="ListViewGroup"/>.
         /// </summary>
         public static Rectangle BoundsOrEmpty(this ListViewItem item) =>
             (Rectangle)_getItemRectOrEmptyMethod.Value.Invoke(item.ListView, new object[] { item.Index });
