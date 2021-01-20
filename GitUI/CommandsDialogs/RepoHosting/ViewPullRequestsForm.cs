@@ -125,7 +125,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         SetPullRequestsData(pullRequests);
                         _selectHostedRepoCB.Enabled = true;
                     }
-                    catch (Exception ex) when (!(ex is OperationCanceledException))
+                    catch (Exception ex) when (ex is not OperationCanceledException)
                     {
                         MessageBox.Show(this, _strFailedToFetchPullData.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
@@ -307,7 +307,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                         LoadDiscussion(discussion);
                     }
-                    catch (Exception ex) when (!(ex is OperationCanceledException))
+                    catch (Exception ex) when (ex is not OperationCanceledException)
                     {
                         MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         LoadDiscussion(null);
@@ -346,7 +346,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                         SplitAndLoadDiff(content, _currentPullRequestInfo.BaseSha, _currentPullRequestInfo.HeadSha);
                     }
-                    catch (Exception ex) when (!(ex is OperationCanceledException))
+                    catch (Exception ex) when (ex is not OperationCanceledException)
                     {
                         MessageBox.Show(this, _strFailedToLoadDiffData.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }

@@ -851,7 +851,7 @@ namespace GitStatistics.PieChart
         /// </returns>
         protected SizeF GetSliceDisplacement(float angle, float displacementFactor)
         {
-            Debug.Assert(displacementFactor > 0F && displacementFactor <= 1F, "displacementFactor > 0F && displacementFactor <= 1F");
+            Debug.Assert(IsDisplacementValid(displacementFactor), "displacementFactor is (>= 0F and <= 1F)");
             if (displacementFactor == 0F)
             {
                 return SizeF.Empty;
@@ -995,7 +995,7 @@ namespace GitStatistics.PieChart
         /// </returns>
         private static bool IsDisplacementValid(float value)
         {
-            return value >= 0F && value <= 1F;
+            return value is (>= 0F and <= 1F);
         }
     }
 }

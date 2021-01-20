@@ -10,9 +10,11 @@ namespace System
         public static unsafe int SetWindowTheme(IntPtr hWnd, string subAppName, string subIdList)
         {
             fixed (char* pszSubAppName = subAppName)
-            fixed (char* pszSubIdList = subIdList)
             {
-                return SetWindowTheme(hWnd, pszSubAppName, pszSubIdList);
+                fixed (char* pszSubIdList = subIdList)
+                {
+                    return SetWindowTheme(hWnd, pszSubAppName, pszSubIdList);
+                }
             }
         }
     }

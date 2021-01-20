@@ -260,7 +260,7 @@ namespace AppVeyorIntegration
                     var version = b["version"].ToObject<string>();
                     var status = ParseBuildStatus(b["status"].ToObject<string>());
                     long? duration = null;
-                    if (status == BuildInfo.BuildStatus.Success || status == BuildInfo.BuildStatus.Failure)
+                    if (status is (BuildInfo.BuildStatus.Success or BuildInfo.BuildStatus.Failure))
                     {
                         duration = GetBuildDuration(b);
                     }

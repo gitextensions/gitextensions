@@ -37,7 +37,7 @@ namespace GitUI.Script
             {
                 return RunScriptInternal(owner, module, scriptKey, uiCommands, revisionGrid);
             }
-            catch (ExternalOperationException ex) when (!(ex is UserExternalOperationException))
+            catch (ExternalOperationException ex) when (ex is not UserExternalOperationException)
             {
                 ThreadHelper.AssertOnUIThread();
                 throw new UserExternalOperationException($"{Strings.ScriptErrorFailedToExecute}: '{scriptKey}'", ex);

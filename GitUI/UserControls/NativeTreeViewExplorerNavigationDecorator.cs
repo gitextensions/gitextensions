@@ -64,7 +64,7 @@ namespace GitUI.UserControls
         {
             // If arrow key was used to navigate to this node, don't send OnSelected
             int delta = (int)_getCurrentTime().Subtract(_lastKeyNavigateTime).TotalMilliseconds;
-            if (delta >= 0 && delta < 500)
+            if (delta is (>= 0 and < 500))
             {
                 return;
             }

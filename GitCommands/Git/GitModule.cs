@@ -736,7 +736,7 @@ namespace GitCommands
                 string hash = findSecondWhitespace >= 0 ? fileStage.Substring(0, findSecondWhitespace).Trim() : "";
                 fileStage = findSecondWhitespace >= 0 ? fileStage.Substring(findSecondWhitespace).Trim() : "";
 
-                if (fileStage.Length > 2 && int.TryParse(fileStage[0].ToString(), out var stage) && stage >= 1 && stage <= 3)
+                if (fileStage.Length > 2 && int.TryParse(fileStage[0].ToString(), out var stage) && stage is (>= 1 and <= 3))
                 {
                     var itemName = fileStage.Substring(2);
                     if (prevItemName != itemName && prevItemName is not null)

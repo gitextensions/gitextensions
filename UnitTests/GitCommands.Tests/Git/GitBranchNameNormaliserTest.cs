@@ -126,11 +126,18 @@ namespace GitCommandsTests.Git
             _gitBranchNameNormaliser.Rule08(input, _gitBranchNameOptions).Should().Be(expected);
         }
 
-        // Branch name cannot contain a '\'.
-        [TestCase(@"test\foo\\bar\", "test_foo_bar_")]
+        // Branch name cannot be the single character '@'.
+        [TestCase(@"@", "_")]
         public void Normalise_rule09(string input, string expected)
         {
             _gitBranchNameNormaliser.Rule09(input, _gitBranchNameOptions).Should().Be(expected);
+        }
+
+        // Branch name cannot contain a '\'.
+        [TestCase(@"test\foo\\bar\", "test_foo_bar_")]
+        public void Normalise_rule10(string input, string expected)
+        {
+            _gitBranchNameNormaliser.Rule10(input, _gitBranchNameOptions).Should().Be(expected);
         }
     }
 }

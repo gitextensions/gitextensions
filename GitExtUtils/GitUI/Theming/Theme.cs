@@ -129,7 +129,7 @@ namespace GitExtUtils.GitUI.Theming
         /// create <see cref="Color"/> instance.
         /// </summary>
         private static bool IsSystemColor(KnownColor name) =>
-            name < KnownColor.Transparent || name > KnownColor.YellowGreen;
+            name is (< KnownColor.Transparent or > KnownColor.YellowGreen);
 
         internal static class TestAccessor
         {
