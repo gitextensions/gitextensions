@@ -152,7 +152,15 @@ namespace GitCommands.Submodules
                 cancelToken.ThrowIfCancellationRequested();
             }
 
+            _submoduleInfoResult.CurrentSubmoduleStatus = gitStatus;
+
             TimeSpan remaining = _previousSubmoduleUpdateTime - DateTime.Now.AddSeconds(-MinRefreshInterval);
+            const int extraStatusRefreshLimit = 1;
+            if (!forceUpdate && remaining.TotalSeconds > extraStatusRefreshLimit)
+            {
+                OnStatusUpdated(_submoduleInfoResult, cancelToken);
+            }
+
             if (!forceUpdate && remaining > TimeSpan.Zero)
             {
                 await Task.Delay(remaining, cancelToken);
@@ -183,7 +191,7 @@ namespace GitCommands.Submodules
         /// <param name="noBranchText">text with no branches.</param>
         private SubmoduleInfoResult GetSuperProjectRepositorySubmodulesStructure(GitModule currentModule, string noBranchText)
         {
-            var result = new SubmoduleInfoResult { Module = currentModule };
+            var result = new SubmoduleInfoResult { Module = currentModule, CurrentSubmoduleStatus = null };
 
             IGitModule topProject = currentModule.GetTopModule();
             bool isCurrentTopProject = currentModule.SuperprojectModule is null;
@@ -325,19 +333,7 @@ namespace GitCommands.Submodules
 
             foreach (var status in changedSubmodules)
             {
-                if (status.IsDirty && !status.IsChanged)
-                {
-                    // Submodule is only dirty, no further Git command required for this submodule
-                    var path = module.GetSubmoduleFullPath(status.Name);
-                    SetModuleAsDirty(path, true);
-
-                    var subModule = new GitModule(path);
-                    await GetSubmoduleDetailedStatusAsync(subModule, cancelToken);
-                }
-                else
-                {
-                    await GetSubmoduleDetailedStatusAsync(module, status.Name, cancelToken);
-                }
+                await GetSubmoduleDetailedStatusAsync(module, status.Name, cancelToken);
             }
         }
 
@@ -345,21 +341,21 @@ namespace GitCommands.Submodules
         /// Set the module (normally top module) as dirty (if changes in module or any submodule)
         /// If status is already set, use that (so no change from changed commits to dirty).
         /// </summary>
-        /// <param name="path">path to the module.</param>
-        private void SetModuleAsDirty(string path, bool force = false)
+        /// <param name="module">the submodule</param>
+        private void SetModuleAsDirty(GitModule module)
         {
+            string path = module.WorkingDir;
             if (!_submoduleInfos.ContainsKey(path) || _submoduleInfos[path] is null)
             {
                 return;
             }
 
-            if (force || _submoduleInfos[path].Detailed is null)
+            if (_submoduleInfos[path].Detailed is null)
             {
                 _submoduleInfos[path].Detailed = new DetailedSubmoduleInfo
                 {
-                    Status = SubmoduleStatus.Unknown,
                     IsDirty = true,
-                    AddedAndRemovedText = ""
+                    RawStatus = null
                 };
             }
             else
@@ -376,7 +372,7 @@ namespace GitCommands.Submodules
         {
             while (module is not null)
             {
-                SetModuleAsDirty(module.WorkingDir);
+                SetModuleAsDirty(module);
 
                 module = module.SuperprojectModule;
             }
@@ -427,20 +423,15 @@ namespace GitCommands.Submodules
             cancelToken.ThrowIfCancellationRequested();
 
             var submoduleStatus = await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(superModule, submoduleName, noLocks: true)
-            .ConfigureAwait(false);
-            if (submoduleStatus is not null && submoduleStatus.Commit != submoduleStatus.OldCommit)
-            {
-                submoduleStatus.CheckSubmoduleStatus(submoduleStatus.GetSubmodule(superModule));
-            }
+                .ConfigureAwait(false);
 
-            // If no changes, set info.Detailed set to null
+            // If no changes, set info.Detailed to null
             info.Detailed = submoduleStatus is null ?
                 null :
                 new DetailedSubmoduleInfo
                 {
-                    Status = submoduleStatus.Status,
                     IsDirty = submoduleStatus.IsDirty,
-                    AddedAndRemovedText = submoduleStatus.AddedAndRemovedString()
+                    RawStatus = submoduleStatus
                 };
 
             // Recursively update submodules

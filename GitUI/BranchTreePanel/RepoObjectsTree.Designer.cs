@@ -105,8 +105,12 @@ namespace GitUI.BranchTreePanel
             this.menuSubmodule = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnubtnManageSubmodules = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnOpenSubmodule = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnOpenGESubmodule = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnUpdateSubmodule = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnSynchronizeSubmodules = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnResetSubmodule = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnStashSubmodule = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnCommitSubmodule = new System.Windows.Forms.ToolStripMenuItem();
             this.menuAllSubmodules = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuMain.SuspendLayout();
             this.menuBranch.SuspendLayout();
@@ -550,8 +554,12 @@ namespace GitUI.BranchTreePanel
             this.menuSubmodule.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnubtnManageSubmodules,
             this.mnubtnOpenSubmodule,
+            this.mnubtnOpenGESubmodule,
             this.mnubtnUpdateSubmodule,
-            this.mnubtnSynchronizeSubmodules});
+            this.mnubtnSynchronizeSubmodules,
+            this.mnubtnResetSubmodule,
+            this.mnubtnStashSubmodule,
+            this.mnubtnCommitSubmodule});
             this.menuSubmodule.Name = "contextmenuSubmodule";
             this.menuSubmodule.Size = new System.Drawing.Size(139, 92);
             this.menuSubmodule.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
@@ -572,6 +580,14 @@ namespace GitUI.BranchTreePanel
             this.mnubtnOpenSubmodule.Text = "&Open";
             this.mnubtnOpenSubmodule.ToolTipText = "Open selected submodule";
             // 
+            // mnubtnOpenGESubmodule
+            // 
+            this.mnubtnOpenGESubmodule.Image = global::GitUI.Properties.Images.GitExtensionsLogo16;
+            this.mnubtnOpenGESubmodule.Name = "mnubtnOpenGESubmodule";
+            this.mnubtnOpenGESubmodule.Size = new System.Drawing.Size(138, 22);
+            this.mnubtnOpenGESubmodule.Text = "O&pen";
+            this.mnubtnOpenGESubmodule.ToolTipText = "Open selected submodule in a new instance";
+            // 
             // mnubtnUpdateSubmodule
             // 
             this.mnubtnUpdateSubmodule.Image = global::GitUI.Properties.Images.SubmodulesUpdate;
@@ -587,6 +603,30 @@ namespace GitUI.BranchTreePanel
             this.mnubtnSynchronizeSubmodules.Size = new System.Drawing.Size(138, 22);
             this.mnubtnSynchronizeSubmodules.Text = "Synchronize";
             this.mnubtnSynchronizeSubmodules.ToolTipText = "Synchronize selected submodule recursively";
+            // 
+            // mnubtnResetSubmodule
+            // 
+            this.mnubtnResetSubmodule.Image = global::GitUI.Properties.Images.ResetWorkingDirChanges;
+            this.mnubtnResetSubmodule.Name = "mnubtnResetSubmodule";
+            this.mnubtnResetSubmodule.Size = new System.Drawing.Size(138, 22);
+            this.mnubtnResetSubmodule.Text = "&Reset";
+            this.mnubtnResetSubmodule.ToolTipText = "Reset selected submodule";
+            // 
+            // mnubtnStashSubmodule
+            // 
+            this.mnubtnStashSubmodule.Image = global::GitUI.Properties.Images.Stash;
+            this.mnubtnStashSubmodule.Name = "mnubtnStashSubmodule";
+            this.mnubtnStashSubmodule.Size = new System.Drawing.Size(138, 22);
+            this.mnubtnStashSubmodule.Text = "&Stash";
+            this.mnubtnStashSubmodule.ToolTipText = "Stash changes in selected submodule";
+            // 
+            // mnubtnCommitSubmodule
+            // 
+            this.mnubtnCommitSubmodule.Image = global::GitUI.Properties.Images.RepoStateDirtySubmodules;
+            this.mnubtnCommitSubmodule.Name = "mnubtnCommitSubmodule";
+            this.mnubtnCommitSubmodule.Size = new System.Drawing.Size(138, 22);
+            this.mnubtnCommitSubmodule.Text = "&Commit";
+            this.mnubtnCommitSubmodule.ToolTipText = "Commit changes in selected submodule";
             // 
             // menuAllSubmodules
             // 
@@ -663,6 +703,10 @@ namespace GitUI.BranchTreePanel
         private ToolStripMenuItem mnubtnSynchronizeSubmodules;
         private ToolStripMenuItem mnubtnUpdateSubmodule;
         private ToolStripMenuItem mnubtnOpenSubmodule;
+        private ToolStripMenuItem mnubtnOpenGESubmodule;
+        private ToolStripMenuItem mnubtnResetSubmodule;
+        private ToolStripMenuItem mnubtnStashSubmodule;
+        private ToolStripMenuItem mnubtnCommitSubmodule;
         private ToolStripMenuItem runScriptToolStripMenuItem;
         private ToolStripMenuItem mnubtnMoveUp;
         private ToolStripMenuItem mnubtnMoveDown;

@@ -26,5 +26,10 @@ namespace GitCommands.Submodules
 
         // Name of current module, if it is a submodule. If current module is TopProject, will be null.
         public string? CurrentSubmoduleName { get; internal set; }
+
+        /// <summary>
+        /// GitItemStatus for the current submodule
+        /// </summary>
+        public IReadOnlyList<GitItemStatus>? CurrentSubmoduleStatus { get; internal set; }
     }
 }

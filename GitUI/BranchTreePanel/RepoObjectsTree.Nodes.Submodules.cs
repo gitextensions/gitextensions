@@ -10,8 +10,11 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Submodules;
+using GitUI.CommandsDialogs;
 using GitUI.Properties;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
+using ResourceManager;
 
 namespace GitUI.BranchTreePanel
 {
@@ -46,16 +49,18 @@ namespace GitUI.BranchTreePanel
         {
             public SubmoduleInfo Info { get; }
             public bool IsCurrent { get; }
+            public IReadOnlyList<GitItemStatus> GitStatus { get; }
             public string LocalPath { get; }
             public string SuperPath { get; }
             public string SubmoduleName { get; }
             public string BranchText { get; }
 
-            public SubmoduleNode(Tree tree, SubmoduleInfo submoduleInfo, bool isCurrent, string localPath, string superPath)
+            public SubmoduleNode(Tree tree, SubmoduleInfo submoduleInfo, bool isCurrent, IReadOnlyList<GitItemStatus> gitStatus, string localPath, string superPath)
                 : base(tree)
             {
                 Info = submoduleInfo;
                 IsCurrent = isCurrent;
+                GitStatus = gitStatus;
                 LocalPath = localPath;
                 SuperPath = superPath;
 
@@ -91,7 +96,18 @@ namespace GitUI.BranchTreePanel
 
             public void Open()
             {
+                if (Info?.Detailed?.RawStatus is not null)
+                {
+                    UICommands.BrowseSetWorkingDir(Info.Path, ObjectId.WorkTreeId, Info.Detailed.RawStatus.OldCommit);
+                    return;
+                }
+
                 UICommands.BrowseSetWorkingDir(Info.Path);
+            }
+
+            public void LaunchGitExtensions()
+            {
+                GitUICommands.LaunchBrowse(workingDir: Info.Path.EnsureTrailingPathSeparator(), ObjectId.WorkTreeId, Info?.Detailed?.RawStatus?.OldCommit);
             }
 
             internal override void OnSelected()
@@ -118,6 +134,26 @@ namespace GitUI.BranchTreePanel
                 if (IsCurrent)
                 {
                     TreeViewNode.NodeFont = new Font(AppSettings.Font, FontStyle.Bold);
+                }
+
+                if (Info.Detailed?.RawStatus is not null)
+                {
+                    // Prefer submodule status, shows ahead/behind
+                    TreeViewNode.ToolTipText = LocalizationHelpers.ProcessSubmoduleStatus(
+                        new GitModule(Info.Path),
+                        Info.Detailed.RawStatus,
+                        moduleIsParent: false,
+                        limitOutput: true);
+                }
+                else if (GitStatus is not null)
+                {
+                    var changeCount = new ArtificialCommitChangeCount();
+                    changeCount.Update(GitStatus);
+                    TreeViewNode.ToolTipText = changeCount.GetSummary();
+                }
+                else
+                {
+                    TreeViewNode.ToolTipText = DisplayText();
                 }
 
                 TreeViewNode.ImageKey = GetSubmoduleItemImage(Info.Detailed);
@@ -263,18 +299,18 @@ namespace GitUI.BranchTreePanel
                 var submoduleNodes = new List<SubmoduleNode>();
 
                 // We always want to display submodules rooted from the top project.
-                CreateSubmoduleNodes(result.AllSubmodules, threadModule, ref submoduleNodes);
+                CreateSubmoduleNodes(result, threadModule, ref submoduleNodes);
 
                 var nodes = new Nodes(this);
-                AddNodesToTree(ref nodes, submoduleNodes, threadModule, result.TopProject);
+                AddTopAndNodesToTree(ref nodes, submoduleNodes, threadModule, result);
                 return nodes;
             }
 
-            private void CreateSubmoduleNodes(IEnumerable<SubmoduleInfo> submodules, GitModule threadModule, ref List<SubmoduleNode> nodes)
+            private void CreateSubmoduleNodes(SubmoduleInfoResult result, GitModule threadModule, ref List<SubmoduleNode> nodes)
             {
                 // result.OurSubmodules/AllSubmodules contain a recursive list of submodules, but don't provide info about the super
                 // project path. So we deduce these by substring matching paths against an ordered list of all paths.
-                var modulePaths = submodules.Select(info => info.Path).ToList();
+                var modulePaths = result.AllSubmodules.Select(info => info.Path).ToList();
 
                 // Add current and parent module paths
                 var parentModule = threadModule;
@@ -287,13 +323,18 @@ namespace GitUI.BranchTreePanel
                 // Sort descending so we find the nearest outer folder first
                 modulePaths = modulePaths.OrderByDescending(path => path).ToList();
 
-                foreach (var submoduleInfo in submodules)
+                foreach (var submoduleInfo in result.AllSubmodules)
                 {
                     string superPath = GetSubmoduleSuperPath(submoduleInfo.Path);
                     string localPath = Path.GetDirectoryName(submoduleInfo.Path.Substring(superPath.Length)).ToPosixPath();
 
                     var isCurrent = submoduleInfo.Bold;
-                    nodes.Add(new SubmoduleNode(this, submoduleInfo, isCurrent, localPath, superPath));
+                    nodes.Add(new SubmoduleNode(this,
+                        submoduleInfo,
+                        isCurrent,
+                        isCurrent ? result.CurrentSubmoduleStatus : null,
+                        localPath,
+                        superPath));
                 }
 
                 return;
@@ -311,11 +352,11 @@ namespace GitUI.BranchTreePanel
                 return node.SuperPath.SubstringAfter(topModule.WorkingDir).ToPosixPath() + node.LocalPath;
             }
 
-            private void AddNodesToTree(
+            private void AddTopAndNodesToTree(
                 ref Nodes nodes,
                 List<SubmoduleNode> submoduleNodes,
                 GitModule threadModule,
-                SubmoduleInfo topProject)
+                SubmoduleInfoResult result)
             {
                 // Create tree of SubmoduleFolderNode for each path directory and add input SubmoduleNodes as leaves.
 
@@ -393,7 +434,12 @@ namespace GitUI.BranchTreePanel
                 }
 
                 // Add top-module node, and move children of root to it
-                var topModuleNode = new SubmoduleNode(this, topProject, topProject.Bold, "", topProject.Path);
+                var topModuleNode = new SubmoduleNode(this,
+                    result.TopProject,
+                    result.TopProject.Bold,
+                    result.TopProject.Bold ? result.CurrentSubmoduleStatus : null,
+                    "",
+                    result.TopProject.Path);
                 topModuleNode.Nodes.AddNodes(rootNode.Nodes);
                 nodes.AddNode(topModuleNode);
             }
@@ -408,6 +454,11 @@ namespace GitUI.BranchTreePanel
                 node.Open();
             }
 
+            public void OpenSubmoduleInGitExtensions(IWin32Window owner, SubmoduleNode node)
+            {
+                node.LaunchGitExtensions();
+            }
+
             public void ManageSubmodules(IWin32Window owner)
             {
                 UICommands.StartSubmodulesDialog(owner);
@@ -416,6 +467,38 @@ namespace GitUI.BranchTreePanel
             public void SynchronizeSubmodules(IWin32Window owner)
             {
                 UICommands.StartSyncSubmodulesDialog(owner);
+            }
+
+            public void ResetSubmodule(IWin32Window owner, SubmoduleNode node)
+            {
+                FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(owner, true, true);
+                if (resetType == FormResetChanges.ActionEnum.Cancel)
+                {
+                    return;
+                }
+
+                GitModule module = new GitModule(node.Info.Path);
+
+                // Reset all changes.
+                module.Reset(ResetMode.Hard);
+
+                // Also delete new files, if requested.
+                if (resetType == FormResetChanges.ActionEnum.ResetAndDelete)
+                {
+                    module.Clean(CleanMode.OnlyNonIgnored, directories: true);
+                }
+            }
+
+            public void StashSubmodule(IWin32Window owner, SubmoduleNode node)
+            {
+                var uiCmds = new GitUICommands(new GitModule(node.Info.Path));
+                uiCmds.StashSave(owner, AppSettings.IncludeUntrackedFilesInManualStash);
+            }
+
+            public void CommitSubmodule(IWin32Window owner, SubmoduleNode node)
+            {
+                var submodulCommands = new GitUICommands(node.Info.Path.EnsureTrailingPathSeparator());
+                submodulCommands.StartCommitDialog(owner);
             }
         }
     }

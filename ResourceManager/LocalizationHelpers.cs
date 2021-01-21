@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using GitCommands;
 using GitCommands.Git;
@@ -111,8 +113,7 @@ namespace ResourceManager
 
         public static string ProcessSubmodulePatch(GitModule module, string fileName, Patch patch)
         {
-            string text = patch?.Text;
-            var status = SubmoduleHelpers.ParseSubmoduleStatus(text, module, fileName);
+            var status = SubmoduleHelpers.ParseSubmoduleStatus(patch?.Text, module, fileName);
             if (status is null)
             {
                 return "";
@@ -121,7 +122,7 @@ namespace ResourceManager
             return ProcessSubmoduleStatus(module, status);
         }
 
-        public static string ProcessSubmoduleStatus([NotNull] GitModule module, [NotNull] GitSubmoduleStatus status)
+        public static string ProcessSubmoduleStatus([NotNull] GitModule module, [NotNull] GitSubmoduleStatus status, bool moduleIsParent = true, bool limitOutput = false)
         {
             if (module is null)
             {
@@ -133,7 +134,7 @@ namespace ResourceManager
                 throw new ArgumentNullException(nameof(status));
             }
 
-            GitModule gitModule = module.GetSubmodule(status.Name);
+            GitModule gitModule = moduleIsParent ? module.GetSubmodule(status.Name) : module;
             var sb = new StringBuilder();
             sb.AppendLine("Submodule " + status.Name + " Change");
 
@@ -262,12 +263,23 @@ namespace ResourceManager
 
             if (status.Commit is not null && status.OldCommit is not null)
             {
+                const int maxLimitedLines = 5;
                 if (status.IsDirty)
                 {
                     string statusText = gitModule.GetStatusText(untracked: false);
                     if (!string.IsNullOrEmpty(statusText))
                     {
                         sb.AppendLine("\nStatus:");
+                        if (limitOutput)
+                        {
+                            var txt = statusText.SplitLines();
+                            if (txt.Length > maxLimitedLines)
+                            {
+                                statusText = new List<string>(txt).Take(maxLimitedLines).Join(Environment.NewLine) +
+                                    $"{Environment.NewLine} {txt.Length - maxLimitedLines} more changes";
+                            }
+                        }
+
                         sb.Append(statusText);
                     }
                 }
@@ -276,6 +288,16 @@ namespace ResourceManager
                 if (!string.IsNullOrEmpty(diffs))
                 {
                     sb.AppendLine("\nDifferences:");
+                    if (limitOutput)
+                    {
+                        var txt = diffs.SplitLines();
+                        if (txt.Length > maxLimitedLines)
+                        {
+                            diffs = new List<string>(txt).Take(maxLimitedLines).Join(Environment.NewLine) +
+                                $"{Environment.NewLine} {txt.Length - maxLimitedLines} more differences";
+                        }
+                    }
+
                     sb.Append(diffs);
                 }
             }
