@@ -2,7 +2,7 @@
 
 namespace GitExtUtils.GitUI.Theming
 {
-    public struct ThemeId
+    public readonly struct ThemeId
     {
         public static ThemeId Default { get; } = new ThemeId(string.Empty, false);
 

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Git;
-using GitCommands.Utils;
+using GitExtensions;
 using GitUI;
 using GitUIPluginInterfaces;
 using Microsoft;

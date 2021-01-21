@@ -1,11 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace GitCommands.Utils
-{
 #if NET5_0_OR_GREATER
 #error Remove this class when targeting .NET 5 and update all usages
 #endif
 
+namespace GitExtensions
+{
     internal static class Strings
     {
         /// <inheritdoc cref="string.IsNullOrEmpty(string)"/>

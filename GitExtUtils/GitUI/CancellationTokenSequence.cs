@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using Microsoft;
 
 namespace GitUI
 {
@@ -31,7 +32,7 @@ namespace GitUI
         /// <remarks>
         /// If this field is <c>null</c>, the object has been disposed.
         /// </remarks>
-        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private CancellationTokenSource? _cancellationTokenSource = new CancellationTokenSource();
 
         /// <summary>
         /// Issues the <see cref="CancellationToken"/> for use by the next asynchronous operation in the sequence,
@@ -79,6 +80,7 @@ namespace GitUI
                 next.Cancel();
                 next.Dispose();
                 nextToken.ThrowIfCancellationRequested();
+                throw Assumes.NotReachable();
             }
 
             prior.Cancel();

@@ -5,6 +5,7 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Text.RegularExpressions;
 using GitCommands.Utils;
+using GitExtensions;
 
 namespace GitCommands
 {

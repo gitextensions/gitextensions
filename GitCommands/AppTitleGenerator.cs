@@ -1,5 +1,5 @@
 using GitCommands.UserRepositoryHistory;
-using GitCommands.Utils;
+using GitExtensions;
 using GitUIPluginInterfaces;
 
 namespace GitCommands

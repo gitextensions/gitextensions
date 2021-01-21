@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using GitCommands.Config;
-using GitCommands.Utils;
+using GitExtensions;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.DiffMergeTools

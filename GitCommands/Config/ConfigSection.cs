@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GitCommands.Utils;
+using GitExtensions;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.Config

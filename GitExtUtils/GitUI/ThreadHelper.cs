@@ -17,9 +17,9 @@ namespace GitUI
         private const int RPC_E_WRONG_THREAD = unchecked((int)0x8001010E);
 #pragma warning restore SA1139 // Use literal suffix notation instead of casting
 
-        private static JoinableTaskContext _joinableTaskContext;
-        private static JoinableTaskCollection _joinableTaskCollection;
-        private static JoinableTaskFactory _joinableTaskFactory;
+        private static JoinableTaskContext _joinableTaskContext = null!;
+        private static JoinableTaskCollection _joinableTaskCollection = null!;
+        private static JoinableTaskFactory _joinableTaskFactory = null!;
 
         public static JoinableTaskContext JoinableTaskContext
         {
@@ -37,9 +37,9 @@ namespace GitUI
 
                 if (value is null)
                 {
-                    _joinableTaskContext = null;
-                    _joinableTaskCollection = null;
-                    _joinableTaskFactory = null;
+                    _joinableTaskContext = null!;
+                    _joinableTaskCollection = null!;
+                    _joinableTaskFactory = null!;
                 }
                 else
                 {
@@ -87,12 +87,12 @@ namespace GitUI
             }
         }
 
-        public static void FileAndForget(this JoinableTask joinableTask, Func<Exception, bool> fileOnlyIf = null)
+        public static void FileAndForget(this JoinableTask joinableTask, Func<Exception, bool>? fileOnlyIf = null)
         {
             joinableTask.Task.FileAndForget(fileOnlyIf);
         }
 
-        public static void FileAndForget(this Task task, Func<Exception, bool> fileOnlyIf = null)
+        public static void FileAndForget(this Task task, Func<Exception, bool>? fileOnlyIf = null)
         {
             JoinableTaskFactory.RunAsync(
                 async () =>
@@ -132,7 +132,7 @@ namespace GitUI
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
         }
 
-        public static T CompletedOrDefault<T>(this Task<T> task)
+        public static T? CompletedOrDefault<T>(this Task<T> task)
         {
             if (!task.IsCompleted)
             {

@@ -20,13 +20,13 @@ namespace GitExtUtils.GitUI
                 value is TValue;
         }
 
-        public static TValue GetTag<TValue>(this Control control) =>
+        public static TValue? GetTag<TValue>(this Control control) =>
             GetTag<TValue>(control, typeof(TValue).FullName);
 
-        public static TValue GetTag<TValue>(this Control control, string key)
+        public static TValue? GetTag<TValue>(this Control control, string key)
         {
             if (control.Tag is null ||
-                !(control.Tag is Dictionary<string, object> dict) ||
+                !(control.Tag is Dictionary<string, object?> dict) ||
                 !dict.TryGetValue(key, out var result))
             {
                 return default;
@@ -44,11 +44,11 @@ namespace GitExtUtils.GitUI
         {
             switch (control.Tag)
             {
-                case Dictionary<string, object> dict:
+                case Dictionary<string, object?> dict:
                     dict[key] = value;
                     break;
                 default:
-                    control.Tag = new Dictionary<string, object> { { key, value } };
+                    control.Tag = new Dictionary<string, object?> { { key, value } };
                     break;
             }
         }

@@ -4,7 +4,7 @@ using System.Diagnostics.Contracts;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Settings;
-using GitCommands.Utils;
+using GitExtensions;
 
 namespace GitCommands.Patches
 {

@@ -17,7 +17,7 @@ namespace GitExtUtils.GitUI.Theming
         private readonly Size _imageSize;
         private readonly Font _font;
         private readonly bool _enabled;
-        private readonly Image[] _tabImages;
+        private readonly Image?[] _tabImages;
         private readonly Rectangle[] _tabRects;
         private readonly string[] _tabTexts;
         private readonly Color[] _tabBackColors;
@@ -62,6 +62,13 @@ namespace GitExtUtils.GitUI.Theming
                 // tabCtrl.GetTabRect[tabCtrl.SelectedIndex] may throw ArgumentOutOfRangeException
                 // https://github.com/gitextensions/gitextensions/pull/7213#issuecomment-554760531
                 _failed = true;
+
+                // Set these to null explicitly to satisfy nullability checking. We will always verify
+                // _failed before dereferencing these.
+                _tabTexts = null!;
+                _tabImages = null!;
+                _tabRects = null!;
+                _tabBackColors = null!;
             }
         }
 
@@ -149,7 +156,7 @@ namespace GitExtUtils.GitUI.Theming
             return imgRect;
         }
 
-        private static Image GetTabImage(TabControl tabs, int index)
+        private static Image? GetTabImage(TabControl tabs, int index)
         {
             var images = tabs.ImageList?.Images;
             if (images is null)

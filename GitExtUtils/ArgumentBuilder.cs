@@ -48,7 +48,7 @@ namespace GitExtUtils
         /// to the argument list.
         /// </remarks>
         /// <param name="s">The string to add.</param>
-        public void Add([CanBeNull] string s)
+        public void Add(string? s)
         {
             if (string.IsNullOrWhiteSpace(s))
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using GitExtensions;
 using GitExtUtils;
 
 namespace GitCommands
@@ -63,10 +64,10 @@ namespace GitCommands
         /// <param name="output">Stored output bytes of the command, if found.</param>
         /// <param name="error">Stored error bytes of the command, if found.</param>
         /// <returns><c>true</c> if the command was found, otherwise <c>false</c>.</returns>
-        public bool TryGet(string cmd, [NotNullWhen(returnValue: true)] out byte[]? output, [NotNullWhen(returnValue: true)] out byte[]? error)
+        public bool TryGet(string? cmd, [NotNullWhen(returnValue: true)] out byte[]? output, [NotNullWhen(returnValue: true)] out byte[]? error)
         {
             // Never cache empty commands
-            if (!string.IsNullOrEmpty(cmd))
+            if (!Strings.IsNullOrEmpty(cmd))
             {
                 lock (_cache)
                 {
@@ -89,10 +90,10 @@ namespace GitCommands
         /// <param name="cmd">The command to add to the cache.</param>
         /// <param name="output">Output bytes of the command.</param>
         /// <param name="error">Error bytes of the command.</param>
-        public void Add(string cmd, byte[] output, byte[] error)
+        public void Add(string? cmd, byte[] output, byte[] error)
         {
             // Never cache empty commands
-            if (string.IsNullOrEmpty(cmd))
+            if (Strings.IsNullOrEmpty(cmd))
             {
                 return;
             }

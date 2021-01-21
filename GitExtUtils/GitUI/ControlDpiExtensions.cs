@@ -4,13 +4,12 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
-using JetBrains.Annotations;
 
 namespace GitUI
 {
     public static class ControlDpiExtensions
     {
-        public static void AdjustForDpiScaling([NotNull] this Control control)
+        public static void AdjustForDpiScaling(this Control control)
         {
             if (control is null)
             {
