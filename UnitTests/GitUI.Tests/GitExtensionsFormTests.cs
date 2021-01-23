@@ -32,7 +32,7 @@ namespace GitUITests
                 Size = new Size(500, 500)
             };
 
-            form.TestAccessor().Dynamic._getScreensWorkingArea = (Func<IReadOnlyList<Rectangle>>)(() => throw new InvalidOperationException());
+            new GitExtensionsFormTestAccessor(form).GetScreensWorkingArea = () => throw new InvalidOperationException();
 
             form.InvokeRestorePosition();
 
@@ -50,7 +50,7 @@ namespace GitUITests
                 WindowState = FormWindowState.Minimized
             };
 
-            form.TestAccessor().Dynamic._getScreensWorkingArea = (Func<IReadOnlyList<Rectangle>>)(() => throw new InvalidOperationException());
+            new GitExtensionsFormTestAccessor(form).GetScreensWorkingArea = () => throw new InvalidOperationException();
 
             form.InvokeRestorePosition();
 
@@ -68,8 +68,9 @@ namespace GitUITests
                 Size = new Size(500, 500)
             };
 
-            form.TestAccessor().Dynamic._getScreensWorkingArea = (Func<IReadOnlyList<Rectangle>>)(() => throw new InvalidOperationException());
-            form.TestAccessor().Dynamic._windowPositionManager = _windowPositionManager;
+            GitExtensionsFormTestAccessor testAccessor = new(form);
+            testAccessor.GetScreensWorkingArea = () => throw new InvalidOperationException();
+            testAccessor.WindowPositionManager = _windowPositionManager;
 
             _windowPositionManager.LoadPosition(form).Returns(x => null);
 
@@ -99,8 +100,9 @@ namespace GitUITests
                 new Rectangle(0, 0, 1920, 1080)
             };
 
-            form.TestAccessor().Dynamic._getScreensWorkingArea = (Func<IReadOnlyList<Rectangle>>)(() => screens);
-            form.TestAccessor().Dynamic._windowPositionManager = _windowPositionManager;
+            GitExtensionsFormTestAccessor testAccessor = new(form);
+            testAccessor.GetScreensWorkingArea = () => screens;
+            testAccessor.WindowPositionManager = _windowPositionManager;
 
             _windowPositionManager.LoadPosition(form)
                 .Returns(x => new WindowPosition(new Rectangle(100, 100, 500, 500), 96, FormWindowState.Normal, "bla"));
@@ -133,8 +135,9 @@ namespace GitUITests
                 new Rectangle(0, 0, 1920, 1080)
             };
 
-            form.TestAccessor().Dynamic._getScreensWorkingArea = (Func<IReadOnlyList<Rectangle>>)(() => screens);
-            form.TestAccessor().Dynamic._windowPositionManager = _windowPositionManager;
+            GitExtensionsFormTestAccessor testAccessor = new(form);
+            testAccessor.GetScreensWorkingArea = () => screens;
+            testAccessor.WindowPositionManager = _windowPositionManager;
 
             _windowPositionManager.LoadPosition(form)
                 .Returns(x => new WindowPosition(new Rectangle(100, 100, 500, 500), savedDpi, FormWindowState.Normal, "bla"));
@@ -171,8 +174,9 @@ namespace GitUITests
                 new Rectangle(0, 0, 1920, 1080)
             };
 
-            form.TestAccessor().Dynamic._getScreensWorkingArea = (Func<IReadOnlyList<Rectangle>>)(() => screens);
-            form.TestAccessor().Dynamic._windowPositionManager = _windowPositionManager;
+            GitExtensionsFormTestAccessor testAccessor = new(form);
+            testAccessor.GetScreensWorkingArea = () => screens;
+            testAccessor.WindowPositionManager = _windowPositionManager;
 
             _windowPositionManager.LoadPosition(form)
                 .Returns(x => new WindowPosition(new Rectangle(100, 100, 300, 200), 96, FormWindowState.Normal, "bla"));
@@ -180,6 +184,26 @@ namespace GitUITests
             form.InvokeRestorePosition();
 
             form.Location.Should().Be(new Point(expectFormTop, expectedFormLeft));
+        }
+
+        private class GitExtensionsFormTestAccessor : TestAccessor<GitExtensionsForm>
+        {
+            public GitExtensionsFormTestAccessor(GitExtensionsForm instance)
+                : base(instance)
+            {
+            }
+
+            public Func<IReadOnlyList<Rectangle>> GetScreensWorkingArea
+            {
+                get => Dynamic._getScreensWorkingArea;
+                set => Dynamic._getScreensWorkingArea = value;
+            }
+
+            public IWindowPositionManager WindowPositionManager
+            {
+                get => Dynamic._windowPositionManager;
+                set => Dynamic._windowPositionManager = value;
+            }
         }
 
         private class MockForm : GitExtensionsForm
