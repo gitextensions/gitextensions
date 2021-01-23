@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
@@ -31,8 +32,7 @@ namespace GitUITests
                 Size = new Size(500, 500)
             };
 
-            var test = form.GetGitExtensionsFormTestAccessor();
-            test.GetScreensWorkingArea = () => throw new InvalidOperationException();
+            form.TestAccessor().Dynamic._getScreensWorkingArea = (Func<IReadOnlyList<Rectangle>>)(() => throw new InvalidOperationException());
 
             form.InvokeRestorePosition();
 
@@ -50,8 +50,7 @@ namespace GitUITests
                 WindowState = FormWindowState.Minimized
             };
 
-            var test = form.GetGitExtensionsFormTestAccessor();
-            test.GetScreensWorkingArea = () => throw new InvalidOperationException();
+            form.TestAccessor().Dynamic._getScreensWorkingArea = (Func<IReadOnlyList<Rectangle>>)(() => throw new InvalidOperationException());
 
             form.InvokeRestorePosition();
 
@@ -69,9 +68,8 @@ namespace GitUITests
                 Size = new Size(500, 500)
             };
 
-            var test = form.GetGitExtensionsFormTestAccessor();
-            test.GetScreensWorkingArea = () => throw new InvalidOperationException();
-            test.WindowPositionManager = _windowPositionManager;
+            form.TestAccessor().Dynamic._getScreensWorkingArea = (Func<IReadOnlyList<Rectangle>>)(() => throw new InvalidOperationException());
+            form.TestAccessor().Dynamic._windowPositionManager = _windowPositionManager;
 
             _windowPositionManager.LoadPosition(form).Returns(x => null);
 
@@ -101,9 +99,8 @@ namespace GitUITests
                 new Rectangle(0, 0, 1920, 1080)
             };
 
-            var test = form.GetGitExtensionsFormTestAccessor();
-            test.GetScreensWorkingArea = () => screens;
-            test.WindowPositionManager = _windowPositionManager;
+            form.TestAccessor().Dynamic._getScreensWorkingArea = (Func<IReadOnlyList<Rectangle>>)(() => screens);
+            form.TestAccessor().Dynamic._windowPositionManager = _windowPositionManager;
 
             _windowPositionManager.LoadPosition(form)
                 .Returns(x => new WindowPosition(new Rectangle(100, 100, 500, 500), 96, FormWindowState.Normal, "bla"));
@@ -136,9 +133,8 @@ namespace GitUITests
                 new Rectangle(0, 0, 1920, 1080)
             };
 
-            var test = form.GetGitExtensionsFormTestAccessor();
-            test.GetScreensWorkingArea = () => screens;
-            test.WindowPositionManager = _windowPositionManager;
+            form.TestAccessor().Dynamic._getScreensWorkingArea = (Func<IReadOnlyList<Rectangle>>)(() => screens);
+            form.TestAccessor().Dynamic._windowPositionManager = _windowPositionManager;
 
             _windowPositionManager.LoadPosition(form)
                 .Returns(x => new WindowPosition(new Rectangle(100, 100, 500, 500), savedDpi, FormWindowState.Normal, "bla"));
@@ -175,9 +171,9 @@ namespace GitUITests
                 new Rectangle(0, 0, 1920, 1080)
             };
 
-            var test = form.GetGitExtensionsFormTestAccessor();
-            test.GetScreensWorkingArea = () => screens;
-            test.WindowPositionManager = _windowPositionManager;
+            form.TestAccessor().Dynamic._getScreensWorkingArea = (Func<IReadOnlyList<Rectangle>>)(() => screens);
+            form.TestAccessor().Dynamic._windowPositionManager = _windowPositionManager;
+
             _windowPositionManager.LoadPosition(form)
                 .Returns(x => new WindowPosition(new Rectangle(100, 100, 300, 200), 96, FormWindowState.Normal, "bla"));
 
