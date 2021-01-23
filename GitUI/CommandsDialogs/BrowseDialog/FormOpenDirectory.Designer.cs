@@ -53,7 +53,7 @@
             this._NO_TRANSLATE_Directory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this._NO_TRANSLATE_Directory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this._NO_TRANSLATE_Directory.FormattingEnabled = true;
-            this._NO_TRANSLATE_Directory.Location = new System.Drawing.Point(85, 10);
+            this._NO_TRANSLATE_Directory.Location = new System.Drawing.Point(85, 9);
             this._NO_TRANSLATE_Directory.Name = "_NO_TRANSLATE_Directory";
             this._NO_TRANSLATE_Directory.Size = new System.Drawing.Size(360, 21);
             this._NO_TRANSLATE_Directory.TabIndex = 1;
@@ -67,7 +67,7 @@
             this.Load.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Load.Location = new System.Drawing.Point(448, 39);
             this.Load.Name = "Load";
-            this.Load.Size = new System.Drawing.Size(144, 25);
+            this.Load.Size = new System.Drawing.Size(164, 25);
             this.Load.TabIndex = 3;
             this.Load.Text = "Open";
             this.Load.UseVisualStyleBackColor = true;
@@ -79,10 +79,10 @@
             this.folderBrowserButton.AutoSize = true;
             this.folderBrowserButton.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
             this.folderBrowserButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.folderBrowserButton.Location = new System.Drawing.Point(477, 8);
-            this.folderBrowserButton.MinimumSize = new System.Drawing.Size(100, 25);
+            this.folderBrowserButton.Location = new System.Drawing.Point(477, 7);
+            this.folderBrowserButton.MinimumSize = new System.Drawing.Size(135, 25);
             this.folderBrowserButton.Name = "folderBrowserButton";
-            this.folderBrowserButton.Size = new System.Drawing.Size(115, 25);
+            this.folderBrowserButton.Size = new System.Drawing.Size(135, 25);
             this.folderBrowserButton.TabIndex = 4;
             this.folderBrowserButton.Text = "&Browse...";
             this.folderBrowserButton.UseVisualStyleBackColor = true;
@@ -92,7 +92,7 @@
             // 
             this.folderGoUpButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.folderGoUpButton.Image = global::GitUI.Properties.Images.NavigateUp;
-            this.folderGoUpButton.Location = new System.Drawing.Point(448, 8);
+            this.folderGoUpButton.Location = new System.Drawing.Point(448, 7);
             this.folderGoUpButton.Name = "folderGoUpButton";
             this.folderGoUpButton.Size = new System.Drawing.Size(26, 25);
             this.folderGoUpButton.TabIndex = 5;
@@ -112,7 +112,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(595, 81);
+            this.ClientSize = new System.Drawing.Size(615, 81);
             this.Controls.Add(this.folderGoUpButton);
             this.Controls.Add(this.folderBrowserButton);
             this.Controls.Add(this.Load);
