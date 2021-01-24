@@ -844,15 +844,6 @@
       <Component Id="Polish.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Polish.Plugins.xlf" />
       </Component>
-      <Component Id="Portuguese_Brazil.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Portuguese (Brazil).gif" />
-      </Component>
-      <Component Id="Portuguese_Brazil.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Portuguese (Brazil).xlf" />
-      </Component>
-      <Component Id="Portuguese_Brazil.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Portuguese (Brazil).Plugins.xlf" />
-      </Component>
       <Component Id="Russian.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.gif" />
       </Component>
@@ -1768,11 +1759,6 @@
           <ComponentRef Id="Polish.xlf" />
           <ComponentRef Id="Polish.Plugins.xlf" />
           <ComponentRef Id="Polish.gif" />
-        </Feature>
-        <Feature Id="Portuguese_Brazil" Title="Portuguese (Brazil)" Level="1">
-          <ComponentRef Id="Portuguese_Brazil.xlf" />
-          <ComponentRef Id="Portuguese_Brazil.Plugins.xlf" />
-          <ComponentRef Id="Portuguese_Brazil.gif" />
         </Feature>
         <Feature Id="Russian" Title="Russian" Level="1">
           <ComponentRef Id="Russian.xlf" />
