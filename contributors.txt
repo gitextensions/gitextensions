@@ -148,3 +148,4 @@ YYYY/MM/DD, github id, Full name, email
 2020/11/05, cristianst85, Cristian Stoica, cristianstoica85(at)gmail.com
 2021/01/02, matyasbach, Matyáš Bach, matyasbach(at)centrum.cz
 2021/01/11, keco2, Robert Keco, mobil750 at-sign gmail com
+2021/01/24, bcolaco, Bruno Colaço, bcolaco[@)gmail.com
