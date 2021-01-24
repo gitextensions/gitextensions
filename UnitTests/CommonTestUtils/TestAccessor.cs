@@ -127,7 +127,7 @@ namespace System
 
                     if (methodInfo != null || type == typeof(object))
                     {
-                        // Found something, or already at the top of the type heirarchy
+                        // Found something, or already at the top of the type hierarchy
                         break;
                     }
 
