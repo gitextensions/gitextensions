@@ -131,7 +131,7 @@ namespace System
                         break;
                     }
 
-                    // Walk up the heirarchy
+                    // Walk up the hierarchy
                     type = type.BaseType;
                 }
                 while (true);
