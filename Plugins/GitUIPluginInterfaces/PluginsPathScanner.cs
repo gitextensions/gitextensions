@@ -40,7 +40,7 @@ namespace GitUIPluginInterfaces
             {
                 if (!string.IsNullOrEmpty(pluginsPath) && Directory.Exists(pluginsPath))
                 {
-                    DirectoryInfo directory = new DirectoryInfo(pluginsPath);
+                    DirectoryInfo directory = new(pluginsPath);
 
                     result = Enumerable.Concat(result, directory.GetFiles("*.dll"));
 

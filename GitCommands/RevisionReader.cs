@@ -55,7 +55,7 @@ namespace GitCommands
               /* Commit subject  */ "%s%n%n" +
               /* Commit body     */ "%b" + EndOfBody;
 
-        private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
+        private readonly CancellationTokenSequence _cancellationTokenSequence = new();
 
         public void Execute(
             GitModule module,

@@ -17,7 +17,7 @@ namespace GitCommands.Patches
             OutsidePatch
         }
 
-        private static readonly Regex _patchHeaderRegex = new Regex("^diff --(?<type>git|cc|combined)\\s", RegexOptions.Compiled);
+        private static readonly Regex _patchHeaderRegex = new("^diff --(?<type>git|cc|combined)\\s", RegexOptions.Compiled);
 
         /// <summary>
         /// Parses a patch file into individual <see cref="Patch"/> objects.

@@ -9,7 +9,7 @@ namespace GitUI
 {
     internal sealed class RevisionGridToolTipProvider
     {
-        private readonly ToolTip _toolTip = new ToolTip();
+        private readonly ToolTip _toolTip = new();
         private readonly Dictionary<Point, bool> _isTruncatedByCellPos = new Dictionary<Point, bool>();
         private readonly RevisionDataGridView _gridView;
         private int _previousRowIndex = -1;

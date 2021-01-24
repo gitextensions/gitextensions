@@ -66,39 +66,39 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _questionInitSubmodulesCaption =
             new TranslationString("Submodules");
 
-        private readonly TranslationString _notOnBranch = new TranslationString("You cannot \"pull\" when git head detached." +
+        private readonly TranslationString _notOnBranch = new("You cannot \"pull\" when git head detached." +
                                   Environment.NewLine + Environment.NewLine + "Do you want to continue?");
 
-        private readonly TranslationString _noRemoteBranch = new TranslationString("You didn't specify a remote branch");
-        private readonly TranslationString _noRemoteBranchMainInstruction = new TranslationString(
+        private readonly TranslationString _noRemoteBranch = new("You didn't specify a remote branch");
+        private readonly TranslationString _noRemoteBranchMainInstruction = new(
             "You asked to pull from the remote '{0}'," + Environment.NewLine +
             "but did not specify a remote branch." + Environment.NewLine +
             "Because this is not the default configured remote for your local branch," + Environment.NewLine +
             "you must specify a remote branch.");
-        private readonly TranslationString _noRemoteBranchForFetchMainInstruction = new TranslationString(
+        private readonly TranslationString _noRemoteBranchForFetchMainInstruction = new(
             "You asked to fetch from the remote '{0}'," + Environment.NewLine +
             "but did not specify a remote branch." + Environment.NewLine +
             "Because this is not the current branch, you must specify a remote branch.");
-        private readonly TranslationString _noRemoteBranchButton = new TranslationString("Pull from {0}");
-        private readonly TranslationString _noRemoteBranchForFetchButton = new TranslationString("Fetch from {0}");
-        private readonly TranslationString _noRemoteBranchCaption = new TranslationString("Remote branch not specified");
+        private readonly TranslationString _noRemoteBranchButton = new("Pull from {0}");
+        private readonly TranslationString _noRemoteBranchForFetchButton = new("Fetch from {0}");
+        private readonly TranslationString _noRemoteBranchCaption = new("Remote branch not specified");
 
-        private readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
+        private readonly TranslationString _dontShowAgain = new("Don't show me this message again.");
 
-        private readonly TranslationString _pruneBranchesCaption = new TranslationString("Pull was rejected");
-        private readonly TranslationString _pruneBranchesMainInstruction = new TranslationString("Remote branch no longer exist");
+        private readonly TranslationString _pruneBranchesCaption = new("Pull was rejected");
+        private readonly TranslationString _pruneBranchesMainInstruction = new("Remote branch no longer exist");
         private readonly TranslationString _pruneBranchesBranch =
             new TranslationString("Do you want to delete all stale remote-tracking branches?");
 
-        private readonly TranslationString _pruneFromCaption = new TranslationString("Prune remote branches from {0}");
+        private readonly TranslationString _pruneFromCaption = new("Prune remote branches from {0}");
 
-        private readonly TranslationString _hoverShowImageLabelText = new TranslationString("Hover to see scenario when fast forward is possible.");
-        private readonly TranslationString _formTitlePull = new TranslationString("Pull ({0})");
-        private readonly TranslationString _formTitleFetch = new TranslationString("Fetch ({0})");
-        private readonly TranslationString _buttonPull = new TranslationString("&Pull");
-        private readonly TranslationString _buttonFetch = new TranslationString("&Fetch");
+        private readonly TranslationString _hoverShowImageLabelText = new("Hover to see scenario when fast forward is possible.");
+        private readonly TranslationString _formTitlePull = new("Pull ({0})");
+        private readonly TranslationString _formTitleFetch = new("Fetch ({0})");
+        private readonly TranslationString _buttonPull = new("&Pull");
+        private readonly TranslationString _buttonFetch = new("&Fetch");
 
-        private readonly TranslationString _pullFetchPruneAllConfirmation = new TranslationString("Warning! The fetch with prune will remove all the remote-tracking references which no longer exist on remotes. Do you want to proceed?");
+        private readonly TranslationString _pullFetchPruneAllConfirmation = new("Warning! The fetch with prune will remove all the remote-tracking references which no longer exist on remotes. Do you want to proceed?");
         #endregion
 
         private const string AllRemotes = "[ All ]";

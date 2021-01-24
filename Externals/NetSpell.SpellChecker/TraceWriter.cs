@@ -6,7 +6,7 @@ using System.Reflection;
 /// </summary>
 internal static class TraceWriter
 {
-    public static TraceSwitch Switch { get; } = new TraceSwitch(Assembly.GetAssembly(typeof(TraceWriter)).GetName().Name, "Trace Helper Switch");
+    public static TraceSwitch Switch { get; } = new(Assembly.GetAssembly(typeof(TraceWriter)).GetName().Name, "Trace Helper Switch");
 
     public static void TraceError(string format, params object[] args)
     {

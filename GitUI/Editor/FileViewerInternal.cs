@@ -29,7 +29,7 @@ namespace GitUI.Editor
         public new event System.Windows.Forms.KeyEventHandler KeyUp;
         public new event EventHandler DoubleClick;
 
-        private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
+        private readonly FindAndReplaceForm _findAndReplaceForm = new();
         private readonly CurrentViewPositionCache _currentViewPositionCache;
         private DiffViewerLineNumberControl _lineNumbersControl;
         private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;

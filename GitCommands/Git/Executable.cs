@@ -63,7 +63,7 @@ namespace GitCommands
             // TODO should this use TaskCreationOptions.RunContinuationsAsynchronously
             private readonly TaskCompletionSource<int> _exitTaskCompletionSource = new TaskCompletionSource<int>();
 
-            private readonly object _syncRoot = new object();
+            private readonly object _syncRoot = new();
             private readonly Process _process;
             private readonly ProcessOperation _logOperation;
             private readonly bool _redirectInput;

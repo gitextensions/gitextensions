@@ -18,10 +18,10 @@ namespace Bitbucket
 {
     public partial class BitbucketPullRequestForm : GitExtensionsFormBase
     {
-        private readonly TranslationString _committed = new TranslationString("{0} committed\n{1}");
-        private readonly TranslationString _success = new TranslationString("Success");
-        private readonly TranslationString _error = new TranslationString("Error");
-        private readonly TranslationString _linkLabelToolTip = new TranslationString("Right-click to copy link");
+        private readonly TranslationString _committed = new("{0} committed\n{1}");
+        private readonly TranslationString _success = new("Success");
+        private readonly TranslationString _error = new("Error");
+        private readonly TranslationString _linkLabelToolTip = new("Right-click to copy link");
         private readonly string _NO_TRANSLATE_RepoUrl = "{0}/projects/{1}/repos/{2}/";
         private readonly string _NO_TRANSLATE_LinkCreatePull = "compare/commits?sourceBranch={0}";
         private readonly string _NO_TRANSLATE_LinkCreatePullNoBranch = "pull-requests?create";

@@ -14,12 +14,12 @@ namespace GitUI.BranchTreePanel.ContextMenu
 
     public class TagMenuItemsStrings : Translate
     {
-        internal readonly TranslationString CheckoutTooltip = new TranslationString("Checkout this tag");
-        internal readonly TranslationString CreateTooltip = new TranslationString("Create a local branch from this tag");
-        internal readonly TranslationString MergeTooltip = new TranslationString("Merge this tag into current branch");
-        internal readonly TranslationString RebaseTooltip = new TranslationString("Rebase current branch to this tag");
-        internal readonly TranslationString ResetTooltip = new TranslationString("Reset current branch to here");
-        internal readonly TranslationString DeleteTooltip = new TranslationString("Delete this tag");
+        internal readonly TranslationString CheckoutTooltip = new("Checkout this tag");
+        internal readonly TranslationString CreateTooltip = new("Create a local branch from this tag");
+        internal readonly TranslationString MergeTooltip = new("Merge this tag into current branch");
+        internal readonly TranslationString RebaseTooltip = new("Rebase current branch to this tag");
+        internal readonly TranslationString ResetTooltip = new("Reset current branch to here");
+        internal readonly TranslationString DeleteTooltip = new("Delete this tag");
 
         public void ApplyTo(MenuItemsStrings strings)
         {

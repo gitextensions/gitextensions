@@ -11,11 +11,11 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormAddToGitIgnore : GitModuleForm
     {
-        private readonly TranslationString _addToLocalExcludeTitle = new TranslationString("Add file(s) to .git/info/exclude");
-        private readonly TranslationString _matchingFilesString = new TranslationString("{0} file(s) matched");
-        private readonly TranslationString _updateStatusString = new TranslationString("Updating ...");
+        private readonly TranslationString _addToLocalExcludeTitle = new("Add file(s) to .git/info/exclude");
+        private readonly TranslationString _matchingFilesString = new("{0} file(s) matched");
+        private readonly TranslationString _updateStatusString = new("Updating ...");
 
-        private readonly AsyncLoader _ignoredFilesLoader = new AsyncLoader();
+        private readonly AsyncLoader _ignoredFilesLoader = new();
         private readonly IFullPathResolver _fullPathResolver;
         private readonly bool _localExclude;
 

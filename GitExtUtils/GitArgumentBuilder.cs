@@ -38,7 +38,7 @@ namespace GitExtUtils
     /// </example>
     public sealed class GitArgumentBuilder : ArgumentBuilder
     {
-        private static readonly Regex CommandRegex = new Regex("^[a-z0-9_.-]+$", RegexOptions.Compiled);
+        private static readonly Regex CommandRegex = new("^[a-z0-9_.-]+$", RegexOptions.Compiled);
 
         private readonly List<GitConfigItem> _configItems;
         private readonly ArgumentString _gitArgs;

@@ -27,12 +27,12 @@ namespace GitUI.CommandsDialogs
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
 
-        private readonly ToolTip _toolTipControl = new ToolTip();
+        private readonly ToolTip _toolTipControl = new();
 
-        private readonly TranslationString _anotherBranchTooltip = new TranslationString("Select another branch");
-        private readonly TranslationString _anotherCommitTooltip = new TranslationString("Select another commit");
-        private readonly TranslationString _btnSwapTooltip = new TranslationString("Swap BASE and Compare commits");
-        private readonly TranslationString _ckCompareToMergeBase = new TranslationString("Compare to merge &base");
+        private readonly TranslationString _anotherBranchTooltip = new("Select another branch");
+        private readonly TranslationString _anotherCommitTooltip = new("Select another commit");
+        private readonly TranslationString _btnSwapTooltip = new("Swap BASE and Compare commits");
+        private readonly TranslationString _ckCompareToMergeBase = new("Compare to merge &base");
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormDiff()

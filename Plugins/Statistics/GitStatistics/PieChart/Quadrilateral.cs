@@ -21,12 +21,12 @@ namespace GitStatistics.PieChart
                     // | (byte)PathPointType.CloseSubpath
             };
 
-        public static readonly Quadrilateral Empty = new Quadrilateral();
+        public static readonly Quadrilateral Empty = new();
 
         /// <summary>
         ///   <c>GraphicsPath</c> representing the quadrilateral.
         /// </summary>
-        private readonly GraphicsPath _path = new GraphicsPath();
+        private readonly GraphicsPath _path = new();
 
         /// <summary>
         ///   Creates empty <c>Quadrilateral</c> object

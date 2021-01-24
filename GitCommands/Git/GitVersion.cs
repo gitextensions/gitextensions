@@ -6,25 +6,25 @@ namespace GitCommands
 {
     public class GitVersion : IComparable<GitVersion>
     {
-        private static readonly GitVersion v1_7_1 = new GitVersion("1.7.1");
-        private static readonly GitVersion v1_7_7 = new GitVersion("1.7.7");
-        private static readonly GitVersion v1_7_11 = new GitVersion("1.7.11");
-        private static readonly GitVersion v1_8_4 = new GitVersion("1.8.4");
-        private static readonly GitVersion v1_8_5 = new GitVersion("1.8.5");
-        private static readonly GitVersion v2_0_1 = new GitVersion("2.0.1");
-        private static readonly GitVersion v2_5_0 = new GitVersion("2.5.0");
-        private static readonly GitVersion v2_5_1 = new GitVersion("2.5.1");
-        private static readonly GitVersion v2_7_0 = new GitVersion("2.7.0");
-        private static readonly GitVersion v2_9_0 = new GitVersion("2.9.0");
-        private static readonly GitVersion v2_11_0 = new GitVersion("2.11.0");
-        private static readonly GitVersion v2_14_6 = new GitVersion("2.14.6");
-        private static readonly GitVersion v2_15_0 = new GitVersion("2.15.0");
-        private static readonly GitVersion v2_15_2 = new GitVersion("2.15.2");
-        private static readonly GitVersion v2_19_0 = new GitVersion("2.19.0");
-        private static readonly GitVersion v2_20_0 = new GitVersion("2.20.0");
+        private static readonly GitVersion v1_7_1 = new("1.7.1");
+        private static readonly GitVersion v1_7_7 = new("1.7.7");
+        private static readonly GitVersion v1_7_11 = new("1.7.11");
+        private static readonly GitVersion v1_8_4 = new("1.8.4");
+        private static readonly GitVersion v1_8_5 = new("1.8.5");
+        private static readonly GitVersion v2_0_1 = new("2.0.1");
+        private static readonly GitVersion v2_5_0 = new("2.5.0");
+        private static readonly GitVersion v2_5_1 = new("2.5.1");
+        private static readonly GitVersion v2_7_0 = new("2.7.0");
+        private static readonly GitVersion v2_9_0 = new("2.9.0");
+        private static readonly GitVersion v2_11_0 = new("2.11.0");
+        private static readonly GitVersion v2_14_6 = new("2.14.6");
+        private static readonly GitVersion v2_15_0 = new("2.15.0");
+        private static readonly GitVersion v2_15_2 = new("2.15.2");
+        private static readonly GitVersion v2_19_0 = new("2.19.0");
+        private static readonly GitVersion v2_20_0 = new("2.20.0");
 
         public static readonly GitVersion LastSupportedVersion = v2_19_0;
-        public static readonly GitVersion LastRecommendedVersion = new GitVersion("2.30.0");
+        public static readonly GitVersion LastRecommendedVersion = new("2.30.0");
 
         private static GitVersion? _current;
 

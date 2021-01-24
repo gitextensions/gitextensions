@@ -17,10 +17,10 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormReflog : GitModuleForm
     {
-        private readonly TranslationString _continueResetCurrentBranchEvenWithChangesText = new TranslationString("You have changes in your working directory that could be lost.\n\nDo you want to continue?");
-        private readonly TranslationString _continueResetCurrentBranchCaptionText = new TranslationString("Changes not committed...");
+        private readonly TranslationString _continueResetCurrentBranchEvenWithChangesText = new("You have changes in your working directory that could be lost.\n\nDo you want to continue?");
+        private readonly TranslationString _continueResetCurrentBranchCaptionText = new("Changes not committed...");
 
-        private readonly Regex _regexReflog = new Regex("^([^ ]+) ([^:]+): (.+)$", RegexOptions.Compiled);
+        private readonly Regex _regexReflog = new("^([^ ]+) ([^:]+): (.+)$", RegexOptions.Compiled);
 
         private string _currentBranch;
         private bool _isBranchCheckedOut;

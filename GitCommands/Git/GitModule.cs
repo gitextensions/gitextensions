@@ -32,13 +32,13 @@ namespace GitCommands
     public sealed class GitModule : IGitModule
     {
         private const string GitError = "Git Error";
-        private static readonly Regex CpEncodingPattern = new Regex("cp\\d+", RegexOptions.Compiled);
+        private static readonly Regex CpEncodingPattern = new("cp\\d+", RegexOptions.Compiled);
         private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
 
         public static readonly string NoNewLineAtTheEnd = "\\ No newline at end of file";
-        public static CommandCache GitCommandCache { get; } = new CommandCache();
+        public static CommandCache GitCommandCache { get; } = new();
 
-        private readonly object _lock = new object();
+        private readonly object _lock = new();
         private readonly IIndexLockManager _indexLockManager;
         private readonly ICommitDataManager _commitDataManager;
         private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
@@ -339,7 +339,7 @@ namespace GitCommands
         }
 
         private string? _gitCommonDirectory;
-        private readonly object _gitCommonLock = new object();
+        private readonly object _gitCommonLock = new();
 
         /// <summary>
         /// Returns git common directory.
@@ -1934,8 +1934,8 @@ namespace GitCommands
                 : "";
         }
 
-        private static readonly Regex HeadersMatch = new Regex(@"^(?<header_key>[-A-Za-z0-9]+)(?::[ \t]*)(?<header_value>.*)$", RegexOptions.Compiled);
-        private static readonly Regex QuotedText = new Regex(@"=\?([\w-]+)\?q\?(.*)\?=$", RegexOptions.Compiled);
+        private static readonly Regex HeadersMatch = new(@"^(?<header_key>[-A-Za-z0-9]+)(?::[ \t]*)(?<header_value>.*)$", RegexOptions.Compiled);
+        private static readonly Regex QuotedText = new(@"=\?([\w-]+)\?q\?(.*)\?=$", RegexOptions.Compiled);
 
         private string RebaseTodoFilePath => GetRebaseDir() + "git-rebase-todo.backup";
         private string CurrentFilePath => GetRebaseDir() + "stopped-sha";
@@ -2179,7 +2179,7 @@ namespace GitCommands
                 .ToList();
         }
 
-        private static readonly Regex _remoteVerboseLineRegex = new Regex(@"^(?<name>[^	]+)\t(?<url>.+?) \((?<direction>fetch|push)\)$", RegexOptions.Compiled);
+        private static readonly Regex _remoteVerboseLineRegex = new(@"^(?<name>[^	]+)\t(?<url>.+?) \((?<direction>fetch|push)\)$", RegexOptions.Compiled);
 
         public async Task<IReadOnlyList<Remote>> GetRemotesAsync()
         {
@@ -3878,7 +3878,7 @@ namespace GitCommands
             return false;
         }
 
-        private static readonly Regex _escapedOctalCodePointRegex = new Regex(@"(\\([0-7]{3}))+", RegexOptions.Compiled);
+        private static readonly Regex _escapedOctalCodePointRegex = new(@"(\\([0-7]{3}))+", RegexOptions.Compiled);
 
         /// <summary>
         /// Un-escapes any octal code points embedded within <paramref name="s"/>.

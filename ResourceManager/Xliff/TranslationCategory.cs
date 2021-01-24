@@ -31,7 +31,7 @@ namespace ResourceManager.Xliff
         public string TargetLanguage { get; set; }
 
         [XmlElement(ElementName = "body")]
-        public TranslationBody Body { get; set; } = new TranslationBody();
+        public TranslationBody Body { get; set; } = new();
 
         public int CompareTo(TranslationCategory other) => StringComparer.InvariantCulture.Compare(Name, other.Name);
     }

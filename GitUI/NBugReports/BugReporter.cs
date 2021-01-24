@@ -20,7 +20,7 @@ namespace GitExtensions
 
         private static string FormatText(ExternalOperationException exception, bool canRaiseBug)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             // Command: <command>
             if (!string.IsNullOrWhiteSpace(exception.Command))

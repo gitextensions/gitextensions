@@ -53,11 +53,11 @@ namespace AzureDevOpsIntegration
         private static CacheAzureDevOps CacheAzureDevOps = null;
         private static string ProjectOnErrorKey = null;
 
-        private readonly TranslationString _buildIntegrationErrorCaption = new TranslationString("Azure DevOps error");
-        private readonly TranslationString _badTokenErrorMessage = new TranslationString(@"The personal access token is invalid or has expired. Update it in the 'Build server integration' settings.
+        private readonly TranslationString _buildIntegrationErrorCaption = new("Azure DevOps error");
+        private readonly TranslationString _badTokenErrorMessage = new(@"The personal access token is invalid or has expired. Update it in the 'Build server integration' settings.
 
 The build server integration has been disabled for this session.");
-        private readonly TranslationString _genericErrorMessage = new TranslationString(@"An error occured when requesting build server results.
+        private readonly TranslationString _genericErrorMessage = new(@"An error occured when requesting build server results.
 
 As a consequence, the build server integration has been disabled for this session.
 

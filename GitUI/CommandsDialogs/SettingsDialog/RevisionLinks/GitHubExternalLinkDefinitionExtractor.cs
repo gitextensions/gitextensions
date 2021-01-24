@@ -10,7 +10,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks
     {
         public override string ServiceName => "GitHub";
         public override Image Icon => Images.GitHub;
-        private readonly GitHubRemoteParser _remoteParser = new GitHubRemoteParser();
+        private readonly GitHubRemoteParser _remoteParser = new();
 
         public override bool IsValidRemoteUrl(string remoteUrl)
         {

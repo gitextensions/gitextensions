@@ -13,7 +13,7 @@ namespace GitUIPluginInterfaces
             Caption = caption;
         }
 
-        private readonly NetworkCredential _defaultValue = new NetworkCredential();
+        private readonly NetworkCredential _defaultValue = new();
         public string Name { get; }
         public string Caption { get; }
         public CredentialsControl CustomControl { get; set; }

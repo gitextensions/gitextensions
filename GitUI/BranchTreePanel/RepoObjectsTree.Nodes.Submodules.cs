@@ -477,7 +477,7 @@ namespace GitUI.BranchTreePanel
                     return;
                 }
 
-                GitModule module = new GitModule(node.Info.Path);
+                GitModule module = new(node.Info.Path);
 
                 // Reset all changes.
                 module.Reset(ResetMode.Hard);

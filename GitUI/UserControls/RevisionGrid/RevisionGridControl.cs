@@ -77,20 +77,20 @@ namespace GitUI
 
         public static readonly string HotkeySettingsName = "RevisionGrid";
 
-        private readonly TranslationString _droppingFilesBlocked = new TranslationString("For you own protection dropping more than 10 patch files at once is blocked!");
-        private readonly TranslationString _cannotHighlightSelectedBranch = new TranslationString("Cannot highlight selected branch when revision graph is loading.");
-        private readonly TranslationString _noRevisionFoundError = new TranslationString("No revision found.");
-        private readonly TranslationString _baseForCompareNotSelectedError = new TranslationString("Base commit for compare is not selected.");
-        private readonly TranslationString _strLoading = new TranslationString("Loading");
-        private readonly TranslationString _rebaseConfirmTitle = new TranslationString("Rebase Confirmation");
-        private readonly TranslationString _rebaseBranch = new TranslationString("Rebase branch.");
-        private readonly TranslationString _rebaseBranchInteractive = new TranslationString("Rebase branch interactively.");
-        private readonly TranslationString _areYouSureRebase = new TranslationString("Are you sure you want to rebase? This action will rewrite commit history.");
-        private readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
-        private readonly TranslationString _noMergeBaseCommit = new TranslationString("There is no common ancestor for the selected commits.");
+        private readonly TranslationString _droppingFilesBlocked = new("For you own protection dropping more than 10 patch files at once is blocked!");
+        private readonly TranslationString _cannotHighlightSelectedBranch = new("Cannot highlight selected branch when revision graph is loading.");
+        private readonly TranslationString _noRevisionFoundError = new("No revision found.");
+        private readonly TranslationString _baseForCompareNotSelectedError = new("Base commit for compare is not selected.");
+        private readonly TranslationString _strLoading = new("Loading");
+        private readonly TranslationString _rebaseConfirmTitle = new("Rebase Confirmation");
+        private readonly TranslationString _rebaseBranch = new("Rebase branch.");
+        private readonly TranslationString _rebaseBranchInteractive = new("Rebase branch interactively.");
+        private readonly TranslationString _areYouSureRebase = new("Are you sure you want to rebase? This action will rewrite commit history.");
+        private readonly TranslationString _dontShowAgain = new("Don't show me this message again.");
+        private readonly TranslationString _noMergeBaseCommit = new("There is no common ancestor for the selected commits.");
 
-        private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
-        private readonly NavigationHistory _navigationHistory = new NavigationHistory();
+        private readonly FormRevisionFilter _revisionFilter = new();
+        private readonly NavigationHistory _navigationHistory = new();
         private readonly Control _loadingControlAsync;
         private readonly Control _loadingControlSync;
         private readonly RevisionGridToolTipProvider _toolTipProvider;
@@ -2102,8 +2102,8 @@ namespace GitUI
                     : null;
         }
 
-        private ArtificialCommitChangeCount _workTreeChangeCount = new ArtificialCommitChangeCount();
-        private ArtificialCommitChangeCount _indexChangeCount = new ArtificialCommitChangeCount();
+        private ArtificialCommitChangeCount _workTreeChangeCount = new();
+        private ArtificialCommitChangeCount _indexChangeCount = new();
 
         public void UpdateArtificialCommitCount(
             [CanBeNull] IReadOnlyList<GitItemStatus> status,

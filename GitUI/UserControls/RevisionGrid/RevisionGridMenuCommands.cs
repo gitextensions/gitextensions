@@ -16,8 +16,8 @@ namespace GitUI.UserControls.RevisionGrid
     {
         public event EventHandler MenuChanged;
 
-        private readonly TranslationString _quickSearchQuickHelp = new TranslationString("Start typing in revision grid to start quick search.");
-        private readonly TranslationString _noRevisionFoundError = new TranslationString("No revision found.");
+        private readonly TranslationString _quickSearchQuickHelp = new("Start typing in revision grid to start quick search.");
+        private readonly TranslationString _noRevisionFoundError = new("No revision found.");
 
         private readonly RevisionGridControl _revisionGrid;
 

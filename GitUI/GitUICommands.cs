@@ -374,7 +374,7 @@ namespace GitUI
         /// <returns>The <see cref="IProcess"/> object for controlling the launched instance.</returns>
         public static IProcess LaunchBrowse(string workingDir = "", ObjectId selectedId = null, ObjectId firstId = null)
         {
-            StringBuilder arguments = new StringBuilder("browse");
+            StringBuilder arguments = new("browse");
 
             if (selectedId is null)
             {

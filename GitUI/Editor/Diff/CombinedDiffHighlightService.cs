@@ -7,7 +7,7 @@ namespace GitUI.Editor.Diff
 {
     public class CombinedDiffHighlightService : DiffHighlightService
     {
-        public static new CombinedDiffHighlightService Instance { get; } = new CombinedDiffHighlightService();
+        public static new CombinedDiffHighlightService Instance { get; } = new();
 
         protected CombinedDiffHighlightService()
         {

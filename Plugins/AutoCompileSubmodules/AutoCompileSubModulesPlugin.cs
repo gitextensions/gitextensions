@@ -24,9 +24,9 @@ namespace AutoCompileSubmodules
             Icon = Resources.IconAutoCompileSubmodules;
         }
 
-        private readonly BoolSetting _msBuildEnabled = new BoolSetting("Enabled", false);
-        private readonly StringSetting _msBuildPath = new StringSetting("Path to msbuild.exe", FindMsBuild());
-        private readonly StringSetting _msBuildArguments = new StringSetting("msbuild.exe arguments", "/p:Configuration=Debug");
+        private readonly BoolSetting _msBuildEnabled = new("Enabled", false);
+        private readonly StringSetting _msBuildPath = new("Path to msbuild.exe", FindMsBuild());
+        private readonly StringSetting _msBuildArguments = new("msbuild.exe arguments", "/p:Configuration=Debug");
 
         private const string DefaultMsBuildPath = @"C:\Windows\Microsoft.NET\Framework\v3.5\msbuild.exe";
 

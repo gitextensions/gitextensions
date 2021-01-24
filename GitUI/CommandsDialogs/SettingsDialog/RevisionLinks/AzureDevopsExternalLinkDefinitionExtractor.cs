@@ -10,7 +10,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks
     {
         public override string ServiceName => "Azure DevOps";
         public override Image Icon => Images.VisualStudioTeamServices;
-        private readonly AzureDevOpsRemoteParser _azureDevOpsRemoteParser = new AzureDevOpsRemoteParser();
+        private readonly AzureDevOpsRemoteParser _azureDevOpsRemoteParser = new();
 
         public override bool IsValidRemoteUrl(string remoteUrl)
         {

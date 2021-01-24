@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public sealed partial class RevisionLinksSettingsPage : RepoDistSettingsPage
     {
-        private readonly TranslationString _addTemplate = new TranslationString("Add {0} templates");
+        private readonly TranslationString _addTemplate = new("Add {0} templates");
         private ExternalLinksManager _externalLinksManager;
 
         public RevisionLinksSettingsPage()

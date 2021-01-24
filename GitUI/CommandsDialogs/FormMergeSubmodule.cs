@@ -10,8 +10,8 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormMergeSubmodule : GitModuleForm
     {
-        private readonly TranslationString _stageFilename = new TranslationString("Stage {0}");
-        private readonly TranslationString _deleted = new TranslationString("deleted");
+        private readonly TranslationString _stageFilename = new("Stage {0}");
+        private readonly TranslationString _deleted = new("deleted");
 
         private readonly string _filename;
 

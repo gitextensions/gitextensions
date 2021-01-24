@@ -10,7 +10,7 @@ namespace GitCommands
     {
         public event EventHandler<AsyncErrorEventArgs>? LoadingError;
 
-        private readonly CancellationTokenSequence _cancellationSequence = new CancellationTokenSequence();
+        private readonly CancellationTokenSequence _cancellationSequence = new();
 
         private int _disposed;
 

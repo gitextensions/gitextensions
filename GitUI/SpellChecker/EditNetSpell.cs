@@ -23,24 +23,24 @@ namespace GitUI.SpellChecker
     {
         public event EventHandler TextAssigned;
 
-        private readonly TranslationString _cutMenuItemText = new TranslationString("Cut");
-        private readonly TranslationString _copyMenuItemText = new TranslationString("Copy");
-        private readonly TranslationString _pasteMenuItemText = new TranslationString("Paste");
-        private readonly TranslationString _deleteMenuItemText = new TranslationString("Delete");
-        private readonly TranslationString _selectAllMenuItemText = new TranslationString("Select all");
+        private readonly TranslationString _cutMenuItemText = new("Cut");
+        private readonly TranslationString _copyMenuItemText = new("Copy");
+        private readonly TranslationString _pasteMenuItemText = new("Paste");
+        private readonly TranslationString _deleteMenuItemText = new("Delete");
+        private readonly TranslationString _selectAllMenuItemText = new("Select all");
 
-        private readonly TranslationString _addToDictionaryText = new TranslationString("Add to dictionary");
-        private readonly TranslationString _ignoreWordText = new TranslationString("Ignore word");
-        private readonly TranslationString _removeWordText = new TranslationString("Remove word");
-        private readonly TranslationString _dictionaryText = new TranslationString("Dictionary");
-        private readonly TranslationString _markIllFormedLinesText = new TranslationString("Mark ill formed lines");
-        private readonly TranslationString _autoCompletionText = new TranslationString("Provide auto completion");
+        private readonly TranslationString _addToDictionaryText = new("Add to dictionary");
+        private readonly TranslationString _ignoreWordText = new("Ignore word");
+        private readonly TranslationString _removeWordText = new("Remove word");
+        private readonly TranslationString _dictionaryText = new("Dictionary");
+        private readonly TranslationString _markIllFormedLinesText = new("Mark ill formed lines");
+        private readonly TranslationString _autoCompletionText = new("Provide auto completion");
 
         private SpellCheckEditControl _customUnderlines;
         private Spelling _spelling;
         private static WordDictionary _wordDictionary;
 
-        private CancellationTokenSource _autoCompleteCancellationTokenSource = new CancellationTokenSource();
+        private CancellationTokenSource _autoCompleteCancellationTokenSource = new();
         private readonly List<IAutoCompleteProvider> _autoCompleteProviders = new List<IAutoCompleteProvider>();
         private AsyncLazy<IEnumerable<AutoCompleteWord>> _autoCompleteListTask;
         private bool _autoCompleteWasUserActivated;

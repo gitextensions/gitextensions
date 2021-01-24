@@ -49,41 +49,41 @@ namespace GitUI.CommandsDialogs
     {
         #region Translation
 
-        private readonly TranslationString _noSubmodulesPresent = new TranslationString("No submodules");
-        private readonly TranslationString _topProjectModuleFormat = new TranslationString("Top project: {0}");
-        private readonly TranslationString _superprojectModuleFormat = new TranslationString("Superproject: {0}");
-        private readonly TranslationString _goToSuperProject = new TranslationString("Go to superproject");
+        private readonly TranslationString _noSubmodulesPresent = new("No submodules");
+        private readonly TranslationString _topProjectModuleFormat = new("Top project: {0}");
+        private readonly TranslationString _superprojectModuleFormat = new("Superproject: {0}");
+        private readonly TranslationString _goToSuperProject = new("Go to superproject");
 
-        private readonly TranslationString _indexLockCantDelete = new TranslationString("Failed to delete index.lock");
+        private readonly TranslationString _indexLockCantDelete = new("Failed to delete index.lock");
 
-        private readonly TranslationString _loading = new TranslationString("Loading...");
+        private readonly TranslationString _loading = new("Loading...");
 
-        private readonly TranslationString _noReposHostPluginLoaded = new TranslationString("No repository host plugin loaded.");
-        private readonly TranslationString _noReposHostFound = new TranslationString("Could not find any relevant repository hosts for the currently open repository.");
+        private readonly TranslationString _noReposHostPluginLoaded = new("No repository host plugin loaded.");
+        private readonly TranslationString _noReposHostFound = new("Could not find any relevant repository hosts for the currently open repository.");
 
-        private readonly TranslationString _configureWorkingDirMenu = new TranslationString("Configure this menu");
+        private readonly TranslationString _configureWorkingDirMenu = new("Configure this menu");
 
-        private readonly TranslationString _updateCurrentSubmodule = new TranslationString("Update current submodule");
+        private readonly TranslationString _updateCurrentSubmodule = new("Update current submodule");
 
-        private readonly TranslationString _pullFetch = new TranslationString("Fetch");
-        private readonly TranslationString _pullFetchAll = new TranslationString("Fetch all");
-        private readonly TranslationString _pullFetchPruneAll = new TranslationString("Fetch and prune all");
-        private readonly TranslationString _pullMerge = new TranslationString("Pull - merge");
-        private readonly TranslationString _pullRebase = new TranslationString("Pull - rebase");
-        private readonly TranslationString _pullOpenDialog = new TranslationString("Open pull dialog");
+        private readonly TranslationString _pullFetch = new("Fetch");
+        private readonly TranslationString _pullFetchAll = new("Fetch all");
+        private readonly TranslationString _pullFetchPruneAll = new("Fetch and prune all");
+        private readonly TranslationString _pullMerge = new("Pull - merge");
+        private readonly TranslationString _pullRebase = new("Pull - rebase");
+        private readonly TranslationString _pullOpenDialog = new("Open pull dialog");
 
-        private readonly TranslationString _buildReportTabCaption = new TranslationString("Build Report");
-        private readonly TranslationString _consoleTabCaption = new TranslationString("Console");
+        private readonly TranslationString _buildReportTabCaption = new("Build Report");
+        private readonly TranslationString _consoleTabCaption = new("Console");
 
-        private readonly TranslationString _noWorkingFolderText = new TranslationString("No working directory");
-        private readonly TranslationString _commitButtonText = new TranslationString("Commit");
+        private readonly TranslationString _noWorkingFolderText = new("No working directory");
+        private readonly TranslationString _commitButtonText = new("Commit");
 
-        private readonly TranslationString _undoLastCommitText = new TranslationString("You will still be able to find all the commit's changes in the staging area\n\nDo you want to continue?");
-        private readonly TranslationString _undoLastCommitCaption = new TranslationString("Undo last commit");
+        private readonly TranslationString _undoLastCommitText = new("You will still be able to find all the commit's changes in the staging area\n\nDo you want to continue?");
+        private readonly TranslationString _undoLastCommitCaption = new("Undo last commit");
 
         #endregion
 
-        private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse"));
+        private readonly SplitterManager _splitterManager = new(new AppSettingsPath("FormBrowse"));
         [NotNull]
         private readonly GitStatusMonitor _gitStatusMonitor;
         private readonly FilterRevisionsHelper _filterRevisionsHelper;
@@ -97,7 +97,7 @@ namespace GitUI.CommandsDialogs
         private readonly ISubmoduleStatusProvider _submoduleStatusProvider;
         private readonly FormBrowseDiagnosticsReporter _formBrowseDiagnosticsReporter;
         [CanBeNull] private BuildReportTabPageExtension _buildReportTabPageExtension;
-        private readonly ShellProvider _shellProvider = new ShellProvider();
+        private readonly ShellProvider _shellProvider = new();
         private ConEmuControl _terminal;
         private Dashboard _dashboard;
 

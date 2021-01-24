@@ -19,11 +19,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
     public partial class FormUpdates : GitExtensionsForm
     {
         #region Translation
-        private readonly TranslationString _newVersionAvailable = new TranslationString("There is a new version {0} of Git Extensions available");
-        private readonly TranslationString _noUpdatesFound = new TranslationString("No updates found");
-        private readonly TranslationString _downloadingUpdate = new TranslationString("Downloading update...");
-        private readonly TranslationString _errorHeading = new TranslationString("Download Failed");
-        private readonly TranslationString _errorMessage = new TranslationString("Failed to download an update.");
+        private readonly TranslationString _newVersionAvailable = new("There is a new version {0} of Git Extensions available");
+        private readonly TranslationString _noUpdatesFound = new("No updates found");
+        private readonly TranslationString _downloadingUpdate = new("Downloading update...");
+        private readonly TranslationString _errorHeading = new("Download Failed");
+        private readonly TranslationString _errorMessage = new("Failed to download an update.");
         #endregion
 
         public IWin32Window OwnerWindow;
@@ -203,7 +203,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                 try
                 {
-                    Process process = new Process();
+                    Process process = new();
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.FileName = "msiexec.exe";
                     process.StartInfo.Arguments = string.Format("/i \"{0}\\{1}\" /qb LAUNCH=1", Environment.GetEnvironmentVariable("TEMP"), fileName);

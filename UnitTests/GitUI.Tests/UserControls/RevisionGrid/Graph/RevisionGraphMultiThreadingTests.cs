@@ -26,7 +26,7 @@ namespace GitUITests.UserControls.RevisionGrid
         // Increase this number to create a larger test set.
         // Advice: set this number to 1000 for thread safety test
         private const int _numberOfRevisionsAddedPerRun = 500;
-        private readonly Random _random = new Random();
+        private readonly Random _random = new();
 
         private RevisionGraph _revisionGraph;
 
@@ -35,7 +35,7 @@ namespace GitUITests.UserControls.RevisionGrid
         {
             _revisionGraph = new RevisionGraph();
 
-            GitRevision revision = new GitRevision(ObjectId.Random());
+            GitRevision revision = new(ObjectId.Random());
 
             // Mark the first revision as the current checkout
             _revisionGraph.Add(revision, RevisionNodeFlags.CheckedOut);
@@ -75,7 +75,7 @@ namespace GitUITests.UserControls.RevisionGrid
 
             for (int i = 0; i < _numberOfRevisionsAddedPerRun; i++)
             {
-                GitRevision revision = new GitRevision(ObjectId.Random());
+                GitRevision revision = new(ObjectId.Random());
                 if (randomRevisions.Count > 1)
                 {
                     var randomRevision1 = randomRevisions[_random.Next(randomRevisions.Count - 1)];

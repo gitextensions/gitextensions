@@ -100,7 +100,7 @@ namespace GitUI.HelperDialogs
         /// For instance, progress messages might be skipped; other messages might be added manually.
         /// </summary>
         [NotNull]
-        private protected FormStatusOutputLog OutputLog { get; } = new FormStatusOutputLog();
+        private protected FormStatusOutputLog OutputLog { get; } = new();
 
         public bool ErrorOccurred()
         {

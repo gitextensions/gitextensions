@@ -242,60 +242,60 @@ namespace GitUI.CommandsDialogs
 
         private class Globalized : Translate
         {
-            public static readonly Globalized Strings = new Globalized();
+            public static readonly Globalized Strings = new();
 
             private Globalized()
             {
                 Translator.Translate(this, AppSettings.CurrentTranslation);
             }
 
-            public readonly TranslationString Cancel = new TranslationString("Cancel");
+            public readonly TranslationString Cancel = new("Cancel");
 
-            public readonly TranslationString CannotLoadTheTextOfTheSparseFile = new TranslationString("Cannot load the text of the sparse file.");
+            public readonly TranslationString CannotLoadTheTextOfTheSparseFile = new("Cannot load the text of the sparse file.");
 
-            public readonly TranslationString ConfirmDisableGitSparse = new TranslationString("You are about to disable Git Sparse feature for this repository, {0}.\nGit won't be able to restore the working copy to its full content this way.\n\nWould you like to have the filter modified so that it allowed for the full working copy?");
+            public readonly TranslationString ConfirmDisableGitSparse = new("You are about to disable Git Sparse feature for this repository, {0}.\nGit won't be able to restore the working copy to its full content this way.\n\nWould you like to have the filter modified so that it allowed for the full working copy?");
 
-            public readonly TranslationString CouldNotSave = new TranslationString("Could not save the modified settings and rules.");
+            public readonly TranslationString CouldNotSave = new("Could not save the modified settings and rules.");
 
-            public readonly TranslationString DisableForThisRepository = new TranslationString("Disable for this repository");
+            public readonly TranslationString DisableForThisRepository = new("Disable for this repository");
 
-            public readonly TranslationString DisableGitSparse = new TranslationString("Disable Git Sparse");
+            public readonly TranslationString DisableGitSparse = new("Disable Git Sparse");
 
-            public readonly TranslationString EditsTheContentsOfTheGitInfoSparseCheckoutFile = new TranslationString("Edits the contents of the “.git/info/sparse-checkout” file.");
+            public readonly TranslationString EditsTheContentsOfTheGitInfoSparseCheckoutFile = new("Edits the contents of the “.git/info/sparse-checkout” file.");
 
-            public readonly TranslationString Enable = new TranslationString("&Enable");
+            public readonly TranslationString Enable = new("&Enable");
 
-            public readonly TranslationString HeaderDetailsText = new TranslationString("Need only a small part of a large repository?\nWith sparse checkout, you can skip the rest from being extracted into your working copy.");
+            public readonly TranslationString HeaderDetailsText = new("Need only a small part of a large repository?\nWith sparse checkout, you can skip the rest from being extracted into your working copy.");
 
-            public readonly TranslationString LoadFile = new TranslationString("Load File");
+            public readonly TranslationString LoadFile = new("Load File");
 
-            public readonly TranslationString RefreshWorkingCopyCheckboxHint = new TranslationString("As the sparse working copy rules are changed, it might become outdated.\nRefreshes the working copy against the current set of the rules to restore any missing files and remove any extra files.\n\nnActual command line: {0}");
+            public readonly TranslationString RefreshWorkingCopyCheckboxHint = new("As the sparse working copy rules are changed, it might become outdated.\nRefreshes the working copy against the current set of the rules to restore any missing files and remove any extra files.\n\nnActual command line: {0}");
 
-            public readonly TranslationString RefreshWorkingCopyUsingTheCurrentSettingsAndRules = new TranslationString("Refresh working copy using the current settings and rules");
+            public readonly TranslationString RefreshWorkingCopyUsingTheCurrentSettingsAndRules = new("Refresh working copy using the current settings and rules");
 
-            public readonly TranslationString Save = new TranslationString("&Save");
+            public readonly TranslationString Save = new("&Save");
 
-            public readonly TranslationString SaveFile = new TranslationString("Save File");
+            public readonly TranslationString SaveFile = new("Save File");
 
-            public readonly TranslationString SetsTheGitPropertyToFalseForTheLocalRepository = new TranslationString("Sets the Git property “{0}” to False for the local repository.");
+            public readonly TranslationString SetsTheGitPropertyToFalseForTheLocalRepository = new("Sets the Git property “{0}” to False for the local repository.");
 
-            public readonly TranslationString SetsTheGitPropertyToTrueForTheLocalRepository = new TranslationString("Sets the Git property “{0}” to True for the local repository.");
+            public readonly TranslationString SetsTheGitPropertyToTrueForTheLocalRepository = new("Sets the Git property “{0}” to True for the local repository.");
 
-            public readonly TranslationString SparseWorkingCopy = new TranslationString("Sparse Working Copy");
+            public readonly TranslationString SparseWorkingCopy = new("Sparse Working Copy");
 
-            public readonly TranslationString SparseWorkingCopySupportHasNotBeenEnabledForThisRepository = new TranslationString("Git Sparse feature has not been enabled for this repository.");
+            public readonly TranslationString SparseWorkingCopySupportHasNotBeenEnabledForThisRepository = new("Git Sparse feature has not been enabled for this repository.");
 
-            public readonly TranslationString SparseWorkingCopySupportIsEnabled = new TranslationString("Git Sparse feature is currently enabled.");
+            public readonly TranslationString SparseWorkingCopySupportIsEnabled = new("Git Sparse feature is currently enabled.");
 
-            public readonly TranslationString SpecifyTheRulesForIncludingOrExcludingFilesAndDirectories = new TranslationString("Specify the pass-filter rules for files and directories:");
+            public readonly TranslationString SpecifyTheRulesForIncludingOrExcludingFilesAndDirectories = new("Specify the pass-filter rules for files and directories:");
 
-            public readonly TranslationString SpecifyTheRulesForIncludingOrExcludingFilesAndDirectoriesLine2 = new TranslationString("The rules have the same format as the “.gitignore” file, matched items are included. To exclude, prefix a rule with an exclamation mark “!”.\n“#” comments a line. This is only a filter, so it cannot change the structure like pulling up a deep subfolder to the first level.");
+            public readonly TranslationString SpecifyTheRulesForIncludingOrExcludingFilesAndDirectoriesLine2 = new("The rules have the same format as the “.gitignore” file, matched items are included. To exclude, prefix a rule with an exclamation mark “!”.\n“#” comments a line. This is only a filter, so it cannot change the structure like pulling up a deep subfolder to the first level.");
 
-            public readonly TranslationString WithSomeRulesStillInTheSparsePassFilter = new TranslationString("with some rules still in the sparse pass-filter");
+            public readonly TranslationString WithSomeRulesStillInTheSparsePassFilter = new("with some rules still in the sparse pass-filter");
 
-            public readonly TranslationString WithTheSparsePassFilterEmptyOrMissing = new TranslationString("with the sparse pass-filter empty or missing");
+            public readonly TranslationString WithTheSparsePassFilterEmptyOrMissing = new("with the sparse pass-filter empty or missing");
 
-            public readonly TranslationString YouHaveMadeChangesToSettingsOrRulesWouldYouLikeToSaveThem = new TranslationString("You have made changes to settings or rules.\nWould you like to save them?");
+            public readonly TranslationString YouHaveMadeChangesToSettingsOrRulesWouldYouLikeToSaveThem = new("You have made changes to settings or rules.\nWould you like to save them?");
         }
     }
 }

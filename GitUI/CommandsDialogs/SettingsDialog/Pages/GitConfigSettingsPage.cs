@@ -11,7 +11,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class GitConfigSettingsPage : ConfigFileSettingsPage
     {
-        private readonly TranslationString _selectFile = new TranslationString("Select file");
+        private readonly TranslationString _selectFile = new("Select file");
         private readonly GitConfigSettingsPageController _controller;
         private DiffMergeToolConfigurationManager _diffMergeToolConfigurationManager;
 

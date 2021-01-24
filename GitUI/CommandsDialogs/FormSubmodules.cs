@@ -16,9 +16,9 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormSubmodules : GitModuleForm
     {
-        private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("FormSubmodules"));
-        private readonly TranslationString _removeSelectedSubmodule = new TranslationString("Are you sure you want remove the selected submodule?");
-        private readonly TranslationString _removeSelectedSubmoduleCaption = new TranslationString("Remove");
+        private readonly SplitterManager _splitterManager = new(new AppSettingsPath("FormSubmodules"));
+        private readonly TranslationString _removeSelectedSubmodule = new("Are you sure you want remove the selected submodule?");
+        private readonly TranslationString _removeSelectedSubmoduleCaption = new("Remove");
 
         private readonly BindingList<IGitSubmoduleInfo> _modules = new BindingList<IGitSubmoduleInfo>();
         private GitSubmoduleInfo _oldSubmoduleInfo;

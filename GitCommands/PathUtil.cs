@@ -216,7 +216,7 @@ namespace GitCommands
                 throw new ArgumentException(nameof(path));
             }
 
-            Uri tempPath = new Uri(path);
+            Uri tempPath = new(path);
             if (!string.IsNullOrEmpty(relativePath))
             {
                 tempPath = new Uri(tempPath, relativePath);

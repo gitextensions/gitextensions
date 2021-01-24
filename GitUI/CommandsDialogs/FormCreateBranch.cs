@@ -13,11 +13,11 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormCreateBranch : GitExtensionsDialog
     {
-        private readonly TranslationString _noRevisionSelected = new TranslationString("Select 1 revision to create the branch on.");
-        private readonly TranslationString _branchNameIsEmpty = new TranslationString("Enter branch name.");
-        private readonly TranslationString _branchNameIsNotValid = new TranslationString("“{0}” is not valid branch name.");
+        private readonly TranslationString _noRevisionSelected = new("Select 1 revision to create the branch on.");
+        private readonly TranslationString _branchNameIsEmpty = new("Enter branch name.");
+        private readonly TranslationString _branchNameIsNotValid = new("“{0}” is not valid branch name.");
         private readonly IGitBranchNameNormaliser _branchNameNormaliser = new GitBranchNameNormaliser();
-        private readonly GitBranchNameOptions _gitBranchNameOptions = new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol);
+        private readonly GitBranchNameOptions _gitBranchNameOptions = new(AppSettings.AutoNormaliseSymbol);
 
         public bool CheckoutAfterCreation { get; set; } = true;
         public bool UserAbleToChangeRevision { get; set; } = true;
