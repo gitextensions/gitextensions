@@ -85,12 +85,12 @@ namespace GitUI.BranchTreePanel
 
             public bool Rebase()
             {
-                return UICommands.StartRebaseDialog(TreeViewNode.TreeView, FullPath);
+                return UICommands.StartRebaseDialog(ParentWindow(), onto: FullPath);
             }
 
             public bool Reset()
             {
-                return UICommands.StartResetCurrentBranchDialog(TreeViewNode.TreeView, FullPath);
+                return UICommands.StartResetCurrentBranchDialog(ParentWindow(), branch: FullPath);
             }
 
             [CanBeNull]
@@ -233,27 +233,27 @@ namespace GitUI.BranchTreePanel
 
             public bool Checkout()
             {
-                return UICommands.StartCheckoutBranch(FullPath, false);
+                return UICommands.StartCheckoutBranch(ParentWindow(), branch: FullPath, remote: false);
             }
 
             public bool CreateBranch()
             {
-                return UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, FullPath);
+                return UICommands.StartCreateBranchDialog(ParentWindow(), branch: FullPath);
             }
 
             public bool Merge()
             {
-                return UICommands.StartMergeBranchDialog(TreeViewNode.TreeView, FullPath);
+                return UICommands.StartMergeBranchDialog(ParentWindow(), branch: FullPath);
             }
 
             public bool Delete()
             {
-                return UICommands.StartDeleteBranchDialog(ParentWindow(), FullPath);
+                return UICommands.StartDeleteBranchDialog(ParentWindow(), branch: FullPath);
             }
 
             public bool Rename()
             {
-                return UICommands.StartRenameDialog(TreeViewNode.TreeView, FullPath);
+                return UICommands.StartRenameDialog(ParentWindow(), branch: FullPath);
             }
         }
 
@@ -294,7 +294,7 @@ namespace GitUI.BranchTreePanel
             public void CreateBranch()
             {
                 var newBranchNamePrefix = FullPath + PathSeparator;
-                UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, null, newBranchNamePrefix);
+                UICommands.StartCreateBranchDialog(ParentWindow(), objectId: null, newBranchNamePrefix);
             }
         }
 
