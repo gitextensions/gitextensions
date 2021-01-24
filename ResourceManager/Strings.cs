@@ -27,10 +27,9 @@ You can change your mind at any time.
 
 Yes, I allow telemetry!");
 
-        private readonly TranslationString _installGitInstructions = new TranslationString("Install git...");
-        private readonly TranslationString _findGitExecutable = new TranslationString("Find git...");
-        private readonly TranslationString _gitExecutableNotFoundText =
-            new TranslationString("The Git executable could not be located on your system.");
+        private readonly TranslationString _installGitInstructions = new TranslationString("Install Git\r\nGo to GitExtensions wiki");
+        private readonly TranslationString _findGitExecutable = new TranslationString("Browse to Git\r\n Find Git on your computer");
+        private readonly TranslationString _gitExecutableNotFoundText = new TranslationString("Git Extensions requires a Git executable to be on your computer which does not appear to be the case. Please install Git or click Browse to find Git on your computer manually.");
         private readonly TranslationString _authorDateText = new TranslationString("{0:Author date|Author dates}");
         private readonly TranslationString _committerText = new TranslationString("Committer");
         private readonly TranslationString _commitDateText = new TranslationString("{0:Commit date|Commit dates}");

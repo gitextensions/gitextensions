@@ -11592,7 +11592,8 @@ Select this commit to populate the full message.</source>
         
       </trans-unit>
       <trans-unit id="_findGitExecutable.Text">
-        <source>Find git...</source>
+        <source>Browse to Git
+Find Git on your computer</source>
         <target>[Ƒīƞḓ ɠīŧ... ςϱϕǋ ǅǈǋϕǲ衋]</target>
         
       </trans-unit>
@@ -11612,7 +11613,7 @@ Select this commit to populate the full message.</source>
         
       </trans-unit>
       <trans-unit id="_gitExecutableNotFoundText.Text">
-        <source>The Git executable could not be located on your system.</source>
+        <source>Git Extensions requires a Git executable to be on your computer which does not appear to be the case. Please install Git or click Browse to find Git on your computer manually.</source>
         <target>[Ŧħḗ Ɠīŧ ḗẋḗƈŭŧȧƀŀḗ ƈǿŭŀḓ ƞǿŧ ƀḗ ŀǿƈȧŧḗḓ ǿƞ ẏǿŭř şẏşŧḗḿ. ΰ靐ϖ ǈΰǲ]</target>
         
       </trans-unit>
@@ -11627,7 +11628,9 @@ Select this commit to populate the full message.</source>
         
       </trans-unit>
       <trans-unit id="_installGitInstructions.Text">
-        <source>Install git...</source>
+        <source>Install Git
+Go to GitExtensions wiki
+        </source>
         <target>[Īƞşŧȧŀŀ ɠīŧ... ϕϵẛ衋ϕ靐ς ǋΐẛẛ]</target>
         
       </trans-unit>
