@@ -344,11 +344,6 @@ namespace GitUI
             return StartCheckoutBranch(owner, "", false, containRevisions);
         }
 
-        public bool StartCheckoutBranch(string branch, bool remote)
-        {
-            return StartCheckoutBranch(null, branch, remote);
-        }
-
         public bool StartCheckoutRemoteBranch(IWin32Window owner, string branch)
         {
             return StartCheckoutBranch(owner, branch, true);

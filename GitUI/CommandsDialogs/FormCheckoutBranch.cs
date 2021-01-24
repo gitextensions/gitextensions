@@ -171,7 +171,7 @@ namespace GitUI.CommandsDialogs
             if (!AppSettings.AlwaysShowCheckoutBranchDlg && localBranchSelected &&
                 (!HasUncommittedChanges || AppSettings.UseDefaultCheckoutBranchAction))
             {
-                return OkClick();
+                return PerformCheckout(owner);
             }
 
             return ShowDialog(owner);
@@ -267,14 +267,14 @@ namespace GitUI.CommandsDialogs
 
         private void OkClick(object sender, EventArgs e)
         {
-            DialogResult = OkClick();
+            DialogResult = PerformCheckout(this);
             if (DialogResult == DialogResult.OK)
             {
                 Close();
             }
         }
 
-        private DialogResult OkClick()
+        private DialogResult PerformCheckout(IWin32Window owner)
         {
             // Ok button set as the "AcceptButton" for the form
             // if the user hits [Enter] at any point, we need to trigger txtCustomBranchName Leave event
@@ -349,8 +349,6 @@ namespace GitUI.CommandsDialogs
             {
                 localChanges = LocalChangesAction.DontChange;
             }
-
-            IWin32Window owner = Visible ? this : Owner;
 
             bool stash = false;
             if (localChanges == LocalChangesAction.Stash)
