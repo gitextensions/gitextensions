@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils;
 using GitUI.UserControls;
 
 namespace GitUI.HelperDialogs

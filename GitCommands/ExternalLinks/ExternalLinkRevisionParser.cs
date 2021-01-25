@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using GitCommands.Remotes;
-using GitExtensions;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.ExternalLinks

@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace GitCommands
+namespace GitExtUtils
 {
     public sealed class GitCommandConfiguration
     {

@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 #error Remove this class when targeting .NET 5 and update all usages
 #endif
 
-namespace GitExtensions
+namespace GitExtUtils
 {
     internal static class Strings
     {

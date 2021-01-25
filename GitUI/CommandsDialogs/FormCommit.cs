@@ -1357,7 +1357,7 @@ namespace GitUI.CommandsDialogs
 
                     if (pushCompleted && Module.SuperprojectModule is not null &&
                         AppSettings.StageInSuperprojectAfterCommit &&
-                        !GitExtensions.Strings.IsNullOrWhiteSpace(Module.SubmodulePath))
+                        !GitExtUtils.Strings.IsNullOrWhiteSpace(Module.SubmodulePath))
                     {
                         Module.SuperprojectModule.StageFile(Module.SubmodulePath);
                     }

@@ -461,7 +461,7 @@ See the changes in the commit form.");
                 selectedItem = searchWindow.SelectedItem;
             }
 
-            if (GitExtensions.Strings.IsNullOrEmpty(selectedItem))
+            if (GitExtUtils.Strings.IsNullOrEmpty(selectedItem))
             {
                 return;
             }

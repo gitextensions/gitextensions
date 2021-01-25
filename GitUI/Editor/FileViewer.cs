@@ -989,7 +989,7 @@ namespace GitUI.Editor
             _viewMode = viewMode;
             _viewItem = item;
             if (_viewMode == ViewMode.Text
-                && !GitExtensions.Strings.IsNullOrEmpty(fileName)
+                && !GitExtUtils.Strings.IsNullOrEmpty(fileName)
                 && (fileName.EndsWith(".diff", StringComparison.OrdinalIgnoreCase)
                     || fileName.EndsWith(".patch", StringComparison.OrdinalIgnoreCase)))
             {

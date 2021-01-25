@@ -78,7 +78,7 @@ namespace GitUI.Script
         private static BindingList<ScriptInfo> DeserializeFromXml(string? xml)
         {
             // When there is nothing to deserialize, add default scripts
-            if (GitExtensions.Strings.IsNullOrEmpty(xml))
+            if (GitExtUtils.Strings.IsNullOrEmpty(xml))
             {
                 return GetDefaultScripts();
             }

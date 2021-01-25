@@ -36,7 +36,7 @@ namespace GitUI.UserControls
 
         public bool IsHighlighted(GitRevision? revision)
         {
-            if (GitExtensions.Strings.IsNullOrWhiteSpace(revision?.AuthorEmail))
+            if (GitExtUtils.Strings.IsNullOrWhiteSpace(revision?.AuthorEmail))
             {
                 return false;
             }

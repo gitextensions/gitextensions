@@ -1,4 +1,4 @@
-﻿namespace GitCommands
+﻿namespace GitExtUtils
 {
     /// <summary>
     /// A configuration key/value pair for use in git command lines.

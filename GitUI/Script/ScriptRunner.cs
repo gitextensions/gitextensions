@@ -46,7 +46,7 @@ namespace GitUI.Script
 
         private static CommandStatus RunScriptInternal(IWin32Window owner, IGitModule module, string? scriptKey, IGitUICommands uiCommands, RevisionGridControl? revisionGrid)
         {
-            if (GitExtensions.Strings.IsNullOrEmpty(scriptKey))
+            if (GitExtUtils.Strings.IsNullOrEmpty(scriptKey))
             {
                 return false;
             }
@@ -59,13 +59,13 @@ namespace GitUI.Script
                     new ExternalOperationException(command: null, arguments: null, module.WorkingDir, innerException: null));
             }
 
-            if (GitExtensions.Strings.IsNullOrEmpty(scriptInfo.Command))
+            if (GitExtUtils.Strings.IsNullOrEmpty(scriptInfo.Command))
             {
                 return false;
             }
 
             string? arguments = scriptInfo.Arguments;
-            if (!GitExtensions.Strings.IsNullOrEmpty(arguments) && revisionGrid is null)
+            if (!GitExtUtils.Strings.IsNullOrEmpty(arguments) && revisionGrid is null)
             {
                 string? optionDependingOnSelectedRevision
                     = ScriptOptionsParser.Options.FirstOrDefault(option => ScriptOptionsParser.DependsOnSelectedRevision(option)
@@ -135,7 +135,7 @@ namespace GitUI.Script
                 }
 
                 command = command.Replace(NavigateToPrefix, string.Empty);
-                if (!GitExtensions.Strings.IsNullOrEmpty(command))
+                if (!GitExtUtils.Strings.IsNullOrEmpty(command))
                 {
                     var revisionRef = new Executable(command, module.WorkingDir).GetOutputLines(argument).FirstOrDefault();
 

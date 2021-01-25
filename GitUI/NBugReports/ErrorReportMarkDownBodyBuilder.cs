@@ -45,7 +45,7 @@ namespace GitUI.NBugReports
             sb.AppendLine();
             sb.AppendLine();
 
-            if (!GitExtensions.Strings.IsNullOrWhiteSpace(additionalInfo))
+            if (!GitExtUtils.Strings.IsNullOrWhiteSpace(additionalInfo))
             {
                 sb.AppendLine("## Additional information");
                 sb.AppendLine(additionalInfo.Trim());
@@ -57,7 +57,7 @@ namespace GitUI.NBugReports
             {
                 sb.AppendLine("## Environment");
 
-                if (!GitExtensions.Strings.IsNullOrWhiteSpace(environmentInfo))
+                if (!GitExtUtils.Strings.IsNullOrWhiteSpace(environmentInfo))
                 {
                     sb.AppendLine(environmentInfo);
                 }

@@ -228,7 +228,7 @@ namespace System.Linq
         {
             foreach (var item in source)
             {
-                if (!GitExtensions.Strings.IsNullOrWhiteSpace(item))
+                if (!GitExtUtils.Strings.IsNullOrWhiteSpace(item))
                 {
                     yield return item;
                 }

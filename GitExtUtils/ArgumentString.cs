@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using GitExtUtils;
 
-namespace GitCommands
+namespace GitExtUtils
 {
     [DebuggerDisplay("{" + nameof(Arguments) + "}")]
     public readonly struct ArgumentString

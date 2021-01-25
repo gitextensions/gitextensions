@@ -2473,7 +2473,7 @@ namespace GitUI.CommandsDialogs
             {
                 string? filePath = PathUtil.Combine(module.WorkingDir, item.Item.Name.ToNativePath());
 
-                if (!GitExtensions.Strings.IsNullOrWhiteSpace(filePath))
+                if (!GitExtUtils.Strings.IsNullOrWhiteSpace(filePath))
                 {
                     FormBrowseUtil.ShowFileOrParentFolderInFileExplorer(filePath);
                 }

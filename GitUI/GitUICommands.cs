@@ -590,7 +590,7 @@ namespace GitUI
             bool Action()
             {
                 using var viewPatch = new FormViewPatch(this);
-                if (!GitExtensions.Strings.IsNullOrEmpty(patchFile))
+                if (!GitExtUtils.Strings.IsNullOrEmpty(patchFile))
                 {
                     viewPatch.LoadPatch(patchFile);
                 }

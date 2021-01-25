@@ -172,7 +172,7 @@ namespace GitUI.Hotkey
         {
             MigrateSettings();
 
-            if (!GitExtensions.Strings.IsNullOrWhiteSpace(AppSettings.SerializedHotkeys))
+            if (!GitExtUtils.Strings.IsNullOrWhiteSpace(AppSettings.SerializedHotkeys))
             {
                 return LoadSerializedSettings(AppSettings.SerializedHotkeys);
             }

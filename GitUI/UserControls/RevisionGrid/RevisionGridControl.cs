@@ -2428,7 +2428,7 @@ namespace GitUI
 
         public void GoToRef(string? refName, bool showNoRevisionMsg, bool toggleSelection = false)
         {
-            if (GitExtensions.Strings.IsNullOrEmpty(refName))
+            if (GitExtUtils.Strings.IsNullOrEmpty(refName))
             {
                 return;
             }
@@ -2605,7 +2605,7 @@ namespace GitUI
         {
             var revision = GetSelectedRevisions().FirstOrDefault();
 
-            if (revision is not null && !GitExtensions.Strings.IsNullOrWhiteSpace(revision.BuildStatus?.Url))
+            if (revision is not null && !GitExtUtils.Strings.IsNullOrWhiteSpace(revision.BuildStatus?.Url))
             {
                 OsShellUtil.OpenUrlInDefaultBrowser(revision.BuildStatus.Url);
             }
@@ -2615,7 +2615,7 @@ namespace GitUI
         {
             var revision = GetSelectedRevisions().FirstOrDefault();
 
-            if (revision is not null && !GitExtensions.Strings.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl))
+            if (revision is not null && !GitExtUtils.Strings.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl))
             {
                 OsShellUtil.OpenUrlInDefaultBrowser(revision.BuildStatus.PullRequestUrl);
             }
@@ -2668,7 +2668,7 @@ namespace GitUI
                 {
                     var fileName = fileNameObject as string;
 
-                    if (!GitExtensions.Strings.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
+                    if (!GitExtUtils.Strings.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
                     {
                         // Start apply patch dialog for each dropped patch file...
                         UICommands.StartApplyPatchDialog(ParentForm, fileName);
@@ -2685,7 +2685,7 @@ namespace GitUI
                 {
                     var fileName = fileNameObject as string;
 
-                    if (!GitExtensions.Strings.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
+                    if (!GitExtUtils.Strings.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
                     {
                         // Allow drop (copy, not move) patch files
                         e.Effect = DragDropEffects.Copy;

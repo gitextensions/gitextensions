@@ -79,7 +79,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                     await this.SwitchToMainThreadAsync();
                     var lastRepo = repositoryHistory.FirstOrDefault();
-                    if (!GitExtensions.Strings.IsNullOrEmpty(lastRepo?.Path))
+                    if (!GitExtUtils.Strings.IsNullOrEmpty(lastRepo?.Path))
                     {
                         string p = lastRepo.Path.Trim('/', '\\');
                         destinationTB.Text = Path.GetDirectoryName(p);

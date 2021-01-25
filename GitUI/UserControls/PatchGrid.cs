@@ -140,7 +140,7 @@ namespace GitUI
                 return;
             }
 
-            if (GitExtensions.Strings.IsNullOrEmpty(patchFile.FullName))
+            if (GitExtUtils.Strings.IsNullOrEmpty(patchFile.FullName))
             {
                 MessageBox.Show(_unableToShowPatchDetails.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
