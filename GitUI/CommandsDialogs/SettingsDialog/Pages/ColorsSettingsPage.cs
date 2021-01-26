@@ -10,8 +10,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     public partial class ColorsSettingsPage : SettingsPageWithHeader
     {
         private int _updateThemeSettingsCounter;
-        private readonly ThemeRepository _themeRepository = new ThemeRepository();
-        private readonly ThemePathProvider _themePathProvider = new ThemePathProvider();
+        private readonly ThemeRepository _themeRepository = new();
+        private readonly ThemePathProvider _themePathProvider = new();
 
         private static readonly TranslationString FormatBuiltinThemeName =
             new TranslationString("{0}");

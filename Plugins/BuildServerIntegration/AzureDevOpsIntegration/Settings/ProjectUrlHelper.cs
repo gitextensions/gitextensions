@@ -55,7 +55,7 @@ namespace AzureDevOpsIntegration.Settings
             },
         };
 
-        private static readonly Regex BuildUrlInfoRegex = new Regex(@"^(?<projecturl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+)/_build.*(?:&|\?)buildId=(?<buildid>\d+)");
+        private static readonly Regex BuildUrlInfoRegex = new(@"^(?<projecturl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+)/_build.*(?:&|\?)buildId=(?<buildid>\d+)");
 
         /// <summary>
         /// Tries to transform a supplied string into a different one using a number of regular expressions to check against.

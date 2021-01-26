@@ -17,15 +17,15 @@ namespace GitUI.CommandsDialogs
     {
         private const string RestoredObjectsTagPrefix = "LOST_FOUND_";
 
-        private readonly TranslationString _removeDanglingObjectsCaption = new TranslationString("Remove");
-        private readonly TranslationString _removeDanglingObjectsQuestion = new TranslationString("Are you sure you want to delete all dangling objects?");
-        private readonly TranslationString _xTagsCreated = new TranslationString("{0} Tags created." + Environment.NewLine + Environment.NewLine + "Do not forget to delete these tags when finished.");
-        private readonly TranslationString _selectLostObjectsToRestoreMessage = new TranslationString("Select objects to restore.");
-        private readonly TranslationString _selectLostObjectsToRestoreCaption = new TranslationString("Restore lost objects");
+        private readonly TranslationString _removeDanglingObjectsCaption = new("Remove");
+        private readonly TranslationString _removeDanglingObjectsQuestion = new("Are you sure you want to delete all dangling objects?");
+        private readonly TranslationString _xTagsCreated = new("{0} Tags created." + Environment.NewLine + Environment.NewLine + "Do not forget to delete these tags when finished.");
+        private readonly TranslationString _selectLostObjectsToRestoreMessage = new("Select objects to restore.");
+        private readonly TranslationString _selectLostObjectsToRestoreCaption = new("Restore lost objects");
 
         private readonly List<LostObject> _lostObjects = new List<LostObject>();
-        private readonly SortableLostObjectsList _filteredLostObjects = new SortableLostObjectsList();
-        private readonly DataGridViewCheckBoxHeaderCell _selectedItemsHeader = new DataGridViewCheckBoxHeaderCell();
+        private readonly SortableLostObjectsList _filteredLostObjects = new();
+        private readonly DataGridViewCheckBoxHeaderCell _selectedItemsHeader = new();
         private readonly IGitTagController _gitTagController;
 
         private LostObject _previewedItem;

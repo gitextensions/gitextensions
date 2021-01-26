@@ -5,8 +5,8 @@ namespace GitUI.UserControls.RevisionGrid
 {
     internal static class MenuUtil
     {
-        private static readonly object _captionTag = new object();
-        private static readonly CaptionCustomMenuRenderer _customMenuRenderer = new CaptionCustomMenuRenderer();
+        private static readonly object _captionTag = new();
+        private static readonly CaptionCustomMenuRenderer _customMenuRenderer = new();
         private static Font _disabledFont;
 
         /// <summary>

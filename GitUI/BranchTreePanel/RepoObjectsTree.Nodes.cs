@@ -121,7 +121,7 @@ namespace GitUI.BranchTreePanel
         {
             protected readonly Nodes Nodes;
             private readonly IGitUICommandsSource _uiCommandsSource;
-            private readonly CancellationTokenSequence _reloadCancellationTokenSequence = new CancellationTokenSequence();
+            private readonly CancellationTokenSequence _reloadCancellationTokenSequence = new();
             private bool _firstReloadNodesSinceModuleChanged = true;
 
             // A flag to indicate whether the data is currently being filtered or not.

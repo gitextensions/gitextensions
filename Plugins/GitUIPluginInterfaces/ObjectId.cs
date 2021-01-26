@@ -16,25 +16,25 @@ namespace GitUIPluginInterfaces
     public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
     {
         private static readonly ThreadLocal<byte[]> _buffer = new ThreadLocal<byte[]>(() => new byte[Sha1ByteCount], trackAllValues: false);
-        private static readonly Random _random = new Random();
+        private static readonly Random _random = new();
 
         /// <summary>
         /// Gets the artificial ObjectId used to represent working directory tree (unstaged) changes.
         /// </summary>
         [NotNull]
-        public static ObjectId WorkTreeId { get; } = new ObjectId(0x11111111, 0x11111111, 0x11111111, 0x11111111, 0x11111111);
+        public static ObjectId WorkTreeId { get; } = new(0x11111111, 0x11111111, 0x11111111, 0x11111111, 0x11111111);
 
         /// <summary>
         /// Gets the artificial ObjectId used to represent changes staged to the index.
         /// </summary>
         [NotNull]
-        public static ObjectId IndexId { get; } = new ObjectId(0x22222222, 0x22222222, 0x22222222, 0x22222222, 0x22222222);
+        public static ObjectId IndexId { get; } = new(0x22222222, 0x22222222, 0x22222222, 0x22222222, 0x22222222);
 
         /// <summary>
         /// Gets the artificial ObjectId used to represent combined diff for merge commits.
         /// </summary>
         [NotNull]
-        public static ObjectId CombinedDiffId { get; } = new ObjectId(0x33333333, 0x33333333, 0x33333333, 0x33333333, 0x33333333);
+        public static ObjectId CombinedDiffId { get; } = new(0x33333333, 0x33333333, 0x33333333, 0x33333333, 0x33333333);
 
         /// <summary>
         /// Produces an <see cref="ObjectId"/> populated with random bytes.

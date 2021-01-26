@@ -21,30 +21,30 @@ namespace GitUI.CommandsDialogs
 {
     public partial class RevisionFileTreeControl : GitModuleControl
     {
-        private readonly TranslationString _resetFileCaption = new TranslationString("Reset");
-        private readonly TranslationString _resetFileText = new TranslationString("Are you sure you want to reset this file or directory?");
-        private readonly TranslationString _saveFileFilterCurrentFormat = new TranslationString("Current format");
-        private readonly TranslationString _saveFileFilterAllFiles = new TranslationString("All files");
-        private readonly TranslationString _nodeNotFoundNextAvailableParentSelected = new TranslationString("Node not found. The next available parent node will be selected.");
-        private readonly TranslationString _nodeNotFoundSelectionNotChanged = new TranslationString("Node not found. File tree selection was not changed.");
+        private readonly TranslationString _resetFileCaption = new("Reset");
+        private readonly TranslationString _resetFileText = new("Are you sure you want to reset this file or directory?");
+        private readonly TranslationString _saveFileFilterCurrentFormat = new("Current format");
+        private readonly TranslationString _saveFileFilterAllFiles = new("All files");
+        private readonly TranslationString _nodeNotFoundNextAvailableParentSelected = new("Node not found. The next available parent node will be selected.");
+        private readonly TranslationString _nodeNotFoundSelectionNotChanged = new("Node not found. File tree selection was not changed.");
 
-        private readonly TranslationString _assumeUnchangedMessage = new TranslationString(@"This feature should be used for performance purpose when it is costly for git to check the state of a big file.
+        private readonly TranslationString _assumeUnchangedMessage = new(@"This feature should be used for performance purpose when it is costly for git to check the state of a big file.
 
 
 Are you sure to assume this file won't change ?");
-        private readonly TranslationString _assumeUnchangedCaption = new TranslationString("Assume this file won't change");
-        private readonly TranslationString _assumeUnchangedFail = new TranslationString("Fail to assume unchanged the file '{0}'.");
-        private readonly TranslationString _assumeUnchangedSuccess = new TranslationString("File successfully assumed unchanged.");
+        private readonly TranslationString _assumeUnchangedCaption = new("Assume this file won't change");
+        private readonly TranslationString _assumeUnchangedFail = new("Fail to assume unchanged the file '{0}'.");
+        private readonly TranslationString _assumeUnchangedSuccess = new("File successfully assumed unchanged.");
 
-        private readonly TranslationString _stopTrackingMessage = new TranslationString(@"Are you sure you want to stop tracking the file
+        private readonly TranslationString _stopTrackingMessage = new(@"Are you sure you want to stop tracking the file
 '{0}'?");
-        private readonly TranslationString _stopTrackingCaption = new TranslationString("Stop tracking the file");
-        private readonly TranslationString _stopTrackingFail = new TranslationString("Fail to stop tracking the file '{0}'.");
-        private readonly TranslationString _stopTrackingSuccess = new TranslationString(@"File successfully untracked. Removal has been added to the staging area.
+        private readonly TranslationString _stopTrackingCaption = new("Stop tracking the file");
+        private readonly TranslationString _stopTrackingFail = new("Fail to stop tracking the file '{0}'.");
+        private readonly TranslationString _stopTrackingSuccess = new(@"File successfully untracked. Removal has been added to the staging area.
 
 See the changes in the commit form.");
 
-        private readonly TranslationString _success = new TranslationString("Success");
+        private readonly TranslationString _success = new("Success");
 
         // store strings to not keep references to nodes
         private readonly Stack<string> _lastSelectedNodes = new Stack<string>();

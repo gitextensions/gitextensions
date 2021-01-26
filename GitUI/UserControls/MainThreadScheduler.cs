@@ -9,7 +9,7 @@ namespace GitUI.UserControls
 {
     internal sealed class MainThreadScheduler : LocalScheduler
     {
-        internal static readonly MainThreadScheduler Instance = new MainThreadScheduler();
+        internal static readonly MainThreadScheduler Instance = new();
 
         public override IDisposable Schedule<TState>(TState state, TimeSpan dueTime, Func<IScheduler, TState, IDisposable> action)
         {

@@ -1272,6 +1272,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
         <source>View in {0}</source>
+        <target>在 {0} 中查看</target>
         
       </trans-unit>
     </body>

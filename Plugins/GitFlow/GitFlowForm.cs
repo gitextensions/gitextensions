@@ -15,15 +15,15 @@ namespace GitFlow
 {
     public partial class GitFlowForm : GitExtensionsFormBase
     {
-        private readonly TranslationString _gitFlowTooltip = new TranslationString("A good branch model for your project with Git...");
-        private readonly TranslationString _loading = new TranslationString("Loading...");
-        private readonly TranslationString _noBranchExist = new TranslationString("No {0} branches exist.");
+        private readonly TranslationString _gitFlowTooltip = new("A good branch model for your project with Git...");
+        private readonly TranslationString _loading = new("Loading...");
+        private readonly TranslationString _noBranchExist = new("No {0} branches exist.");
 
         private readonly GitUIEventArgs _gitUiCommands;
 
         private Dictionary<string, IReadOnlyList<string>> Branches { get; } = new Dictionary<string, IReadOnlyList<string>>();
 
-        private readonly AsyncLoader _task = new AsyncLoader();
+        private readonly AsyncLoader _task = new();
 
         public bool IsRefreshNeeded { get; set; }
 

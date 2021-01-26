@@ -36,7 +36,7 @@ namespace GitExtUtils
     /// </example>
     public class ArgumentBuilder : IEnumerable
     {
-        private readonly StringBuilder _arguments = new StringBuilder(capacity: 16);
+        private readonly StringBuilder _arguments = new(capacity: 16);
 
         public bool IsEmpty => _arguments.Length == 0;
 

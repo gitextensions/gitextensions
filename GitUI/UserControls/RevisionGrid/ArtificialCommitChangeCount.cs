@@ -64,7 +64,7 @@ namespace GitUI
         /// <returns>string with changes</returns>
         public string GetSummary()
         {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
 
             // TODO use translation strings here
             Append(Changed, "changed file");

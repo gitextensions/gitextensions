@@ -41,14 +41,14 @@ namespace GitCommands.Submodules
         // Throttle updates triggered from status updates
         private const int MinRefreshInterval = 15;
 
-        private readonly CancellationTokenSequence _submodulesStructureSequence = new CancellationTokenSequence();
-        private readonly CancellationTokenSequence _submodulesStatusSequence = new CancellationTokenSequence();
+        private readonly CancellationTokenSequence _submodulesStructureSequence = new();
+        private readonly CancellationTokenSequence _submodulesStatusSequence = new();
         private DateTime _previousSubmoduleUpdateTime;
         private SubmoduleInfoResult? _submoduleInfoResult;
         private readonly Dictionary<string, SubmoduleInfo> _submoduleInfos = new Dictionary<string, SubmoduleInfo>();
 
         // Singleton accessor
-        public static SubmoduleStatusProvider Default { get; } = new SubmoduleStatusProvider();
+        public static SubmoduleStatusProvider Default { get; } = new();
 
         // Invoked when status update is requested (use to clear/lock UI)
         public event EventHandler? StatusUpdating;

@@ -344,11 +344,6 @@ namespace GitUI
             return StartCheckoutBranch(owner, "", false, containRevisions);
         }
 
-        public bool StartCheckoutBranch(string branch, bool remote)
-        {
-            return StartCheckoutBranch(null, branch, remote);
-        }
-
         public bool StartCheckoutRemoteBranch(IWin32Window owner, string branch)
         {
             return StartCheckoutBranch(owner, branch, true);
@@ -374,7 +369,7 @@ namespace GitUI
         /// <returns>The <see cref="IProcess"/> object for controlling the launched instance.</returns>
         public static IProcess LaunchBrowse(string workingDir = "", ObjectId selectedId = null, ObjectId firstId = null)
         {
-            StringBuilder arguments = new StringBuilder("browse");
+            StringBuilder arguments = new("browse");
 
             if (selectedId is null)
             {

@@ -8,9 +8,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
     public partial class FormDashboardCategoryTitle : GitExtensionsForm
     {
-        private readonly TranslationString _categoryNameRequiredText = new TranslationString("Category name is required");
-        private readonly TranslationString _categoryNameExistsText = new TranslationString("Category name already exists");
-        private readonly TranslationString _renameCategoryText = new TranslationString("Rename category");
+        private readonly TranslationString _categoryNameRequiredText = new("Category name is required");
+        private readonly TranslationString _categoryNameExistsText = new("Category name already exists");
+        private readonly TranslationString _renameCategoryText = new("Rename category");
         private readonly List<string> _existingCategories = new List<string>();
 
         public FormDashboardCategoryTitle()

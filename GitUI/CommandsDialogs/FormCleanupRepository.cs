@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs
     {
         private readonly TranslationString _reallyCleanupQuestion =
             new TranslationString("Are you sure you want to cleanup the repository?");
-        private readonly TranslationString _reallyCleanupQuestionCaption = new TranslationString("Cleanup");
+        private readonly TranslationString _reallyCleanupQuestionCaption = new("Cleanup");
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormCleanupRepository()

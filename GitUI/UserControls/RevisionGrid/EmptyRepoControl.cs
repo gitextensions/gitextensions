@@ -5,7 +5,7 @@ namespace GitUI.UserControls.RevisionGrid
 {
     public sealed partial class EmptyRepoControl : GitModuleControl
     {
-        private readonly TranslationString _repoHasNoCommits = new TranslationString("This repository does not yet contain any commits.");
+        private readonly TranslationString _repoHasNoCommits = new("This repository does not yet contain any commits.");
 
         /// <summary>For VS designer.</summary>
         public EmptyRepoControl()

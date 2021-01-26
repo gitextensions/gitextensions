@@ -57,7 +57,7 @@ namespace GitCommands.Statistics
         public event EventHandler? Exited;
         public event Action<Commit>? CommitLoaded;
 
-        private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
+        private readonly CancellationTokenSequence _cancellationTokenSequence = new();
         private readonly IGitModule _module;
 
         public ImpactLoader(IGitModule module)

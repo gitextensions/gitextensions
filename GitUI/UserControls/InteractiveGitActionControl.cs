@@ -12,14 +12,14 @@ namespace GitUI.UserControls
 {
     public partial class InteractiveGitActionControl : GitModuleControl
     {
-        private readonly TranslationString _progressMessage = new TranslationString("{0} is currently in progress.");
-        private readonly TranslationString _conflictsMessage = new TranslationString("There are unresolved merge conflicts.");
-        private readonly TranslationString _progressWithConflictsMessage = new TranslationString("{0} is currently in progress with merge conflicts.");
+        private readonly TranslationString _progressMessage = new("{0} is currently in progress.");
+        private readonly TranslationString _conflictsMessage = new("There are unresolved merge conflicts.");
+        private readonly TranslationString _progressWithConflictsMessage = new("{0} is currently in progress with merge conflicts.");
 
-        private readonly TranslationString _bisect = new TranslationString("Bisect");
-        private readonly TranslationString _rebase = new TranslationString("Rebase");
-        private readonly TranslationString _merge = new TranslationString("Merge");
-        private readonly TranslationString _patch = new TranslationString("Patch");
+        private readonly TranslationString _bisect = new("Bisect");
+        private readonly TranslationString _rebase = new("Rebase");
+        private readonly TranslationString _merge = new("Merge");
+        private readonly TranslationString _patch = new("Patch");
 
         public enum GitAction
         {

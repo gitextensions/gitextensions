@@ -13,7 +13,7 @@ namespace GitUI
     /// <remarks>Includes support for font, hotkey, icon, translation, and position restore.</remarks>
     public partial class GitExtensionsDialog : GitModuleForm
     {
-        private static readonly Pen FooterDividerPen = new Pen(KnownColor.ControlLight.MakeBackgroundDarkerBy(0.04));
+        private static readonly Pen FooterDividerPen = new(KnownColor.ControlLight.MakeBackgroundDarkerBy(0.04));
 
         /// <summary>Creates a new <see cref="GitExtensionsForm"/> without position restore.</summary>
         [Obsolete("For VS designer and translation test only. Do not remove.")]

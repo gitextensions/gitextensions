@@ -17,19 +17,19 @@ namespace Gource
     public class GourcePlugin : GitPluginBase, IGitPluginForRepository
     {
         #region Translation
-        private readonly TranslationString _currentDirectoryIsNotValidGit = new TranslationString("The current directory is not a valid git repository.\n\n" +
+        private readonly TranslationString _currentDirectoryIsNotValidGit = new("The current directory is not a valid git repository.\n\n" +
             "Gource can be only be started from a valid git repository.");
-        private readonly TranslationString _resetConfigPath = new TranslationString("Cannot find Gource in the configured path: {0}.\n\n" +
+        private readonly TranslationString _resetConfigPath = new("Cannot find Gource in the configured path: {0}.\n\n" +
             "Do you want to reset the configured path?");
-        private readonly TranslationString _gource = new TranslationString("Gource");
-        private readonly TranslationString _doYouWantDownloadGource = new TranslationString("There is no path to Gource configured.\n\n" +
+        private readonly TranslationString _gource = new("Gource");
+        private readonly TranslationString _doYouWantDownloadGource = new("There is no path to Gource configured.\n\n" +
             "Do you want to automatically download Gource?");
-        private readonly TranslationString _download = new TranslationString("Download");
-        private readonly TranslationString _cannotFindGource = new TranslationString("Cannot find Gource.\n" +
+        private readonly TranslationString _download = new("Download");
+        private readonly TranslationString _cannotFindGource = new("Cannot find Gource.\n" +
             "Please download Gource and set the path in the plugins settings dialog.");
-        private readonly TranslationString _bytesDownloaded = new TranslationString("{0} bytes downloaded.");
-        private readonly TranslationString _gourceDownloadedAndUnzipped = new TranslationString("Gource has been downloaded and unzipped.");
-        private readonly TranslationString _downloadingFailed = new TranslationString("Downloading failed.\n" +
+        private readonly TranslationString _bytesDownloaded = new("{0} bytes downloaded.");
+        private readonly TranslationString _gourceDownloadedAndUnzipped = new("Gource has been downloaded and unzipped.");
+        private readonly TranslationString _downloadingFailed = new("Downloading failed.\n" +
             "Please download Gource and set the path in the plugins settings dialog.");
         #endregion
 
@@ -40,8 +40,8 @@ namespace Gource
             Icon = Resources.IconGource;
         }
 
-        private readonly StringSetting _gourcePath = new StringSetting("Path to Gource", "");
-        private readonly StringSetting _gourceArguments = new StringSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
+        private readonly StringSetting _gourcePath = new("Path to Gource", "");
+        private readonly StringSetting _gourceArguments = new("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
 
         #region IGitPlugin Members
 

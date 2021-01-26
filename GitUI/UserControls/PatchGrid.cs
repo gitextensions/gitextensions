@@ -13,7 +13,7 @@ namespace GitUI
 {
     public partial class PatchGrid : GitModuleControl
     {
-        private readonly TranslationString _unableToShowPatchDetails = new TranslationString("Unable to show details of patch file.");
+        private readonly TranslationString _unableToShowPatchDetails = new("Unable to show details of patch file.");
 
         private List<PatchFile> _skipped;
         private bool _isManagingRebase;

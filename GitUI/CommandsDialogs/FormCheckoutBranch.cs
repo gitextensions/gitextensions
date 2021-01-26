@@ -36,19 +36,19 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _resetNonFastForwardBranch =
             new TranslationString("You are going to reset the “{0}” branch to a new location discarding ALL the commited changes since the {1} revision.\n\nAre you sure?");
-        private readonly TranslationString _resetCaption = new TranslationString("Reset branch");
+        private readonly TranslationString _resetCaption = new("Reset branch");
         #endregion
 
         private readonly IReadOnlyList<ObjectId> _containRevisions;
         private readonly bool _isLoading;
         private readonly string _rbResetBranchDefaultText;
-        private TranslationString _invalidBranchName = new TranslationString("An existing branch must be selected.");
+        private TranslationString _invalidBranchName = new("An existing branch must be selected.");
         private bool? _isDirtyDir;
         private string _remoteName = "";
         private string _newLocalBranchName = "";
         private string _localBranchName = "";
         private readonly IGitBranchNameNormaliser _branchNameNormaliser;
-        private readonly GitBranchNameOptions _gitBranchNameOptions = new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol);
+        private readonly GitBranchNameOptions _gitBranchNameOptions = new(AppSettings.AutoNormaliseSymbol);
         private readonly Dictionary<Control, int> _controls = new Dictionary<Control, int>();
 
         private IReadOnlyList<IGitRef> _localBranches;
@@ -171,7 +171,7 @@ namespace GitUI.CommandsDialogs
             if (!AppSettings.AlwaysShowCheckoutBranchDlg && localBranchSelected &&
                 (!HasUncommittedChanges || AppSettings.UseDefaultCheckoutBranchAction))
             {
-                return OkClick();
+                return PerformCheckout(owner);
             }
 
             return ShowDialog(owner);
@@ -267,14 +267,14 @@ namespace GitUI.CommandsDialogs
 
         private void OkClick(object sender, EventArgs e)
         {
-            DialogResult = OkClick();
+            DialogResult = PerformCheckout(this);
             if (DialogResult == DialogResult.OK)
             {
                 Close();
             }
         }
 
-        private DialogResult OkClick()
+        private DialogResult PerformCheckout(IWin32Window owner)
         {
             // Ok button set as the "AcceptButton" for the form
             // if the user hits [Enter] at any point, we need to trigger txtCustomBranchName Leave event
@@ -349,8 +349,6 @@ namespace GitUI.CommandsDialogs
             {
                 localChanges = LocalChangesAction.DontChange;
             }
-
-            IWin32Window owner = Visible ? this : Owner;
 
             bool stash = false;
             if (localChanges == LocalChangesAction.Stash)

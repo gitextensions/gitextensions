@@ -17,11 +17,11 @@ namespace GitHub3
         private readonly string _authorizationApiUrl;
         private bool _require2ndFactorCode = false;
         private readonly JoinableTaskFactory _joinableTaskFactory;
-        private readonly HttpClient _httpClient = new HttpClient();
+        private readonly HttpClient _httpClient = new();
 
-        private readonly TranslationString _generationFailed = new TranslationString("Fail to generate token due to error:");
-        private readonly TranslationString _ask2ndFactorCode = new TranslationString("Please enter your GitHub validation code (from {0})");
-        private readonly TranslationString _generationSucceed = new TranslationString("Successfully retrieved OAuth token.");
+        private readonly TranslationString _generationFailed = new("Fail to generate token due to error:");
+        private readonly TranslationString _ask2ndFactorCode = new("Please enter your GitHub validation code (from {0})");
+        private readonly TranslationString _generationSucceed = new("Successfully retrieved OAuth token.");
 
         public GitHubCredentialsPrompt(string authorizationApiUrl)
         {

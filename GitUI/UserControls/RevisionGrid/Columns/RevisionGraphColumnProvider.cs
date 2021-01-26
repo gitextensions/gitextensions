@@ -23,7 +23,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         private readonly LaneInfoProvider _laneInfoProvider;
         private readonly RevisionGridControl _grid;
         private readonly RevisionGraph _revisionGraph;
-        private readonly GraphCache _graphCache = new GraphCache();
+        private readonly GraphCache _graphCache = new();
 
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyleCache;
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyle;
@@ -305,7 +305,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         if (currentRow.GetCurrentRevisionLane() < MaxLanes)
                         {
                             int centerX = g.RenderingOrigin.X + (int)((currentRow.GetCurrentRevisionLane() + 0.5) * LaneWidth);
-                            Rectangle nodeRect = new Rectangle(centerX - (NodeDimension / 2), centerY - (NodeDimension / 2), NodeDimension, NodeDimension);
+                            Rectangle nodeRect = new(centerX - (NodeDimension / 2), centerY - (NodeDimension / 2), NodeDimension, NodeDimension);
 
                             var square = currentRow.Revision.HasRef;
                             var hasOutline = currentRow.Revision.IsCheckedOut;

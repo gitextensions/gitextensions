@@ -19,18 +19,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
     public partial class UserRepositoriesList : GitExtensionsControl
     {
-        private readonly TranslationString _groupRecentRepositories = new TranslationString("Recent repositories");
-        private readonly TranslationString _deleteCategoryCaption = new TranslationString(
+        private readonly TranslationString _groupRecentRepositories = new("Recent repositories");
+        private readonly TranslationString _deleteCategoryCaption = new(
             "Delete Category");
-        private readonly TranslationString _deleteCategoryQuestion = new TranslationString(
+        private readonly TranslationString _deleteCategoryQuestion = new(
             "Do you want to delete category \"{0}\" with {1} repositories?\n\nThe action cannot be undone.");
 
-        private readonly TranslationString _clearRecentCategoryCaption = new TranslationString(
+        private readonly TranslationString _clearRecentCategoryCaption = new(
             "Clear recent repositories");
-        private readonly TranslationString _clearRecentCategoryQuestion = new TranslationString(
+        private readonly TranslationString _clearRecentCategoryQuestion = new(
             "Do you want to clear the list of recent repositories?\n\nThe action cannot be undone.");
 
-        private readonly TranslationString _cannotOpenTheFolder = new TranslationString("Cannot open the folder");
+        private readonly TranslationString _cannotOpenTheFolder = new("Cannot open the folder");
 
         private class SelectedRepositoryItem
         {
@@ -821,7 +821,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 string dir = fileNameArray[0];
                 if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
                 {
-                    GitModule module = new GitModule(dir);
+                    GitModule module = new(dir);
 
                     if (!module.IsValidGitWorkingDir())
                     {

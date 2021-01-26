@@ -23,11 +23,11 @@ namespace GitUI.BranchTreePanel
 {
     public partial class RepoObjectsTree : GitModuleControl
     {
-        private readonly CancellationTokenSequence _selectionCancellationTokenSequence = new CancellationTokenSequence();
+        private readonly CancellationTokenSequence _selectionCancellationTokenSequence = new();
         private readonly TranslationString _showBranchOnly =
             new TranslationString("Filter the revision grid to show this branch only\nTo show all branches, right click the revision grid, select 'view' and then the 'show all branches'");
-        private readonly TranslationString _searchTooltip = new TranslationString("Search");
-        private readonly TranslationString _showHideRefsTooltip = new TranslationString("Show/hide branches/remotes/tags");
+        private readonly TranslationString _searchTooltip = new("Search");
+        private readonly TranslationString _showHideRefsTooltip = new("Show/hide branches/remotes/tags");
 
         private NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
         private NativeTreeViewExplorerNavigationDecorator _explorerNavigationDecorator;

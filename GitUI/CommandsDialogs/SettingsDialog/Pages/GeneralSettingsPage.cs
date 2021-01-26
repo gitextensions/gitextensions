@@ -10,12 +10,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class GeneralSettingsPage : SettingsPageWithHeader
     {
-        private readonly TranslationString _openPullDialog = new TranslationString("Open pull dialog");
-        private readonly TranslationString _pullMerge = new TranslationString("Pull - merge");
-        private readonly TranslationString _pullRebase = new TranslationString("Pull - rebase");
-        private readonly TranslationString _fetch = new TranslationString("Fetch");
-        private readonly TranslationString _fetchAll = new TranslationString("Fetch all");
-        private readonly TranslationString _fetchAndPruneAll = new TranslationString("Fetch and prune all");
+        private readonly TranslationString _openPullDialog = new("Open pull dialog");
+        private readonly TranslationString _pullMerge = new("Pull - merge");
+        private readonly TranslationString _pullRebase = new("Pull - rebase");
+        private readonly TranslationString _fetch = new("Fetch");
+        private readonly TranslationString _fetchAll = new("Fetch all");
+        private readonly TranslationString _fetchAndPruneAll = new("Fetch and prune all");
 
         public GeneralSettingsPage()
         {

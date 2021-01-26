@@ -251,8 +251,8 @@ namespace GitCommands.Config
 
             // parsed char
             private int _pos;
-            private readonly StringBuilder _token = new StringBuilder();
-            private readonly StringBuilder _valueToken = new StringBuilder();
+            private readonly StringBuilder _token = new();
+            private readonly StringBuilder _valueToken = new();
 
             public ConfigFileParser(ConfigFile configFile)
             {

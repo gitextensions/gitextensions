@@ -16,7 +16,7 @@ namespace GitUI
 {
     public sealed partial class AvatarControl : GitExtensionsControl
     {
-        private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
+        private readonly CancellationTokenSequence _cancellationTokenSequence = new();
         private readonly IAvatarProvider _avatarProvider = AvatarService.Default;
 
         public AvatarControl()

@@ -30,8 +30,8 @@ namespace GitUI.BuildServerIntegration
     {
         private static readonly TimeSpan ShortPollInterval = TimeSpan.FromSeconds(10);
         private static readonly TimeSpan LongPollInterval = TimeSpan.FromSeconds(120);
-        private readonly CancellationTokenSequence _launchCancellation = new CancellationTokenSequence();
-        private readonly object _buildServerCredentialsLock = new object();
+        private readonly CancellationTokenSequence _launchCancellation = new();
+        private readonly object _buildServerCredentialsLock = new();
         private readonly RevisionGridControl _revisionGrid;
         private readonly RevisionDataGridView _revisionGridView;
         private readonly Func<GitModule> _module;

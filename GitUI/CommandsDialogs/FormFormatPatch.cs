@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormFormatPatch : GitModuleForm
     {
-        private readonly TranslationString _currentBranchText = new TranslationString("Current branch:");
+        private readonly TranslationString _currentBranchText = new("Current branch:");
         private readonly TranslationString _noOutputPathEnteredText =
             new TranslationString("You need to enter an output path.");
         private readonly TranslationString _noEmailEnteredText =

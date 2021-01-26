@@ -73,10 +73,10 @@ namespace GitCommands.Gpg
         private const string NoTagPubKey = "NO_PUBKEY";
         private const string NoSignatureFound = "error: no signature found";
 
-        private static readonly Regex ValidSignatureTagRegex = new Regex(ValidTagSign, RegexOptions.Compiled);
-        private static readonly Regex GoodSignatureTagRegex = new Regex(GoodSignature, RegexOptions.Compiled);
-        private static readonly Regex NoPubKeyTagRegex = new Regex(NoTagPubKey, RegexOptions.Compiled);
-        private static readonly Regex NoSignatureFoundTagRegex = new Regex(NoSignatureFound, RegexOptions.Compiled);
+        private static readonly Regex ValidSignatureTagRegex = new(ValidTagSign, RegexOptions.Compiled);
+        private static readonly Regex GoodSignatureTagRegex = new(GoodSignature, RegexOptions.Compiled);
+        private static readonly Regex NoPubKeyTagRegex = new(NoTagPubKey, RegexOptions.Compiled);
+        private static readonly Regex NoSignatureFoundTagRegex = new(NoSignatureFound, RegexOptions.Compiled);
 
         /// <summary>
         /// Obtain the tag verification message for all the tag in current git revision

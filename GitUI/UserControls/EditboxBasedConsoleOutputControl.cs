@@ -197,7 +197,7 @@ namespace GitUI.UserControls
 
         private sealed class ProcessOutputThrottle : IDisposable
         {
-            private readonly StringBuilder _textToAdd = new StringBuilder();
+            private readonly StringBuilder _textToAdd = new();
             private readonly Timer _timer;
             private readonly Action<string> _doOutput;
 

@@ -130,7 +130,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly TranslationString _shCanBeRunCaption =
             new TranslationString("Locate linux tools");
 
-        private readonly TranslationString _gcmDetectedCaption = new TranslationString("Obsolete git-credential-winstore.exe detected");
+        private readonly TranslationString _gcmDetectedCaption = new("Obsolete git-credential-winstore.exe detected");
         #endregion
 
         private const string _putty = "PuTTY";

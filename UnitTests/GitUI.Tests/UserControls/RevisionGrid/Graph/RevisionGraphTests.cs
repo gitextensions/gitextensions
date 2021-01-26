@@ -83,9 +83,9 @@ namespace GitUITests.UserControls.RevisionGrid
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
             Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
 
-            GitRevision commit1 = new GitRevision(ObjectId.Random());
+            GitRevision commit1 = new(ObjectId.Random());
 
-            GitRevision commit2 = new GitRevision(ObjectId.Random());
+            GitRevision commit2 = new(ObjectId.Random());
             commit1.ParentIds = new ObjectId[] { commit2.ObjectId };
             commit2.ParentIds = new ObjectId[] { _revisionGraph.GetNodeForRow(4).Objectid };
 
@@ -100,7 +100,7 @@ namespace GitUITests.UserControls.RevisionGrid
             Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
 
             // Add a new head
-            GitRevision newHead = new GitRevision(ObjectId.Random());
+            GitRevision newHead = new(ObjectId.Random());
             newHead.ParentIds = new ObjectId[] { _revisionGraph.GetNodeForRow(0).Objectid };
             _revisionGraph.Add(newHead, RevisionNodeFlags.None); // Add commit that has the current top node as parent.
 
@@ -129,11 +129,11 @@ namespace GitUITests.UserControls.RevisionGrid
              *     Commit3
              */
 
-            GitRevision commit1 = new GitRevision(ObjectId.Random());
+            GitRevision commit1 = new(ObjectId.Random());
 
-            GitRevision commit2 = new GitRevision(ObjectId.Random());
+            GitRevision commit2 = new(ObjectId.Random());
 
-            GitRevision commit3 = new GitRevision(ObjectId.Random());
+            GitRevision commit3 = new(ObjectId.Random());
             commit1.ParentIds = new ObjectId[] { commit3.ObjectId };
 
             _revisionGraph.Add(commit1, RevisionNodeFlags.None);
@@ -162,20 +162,20 @@ namespace GitUITests.UserControls.RevisionGrid
                  *        |
                  *     Commit6
                  */
-                GitRevision commit1 = new GitRevision(ObjectId.Random());
+                GitRevision commit1 = new(ObjectId.Random());
 
-                GitRevision commit2 = new GitRevision(ObjectId.Random());
+                GitRevision commit2 = new(ObjectId.Random());
                 commit1.ParentIds = new ObjectId[] { commit2.ObjectId };
 
-                GitRevision commit3 = new GitRevision(ObjectId.Random());
-                GitRevision commit4 = new GitRevision(ObjectId.Random());
+                GitRevision commit3 = new(ObjectId.Random());
+                GitRevision commit4 = new(ObjectId.Random());
                 commit2.ParentIds = new ObjectId[] { commit3.ObjectId, commit4.ObjectId };
 
-                GitRevision commit5 = new GitRevision(ObjectId.Random());
+                GitRevision commit5 = new(ObjectId.Random());
                 commit3.ParentIds = new ObjectId[] { commit5.ObjectId };
                 commit4.ParentIds = new ObjectId[] { commit5.ObjectId };
 
-                GitRevision commit6 = new GitRevision(ObjectId.Random());
+                GitRevision commit6 = new(ObjectId.Random());
                 commit5.ParentIds = new ObjectId[] { commit6.ObjectId };
                 commit6.ParentIds = new ObjectId[] { };
 

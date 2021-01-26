@@ -25,7 +25,7 @@ namespace GitUI
     /// </summary>
     public class GitModuleControl : GitExtensionsControl
     {
-        private readonly object _lock = new object();
+        private readonly object _lock = new();
 
         private int _isDisposed;
 

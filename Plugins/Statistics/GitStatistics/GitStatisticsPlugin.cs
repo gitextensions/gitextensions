@@ -13,9 +13,9 @@ namespace GitStatistics
             "*.c;*.cpp;*.cc;*.cxx;*.h;*.hpp;*.hxx;*.inl;*.idl;*.asm;*.inc;*.cs;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;" +
             "*.vbs;*.vb;*.sql;*.aspx;*.asp;*.php;*.nav;*.pas;*.py;*.rb;*.js;*.jsm;*.ts;*.mk;*.java";
 
-        private readonly StringSetting _codeFiles = new StringSetting("Code files", _defaultCodeFiles);
-        private readonly StringSetting _ignoreDirectories = new StringSetting("Directories to ignore (EndsWith)", @"\Debug;\Release;\obj;\bin;\lib");
-        private readonly BoolSetting _ignoreSubmodules = new BoolSetting("Ignore submodules", defaultValue: true);
+        private readonly StringSetting _codeFiles = new("Code files", _defaultCodeFiles);
+        private readonly StringSetting _ignoreDirectories = new("Directories to ignore (EndsWith)", @"\Debug;\Release;\obj;\bin;\lib");
+        private readonly BoolSetting _ignoreSubmodules = new("Ignore submodules", defaultValue: true);
 
         public GitStatisticsPlugin() : base(true)
         {

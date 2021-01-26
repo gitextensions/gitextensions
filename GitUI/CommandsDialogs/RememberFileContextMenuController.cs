@@ -11,7 +11,7 @@ namespace GitUI.CommandsDialogs
     public class RememberFileContextMenuController
     {
         // Singleton accessor
-        public static RememberFileContextMenuController Default { get; } = new RememberFileContextMenuController();
+        public static RememberFileContextMenuController Default { get; } = new();
 
         /// <summary>
         /// The remembered file status item, to diff with other files and commits

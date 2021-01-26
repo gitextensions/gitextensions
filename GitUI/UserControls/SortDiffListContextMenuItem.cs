@@ -9,9 +9,9 @@ namespace GitUI.UserControls
 {
     public class SortDiffListContextMenuItem : ToolStripMenuItem
     {
-        private readonly TranslationString _filePathSortText = new TranslationString("File &Path");
-        private readonly TranslationString _fileExtensionSortText = new TranslationString("File &Extension");
-        private readonly TranslationString _fileStatusSortText = new TranslationString("File &Status");
+        private readonly TranslationString _filePathSortText = new("File &Path");
+        private readonly TranslationString _fileExtensionSortText = new("File &Extension");
+        private readonly TranslationString _fileStatusSortText = new("File &Status");
         private readonly IDiffListSortService _sortService;
         private readonly ToolStripMenuItem _filePathSortItem;
         private readonly ToolStripMenuItem _fileExtensionSortItem;

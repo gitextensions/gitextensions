@@ -8,7 +8,7 @@ namespace GitUI
     public class FormStatusOutputLog
     {
         [NotNull]
-        private readonly StringBuilder _outputString = new StringBuilder();
+        private readonly StringBuilder _outputString = new();
 
         public void Append([NotNull] string text)
         {

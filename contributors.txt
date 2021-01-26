@@ -149,3 +149,4 @@ YYYY/MM/DD, github id, Full name, email
 2021/01/02, matyasbach, Matyáš Bach, matyasbach(at)centrum.cz
 2021/01/11, keco2, Robert Keco, mobil750 at-sign gmail com
 2021/01/17, thimmy687, Ricardo Krause, kaser23@gmx.de
+2021/01/24, bcolaco, Bruno Colaço, bcolaco[@)gmail.com

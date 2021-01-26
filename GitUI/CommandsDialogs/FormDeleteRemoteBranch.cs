@@ -15,7 +15,7 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormDeleteRemoteBranch : GitModuleForm
     {
-        private readonly TranslationString _deleteRemoteBranchesCaption = new TranslationString("Delete remote branches");
+        private readonly TranslationString _deleteRemoteBranchesCaption = new("Delete remote branches");
         private readonly TranslationString _confirmDeleteUnmergedRemoteBranchMessage =
             new TranslationString("At least one remote branch is unmerged. Are you sure you want to delete it?" + Environment.NewLine + "Deleting a branch can cause commits to be deleted too!");
 

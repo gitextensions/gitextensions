@@ -7,7 +7,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class GitSettingsPage : SettingsPageWithHeader
     {
-        private readonly TranslationString _homeIsSetToString = new TranslationString("HOME is set to:");
+        private readonly TranslationString _homeIsSetToString = new("HOME is set to:");
 
         public GitSettingsPage()
         {

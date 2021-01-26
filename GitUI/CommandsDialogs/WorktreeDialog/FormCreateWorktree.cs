@@ -11,7 +11,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 {
     public sealed partial class FormCreateWorktree : GitModuleForm
     {
-        private readonly AsyncLoader _branchesLoader = new AsyncLoader();
+        private readonly AsyncLoader _branchesLoader = new();
         private readonly char[] _invalidCharsInPath = Path.GetInvalidFileNameChars();
 
         private string _initialDirectoryPath;

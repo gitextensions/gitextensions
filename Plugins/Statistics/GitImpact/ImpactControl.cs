@@ -19,7 +19,7 @@ namespace GitImpact
         private const int LinesFontSize = 10;
         private const int WeekFontSize = 8;
 
-        private readonly object _dataLock = new object();
+        private readonly object _dataLock = new();
 
         private ImpactLoader _impactLoader;
 
