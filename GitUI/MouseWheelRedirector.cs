@@ -8,7 +8,7 @@ namespace GitUI
 {
     public sealed class MouseWheelRedirector : IMessageFilter
     {
-        private static readonly MouseWheelRedirector instance = new MouseWheelRedirector();
+        private static readonly MouseWheelRedirector instance = new();
 
         private MouseWheelRedirector()
         {

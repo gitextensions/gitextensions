@@ -19,8 +19,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class ScriptsSettingsPage : SettingsPageWithHeader
     {
-        private readonly TranslationString _scriptSettingsPageHelpDisplayArgumentsHelp = new TranslationString("Arguments help");
-        private readonly TranslationString _scriptSettingsPageHelpDisplayContent = new TranslationString(@"Use {option} for normal replacement.
+        private readonly TranslationString _scriptSettingsPageHelpDisplayArgumentsHelp = new("Arguments help");
+        private readonly TranslationString _scriptSettingsPageHelpDisplayContent = new(@"Use {option} for normal replacement.
 Use {{option}} for quoted replacement.
 
 User Input:
@@ -214,7 +214,7 @@ Current Branch:
                 {
                     var color = !script.Enabled ? SystemColors.GrayText : SystemColors.WindowText;
 
-                    ListViewItem lvitem = new ListViewItem(script.Name)
+                    ListViewItem lvitem = new(script.Name)
                     {
                         ToolTipText = $"{script.Command} {script.Arguments}",
                         Tag = script,

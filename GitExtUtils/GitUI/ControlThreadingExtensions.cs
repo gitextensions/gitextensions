@@ -128,14 +128,14 @@ namespace GitUI
 
         private sealed class ControlIsDisposedCancellationFactory : IsDisposedCancellationFactory<Control>
         {
-            public static readonly ControlIsDisposedCancellationFactory Instance = new ControlIsDisposedCancellationFactory();
+            public static readonly ControlIsDisposedCancellationFactory Instance = new();
 
             protected override bool IsDisposed(Control component) => component.IsDisposed;
         }
 
         private sealed class ToolStripItemDisposedCancellationFactory : IsDisposedCancellationFactory<ToolStripItem>
         {
-            public static readonly ToolStripItemDisposedCancellationFactory Instance = new ToolStripItemDisposedCancellationFactory();
+            public static readonly ToolStripItemDisposedCancellationFactory Instance = new();
 
             protected override bool IsDisposed(ToolStripItem component) => component.IsDisposed;
         }

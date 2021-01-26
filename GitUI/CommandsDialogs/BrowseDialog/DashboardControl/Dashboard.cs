@@ -14,14 +14,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
     [ThemeAware]
     public partial class Dashboard : GitModuleControl
     {
-        private readonly TranslationString _cloneFork = new TranslationString("Clone {0} repository");
-        private readonly TranslationString _cloneRepository = new TranslationString("Clone repository");
-        private readonly TranslationString _createRepository = new TranslationString("Create new repository");
-        private readonly TranslationString _develop = new TranslationString("Develop");
-        private readonly TranslationString _donate = new TranslationString("Donate");
-        private readonly TranslationString _issues = new TranslationString("Issues");
-        private readonly TranslationString _openRepository = new TranslationString("Open repository");
-        private readonly TranslationString _translate = new TranslationString("Translate");
+        private readonly TranslationString _cloneFork = new("Clone {0} repository");
+        private readonly TranslationString _cloneRepository = new("Clone repository");
+        private readonly TranslationString _createRepository = new("Create new repository");
+        private readonly TranslationString _develop = new("Develop");
+        private readonly TranslationString _donate = new("Donate");
+        private readonly TranslationString _issues = new("Issues");
+        private readonly TranslationString _openRepository = new("Open repository");
+        private readonly TranslationString _translate = new("Translate");
 
         private DashboardTheme _selectedTheme;
 

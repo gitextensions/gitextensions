@@ -1719,7 +1719,7 @@ namespace GitUI
             /// <summary>
             /// Secondary sort should be by file path.
             /// </summary>
-            private static readonly GitStatusListSorter ThenBy = new GitStatusListSorter(new GitItemStatusNameComparer());
+            private static readonly GitStatusListSorter ThenBy = new(new GitItemStatusNameComparer());
 
             public override int Compare(ListViewItem x, ListViewItem y)
             {

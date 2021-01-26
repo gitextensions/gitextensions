@@ -18,17 +18,17 @@ namespace GitStatistics
 {
     public partial class FormGitStatistics : GitExtensionsFormBase
     {
-        private readonly TranslationString _commits = new TranslationString("{0:N0} Commits");
-        private readonly TranslationString _commitsBy = new TranslationString("{0:N0} Commits by {1}");
-        private readonly TranslationString _linesOfCodeInFiles = new TranslationString("{0:N0} Lines of code in {1} files ({2:P1})");
-        private readonly TranslationString _linesOfCode = new TranslationString("{0:N0} Lines of code");
-        private readonly TranslationString _linesOfCodeP = new TranslationString("{0:N0} Lines of code ({1:P1})");
-        private readonly TranslationString _linesOfTestCode = new TranslationString("{0:N0} Lines of test code");
-        private readonly TranslationString _linesOfTestCodeP = new TranslationString("{0:N0} Lines of test code ({1:P1})");
-        private readonly TranslationString _linesOfProductionCodeP = new TranslationString("{0:N0} Lines of production code ({1:P1})");
-        private readonly TranslationString _blankLinesP = new TranslationString("{0:N0} Blank lines ({1:P1})");
-        private readonly TranslationString _commentLinesP = new TranslationString("{0:N0} Comment lines ({1:P1})");
-        private readonly TranslationString _linesOfDesignerFilesP = new TranslationString("{0:N0} Lines in designer files ({1:P1})");
+        private readonly TranslationString _commits = new("{0:N0} Commits");
+        private readonly TranslationString _commitsBy = new("{0:N0} Commits by {1}");
+        private readonly TranslationString _linesOfCodeInFiles = new("{0:N0} Lines of code in {1} files ({2:P1})");
+        private readonly TranslationString _linesOfCode = new("{0:N0} Lines of code");
+        private readonly TranslationString _linesOfCodeP = new("{0:N0} Lines of code ({1:P1})");
+        private readonly TranslationString _linesOfTestCode = new("{0:N0} Lines of test code");
+        private readonly TranslationString _linesOfTestCodeP = new("{0:N0} Lines of test code ({1:P1})");
+        private readonly TranslationString _linesOfProductionCodeP = new("{0:N0} Lines of production code ({1:P1})");
+        private readonly TranslationString _blankLinesP = new("{0:N0} Blank lines ({1:P1})");
+        private readonly TranslationString _commentLinesP = new("{0:N0} Comment lines ({1:P1})");
+        private readonly TranslationString _linesOfDesignerFilesP = new("{0:N0} Lines in designer files ({1:P1})");
 
         private readonly string _codeFilePattern;
         private readonly bool _countSubmodules;

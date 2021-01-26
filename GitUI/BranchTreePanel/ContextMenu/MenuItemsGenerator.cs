@@ -36,7 +36,7 @@ namespace GitUI.BranchTreePanel.ContextMenu
             return items;
         }
 
-        public MenuItemsStrings Strings { get; } = new MenuItemsStrings();
+        public MenuItemsStrings Strings { get; } = new();
 
         private void Generate(List<ToolStripItemWithKey> items)
         {

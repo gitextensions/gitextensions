@@ -49,14 +49,14 @@ namespace GitUI.CommandsDialogs
                                   "Only use amend if the commit is not published yet!" + Environment.NewLine +
                                   Environment.NewLine + "Do you want to continue?");
 
-        private readonly TranslationString _amendCommitCaption = new TranslationString("Amend commit");
+        private readonly TranslationString _amendCommitCaption = new("Amend commit");
 
-        private readonly TranslationString _deleteFailed = new TranslationString("Delete file failed");
+        private readonly TranslationString _deleteFailed = new("Delete file failed");
 
         private readonly TranslationString _deleteSelectedFiles =
             new TranslationString("Are you sure you want to delete the selected file(s)?");
 
-        private readonly TranslationString _deleteSelectedFilesCaption = new TranslationString("Delete");
+        private readonly TranslationString _deleteSelectedFilesCaption = new("Delete");
 
         private readonly TranslationString _deleteUntrackedFiles =
             new TranslationString("Are you sure you want to delete all untracked files?");
@@ -64,16 +64,16 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _deleteUntrackedFilesCaption =
             new TranslationString("Delete untracked files.");
 
-        private readonly TranslationString _enterCommitMessage = new TranslationString("Please enter commit message");
-        private readonly TranslationString _enterCommitMessageCaption = new TranslationString("Commit message");
-        private readonly TranslationString _commitMessageDisabled = new TranslationString("Commit Message is requested during commit");
+        private readonly TranslationString _enterCommitMessage = new("Please enter commit message");
+        private readonly TranslationString _enterCommitMessageCaption = new("Commit message");
+        private readonly TranslationString _commitMessageDisabled = new("Commit Message is requested during commit");
 
-        private readonly TranslationString _enterCommitMessageHint = new TranslationString("Enter commit message");
+        private readonly TranslationString _enterCommitMessageHint = new("Enter commit message");
 
         private readonly TranslationString _mergeConflicts =
             new TranslationString("There are unresolved merge conflicts, solve merge conflicts before committing.");
 
-        private readonly TranslationString _mergeConflictsCaption = new TranslationString("Merge conflicts");
+        private readonly TranslationString _mergeConflictsCaption = new("Merge conflicts");
 
         private readonly TranslationString _noFilesStagedAndNothingToCommit =
             new TranslationString("There are no files staged for this commit.");
@@ -84,8 +84,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noFilesStagedAndConfirmAnEmptyMergeCommit =
             new TranslationString("There are no files staged for this commit.\nAre you sure you want to commit?");
 
-        private readonly TranslationString _noStagedChanges = new TranslationString("There are no staged changes");
-        private readonly TranslationString _noUnstagedChanges = new TranslationString("There are no unstaged changes");
+        private readonly TranslationString _noStagedChanges = new("There are no staged changes");
+        private readonly TranslationString _noUnstagedChanges = new("There are no unstaged changes");
 
         private readonly TranslationString _notOnBranch =
             new TranslationString("This commit will be unreferenced when switching to another branch and can be lost." +
@@ -97,57 +97,57 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _resetSelectedChangesText =
             new TranslationString("Are you sure you want to reset all selected files?");
 
-        private readonly TranslationString _resetStageChunkOfFileCaption = new TranslationString("Unstage chunk of file");
-        private readonly TranslationString _stageDetails = new TranslationString("Stage Details");
-        private readonly TranslationString _stageFiles = new TranslationString("Stage {0} files");
-        private readonly TranslationString _selectOnlyOneFile = new TranslationString("You must have only one file selected.");
+        private readonly TranslationString _resetStageChunkOfFileCaption = new("Unstage chunk of file");
+        private readonly TranslationString _stageDetails = new("Stage Details");
+        private readonly TranslationString _stageFiles = new("Stage {0} files");
+        private readonly TranslationString _selectOnlyOneFile = new("You must have only one file selected.");
 
-        private readonly TranslationString _stageAll = new TranslationString("Stage all");
-        private readonly TranslationString _stageFiltered = new TranslationString("Stage filtered");
-        private readonly TranslationString _unstageAll = new TranslationString("Unstage all");
-        private readonly TranslationString _unstageFiltered = new TranslationString("Unstage filtered");
+        private readonly TranslationString _stageAll = new("Stage all");
+        private readonly TranslationString _stageFiltered = new("Stage filtered");
+        private readonly TranslationString _unstageAll = new("Unstage all");
+        private readonly TranslationString _unstageFiltered = new("Unstage filtered");
 
-        private readonly TranslationString _addSelectionToCommitMessage = new TranslationString("Add selection to commit message");
-        private readonly TranslationString _formTitle = new TranslationString("Commit to {0} ({1})");
+        private readonly TranslationString _addSelectionToCommitMessage = new("Add selection to commit message");
+        private readonly TranslationString _formTitle = new("Commit to {0} ({1})");
 
-        private readonly TranslationString _selectionFilterToolTip = new TranslationString("Enter a regular expression to select unstaged files.");
-        private readonly TranslationString _selectionFilterErrorToolTip = new TranslationString("Error {0}");
+        private readonly TranslationString _selectionFilterToolTip = new("Enter a regular expression to select unstaged files.");
+        private readonly TranslationString _selectionFilterErrorToolTip = new("Error {0}");
 
-        private readonly TranslationString _commitMsgFirstLineInvalid = new TranslationString("First line of commit message contains too many characters."
+        private readonly TranslationString _commitMsgFirstLineInvalid = new("First line of commit message contains too many characters."
             + Environment.NewLine + "Do you want to continue?");
 
-        private readonly TranslationString _commitMsgLineInvalid = new TranslationString("The following line of commit message contains too many characters:"
+        private readonly TranslationString _commitMsgLineInvalid = new("The following line of commit message contains too many characters:"
             + Environment.NewLine + Environment.NewLine + "{0}" + Environment.NewLine + Environment.NewLine + "Do you want to continue?");
 
-        private readonly TranslationString _commitMsgSecondLineNotEmpty = new TranslationString("Second line of commit message is not empty." + Environment.NewLine + "Do you want to continue?");
+        private readonly TranslationString _commitMsgSecondLineNotEmpty = new("Second line of commit message is not empty." + Environment.NewLine + "Do you want to continue?");
 
-        private readonly TranslationString _commitMsgRegExNotMatched = new TranslationString("Commit message does not match RegEx." + Environment.NewLine + "Do you want to continue?");
+        private readonly TranslationString _commitMsgRegExNotMatched = new("Commit message does not match RegEx." + Environment.NewLine + "Do you want to continue?");
 
-        private readonly TranslationString _commitValidationCaption = new TranslationString("Commit validation");
+        private readonly TranslationString _commitValidationCaption = new("Commit validation");
 
-        private readonly TranslationString _commitMessageSettings = new TranslationString("Edit commit message templates and settings...");
+        private readonly TranslationString _commitMessageSettings = new("Edit commit message templates and settings...");
 
-        private readonly TranslationString _commitAuthorInfo = new TranslationString("Author");
-        private readonly TranslationString _commitCommitterInfo = new TranslationString("Committer");
-        private readonly TranslationString _commitCommitterToolTip = new TranslationString("Click to change committer information.");
+        private readonly TranslationString _commitAuthorInfo = new("Author");
+        private readonly TranslationString _commitCommitterInfo = new("Committer");
+        private readonly TranslationString _commitCommitterToolTip = new("Click to change committer information.");
 
         private readonly TranslationString _modifyCommitMessageButtonToolTip
             = new TranslationString("If you change the first line of the commit message, git will treat this commit as an ordinary commit," + Environment.NewLine
                                     + "i.e. it may no longer be a fixup or an autosquash commit.");
 
-        private readonly TranslationString _templateNotFoundCaption = new TranslationString("Template Error");
-        private readonly TranslationString _templateNotFound = new TranslationString($"Template not found: {{0}}.{Environment.NewLine}{Environment.NewLine}You can set your template:{Environment.NewLine}\t$ git config commit.template ./.git_commit_msg.txt{Environment.NewLine}You can unset the template:{Environment.NewLine}\t$ git config --unset commit.template");
-        private readonly TranslationString _templateLoadErrorCaption = new TranslationString("Template could not be loaded");
+        private readonly TranslationString _templateNotFoundCaption = new("Template Error");
+        private readonly TranslationString _templateNotFound = new($"Template not found: {{0}}.{Environment.NewLine}{Environment.NewLine}You can set your template:{Environment.NewLine}\t$ git config commit.template ./.git_commit_msg.txt{Environment.NewLine}You can unset the template:{Environment.NewLine}\t$ git config --unset commit.template");
+        private readonly TranslationString _templateLoadErrorCaption = new("Template could not be loaded");
 
-        private readonly TranslationString _skipWorktreeToolTip = new TranslationString("Hide already tracked files that will change but that you don\'t want to commit."
+        private readonly TranslationString _skipWorktreeToolTip = new("Hide already tracked files that will change but that you don\'t want to commit."
             + Environment.NewLine + "Suitable for some config files modified locally.");
-        private readonly TranslationString _assumeUnchangedToolTip = new TranslationString("Tell git to not check the status of this file for performance benefits."
+        private readonly TranslationString _assumeUnchangedToolTip = new("Tell git to not check the status of this file for performance benefits."
             + Environment.NewLine + "Use this feature when a file is big and never change."
             + Environment.NewLine + "Git will never check if the file has changed that will improve status check performance.");
-        private readonly TranslationString _stopTrackingFail = new TranslationString("Fail to stop tracking the file '{0}'.");
+        private readonly TranslationString _stopTrackingFail = new("Fail to stop tracking the file '{0}'.");
 
-        private readonly TranslationString _statusBarBranchWithoutRemote = new TranslationString("(remote not configured)");
-        private readonly TranslationString _untrackedRemote = new TranslationString("(untracked)");
+        private readonly TranslationString _statusBarBranchWithoutRemote = new("(remote not configured)");
+        private readonly TranslationString _untrackedRemote = new("(untracked)");
         #endregion
 
         private event Action OnStageAreaLoaded;
@@ -155,10 +155,10 @@ namespace GitUI.CommandsDialogs
         private readonly ICommitTemplateManager _commitTemplateManager;
         [CanBeNull] private readonly GitRevision _editedCommit;
         private readonly ToolStripMenuItem _addSelectionToCommitMessageToolStripMenuItem;
-        private readonly AsyncLoader _unstagedLoader = new AsyncLoader();
+        private readonly AsyncLoader _unstagedLoader = new();
         private readonly bool _useFormCommitMessage = AppSettings.UseFormCommitMessage;
-        private readonly CancellationTokenSequence _interactiveAddSequence = new CancellationTokenSequence();
-        private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("CommitDialog"));
+        private readonly CancellationTokenSequence _interactiveAddSequence = new();
+        private readonly SplitterManager _splitterManager = new(new AppSettingsPath("CommitDialog"));
         private readonly Subject<string> _selectionFilterSubject = new Subject<string>();
         private readonly IFullPathResolver _fullPathResolver;
         private readonly List<string> _formattedLines = new List<string>();

@@ -12,10 +12,10 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormEditor : GitModuleForm
     {
-        private readonly TranslationString _saveChanges = new TranslationString("Do you want to save changes?");
-        private readonly TranslationString _saveChangesCaption = new TranslationString("Save changes");
-        private readonly TranslationString _cannotOpenFile = new TranslationString("Cannot open file:");
-        private readonly TranslationString _cannotSaveFile = new TranslationString("Cannot save file:");
+        private readonly TranslationString _saveChanges = new("Do you want to save changes?");
+        private readonly TranslationString _saveChangesCaption = new("Save changes");
+        private readonly TranslationString _cannotOpenFile = new("Cannot open file:");
+        private readonly TranslationString _cannotSaveFile = new("Cannot save file:");
 
         [CanBeNull] private readonly string _fileName;
 

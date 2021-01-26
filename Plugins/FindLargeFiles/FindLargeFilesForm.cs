@@ -16,15 +16,15 @@ namespace FindLargeFiles
 {
     public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
     {
-        private readonly TranslationString _areYouSureToDelete = new TranslationString("Are you sure to delete the selected files?");
-        private readonly TranslationString _deleteCaption = new TranslationString("Delete");
+        private readonly TranslationString _areYouSureToDelete = new("Are you sure to delete the selected files?");
+        private readonly TranslationString _deleteCaption = new("Delete");
 
         private readonly float _threshold;
         private readonly GitUIEventArgs _gitUiCommands;
         private readonly IGitModule _gitCommands;
         private string[] _revList;
         private readonly Dictionary<string, GitObject> _list = new Dictionary<string, GitObject>();
-        private readonly SortableObjectsList _gitObjects = new SortableObjectsList();
+        private readonly SortableObjectsList _gitObjects = new();
 
         public FindLargeFilesForm(float threshold, GitUIEventArgs gitUiEventArgs)
         {

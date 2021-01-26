@@ -15,13 +15,13 @@ namespace TeamCityIntegration.Settings
     public partial class TeamCitySettingsUserControl : GitExtensionsControl, IBuildServerSettingsUserControl
     {
         private string _defaultProjectName;
-        private readonly TeamCityAdapter _teamCityAdapter = new TeamCityAdapter();
-        private readonly TranslationString _failToLoadProjectMessage = new TranslationString("Failed to load the projects and build list." + Environment.NewLine + "Please verify the server url.");
-        private readonly TranslationString _failToLoadProjectCaption = new TranslationString("Error when loading the projects and build list");
-        private readonly TranslationString _failToExtractDataFromClipboardMessage = new TranslationString("The clipboard doesn't contain a valid build url." + Environment.NewLine + Environment.NewLine +
+        private readonly TeamCityAdapter _teamCityAdapter = new();
+        private readonly TranslationString _failToLoadProjectMessage = new("Failed to load the projects and build list." + Environment.NewLine + "Please verify the server url.");
+        private readonly TranslationString _failToLoadProjectCaption = new("Error when loading the projects and build list");
+        private readonly TranslationString _failToExtractDataFromClipboardMessage = new("The clipboard doesn't contain a valid build url." + Environment.NewLine + Environment.NewLine +
                 "Please copy in the clipboard the url of the build before retrying." + Environment.NewLine +
                 "(Should contain at least the \"buildTypeId\" parameter)");
-        private readonly TranslationString _failToExtractDataFromClipboardCaption = new TranslationString("Build url not valid");
+        private readonly TranslationString _failToExtractDataFromClipboardCaption = new("Build url not valid");
 
         public TeamCitySettingsUserControl()
         {
@@ -93,7 +93,7 @@ namespace TeamCityIntegration.Settings
             buttonProjectChooser.Enabled = !string.IsNullOrWhiteSpace(TeamCityServerUrl.Text);
         }
 
-        private readonly Regex _teamcityBuildUrlParameters = new Regex(@"(\?|\&)([^=]+)\=([^&]+)");
+        private readonly Regex _teamcityBuildUrlParameters = new(@"(\?|\&)([^=]+)\=([^&]+)");
         private void lnkExtractDataFromBuildUrlCopiedInTheClipboard_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (Clipboard.ContainsText() && Clipboard.GetText().Contains("buildTypeId="))

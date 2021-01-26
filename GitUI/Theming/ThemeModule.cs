@@ -13,7 +13,7 @@ namespace GitUI.Theming
     {
         public static ThemeSettings Settings { get; private set; } = ThemeSettings.Default;
 
-        private static ThemeRepository Repository { get; } = new ThemeRepository();
+        private static ThemeRepository Repository { get; } = new();
         public static bool IsDarkTheme { get; private set; }
 
         public static void Load()

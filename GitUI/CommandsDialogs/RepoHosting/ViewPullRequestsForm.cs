@@ -17,15 +17,15 @@ namespace GitUI.CommandsDialogs.RepoHosting
     public partial class ViewPullRequestsForm : GitModuleForm
     {
         #region Translation
-        private readonly TranslationString _strFailedToFetchPullData = new TranslationString("Failed to fetch pull data!");
-        private readonly TranslationString _strFailedToLoadDiscussionItem = new TranslationString("Failed to post discussion item!");
-        private readonly TranslationString _strFailedToClosePullRequest = new TranslationString("Failed to close pull request!");
-        private readonly TranslationString _strFailedToLoadDiffData = new TranslationString("Failed to load diff data!");
-        private readonly TranslationString _strCouldNotLoadDiscussion = new TranslationString("Could not load discussion!");
-        private readonly TranslationString _strLoading = new TranslationString(" : LOADING : ");
-        private readonly TranslationString _strUnableUnderstandPatch = new TranslationString("Error: Unable to understand patch");
-        private readonly TranslationString _strRemoteAlreadyExist = new TranslationString("ERROR: Remote with name {0} already exists but it points to a different repository!\r\nDetails: Is {1} expected {2}");
-        private readonly TranslationString _strCouldNotAddRemote = new TranslationString("Could not add remote with name {0} and URL {1}");
+        private readonly TranslationString _strFailedToFetchPullData = new("Failed to fetch pull data!");
+        private readonly TranslationString _strFailedToLoadDiscussionItem = new("Failed to post discussion item!");
+        private readonly TranslationString _strFailedToClosePullRequest = new("Failed to close pull request!");
+        private readonly TranslationString _strFailedToLoadDiffData = new("Failed to load diff data!");
+        private readonly TranslationString _strCouldNotLoadDiscussion = new("Could not load discussion!");
+        private readonly TranslationString _strLoading = new(" : LOADING : ");
+        private readonly TranslationString _strUnableUnderstandPatch = new("Error: Unable to understand patch");
+        private readonly TranslationString _strRemoteAlreadyExist = new("ERROR: Remote with name {0} already exists but it points to a different repository!\r\nDetails: Is {1} expected {2}");
+        private readonly TranslationString _strCouldNotAddRemote = new("Could not add remote with name {0} and URL {1}");
         #endregion
 
         private GitProtocol _cloneGitProtocol;
@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private IReadOnlyList<IHostedRemote> _hostedRemotes;
         private bool _isFirstLoad;
         private IReadOnlyList<IPullRequestInformation> _pullRequestsInfo;
-        private readonly AsyncLoader _loader = new AsyncLoader();
+        private readonly AsyncLoader _loader = new();
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private ViewPullRequestsForm()

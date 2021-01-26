@@ -17,7 +17,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormRemotes : GitModuleForm
     {
-        private readonly FormRemotesController _formRemotesController = new FormRemotesController();
+        private readonly FormRemotesController _formRemotesController = new();
         private IConfigFileRemoteSettingsManager _remotesManager;
         private ConfigFileRemote _selectedRemote;
         private readonly ListViewGroup _lvgEnabled;

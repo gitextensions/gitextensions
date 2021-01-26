@@ -16,7 +16,7 @@ namespace GitCommands.Git
 
     public sealed class GitTreeParser : IGitTreeParser
     {
-        private static readonly Regex _treeLineRegex = new Regex(
+        private static readonly Regex _treeLineRegex = new(
             @"^(?<mode>\d{6}) (?<type>(blob|tree|commit)+) (?<objectid>[0-9a-f]{40})\s+(?<name>.+)$",
             RegexOptions.Compiled);
 

@@ -21,20 +21,20 @@ namespace GitUI.CommandsDialogs.RepoHosting
     {
         #region Translation
 
-        private readonly TranslationString _strLoading = new TranslationString(" : LOADING : ");
-        private readonly TranslationString _strFailedToGetRepos = new TranslationString("Failed to get repositories. This most likely means you didn't configure {0}, please do so via the menu \"Plugins/{0}\".");
-        private readonly TranslationString _strWillCloneWithPushAccess = new TranslationString("Will clone {0} into {1}.\r\nYou will have push access. {2}");
-        private readonly TranslationString _strWillCloneInfo = new TranslationString("Will clone {0} into {1}.\r\nYou can not push unless you are a collaborator. {2}");
-        private readonly TranslationString _strWillBeAddedAsARemote = new TranslationString("\"{0}\" will be added as a remote.");
-        private readonly TranslationString _strCouldNotAddRemote = new TranslationString("Could not add remote");
-        private readonly TranslationString _strNoHomepageDefined = new TranslationString("No homepage defined");
-        private readonly TranslationString _strFailedToFork = new TranslationString("Failed to fork:");
-        private readonly TranslationString _strSearchFailed = new TranslationString("Search failed!");
-        private readonly TranslationString _strUserNotFound = new TranslationString("User not found!");
-        private readonly TranslationString _strCouldNotFetchReposOfUser = new TranslationString("Could not fetch repositories of user!");
-        private readonly TranslationString _strSearching = new TranslationString(" : SEARCHING : ");
-        private readonly TranslationString _strSelectOneItem = new TranslationString("You must select exactly one item");
-        private readonly TranslationString _strCloneFolderCanNotBeEmpty = new TranslationString("Clone folder can not be empty");
+        private readonly TranslationString _strLoading = new(" : LOADING : ");
+        private readonly TranslationString _strFailedToGetRepos = new("Failed to get repositories. This most likely means you didn't configure {0}, please do so via the menu \"Plugins/{0}\".");
+        private readonly TranslationString _strWillCloneWithPushAccess = new("Will clone {0} into {1}.\r\nYou will have push access. {2}");
+        private readonly TranslationString _strWillCloneInfo = new("Will clone {0} into {1}.\r\nYou can not push unless you are a collaborator. {2}");
+        private readonly TranslationString _strWillBeAddedAsARemote = new("\"{0}\" will be added as a remote.");
+        private readonly TranslationString _strCouldNotAddRemote = new("Could not add remote");
+        private readonly TranslationString _strNoHomepageDefined = new("No homepage defined");
+        private readonly TranslationString _strFailedToFork = new("Failed to fork:");
+        private readonly TranslationString _strSearchFailed = new("Search failed!");
+        private readonly TranslationString _strUserNotFound = new("User not found!");
+        private readonly TranslationString _strCouldNotFetchReposOfUser = new("Could not fetch repositories of user!");
+        private readonly TranslationString _strSearching = new(" : SEARCHING : ");
+        private readonly TranslationString _strSelectOneItem = new("You must select exactly one item");
+        private readonly TranslationString _strCloneFolderCanNotBeEmpty = new("Clone folder can not be empty");
 
         #endregion
 

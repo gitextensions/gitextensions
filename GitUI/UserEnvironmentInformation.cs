@@ -35,7 +35,7 @@ namespace GitUI
             var gitVersionInfo = GetGitVersionInfo(gitVer, GitVersion.LastSupportedVersion, GitVersion.LastRecommendedVersion);
 
             // Build and open FormAbout design to make sure info still looks good if you change this code.
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             sb.AppendLine($"- Git Extensions {AppSettings.ProductVersion}");
             sb.AppendLine($"- Build {_sha}{(_dirty ? " (Dirty)" : "")}");

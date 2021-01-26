@@ -23,15 +23,15 @@ namespace GitUI.CommandsDialogs
 {
     public partial class RevisionDiffControl : GitModuleControl
     {
-        private readonly TranslationString _saveFileFilterCurrentFormat = new TranslationString("Current format");
-        private readonly TranslationString _saveFileFilterAllFiles = new TranslationString("All files");
-        private readonly TranslationString _deleteSelectedFilesCaption = new TranslationString("Delete");
+        private readonly TranslationString _saveFileFilterCurrentFormat = new("Current format");
+        private readonly TranslationString _saveFileFilterAllFiles = new("All files");
+        private readonly TranslationString _deleteSelectedFilesCaption = new("Delete");
         private readonly TranslationString _deleteSelectedFiles =
             new TranslationString("Are you sure you want to delete the selected file(s)?");
-        private readonly TranslationString _deleteFailed = new TranslationString("Delete file failed");
-        private readonly TranslationString _multipleDescription = new TranslationString("<multiple>");
-        private readonly TranslationString _selectedRevision = new TranslationString("Second: b/");
-        private readonly TranslationString _firstRevision = new TranslationString("First: a/");
+        private readonly TranslationString _deleteFailed = new("Delete file failed");
+        private readonly TranslationString _multipleDescription = new("<multiple>");
+        private readonly TranslationString _selectedRevision = new("Second: b/");
+        private readonly TranslationString _firstRevision = new("First: a/");
 
         private readonly TranslationString _resetSelectedChangesText =
             new TranslationString("Are you sure you want to reset all selected files to {0}?");
@@ -179,7 +179,7 @@ namespace GitUI.CommandsDialogs
             {
                 var tools = await Module.GetCustomDiffMergeTools(isDiff: true);
                 openWithCustomDifftoolToolStripMenuItem.DropDown = null;
-                ContextMenuStrip customDiffToolDropDown = new ContextMenuStrip();
+                ContextMenuStrip customDiffToolDropDown = new();
                 foreach (var tool in tools)
                 {
                     var toolStripItem = new ToolStripMenuItem(tool) { Tag = tool };

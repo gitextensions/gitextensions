@@ -28,9 +28,9 @@ namespace GitUI.Avatars
          * RaMMicHaeL
          * SamuelLongchamps
          */
-        private static readonly Regex _gitHubEmailRegex = new Regex(@"^(\d+\+)?(?<username>[^@]+)@users\.noreply\.github\.com$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex _gitHubEmailRegex = new(@"^(\d+\+)?(?<username>[^@]+)@users\.noreply\.github\.com$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private static readonly SemaphoreSlim _downloadSemaphore = new SemaphoreSlim(initialCount: MaxConcurrentDownloads);
+        private static readonly SemaphoreSlim _downloadSemaphore = new(initialCount: MaxConcurrentDownloads);
 
         private static readonly ConcurrentDictionary<Uri, (DateTime, Task<Image>)> _downloads = new ConcurrentDictionary<Uri, (DateTime, Task<Image>)>();
 

@@ -11,7 +11,7 @@ namespace GitUI.Theming
     internal class ThemeMigration
     {
         private readonly ThemeRepository _repository;
-        private readonly ThemeId _migratedThemeId = new ThemeId("migrated", false);
+        private readonly ThemeId _migratedThemeId = new("migrated", false);
         private readonly ThemeId[] _themeIds;
 
         public ThemeMigration(ThemeRepository repository)

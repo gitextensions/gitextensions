@@ -12,7 +12,7 @@ namespace GitCommands.Settings
         private DateTime? _lastFileRead;
         private DateTime _lastFileModificationDate = DateTime.MaxValue;
         private DateTime? _lastModificationDate;
-        private readonly FileSystemWatcher _fileWatcher = new FileSystemWatcher();
+        private readonly FileSystemWatcher _fileWatcher = new();
         private readonly bool _canEnableFileWatcher;
 
         private Timer? _saveTimer;

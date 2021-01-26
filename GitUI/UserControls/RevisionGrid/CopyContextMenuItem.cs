@@ -14,7 +14,7 @@ namespace GitUI.UserControls.RevisionGrid
 {
     public sealed class CopyContextMenuItem : ToolStripMenuItem
     {
-        private readonly TranslationString _copyToClipboardText = new TranslationString("&Copy to clipboard");
+        private readonly TranslationString _copyToClipboardText = new("&Copy to clipboard");
         [CanBeNull] private Func<IReadOnlyList<GitRevision>> _revisionFunc;
         private uint _itemNumber;
 

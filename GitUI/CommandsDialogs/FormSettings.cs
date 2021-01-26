@@ -23,7 +23,7 @@ namespace GitUI.CommandsDialogs
 
         #region Translation
 
-        private readonly TranslationString _cantSaveSettings = new TranslationString("Failed to save all settings");
+        private readonly TranslationString _cantSaveSettings = new("Failed to save all settings");
 
         #endregion
 

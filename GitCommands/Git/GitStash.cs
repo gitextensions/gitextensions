@@ -6,7 +6,7 @@ namespace GitCommands.Git
     /// <summary>Stored local modifications.</summary>
     public sealed class GitStash
     {
-        private static readonly Regex _regex = new Regex(@"^stash@\{(?<index>\d+)\}: (?<message>.+)$", RegexOptions.Compiled);
+        private static readonly Regex _regex = new(@"^stash@\{(?<index>\d+)\}: (?<message>.+)$", RegexOptions.Compiled);
 
         public static bool TryParse(string s, [NotNullWhen(returnValue: true)] out GitStash? stash)
         {

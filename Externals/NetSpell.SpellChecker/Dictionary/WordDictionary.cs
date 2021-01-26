@@ -710,14 +710,14 @@ namespace NetSpell.SpellChecker.Dictionary
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public PhoneticRuleCollection PhoneticRules { get; } = new PhoneticRuleCollection();
+        public PhoneticRuleCollection PhoneticRules { get; } = new();
 
         /// <summary>
         ///     Collection of affix prefixes for the base words in this dictionary
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public AffixRuleCollection PrefixRules { get; } = new AffixRuleCollection();
+        public AffixRuleCollection PrefixRules { get; } = new();
 
         /// <summary>
         ///     List of characters to use when generating suggestions using the near miss strategy
@@ -731,7 +731,7 @@ namespace NetSpell.SpellChecker.Dictionary
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public AffixRuleCollection SuffixRules { get; } = new AffixRuleCollection();
+        public AffixRuleCollection SuffixRules { get; } = new();
 
         /// <summary>
         ///     List of characters to try when generating suggestions using the near miss strategy
