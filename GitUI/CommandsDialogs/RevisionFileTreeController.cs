@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs
         private readonly IFileAssociatedIconProvider _iconProvider;
         private readonly Func<string> _getWorkingDir;
         private readonly IGitRevisionInfoProvider _revisionInfoProvider;
-        private readonly ConcurrentDictionary<string, IEnumerable<IGitItem>> _cachedItems = new ConcurrentDictionary<string, IEnumerable<IGitItem>>();
+        private readonly ConcurrentDictionary<string, IEnumerable<INamedGitItem>> _cachedItems = new();
 
         public RevisionFileTreeController(Func<string> getWorkingDir, IGitRevisionInfoProvider revisionInfoProvider, IFileAssociatedIconProvider iconProvider)
         {

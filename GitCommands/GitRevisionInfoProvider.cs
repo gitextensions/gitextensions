@@ -11,7 +11,7 @@ namespace GitCommands
         /// Loads children item for the given <paramref name="item"/>.
         /// </summary>
         /// <returns>The item's children.</returns>
-        IEnumerable<IGitItem> LoadChildren(IGitItem item);
+        IEnumerable<INamedGitItem> LoadChildren(IGitItem item);
     }
 
     public sealed class GitRevisionInfoProvider : IGitRevisionInfoProvider
@@ -29,7 +29,7 @@ namespace GitCommands
         /// <returns>The item's children.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="item"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><see cref="IGitItem.Guid"/> is not supplied.</exception>
-        public IEnumerable<IGitItem> LoadChildren(IGitItem item)
+        public IEnumerable<INamedGitItem> LoadChildren(IGitItem item)
         {
             if (item is null)
             {
@@ -50,7 +50,7 @@ namespace GitCommands
 
             return YieldSubItems();
 
-            IEnumerable<IGitItem> YieldSubItems()
+            IEnumerable<INamedGitItem> YieldSubItems()
             {
                 var basePath = (item as GitItem)?.FileName ?? string.Empty;
 

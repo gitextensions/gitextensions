@@ -3188,7 +3188,7 @@ namespace GitCommands
                 .Split('\0', '\n');
         }
 
-        public IEnumerable<IGitItem> GetTree(ObjectId commitId, bool full)
+        public IEnumerable<INamedGitItem> GetTree(ObjectId commitId, bool full)
         {
             var args = new GitArgumentBuilder("ls-tree")
             {

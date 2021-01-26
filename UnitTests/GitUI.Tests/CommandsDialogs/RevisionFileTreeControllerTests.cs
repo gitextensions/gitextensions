@@ -55,7 +55,7 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void LoadItemsInTreeView_should_add_all_none_GitItem_items_with_1st_level_nodes()
         {
-            var items = new IGitItem[] { new MockGitItem("file1"), new MockGitItem("file2") };
+            var items = new INamedGitItem[] { new MockGitItem("file1"), new MockGitItem("file2") };
             var item = new MockGitItem("folder");
             _revisionInfoProvider.LoadChildren(item).Returns(items);
 
@@ -280,7 +280,7 @@ namespace GitUITests.CommandsDialogs
 
         [SuppressMessage("ReSharper", "UnusedMember.Local")]
         [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
-        private class MockGitItem : IGitItem
+        private class MockGitItem : INamedGitItem
         {
             public MockGitItem(string name)
             {
