@@ -1633,7 +1633,7 @@ namespace GitUI
             else
             {
                 RefFilterOptions = _branchFilter.Length > 0
-                    ? RefFilterOptions.None
+                    ? RefFilterOptions.Branches
                     : RefFilterOptions.All | RefFilterOptions.Boundary;
             }
 
