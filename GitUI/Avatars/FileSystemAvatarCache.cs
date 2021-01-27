@@ -11,27 +11,21 @@ namespace GitUI.Avatars
     /// <summary>
     /// Decorates an avatar provider, adding persistent caching to the file system.
     /// </summary>
-    public sealed class AvatarPersistentCache : IAvatarProvider
+    public sealed class FileSystemAvatarCache : IAvatarProvider, IAvatarCacheCleaner
     {
         private const int DefaultCacheDays = 30;
 
         private readonly IAvatarProvider _inner;
-        private readonly IAvatarGenerator _avatarGenerator;
         private readonly IFileSystem _fileSystem;
 
-        public AvatarPersistentCache(IAvatarProvider inner, IAvatarGenerator avatarGenerator, IFileSystem fileSystem = null)
+        public FileSystemAvatarCache(IAvatarProvider inner, IFileSystem fileSystem = null)
         {
             _inner = inner;
-            _avatarGenerator = avatarGenerator;
             _fileSystem = fileSystem ?? new FileSystem();
         }
 
         /// <inheritdoc />
-        event Action IAvatarProvider.CacheCleared
-        {
-            add => _inner.CacheCleared += value;
-            remove => _inner.CacheCleared -= value;
-        }
+        public event EventHandler CacheCleared;
 
         /// <inheritdoc />
         public async Task<Image> GetAvatarAsync(string email, string name, int imageSize)
@@ -39,9 +33,7 @@ namespace GitUI.Avatars
             var cacheDir = AppSettings.AvatarImageCachePath;
             var path = Path.Combine(cacheDir, $"{email}.{imageSize}px.png");
 
-            var image = ReadImage()
-                ?? await _inner.GetAvatarAsync(email, name, imageSize)
-                ?? _avatarGenerator.GetAvatarImage(email, name, imageSize);
+            var image = ReadImage() ?? await _inner.GetAvatarAsync(email, name, imageSize);
 
             if (image is not null)
             {
@@ -142,7 +134,7 @@ namespace GitUI.Avatars
                     });
             }
 
-            await _inner.ClearCacheAsync();
+            CacheCleared?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -374,7 +374,7 @@ namespace GitUI.Blame
                             else
                             {
                                 var avatar = ThreadHelper.JoinableTaskFactory.Run(() =>
-                                    AvatarService.Default.GetAvatarAsync(authorEmail, line.Commit.Author,
+                                    AvatarService.DefaultProvider.GetAvatarAsync(authorEmail, line.Commit.Author,
                                         avatarSize));
                                 cacheAvatars.Add(authorEmail, avatar);
                                 gitBlameDisplays[index].Avatar = avatar;

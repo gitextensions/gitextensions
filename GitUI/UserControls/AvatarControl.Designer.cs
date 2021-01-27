@@ -60,7 +60,6 @@
             // 
             // avatarProviderToolStripMenuItem
             // 
-            this.avatarProviderToolStripMenuItem.CheckOnClick = true;
             this.avatarProviderToolStripMenuItem.Name = "avatarProviderToolStripMenuItem";
             this.avatarProviderToolStripMenuItem.Size = new System.Drawing.Size(251, 38);
             this.avatarProviderToolStripMenuItem.Text = "Avatar provider";

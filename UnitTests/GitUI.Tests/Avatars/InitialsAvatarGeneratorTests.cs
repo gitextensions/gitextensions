@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using GitUI.Avatars;
-using NSubstitute;
-using NSubstitute.ExceptionExtensions;
+﻿using GitUI.Avatars;
 using NUnit.Framework;
 
 namespace GitUITests.Avatars
@@ -25,7 +21,7 @@ namespace GitUITests.Avatars
         [TestCase(null, null, "?")]
         public void GetInitialsAndHashCode_return_initials_of_a_user(string email, string name, string expected)
         {
-            var (initials, _) = new InitialsAvatarGenerator().GetInitialsAndHashCode(email, name);
+            var (initials, _) = new InitialsAvatarProvider().GetInitialsAndHashCode(email, name);
 
             Assert.AreEqual(expected, initials);
         }

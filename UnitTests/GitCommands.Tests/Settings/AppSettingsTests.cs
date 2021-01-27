@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using GitCommands;
 using GitCommands.Settings;
+using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
 
@@ -165,7 +166,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.CommitInfoShowTagThisCommitDerivesFrom)], true, false, false);
                 yield return (properties[nameof(AppSettings.AvatarImageCacheDays)], 5, false, false);
                 yield return (properties[nameof(AppSettings.ShowAuthorAvatarInCommitInfo)], true, false, false);
-                yield return (properties[nameof(AppSettings.AvatarProvider)], AvatarProvider.Gravatar, false, false);
+                yield return (properties[nameof(AppSettings.AvatarProvider)], AvatarProvider.Default, false, false);
                 yield return (properties[nameof(AppSettings.Translation)], string.Empty, true, false);
                 yield return (properties[nameof(AppSettings.UserProfileHomeDir)], false, false, false);
                 yield return (properties[nameof(AppSettings.CustomHomeDir)], string.Empty, true, false);

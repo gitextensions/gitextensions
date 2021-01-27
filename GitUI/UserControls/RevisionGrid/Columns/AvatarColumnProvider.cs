@@ -14,14 +14,16 @@ namespace GitUI.UserControls.RevisionGrid.Columns
     {
         private readonly RevisionDataGridView _revisionGridView;
         private readonly IAvatarProvider _avatarProvider;
+        private readonly IAvatarCacheCleaner _avatarCacheCleaner;
 
-        public AvatarColumnProvider(RevisionDataGridView revisionGridView, IAvatarProvider avatarProvider)
+        public AvatarColumnProvider(RevisionDataGridView revisionGridView, IAvatarProvider avatarProvider, IAvatarCacheCleaner avatarCacheCleaner)
             : base("Avatar")
         {
             _revisionGridView = revisionGridView;
             _avatarProvider = avatarProvider;
+            _avatarCacheCleaner = avatarCacheCleaner;
 
-            _avatarProvider.CacheCleared += _revisionGridView.Invalidate;
+            _avatarCacheCleaner.CacheCleared += (sender, args) => _revisionGridView.Invalidate();
 
             Column = new DataGridViewTextBoxColumn
             {
