@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.IsolatedStorage;
@@ -40,6 +41,9 @@ namespace GitUI.BuildServerIntegration
         private IBuildServerAdapter _buildServerAdapter;
         private readonly object _observerLock = new object();
 
+        public Dictionary<string, BuildInfo> FinishedBuilds { get; set; } = new Dictionary<string, BuildInfo>();
+        public DateTime? LastCall { get; set; }
+
         internal BuildStatusColumnProvider ColumnProvider { get; }
 
         public BuildServerWatcher(RevisionGridControl revisionGrid, RevisionDataGridView revisionGridView, Func<GitModule> module)
@@ -80,7 +84,7 @@ namespace GitUI.BuildServerIntegration
             var runningBuildsObservable = buildServerAdapter.GetRunningBuilds(scheduler);
 
             var fullDayObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
-            var fullObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler);
+            var fullObservable = LastCall.HasValue ? buildServerAdapter.GetFinishedBuildsSince(scheduler, LastCall.Value) : buildServerAdapter.GetFinishedBuildsSince(scheduler);
 
             bool anyRunningBuilds = false;
             var delayObservable = Observable.Defer(() => Observable.Empty<BuildInfo>()
@@ -96,6 +100,11 @@ namespace GitUI.BuildServerIntegration
                             .Finally(() => shouldLookForNewlyFinishedBuilds = false));
 
             CancelBuildStatusFetchOperation();
+            foreach (BuildInfo buildInfo in FinishedBuilds.Values)
+            {
+                OnBuildInfoUpdate(buildInfo);
+            }
+
             lock (_observerLock)
             {
                 _buildStatusCancellationToken = new CompositeDisposable
@@ -296,6 +305,19 @@ namespace GitUI.BuildServerIntegration
 
                     if (index.Value < _revisionGridView.RowCount)
                     {
+                        if (buildInfo.Status != BuildInfo.BuildStatus.InProgress && buildInfo.Status != BuildInfo.BuildStatus.Unknown)
+                        {
+                            if (!FinishedBuilds.ContainsKey(buildInfo.Id))
+                            {
+                                FinishedBuilds.Add(buildInfo.Id, buildInfo);
+                            }
+
+                            if (!LastCall.HasValue || buildInfo.StartDate >= LastCall)
+                            {
+                                LastCall = buildInfo.StartDate.AddSeconds(1);
+                            }
+                        }
+
                         if (_revisionGridView.Rows[index.Value].Cells[ColumnProvider.Index].Displayed)
                         {
                             _revisionGridView.UpdateCellValue(ColumnProvider.Index, index.Value);

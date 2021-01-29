@@ -217,16 +217,6 @@ Detail of the error:");
                     return;
                 }
 
-                if (!running && !sinceDate.HasValue && CacheAzureDevOps.FinishedBuilds.Any())
-                {
-                    foreach (var buildInfo in CacheAzureDevOps.FinishedBuilds)
-                    {
-                        observer.OnNext(buildInfo);
-                    }
-
-                    sinceDate = CacheAzureDevOps.LastCall;
-                }
-
                 var builds = running ?
                     FilterRunningBuilds(await _apiClient.QueryRunningBuildsAsync(_buildDefinitions)) :
                     await _apiClient.QueryFinishedBuildsAsync(_buildDefinitions, sinceDate);
@@ -246,11 +236,6 @@ Detail of the error:");
                         var buildToDisplay = buildsForACommit.OrderByDescending(b => b.FinishTime).First();
                         var buildInfo = CreateBuildInfo(buildToDisplay);
                         observer.OnNext(buildInfo);
-                        CacheAzureDevOps.FinishedBuilds.Add(buildInfo);
-                        if (buildToDisplay.FinishTime.HasValue && buildToDisplay.FinishTime.Value >= CacheAzureDevOps.LastCall)
-                        {
-                            CacheAzureDevOps.LastCall = buildToDisplay.FinishTime.Value.AddSeconds(1);
-                        }
                     }
                 }
             }
