@@ -11,7 +11,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
         private CommitTemplateItem[] _commitTemplates;
 
-        private const int _maxCommitTemplates = 5;
+        private const int _maxCommitTemplates = 10;
         private const int _maxShownCharsForName = 50;
         private const int _maxUsedCharsForName = 80;
 
@@ -41,6 +41,16 @@ namespace GitUI.CommandsDialogs.CommitDialog
                 for (int i = 0; i < _commitTemplates.Length; i++)
                 {
                     _commitTemplates[i] = new CommitTemplateItem();
+                }
+            }
+            else if (_commitTemplates.Length < _maxCommitTemplates)
+            {
+                // Migration: keep the one configured and complete with empty ones
+                var previousCommitTemplates = _commitTemplates;
+                _commitTemplates = new CommitTemplateItem[_maxCommitTemplates];
+                for (int i = 0; i < _commitTemplates.Length; i++)
+                {
+                    _commitTemplates[i] = i < previousCommitTemplates.Length ? previousCommitTemplates[i] : new CommitTemplateItem();
                 }
             }
 
