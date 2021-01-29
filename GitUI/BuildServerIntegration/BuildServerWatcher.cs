@@ -374,5 +374,10 @@ namespace GitUI.BuildServerIntegration
             var fileName = string.Format("BuildServer-{0}.options", Convert.ToBase64String(Encoding.UTF8.GetBytes(buildServerAdapter.UniqueKey)));
             return new IsolatedStorageFileStream(fileName, FileMode.OpenOrCreate, fileAccess, fileShare);
         }
+
+        public void ChangeRepository()
+        {
+            _buildServerAdapter?.RepositoryClosed();
+        }
     }
 }

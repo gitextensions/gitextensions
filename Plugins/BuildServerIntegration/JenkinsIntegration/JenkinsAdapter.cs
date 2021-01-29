@@ -589,6 +589,10 @@ namespace JenkinsIntegration
             return restServicePath;
         }
 
+        public void RepositoryClosed()
+        {
+        }
+
         public void Dispose()
         {
             GC.SuppressFinalize(this);

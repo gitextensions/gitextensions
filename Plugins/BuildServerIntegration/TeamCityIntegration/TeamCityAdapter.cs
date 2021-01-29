@@ -542,6 +542,10 @@ namespace TeamCityIntegration
             return dateTime.ToUniversalTime().ToString("yyyyMMdd'T'HHmmss-0000", CultureInfo.InvariantCulture).Replace(":", string.Empty);
         }
 
+        public void RepositoryClosed()
+        {
+        }
+
         public void Dispose()
         {
             GC.SuppressFinalize(this);

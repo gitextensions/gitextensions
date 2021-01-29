@@ -538,6 +538,10 @@ namespace AppVeyorIntegration
                 TaskScheduler.Current);
         }
 
+        public void RepositoryClosed()
+        {
+        }
+
         public void Dispose()
         {
             GC.SuppressFinalize(this);
