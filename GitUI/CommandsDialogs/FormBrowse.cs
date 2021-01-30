@@ -320,17 +320,6 @@ namespace GitUI.CommandsDialogs
 
             return;
 
-            void WorkaroundToolbarLocationBug()
-            {
-                // Layout engine bug (?) which may change the order of toolbars
-                // if the 1st one becomes longer than the 2nd toolbar's Location.X
-                // the layout engine will be place the 2nd toolbar first
-                toolPanel.TopToolStripPanel.Controls.Clear();
-                toolPanel.TopToolStripPanel.Controls.Add(ToolStripScripts);
-                toolPanel.TopToolStripPanel.Controls.Add(ToolStripFilters);
-                toolPanel.TopToolStripPanel.Controls.Add(ToolStripMain);
-            }
-
             void FocusRevisionDiffFileStatusList()
             {
                 if (!revisionDiff.Visible)
@@ -510,6 +499,37 @@ namespace GitUI.CommandsDialogs
                 }
 
                 return brush;
+            }
+
+            void WorkaroundToolbarLocationBug()
+            {
+                // Layout engine bug (?) which may change the order of toolbars
+                // if the 1st one becomes longer than the 2nd toolbar's Location.X
+                // the layout engine will be place the 2nd toolbar first
+
+                // 1. Clear all toolbars
+                toolPanel.TopToolStripPanel.Controls.Clear();
+
+                // 2. Add all the toolbars back in a reverse order, every added toolbar pushing existing ones to the right
+                ToolStrip[] toolStrips = new[] { ToolStripScripts, ToolStripFilters, ToolStripMain };
+                foreach (ToolStrip toolStrip in toolStrips)
+                {
+                    toolPanel.TopToolStripPanel.Controls.Add(toolStrip);
+                }
+
+#if DEBUG
+                // 3. Assert all toolbars on the same row
+                foreach (ToolStrip toolStrip in toolStrips)
+                {
+                    Debug.Assert(toolStrip.Top == 0, $"{toolStrip.Name} must be placed on the 1st row");
+                }
+
+                // 4. Assert the correct order of toolbars
+                for (int i = toolStrips.Length - 1; i > 0; i--)
+                {
+                    Debug.Assert(toolStrips[i].Left < toolStrips[i - 1].Left, $"{toolStrips[i - 1].Name} must be placed before {toolStrips[i].Name}");
+                }
+#endif
             }
         }
 
