@@ -19,63 +19,63 @@ namespace GitUI.CommandsDialogs
     public partial class FormResolveConflicts : GitModuleForm
     {
         #region Translation
-        private readonly TranslationString _uskUseCustomMergeScript = new TranslationString("There is a custom merge script ({0}) for this file type." + Environment.NewLine + Environment.NewLine + "Do you want to use this custom merge script?");
-        private readonly TranslationString _uskUseCustomMergeScriptCaption = new TranslationString("Custom merge script");
-        private readonly TranslationString _fileUnchangedAfterMerge = new TranslationString("The file has not been modified by the merge. Usually this means that the file has been saved to the wrong location." + Environment.NewLine + Environment.NewLine + "The merge conflict will not be marked as solved. Please try again.");
-        private readonly TranslationString _allConflictsResolved = new TranslationString("All merge conflicts are resolved, you can commit." + Environment.NewLine + "Do you want to commit now?");
-        private readonly TranslationString _allConflictsResolvedCaption = new TranslationString("Commit");
-        private readonly TranslationString _fileIsBinary = new TranslationString("The selected file appears to be a binary file." + Environment.NewLine + "Are you sure you want to open this file in {0}?");
-        private readonly TranslationString _askMergeConflictSolvedAfterCustomMergeScript = new TranslationString("The merge conflict need to be solved and the result must be saved as:" + Environment.NewLine + "{0}" + Environment.NewLine + Environment.NewLine + "Is the merge conflict solved?");
-        private readonly TranslationString _askMergeConflictSolved = new TranslationString("Is the merge conflict solved?");
-        private readonly TranslationString _askMergeConflictSolvedCaption = new TranslationString("Conflict solved?");
-        private readonly TranslationString _noMergeTool = new TranslationString("There is no mergetool configured." + Environment.NewLine + "Please go to settings and set a mergetool!");
-        private readonly TranslationString _noMergeToolConfigured = new TranslationString("The mergetool is not correctly configured." + Environment.NewLine + "Please go to settings and configure the mergetool!");
-        private readonly TranslationString _errorStartingMergetool = new TranslationString("Error starting mergetool: {0}");
-        private readonly TranslationString _stageFilename = new TranslationString("Stage {0}");
+        private readonly TranslationString _uskUseCustomMergeScript = new("There is a custom merge script ({0}) for this file type." + Environment.NewLine + Environment.NewLine + "Do you want to use this custom merge script?");
+        private readonly TranslationString _uskUseCustomMergeScriptCaption = new("Custom merge script");
+        private readonly TranslationString _fileUnchangedAfterMerge = new("The file has not been modified by the merge. Usually this means that the file has been saved to the wrong location." + Environment.NewLine + Environment.NewLine + "The merge conflict will not be marked as solved. Please try again.");
+        private readonly TranslationString _allConflictsResolved = new("All merge conflicts are resolved, you can commit." + Environment.NewLine + "Do you want to commit now?");
+        private readonly TranslationString _allConflictsResolvedCaption = new("Commit");
+        private readonly TranslationString _fileIsBinary = new("The selected file appears to be a binary file." + Environment.NewLine + "Are you sure you want to open this file in {0}?");
+        private readonly TranslationString _askMergeConflictSolvedAfterCustomMergeScript = new("The merge conflict need to be solved and the result must be saved as:" + Environment.NewLine + "{0}" + Environment.NewLine + Environment.NewLine + "Is the merge conflict solved?");
+        private readonly TranslationString _askMergeConflictSolved = new("Is the merge conflict solved?");
+        private readonly TranslationString _askMergeConflictSolvedCaption = new("Conflict solved?");
+        private readonly TranslationString _noMergeTool = new("There is no mergetool configured." + Environment.NewLine + "Please go to settings and set a mergetool!");
+        private readonly TranslationString _noMergeToolConfigured = new("The mergetool is not correctly configured." + Environment.NewLine + "Please go to settings and configure the mergetool!");
+        private readonly TranslationString _errorStartingMergetool = new("Error starting mergetool: {0}");
+        private readonly TranslationString _stageFilename = new("Stage {0}");
 
-        private readonly TranslationString _noBaseRevision = new TranslationString("There is no base revision for {0}." + Environment.NewLine + "Fall back to 2-way merge?");
-        private readonly TranslationString _ours = new TranslationString("ours");
-        private readonly TranslationString _theirs = new TranslationString("theirs");
-        private readonly TranslationString _fileBinaryChooseLocalBaseRemote = new TranslationString("File ({0}) appears to be a binary file." + Environment.NewLine + "Choose to keep the local ({1}), remote ({2}) or base file.");
-        private readonly TranslationString _fileChangeLocallyAndRemotely = new TranslationString("The file has been changed both locally ({0}) and remotely ({1}). Merge the changes.");
-        private readonly TranslationString _fileCreatedLocallyAndRemotely = new TranslationString("A file with the same name has been created locally ({0}) and remotely ({1}). Choose the file you want to keep or merge the files.");
-        private readonly TranslationString _fileCreatedLocallyAndRemotelyLong = new TranslationString("File {0} does not have a base revision." + Environment.NewLine + "A file with the same name has been created locally ({1}) and remotely ({2}) causing this conflict." + Environment.NewLine + Environment.NewLine + "Choose the file you want to keep, merge the files or delete the file?");
-        private readonly TranslationString _fileDeletedLocallyAndModifiedRemotely = new TranslationString("The file has been deleted locally ({0}) and modified remotely ({1}). Choose to delete the file or keep the modified version.");
-        private readonly TranslationString _fileDeletedLocallyAndModifiedRemotelyLong = new TranslationString("File {0} does not have a local revision." + Environment.NewLine + "The file has been deleted locally ({1}) but modified remotely ({2})." + Environment.NewLine + Environment.NewLine + "Choose to delete the file or keep the modified version.");
-        private readonly TranslationString _filesDeletedLocallyAndModifiedRemotelyLong = new TranslationString("{0} and {1} other out of {2} selected files do not have a local revision." + Environment.NewLine + "The files have been deleted locally, but modified remotely" + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
-        private readonly TranslationString _filesDeletedLocallyAndModifiedRemotelyLongNoOtherFilesSelected = new TranslationString("{0} and {1} other selected file(s) do not have a local revision." + Environment.NewLine + "The files have been deleted locally, but modified remotely" + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
-        private readonly TranslationString _fileModifiedLocallyAndDeletedRemotely = new TranslationString("The file has been modified locally ({0}) and deleted remotely ({1}). Choose to delete the file or keep the modified version.");
-        private readonly TranslationString _fileModifiedLocallyAndDeletedRemotelyLong = new TranslationString("File {0} does not have a remote revision." + Environment.NewLine + "The file has been modified locally ({1}) but deleted remotely ({2})." + Environment.NewLine + Environment.NewLine + "Choose to delete the file or keep the modified version.");
-        private readonly TranslationString _filesModifiedLocallyAndDeletedRemotelyLong = new TranslationString("{0} and {1} other out of {2} selected files do not have a remote revision." + Environment.NewLine + "The files have been modified locally, but deleted remotely." + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
-        private readonly TranslationString _filesModifiedLocallyAndDeletedRemotelyLongNoOtherFilesSelected = new TranslationString("{0} and {1} other selected file(s) do not have a remote revision." + Environment.NewLine + "The files have been modified locally, but deleted remotely." + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
-        private readonly TranslationString _noBase = new TranslationString("no base");
-        private readonly TranslationString _deleted = new TranslationString("deleted");
-        private readonly TranslationString _chooseLocalButtonText = new TranslationString("Choose local");
-        private readonly TranslationString _chooseRemoteButtonText = new TranslationString("Choose remote");
-        private readonly TranslationString _deleteFileButtonText = new TranslationString("Delete file");
-        private readonly TranslationString _keepModifiedButtonText = new TranslationString("Keep modified");
-        private readonly TranslationString _keepBaseButtonText = new TranslationString("Keep base file");
+        private readonly TranslationString _noBaseRevision = new("There is no base revision for {0}." + Environment.NewLine + "Fall back to 2-way merge?");
+        private readonly TranslationString _ours = new("ours");
+        private readonly TranslationString _theirs = new("theirs");
+        private readonly TranslationString _fileBinaryChooseLocalBaseRemote = new("File ({0}) appears to be a binary file." + Environment.NewLine + "Choose to keep the local ({1}), remote ({2}) or base file.");
+        private readonly TranslationString _fileChangeLocallyAndRemotely = new("The file has been changed both locally ({0}) and remotely ({1}). Merge the changes.");
+        private readonly TranslationString _fileCreatedLocallyAndRemotely = new("A file with the same name has been created locally ({0}) and remotely ({1}). Choose the file you want to keep or merge the files.");
+        private readonly TranslationString _fileCreatedLocallyAndRemotelyLong = new("File {0} does not have a base revision." + Environment.NewLine + "A file with the same name has been created locally ({1}) and remotely ({2}) causing this conflict." + Environment.NewLine + Environment.NewLine + "Choose the file you want to keep, merge the files or delete the file?");
+        private readonly TranslationString _fileDeletedLocallyAndModifiedRemotely = new("The file has been deleted locally ({0}) and modified remotely ({1}). Choose to delete the file or keep the modified version.");
+        private readonly TranslationString _fileDeletedLocallyAndModifiedRemotelyLong = new("File {0} does not have a local revision." + Environment.NewLine + "The file has been deleted locally ({1}) but modified remotely ({2})." + Environment.NewLine + Environment.NewLine + "Choose to delete the file or keep the modified version.");
+        private readonly TranslationString _filesDeletedLocallyAndModifiedRemotelyLong = new("{0} and {1} other out of {2} selected files do not have a local revision." + Environment.NewLine + "The files have been deleted locally, but modified remotely" + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
+        private readonly TranslationString _filesDeletedLocallyAndModifiedRemotelyLongNoOtherFilesSelected = new("{0} and {1} other selected file(s) do not have a local revision." + Environment.NewLine + "The files have been deleted locally, but modified remotely" + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
+        private readonly TranslationString _fileModifiedLocallyAndDeletedRemotely = new("The file has been modified locally ({0}) and deleted remotely ({1}). Choose to delete the file or keep the modified version.");
+        private readonly TranslationString _fileModifiedLocallyAndDeletedRemotelyLong = new("File {0} does not have a remote revision." + Environment.NewLine + "The file has been modified locally ({1}) but deleted remotely ({2})." + Environment.NewLine + Environment.NewLine + "Choose to delete the file or keep the modified version.");
+        private readonly TranslationString _filesModifiedLocallyAndDeletedRemotelyLong = new("{0} and {1} other out of {2} selected files do not have a remote revision." + Environment.NewLine + "The files have been modified locally, but deleted remotely." + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
+        private readonly TranslationString _filesModifiedLocallyAndDeletedRemotelyLongNoOtherFilesSelected = new("{0} and {1} other selected file(s) do not have a remote revision." + Environment.NewLine + "The files have been modified locally, but deleted remotely." + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
+        private readonly TranslationString _noBase = new("no base");
+        private readonly TranslationString _deleted = new("deleted");
+        private readonly TranslationString _chooseLocalButtonText = new("Choose local");
+        private readonly TranslationString _chooseRemoteButtonText = new("Choose remote");
+        private readonly TranslationString _deleteFileButtonText = new("Delete file");
+        private readonly TranslationString _keepModifiedButtonText = new("Keep modified");
+        private readonly TranslationString _keepBaseButtonText = new("Keep base file");
 
-        private readonly TranslationString _solveMergeConflictApplyToAllCheckBoxText = new TranslationString("Apply to {0} and {1} other file(s)");
-        private readonly TranslationString _solveMergeConflictDialogCaption = new TranslationString("Solve merge conflict");
+        private readonly TranslationString _solveMergeConflictApplyToAllCheckBoxText = new("Apply to {0} and {1} other file(s)");
+        private readonly TranslationString _solveMergeConflictDialogCaption = new("Solve merge conflict");
 
-        private readonly TranslationString _conflictedFilesContextMenuText = new TranslationString("Solve");
-        private readonly TranslationString _openMergeToolItemText = new TranslationString("Open in");
-        private readonly TranslationString _button1Text = new TranslationString("Open in");
+        private readonly TranslationString _conflictedFilesContextMenuText = new("Solve");
+        private readonly TranslationString _openMergeToolItemText = new("Open in");
+        private readonly TranslationString _button1Text = new("Open in");
 
-        private readonly TranslationString _resetItemRebaseText = new TranslationString("Abort rebase");
-        private readonly TranslationString _contextChooseLocalRebaseText = new TranslationString("Choose local (theirs)");
-        private readonly TranslationString _contextChooseRemoteRebaseText = new TranslationString("Choose remote (ours)");
+        private readonly TranslationString _resetItemRebaseText = new("Abort rebase");
+        private readonly TranslationString _contextChooseLocalRebaseText = new("Choose local (theirs)");
+        private readonly TranslationString _contextChooseRemoteRebaseText = new("Choose remote (ours)");
 
-        private readonly TranslationString _resetItemMergeText = new TranslationString("Abort merge");
-        private readonly TranslationString _contextChooseLocalMergeText = new TranslationString("Choose local (ours)");
-        private readonly TranslationString _contextChooseRemoteMergeText = new TranslationString("Choose remote (theirs)");
+        private readonly TranslationString _resetItemMergeText = new("Abort merge");
+        private readonly TranslationString _contextChooseLocalMergeText = new("Choose local (ours)");
+        private readonly TranslationString _contextChooseRemoteMergeText = new("Choose remote (theirs)");
 
-        private readonly TranslationString _noBaseFileMergeCaption = new TranslationString("Merge");
+        private readonly TranslationString _noBaseFileMergeCaption = new("Merge");
 
-        private readonly TranslationString _chooseBaseFileFailedText = new TranslationString("Choose base file failed.");
-        private readonly TranslationString _chooseLocalFileFailedText = new TranslationString("Choose local file failed.");
-        private readonly TranslationString _chooseRemoteFileFailedText = new TranslationString("Choose remote file failed.");
+        private readonly TranslationString _chooseBaseFileFailedText = new("Choose base file failed.");
+        private readonly TranslationString _chooseLocalFileFailedText = new("Choose local file failed.");
+        private readonly TranslationString _chooseRemoteFileFailedText = new("Choose remote file failed.");
 
         private readonly TranslationString _currentFormatFilter =
             new TranslationString("Current format (*.{0})");
@@ -87,16 +87,16 @@ namespace GitUI.CommandsDialogs
                 "All changes since the last commit will be deleted." + Environment.NewLine +
                 Environment.NewLine + "Do you want to reset changes?");
 
-        private readonly TranslationString _abortCurrentOperationCaption = new TranslationString("Abort");
+        private readonly TranslationString _abortCurrentOperationCaption = new("Abort");
 
         private readonly TranslationString _areYouSureYouWantDeleteFiles =
             new TranslationString("Are you sure you want to DELETE all changes?" + Environment.NewLine +
                 Environment.NewLine + "This action cannot be made undone.");
 
-        private readonly TranslationString _areYouSureYouWantDeleteFilesCaption = new TranslationString("WARNING!");
+        private readonly TranslationString _areYouSureYouWantDeleteFilesCaption = new("WARNING!");
 
-        private readonly TranslationString _failureWhileOpenFile = new TranslationString("Open temporary file failed.");
-        private readonly TranslationString _failureWhileSaveFile = new TranslationString("Save file failed.");
+        private readonly TranslationString _failureWhileOpenFile = new("Open temporary file failed.");
+        private readonly TranslationString _failureWhileSaveFile = new("Save file failed.");
         #endregion
 
         private enum ConflictResolutionPreference
@@ -299,7 +299,7 @@ namespace GitUI.CommandsDialogs
             {
                 var tools = await Module.GetCustomDiffMergeTools(isDiff: false);
                 customMergetool.DropDown = null;
-                ContextMenuStrip customDiffToolDropDown = new ContextMenuStrip();
+                ContextMenuStrip customDiffToolDropDown = new();
                 foreach (var tool in tools)
                 {
                     var toolStripItem = new ToolStripMenuItem(tool) { Tag = tool };

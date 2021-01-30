@@ -47,13 +47,13 @@ namespace GitUI.CommitInfo
             }
         }
 
-        private static readonly TranslationString _brokenRefs = new TranslationString("The repository refs seem to be broken:");
-        private static readonly TranslationString _copyLink = new TranslationString("Copy &link ({0})");
-        private static readonly TranslationString _trsLinksRelatedToRevision = new TranslationString("Related links:");
-        private static readonly TranslationString _derivesFromTag = new TranslationString("Derives from tag:");
-        private static readonly TranslationString _derivesFromNoTag = new TranslationString("Derives from no tag");
-        private static readonly TranslationString _plusCommits = new TranslationString("commits");
-        private static readonly TranslationString _repoFailure = new TranslationString("Repository failure");
+        private static readonly TranslationString _brokenRefs = new("The repository refs seem to be broken:");
+        private static readonly TranslationString _copyLink = new("Copy &link ({0})");
+        private static readonly TranslationString _trsLinksRelatedToRevision = new("Related links:");
+        private static readonly TranslationString _derivesFromTag = new("Derives from tag:");
+        private static readonly TranslationString _derivesFromNoTag = new("Derives from no tag");
+        private static readonly TranslationString _plusCommits = new("commits");
+        private static readonly TranslationString _repoFailure = new("Repository failure");
 
         private readonly ILinkFactory _linkFactory = new LinkFactory();
         private readonly ICommitDataManager _commitDataManager;
@@ -64,7 +64,7 @@ namespace GitUI.CommitInfo
         private readonly IExternalLinkRevisionParser _externalLinkRevisionParser;
         private readonly IConfigFileRemoteSettingsManager _remotesManager;
         private readonly GitDescribeProvider _gitDescribeProvider;
-        private readonly CancellationTokenSequence _asyncLoadCancellation = new CancellationTokenSequence();
+        private readonly CancellationTokenSequence _asyncLoadCancellation = new();
         private readonly RefsFormatter _refsFormatter;
 
         private readonly IDisposable _revisionInfoResizedSubscription;
@@ -767,9 +767,9 @@ namespace GitUI.CommitInfo
         {
             private const string RemoteBranchPrefix = "remotes/";
 
-            private static readonly Regex _importantRepoRegex = new Regex($"^{RemoteBranchPrefix}(origin|upstream)/",
+            private static readonly Regex _importantRepoRegex = new($"^{RemoteBranchPrefix}(origin|upstream)/",
                 RegexOptions.Compiled | RegexOptions.CultureInvariant);
-            private static readonly Regex _remoteMasterRegex = new Regex($"^{RemoteBranchPrefix}.*/master[^/]*$",
+            private static readonly Regex _remoteMasterRegex = new($"^{RemoteBranchPrefix}.*/master[^/]*$",
                 RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
             private readonly string _currentBranch;

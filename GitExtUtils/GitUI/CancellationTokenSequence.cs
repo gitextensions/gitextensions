@@ -17,7 +17,7 @@ namespace GitUI
     /// <example>
     /// Define an instance of this type, usually as a private readonly field:
     /// <code>
-    /// private readonly CancellableSequence _sequence = new CancellableSequence();
+    /// private readonly CancellableSequence _sequence = new();
     /// </code>
     /// Then use it to generate <see cref="CancellationToken"/> objects for use in asynchronous
     /// operations.

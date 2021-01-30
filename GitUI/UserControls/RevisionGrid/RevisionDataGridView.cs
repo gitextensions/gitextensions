@@ -33,7 +33,7 @@ namespace GitUI.UserControls.RevisionGrid
     {
         private readonly SolidBrush _alternatingRowBackgroundBrush;
 
-        internal RevisionGraph _revisionGraph = new RevisionGraph();
+        internal RevisionGraph _revisionGraph = new();
 
         private readonly List<ColumnProvider> _columnProviders = new List<ColumnProvider>();
         private readonly CancellationTokenSequence _backgroundCancellationSequence;

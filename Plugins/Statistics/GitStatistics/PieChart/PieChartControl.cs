@@ -12,7 +12,7 @@ namespace GitStatistics.PieChart
     /// </summary>
     public class PieChartControl : Panel
     {
-        private readonly ToolTip _toolTip = new ToolTip();
+        private readonly ToolTip _toolTip = new();
         private float _bottomMargin;
         private Color[] _colors;
         private int _defaultToolTipAutoPopDelay;

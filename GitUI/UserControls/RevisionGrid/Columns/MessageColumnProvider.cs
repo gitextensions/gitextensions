@@ -16,7 +16,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
     internal sealed class MessageColumnProvider : ColumnProvider
     {
         public const int MaxSuperprojectRefs = 4;
-        private readonly StringBuilder _toolTipBuilder = new StringBuilder(200);
+        private readonly StringBuilder _toolTipBuilder = new(200);
 
         private readonly Image _bisectGoodImage = DpiUtil.Scale(Images.BisectGood);
         private readonly Image _bisectBadImage = DpiUtil.Scale(Images.BisectBad);

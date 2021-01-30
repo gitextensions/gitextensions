@@ -23,14 +23,14 @@ namespace GitUI.CommandsDialogs
     {
         private const string FormBrowseName = "FormBrowse";
 
-        private readonly TranslationString _buildReportTabCaption = new TranslationString("Build Report");
-        private readonly AsyncLoader _asyncLoader = new AsyncLoader();
+        private readonly TranslationString _buildReportTabCaption = new("Build Report");
+        private readonly AsyncLoader _asyncLoader = new();
         private readonly ICommitDataManager _commitDataManager;
         private readonly FilterRevisionsHelper _filterRevisionsHelper;
         private readonly FilterBranchHelper _filterBranchHelper;
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFullPathResolver _fullPathResolver;
-        private readonly FormFileHistoryController _controller = new FormFileHistoryController();
+        private readonly FormFileHistoryController _controller = new();
 
         private BuildReportTabPageExtension _buildReportTabPageExtension;
 

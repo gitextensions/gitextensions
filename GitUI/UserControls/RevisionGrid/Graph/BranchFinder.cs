@@ -6,7 +6,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 {
     internal class BranchFinder
     {
-        private static readonly Regex MergeRegex = new Regex("(?i)^merged? (pull request (.*) from )?(.*branch |tag )?'?([^ ']*[^ '.])'?( of [^ ]*[^ .])?( into (.*[^.]))?\\.?$",
+        private static readonly Regex MergeRegex = new("(?i)^merged? (pull request (.*) from )?(.*branch |tag )?'?([^ ']*[^ '.])'?( of [^ ]*[^ .])?( into (.*[^.]))?\\.?$",
             RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         internal BranchFinder([NotNull] RevisionGraphRevision node)

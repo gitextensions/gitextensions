@@ -13,10 +13,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class AppearanceSettingsPage : SettingsPageWithHeader
     {
-        private readonly TranslationString _noDictFile = new TranslationString("None");
-        private readonly TranslationString _noDictFilesFound = new TranslationString("No dictionary files found in: {0}");
-        private readonly TranslationString _noImageServiceTooltip = new TranslationString("A default image, if an email address has no matching Gravatar image.\r\nSee http://en.gravatar.com/site/implement/images#default-image for more details.");
-        private readonly TranslationString _authorDateSortWarningTooltip = new TranslationString("Sorting by author date may delay rendering of the revision graph.");
+        private readonly TranslationString _noDictFile = new("None");
+        private readonly TranslationString _noDictFilesFound = new("No dictionary files found in: {0}");
+        private readonly TranslationString _noImageServiceTooltip = new("A default image, if an email address has no matching Gravatar image.\r\nSee http://en.gravatar.com/site/implement/images#default-image for more details.");
+        private readonly TranslationString _authorDateSortWarningTooltip = new("Sorting by author date may delay rendering of the revision graph.");
 
         public AppearanceSettingsPage()
         {

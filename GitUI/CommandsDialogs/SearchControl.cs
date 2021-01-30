@@ -12,7 +12,7 @@ namespace GitUI.CommandsDialogs
     {
         private readonly Func<string, IEnumerable<T>> _getCandidates;
         private readonly Action<Size> _onSizeChanged;
-        private readonly AsyncLoader _backgroundLoader = new AsyncLoader();
+        private readonly AsyncLoader _backgroundLoader = new();
         private bool _isUpdatingTextFromCode;
         public event Action OnTextEntered;
         public event Action OnCancelled;

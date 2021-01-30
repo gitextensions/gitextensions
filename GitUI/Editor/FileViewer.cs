@@ -56,8 +56,8 @@ namespace GitUI.Editor
             Image
         }
 
-        private readonly TranslationString _largeFileSizeWarning = new TranslationString("This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.");
-        private readonly TranslationString _cannotViewImage = new TranslationString("Cannot view image {0}");
+        private readonly TranslationString _largeFileSizeWarning = new("This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.");
+        private readonly TranslationString _cannotViewImage = new("Cannot view image {0}");
 
         public event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
         public event EventHandler HScrollPositionChanged;
@@ -1046,7 +1046,16 @@ namespace GitUI.Editor
                                 if (image is null)
                                 {
                                     ResetView(ViewMode.Text, null);
-                                    internalFileViewer.SetText(string.Format(_cannotViewImage.Text, fileName), openWithDifftool);
+
+                                    var text = getFileText();
+                                    var summary = new StringBuilder()
+                                        .AppendLine(string.Format(_cannotViewImage.Text, fileName))
+                                        .AppendLine()
+                                        .AppendLine($"{text.Length:N0} bytes:")
+                                        .AppendLine();
+
+                                    ToHexDump(Encoding.ASCII.GetBytes(text), summary);
+                                    internalFileViewer.SetText(summary.ToString(), openWithDifftool);
                                     return;
                                 }
 
@@ -1962,7 +1971,7 @@ namespace GitUI.Editor
                 [NotNull] string text,
                 [CanBeNull] Action openWithDifftool = null)
             {
-                FileStatusItem f = new FileStatusItem(new GitRevision(ObjectId.Random()),
+                FileStatusItem f = new(new GitRevision(ObjectId.Random()),
                     new GitRevision(ObjectId.Random()),
                     new GitItemStatus { Name = fileName });
                 var fileViewer = _fileViewer;

@@ -35,7 +35,7 @@ namespace GitUI.Blame
         /// </summary>
         public event Action EscapePressed;
 
-        private readonly AsyncLoader _blameLoader = new AsyncLoader();
+        private readonly AsyncLoader _blameLoader = new();
         private int _lineIndex;
 
         [CanBeNull] private GitBlameLine _lastBlameLine;

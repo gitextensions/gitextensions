@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
-using JetBrains.Annotations;
 
 namespace GitUI
 {
@@ -29,35 +28,81 @@ namespace GitUI
     {
         private static WindowPositionList _windowPositionList;
 
-        /// <summary>
-        /// Determines which screen a given point belongs to.
-        /// </summary>
-        [Pure]
-        public static Rectangle? FindWindowScreen(Point location, IEnumerable<Rectangle> desktopWorkingArea)
+        public static Point FitWindowOnScreen(Rectangle calculatedWindowBounds, IEnumerable<Rectangle> workingArea)
         {
-            var distance = new SortedDictionary<float, Rectangle>();
-
-            foreach (var rect in desktopWorkingArea)
+            // Ensure the window with its new size and location will be accessible to the user
+            // If all fails, we'll display the window the (0, 0)
+            Point location = Point.Empty;
+            foreach (Rectangle screen in workingArea)
             {
-                if (rect.Contains(location) && !distance.ContainsKey(0.0f))
+                bool isDisplayed = IsDisplayedOn10Percent(screen, calculatedWindowBounds);
+                if (isDisplayed)
                 {
-                    return null; // title in screen
-                }
-
-                int midPointX = rect.X + (rect.Width / 2);
-                int midPointY = rect.Y + (rect.Height / 2);
-                var d = (float)Math.Sqrt(((location.X - midPointX) * (location.X - midPointX)) +
-                                         ((location.Y - midPointY) * (location.Y - midPointY)));
-
-                // In a very unlikely scenario where a user has several monitors, which are arranged in a particular way
-                // and a form's window happens to be in exact middle between monitors, if we don't check - it will crash
-                if (!distance.ContainsKey(d))
-                {
-                    distance.Add(d, rect);
+                    location = calculatedWindowBounds.Location;
+                    break;
                 }
             }
 
-            return distance.FirstOrDefault().Value;
+            return location;
+        }
+
+        private static bool IsDisplayedOn10Percent(Rectangle screen, Rectangle window)
+        {
+            if (screen.IsEmpty || window.IsEmpty)
+            {
+                return false;
+            }
+
+            // We insist that any window to cover at least 10% of a screen realestate both horizontally and vertically
+            // However, check if the window is smaller than the minimum presence requirement.
+            // If so, adjust the requirements to the size of the window.
+            const float MinimumScreenPresence = 0.1f; // 10%
+            int requiredHeight = Math.Min((int)(screen.Height * MinimumScreenPresence), window.Height);
+            int requireWidth = Math.Min((int)(screen.Width * MinimumScreenPresence), window.Width);
+
+            Point p;
+            if (screen.Contains(window.Location))
+            {
+                p = new Point(window.Left + requireWidth, window.Top + requiredHeight);
+                bool leftTop = screen.Contains(p);
+                if (leftTop)
+                {
+                    Debug.WriteLine($"{screen.ToString()} contains {p} (L, T)");
+                    return true;
+                }
+            }
+
+            if (screen.Contains(new Point(window.Left + (window.Width / 2), window.Top)))
+            {
+                p = new Point(window.Left + (window.Width / 2) - requireWidth, window.Top + requiredHeight);
+                bool middleTop = screen.Contains(p);
+                if (middleTop)
+                {
+                    Debug.WriteLine($"{screen.ToString()} contains {p} (W/2-, T)");
+                    return true;
+                }
+
+                p = new Point(window.Left + (window.Width / 2) + requireWidth, window.Top + requiredHeight);
+                middleTop = screen.Contains(p);
+                if (middleTop)
+                {
+                    Debug.WriteLine($"{screen.ToString()} contains {p} (W/2+, T)");
+                    return true;
+                }
+            }
+
+            if (screen.Contains(new Point(window.Right, window.Top)))
+            {
+                p = new Point(window.Right - requireWidth, window.Top + requiredHeight);
+                bool rightTop = screen.Contains(p);
+                if (rightTop)
+                {
+                    Debug.WriteLine($"{screen.ToString()} contains {p} (R, T)");
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

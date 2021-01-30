@@ -70,19 +70,19 @@ namespace GitHub3
     [Export(typeof(IGitPlugin))]
     public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin
     {
-        private readonly TranslationString _viewInWebSite = new TranslationString("View in {0}");
-        private readonly TranslationString _tokenAlreadyExist = new TranslationString("You already have an OAuth token. To get a new one, delete your old one in Plugins > Settings first.");
+        private readonly TranslationString _viewInWebSite = new("View in {0}");
+        private readonly TranslationString _tokenAlreadyExist = new("You already have an OAuth token. To get a new one, delete your old one in Plugins > Settings first.");
 
         public static string GitHubAuthorizationRelativeUrl = "authorizations";
         public static string UpstreamConventionName = "upstream";
-        public readonly StringSetting GitHubHost = new StringSetting("GitHub (Enterprise) hostname", "github.com");
-        public readonly StringSetting OAuthToken = new StringSetting("OAuth Token", "");
+        public readonly StringSetting GitHubHost = new("GitHub (Enterprise) hostname", "github.com");
+        public readonly StringSetting OAuthToken = new("OAuth Token", "");
         public string GitHubApiEndpoint => $"https://api.{GitHubHost.ValueOrDefault(Settings)}";
         public string GitHubEndpoint => $"https://{GitHubHost.ValueOrDefault(Settings)}";
 
         internal static GitHub3Plugin Instance;
         internal static Client _gitHub;
-        internal static Client GitHub => _gitHub ?? (_gitHub = new Client(Instance.GitHubApiEndpoint));
+        internal static Client GitHub => _gitHub ?? (_gitHub = new(Instance.GitHubApiEndpoint));
 
         private IGitUICommands _currentGitUiCommands;
         private IReadOnlyList<IHostedRemote> _hostedRemotesForModule;

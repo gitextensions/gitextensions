@@ -11,7 +11,7 @@ namespace GitUI.CommandsDialogs
 {
     public class ToolStripPushButton : ToolStripButton
     {
-        private readonly TranslationString _push = new TranslationString("Push");
+        private readonly TranslationString _push = new("Push");
 
         private readonly TranslationString _aheadCommitsToPush =
             new TranslationString("{0} new commit(s) will be pushed");

@@ -497,7 +497,7 @@ namespace GitCommandsTests.Config
         {
             // create test data
             {
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
                 sb.AppendLine("[branch \"BranchName1\"]");
                 sb.AppendLine("remote = origin1");
                 sb.AppendLine("[branch \"BranchName2\"]");

@@ -15,8 +15,8 @@ namespace GitUI.UserControls
     public partial class CommitSummaryUserControl : GitExtensionsControl
     {
         private const int MaxBranchTagLength = 75;
-        private readonly TranslationString _noRevision = new TranslationString("No revision");
-        private readonly TranslationString _notAvailable = new TranslationString("n/a");
+        private readonly TranslationString _noRevision = new("No revision");
+        private readonly TranslationString _notAvailable = new("n/a");
         private readonly IDateFormatter _dateFormatter = new DateFormatter();
         private readonly string _tagsCaption;
         private readonly string _branchesCaption;

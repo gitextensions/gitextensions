@@ -102,7 +102,7 @@ namespace GitCommands.Git.Commands
                 format = @"--format=""%(if)%(authordate)%(then)%(objectname) %(refname)%(else)%(*objectname) %(*refname)%(end)""";
             }
 
-            GitArgumentBuilder cmd = new GitArgumentBuilder("for-each-ref",
+            GitArgumentBuilder cmd = new("for-each-ref",
                 gitOptions: noLocks && GitVersion.Current.SupportNoOptionalLocks
                     ? (ArgumentString)"--no-optional-locks"
                     : default)

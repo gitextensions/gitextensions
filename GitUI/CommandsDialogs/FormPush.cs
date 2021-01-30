@@ -50,15 +50,15 @@ namespace GitUI.CommandsDialogs
             new TranslationString("The branch you are about to push seems to be a new branch for the remote." +
                                   Environment.NewLine + "Are you sure you want to push this branch?");
 
-        private readonly TranslationString _pushCaption = new TranslationString("Push");
+        private readonly TranslationString _pushCaption = new("Push");
 
-        private readonly TranslationString _pushToCaption = new TranslationString("Push to {0}");
+        private readonly TranslationString _pushToCaption = new("Push to {0}");
 
         private readonly TranslationString _selectDestinationDirectory =
             new TranslationString("Please select a destination directory");
 
-        private readonly TranslationString _errorPushToRemoteCaption = new TranslationString("Push to remote");
-        private readonly TranslationString _configureRemote = new TranslationString($"Please configure a remote repository first.{Environment.NewLine}Would you like to do it now?");
+        private readonly TranslationString _errorPushToRemoteCaption = new("Push to remote");
+        private readonly TranslationString _configureRemote = new($"Please configure a remote repository first.{Environment.NewLine}Would you like to do it now?");
 
         private readonly TranslationString _selectTag =
             new TranslationString("You need to select a tag to push or select \"Push all tags\".");
@@ -66,23 +66,23 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _updateTrackingReference =
             new TranslationString("The branch {0} does not have a tracking reference. Do you want to add a tracking reference to {1}?");
 
-        private readonly TranslationString _pullRepositoryMainMergeInstruction = new TranslationString("Pull latest changes from remote repository");
-        private readonly TranslationString _pullRepositoryMainForceInstruction = new TranslationString("Push rejected");
+        private readonly TranslationString _pullRepositoryMainMergeInstruction = new("Pull latest changes from remote repository");
+        private readonly TranslationString _pullRepositoryMainForceInstruction = new("Push rejected");
         private readonly TranslationString _pullRepositoryMergeInstruction =
             new TranslationString("The push was rejected because the tip of your current branch is behind its remote counterpart. " +
                 "Merge the remote changes before pushing again.");
         private readonly TranslationString _pullRepositoryForceInstruction =
             new TranslationString("The push was rejected because the tip of your current branch is behind its remote counterpart");
-        private readonly TranslationString _pullDefaultButton = new TranslationString("Pull with the default pull action ({0})");
-        private readonly TranslationString _pullRebaseButton = new TranslationString("Pull with rebase");
-        private readonly TranslationString _pullMergeButton = new TranslationString("Pull with merge");
-        private readonly TranslationString _pushForceButton = new TranslationString("Force push with lease");
-        private readonly TranslationString _pullActionNone = new TranslationString("none");
-        private readonly TranslationString _pullActionFetch = new TranslationString("fetch");
-        private readonly TranslationString _pullActionRebase = new TranslationString("rebase");
-        private readonly TranslationString _pullActionMerge = new TranslationString("merge");
-        private readonly TranslationString _pullRepositoryCaption = new TranslationString("Push was rejected from \"{0}\"");
-        private readonly TranslationString _dontShowAgain = new TranslationString("Remember my decision.");
+        private readonly TranslationString _pullDefaultButton = new("Pull with the default pull action ({0})");
+        private readonly TranslationString _pullRebaseButton = new("Pull with rebase");
+        private readonly TranslationString _pullMergeButton = new("Pull with merge");
+        private readonly TranslationString _pushForceButton = new("Force push with lease");
+        private readonly TranslationString _pullActionNone = new("none");
+        private readonly TranslationString _pullActionFetch = new("fetch");
+        private readonly TranslationString _pullActionRebase = new("rebase");
+        private readonly TranslationString _pullActionMerge = new("merge");
+        private readonly TranslationString _pullRepositoryCaption = new("Push was rejected from \"{0}\"");
+        private readonly TranslationString _dontShowAgain = new("Remember my decision.");
         private readonly TranslationString _useForceWithLeaseInstead =
             new TranslationString("Force push may overwrite changes since your last fetch. Do you want to use the safer force with lease instead?");
         private readonly TranslationString _forceWithLeaseTooltips =

@@ -20,16 +20,16 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormClone : GitExtensionsDialog
     {
-        private readonly TranslationString _infoNewRepositoryLocation = new TranslationString("The repository will be cloned to a new directory located here:" + Environment.NewLine + "{0}");
-        private readonly TranslationString _infoDirectoryExists = new TranslationString("(Directory already exists)");
-        private readonly TranslationString _infoDirectoryNew = new TranslationString("(New directory)");
-        private readonly TranslationString _questionOpenRepo = new TranslationString("The repository has been cloned successfully." + Environment.NewLine + "Do you want to open the new repository \"{0}\" now?");
-        private readonly TranslationString _questionOpenRepoCaption = new TranslationString("Open");
-        private readonly TranslationString _branchDefaultRemoteHead = new TranslationString("(default: remote HEAD)" /* Has a colon, so won't alias with any valid branch name */);
-        private readonly TranslationString _branchNone = new TranslationString("(none: don't checkout after clone)" /* Has a colon, so won't alias with any valid branch name */);
-        private readonly TranslationString _errorDestinationNotSupplied = new TranslationString("You need to specify destination folder.");
-        private readonly TranslationString _errorDestinationNotRooted = new TranslationString("Destination folder must be an absolute path.");
-        private readonly TranslationString _errorCloneFailed = new TranslationString("Clone Failed");
+        private readonly TranslationString _infoNewRepositoryLocation = new("The repository will be cloned to a new directory located here:" + Environment.NewLine + "{0}");
+        private readonly TranslationString _infoDirectoryExists = new("(Directory already exists)");
+        private readonly TranslationString _infoDirectoryNew = new("(New directory)");
+        private readonly TranslationString _questionOpenRepo = new("The repository has been cloned successfully." + Environment.NewLine + "Do you want to open the new repository \"{0}\" now?");
+        private readonly TranslationString _questionOpenRepoCaption = new("Open");
+        private readonly TranslationString _branchDefaultRemoteHead = new("(default: remote HEAD)" /* Has a colon, so won't alias with any valid branch name */);
+        private readonly TranslationString _branchNone = new("(none: don't checkout after clone)" /* Has a colon, so won't alias with any valid branch name */);
+        private readonly TranslationString _errorDestinationNotSupplied = new("You need to specify destination folder.");
+        private readonly TranslationString _errorDestinationNotRooted = new("Destination folder must be an absolute path.");
+        private readonly TranslationString _errorCloneFailed = new("Clone Failed");
 
         private readonly bool _openedFromProtocolHandler;
         private readonly string _url;
@@ -403,7 +403,7 @@ namespace GitUI.CommandsDialogs
             ToTextUpdate(sender, e);
         }
 
-        private readonly AsyncLoader _branchListLoader = new AsyncLoader();
+        private readonly AsyncLoader _branchListLoader = new();
 
         private void UpdateBranches(RemoteActionResult<IReadOnlyList<IGitRef>> branchList)
         {

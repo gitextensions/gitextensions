@@ -12,8 +12,8 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormAbout : GitExtensionsForm
     {
-        private readonly TranslationString _thanksToContributors = new TranslationString("Thanks to over {0:#,##0} contributors: ");
-        private readonly TranslationString _copyTooltip = new TranslationString("Copy environment info");
+        private readonly TranslationString _thanksToContributors = new("Thanks to over {0:#,##0} contributors: ");
+        private readonly TranslationString _copyTooltip = new("Copy environment info");
 
         public FormAbout()
         {

@@ -17,19 +17,19 @@ namespace GitUI.CommandsDialogs
     public partial class FormRebase : GitModuleForm
     {
         private static readonly List<PatchFile> Skipped = new List<PatchFile>();
-        private readonly TranslationString _continueRebaseText = new TranslationString("Continue rebase");
-        private readonly TranslationString _solveConflictsText = new TranslationString("Solve conflicts");
+        private readonly TranslationString _continueRebaseText = new("Continue rebase");
+        private readonly TranslationString _solveConflictsText = new("Solve conflicts");
 
-        private readonly TranslationString _solveConflictsText2 = new TranslationString(">Solve conflicts<");
-        private readonly TranslationString _continueRebaseText2 = new TranslationString(">Continue rebase<");
+        private readonly TranslationString _solveConflictsText2 = new(">Solve conflicts<");
+        private readonly TranslationString _continueRebaseText2 = new(">Continue rebase<");
 
-        private readonly TranslationString _noBranchSelectedText = new TranslationString("Please select a branch");
+        private readonly TranslationString _noBranchSelectedText = new("Please select a branch");
 
         private readonly TranslationString _branchUpToDateText =
             new TranslationString("Current branch a is up to date." + Environment.NewLine + "Nothing to rebase.");
-        private readonly TranslationString _branchUpToDateCaption = new TranslationString("Rebase");
+        private readonly TranslationString _branchUpToDateCaption = new("Rebase");
 
-        private readonly TranslationString _hoverShowImageLabelText = new TranslationString("Hover to see scenario when fast forward is possible.");
+        private readonly TranslationString _hoverShowImageLabelText = new("Hover to see scenario when fast forward is possible.");
 
         private readonly string _defaultBranch;
         private readonly string _defaultToBranch;

@@ -16,8 +16,8 @@ namespace ProxySwitcher
         private readonly IGitModule _gitCommands;
 
         #region Translation
-        private readonly TranslationString _pluginDescription = new TranslationString("Proxy Switcher");
-        private readonly TranslationString _pleaseSetProxy = new TranslationString("There is no proxy configured. Please set the proxy host in the plugin settings.");
+        private readonly TranslationString _pluginDescription = new("Proxy Switcher");
+        private readonly TranslationString _pleaseSetProxy = new("There is no proxy configured. Please set the proxy host in the plugin settings.");
         #endregion
 
         /// <summary>

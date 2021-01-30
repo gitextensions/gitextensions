@@ -8,12 +8,12 @@ namespace GitUI.Editor
 {
     internal sealed class CommitMessageHighlightingStrategy : GitHighlightingStrategyBase
     {
-        private static HighlightColor ColorSummary { get; } = new HighlightColor(SystemColors.WindowText, bold: true, italic: false);
+        private static HighlightColor ColorSummary { get; } = new(SystemColors.WindowText, bold: true, italic: false);
 
         private readonly List<TextMarker> _overlengthDescriptionMarkers = new List<TextMarker>();
 
-        private readonly TextMarker _markerSummaryTooLong = new TextMarker(0, 0, TextMarkerType.WaveLine, Color.Red) { ToolTip = "Summary line is too long." };
-        private readonly TextMarker _markerSpacerNeeded = new TextMarker(0, 0, TextMarkerType.WaveLine, Color.Red) { ToolTip = "There must be a blank line after the summary." };
+        private readonly TextMarker _markerSummaryTooLong = new(0, 0, TextMarkerType.WaveLine, Color.Red) { ToolTip = "Summary line is too long." };
+        private readonly TextMarker _markerSpacerNeeded = new(0, 0, TextMarkerType.WaveLine, Color.Red) { ToolTip = "There must be a blank line after the summary." };
 
         public CommitMessageHighlightingStrategy(GitModule module)
             : base("GitCommitMessage", module)

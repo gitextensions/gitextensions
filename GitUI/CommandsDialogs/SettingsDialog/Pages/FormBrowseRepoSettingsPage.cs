@@ -6,7 +6,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
     {
-        private readonly ShellProvider _shellProvider = new ShellProvider();
+        private readonly ShellProvider _shellProvider = new();
         private int _cboTerminalPreviousIndex = -1;
 
         public FormBrowseRepoSettingsPage()

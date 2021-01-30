@@ -35,14 +35,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// </summary>
         private const int PeriodicUpdateInterval = 5 * 60 * 1000;
 
-        private readonly FileSystemWatcher _workTreeWatcher = new FileSystemWatcher();
-        private readonly FileSystemWatcher _gitDirWatcher = new FileSystemWatcher();
+        private readonly FileSystemWatcher _workTreeWatcher = new();
+        private readonly FileSystemWatcher _gitDirWatcher = new();
         private readonly System.Windows.Forms.Timer _timerRefresh;
         private bool _commandIsRunning;
         private bool _isFirstPostRepoChanged;
         private string _gitPath;
         private string _submodulesPath;
-        private readonly CancellationTokenSequence _statusSequence = new CancellationTokenSequence();
+        private readonly CancellationTokenSequence _statusSequence = new();
         private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
 
         // Timestamps to schedule status updates, limit the update interval dynamically

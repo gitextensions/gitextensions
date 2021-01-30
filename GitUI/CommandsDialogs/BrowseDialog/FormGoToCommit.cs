@@ -20,8 +20,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private IGitRef _selectedTag;
         private IGitRef _selectedBranch;
 
-        private readonly AsyncLoader _tagsLoader = new AsyncLoader();
-        private readonly AsyncLoader _branchesLoader = new AsyncLoader();
+        private readonly AsyncLoader _tagsLoader = new();
+        private readonly AsyncLoader _branchesLoader = new();
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormGoToCommit()
