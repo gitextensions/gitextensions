@@ -1046,7 +1046,16 @@ namespace GitUI.Editor
                                 if (image is null)
                                 {
                                     ResetView(ViewMode.Text, null);
-                                    internalFileViewer.SetText(string.Format(_cannotViewImage.Text, fileName), openWithDifftool);
+
+                                    var text = getFileText();
+                                    var summary = new StringBuilder()
+                                        .AppendLine(string.Format(_cannotViewImage.Text, fileName))
+                                        .AppendLine()
+                                        .AppendLine($"{text.Length:N0} bytes:")
+                                        .AppendLine();
+
+                                    ToHexDump(Encoding.ASCII.GetBytes(text), summary);
+                                    internalFileViewer.SetText(summary.ToString(), openWithDifftool);
                                     return;
                                 }
 
