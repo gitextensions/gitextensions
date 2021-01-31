@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
-using GitCommands;
 using GitExtUtils.GitUI.Theming;
+using GitUIPluginInterfaces;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
 
@@ -15,8 +15,8 @@ namespace GitUI.UserControls
     public partial class CommitSummaryUserControl : GitExtensionsControl
     {
         private const int MaxBranchTagLength = 75;
-        private readonly TranslationString _noRevision = new TranslationString("No revision");
-        private readonly TranslationString _notAvailable = new TranslationString("n/a");
+        private readonly TranslationString _noRevision = new("No revision");
+        private readonly TranslationString _notAvailable = new("n/a");
         private readonly IDateFormatter _dateFormatter = new DateFormatter();
         private readonly string _tagsCaption;
         private readonly string _branchesCaption;
@@ -42,13 +42,12 @@ namespace GitUI.UserControls
             labelAuthor.Font = new Font(labelAuthor.Font, FontStyle.Bold);
         }
 
+        /// <summary>
+        /// Gets or sets a revision for which to show a summary.
+        /// </summary>
         public GitRevision Revision
         {
-            get
-            {
-                return _revision;
-            }
-
+            get => _revision;
             set
             {
                 _revision = value;
@@ -58,7 +57,7 @@ namespace GitUI.UserControls
                 labelTagsCaption.Text = _tagsCaption;
                 labelBranchesCaption.Text = _branchesCaption;
 
-                if (Revision != null)
+                if (Revision is not null)
                 {
                     groupBox1.Text = Revision.ObjectId.ToShortString();
                     labelAuthor.Text = Revision.Author;

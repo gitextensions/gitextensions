@@ -35,9 +35,9 @@ you'll want to browse our [wiki](https://github.com/gitextensions/gitextensions/
 
 Good places to start contributing include:
 
-- Open [bugs](https://github.com/gitextensions/gitextensions/labels/bug)
-- Open issues marked [good first issue](https://github.com/gitextensions/gitextensions/labels/good%20first%20issue)
-- Open issues marked [help wanted](https://github.com/gitextensions/gitextensions/labels/help%20wanted)
+- Open [bugs](https://github.com/gitextensions/gitextensions/labels/%3Abeetle%3A%20type%3A%20bug)
+- Open issues marked [good first issue](https://github.com/gitextensions/gitextensions/labels/%3Anerd_face%3A%20good%20first%20issue)
+- Open issues marked [up-for-grabs](https://github.com/gitextensions/gitextensions/labels/up-for-grabs)
 
 It's a good idea to mention that you're picking something up by commenting on its issue.
 

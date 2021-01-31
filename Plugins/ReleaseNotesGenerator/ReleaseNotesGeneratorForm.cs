@@ -17,10 +17,10 @@ namespace ReleaseNotesGenerator
     /// </summary>
     public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
     {
-        private readonly TranslationString _commitLogFrom = new TranslationString("Commit log from '{0}' to '{1}' ({2}):");
-        private readonly TranslationString _fromCommitNotSpecified = new TranslationString("'From' commit must be specified");
-        private readonly TranslationString _toCommitNotSpecified = new TranslationString("'To' commit must be specified");
-        private readonly TranslationString _caption = new TranslationString("Invalid input");
+        private readonly TranslationString _commitLogFrom = new("Commit log from '{0}' to '{1}' ({2}):");
+        private readonly TranslationString _fromCommitNotSpecified = new("'From' commit must be specified");
+        private readonly TranslationString _toCommitNotSpecified = new("'To' commit must be specified");
+        private readonly TranslationString _caption = new("Invalid input");
 
         private const string MostRecentHint = "most recent changes are listed on top";
         private readonly GitUIEventArgs _gitUiCommands;
@@ -88,7 +88,7 @@ namespace ReleaseNotesGenerator
 
         private void textBoxResult_TextChanged(object sender, EventArgs e)
         {
-            groupBoxCopy.Enabled = _lastGeneratedLogLines != null && _lastGeneratedLogLines.Any();
+            groupBoxCopy.Enabled = _lastGeneratedLogLines is not null && _lastGeneratedLogLines.Any();
         }
 
         private void buttonCopyOrigOutput_Click(object sender, EventArgs e)

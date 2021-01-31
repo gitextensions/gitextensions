@@ -81,7 +81,7 @@ namespace ResourceManager
 
         public string CreateCommitLink(ObjectId objectId, string linkText = null, bool preserveGuidInLinkText = false)
         {
-            if (linkText == null)
+            if (linkText is null)
             {
                 if (objectId == ObjectId.WorkTreeId)
                 {
@@ -118,7 +118,7 @@ namespace ResourceManager
             {
                 if (commandEventArgs.Command == ShowAll)
                 {
-                    if (showAll == null)
+                    if (showAll is null)
                     {
                         throw new InvalidOperationException($"unexpected internal link: {linkText}");
                     }
@@ -127,7 +127,7 @@ namespace ResourceManager
                     return;
                 }
 
-                if (handleInternalLink == null)
+                if (handleInternalLink is null)
                 {
                     throw new InvalidOperationException($"unexpected internal link: {linkText}");
                 }
@@ -158,7 +158,7 @@ namespace ResourceManager
 
         public bool ParseLink(string linkText, out Uri uri)
         {
-            if (linkText == null)
+            if (linkText is null)
             {
                 uri = null;
                 return false;

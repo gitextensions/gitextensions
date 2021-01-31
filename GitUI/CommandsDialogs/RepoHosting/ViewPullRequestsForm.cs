@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
@@ -16,15 +17,15 @@ namespace GitUI.CommandsDialogs.RepoHosting
     public partial class ViewPullRequestsForm : GitModuleForm
     {
         #region Translation
-        private readonly TranslationString _strFailedToFetchPullData = new TranslationString("Failed to fetch pull data!");
-        private readonly TranslationString _strFailedToLoadDiscussionItem = new TranslationString("Failed to post discussion item!");
-        private readonly TranslationString _strFailedToClosePullRequest = new TranslationString("Failed to close pull request!");
-        private readonly TranslationString _strFailedToLoadDiffData = new TranslationString("Failed to load diff data!");
-        private readonly TranslationString _strCouldNotLoadDiscussion = new TranslationString("Could not load discussion!");
-        private readonly TranslationString _strLoading = new TranslationString(" : LOADING : ");
-        private readonly TranslationString _strUnableUnderstandPatch = new TranslationString("Error: Unable to understand patch");
-        private readonly TranslationString _strRemoteAlreadyExist = new TranslationString("ERROR: Remote with name {0} already exists but it points to a different repository!\r\nDetails: Is {1} expected {2}");
-        private readonly TranslationString _strCouldNotAddRemote = new TranslationString("Could not add remote with name {0} and URL {1}");
+        private readonly TranslationString _strFailedToFetchPullData = new("Failed to fetch pull data!");
+        private readonly TranslationString _strFailedToLoadDiscussionItem = new("Failed to post discussion item!");
+        private readonly TranslationString _strFailedToClosePullRequest = new("Failed to close pull request!");
+        private readonly TranslationString _strFailedToLoadDiffData = new("Failed to load diff data!");
+        private readonly TranslationString _strCouldNotLoadDiscussion = new("Could not load discussion!");
+        private readonly TranslationString _strLoading = new(" : LOADING : ");
+        private readonly TranslationString _strUnableUnderstandPatch = new("Error: Unable to understand patch");
+        private readonly TranslationString _strRemoteAlreadyExist = new("ERROR: Remote with name {0} already exists but it points to a different repository!\r\nDetails: Is {1} expected {2}");
+        private readonly TranslationString _strCouldNotAddRemote = new("Could not add remote with name {0} and URL {1}");
         #endregion
 
         private GitProtocol _cloneGitProtocol;
@@ -34,7 +35,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private IReadOnlyList<IHostedRemote> _hostedRemotes;
         private bool _isFirstLoad;
         private IReadOnlyList<IPullRequestInformation> _pullRequestsInfo;
-        private readonly AsyncLoader _loader = new AsyncLoader();
+        private readonly AsyncLoader _loader = new();
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private ViewPullRequestsForm()
@@ -47,6 +48,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             InitializeComponent();
             _selectHostedRepoCB.DisplayMember = nameof(IHostedRemote.DisplayData);
+            _diffViewer.ExtraDiffArgumentsChanged += _fileStatusList_SelectedIndexChanged;
             _loader.LoadingError += (sender, ex) =>
                 {
                     MessageBox.Show(this, ex.Exception.ToString(), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -101,7 +103,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             var hostedRemote = _selectHostedRepoCB.SelectedItem as IHostedRemote;
 
             var hostedRepo = hostedRemote?.GetHostedRepository();
-            if (hostedRepo == null)
+            if (hostedRepo is null)
             {
                 return;
             }
@@ -123,7 +125,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         SetPullRequestsData(pullRequests);
                         _selectHostedRepoCB.Enabled = true;
                     }
-                    catch (Exception ex) when (!(ex is OperationCanceledException))
+                    catch (Exception ex) when (ex is not OperationCanceledException)
                     {
                         MessageBox.Show(this, _strFailedToFetchPullData.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
@@ -148,7 +150,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             if (_isFirstLoad)
             {
                 _isFirstLoad = false;
-                if (infos != null && infos.Count == 0 && _hostedRemotes.Count > 0)
+                if (infos is not null && infos.Count == 0 && _hostedRemotes.Count > 0)
                 {
                     SelectNextHostedRepository();
                     return;
@@ -158,7 +160,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _pullRequestsInfo = infos;
             _pullRequestsList.Items.Clear();
 
-            if (_pullRequestsInfo == null)
+            if (_pullRequestsInfo is null)
             {
                 return;
             }
@@ -180,7 +182,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 Cast<IHostedRemote>().
                 FirstOrDefault(remote => remote.Name.Equals(currentRemote, StringComparison.OrdinalIgnoreCase));
 
-            if (hostedRemote == null)
+            if (hostedRemote is null)
             {
                 if (_selectHostedRepoCB.Items.Count > 0)
                 {
@@ -269,12 +271,12 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
 
             _currentPullRequestInfo = _pullRequestsList.SelectedItems[0].Tag as IPullRequestInformation;
-            if (prevPri != null && prevPri.Equals(_currentPullRequestInfo))
+            if (prevPri is not null && prevPri.Equals(_currentPullRequestInfo))
             {
                 return;
             }
 
-            if (_currentPullRequestInfo == null)
+            if (_currentPullRequestInfo is null)
             {
                 return;
             }
@@ -305,7 +307,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                         LoadDiscussion(discussion);
                     }
-                    catch (Exception ex) when (!(ex is OperationCanceledException))
+                    catch (Exception ex) when (ex is not OperationCanceledException)
                     {
                         MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         LoadDiscussion(null);
@@ -322,9 +324,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _discussionWB_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            if (_discussionWB.Document != null)
+            if (_discussionWB.Document is not null)
             {
-                if (_discussionWB.Document.Window != null && _discussionWB.Document.Body != null)
+                if (_discussionWB.Document.Window is not null && _discussionWB.Document.Body is not null)
                 {
                     _discussionWB.Document.Window.ScrollTo(0, _discussionWB.Document.Body.ScrollRectangle.Height);
                 }
@@ -344,7 +346,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                         SplitAndLoadDiff(content, _currentPullRequestInfo.BaseSha, _currentPullRequestInfo.HeadSha);
                     }
-                    catch (Exception ex) when (!(ex is OperationCanceledException))
+                    catch (Exception ex) when (ex is not OperationCanceledException)
                     {
                         MessageBox.Show(this, _strFailedToLoadDiffData.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
@@ -356,13 +358,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             _diffCache = new Dictionary<string, string>();
 
-            var fileParts = Regex.Split(diffData, @"(?:\n|^)diff --git ").Where(el => el != null && el.Trim().Length > 10).ToList();
+            var fileParts = Regex.Split(diffData, @"(?:\n|^)diff --git ").Where(el => el is not null && el.Trim().Length > 10).ToList();
             var giss = new List<GitItemStatus>();
 
             // baseSha is the sha of the merge to ("master") sha, the commit to be firstId
             GitRevision firstRev = ObjectId.TryParse(baseSha, out ObjectId firstId) ? new GitRevision(firstId) : null;
             GitRevision secondRev = ObjectId.TryParse(secondSha, out ObjectId secondId) ? new GitRevision(secondId) : null;
-            if (secondRev == null)
+            if (secondRev is null)
             {
                 MessageBox.Show(this, _strUnableUnderstandPatch.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -397,16 +399,15 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _fetchBtn_Click(object sender, EventArgs e)
         {
-            if (_currentPullRequestInfo == null)
+            if (_currentPullRequestInfo is null)
             {
                 return;
             }
 
             var cmd = string.Format("fetch --no-tags --progress {0} {1}:{2}",
                 _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl, _currentPullRequestInfo.HeadRef, _currentPullRequestInfo.FetchBranch);
-            var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand, cmd);
-
-            if (errorOccurred)
+            var success = FormProcess.ShowDialog(this, process: AppSettings.GitCommand, arguments: cmd, Module.WorkingDir, input: null, useDialogSettings: true);
+            if (!success)
             {
                 return;
             }
@@ -418,7 +419,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _addAsRemoteAndFetch_Click(object sender, EventArgs e)
         {
-            if (_currentPullRequestInfo == null)
+            if (_currentPullRequestInfo is null)
             {
                 return;
             }
@@ -431,14 +432,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 var remoteRef = _currentPullRequestInfo.HeadRef;
 
                 var existingRepo = _hostedRemotes.FirstOrDefault(el => el.Name == remoteName);
-                if (existingRepo != null)
+                if (existingRepo is not null)
                 {
                     var hostedRepository = existingRepo.GetHostedRepository();
                     hostedRepository.CloneProtocol = _cloneGitProtocol;
                     if (hostedRepository.CloneReadOnlyUrl != remoteUrl)
                     {
-                        MessageBox.Show(this, string.Format(_strRemoteAlreadyExist.Text,
-                                            remoteName, hostedRepository.CloneReadOnlyUrl, remoteUrl),
+                        MessageBox.Show(this, string.Format(_strRemoteAlreadyExist.Text, remoteName, hostedRepository.CloneReadOnlyUrl, remoteUrl),
                             Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
@@ -456,9 +456,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 }
 
                 var cmd = string.Format("fetch --no-tags --progress {0} {1}:{0}/{1}", remoteName, remoteRef);
-                var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand, cmd);
-
-                if (errorOccurred)
+                var success = FormProcess.ShowDialog(this, process: AppSettings.GitCommand, arguments: cmd, Module.WorkingDir, input: null, useDialogSettings: true);
+                if (!success)
                 {
                     return;
                 }
@@ -466,7 +465,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 UICommands.RepoChangedNotifier.Notify();
 
                 cmd = string.Format("checkout {0}/{1}", remoteName, remoteRef);
-                if (FormProcess.ShowDialog(this, AppSettings.GitCommand, cmd))
+                success = FormProcess.ShowDialog(this, process: AppSettings.GitCommand, arguments: cmd, Module.WorkingDir, input: null, useDialogSettings: true);
+                if (success)
                 {
                     UICommands.RepoChangedNotifier.Notify();
                 }
@@ -482,7 +482,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void _fileStatusList_SelectedIndexChanged(object sender, EventArgs e)
         {
             var gis = _fileStatusList.SelectedItem?.Item;
-            if (gis == null)
+            if (gis is null)
             {
                 return;
             }
@@ -495,13 +495,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
             else
             {
-                _diffViewer.ViewPatch(gis.Name, text: data);
+                _diffViewer.ViewFixedPatch(gis.Name, text: data);
             }
         }
 
         private void _closePullRequestBtn_Click(object sender, EventArgs e)
         {
-            if (_currentPullRequestInfo == null)
+            if (_currentPullRequestInfo is null)
             {
                 return;
             }

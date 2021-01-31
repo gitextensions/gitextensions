@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using JetBrains.Annotations;
 
 namespace GitExtUtils
 {
     public static class ClipboardUtil
     {
-        public static bool TrySetText([NotNull] string text)
+        public static bool TrySetText(string text)
         {
-            if (text == null)
+            if (text is null)
             {
                 throw new ArgumentNullException(nameof(text));
             }

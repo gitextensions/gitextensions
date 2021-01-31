@@ -3,7 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git.Commands;
 using GitCommands.Utils;
+using GitUI.HelperDialogs;
 using JetBrains.Annotations;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
@@ -14,7 +16,7 @@ namespace GitUI.CommandsDialogs
     {
         private readonly TranslationString _reallyCleanupQuestion =
             new TranslationString("Are you sure you want to cleanup the repository?");
-        private readonly TranslationString _reallyCleanupQuestionCaption = new TranslationString("Cleanup");
+        private readonly TranslationString _reallyCleanupQuestionCaption = new("Cleanup");
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormCleanupRepository()
@@ -48,7 +50,7 @@ namespace GitUI.CommandsDialogs
         private void Preview_Click(object sender, EventArgs e)
         {
             var cleanUpCmd = GitCommandHelpers.CleanCmd(GetCleanMode(), dryRun: true, directories: RemoveDirectories.Checked, paths: GetPathArgumentFromGui());
-            string cmdOutput = FormProcess.ReadDialog(this, cleanUpCmd);
+            string cmdOutput = FormProcess.ReadDialog(this, process: null, arguments: cleanUpCmd, Module.WorkingDir, input: null, useDialogSettings: true);
             PreviewOutput.Text = EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(cmdOutput);
         }
 
@@ -57,7 +59,7 @@ namespace GitUI.CommandsDialogs
             if (MessageBox.Show(this, _reallyCleanupQuestion.Text, _reallyCleanupQuestionCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 var cleanUpCmd = GitCommandHelpers.CleanCmd(GetCleanMode(), dryRun: false, directories: RemoveDirectories.Checked, paths: GetPathArgumentFromGui());
-                string cmdOutput = FormProcess.ReadDialog(this, cleanUpCmd);
+                string cmdOutput = FormProcess.ReadDialog(this, process: null, arguments: cleanUpCmd, Module.WorkingDir, input: null, useDialogSettings: true);
                 PreviewOutput.Text = EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(cmdOutput);
             }
         }

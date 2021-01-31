@@ -168,14 +168,14 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             string prefix = "", string suffix = "")
         {
             _infoProvider.GetLaneInfo(0, 0).Should()
-                .Be(string.Format(branch == null ? "{0}{1}{2}{2}{6}{7}"
+                .Be(string.Format(branch is null ? "{0}{1}{2}{2}{6}{7}"
                                                  : "{0}{1}{2}\n{3}: {4}{5}{2}{6}{7}",
                     prefix,
                     node.GitRevision.Guid,
                     Environment.NewLine,
                     Strings.Branch,
                     branch,
-                    mergedWith == null ? "" : string.Format(LaneInfoProvider.TestAccessor.MergedWithText.Text, mergedWith),
+                    mergedWith is null ? "" : string.Format(LaneInfoProvider.TestAccessor.MergedWithText.Text, mergedWith),
                     node.GitRevision.Body,
                     suffix));
         }

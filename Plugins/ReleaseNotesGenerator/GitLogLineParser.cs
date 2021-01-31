@@ -12,7 +12,7 @@ namespace ReleaseNotesGenerator
 
     public sealed class GitLogLineParser : IGitLogLineParser
     {
-        private static readonly Regex LogLineRegex = new Regex("^([a-zA-Z0-9]{1,})@(.*)", RegexOptions.Compiled);
+        private static readonly Regex LogLineRegex = new("^([a-zA-Z0-9]{1,})@(.*)", RegexOptions.Compiled);
 
         [CanBeNull]
         public LogLine Parse(string line)
@@ -35,7 +35,7 @@ namespace ReleaseNotesGenerator
         public IEnumerable<LogLine> Parse(IEnumerable<string> lines)
         {
             var resultList = new List<LogLine>();
-            if (lines == null)
+            if (lines is null)
             {
                 return resultList;
             }
@@ -44,9 +44,9 @@ namespace ReleaseNotesGenerator
             foreach (string line in lines)
             {
                 var logLine1 = Parse(line);
-                if (logLine1 != null)
+                if (logLine1 is not null)
                 {
-                    if (logLineCurrent != null)
+                    if (logLineCurrent is not null)
                     {
                         resultList.Add(logLineCurrent);
                     }
@@ -59,7 +59,7 @@ namespace ReleaseNotesGenerator
                 }
             }
 
-            if (logLineCurrent != null)
+            if (logLineCurrent is not null)
             {
                 resultList.Add(logLineCurrent);
             }

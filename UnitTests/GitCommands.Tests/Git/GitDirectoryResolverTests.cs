@@ -97,24 +97,20 @@ namespace GitCommandsTests.Git
         public void Resolve_non_bare_repository_real_filesystem()
         {
             _resolver = new GitDirectoryResolver();
-            using (var helper = new GitModuleTestHelper())
-            {
-                _resolver.Resolve(helper.Module.WorkingDir).Should().Be(helper.Module.WorkingDirGitDir);
-            }
+            using var helper = new GitModuleTestHelper();
+            _resolver.Resolve(helper.Module.WorkingDir).Should().Be(helper.Module.WorkingDirGitDir);
         }
 
         [Test]
         public void Resolve_submodule_real_filesystem()
         {
-            using (var helper = new GitModuleTestHelper())
-            {
-                var submodulePath = Path.Combine(helper.Module.WorkingDir, "External", "Git.hub");
-                helper.CreateFile(submodulePath, ".git", "\r \r\ngitdir: ../../.git/modules/Externals/Git.hub\r\ntext");
-                _resolver = new GitDirectoryResolver();
+            using var helper = new GitModuleTestHelper();
+            var submodulePath = Path.Combine(helper.Module.WorkingDir, "External", "Git.hub");
+            helper.CreateFile(submodulePath, ".git", "\r \r\ngitdir: ../../.git/modules/Externals/Git.hub\r\ntext");
+            _resolver = new GitDirectoryResolver();
 
-                _resolver.Resolve(submodulePath).Should().Be($@"{helper.Module.WorkingDirGitDir}modules\Externals\Git.hub\");
-                _resolver.Resolve(helper.Module.WorkingDir).Should().Be(helper.Module.WorkingDirGitDir);
-            }
+            _resolver.Resolve(submodulePath).Should().Be($@"{helper.Module.WorkingDirGitDir}modules\Externals\Git.hub\");
+            _resolver.Resolve(helper.Module.WorkingDir).Should().Be(helper.Module.WorkingDirGitDir);
         }
     }
 }

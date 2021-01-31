@@ -130,7 +130,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly TranslationString _shCanBeRunCaption =
             new TranslationString("Locate linux tools");
 
-        private readonly TranslationString _gcmDetectedCaption = new TranslationString("Obsolete git-credential-winstore.exe detected");
+        private readonly TranslationString _gcmDetectedCaption = new("Obsolete git-credential-winstore.exe detected");
         #endregion
 
         private const string _putty = "PuTTY";
@@ -184,7 +184,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void SshConfig_Click(object sender, EventArgs e)
         {
-            if (GitCommandHelpers.Plink())
+            if (GitSshHelpers.Plink())
             {
                 if (SshSettingsPage.AutoFindPuttyPaths())
                 {
@@ -433,7 +433,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private bool CheckSSHSettings()
         {
             SshConfig.Visible = true;
-            if (GitCommandHelpers.Plink())
+            if (GitSshHelpers.Plink())
             {
                 return RenderSettingSetUnset(() => !File.Exists(AppSettings.Plink) || !File.Exists(AppSettings.Puttygen) || !File.Exists(AppSettings.Pageant),
                                         SshConfig, SshConfig_Fix,
@@ -555,8 +555,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                                                       null)))
             {
                 // Check if shell extensions are installed
-                string path32 = Path.Combine(AppSettings.GetInstallDir(), CommonLogic.GitExtensionsShellEx32Name);
-                string path64 = Path.Combine(AppSettings.GetInstallDir(), CommonLogic.GitExtensionsShellEx64Name);
+                string path32 = PathUtil.Combine(AppSettings.GetInstallDir(), CommonLogic.GitExtensionsShellEx32Name);
+                string path64 = PathUtil.Combine(AppSettings.GetInstallDir(), CommonLogic.GitExtensionsShellEx64Name);
                 if (!File.Exists(path32) || (IntPtr.Size == 8 && !File.Exists(path64)))
                 {
                     RenderSettingSet(ShellExtensionsRegistered, ShellExtensionsRegistered_Fix, _shellExtNoInstalled.Text);
@@ -647,7 +647,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void GcmDetectedFix_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/gitextensions/gitextensions/wiki/How-To:-fix-GitCredentialWinStore-missing");
+            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/wiki/How-To:-fix-GitCredentialWinStore-missing");
         }
     }
 }

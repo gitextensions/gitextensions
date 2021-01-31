@@ -24,10 +24,8 @@ namespace GitImpact
                 return false;
             }
 
-            using (var form = new FormImpact(args.GitModule))
-            {
-                form.ShowDialog(args.OwnerForm);
-            }
+            using var form = new FormImpact(args.GitModule);
+            form.ShowDialog(args.OwnerForm);
 
             return false;
         }

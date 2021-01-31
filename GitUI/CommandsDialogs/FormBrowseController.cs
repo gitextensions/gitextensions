@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Gpg;
 using GitCommands.UserRepositoryHistory;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
@@ -62,7 +62,7 @@ namespace GitUI.CommandsDialogs
         [ItemCanBeNull]
         public async Task<GpgInfo> LoadGpgInfoAsync(GitRevision revision)
         {
-            if (!AppSettings.ShowGpgInformation.ValueOrDefault || revision?.ObjectId == null)
+            if (!AppSettings.ShowGpgInformation.Value || revision?.ObjectId is null)
             {
                 return null;
             }
@@ -106,17 +106,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var process = new Process
-            {
-                StartInfo =
-                {
-                    FileName = AppSettings.GetGitExtensionsFullPath(),
-                    Arguments = "browse",
-                    WorkingDirectory = repoPath,
-                    UseShellExecute = false
-                }
-            };
-            process.Start();
+            GitUICommands.LaunchBrowse(repoPath);
         }
     }
 }

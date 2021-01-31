@@ -11,11 +11,11 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormAddToGitIgnore : GitModuleForm
     {
-        private readonly TranslationString _addToLocalExcludeTitle = new TranslationString("Add file(s) to .git/info/exclude");
-        private readonly TranslationString _matchingFilesString = new TranslationString("{0} file(s) matched");
-        private readonly TranslationString _updateStatusString = new TranslationString("Updating ...");
+        private readonly TranslationString _addToLocalExcludeTitle = new("Add file(s) to .git/info/exclude");
+        private readonly TranslationString _matchingFilesString = new("{0} file(s) matched");
+        private readonly TranslationString _updateStatusString = new("Updating ...");
 
-        private readonly AsyncLoader _ignoredFilesLoader = new AsyncLoader();
+        private readonly AsyncLoader _ignoredFilesLoader = new();
         private readonly IFullPathResolver _fullPathResolver;
         private readonly bool _localExclude;
 
@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs
                 Text = _addToLocalExcludeTitle.Text;
             }
 
-            if (filePatterns != null)
+            if (filePatterns is not null)
             {
                 FilePattern.Text = string.Join(Environment.NewLine, filePatterns);
             }
@@ -88,10 +88,8 @@ namespace GitUI.CommandsDialogs
                         gitIgnoreFileAddition.Append(Environment.NewLine);
                     }
 
-                    using (TextWriter tw = new StreamWriter(x, true, GitModule.SystemEncoding))
-                    {
-                        tw.Write(gitIgnoreFileAddition);
-                    }
+                    using TextWriter tw = new StreamWriter(x, true, GitModule.SystemEncoding);
+                    tw.Write(gitIgnoreFileAddition);
                 });
             }
             catch (Exception ex)

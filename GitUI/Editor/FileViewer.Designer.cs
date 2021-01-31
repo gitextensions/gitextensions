@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace GitUI.Editor
 {
@@ -20,7 +21,9 @@ namespace GitUI.Editor
             this.components = new System.ComponentModel.Container();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cherrypickSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stageSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unstageSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyNewVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyOldVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,7 +55,6 @@ namespace GitUI.Editor
             this.encodingToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.ignoreAllWhitespaces = new System.Windows.Forms.ToolStripButton();
             this.PictureBox = new System.Windows.Forms.PictureBox();
-            this.revertSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._NO_TRANSLATE_lblShowPreview = new System.Windows.Forms.LinkLabel();
             this.internalFileViewer = new GitUI.Editor.FileViewerInternal();
             this.showSyntaxHighlighting = new System.Windows.Forms.ToolStripButton();
@@ -64,9 +66,10 @@ namespace GitUI.Editor
             // contextMenu
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.stageSelectedLinesToolStripMenuItem,
+            this.unstageSelectedLinesToolStripMenuItem,
+            this.resetSelectedLinesToolStripMenuItem,
             this.copyToolStripMenuItem,
-            this.cherrypickSelectedLinesToolStripMenuItem,
-            this.revertSelectedLinesToolStripMenuItem,
             this.copyPatchToolStripMenuItem,
             this.copyNewVersionToolStripMenuItem,
             this.copyOldVersionToolStripMenuItem,
@@ -86,6 +89,30 @@ namespace GitUI.Editor
             this.contextMenu.Name = "ContextMenu";
             this.contextMenu.Size = new System.Drawing.Size(244, 346);
             // 
+            // stageSelectedLinesToolStripMenuItem
+            // 
+            this.stageSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.Stage;
+            this.stageSelectedLinesToolStripMenuItem.Name = "stageSelectedLinesToolStripMenuItem";
+            this.stageSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.stageSelectedLinesToolStripMenuItem.Text = Strings.StageSelectedLines;
+            this.stageSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.stageSelectedLinesToolStripMenuItem_Click);
+            // 
+            // unstageSelectedLinesToolStripMenuItem
+            // 
+            this.unstageSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.Unstage;
+            this.unstageSelectedLinesToolStripMenuItem.Name = "chunstageSelectedLinesToolStripMenuItemerrypickSelectedLinesToolStripMenuItem";
+            this.unstageSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.unstageSelectedLinesToolStripMenuItem.Text = Strings.UnstageSelectedLines;
+            this.unstageSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.unstageSelectedLinesToolStripMenuItem_Click);
+            // 
+            // resetSelectedLinesToolStripMenuItem
+            // 
+            this.resetSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetWorkingDirChanges;
+            this.resetSelectedLinesToolStripMenuItem.Name = "resetSelectedLinesToolStripMenuItem";
+            this.resetSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.resetSelectedLinesToolStripMenuItem.Text = Strings.ResetSelectedLines;
+            this.resetSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.resetSelectedLinesToolStripMenuItem_Click);
+            // 
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
@@ -93,14 +120,6 @@ namespace GitUI.Editor
             this.copyToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.CopyToolStripMenuItemClick);
-            // 
-            // cherrypickSelectedLinesToolStripMenuItem
-            // 
-            this.cherrypickSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.CherryPick;
-            this.cherrypickSelectedLinesToolStripMenuItem.Name = "cherrypickSelectedLinesToolStripMenuItem";
-            this.cherrypickSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.cherrypickSelectedLinesToolStripMenuItem.Text = "Cherry pick selected lines";
-            this.cherrypickSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.cherrypickSelectedLinesToolStripMenuItem_Click);
             // 
             // copyPatchToolStripMenuItem
             // 
@@ -373,14 +392,6 @@ namespace GitUI.Editor
             this.PictureBox.TabIndex = 7;
             this.PictureBox.TabStop = false;
             this.PictureBox.Visible = false;
-            // 
-            // resetSelectedLinesToolStripMenuItem
-            // 
-            this.revertSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetFileTo;
-            this.revertSelectedLinesToolStripMenuItem.Name = "revertSelectedLinesToolStripMenuItem";
-            this.revertSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.revertSelectedLinesToolStripMenuItem.Text = "Revert selected lines";
-            this.revertSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.revertSelectedLinesToolStripMenuItem_Click);
             //
             // llShowPreview
             //
@@ -474,8 +485,9 @@ namespace GitUI.Editor
         private System.Windows.Forms.ToolStripMenuItem goToLineToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyNewVersionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyOldVersionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem cherrypickSelectedLinesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem revertSelectedLinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem stageSelectedLinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unstageSelectedLinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton ignoreAllWhitespaces;
         private System.Windows.Forms.ToolStripMenuItem ignoreAllWhitespaceChangesToolStripMenuItem;
         private LinkLabel _NO_TRANSLATE_lblShowPreview;

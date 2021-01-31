@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands.UserRepositoryHistory
@@ -32,7 +31,6 @@ namespace GitCommands.UserRepositoryHistory
         /// <param name="repositoryPathUrl">A repository URL to be save as "most recent".</param>
         /// <returns>The current version of the list of recently used git repositories after the update.</returns>
         /// <exception cref="ArgumentException"><paramref name="repositoryPathUrl"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
-        [ContractAnnotation("repositoryPathUrl:null=>halt")]
         public async Task<IList<Repository>> AddAsMostRecentAsync(string repositoryPathUrl)
         {
             if (string.IsNullOrWhiteSpace(repositoryPathUrl))
@@ -48,7 +46,7 @@ namespace GitCommands.UserRepositoryHistory
                 var repositoryHistory = await LoadRecentHistoryAsync();
 
                 var repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase));
-                if (repository != null)
+                if (repository is not null)
                 {
                     if (repositoryHistory[0] == repository)
                     {
@@ -82,7 +80,7 @@ namespace GitCommands.UserRepositoryHistory
             // TODO: to be addressed separately
             int size = AppSettings.RecentRepositoriesHistorySize;
             var history = _repositoryStorage.Load(KeyRemoteHistory);
-            if (history == null)
+            if (history is null)
             {
                 return Array.Empty<Repository>();
             }
@@ -96,7 +94,6 @@ namespace GitCommands.UserRepositoryHistory
         /// <param name="repositoryPath">A repository path to remove.</param>
         /// <returns>The current version of the list of recently used git repositories after the update.</returns>
         /// <exception cref="ArgumentException"><paramref name="repositoryPath"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
-        [ContractAnnotation("repositoryPath:null=>halt")]
         public async Task<IList<Repository>> RemoveRecentAsync(string repositoryPath)
         {
             if (string.IsNullOrWhiteSpace(repositoryPath))
@@ -107,7 +104,7 @@ namespace GitCommands.UserRepositoryHistory
             await TaskScheduler.Default;
             var repositoryHistory = await LoadRecentHistoryAsync();
             var repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
-            if (repository == null)
+            if (repository is null)
             {
                 return repositoryHistory;
             }
@@ -128,10 +125,9 @@ namespace GitCommands.UserRepositoryHistory
         /// <returns>An awaitable task.</returns>
         /// <remarks>The size of the history will be adjusted as per <see cref="AppSettings.RecentRepositoriesHistorySize"/> setting.</remarks>
         /// <exception cref="ArgumentNullException"><paramref name="repositoryHistory"/> is <see langword="null"/>.</exception>
-        [ContractAnnotation("repositoryHistory:null=>halt")]
         public async Task SaveRecentHistoryAsync(IEnumerable<Repository> repositoryHistory)
         {
-            if (repositoryHistory == null)
+            if (repositoryHistory is null)
             {
                 throw new ArgumentNullException(nameof(repositoryHistory));
             }

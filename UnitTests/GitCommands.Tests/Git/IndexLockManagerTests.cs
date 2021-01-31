@@ -132,39 +132,37 @@ namespace GitCommandsTests.Git
         [Test]
         public void Resolve_submodule_real_filesystem()
         {
-            using (var helper = new GitModuleTestHelper())
-            {
-                helper.CreateFile(helper.Module.WorkingDir, ".gitmodules", @"[submodule ""Externals/NBug""]
+            using var helper = new GitModuleTestHelper();
+            helper.CreateFile(helper.Module.WorkingDir, ".gitmodules", @"[submodule ""Externals/NBug""]
     path = Externals/NBug
     url = https://github.com/gitextensions/NBug.git
 [submodule ""Externals/Git.hub""]
     path = Externals/Git.hub
     url = https://github.com/gitextensions/Git.hub.gitk");
 
-                var submoduleGitHub = Path.Combine(helper.Module.WorkingDir, "Externals", "Git.hub");
-                var submoduleNBug = Path.Combine(helper.Module.WorkingDir, "Externals", "NBug");
-                var submoduleGitHubWorkingDirGitDir = Path.Combine(helper.Module.WorkingDirGitDir, "modules", "Externals", "Git.hub");
-                var submoduleNbugWorkingDirGitDir = Path.Combine(helper.Module.WorkingDirGitDir, "modules", "Externals", "NBug");
-                helper.CreateFile(submoduleGitHub, ".git", "gitdir: ../../.git/modules/Externals/Git.hub");
-                helper.CreateFile(submoduleNBug, ".git", "gitdir: ../../.git/modules/Externals/NBug");
-                helper.CreateFile(helper.Module.WorkingDirGitDir, IndexLock, "");
-                helper.CreateFile(submoduleGitHubWorkingDirGitDir, IndexLock, "");
+            var submoduleGitHub = Path.Combine(helper.Module.WorkingDir, "Externals", "Git.hub");
+            var submoduleNBug = Path.Combine(helper.Module.WorkingDir, "Externals", "NBug");
+            var submoduleGitHubWorkingDirGitDir = Path.Combine(helper.Module.WorkingDirGitDir, "modules", "Externals", "Git.hub");
+            var submoduleNbugWorkingDirGitDir = Path.Combine(helper.Module.WorkingDirGitDir, "modules", "Externals", "NBug");
+            helper.CreateFile(submoduleGitHub, ".git", "gitdir: ../../.git/modules/Externals/Git.hub");
+            helper.CreateFile(submoduleNBug, ".git", "gitdir: ../../.git/modules/Externals/NBug");
+            helper.CreateFile(helper.Module.WorkingDirGitDir, IndexLock, "");
+            helper.CreateFile(submoduleGitHubWorkingDirGitDir, IndexLock, "");
 
-                _manager = new IndexLockManager(helper.Module);
+            _manager = new IndexLockManager(helper.Module);
 
-                var indexLock = Path.Combine(helper.Module.WorkingDirGitDir, IndexLock);
-                File.Exists(indexLock).Should().BeTrue();
-                var gitHubIndexLock = Path.Combine(submoduleGitHubWorkingDirGitDir, IndexLock);
-                File.Exists(gitHubIndexLock).Should().BeTrue();
-                var nbugIndexLock = Path.Combine(submoduleNbugWorkingDirGitDir, IndexLock);
-                File.Exists(nbugIndexLock).Should().BeFalse();
+            var indexLock = Path.Combine(helper.Module.WorkingDirGitDir, IndexLock);
+            File.Exists(indexLock).Should().BeTrue();
+            var gitHubIndexLock = Path.Combine(submoduleGitHubWorkingDirGitDir, IndexLock);
+            File.Exists(gitHubIndexLock).Should().BeTrue();
+            var nbugIndexLock = Path.Combine(submoduleNbugWorkingDirGitDir, IndexLock);
+            File.Exists(nbugIndexLock).Should().BeFalse();
 
-                _manager.UnlockIndex(true);
+            _manager.UnlockIndex(true);
 
-                File.Exists(indexLock).Should().BeFalse();
-                File.Exists(gitHubIndexLock).Should().BeFalse();
-                File.Exists(nbugIndexLock).Should().BeFalse();
-            }
+            File.Exists(indexLock).Should().BeFalse();
+            File.Exists(gitHubIndexLock).Should().BeFalse();
+            File.Exists(nbugIndexLock).Should().BeFalse();
         }
     }
 }

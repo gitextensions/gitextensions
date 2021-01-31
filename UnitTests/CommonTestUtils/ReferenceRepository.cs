@@ -32,6 +32,14 @@ namespace CommonTestUtils
             return commit.Id.Sha;
         }
 
+        public void CreateBranch(string branchName, string commitHash, bool allowOverwrite = false)
+        {
+            using (var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir))
+            {
+                repository.Branches.Add(branchName, commitHash, allowOverwrite);
+            }
+        }
+
         public void CreateCommit(string commitMessage, string content = null)
         {
             using (var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir))
@@ -40,6 +48,16 @@ namespace CommonTestUtils
                 repository.Index.Add("A.txt");
 
                 _commitHash = Commit(repository, commitMessage);
+            }
+        }
+
+        public string CreateRepoFile(string fileName, string fileContent) => _moduleTestHelper.CreateRepoFile(fileName, fileContent);
+
+        public void CreateTag(string tagName, string commitHash, bool allowOverwrite = false)
+        {
+            using (var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir))
+            {
+                repository.Tags.Add(tagName, commitHash, allowOverwrite);
             }
         }
 
@@ -72,6 +90,13 @@ namespace CommonTestUtils
                     b => b.Remote = remote.Name,
                     b => b.UpstreamBranch = masterBranch.CanonicalName);
             }
+        }
+
+        public void Fetch(string remoteName)
+        {
+            using var repository = new LibGit2Sharp.Repository(Module.WorkingDir);
+            var options = new LibGit2Sharp.FetchOptions();
+            Commands.Fetch(repository, remoteName, Array.Empty<string>(), options, null);
         }
 
         public void Reset()

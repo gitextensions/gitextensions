@@ -21,7 +21,6 @@ namespace GitUITests.Avatars
         private FileBase _file;
         private FileInfoBase _fileInfo;
         private IFileInfoFactory _fileInfoFactory;
-        private IAvatarGenerator _avatarGenerator;
 
         [SetUp]
         public override void SetUp()
@@ -38,19 +37,17 @@ namespace GitUITests.Avatars
             _fileInfoFactory = Substitute.For<IFileInfoFactory>();
             _fileInfoFactory.FromFileName(Arg.Any<string>()).Returns(_fileInfo);
             _fileSystem.FileInfo.Returns(_fileInfoFactory);
-            _avatarGenerator = Substitute.For<IAvatarGenerator>();
-            _avatarGenerator.GetAvatarImage(_emailMissing, _nameMissing, _size).Returns(_imgGenerated);
 
             _folderPath = AppSettings.AvatarImageCachePath;
 
-            _cache = new AvatarPersistentCache(_inner, _avatarGenerator, _fileSystem);
+            _cache = new FileSystemAvatarCache(_inner, _fileSystem);
         }
 
         [Test]
         public async Task GetAvatarAsync_should_create_if_folder_absent()
         {
             var fileSystem = new MockFileSystem();
-            _cache = new AvatarPersistentCache(_inner, Substitute.For<IAvatarGenerator>(), fileSystem);
+            _cache = new FileSystemAvatarCache(_inner, fileSystem);
             fileSystem.Directory.Exists(_folderPath).Should().BeFalse();
 
             Assert.AreSame(_img1, await _cache.GetAvatarAsync(_email1, _name1, _size));
@@ -62,23 +59,13 @@ namespace GitUITests.Avatars
         public async Task GetAvatarAsync_should_create_image_from_stream()
         {
             var fileSystem = new MockFileSystem();
-            _cache = new AvatarPersistentCache(_inner, Substitute.For<IAvatarGenerator>(), fileSystem);
+            _cache = new FileSystemAvatarCache(_inner, fileSystem);
             fileSystem.Directory.Exists(_folderPath).Should().BeFalse();
 
             Assert.AreSame(_img1, await _cache.GetAvatarAsync(_email1, _name1, _size));
 
             fileSystem.Directory.Exists(_folderPath).Should().BeTrue();
             fileSystem.File.Exists(Path.Combine(_folderPath, $"{_email1}.{_size}px.png")).Should().BeTrue();
-        }
-
-        [Test]
-        public async Task GetAvatarAsync_should_generate_avatar_if_none_found()
-        {
-            var fileSystem = new MockFileSystem();
-            _cache = new AvatarPersistentCache(_inner, _avatarGenerator, fileSystem);
-            fileSystem.Directory.Exists(_folderPath).Should().BeFalse();
-
-            Assert.AreSame(_imgGenerated, await _cache.GetAvatarAsync(_emailMissing, _nameMissing, _size));
         }
 
         [Test]
@@ -111,7 +98,7 @@ namespace GitUITests.Avatars
         {
             _directory.Exists(Arg.Any<string>()).Returns(false);
 
-            await _cache.ClearCacheAsync();
+            await _cacheCleaner.ClearCacheAsync();
 
             _directory.DidNotReceive().GetFiles(Arg.Any<string>());
         }
@@ -120,13 +107,13 @@ namespace GitUITests.Avatars
         public async Task ClearCacheAsync_should_remove_all()
         {
             var fileSystem = new MockFileSystem();
-            _cache = new AvatarPersistentCache(_inner, Substitute.For<IAvatarGenerator>(), fileSystem);
+            _cache = new FileSystemAvatarCache(_inner, fileSystem);
 
             fileSystem.AddFile(Path.Combine(_folderPath, "a@a.com.16px.png"), new MockFileData(""));
             fileSystem.AddFile(Path.Combine(_folderPath, "b@b.com.16px.png"), new MockFileData(""));
             fileSystem.AllFiles.Count().Should().Be(2);
 
-            await _cache.ClearCacheAsync();
+            await _cacheCleaner.ClearCacheAsync();
 
             fileSystem.AllFiles.Count().Should().Be(0);
         }
@@ -139,7 +126,7 @@ namespace GitUITests.Avatars
             _file.When(x => x.Delete(Arg.Any<string>()))
                 .Do(x => throw new DivideByZeroException());
 
-            Func<Task> act = () => _cache.ClearCacheAsync();
+            Func<Task> act = () => _cacheCleaner.ClearCacheAsync();
             act.Should().NotThrow();
         }
     }

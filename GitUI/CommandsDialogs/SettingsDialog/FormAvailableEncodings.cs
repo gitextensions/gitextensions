@@ -31,12 +31,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             var availableEncoding = Encoding.GetEncodings()
                 .Select(ei => ei.GetEncoding())
+                .Where(e => e != Encoding.UTF7) // UTF-7 is no longer supported, see: https://github.com/dotnet/docs/issues/19274
                 .Where(e => !includedEncoding.ContainsKey(e.HeaderName))
                 .ToList();
 
             // If exists utf-8, then replace to utf-8 without BOM
             var utf8 = availableEncoding.FirstOrDefault(e => typeof(UTF8Encoding) == e.GetType());
-            if (utf8 != null)
+            if (utf8 is not null)
             {
                 availableEncoding.Remove(utf8);
                 availableEncoding.Add(new UTF8Encoding(false));
@@ -56,7 +57,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private void ToLeft_Click(object sender, EventArgs e)
         {
-            if (ListAvailableEncodings.SelectedItem != null)
+            if (ListAvailableEncodings.SelectedItem is not null)
             {
                 var index = ListAvailableEncodings.SelectedIndex;
                 ListIncludedEncodings.Items.Add(ListAvailableEncodings.SelectedItem);
@@ -82,7 +83,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private void ToRight_Click(object sender, EventArgs e)
         {
-            if (ListIncludedEncodings.SelectedItem != null)
+            if (ListIncludedEncodings.SelectedItem is not null)
             {
                 var index = ListIncludedEncodings.SelectedIndex;
                 ListAvailableEncodings.Items.Add(ListIncludedEncodings.SelectedItem);
@@ -97,13 +98,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             Type encodingType = null;
 
             // Get type if exists
-            if (encoding != null)
+            if (encoding is not null)
             {
                 encodingType = encoding.GetType();
             }
 
             // If selected encoding and encoding not default list
-            ToRight.Enabled = encoding != null &&
+            ToRight.Enabled = encoding is not null &&
                 !(
                     encodingType == typeof(ASCIIEncoding) ||
                     encodingType == typeof(UnicodeEncoding) ||
@@ -114,7 +115,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private void ListAvailableEncodings_SelectedValueChanged(object sender, EventArgs e)
         {
-            ToLeft.Enabled = ListAvailableEncodings.SelectedItem != null;
+            ToLeft.Enabled = ListAvailableEncodings.SelectedItem is not null;
         }
     }
 }

@@ -35,7 +35,7 @@ namespace GitHub3
 
                 if (!_repo.Detailed)
                 {
-                    if (_repo.Organization != null)
+                    if (_repo.Organization is not null)
                     {
                         return null;
                     }
@@ -58,7 +58,7 @@ namespace GitHub3
 
                 if (!_repo.Detailed)
                 {
-                    if (_repo.Organization != null)
+                    if (_repo.Organization is not null)
                     {
                         return null;
                     }
@@ -96,7 +96,7 @@ namespace GitHub3
         {
             var pullRequests = _repo?.GetPullRequests();
 
-            if (pullRequests != null)
+            if (pullRequests is not null)
             {
                 return pullRequests
                     .Select(pr => new GitHubPullRequest(pr))
@@ -110,7 +110,7 @@ namespace GitHub3
         {
             var pullRequest = _repo.CreatePullRequest(GitHubLoginInfo.Username + ":" + myBranch, remoteBranch, title, body);
 
-            if (pullRequest == null || pullRequest.Number == 0)
+            if (pullRequest is null || pullRequest.Number == 0)
             {
                 throw new Exception("Failed to create pull request.");
             }

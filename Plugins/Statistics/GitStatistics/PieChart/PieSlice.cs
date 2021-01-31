@@ -358,7 +358,7 @@ namespace GitStatistics.PieChart
         /// </summary>
         public virtual void Dispose()
         {
-            if (Pen != null)
+            if (Pen is not null)
             {
                 Pen.Dispose();
                 Pen = null;
@@ -712,25 +712,25 @@ namespace GitStatistics.PieChart
         /// </summary>
         protected void DisposeBrushes()
         {
-            if (BrushSurface != null)
+            if (BrushSurface is not null)
             {
                 BrushSurface.Dispose();
                 BrushSurface = null;
             }
 
-            if (BrushStartSide != null)
+            if (BrushStartSide is not null)
             {
                 BrushStartSide.Dispose();
                 BrushStartSide = null;
             }
 
-            if (BrushEndSide != null)
+            if (BrushEndSide is not null)
             {
                 BrushEndSide.Dispose();
                 BrushEndSide = null;
             }
 
-            if (BrushPeripherySurface != null)
+            if (BrushPeripherySurface is not null)
             {
                 BrushPeripherySurface.Dispose();
                 BrushPeripherySurface = null;
@@ -953,28 +953,17 @@ namespace GitStatistics.PieChart
         /// </summary>
         private void InitializeSides()
         {
-            if (StartAngle > 90 && StartAngle < 270)
-            {
-                StartSide =
-                    new Quadrilateral(
+            StartSide = StartAngle is (> 90 and < 270)
+                ? new Quadrilateral(
                         Center, PointStart, PointStartBelow, CenterBelow,
-                        SweepAngle != 180);
-            }
-            else
-            {
-                StartSide = Quadrilateral.Empty;
-            }
+                        SweepAngle != 180)
+                : Quadrilateral.Empty;
 
-            if (EndAngle > 270 || EndAngle < 90)
-            {
-                EndSide = new Quadrilateral(
+            EndSide = EndAngle is (> 270 or < 90)
+                ? new Quadrilateral(
                     Center, PointEnd, PointEndBelow, CenterBelow,
-                    SweepAngle != 180);
-            }
-            else
-            {
-                EndSide = Quadrilateral.Empty;
-            }
+                    SweepAngle != 180)
+                : Quadrilateral.Empty;
         }
 
         /// <summary>

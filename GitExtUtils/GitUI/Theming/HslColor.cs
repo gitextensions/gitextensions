@@ -31,8 +31,8 @@ namespace GitExtUtils.GitUI.Theming
         /// <summary>
         /// Creates an <see cref="HslColor"/> from an RGB <see cref="Color"/> object.
         /// </summary>
-        /// <param name="c">A Color to convert</param>
-        /// <returns>An HSL value</returns>
+        /// <param name="c">A Color to convert.</param>
+        /// <returns>An HSL value.</returns>
         public HslColor(in Color c)
         {
             double r = c.R / 255d;

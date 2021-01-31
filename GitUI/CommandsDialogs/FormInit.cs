@@ -4,12 +4,11 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
-using GitExtUtils;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class FormInit : GitExtensionsForm
+    public partial class FormInit : GitExtensionsDialog
     {
         private readonly TranslationString _chooseDirectory =
             new TranslationString("Please choose a directory.");
@@ -26,9 +25,15 @@ namespace GitUI.CommandsDialogs
         private readonly EventHandler<GitModuleEventArgs> _gitModuleChanged;
 
         public FormInit(string dir, EventHandler<GitModuleEventArgs> gitModuleChanged)
+            : base(commands: null, enablePositionRestore: true)
         {
             _gitModuleChanged = gitModuleChanged;
             InitializeComponent();
+
+            // work-around the designer bug that can't add controls to FlowLayoutPanel
+            ControlsPanel.Controls.Add(Init);
+            AcceptButton = Init;
+
             InitializeComplete();
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
@@ -103,7 +108,7 @@ namespace GitUI.CommandsDialogs
         {
             var userSelectedPath = OsShellUtil.PickFolder(this);
 
-            if (userSelectedPath != null)
+            if (userSelectedPath is not null)
             {
                 _NO_TRANSLATE_Directory.Text = userSelectedPath;
             }

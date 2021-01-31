@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Permissions;
 using System.Text;
@@ -8,7 +7,6 @@ using System.Threading.Tasks;
 using GitCommands.Logging;
 using GitUI;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -18,12 +16,12 @@ namespace GitCommands
         private readonly string _workingDir;
         private readonly Func<string> _fileNameProvider;
 
-        public Executable([NotNull] string fileName, [NotNull] string workingDir = "")
+        public Executable(string fileName, string workingDir = "")
             : this(() => fileName, workingDir)
         {
         }
 
-        public Executable([NotNull] Func<string> fileNameProvider, [NotNull] string workingDir = "")
+        public Executable(Func<string> fileNameProvider, string workingDir = "")
         {
             _workingDir = workingDir;
             _fileNameProvider = fileNameProvider;
@@ -31,7 +29,12 @@ namespace GitCommands
 
         /// <inheritdoc />
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        public IProcess Start(ArgumentString arguments = default, bool createWindow = false, bool redirectInput = false, bool redirectOutput = false, Encoding outputEncoding = null)
+        public IProcess Start(ArgumentString arguments = default,
+                              bool createWindow = false,
+                              bool redirectInput = false,
+                              bool redirectOutput = false,
+                              Encoding? outputEncoding = null,
+                              bool useShellExecute = false)
         {
             // TODO should we set these on the child process only?
             EnvironmentConfiguration.SetEnvironmentVariables();
@@ -40,7 +43,7 @@ namespace GitCommands
 
             var fileName = _fileNameProvider();
 
-            return new ProcessWrapper(fileName, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding);
+            return new ProcessWrapper(fileName, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute);
         }
 
         public string GetOutput(ArgumentString arguments)
@@ -60,7 +63,7 @@ namespace GitCommands
             // TODO should this use TaskCreationOptions.RunContinuationsAsynchronously
             private readonly TaskCompletionSource<int> _exitTaskCompletionSource = new TaskCompletionSource<int>();
 
-            private readonly object _syncRoot = new object();
+            private readonly object _syncRoot = new();
             private readonly Process _process;
             private readonly ProcessOperation _logOperation;
             private readonly bool _redirectInput;
@@ -68,10 +71,16 @@ namespace GitCommands
 
             private bool _disposed;
 
-            [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-            public ProcessWrapper(string fileName, string arguments, string workDir, bool createWindow, bool redirectInput, bool redirectOutput, [CanBeNull] Encoding outputEncoding)
+            public ProcessWrapper(string fileName,
+                                  string arguments,
+                                  string workDir,
+                                  bool createWindow,
+                                  bool redirectInput,
+                                  bool redirectOutput,
+                                  Encoding? outputEncoding,
+                                  bool useShellExecute)
             {
-                Debug.Assert(redirectOutput == (outputEncoding != null), "redirectOutput == (outputEncoding != null)");
+                Debug.Assert(redirectOutput == (outputEncoding is not null), "redirectOutput == (outputEncoding is not null)");
                 _redirectInput = redirectInput;
                 _redirectOutput = redirectOutput;
 
@@ -80,7 +89,8 @@ namespace GitCommands
                     EnableRaisingEvents = true,
                     StartInfo =
                     {
-                        UseShellExecute = false,
+                        UseShellExecute = useShellExecute,
+                        Verb = useShellExecute ? "open" : string.Empty,
                         ErrorDialog = false,
                         CreateNoWindow = !createWindow,
                         RedirectStandardInput = redirectInput,
@@ -98,9 +108,18 @@ namespace GitCommands
 
                 _process.Exited += OnProcessExit;
 
-                _process.Start();
+                try
+                {
+                    _process.Start();
+                    _logOperation.SetProcessId(_process.Id);
+                }
+                catch (Exception ex)
+                {
+                    Dispose();
 
-                _logOperation.SetProcessId(_process.Id);
+                    _logOperation.LogProcessEnd(ex);
+                    throw new ExternalOperationException(fileName, arguments, workDir, ex);
+                }
             }
 
             private void OnProcessExit(object sender, EventArgs eventArgs)
@@ -111,9 +130,17 @@ namespace GitCommands
                     // if the Process is disposed then reading ExitCode will throw.
                     if (!_disposed)
                     {
-                        var exitCode = _process.ExitCode;
-                        _logOperation.LogProcessEnd(exitCode);
-                        _exitTaskCompletionSource.TrySetResult(exitCode);
+                        try
+                        {
+                            var exitCode = _process.ExitCode;
+                            _logOperation.LogProcessEnd(exitCode);
+                            _exitTaskCompletionSource.TrySetResult(exitCode);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logOperation.LogProcessEnd(ex);
+                            _exitTaskCompletionSource.TrySetException(ex);
+                        }
                     }
                 }
             }

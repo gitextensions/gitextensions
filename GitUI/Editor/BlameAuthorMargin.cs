@@ -71,14 +71,14 @@ namespace GitUI.Editor
 
         public override void Paint(Graphics g, Rectangle rect)
         {
-            if (rect.Width <= 0 || rect.Height <= 0 || _blameLines == null || _blameLines.Count == 0)
+            if (rect.Width <= 0 || rect.Height <= 0 || _blameLines is null || _blameLines.Count == 0)
             {
                 return;
             }
 
             g.Clear(_backgroundColor);
 
-            if (_avatars == null || _avatars.Count == 0)
+            if (_avatars is null || _avatars.Count == 0)
             {
                 return;
             }
@@ -98,7 +98,7 @@ namespace GitUI.Editor
                 int y = negativeOffset + (i * _lineHeight);
                 g.FillRectangle(_brushs[_blameLines[lineStart + i].AgeBucketIndex], 0, y, AgeBucketMarkerWidth, _lineHeight);
 
-                if (_avatars[lineStart + i] != null)
+                if (_avatars[lineStart + i] is not null)
                 {
                     g.DrawImage(_avatars[lineStart + i], new Point(AgeBucketMarkerWidth, y));
                 }

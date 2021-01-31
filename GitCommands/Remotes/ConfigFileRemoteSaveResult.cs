@@ -5,7 +5,7 @@ namespace GitCommands.Remotes
     /// </summary>
     public class ConfigFileRemoteSaveResult
     {
-        public ConfigFileRemoteSaveResult(string message, bool shouldUpdateRemote)
+        public ConfigFileRemoteSaveResult(string? message, bool shouldUpdateRemote)
         {
             UserMessage = message;
             ShouldUpdateRemote = shouldUpdateRemote;
@@ -19,6 +19,6 @@ namespace GitCommands.Remotes
         /// <summary>
         /// Gets the output of the save operation (if any).
         /// </summary>
-        public string UserMessage { get; }
+        public string? UserMessage { get; }
     }
 }

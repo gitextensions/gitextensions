@@ -14,10 +14,12 @@ using GitCommands.UserRepositoryHistory;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
+using GitUI.HelperDialogs;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -64,43 +66,39 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _questionInitSubmodulesCaption =
             new TranslationString("Submodules");
 
-        private readonly TranslationString _notOnBranchMainInstruction = new TranslationString("You are not working on a branch");
-        private readonly TranslationString _notOnBranch = new TranslationString("You cannot \"pull\" when git head detached." +
+        private readonly TranslationString _notOnBranch = new("You cannot \"pull\" when git head detached." +
                                   Environment.NewLine + Environment.NewLine + "Do you want to continue?");
-        private readonly TranslationString _notOnBranchButtons = new TranslationString("Checkout branch|Continue");
-        private readonly TranslationString _notOnBranchCaption = new TranslationString("Not on a branch");
 
-        private readonly TranslationString _noRemoteBranch = new TranslationString("You didn't specify a remote branch");
-        private readonly TranslationString _noRemoteBranchMainInstruction = new TranslationString(
+        private readonly TranslationString _noRemoteBranch = new("You didn't specify a remote branch");
+        private readonly TranslationString _noRemoteBranchMainInstruction = new(
             "You asked to pull from the remote '{0}'," + Environment.NewLine +
             "but did not specify a remote branch." + Environment.NewLine +
             "Because this is not the default configured remote for your local branch," + Environment.NewLine +
             "you must specify a remote branch.");
-        private readonly TranslationString _noRemoteBranchForFetchMainInstruction = new TranslationString(
+        private readonly TranslationString _noRemoteBranchForFetchMainInstruction = new(
             "You asked to fetch from the remote '{0}'," + Environment.NewLine +
             "but did not specify a remote branch." + Environment.NewLine +
             "Because this is not the current branch, you must specify a remote branch.");
-        private readonly TranslationString _noRemoteBranchButtons = new TranslationString("Pull from {0}|Cancel");
-        private readonly TranslationString _noRemoteBranchForFetchButtons = new TranslationString("Fetch from {0}|Cancel");
-        private readonly TranslationString _noRemoteBranchCaption = new TranslationString("Remote branch not specified");
+        private readonly TranslationString _noRemoteBranchButton = new("Pull from {0}");
+        private readonly TranslationString _noRemoteBranchForFetchButton = new("Fetch from {0}");
+        private readonly TranslationString _noRemoteBranchCaption = new("Remote branch not specified");
 
-        private readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
+        private readonly TranslationString _dontShowAgain = new("Don't show me this message again.");
 
-        private readonly TranslationString _pruneBranchesCaption = new TranslationString("Pull was rejected");
-        private readonly TranslationString _pruneBranchesMainInstruction = new TranslationString("Remote branch no longer exist");
+        private readonly TranslationString _pruneBranchesCaption = new("Pull was rejected");
+        private readonly TranslationString _pruneBranchesMainInstruction = new("Remote branch no longer exist");
         private readonly TranslationString _pruneBranchesBranch =
             new TranslationString("Do you want to delete all stale remote-tracking branches?");
-        private readonly TranslationString _pruneBranchesButtons = new TranslationString("Deletes stale branches|Cancel");
 
-        private readonly TranslationString _pruneFromCaption = new TranslationString("Prune remote branches from {0}");
+        private readonly TranslationString _pruneFromCaption = new("Prune remote branches from {0}");
 
-        private readonly TranslationString _hoverShowImageLabelText = new TranslationString("Hover to see scenario when fast forward is possible.");
-        private readonly TranslationString _formTitlePull = new TranslationString("Pull ({0})");
-        private readonly TranslationString _formTitleFetch = new TranslationString("Fetch ({0})");
-        private readonly TranslationString _buttonPull = new TranslationString("&Pull");
-        private readonly TranslationString _buttonFetch = new TranslationString("&Fetch");
+        private readonly TranslationString _hoverShowImageLabelText = new("Hover to see scenario when fast forward is possible.");
+        private readonly TranslationString _formTitlePull = new("Pull ({0})");
+        private readonly TranslationString _formTitleFetch = new("Fetch ({0})");
+        private readonly TranslationString _buttonPull = new("&Pull");
+        private readonly TranslationString _buttonFetch = new("&Fetch");
 
-        private readonly TranslationString _pullFetchPruneAllConfirmation = new TranslationString("Warning! The fetch with prune will remove all the remote-tracking references which no longer exist on remotes. Do you want to proceed?");
+        private readonly TranslationString _pullFetchPruneAllConfirmation = new("Warning! The fetch with prune will remove all the remote-tracking references which no longer exist on remotes. Do you want to proceed?");
         #endregion
 
         private const string AllRemotes = "[ All ]";
@@ -141,16 +139,22 @@ namespace GitUI.CommandsDialogs
             switch (pullAction)
             {
                 case AppSettings.PullAction.None:
+                    Merge.Checked = true;
+                    break;
                 case AppSettings.PullAction.Merge:
                     Merge.Checked = true;
-                    Prune.Enabled = true;
+                    Prune.Enabled = false;
+                    PruneTags.Enabled = false;
                     break;
                 case AppSettings.PullAction.Rebase:
                     Rebase.Checked = true;
+                    Prune.Enabled = false;
+                    PruneTags.Enabled = false;
                     break;
                 case AppSettings.PullAction.Fetch:
                     Fetch.Checked = true;
                     Prune.Enabled = true;
+                    PruneTags.Enabled = true;
                     break;
                 case AppSettings.PullAction.FetchAll:
                     Fetch.Checked = true;
@@ -159,6 +163,8 @@ namespace GitUI.CommandsDialogs
                 case AppSettings.PullAction.FetchPruneAll:
                     Fetch.Checked = true;
                     Prune.Checked = true;
+                    PruneTags.Checked = false;
+
                     if (string.IsNullOrEmpty(defaultRemote))
                     {
                         _NO_TRANSLATE_Remotes.Text = AllRemotes;
@@ -212,7 +218,7 @@ namespace GitUI.CommandsDialogs
             }
 
             var currentBranchRemote = remotes.FirstOrDefault(x => x.Name.Equals(selectedRemoteName, StringComparison.OrdinalIgnoreCase));
-            if (currentBranchRemote != null)
+            if (currentBranchRemote is not null)
             {
                 _NO_TRANSLATE_Remotes.SelectedItem = currentBranchRemote;
             }
@@ -297,7 +303,7 @@ namespace GitUI.CommandsDialogs
             {
                 LoadPuttyKey();
 
-                if (_heads == null)
+                if (_heads is null)
                 {
                     if (PullFromUrl.Checked)
                     {
@@ -365,15 +371,36 @@ namespace GitUI.CommandsDialogs
 
             if (!Fetch.Checked && string.IsNullOrWhiteSpace(Branches.Text) && Module.IsDetachedHead())
             {
-                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(
-                    owner,
-                    _notOnBranchCaption.Text,
-                    _notOnBranchMainInstruction.Text,
-                    _notOnBranch.Text,
-                    _notOnBranchButtons.Text,
-                    ShowCancelButton: true);
+                int dialogResult = -1;
 
-                switch (idx)
+                using var dialog = new TaskDialog
+                {
+                    OwnerWindowHandle = owner.Handle,
+                    Text = _notOnBranch.Text,
+                    InstructionText = Strings.ErrorInstructionNotOnBranch,
+                    Caption = Strings.ErrorCaptionNotOnBranch,
+                    StandardButtons = TaskDialogStandardButtons.Cancel,
+                    Icon = TaskDialogStandardIcon.Error,
+                    Cancelable = true,
+                };
+                var btnCheckout = new TaskDialogCommandLink("Checkout", null, Strings.ButtonCheckoutBranch);
+                btnCheckout.Click += (s, e) =>
+                {
+                    dialogResult = 0;
+                    dialog.Close();
+                };
+                var btnContinue = new TaskDialogCommandLink("Continue", null, Strings.ButtonContinue);
+                btnContinue.Click += (s, e) =>
+                {
+                    dialogResult = 1;
+                    dialog.Close();
+                };
+                dialog.Controls.Add(btnCheckout);
+                dialog.Controls.Add(btnContinue);
+
+                dialog.Show();
+
+                switch (dialogResult)
                 {
                     case 0:
                         if (!UICommands.StartCheckoutBranch(owner))
@@ -542,21 +569,23 @@ namespace GitUI.CommandsDialogs
                 }
 
                 bool? messageBoxResult = AppSettings.AutoPopStashAfterPull;
-                if (messageBoxResult == null)
+                if (messageBoxResult is null)
                 {
-                    DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
-                        owner,
-                        _applyStashedItemsAgainCaption.Text,
-                        "",
-                        _applyStashedItemsAgain.Text,
-                        "",
-                        "",
-                        _dontShowAgain.Text,
-                        PSTaskDialog.eTaskDialogButtons.YesNo,
-                        PSTaskDialog.eSysIcons.Question,
-                        PSTaskDialog.eSysIcons.Question);
-                    messageBoxResult = res == DialogResult.Yes;
-                    if (PSTaskDialog.cTaskDialog.VerificationChecked)
+                    using var dialog = new TaskDialog
+                    {
+                        OwnerWindowHandle = owner.Handle,
+                        Text = _applyStashedItemsAgain.Text,
+                        Caption = _applyStashedItemsAgainCaption.Text,
+                        StandardButtons = TaskDialogStandardButtons.Yes | TaskDialogStandardButtons.No,
+                        Icon = TaskDialogStandardIcon.Information,
+                        FooterCheckBoxText = _dontShowAgain.Text,
+                        FooterIcon = TaskDialogStandardIcon.Information,
+                        StartupLocation = TaskDialogStartupLocation.CenterOwner,
+                    };
+
+                    messageBoxResult = dialog.Show() == TaskDialogResult.Yes;
+
+                    if (dialog.FooterCheckBoxChecked == true)
                     {
                         AppSettings.AutoPopStashAfterPull = messageBoxResult;
                     }
@@ -639,12 +668,12 @@ namespace GitUI.CommandsDialogs
         {
             if (Fetch.Checked)
             {
-                return new FormRemoteProcess(Module, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg(), Unshallow.Checked, Prune.Checked));
+                return new FormRemoteProcess(UICommands, process: null, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg(), Unshallow.Checked, Prune.Checked, PruneTags.Checked));
             }
 
             Debug.Assert(Merge.Checked || Rebase.Checked, "Merge.Checked || Rebase.Checked");
 
-            return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked, Prune.Checked))
+            return new FormRemoteProcess(UICommands, process: null, Module.PullCmd(source, curRemoteBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked))
             {
                 HandleOnExitCallback = HandlePullOnExit
             };
@@ -671,17 +700,24 @@ namespace GitUI.CommandsDialogs
 
                 if (isRefRemoved.IsMatch(form.GetOutputString()))
                 {
-                    int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(form,
-                        _pruneBranchesCaption.Text,
-                        _pruneBranchesMainInstruction.Text,
-                        _pruneBranchesBranch.Text,
-                        _pruneBranchesButtons.Text,
-                        true);
-                    if (idx == 0)
+                    using var dialog = new TaskDialog
+                    {
+                        OwnerWindowHandle = form.Handle,
+                        Text = _pruneBranchesBranch.Text,
+                        Caption = _pruneBranchesCaption.Text,
+                        InstructionText = _pruneBranchesMainInstruction.Text,
+                        StandardButtons = TaskDialogStandardButtons.Yes | TaskDialogStandardButtons.No | TaskDialogStandardButtons.Cancel,
+                        Icon = TaskDialogStandardIcon.Information,
+                        DefaultButton = TaskDialogDefaultButton.No,
+                        StartupLocation = TaskDialogStartupLocation.CenterOwner,
+                    };
+                    TaskDialogResult result = dialog.Show();
+
+                    if (result == TaskDialogResult.Yes)
                     {
                         string remote = _NO_TRANSLATE_Remotes.Text;
                         string pruneCmd = "remote prune " + remote;
-                        using (var formPrune = new FormRemoteProcess(Module, pruneCmd)
+                        using (var formPrune = new FormRemoteProcess(UICommands, process: null, pruneCmd)
                         {
                             Remote = remote,
                             Text = string.Format(_pruneFromCaption.Text, remote)
@@ -734,24 +770,44 @@ namespace GitUI.CommandsDialogs
             if (string.IsNullOrEmpty(Branches.Text) && !string.IsNullOrEmpty(curLocalBranch)
                 && remote != currentBranchRemote.Value && !Fetch.Checked)
             {
-                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
-                                                        _noRemoteBranchCaption.Text,
-                                                        _noRemoteBranch.Text,
-                                                        string.Format(_noRemoteBranchMainInstruction.Text, remote),
-                                                        string.Format(_noRemoteBranchButtons.Text, remote + "/" + curLocalBranch),
-                                                        false);
-                switch (idx)
+                int dialogResult = -1;
+
+                using var dialog = new TaskDialog
+                {
+                    OwnerWindowHandle = Handle,
+                    Text = string.Format(_noRemoteBranchMainInstruction.Text, remote),
+                    Caption = _noRemoteBranchCaption.Text,
+                    InstructionText = _noRemoteBranch.Text,
+                    StandardButtons = TaskDialogStandardButtons.Cancel,
+                    Icon = TaskDialogStandardIcon.Information,
+                    FooterCheckBoxText = _dontShowAgain.Text,
+                    FooterIcon = TaskDialogStandardIcon.Information,
+                    StartupLocation = TaskDialogStartupLocation.CenterOwner,
+                    Cancelable = false
+                };
+
+                var btnPullFrom = new TaskDialogCommandLink("PullFrom", null, string.Format(_noRemoteBranchButton.Text, remote + "/" + curLocalBranch));
+                btnPullFrom.Click += (s, e) =>
+                {
+                    dialogResult = 0;
+                    dialog.Close();
+                };
+                dialog.Controls.Add(btnPullFrom);
+
+                dialog.Show();
+
+                switch (dialogResult)
                 {
                     case 0:
                         curRemoteBranch = curLocalBranch;
                         return true;
+
                     default:
                         return false;
                 }
             }
 
-            if (string.IsNullOrEmpty(Branches.Text) && !string.IsNullOrEmpty(curLocalBranch)
-                && Fetch.Checked)
+            if (string.IsNullOrEmpty(Branches.Text) && !string.IsNullOrEmpty(curLocalBranch) && Fetch.Checked)
             {
                 // if local branch eq to current branch and remote branch is not specified
                 // then run fetch with no refspec
@@ -761,13 +817,31 @@ namespace GitUI.CommandsDialogs
                     return true;
                 }
 
-                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
-                                                        _noRemoteBranchCaption.Text,
-                                                        _noRemoteBranch.Text,
-                                                        string.Format(_noRemoteBranchForFetchMainInstruction.Text, remote),
-                                                        string.Format(_noRemoteBranchForFetchButtons.Text, remote + "/" + curLocalBranch),
-                                                        false);
-                switch (idx)
+                int dialogResult = -1;
+
+                using var dialog = new TaskDialog
+                {
+                    OwnerWindowHandle = Handle,
+                    Text = string.Format(_noRemoteBranchForFetchMainInstruction.Text, remote),
+                    Caption = _noRemoteBranchCaption.Text,
+                    InstructionText = _noRemoteBranch.Text,
+                    StandardButtons = TaskDialogStandardButtons.Cancel,
+                    Icon = TaskDialogStandardIcon.Information,
+                    StartupLocation = TaskDialogStartupLocation.CenterOwner,
+                    Cancelable = false
+                };
+
+                var btnPullFrom = new TaskDialogCommandLink("PullFrom", null, string.Format(_noRemoteBranchForFetchButton.Text, remote + "/" + curLocalBranch));
+                btnPullFrom.Click += (s, e) =>
+                {
+                    dialogResult = 0;
+                    dialog.Close();
+                };
+                dialog.Controls.Add(btnPullFrom);
+
+                dialog.Show();
+
+                switch (dialogResult)
                 {
                     case 0:
                         curRemoteBranch = curLocalBranch;
@@ -821,7 +895,7 @@ namespace GitUI.CommandsDialogs
 
         private void LoadPuttyKey()
         {
-            if (!GitCommandHelpers.Plink())
+            if (!GitSshHelpers.Plink())
             {
                 return;
             }
@@ -983,7 +1057,9 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image2 = DpiUtil.Scale(Images.HelpPullMergeFastForward.AdaptLightness());
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
             AllTags.Enabled = false;
-            Prune.Enabled = true;
+            Prune.Enabled = false;
+            PruneTags.Enabled = false;
+
             UpdateFormTitleAndButton();
             if (AllTags.Checked)
             {
@@ -1004,6 +1080,8 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = false;
             Prune.Enabled = false;
+            PruneTags.Enabled = false;
+
             UpdateFormTitleAndButton();
             if (AllTags.Checked)
             {
@@ -1025,6 +1103,8 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = true;
             Prune.Enabled = true;
+            PruneTags.Enabled = true;
+
             UpdateFormTitleAndButton();
         }
 
@@ -1072,6 +1152,17 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void Prune_CheckedChanged(object sender, EventArgs e)
+        {
+            PruneTags.Checked = Prune.Checked && PruneTags.Checked;
+        }
+
+        private void PruneTags_CheckedChanged(object sender, EventArgs e)
+        {
+            Prune.Checked = Prune.Checked || PruneTags.Checked;
+            AllTags.Checked = AllTags.Checked || PruneTags.Checked;
+        }
+
         internal TestAccessor GetTestAccessor() => new TestAccessor(this);
 
         internal readonly struct TestAccessor
@@ -1091,6 +1182,7 @@ namespace GitUI.CommandsDialogs
             public RadioButton Fetch => _form.Fetch;
             public CheckBox AutoStash => _form.AutoStash;
             public CheckBox Prune => _form.Prune;
+            public CheckBox PruneTags => _form.PruneTags;
             public ComboBox Remotes => _form._NO_TRANSLATE_Remotes;
             public TextBox LocalBranch => _form.localBranch;
 

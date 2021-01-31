@@ -33,7 +33,7 @@ namespace GitUI.UserControls.RevisionGrid
     {
         private readonly SolidBrush _alternatingRowBackgroundBrush;
 
-        internal RevisionGraph _revisionGraph = new RevisionGraph();
+        internal RevisionGraph _revisionGraph = new();
 
         private readonly List<ColumnProvider> _columnProviders = new List<ColumnProvider>();
         private readonly CancellationTokenSequence _backgroundCancellationSequence;
@@ -85,7 +85,7 @@ namespace GitUI.UserControls.RevisionGrid
                 if (Columns[e.ColumnIndex].Tag is ColumnProvider provider)
                 {
                     var revision = GetRevision(e.RowIndex);
-                    if (revision != null)
+                    if (revision is not null)
                     {
                         provider.OnCellFormatting(e, revision);
                     }
@@ -214,7 +214,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     var row = _revisionGraph.GetNodeForRow(SelectedRows[i].Index);
 
-                    if (row != null && row.GitRevision != null)
+                    if (row is not null && row.GitRevision is not null)
                     {
                         // NOTE returned collection has reverse order of SelectedRows
                         data[SelectedRows.Count - 1 - i] = row.GitRevision.ObjectId;
@@ -236,14 +236,33 @@ namespace GitUI.UserControls.RevisionGrid
 
         private Color GetForeground(DataGridViewElementStates state, int rowIndex)
         {
-            if (state.HasFlag(DataGridViewElementStates.Selected))
+            bool isNonRelativeGray = AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(rowIndex);
+            bool isSelected = state.HasFlag(DataGridViewElementStates.Selected);
+            return (isNonRelativeGray, isSelected) switch
             {
-                return SystemColors.HighlightText;
-            }
+                (isNonRelativeGray: false, isSelected: false) => SystemColors.ControlText,
+                (isNonRelativeGray: false, isSelected: true) => SystemColors.HighlightText,
+                (isNonRelativeGray: true, isSelected: false) => SystemColors.GrayText,
 
-            return AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(rowIndex)
-                ? SystemColors.GrayText
-                : SystemColors.ControlText;
+                // (isGray: true, isSelected: true)
+                _ => getHighlightedGrayTextColor()
+            };
+        }
+
+        private Color GetCommitBodyForeground(DataGridViewElementStates state, int rowIndex)
+        {
+            bool isNonRelativeGray = AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(rowIndex);
+            bool isSelected = state.HasFlag(DataGridViewElementStates.Selected);
+
+            return (isNonRelativeGray, isSelected) switch
+            {
+                (isNonRelativeGray: false, isSelected: false) => SystemColors.GrayText,
+                (isNonRelativeGray: false, isSelected: true) => getHighlightedGrayTextColor(),
+                (isNonRelativeGray: true, isSelected: false) => getGrayTextColor(degreeOfGrayness: 1.4f),
+
+                // (isGray: true, isSelected: true)
+                _ => getHighlightedGrayTextColor(degreeOfGrayness: 1.4f)
+            };
         }
 
         private Brush GetBackground(DataGridViewElementStates state, int rowIndex, GitRevision revision)
@@ -253,7 +272,7 @@ namespace GitUI.UserControls.RevisionGrid
                 return SystemBrushes.Highlight;
             }
 
-            if (AppSettings.HighlightAuthoredRevisions && revision != null && !revision.IsArtificial && AuthorHighlighting.IsHighlighted(revision))
+            if (AppSettings.HighlightAuthoredRevisions && revision is not null && !revision.IsArtificial && AuthorHighlighting.IsHighlighted(revision))
             {
                 return new SolidBrush(AppColor.AuthoredHighlight.GetThemeColor());
             }
@@ -275,7 +294,7 @@ namespace GitUI.UserControls.RevisionGrid
             if (e.RowIndex < 0 ||
                 e.RowIndex >= RowCount ||
                 !e.State.HasFlag(DataGridViewElementStates.Visible) ||
-                revision == null)
+                revision is null)
             {
                 return;
             }
@@ -284,9 +303,11 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 var backBrush = GetBackground(e.State, e.RowIndex, revision);
                 var foreColor = GetForeground(e.State, e.RowIndex);
+                var commitBodyForeColor = GetCommitBodyForeground(e.State, e.RowIndex);
 
                 e.Graphics.FillRectangle(backBrush, e.CellBounds);
-                provider.OnCellPainting(e, revision, _rowHeight, new CellStyle(backBrush, foreColor, _normalFont, _boldFont, _monospaceFont));
+                var cellStyle = new CellStyle(backBrush, foreColor, commitBodyForeColor, _normalFont, _boldFont, _monospaceFont);
+                provider.OnCellPainting(e, revision, _rowHeight, cellStyle);
 
                 e.Handled = true;
             }
@@ -331,6 +352,13 @@ namespace GitUI.UserControls.RevisionGrid
             StartBackgroundProcessingTask(cancellationToken);
         }
 
+        /// <summary>
+        /// Checks whether the given hash is present in the graph.
+        /// </summary>
+        /// <param name="objectId">The hash to find.</param>
+        /// <returns><see langword="true"/>, if the given hash if found; otherwise <see langword="false"/>.</returns>
+        public bool Contains(ObjectId objectId) => _revisionGraph.Contains(objectId);
+
         private void StartBackgroundProcessingTask(CancellationToken cancellationToken)
         {
             // Start the background processing via JoinableTaskContext.Factory to avoid tracking the long-running
@@ -370,7 +398,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             try
             {
-                if (CurrentCell == null)
+                if (CurrentCell is null)
                 {
                     RowCount = count;
                     CurrentCell = null;
@@ -405,7 +433,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                     Rows[rowIndexToBeSelected].Selected = true;
 
-                    if (CurrentCell == null)
+                    if (CurrentCell is null)
                     {
                         CurrentCell = Rows[rowIndexToBeSelected].Cells[1];
                     }
@@ -621,7 +649,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public int? TryGetRevisionIndex([CanBeNull] ObjectId objectId)
         {
-            return objectId != null && _revisionGraph.TryGetRowIndex(objectId, out var index) ? (int?)index : null;
+            return objectId is not null && _revisionGraph.TryGetRowIndex(objectId, out var index) ? (int?)index : null;
         }
 
         public IReadOnlyList<ObjectId> GetRevisionChildren(ObjectId objectId)
@@ -663,7 +691,7 @@ namespace GitUI.UserControls.RevisionGrid
                     break;
                 case Keys.Control | Keys.C:
                     var selectedRevisions = SelectedObjectIds;
-                    if (selectedRevisions != null && selectedRevisions.Count != 0)
+                    if (selectedRevisions is not null && selectedRevisions.Count != 0)
                     {
                         ClipboardUtil.TrySetText(string.Join(Environment.NewLine, selectedRevisions));
                     }
@@ -719,5 +747,15 @@ namespace GitUI.UserControls.RevisionGrid
                 base.OnMouseWheel(e);
             }
         }
+
+        private static Color getHighlightedGrayTextColor(float degreeOfGrayness = 1f) =>
+            ColorHelper.GetHighlightGrayTextColor(
+                backgroundColorName: KnownColor.Control,
+                textColorName: KnownColor.ControlText,
+                highlightColorName: KnownColor.Highlight,
+                degreeOfGrayness);
+
+        private static Color getGrayTextColor(float degreeOfGrayness = 1f) =>
+            ColorHelper.GetGrayTextColor(textColorName: KnownColor.ControlText, degreeOfGrayness);
     }
 }

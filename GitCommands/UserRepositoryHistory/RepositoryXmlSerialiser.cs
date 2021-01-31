@@ -19,8 +19,7 @@ namespace GitCommands.UserRepositoryHistory
         /// <param name="serialised">A serialised list of user's git repositories.</param>
         /// <returns>A list of user's git repositories, if successfully deserialised; otherwise <see langword="null"/>.</returns>
         /// <exception cref="ArgumentException"><paramref name="serialised"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
-        [ContractAnnotation("serialised:null=>halt")]
-        public IReadOnlyList<Repository> Deserialize([NotNull]string serialised)
+        public IReadOnlyList<Repository>? Deserialize(string serialised)
         {
             if (string.IsNullOrEmpty(serialised))
             {
@@ -30,12 +29,10 @@ namespace GitCommands.UserRepositoryHistory
             try
             {
                 var serializer = new XmlSerializer(typeof(RepositoryHistorySurrogate));
-                using (TextReader reader = new StringReader(serialised))
+                using TextReader reader = new StringReader(serialised);
+                if (serializer.Deserialize(reader) is RepositoryHistorySurrogate obj)
                 {
-                    if (serializer.Deserialize(reader) is RepositoryHistorySurrogate obj)
-                    {
-                        return obj.Repositories;
-                    }
+                    return obj.Repositories;
                 }
             }
             catch (Exception ex)
@@ -52,11 +49,9 @@ namespace GitCommands.UserRepositoryHistory
         /// <param name="repositories">A list of user's git repositories.</param>
         /// <returns>A serialised list of user's git repositories, if successful; otherwise <see langword="null"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="repositories"/> is <see langword="null"/>.</exception>
-        [CanBeNull]
-        [ContractAnnotation("repositories:null=>halt")]
-        public string Serialize([NotNull]IEnumerable<Repository> repositories)
+        public string? Serialize(IEnumerable<Repository> repositories)
         {
-            if (repositories == null)
+            if (repositories is null)
             {
                 throw new ArgumentNullException(nameof(repositories));
             }
@@ -64,14 +59,12 @@ namespace GitCommands.UserRepositoryHistory
             try
             {
                 var surrogate = new RepositoryHistorySurrogate(repositories);
-                using (var sw = new StringWriter())
-                {
-                    var serializer = new XmlSerializer(typeof(RepositoryHistorySurrogate));
-                    var ns = new XmlSerializerNamespaces();
-                    ns.Add(string.Empty, string.Empty);
-                    serializer.Serialize(sw, surrogate, ns);
-                    return sw.ToString();
-                }
+                using var sw = new StringWriter();
+                var serializer = new XmlSerializer(typeof(RepositoryHistorySurrogate));
+                var ns = new XmlSerializerNamespaces();
+                ns.Add(string.Empty, string.Empty);
+                serializer.Serialize(sw, surrogate, ns);
+                return sw.ToString();
             }
             catch (Exception ex)
             {

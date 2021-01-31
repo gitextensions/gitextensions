@@ -14,11 +14,11 @@ namespace GitUI.UserControls
         /// </summary>
         public static string GetFullNamePath(this TreeNode node)
         {
-            var sep = node.TreeView != null ? node.TreeView.PathSeparator : "\\";
+            var sep = node.TreeView is not null ? node.TreeView.PathSeparator : "\\";
 
             string result = GetNameOrText(node);
             var currNode = node;
-            while (currNode.Parent != null)
+            while (currNode.Parent is not null)
             {
                 currNode = currNode.Parent;
                 result = GetNameOrText(currNode) + sep + result;
@@ -69,7 +69,7 @@ namespace GitUI.UserControls
             }
         }
 
-        private static TreeNode GetNodeFromPath(TreeNode node, string path)
+        public static TreeNode GetNodeFromPath(this TreeNode node, string path)
         {
             if (GetFullNamePath(node) == path)
             {
@@ -79,7 +79,7 @@ namespace GitUI.UserControls
             foreach (TreeNode childNode in node.Nodes)
             {
                 var foundNode = GetNodeFromPath(childNode, path);
-                if (foundNode != null)
+                if (foundNode is not null)
                 {
                     return foundNode;
                 }

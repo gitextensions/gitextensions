@@ -19,7 +19,7 @@ namespace ResourceManager.Xliff
 
         private static bool AllowTranslateProperty(string text)
         {
-            if (text == null)
+            if (text is null)
             {
                 return false;
             }
@@ -29,7 +29,7 @@ namespace ResourceManager.Xliff
 
         public static IEnumerable<(string name, object item)> GetObjFields(object obj, string objName)
         {
-            if (objName != null)
+            if (objName is not null)
             {
                 yield return (objName, obj);
             }
@@ -59,7 +59,7 @@ namespace ResourceManager.Xliff
 
         public static void AddTranslationItemsFromFields(string category, object obj, ITranslation translation)
         {
-            if (obj == null)
+            if (obj is null)
             {
                 return;
             }
@@ -69,7 +69,7 @@ namespace ResourceManager.Xliff
 
         private static IEnumerable<PropertyInfo> GetItemPropertiesEnumerator(string name, object item)
         {
-            if (item == null)
+            if (item is null)
             {
                 yield break;
             }
@@ -109,7 +109,7 @@ namespace ResourceManager.Xliff
                 {
                     var value = property.GetValue(itemObj, null);
 
-                    if (value == null)
+                    if (value is null)
                     {
                         continue;
                     }
@@ -197,14 +197,14 @@ namespace ResourceManager.Xliff
 
         public static void TranslateProperty(string category, object obj, string propName, ITranslation translation)
         {
-            if (obj == null)
+            if (obj is null)
             {
                 return;
             }
 
             var property = obj.GetType().GetProperty(propName, _propertyFlags);
 
-            if (property == null)
+            if (property is null)
             {
                 return;
             }
@@ -221,7 +221,7 @@ namespace ResourceManager.Xliff
 
         public static void TranslateItemsFromFields(string category, object obj, ITranslation translation)
         {
-            if (obj == null)
+            if (obj is null)
             {
                 return;
             }
@@ -248,6 +248,8 @@ namespace ResourceManager.Xliff
 
         private static readonly HashSet<string> _translatableItemInComponentNames = new HashSet<string>(StringComparer.Ordinal)
         {
+            "AccessibleDescription",
+            "AccessibleName",
             "Caption",
             "Text",
             "ToolTipText",
@@ -331,14 +333,14 @@ namespace ResourceManager.Xliff
                 }
             }
 
-            if (obj == null && constructors.Length != 0)
+            if (obj is null && constructors.Length != 0)
             {
                 var parameterConstructor = constructors[0];
                 var parameters = parameterConstructor.GetParameters();
                 obj = parameterConstructor.Invoke(new object[parameters.Length]);
             }
 
-            Debug.Assert(obj != null, "obj != null");
+            Debug.Assert(obj is not null, "obj is not null");
             return obj;
         }
     }

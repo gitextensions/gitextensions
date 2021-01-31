@@ -183,25 +183,23 @@ namespace GitUITests.CommandsDialogs
             var items = new[] { new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file1.txt"), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file2.txt") };
             var item = new GitItem(0, GitObjectType.Tree, ObjectId.Random(), "folder");
             _revisionInfoProvider.LoadChildren(item).Returns(items);
-            using (var bitmap = new Bitmap(1, 1))
-            using (var icon = Icon.FromHandle(bitmap.GetHicon()))
+            using var bitmap = new Bitmap(1, 1);
+            using var icon = Icon.FromHandle(bitmap.GetHicon());
+            _iconProvider.Get(Arg.Any<string>(), Arg.Is<string>(x => x.EndsWith(".txt"))).Returns(icon);
+
+            _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
+
+            _rootNode.Nodes.Count.Should().Be(items.Length);
+            for (int i = 0; i < items.Length - 1; i++)
             {
-                _iconProvider.Get(Arg.Any<string>(), Arg.Is<string>(x => x.EndsWith(".txt"))).Returns(icon);
-
-                _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
-
-                _rootNode.Nodes.Count.Should().Be(items.Length);
-                for (int i = 0; i < items.Length - 1; i++)
-                {
-                    _rootNode.Nodes[i].Text.Should().Be(items[i].Name);
-                    _rootNode.Nodes[i].ImageKey.Should().Be(".txt");
-                    _rootNode.Nodes[i].SelectedImageKey.Should().Be(".txt");
-                    _rootNode.Nodes[i].Nodes.Count.Should().Be(0);
-                    _iconProvider.Received(1).Get(Arg.Any<string>(), items[i].Name);
-                }
-
-                _imageList.Images.Count.Should().Be(1);
+                _rootNode.Nodes[i].Text.Should().Be(items[i].Name);
+                _rootNode.Nodes[i].ImageKey.Should().Be(".txt");
+                _rootNode.Nodes[i].SelectedImageKey.Should().Be(".txt");
+                _rootNode.Nodes[i].Nodes.Count.Should().Be(0);
+                _iconProvider.Received(1).Get(Arg.Any<string>(), items[i].Name);
             }
+
+            _imageList.Images.Count.Should().Be(1);
         }
 
         private void PopulateTreeView(NativeTreeView treeView, string filePathToAdd)

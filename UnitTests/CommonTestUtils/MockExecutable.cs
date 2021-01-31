@@ -73,7 +73,7 @@ namespace CommonTestUtils
             }
         }
 
-        public IProcess Start(ArgumentString arguments, bool createWindow, bool redirectInput, bool redirectOutput, Encoding outputEncoding)
+        public IProcess Start(ArgumentString arguments, bool createWindow, bool redirectInput, bool redirectOutput, Encoding outputEncoding, bool useShellExecute = false)
         {
             if (_outputStackByArguments.TryRemove(arguments, out var queue) && queue.TryPop(out var item))
             {
@@ -179,7 +179,7 @@ namespace CommonTestUtils
 
                 // Only verify if std input is not closed.
                 // ExecutableExtensions.ExecuteAsync will close std input when writeInput action is specified
-                if (StandardInput.BaseStream != null)
+                if (StandardInput.BaseStream is not null)
                 {
                     // no input should have been written (yet)
                     Assert.AreEqual(0, StandardInput.BaseStream.Length);

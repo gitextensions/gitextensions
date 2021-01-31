@@ -12,7 +12,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             get
             {
-                if (_header == null)
+                if (_header is null)
                 {
                     _header = new SettingsPageHeader(this);
                 }

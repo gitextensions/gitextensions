@@ -10,7 +10,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks
     {
         public override string ServiceName => "Azure DevOps";
         public override Image Icon => Images.VisualStudioTeamServices;
-        private readonly AzureDevOpsRemoteParser _azureDevOpsRemoteParser = new AzureDevOpsRemoteParser();
+        private readonly AzureDevOpsRemoteParser _azureDevOpsRemoteParser = new();
 
         public override bool IsValidRemoteUrl(string remoteUrl)
         {
@@ -28,8 +28,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks
                 _azureDevOpsRemoteParser.TryExtractAzureDevopsDataFromRemoteUrl(remoteUrl, out accountName, out _, out repoName);
             }
 
-            accountName = accountName ?? "ACCOUNT_NAME";
-            repoName = repoName ?? "REPO_NAME";
+            accountName ??= "ACCOUNT_NAME";
+            repoName ??= "REPO_NAME";
 
             var azureDevopsUrl = $"https://dev.azure.com/{accountName}";
             var definition = new ExternalLinkDefinition

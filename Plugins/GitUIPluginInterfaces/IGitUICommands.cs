@@ -30,7 +30,7 @@ namespace GitUIPluginInterfaces
         bool StartCommandLineProcessDialog(IWin32Window owner, IGitCommand command);
         void StartBatchFileProcessDialog(string batchFile);
 
-        bool StartRemotesDialog();
+        bool StartSettingsDialog(Type pageType);
         bool StartSettingsDialog(IGitPlugin gitPlugin);
         void AddCommitTemplate(string key, Func<string> addingText, Image icon);
         void RemoveCommitTemplate(string key);

@@ -10,8 +10,8 @@ namespace GitUI.CommandsDialogs
 {
     public partial class RevisionGpgInfoControl : GitModuleControl
     {
-        private readonly TranslationString _commitNotSigned = new TranslationString("Commit is not signed");
-        private readonly TranslationString _tagNotSigned = new TranslationString("Tag is not signed");
+        private readonly TranslationString _commitNotSigned = new("Commit is not signed");
+        private readonly TranslationString _tagNotSigned = new("Tag is not signed");
 
         public RevisionGpgInfoControl()
         {
@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs
         public void DisplayGpgInfo([CanBeNull] GpgInfo info)
         {
             // No Commit Signature and No Tag Signature
-            if (info == null)
+            if (info is null)
             {
                 commitSignPicture.Visible = false;
                 txtCommitGpgInfo.Text = _commitNotSigned.Text;

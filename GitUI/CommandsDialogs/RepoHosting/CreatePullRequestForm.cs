@@ -14,12 +14,12 @@ namespace GitUI.CommandsDialogs.RepoHosting
     public partial class CreatePullRequestForm : GitModuleForm
     {
         #region Translation
-        private readonly TranslationString _strLoading = new TranslationString("Loading...");
-        private readonly TranslationString _strYouMustSpecifyATitle = new TranslationString("You must specify a title.");
-        private readonly TranslationString _strPullRequest = new TranslationString("Pull request");
-        private readonly TranslationString _strFailedToCreatePullRequest = new TranslationString("Failed to create pull request.");
-        private readonly TranslationString _strPleaseCloneGitHubRep = new TranslationString("Please clone GitHub repository before pull request.");
-        private readonly TranslationString _strDone = new TranslationString("Done");
+        private readonly TranslationString _strLoading = new("Loading...");
+        private readonly TranslationString _strYouMustSpecifyATitle = new("You must specify a title.");
+        private readonly TranslationString _strPullRequest = new("Pull request");
+        private readonly TranslationString _strFailedToCreatePullRequest = new("Failed to create pull request.");
+        private readonly TranslationString _strPleaseCloneGitHubRep = new("Please clone GitHub repository before pull request.");
+        private readonly TranslationString _strDone = new("Done");
         #endregion
 
         private readonly IRepositoryHostPlugin _repoHost;
@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private IReadOnlyList<IHostedRemote> _hostedRemotes;
         private string _currentBranch;
         private string _prevTitle;
-        private readonly AsyncLoader _remoteLoader = new AsyncLoader();
+        private readonly AsyncLoader _remoteLoader = new();
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private CreatePullRequestForm()
@@ -79,7 +79,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _pullReqTargetsCB.Items.Clear();
             _pullReqTargetsCB.Items.AddRange(foreignHostedRemotes);
 
-            if (_chooseRemote != null)
+            if (_chooseRemote is not null)
             {
                 for (int i = 0; i < _pullReqTargetsCB.Items.Count; i++)
                 {
@@ -117,7 +117,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             var myRemote = MyRemote;
 
-            if (myRemote == null)
+            if (myRemote is null)
             {
                 return;
             }
@@ -163,7 +163,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _yourBranchCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_prevTitle == _titleTB.Text && !string.IsNullOrWhiteSpace(_yourBranchesCB.Text) && MyRemote != null)
+            if (_prevTitle == _titleTB.Text && !string.IsNullOrWhiteSpace(_yourBranchesCB.Text) && MyRemote is not null)
             {
                 var lastMsg = Module.GetPreviousCommitMessages(1, MyRemote.Name.Combine("/", _yourBranchesCB.Text)).FirstOrDefault();
                 _titleTB.Text = lastMsg?.SubstringUntil('\n');
@@ -173,7 +173,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _createBtn_Click(object sender, EventArgs e)
         {
-            if (_currentHostedRemote == null)
+            if (_currentHostedRemote is null)
             {
                 return;
             }

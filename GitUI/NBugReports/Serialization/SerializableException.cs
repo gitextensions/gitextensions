@@ -46,10 +46,10 @@ namespace GitUI.NBugReports.Serialization
                 {
                     foreach (DictionaryEntry entry in exception.Data)
                     {
-                        if (entry.Value != null)
+                        if (entry.Value is not null)
                         {
                             // Assign 'Data' property only if there is at least one entry with non-null value
-                            if (Data == null)
+                            if (Data is null)
                             {
                                 Data = new SerializableDictionary<object, object>();
                             }
@@ -59,12 +59,12 @@ namespace GitUI.NBugReports.Serialization
                     }
                 }
 
-                if (exception.HelpLink != null)
+                if (exception.HelpLink is not null)
                 {
                     HelpLink = exception.HelpLink;
                 }
 
-                if (exception.InnerException != null)
+                if (exception.InnerException is not null)
                 {
                     InnerException = new SerializableException(exception.InnerException);
                 }
@@ -83,17 +83,17 @@ namespace GitUI.NBugReports.Serialization
 
                 Message = exception.Message != string.Empty ? exception.Message : string.Empty;
 
-                if (exception.Source != null)
+                if (exception.Source is not null)
                 {
                     Source = exception.Source;
                 }
 
-                if (exception.StackTrace != null)
+                if (exception.StackTrace is not null)
                 {
                     StackTrace = exception.StackTrace;
                 }
 
-                if (exception.TargetSite != null)
+                if (exception.TargetSite is not null)
                 {
                     TargetSite = string.Format("{0} @ {1}", exception.TargetSite, exception.TargetSite.DeclaringType);
                 }
@@ -139,14 +139,12 @@ namespace GitUI.NBugReports.Serialization
         public string ToXmlString()
         {
             var serializer = new XmlSerializer(typeof(SerializableException));
-            using (var stream = new MemoryStream())
-            {
-                stream.SetLength(0);
-                serializer.Serialize(stream, this);
-                stream.Position = 0;
-                var doc = XDocument.Load(stream);
-                return doc.Root.ToString();
-            }
+            using var stream = new MemoryStream();
+            stream.SetLength(0);
+            serializer.Serialize(stream, this);
+            stream.Position = 0;
+            var doc = XDocument.Load(stream);
+            return doc.Root.ToString();
         }
 
         private SerializableDictionary<string, object> GetExtendedInformation(Exception exception)
@@ -162,7 +160,7 @@ namespace GitUI.NBugReports.Serialization
             {
                 var extendedInformation = new SerializableDictionary<string, object>();
 
-                foreach (var property in extendedProperties.Where(property => property.GetValue(exception, null) != null))
+                foreach (var property in extendedProperties.Where(property => property.GetValue(exception, null) is not null))
                 {
                     extendedInformation.Add(property.Name, property.GetValue(exception, null));
                 }

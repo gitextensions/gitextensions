@@ -6,13 +6,14 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitUI.CommandsDialogs.FormatPatchDialog;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
     public partial class FormFormatPatch : GitModuleForm
     {
-        private readonly TranslationString _currentBranchText = new TranslationString("Current branch:");
+        private readonly TranslationString _currentBranchText = new("Current branch:");
         private readonly TranslationString _noOutputPathEnteredText =
             new TranslationString("You need to enter an output path.");
         private readonly TranslationString _noEmailEnteredText =
@@ -56,7 +57,7 @@ namespace GitUI.CommandsDialogs
         {
             var userSelectedPath = OsShellUtil.PickFolder(this);
 
-            if (userSelectedPath != null)
+            if (userSelectedPath is not null)
             {
                 OutputPath.Text = userSelectedPath;
             }

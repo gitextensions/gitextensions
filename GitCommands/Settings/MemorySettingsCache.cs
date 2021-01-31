@@ -4,7 +4,7 @@ namespace GitCommands.Settings
 {
     public class MemorySettingsCache : SettingsCache
     {
-        private readonly IDictionary<string, string> _stringSettings = new Dictionary<string, string>();
+        private readonly IDictionary<string, string?> _stringSettings = new Dictionary<string, string?>();
 
         protected override void LoadImpl()
         {
@@ -21,12 +21,12 @@ namespace GitCommands.Settings
             // cached in memory, do nothing
         }
 
-        protected override void SetValueImpl(string key, string value)
+        protected override void SetValueImpl(string key, string? value)
         {
             _stringSettings[key] = value;
         }
 
-        protected override string GetValueImpl(string key)
+        protected override string? GetValueImpl(string key)
         {
             if (_stringSettings.TryGetValue(key, out var value))
             {

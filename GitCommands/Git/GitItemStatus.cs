@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
@@ -38,19 +36,21 @@ namespace GitCommands
             IsSkipWorktree = 1 << 10,
             IsSubmodule = 1 << 11,
             IsDirty = 1 << 12,
-            IsStatusOnly = 1 << 13
+
+            // Other flags are parsed from Git status, set fake flags for special uses
+            IsStatusOnly = 1 << 13,
+            IsRangeDiff = 1 << 14
         }
 
-        private JoinableTask<GitSubmoduleStatus> _submoduleStatus;
+        private JoinableTask<GitSubmoduleStatus?>? _submoduleStatus;
 
         private Flags _flags;
 
-        public string Name { get; set; }
-        public string OldName { get; set; }
-        public string ErrorMessage { get; set; }
-        [CanBeNull]
-        public ObjectId TreeGuid { get; set; }
-        public string RenameCopyPercentage { get; set; }
+        public string? Name { get; set; }
+        public string? OldName { get; set; }
+        public string? ErrorMessage { get; set; }
+        public ObjectId? TreeGuid { get; set; }
+        public string? RenameCopyPercentage { get; set; }
 
         public StagedStatus Staged { get; set; }
 
@@ -136,14 +136,24 @@ namespace GitCommands
             set => SetFlag(value, Flags.IsDirty);
         }
 
-        /// <summary>
+        /// <remarks>
         /// This item is not a Git item, just status information
         /// If ErrorMessage is set, this is an error from Git, otherwise just a marker that nothing is changed
-        /// </summary>
+        /// </remarks>
         public bool IsStatusOnly
         {
             get => _flags.HasFlag(Flags.IsStatusOnly);
             set => SetFlag(value, Flags.IsStatusOnly);
+        }
+
+        /// <remarks>
+        /// This item is not a native git item, but a status information
+        /// calculated with git range-diff command.
+        /// </remarks>
+        public bool IsRangeDiff
+        {
+            get => _flags.HasFlag(Flags.IsRangeDiff);
+            set => SetFlag(value, Flags.IsRangeDiff);
         }
 
         private void SetFlag(bool isSet, Flags flag)
@@ -160,13 +170,12 @@ namespace GitCommands
 
         #endregion
 
-        [CanBeNull]
-        public Task<GitSubmoduleStatus> GetSubmoduleStatusAsync()
+        public Task<GitSubmoduleStatus?>? GetSubmoduleStatusAsync()
         {
             return _submoduleStatus?.JoinAsync();
         }
 
-        internal void SetSubmoduleStatus(JoinableTask<GitSubmoduleStatus> status)
+        internal void SetSubmoduleStatus(JoinableTask<GitSubmoduleStatus?> status)
         {
             _submoduleStatus = status;
         }
@@ -210,7 +219,7 @@ namespace GitCommands
                 str.Append(" (Conflict)");
             }
 
-            if (Staged != StagedStatus.None && Staged != StagedStatus.Unset)
+            if (Staged is not (StagedStatus.None or StagedStatus.Unset))
             {
                 str.Append($" {Staged}");
             }

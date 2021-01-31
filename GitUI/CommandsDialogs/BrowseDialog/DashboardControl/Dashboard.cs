@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -15,14 +14,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
     [ThemeAware]
     public partial class Dashboard : GitModuleControl
     {
-        private readonly TranslationString _cloneFork = new TranslationString("Clone {0} repository");
-        private readonly TranslationString _cloneRepository = new TranslationString("Clone repository");
-        private readonly TranslationString _createRepository = new TranslationString("Create new repository");
-        private readonly TranslationString _develop = new TranslationString("Develop");
-        private readonly TranslationString _donate = new TranslationString("Donate");
-        private readonly TranslationString _issues = new TranslationString("Issues");
-        private readonly TranslationString _openRepository = new TranslationString("Open repository");
-        private readonly TranslationString _translate = new TranslationString("Translate");
+        private readonly TranslationString _cloneFork = new("Clone {0} repository");
+        private readonly TranslationString _cloneRepository = new("Clone repository");
+        private readonly TranslationString _createRepository = new("Create new repository");
+        private readonly TranslationString _develop = new("Develop");
+        private readonly TranslationString _donate = new("Donate");
+        private readonly TranslationString _issues = new("Issues");
+        private readonly TranslationString _openRepository = new("Open repository");
+        private readonly TranslationString _translate = new("Translate");
 
         private DashboardTheme _selectedTheme;
 
@@ -181,7 +180,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     linkLabel.MouseHover += (s, e) => linkLabel.LinkColor = _selectedTheme.AccentedText;
                     linkLabel.MouseLeave += (s, e) => linkLabel.LinkColor = _selectedTheme.PrimaryText;
 
-                    if (handler != null)
+                    if (handler is not null)
                     {
                         linkLabel.Click += handler;
                     }
@@ -201,7 +200,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void dashboard_ParentChanged(object sender, EventArgs e)
         {
-            if (Parent == null)
+            if (Parent is null)
             {
                 Visible = false;
                 return;
@@ -212,24 +211,24 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private static void TranslateItem_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/gitextensions/gitextensions/wiki/Translations");
+            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/wiki/Translations");
         }
 
         private static void GitHubItem_Click(object sender, EventArgs e)
         {
-            Process.Start(@"https://github.com/gitextensions/gitextensions");
+            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions");
         }
 
         private static void IssuesItem_Click(object sender, EventArgs e)
         {
             UserEnvironmentInformation.CopyInformation();
-            Process.Start(@"https://github.com/gitextensions/gitextensions/issues");
+            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/issues");
         }
 
         private void openItem_Click(object sender, EventArgs e)
         {
             GitModule module = FormOpenDirectory.OpenModule(this, currentModule: null);
-            if (module != null)
+            if (module is not null)
             {
                 OnModuleChanged(this, new GitModuleEventArgs(module));
             }
@@ -247,7 +246,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private static void DonateItem_Click(object sender, EventArgs e)
         {
-            Process.Start(FormDonate.DonationUrl);
+            OsShellUtil.OpenUrlInDefaultBrowser(FormDonate.DonationUrl);
         }
     }
 }

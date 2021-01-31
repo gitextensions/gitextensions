@@ -446,33 +446,29 @@ namespace GitCommandsTests.Remote
             [Test]
             public void ToggleRemoteState_should_not_fail_if_activate_repeatedly()
             {
-                using (var helper = new GitModuleTestHelper())
-                {
-                    var manager = new ConfigFileRemoteSettingsManager(() => helper.Module);
+                using var helper = new GitModuleTestHelper();
+                var manager = new ConfigFileRemoteSettingsManager(() => helper.Module);
 
-                    const string remoteName = "active";
-                    helper.Module.AddRemote(remoteName, "http://localhost/remote/repo.git");
-                    manager.ToggleRemoteState(remoteName, true);
+                const string remoteName = "active";
+                helper.Module.AddRemote(remoteName, "http://localhost/remote/repo.git");
+                manager.ToggleRemoteState(remoteName, true);
 
-                    helper.Module.AddRemote(remoteName, "http://localhost/remote/repo.git");
-                    manager.ToggleRemoteState(remoteName, false);
-                }
+                helper.Module.AddRemote(remoteName, "http://localhost/remote/repo.git");
+                manager.ToggleRemoteState(remoteName, false);
             }
 
             [Test]
             public void ToggleRemoteState_should_not_fail_if_deactivate_repeatedly()
             {
-                using (var helper = new GitModuleTestHelper())
-                {
-                    var manager = new ConfigFileRemoteSettingsManager(() => helper.Module);
+                using var helper = new GitModuleTestHelper();
+                var manager = new ConfigFileRemoteSettingsManager(() => helper.Module);
 
-                    const string remoteName = "active";
-                    helper.Module.AddRemote(remoteName, "http://localhost/remote/repo.git");
-                    manager.ToggleRemoteState(remoteName, true);
+                const string remoteName = "active";
+                helper.Module.AddRemote(remoteName, "http://localhost/remote/repo.git");
+                manager.ToggleRemoteState(remoteName, true);
 
-                    helper.Module.AddRemote(remoteName, "http://localhost/remote/repo.git");
-                    manager.ToggleRemoteState(remoteName, true);
-                }
+                helper.Module.AddRemote(remoteName, "http://localhost/remote/repo.git");
+                manager.ToggleRemoteState(remoteName, true);
             }
         }
     }

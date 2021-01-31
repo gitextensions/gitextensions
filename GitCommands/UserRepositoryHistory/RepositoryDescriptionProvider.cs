@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using GitCommands.Git;
-using JetBrains.Annotations;
+using GitExtensions;
 
 namespace GitCommands.UserRepositoryHistory
 {
@@ -14,7 +14,7 @@ namespace GitCommands.UserRepositoryHistory
         /// otherwise the last part of path is returned.
         /// </summary>
         /// <param name="repositoryDir">Path to repository.</param>
-        /// <returns>Short name for repository</returns>
+        /// <returns>Short name for repository.</returns>
         string Get(string repositoryDir);
     }
 
@@ -35,7 +35,7 @@ namespace GitCommands.UserRepositoryHistory
         /// otherwise the last part of path is returned.
         /// </summary>
         /// <param name="repositoryDir">Path to repository.</param>
-        /// <returns>Short name for repository</returns>
+        /// <returns>Short name for repository.</returns>
         public string Get(string repositoryDir)
         {
             var dirInfo = new DirectoryInfo(repositoryDir);
@@ -44,8 +44,8 @@ namespace GitCommands.UserRepositoryHistory
                 return dirInfo.Name;
             }
 
-            string desc = ReadRepositoryDescription(repositoryDir);
-            if (!string.IsNullOrWhiteSpace(desc))
+            string? desc = ReadRepositoryDescription(repositoryDir);
+            if (!Strings.IsNullOrWhiteSpace(desc))
             {
                 return desc;
             }
@@ -58,8 +58,7 @@ namespace GitCommands.UserRepositoryHistory
         /// </summary>
         /// <param name="workingDir">Path to repository.</param>
         /// <returns>If the repository has description, returns that description, else returns <c>null</c>.</returns>
-        [CanBeNull]
-        private string ReadRepositoryDescription(string workingDir)
+        private string? ReadRepositoryDescription(string workingDir)
         {
             var gitDir = _gitDirectoryResolver.Resolve(workingDir);
             var descriptionFilePath = Path.Combine(gitDir, RepositoryDescriptionFileName);

@@ -228,7 +228,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 repo = lb.SelectedItems[0].Tag as RecentRepoInfo;
             }
 
-            return repo != null;
+            return repo is not null;
         }
 
         private void anchorToMostToolStripMenuItem_Click(object sender, EventArgs e)

@@ -29,7 +29,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             IRevisionGraphRow row = _revisionGraphRowProvider.GetSegmentsForRow(rowIndex);
-            if (row == null)
+            if (row is null)
             {
                 return NotFoundResult;
             }

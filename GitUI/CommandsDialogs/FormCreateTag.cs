@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using GitCommands;
+using GitCommands.Git.Commands;
+using GitCommands.Git.Extensions;
 using GitCommands.Git.Tag;
+using GitUI.HelperDialogs;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -12,13 +14,13 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormCreateTag : GitModuleForm
     {
-        private readonly TranslationString _messageCaption = new TranslationString("Tag");
-        private readonly TranslationString _noRevisionSelected = new TranslationString("Select 1 revision to create the tag on.");
-        private readonly TranslationString _pushToCaption = new TranslationString("Push tag to '{0}'");
-        private static readonly TranslationString _trsLightweight = new TranslationString("Lightweight tag");
-        private static readonly TranslationString _trsAnnotated = new TranslationString("Annotated tag");
-        private static readonly TranslationString _trsSignDefault = new TranslationString("Sign with default GPG");
-        private static readonly TranslationString _trsSignSpecificKey = new TranslationString("Sign with specific GPG");
+        private readonly TranslationString _messageCaption = new("Tag");
+        private readonly TranslationString _noRevisionSelected = new("Select 1 revision to create the tag on.");
+        private readonly TranslationString _pushToCaption = new("Push tag to '{0}'");
+        private static readonly TranslationString _trsLightweight = new("Lightweight tag");
+        private static readonly TranslationString _trsAnnotated = new("Annotated tag");
+        private static readonly TranslationString _trsSignDefault = new("Sign with default GPG");
+        private static readonly TranslationString _trsSignSpecificKey = new("Sign with specific GPG");
 
         private readonly IGitTagController _gitTagController;
         private string _currentRemote = "";
@@ -40,13 +42,13 @@ namespace GitUI.CommandsDialogs
 
             tagMessage.MistakeFont = new Font(tagMessage.MistakeFont, FontStyle.Underline);
 
-            if (objectId != null && objectId.IsArtificial)
+            if (objectId is not null && objectId.IsArtificial)
             {
                 objectId = null;
             }
 
-            objectId = objectId ?? Module.GetCurrentCheckout();
-            if (objectId != null)
+            objectId ??= Module.GetCurrentCheckout();
+            if (objectId is not null)
             {
                 commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
             }
@@ -87,7 +89,7 @@ namespace GitUI.CommandsDialogs
         {
             var objectId = commitPickerSmallControl1.SelectedObjectId;
 
-            if (objectId == null)
+            if (objectId is null)
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return "";
@@ -115,7 +117,7 @@ namespace GitUI.CommandsDialogs
 
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
 
-            using (var form = new FormRemoteProcess(Module, pushCmd)
+            using (var form = new FormRemoteProcess(UICommands, process: null, pushCmd)
             {
                 Remote = _currentRemote,
                 Text = string.Format(_pushToCaption.Text, _currentRemote),

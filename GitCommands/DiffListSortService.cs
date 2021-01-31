@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GitCommands
 {
@@ -11,7 +7,7 @@ namespace GitCommands
         private static readonly Lazy<DiffListSortService> _lazyDiffListSorting = new Lazy<DiffListSortService>(() => new DiffListSortService());
         public static DiffListSortService Instance => _lazyDiffListSorting.Value;
         private DiffListSortType _diffListSorting;
-        public event EventHandler DiffListSortingChanged;
+        public event EventHandler? DiffListSortingChanged;
 
         public DiffListSortType DiffListSorting
         {

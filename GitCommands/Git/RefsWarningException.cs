@@ -9,7 +9,7 @@ namespace GitCommands.Git
         {
         }
 
-        public RefsWarningException(string message, Exception inner)
+        public RefsWarningException(string message, Exception? inner)
             : base(message, inner)
         {
         }

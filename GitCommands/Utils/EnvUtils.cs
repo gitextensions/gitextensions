@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using GitExtensions;
 using Microsoft.Win32;
 
 namespace GitCommands.Utils
@@ -86,13 +87,13 @@ namespace GitCommands.Utils
 
                 try
                 {
-                    RegistryKey registryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full", false);
-                    if (registryKey != null)
+                    RegistryKey? registryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full", false);
+                    if (registryKey is not null)
                     {
                         using (registryKey)
                         {
                             var v = registryKey.GetValue("Install");
-                            return v != null && v.ToString() == "1";
+                            return v is not null && v.ToString() == "1";
                         }
                     }
                 }
@@ -105,9 +106,9 @@ namespace GitCommands.Utils
             return false;
         }
 
-        public static string ReplaceLinuxNewLinesDependingOnPlatform(string s)
+        public static string? ReplaceLinuxNewLinesDependingOnPlatform(string? s)
         {
-            if (string.IsNullOrEmpty(s))
+            if (Strings.IsNullOrEmpty(s))
             {
                 return s;
             }

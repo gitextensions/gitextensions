@@ -1,7 +1,6 @@
 using System;
 using System.Text;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -16,15 +15,14 @@ namespace GitCommands
             _defaultEncoding = defaultEncoding;
         }
 
-        [NotNull]
         public IProcess RunDetached(
             ArgumentString arguments = default,
             bool createWindow = false,
             bool redirectInput = false,
             bool redirectOutput = false,
-            Encoding outputEncoding = null)
+            Encoding? outputEncoding = null)
         {
-            if (outputEncoding == null && redirectOutput)
+            if (outputEncoding is null && redirectOutput)
             {
                 outputEncoding = _defaultEncoding();
             }

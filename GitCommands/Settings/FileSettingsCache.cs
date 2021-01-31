@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
+using System.Timers;
 using GitCommands.Utils;
 
 namespace GitCommands.Settings
@@ -12,10 +12,10 @@ namespace GitCommands.Settings
         private DateTime? _lastFileRead;
         private DateTime _lastFileModificationDate = DateTime.MaxValue;
         private DateTime? _lastModificationDate;
-        private readonly FileSystemWatcher _fileWatcher = new FileSystemWatcher();
+        private readonly FileSystemWatcher _fileWatcher = new();
         private readonly bool _canEnableFileWatcher;
 
-        private System.Timers.Timer _saveTimer = new System.Timers.Timer(SaveTime);
+        private Timer? _saveTimer;
         private readonly bool _autoSave;
 
         public string SettingsFilePath { get; }
@@ -25,6 +25,7 @@ namespace GitCommands.Settings
             SettingsFilePath = settingsFilePath;
             _autoSave = autoSave;
 
+            _saveTimer = new Timer(SaveTime);
             _saveTimer.Enabled = false;
             _saveTimer.AutoReset = false;
             _saveTimer.Elapsed += OnSaveTimer;
@@ -34,7 +35,7 @@ namespace GitCommands.Settings
             _fileWatcher.Changed += _fileWatcher_Changed;
             _fileWatcher.Renamed += _fileWatcher_Renamed;
             _fileWatcher.Created += _fileWatcher_Created;
-            string dir;
+            string? dir;
             try
             {
                 dir = Path.GetDirectoryName(SettingsFilePath);
@@ -75,7 +76,7 @@ namespace GitCommands.Settings
             {
                 LockedAction(() =>
                 {
-                    if (_saveTimer != null)
+                    if (_saveTimer is not null)
                     {
                         _saveTimer.Dispose();
                         _saveTimer = null;
@@ -172,20 +173,19 @@ namespace GitCommands.Settings
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Cannot save settings", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    throw new SaveSettingsException(ex);
                 }
 
                 _lastFileModificationDate = GetLastFileModificationUtc();
                 _lastFileRead = DateTime.UtcNow;
-                if (_saveTimer != null)
+                if (_saveTimer is not null)
                 {
                     _fileWatcher.EnableRaisingEvents = _canEnableFileWatcher;
                 }
             }
-            catch (IOException e)
+            catch (IOException ex)
             {
-                Debug.WriteLine(e.Message);
-                throw;
+                throw new SaveSettingsException(ex);
             }
         }
 
@@ -240,16 +240,19 @@ namespace GitCommands.Settings
         private void StartSaveTimer()
         {
             // Resets timer so that the last call will let the timer event run and will cause the settings to be saved.
-            _saveTimer.Stop();
-            _saveTimer.AutoReset = true;
-            _saveTimer.Interval = SaveTime;
-            _saveTimer.AutoReset = false;
+            if (_saveTimer != null)
+            {
+                _saveTimer.Stop();
+                _saveTimer.AutoReset = true;
+                _saveTimer.Interval = SaveTime;
+                _saveTimer.AutoReset = false;
 
-            _saveTimer.Start();
+                _saveTimer.Start();
+            }
         }
 
         internal TestAccessor GetTestAccessor()
-        => new TestAccessor(this);
+            => new TestAccessor(this);
 
         internal readonly struct TestAccessor
         {

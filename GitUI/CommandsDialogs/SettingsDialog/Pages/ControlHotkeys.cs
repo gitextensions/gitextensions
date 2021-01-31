@@ -73,7 +73,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             SelectedHotkeySettings = null;
 
             cmbSettings.Items.Clear();
-            if (settings != null)
+            if (settings is not null)
             {
                 foreach (var setting in settings)
                 {
@@ -87,11 +87,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             SelectedHotkeyCommand = null;
 
             listMappings.Items.Clear();
-            if (setting != null)
+            if (setting is not null)
             {
                 foreach (var cmd in setting.Commands)
                 {
-                    if (cmd != null)
+                    if (cmd is not null)
                     {
                         listMappings.Items.Add(
                             new ListViewItem(new[] { cmd.Name, cmd.KeyData.ToText() })
@@ -126,7 +126,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void listMappings_SelectedIndexChanged(object sender, EventArgs e)
         {
             var lvi = listMappings.SelectedItems.Count > 0 ? listMappings.SelectedItems[0] : null;
-            if (lvi != null)
+            if (lvi is not null)
             {
                 var hotkey = lvi.Tag as HotkeyCommand;
                 SelectedHotkeyCommand = hotkey;
@@ -136,7 +136,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void bApply_Click(object sender, EventArgs e)
         {
             var hotkey = SelectedHotkeyCommand;
-            if (hotkey != null)
+            if (hotkey is not null)
             {
                 // Update the KeyData with the chosen one
                 hotkey.KeyData = txtHotkey.KeyData;
@@ -149,7 +149,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void bClear_Click(object sender, EventArgs e)
         {
             var hotkey = SelectedHotkeyCommand;
-            if (hotkey != null)
+            if (hotkey is not null)
             {
                 // Update the KeyData with the chosen one
                 hotkey.KeyData = Keys.None;

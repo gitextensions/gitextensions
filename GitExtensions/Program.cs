@@ -13,6 +13,7 @@ using GitUI.Infrastructure.Telemetry;
 using GitUI.Theming;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitExtensions
@@ -36,6 +37,11 @@ namespace GitExtensions
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            // If an error happens before we had a chance to init the environment information
+            // the call to GetInformation() from BugReporter.ShowNBug() will fail.
+            // There's no perf hit calling Initialise() multiple times.
+            UserEnvironmentInformation.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty);
+
             ThemeModule.Load();
             Application.ApplicationExit += (s, e) => ThemeModule.Unload();
 
@@ -47,14 +53,14 @@ namespace GitExtensions
 
                 if (!Debugger.IsAttached)
                 {
-                    AppDomain.CurrentDomain.UnhandledException += (s, e) => ReportBug((Exception)e.ExceptionObject);
-                    Application.ThreadException += (s, e) => ReportBug(e.Exception);
+                    AppDomain.CurrentDomain.UnhandledException += (s, e) => BugReporter.Report((Exception)e.ExceptionObject, e.IsTerminating);
+                    Application.ThreadException += (s, e) => BugReporter.Report(e.Exception, isTerminating: false);
                 }
             }
             catch (TypeInitializationException tie)
             {
                 // is this exception caused by the configuration?
-                if (tie.InnerException != null
+                if (tie.InnerException is not null
                     && tie.InnerException.GetType()
                         .IsSubclassOf(typeof(ConfigurationException)))
                 {
@@ -101,8 +107,8 @@ namespace GitExtensions
 
             if (!AppSettings.TelemetryEnabled.HasValue)
             {
-                AppSettings.TelemetryEnabled = MessageBox.Show(null, Strings.TelemetryPermissionMessage,
-                                                               Strings.TelemetryPermissionCaption, MessageBoxButtons.YesNo,
+                AppSettings.TelemetryEnabled = MessageBox.Show(null, ResourceManager.Strings.TelemetryPermissionMessage,
+                                                               ResourceManager.Strings.TelemetryPermissionCaption, MessageBoxButtons.YesNo,
                                                                MessageBoxIcon.Question) == DialogResult.Yes;
             }
 
@@ -160,7 +166,14 @@ namespace GitExtensions
             else
             {
                 // if we are here args.Length > 1
-                commands.RunCommand(args);
+
+                // Avoid replacing the ExitCode eventually set while parsing arguments,
+                // i.e. assume -1 and afterwards, only set it to 0 if no error is indicated.
+                Environment.ExitCode = -1;
+                if (commands.RunCommand(args))
+                {
+                    Environment.ExitCode = 0;
+                }
             }
 
             AppSettings.SaveSettings();
@@ -198,7 +211,7 @@ namespace GitExtensions
                 }
             }
 
-            if (args.Length <= 1 && workingDir == null && AppSettings.StartWithRecentWorkingDir)
+            if (args.Length <= 1 && workingDir is null && AppSettings.StartWithRecentWorkingDir)
             {
                 if (GitModule.IsValidGitWorkingDir(AppSettings.RecentWorkingDir))
                 {
@@ -206,7 +219,7 @@ namespace GitExtensions
                 }
             }
 
-            if (args.Length > 1 && workingDir == null)
+            if (args.Length > 1 && workingDir is null)
             {
                 // If no working dir is yet found, try to find one relative to the current working directory.
                 // This allows the `fileeditor` command to discover repository configuration which is
@@ -288,16 +301,31 @@ namespace GitExtensions
 
         private static bool LocateMissingGit()
         {
-            int dialogResult = PSTaskDialog.cTaskDialog.ShowCommandBox(Title: "Error",
-                                                                        MainInstruction: ResourceManager.Strings.GitExecutableNotFound,
-                                                                        Content: null,
-                                                                        ExpandedInfo: null,
-                                                                        Footer: null,
-                                                                        VerificationText: null,
-                                                                        CommandButtons: $"{ResourceManager.Strings.FindGitExecutable}|{ResourceManager.Strings.InstallGitInstructions}",
-                                                                        ShowCancelButton: true,
-                                                                        MainIcon: PSTaskDialog.eSysIcons.Error,
-                                                                        FooterIcon: PSTaskDialog.eSysIcons.Warning);
+            int dialogResult = -1;
+
+            using var dialog1 = new TaskDialog
+            {
+                InstructionText = ResourceManager.Strings.GitExecutableNotFound,
+                Icon = TaskDialogStandardIcon.Error,
+                StandardButtons = TaskDialogStandardButtons.Cancel,
+                Cancelable = true,
+            };
+            var btnFindGitExecutable = new TaskDialogCommandLink("FindGitExecutable", null, ResourceManager.Strings.FindGitExecutable);
+            btnFindGitExecutable.Click += (s, e) =>
+            {
+                dialogResult = 0;
+                dialog1.Close();
+            };
+            var btnInstallGitInstructions = new TaskDialogCommandLink("InstallGitInstructions", null, ResourceManager.Strings.InstallGitInstructions);
+            btnInstallGitInstructions.Click += (s, e) =>
+            {
+                dialogResult = 1;
+                dialog1.Close();
+            };
+            dialog1.Controls.Add(btnFindGitExecutable);
+            dialog1.Controls.Add(btnInstallGitInstructions);
+
+            dialog1.Show();
             switch (dialogResult)
             {
                 case 0:
@@ -323,7 +351,7 @@ namespace GitExtensions
 
                 case 1:
                     {
-                        Process.Start(@"https://github.com/gitextensions/gitextensions/wiki/Application-Dependencies#git");
+                        OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/wiki/Application-Dependencies#git");
                         return false;
                     }
 
@@ -331,23 +359,6 @@ namespace GitExtensions
                     {
                         return false;
                     }
-            }
-        }
-
-        private static void ReportBug(Exception ex)
-        {
-            // if the error happens before we had a chance to init the environment information
-            // the call to GetInformation() will fail. A double Initialise() call is safe.
-            UserEnvironmentInformation.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty);
-            var envInfo = UserEnvironmentInformation.GetInformation();
-
-            using (var form = new GitUI.NBugReports.BugReportForm())
-            {
-                var result = form.ShowDialog(ex, envInfo);
-                if (result == DialogResult.Abort)
-                {
-                    Environment.Exit(-1);
-                }
             }
         }
     }

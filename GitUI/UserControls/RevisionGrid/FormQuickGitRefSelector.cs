@@ -8,10 +8,10 @@ namespace GitUI.UserControls.RevisionGrid
 {
     public class FormQuickGitRefSelector : FormQuickItemSelector
     {
-        private readonly TranslationString _actionRename = new TranslationString("Rename");
-        private readonly TranslationString _actionDelete = new TranslationString("Delete");
-        private readonly TranslationString _actionSelect = new TranslationString("Select");
-        private readonly TranslationString _tag = new TranslationString("tag");
+        private readonly TranslationString _actionRename = new("Rename");
+        private readonly TranslationString _actionDelete = new("Delete");
+        private readonly TranslationString _actionSelect = new("Select");
+        private readonly TranslationString _tag = new("tag");
 
         /// <summary>
         /// Gets the ref selected by the user.

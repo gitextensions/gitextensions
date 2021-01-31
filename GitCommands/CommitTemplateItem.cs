@@ -4,7 +4,6 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using GitCommands.Utils;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -13,7 +12,7 @@ namespace GitCommands
     {
         public string Name { get; set; }
         public string Text { get; set; }
-        public Image Icon { get; set; }
+        public Image? Icon { get; set; }
 
         public CommitTemplateItem(string name, string text, Image icon)
         {
@@ -47,14 +46,13 @@ namespace GitCommands
             AppSettings.CommitTemplates = strVal ?? string.Empty;
         }
 
-        [CanBeNull]
-        public static CommitTemplateItem[] LoadFromSettings()
+        public static CommitTemplateItem[]? LoadFromSettings()
         {
             string serializedString = AppSettings.CommitTemplates;
             var templates = DeserializeCommitTemplates(serializedString, out var shouldBeUpdated);
             if (shouldBeUpdated)
             {
-                SaveToSettings(templates);
+                SaveToSettings(templates!);
             }
 
             return templates;
@@ -65,8 +63,7 @@ namespace GitCommands
             return JsonSerializer.Serialize(items);
         }
 
-        [CanBeNull]
-        private static CommitTemplateItem[] DeserializeCommitTemplates(string serializedString, out bool shouldBeUpdated)
+        private static CommitTemplateItem[]? DeserializeCommitTemplates(string serializedString, out bool shouldBeUpdated)
         {
             shouldBeUpdated = false;
             if (string.IsNullOrEmpty(serializedString))
@@ -74,7 +71,7 @@ namespace GitCommands
                 return null;
             }
 
-            CommitTemplateItem[] commitTemplateItem = null;
+            CommitTemplateItem[]? commitTemplateItem = null;
             try
             {
                 commitTemplateItem = JsonSerializer.Deserialize<CommitTemplateItem[]>(serializedString);
@@ -84,7 +81,7 @@ namespace GitCommands
                 // do nothing
             }
 
-            if (commitTemplateItem == null)
+            if (commitTemplateItem is null)
             {
                 try
                 {
@@ -92,11 +89,9 @@ namespace GitCommands
                     int length = Convert.ToInt32(serializedString.Substring(0, p));
 
                     byte[] memoryData = Convert.FromBase64String(serializedString.Substring(p + 1));
-                    using (var rs = new MemoryStream(memoryData, 0, length))
-                    {
-                        var sf = new BinaryFormatter { Binder = new MoveNamespaceDeserializationBinder() };
-                        commitTemplateItem = (CommitTemplateItem[])sf.Deserialize(rs);
-                    }
+                    using var rs = new MemoryStream(memoryData, 0, length);
+                    var sf = new BinaryFormatter { Binder = new MoveNamespaceDeserializationBinder() };
+                    commitTemplateItem = (CommitTemplateItem[])sf.Deserialize(rs);
 
                     shouldBeUpdated = true;
                 }

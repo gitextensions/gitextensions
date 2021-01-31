@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
@@ -12,10 +9,9 @@ namespace GitUI.UserControls
 {
     public class SortDiffListContextMenuItem : ToolStripMenuItem
     {
-        private readonly TranslationString _sortByText = new TranslationString("&Sort by...");
-        private readonly TranslationString _filePathSortText = new TranslationString("File &Path");
-        private readonly TranslationString _fileExtensionSortText = new TranslationString("File &Extension");
-        private readonly TranslationString _fileStatusSortText = new TranslationString("File &Status");
+        private readonly TranslationString _filePathSortText = new("File &Path");
+        private readonly TranslationString _fileExtensionSortText = new("File &Extension");
+        private readonly TranslationString _fileStatusSortText = new("File &Status");
         private readonly IDiffListSortService _sortService;
         private readonly ToolStripMenuItem _filePathSortItem;
         private readonly ToolStripMenuItem _fileExtensionSortItem;
@@ -26,7 +22,7 @@ namespace GitUI.UserControls
         {
             _sortService = sortService ?? throw new ArgumentNullException(nameof(sortService));
             Image = Images.SortBy;
-            Text = _sortByText.Text;
+            Text = Strings.SortBy;
 
             _filePathSortItem = new ToolStripMenuItem()
             {
@@ -64,8 +60,6 @@ namespace GitUI.UserControls
             RequerySortingMethod();
         }
 
-        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
-
         private IReadOnlyList<ToolStripMenuItem> AllItems()
         {
             return _allItems;
@@ -87,7 +81,9 @@ namespace GitUI.UserControls
             _sortService.DiffListSorting = sortingType;
         }
 
-        public struct TestAccessor
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal struct TestAccessor
         {
             private readonly SortDiffListContextMenuItem _contextMenuItem;
 
@@ -96,7 +92,7 @@ namespace GitUI.UserControls
                 _contextMenuItem = menuitem;
             }
 
-            public void SimulateOpeningEvent() => _contextMenuItem.RequerySortingMethod();
+            public void RaiseDropDownOpening() => _contextMenuItem.RequerySortingMethod();
         }
     }
 }

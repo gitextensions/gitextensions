@@ -29,7 +29,7 @@ namespace GitUI.Editor
         public new event System.Windows.Forms.KeyEventHandler KeyUp;
         public new event EventHandler DoubleClick;
 
-        private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
+        private readonly FindAndReplaceForm _findAndReplaceForm = new();
         private readonly CurrentViewPositionCache _currentViewPositionCache;
         private DiffViewerLineNumberControl _lineNumbersControl;
         private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
@@ -166,7 +166,7 @@ namespace GitUI.Editor
 
             TextMarker marker =
                 markers.FirstOrDefault(x => x.Offset > offset && x.Color == AppColor.HighlightAllOccurences.GetThemeColor());
-            if (marker != null)
+            if (marker is not null)
             {
                 TextLocation position = TextEditor.ActiveTextAreaControl.TextArea.Document.OffsetToPosition(marker.Offset);
                 TextEditor.ActiveTextAreaControl.Caret.Position = position;
@@ -184,7 +184,7 @@ namespace GitUI.Editor
 
             TextMarker marker =
                 markers.LastOrDefault(x => x.Offset < offset && x.Color == AppColor.HighlightAllOccurences.GetThemeColor());
-            if (marker != null)
+            if (marker is not null)
             {
                 TextLocation position = TextEditor.ActiveTextAreaControl.TextArea.Document.OffsetToPosition(marker.Offset);
                 TextEditor.ActiveTextAreaControl.Caret.Position = position;
@@ -199,7 +199,7 @@ namespace GitUI.Editor
 
         public async Task FindNextAsync(bool searchForwardOrOpenWithDifftool)
         {
-            if (searchForwardOrOpenWithDifftool && OpenWithDifftool != null && string.IsNullOrEmpty(_findAndReplaceForm.LookFor))
+            if (searchForwardOrOpenWithDifftool && OpenWithDifftool is not null && string.IsNullOrEmpty(_findAndReplaceForm.LookFor))
             {
                 OpenWithDifftool.Invoke();
                 return;
@@ -234,11 +234,16 @@ namespace GitUI.Editor
 
         public void SetText(string text, Action openWithDifftool, bool isDiff = false)
         {
+            SetText(text, openWithDifftool, isDiff, false);
+        }
+
+        public void SetText(string text, Action openWithDifftool, bool isDiff, bool isRangeDiff)
+        {
             _currentViewPositionCache.Capture();
 
             OpenWithDifftool = openWithDifftool;
-            _lineNumbersControl.Clear(isDiff);
-            _lineNumbersControl.SetVisibility(isDiff);
+            _lineNumbersControl.Clear(isDiff && !isRangeDiff);
+            _lineNumbersControl.SetVisibility(isDiff && !isRangeDiff);
 
             if (isDiff)
             {
@@ -248,11 +253,16 @@ namespace GitUI.Editor
                     TextEditor.ActiveTextAreaControl.TextArea.InsertLeftMargin(0, _lineNumbersControl);
                 }
 
-                _diffHighlightService = DiffHighlightService.IsCombinedDiff(text)
-                    ? CombinedDiffHighlightService.Instance
-                    : DiffHighlightService.Instance;
+                _diffHighlightService = isRangeDiff
+                    ? RangeDiffHighlightService.Instance
+                    : DiffHighlightService.IsCombinedDiff(text)
+                        ? CombinedDiffHighlightService.Instance
+                        : DiffHighlightService.Instance;
 
-                _lineNumbersControl.DisplayLineNumFor(text);
+                if (!isRangeDiff)
+                {
+                    _lineNumbersControl.DisplayLineNumFor(text);
+                }
             }
 
             TextEditor.Text = text;
@@ -369,7 +379,7 @@ namespace GitUI.Editor
             set
             {
                 var scrollBar = TextEditor.ActiveTextAreaControl.HScrollBar;
-                if (scrollBar == null)
+                if (scrollBar is null)
                 {
                     return;
                 }
@@ -386,7 +396,7 @@ namespace GitUI.Editor
             set
             {
                 var scrollBar = TextEditor.ActiveTextAreaControl.VScrollBar;
-                if (scrollBar == null)
+                if (scrollBar is null)
                 {
                     return;
                 }
@@ -458,7 +468,7 @@ namespace GitUI.Editor
                 for (int line = 0; line < TotalNumberOfLines; ++line)
                 {
                     DiffLineInfo diffLineNum = _lineNumbersControl.GetLineInfo(line);
-                    if (diffLineNum != null)
+                    if (diffLineNum is not null)
                     {
                         int diffLine = rightFile ? diffLineNum.RightLineNumber : diffLineNum.LeftLineNumber;
                         if (diffLine != DiffLineInfo.NotApplicableLineNum && diffLine >= lineNumber)
@@ -559,7 +569,7 @@ namespace GitUI.Editor
                     return;
                 }
 
-                if (_authorsAvatarMargin == null)
+                if (_authorsAvatarMargin is null)
                 {
                     _authorsAvatarMargin = new BlameAuthorMargin(TextEditor.ActiveTextAreaControl.TextArea);
                     TextEditor.ActiveTextAreaControl.TextArea.InsertLeftMargin(0, _authorsAvatarMargin);
@@ -614,7 +624,7 @@ namespace GitUI.Editor
 
                 // search downwards for a code line, i.e. a line with line numbers
                 int activeLine = initialActiveLine;
-                while (activeLine < currentViewPosition.TotalNumberOfLines && currentViewPosition.ActiveLineNum == null)
+                while (activeLine < currentViewPosition.TotalNumberOfLines && currentViewPosition.ActiveLineNum is null)
                 {
                     SetActiveLineNum(activeLine);
                     ++activeLine;
@@ -622,7 +632,7 @@ namespace GitUI.Editor
 
                 // if none found, search upwards
                 activeLine = initialActiveLine - 1;
-                while (activeLine >= 0 && currentViewPosition.ActiveLineNum == null)
+                while (activeLine >= 0 && currentViewPosition.ActiveLineNum is null)
                 {
                     SetActiveLineNum(activeLine);
                     --activeLine;
@@ -634,7 +644,7 @@ namespace GitUI.Editor
                 void SetActiveLineNum(int line)
                 {
                     currentViewPosition.ActiveLineNum = _viewer._lineNumbersControl.GetLineInfo(line);
-                    if (currentViewPosition.ActiveLineNum == null)
+                    if (currentViewPosition.ActiveLineNum is null)
                     {
                         return;
                     }
@@ -664,7 +674,7 @@ namespace GitUI.Editor
                         _viewer.FirstVisibleLine = viewPosition.FirstVisibleLine;
                     }
                 }
-                else if (isDiff && _viewer.GetLineText(0) == viewPosition.FirstLine && viewPosition.ActiveLineNum != null)
+                else if (isDiff && _viewer.GetLineText(0) == viewPosition.FirstLine && viewPosition.ActiveLineNum is not null)
                 {
                     // prefer the LeftLineNum because the base revision will not change
                     int line = viewPosition.ActiveLineNum.LeftLineNumber != DiffLineInfo.NotApplicableLineNum

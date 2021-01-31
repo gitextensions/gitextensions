@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -41,7 +42,7 @@ namespace GitUI.CommandsDialogs
             {
                 _diffSelectedRevision = value;
                 ////commitSummaryUserControl2.Revision = _diffSelectedRevision;
-                if (_diffSelectedRevision == null)
+                if (_diffSelectedRevision is null)
                 {
                     const string defaultString = "...";
                     labelDateCaption.Text = $"{ResourceManager.Strings.CommitDate}:";
@@ -61,7 +62,7 @@ namespace GitUI.CommandsDialogs
 
         public void SetDiffSelectedRevision(GitRevision revision)
         {
-            checkboxRevisionFilter.Checked = revision != null;
+            checkboxRevisionFilter.Checked = revision is not null;
             DiffSelectedRevision = revision;
         }
 
@@ -110,7 +111,7 @@ namespace GitUI.CommandsDialogs
 
         private void Save_Click(object sender, EventArgs e)
         {
-            if (checkboxRevisionFilter.Checked && DiffSelectedRevision == null)
+            if (checkboxRevisionFilter.Checked && DiffSelectedRevision is null)
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
@@ -140,9 +141,8 @@ namespace GitUI.CommandsDialogs
                 {
                     string format = GetSelectedOutputFormat() == OutputFormat.Zip ? "zip" : "tar";
 
-                    FormProcess.ShowDialog(this,
-                        string.Format("archive --format={0} {1} --output \"{2}\" {3}",
-                        format, revision, saveFileDialog.FileName, GetPathArgumentFromGui()));
+                    var arguments = string.Format("archive --format={0} {1} --output \"{2}\" {3}", format, revision, saveFileDialog.FileName, GetPathArgumentFromGui());
+                    FormProcess.ShowDialog(this, process: null, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
                     Close();
                 }
             }
@@ -160,7 +160,7 @@ namespace GitUI.CommandsDialogs
             else if (checkboxRevisionFilter.Checked)
             {
                 // 1. get all changed (and not deleted files) from selected to current revision
-                var files = UICommands.Module.GetDiffFiles(DiffSelectedRevision?.Guid, SelectedRevision?.Guid, StagedStatus.None).Where(f => !f.IsDeleted);
+                var files = UICommands.Module.GetDiffFilesWithUntracked(DiffSelectedRevision?.Guid, SelectedRevision?.Guid, StagedStatus.None).Where(f => !f.IsDeleted);
 
                 // 2. wrap file names with ""
                 // 3. join together with space as separator
@@ -181,7 +181,7 @@ namespace GitUI.CommandsDialogs
         {
             using (var chooseForm = new FormChooseCommit(UICommands, SelectedRevision.Guid))
             {
-                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
+                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
                 {
                     SelectedRevision = chooseForm.SelectedRevision;
                 }
@@ -199,9 +199,9 @@ namespace GitUI.CommandsDialogs
 
         private void btnDiffChooseRevision_Click(object sender, EventArgs e)
         {
-            using (var chooseForm = new FormChooseCommit(UICommands, DiffSelectedRevision != null ? DiffSelectedRevision.Guid : string.Empty))
+            using (var chooseForm = new FormChooseCommit(UICommands, DiffSelectedRevision is not null ? DiffSelectedRevision.Guid : string.Empty))
             {
-                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
+                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
                 {
                     DiffSelectedRevision = chooseForm.SelectedRevision;
                 }

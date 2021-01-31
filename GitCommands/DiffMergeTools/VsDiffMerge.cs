@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using GitCommands.Utils;
+using GitExtensions;
 using Microsoft.Win32;
 
 namespace GitCommands.DiffMergeTools
@@ -39,13 +40,11 @@ namespace GitCommands.DiffMergeTools
             foreach (var version in vsVersions)
             {
                 string registryKeyString = $@"SOFTWARE{(Environment.Is64BitProcess ? @"\Wow6432Node\" : "\\")}Microsoft\VisualStudio\{version}";
-                using (RegistryKey localMachineKey = Registry.LocalMachine.OpenSubKey(registryKeyString))
+                using RegistryKey? localMachineKey = Registry.LocalMachine.OpenSubKey(registryKeyString);
+                var path = localMachineKey?.GetValue("InstallDir") as string;
+                if (!Strings.IsNullOrEmpty(path))
                 {
-                    var path = localMachineKey?.GetValue("InstallDir") as string;
-                    if (!string.IsNullOrEmpty(path))
-                    {
-                        return Path.Combine(path, ExeName);
-                    }
+                    return Path.Combine(path, ExeName);
                 }
             }
 

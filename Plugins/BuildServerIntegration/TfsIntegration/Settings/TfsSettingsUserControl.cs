@@ -30,7 +30,7 @@ namespace TfsIntegration.Settings
 
         public void LoadSettings(ISettingsSource buildServerConfig)
         {
-            if (buildServerConfig != null)
+            if (buildServerConfig is not null)
             {
                 TfsServer.Text = buildServerConfig.GetString("TfsServer", string.Empty);
                 TfsTeamCollectionName.Text = buildServerConfig.GetString("TfsTeamCollectionName", "DefaultCollection");

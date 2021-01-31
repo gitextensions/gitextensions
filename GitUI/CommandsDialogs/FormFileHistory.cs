@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils;
 using GitExtUtils.GitUI;
+using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -22,14 +23,14 @@ namespace GitUI.CommandsDialogs
     {
         private const string FormBrowseName = "FormBrowse";
 
-        private readonly TranslationString _buildReportTabCaption = new TranslationString("Build Report");
-        private readonly AsyncLoader _asyncLoader = new AsyncLoader();
+        private readonly TranslationString _buildReportTabCaption = new("Build Report");
+        private readonly AsyncLoader _asyncLoader = new();
         private readonly ICommitDataManager _commitDataManager;
         private readonly FilterRevisionsHelper _filterRevisionsHelper;
         private readonly FilterBranchHelper _filterBranchHelper;
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFullPathResolver _fullPathResolver;
-        private readonly FormFileHistoryController _controller = new FormFileHistoryController();
+        private readonly FormFileHistoryController _controller = new();
 
         private BuildReportTabPageExtension _buildReportTabPageExtension;
 
@@ -54,7 +55,7 @@ namespace GitUI.CommandsDialogs
             _formBrowseMenus.ResetMenuCommandSets();
             _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, FileChanges.MenuCommands.NavigateMenuCommands);
             _formBrowseMenus.AddMenuCommandSet(MainMenuItem.ViewMenu, FileChanges.MenuCommands.ViewMenuCommands);
-            _formBrowseMenus.InsertAdditionalMainMenuItems(toolStripSeparator4);
+            _formBrowseMenus.InsertRevisionGridMainMenuItems(toolStripSeparator4);
 
             _commitDataManager = new CommitDataManager(() => Module);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
@@ -93,10 +94,18 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public FormFileHistory(GitUICommands commands, string fileName, GitRevision revision = null, bool filterByRevision = false)
+        /// <summary>
+        /// Open FileHistory form
+        /// </summary>
+        /// <param name="commands">commands in the current form</param>
+        /// <param name="fileName">name in repo of file to view</param>
+        /// <param name="revision">initial selected commit</param>
+        /// <param name="filterByRevision">add filter</param>
+        /// <param name="showBlame">show blame initially instead of diff view</param>
+        public FormFileHistory(GitUICommands commands, string fileName, GitRevision revision = null, bool filterByRevision = false, bool showBlame = false)
             : this(commands)
         {
-            FileChanges.InitialObjectId = revision?.ObjectId;
+            FileChanges.SelectedId = revision?.ObjectId;
             FileChanges.ShowBuildServerInfo = true;
 
             FileName = fileName;
@@ -144,10 +153,12 @@ namespace GitUI.CommandsDialogs
                 showOriginalFilePathToolStripMenuItem.Checked = AppSettings.BlameShowOriginalFilePath;
             }
 
-            if (filterByRevision && revision?.ObjectId != null)
+            if (filterByRevision && revision?.ObjectId is not null)
             {
                 _filterBranchHelper.SetBranchFilter(revision.Guid, false);
             }
+
+            tabControl1.SelectedTab = blameTabExists && showBlame ? BlameTab : DiffTab;
         }
 
         /// <summary>
@@ -170,9 +181,6 @@ namespace GitUI.CommandsDialogs
 
             base.Dispose(disposing);
         }
-
-        public void SelectBlameTab() => tabControl1.SelectedTab = BlameTab;
-        public void SelectDiffTab() => tabControl1.SelectedTab = DiffTab;
 
         protected override void OnRuntimeLoad(EventArgs e)
         {
@@ -237,7 +245,7 @@ namespace GitUI.CommandsDialogs
                         "--format=\"%n\"",
                         "--name-only",
                         "--follow",
-                        GitCommandHelpers.FindRenamesAndCopiesOpts(),
+                        FindRenamesAndCopiesOpts(),
                         "--",
                         fileName.Quote()
                     };
@@ -261,13 +269,13 @@ namespace GitUI.CommandsDialogs
 
                     // here we need --name-only to get the previous filenames in the revision graph
                     res.path = listOfFileNames.ToString();
-                    res.revision += " --name-only --parents" + GitCommandHelpers.FindRenamesAndCopiesOpts();
+                    res.revision += $" --name-only --parents{FindRenamesAndCopiesOpts()}";
                 }
                 else if (AppSettings.FollowRenamesInFileHistory)
                 {
                     // history of a directory
                     // --parents doesn't work with --follow enabled, but needed to graph a filtered log
-                    res.revision = " " + GitCommandHelpers.FindRenamesOpt() + " --follow --parents";
+                    res.revision = $" {FindRenamesOpt()} --follow --parents";
                 }
                 else
                 {
@@ -282,6 +290,23 @@ namespace GitUI.CommandsDialogs
 
                 return res;
             }
+        }
+
+        // returns " --find-renames=..." according to app settings
+        private static ArgumentString FindRenamesOpt()
+        {
+            return AppSettings.FollowRenamesInFileHistoryExactOnly
+                ? " --find-renames=\"100%\""
+                : " --find-renames";
+        }
+
+        // returns " --find-renames=... --find-copies=..." according to app settings
+        private static ArgumentString FindRenamesAndCopiesOpts()
+        {
+            var findCopies = AppSettings.FollowRenamesInFileHistoryExactOnly
+                ? " --find-copies=\"100%\""
+                : " --find-copies";
+            return FindRenamesOpt() + findCopies;
         }
 
         private void FileChangesSelectionChanged(object sender, EventArgs e)
@@ -336,19 +361,19 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                if (CommitInfoTabPage.Parent == null)
+                if (CommitInfoTabPage.Parent is null)
                 {
                     tabControl1.TabPages.Insert(0, CommitInfoTabPage);
                 }
 
-                if (ViewTab.Parent == null)
+                if (ViewTab.Parent is null)
                 {
                     var index = tabControl1.TabPages.IndexOf(DiffTab);
                     Debug.Assert(index != -1, "TabControl should contain diff tab page");
                     tabControl1.TabPages.Insert(index + 1, ViewTab);
                 }
 
-                if (BlameTab.Parent == null)
+                if (BlameTab.Parent is null)
                 {
                     var index = tabControl1.TabPages.IndexOf(ViewTab);
                     Debug.Assert(index != -1, "TabControl should contain view tab page");
@@ -388,7 +413,7 @@ namespace GitUI.CommandsDialogs
                 CommitDiff.SetRevision(revision.ObjectId, fileName);
             }
 
-            if (_buildReportTabPageExtension == null)
+            if (_buildReportTabPageExtension is null)
             {
                 _buildReportTabPageExtension = new BuildReportTabPageExtension(() => Module, tabControl1, _buildReportTabCaption.Text);
             }
@@ -430,8 +455,13 @@ namespace GitUI.CommandsDialogs
                     orgFileName = FileName;
                 }
 
-                string fullName = _fullPathResolver.Resolve(orgFileName.ToNativePath());
+                string fullName = _fullPathResolver.Resolve(orgFileName);
+                if (string.IsNullOrWhiteSpace(fullName))
+                {
+                    return;
+                }
 
+                fullName = fullName.ToNativePath();
                 using (var fileDialog = new SaveFileDialog
                 {
                     InitialDirectory = Path.GetDirectoryName(fullName),
@@ -580,7 +610,7 @@ namespace GitUI.CommandsDialogs
             else if (e.Command == "gotobranch" || e.Command == "gototag")
             {
                 CommitData commit = _commitDataManager.GetCommitData(e.Data, out _);
-                if (commit != null)
+                if (commit is not null)
                 {
                     FileChanges.SetSelectedRevision(commit.ObjectId);
                 }
@@ -710,6 +740,11 @@ namespace GitUI.CommandsDialogs
             AppSettings.BlameShowAuthorAvatar = !AppSettings.BlameShowAuthorAvatar;
             showAuthorAvatarToolStripMenuItem.Checked = AppSettings.BlameShowAuthorAvatar;
             UpdateSelectedFileViewers(true);
+        }
+
+        private void GitcommandLogToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            FormGitCommandLog.ShowOrActivate(this);
         }
     }
 }

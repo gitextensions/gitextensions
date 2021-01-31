@@ -2,7 +2,6 @@
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
-using JetBrains.Annotations;
 
 namespace GitCommands.Git
 {
@@ -16,8 +15,7 @@ namespace GitCommands.Git
         /// </summary>
         /// <param name="repositoryPath">The repository working folder.</param>
         /// <returns>The resolved location of .git folder.</returns>
-        [NotNull]
-        string Resolve([NotNull] string repositoryPath);
+        string Resolve(string repositoryPath);
     }
 
     /// <summary>
@@ -27,7 +25,7 @@ namespace GitCommands.Git
     {
         private readonly IFileSystem _fileSystem;
 
-        public GitDirectoryResolver([NotNull] IFileSystem fileSystem)
+        public GitDirectoryResolver(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
         }
@@ -65,7 +63,7 @@ namespace GitCommands.Git
         /// <exception cref="ArgumentNullException"><paramref name="repositoryPath"/> is <see langword="null"/>.</exception>
         public string Resolve(string repositoryPath)
         {
-            if (repositoryPath == null)
+            if (repositoryPath is null)
             {
                 throw new ArgumentNullException(nameof(repositoryPath));
             }
@@ -80,7 +78,7 @@ namespace GitCommands.Git
             {
                 const string gitdir = "gitdir:";
                 var line = _fileSystem.File.ReadLines(gitPath).FirstOrDefault(l => l.StartsWith(gitdir));
-                if (line != null)
+                if (line is not null)
                 {
                     string path = line.Substring(gitdir.Length).Trim().ToNativePath();
                     if (Path.IsPathRooted(path))

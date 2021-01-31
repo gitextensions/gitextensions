@@ -23,7 +23,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [SetUp]
         public void SetUp()
         {
-            if (_referenceRepository == null)
+            if (_referenceRepository is null)
             {
                 _referenceRepository = new ReferenceRepository();
                 AppSettings.LoadSettings();
@@ -54,10 +54,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                 UITest.RunForm<FormEditor>(
                     () =>
                     {
-                        using (var formEditor = new FormEditor(_commands, filePath, showWarning: false))
-                        {
-                            formEditor.ShowDialog();
-                        }
+                        using var formEditor = new FormEditor(_commands, filePath, showWarning: false);
+                        formEditor.ShowDialog();
                     },
                     form =>
                     {
@@ -106,10 +104,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                 UITest.RunForm<FormEditor>(
                     () =>
                     {
-                        using (var formEditor = new FormEditor(_commands, filePath, showWarning: false))
-                        {
-                            formEditor.ShowDialog();
-                        }
+                        using var formEditor = new FormEditor(_commands, filePath, showWarning: false);
+                        formEditor.ShowDialog();
                     },
                     form =>
                     {

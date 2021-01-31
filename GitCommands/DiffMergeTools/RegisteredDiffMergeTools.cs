@@ -44,7 +44,7 @@ namespace GitCommands.DiffMergeTools
                 .Select(t => t.Key);
         }
 
-        internal static DiffMergeTool Get(string toolName)
+        internal static DiffMergeTool? Get(string toolName)
         {
             if (RegisteredTools.ContainsKey(toolName))
             {

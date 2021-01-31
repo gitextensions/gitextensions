@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -7,16 +6,23 @@ using GitCommands;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI.Avatars;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class AppearanceSettingsPage : SettingsPageWithHeader
     {
-        private readonly TranslationString _noDictFile = new TranslationString("None");
-        private readonly TranslationString _noDictFilesFound = new TranslationString("No dictionary files found in: {0}");
-        private readonly TranslationString _noImageServiceTooltip = new TranslationString("A default image, if an email address has no matching Gravatar image.\r\nSee http://en.gravatar.com/site/implement/images#default-image for more details.");
-        private readonly TranslationString _authorDateSortWarningTooltip = new TranslationString("Sorting by author date may delay rendering of the revision graph.");
+        private const string _customAvatarTemplateURL = "https://git-extensions-documentation.readthedocs.io/en/latest/settings.html#git-extensions-appearance-author-images-avatar-provider";
+        private const string _gravatarDefaultImageURL = "https://git-extensions-documentation.readthedocs.io/en/latest/settings.html#git-extensions-appearance-author-images-avatar-fallback";
+        private const string _spellingWikiURL = "https://github.com/gitextensions/gitextensions/wiki/Spelling";
+        private const string _translationsWikiURL = "https://github.com/gitextensions/gitextensions/wiki/Translations";
+
+        private readonly TranslationString _noDictFile = new("None");
+        private readonly TranslationString _noDictFilesFound = new("No dictionary files found in: {0}");
+        private readonly TranslationString _noImageServiceTooltip = new($"A default image, if the provider has no image for the email address.\r\n\r\nClick this info icon for more details.");
+        private readonly TranslationString _authorDateSortWarningTooltip = new("Sorting by author date may delay rendering of the revision graph.");
+        private readonly TranslationString _avatarProviderTooltip = new($"The avatar provider defines the source for user-defined avatar images.\r\nThe \"Default\" provider uses GitHub and Gravatar,\r\nthe \"Custom\" provider allows you to set custom provider URLs and\r\n\"None\" disables user-defined avatars.\r\n\r\nClick this info icon for more details.");
 
         public AppearanceSettingsPage()
         {
@@ -24,8 +30,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Text = "Appearance";
             InitializeComplete();
 
+            FillComboBoxWithEnumValues<GitRefsSortOrder>(_NO_TRANSLATE_cmbBranchesOrder);
+            FillComboBoxWithEnumValues<GitRefsSortBy>(_NO_TRANSLATE_cmbBranchesSortBy);
             FillComboBoxWithEnumValues<AvatarProvider>(AvatarProvider);
-            FillComboBoxWithEnumValues<GravatarFallbackAvatarType>(_NO_TRANSLATE_NoImageService);
+            FillComboBoxWithEnumValues<AvatarFallbackType>(_NO_TRANSLATE_NoImageService);
         }
 
         private void FillComboBoxWithEnumValues<T>(ComboBox comboBox) where T : Enum
@@ -43,20 +51,22 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             ToolTip.SetToolTip(_NO_TRANSLATE_NoImageService, _noImageServiceTooltip.Text);
             ToolTip.SetToolTip(pictureAvatarHelp, _noImageServiceTooltip.Text);
+            ToolTip.SetToolTip(avatarProviderHelp, _avatarProviderTooltip.Text);
             chkSortByAuthorDate.ToolTipText = _authorDateSortWarningTooltip.Text;
             pictureAvatarHelp.Size = DpiUtil.Scale(pictureAvatarHelp.Size);
+            avatarProviderHelp.Size = DpiUtil.Scale(avatarProviderHelp.Size);
 
             // align 1st columns across all tables
-            tlpnlGeneral.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
-            tlpnlAuthor.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
-            tlpnlLanguage.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
+            tlpnlGeneral.AdjustWidthToSize(0, lblBranchesSortBy, lblBranchesOrder, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
+            tlpnlAuthor.AdjustWidthToSize(0, lblBranchesSortBy, lblBranchesOrder, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
+            tlpnlLanguage.AdjustWidthToSize(0, lblBranchesSortBy, lblBranchesOrder, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
 
             // align 2nd columns across all tables
             truncatePathMethod.AdjustWidthToFitContent();
             Language.AdjustWidthToFitContent();
-            tlpnlGeneral.AdjustWidthToSize(1, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
-            tlpnlAuthor.AdjustWidthToSize(1, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
-            tlpnlLanguage.AdjustWidthToSize(1, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
+            tlpnlGeneral.AdjustWidthToSize(1, _NO_TRANSLATE_cmbBranchesSortBy, _NO_TRANSLATE_cmbBranchesOrder, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
+            tlpnlAuthor.AdjustWidthToSize(1, _NO_TRANSLATE_cmbBranchesSortBy, _NO_TRANSLATE_cmbBranchesOrder, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
+            tlpnlLanguage.AdjustWidthToSize(1, _NO_TRANSLATE_cmbBranchesSortBy, _NO_TRANSLATE_cmbBranchesOrder, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
         }
 
         public static SettingsPageReference GetPageReference()
@@ -75,8 +85,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             ShowAuthorAvatarInCommitGraph.Checked = AppSettings.ShowAuthorAvatarColumn;
             chkSortByAuthorDate.Checked = AppSettings.SortByAuthorDate;
             AvatarProvider.SelectedValue = AppSettings.AvatarProvider;
-            _NO_TRANSLATE_NoImageService.SelectedValue = AppSettings.GravatarFallbackAvatarType;
-            ManageGravatarOptionsDisplay();
+            _NO_TRANSLATE_NoImageService.SelectedValue = AppSettings.AvatarFallbackType;
+            txtCustomAvatarTemplate.Text = AppSettings.CustomAvatarTemplate;
+            ManageAvatarOptionsDisplay();
 
             Language.Items.Clear();
             Language.Items.Add("English");
@@ -84,6 +95,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Language.Text = AppSettings.Translation;
 
             truncatePathMethod.SelectedIndex = GetTruncatePathMethodIndex(AppSettings.TruncatePathMethod);
+            _NO_TRANSLATE_cmbBranchesOrder.SelectedIndex = (int)AppSettings.RefsSortOrder;
+            _NO_TRANSLATE_cmbBranchesSortBy.SelectedIndex = (int)AppSettings.RefsSortBy;
 
             Dictionary.Items.Clear();
             Dictionary.Items.Add(_noDictFile.Text);
@@ -127,6 +140,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void PageToSettings()
         {
+            var shouldClearCache =
+                AppSettings.AvatarProvider != (AvatarProvider)AvatarProvider.SelectedValue
+                || AppSettings.AvatarFallbackType != (AvatarFallbackType)_NO_TRANSLATE_NoImageService.SelectedValue
+                || AppSettings.CustomAvatarTemplate != txtCustomAvatarTemplate.Text;
+
             AppSettings.EnableAutoScale = chkEnableAutoScale.Checked;
             AppSettings.TruncatePathMethod = GetTruncatePathMethodString(truncatePathMethod.SelectedIndex);
             AppSettings.ShowRepoCurrentBranch = chkShowRepoCurrentBranch.Checked;
@@ -134,21 +152,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowAuthorAvatarColumn = ShowAuthorAvatarInCommitGraph.Checked;
             AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatarInCommitInfo.Checked;
             AppSettings.AvatarImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
+            AppSettings.CustomAvatarTemplate = txtCustomAvatarTemplate.Text;
             AppSettings.SortByAuthorDate = chkSortByAuthorDate.Checked;
+            AppSettings.RefsSortOrder = (GitRefsSortOrder)_NO_TRANSLATE_cmbBranchesOrder.SelectedIndex;
+            AppSettings.RefsSortBy = (GitRefsSortBy)_NO_TRANSLATE_cmbBranchesSortBy.SelectedIndex;
 
             AppSettings.Translation = Language.Text;
             ResourceManager.Strings.Reinitialize();
             Strings.Reinitialize();
 
-            var shouldClearCache =
-                AppSettings.AvatarProvider != (AvatarProvider)AvatarProvider.SelectedValue
-                || AppSettings.GravatarFallbackAvatarType != (GravatarFallbackAvatarType)_NO_TRANSLATE_NoImageService.SelectedValue;
-
             AppSettings.AvatarProvider = (AvatarProvider)AvatarProvider.SelectedValue;
 
-            if (_NO_TRANSLATE_NoImageService.SelectedValue is GravatarFallbackAvatarType imageType)
+            if (_NO_TRANSLATE_NoImageService.SelectedValue is AvatarFallbackType imageType)
             {
-                AppSettings.GravatarFallbackAvatarType = imageType;
+                AppSettings.AvatarFallbackType = imageType;
             }
 
             if (shouldClearCache)
@@ -162,20 +179,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             return;
 
-            TruncatePathMethod GetTruncatePathMethodString(int index)
+            TruncatePathMethod GetTruncatePathMethodString(int index) => index switch
             {
-                switch (index)
-                {
-                    case 1:
-                        return TruncatePathMethod.Compact;
-                    case 2:
-                        return TruncatePathMethod.TrimStart;
-                    case 3:
-                        return TruncatePathMethod.FileNameOnly;
-                    default:
-                        return TruncatePathMethod.None;
-                }
-            }
+                1 => TruncatePathMethod.Compact,
+                2 => TruncatePathMethod.TrimStart,
+                3 => TruncatePathMethod.FileNameOnly,
+                _ => TruncatePathMethod.None,
+            };
         }
 
         private void Dictionary_DropDown(object sender, EventArgs e)
@@ -204,35 +214,40 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ClearImageCache_Click(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.Run(AvatarService.Default.ClearCacheAsync);
+            ThreadHelper.JoinableTaskFactory.Run(AvatarService.CacheCleaner.ClearCacheAsync);
         }
 
         private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"https://github.com/gitextensions/gitextensions/wiki/Translations");
+            OsShellUtil.OpenUrlInDefaultBrowser(_translationsWikiURL);
         }
 
         private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"https://github.com/gitextensions/gitextensions/wiki/Spelling");
+            OsShellUtil.OpenUrlInDefaultBrowser(_spellingWikiURL);
         }
 
         private void pictureAvatarHelp_Click(object sender, EventArgs e)
         {
-            Process.Start(@"http://en.gravatar.com/site/implement/images#default-image");
+            OsShellUtil.OpenUrlInDefaultBrowser(_gravatarDefaultImageURL);
+        }
+
+        private void customAvatarHelp_Click(object sender, EventArgs e)
+        {
+            OsShellUtil.OpenUrlInDefaultBrowser(_customAvatarTemplateURL);
         }
 
         private void AvatarProvider_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ManageGravatarOptionsDisplay();
+            ManageAvatarOptionsDisplay();
         }
 
-        private void ManageGravatarOptionsDisplay()
+        private void ManageAvatarOptionsDisplay()
         {
-            var showAvatarOptions = (AvatarProvider)AvatarProvider.SelectedValue == GitCommands.AvatarProvider.Gravatar;
-            lblNoImageService.Visible = showAvatarOptions;
-            _NO_TRANSLATE_NoImageService.Visible = showAvatarOptions;
-            pictureAvatarHelp.Visible = showAvatarOptions;
+            var showCustomTemplate = (AvatarProvider)AvatarProvider.SelectedValue == GitCommands.AvatarProvider.Custom;
+
+            lblCustomAvatarTemplate.Visible = showCustomTemplate;
+            txtCustomAvatarTemplate.Visible = showCustomTemplate;
         }
 
         private class ComboBoxItem<T>

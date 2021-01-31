@@ -2,9 +2,9 @@
 
 namespace GitExtUtils.GitUI.Theming
 {
-    public struct ThemeId
+    public readonly struct ThemeId
     {
-        public static ThemeId Default { get; } = new ThemeId(string.Empty, false);
+        public static ThemeId Default { get; } = new(string.Empty, false);
 
         public string Name { get; }
         public bool IsBuiltin { get; }
@@ -21,7 +21,7 @@ namespace GitExtUtils.GitUI.Theming
         public override int GetHashCode()
         {
             // Name can be null because of default struct constructor
-            int nameHashCode = Name == null
+            int nameHashCode = Name is null
                 ? 0
                 : StringComparer.OrdinalIgnoreCase.GetHashCode(Name);
             return nameHashCode ^ IsBuiltin.GetHashCode();

@@ -11,47 +11,45 @@ namespace GitUI.Theming
         public override int RenderBackground(IntPtr hdc, int partId, int stateId, Rectangle prect,
             NativeMethods.RECTCLS pcliprect)
         {
-            using (var ctx = CreateRenderContext(hdc, pcliprect))
+            using var ctx = CreateRenderContext(hdc, pcliprect);
+            switch ((Parts)partId)
             {
-                switch ((Parts)partId)
+                case Parts.None:
                 {
-                    case Parts.None:
+                    ctx.Graphics.FillRectangle(SystemBrushes.Control, prect);
+                    return Handled;
+                }
+
+                case Parts.HP_HEADERITEM:
+                {
+                    var backBrush = GetBackBrush((State.Item)stateId);
+                    ctx.Graphics.FillRectangle(backBrush, prect);
+                    ctx.Graphics.DrawLine(SystemPens.ControlDark,
+                        new Point(prect.Right - 1, prect.Top),
+                        new Point(prect.Right - 1, prect.Bottom - 1));
+                    return Handled;
+                }
+
+                case Parts.HP_HEADERSORTARROW:
+                {
+                    var arrowPoints = GetArrowPolygon((State.SortArrow)stateId, prect);
+                    ctx.Graphics.FillRectangle(SystemBrushes.Control, prect);
+                    using (ctx.HighQuality())
                     {
-                        ctx.Graphics.FillRectangle(SystemBrushes.Control, prect);
-                        return Handled;
+                        ctx.Graphics.FillPolygon(SystemBrushes.ControlDarkDark, arrowPoints);
                     }
 
-                    case Parts.HP_HEADERITEM:
-                    {
-                        var backBrush = GetBackBrush((State.Item)stateId);
-                        ctx.Graphics.FillRectangle(backBrush, prect);
-                        ctx.Graphics.DrawLine(SystemPens.ControlDark,
-                            new Point(prect.Right - 1, prect.Top),
-                            new Point(prect.Right - 1, prect.Bottom - 1));
-                        return Handled;
-                    }
+                    return Handled;
+                }
 
-                    case Parts.HP_HEADERSORTARROW:
-                    {
-                        var arrowPoints = GetArrowPolygon((State.SortArrow)stateId, prect);
-                        ctx.Graphics.FillRectangle(SystemBrushes.Control, prect);
-                        using (ctx.HighQuality())
-                        {
-                            ctx.Graphics.FillPolygon(SystemBrushes.ControlDarkDark, arrowPoints);
-                        }
-
-                        return Handled;
-                    }
-
-                    // case Parts.HP_HEADERITEMLEFT:
-                    // case Parts.HP_HEADERITEMRIGHT:
-                    // case Parts.HP_HEADERDROPDOWN:
-                    // case Parts.HP_HEADERDROPDOWNFILTER:
-                    // case Parts.HP_HEADEROVERFLOW:
-                    default:
-                    {
-                        return Unhandled;
-                    }
+                // case Parts.HP_HEADERITEMLEFT:
+                // case Parts.HP_HEADERITEMRIGHT:
+                // case Parts.HP_HEADERDROPDOWN:
+                // case Parts.HP_HEADERDROPDOWNFILTER:
+                // case Parts.HP_HEADEROVERFLOW:
+                default:
+                {
+                    return Unhandled;
                 }
             }
         }

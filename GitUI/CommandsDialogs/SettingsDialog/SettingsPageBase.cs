@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             get
             {
-                if (_pageHost == null)
+                if (_pageHost is null)
                 {
                     throw new InvalidOperationException("PageHost instance was not passed to page: " + GetType().FullName);
                 }
@@ -126,19 +126,31 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             _controlBindings.Add(binding);
         }
 
-        protected void AddSettingBinding(BoolNullableSetting setting, CheckBox checkBox)
+        protected void AddSettingBinding(ISetting<bool> setting, CheckBox checkBox)
         {
             var adapter = new BoolCheckBoxAdapter(setting, checkBox);
             AddControlBinding(adapter.CreateControlBinding());
         }
 
-        protected void AddSettingBinding(IntNullableSetting setting, TextBox control)
+        protected void AddSettingBinding(ISetting<bool?> setting, CheckBox checkBox)
+        {
+            var adapter = new BoolCheckBoxAdapter(setting, checkBox);
+            AddControlBinding(adapter.CreateControlBinding());
+        }
+
+        protected void AddSettingBinding(ISetting<int> setting, TextBox control)
         {
             var adapter = new IntTextBoxAdapter(setting, control);
             AddControlBinding(adapter.CreateControlBinding());
         }
 
-        protected void AddSettingBinding(GitCommands.Settings.StringSetting setting, ComboBox comboBox)
+        protected void AddSettingBinding(ISetting<int?> setting, TextBox control)
+        {
+            var adapter = new IntTextBoxAdapter(setting, control);
+            AddControlBinding(adapter.CreateControlBinding());
+        }
+
+        protected void AddSettingBinding(ISetting<string> setting, ComboBox comboBox)
         {
             var adapter = new StringComboBoxAdapter(setting, comboBox);
             AddControlBinding(adapter.CreateControlBinding());
@@ -198,10 +210,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public virtual SettingsPageReference PageReference => new SettingsPageReferenceByType(GetType());
     }
 
-    public class BoolCheckBoxAdapter : GitUIPluginInterfaces.BoolSetting
+    public class BoolCheckBoxAdapter : BoolSetting
     {
-        public BoolCheckBoxAdapter(BoolNullableSetting setting, CheckBox checkBox)
-            : base(setting.FullPath, setting.DefaultValue.Value)
+        public BoolCheckBoxAdapter(ISetting<bool> setting, CheckBox checkBox)
+            : base(setting.FullPath, setting.Default)
+        {
+            CustomControl = checkBox;
+        }
+
+        public BoolCheckBoxAdapter(ISetting<bool?> setting, CheckBox checkBox)
+            : base(setting.FullPath, setting.Default.Value)
         {
             CustomControl = checkBox;
         }
@@ -209,8 +227,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
     public class StringComboBoxAdapter : ChoiceSetting
     {
-        public StringComboBoxAdapter(GitCommands.Settings.StringSetting setting, ComboBox comboBox)
-            : base(setting.FullPath, comboBox.Items.Cast<string>().ToList(), setting.DefaultValue)
+        public StringComboBoxAdapter(ISetting<string> setting, ComboBox comboBox)
+            : base(setting.FullPath, comboBox.Items.Cast<string>().ToList(), setting.Default)
         {
             CustomControl = comboBox;
         }
@@ -218,8 +236,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
     public class IntTextBoxAdapter : NumberSetting<int>
     {
-        public IntTextBoxAdapter(IntNullableSetting setting, TextBox control)
-            : base(setting.FullPath, setting.DefaultValue.Value)
+        public IntTextBoxAdapter(ISetting<int> setting, TextBox control)
+            : base(setting.FullPath, setting.Default)
+        {
+            CustomControl = control;
+        }
+
+        public IntTextBoxAdapter(ISetting<int?> setting, TextBox control)
+            : base(setting.FullPath, setting.Default.Value)
         {
             CustomControl = control;
         }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +13,21 @@ namespace GitUITests.Editor
     [TestFixture]
     public class FindAndReplaceFormTests
     {
+        public struct TextRegion
+        {
+            internal TextLocation Start;
+            internal TextLocation End;
+
+            internal TextRegion(TextLocation start, TextLocation end)
+            {
+                Start = start;
+                End = end;
+            }
+
+            public override string ToString()
+                => $"[[Line = {Start.X}, Column = {Start.Y}], [Line = {End.X}, Column = {End.Y}]]";
+        }
+
         private FindAndReplaceForm _findAndReplaceForm;
         private FindAndReplaceForm.TestAccessor _testAccessor;
         private TextEditorControl _textEditorControl;
@@ -32,7 +47,7 @@ namespace GitUITests.Editor
             _textEditorControl.Dispose();
         }
 
-        public static IEnumerable<TestCaseData> MatchCase
+        private static IEnumerable<TestCaseData> MatchCase
         {
             get
             {
@@ -43,7 +58,7 @@ namespace GitUITests.Editor
             }
         }
 
-        [Test, TestCaseSource(nameof(MatchCase))]
+        [TestCaseSource(nameof(MatchCase))]
         public async Task FindNextAsync_match_case(string text, string searchPhrase, bool matchCase, TextRange expectedRange)
         {
             Arrange(text, searchPhrase, matchCase);
@@ -53,7 +68,7 @@ namespace GitUITests.Editor
             AssertTextRange(expectedRange, actualRange);
         }
 
-        public static IEnumerable<TestCaseData> MatchWholeWordOnly
+        private static IEnumerable<TestCaseData> MatchWholeWordOnly
         {
             get
             {
@@ -62,7 +77,7 @@ namespace GitUITests.Editor
             }
         }
 
-        [Test, TestCaseSource(nameof(MatchWholeWordOnly))]
+        [TestCaseSource(nameof(MatchWholeWordOnly))]
         public async Task FindNextAsync_match_whole_world_only(string text, string searchPhrase, TextRange expectedRange)
         {
             Arrange(text, searchPhrase, matchWholeWordOnly: true);
@@ -72,21 +87,21 @@ namespace GitUITests.Editor
             AssertTextRange(expectedRange, actualRange);
         }
 
-        public static IEnumerable<TestCaseData> LoopAround
+        private static IEnumerable<TestCaseData> LoopAround
         {
             get
             {
                 const string textToSearch = "line odd\r\nline even\r\nline odd";
 
                 // Search entire document, both directions
-                yield return new TestCaseData(textToSearch, "odd", false, default, default, new[]
+                yield return new TestCaseData(textToSearch, "odd", false, default, new[]
                 {
                     new TextRange(5, 3),
                     new TextRange(26, 3),
                     new TextRange(5, 3),
                 });
 
-                yield return new TestCaseData(textToSearch, "odd", true, default, default, new[]
+                yield return new TestCaseData(textToSearch, "odd", true, default, new[]
                 {
                     new TextRange(26, 3),
                     new TextRange(5, 3),
@@ -94,14 +109,14 @@ namespace GitUITests.Editor
                 });
 
                 // Search scan region, both directions
-                yield return new TestCaseData(textToSearch, "line", false, new TextLocation(0, 1), new TextLocation(5, 2), new[]
+                yield return new TestCaseData(textToSearch, "line", false, new TextRegion(new TextLocation(0, 1), new TextLocation(5, 2)), new[]
                 {
                     new TextRange(10, 4),
                     new TextRange(21, 4),
                     new TextRange(10, 4),
                 });
 
-                yield return new TestCaseData(textToSearch, "line", true, new TextLocation(0, 1), new TextLocation(5, 2), new[]
+                yield return new TestCaseData(textToSearch, "line", true, new TextRegion(new TextLocation(0, 1), new TextLocation(5, 2)), new[]
                 {
                     new TextRange(21, 4),
                     new TextRange(10, 4),
@@ -110,16 +125,15 @@ namespace GitUITests.Editor
             }
         }
 
-        [Test, TestCaseSource(nameof(LoopAround))]
+        [TestCaseSource(nameof(LoopAround))]
         public async Task FindNextAsync_should_make_a_loop_and_return_to_first_occurrence(
             string text,
             string searchPhrase,
             bool searchBackwards,
-            TextLocation scanRegionStart,
-            TextLocation scanRegionEnd,
-            IEnumerable<TextRange> expectedRanges)
+            TextRegion scanRegion,
+            TextRange[] expectedRanges)
         {
-            Arrange(text, searchPhrase, scanRegionStart: scanRegionStart, scanRegionEnd: scanRegionEnd);
+            Arrange(text, searchPhrase, scanRegion: scanRegion);
 
             foreach (TextRange expectedRange in expectedRanges)
             {
@@ -132,10 +146,7 @@ namespace GitUITests.Editor
         [Test]
         public async Task FindNextAsync_pressing_f3_outside_of_scan_region_should_clear_it()
         {
-            Arrange("line one\r\nline two\r\nline three",
-                "line",
-                scanRegionStart: new TextLocation(0, 0),
-                scanRegionEnd: new TextLocation(0, 1));
+            Arrange("line one\r\nline two\r\nline three", "line", scanRegion: new TextRegion(new TextLocation(0, 0), new TextLocation(0, 1)));
 
             var actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
             AssertTextRange(new TextRange(0, 4), actualRange);
@@ -148,7 +159,7 @@ namespace GitUITests.Editor
             AssertTextRange(new TextRange(20, 4), actualRange);
         }
 
-        public static IEnumerable<TestCaseData> MultiFileSearch
+        private static IEnumerable<TestCaseData> MultiFileSearch
         {
             get
             {
@@ -157,26 +168,23 @@ namespace GitUITests.Editor
                     new[] { "line one\r\nline two\r\nline three", "content one\r\ncontent two\r\ncontent three" },
                     "two",
                     default,
-                    default,
                     new[] { new TextRange(15, 3), new TextRange(21, 3), new TextRange(15, 3) });
 
                 // Has scan region, should search the first file only
                 yield return new TestCaseData(
                     new[] { "line one\r\nline two\r\nline three", "content one\r\ncontent two\r\ncontent three" },
                     "two",
-                    new TextLocation(0, 1),
-                    new TextLocation(0, 2),
+                    new TextRegion(new TextLocation(0, 1), new TextLocation(0, 2)),
                     new[] { new TextRange(15, 3), new TextRange(15, 3) });
             }
         }
 
-        [Test, TestCaseSource(nameof(MultiFileSearch))]
+        [TestCaseSource(nameof(MultiFileSearch))]
         public async Task FindNextAsync_should_iterate_over_files(
             string[] texts,
             string searchPhrase,
-            TextLocation scanRegionStart,
-            TextLocation scanRegionEnd,
-            IEnumerable<TextRange> expectedRanges)
+            TextRegion scanRegion,
+            TextRange[] expectedRanges)
         {
             int currentIndex = 0;
 
@@ -190,7 +198,7 @@ namespace GitUITests.Editor
                 return true;
             }
 
-            Arrange(texts.First(), searchPhrase, scanRegionStart: scanRegionStart, scanRegionEnd: scanRegionEnd, fileLoader: FileLoader);
+            Arrange(texts.First(), searchPhrase, scanRegion: scanRegion, fileLoader: FileLoader);
 
             foreach (TextRange expectedRange in expectedRanges)
             {
@@ -203,9 +211,7 @@ namespace GitUITests.Editor
         [Test]
         public void FindAndReplaceForm_scan_region_clears_if_new_text_was_set()
         {
-            Arrange("line 1\r\nline 2\r\nline 3", "line",
-                scanRegionStart: new TextLocation(0, 1),
-                scanRegionEnd: new TextLocation(0, 2));
+            Arrange("line 1\r\nline 2\r\nline 3", "line", scanRegion: new TextRegion(new TextLocation(0, 1), new TextLocation(0, 2)));
 
             Assert.IsTrue(_testAccessor.Search.HasScanRegion);
 
@@ -218,8 +224,7 @@ namespace GitUITests.Editor
             string searchPhrase,
             bool matchCase = false,
             bool matchWholeWordOnly = false,
-            TextLocation scanRegionStart = default,
-            TextLocation scanRegionEnd = default,
+            TextRegion scanRegion = default,
             GetNextFileFnc fileLoader = null)
         {
             _textEditorControl.Text = text;
@@ -229,11 +234,11 @@ namespace GitUITests.Editor
             _testAccessor.ChkMatchWholeWord.Checked = matchWholeWordOnly;
             _findAndReplaceForm.SetFileLoader(fileLoader);
 
-            if (scanRegionStart != default || scanRegionEnd != default)
+            if (scanRegion.Start != default || scanRegion.End != default)
             {
-                var selection = new DefaultSelection(_textEditorControl.Document, scanRegionStart, scanRegionEnd);
+                var selection = new DefaultSelection(_textEditorControl.Document, scanRegion.Start, scanRegion.End);
                 _textEditorControl.ActiveTextAreaControl.SelectionManager.SetSelection(selection);
-                _textEditorControl.ActiveTextAreaControl.Caret.Position = scanRegionEnd;
+                _textEditorControl.ActiveTextAreaControl.Caret.Position = scanRegion.End;
                 _testAccessor.Search.SetScanRegion(selection);
             }
         }
@@ -243,7 +248,7 @@ namespace GitUITests.Editor
             // Assert returned value
             Assert.That(actualRange, Is.EqualTo(expectedRange).Using(new SegmentComparer()));
 
-            if (expectedRange == null)
+            if (expectedRange is null)
             {
                 return;
             }

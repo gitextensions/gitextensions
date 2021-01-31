@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 OpenSSH.Checked = true;
             }
-            else if (GitCommandHelpers.Plink())
+            else if (GitSshHelpers.Plink())
             {
                 Putty.Checked = true;
             }
@@ -61,17 +61,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (OpenSSH.Checked)
             {
-                GitCommandHelpers.UnsetSsh();
+                GitSshHelpers.UnsetSsh();
             }
 
             if (Putty.Checked)
             {
-                GitCommandHelpers.SetSsh(PlinkPath.Text);
+                GitSshHelpers.SetSsh(PlinkPath.Text);
             }
 
             if (Other.Checked)
             {
-                GitCommandHelpers.SetSsh(OtherSsh.Text);
+                GitSshHelpers.SetSsh(OtherSsh.Text);
             }
         }
 
@@ -109,19 +109,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             yield return programFiles + @"\TortoiseGit\bin\";
-            if (programFilesX86 != null)
+            if (programFilesX86 is not null)
             {
                 yield return programFilesX86 + @"\TortoiseGit\bin\";
             }
 
             yield return programFiles + @"\TortoiseSvn\bin\";
-            if (programFilesX86 != null)
+            if (programFilesX86 is not null)
             {
                 yield return programFilesX86 + @"\TortoiseSvn\bin\";
             }
 
             yield return programFiles + @"\PuTTY\";
-            if (programFilesX86 != null)
+            if (programFilesX86 is not null)
             {
                 yield return programFilesX86 + @"\PuTTY\";
             }

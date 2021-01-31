@@ -24,7 +24,7 @@ namespace GitUI.Hotkey
         {
             get
             {
-                if (_serializer == null)
+                if (_serializer is null)
                 {
                     _serializer = new XmlSerializer(typeof(HotkeySettings[]), new[] { typeof(HotkeyCommand) });
                 }
@@ -92,7 +92,7 @@ namespace GitUI.Hotkey
             {
                 foreach (var command in setting.Commands)
                 {
-                    if (command != null)
+                    if (command is not null)
                     {
                         _usedKeys.Add(command.KeyData);
                     }
@@ -122,7 +122,7 @@ namespace GitUI.Hotkey
 
         internal static void MergeIntoDefaultSettings(HotkeySettings[] defaultSettings, HotkeySettings[] loadedSettings)
         {
-            if (loadedSettings == null)
+            if (loadedSettings is null)
             {
                 return;
             }
@@ -136,11 +136,11 @@ namespace GitUI.Hotkey
             {
                 foreach (var setting in loadedSettings)
                 {
-                    if (setting != null)
+                    if (setting is not null)
                     {
                         foreach (var command in setting.Commands)
                         {
-                            if (command != null)
+                            if (command is not null)
                             {
                                 string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
                                 if (defaultCommands.TryGetValue(dictKey, out var defaultCommand))
@@ -159,7 +159,7 @@ namespace GitUI.Hotkey
                 {
                     foreach (var command in setting.Commands)
                     {
-                        if (command != null)
+                        if (command is not null)
                         {
                             string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
                             defaultCommands.Add(dictKey, command);
@@ -202,13 +202,13 @@ namespace GitUI.Hotkey
 
         private static void MigrateSettings()
         {
-            if (AppSettings.SerializedHotkeys == null)
+            if (AppSettings.SerializedHotkeys is null)
             {
                 Properties.Settings.Default.Upgrade();
                 if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.Hotkeys))
                 {
                     HotkeySettings[] settings = LoadSerializedSettings(Properties.Settings.Default.Hotkeys);
-                    if (settings == null)
+                    if (settings is null)
                     {
                         AppSettings.SerializedHotkeys = " "; // mark settings as migrated
                     }
@@ -335,18 +335,21 @@ namespace GitUI.Hotkey
                     Hk(RevisionGridControl.Command.ToggleShowTags, Keys.Control | Keys.Alt | Keys.T)),
                 new HotkeySettings(
                     FileViewer.HotkeySettingsName,
-                    Hk(FileViewer.Commands.Find, Keys.Control | Keys.F),
-                    Hk(FileViewer.Commands.FindNextOrOpenWithDifftool, OpenWithDifftoolHotkey),
-                    Hk(FileViewer.Commands.FindPrevious, Keys.Shift | OpenWithDifftoolHotkey),
-                    Hk(FileViewer.Commands.GoToLine, Keys.Control | Keys.G),
-                    Hk(FileViewer.Commands.IncreaseNumberOfVisibleLines, Keys.None),
-                    Hk(FileViewer.Commands.DecreaseNumberOfVisibleLines, Keys.None),
-                    Hk(FileViewer.Commands.NextChange, Keys.Alt | Keys.Down),
-                    Hk(FileViewer.Commands.PreviousChange, Keys.Alt | Keys.Up),
-                    Hk(FileViewer.Commands.ShowEntireFile, Keys.None),
-                    Hk(FileViewer.Commands.TreatFileAsText, Keys.None),
-                    Hk(FileViewer.Commands.NextOccurrence, Keys.Alt | Keys.Right),
-                    Hk(FileViewer.Commands.PreviousOccurrence, Keys.Alt | Keys.Left)),
+                    Hk(FileViewer.Command.Find, Keys.Control | Keys.F),
+                    Hk(FileViewer.Command.FindNextOrOpenWithDifftool, OpenWithDifftoolHotkey),
+                    Hk(FileViewer.Command.FindPrevious, Keys.Shift | OpenWithDifftoolHotkey),
+                    Hk(FileViewer.Command.GoToLine, Keys.Control | Keys.G),
+                    Hk(FileViewer.Command.IncreaseNumberOfVisibleLines, Keys.None),
+                    Hk(FileViewer.Command.DecreaseNumberOfVisibleLines, Keys.None),
+                    Hk(FileViewer.Command.NextChange, Keys.Alt | Keys.Down),
+                    Hk(FileViewer.Command.PreviousChange, Keys.Alt | Keys.Up),
+                    Hk(FileViewer.Command.ShowEntireFile, Keys.None),
+                    Hk(FileViewer.Command.TreatFileAsText, Keys.None),
+                    Hk(FileViewer.Command.NextOccurrence, Keys.Alt | Keys.Right),
+                    Hk(FileViewer.Command.PreviousOccurrence, Keys.Alt | Keys.Left),
+                    Hk(FileViewer.Command.StageLines, Keys.S),
+                    Hk(FileViewer.Command.UnstageLines, Keys.U),
+                    Hk(FileViewer.Command.ResetLines, Keys.R)),
                 new HotkeySettings(
                     FormResolveConflicts.HotkeySettingsName,
                     Hk(FormResolveConflicts.Commands.ChooseBase, Keys.B),
@@ -364,7 +367,10 @@ namespace GitUI.Hotkey
                     Hk(RevisionDiffControl.Command.OpenWithDifftool, OpenWithDifftoolHotkey),
                     Hk(RevisionDiffControl.Command.OpenWithDifftoolFirstToLocal, OpenWithDifftoolFirstToLocalHotkey),
                     Hk(RevisionDiffControl.Command.OpenWithDifftoolSelectedToLocal, OpenWithDifftoolSelectedToLocalHotkey),
-                    Hk(RevisionDiffControl.Command.ShowHistory, ShowHistoryHotkey)),
+                    Hk(RevisionDiffControl.Command.ShowHistory, ShowHistoryHotkey),
+                    Hk(RevisionDiffControl.Command.ResetSelectedFiles, Keys.R),
+                    Hk(RevisionDiffControl.Command.StageSelectedFile, Keys.S),
+                    Hk(RevisionDiffControl.Command.UnStageSelectedFile, Keys.U)),
                 new HotkeySettings(
                     RevisionFileTreeControl.HotkeySettingsName,
                     Hk(RevisionFileTreeControl.Command.Blame, BlameHotkey),

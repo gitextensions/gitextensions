@@ -8,26 +8,28 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
+using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class FormClone : GitModuleForm
+    public partial class FormClone : GitExtensionsDialog
     {
-        private readonly TranslationString _infoNewRepositoryLocation = new TranslationString("The repository will be cloned to a new directory located here:" + Environment.NewLine + "{0}");
-        private readonly TranslationString _infoDirectoryExists = new TranslationString("(Directory already exists)");
-        private readonly TranslationString _infoDirectoryNew = new TranslationString("(New directory)");
-        private readonly TranslationString _questionOpenRepo = new TranslationString("The repository has been cloned successfully." + Environment.NewLine + "Do you want to open the new repository \"{0}\" now?");
-        private readonly TranslationString _questionOpenRepoCaption = new TranslationString("Open");
-        private readonly TranslationString _branchDefaultRemoteHead = new TranslationString("(default: remote HEAD)" /* Has a colon, so won't alias with any valid branch name */);
-        private readonly TranslationString _branchNone = new TranslationString("(none: don't checkout after clone)" /* Has a colon, so won't alias with any valid branch name */);
-        private readonly TranslationString _errorDestinationNotSupplied = new TranslationString("You need to specify destination folder.");
-        private readonly TranslationString _errorDestinationNotRooted = new TranslationString("Destination folder must be an absolute path.");
-        private readonly TranslationString _errorCloneFailed = new TranslationString("Clone Failed");
+        private readonly TranslationString _infoNewRepositoryLocation = new("The repository will be cloned to a new directory located here:" + Environment.NewLine + "{0}");
+        private readonly TranslationString _infoDirectoryExists = new("(Directory already exists)");
+        private readonly TranslationString _infoDirectoryNew = new("(New directory)");
+        private readonly TranslationString _questionOpenRepo = new("The repository has been cloned successfully." + Environment.NewLine + "Do you want to open the new repository \"{0}\" now?");
+        private readonly TranslationString _questionOpenRepoCaption = new("Open");
+        private readonly TranslationString _branchDefaultRemoteHead = new("(default: remote HEAD)" /* Has a colon, so won't alias with any valid branch name */);
+        private readonly TranslationString _branchNone = new("(none: don't checkout after clone)" /* Has a colon, so won't alias with any valid branch name */);
+        private readonly TranslationString _errorDestinationNotSupplied = new("You need to specify destination folder.");
+        private readonly TranslationString _errorDestinationNotRooted = new("Destination folder must be an absolute path.");
+        private readonly TranslationString _errorCloneFailed = new("Clone Failed");
 
         private readonly bool _openedFromProtocolHandler;
         private readonly string _url;
@@ -42,10 +44,16 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormClone(GitUICommands commands, string url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs> gitModuleChanged)
-            : base(commands)
+            : base(commands, enablePositionRestore: false)
         {
             _gitModuleChanged = gitModuleChanged;
             InitializeComponent();
+
+            // work-around the designer bug that can't add controls to FlowLayoutPanel
+            ControlsPanel.Controls.Add(Ok);
+            ControlsPanel.Controls.Add(LoadSSHKey);
+            AcceptButton = Ok;
+
             InitializeComplete();
             _openedFromProtocolHandler = openedFromProtocolHandler;
             _url = url;
@@ -67,8 +75,10 @@ namespace GitUI.CommandsDialogs
             base.OnRuntimeLoad(e);
 
             // scale up for hi DPI
-            MaximumSize = DpiUtil.Scale(new Size(950, 375));
-            MinimumSize = DpiUtil.Scale(new Size(450, 375));
+            MaximumSize = DpiUtil.Scale(new Size(950, 398));
+            MinimumSize = DpiUtil.Scale(new Size(450, 398));
+            Size = new Size((tpnlMain.Left * 2) + tpnlMain.Width + /* right margin */DpiUtil.Scale(16), Height);
+            tpnlMain.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
@@ -245,7 +255,7 @@ namespace GitUI.CommandsDialogs
                                                           CentralRepository.Checked,
                                                           cbIntializeAllSubmodules.Checked,
                                                           branch, depth, isSingleBranch, cbLfs.Checked);
-                using (var fromProcess = new FormRemoteProcess(Module, AppSettings.GitCommand, cloneCmd))
+                using (var fromProcess = new FormRemoteProcess(UICommands, AppSettings.GitCommand, cloneCmd))
                 {
                     fromProcess.SetUrlTryingToConnect(sourceRepo);
                     fromProcess.ShowDialog(this);
@@ -276,7 +286,7 @@ namespace GitUI.CommandsDialogs
                     var uiCommands = new GitUICommands(dirTo);
                     uiCommands.StartBrowseDialog();
                 }
-                else if (ShowInTaskbar == false && _gitModuleChanged != null &&
+                else if (ShowInTaskbar == false && _gitModuleChanged is not null &&
                     AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
                     _gitModuleChanged(this, new GitModuleEventArgs(new GitModule(dirTo)));
@@ -300,7 +310,7 @@ namespace GitUI.CommandsDialogs
         {
             var userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_From.Text);
 
-            if (userSelectedPath != null)
+            if (userSelectedPath is not null)
             {
                 _NO_TRANSLATE_From.Text = userSelectedPath;
             }
@@ -312,7 +322,7 @@ namespace GitUI.CommandsDialogs
         {
             var userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_To.Text);
 
-            if (userSelectedPath != null)
+            if (userSelectedPath is not null)
             {
                 _NO_TRANSLATE_To.Text = userSelectedPath;
             }
@@ -327,7 +337,7 @@ namespace GitUI.CommandsDialogs
 
         private void FormCloneLoad(object sender, EventArgs e)
         {
-            if (!GitCommandHelpers.Plink())
+            if (!GitSshHelpers.Plink())
             {
                 LoadSSHKey.Visible = false;
             }
@@ -393,7 +403,7 @@ namespace GitUI.CommandsDialogs
             ToTextUpdate(sender, e);
         }
 
-        private readonly AsyncLoader _branchListLoader = new AsyncLoader();
+        private readonly AsyncLoader _branchListLoader = new();
 
         private void UpdateBranches(RemoteActionResult<IReadOnlyList<IGitRef>> branchList)
         {
@@ -403,7 +413,7 @@ namespace GitUI.CommandsDialogs
             {
                 string remoteUrl = _NO_TRANSLATE_From.Text;
 
-                if (FormRemoteProcess.AskForCacheHostkey(this, Module, remoteUrl))
+                if (FormRemoteProcess.AskForCacheHostkey(this, remoteUrl))
                 {
                     LoadBranches();
                 }
@@ -449,7 +459,7 @@ namespace GitUI.CommandsDialogs
             {
                 _branchListLoader.Dispose();
 
-                if (components != null)
+                if (components is not null)
                 {
                     components.Dispose();
                 }

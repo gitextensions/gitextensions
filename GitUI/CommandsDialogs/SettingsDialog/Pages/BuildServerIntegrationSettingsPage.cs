@@ -74,8 +74,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void PageToSettings()
         {
-            CurrentSettings.BuildServer.EnableIntegration.Value = checkBoxEnableBuildServerIntegration.GetNullableChecked();
-            CurrentSettings.BuildServer.ShowBuildResultPage.Value = checkBoxShowBuildResultPage.GetNullableChecked();
+            CurrentSettings.BuildServer.EnableIntegration.Value = checkBoxEnableBuildServerIntegration.Checked;
+            CurrentSettings.BuildServer.ShowBuildResultPage.Value = checkBoxShowBuildResultPage.Checked;
 
             var selectedBuildServerType = GetSelectedBuildServerType();
 
@@ -97,7 +97,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             buildServerSettingsPanel.Controls.Clear();
 
-            if (control != null)
+            if (control is not null)
             {
                 control.LoadSettings(CurrentSettings.BuildServer.TypeSettings);
 
@@ -118,7 +118,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             var exports = ManagedExtensibility.GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>();
             var selectedExport = exports.SingleOrDefault(export => export.Metadata.BuildServerType == GetSelectedBuildServerType());
-            if (selectedExport != null)
+            if (selectedExport is not null)
             {
                 var buildServerSettingsUserControl = selectedExport.Value;
                 var remoteUrls = _remotesManager.LoadRemotes(false).Select(r => string.IsNullOrEmpty(r.PushUrl) ? r.Url : r.PushUrl);

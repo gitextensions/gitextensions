@@ -14,26 +14,26 @@ namespace GitCommands.Remotes
         /// <summary>
         /// Gets or sets the name of the remote branch.
         /// </summary>
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// Gets or sets value stored in .git/config via <see cref="SettingKeyString.RemotePush"/> key.
         /// </summary>
-        public IReadOnlyList<string> Push { get; set; }
+        public IReadOnlyList<string>? Push { get; set; }
 
         /// <summary>
         /// Gets or sets the last pushurl stored in .git/config via <see cref="SettingKeyString.RemotePushUrl"/> key.
         /// </summary>
-        public string PushUrl { get; set; }
+        public string? PushUrl { get; set; }
 
         /// <summary>
         /// Gets or sets value stored in .git/config via <see cref="SettingKeyString.RemotePuttySshKey"/> key.
         /// </summary>
-        public string PuttySshKey { get; set; }
+        public string? PuttySshKey { get; set; }
 
         /// <summary>
         /// Gets or sets value stored in .git/config via <see cref="SettingKeyString.RemoteUrl"/> key.
         /// </summary>
-        public string Url { get; set; }
+        public string? Url { get; set; }
     }
 }

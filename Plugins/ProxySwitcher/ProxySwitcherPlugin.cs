@@ -8,10 +8,10 @@ namespace ProxySwitcher
     [Export(typeof(IGitPlugin))]
     public class ProxySwitcherPlugin : GitPluginBase
     {
-        public readonly StringSetting Username = new StringSetting("Username", string.Empty);
-        public readonly StringSetting Password = new StringSetting("Password", string.Empty);
-        public readonly StringSetting HttpProxy = new StringSetting("HTTP proxy", string.Empty);
-        public readonly StringSetting HttpProxyPort = new StringSetting("HTTP proxy port", "8080");
+        public readonly StringSetting Username = new("Username", string.Empty);
+        public readonly StringSetting Password = new("Password", string.Empty);
+        public readonly StringSetting HttpProxy = new("HTTP proxy", string.Empty);
+        public readonly StringSetting HttpProxyPort = new("HTTP proxy port", "8080");
 
         public ProxySwitcherPlugin() : base(true)
         {
@@ -30,10 +30,8 @@ namespace ProxySwitcher
 
         public override bool Execute(GitUIEventArgs args)
         {
-            using (var form = new ProxySwitcherForm(this, Settings, args))
-            {
-                form.ShowDialog(args.OwnerForm);
-            }
+            using var form = new ProxySwitcherForm(this, Settings, args);
+            form.ShowDialog(args.OwnerForm);
 
             return false;
         }

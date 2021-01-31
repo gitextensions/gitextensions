@@ -24,7 +24,7 @@ namespace GitUI.UserControls
 
         public (Image image, Brush brush) Invoke(IReadOnlyList<GitItemStatus> allChangedFiles)
         {
-            if (allChangedFiles == null)
+            if (allChangedFiles is null)
             {
                 return Unknown;
             }

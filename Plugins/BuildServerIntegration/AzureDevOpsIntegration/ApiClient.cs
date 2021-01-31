@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -58,6 +59,11 @@ namespace AzureDevOpsIntegration
         {
             using (var response = await _httpClient.GetAsync(url))
             {
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new UnauthorizedAccessException();
+                }
+
                 response.EnsureSuccessStatusCode();
                 string json = await response.Content.ReadAsStringAsync();
 
@@ -90,7 +96,7 @@ namespace AzureDevOpsIntegration
         [CanBeNull]
         private static string GetBuildDefinitionsIds(IEnumerable<BuildDefinition> buildDefinitions)
         {
-            if (buildDefinitions != null && buildDefinitions.Any())
+            if (buildDefinitions is not null && buildDefinitions.Any())
             {
                 return string.Join(",", buildDefinitions.Select(b => b.Id));
             }

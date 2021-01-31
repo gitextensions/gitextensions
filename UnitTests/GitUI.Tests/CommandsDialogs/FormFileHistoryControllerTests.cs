@@ -48,16 +48,15 @@ namespace GitUITests.CommandsDialogs
         [TestCase("Folder2\\file1.txt", false, false)]
         public void TryGetExactPathName_should_check_if_path_matches_case(string relativePath, bool isResolved, bool doesMatch)
         {
-            using (var repo = new GitModuleTestHelper())
-            {
-                // Create a file
-                var notUsed = repo.CreateFile(Path.Combine(repo.TemporaryPath, "Folder1"), "file1.txt", "bla");
+            using var repo = new GitModuleTestHelper();
 
-                var expected = Path.Combine(repo.TemporaryPath, relativePath);
+            // Create a file
+            var notUsed = repo.CreateFile(Path.Combine(repo.TemporaryPath, "Folder1"), "file1.txt", "bla");
 
-                Assert.AreEqual(isResolved, _controller.TryGetExactPath(expected, out string exactPath));
-                Assert.AreEqual(doesMatch, exactPath == expected);
-            }
+            var expected = Path.Combine(repo.TemporaryPath, relativePath);
+
+            Assert.AreEqual(isResolved, _controller.TryGetExactPath(expected, out string exactPath));
+            Assert.AreEqual(doesMatch, exactPath == expected);
         }
     }
 }

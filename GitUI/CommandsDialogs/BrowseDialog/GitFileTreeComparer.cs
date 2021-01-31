@@ -10,17 +10,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             var xGitItem = x as GitItem;
             var yGitItem = y as GitItem;
-            if (xGitItem == null && yGitItem == null)
+            if (xGitItem is null && yGitItem is null)
             {
                 return 0;
             }
 
-            if (xGitItem == null)
+            if (xGitItem is null)
             {
                 return 1;
             }
 
-            if (yGitItem == null)
+            if (yGitItem is null)
             {
                 return -1;
             }

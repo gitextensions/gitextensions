@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands.Git.Commands;
 using GitCommands.Git.Tag;
 using GitExtUtils;
 using GitExtUtils.GitUI;
@@ -16,15 +17,15 @@ namespace GitUI.CommandsDialogs
     {
         private const string RestoredObjectsTagPrefix = "LOST_FOUND_";
 
-        private readonly TranslationString _removeDanglingObjectsCaption = new TranslationString("Remove");
-        private readonly TranslationString _removeDanglingObjectsQuestion = new TranslationString("Are you sure you want to delete all dangling objects?");
-        private readonly TranslationString _xTagsCreated = new TranslationString("{0} Tags created." + Environment.NewLine + Environment.NewLine + "Do not forget to delete these tags when finished.");
-        private readonly TranslationString _selectLostObjectsToRestoreMessage = new TranslationString("Select objects to restore.");
-        private readonly TranslationString _selectLostObjectsToRestoreCaption = new TranslationString("Restore lost objects");
+        private readonly TranslationString _removeDanglingObjectsCaption = new("Remove");
+        private readonly TranslationString _removeDanglingObjectsQuestion = new("Are you sure you want to delete all dangling objects?");
+        private readonly TranslationString _xTagsCreated = new("{0} Tags created." + Environment.NewLine + Environment.NewLine + "Do not forget to delete these tags when finished.");
+        private readonly TranslationString _selectLostObjectsToRestoreMessage = new("Select objects to restore.");
+        private readonly TranslationString _selectLostObjectsToRestoreCaption = new("Restore lost objects");
 
         private readonly List<LostObject> _lostObjects = new List<LostObject>();
-        private readonly SortableLostObjectsList _filteredLostObjects = new SortableLostObjectsList();
-        private readonly DataGridViewCheckBoxHeaderCell _selectedItemsHeader = new DataGridViewCheckBoxHeaderCell();
+        private readonly SortableLostObjectsList _filteredLostObjects = new();
+        private readonly DataGridViewCheckBoxHeaderCell _selectedItemsHeader = new();
         private readonly IGitTagController _gitTagController;
 
         private LostObject _previewedItem;
@@ -62,6 +63,7 @@ namespace GitUI.CommandsDialogs
             columnParent.MinimumWidth = DpiUtil.Scale(75);
 
             _selectedItemsHeader.AttachTo(columnIsLostObjectSelected);
+            fileViewer.ExtraDiffArgumentsChanged += Warnings_SelectionChanged;
 
             InitializeComplete();
             Warnings.AutoGenerateColumns = false;
@@ -91,8 +93,7 @@ namespace GitUI.CommandsDialogs
         private void SaveObjectsClick(object sender, EventArgs e)
         {
             var options = GetOptions();
-
-            FormProcess.ShowDialog(this, "fsck-objects --lost-found" + options);
+            FormProcess.ShowDialog(this, process: null, arguments: $"fsck-objects --lost-found{options}", Module.WorkingDir, input: null, useDialogSettings: true);
             UpdateLostObjects();
         }
 
@@ -107,7 +108,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            FormProcess.ShowDialog(this, "prune");
+            FormProcess.ShowDialog(this, process: null, arguments: "prune", Module.WorkingDir, input: null, useDialogSettings: true);
             UpdateLostObjects();
         }
 
@@ -232,7 +233,7 @@ namespace GitUI.CommandsDialogs
 
         private void Warnings_SelectionChanged(object sender, EventArgs e)
         {
-            if (CurrentItem == null || _previewedItem == CurrentItem)
+            if (CurrentItem is null || _previewedItem == CurrentItem)
             {
                 return;
             }
@@ -243,7 +244,7 @@ namespace GitUI.CommandsDialogs
             if (_previewedItem.ObjectType == LostObjectType.Commit)
             {
                 ThreadHelper.JoinableTaskFactory.RunAsync(() =>
-                    fileViewer.ViewPatchAsync("commit.patch", content, null))
+                    fileViewer.ViewFixedPatchAsync("commit.patch", content, null))
                 .FileAndForget();
             }
             else
@@ -285,9 +286,8 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                var dialogResult = FormProcess.ReadDialog(this, "fsck-objects" + GetOptions());
-
-                if (FormProcess.IsOperationAborted(dialogResult))
+                string cmdOutput = FormProcess.ReadDialog(this, process: null, arguments: $"fsck-objects{GetOptions()}", Module.WorkingDir, input: null, useDialogSettings: true);
+                if (FormProcess.IsOperationAborted(cmdOutput))
                 {
                     DialogResult = DialogResult.Abort;
                     return;
@@ -295,11 +295,11 @@ namespace GitUI.CommandsDialogs
 
                 _lostObjects.Clear();
                 _lostObjects.AddRange(
-                    dialogResult
+                    cmdOutput
                         .Split('\r', '\n')
                         .Where(s => !string.IsNullOrEmpty(s))
                         .Select((s) => LostObject.TryParse(Module, s))
-                        .Where(parsedLostObject => parsedLostObject != null)
+                        .Where(parsedLostObject => parsedLostObject is not null)
                         .OrderByDescending(l => l.Date));
 
                 UpdateFilteredLostObjects();
@@ -351,7 +351,7 @@ namespace GitUI.CommandsDialogs
         private void ViewCurrentItem()
         {
             var currentItem = CurrentItem;
-            if (currentItem == null)
+            if (currentItem is null)
             {
                 return;
             }
@@ -425,7 +425,7 @@ namespace GitUI.CommandsDialogs
 
         private void mnuLostObjects_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (Warnings != null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem != null)
+            if (Warnings is not null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem is not null)
             {
                 var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
                 var isCommit = lostObject.ObjectType == LostObjectType.Commit;
@@ -450,7 +450,7 @@ namespace GitUI.CommandsDialogs
 
         private void copyHashToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Warnings != null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem != null)
+            if (Warnings is not null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem is not null)
             {
                 var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
                 ClipboardUtil.TrySetText(lostObject.ObjectId.ToString());
@@ -459,7 +459,7 @@ namespace GitUI.CommandsDialogs
 
         private void copyParentHashToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Warnings != null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem != null)
+            if (Warnings is not null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem is not null)
             {
                 var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
                 ClipboardUtil.TrySetText(lostObject.Parent?.ToString());
@@ -468,7 +468,7 @@ namespace GitUI.CommandsDialogs
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Warnings == null || Warnings.SelectedRows.Count == 0 || Warnings.SelectedRows[0].DataBoundItem == null)
+            if (Warnings is null || Warnings.SelectedRows.Count == 0 || Warnings.SelectedRows[0].DataBoundItem is null)
             {
                 return;
             }

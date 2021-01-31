@@ -6,6 +6,7 @@ namespace GitUI.UserControls.RevisionGrid
 {
     public partial class FormRevisionFilter : GitExtensionsForm
     {
+        private int _maxRevisionGraphCommitsDefaultValue;
         public FormRevisionFilter()
         {
             InitializeComponent();
@@ -13,6 +14,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             LimitCheck.Checked = AppSettings.MaxRevisionGraphCommits > 0;
             _NO_TRANSLATE_Limit.Value = AppSettings.MaxRevisionGraphCommits;
+            _maxRevisionGraphCommitsDefaultValue = AppSettings.MaxRevisionGraphCommits;
         }
 
         private void FormRevisionFilterLoad(object sender, EventArgs e)
@@ -75,6 +77,13 @@ namespace GitUI.UserControls.RevisionGrid
 
         public ArgumentString GetRevisionFilter()
         {
+            // If the value is not user defined, update it to the new default value.
+            if (_maxRevisionGraphCommitsDefaultValue == (int)_NO_TRANSLATE_Limit.Value)
+            {
+                _maxRevisionGraphCommitsDefaultValue = AppSettings.MaxRevisionGraphCommits;
+                _NO_TRANSLATE_Limit.Value = AppSettings.MaxRevisionGraphCommits;
+            }
+
             var filter = new ArgumentBuilder();
 
             if (AuthorCheck.Checked && GitVersion.Current.IsRegExStringCmdPassable(Author.Text))
@@ -178,7 +187,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public void SetBranchFilter(string filter)
         {
-            BranchFilter.Text = filter;
+            BranchFilter.Text = filter?.Trim();
         }
 
         private void OkClick(object sender, EventArgs e)

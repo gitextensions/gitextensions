@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -29,7 +31,7 @@ namespace GitUI
             [NotNull] Encoding encoding)
         {
             // Files with tree guid should be presented with normal diff
-            var isTracked = file.IsTracked || (file.TreeGuid != null && secondId != null);
+            var isTracked = file.IsTracked || (file.TreeGuid is not null && secondId is not null);
 
             return module.GetSingleDiff(firstId, secondId, file.Name, file.OldName, diffArgs, encoding, true, isTracked);
         }
@@ -53,7 +55,7 @@ namespace GitUI
                 return fileViewer.ViewTextAsync(item.Item.Name, item.Item.ErrorMessage);
             }
 
-            if (item?.Item == null || item.SecondRevision?.ObjectId == null)
+            if (item?.Item is null || item.SecondRevision?.ObjectId is null)
             {
                 if (!string.IsNullOrWhiteSpace(defaultText))
                 {
@@ -68,17 +70,38 @@ namespace GitUI
 
             openWithDiffTool ??= OpenWithDiffTool;
 
-            if (item.Item.IsNew || firstId == null || FileHelper.IsImage(item.Item.Name))
+            if (item.Item.IsNew || firstId is null || FileHelper.IsImage(item.Item.Name))
             {
                 // View blob guid from revision, or file for worktree
                 return fileViewer.ViewGitItemRevisionAsync(item.Item, item.SecondRevision.ObjectId, openWithDiffTool);
             }
 
-            string selectedPatch = GetSelectedPatch(fileViewer, firstId, item.SecondRevision.ObjectId, item.Item);
+            if (item.Item.IsRangeDiff)
+            {
+                // This command may take time, give an indication of what is going on
+                // The sha are incorrect if baseA/baseB is set, to simplify the presentation
+                fileViewer.ViewText("range-diff.sh", $"git range-diff {firstId}...{item.SecondRevision.ObjectId}");
 
-            return item.Item.IsSubmodule || selectedPatch == null
-                ? fileViewer.ViewTextAsync(item.Item.Name, text: selectedPatch ?? defaultText, openWithDifftool: openWithDiffTool)
-                : fileViewer.ViewPatchAsync(item.Item.Name, text: selectedPatch, openWithDifftool: openWithDiffTool);
+                string output = fileViewer.Module.GetRangeDiff(
+                        firstId,
+                        item.SecondRevision.ObjectId,
+                        item.BaseA,
+                        item.BaseB,
+                        fileViewer.GetExtraDiffArguments(isRangeDiff: true));
+
+                // Try set highlighting from first found filename
+                var match = new Regex(@"\n\s*(@@|##)\s+(?<file>[^#:\n]+)").Match(output ?? "");
+                var filename = match.Groups["file"].Success ? match.Groups["file"].Value : item.Item.Name;
+
+                return fileViewer.ViewRangeDiffAsync(filename, output ?? defaultText);
+            }
+
+            string selectedPatch = GetSelectedPatch(fileViewer, firstId, item.SecondRevision.ObjectId, item.Item)
+                ?? defaultText;
+
+            return item.Item.IsSubmodule
+                ? fileViewer.ViewTextAsync(item.Item.Name, text: selectedPatch, openWithDifftool: openWithDiffTool)
+                : fileViewer.ViewPatchAsync(item, text: selectedPatch, openWithDifftool: openWithDiffTool);
 
             void OpenWithDiffTool()
             {
@@ -87,8 +110,7 @@ namespace GitUI
                     item.Item.OldName,
                     firstId?.ToString(),
                     item.SecondRevision.ToString(),
-                    "",
-                    item.Item.IsTracked);
+                    isTracked: item.Item.IsTracked);
             }
 
             static string GetSelectedPatch(
@@ -107,11 +129,11 @@ namespace GitUI
                         : diffOfConflict;
                 }
 
-                if (file.IsSubmodule && file.GetSubmoduleStatusAsync() != null)
+                if (file.IsSubmodule && file.GetSubmoduleStatusAsync() is not null)
                 {
                     // Patch already evaluated
                     var status = ThreadHelper.JoinableTaskFactory.Run(file.GetSubmoduleStatusAsync);
-                    return status != null
+                    return status is not null
                         ? LocalizationHelpers.ProcessSubmoduleStatus(fileViewer.Module, status)
                         : $"Failed to get status for submodule \"{file.Name}\"";
                 }
@@ -143,7 +165,7 @@ namespace GitUI
 
         public static void Mask(this Control control)
         {
-            if (FindMaskPanel(control) == null)
+            if (FindMaskPanel(control) is null)
             {
                 var panel = new LoadingControl
                 {
@@ -159,7 +181,7 @@ namespace GitUI
         public static void UnMask(this Control control)
         {
             var panel = FindMaskPanel(control);
-            if (panel != null)
+            if (panel is not null)
             {
                 control.Controls.Remove(panel);
                 panel.Dispose();

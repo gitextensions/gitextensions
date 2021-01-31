@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using GitCommands;
+using GitCommands.Git.Commands;
+using GitUI.HelperDialogs;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
     public partial class FormRevertCommit : GitModuleForm
     {
-        private readonly TranslationString _noneParentSelectedText = new TranslationString("None parent is selected!");
+        private readonly TranslationString _noneParentSelectedText = new("None parent is selected!");
 
         private bool _isMerge;
 
@@ -77,7 +79,12 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            FormProcess.ShowDialog(this, GitCommandHelpers.RevertCmd(Revision.ObjectId, AutoCommit.Checked, parentIndex));
+            var command = GitCommandHelpers.RevertCmd(Revision.ObjectId, AutoCommit.Checked, parentIndex);
+
+            // Don't verify whether the command is successful.
+            // If it fails, likely there is a conflict that needs to be resolved.
+            FormProcess.ShowDialog(this, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+
             MergeConflictHandler.HandleMergeConflicts(UICommands, this, AutoCommit.Checked);
             DialogResult = DialogResult.OK;
             Close();

@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Drawing;
 using System.IO;
 using System.IO.Abstractions;
+using GitExtensions;
 
 namespace GitCommands
 {
@@ -17,13 +18,13 @@ namespace GitCommands
         /// <param name="workingDirectory">The git repository working directory.</param>
         /// <param name="relativeFilePath">The relative path to the file.</param>
         /// <returns>The icon associated with the given file type or <see langword="null"/>.</returns>
-        Icon Get(string workingDirectory, string relativeFilePath);
+        Icon? Get(string workingDirectory, string relativeFilePath);
     }
 
     public sealed class FileAssociatedIconProvider : IFileAssociatedIconProvider
     {
         private readonly IFileSystem _fileSystem;
-        private static readonly ConcurrentDictionary<string, Icon> LoadedFileIcons = new ConcurrentDictionary<string, Icon>(StringComparer.OrdinalIgnoreCase);
+        private static readonly ConcurrentDictionary<string, Icon?> LoadedFileIcons = new ConcurrentDictionary<string, Icon?>(StringComparer.OrdinalIgnoreCase);
 
         public FileAssociatedIconProvider(IFileSystem fileSystem)
         {
@@ -49,9 +50,9 @@ namespace GitCommands
         /// The method takes two parameters to performance reasons - the full path is established
         /// only if the file type has not been processed already and the extensions is not cached.
         /// </remarks>
-        public Icon Get(string workingDirectory, string relativeFilePath)
+        public Icon? Get(string workingDirectory, string relativeFilePath)
         {
-            var extension = Path.GetExtension(relativeFilePath);
+            var extension = PathUtil.GetExtension(relativeFilePath);
             if (string.IsNullOrWhiteSpace(extension))
             {
                 return null;
@@ -59,7 +60,7 @@ namespace GitCommands
 
             var icon = LoadedFileIcons.GetOrAdd(extension, ext =>
             {
-                string tempFile = null;
+                string? tempFile = null;
                 try
                 {
                     // if the file doesn't exist - create a blank temp file with the required extension
@@ -68,7 +69,7 @@ namespace GitCommands
                     // extensions from the registry and using p/invokes and WinAPI, which have
                     // significantly higher maintenance overhead.
 
-                    var fullPath = Path.Combine(workingDirectory, relativeFilePath);
+                    var fullPath = PathUtil.Combine(workingDirectory, relativeFilePath);
                     if (!_fileSystem.File.Exists(fullPath))
                     {
                         tempFile = CreateTempFile(Path.GetFileName(fullPath));
@@ -83,7 +84,7 @@ namespace GitCommands
                 }
                 finally
                 {
-                    if (!string.IsNullOrEmpty(tempFile))
+                    if (!Strings.IsNullOrEmpty(tempFile))
                     {
                         DeleteFile(tempFile);
                     }

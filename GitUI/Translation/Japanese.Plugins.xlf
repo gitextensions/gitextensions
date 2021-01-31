@@ -341,7 +341,7 @@
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete {0} selected branches?</source>
-        <target>選択した{0}のブランチを削除してもよろしいですか？</target>
+        <target>選択した{0}のブランチを削除してよろしいですか？</target>
         
       </trans-unit>
       <trans-unit id="_branchesSelected.Text">
@@ -363,9 +363,9 @@
         <source>DANGEROUS ACTION!
 Branches will be deleted on the remote '{0}'. This can not be undone.
 Are you sure you want to continue?</source>
-        <target>危険な行為です！
+        <target>危険な操作です！
 リモート '{0}' のブランチを削除しようとしています。
-これはやり直せませんが、本当に続行しますか？</target>
+これはやり直せませんが、続行してよろしいですか？</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
@@ -425,7 +425,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
-        <target>完全に他のブランチにマージされたブランチを削除</target>
+        <target>別のブランチに完全にマージされたブランチを削除</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -533,7 +533,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete the selected files?</source>
-        <target>選択したファイルを削除してもよろしいですか？</target>
+        <target>選択したファイルを削除してよろしいですか？</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
@@ -739,7 +739,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="labelReviewers.Text">
         <source>Reviewer(s):</source>
-        <target>レビュアー：</target>
+        <target>レビュアー:</target>
         
       </trans-unit>
       <trans-unit id="labelTopic.Text">
@@ -753,7 +753,7 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Edit .gitreview</source>
-        <target>.gitreviewファイルを編集</target>
+        <target>.gitreviewを編集</target>
         
       </trans-unit>
       <trans-unit id="Save.Text">
@@ -770,12 +770,12 @@ Check if file is accessible.</source>
       </trans-unit>
       <trans-unit id="_cannotAccessGitreviewCaption.Text">
         <source>Failed to save .gitreview</source>
-        <target>.gitreview ファイルの保存に失敗しました。</target>
+        <target>.gitreviewの保存に失敗しました。</target>
         
       </trans-unit>
       <trans-unit id="_gitreviewOnlyInWorkingDirSupported.Text">
         <source>.gitreview is only supported when there is a working directory.</source>
-        <target>.gitreview ファイルは作業ディレクトリがあるときのみサポートされます。</target>
+        <target>.gitreviewは作業ディレクトリがあるときのみサポートされます。</target>
         
       </trans-unit>
       <trans-unit id="_gitreviewOnlyInWorkingDirSupportedCaption.Text">
@@ -785,7 +785,7 @@ Check if file is accessible.</source>
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
         <source>Save changes to .gitreview?</source>
-        <target>.gitreviewファイルの変更を保存しますか？</target>
+        <target>.gitreviewの変更を保存しますか？</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestionCaption.Text">
@@ -984,7 +984,7 @@ defaultrebase=0</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Gerrit Plugin</source>
-        <target>Gerrit Plugin</target>
+        <target>Gerrit プラグイン</target>
         
       </trans-unit>
       <trans-unit id="btnClose.Text">
@@ -1041,7 +1041,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_editGitReview.Text">
         <source>Edit .gitreview</source>
-        <target>.gitreviewファイルを編集</target>
+        <target>.gitreviewを編集</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHook.Text">
@@ -1124,7 +1124,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_gitFlowTooltip.Text">
         <source>A good branch model for your project with Git...</source>
-        <target>Gitを使ったプロジェクトの良いブランチモデル</target>
+        <target>Gitを使ったプロジェクトの良いブランチモデル...</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -1164,7 +1164,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="btnPull.Text">
         <source>Pull</source>
-        <target>Pull</target>
+        <target>プル</target>
         
       </trans-unit>
       <trans-unit id="cbBasedOn.Text">
@@ -1174,7 +1174,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="cbPushAfterFinish.Text">
         <source>Push after finish</source>
-        <target>完了してからプッシュ</target>
+        <target>完了後にプッシュ</target>
         
       </trans-unit>
       <trans-unit id="cbSquash.Text">
@@ -1204,12 +1204,12 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>command:</source>
-        <target>コマンド：</target>
+        <target>コマンド:</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>Remote to pull from :</source>
-        <target>pull元のリモート：</target>
+        <target>プル元のリモート:</target>
         
       </trans-unit>
       <trans-unit id="lblCaptionHead.Text">
@@ -1252,7 +1252,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
     <body>
       <trans-unit id="Description.Text">
         <source>GitHub</source>
-        <target>Github</target>
+        <target>GitHub</target>
         
       </trans-unit>
       <trans-unit id="GitHubHost.Caption">
@@ -1334,7 +1334,7 @@ Please download Gource and set the path in the plugins settings dialog.</source>
 Gource can be only be started from a valid git repository.</source>
         <target>現在のディレクトリは有効なGitリポジトリではありません。
 
-Grouceは有効なGirリポジトリからしか開始できません。</target>
+Gourceは有効なGitリポジトリからしか開始できません。</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantDownloadGource.Text">
@@ -1355,7 +1355,7 @@ Do you want to automatically download Gource?</source>
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
         <target>ダウンロードに失敗しました。
-Grouceをダウンロードし、プラグイン設定ダイアログからパスを設定してください。</target>
+Gourceをダウンロードし、プラグイン設定ダイアログからパスを設定してください。</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -1382,9 +1382,10 @@ Grouceをダウンロードし、プラグイン設定ダイアログからパ�
         <source>Cannot find Gource in the configured path: {0}.
 
 Do you want to reset the configured path?</source>
-        <target>設定されたパス： {0} にGourceが見つかりませんでした。
+        <target>設定されたパスにGourceが見つかりませんでした:
+{0}
 
-パスを再設定しますか？</target>
+パスをリセットしますか？</target>
         
       </trans-unit>
     </body>
@@ -1545,12 +1546,12 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="GlobalHttpProxy_Label.Text">
         <source>Global http.proxy:</source>
-        <target>グローバルのhttp.proxy：</target>
+        <target>グローバルのhttp.proxy:</target>
         
       </trans-unit>
       <trans-unit id="LocalHttpProxy_Label.Text">
         <source>Local http.proxy:</source>
-        <target>ローカルのhttp.proxy：</target>
+        <target>ローカルのhttp.proxy:</target>
         
       </trans-unit>
       <trans-unit id="SetProxy_Button.Text">
@@ -1638,7 +1639,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableSpace.Text">
         <source>as text table (spaces)</source>
-        <target>テキストテーブル(スペース区切り)として</target>
+        <target>テキストテーブル(空白区切り)として</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableTab.Text">
@@ -1673,7 +1674,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>separate columns with spaces</source>
-        <target>行をスペースで分割</target>
+        <target>列を空白で分割</target>
         
       </trans-unit>
       <trans-unit id="label11.Text">
@@ -1689,7 +1690,7 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>git log arguments:</source>
-        <target>gitログ引数：</target>
+        <target>gitログ引数:</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
@@ -1721,7 +1722,7 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>separate columns with tabs</source>
-        <target>行をタブで分割</target>
+        <target>列をタブで分割</target>
         
       </trans-unit>
       <trans-unit id="labelRevCount.Text">
@@ -1787,7 +1788,7 @@ URLが有効であり、APIトークンがビルドおよびプロジェクト�
  - https://dev.azure.com/yourorganization/projectname/
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</source>
-        <target>例：
+        <target>例:
  - https://dev.azure.com/yourorganization/projectname/
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</target>

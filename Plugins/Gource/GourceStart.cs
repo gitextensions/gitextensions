@@ -113,8 +113,15 @@ namespace Gource
             {
                 try
                 {
-                    var image = await AvatarService.Default.GetAvatarAsync(author.email, author.name, imageSize: 90);
-                    var filePath = Path.Combine(gourceAvatarsDir, author + ".png");
+                    var image = await AvatarService.DefaultProvider.GetAvatarAsync(author.email, author.name, imageSize: 90);
+                    var filename = author.name + ".png";
+
+                    if (filename.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+                    {
+                        return;
+                    }
+
+                    var filePath = Path.Combine(gourceAvatarsDir, filename);
                     image.Save(filePath, ImageFormat.Png);
                 }
                 catch

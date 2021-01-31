@@ -8,7 +8,7 @@ namespace GitUI
 {
     public sealed class MouseWheelRedirector : IMessageFilter
     {
-        private static readonly MouseWheelRedirector instance = new MouseWheelRedirector();
+        private static readonly MouseWheelRedirector instance = new();
 
         private MouseWheelRedirector()
         {
@@ -52,7 +52,7 @@ namespace GitUI
             }
 
             Control control = Control.FromHandle(hwnd);
-            if (control == null)
+            if (control is null)
             {
                 return false;
             }
@@ -62,7 +62,7 @@ namespace GitUI
                 return false;
             }
 
-            while (control != null && !(control is GitExtensionsControl))
+            while (control is not (null or GitExtensionsControl))
             {
                 bool nonScrollableRtbx = isNonScrollableRichTextBox(control);
 
@@ -73,7 +73,7 @@ namespace GitUI
                 }
             }
 
-            if (control == null)
+            if (control is null)
             {
                 return false;
             }

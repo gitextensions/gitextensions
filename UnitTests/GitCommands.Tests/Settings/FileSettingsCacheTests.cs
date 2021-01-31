@@ -50,7 +50,6 @@ namespace GitCommandsTests.Settings
             new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor().CanEnableFileWatcher.Should().BeFalse();
         }
 
-        [Ignore("Popup instead of a throw")]
         [TestCase(null)]
         [TestCase("")]
         [TestCase("C:\\" + "\t")]
@@ -58,7 +57,7 @@ namespace GitCommandsTests.Settings
         {
             var cache = new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor();
             cache.SetLastModificationDate(DateTime.Now);
-            ((Action)(() => cache.SaveImpl())).Should().Throw<Exception>();
+            ((Action)(() => cache.SaveImpl())).Should().Throw<SaveSettingsException>();
         }
 
         [Test]

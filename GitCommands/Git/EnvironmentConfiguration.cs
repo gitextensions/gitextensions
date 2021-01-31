@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using GitCommands.Utils;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -12,8 +11,7 @@ namespace GitCommands
         /// <summary>
         /// The <c>USER</c> environment variable's value for the user/machine.
         /// </summary>
-        [CanBeNull]
-        private static readonly string UserHomeDir
+        private static readonly string? UserHomeDir
             = Env.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)
            ?? Env.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.Machine);
 
@@ -28,9 +26,9 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(AppSettings.GitBinDir))
             {
                 // Ensure the git binary dir is on the path
-                string path = Env.GetEnvironmentVariable("PATH");
+                string? path = Env.GetEnvironmentVariable("PATH");
 
-                if (path == null)
+                if (path is null)
                 {
                     Env.SetEnvironmentVariable("PATH", AppSettings.GitBinDir);
                 }
@@ -66,7 +64,7 @@ namespace GitCommands
 
             return;
 
-            string ComputeHomeLocation()
+            static string? ComputeHomeLocation()
             {
                 if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir))
                 {
@@ -86,14 +84,12 @@ namespace GitCommands
         /// Gets the value of the current process's <c>HOME</c> environment variable.
         /// </summary>
         /// <returns>The variable's value, or an empty string if it is not present.</returns>
-        [NotNull]
         public static string GetHomeDir()
         {
             return Env.GetEnvironmentVariable("HOME") ?? "";
         }
 
-        [CanBeNull]
-        public static string GetDefaultHomeDir()
+        public static string? GetDefaultHomeDir()
         {
             // Use the HOME property from the user or machine, as captured at startup
             if (!string.IsNullOrEmpty(UserHomeDir))

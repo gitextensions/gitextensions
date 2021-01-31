@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.HelperDialogs;
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls
@@ -45,7 +46,7 @@ namespace GitUI.UserControls
 
         protected void FireDataReceived([NotNull] TextEventArgs args)
         {
-            if (args == null)
+            if (args is null)
             {
                 throw new ArgumentNullException(nameof(args));
             }

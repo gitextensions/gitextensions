@@ -35,7 +35,7 @@ namespace GitUI.CommitInfo
 
         public string FormatBranches(IEnumerable<string> branches, bool showAsLinks, bool limit)
         {
-            if (branches == null)
+            if (branches is null)
             {
                 return string.Empty;
             }
@@ -46,7 +46,7 @@ namespace GitUI.CommitInfo
 
         public string FormatTags(IReadOnlyList<string> tags, bool showAsLinks, bool limit)
         {
-            if (tags == null)
+            if (tags is null)
             {
                 return string.Empty;
             }

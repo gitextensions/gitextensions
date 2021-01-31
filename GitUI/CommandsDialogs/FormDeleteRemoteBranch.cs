@@ -5,7 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Git;
+using GitCommands.Git.Commands;
+using GitUI.HelperDialogs;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -14,7 +15,7 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormDeleteRemoteBranch : GitModuleForm
     {
-        private readonly TranslationString _deleteRemoteBranchesCaption = new TranslationString("Delete remote branches");
+        private readonly TranslationString _deleteRemoteBranchesCaption = new("Delete remote branches");
         private readonly TranslationString _confirmDeleteUnmergedRemoteBranchMessage =
             new TranslationString("At least one remote branch is unmerged. Are you sure you want to delete it?" + Environment.NewLine + "Deleting a branch can cause commits to be deleted too!");
 
@@ -43,7 +44,7 @@ namespace GitUI.CommandsDialogs
                 _mergedBranches.Add(branch);
             }
 
-            if (_defaultRemoteBranch != null)
+            if (_defaultRemoteBranch is not null)
             {
                 Branches.SetSelectedText(_defaultRemoteBranch);
             }
@@ -78,7 +79,7 @@ namespace GitUI.CommandsDialogs
 
                     ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
 
-                    using (var form = new FormRemoteProcess(Module, cmd.Arguments)
+                    using (var form = new FormRemoteProcess(UICommands, process: null, cmd.Arguments)
                     {
                         Remote = remote
                     })
@@ -109,7 +110,7 @@ namespace GitUI.CommandsDialogs
 
         private void EnsurePageant(string remote)
         {
-            if (GitCommandHelpers.Plink())
+            if (GitSshHelpers.Plink())
             {
                 if (!File.Exists(AppSettings.Pageant))
                 {

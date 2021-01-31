@@ -1,17 +1,18 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git.Commands;
 using GitExtUtils.GitUI.Theming;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.HelperDialogs
 {
     public partial class FormResetCurrentBranch : GitModuleForm
     {
-        private readonly TranslationString _branchInfo = new TranslationString("Reset branch '{0}' to revision:");
-        private readonly TranslationString _resetHardWarning = new TranslationString("You are about to discard ALL local changes, are you sure?");
-        private readonly TranslationString _resetCaption = new TranslationString("Reset branch");
+        private readonly TranslationString _branchInfo = new("Reset branch '{0}' to revision:");
+        private readonly TranslationString _resetHardWarning = new("You are about to discard ALL local changes, are you sure?");
+        private readonly TranslationString _resetCaption = new("Reset branch");
 
         public enum ResetType
         {
@@ -76,18 +77,19 @@ namespace GitUI.HelperDialogs
         {
             if (Soft.Checked)
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.ResetCmd(ResetMode.Soft, Revision.Guid));
+                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.ResetCmd(ResetMode.Soft, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
             }
             else if (Mixed.Checked)
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.ResetCmd(ResetMode.Mixed, Revision.Guid));
+                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.ResetCmd(ResetMode.Mixed, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
             }
             else if (Hard.Checked)
             {
                 if (MessageBox.Show(this, _resetHardWarning.Text, _resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     var currentCheckout = Module.GetCurrentCheckout();
-                    if (FormProcess.ShowDialog(this, GitCommandHelpers.ResetCmd(ResetMode.Hard, Revision.Guid)))
+                    bool success = FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.ResetCmd(ResetMode.Hard, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
+                    if (success)
                     {
                         if (currentCheckout != Revision.ObjectId)
                         {
@@ -102,11 +104,11 @@ namespace GitUI.HelperDialogs
             }
             else if (Merge.Checked)
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.ResetCmd(ResetMode.Merge, Revision.Guid));
+                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.ResetCmd(ResetMode.Merge, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
             }
             else if (Keep.Checked)
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.ResetCmd(ResetMode.Keep, Revision.Guid));
+                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.ResetCmd(ResetMode.Keep, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
             }
 
             UICommands.RepoChangedNotifier.Notify();
@@ -144,7 +146,7 @@ namespace GitUI.HelperDialogs
                 helpSection = "--hard";
             }
 
-            Process.Start($"https://git-scm.com/docs/git-reset#Documentation/git-reset.txt-{helpSection}");
+            OsShellUtil.OpenUrlInDefaultBrowser(@$"https://git-scm.com/docs/git-reset#Documentation/git-reset.txt-{helpSection}");
         }
     }
 }

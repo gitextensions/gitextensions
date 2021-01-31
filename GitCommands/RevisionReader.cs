@@ -1,31 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
+#pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
     [Flags]
     public enum RefFilterOptions
     {
-        Branches = 1,              // --branches
-        Remotes = 2,               // --remotes
-        Tags = 4,                  // --tags
-        Stashes = 8,               //
-        All = 15,                  // --all
-        Boundary = 16,             // --boundary
-        ShowGitNotes = 32,         // --not --glob=notes --not
-        NoMerges = 64,             // --no-merges
-        FirstParent = 128,         // --first-parent
-        SimplifyByDecoration = 256 // --simplify-by-decoration
+        None                    = 0x000,
+        Branches                = 0x001,    // --branches
+        Remotes                 = 0x002,    // --remotes
+        Tags                    = 0x004,    // --tags
+        Stashes                 = 0x008,    //
+        All                     = 0x00F,    // --all
+        Boundary                = 0x010,    // --boundary
+        ShowGitNotes            = 0x020,    // --not --glob=notes --not
+        NoMerges                = 0x040,    // --no-merges
+        FirstParent             = 0x080,    // --first-parent
+        SimplifyByDecoration    = 0x100,    // --simplify-by-decoration
+        Reflogs                 = 0x200,    // --reflog
     }
+#pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
 
     public sealed class RevisionReader : IDisposable
     {
@@ -51,7 +55,7 @@ namespace GitCommands
               /* Commit subject  */ "%s%n%n" +
               /* Commit body     */ "%b" + EndOfBody;
 
-        private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
+        private readonly CancellationTokenSequence _cancellationTokenSequence = new();
 
         public void Execute(
             GitModule module,
@@ -61,7 +65,7 @@ namespace GitCommands
             string branchFilter,
             string revisionFilter,
             string pathFilter,
-            [CanBeNull] Func<GitRevision, bool> revisionPredicate)
+            Func<GitRevision, bool>? revisionPredicate)
         {
             ThreadHelper.JoinableTaskFactory
                 .RunAsync(() => ExecuteAsync(module, refs, subject, refFilterOptions, branchFilter, revisionFilter, pathFilter, revisionPredicate))
@@ -81,7 +85,7 @@ namespace GitCommands
             string branchFilter,
             string revisionFilter,
             string pathFilter,
-            [CanBeNull] Func<GitRevision, bool> revisionPredicate)
+            Func<GitRevision, bool>? revisionPredicate)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
@@ -129,7 +133,7 @@ namespace GitCommands
 
                     if (TryParseRevision(module, chunk, stringPool, logOutputEncoding, out var revision))
                     {
-                        if (revisionPredicate == null || revisionPredicate(revision))
+                        if (revisionPredicate is null || revisionPredicate(revision))
                         {
                             // The full commit message body is used initially in InMemFilter, after which it isn't
                             // strictly needed and can be re-populated asynchronously.
@@ -178,7 +182,7 @@ namespace GitCommands
                     "--first-parent",
                     new ArgumentBuilder
                     {
-                        { AppSettings.ShowReflogReferences, "--reflog" },
+                        { refFilterOptions.HasFlag(RefFilterOptions.Reflogs), "--reflog" },
                         { AppSettings.SortByAuthorDate, "--author-date-order" },
                         {
                             refFilterOptions.HasFlag(RefFilterOptions.All),
@@ -210,7 +214,7 @@ namespace GitCommands
         {
             var selectedRef = refs.FirstOrDefault(head => head.Name == branchName);
 
-            if (selectedRef != null)
+            if (selectedRef is not null)
             {
                 selectedRef.IsSelected = true;
 
@@ -220,16 +224,14 @@ namespace GitCommands
                          && selectedRef.GetTrackingRemote(localConfigFile) == head.Remote
                          && selectedRef.GetMergeWith(localConfigFile) == head.LocalName);
 
-                if (selectedHeadMergeSource != null)
+                if (selectedHeadMergeSource is not null)
                 {
                     selectedHeadMergeSource.IsSelectedHeadMergeSource = true;
                 }
             }
         }
 
-        [ContractAnnotation("=>false,revision:null")]
-        [ContractAnnotation("=>true,revision:notnull")]
-        private static bool TryParseRevision(GitModule module, ArraySegment<byte> chunk, StringPool stringPool, Encoding logOutputEncoding, out GitRevision revision)
+        private static bool TryParseRevision(GitModule module, ArraySegment<byte> chunk, StringPool stringPool, Encoding logOutputEncoding, [NotNullWhen(returnValue: true)] out GitRevision? revision)
         {
             // The 'chunk' of data contains a complete git log item, encoded.
             // This method decodes that chunk and produces a revision object.
@@ -355,7 +357,7 @@ namespace GitCommands
             #region Encoding
 
             // Line is the name of the encoding used by git, or an empty string, terminated by `\n`
-            string encodingName;
+            string? encodingName;
             Encoding encoding;
 
             var encodingNameEndOffset = Array.IndexOf(array, (byte)'\n', offset);
@@ -376,7 +378,7 @@ namespace GitCommands
             else
             {
                 encodingName = logOutputEncoding.GetString(array, offset, encodingNameEndOffset - offset);
-                encoding = module.GetEncodingByGitName(encodingName);
+                encoding = module.GetEncodingByGitName(encodingName) ?? Encoding.UTF8;
             }
 
             offset = encodingNameEndOffset + 1;
@@ -397,7 +399,7 @@ namespace GitCommands
 
             var subject = reader.ReadLine(advance: false);
 
-            if (author == null || authorEmail == null || committer == null || committerEmail == null || subject == null)
+            if (author is null || authorEmail is null || committer is null || committerEmail is null || subject is null)
             {
                 // TODO log this parse error
                 Debug.Fail("Unable to read an entry from the log -- this should not happen");
@@ -409,7 +411,7 @@ namespace GitCommands
             // Therefore we read the subject twice.
             // If there are not enough characters remaining for a body, then just assign the subject string directly.
             var (body, additionalData) = ParseCommitBody(reader, subject);
-            if (body == null)
+            if (body is null)
             {
                 // TODO log this parse error
                 Debug.Fail("Unable to read body from the log -- this should not happen");
@@ -440,8 +442,7 @@ namespace GitCommands
             return true;
         }
 
-        [CanBeNull]
-        private static (string body, string additionalData) ParseCommitBody([NotNull] StringLineReader reader, [NotNull] string subject)
+        private static (string? body, string? additionalData) ParseCommitBody(StringLineReader reader, string subject)
         {
             int lengthOfSubjectRepeatedInBody = subject.Length + 2/*newlines*/;
             if (reader.Remaining == lengthOfSubjectRepeatedInBody + EndOfBody.Length)
@@ -458,7 +459,7 @@ namespace GitCommands
                 return (body: null, additionalData: null);
             }
 
-            string additionalData = null;
+            string? additionalData = null;
             if (tail.Length > indexOfEndOfBody + EndOfBody.Length)
             {
                 additionalData = tail.Substring(indexOfEndOfBody + EndOfBody.Length).TrimStart();
@@ -492,8 +493,7 @@ namespace GitCommands
 
             public int Remaining => _s.Length - _index;
 
-            [CanBeNull]
-            public string ReadLine([CanBeNull] StringPool pool = null, bool advance = true)
+            public string? ReadLine(StringPool? pool = null, bool advance = true)
             {
                 if (_index == _s.Length)
                 {
@@ -513,13 +513,12 @@ namespace GitCommands
                     _index = endIndex + 1;
                 }
 
-                return pool != null
+                return pool is not null
                     ? pool.Intern(_s, startIndex, endIndex - startIndex)
                     : _s.Substring(startIndex, endIndex - startIndex);
             }
 
-            [CanBeNull]
-            public string ReadToEnd(bool advance = true)
+            public string? ReadToEnd(bool advance = true)
             {
                 if (_index == _s.Length)
                 {
@@ -555,7 +554,7 @@ namespace GitCommands
                 string branchFilter, string revisionFilter, string pathFilter) =>
                 _revisionReader.BuildArguments(refFilterOptions, branchFilter, revisionFilter, pathFilter);
 
-            internal static (string body, string additionalData) ParseCommitBody(StringLineReader reader, string subject) =>
+            internal static (string? body, string? additionalData) ParseCommitBody(StringLineReader reader, string subject) =>
                 RevisionReader.ParseCommitBody(reader, subject);
 
             internal static StringLineReader MakeReader(string s) => new StringLineReader(s);

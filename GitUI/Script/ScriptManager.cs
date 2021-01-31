@@ -14,13 +14,13 @@ namespace GitUI.Script
     public static class ScriptManager
     {
         internal const int MinimumUserScriptID = 9000;
-        private static readonly XmlSerializer _serializer = new XmlSerializer(typeof(BindingList<ScriptInfo>));
+        private static readonly XmlSerializer _serializer = new(typeof(BindingList<ScriptInfo>));
         private static BindingList<ScriptInfo> _scripts;
 
         [NotNull]
         public static BindingList<ScriptInfo> GetScripts()
         {
-            if (_scripts == null)
+            if (_scripts is null)
             {
                 _scripts = DeserializeFromXml(AppSettings.OwnScripts);
                 FixAmbiguousHotkeyCommandIdentifiers();
@@ -90,11 +90,9 @@ namespace GitUI.Script
 
             try
             {
-                using (var stringReader = new StringReader(xml))
-                using (var xmlReader = new XmlTextReader(stringReader))
-                {
-                    return (BindingList<ScriptInfo>)_serializer.Deserialize(xmlReader);
-                }
+                using var stringReader = new StringReader(xml);
+                using var xmlReader = new XmlTextReader(stringReader);
+                return (BindingList<ScriptInfo>)_serializer.Deserialize(xmlReader);
             }
             catch (Exception ex)
             {

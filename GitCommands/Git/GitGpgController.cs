@@ -50,7 +50,7 @@ namespace GitCommands.Gpg
         /// Obtain the tag verification message for all the tag in current git revision
         /// </summary>
         /// <returns>Full concatenated string coming from GPG analysis on all tags on current git revision.</returns>
-        string GetTagVerifyMessage(GitRevision revision);
+        string? GetTagVerifyMessage(GitRevision revision);
     }
 
     public class GitGpgController : IGitGpgController
@@ -73,10 +73,10 @@ namespace GitCommands.Gpg
         private const string NoTagPubKey = "NO_PUBKEY";
         private const string NoSignatureFound = "error: no signature found";
 
-        private static readonly Regex ValidSignatureTagRegex = new Regex(ValidTagSign, RegexOptions.Compiled);
-        private static readonly Regex GoodSignatureTagRegex = new Regex(GoodSignature, RegexOptions.Compiled);
-        private static readonly Regex NoPubKeyTagRegex = new Regex(NoTagPubKey, RegexOptions.Compiled);
-        private static readonly Regex NoSignatureFoundTagRegex = new Regex(NoSignatureFound, RegexOptions.Compiled);
+        private static readonly Regex ValidSignatureTagRegex = new(ValidTagSign, RegexOptions.Compiled);
+        private static readonly Regex GoodSignatureTagRegex = new(GoodSignature, RegexOptions.Compiled);
+        private static readonly Regex NoPubKeyTagRegex = new(NoTagPubKey, RegexOptions.Compiled);
+        private static readonly Regex NoSignatureFoundTagRegex = new(NoSignatureFound, RegexOptions.Compiled);
 
         /// <summary>
         /// Obtain the tag verification message for all the tag in current git revision
@@ -93,7 +93,7 @@ namespace GitCommands.Gpg
         /// <returns>Enum value that indicate the gpg status for current git revision.</returns>
         public async Task<CommitStatus> GetRevisionCommitSignatureStatusAsync(GitRevision revision)
         {
-            if (revision == null)
+            if (revision is null)
             {
                 throw new ArgumentNullException(nameof(revision));
             }
@@ -144,7 +144,7 @@ namespace GitCommands.Gpg
         /// <returns>Enum value that indicate if current git revision has one tag with good signature, one tag with bad signature or more than one tag.</returns>
         public async Task<TagStatus> GetRevisionTagSignatureStatusAsync(GitRevision revision)
         {
-            if (revision == null)
+            if (revision is null)
             {
                 throw new ArgumentNullException(nameof(revision));
             }
@@ -166,7 +166,7 @@ namespace GitCommands.Gpg
                 }
 
                 /* Raw message to be checked */
-                string rawGpgMessage = GetTagVerificationMessage(usefulTagRefs[0], true);
+                string? rawGpgMessage = GetTagVerificationMessage(usefulTagRefs[0], true);
 
                 /* Look for icon to be shown */
                 if (GoodSignatureTagRegex.IsMatch(rawGpgMessage) && ValidSignatureTagRegex.IsMatch(rawGpgMessage))
@@ -198,7 +198,7 @@ namespace GitCommands.Gpg
         /// <returns>Full string coming from GPG analysis on current revision.</returns>
         public string GetCommitVerificationMessage(GitRevision revision)
         {
-            if (revision == null)
+            if (revision is null)
             {
                 throw new ArgumentNullException(nameof(revision));
             }
@@ -217,9 +217,9 @@ namespace GitCommands.Gpg
         /// Obtain the tag verification message for all the tag on the revision
         /// </summary>
         /// <returns>Full string coming from GPG analysis on current revision.</returns>
-        public string GetTagVerifyMessage(GitRevision revision)
+        public string? GetTagVerifyMessage(GitRevision revision)
         {
-            if (revision == null)
+            if (revision is null)
             {
                 throw new ArgumentNullException(nameof(revision));
             }
@@ -228,7 +228,7 @@ namespace GitCommands.Gpg
             return EvaluateTagVerifyMessage(usefulTagRefs);
         }
 
-        private string GetTagVerificationMessage(IGitRef tagRef, bool raw = true)
+        private string? GetTagVerificationMessage(IGitRef tagRef, bool raw = true)
         {
             string tagName = tagRef.LocalName;
             if (string.IsNullOrWhiteSpace(tagName))
@@ -245,7 +245,7 @@ namespace GitCommands.Gpg
             return module.GitExecutable.GetOutput(args);
         }
 
-        private string EvaluateTagVerifyMessage(IReadOnlyList<IGitRef> usefulTagRefs)
+        private string? EvaluateTagVerifyMessage(IReadOnlyList<IGitRef> usefulTagRefs)
         {
             if (usefulTagRefs.Count == 0)
             {
@@ -273,7 +273,7 @@ namespace GitCommands.Gpg
         private IGitModule GetModule()
         {
             var module = _getModule();
-            if (module == null)
+            if (module is null)
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }

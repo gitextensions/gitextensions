@@ -12,7 +12,7 @@ namespace GitStatistics.PieChart
     /// </summary>
     public class PieChartControl : Panel
     {
-        private readonly ToolTip _toolTip = new ToolTip();
+        private readonly ToolTip _toolTip = new();
         private float _bottomMargin;
         private Color[] _colors;
         private int _defaultToolTipAutoPopDelay;
@@ -207,7 +207,7 @@ namespace GitStatistics.PieChart
         /// </param>
         protected void DoDraw(Graphics graphics)
         {
-            if (_values == null || _values.Length <= 0 || !HasNonZeroValue())
+            if (_values is null || _values.Length <= 0 || !HasNonZeroValue())
             {
                 return;
             }
@@ -223,7 +223,7 @@ namespace GitStatistics.PieChart
             }
 
             _pieChart?.Dispose();
-            if (_colors != null && _colors.Length > 0)
+            if (_colors is not null && _colors.Length > 0)
             {
                 _pieChart = new PieChart3D(_leftMargin, _topMargin, width, height, _values, _colors,
                                            _sliceRelativeHeight);
@@ -267,7 +267,7 @@ namespace GitStatistics.PieChart
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-            if (_pieChart == null)
+            if (_pieChart is null)
             {
                 return;
             }
@@ -275,7 +275,7 @@ namespace GitStatistics.PieChart
             var index = _pieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
             if (index != -1)
             {
-                if (ToolTips == null || ToolTips.Length <= index || ToolTips[index].Length == 0)
+                if (ToolTips is null || ToolTips.Length <= index || ToolTips[index].Length == 0)
                 {
                     _toolTip.SetToolTip(this, _values[index].ToString());
                 }
@@ -295,12 +295,12 @@ namespace GitStatistics.PieChart
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            if (_pieChart != null)
+            if (_pieChart is not null)
             {
                 var index = _pieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
                 if (index != -1)
                 {
-                    if (ToolTips == null || ToolTips.Length <= index || ToolTips[index].Length == 0)
+                    if (ToolTips is null || ToolTips.Length <= index || ToolTips[index].Length == 0)
                     {
                         _toolTip.SetToolTip(this, _values[index].ToString());
                     }

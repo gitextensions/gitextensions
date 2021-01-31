@@ -7,9 +7,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 {
     internal sealed class LaneInfoProvider
     {
-        private static readonly TranslationString NoInfoText = new TranslationString("Sorry, this commit seems to be not loaded.");
-        private static readonly TranslationString MergedWithText = new TranslationString(" (merged with {0})");
-        internal static readonly TranslationString ByPullRequestText = new TranslationString(" by pull request {0}");
+        private static readonly TranslationString NoInfoText = new("Sorry, this commit seems to be not loaded.");
+        private static readonly TranslationString MergedWithText = new(" (merged with {0})");
+        internal static readonly TranslationString ByPullRequestText = new(" by pull request {0}");
         private readonly ILaneNodeLocator _nodeLocator;
         private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
 
@@ -22,12 +22,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public string GetLaneInfo(int rowIndex, int lane)
         {
             (var node, bool isAtNode) = _nodeLocator.FindPrevNode(rowIndex, lane);
-            if (node == null)
+            if (node is null)
             {
                 return string.Empty;
             }
 
-            if (node.GitRevision == null)
+            if (node.GitRevision is null)
             {
                 return NoInfoText.Text;
             }
@@ -55,7 +55,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 laneInfoText.AppendLine();
             }
 
-            if (node.GitRevision.Body != null)
+            if (node.GitRevision.Body is not null)
             {
                 laneInfoText.Append(_gitRevisionSummaryBuilder.BuildSummary(node.GitRevision.Body));
             }

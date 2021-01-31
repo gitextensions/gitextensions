@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
+using GitUI.Interops.DwmApi;
+using GitUI.Theming;
 using ResourceManager;
 
 namespace GitUI
@@ -37,6 +39,12 @@ namespace GitUI
             var cancelButton = new Button();
             cancelButton.Click += CancelButtonClick;
             CancelButton = cancelButton;
+
+            if (ThemeModule.IsDarkTheme)
+            {
+                // Warning: This call freezes the CI in AppVeyor, however dark theme is not used on build machines
+                DwmApi.UseImmersiveDarkMode(Handle, true);
+            }
 
             void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
             {
@@ -94,14 +102,14 @@ namespace GitUI
             }
 
             var position = _windowPositionManager.LoadPosition(this);
-            if (position == null)
+            if (position is null)
             {
                 return;
             }
 
             _needsPositionRestore = false;
 
-            var workingArea = _getScreensWorkingArea();
+            IReadOnlyList<Rectangle> workingArea = _getScreensWorkingArea();
             if (!workingArea.Any(screen => screen.IntersectsWith(position.Rect)))
             {
                 if (position.State == FormWindowState.Maximized)
@@ -123,23 +131,19 @@ namespace GitUI
                 Size = DpiUtil.Scale(position.Rect.Size, originalDpi: position.DeviceDpi);
             }
 
-            if (Owner == null || !windowCentred)
+            if (Owner is null || !windowCentred)
             {
-                var location = DpiUtil.Scale(position.Rect.Location, originalDpi: position.DeviceDpi);
+                Point calculatedLocation = DpiUtil.Scale(position.Rect.Location, originalDpi: position.DeviceDpi);
 
-                if (WindowPositionManager.FindWindowScreen(location, workingArea) is Rectangle rect)
-                {
-                    location.Y = rect.Y;
-                }
-
-                DesktopLocation = location;
+                DesktopLocation = WindowPositionManager.FitWindowOnScreen(new Rectangle(calculatedLocation, Size), workingArea);
             }
             else
             {
                 // Calculate location for modal form with parent
-                Location = new Point(
+                Point calculatedLocation = new Point(
                     Owner.Left + (Owner.Width / 2) - (Width / 2),
                     Owner.Top + (Owner.Height / 2) - (Height / 2));
+                Location = WindowPositionManager.FitWindowOnScreen(new Rectangle(calculatedLocation, Size), workingArea);
             }
 
             if (WindowState != position.State)
@@ -148,31 +152,6 @@ namespace GitUI
             }
 
             ResumeLayout();
-        }
-
-        // This is a base class for many forms, which have own GetTestAccessor() methods. This has to be unique
-        internal GitExtensionsFormTestAccessor GetGitExtensionsFormTestAccessor() => new GitExtensionsFormTestAccessor(this);
-
-        internal readonly struct GitExtensionsFormTestAccessor
-        {
-            private readonly GitExtensionsForm _form;
-
-            public GitExtensionsFormTestAccessor(GitExtensionsForm form)
-            {
-                _form = form;
-            }
-
-            public IWindowPositionManager WindowPositionManager
-            {
-                get => _form._windowPositionManager;
-                set => _form._windowPositionManager = value;
-            }
-
-            public Func<IReadOnlyList<Rectangle>> GetScreensWorkingArea
-            {
-                get => _form._getScreensWorkingArea;
-                set => _form._getScreensWorkingArea = value;
-            }
         }
     }
 }

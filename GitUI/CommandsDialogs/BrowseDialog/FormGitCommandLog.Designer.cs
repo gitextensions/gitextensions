@@ -15,7 +15,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (components is not null))
             {
                 components.Dispose();
             }
@@ -102,7 +102,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // 
             this.splitContainer2.Panel2.Controls.Add(this.LogOutput);
             this.splitContainer2.Size = new System.Drawing.Size(655, 419);
-            this.splitContainer2.SplitterDistance = 337;
+            this.splitContainer2.SplitterDistance = 280;
             this.splitContainer2.TabIndex = 1;
             // 
             // LogItems
@@ -114,7 +114,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.LogItems.Location = new System.Drawing.Point(0, 0);
             this.LogItems.Margin = new System.Windows.Forms.Padding(0);
             this.LogItems.Name = "LogItems";
-            this.LogItems.Size = new System.Drawing.Size(655, 337);
+            this.LogItems.Size = new System.Drawing.Size(655, 280);
             this.LogItems.TabIndex = 0;
             this.LogItems.SelectedIndexChanged += new System.EventHandler(this.LogItems_SelectedIndexChanged);
             // 
@@ -150,7 +150,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.LogOutput.Location = new System.Drawing.Point(0, 0);
             this.LogOutput.Margin = new System.Windows.Forms.Padding(0);
             this.LogOutput.Name = "LogOutput";
-            this.LogOutput.Size = new System.Drawing.Size(655, 78);
+            this.LogOutput.Size = new System.Drawing.Size(655, 135);
             this.LogOutput.TabIndex = 0;
             this.LogOutput.Text = "";
             // 

@@ -13,7 +13,7 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (components is not null))
             {
                 components.Dispose();
             }
@@ -33,6 +33,8 @@
             this.tvGitTree = new GitUI.UserControls.NativeTreeView();
             this.FileTreeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.diffWithRememberedFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rememberFileStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetToThisRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorFileSystemActions = new System.Windows.Forms.ToolStripSeparator();
@@ -110,6 +112,8 @@
             this.resetToThisRevisionToolStripMenuItem,
             this.toolStripSeparatorTopActions,
             this.openWithDifftoolToolStripMenuItem,
+            this.diffWithRememberedFileToolStripMenuItem,
+            this.rememberFileStripMenuItem,
             this.openWithToolStripMenuItem,
             this.openFileToolStripMenuItem,
             this.openFileWithToolStripMenuItem,
@@ -142,6 +146,19 @@
             this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(325, 22);
             this.openWithDifftoolToolStripMenuItem.Text = "Open with difftool";
             this.openWithDifftoolToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
+            // 
+            // diffWithRememberedFileToolStripMenuItem
+            // 
+            this.diffWithRememberedFileToolStripMenuItem.Name = "diffWithRememberedFileToolStripMenuItem";
+            this.diffWithRememberedFileToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
+            this.diffWithRememberedFileToolStripMenuItem.Click += new System.EventHandler(this.diffWithRememberedFileToolStripMenuItem_Click);
+            // 
+            // rememberFileStripMenuItem
+            // 
+            this.rememberFileStripMenuItem.Name = "rememberFileStripMenuItem";
+            this.rememberFileStripMenuItem.Size = new System.Drawing.Size(296, 22);
+            this.rememberFileStripMenuItem.Text = "Remember file for diff";
+            this.rememberFileStripMenuItem.Click += new System.EventHandler(this.rememberFileToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
@@ -355,6 +372,8 @@
         private Editor.FileViewer FileText;
         private System.Windows.Forms.ContextMenuStrip FileTreeContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem diffWithRememberedFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rememberFileStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetToThisRevisionToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorFileSystemActions;

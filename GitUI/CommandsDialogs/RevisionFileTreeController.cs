@@ -85,7 +85,7 @@ namespace GitUI.CommandsDialogs
         public void LoadChildren(IGitItem item, TreeNodeCollection nodes, ImageList.ImageCollection imageCollection)
         {
             var childrenItems = _cachedItems.GetOrAdd(item.Guid, _revisionInfoProvider.LoadChildren(item));
-            if (childrenItems == null)
+            if (childrenItems is null)
             {
                 return;
             }
@@ -120,7 +120,8 @@ namespace GitUI.CommandsDialogs
 
                     case GitObjectType.Blob:
                         {
-                            var extension = Path.GetExtension(gitItem.FileName);
+                            var extension = PathUtil.GetExtension(gitItem.FileName);
+
                             if (string.IsNullOrWhiteSpace(extension))
                             {
                                 continue;
@@ -128,11 +129,11 @@ namespace GitUI.CommandsDialogs
 
                             if (!imageCollection.ContainsKey(extension))
                             {
-                                // a little optimisation - initialise the first time it is required
-                                workingDir = workingDir ?? _getWorkingDir();
+                                // lazy - initialise the first time used
+                                workingDir ??= _getWorkingDir();
 
                                 var fileIcon = _iconProvider.Get(workingDir, gitItem.FileName);
-                                if (fileIcon == null)
+                                if (fileIcon is null)
                                 {
                                     continue;
                                 }
@@ -151,7 +152,7 @@ namespace GitUI.CommandsDialogs
         {
             var pathParts = new Queue<string>(fileSubPath.Split(Path.DirectorySeparatorChar));
             var foundNode = FindSubNode(tree.Nodes, pathParts);
-            if (foundNode == null)
+            if (foundNode is null)
             {
                 return false;
             }
@@ -173,7 +174,7 @@ namespace GitUI.CommandsDialogs
                 var node = nodes.Cast<TreeNode>().SingleOrDefault(n =>
                     n?.Tag is GitItem item && item.ObjectType == GitObjectType.Tree && item.Name == treeToFind);
 
-                if (node == null)
+                if (node is null)
                 {
                     return null;
                 }

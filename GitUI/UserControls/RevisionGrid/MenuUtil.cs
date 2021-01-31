@@ -5,8 +5,8 @@ namespace GitUI.UserControls.RevisionGrid
 {
     internal static class MenuUtil
     {
-        private static readonly object _captionTag = new object();
-        private static readonly CaptionCustomMenuRenderer _customMenuRenderer = new CaptionCustomMenuRenderer();
+        private static readonly object _captionTag = new();
+        private static readonly CaptionCustomMenuRenderer _customMenuRenderer = new();
         private static Font _disabledFont;
 
         /// <summary>
@@ -19,7 +19,7 @@ namespace GitUI.UserControls.RevisionGrid
             menuItem.Tag = _captionTag;
             menuItem.Enabled = false;
 
-            if (_disabledFont == null)
+            if (_disabledFont is null)
             {
                 _disabledFont = new Font(menuItem.Font, FontStyle.Italic);
             }

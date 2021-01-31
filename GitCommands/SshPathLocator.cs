@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -44,8 +43,7 @@ namespace GitCommands
             return ssh ?? "";
         }
 
-        [CanBeNull]
-        private string GetSshFromGitDir(string gitBinDirectory)
+        private string? GetSshFromGitDir(string gitBinDirectory)
         {
             if (string.IsNullOrEmpty(gitBinDirectory))
             {
@@ -58,7 +56,7 @@ namespace GitCommands
                 // (at least this is what AppSettings.GitBinDir ensures),
                 // but then GetParent() returns the same directory, only without the trailing separator
                 var gitDirInfo = _fileSystem.Directory.GetParent(gitBinDirectory.RemoveTrailingPathSeparator());
-                if (gitDirInfo == null)
+                if (gitDirInfo is null)
                 {
                     return null;
                 }

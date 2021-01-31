@@ -35,7 +35,7 @@ namespace ResourceManager.CommitDataRenders
         /// </summary>
         public string Render(CommitData commitData, bool showRevisionsAsLinks)
         {
-            if (commitData == null)
+            if (commitData is null)
             {
                 throw new ArgumentNullException(nameof(commitData));
             }
@@ -54,7 +54,7 @@ namespace ResourceManager.CommitDataRenders
         {
             var module = _getModule();
 
-            if (module == null)
+            if (module is null)
             {
                 return hash;
             }

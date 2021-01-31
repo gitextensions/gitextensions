@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             diffFontDialog.Font = _diffFont;
             DialogResult result = diffFontDialog.ShowDialog(this);
 
-            if (result == DialogResult.OK || result == DialogResult.Yes)
+            if (result is (DialogResult.OK or DialogResult.Yes))
             {
                 SetCurrentDiffFont(diffFontDialog.Font);
             }
@@ -51,7 +51,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             applicationDialog.Font = _applicationFont;
             DialogResult result = applicationDialog.ShowDialog(this);
 
-            if (result == DialogResult.OK || result == DialogResult.Yes)
+            if (result is (DialogResult.OK or DialogResult.Yes))
             {
                 SetCurrentApplicationFont(applicationDialog.Font);
             }
@@ -62,7 +62,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             commitFontDialog.Font = _commitFont;
             DialogResult result = commitFontDialog.ShowDialog(this);
 
-            if (result == DialogResult.OK || result == DialogResult.Yes)
+            if (result is (DialogResult.OK or DialogResult.Yes))
             {
                 SetCurrentCommitFont(commitFontDialog.Font);
             }
@@ -73,7 +73,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             monospaceFontDialog.Font = _monospaceFont;
             DialogResult result = monospaceFontDialog.ShowDialog(this);
 
-            if (result == DialogResult.OK || result == DialogResult.Yes)
+            if (result is (DialogResult.OK or DialogResult.Yes))
             {
                 SetCurrentMonospaceFont(monospaceFontDialog.Font);
             }

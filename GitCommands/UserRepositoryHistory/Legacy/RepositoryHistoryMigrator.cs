@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using Current = GitCommands.UserRepositoryHistory;
 
@@ -52,10 +52,9 @@ namespace GitCommands.UserRepositoryHistory.Legacy
         /// <c>changed</c> is <see langword="true"/>, if the migration has taken place; otherwise <see langword="false"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="currentHistory"/> is <see langword="null"/>.</exception>
-        [ContractAnnotation("currentHistory:null=>halt")]
         public async Task<(IList<Current.Repository> history, bool changed)> MigrateAsync(IEnumerable<Current.Repository> currentHistory)
         {
-            if (currentHistory == null)
+            if (currentHistory is null)
             {
                 throw new ArgumentNullException(nameof(currentHistory));
             }
@@ -64,7 +63,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
 
             await TaskScheduler.Default;
             var categorised = _repositoryStorage.Load();
-            if (categorised?.Count < 1)
+            if (categorised.Count < 1)
             {
                 return (history, false);
             }
@@ -83,15 +82,18 @@ namespace GitCommands.UserRepositoryHistory.Legacy
 
             foreach (var category in categorised.Where(c => c.CategoryType == "Repositories"))
             {
+                Assumes.NotNull(category.Repositories);
+
                 foreach (var repository in category.Repositories)
                 {
                     var repo = history.FirstOrDefault(hr => hr.Path == repository.Path);
-                    if (repo == null)
+                    if (repo is null)
                     {
-                        repo = new Current.Repository(repository.Path);
+                        repo = new Current.Repository(repository.Path!);
                         history.Add(repo);
                     }
 
+                    Assumes.NotNull(repository.Anchor);
                     repo.Anchor = GetAnchor(repository.Anchor);
                     repo.Category = category.Description;
 

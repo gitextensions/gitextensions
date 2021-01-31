@@ -1,18 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands;
 using GitUI.BranchTreePanel.ContextMenu;
 using GitUI.BranchTreePanel.Interfaces;
+using GitUI.CommandsDialogs;
+using GitUI.UserControls.RevisionGrid;
 using ResourceManager;
 
 namespace GitUI.BranchTreePanel
 {
     partial class RepoObjectsTree : IMenuItemFactory
     {
-        private TreeNode _lastRightClickedNode;
+        private GitRefsSortOrderContextMenuItem _sortOrderContextMenuItem;
+        private GitRefsSortByContextMenuItem _sortByContextMenuItem;
+        private ToolStripSeparator _tsmiSortMenuSpacer = new ToolStripSeparator { Name = "tsmiSortMenuSpacer" };
+        private ToolStripItem[] _menuBranchCopyContextMenuItems = Array.Empty<ToolStripItem>();
+        private ToolStripItem[] _menuRemoteCopyContextMenuItems = Array.Empty<ToolStripItem>();
 
         /// <summary>
         /// Local branch context menu [git ref / rename / delete] actions
@@ -44,7 +52,7 @@ namespace GitUI.BranchTreePanel
                 contextMenu.Items.Clear();
                 contextMenu.Items.Add(mnubtnCollapseAll);
                 contextMenu.Items.Add(mnubtnExpandAll);
-                if (treeNode != null)
+                if (treeNode is not null)
                 {
                     AddMoveUpDownMenuItems();
                 }
@@ -67,7 +75,7 @@ namespace GitUI.BranchTreePanel
                 contextMenu.Items.Add(mnubtnExpandAll);
             }
 
-            if (treeNode != null)
+            if (treeNode is not null)
             {
                 AddMoveUpDownMenuItems();
             }
@@ -91,8 +99,8 @@ namespace GitUI.BranchTreePanel
                     contextMenu.Items.Add(mnubtnMoveDown);
                 }
 
-                mnubtnMoveUp.Enabled = treeNode.TreeViewNode.PrevNode != null;
-                mnubtnMoveDown.Enabled = treeNode.TreeViewNode.NextNode != null;
+                mnubtnMoveUp.Enabled = treeNode.TreeViewNode.PrevNode is not null;
+                mnubtnMoveDown.Enabled = treeNode.TreeViewNode.NextNode is not null;
             }
         }
 
@@ -103,14 +111,43 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
-            var node = (contextMenu.SourceControl as TreeView)?.SelectedNode;
-            if (node == null)
+            var node = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag as LocalBranchNode;
+
+            if (node is null)
             {
                 return;
             }
 
-            var isNotActiveBranch = !((node.Tag as LocalBranchNode)?.IsActive ?? false);
+            var isNotActiveBranch = !node.IsActive;
             _localBranchMenuItems.GetInactiveBranchItems().ForEach(t => t.Item.Visible = isNotActiveBranch);
+
+            _menuBranchCopyContextMenuItems.ForEach(x => x.Visible = node.Visible);
+
+            if (node.Visible)
+            {
+                contextMenu.AddUserScripts(runScriptToolStripMenuItem, _scriptRunner.Execute);
+            }
+            else
+            {
+                contextMenu.RemoveUserScripts(runScriptToolStripMenuItem);
+            }
+        }
+
+        private void ContextMenuRemoteSpecific(ContextMenuStrip contextMenu)
+        {
+            if (contextMenu != menuRemote)
+            {
+                return;
+            }
+
+            var node = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag as RemoteBranchNode;
+
+            if (node is null)
+            {
+                return;
+            }
+
+            _menuRemoteCopyContextMenuItems.ForEach(x => x.Visible = node.Visible);
         }
 
         private void ContextMenuRemoteRepoSpecific(ContextMenuStrip contextMenu)
@@ -121,7 +158,7 @@ namespace GitUI.BranchTreePanel
             }
 
             var node = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag as RemoteRepoNode;
-            if (node == null)
+            if (node is null)
             {
                 return;
             }
@@ -137,10 +174,43 @@ namespace GitUI.BranchTreePanel
             mnubtnEnableRemoteAndFetch.Visible = !node.Enabled;
         }
 
+        private void ContextMenuSort(ContextMenuStrip contextMenu)
+        {
+            // We can only sort refs, i.e. branches and tags
+            if (contextMenu != menuBranch &&
+                contextMenu != menuRemote &&
+                contextMenu != menuTag)
+            {
+                return;
+            }
+
+            // Add the following to the every participating context menu:
+            //
+            //    ---------
+            //    Sort By...
+            //    Sort Order...
+
+            if (!contextMenu.Items.Contains(_sortOrderContextMenuItem))
+            {
+                AddContextMenuItems(contextMenu,
+                    new ToolStripItem[]
+                    {
+                        _tsmiSortMenuSpacer,
+                        _sortByContextMenuItem,
+                        _sortOrderContextMenuItem,
+                    },
+                    insertBefore: tsmiMainMenuSpacer1);
+            }
+
+            // If refs are sorted by git (GitRefsSortBy = Default) don't show sort order options
+            contextMenu.Items[GitRefsSortOrderContextMenuItem.MenuItemName].Visible =
+                AppSettings.RefsSortBy != GitUIPluginInterfaces.GitRefsSortBy.Default;
+        }
+
         private void ContextMenuSubmoduleSpecific(ContextMenuStrip contextMenu)
         {
             TreeNode selectedNode = (contextMenu.SourceControl as TreeView)?.SelectedNode;
-            if (selectedNode == null)
+            if (selectedNode is null)
             {
                 return;
             }
@@ -161,15 +231,14 @@ namespace GitUI.BranchTreePanel
 
                 bool bareRepository = Module.IsBareRepository();
                 mnubtnOpenSubmodule.Visible = submoduleNode.CanOpen;
+                mnubtnOpenGESubmodule.Visible = submoduleNode.CanOpen;
                 mnubtnUpdateSubmodule.Visible = true;
                 mnubtnManageSubmodules.Visible = !bareRepository && submoduleNode.IsCurrent;
                 mnubtnSynchronizeSubmodules.Visible = !bareRepository && submoduleNode.IsCurrent;
+                mnubtnResetSubmodule.Visible = !bareRepository;
+                mnubtnStashSubmodule.Visible = !bareRepository;
+                mnubtnCommitSubmodule.Visible = !bareRepository;
             }
-        }
-
-        private void OnNodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            _lastRightClickedNode = e.Button == MouseButtons.Right ? e.Node : null;
         }
 
         private static void RegisterClick(ToolStripItem item, Action onClick)
@@ -179,16 +248,35 @@ namespace GitUI.BranchTreePanel
 
         private void RegisterClick<T>(ToolStripItem item, Action<T> onClick) where T : class, INode
         {
-            item.Click += (o, e) => Node.OnNode(_lastRightClickedNode, onClick);
+            item.Click += (o, e) => Node.OnNode(treeMain.SelectedNode, onClick);
         }
 
         private void RegisterContextActions()
         {
+            _menuBranchCopyContextMenuItems = CreateCopyContextMenuItems();
+            _menuRemoteCopyContextMenuItems = CreateCopyContextMenuItems();
+
+            AddContextMenuItems(menuBranch, _menuBranchCopyContextMenuItems);
+            AddContextMenuItems(menuRemote, _menuRemoteCopyContextMenuItems);
+
+            _sortOrderContextMenuItem = new GitRefsSortOrderContextMenuItem(() =>
+            {
+                _branchesTree.Refresh();
+                _remotesTree.Refresh();
+                _tagTree.Refresh();
+            });
+            _sortByContextMenuItem = new GitRefsSortByContextMenuItem(() =>
+            {
+                _branchesTree.Refresh();
+                _remotesTree.Refresh();
+                _tagTree.Refresh();
+            });
+
             _localBranchMenuItems = new LocalBranchMenuItems<LocalBranchNode>(this);
-            AddContextMenuItems(menuBranch, _localBranchMenuItems.Select(s => s.Item));
+            AddContextMenuItems(menuBranch, _localBranchMenuItems.Select(s => s.Item), insertAfter: _menuBranchCopyContextMenuItems[1]);
 
             _remoteBranchMenuItems = new RemoteBranchMenuItems<RemoteBranchNode>(this);
-            AddContextMenuItems(menuRemote, _remoteBranchMenuItems.Select(s => s.Item), toolStripSeparator1);
+            AddContextMenuItems(menuRemote, _remoteBranchMenuItems.Select(s => s.Item), insertAfter: toolStripSeparator1);
 
             _tagNodeMenuItems = new TagMenuItems<TagNode>(this);
             AddContextMenuItems(menuTag, _tagNodeMenuItems.Select(s => s.Item));
@@ -197,8 +285,6 @@ namespace GitUI.BranchTreePanel
             RegisterClick(mnubtnExpandAll, () => treeMain.ExpandAll());
             RegisterClick(mnubtnMoveUp, () => ReorderTreeNode(treeMain.SelectedNode, up: true));
             RegisterClick(mnubtnMoveDown, () => ReorderTreeNode(treeMain.SelectedNode, up: false));
-
-            treeMain.NodeMouseClick += OnNodeMouseClick;
 
             RegisterClick<LocalBranchNode>(mnubtnFilterLocalBranchInRevisionGrid, FilterInRevisionGrid);
             Node.RegisterContextMenu(typeof(LocalBranchNode), menuBranch);
@@ -235,8 +321,25 @@ namespace GitUI.BranchTreePanel
             RegisterClick<SubmoduleNode>(mnubtnManageSubmodules, _ => _submoduleTree.ManageSubmodules(this));
             RegisterClick<SubmoduleNode>(mnubtnSynchronizeSubmodules, _ => _submoduleTree.SynchronizeSubmodules(this));
             RegisterClick<SubmoduleNode>(mnubtnOpenSubmodule, node => _submoduleTree.OpenSubmodule(this, node));
+            RegisterClick<SubmoduleNode>(mnubtnOpenGESubmodule, node => _submoduleTree.OpenSubmoduleInGitExtensions(this, node));
             RegisterClick<SubmoduleNode>(mnubtnUpdateSubmodule, node => _submoduleTree.UpdateSubmodule(this, node));
+            RegisterClick<SubmoduleNode>(mnubtnResetSubmodule, node => _submoduleTree.ResetSubmodule(this, node));
+            RegisterClick<SubmoduleNode>(mnubtnStashSubmodule, node => _submoduleTree.StashSubmodule(this, node));
+            RegisterClick<SubmoduleNode>(mnubtnCommitSubmodule, node => _submoduleTree.CommitSubmodule(this, node));
             Node.RegisterContextMenu(typeof(SubmoduleNode), menuSubmodule);
+        }
+
+        private ToolStripItem[] CreateCopyContextMenuItems()
+        {
+            var copyContextMenuItem = new CopyContextMenuItem();
+
+            copyContextMenuItem.SetRevisionFunc(() => _scriptHost.GetSelectedRevisions());
+
+            return new ToolStripItem[]
+            {
+                copyContextMenuItem,
+                new ToolStripSeparator()
+            };
         }
 
         private void FilterInRevisionGrid(BaseBranchNode branch)
@@ -247,13 +350,15 @@ namespace GitUI.BranchTreePanel
         private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
             var contextMenu = sender as ContextMenuStrip;
-            if (contextMenu == null)
+            if (contextMenu is null)
             {
                 return;
             }
 
             ContextMenuAddExpandCollapseTree(contextMenu);
+            ContextMenuSort(contextMenu);
             ContextMenuBranchSpecific(contextMenu);
+            ContextMenuRemoteSpecific(contextMenu);
             ContextMenuRemoteRepoSpecific(contextMenu);
             ContextMenuSubmoduleSpecific(contextMenu);
 
@@ -275,11 +380,24 @@ namespace GitUI.BranchTreePanel
             return result;
         }
 
-        private void AddContextMenuItems(ContextMenuStrip menu, IEnumerable<ToolStripItem> items, ToolStripItem insertAfter = null)
+        private void AddContextMenuItems(ContextMenuStrip menu, IEnumerable<ToolStripItem> items, ToolStripItem insertBefore = null, ToolStripItem insertAfter = null)
         {
+            Debug.Assert(!(insertAfter is not null && insertBefore is not null), $"Only {nameof(insertBefore)} or {nameof(insertAfter)} is allowed.");
+
             menu.SuspendLayout();
-            int index = insertAfter == null ? 0 : Math.Max(0, menu.Items.IndexOf(insertAfter) + 1);
-            items.ForEach(item => menu.Items.Insert(index++, item));
+
+            int index;
+            if (insertBefore is not null)
+            {
+                index = Math.Max(0, menu.Items.IndexOf(insertBefore) - 1);
+                items.ForEach(item => menu.Items.Insert(++index, item));
+            }
+            else
+            {
+                index = insertAfter is null ? 0 : Math.Max(0, menu.Items.IndexOf(insertAfter) + 1);
+                items.ForEach(item => menu.Items.Insert(index++, item));
+            }
+
             menu.ResumeLayout();
         }
     }

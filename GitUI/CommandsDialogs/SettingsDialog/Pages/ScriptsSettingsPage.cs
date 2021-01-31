@@ -19,8 +19,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class ScriptsSettingsPage : SettingsPageWithHeader
     {
-        private readonly TranslationString _scriptSettingsPageHelpDisplayArgumentsHelp = new TranslationString("Arguments help");
-        private readonly TranslationString _scriptSettingsPageHelpDisplayContent = new TranslationString(@"Use {option} for normal replacement.
+        private readonly TranslationString _scriptSettingsPageHelpDisplayArgumentsHelp = new("Arguments help");
+        private readonly TranslationString _scriptSettingsPageHelpDisplayContent = new(@"Use {option} for normal replacement.
 Use {{option}} for quoted replacement.
 
 User Input:
@@ -47,6 +47,7 @@ Selected Branch:
 {sRemotePathFromUrl}
 {sHash}
 {sMessage}
+{sSubject}
 {sAuthor}
 {sCommitter}
 {sAuthorDate}
@@ -60,6 +61,7 @@ Current Branch:
 {cRemoteBranchName}   (without the remote's name)
 {cHash}
 {cMessage}
+{cSubject}
 {cAuthor}
 {cCommitter}
 {cAuthorDate}
@@ -212,7 +214,7 @@ Current Branch:
                 {
                     var color = !script.Enabled ? SystemColors.GrayText : SystemColors.WindowText;
 
-                    ListViewItem lvitem = new ListViewItem(script.Name)
+                    ListViewItem lvitem = new(script.Name)
                     {
                         ToolTipText = $"{script.Command} {script.Arguments}",
                         Tag = script,
@@ -235,7 +237,7 @@ Current Branch:
                 if (selectedScript is object)
                 {
                     ListViewItem lvi = lvScripts.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Tag == selectedScript);
-                    if (lvi != null)
+                    if (lvi is not null)
                     {
                         lvi.Selected = true;
                         lvScripts.FocusedItem = lvi;

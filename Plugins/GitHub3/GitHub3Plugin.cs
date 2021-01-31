@@ -28,7 +28,7 @@ namespace GitHub3
                     return null;
                 }
 
-                if (_username != null)
+                if (_username is not null)
                 {
                     return _username;
                 }
@@ -36,7 +36,7 @@ namespace GitHub3
                 try
                 {
                     var user = GitHub3Plugin.GitHub.getCurrentUser();
-                    if (user != null)
+                    if (user is not null)
                     {
                         _username = user.Login;
                         return _username;
@@ -70,19 +70,19 @@ namespace GitHub3
     [Export(typeof(IGitPlugin))]
     public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin
     {
-        private readonly TranslationString _viewInWebSite = new TranslationString("View in {0}");
-        private readonly TranslationString _tokenAlreadyExist = new TranslationString("You already have an OAuth token. To get a new one, delete your old one in Plugins > Settings first.");
+        private readonly TranslationString _viewInWebSite = new("View in {0}");
+        private readonly TranslationString _tokenAlreadyExist = new("You already have an OAuth token. To get a new one, delete your old one in Plugins > Settings first.");
 
         public static string GitHubAuthorizationRelativeUrl = "authorizations";
         public static string UpstreamConventionName = "upstream";
-        public readonly StringSetting GitHubHost = new StringSetting("GitHub (Enterprise) hostname", "github.com");
-        public readonly StringSetting OAuthToken = new StringSetting("OAuth Token", "");
+        public readonly StringSetting GitHubHost = new("GitHub (Enterprise) hostname", "github.com");
+        public readonly StringSetting OAuthToken = new("OAuth Token", "");
         public string GitHubApiEndpoint => $"https://api.{GitHubHost.ValueOrDefault(Settings)}";
         public string GitHubEndpoint => $"https://{GitHubHost.ValueOrDefault(Settings)}";
 
         internal static GitHub3Plugin Instance;
         internal static Client _gitHub;
-        internal static Client GitHub => _gitHub ?? (_gitHub = new Client(Instance.GitHubApiEndpoint));
+        internal static Client GitHub => _gitHub ?? (_gitHub = new(Instance.GitHubApiEndpoint));
 
         private IGitUICommands _currentGitUiCommands;
         private IReadOnlyList<IHostedRemote> _hostedRemotesForModule;
@@ -92,7 +92,7 @@ namespace GitHub3
             SetNameAndDescription("GitHub");
             Translate();
 
-            if (Instance == null)
+            if (Instance is null)
             {
                 Instance = this;
             }
@@ -119,10 +119,9 @@ namespace GitHub3
             if (string.IsNullOrEmpty(GitHubLoginInfo.OAuthToken))
             {
                 var authorizationApiUrl = new Uri(new Uri(GitHubApiEndpoint), GitHubAuthorizationRelativeUrl).ToString();
-                using (var gitHubCredentialsPrompt = new GitHubCredentialsPrompt(authorizationApiUrl))
-                {
-                    gitHubCredentialsPrompt.ShowDialog(args.OwnerForm);
-                }
+                using var gitHubCredentialsPrompt = new GitHubCredentialsPrompt(authorizationApiUrl);
+
+                gitHubCredentialsPrompt.ShowDialog(args.OwnerForm);
             }
             else
             {
@@ -162,7 +161,7 @@ namespace GitHub3
         {
             var gitModule = _currentGitUiCommands.GitModule;
             var hostedRemote = GetHostedRemotesForModule().FirstOrDefault(r => r.IsOwnedByMe);
-            if (hostedRemote == null)
+            if (hostedRemote is null)
             {
                 return null;
             }
@@ -192,7 +191,7 @@ namespace GitHub3
         /// </summary>
         public IReadOnlyList<IHostedRemote> GetHostedRemotesForModule()
         {
-            if (_currentGitUiCommands?.GitModule == null)
+            if (_currentGitUiCommands?.GitModule is null)
             {
                 return Array.Empty<IHostedRemote>();
             }
@@ -244,7 +243,7 @@ namespace GitHub3
                 toolStripItem.Click += (s, e) =>
                 {
                     var blameContext = contextMenu?.Tag as GitBlameContext;
-                    if (blameContext == null)
+                    if (blameContext is null)
                     {
                         return;
                     }

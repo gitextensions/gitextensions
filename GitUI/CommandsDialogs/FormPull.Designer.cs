@@ -13,7 +13,7 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (components is not null))
             {
                 components.Dispose();
             }
@@ -35,6 +35,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.Unshallow = new System.Windows.Forms.CheckBox();
+            this.Prune = new System.Windows.Forms.CheckBox();
+            this.PruneTags = new System.Windows.Forms.CheckBox();
             this.Pull = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.helpImageDisplayUserControl1 = new GitUI.Help.HelpImageDisplayUserControl();
@@ -62,7 +64,6 @@
             this.Mergetool = new System.Windows.Forms.Button();
             this.Stash = new System.Windows.Forms.Button();
             this.AutoStash = new System.Windows.Forms.CheckBox();
-            this.Prune = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -133,6 +134,33 @@
             this.Tooltip.SetToolTip(this.Unshallow, "Fetches as much history from the remote source as possible.\nIf full history is available (if the source is not a shallow clone itself), then this repo will be a shallow clone no more.\n\nActual command line (if checked): --unshallow");
             this.Unshallow.Visible = false;
             // 
+            // Prune
+            // 
+            this.Prune.AutoSize = true;
+            this.Prune.Location = new System.Drawing.Point(7, 407);
+            this.Prune.Margin = new System.Windows.Forms.Padding(7, 2, 2, 2);
+            this.Prune.Name = "Prune";
+            this.Prune.Size = new System.Drawing.Size(136, 17);
+            this.Prune.TabIndex = 20;
+            this.Prune.Text = "Prune remote branches";
+            this.Tooltip.SetToolTip(this.Prune, "Removes remote tracking branches that no longer exist on the remote (e.g. if some" +
+        "one else deleted them).\r\n\r\nActual command line (if checked): --prune\r\n");
+            this.Prune.CheckedChanged += new System.EventHandler(this.Prune_CheckedChanged);
+            // 
+            // PruneTags
+            // 
+            this.PruneTags.AutoSize = true;
+            this.PruneTags.Location = new System.Drawing.Point(7, 428);
+            this.PruneTags.Margin = new System.Windows.Forms.Padding(7, 2, 2, 2);
+            this.PruneTags.Name = "PruneTags";
+            this.PruneTags.Size = new System.Drawing.Size(77, 17);
+            this.PruneTags.TabIndex = 20;
+            this.PruneTags.Text = "Prune remote branches and tags";
+            this.PruneTags.Enabled = false;
+            this.Tooltip.SetToolTip(this.PruneTags, "Before fetching, remove any local tags that no longer exist on the remote if --pr" +
+        "une is enabled.");
+            this.PruneTags.CheckedChanged += new System.EventHandler(this.PruneTags_CheckedChanged);
+            // 
             // Pull
             // 
             this.Pull.Anchor = System.Windows.Forms.AnchorStyles.Right;
@@ -202,11 +230,12 @@
             this.tableLayoutPanel2.Controls.Add(this.Unshallow, 0, 4);
             this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 0, 6);
             this.tableLayoutPanel2.Controls.Add(this.Prune, 0, 5);
+            this.tableLayoutPanel2.Controls.Add(this.PruneTags, 0, 6);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 7;
+            this.tableLayoutPanel2.RowCount = 8;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -514,18 +543,6 @@
             this.AutoStash.Text = "Auto stash";
             this.AutoStash.UseVisualStyleBackColor = true;
             // 
-            // Prune
-            // 
-            this.Prune.AutoSize = true;
-            this.Prune.Location = new System.Drawing.Point(7, 408);
-            this.Prune.Margin = new System.Windows.Forms.Padding(7, 2, 2, 2);
-            this.Prune.Name = "Prune";
-            this.Prune.Size = new System.Drawing.Size(138, 17);
-            this.Prune.TabIndex = 20;
-            this.Prune.Text = "Prune remote branches";
-            this.Tooltip.SetToolTip(this.Prune, "Removes remote tracking branches that no longer exist on the remote (e.g. if some" +
-        "one else deleted them).\r\n\r\nActual command line (if checked): --prune\r\n");
-            // 
             // FormPull
             // 
             this.AcceptButton = this.Pull;
@@ -599,5 +616,6 @@
         private UserControls.FolderBrowserButton folderBrowserButton1;
         private System.Windows.Forms.CheckBox Unshallow;
         private System.Windows.Forms.CheckBox Prune;
+        private System.Windows.Forms.CheckBox PruneTags;
     }
 }

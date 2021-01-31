@@ -4,18 +4,20 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
+using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public sealed partial class FormCreateBranch : GitModuleForm
+    public sealed partial class FormCreateBranch : GitExtensionsDialog
     {
-        private readonly TranslationString _noRevisionSelected = new TranslationString("Select 1 revision to create the branch on.");
-        private readonly TranslationString _branchNameIsEmpty = new TranslationString("Enter branch name.");
-        private readonly TranslationString _branchNameIsNotValid = new TranslationString("“{0}” is not valid branch name.");
+        private readonly TranslationString _noRevisionSelected = new("Select 1 revision to create the branch on.");
+        private readonly TranslationString _branchNameIsEmpty = new("Enter branch name.");
+        private readonly TranslationString _branchNameIsNotValid = new("“{0}” is not valid branch name.");
         private readonly IGitBranchNameNormaliser _branchNameNormaliser = new GitBranchNameNormaliser();
-        private readonly GitBranchNameOptions _gitBranchNameOptions = new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol);
+        private readonly GitBranchNameOptions _gitBranchNameOptions = new(AppSettings.AutoNormaliseSymbol);
 
         public bool CheckoutAfterCreation { get; set; } = true;
         public bool UserAbleToChangeRevision { get; set; } = true;
@@ -28,28 +30,37 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormCreateBranch(GitUICommands commands, ObjectId objectId, string newBranchNamePrefix = null)
-            : base(commands)
+            : base(commands, enablePositionRestore: false)
         {
             InitializeComponent();
+
+            // work-around the designer bug that can't add controls to FlowLayoutPanel
+            ControlsPanel.Controls.Add(Ok);
+            AcceptButton = Ok;
+
             InitializeComplete();
 
             groupBox1.AutoSize = true;
 
-            if (objectId != null && objectId.IsArtificial)
+            if (objectId is not null && objectId.IsArtificial)
             {
                 objectId = null;
             }
 
+            commitSummaryUserControl1.Revision = null;
+
             objectId ??= Module.GetCurrentCheckout();
-            if (objectId != null)
+            if (objectId is not null)
             {
                 commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
 
                 if (string.IsNullOrWhiteSpace(newBranchNamePrefix))
                 {
-                    var refs = Module.GetRevision(objectId, shortFormat: true, loadRefs: true).Refs;
-                    IGitRef firstRef = refs.FirstOrDefault(r => !r.IsTag) ?? refs.FirstOrDefault(r => r.IsTag);
+                    GitRevision revision = Module.GetRevision(objectId, shortFormat: true, loadRefs: true);
+                    IGitRef firstRef = revision.Refs.FirstOrDefault(r => !r.IsTag) ?? revision.Refs.FirstOrDefault(r => r.IsTag);
                     newBranchNamePrefix = firstRef?.LocalName;
+
+                    commitSummaryUserControl1.Revision = revision;
                 }
             }
 
@@ -72,8 +83,10 @@ namespace GitUI.CommandsDialogs
             BranchNameTextBox.SelectionStart = caretPosition;
         }
 
-        private void FormCreateBranch_Shown(object sender, EventArgs e)
+        protected override void OnShown(EventArgs e)
         {
+            base.OnShown(e);
+
             // ensure all labels are wrapped if required
             // this must happen only after the label texts have been set
             foreach (var label in this.FindDescendantsOfType<Label>())
@@ -95,7 +108,7 @@ namespace GitUI.CommandsDialogs
             Ok.Focus();
 
             var objectId = commitPickerSmallControl1.SelectedObjectId;
-            if (objectId == null)
+            if (objectId is null)
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.None;
@@ -121,23 +134,23 @@ namespace GitUI.CommandsDialogs
             {
                 var originalHash = Module.GetCurrentCheckout();
 
-                var cmd = Orphan.Checked
+                var command = Orphan.Checked
                     ? GitCommandHelpers.CreateOrphanCmd(branchName, objectId)
                     : GitCommandHelpers.BranchCmd(branchName, objectId.ToString(), chkbxCheckoutAfterCreate.Checked);
 
-                bool wasSuccessful = FormProcess.ShowDialog(this, cmd);
-                if (Orphan.Checked && wasSuccessful && ClearOrphan.Checked)
+                bool success = FormProcess.ShowDialog(this, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+                if (Orphan.Checked && success && ClearOrphan.Checked)
                 {
                     // orphan AND orphan creation success AND clear
-                    FormProcess.ShowDialog(this, GitCommandHelpers.RemoveCmd());
+                    FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.RemoveCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                 }
 
-                if (wasSuccessful && chkbxCheckoutAfterCreate.Checked && objectId != originalHash)
+                if (success && chkbxCheckoutAfterCreate.Checked && objectId != originalHash)
                 {
                     UICommands.UpdateSubmodules(this);
                 }
 
-                DialogResult = wasSuccessful ? DialogResult.OK : DialogResult.None;
+                DialogResult = success ? DialogResult.OK : DialogResult.None;
             }
             catch (Exception ex)
             {
@@ -155,6 +168,12 @@ namespace GitUI.CommandsDialogs
             {
                 chkbxCheckoutAfterCreate.Checked = true;
             }
+        }
+
+        private void commitPickerSmallControl1_SelectedObjectIdChanged(object sender, EventArgs e)
+        {
+            GitRevision revision = Module.GetRevision(commitPickerSmallControl1.SelectedObjectId, shortFormat: true, loadRefs: true);
+            commitSummaryUserControl1.Revision = revision;
         }
     }
 }

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.Git.Commands;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SubmodulesDialog;
+using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -14,8 +16,9 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormSubmodules : GitModuleForm
     {
-        private readonly TranslationString _removeSelectedSubmodule = new TranslationString("Are you sure you want remove the selected submodule?");
-        private readonly TranslationString _removeSelectedSubmoduleCaption = new TranslationString("Remove");
+        private readonly SplitterManager _splitterManager = new(new AppSettingsPath("FormSubmodules"));
+        private readonly TranslationString _removeSelectedSubmodule = new("Are you sure you want remove the selected submodule?");
+        private readonly TranslationString _removeSelectedSubmoduleCaption = new("Remove");
 
         private readonly BindingList<IGitSubmoduleInfo> _modules = new BindingList<IGitSubmoduleInfo>();
         private GitSubmoduleInfo _oldSubmoduleInfo;
@@ -37,6 +40,19 @@ namespace GitUI.CommandsDialogs
             splitContainer1.SplitterDistance = DpiUtil.Scale(222);
             Pull.AdaptImageLightness();
             InitializeComplete();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            _splitterManager.AddSplitter(splitContainer1, nameof(splitContainer1));
+            _splitterManager.RestoreSplitters();
+            base.OnLoad(e);
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            _splitterManager.SaveSplitters();
+            base.OnClosing(e);
         }
 
         private void AddSubmoduleClick(object sender, EventArgs e)
@@ -78,7 +94,7 @@ namespace GitUI.CommandsDialogs
             };
             _bw.DoWork += (sender, e) =>
             {
-                foreach (var oldSubmodule in Module.GetSubmodulesInfo().Where(submodule => submodule != null))
+                foreach (var oldSubmodule in Module.GetSubmodulesInfo().Where(submodule => submodule is not null))
                 {
                     if (_bw.CancellationPending)
                     {
@@ -98,13 +114,13 @@ namespace GitUI.CommandsDialogs
                         _modules.Add(e.UserState as GitSubmoduleInfo);
                     }
 
-                    if (_oldSubmoduleInfo != null)
+                    if (_oldSubmoduleInfo is not null)
                     {
                         DataGridViewRow row = Submodules.Rows
                             .Cast<DataGridViewRow>()
                             .FirstOrDefault(r => r.DataBoundItem as GitSubmoduleInfo == _oldSubmoduleInfo);
 
-                        if (row != null)
+                        if (row is not null)
                         {
                             row.Selected = true;
                         }
@@ -119,7 +135,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.SubmoduleSyncCmd(SubModuleLocalPath.Text));
+                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.SubmoduleSyncCmd(SubModuleLocalPath.Text), Module.WorkingDir, input: null, useDialogSettings: true);
                 Initialize();
             }
         }
@@ -128,7 +144,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.SubmoduleUpdateCmd(SubModuleLocalPath.Text));
+                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.SubmoduleUpdateCmd(SubModuleLocalPath.Text), Module.WorkingDir, input: null, useDialogSettings: true);
                 Initialize();
             }
         }
@@ -180,7 +196,7 @@ namespace GitUI.CommandsDialogs
         private void Pull_Click(object sender, EventArgs e)
         {
             var submodule = Module.GetSubmodule(SubModuleLocalPath.Text);
-            if (submodule == null)
+            if (submodule is null)
             {
                 return;
             }

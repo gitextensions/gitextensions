@@ -15,8 +15,8 @@
 ' Stefan Küng, 2006, 2009
 '
 ' Modified by GitExt Team for Git Extensions (2017)
-'
-dim objArgs, num, sMergedDoc, sTheirDoc, objScript
+' (use sMergedDoc as sMyDoc)
+dim objArgs, num, sBaseDoc, sMergedDoc, sTheirDoc, sMyDoc, objScript
 
 Set objArgs = WScript.Arguments
 num = objArgs.Count
@@ -27,10 +27,18 @@ end if
 
 sMergedDoc = objArgs(0)
 sTheirDoc = objArgs(1)
+sMyDoc = sMergedDoc
+sBaseDoc = objArgs(3)
 
+'since i haven't found a way to tell OO a new "save" path after a document is opened,
+'the %mine and %merged paths need to be identical since it always saves to the %mine path
+'if (sMergedDoc <> sMyDoc) Then
+'    MsgBox "paths %mine and %merged must be identical", vbExclamation, "wrong parameters"
+'    Wscript.Quit 1
+'End If
 Set objScript = CreateObject("Scripting.FileSystemObject")
-If objScript.FileExists(sMergedDoc) = False Then
-    MsgBox "File " + sMergedDoc + " does not exist.  Cannot compare the documents.", vbExclamation, "File not found"
+If objScript.FileExists(sMyDoc) = False Then
+    MsgBox "File " + sMyDoc + " does not exist.  Cannot compare the documents.", vbExclamation, "File not found"
     Wscript.Quit 1
 End If
 If objScript.FileExists(sTheirDoc) = False Then
@@ -38,7 +46,7 @@ If objScript.FileExists(sTheirDoc) = False Then
     Wscript.Quit 1
 End If
 'remove the file write protection
-objScript.GetFile(sMergedDoc).Attributes = objScript.GetFile(sMergedDoc).Attributes And Not 1
+objScript.GetFile(sMyDoc).Attributes = objScript.GetFile(sMyDoc).Attributes And Not 1
 objScript.GetFile(sTheirDoc).Attributes = objScript.GetFile(sTheirDoc).Attributes And Not 1
 
 Set objScript = Nothing
@@ -56,12 +64,12 @@ On Error Goto 0
 'Create the DesktopSet
 Set objDesktop = objServiceManager.createInstance("com.sun.star.frame.Desktop")
 'Adjust the paths for OO
-sMergedDoc = Replace(sMergedDoc, "\", "/")
-sMergedDoc = Replace(sMergedDoc, ":", "|")
-sMergedDoc = Replace(sMergedDoc, "%", "%25")
-sMergedDoc = Replace(sMergedDoc, " ", "%20")
-sMergedDoc = Replace(sMergedDoc, "#", "%23")
-sMergedDoc = "file:///"&sMergedDoc
+sMyDoc = Replace(sMyDoc, "\", "/")
+sMyDoc = Replace(sMyDoc, ":", "|")
+sMyDoc = Replace(sMyDoc, "%", "%25")
+sMyDoc = Replace(sMyDoc, " ", "%20")
+sMyDoc = Replace(sMyDoc, "#", "%23")
+sMyDoc = "file:///"&sMyDoc
 sTheirDoc = Replace(sTheirDoc, "\", "/")
 sTheirDoc = Replace(sTheirDoc, ":", "|")
 sTheirDoc = Replace(sTheirDoc, "%", "%25")
@@ -74,7 +82,7 @@ Dim oPropertyValue(0)
 Set oPropertyValue(0) = objServiceManager.Bridge_GetStruct("com.sun.star.beans.PropertyValue")
 oPropertyValue(0).Name = "ShowTrackedChanges"
 oPropertyValue(0).Value = true
-Set objDocument = objDesktop.loadComponentFromURL(sMergedDoc, "_blank", 0, oPropertyValue)
+Set objDocument = objDesktop.loadComponentFromURL(sMyDoc, "_blank", 0, oPropertyValue)
 
 'Set the frame
 Set Frame = objDesktop.getCurrentFrame

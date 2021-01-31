@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using GitCommands.Git.Extensions;
 using GitExtUtils;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -21,20 +21,17 @@ namespace GitCommands
         /// </remarks>
         /// <param name="revision">The <see cref="GitRevision"/> to convert from.</param>
         /// <param name="children">The list of children to add to the returned object.</param>
-        [NotNull]
-        CommitData CreateFromRevision([NotNull] GitRevision revision, IReadOnlyList<ObjectId> children);
+        CommitData CreateFromRevision(GitRevision revision, IReadOnlyList<ObjectId> children);
 
         /// <summary>
         /// Gets <see cref="CommitData"/> for the specified <paramref name="sha1"/>.
         /// </summary>
-        [ContractAnnotation("=>null,error:notnull")]
-        [ContractAnnotation("=>notnull,error:null")]
-        CommitData GetCommitData([NotNull] string sha1, out string error);
+        CommitData? GetCommitData(string sha1, out string? error);
 
         /// <summary>
         /// Updates the <see cref="CommitData.Body"/> (commit message) property of <paramref name="commitData"/>.
         /// </summary>
-        void UpdateBody([NotNull] CommitData commitData, [CanBeNull] out string error);
+        void UpdateBody(CommitData commitData, out string? error);
     }
 
     public sealed class CommitDataManager : ICommitDataManager
@@ -50,7 +47,7 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        public void UpdateBody(CommitData commitData, out string error)
+        public void UpdateBody(CommitData commitData, out string? error)
         {
             if (!TryGetCommitLog(commitData.ObjectId.ToString(), BodyAndNotesFormat, out error, out var data))
             {
@@ -85,7 +82,7 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        public CommitData GetCommitData(string sha1, out string error)
+        public CommitData? GetCommitData(string sha1, out string? error)
         {
             return TryGetCommitLog(sha1, CommitDataFormat, out error, out var info)
                 ? CreateFromFormattedData(info)
@@ -98,10 +95,9 @@ namespace GitCommands
         /// <param name="data">Data produced by a <c>git log</c> or <c>git show</c> command where <c>--format</c>
         /// was provided the string <see cref="CommitDataFormat"/>.</param>
         /// <returns>CommitData object populated with parsed info from git string.</returns>
-        [NotNull]
-        internal CommitData CreateFromFormattedData([NotNull] string data)
+        internal CommitData CreateFromFormattedData(string data)
         {
-            if (data == null)
+            if (data is null)
             {
                 throw new ArgumentNullException(nameof(data));
             }
@@ -158,12 +154,12 @@ namespace GitCommands
         /// <inheritdoc />
         public CommitData CreateFromRevision(GitRevision revision, IReadOnlyList<ObjectId> children)
         {
-            if (revision == null)
+            if (revision is null)
             {
                 throw new ArgumentNullException(nameof(revision));
             }
 
-            if (revision.ObjectId == null)
+            if (revision.ObjectId is null)
             {
                 throw new ArgumentException($"Cannot have a null {nameof(GitRevision.ObjectId)}.", nameof(revision));
             }
@@ -175,12 +171,11 @@ namespace GitCommands
             { ChildIds = children };
         }
 
-        [NotNull]
         private IGitModule GetModule()
         {
             var module = _getModule();
 
-            if (module == null)
+            if (module is null)
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }
@@ -188,9 +183,7 @@ namespace GitCommands
             return module;
         }
 
-        [ContractAnnotation("=>false,error:notnull,data:null")]
-        [ContractAnnotation("=>true,error:null,data:notnull")]
-        private bool TryGetCommitLog([NotNull] string commitId, [NotNull] string format, out string error, out string data)
+        private bool TryGetCommitLog(string commitId, string format, [NotNullWhen(returnValue: false)] out string? error, [NotNullWhen(returnValue: true)] out string? data)
         {
             if (commitId.IsArtificial())
             {
@@ -219,8 +212,7 @@ namespace GitCommands
             return true;
         }
 
-        [NotNull]
-        private static string ProcessDiffNotes(int startIndex, [NotNull, ItemNotNull] string[] lines)
+        private static string ProcessDiffNotes(int startIndex, string[] lines)
         {
             int endIndex = lines.Length - 1;
             if (lines[endIndex] == "Notes:")

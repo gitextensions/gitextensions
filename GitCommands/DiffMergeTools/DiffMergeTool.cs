@@ -46,7 +46,7 @@ namespace GitCommands.DiffMergeTools
 
         /// <summary>
         /// Gets the list of possible locations of the diff/merge tool.
-        /// These location will be used to help the user to automaticaly locate the tool.
+        /// These location will be used to help the user to automatically locate the tool.
         /// </summary>
         public abstract IEnumerable<string> SearchPaths { get; }
     }

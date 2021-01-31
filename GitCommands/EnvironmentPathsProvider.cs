@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using GitCommands.Utils;
+using GitExtensions;
 
 namespace GitCommands
 {
@@ -36,9 +37,9 @@ namespace GitCommands
         /// <returns>The list of paths defined under %PATH% environment variable.</returns>
         public IEnumerable<string> GetEnvironmentPaths()
         {
-            string pathVariable = _environment.GetEnvironmentVariable("PATH");
+            string? pathVariable = _environment.GetEnvironmentVariable("PATH");
 
-            if (string.IsNullOrWhiteSpace(pathVariable))
+            if (Strings.IsNullOrWhiteSpace(pathVariable))
             {
                 yield break;
             }
@@ -72,7 +73,7 @@ namespace GitCommands
         // TODO: optimise?
         internal static bool IsValidPath(string path)
         {
-            FileInfo fi = null;
+            FileInfo? fi = null;
             try
             {
                 fi = new FileInfo(path);
@@ -87,7 +88,7 @@ namespace GitCommands
             {
             }
 
-            return fi != null;
+            return fi is not null;
         }
     }
 }

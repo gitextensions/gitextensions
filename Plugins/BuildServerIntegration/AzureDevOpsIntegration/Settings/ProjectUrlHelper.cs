@@ -55,7 +55,7 @@ namespace AzureDevOpsIntegration.Settings
             },
         };
 
-        private static readonly Regex BuildUrlInfoRegex = new Regex(@"^(?<projecturl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+)/_build.*(?:&|\?)buildId=(?<buildid>\d+)");
+        private static readonly Regex BuildUrlInfoRegex = new(@"^(?<projecturl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+)/_build.*(?:&|\?)buildId=(?<buildid>\d+)");
 
         /// <summary>
         /// Tries to transform a supplied string into a different one using a number of regular expressions to check against.
@@ -72,7 +72,7 @@ namespace AzureDevOpsIntegration.Settings
         /// </returns>
         private static (bool success, string result) TryTransformString(string value, Dictionary<Regex, Func<Match, string>> lookupDictionary)
         {
-            if (value == null)
+            if (value is null)
             {
                 return (false, null);
             }
@@ -103,7 +103,7 @@ namespace AzureDevOpsIntegration.Settings
         /// </returns>
         public static (bool success, string projectUrl) TryDetectProjectFromRemoteUrl(string remoteUrl)
         {
-            if (remoteUrl == null && !BuildServerSettingsHelper.IsUrlValid(remoteUrl))
+            if (remoteUrl is null && !BuildServerSettingsHelper.IsUrlValid(remoteUrl))
             {
                 return (false, null);
             }
@@ -141,7 +141,7 @@ namespace AzureDevOpsIntegration.Settings
         /// </returns>
         public static (bool success, string tokenManagementUrl) TryGetTokenManagementUrlFromProject(string projectUrl)
         {
-            if (projectUrl == null && !BuildServerSettingsHelper.IsUrlValid(projectUrl))
+            if (projectUrl is null && !BuildServerSettingsHelper.IsUrlValid(projectUrl))
             {
                 return (false, null);
             }
@@ -160,7 +160,7 @@ namespace AzureDevOpsIntegration.Settings
         /// </returns>
         public static (bool success, string projectUrl, int buildId) TryParseBuildUrl(string buildUrl)
         {
-            if (buildUrl == null && !BuildServerSettingsHelper.IsUrlValid(buildUrl))
+            if (buildUrl is null && !BuildServerSettingsHelper.IsUrlValid(buildUrl))
             {
                 return (false, null, -1);
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GitCommands.Settings;
 using GitUIPluginInterfaces;
+using Microsoft;
 
 namespace GitCommands.ExternalLinks
 {
@@ -34,15 +35,17 @@ namespace GitCommands.ExternalLinks
         /// </summary>
         public IReadOnlyList<ExternalLinkDefinition> Get(RepoDistSettings settings)
         {
-            if (settings == null)
+            if (settings is null)
             {
                 throw new ArgumentNullException(nameof(settings));
             }
 
             var cachedSettings = new RepoDistSettings(null, settings.SettingsCache, SettingLevel.Unknown);
-            IEnumerable<ExternalLinkDefinition> effective = _externalLinksStorage.Load(cachedSettings);
+            IEnumerable<ExternalLinkDefinition>? effective = _externalLinksStorage.Load(cachedSettings);
 
-            if (settings.LowerPriority != null)
+            Assumes.NotNull(effective);
+
+            if (settings.LowerPriority is not null)
             {
                 var lowerPriorityLoader = new ConfiguredLinkDefinitionsProvider(_externalLinksStorage);
                 effective = effective.Union(lowerPriorityLoader.Get(settings.LowerPriority));

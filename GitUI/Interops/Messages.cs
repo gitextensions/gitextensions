@@ -39,5 +39,40 @@
         public const int EM_POSFROMCHAR = 0x00D6;
         public const int EM_CHARFROMPOS = 0x00D7;
         public const int EM_GETFIRSTVISIBLELINE = 0xCE;
+
+        /// <summary>
+        /// The WM_NULL message performs no operation. An application sends the WM_NULL message if it wants to post a message that the recipient window will ignore.
+        /// </summary>
+        public const int WM_NULL = 0x0000;
+
+        /// <summary>
+        /// The WM_PAINT message is sent when the system or another application makes a request to paint a portion of an application's window. The message is sent when the UpdateWindow or RedrawWindow function is called, or by the DispatchMessage function when the application obtains a WM_PAINT message by using the GetMessage or PeekMessage function.
+        /// </summary>
+        public const int WM_PAINT = 0x000F;
+
+        /// <summary>
+        /// The WM_NCPAINT message is sent to a window when its frame must be painted.
+        /// </summary>
+        public const int WM_NCPAINT = 0x0085;
+
+        /// <summary>
+        /// The WM_MOUSEHOVER message is posted to a window when the cursor hovers over the client area of the window for the period of time specified in a prior call to TrackMouseEvent.
+        /// </summary>
+        public const int WM_MOUSEHOVER = 0x02A1;
+
+        /// <summary>
+        /// The WM_MOUSELEAVE message is posted to a window when the cursor leaves the client area of the window specified in a prior call to TrackMouseEvent.
+        /// </summary>
+        public const int WM_MOUSELEAVE = 0x02A3;
+
+        /// <summary>
+        /// The WM_NCMOUSEHOVER message is posted to a window when the cursor hovers over the nonclient area of the window for the period of time specified in a prior call to TrackMouseEvent.
+        /// </summary>
+        public const int WM_NCMOUSEHOVER = 0x02A0;
+
+        /// <summary>
+        /// The WM_NCMOUSELEAVE message is posted to a window when the cursor leaves the nonclient area of the window specified in a prior call to TrackMouseEvent.
+        /// </summary>
+        public const int WM_NCMOUSELEAVE = 0x02A2;
     }
 }

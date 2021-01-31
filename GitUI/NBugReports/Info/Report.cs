@@ -35,14 +35,12 @@ namespace GitUI.NBugReports.Info
         public override string ToString()
         {
             var serializer = new XmlSerializer(typeof(Report));
-            using (var stream = new MemoryStream())
-            {
-                stream.SetLength(0);
-                serializer.Serialize(stream, this);
-                stream.Position = 0;
-                var doc = XDocument.Load(stream);
-                return doc.Root.ToString();
-            }
+            using var stream = new MemoryStream();
+            stream.SetLength(0);
+            serializer.Serialize(stream, this);
+            stream.Position = 0;
+            var doc = XDocument.Load(stream);
+            return doc.Root.ToString();
         }
     }
 }

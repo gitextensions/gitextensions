@@ -8,7 +8,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -22,16 +21,16 @@ namespace GitUI.NBugReports
 {
     public partial class BugReportForm : GitExtensionsForm
     {
-        private readonly TranslationString _title = new TranslationString("Error Report");
-        private readonly TranslationString _submitGitHubMessage = new TranslationString(@"Give as much as information as possible please to help the developers solve this issue. Otherwise, your issue ticket may be closed without any follow-up from the developers.
+        private readonly TranslationString _title = new("Error Report");
+        private readonly TranslationString _submitGitHubMessage = new(@"Give as much as information as possible please to help the developers solve this issue. Otherwise, your issue ticket may be closed without any follow-up from the developers.
 
 Because of this, make sure to fill in all the fields in the report template please.
 
 Send report anyway?");
-        private readonly TranslationString _toolTipCopy = new TranslationString("Copy the issue details into clipboard");
-        private readonly TranslationString _toolTipSendQuit = new TranslationString("Report the issue to GitHub and quit application.\r\nA valid GitHub account is required");
-        private readonly TranslationString _toolTipQuit = new TranslationString("Quit application without reporting the issue");
-        private readonly TranslationString _noReproStepsSuppliedErrorMessage = new TranslationString(@"Please provide as much as information as possible to help the developers solve this issue.");
+        private readonly TranslationString _toolTipCopy = new("Copy the issue details into clipboard");
+        private readonly TranslationString _toolTipSendQuit = new("Report the issue to GitHub and quit application.\r\nA valid GitHub account is required");
+        private readonly TranslationString _toolTipQuit = new("Quit application without reporting the issue");
+        private readonly TranslationString _noReproStepsSuppliedErrorMessage = new(@"Please provide as much as information as possible to help the developers solve this issue.");
 
         private static readonly IErrorReportMarkDownBodyBuilder ErrorReportBodyBuilder;
         private static readonly GitHubUrlBuilder UrlBuilder;
@@ -71,7 +70,7 @@ Send report anyway?");
             mainTabs.TabPages.Remove(mainTabs.TabPages["reportContentsTabPage"]);
         }
 
-        public DialogResult ShowDialog(Exception exception, string environmentInfo)
+        public DialogResult ShowDialog(IWin32Window owner, Exception exception, string environmentInfo)
         {
             _lastException = new SerializableException(exception);
             _lastReport = new Report(_lastException);
@@ -95,7 +94,7 @@ Send report anyway?");
             DialogResult = DialogResult.None;
 
             // ToDo: Fill in the 'Report Contents' tab);
-            var result = ShowDialog();
+            var result = ShowDialog(owner);
 
             // Write back the user description (as we passed 'report' as a reference since it is a reference object anyway)
             _lastReport.GeneralInfo.UserDescription = descriptionTextBox.Text;
@@ -138,7 +137,7 @@ Send report anyway?");
             }
 
             string url = UrlBuilder.Build("https://github.com/gitextensions/gitextensions/issues/new", _lastException.OriginalException, _environmentInfo, descriptionTextBox.Text);
-            Process.Start(url);
+            OsShellUtil.OpenUrlInDefaultBrowser(url);
 
             DialogResult = DialogResult.Abort;
             Close();

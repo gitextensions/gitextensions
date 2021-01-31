@@ -82,7 +82,7 @@ namespace GitCommandsTests
                     return 0;
                 }
 
-                if (x == null || y == null)
+                if (x is null || y is null)
                 {
                     return 1;
                 }

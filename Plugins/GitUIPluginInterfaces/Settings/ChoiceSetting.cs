@@ -17,7 +17,7 @@ namespace GitUIPluginInterfaces
             Caption = caption;
             DefaultValue = defaultValue;
             Values = values;
-            if (DefaultValue == null && values.Any())
+            if (DefaultValue is null && values.Any())
             {
                 DefaultValue = values.First();
             }

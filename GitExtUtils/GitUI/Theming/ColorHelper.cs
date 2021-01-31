@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using JetBrains.Annotations;
 
 namespace GitExtUtils.GitUI.Theming
 {
@@ -17,7 +16,6 @@ namespace GitExtUtils.GitUI.Theming
             (KnownColor.MenuHighlight, KnownColor.HighlightText),
         };
 
-        [NotNull]
         public static ThemeSettings ThemeSettings { private get; set; } = ThemeSettings.Default;
 
         public static void SetForeColorForBackColor(this Control control) =>
@@ -58,14 +56,62 @@ namespace GitExtUtils.GitUI.Theming
         public static Color AdaptBackColor(this Color original) =>
             AdaptColor(original, isForeground: false);
 
-        public static Color AdaptColor(Color originalRgb, bool isForeground)
+        /// <summary>
+        /// Get a color to be used instead of SystemColors.GrayText
+        /// when background is SystemColors.Highlight or SystemColors.MenuHighlight.
+        /// </summary>
+        /// <remarks>
+        /// Consider a transformation of color range [SystemColors.ControlText, SystemColors.Control] to
+        /// [SystemColors.HighlightText, SystemColors.Highlight].
+        /// What result would such transformation produce given SystemColors.GrayText as input?
+        /// First we calculate transformed GrayText color relative to InvariantTheme.
+        /// Then we apply transformation from InvariantTheme to current theme by calling AdaptTextColor.
+        /// </remarks>
+        public static Color GetHighlightGrayTextColor(
+            KnownColor backgroundColorName,
+            KnownColor textColorName,
+            KnownColor highlightColorName,
+            float degreeOfGrayness = 1f)
+        {
+            var grayTextHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(KnownColor.GrayText));
+            var textHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(textColorName));
+            var highlightTextHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(KnownColor.HighlightText));
+            var backgroundHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(backgroundColorName));
+            var highlightBackgroundHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(highlightColorName));
+
+            double grayTextL = textHsl.L + (degreeOfGrayness * (grayTextHsl.L - textHsl.L));
+
+            double highlightGrayTextL = Transform(
+                grayTextL,
+                textHsl.L, backgroundHsl.L,
+                highlightTextHsl.L, highlightBackgroundHsl.L);
+
+            var highlightGrayTextHsl = grayTextHsl.WithLuminosity(highlightGrayTextL);
+            return AdaptTextColor(highlightGrayTextHsl.ToColor());
+        }
+
+        /// <summary>
+        /// Get a color to be used instead of SystemColors.GrayText which is more ore less gray than
+        /// the usual SystemColors.GrayText.
+        /// </summary>
+        public static Color GetGrayTextColor(KnownColor textColorName, float degreeOfGrayness = 1f)
+        {
+            var grayTextHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(KnownColor.GrayText));
+            var textHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(textColorName));
+
+            double grayTextL = textHsl.L + (degreeOfGrayness * (grayTextHsl.L - textHsl.L));
+            var highlightGrayTextHsl = grayTextHsl.WithLuminosity(grayTextL);
+            return AdaptTextColor(highlightGrayTextHsl.ToColor());
+        }
+
+        public static Color AdaptColor(Color original, bool isForeground)
         {
             if (ThemeSettings == ThemeSettings.Default)
             {
-                return originalRgb;
+                return original;
             }
 
-            var hsl1 = originalRgb.ToPerceptedHsl();
+            var hsl1 = original.ToPerceptedHsl();
 
             var index = Enumerable.Range(0, BackForeExamples.Length)
                 .Select(i => (
@@ -76,8 +122,8 @@ namespace GitExtUtils.GitUI.Theming
 
             var option = BackForeExamples[index];
             return isForeground
-                ? AdaptColor(originalRgb, option.fore, option.back)
-                : AdaptColor(originalRgb, option.back, option.fore);
+                ? AdaptColor(original, option.fore, option.back)
+                : AdaptColor(original, option.back, option.fore);
 
             double DistanceTo(KnownColor c2)
             {
@@ -89,9 +135,9 @@ namespace GitExtUtils.GitUI.Theming
         /// <summary>
         /// Roughly speaking makes a linear transformation of input orig 0 &lt; orig &lt; 1
         /// The transformation is specified by how it affected a pair of values
-        /// (exampleOrig, oppositeOrig) to (example, opposite)
+        /// (exampleOrig, oppositeOrig) to (example, opposite).
         /// </summary>
-        public static double Transform(double orig,
+        private static double Transform(double orig,
             double exampleOrig, double oppositeOrig,
             double example, double opposite)
         {
@@ -138,7 +184,7 @@ namespace GitExtUtils.GitUI.Theming
         }
 
         public static Color GetSplitterColor() =>
-            KnownColor.ControlLight.MakeBackgroundDarkerBy(0.035);
+            KnownColor.Window.MakeBackgroundDarkerBy(0);
 
         public static void AdaptImageLightness(this ToolStripItem item) =>
             item.Image = ((Bitmap)item.Image)?.AdaptLightness();
@@ -158,24 +204,34 @@ namespace GitExtUtils.GitUI.Theming
             return clone;
         }
 
-        private static Color AdaptColor(Color originalRgb, KnownColor exampleName, KnownColor oppositeName)
+        private static Color AdaptColor(Color original, KnownColor exampleName, KnownColor oppositeName)
         {
-            var exampleOrig = RgbHsl(ThemeSettings.InvariantTheme.GetNonEmptyColor(exampleName));
-            var oppositeOrig = RgbHsl(ThemeSettings.InvariantTheme.GetNonEmptyColor(oppositeName));
-            var example = RgbHsl(ThemeSettings.Theme.GetNonEmptyColor(exampleName));
-            var opposite = RgbHsl(ThemeSettings.Theme.GetNonEmptyColor(oppositeName));
-            var original = RgbHsl(originalRgb);
+            Color exampleOriginal = ThemeSettings.InvariantTheme.GetNonEmptyColor(exampleName);
+            Color oppositeOriginal = ThemeSettings.InvariantTheme.GetNonEmptyColor(oppositeName);
+            Color example = ThemeSettings.Theme.GetNonEmptyColor(exampleName);
+            Color opposite = ThemeSettings.Theme.GetNonEmptyColor(oppositeName);
+
+            if (ThemeSettings.Variations.Contains(ThemeVariations.Colorblind))
+            {
+                original = original.AdaptToColorblindness();
+            }
+
+            var exampleOrigRgbHsl = RgbHsl(exampleOriginal);
+            var oppositeOrigRgbHsl = RgbHsl(oppositeOriginal);
+            var exampleRgbHsl = RgbHsl(example);
+            var oppositeRgbHsl = RgbHsl(opposite);
+            var originalRgbHsl = RgbHsl(original);
 
             double perceptedL = Transform(
-                PerceptedL(original),
-                PerceptedL(exampleOrig),
-                PerceptedL(oppositeOrig),
-                PerceptedL(example),
-                PerceptedL(opposite));
+                PerceptedL(originalRgbHsl),
+                PerceptedL(exampleOrigRgbHsl),
+                PerceptedL(oppositeOrigRgbHsl),
+                PerceptedL(exampleRgbHsl),
+                PerceptedL(oppositeRgbHsl));
 
-            double actualL = ActualL(original.rgb, perceptedL);
+            double actualL = ActualL(originalRgbHsl.rgb, perceptedL);
 
-            var result = original.hsl.WithLuminosity(actualL).ToColor();
+            var result = originalRgbHsl.hsl.WithLuminosity(actualL).ToColor();
             return result;
 
             double PerceptedL((Color rgb, HslColor hsl) c) =>
@@ -187,9 +243,9 @@ namespace GitExtUtils.GitUI.Theming
 
         private static Color TransformHsl(
             this Color c,
-            Func<double, double> h = null,
-            Func<double, double> s = null,
-            Func<double, double> l = null)
+            Func<double, double>? h = null,
+            Func<double, double>? s = null,
+            Func<double, double>? l = null)
         {
             var hsl = new HslColor(c);
             var transformed = new HslColor(
@@ -242,6 +298,32 @@ namespace GitExtUtils.GitUI.Theming
         private static bool IsLightColor(this Color color)
         {
             return new HslColor(color).L > 0.5;
+        }
+
+        private static Color AdaptToColorblindness(this Color color)
+        {
+            double excludeHTo = 15d; // orange
+
+            var hsl = new HslColor(color);
+            var deltaH = ((hsl.H * 360d) - excludeHTo + 180).Modulo(360) - 180;
+
+            const double deltaFrom = -140d;
+            const double deltaTo = 0d;
+
+            if (deltaH <= deltaFrom || deltaH >= deltaTo)
+            {
+                return color;
+            }
+
+            double correctedDelta = deltaFrom + ((deltaH - deltaFrom) / 2d);
+            double correctedH = (excludeHTo + correctedDelta).Modulo(360);
+            return new HslColor(correctedH / 360d, hsl.S, hsl.L).ToColor();
+        }
+
+        internal static class TestAccessor
+        {
+            public static double Transform(double orig, double exampleOrig, double oppositeOrig, double example, double opposite) =>
+                ColorHelper.Transform(orig, exampleOrig, oppositeOrig, example, opposite);
         }
     }
 }

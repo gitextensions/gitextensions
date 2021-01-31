@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Documents;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git.Commands;
+using GitCommands.Patches;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUI.Theming;
@@ -12,19 +16,20 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormRebase : GitModuleForm
     {
-        private readonly TranslationString _continueRebaseText = new TranslationString("Continue rebase");
-        private readonly TranslationString _solveConflictsText = new TranslationString("Solve conflicts");
+        private static readonly List<PatchFile> Skipped = new List<PatchFile>();
+        private readonly TranslationString _continueRebaseText = new("Continue rebase");
+        private readonly TranslationString _solveConflictsText = new("Solve conflicts");
 
-        private readonly TranslationString _solveConflictsText2 = new TranslationString(">Solve conflicts<");
-        private readonly TranslationString _continueRebaseText2 = new TranslationString(">Continue rebase<");
+        private readonly TranslationString _solveConflictsText2 = new(">Solve conflicts<");
+        private readonly TranslationString _continueRebaseText2 = new(">Continue rebase<");
 
-        private readonly TranslationString _noBranchSelectedText = new TranslationString("Please select a branch");
+        private readonly TranslationString _noBranchSelectedText = new("Please select a branch");
 
         private readonly TranslationString _branchUpToDateText =
             new TranslationString("Current branch a is up to date." + Environment.NewLine + "Nothing to rebase.");
-        private readonly TranslationString _branchUpToDateCaption = new TranslationString("Rebase");
+        private readonly TranslationString _branchUpToDateCaption = new("Rebase");
 
-        private readonly TranslationString _hoverShowImageLabelText = new TranslationString("Hover to see scenario when fast forward is possible.");
+        private readonly TranslationString _hoverShowImageLabelText = new("Hover to see scenario when fast forward is possible.");
 
         private readonly string _defaultBranch;
         private readonly string _defaultToBranch;
@@ -47,6 +52,7 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
+            patchGrid1.SetSkipped(Skipped);
             if (AppSettings.AlwaysShowAdvOpt)
             {
                 ShowOptions_LinkClicked(null, null);
@@ -80,7 +86,7 @@ namespace GitUI.CommandsDialogs
             Branches.DataSource = refs;
             Branches.DisplayMember = nameof(GitRef.Name);
 
-            if (_defaultBranch != null)
+            if (_defaultBranch is not null)
             {
                 Branches.Text = _defaultBranch;
             }
@@ -177,9 +183,28 @@ namespace GitUI.CommandsDialogs
             EnableButtons();
         }
 
-        private void InteractiveRebaseClick(object sender, EventArgs e)
+        private void chkInteractive_CheckedChanged(object sender, EventArgs e)
         {
             chkAutosquash.Enabled = chkInteractive.Checked;
+        }
+
+        private void chkIgnoreDate_CheckedChanged(object sender, EventArgs e)
+        {
+            ToggleDateCheckboxMutualExclusions();
+        }
+
+        private void chkCommitterDateIsAuthorDate_CheckedChanged(object sender, EventArgs e)
+        {
+            ToggleDateCheckboxMutualExclusions();
+        }
+
+        private void ToggleDateCheckboxMutualExclusions()
+        {
+            chkCommitterDateIsAuthorDate.Enabled = !chkIgnoreDate.Checked;
+            chkIgnoreDate.Enabled = !chkCommitterDateIsAuthorDate.Checked;
+            chkInteractive.Enabled = !chkIgnoreDate.Checked && !chkCommitterDateIsAuthorDate.Checked;
+            chkPreserveMerges.Enabled = !chkIgnoreDate.Checked && !chkCommitterDateIsAuthorDate.Checked;
+            chkAutosquash.Enabled = chkInteractive.Checked && !chkIgnoreDate.Checked && !chkCommitterDateIsAuthorDate.Checked;
         }
 
         private void AddFilesClick(object sender, EventArgs e)
@@ -191,7 +216,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.ContinueRebaseCmd());
+                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.ContinueRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
 
                 if (!Module.InTheMiddleOfRebase())
                 {
@@ -208,12 +233,13 @@ namespace GitUI.CommandsDialogs
             using (WaitCursorScope.Enter())
             {
                 var applyingPatch = patchGrid1.PatchFiles.FirstOrDefault(p => p.IsNext);
-                if (applyingPatch != null)
+                if (applyingPatch is not null)
                 {
                     applyingPatch.IsSkipped = true;
+                    Skipped.Add(applyingPatch);
                 }
 
-                FormProcess.ShowDialog(this, GitCommandHelpers.SkipRebaseCmd());
+                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.SkipRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
 
                 if (!Module.InTheMiddleOfRebase())
                 {
@@ -230,10 +256,11 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.AbortRebaseCmd());
+                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.AbortRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
 
                 if (!Module.InTheMiddleOfRebase())
                 {
+                    Skipped.Clear();
                     Close();
                 }
 
@@ -254,22 +281,24 @@ namespace GitUI.CommandsDialogs
 
                 AppSettings.RebaseAutoStash = chkStash.Checked;
 
+                Skipped.Clear();
+
                 string rebaseCmd;
                 if (chkSpecificRange.Checked && !string.IsNullOrWhiteSpace(txtFrom.Text) && !string.IsNullOrWhiteSpace(cboTo.Text))
                 {
                     rebaseCmd = GitCommandHelpers.RebaseCmd(
                         cboTo.Text, chkInteractive.Checked, chkPreserveMerges.Checked,
-                        chkAutosquash.Checked, chkStash.Checked, txtFrom.Text, Branches.Text);
+                        chkAutosquash.Checked, chkStash.Checked, chkIgnoreDate.Checked, chkCommitterDateIsAuthorDate.Checked, txtFrom.Text, Branches.Text);
                 }
                 else
                 {
                     rebaseCmd = GitCommandHelpers.RebaseCmd(
                         Branches.Text, chkInteractive.Checked,
-                        chkPreserveMerges.Checked, chkAutosquash.Checked, chkStash.Checked);
+                        chkPreserveMerges.Checked, chkAutosquash.Checked, chkStash.Checked, chkIgnoreDate.Checked, chkCommitterDateIsAuthorDate.Checked);
                 }
 
-                var dialogResult = FormProcess.ReadDialog(this, rebaseCmd);
-                if (dialogResult.Trim() == "Current branch a is up to date.")
+                string cmdOutput = FormProcess.ReadDialog(this, process: null, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
+                if (cmdOutput.Trim() == "Current branch a is up to date.")
                 {
                     MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -307,17 +336,36 @@ namespace GitUI.CommandsDialogs
         {
             using (var chooseForm = new FormChooseCommit(UICommands, txtFrom.Text))
             {
-                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
+                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
                 {
                     txtFrom.Text = chooseForm.SelectedRevision.ObjectId.ToShortString();
                 }
             }
         }
 
-        private void CommitButtonClick(object sender, EventArgs e)
+        private void Commit_Click(object sender, EventArgs e)
         {
             UICommands.StartCommitDialog(this);
             EnableButtons();
+        }
+
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly FormRebase _form;
+
+            public TestAccessor(FormRebase form)
+            {
+                _form = form;
+            }
+
+            public CheckBox chkInteractive => _form.chkInteractive;
+            public CheckBox chkPreserveMerges => _form.chkPreserveMerges;
+            public CheckBox chkAutosquash => _form.chkAutosquash;
+            public CheckBox chkStash => _form.chkStash;
+            public CheckBox chkIgnoreDate => _form.chkIgnoreDate;
+            public CheckBox chkCommitterDateIsAuthorDate => _form.chkCommitterDateIsAuthorDate;
         }
     }
 }

@@ -25,10 +25,15 @@ namespace BackgroundFetch
         private IDisposable _cancellationToken;
         private IGitUICommands _currentGitUiCommands;
 
-        private readonly StringSetting _gitCommand = new StringSetting("Arguments of git command to run", "fetch --all");
+        private readonly PseudoSetting _warningForceWithLease = new("WARNING: be careful when force push with lease having the periodic background fetch enabled but chose not to auto-refresh after each fetch.\r\n\r\nYou could lose new commits pushed by others to the remote branch.\r\n\r\nBe sure to refresh the revision grid before doing a force push with lease.", textboxSettings: tb =>
+        {
+            tb.Multiline = true;
+            tb.Height = 500;
+        });
+        private readonly StringSetting _gitCommand = new("Arguments of git command to run", "fetch --all");
         private readonly NumberSetting<int> _fetchInterval = new NumberSetting<int>("Fetch every (seconds) - set to 0 to disable", 0);
-        private readonly BoolSetting _autoRefresh = new BoolSetting("Refresh view after fetch", false);
-        private readonly BoolSetting _fetchAllSubmodules = new BoolSetting("Fetch all submodules", false);
+        private readonly BoolSetting _autoRefresh = new("Refresh view after fetch", false);
+        private readonly BoolSetting _fetchAllSubmodules = new("Fetch all submodules", false);
 
         public override IEnumerable<ISetting> GetSettings()
         {
@@ -37,6 +42,7 @@ namespace BackgroundFetch
             yield return _fetchInterval;
             yield return _autoRefresh;
             yield return _fetchAllSubmodules;
+            yield return _warningForceWithLease;
         }
 
         public override void Register(IGitUICommands gitUiCommands)
@@ -87,21 +93,39 @@ namespace BackgroundFetch
                                       GitArgumentBuilder args;
                                       if (_fetchAllSubmodules.ValueOrDefault(Settings))
                                       {
-                                        args = new GitArgumentBuilder("submodule")
-                                        {
+                                          // The Git command is hardcoded compared, not using _gitCommand
+                                          args = new GitArgumentBuilder("submodule")
+                                          {
                                             "foreach",
                                             "--recursive",
                                             "git",
                                             "fetch",
                                             "--all"
-                                        };
+                                          };
 
-                                        _currentGitUiCommands.GitModule.GitExecutable.GetOutput(args);
+                                          try
+                                          {
+                                              _currentGitUiCommands.GitModule.GitExecutable.GetOutput(args);
+                                          }
+                                          catch
+                                          {
+                                              // Ignore background errors
+                                          }
                                       }
 
                                       var gitCmd = _gitCommand.ValueOrDefault(Settings).Trim().SplitBySpace();
                                       args = new GitArgumentBuilder(gitCmd[0]) { gitCmd.Skip(1) };
-                                      var msg = _currentGitUiCommands.GitModule.GitExecutable.GetOutput(args);
+                                      string msg;
+                                      try
+                                      {
+                                          msg = _currentGitUiCommands.GitModule.GitExecutable.GetOutput(args);
+                                      }
+                                      catch
+                                      {
+                                          // Ignore background errors
+                                          return;
+                                      }
+
                                       if (_autoRefresh.ValueOrDefault(Settings))
                                       {
                                           if (gitCmd[0].Equals("fetch", StringComparison.InvariantCultureIgnoreCase))
@@ -122,7 +146,7 @@ namespace BackgroundFetch
 
         private void CancelBackgroundOperation()
         {
-            if (_cancellationToken != null)
+            if (_cancellationToken is not null)
             {
                 _cancellationToken.Dispose();
                 _cancellationToken = null;
@@ -133,7 +157,7 @@ namespace BackgroundFetch
         {
             CancelBackgroundOperation();
 
-            if (_currentGitUiCommands != null)
+            if (_currentGitUiCommands is not null)
             {
                 _currentGitUiCommands.PostSettings -= OnPostSettings;
                 _currentGitUiCommands = null;

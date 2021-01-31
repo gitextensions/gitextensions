@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using GitCommands;
@@ -11,12 +10,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class GeneralSettingsPage : SettingsPageWithHeader
     {
-        private readonly TranslationString _openPullDialog = new TranslationString("Open pull dialog");
-        private readonly TranslationString _pullMerge = new TranslationString("Pull - merge");
-        private readonly TranslationString _pullRebase = new TranslationString("Pull - rebase");
-        private readonly TranslationString _fetch = new TranslationString("Fetch");
-        private readonly TranslationString _fetchAll = new TranslationString("Fetch all");
-        private readonly TranslationString _fetchAndPruneAll = new TranslationString("Fetch and prune all");
+        private readonly TranslationString _openPullDialog = new("Open pull dialog");
+        private readonly TranslationString _pullMerge = new("Pull - merge");
+        private readonly TranslationString _pullRebase = new("Pull - rebase");
+        private readonly TranslationString _fetch = new("Fetch");
+        private readonly TranslationString _fetchAll = new("Fetch all");
+        private readonly TranslationString _fetchAndPruneAll = new("Fetch and prune all");
 
         public GeneralSettingsPage()
         {
@@ -91,7 +90,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowGitStatusInToolbar.Checked = AppSettings.ShowGitStatusInBrowseToolbar;
             chkShowGitStatusForArtificialCommits.Checked = AppSettings.ShowGitStatusForArtificialCommits;
             chkShowSubmoduleStatusInBrowse.Checked = AppSettings.ShowSubmoduleStatus;
+            lblCommitsLimit.Checked = AppSettings.MaxRevisionGraphCommits != 0;
             _NO_TRANSLATE_MaxCommits.Value = AppSettings.MaxRevisionGraphCommits;
+            _NO_TRANSLATE_MaxCommits.Enabled = AppSettings.MaxRevisionGraphCommits != 0;
             chkCloseProcessDialog.Checked = AppSettings.CloseProcessDialog;
             chkShowGitCommandLine.Checked = AppSettings.ShowGitCommandLine;
             chkUseFastChecks.Checked = AppSettings.UseFastChecks;
@@ -118,7 +119,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.CloseProcessDialog = chkCloseProcessDialog.Checked;
             AppSettings.ShowGitCommandLine = chkShowGitCommandLine.Checked;
             AppSettings.UseFastChecks = chkUseFastChecks.Checked;
-            AppSettings.MaxRevisionGraphCommits = (int)_NO_TRANSLATE_MaxCommits.Value;
+            AppSettings.MaxRevisionGraphCommits = lblCommitsLimit.Checked ? (int)_NO_TRANSLATE_MaxCommits.Value : 0;
             AppSettings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
             AppSettings.ShowStashCount = chkShowStashCountInBrowseWindow.Checked;
             AppSettings.ShowAheadBehindData = chkShowAheadBehindDataInBrowseWindow.Checked;
@@ -141,7 +142,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 }
 
                 var dir = new DirectoryInfo(x.Path);
-                if (dir.Parent == null)
+                if (dir.Parent is null)
                 {
                     return x.Path;
                 }
@@ -154,7 +155,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             var userSelectedPath = OsShellUtil.PickFolder(this, cbDefaultCloneDestination.Text);
 
-            if (userSelectedPath != null)
+            if (userSelectedPath is not null)
             {
                 cbDefaultCloneDestination.Text = userSelectedPath;
             }
@@ -167,7 +168,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void LlblTelemetryPrivacyLink_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://github.com/gitextensions/gitextensions/blob/master/PrivacyPolicy.md");
+            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/blob/master/PrivacyPolicy.md");
+        }
+
+        private void lblCommitsLimit_CheckedChanged(object sender, EventArgs e)
+        {
+            _NO_TRANSLATE_MaxCommits.Enabled = lblCommitsLimit.Checked;
         }
     }
 }

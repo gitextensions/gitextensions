@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:VSExtension="http://schemas.microsoft.com/wix/VSExtension">
   <?include Config.wxi?>
   <Product Id="*" UpgradeCode="$(var.UpgradeCode)" Name="$(var.ProductName) $(var.Version)" Manufacturer="$(var.Manufacturer)" Version="$(var.NumericVersion)" Language="1033">
@@ -157,9 +157,6 @@
       </Component>
       <Component Id="Git.hub.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Git.hub.dll" />
-      </Component>
-      <Component Id="PSTaskDialog.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\PSTaskDialog.dll" />
       </Component>
       <Component Id="RestSharp.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\RestSharp.dll" />
@@ -518,6 +515,9 @@
       <Component Id="System.Xml.XPath.XDocument.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\System.Xml.XPath.XDocument.dll" />
       </Component>
+      <Component Id="ExCSS.dll" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\ExCSS.dll" />
+      </Component>
       <!-- Remove unused dll, installed in versions <= 2.31 -->
       <Component Id="GithubSharp.Core.dll" Guid="08F2D539-54CE-4895-ACA5-A7FBA73CA172">
         <RemoveFile Name="GithubSharp.Core.dll" Id="GithubSharp.Core.dll" On="both" />
@@ -589,14 +589,20 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="ThemesDir">
-      <Component Id="win10default.css" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Themes\win10default.css" />
+      <Component Id="Themes.README.md" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Themes\README.md" />
       </Component>
-      <Component Id="dark.css" Guid="*">
+      <Component Id="Themes.invariant.css" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Themes\invariant.css" />
+      </Component>
+      <Component Id="Themes.dark.css" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Themes\dark.css" />
       </Component>
-      <Component Id="darksilver.css" Guid="*">
+      <Component Id="Themes.darksilver.css" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Themes\darksilver.css" />
+      </Component>
+      <Component Id="Themes.bright.css" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Themes\bright.css" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="PluginsDir">
@@ -775,6 +781,24 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="TranslationsDir">
+      <Component Id="Czech.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Czech.gif" />
+      </Component>
+      <Component Id="Czech.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Czech.xlf" />
+      </Component>
+      <Component Id="Czech.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Czech.Plugins.xlf" />
+      </Component>
+      <Component Id="Dutch.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Dutch.gif" />
+      </Component>
+      <Component Id="Dutch.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Dutch.xlf" />
+      </Component>
+      <Component Id="Dutch.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Dutch.Plugins.xlf" />
+      </Component>
       <Component Id="English.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\English.gif" />
       </Component>
@@ -1517,7 +1541,6 @@
       <ComponentRef Id="AdysTech.CredentialManager.dll" />
       <ComponentRef Id="GitUI.dll" />
       <ComponentRef Id="ConEmu.WinForms.dll" />
-      <ComponentRef Id="PSTaskDialog.dll" />
       <ComponentRef Id="AppInsights.WindowsDesktop.dll" />
       <ComponentRef Id="Microsoft.ApplicationInsights.dll" />
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll" />
@@ -1532,6 +1555,7 @@
       <ComponentRef Id="NetSpell.SpellChecker.dll" />
       <ComponentRef Id="ResourceManager.dll" />
       <ComponentRef Id="GitUIPluginInterfaces.dll" />
+      <ComponentRef Id="ExCSS.dll" />
       <ComponentRef Id="checksettings.reg" />
       <ComponentRef Id="InstallDir.reg" />
       <ComponentRef Id="gitssh_openssh.reg" />
@@ -1561,9 +1585,11 @@
       <ComponentRef Id="EasyHook.dll" />
       <ComponentRef Id="EasyHook32.dll" />
       <ComponentRef Id="EasyHook64.dll" />
-      <ComponentRef Id="win10default.css" />
-      <ComponentRef Id="dark.css" />
-      <ComponentRef Id="darksilver.css" />
+      <ComponentRef Id="Themes.README.md" />
+      <ComponentRef Id="Themes.invariant.css" />
+      <ComponentRef Id="Themes.dark.css" />
+      <ComponentRef Id="Themes.darksilver.css" />
+      <ComponentRef Id="Themes.bright.css" />
       <!-- Remove unused dll, installed in versions <= 2.31 -->
       <ComponentRef Id="GithubSharp.Core.dll" />
       <!-- Remove unused dll, installed in versions <= 2.31 -->
@@ -1704,6 +1730,16 @@
         </Feature>
       </Feature>
       <Feature Id="Translation" Title="Translations" Level="1">
+        <Feature Id="Czech" Title="Czech" Level="1">
+          <ComponentRef Id="Czech.xlf" />
+          <ComponentRef Id="Czech.Plugins.xlf" />
+          <ComponentRef Id="Czech.gif" />
+        </Feature>
+        <Feature Id="Dutch" Title="Dutch" Level="1">
+          <ComponentRef Id="Dutch.xlf" />
+          <ComponentRef Id="Dutch.Plugins.xlf" />
+          <ComponentRef Id="Dutch.gif" />
+        </Feature>
         <Feature Id="French" Title="French" Level="1">
           <ComponentRef Id="French.xlf" />
           <ComponentRef Id="French.Plugins.xlf" />

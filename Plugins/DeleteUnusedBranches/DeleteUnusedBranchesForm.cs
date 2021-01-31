@@ -17,21 +17,21 @@ namespace DeleteUnusedBranches
 {
     public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
     {
-        private readonly TranslationString _deleteCaption = new TranslationString("Delete");
-        private readonly TranslationString _selectBranchesToDelete = new TranslationString("Select branches to delete using checkboxes in '{0}' column.");
-        private readonly TranslationString _areYouSureToDelete = new TranslationString("Are you sure to delete {0} selected branches?");
-        private readonly TranslationString _dangerousAction = new TranslationString("DANGEROUS ACTION!\nBranches will be deleted on the remote '{0}'. This can not be undone.\nAre you sure you want to continue?");
-        private readonly TranslationString _deletingBranches = new TranslationString("Deleting branches...");
-        private readonly TranslationString _deletingUnmergedBranches = new TranslationString("Deleting unmerged branches will result in dangling commits. Use with caution!");
-        private readonly TranslationString _chooseBranchesToDelete = new TranslationString("Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.");
-        private readonly TranslationString _pressToSearch = new TranslationString("Press '{0}' to search for branches to delete.");
-        private readonly TranslationString _cancel = new TranslationString("Cancel");
-        private readonly TranslationString _searchBranches = new TranslationString("Search branches");
-        private readonly TranslationString _loading = new TranslationString("Loading...");
-        private readonly TranslationString _branchesSelected = new TranslationString("{0}/{1} branches selected.");
+        private readonly TranslationString _deleteCaption = new("Delete");
+        private readonly TranslationString _selectBranchesToDelete = new("Select branches to delete using checkboxes in '{0}' column.");
+        private readonly TranslationString _areYouSureToDelete = new("Are you sure to delete {0} selected branches?");
+        private readonly TranslationString _dangerousAction = new("DANGEROUS ACTION!\nBranches will be deleted on the remote '{0}'. This can not be undone.\nAre you sure you want to continue?");
+        private readonly TranslationString _deletingBranches = new("Deleting branches...");
+        private readonly TranslationString _deletingUnmergedBranches = new("Deleting unmerged branches will result in dangling commits. Use with caution!");
+        private readonly TranslationString _chooseBranchesToDelete = new("Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.");
+        private readonly TranslationString _pressToSearch = new("Press '{0}' to search for branches to delete.");
+        private readonly TranslationString _cancel = new("Cancel");
+        private readonly TranslationString _searchBranches = new("Search branches");
+        private readonly TranslationString _loading = new("Loading...");
+        private readonly TranslationString _branchesSelected = new("{0}/{1} branches selected.");
         private readonly DeleteUnusedBranchesFormSettings _settings;
 
-        private readonly SortableBranchesList _branches = new SortableBranchesList();
+        private readonly SortableBranchesList _branches = new();
         private readonly IGitModule _gitCommands;
         private readonly IGitUICommands _gitUiCommands;
         private readonly IGitPlugin _gitPlugin;
@@ -62,7 +62,7 @@ namespace DeleteUnusedBranches
 
             InitializeComplete();
 
-            if (gitUiCommands == null)
+            if (gitUiCommands is null)
             {
                 return;
             }
@@ -145,7 +145,7 @@ namespace DeleteUnusedBranches
             return _commandOutputParser.GetBranchNames(result.AllOutput)
                                         .Where(branchName => branchName != curBranch && branchName != context.ReferenceBranch)
                                         .Where(branchName => (!context.IncludeRemotes || branchName.StartsWith(context.RemoteRepositoryName + "/"))
-                                                            && (regex == null || regex.IsMatch(branchName) == regexMustMatch));
+                                                            && (regex is null || regex.IsMatch(branchName) == regexMustMatch));
         }
 
         private void Delete_Click(object sender, EventArgs e)
@@ -333,7 +333,7 @@ namespace DeleteUnusedBranches
 
         private bool IsRefreshing
         {
-            get => _refreshCancellation != null;
+            get => _refreshCancellation is not null;
             set
             {
                 if (value == IsRefreshing)

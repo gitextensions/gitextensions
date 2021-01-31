@@ -1,23 +1,25 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows.Forms;
-using GitCommands;
+using GitCommands.Git.Commands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.HelperDialogs;
 using ResourceManager;
 
 namespace GitUI.UserControls
 {
     public partial class InteractiveGitActionControl : GitModuleControl
     {
-        private readonly TranslationString _progressMessage = new TranslationString("{0} is currently in progress.");
-        private readonly TranslationString _conflictsMessage = new TranslationString("There are unresolved merge conflicts.");
-        private readonly TranslationString _progressWithConflictsMessage = new TranslationString("{0} is currently in progress with merge conflicts.");
+        private readonly TranslationString _progressMessage = new("{0} is currently in progress.");
+        private readonly TranslationString _conflictsMessage = new("There are unresolved merge conflicts.");
+        private readonly TranslationString _progressWithConflictsMessage = new("{0} is currently in progress with merge conflicts.");
 
-        private readonly TranslationString _bisect = new TranslationString("Bisect");
-        private readonly TranslationString _rebase = new TranslationString("Rebase");
-        private readonly TranslationString _merge = new TranslationString("Merge");
-        private readonly TranslationString _patch = new TranslationString("Patch");
+        private readonly TranslationString _bisect = new("Bisect");
+        private readonly TranslationString _rebase = new("Rebase");
+        private readonly TranslationString _merge = new("Merge");
+        private readonly TranslationString _patch = new("Patch");
 
         public enum GitAction
         {
@@ -40,10 +42,11 @@ namespace GitUI.UserControls
             InitializeComplete();
         }
 
-        public void RefreshGitAction()
+        // It is possible for a repo to be in a middle of a bisect operation and
+        // be in a conflicted state. Hence detect bisect separately from the rest
+        // of git actions
+        public void RefreshBisect()
         {
-            // get the current state of the repo
-
             if (!Module.IsValidGitWorkingDir())
             {
                 return;
@@ -55,7 +58,29 @@ namespace GitUI.UserControls
                 return;
             }
 
-            bool hasConflicts = Module.InTheMiddleOfConflictedMerge();
+            SetGitAction(GitAction.None, false);
+        }
+
+        public void RefreshGitAction()
+        {
+            // get the current state of the repo
+
+            if (!Module.IsValidGitWorkingDir())
+            {
+                return;
+            }
+
+            bool hasConflicts;
+            try
+            {
+                hasConflicts = Module.InTheMiddleOfConflictedMerge();
+            }
+            catch (Win32Exception)
+            {
+                // This command can be executed seemingly in the background (selecting Browse),
+                // do not notify the user (this can occur if Git is upgraded)
+                hasConflicts = false;
+            }
 
             if (Module.InTheMiddleOfRebase())
             {
@@ -161,13 +186,13 @@ namespace GitUI.UserControls
             switch (_action)
             {
                 case GitAction.Rebase:
-                    FormProcess.ShowDialog(Form, GitCommandHelpers.ContinueRebaseCmd());
+                    FormProcess.ShowDialog(Form, process: null, arguments: GitCommandHelpers.ContinueRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                     break;
                 case GitAction.Merge:
-                    FormProcess.ShowDialog(Form, GitCommandHelpers.ContinueMergeCmd());
+                    FormProcess.ShowDialog(Form, process: null, arguments: GitCommandHelpers.ContinueMergeCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                     break;
                 case GitAction.Patch:
-                    FormProcess.ShowDialog(Form, GitCommandHelpers.ResolvedCmd());
+                    FormProcess.ShowDialog(Form, process: null, arguments: GitCommandHelpers.ResolvedCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                     break;
                 default:
                     return;
@@ -186,13 +211,13 @@ namespace GitUI.UserControls
             switch (_action)
             {
                 case GitAction.Rebase:
-                    FormProcess.ShowDialog(Form, GitCommandHelpers.AbortRebaseCmd());
+                    FormProcess.ShowDialog(Form, process: null, arguments: GitCommandHelpers.AbortRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                     break;
                 case GitAction.Merge:
-                    FormProcess.ShowDialog(Form, GitCommandHelpers.AbortMergeCmd());
+                    FormProcess.ShowDialog(Form, process: null, arguments: GitCommandHelpers.AbortMergeCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                     break;
                 case GitAction.Patch:
-                    FormProcess.ShowDialog(Form, GitCommandHelpers.AbortCmd());
+                    FormProcess.ShowDialog(Form, process: null, arguments: GitCommandHelpers.AbortCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                     break;
                 default:
                     return;
@@ -211,7 +236,7 @@ namespace GitUI.UserControls
             switch (_action)
             {
                 case GitAction.Bisect:
-                    if (!(Form is FormBrowse))
+                    if (Form is not FormBrowse)
                     {
                         return;
                     }

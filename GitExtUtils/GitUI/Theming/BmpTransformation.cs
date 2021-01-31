@@ -16,7 +16,7 @@ namespace GitExtUtils.GitUI.Theming
         private const PixelFormat PixelFormat = System.Drawing.Imaging.PixelFormat.Format32bppArgb;
 
         protected Rectangle Rect { get; private set; }
-        protected byte[] BgraValues { get; private set; }
+        protected byte[]? BgraValues { get; private set; }
         protected bool ImageChanged { get; set; }
 
         protected BmpTransformation(Bitmap bmp)

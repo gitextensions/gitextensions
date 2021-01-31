@@ -12,11 +12,11 @@ namespace GitUI
         /// Properly handle Ctrl + Backspace by removing the last word before the cursor.
         /// </summary>
         /// <remarks>
-        /// By default .NET TextBox inserts a strange special character instead
+        /// By default .NET TextBox inserts a strange special character instead.
         /// </remarks>
         public static void EnableRemoveWordHotkey(this Control control)
         {
-            if (control == null)
+            if (control is null)
             {
                 throw new ArgumentNullException(nameof(control));
             }

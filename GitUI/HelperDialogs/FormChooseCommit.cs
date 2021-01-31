@@ -31,9 +31,9 @@ namespace GitUI.HelperDialogs
             if (!string.IsNullOrEmpty(preselectCommit))
             {
                 var objectId = Module.RevParse(preselectCommit);
-                if (objectId != null)
+                if (objectId is not null)
                 {
-                    revisionGrid.InitialObjectId = objectId;
+                    revisionGrid.SelectedId = objectId;
                 }
             }
         }
@@ -61,7 +61,7 @@ namespace GitUI.HelperDialogs
 
         private void revisionGrid_DoubleClickRevision(object sender, DoubleClickRevisionEventArgs e)
         {
-            if (e.Revision != null)
+            if (e.Revision is not null)
             {
                 SelectedRevision = e.Revision;
                 DialogResult = DialogResult.OK;
@@ -102,7 +102,7 @@ namespace GitUI.HelperDialogs
 
             var parents = SelectedRevision.ParentIds;
 
-            if (parents == null || parents.Count == 0)
+            if (parents is null || parents.Count == 0)
             {
                 return;
             }

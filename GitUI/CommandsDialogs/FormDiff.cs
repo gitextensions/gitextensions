@@ -26,14 +26,13 @@ namespace GitUI.CommandsDialogs
         private readonly IFileStatusListContextMenuController _revisionDiffContextMenuController;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
-        private readonly bool _firstParentIsValid;
 
-        private readonly ToolTip _toolTipControl = new ToolTip();
+        private readonly ToolTip _toolTipControl = new();
 
-        private readonly TranslationString _anotherBranchTooltip = new TranslationString("Select another branch");
-        private readonly TranslationString _anotherCommitTooltip = new TranslationString("Select another commit");
-        private readonly TranslationString _btnSwapTooltip = new TranslationString("Swap BASE and Compare commits");
-        private readonly TranslationString _ckCompareToMergeBase = new TranslationString("Compare to merge &base");
+        private readonly TranslationString _anotherBranchTooltip = new("Select another branch");
+        private readonly TranslationString _anotherCommitTooltip = new("Select another commit");
+        private readonly TranslationString _btnSwapTooltip = new("Swap BASE and Compare commits");
+        private readonly TranslationString _ckCompareToMergeBase = new("Compare to merge &base");
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormDiff()
@@ -42,14 +41,13 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormDiff(
-            GitUICommands commands, bool firstParentIsValid,
+            GitUICommands commands,
             ObjectId baseId, ObjectId headId,
             string baseCommitDisplayStr, string headCommitDisplayStr)
             : base(commands)
         {
             _baseCommitDisplayStr = baseCommitDisplayStr;
             _headCommitDisplayStr = headCommitDisplayStr;
-            _firstParentIsValid = firstParentIsValid;
 
             InitializeComponent();
 
@@ -76,9 +74,9 @@ namespace GitUI.CommandsDialogs
                 mergeBase = Module.GetMergeBase(_baseRevision.ObjectId, _headRevision.ObjectId);
             }
 
-            _mergeBase = mergeBase != null ? new GitRevision(mergeBase) : null;
+            _mergeBase = mergeBase is not null ? new GitRevision(mergeBase) : null;
             ckCompareToMergeBase.Text = $"{_ckCompareToMergeBase} ({_mergeBase?.ObjectId.ToShortString()})";
-            ckCompareToMergeBase.Enabled = _mergeBase != null;
+            ckCompareToMergeBase.Enabled = _mergeBase is not null;
 
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();
@@ -144,7 +142,7 @@ namespace GitUI.CommandsDialogs
 
         private void openWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (DiffFiles.SelectedGitItem == null)
+            if (DiffFiles.SelectedGitItem is null)
             {
                 return;
             }
@@ -171,14 +169,6 @@ namespace GitUI.CommandsDialogs
                 else if (sender == selectedToLocalToolStripMenuItem)
                 {
                     return RevisionDiffKind.DiffBLocal;
-                }
-                else if (sender == firstParentToLocalToolStripMenuItem)
-                {
-                    return RevisionDiffKind.DiffAParentLocal;
-                }
-                else if (sender == selectedParentToLocalToolStripMenuItem)
-                {
-                    return RevisionDiffKind.DiffBParentLocal;
                 }
                 else
                 {
@@ -238,7 +228,7 @@ namespace GitUI.CommandsDialogs
                 selectedItem = searchWindow.SelectedItem;
             }
 
-            if (selectedItem != null)
+            if (selectedItem is not null)
             {
                 DiffFiles.SelectedGitItem = selectedItem;
             }
@@ -299,7 +289,6 @@ namespace GitUI.CommandsDialogs
                 allAreNew: allAreNew,
                 allAreDeleted: allAreDeleted,
                 firstIsParent: firstIsParent,
-                firstParentsValid: _firstParentIsValid,
                 localExists: localExists);
         }
 
@@ -310,10 +299,6 @@ namespace GitUI.CommandsDialogs
             firstToSelectedToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstToSelected(selectionInfo);
             firstToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstToLocal(selectionInfo);
             selectedToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuSelectedToLocal(selectionInfo);
-            firstParentToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstParentToLocal(selectionInfo);
-            selectedParentToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuSelectedParentToLocal(selectionInfo);
-            firstParentToLocalToolStripMenuItem.Visible = _revisionDiffContextMenuController.ShouldDisplayMenuFirstParentToLocal(selectionInfo);
-            selectedParentToLocalToolStripMenuItem.Visible = _revisionDiffContextMenuController.ShouldDisplayMenuSelectedParentToLocal(selectionInfo);
         }
 
         private void PickAnotherBranch(GitRevision preSelectCommit, ref string displayStr, [CanBeNull] ref GitRevision revision)
@@ -324,7 +309,7 @@ namespace GitUI.CommandsDialogs
                 {
                     displayStr = form.BranchName;
                     var objectId = Module.RevParse(form.BranchName);
-                    revision = objectId == null ? null : new GitRevision(objectId);
+                    revision = objectId is null ? null : new GitRevision(objectId);
                     PopulateDiffFiles();
                 }
             }

@@ -5,21 +5,21 @@ namespace GitCommands.Git
     /// <summary>
     /// Compares the file names/>.
     /// </summary>
-    public class GitItemStatusNameComparer : Comparer<GitItemStatus>
+    public class GitItemStatusNameComparer : Comparer<GitItemStatus?>
     {
-        public override int Compare(GitItemStatus x, GitItemStatus y)
+        public override int Compare(GitItemStatus? x, GitItemStatus? y)
         {
             if (ReferenceEquals(x, y))
             {
                 return 0;
             }
 
-            if (x == null)
+            if (x is null)
             {
                 return -1;
             }
 
-            if (y == null)
+            if (y is null)
             {
                 return 1;
             }

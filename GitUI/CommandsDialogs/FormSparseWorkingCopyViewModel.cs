@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 
 using GitCommands;
-
+using GitUI.HelperDialogs;
 using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// Tells whether the rules have been edited in the UI against what's on disk.
         /// </summary>
-        public bool IsRulesTextChanged => (_rulesText != null) && (_rulesText != (_sRulesTextAsOnDisk ?? ""));
+        public bool IsRulesTextChanged => (_rulesText is not null) && (_rulesText != (_sRulesTextAsOnDisk ?? ""));
 
         /// <summary>
         /// Current UI state of the Git sparse option.
@@ -156,7 +156,7 @@ namespace GitUI.CommandsDialogs
         {
             // Re-apply tree to the index
             // TODO: check how it affects the uncommitted working copy changes
-            using (var fromProcess = new FormRemoteProcess(_gitCommands.Module, AppSettings.GitCommand, RefreshWorkingCopyCommandName))
+            using (var fromProcess = new FormRemoteProcess(_gitCommands, AppSettings.GitCommand, RefreshWorkingCopyCommandName))
             {
                 fromProcess.ShowDialog(Form.ActiveForm);
             }

@@ -6,55 +6,80 @@ namespace GitUI
 {
     internal sealed class Strings : Translate
     {
-        private readonly TranslationString _error = new TranslationString("Error");
-        private readonly TranslationString _warning = new TranslationString("Warning");
-        private readonly TranslationString _yes = new TranslationString("Yes");
-        private readonly TranslationString _no = new TranslationString("No");
-        private readonly TranslationString _okText = new TranslationString("OK");
-        private readonly TranslationString _cancelText = new TranslationString("Cancel");
+        private readonly TranslationString _error = new("Error");
+        private readonly TranslationString _warning = new("Warning");
+        private readonly TranslationString _yes = new("Yes");
+        private readonly TranslationString _no = new("No");
+        private readonly TranslationString _okText = new("OK");
+        private readonly TranslationString _cancelText = new("Cancel");
 
-        private readonly TranslationString _containedInBranchesText = new TranslationString("Contained in branches:");
-        private readonly TranslationString _containedInNoBranchText = new TranslationString("Contained in no branch");
-        private readonly TranslationString _containedInTagsText = new TranslationString("Contained in tags:");
-        private readonly TranslationString _containedInNoTagText = new TranslationString("Contained in no tag");
-        private readonly TranslationString _viewPullRequest = new TranslationString("View pull requests");
-        private readonly TranslationString _createPullRequest = new TranslationString("Create pull request");
-        private readonly TranslationString _forkCloneRepo = new TranslationString("Fork or clone a repository");
-        private readonly TranslationString _branchText = new TranslationString("Branch");
-        private readonly TranslationString _branchesText = new TranslationString("Branches");
-        private readonly TranslationString _remotesText = new TranslationString("Remotes");
-        private readonly TranslationString _tagsText = new TranslationString("Tags");
-        private readonly TranslationString _submodulesText = new TranslationString("Submodules");
-        private readonly TranslationString _bodyNotLoaded = new TranslationString("\n\nFull message text is not present in older commits.\nSelect this commit to populate the full message.");
-        private readonly TranslationString _searchingFor = new TranslationString("Searching for: ");
-        private readonly TranslationString _loadingDataText = new TranslationString("Loading data...");
-        private readonly TranslationString _uninterestingDiffOmitted = new TranslationString("Uninteresting diff hunks are omitted.");
-        private readonly TranslationString _openReport = new TranslationString("Open report");
-        private readonly TranslationString _noResultsFound = new TranslationString("<No results found>");
-        private readonly TranslationString _local = new TranslationString("Local");
-        private readonly TranslationString _tag = new TranslationString("Tag");
-        private readonly TranslationString _remote = new TranslationString("Remote");
-        private readonly TranslationString _openWithGitExtensions = new TranslationString("Open with Git Extensions");
-        private readonly TranslationString _contScrollToNextFileOnlyWithAlt = new TranslationString("Enable automatic continuous scroll (without ALT button)");
-        private readonly TranslationString _noRevision = new TranslationString("No revision");
+        private readonly TranslationString _buttonCheckoutBranch = new("Checkout branch");
+        private readonly TranslationString _buttonContinue = new("Continue");
+        private readonly TranslationString _buttonCloseApp = new("Close application");
+        private readonly TranslationString _buttonCreateBranch = new("Create branch");
+        private readonly TranslationString _buttonIgnore = new("Ignore");
+        private readonly TranslationString _buttonReportBug = new("Report bug!");
 
-        private readonly TranslationString _authored = new TranslationString("authored");
-        private readonly TranslationString _committed = new TranslationString("committed");
-        private readonly TranslationString _authoredAndCommitted = new TranslationString("authored and committed");
-        private readonly TranslationString _markBisectAsGood = new TranslationString("Marked as good in bisect");
-        private readonly TranslationString _markBisectAsBad = new TranslationString("Marked as bad in bisect");
+        private readonly TranslationString _captionFailedExecute = new("Failed to execute");
+        private readonly TranslationString _instructionOperationFailed = new("Operation failed");
 
-        private readonly TranslationString _errorCaptionFailedDeleteFile = new TranslationString("Failed to delete file");
-        private readonly TranslationString _errorCaptionFailedDeleteFolder = new TranslationString("Failed to delete directory");
+        private readonly TranslationString _containedInCurrentCommitText = new("'{0}' is contained in the currently selected commit");
+        private readonly TranslationString _containedInBranchesText = new("Contained in branches:");
+        private readonly TranslationString _containedInNoBranchText = new("Contained in no branch");
+        private readonly TranslationString _containedInTagsText = new("Contained in tags:");
+        private readonly TranslationString _containedInNoTagText = new("Contained in no tag");
+        private readonly TranslationString _invisibleCommitText = new("'{0}' is not currently visible");
+        private readonly TranslationString _viewPullRequest = new("View pull requests");
+        private readonly TranslationString _createPullRequest = new("Create pull request");
+        private readonly TranslationString _forkCloneRepo = new("Fork or clone a repository");
+        private readonly TranslationString _branchText = new("Branch");
+        private readonly TranslationString _branchesText = new("Branches");
+        private readonly TranslationString _remotesText = new("Remotes");
+        private readonly TranslationString _tagsText = new("Tags");
+        private readonly TranslationString _submodulesText = new("Submodules");
+        private readonly TranslationString _bodyNotLoaded = new("\n\nFull message text is not present in older commits.\nSelect this commit to populate the full message.");
+        private readonly TranslationString _searchingFor = new("Searching for: ");
+        private readonly TranslationString _loadingDataText = new("Loading data...");
+        private readonly TranslationString _uninterestingDiffOmitted = new("Uninteresting diff hunks are omitted.");
+        private readonly TranslationString _openReport = new("Open report");
+        private readonly TranslationString _noResultsFound = new("<No results found>");
+        private readonly TranslationString _local = new("Local");
+        private readonly TranslationString _tag = new("Tag");
+        private readonly TranslationString _remote = new("Remote");
+        private readonly TranslationString _openWithGitExtensions = new("Open with Git Extensions");
+        private readonly TranslationString _contScrollToNextFileOnlyWithAlt = new("Enable automatic continuous scroll (without ALT button)");
+        private readonly TranslationString _noRevision = new("No revision");
 
-        private readonly TranslationString _noBranch = new TranslationString("no branch");
-        private readonly TranslationString _removeSelectedInvalidRepository = new TranslationString("Remove the selected invalid repository");
-        private readonly TranslationString _removeAllInvalidRepositories = new TranslationString("Remove all {0} invalid repositories");
-        private readonly TranslationString _open = new TranslationString("Open");
-        private readonly TranslationString _directoryIsNotAValidRepository = new TranslationString("The selected item is not a valid git repository.");
+        private readonly TranslationString _authored = new("authored");
+        private readonly TranslationString _committed = new("committed");
+        private readonly TranslationString _authoredAndCommitted = new("authored and committed");
+        private readonly TranslationString _markBisectAsGood = new("Marked as good in bisect");
+        private readonly TranslationString _markBisectAsBad = new("Marked as bad in bisect");
 
-        private readonly TranslationString _showDiffForAllParentsText = new TranslationString("Show file differences for all parents in browse dialog");
-        private readonly TranslationString _showDiffForAllParentsTooltip = new TranslationString(@"Show all differences between the selected commits, not limiting to only one difference.
+        private readonly TranslationString _errorCaptionFailedDeleteFile = new("Failed to delete file");
+        private readonly TranslationString _errorCaptionFailedDeleteFolder = new("Failed to delete directory");
+        private readonly TranslationString _errorCaptionNotOnBranch = new("Not on a branch");
+
+        private readonly TranslationString _mainInstructionNotOnBranch = new("You are not working on a branch");
+
+        private readonly TranslationString _noBranch = new("no branch");
+        private readonly TranslationString _removeSelectedInvalidRepository = new("Remove the selected invalid repository");
+        private readonly TranslationString _removeAllInvalidRepositories = new("Remove all {0} invalid repositories");
+        private readonly TranslationString _open = new("Open");
+        private readonly TranslationString _directoryIsNotAValidRepository = new("The selected item is not a valid git repository.");
+
+        private readonly TranslationString _sortBy = new("&Sort by...");
+        private readonly TranslationString _sortOrder = new("&Sort order...");
+
+        private readonly TranslationString _diffSelectedWithRememberedFile = new("Diff with \"{0}\"");
+        private readonly TranslationString _diffWithParent = new("Diff with a/");
+        private readonly TranslationString _diffBaseToB = new("Unique diff BASE with b/");
+        private readonly TranslationString _diffCommonBase = new("Common diff with BASE a/");
+        private readonly TranslationString _diffRange = new("Range diff");
+        private readonly TranslationString _combinedDiff = new("Combined diff");
+
+        private readonly TranslationString _showDiffForAllParentsText = new("Show file differences for all parents in browse dialog");
+        private readonly TranslationString _showDiffForAllParentsTooltip = new(@"Show all differences between the selected commits, not limiting to only one difference.
 
 - For a single selected commit, show the difference with its parent commit.
 - For a single selected merge commit, show the difference with all parents.
@@ -64,6 +89,19 @@ namespace GitUI
    - The difference of common files (identical changes) from BASE to the commits.
 - For multiple selected commits (up to four), show the difference for all the first selected with the last selected commit.
 - For more than four selected commits, show the difference from the first to the last selected commit.");
+
+        private readonly TranslationString _stageSelectedLines = new("Stage selected line(s)");
+        private readonly TranslationString _unstageSelectedLines = new("Unstage selected line(s)");
+        private readonly TranslationString _resetSelectedLines = new("Reset selected line(s)");
+        private readonly TranslationString _resetSelectedLinesConfirmation = new("Are you sure you want to reset the changes to the selected lines?");
+        private readonly TranslationString _resetChangesCaption = new("Reset changes");
+
+        private readonly TranslationString _rotInactive = new("[ Inactive ]");
+
+        private readonly TranslationString _argumentsText = new("Arguments");
+        private readonly TranslationString _commandText = new("Command");
+        private readonly TranslationString _workingDirectoryText = new("Working directory");
+        private readonly TranslationString _reportBugText = new("If you think this was caused by Git Extensions, you can report a bug for the team to investigate.");
 
         // public only because of FormTranslate
         public Strings()
@@ -88,10 +126,22 @@ namespace GitUI
         public static string OK => _instance.Value._okText.Text;
         public static string Cancel => _instance.Value._cancelText.Text;
 
+        public static string ButtonContinue => _instance.Value._buttonContinue.Text;
+        public static string ButtonCheckoutBranch => _instance.Value._buttonCheckoutBranch.Text;
+        public static string ButtonCloseApp => _instance.Value._buttonCloseApp.Text;
+        public static string ButtonCreateBranch => _instance.Value._buttonCreateBranch.Text;
+        public static string ButtonIgnore => _instance.Value._buttonIgnore.Text;
+        public static string ButtonReportBug => _instance.Value._buttonReportBug.Text;
+
+        public static string CaptionFailedExecute => _instance.Value._captionFailedExecute.Text;
+        public static string InstructionOperationFailed => _instance.Value._instructionOperationFailed.Text;
+
+        public static string ContainedInCurrentCommit => _instance.Value._containedInCurrentCommitText.Text;
         public static string ContainedInBranches => _instance.Value._containedInBranchesText.Text;
         public static string ContainedInNoBranch => _instance.Value._containedInNoBranchText.Text;
         public static string ContainedInTags => _instance.Value._containedInTagsText.Text;
         public static string ContainedInNoTag => _instance.Value._containedInNoTagText.Text;
+        public static string InvisibleCommit => _instance.Value._invisibleCommitText.Text;
 
         public static string CreatePullRequest => _instance.Value._createPullRequest.Text;
         public static string ForkCloneRepo => _instance.Value._forkCloneRepo.Text;
@@ -127,6 +177,9 @@ namespace GitUI
 
         public static string ErrorCaptionFailedDeleteFile => _instance.Value._errorCaptionFailedDeleteFile.Text;
         public static string ErrorCaptionFailedDeleteFolder => _instance.Value._errorCaptionFailedDeleteFolder.Text;
+        public static string ErrorCaptionNotOnBranch => _instance.Value._errorCaptionNotOnBranch.Text;
+
+        public static string ErrorInstructionNotOnBranch => _instance.Value._mainInstructionNotOnBranch.Text;
 
         public static string NoBranch => _instance.Value._noBranch.Text;
         public static string RemoveSelectedInvalidRepository => _instance.Value._removeSelectedInvalidRepository.Text;
@@ -134,7 +187,47 @@ namespace GitUI
         public static string Open => _instance.Value._open.Text;
         public static string DirectoryInvalidRepository => _instance.Value._directoryIsNotAValidRepository.Text;
 
+        public static string SortBy => _instance.Value._sortBy.Text;
+        public static string SortOrder => _instance.Value._sortOrder.Text;
+
+        public static string DiffSelectedWithRememberedFile => _instance.Value._diffSelectedWithRememberedFile.Text;
+        public static string DiffWithParent => _instance.Value._diffWithParent.Text;
+        public static string DiffBaseToB => _instance.Value._diffBaseToB.Text;
+        public static string DiffCommonBase => _instance.Value._diffCommonBase.Text;
+        public static string DiffRange => _instance.Value._diffRange.Text;
+        public static string CombinedDiff => _instance.Value._combinedDiff.Text;
         public static string ShowDiffForAllParentsText => _instance.Value._showDiffForAllParentsText.Text;
         public static string ShowDiffForAllParentsTooltip => _instance.Value._showDiffForAllParentsTooltip.Text;
+
+        public static string StageSelectedLines => _instance.Value._stageSelectedLines.Text;
+        public static string UnstageSelectedLines => _instance.Value._unstageSelectedLines.Text;
+        public static string ResetSelectedLines => _instance.Value._resetSelectedLines.Text;
+        public static string ResetSelectedLinesConfirmation => _instance.Value._resetSelectedLinesConfirmation.Text;
+        public static string ResetChangesCaption => _instance.Value._resetChangesCaption.Text;
+
+        public static string Inactive => _instance.Value._rotInactive.Text;
+
+        public static string Arguments => _instance.Value._argumentsText.Text;
+        public static string Command => _instance.Value._commandText.Text;
+        public static string WorkingDirectory => _instance.Value._workingDirectoryText.Text;
+        public static string ReportBug => _instance.Value._reportBugText.Text;
+
+        #region Scripts
+
+        private readonly TranslationString _scriptConfirmExecuteText = new("Do you want to execute script");
+        private readonly TranslationString _scriptErrorCantFindText = new("Unable to find script");
+        private readonly TranslationString _scriptErrorFailedToExecuteText = new("Failed to execute script");
+        private readonly TranslationString _scriptErrorOptionWithoutRevisionGridText = new("option is only supported when invoked from the revision grid");
+        private readonly TranslationString _scriptErrorOptionWithoutRevisionText = new("A valid revision is required to substitute the argument options");
+        private readonly TranslationString _scriptText = new("Script");
+
+        public static string ScriptConfirmExecute => _instance.Value._scriptConfirmExecuteText.Text;
+        public static string ScriptErrorCantFind => _instance.Value._scriptErrorCantFindText.Text;
+        public static string ScriptErrorFailedToExecute => _instance.Value._scriptErrorFailedToExecuteText.Text;
+        public static string ScriptErrorOptionWithoutRevisionGridText => _instance.Value._scriptErrorOptionWithoutRevisionGridText.Text;
+        public static string ScriptErrorOptionWithoutRevisionText => _instance.Value._scriptErrorOptionWithoutRevisionText.Text;
+        public static string ScriptText => _instance.Value._scriptText.Text;
+
+        #endregion
     }
 }

@@ -5,7 +5,6 @@ using System.Linq;
 using GitCommands.Git;
 using GitExtUtils;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -25,7 +24,7 @@ namespace GitCommands
         /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
         /// <param name="condition">Whether or not to add <paramref name="ifConditionTrue"/> to the argument list.</param>
         /// <param name="ifConditionTrue">The string to add if <paramref name="condition"/> is <c>true</c>.</param>
-        public static void Add(this ArgumentBuilder builder, bool condition, [CanBeNull] string ifConditionTrue)
+        public static void Add(this ArgumentBuilder builder, bool condition, string? ifConditionTrue)
         {
             if (condition)
             {
@@ -45,7 +44,7 @@ namespace GitCommands
         /// <param name="condition">Whether or not to add <paramref name="ifConditionTrue"/> to the argument list.</param>
         /// <param name="ifConditionTrue">The string to add if <paramref name="condition"/> is <c>true</c>.</param>
         /// <param name="ifConditionFalse">The string to add if <paramref name="condition"/> is <c>false</c>.</param>
-        public static void Add(this ArgumentBuilder builder, bool condition, [CanBeNull] string ifConditionTrue, [CanBeNull] string ifConditionFalse)
+        public static void Add(this ArgumentBuilder builder, bool condition, string? ifConditionTrue, string? ifConditionFalse)
         {
             builder.Add(condition ? ifConditionTrue : ifConditionFalse);
         }
@@ -60,9 +59,9 @@ namespace GitCommands
         /// </remarks>
         /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
         /// <param name="values">A sequence of strings to add.</param>
-        public static void Add(this ArgumentBuilder builder, [CanBeNull, ItemCanBeNull] IEnumerable<string> values)
+        public static void Add(this ArgumentBuilder builder, IEnumerable<string?>? values)
         {
-            if (values == null)
+            if (values is null)
             {
                 return;
             }
@@ -86,9 +85,9 @@ namespace GitCommands
         /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
         /// <param name="condition">Whether or not to add <paramref name="ifConditionTrue"/> to the argument list.</param>
         /// <param name="ifConditionTrue">A sequence of strings to add if <paramref name="condition"/> is <c>true</c>.</param>
-        public static void Add(this ArgumentBuilder builder, bool condition, [CanBeNull, ItemCanBeNull] IEnumerable<string> ifConditionTrue)
+        public static void Add(this ArgumentBuilder builder, bool condition, IEnumerable<string?>? ifConditionTrue)
         {
-            if (!condition || ifConditionTrue == null)
+            if (!condition || ifConditionTrue is null)
             {
                 return;
             }
@@ -108,7 +107,7 @@ namespace GitCommands
         {
             builder.Add(GetArgument());
 
-            string GetArgument()
+            string? GetArgument()
             {
                 switch (option)
                 {
@@ -270,9 +269,9 @@ namespace GitCommands
         /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
         /// <param name="objectId">The SHA-1 object ID to add to the builder, or <c>null</c>.</param>
         /// <exception cref="ArgumentException"><paramref name="objectId"/> represents an artificial commit.</exception>
-        public static void Add(this ArgumentBuilder builder, [CanBeNull] ObjectId objectId)
+        public static void Add(this ArgumentBuilder builder, ObjectId? objectId)
         {
-            if (objectId == null)
+            if (objectId is null)
             {
                 return;
             }
@@ -294,9 +293,9 @@ namespace GitCommands
         /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
         /// <param name="objectIds">A sequence of SHA-1 object IDs to add to the builder, or <c>null</c>.</param>
         /// <exception cref="ArgumentException"><paramref name="objectIds"/> contains an artificial commit.</exception>
-        public static void Add(this ArgumentBuilder builder, [CanBeNull, ItemCanBeNull] IEnumerable<ObjectId> objectIds)
+        public static void Add(this ArgumentBuilder builder, IEnumerable<ObjectId?>? objectIds)
         {
-            if (objectIds == null)
+            if (objectIds is null)
             {
                 return;
             }
@@ -341,7 +340,7 @@ namespace GitCommands
             var lastBatchBuilder = arguments.Aggregate(builder, (currentBatchBuilder, argument) =>
             {
                 // 1: ' ' space character length will be added
-                // When enumeration is finished, no need to add ' ' to length calculcation
+                // When enumeration is finished, no need to add ' ' to length calculation
                 if (baseLength + currentArgumentLength + 1 + argument.Length >= maxLength)
                 {
                     // Handle abnormal case when base command and a single argument exceed max length

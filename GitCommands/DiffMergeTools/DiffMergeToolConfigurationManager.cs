@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using GitCommands.Config;
+using GitExtensions;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.DiffMergeTools
@@ -10,7 +11,7 @@ namespace GitCommands.DiffMergeTools
     public sealed class DiffMergeToolConfigurationManager
     {
         private readonly Func<IConfigValueStore> _getFileSettings;
-        private readonly Func<string, IEnumerable<string>, string> _findFileInFolders;
+        private readonly Func<string, IEnumerable<string?>, string> _findFileInFolders;
 
         public DiffMergeToolConfigurationManager(Func<IConfigValueStore> getFileSettings)
             : this(getFileSettings, PathUtil.FindInFolders)
@@ -18,7 +19,7 @@ namespace GitCommands.DiffMergeTools
             _getFileSettings = getFileSettings;
         }
 
-        internal DiffMergeToolConfigurationManager(Func<IConfigValueStore> getFileSettings, Func<string, IEnumerable<string>, string> findFileInFolders)
+        internal DiffMergeToolConfigurationManager(Func<IConfigValueStore> getFileSettings, Func<string, IEnumerable<string?>, string> findFileInFolders)
         {
             _getFileSettings = getFileSettings;
             _findFileInFolders = findFileInFolders;
@@ -27,16 +28,16 @@ namespace GitCommands.DiffMergeTools
         /// <summary>
         /// Gets the diff tool configured in the effective config under 'diff.guitool'.
         /// </summary>
-        public string ConfiguredDiffTool => _getFileSettings()?.GetValue(SettingKeyString.DiffToolKey);
+        public string? ConfiguredDiffTool => _getFileSettings()?.GetValue(SettingKeyString.DiffToolKey);
 
         /// <summary>
         /// Gets the merge tool configured in the effective config under 'merge.guitool' or 'merge.tool'.
         /// </summary>
-        public string ConfiguredMergeTool
+        public string? ConfiguredMergeTool
         {
             get
             {
-                string mergetool = "";
+                string? mergetool = "";
                 if (GitVersion.Current.SupportGuiMergeTool)
                 {
                     mergetool = _getFileSettings()?.GetValue(SettingKeyString.MergeToolKey);
@@ -68,7 +69,7 @@ namespace GitCommands.DiffMergeTools
             }
 
             var fileSettings = _getFileSettings();
-            if (fileSettings == null)
+            if (fileSettings is null)
             {
                 return;
             }
@@ -93,7 +94,7 @@ namespace GitCommands.DiffMergeTools
             }
 
             var command = GetToolSetting(toolName, toolType, "cmd");
-            if (!string.IsNullOrWhiteSpace(command))
+            if (!Strings.IsNullOrWhiteSpace(command))
             {
                 return command;
             }
@@ -122,7 +123,7 @@ namespace GitCommands.DiffMergeTools
             }
 
             var path = GetToolSetting(toolName, toolType, "path");
-            if (!string.IsNullOrWhiteSpace(path))
+            if (!Strings.IsNullOrWhiteSpace(path))
             {
                 return path;
             }
@@ -130,20 +131,20 @@ namespace GitCommands.DiffMergeTools
             return LoadDiffMergeToolConfig(toolName, null).Path;
         }
 
-        public DiffMergeToolConfiguration LoadDiffMergeToolConfig(string toolName, string userSuppliedPath)
+        public DiffMergeToolConfiguration LoadDiffMergeToolConfig(string toolName, string? userSuppliedPath)
         {
             if (string.IsNullOrWhiteSpace(toolName))
             {
                 throw new ArgumentException(@"Invalid diff/merge tool requested", nameof(toolName));
             }
 
-            string fullPath;
+            string? fullPath;
 
             var diffTool = RegisteredDiffMergeTools.Get(toolName);
-            if (diffTool == null)
+            if (diffTool is null)
             {
                 var exeName = toolName + ".exe";
-                if (!string.IsNullOrWhiteSpace(userSuppliedPath))
+                if (!Strings.IsNullOrWhiteSpace(userSuppliedPath))
                 {
                     fullPath = userSuppliedPath;
                 }
@@ -155,7 +156,7 @@ namespace GitCommands.DiffMergeTools
                 return new DiffMergeToolConfiguration(exeName, fullPath ?? string.Empty, null, null);
             }
 
-            if (!string.IsNullOrWhiteSpace(userSuppliedPath))
+            if (!Strings.IsNullOrWhiteSpace(userSuppliedPath))
             {
                 fullPath = userSuppliedPath;
             }
@@ -175,7 +176,7 @@ namespace GitCommands.DiffMergeTools
         public void UnsetCurrentTool(DiffMergeToolType toolType)
         {
             var fileSettings = _getFileSettings();
-            if (fileSettings == null)
+            if (fileSettings is null)
             {
                 return;
             }
@@ -198,23 +199,23 @@ namespace GitCommands.DiffMergeTools
             }
         }
 
-        private string GetToolSetting(string toolName, DiffMergeToolType toolType, string settingSuffix)
+        private string? GetToolSetting(string? toolName, DiffMergeToolType toolType, string settingSuffix)
         {
             (string toolKey, string prefix) = GetInfo(toolType);
 
-            if (string.IsNullOrWhiteSpace(toolName))
+            if (Strings.IsNullOrWhiteSpace(toolName))
             {
                 toolName = _getFileSettings()?.GetValue(toolKey);
             }
 
-            return string.IsNullOrWhiteSpace(toolName) ?
+            return Strings.IsNullOrWhiteSpace(toolName) ?
                 string.Empty :
                 _getFileSettings()?.GetValue(string.Concat(prefix, ".", toolName, ".", settingSuffix));
         }
 
-        private static string UnquoteString(string str)
+        private static string? UnquoteString(string? str)
         {
-            if (string.IsNullOrEmpty(str))
+            if (Strings.IsNullOrEmpty(str))
             {
                 return str;
             }
@@ -243,7 +244,7 @@ namespace GitCommands.DiffMergeTools
             public (string toolKey, string prefix) GetInfo(DiffMergeToolType toolType)
                 => _manager.GetInfo(toolType);
 
-            public string GetToolSetting(string toolName, DiffMergeToolType toolType, string settingSuffix)
+            public string? GetToolSetting(string? toolName, DiffMergeToolType toolType, string settingSuffix)
                 => _manager.GetToolSetting(toolName, toolType, settingSuffix);
         }
     }

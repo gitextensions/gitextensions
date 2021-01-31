@@ -36,7 +36,7 @@ namespace GitExtUtils
     /// </example>
     public class ArgumentBuilder : IEnumerable
     {
-        private readonly StringBuilder _arguments = new StringBuilder(capacity: 16);
+        private readonly StringBuilder _arguments = new(capacity: 16);
 
         public bool IsEmpty => _arguments.Length == 0;
 
@@ -48,7 +48,7 @@ namespace GitExtUtils
         /// to the argument list.
         /// </remarks>
         /// <param name="s">The string to add.</param>
-        public void Add([CanBeNull] string s)
+        public void Add(string? s)
         {
             if (string.IsNullOrWhiteSpace(s))
             {
@@ -64,9 +64,9 @@ namespace GitExtUtils
         }
 
         /// <summary>
-        /// Adds a range of arguments
+        /// Adds a range of arguments.
         /// </summary>
-        /// <param name="args">The arguments to add to this builder</param>
+        /// <param name="args">The arguments to add to this builder.</param>
         public void AddRange(IEnumerable<string> args)
         {
             args = args.Where(a => !string.IsNullOrEmpty(a));

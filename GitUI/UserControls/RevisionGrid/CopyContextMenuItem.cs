@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using GitCommands;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 
@@ -14,7 +14,7 @@ namespace GitUI.UserControls.RevisionGrid
 {
     public sealed class CopyContextMenuItem : ToolStripMenuItem
     {
-        private readonly TranslationString _copyToClipboardText = new TranslationString("&Copy to clipboard");
+        private readonly TranslationString _copyToClipboardText = new("&Copy to clipboard");
         [CanBeNull] private Func<IReadOnlyList<GitRevision>> _revisionFunc;
         private uint _itemNumber;
 
@@ -37,7 +37,7 @@ namespace GitUI.UserControls.RevisionGrid
         private void AddItem(string displayText, Func<GitRevision, string> extractRevisionText, Image image, char? hotkey)
         {
             var textToCopy = ExtractRevisionTexts(extractRevisionText);
-            if (textToCopy == null)
+            if (textToCopy is null)
             {
                 return;
             }
@@ -63,7 +63,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             var item = new ToolStripMenuItem
             {
-                Text = displayText,
+                Text = displayText.TrimEnd('\r', '\n'),
                 ShowShortcutKeys = true,
                 Image = image
             };
@@ -78,13 +78,13 @@ namespace GitUI.UserControls.RevisionGrid
 
         private string[] ExtractRevisionTexts(Func<GitRevision, string> extractRevisionText)
         {
-            if (extractRevisionText == null)
+            if (extractRevisionText is null)
             {
                 return null;
             }
 
             var gitRevisions = _revisionFunc?.Invoke();
-            if (gitRevisions == null || gitRevisions.Count == 0)
+            if (gitRevisions is null || gitRevisions.Count == 0)
             {
                 return null;
             }
@@ -95,7 +95,7 @@ namespace GitUI.UserControls.RevisionGrid
         private void OnDropDownOpening(object sender, EventArgs e)
         {
             var revisions = _revisionFunc?.Invoke();
-            if (revisions == null || revisions.Count == 0)
+            if (revisions is null || revisions.Count == 0)
             {
                 HideDropDown();
                 return;

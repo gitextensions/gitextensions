@@ -26,7 +26,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             var revisionGraphRow = Substitute.For<IRevisionGraphRow>();
 
             var segments = new List<RevisionGraphSegment>();
-            if (firstSegment != null)
+            if (firstSegment is not null)
             {
                 segments.Add(firstSegment);
             }

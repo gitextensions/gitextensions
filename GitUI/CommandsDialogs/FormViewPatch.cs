@@ -11,8 +11,8 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormViewPatch : GitModuleForm
     {
-        private readonly TranslationString _patchFileFilterString = new TranslationString("Patch file (*.Patch)");
-        private readonly TranslationString _patchFileFilterTitle = new TranslationString("Select patch file");
+        private readonly TranslationString _patchFileFilterString = new("Patch file (*.Patch)");
+        private readonly TranslationString _patchFileFilterTitle = new("Select patch file");
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormViewPatch()
@@ -27,6 +27,7 @@ namespace GitUI.CommandsDialogs
 
             typeDataGridViewTextBoxColumn.Width = DpiUtil.Scale(70);
             File.Width = DpiUtil.Scale(50);
+            ChangesList.ExtraDiffArgumentsChanged += GridChangedFiles_SelectionChanged;
 
             InitializeComplete();
 
@@ -50,12 +51,12 @@ namespace GitUI.CommandsDialogs
 
             var patch = (Patch)GridChangedFiles.SelectedRows[0].DataBoundItem;
 
-            if (patch == null)
+            if (patch is null)
             {
                 return;
             }
 
-            ChangesList.ViewPatch(patch.FileNameB, patch.Text ?? "");
+            ChangesList.ViewFixedPatch(patch.FileNameB, patch.Text ?? "");
         }
 
         private void BrowsePatch_Click(object sender, EventArgs e)

@@ -65,9 +65,10 @@ namespace AppVeyorIntegration
         public void Initialize(
             IBuildServerWatcher buildServerWatcher,
             ISettingsSource config,
+            Action openSettings,
             Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
-            if (_buildServerWatcher != null)
+            if (_buildServerWatcher is not null)
             {
                 throw new InvalidOperationException("Already initialized");
             }
@@ -259,7 +260,7 @@ namespace AppVeyorIntegration
                     var version = b["version"].ToObject<string>();
                     var status = ParseBuildStatus(b["status"].ToObject<string>());
                     long? duration = null;
-                    if (status == BuildInfo.BuildStatus.Success || status == BuildInfo.BuildStatus.Failure)
+                    if (status is (BuildInfo.BuildStatus.Success or BuildInfo.BuildStatus.Failure))
                     {
                         duration = GetBuildDuration(b);
                     }
@@ -277,14 +278,14 @@ namespace AppVeyorIntegration
                         StartDate = b["started"]?.ToObject<DateTime>() ?? DateTime.MinValue,
                         BaseWebUrl = baseWebUrl,
                         Url = WebSiteUrl + "/project/" + project.Id + "/build/" + version,
-                        PullRequestUrl = repositoryType != null && repositoryName != null && pullRequestId != null
+                        PullRequestUrl = repositoryType is not null && repositoryName is not null && pullRequestId is not null
                             ? BuildPullRequetUrl(repositoryType.Value<string>(), repositoryName.Value<string>(),
                                 pullRequestId.Value<string>())
                             : null,
                         BaseApiUrl = baseApiUrl,
                         AppVeyorBuildReportUrl = baseApiUrl + "/build/" + version,
-                        PullRequestText = pullRequestId != null ? "PR#" + pullRequestId.Value<string>() : string.Empty,
-                        PullRequestTitle = pullRequestTitle != null ? pullRequestTitle.Value<string>() : string.Empty,
+                        PullRequestText = pullRequestId is not null ? "PR#" + pullRequestId.Value<string>() : string.Empty,
+                        PullRequestTitle = pullRequestTitle is not null ? pullRequestTitle.Value<string>() : string.Empty,
                         Duration = duration,
                         TestsResultText = string.Empty
                     });
@@ -326,7 +327,7 @@ namespace AppVeyorIntegration
         {
             try
             {
-                if (_allBuilds == null)
+                if (_allBuilds is null)
                 {
                     return;
                 }
@@ -400,7 +401,7 @@ namespace AppVeyorIntegration
         private void UpdateDescription(AppVeyorBuildInfo buildDetails, CancellationToken cancellationToken)
         {
             var buildDetailsParsed = ThreadHelper.JoinableTaskFactory.Run(() => FetchBuildDetailsManagingVersionUpdateAsync(buildDetails, cancellationToken));
-            if (buildDetailsParsed == null)
+            if (buildDetailsParsed is null)
             {
                 return;
             }

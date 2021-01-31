@@ -9,12 +9,12 @@ namespace Bitbucket
     [Export(typeof(IGitPlugin))]
     public class BitbucketPlugin : GitPluginBase
     {
-        public readonly StringSetting BitbucketUsername = new StringSetting("Bitbucket Username", string.Empty);
-        public readonly PasswordSetting BitbucketPassword = new PasswordSetting("Bitbucket Password", string.Empty);
-        public readonly StringSetting BitbucketBaseUrl = new StringSetting("Specify the base URL to Bitbucket", "https://example.bitbucket.com");
-        public readonly BoolSetting BitbucketDisableSsl = new BoolSetting("Disable SSL verification", false);
+        public readonly StringSetting BitbucketUsername = new("Bitbucket Username", string.Empty);
+        public readonly PasswordSetting BitbucketPassword = new("Bitbucket Password", string.Empty);
+        public readonly StringSetting BitbucketBaseUrl = new("Specify the base URL to Bitbucket", "https://example.bitbucket.com");
+        public readonly BoolSetting BitbucketDisableSsl = new("Disable SSL verification", false);
 
-        private readonly TranslationString _yourRepositoryIsNotInBitbucket = new TranslationString("Your repository is not hosted in BitBucket Server.");
+        private readonly TranslationString _yourRepositoryIsNotInBitbucket = new("Your repository is not hosted in BitBucket Server.");
 
         public BitbucketPlugin() : base(true)
         {
@@ -27,7 +27,7 @@ namespace Bitbucket
         public override bool Execute(GitUIEventArgs args)
         {
             Settings settings = Bitbucket.Settings.Parse(args.GitModule, Settings, this);
-            if (settings == null)
+            if (settings is null)
             {
                 MessageBox.Show(args.OwnerForm,
                                 _yourRepositoryIsNotInBitbucket.Text,
@@ -37,10 +37,8 @@ namespace Bitbucket
                 return false;
             }
 
-            using (var frm = new BitbucketPullRequestForm(settings, args.GitModule))
-            {
-                frm.ShowDialog(args.OwnerForm);
-            }
+            using var frm = new BitbucketPullRequestForm(settings, args.GitModule);
+            frm.ShowDialog(args.OwnerForm);
 
             return true;
         }

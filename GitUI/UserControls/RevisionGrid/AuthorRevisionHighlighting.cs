@@ -27,7 +27,7 @@ namespace GitUI.UserControls
             var changed = !string.Equals(revision?.AuthorEmail, AuthorEmailToHighlight, StringComparison.OrdinalIgnoreCase);
             if (changed)
             {
-                AuthorEmailToHighlight = revision != null
+                AuthorEmailToHighlight = revision is not null
                     ? revision.AuthorEmail
                     : currentModule.GetEffectiveSetting(SettingKeyString.UserEmail);
                 return true;

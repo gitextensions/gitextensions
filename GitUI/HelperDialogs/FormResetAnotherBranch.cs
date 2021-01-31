@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
@@ -15,7 +16,7 @@ namespace GitUI.HelperDialogs
     {
         private IGitRef[] _localGitRefs;
         private readonly GitRevision _revision;
-        private readonly TranslationString _localRefInvalid = new TranslationString("The entered value '{0}' is not the name of an existing local branch.");
+        private readonly TranslationString _localRefInvalid = new("The entered value '{0}' is not the name of an existing local branch.");
 
         public static FormResetAnotherBranch Create(GitUICommands gitUiCommands, GitRevision revision)
             => new FormResetAnotherBranch(gitUiCommands, revision ?? throw new NotSupportedException(Strings.NoRevision));
@@ -60,8 +61,12 @@ namespace GitUI.HelperDialogs
             var currentBranch = Module.GetSelectedBranch();
             var isDetachedHead = currentBranch == DetachedHeadParser.DetachedBranch;
 
+            var selectedRevisionRemotes = _revision.Refs.Where(r => r.IsRemote).ToList();
+
             return Module.GetRefs(false)
-                .Where(r => r.IsHead && (isDetachedHead || r.LocalName != currentBranch))
+                .Where(r => r.IsHead)
+                .Where(r => isDetachedHead || r.LocalName != currentBranch)
+                .OrderByDescending(r => selectedRevisionRemotes.Any(r.IsTrackingRemote)) // Put local branches that track these remotes first
                 .ToArray();
         }
 
@@ -80,17 +85,16 @@ namespace GitUI.HelperDialogs
         private void Ok_Click(object sender, EventArgs e)
         {
             var gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == Branches.Text);
-            if (gitRefToReset == null)
+            if (gitRefToReset is null)
             {
                 MessageBox.Show(string.Format(_localRefInvalid.Text, Branches.Text), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             var repoPath = Path.GetFullPath(Module.WorkingDir);
-            var args = GitCommandHelpers.PushLocalCmd(repoPath, gitRefToReset.CompleteName, _revision.ObjectId, ForceReset.Checked);
-            var isSuccess = FormProcess.ShowDialog(this, args);
-
-            if (isSuccess)
+            var command = GitCommandHelpers.PushLocalCmd(repoPath, gitRefToReset.CompleteName, _revision.ObjectId, ForceReset.Checked);
+            bool success = FormProcess.ShowDialog(this, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+            if (success)
             {
                 UICommands.RepoChangedNotifier.Notify();
                 Close();

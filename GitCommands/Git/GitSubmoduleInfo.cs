@@ -1,20 +1,19 @@
 ﻿using System;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
     public sealed class GitSubmoduleInfo : IGitSubmoduleInfo
     {
-        [NotNull] public string Name { get; }
-        [NotNull] public string LocalPath { get; }
-        [NotNull] public string RemotePath { get; }
-        [NotNull] public ObjectId CurrentCommitId { get; }
-        [NotNull] public string Branch { get; }
+        public string Name { get; }
+        public string LocalPath { get; }
+        public string RemotePath { get; }
+        public ObjectId CurrentCommitId { get; }
+        public string Branch { get; }
         public bool IsInitialized { get; }
         public bool IsUpToDate { get; }
 
-        public GitSubmoduleInfo([NotNull] string name, [NotNull] string localPath, [NotNull] string remotePath, [NotNull] ObjectId currentCommitGuid, [NotNull] string branch, bool isInitialized, bool isUpToDate)
+        public GitSubmoduleInfo(string name, string localPath, string remotePath, ObjectId currentCommitGuid, string branch, bool isInitialized, bool isUpToDate)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             LocalPath = localPath ?? throw new ArgumentNullException(nameof(localPath));

@@ -171,11 +171,11 @@ namespace GitUI.Help
             Size size;
             if (IsExpanded)
             {
-                if (_image1 != null && _image2 == null)
+                if (_image1 is not null && _image2 is null)
                 {
                     size = Image1.Size;
                 }
-                else if (_image1 != null && Image2 != null)
+                else if (_image1 is not null && Image2 is not null)
                 {
                     int w = Math.Max(_image1.Size.Width, _image2.Width);
                     int h = Math.Max(_image1.Size.Height, _image2.Height);
@@ -200,7 +200,7 @@ namespace GitUI.Help
             var form = TopLevelControl as Form;
             var s = new Size();
             var ms = new Size();
-            if (form != null)
+            if (form is not null)
             {
                 s = form.Size;
                 s.Width -= Size.Width;
@@ -214,7 +214,7 @@ namespace GitUI.Help
 
             Size = size;
             MinimumSize = size;
-            if (form != null)
+            if (form is not null)
             {
                 s.Width += Size.Width;
                 form.Size = s;

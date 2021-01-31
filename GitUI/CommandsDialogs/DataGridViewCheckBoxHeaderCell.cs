@@ -26,7 +26,7 @@ namespace GitUI.CommandsDialogs
                 throw new InvalidOperationException("This cell has already been attached to a column.");
             }
 
-            if (DataGridView != null)
+            if (DataGridView is not null)
             {
                 owningColumn.HeaderCell = this;
                 owningColumn.HeaderText = string.Empty;

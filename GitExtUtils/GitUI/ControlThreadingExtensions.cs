@@ -14,11 +14,9 @@ namespace GitUI
 
         static ControlThreadingExtensions()
         {
-            using (var cts = new CancellationTokenSource())
-            {
-                cts.Cancel();
-                _preCancelledToken = cts.Token;
-            }
+            using var cts = new CancellationTokenSource();
+            cts.Cancel();
+            _preCancelledToken = cts.Token;
 
             _controlDisposed = new ConditionalWeakTable<IComponent, StrongBox<CancellationToken>>();
         }
@@ -40,7 +38,7 @@ namespace GitUI
             }
 
             var disposedCancellationToken = ToolStripItemDisposedCancellationFactory.Instance.GetOrCreateCancellationToken(control);
-            CancellationTokenSource cancellationTokenSource = null;
+            CancellationTokenSource? cancellationTokenSource = null;
             if (cancellationToken.CanBeCanceled)
             {
                 cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(disposedCancellationToken, cancellationToken);
@@ -70,7 +68,7 @@ namespace GitUI
             }
 
             var disposedCancellationToken = ControlIsDisposedCancellationFactory.Instance.GetOrCreateCancellationToken(control);
-            CancellationTokenSource cancellationTokenSource = null;
+            CancellationTokenSource? cancellationTokenSource = null;
             if (cancellationToken.CanBeCanceled)
             {
                 cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(disposedCancellationToken, cancellationToken);
@@ -86,9 +84,9 @@ namespace GitUI
         public readonly struct ControlMainThreadAwaitable
         {
             private readonly JoinableTaskFactory.MainThreadAwaitable _awaitable;
-            private readonly IDisposable _disposable;
+            private readonly IDisposable? _disposable;
 
-            internal ControlMainThreadAwaitable(JoinableTaskFactory.MainThreadAwaitable awaitable, IDisposable disposable)
+            internal ControlMainThreadAwaitable(JoinableTaskFactory.MainThreadAwaitable awaitable, IDisposable? disposable)
             {
                 _awaitable = awaitable;
                 _disposable = disposable;
@@ -103,9 +101,9 @@ namespace GitUI
         public readonly struct ControlMainThreadAwaiter : INotifyCompletion
         {
             private readonly JoinableTaskFactory.MainThreadAwaiter _awaiter;
-            private readonly IDisposable _disposable;
+            private readonly IDisposable? _disposable;
 
-            internal ControlMainThreadAwaiter(JoinableTaskFactory.MainThreadAwaiter awaiter, IDisposable disposable)
+            internal ControlMainThreadAwaiter(JoinableTaskFactory.MainThreadAwaiter awaiter, IDisposable? disposable)
             {
                 _awaiter = awaiter;
                 _disposable = disposable;
@@ -130,14 +128,14 @@ namespace GitUI
 
         private sealed class ControlIsDisposedCancellationFactory : IsDisposedCancellationFactory<Control>
         {
-            public static readonly ControlIsDisposedCancellationFactory Instance = new ControlIsDisposedCancellationFactory();
+            public static readonly ControlIsDisposedCancellationFactory Instance = new();
 
             protected override bool IsDisposed(Control component) => component.IsDisposed;
         }
 
         private sealed class ToolStripItemDisposedCancellationFactory : IsDisposedCancellationFactory<ToolStripItem>
         {
-            public static readonly ToolStripItemDisposedCancellationFactory Instance = new ToolStripItemDisposedCancellationFactory();
+            public static readonly ToolStripItemDisposedCancellationFactory Instance = new();
 
             protected override bool IsDisposed(ToolStripItem component) => component.IsDisposed;
         }

@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public sealed partial class RevisionLinksSettingsPage : RepoDistSettingsPage
     {
-        private readonly TranslationString _addTemplate = new TranslationString("Add {0} templates");
+        private readonly TranslationString _addTemplate = new("Add {0} templates");
         private ExternalLinksManager _externalLinksManager;
 
         public RevisionLinksSettingsPage()
@@ -71,7 +71,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void CategoryChanged()
         {
-            if (SelectedLinkDefinition == null)
+            if (SelectedLinkDefinition is null)
             {
                 splitContainer1.Panel2.Enabled = false;
                 _NO_TRANSLATE_Name.Text = string.Empty;
@@ -141,7 +141,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private Remote FindRemoteByPreference(IList<Remote> remotes)
         {
-            if (remotes == null)
+            if (remotes is null)
             {
                 return default;
             }
@@ -150,7 +150,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             foreach (var remoteName in remoteNames)
             {
                 var remoteFound = remotes.FirstOrDefault(r => r.Name == remoteName);
-                if (remoteFound.Name != null)
+                if (remoteFound.Name is not null)
                 {
                     return remoteFound;
                 }
@@ -174,7 +174,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void Remove_Click(object sender, EventArgs e)
         {
-            if (SelectedLinkDefinition == null)
+            if (SelectedLinkDefinition is null)
             {
                 return;
             }
@@ -195,7 +195,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void _NO_TRANSLATE_Name_Leave(object sender, EventArgs e)
         {
-            if (SelectedLinkDefinition != null)
+            if (SelectedLinkDefinition is not null)
             {
                 var selected = SelectedLinkDefinition;
                 selected.Name = _NO_TRANSLATE_Name.Text;
@@ -206,7 +206,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void EnabledChx_CheckedChanged(object sender, EventArgs e)
         {
-            if (SelectedLinkDefinition != null)
+            if (SelectedLinkDefinition is not null)
             {
                 SelectedLinkDefinition.Enabled = EnabledChx.Checked;
             }
@@ -214,7 +214,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void MessageChx_CheckedChanged(object sender, EventArgs e)
         {
-            if (SelectedLinkDefinition != null)
+            if (SelectedLinkDefinition is not null)
             {
                 if (MessageChx.Checked)
                 {
@@ -229,7 +229,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void _NO_TRANSLATE_SearchPatternEdit_Leave(object sender, EventArgs e)
         {
-            if (SelectedLinkDefinition != null)
+            if (SelectedLinkDefinition is not null)
             {
                 SelectedLinkDefinition.SearchPattern = _NO_TRANSLATE_SearchPatternEdit.Text.Trim();
             }
@@ -237,7 +237,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void _NO_TRANSLATE_NestedPatternEdit_Leave(object sender, EventArgs e)
         {
-            if (SelectedLinkDefinition != null)
+            if (SelectedLinkDefinition is not null)
             {
                 SelectedLinkDefinition.NestedSearchPattern = _NO_TRANSLATE_NestedPatternEdit.Text.Trim();
             }
@@ -245,7 +245,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void LocalBranchChx_CheckedChanged(object sender, EventArgs e)
         {
-            if (SelectedLinkDefinition != null)
+            if (SelectedLinkDefinition is not null)
             {
                 if (LocalBranchChx.Checked)
                 {
@@ -260,7 +260,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void RemoteBranchChx_CheckedChanged(object sender, EventArgs e)
         {
-            if (SelectedLinkDefinition != null)
+            if (SelectedLinkDefinition is not null)
             {
                 if (RemoteBranchChx.Checked)
                 {
@@ -275,7 +275,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void _NO_TRANSLATE_RemotePatern_Leave(object sender, EventArgs e)
         {
-            if (SelectedLinkDefinition != null)
+            if (SelectedLinkDefinition is not null)
             {
                 SelectedLinkDefinition.RemoteSearchPattern = _NO_TRANSLATE_RemotePatern.Text.Trim();
             }
@@ -283,7 +283,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void chxURL_CheckedChanged(object sender, EventArgs e)
         {
-            if (SelectedLinkDefinition != null)
+            if (SelectedLinkDefinition is not null)
             {
                 if (chxURL.Checked)
                 {
@@ -298,7 +298,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void chxPushURL_CheckedChanged(object sender, EventArgs e)
         {
-            if (SelectedLinkDefinition != null)
+            if (SelectedLinkDefinition is not null)
             {
                 if (chxPushURL.Checked)
                 {
@@ -313,7 +313,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void _NO_TRANSLATE_UseRemotes_Leave(object sender, EventArgs e)
         {
-            if (SelectedLinkDefinition != null)
+            if (SelectedLinkDefinition is not null)
             {
                 SelectedLinkDefinition.UseRemotesPattern = _NO_TRANSLATE_UseRemotes.Text.Trim();
             }
@@ -321,7 +321,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void chkOnlyFirstRemote_CheckedChanged(object sender, EventArgs e)
         {
-            if (SelectedLinkDefinition != null)
+            if (SelectedLinkDefinition is not null)
             {
                 SelectedLinkDefinition.UseOnlyFirstRemote = chkOnlyFirstRemote.Checked;
             }

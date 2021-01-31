@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.Git.Commands;
 
 namespace CommonTestUtils
 {
@@ -30,10 +31,13 @@ namespace CommonTestUtils
             Module = module;
 
             // Don't assume global user/email
-            Module.LocalConfigFile.SetString(SettingKeyString.UserName, "author");
-            Module.LocalConfigFile.SetString(SettingKeyString.UserEmail, "author@mail.com");
-            Module.LocalConfigFile.FilesEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
-            Module.LocalConfigFile.Save();
+            SetDummyUserEmail(module);
+
+            // Stage operations may fail due to different line endings, so want only warning and not a fatal error
+            //
+            //  fatal: LF would be replaced by CRLF in .gitmodules
+            //         Failed to register submodule 'repo2'
+            module.GitExecutable.GetOutput(@"config core.safecrlf false");
 
             return;
 
@@ -111,20 +115,29 @@ namespace CommonTestUtils
         }
 
         /// <summary>
-        /// Adds 'helper' as a submodule of the current helper.
+        /// Set dummy user and email locally for the module, no global setting in AppVeyor
+        /// Must also be set on the submodule, local settings are not included when adding it
         /// </summary>
-        /// <param name="helper">GitModuleTestHelper to add as a submodule of this.</param>
+        private void SetDummyUserEmail(GitModule module)
+        {
+            module.LocalConfigFile.SetString(SettingKeyString.UserName, "author");
+            module.LocalConfigFile.SetString(SettingKeyString.UserEmail, "author@mail.com");
+            module.LocalConfigFile.FilesEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+            module.LocalConfigFile.Save();
+        }
+
+        /// <summary>
+        /// Adds 'subModuleHelper' as a submodule of the current subModuleHelper.
+        /// </summary>
+        /// <param name="subModuleHelper">GitModuleTestHelper to add as a submodule of this.</param>
         /// <param name="path">Relative submodule path.</param>
-        /// <returns>Module of added submodule</returns>
-        public GitModule AddSubmodule(GitModuleTestHelper helper, string path)
+        public void AddSubmodule(GitModuleTestHelper subModuleHelper, string path)
         {
             // Submodules require at least one commit
-            helper.Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Empty commit""");
+            subModuleHelper.Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Initial empty commit""");
 
-            Module.GitExecutable.GetOutput(GitCommandHelpers.AddSubmoduleCmd(helper.Module.WorkingDir.ToPosixPath(), path, null, true));
+            Module.GitExecutable.GetOutput(GitCommandHelpers.AddSubmoduleCmd(subModuleHelper.Module.WorkingDir.ToPosixPath(), path, null, true));
             Module.GitExecutable.GetOutput(@"commit -am ""Add submodule""");
-
-            return new GitModule(Path.Combine(Module.WorkingDir, path).ToPosixPath());
         }
 
         /// <summary>
@@ -135,7 +148,12 @@ namespace CommonTestUtils
         {
             Module.GitExecutable.GetOutput(@"submodule update --init --recursive");
             var paths = Module.GetSubmodulesLocalPaths(recursive: true);
-            return paths.Select(path => new GitModule(Path.Combine(Module.WorkingDir, path).ToNativePath()));
+            return paths.Select(path =>
+            {
+                var module = new GitModule(Path.Combine(Module.WorkingDir, path).ToNativePath());
+                SetDummyUserEmail(module);
+                return module;
+            });
         }
 
         public void Dispose()

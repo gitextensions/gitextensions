@@ -23,7 +23,8 @@ namespace GitUI
         private ThumbnailToolBarButton _commitButton;
         private ThumbnailToolBarButton _pushButton;
         private ThumbnailToolBarButton _pullButton;
-        private bool ToolbarButtonsCreated => _commitButton != null;
+        private string _deferredAddToRecent;
+        private bool ToolbarButtonsCreated => _commitButton is not null;
         private readonly IRepositoryDescriptionProvider _repositoryDescriptionProvider;
 
         public WindowsJumpListManager(IRepositoryDescriptionProvider repositoryDescriptionProvider)
@@ -65,8 +66,14 @@ namespace GitUI
         [ContractAnnotation("workingDir:null=>halt")]
         public void AddToRecent([NotNull] string workingDir)
         {
-            if (!ToolbarButtonsCreated || !IsSupported)
+            if (!IsSupported)
             {
+                return;
+            }
+
+            if (!ToolbarButtonsCreated)
+            {
+                _deferredAddToRecent = workingDir;
                 return;
             }
 
@@ -123,6 +130,11 @@ namespace GitUI
         }
 
         /// <summary>
+        /// Indicates if the JumpList creation is still needed
+        /// </summary>
+        public bool NeedsJumpListCreation => IsSupported && !ToolbarButtonsCreated;
+
+        /// <summary>
         /// Creates a JumpList for the given application instance.
         /// It also adds thumbnail toolbars, which are a set of up to seven buttons at the bottom of the taskbar’s icon thumbnail preview.
         /// </summary>
@@ -145,6 +157,13 @@ namespace GitUI
 
                 CreateTaskbarButtons(windowHandle, buttons);
             }, nameof(CreateJumpList));
+
+            if (ToolbarButtonsCreated && _deferredAddToRecent is not null)
+            {
+                var recentRepoAddToRecent = _deferredAddToRecent;
+                _deferredAddToRecent = null;
+                AddToRecent(recentRepoAddToRecent);
+            }
 
             return;
 

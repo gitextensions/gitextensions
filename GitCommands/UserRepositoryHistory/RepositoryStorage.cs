@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 
 namespace GitCommands.UserRepositoryHistory
 {
@@ -48,8 +47,7 @@ namespace GitCommands.UserRepositoryHistory
         /// <returns>A collection of user's git repositories, if successful;
         /// otherwise an empty list, if the setting does not exist or the persisted value cannot be deserialised.</returns>
         /// <exception cref="ArgumentException"><paramref name="key"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
-        [ContractAnnotation("key:null=>halt")]
-        public IReadOnlyList<Repository> Load([NotNull]string key)
+        public IReadOnlyList<Repository> Load(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
             {
@@ -57,13 +55,13 @@ namespace GitCommands.UserRepositoryHistory
             }
 
             string setting = AppSettings.GetString(key, null);
-            if (setting == null)
+            if (setting is null)
             {
                 return Array.Empty<Repository>();
             }
 
             var history = _repositorySerialiser.Deserialize(setting);
-            if (history == null)
+            if (history is null)
             {
                 return Array.Empty<Repository>();
             }
@@ -78,21 +76,20 @@ namespace GitCommands.UserRepositoryHistory
         /// <param name="repositories">A collection of user's git repositories.</param>
         /// <exception cref="ArgumentException"><paramref name="key"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="repositories"/> is <see langword="null"/>.</exception>
-        [ContractAnnotation("key:null=>halt;repositories:null=>halt")]
-        public void Save([NotNull]string key, [NotNull]IEnumerable<Repository> repositories)
+        public void Save(string key, IEnumerable<Repository> repositories)
         {
             if (string.IsNullOrWhiteSpace(key))
             {
                 throw new ArgumentException(nameof(key));
             }
 
-            if (repositories == null)
+            if (repositories is null)
             {
                 throw new ArgumentNullException(nameof(repositories));
             }
 
             var xml = _repositorySerialiser.Serialize(repositories);
-            if (xml == null)
+            if (xml is null)
             {
                 return;
             }

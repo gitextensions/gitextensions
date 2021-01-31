@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
+using GitUI.HelperDialogs;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 
@@ -32,7 +33,7 @@ namespace GitUI.CommandsDialogs
         private void FormDeleteTagLoad(object sender, EventArgs e)
         {
             Tags.DisplayMember = nameof(IGitRef.LocalName);
-            Tags.DataSource = Module.GetRefs(true, false);
+            Tags.DataSource = Module.GetRefs(tags: true, branches: false);
             Tags.Text = Tag as string;
             remotesComboboxControl1.SelectedRemote = Module.GetCurrentRemote();
             EnableOrDisableRemotesCombobox();
@@ -64,7 +65,7 @@ namespace GitUI.CommandsDialogs
 
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
 
-            using (var form = new FormRemoteProcess(Module, pushCmd)
+            using (var form = new FormRemoteProcess(UICommands, process: null, pushCmd)
             {
                 ////Remote = currentRemote,
                 ////Text = string.Format(_deleteFromCaption.Text, currentRemote),

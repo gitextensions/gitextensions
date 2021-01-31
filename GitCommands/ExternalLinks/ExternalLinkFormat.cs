@@ -3,29 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using GitUIPluginInterfaces;
+using Microsoft;
 
 namespace GitCommands.ExternalLinks
 {
     [XmlType("GitExtLinkFormat")]
     public class ExternalLinkFormat
     {
-        public string Caption { get; set; }
-        public string Format { get; set; }
+        public string? Caption { get; set; }
+        public string? Format { get; set; }
         [XmlIgnore]
         public bool IsValid { get; private set; }
 
-        public ExternalLink Apply(Match remoteMatch, Match revisionMatch, GitRevision revision)
+        public ExternalLink Apply(Match? remoteMatch, Match? revisionMatch, GitRevision revision)
         {
             var groups = new List<string>();
             AddGroupsFromMatches(remoteMatch);
             AddGroupsFromMatches(revisionMatch);
             var groupsArray = groups.ToArray<object>();
 
-            string caption = null;
-            string uri;
+            string? caption = null;
+            string? uri;
             try
             {
                 caption = string.Format(Caption, groupsArray);
+                Assumes.NotNull(Format);
                 uri = Format.Replace("%COMMIT_HASH%", revision.Guid);
                 uri = string.Format(uri, groupsArray);
                 IsValid = true;
@@ -38,9 +41,9 @@ namespace GitCommands.ExternalLinks
 
             return new ExternalLink(caption, uri);
 
-            void AddGroupsFromMatches(Match match)
+            void AddGroupsFromMatches(Match? match)
             {
-                if (match != null)
+                if (match is not null)
                 {
                     for (int i = match.Groups.Count > 1 ? 1 : 0; i < match.Groups.Count; i++)
                     {

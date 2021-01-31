@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+using System;
 using System.Linq;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
@@ -11,6 +10,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     public partial class ColorsSettingsPage : SettingsPageWithHeader
     {
         private int _updateThemeSettingsCounter;
+        private readonly ThemeRepository _themeRepository = new();
+        private readonly ThemePathProvider _themePathProvider = new();
 
         private static readonly TranslationString FormatBuiltinThemeName =
             new TranslationString("{0}");
@@ -25,6 +26,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Text = "Colors";
+            sbOpenThemeFolder.AutoSize = false;
             InitializeComplete();
         }
 
@@ -45,12 +47,21 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     // - user creates custom theme and selects it in this settings page
                     // - user saves app settings
                     // - user deletes the file with custom theme
-                    Trace.WriteLine("Theme not found: " + formattedThemeId);
+                    MessageBoxes.ShowError(this, "Theme not found: " + formattedThemeId);
                     index = 0;
                 }
 
                 _NO_TRANSLATE_cbSelectTheme.SelectedIndex = index;
             }
+        }
+
+        private string[] SelectedThemeVariations
+        {
+            get => chkColorblind.Checked
+                ? new[] { ThemeVariations.Colorblind }
+                : GitExtUtils.GitUI.Theming.ThemeVariations.None;
+
+            set => chkColorblind.Checked = value.Contains(ThemeVariations.Colorblind);
         }
 
         public bool UseSystemVisualStyle
@@ -79,14 +90,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkHighlightAuthored.Checked = AppSettings.HighlightAuthoredRevisions;
 
             BeginUpdateThemeSettings();
-            var themeRepository = new ThemeRepository(new ThemePersistence());
             _NO_TRANSLATE_cbSelectTheme.Items.Clear();
             _NO_TRANSLATE_cbSelectTheme.Items.Add(new FormattedThemeId(ThemeId.Default));
-            _NO_TRANSLATE_cbSelectTheme.Items.AddRange(themeRepository.GetThemeIds()
+            _NO_TRANSLATE_cbSelectTheme.Items.AddRange(_themeRepository.GetThemeIds()
                 .Select(id => new FormattedThemeId(id))
                 .Cast<object>()
                 .ToArray());
             SelectedThemeId = AppSettings.ThemeId;
+            SelectedThemeVariations = AppSettings.ThemeVariations;
             UseSystemVisualStyle = AppSettings.UseSystemVisualStyle;
             EndUpdateThemeSettings();
         }
@@ -100,6 +111,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.HighlightAuthoredRevisions = chkHighlightAuthored.Checked;
             AppSettings.UseSystemVisualStyle = UseSystemVisualStyle;
             AppSettings.ThemeId = SelectedThemeId;
+            AppSettings.ThemeVariations = SelectedThemeVariations;
         }
 
         private void ComboBoxTheme_SelectedIndexChanged(object sender, EventArgs e)
@@ -111,10 +123,25 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             BeginUpdateThemeSettings();
             UseSystemVisualStyle = SelectedThemeId == ThemeId.Default;
+            if (SelectedThemeId == ThemeId.Default)
+            {
+                SelectedThemeVariations = ThemeVariations.None;
+            }
+
             EndUpdateThemeSettings();
         }
 
         private void ChkUseSystemVisualStyle_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateThemeSettings();
+        }
+
+        private void ChkColorblind_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateThemeSettings();
+        }
+
+        private void UpdateThemeSettings()
         {
             BeginUpdateThemeSettings();
             EndUpdateThemeSettings();
@@ -140,10 +167,26 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 bool settingsChanged =
                     UseSystemVisualStyle != ThemeModule.Settings.UseSystemVisualStyle ||
-                    SelectedThemeId != ThemeModule.Settings.Theme.Id;
+                    SelectedThemeId != ThemeModule.Settings.Theme.Id ||
+                    !SelectedThemeVariations.SequenceEqual(AppSettings.ThemeVariations);
 
                 lblRestartNeeded.Visible = settingsChanged;
-                chkUseSystemVisualStyle.Enabled = SelectedThemeId != ThemeId.Default;
+                chkColorblind.Enabled =
+                    chkUseSystemVisualStyle.Enabled = SelectedThemeId != ThemeId.Default;
+            }
+
+            if (SelectedThemeId != ThemeId.Default)
+            {
+                try
+                {
+                    Theme unused = _themeRepository.GetTheme(SelectedThemeId, SelectedThemeVariations);
+                }
+                catch (Exception ex)
+                {
+                    string variations = string.Concat(SelectedThemeVariations.Select(_ => "." + _));
+                    string identifier = new FormattedThemeId(SelectedThemeId).ToString();
+                    MessageBoxes.ShowError(this, $"Failed to load theme {identifier}{variations}: {ex}");
+                }
             }
         }
 
@@ -186,5 +229,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             private bool Equals(FormattedThemeId other) =>
                 ThemeId.Equals(other.ThemeId);
         }
+
+        private void tsmiApplicationFolder_Click(object sender, EventArgs e)
+            => OsShellUtil.SelectPathInFileExplorer(_themePathProvider.AppThemesDirectory);
+
+        private void tsmiUserFolder_Click(object sender, EventArgs e)
+            => OsShellUtil.SelectPathInFileExplorer(_themePathProvider.UserThemesDirectory);
     }
 }

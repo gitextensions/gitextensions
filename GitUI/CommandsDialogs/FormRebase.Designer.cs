@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (components is not null))
             {
                 components.Dispose();
             }
@@ -28,6 +28,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.lblCurrent = new System.Windows.Forms.Label();
             this.Branches = new System.Windows.Forms.ComboBox();
@@ -45,6 +46,8 @@ namespace GitUI.CommandsDialogs
             this.chkPreserveMerges = new System.Windows.Forms.CheckBox();
             this.chkAutosquash = new System.Windows.Forms.CheckBox();
             this.chkStash = new System.Windows.Forms.CheckBox();
+            this.chkIgnoreDate = new System.Windows.Forms.CheckBox();
+            this.chkCommitterDateIsAuthorDate = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.chkSpecificRange = new System.Windows.Forms.CheckBox();
             this.lblRangeFrom = new System.Windows.Forms.Label();
@@ -65,10 +68,11 @@ namespace GitUI.CommandsDialogs
             this.Ok = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.Commit = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.rebasePanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.Commit = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.flowLayoutPanel2.SuspendLayout();
             this.OptionsPanel.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
@@ -86,7 +90,7 @@ namespace GitUI.CommandsDialogs
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(305, 19);
+            this.label1.Size = new System.Drawing.Size(236, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Rebase current branch on top of another branch";
             // 
@@ -96,7 +100,7 @@ namespace GitUI.CommandsDialogs
             this.lblCurrent.AutoSize = true;
             this.lblCurrent.Location = new System.Drawing.Point(3, 5);
             this.lblCurrent.Name = "lblCurrent";
-            this.lblCurrent.Size = new System.Drawing.Size(105, 19);
+            this.lblCurrent.Size = new System.Drawing.Size(80, 13);
             this.lblCurrent.TabIndex = 2;
             this.lblCurrent.Text = "Current branch:";
             // 
@@ -106,18 +110,18 @@ namespace GitUI.CommandsDialogs
             this.Branches.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.Branches.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(81, 3);
+            this.Branches.Location = new System.Drawing.Point(68, 3);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(218, 27);
+            this.Branches.Size = new System.Drawing.Size(218, 21);
             this.Branches.TabIndex = 6;
             // 
             // label2
             // 
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 4);
+            this.label2.Location = new System.Drawing.Point(3, 7);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(72, 19);
+            this.label2.Size = new System.Drawing.Size(59, 13);
             this.label2.TabIndex = 5;
             this.label2.Text = "Rebase on";
             // 
@@ -177,11 +181,11 @@ namespace GitUI.CommandsDialogs
             this.flowLayoutPanel2.Controls.Add(this.lblCurrent);
             this.flowLayoutPanel2.Controls.Add(this.Currentbranch);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 19);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 13);
             this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.flowLayoutPanel2.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(509, 29);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(684, 23);
             this.flowLayoutPanel2.TabIndex = 31;
             this.flowLayoutPanel2.WrapContents = false;
             // 
@@ -189,9 +193,9 @@ namespace GitUI.CommandsDialogs
             // 
             this.Currentbranch.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.Currentbranch.AutoSize = true;
-            this.Currentbranch.Location = new System.Drawing.Point(114, 5);
+            this.Currentbranch.Location = new System.Drawing.Point(89, 5);
             this.Currentbranch.Name = "Currentbranch";
-            this.Currentbranch.Size = new System.Drawing.Size(0, 19);
+            this.Currentbranch.Size = new System.Drawing.Size(0, 13);
             this.Currentbranch.TabIndex = 3;
             // 
             // OptionsPanel
@@ -201,12 +205,12 @@ namespace GitUI.CommandsDialogs
             this.OptionsPanel.Controls.Add(this.flowLayoutPanel4, 0, 0);
             this.OptionsPanel.Controls.Add(this.flowLayoutPanel5, 0, 1);
             this.OptionsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OptionsPanel.Location = new System.Drawing.Point(3, 84);
+            this.OptionsPanel.Location = new System.Drawing.Point(3, 72);
             this.OptionsPanel.Name = "OptionsPanel";
             this.OptionsPanel.RowCount = 2;
             this.OptionsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.OptionsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.OptionsPanel.Size = new System.Drawing.Size(503, 72);
+            this.OptionsPanel.Size = new System.Drawing.Size(678, 72);
             this.OptionsPanel.TabIndex = 30;
             this.OptionsPanel.Visible = false;
             // 
@@ -216,10 +220,12 @@ namespace GitUI.CommandsDialogs
             this.flowLayoutPanel4.Controls.Add(this.chkPreserveMerges);
             this.flowLayoutPanel4.Controls.Add(this.chkAutosquash);
             this.flowLayoutPanel4.Controls.Add(this.chkStash);
+            this.flowLayoutPanel4.Controls.Add(this.chkIgnoreDate);
+            this.flowLayoutPanel4.Controls.Add(this.chkCommitterDateIsAuthorDate);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(497, 25);
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(672, 25);
             this.flowLayoutPanel4.TabIndex = 0;
             this.flowLayoutPanel4.WrapContents = false;
             // 
@@ -229,32 +235,31 @@ namespace GitUI.CommandsDialogs
             this.chkInteractive.AutoSize = true;
             this.chkInteractive.Location = new System.Drawing.Point(3, 3);
             this.chkInteractive.Name = "chkInteractive";
-            this.chkInteractive.Size = new System.Drawing.Size(139, 23);
+            this.chkInteractive.Size = new System.Drawing.Size(116, 17);
             this.chkInteractive.TabIndex = 7;
             this.chkInteractive.Text = "Interactive Rebase";
             this.chkInteractive.UseVisualStyleBackColor = true;
-            this.chkInteractive.Click += new System.EventHandler(this.InteractiveRebaseClick);
+            this.chkInteractive.CheckedChanged += new System.EventHandler(this.chkInteractive_CheckedChanged);
             // 
             // chkPreserveMerges
             // 
             this.chkPreserveMerges.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.chkPreserveMerges.AutoSize = true;
-            this.chkPreserveMerges.Location = new System.Drawing.Point(148, 3);
+            this.chkPreserveMerges.Location = new System.Drawing.Point(125, 3);
             this.chkPreserveMerges.Name = "chkPreserveMerges";
-            this.chkPreserveMerges.Size = new System.Drawing.Size(130, 23);
+            this.chkPreserveMerges.Size = new System.Drawing.Size(106, 17);
             this.chkPreserveMerges.TabIndex = 7;
             this.chkPreserveMerges.Text = "Preserve Merges";
             this.chkPreserveMerges.UseVisualStyleBackColor = true;
-            this.chkPreserveMerges.Click += new System.EventHandler(this.InteractiveRebaseClick);
             // 
             // chkAutosquash
             // 
             this.chkAutosquash.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.chkAutosquash.AutoSize = true;
             this.chkAutosquash.Enabled = false;
-            this.chkAutosquash.Location = new System.Drawing.Point(284, 3);
+            this.chkAutosquash.Location = new System.Drawing.Point(237, 3);
             this.chkAutosquash.Name = "chkAutosquash";
-            this.chkAutosquash.Size = new System.Drawing.Size(101, 23);
+            this.chkAutosquash.Size = new System.Drawing.Size(82, 17);
             this.chkAutosquash.TabIndex = 7;
             this.chkAutosquash.Text = "Autosquash";
             this.chkAutosquash.UseVisualStyleBackColor = true;
@@ -264,12 +269,38 @@ namespace GitUI.CommandsDialogs
             this.chkStash.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.chkStash.AutoSize = true;
             this.chkStash.Enabled = false;
-            this.chkStash.Location = new System.Drawing.Point(343, 3);
+            this.chkStash.Location = new System.Drawing.Point(325, 3);
             this.chkStash.Name = "chkStash";
-            this.chkStash.Size = new System.Drawing.Size(54, 19);
+            this.chkStash.Size = new System.Drawing.Size(76, 17);
             this.chkStash.TabIndex = 8;
             this.chkStash.Text = "Auto stash";
             this.chkStash.UseVisualStyleBackColor = true;
+            // 
+            // chkIgnoreDate
+            // 
+            this.chkIgnoreDate.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.chkIgnoreDate.AutoSize = true;
+            this.chkIgnoreDate.Location = new System.Drawing.Point(407, 3);
+            this.chkIgnoreDate.Name = "chkIgnoreDate";
+            this.chkIgnoreDate.Size = new System.Drawing.Size(80, 17);
+            this.chkIgnoreDate.TabIndex = 9;
+            this.chkIgnoreDate.Text = "Ignore date";
+            this.toolTip1.SetToolTip(this.chkIgnoreDate, "Changes the author dates of the commits in this branch\r\ninto the commit dates.");
+            this.chkIgnoreDate.UseVisualStyleBackColor = true;
+            this.chkIgnoreDate.CheckedChanged += new System.EventHandler(this.chkIgnoreDate_CheckedChanged);
+            // 
+            // chkCommitterDateIsAuthorDate
+            // 
+            this.chkCommitterDateIsAuthorDate.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.chkCommitterDateIsAuthorDate.AutoSize = true;
+            this.chkCommitterDateIsAuthorDate.Location = new System.Drawing.Point(493, 3);
+            this.chkCommitterDateIsAuthorDate.Name = "chkCommitterDateIsAuthorDate";
+            this.chkCommitterDateIsAuthorDate.Size = new System.Drawing.Size(163, 17);
+            this.chkCommitterDateIsAuthorDate.TabIndex = 10;
+            this.chkCommitterDateIsAuthorDate.Text = "Committer date is author date";
+            this.toolTip1.SetToolTip(this.chkCommitterDateIsAuthorDate, "Changes the committer dates of the commits in this branch\r\ninto the author dates.");
+            this.chkCommitterDateIsAuthorDate.UseVisualStyleBackColor = true;
+            this.chkCommitterDateIsAuthorDate.CheckedChanged += new System.EventHandler(this.chkCommitterDateIsAuthorDate_CheckedChanged);
             // 
             // flowLayoutPanel5
             // 
@@ -283,7 +314,7 @@ namespace GitUI.CommandsDialogs
             this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 34);
             this.flowLayoutPanel5.Name = "flowLayoutPanel5";
-            this.flowLayoutPanel5.Size = new System.Drawing.Size(497, 35);
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(672, 35);
             this.flowLayoutPanel5.TabIndex = 1;
             this.flowLayoutPanel5.WrapContents = false;
             // 
@@ -291,9 +322,9 @@ namespace GitUI.CommandsDialogs
             // 
             this.chkSpecificRange.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.chkSpecificRange.AutoSize = true;
-            this.chkSpecificRange.Location = new System.Drawing.Point(3, 4);
+            this.chkSpecificRange.Location = new System.Drawing.Point(3, 6);
             this.chkSpecificRange.Name = "chkSpecificRange";
-            this.chkSpecificRange.Size = new System.Drawing.Size(111, 23);
+            this.chkSpecificRange.Size = new System.Drawing.Size(94, 17);
             this.chkSpecificRange.TabIndex = 12;
             this.chkSpecificRange.Text = "Specific range";
             this.chkSpecificRange.UseVisualStyleBackColor = true;
@@ -303,9 +334,9 @@ namespace GitUI.CommandsDialogs
             // 
             this.lblRangeFrom.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblRangeFrom.AutoSize = true;
-            this.lblRangeFrom.Location = new System.Drawing.Point(120, 6);
+            this.lblRangeFrom.Location = new System.Drawing.Point(103, 8);
             this.lblRangeFrom.Name = "lblRangeFrom";
-            this.lblRangeFrom.Size = new System.Drawing.Size(75, 19);
+            this.lblRangeFrom.Size = new System.Drawing.Size(59, 13);
             this.lblRangeFrom.TabIndex = 9;
             this.lblRangeFrom.Text = "From (exc.)";
             // 
@@ -313,9 +344,9 @@ namespace GitUI.CommandsDialogs
             // 
             this.txtFrom.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.txtFrom.Enabled = false;
-            this.txtFrom.Location = new System.Drawing.Point(201, 3);
+            this.txtFrom.Location = new System.Drawing.Point(168, 5);
             this.txtFrom.Name = "txtFrom";
-            this.txtFrom.Size = new System.Drawing.Size(80, 26);
+            this.txtFrom.Size = new System.Drawing.Size(80, 20);
             this.txtFrom.TabIndex = 8;
             // 
             // btnChooseFromRevision
@@ -323,7 +354,7 @@ namespace GitUI.CommandsDialogs
             this.btnChooseFromRevision.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.btnChooseFromRevision.Enabled = false;
             this.btnChooseFromRevision.Image = global::GitUI.Properties.Images.SelectRevision;
-            this.btnChooseFromRevision.Location = new System.Drawing.Point(287, 4);
+            this.btnChooseFromRevision.Location = new System.Drawing.Point(254, 3);
             this.btnChooseFromRevision.Name = "btnChooseFromRevision";
             this.btnChooseFromRevision.Size = new System.Drawing.Size(25, 24);
             this.btnChooseFromRevision.TabIndex = 30;
@@ -334,9 +365,9 @@ namespace GitUI.CommandsDialogs
             // 
             this.lblRangeTo.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblRangeTo.AutoSize = true;
-            this.lblRangeTo.Location = new System.Drawing.Point(318, 6);
+            this.lblRangeTo.Location = new System.Drawing.Point(285, 8);
             this.lblRangeTo.Name = "lblRangeTo";
-            this.lblRangeTo.Size = new System.Drawing.Size(24, 19);
+            this.lblRangeTo.Size = new System.Drawing.Size(20, 13);
             this.lblRangeTo.TabIndex = 11;
             this.lblRangeTo.Text = "To";
             // 
@@ -347,18 +378,18 @@ namespace GitUI.CommandsDialogs
             this.cboTo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cboTo.Enabled = false;
             this.cboTo.FormattingEnabled = true;
-            this.cboTo.Location = new System.Drawing.Point(348, 5);
+            this.cboTo.Location = new System.Drawing.Point(311, 4);
             this.cboTo.Name = "cboTo";
-            this.cboTo.Size = new System.Drawing.Size(184, 27);
+            this.cboTo.Size = new System.Drawing.Size(184, 21);
             this.cboTo.TabIndex = 29;
             // 
             // ShowOptions
             // 
             this.ShowOptions.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.ShowOptions.AutoSize = true;
-            this.ShowOptions.Location = new System.Drawing.Point(305, 4);
+            this.ShowOptions.Location = new System.Drawing.Point(292, 7);
             this.ShowOptions.Name = "ShowOptions";
-            this.ShowOptions.Size = new System.Drawing.Size(92, 19);
+            this.ShowOptions.Size = new System.Drawing.Size(71, 13);
             this.ShowOptions.TabIndex = 27;
             this.ShowOptions.TabStop = true;
             this.ShowOptions.Text = "Show options";
@@ -367,19 +398,20 @@ namespace GitUI.CommandsDialogs
             // patchGrid1
             // 
             this.patchGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.patchGrid1.Location = new System.Drawing.Point(3, 190);
+            this.patchGrid1.IsManagingRebase = true;
+            this.patchGrid1.Location = new System.Drawing.Point(3, 172);
             this.patchGrid1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.patchGrid1.Name = "patchGrid1";
-            this.patchGrid1.Size = new System.Drawing.Size(503, 274);
+            this.patchGrid1.Size = new System.Drawing.Size(678, 292);
             this.patchGrid1.TabIndex = 16;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 159);
+            this.label3.Location = new System.Drawing.Point(3, 147);
             this.label3.Name = "label3";
             this.label3.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
-            this.label3.Size = new System.Drawing.Size(139, 29);
+            this.label3.Size = new System.Drawing.Size(101, 23);
             this.label3.TabIndex = 0;
             this.label3.Text = "Commits to re-apply:";
             // 
@@ -429,7 +461,7 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 472F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(984, 472);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1159, 472);
             this.tableLayoutPanel1.TabIndex = 19;
             // 
             // helpImageDisplayUserControl1
@@ -445,7 +477,7 @@ namespace GitUI.CommandsDialogs
             this.helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             this.helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = "Hover to see scenario when fast forward is possible.";
             this.helpImageDisplayUserControl1.Location = new System.Drawing.Point(3, 3);
-            this.helpImageDisplayUserControl1.MinimumSize = new System.Drawing.Size(289, 422);
+            this.helpImageDisplayUserControl1.MinimumSize = new System.Drawing.Size(289, 418);
             this.helpImageDisplayUserControl1.Name = "helpImageDisplayUserControl1";
             this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(289, 466);
             this.helpImageDisplayUserControl1.TabIndex = 20;
@@ -468,7 +500,7 @@ namespace GitUI.CommandsDialogs
             this.flowLayoutPanel1.Controls.Add(this.SolveMergeconflicts);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(813, 3);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(988, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(168, 466);
             this.flowLayoutPanel1.TabIndex = 1;
@@ -505,6 +537,16 @@ namespace GitUI.CommandsDialogs
             this.panel3.Size = new System.Drawing.Size(10, 15);
             this.panel3.TabIndex = 21;
             // 
+            // Commit
+            // 
+            this.Commit.Location = new System.Drawing.Point(3, 198);
+            this.Commit.Name = "Commit";
+            this.Commit.Size = new System.Drawing.Size(162, 25);
+            this.Commit.TabIndex = 23;
+            this.Commit.Text = "Commit...";
+            this.Commit.UseVisualStyleBackColor = true;
+            this.Commit.Click += new System.EventHandler(this.Commit_Click);
+            // 
             // panel4
             // 
             this.panel4.Location = new System.Drawing.Point(3, 229);
@@ -532,7 +574,7 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(509, 466);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(684, 466);
             this.tableLayoutPanel3.TabIndex = 32;
             // 
             // rebasePanel
@@ -542,20 +584,10 @@ namespace GitUI.CommandsDialogs
             this.rebasePanel.Controls.Add(this.Branches);
             this.rebasePanel.Controls.Add(this.ShowOptions);
             this.rebasePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rebasePanel.Location = new System.Drawing.Point(3, 51);
+            this.rebasePanel.Location = new System.Drawing.Point(3, 39);
             this.rebasePanel.Name = "rebasePanel";
-            this.rebasePanel.Size = new System.Drawing.Size(503, 27);
+            this.rebasePanel.Size = new System.Drawing.Size(678, 27);
             this.rebasePanel.TabIndex = 32;
-            // 
-            // Commit
-            // 
-            this.Commit.Location = new System.Drawing.Point(3, 198);
-            this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(162, 25);
-            this.Commit.TabIndex = 23;
-            this.Commit.Text = "Commit...";
-            this.Commit.UseVisualStyleBackColor = true;
-            this.Commit.Click += new System.EventHandler(this.CommitButtonClick);
             // 
             // FormRebase
             // 
@@ -563,9 +595,9 @@ namespace GitUI.CommandsDialogs
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(984, 472);
+            this.ClientSize = new System.Drawing.Size(1159, 472);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.MinimumSize = new System.Drawing.Size(1000, 510);
+            this.MinimumSize = new System.Drawing.Size(1175, 510);
             this.Name = "FormRebase";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Rebase";
@@ -634,5 +666,8 @@ namespace GitUI.CommandsDialogs
         private Help.HelpImageDisplayUserControl helpImageDisplayUserControl1;
         private System.Windows.Forms.CheckBox chkStash;
         private System.Windows.Forms.Button Commit;
+        private System.Windows.Forms.CheckBox chkIgnoreDate;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.CheckBox chkCommitterDateIsAuthorDate;
     }
 }

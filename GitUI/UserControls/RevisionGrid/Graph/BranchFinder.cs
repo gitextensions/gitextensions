@@ -6,7 +6,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 {
     internal class BranchFinder
     {
-        private static readonly Regex MergeRegex = new Regex("(?i)^merged? (pull request (.*) from )?(.*branch |tag )?'?([^ ']*[^ '.])'?( of [^ ]*[^ .])?( into (.*[^.]))?\\.?$",
+        private static readonly Regex MergeRegex = new("(?i)^merged? (pull request (.*) from )?(.*branch |tag )?'?([^ ']*[^ '.])'?( of [^ ]*[^ .])?( into (.*[^.]))?\\.?$",
             RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         internal BranchFinder([NotNull] RevisionGraphRevision node)
@@ -52,22 +52,22 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// </param>
         private bool CheckForMerge([NotNull] RevisionGraphRevision node, [CanBeNull] RevisionGraphRevision parent)
         {
-            bool isTheFirstBranch = parent == null || node.Parents.IsEmpty || node.Parents.Last() == parent; // note: Parents are stored in reverse order
+            bool isTheFirstBranch = parent is null || node.Parents.IsEmpty || node.Parents.Last() == parent; // note: Parents are stored in reverse order
             string mergedInto;
             string mergedWith;
             (mergedInto, mergedWith) = ParseMergeMessage(node.GitRevision.Subject, appendPullRequest: isTheFirstBranch);
 
-            if (mergedInto != null)
+            if (mergedInto is not null)
             {
                 CommittedTo = isTheFirstBranch ? mergedInto : mergedWith;
             }
 
-            if (MergedWith == null)
+            if (MergedWith is null)
             {
                 MergedWith = mergedWith ?? string.Empty;
             }
 
-            return CommittedTo != null;
+            return CommittedTo is not null;
         }
 
         private static (string into, string with) ParseMergeMessage([NotNull] string commitSubject, bool appendPullRequest)

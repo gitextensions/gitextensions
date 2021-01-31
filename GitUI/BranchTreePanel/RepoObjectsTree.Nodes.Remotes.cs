@@ -9,10 +9,10 @@ using GitCommands;
 using GitCommands.Remotes;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.Properties;
+using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft.VisualStudio.Threading;
-using ResourceManager;
 
 namespace GitUI.BranchTreePanel
 {
@@ -20,36 +20,60 @@ namespace GitUI.BranchTreePanel
     {
         private sealed class RemoteBranchTree : Tree
         {
-            private readonly TranslationString _inactiveRemoteNodeLabel = new TranslationString("Inactive");
+            private readonly ICheckRefs _refsSource;
 
-            public RemoteBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
+            // Retains the list of currently loaded branches.
+            // This is needed to apply filtering without reloading the data.
+            // Whether or not force the reload of data is controlled by <see cref="_isFiltering"/> flag.
+            private IReadOnlyList<IGitRef> _loadedBranches;
+
+            public RemoteBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource)
                 : base(treeNode, uiCommands)
             {
+                _refsSource = refsSource;
             }
+
+            protected override bool SupportsFiltering => true;
 
             protected override Task OnAttachedAsync()
             {
+                IsFiltering.Value = false;
                 return ReloadNodesAsync(LoadNodesAsync);
             }
 
             protected override Task PostRepositoryChangedAsync()
             {
+                IsFiltering.Value = false;
                 return ReloadNodesAsync(LoadNodesAsync);
             }
 
-            private async Task<Nodes> LoadNodesAsync(CancellationToken token)
+            protected override async Task<Nodes> LoadNodesAsync(CancellationToken token)
             {
                 await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
+
+                if (!IsFiltering.Value || _loadedBranches is null)
+                {
+                    _loadedBranches = Module.GetRefs(tags: true, branches: true).Where(branch => branch.IsRemote && !branch.IsTag).ToList();
+                    token.ThrowIfCancellationRequested();
+                }
+
+                return await FillBranchTreeAsync(_loadedBranches, token);
+            }
+
+            /// <inheritdoc/>
+            protected internal override void Refresh()
+            {
+                // Break the local cache to ensure the data is requeried to reflect the required sort order.
+                _loadedBranches = null;
+
+                base.Refresh();
+            }
+
+            private async Task<Nodes> FillBranchTreeAsync(IReadOnlyList<IGitRef> branches, CancellationToken token)
+            {
                 var nodes = new Nodes(this);
                 var pathToNodes = new Dictionary<string, BaseBranchNode>();
-
-                var branches = Module.GetRefs(tags: true, branches: true, noLocks: true)
-                    .Where(branch => branch.IsRemote && !branch.IsTag)
-                    .OrderBy(branch => branch.Name)
-                    .Select(branch => branch.Name);
-
-                token.ThrowIfCancellationRequested();
 
                 var enabledRemoteRepoNodes = new List<RemoteRepoNode>();
                 var remoteByName = (await Module.GetRemotesAsync().ConfigureAwaitRunInline()).ToDictionary(r => r.Name);
@@ -57,18 +81,21 @@ namespace GitUI.BranchTreePanel
                 var remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
 
                 // Create nodes for enabled remotes with branches
-                foreach (var branchPath in branches)
+                foreach (IGitRef branch in branches)
                 {
                     token.ThrowIfCancellationRequested();
-                    var remoteName = branchPath.SubstringUntil('/');
-                    if (remoteByName.TryGetValue(remoteName, out var remote))
+
+                    bool isVisible = !IsFiltering.Value || _refsSource.Contains(branch.ObjectId);
+                    var remoteName = branch.Name.SubstringUntil('/');
+                    if (remoteByName.TryGetValue(remoteName, out Remote remote))
                     {
-                        var remoteBranchNode = new RemoteBranchNode(this, branchPath);
+                        var remoteBranchNode = new RemoteBranchNode(this, branch.ObjectId, branch.Name, isVisible);
+
                         var parent = remoteBranchNode.CreateRootNode(
                             pathToNodes,
                             (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
 
-                        if (parent != null)
+                        if (parent is not null)
                         {
                             enabledRemoteRepoNodes.Add((RemoteRepoNode)parent);
                         }
@@ -102,7 +129,7 @@ namespace GitUI.BranchTreePanel
                         disabledRemoteRepoNodes.Add(node);
                     }
 
-                    var disabledFolderNode = new RemoteRepoFolderNode(this, _inactiveRemoteNodeLabel.Text);
+                    var disabledFolderNode = new RemoteRepoFolderNode(this, Strings.Inactive);
                     disabledRemoteRepoNodes
                         .OrderBy(node => node.FullPath)
                         .ForEach(node => disabledFolderNode.Nodes.AddNode(node));
@@ -155,10 +182,11 @@ namespace GitUI.BranchTreePanel
             }
         }
 
+        [DebuggerDisplay("(Remote) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
         private sealed class RemoteBranchNode : BaseBranchLeafNode, IGitRefActions, ICanDelete, ICanRename
         {
-            public RemoteBranchNode(Tree tree, string fullPath)
-                : base(tree, fullPath, nameof(Images.BranchRemote), nameof(Images.BranchRemoteMerged))
+            public RemoteBranchNode(Tree tree, in ObjectId objectId, string fullPath, bool visible)
+                : base(tree, objectId, fullPath, visible, nameof(Images.BranchRemote), nameof(Images.BranchRemoteMerged))
             {
             }
 
@@ -183,18 +211,6 @@ namespace GitUI.BranchTreePanel
                     remote: remoteBranchInfo.Remote,
                     pullAction: AppSettings.PullAction.Fetch);
                 return pullCompleted;
-            }
-
-            private readonly struct RemoteBranchInfo
-            {
-                public string Remote { get; }
-                public string BranchName { get; }
-
-                public RemoteBranchInfo(string remote, string branchName)
-                {
-                    Remote = remote;
-                    BranchName = branchName;
-                }
             }
 
             private RemoteBranchInfo GetRemoteBranchInfo()
@@ -254,15 +270,28 @@ namespace GitUI.BranchTreePanel
             {
                 return Fetch() && Rebase();
             }
+
+            private readonly struct RemoteBranchInfo
+            {
+                public string Remote { get; }
+                public string BranchName { get; }
+
+                public RemoteBranchInfo(string remote, string branchName)
+                {
+                    Remote = remote;
+                    BranchName = branchName;
+                }
+            }
         }
 
+        [DebuggerDisplay("Remote = {_remote.Name}, FullPath = {FullPath}")]
         private sealed class RemoteRepoNode : BaseBranchNode
         {
             private readonly Remote _remote;
             private readonly IConfigFileRemoteSettingsManager _remotesManager;
 
             public RemoteRepoNode(Tree tree, string fullPath, IConfigFileRemoteSettingsManager remotesManager, Remote remote, bool isEnabled)
-                : base(tree, fullPath)
+                : base(tree, fullPath, visible: true)
             {
                 _remote = remote;
                 Enabled = isEnabled;
@@ -290,7 +319,7 @@ namespace GitUI.BranchTreePanel
                     return;
                 }
 
-                Process.Start(_remote.FetchUrl);
+                OsShellUtil.OpenUrlInDefaultBrowser(_remote.FetchUrl);
             }
 
             public bool IsRemoteUrlUsingHttp => _remote.FetchUrl.IsUrlUsingHttp();
@@ -377,16 +406,17 @@ namespace GitUI.BranchTreePanel
             }
         }
 
+        [DebuggerDisplay("(Folder) FullPath = {FullPath}")]
         private sealed class RemoteRepoFolderNode : BaseBranchNode
         {
-            public RemoteRepoFolderNode(Tree tree, string name) : base(tree, name)
+            public RemoteRepoFolderNode(Tree tree, string name) : base(tree, name, true)
             {
             }
 
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.FolderClosed);
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.EyeClosed);
             }
 
             protected override string DisplayText()

@@ -15,7 +15,7 @@
         {
             _backgroundLoader.Cancel();
 
-            if (disposing && (components != null))
+            if (disposing && (components is not null))
             {
                 components.Dispose();
             }
@@ -31,7 +31,7 @@
         private void InitializeComponent()
         {
             this.listBoxSearchResult = new System.Windows.Forms.ListBox();
-            this.txtSearchBox = new System.Windows.Forms.TextBox();
+            this.txtSearchBox = new GitUI.UserControls.TextBoxEx();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -95,7 +95,7 @@
         #endregion
 
         private System.Windows.Forms.ListBox listBoxSearchResult;
-        private System.Windows.Forms.TextBox txtSearchBox;
+        private GitUI.UserControls.TextBoxEx txtSearchBox;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
 }

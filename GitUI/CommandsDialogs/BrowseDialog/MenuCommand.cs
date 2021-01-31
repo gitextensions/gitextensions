@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             toolStripMenuItem.Click += (obj, sender) =>
             {
-                if (menuCommand.ExecuteAction != null)
+                if (menuCommand.ExecuteAction is not null)
                 {
                     menuCommand.ExecuteAction();
                 }
@@ -82,6 +82,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         public Image Image { get; set; }
 
         public Keys ShortcutKeys { get; set; }
+
         public string ShortcutKeyDisplayString { get; set; }
 
         /// <summary>
@@ -114,7 +115,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public void SetCheckForRegisteredMenuItems()
         {
-            if (IsCheckedFunc != null)
+            if (IsCheckedFunc is not null)
             {
                 var isChecked = IsCheckedFunc();
 

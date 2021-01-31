@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using JetBrains.Annotations;
 
@@ -9,8 +10,8 @@ namespace GitExtUtils
     /// Associative cache with fixed capacity that expires the last used item first.
     /// </summary>
     /// <typeparam name="TKey">Type of keys in the cache.</typeparam>
-    /// <typeparam name="TValue">Type of values in the cache</typeparam>
-    public sealed class MruCache<TKey, TValue>
+    /// <typeparam name="TValue">Type of values in the cache.</typeparam>
+    public sealed class MruCache<TKey, TValue> where TValue : notnull
     {
         private readonly Dictionary<TKey, LinkedListNode<Entry>> _nodeByKey;
         private readonly LinkedList<Entry> _entries = new LinkedList<Entry>();
@@ -85,9 +86,7 @@ namespace GitExtUtils
         /// <param name="key">The key that uniquely identifies the cache entry.</param>
         /// <param name="value">The cached value if found, otherwise <c>default</c>.</param>
         /// <returns><c>true</c> if <paramref name="key"/> exists in the cache, otherwise <c>false</c>.</returns>
-        [ContractAnnotation("=>true,value:notnull")]
-        [ContractAnnotation("=>false,value:null")]
-        public bool TryGetValue(TKey key, out TValue value)
+        public bool TryGetValue(TKey key, [NotNullWhen(returnValue: true)] out TValue? value)
         {
             if (!_nodeByKey.TryGetValue(key, out var node))
             {
@@ -110,7 +109,7 @@ namespace GitExtUtils
         /// <returns><c>true</c> if <paramref name="key"/> was removed from the cache, otherwise <c>false</c>.</returns>
         [ContractAnnotation("=>true,value:notnull")]
         [ContractAnnotation("=>false,value:null")]
-        public bool TryRemove(TKey key, out TValue value)
+        public bool TryRemove(TKey key, [NotNullWhen(returnValue: true)] out TValue? value)
         {
             if (!_nodeByKey.TryGetValue(key, out var node))
             {

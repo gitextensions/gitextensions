@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks
             var cloudProviderKinds = Enum.GetValues(typeof(CloudProviderKind)).OfType<CloudProviderKind>();
             var cloudProviderExternalLinkDefinitionExtractorFactory = new CloudProviderExternalLinkDefinitionExtractorFactory();
             return cloudProviderKinds.Select(c => cloudProviderExternalLinkDefinitionExtractorFactory.Get(c))
-                .Where(e => e != null);
+                .Where(e => e is not null);
         }
     }
 }

@@ -1,41 +1,42 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Text.RegularExpressions;
-using JetBrains.Annotations;
+using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
     public static class GitRefName
     {
-        private static readonly Regex _remoteHeadRegex = new Regex("^refs/remotes/[^/]+/HEAD$", RegexOptions.Compiled);
-        private static readonly Regex _remoteNameRegex = new Regex("^refs/remotes/([^/]+)", RegexOptions.Compiled);
+        private static readonly Regex _remoteHeadRegex = new("^refs/remotes/[^/]+/HEAD$", RegexOptions.Compiled);
+        private static readonly Regex _remoteNameRegex = new("^refs/remotes/([^/]+)", RegexOptions.Compiled);
 
-        /// <summary>"refs/tags/"</summary>
+        /// <summary>"refs/tags/".</summary>
         public static string RefsTagsPrefix { get; } = "refs/tags/";
 
-        /// <summary>"refs/heads/"</summary>
+        /// <summary>"refs/heads/".</summary>
         public static string RefsHeadsPrefix { get; } = "refs/heads/";
 
-        /// <summary>"refs/remotes/"</summary>
+        /// <summary>"refs/remotes/".</summary>
         public static string RefsRemotesPrefix { get; } = "refs/remotes/";
 
-        /// <summary>"refs/bisect/"</summary>
+        /// <summary>"refs/bisect/".</summary>
         public static string RefsBisectPrefix { get; } = "refs/bisect/";
 
-        /// <summary>"refs/bisect/good"</summary>
+        /// <summary>"refs/bisect/good".</summary>
         public static string RefsBisectGoodPrefix { get; } = "refs/bisect/good";
 
-        /// <summary>"refs/bisect/bad"</summary>
+        /// <summary>"refs/bisect/bad".</summary>
         public static string RefsBisectBadPrefix { get; } = "refs/bisect/bad";
 
-        /// <summary>"refs/stash"</summary>
+        /// <summary>"refs/stash".</summary>
         public static string RefsStashPrefix { get; } = "refs/stash";
 
-        /// <summary>"^{}"</summary>
+        /// <summary>"^{}".</summary>
         public static string TagDereferenceSuffix { get; } = "^{}";
 
-        [Pure, NotNull]
-        public static string GetRemoteName([NotNull] string refName)
+        [Pure]
+        public static string GetRemoteName(string refName)
         {
             var match = _remoteNameRegex.Match(refName);
 
@@ -52,8 +53,8 @@ namespace GitCommands
             return string.Empty;
         }
 
-        [Pure, NotNull]
-        public static string GetRemoteName([NotNull] string refName, [NotNull, ItemNotNull] IEnumerable<string> remotes)
+        [Pure]
+        public static string GetRemoteName(string refName, IEnumerable<string> remotes)
         {
             if (refName.StartsWith("refs/"))
             {
@@ -71,10 +72,27 @@ namespace GitCommands
             return string.Empty;
         }
 
-        [Pure, CanBeNull]
-        public static string GetFullBranchName([CanBeNull] string branch)
+        [Pure]
+        public static string GetRemoteBranch(string refName)
         {
-            if (branch == null)
+            if (refName.Length <= GitRefName.RefsRemotesPrefix.Length)
+            {
+                return string.Empty;
+            }
+
+            var startBranch = refName.IndexOf('/', GitRefName.RefsRemotesPrefix.Length);
+            if (startBranch < 0)
+            {
+                return string.Empty;
+            }
+
+            return refName.Substring(1 + startBranch);
+        }
+
+        [Pure]
+        public static string? GetFullBranchName(string? branch)
+        {
+            if (branch is null)
             {
                 return null;
             }
@@ -97,7 +115,7 @@ namespace GitCommands
         }
 
         [Pure]
-        public static bool IsRemoteHead([NotNull] string refName)
+        public static bool IsRemoteHead(string refName)
         {
             return _remoteHeadRegex.IsMatch(refName);
         }

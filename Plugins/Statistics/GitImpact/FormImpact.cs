@@ -9,14 +9,14 @@ namespace GitImpact
 {
     public sealed partial class FormImpact : GitExtensionsFormBase
     {
-        private readonly TranslationString _authorCommits = new TranslationString("{0} ({1} Commits, {2} Changed Lines)");
+        private readonly TranslationString _authorCommits = new("{0} ({1} Commits, {2} Changed Lines)");
 
         public FormImpact(IGitModule module)
         {
             InitializeComponent();
             InitializeComplete();
             UpdateAuthorInfo("");
-            if (module != null)
+            if (module is not null)
             {
                 Impact.Init(module);
                 Impact.UpdateData();

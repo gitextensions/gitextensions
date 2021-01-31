@@ -23,7 +23,7 @@ namespace GitUI.NBugReports
         /// <see href="https://help.github.com/en/articles/about-automation-for-issues-and-pull-requests-with-query-parameters"/>
         public string Build(string url, Exception exception, string environmentInfo, string additionalInfo)
         {
-            if (string.IsNullOrWhiteSpace(url) || exception == null)
+            if (string.IsNullOrWhiteSpace(url) || exception is null)
             {
                 return null;
             }

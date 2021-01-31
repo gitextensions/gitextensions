@@ -17,7 +17,7 @@ namespace GitExtUtils.GitUI.Theming
         private readonly Size _imageSize;
         private readonly Font _font;
         private readonly bool _enabled;
-        private readonly Image[] _tabImages;
+        private readonly Image?[] _tabImages;
         private readonly Rectangle[] _tabRects;
         private readonly string[] _tabTexts;
         private readonly Color[] _tabBackColors;
@@ -62,6 +62,13 @@ namespace GitExtUtils.GitUI.Theming
                 // tabCtrl.GetTabRect[tabCtrl.SelectedIndex] may throw ArgumentOutOfRangeException
                 // https://github.com/gitextensions/gitextensions/pull/7213#issuecomment-554760531
                 _failed = true;
+
+                // Set these to null explicitly to satisfy nullability checking. We will always verify
+                // _failed before dereferencing these.
+                _tabTexts = null!;
+                _tabImages = null!;
+                _tabRects = null!;
+                _tabBackColors = null!;
             }
         }
 
@@ -72,10 +79,8 @@ namespace GitExtUtils.GitUI.Theming
                 return;
             }
 
-            using (var canvasBrush = new SolidBrush(_parentBackColor))
-            {
-                _graphics.FillRectangle(canvasBrush, _clipRectangle);
-            }
+            using var canvasBrush = new SolidBrush(_parentBackColor);
+            _graphics.FillRectangle(canvasBrush, _clipRectangle);
 
             RenderSelectedPageBackground();
 
@@ -95,39 +100,37 @@ namespace GitExtUtils.GitUI.Theming
             {
                 RenderTabBackground(index);
                 RenderTabImage(index);
-                RenderTabText(index, _tabImages[index] != null);
+                RenderTabText(index, _tabImages[index] is not null);
             }
         }
 
         private void RenderTabBackground(int index)
         {
-            using (var borderPen = GetBorderPen())
+            using var borderPen = GetBorderPen();
+            var outerRect = GetOuterTabRect(index);
+            _graphics.FillRectangle(GetBackgroundBrush(index), outerRect);
+
+            var points = new List<Point>(4);
+            if (index <= _selectedIndex)
             {
-                var outerRect = GetOuterTabRect(index);
-                _graphics.FillRectangle(GetBackgroundBrush(index), outerRect);
-
-                var points = new List<Point>(4);
-                if (index <= _selectedIndex)
-                {
-                    points.Add(new Point(outerRect.Left, outerRect.Bottom - 1));
-                }
-
-                points.Add(new Point(outerRect.Left, outerRect.Top));
-                points.Add(new Point(outerRect.Right - 1, outerRect.Top));
-
-                if (index >= _selectedIndex)
-                {
-                    points.Add(new Point(outerRect.Right - 1, outerRect.Bottom - 1));
-                }
-
-                _graphics.DrawLines(borderPen, points.ToArray());
+                points.Add(new Point(outerRect.Left, outerRect.Bottom - 1));
             }
+
+            points.Add(new Point(outerRect.Left, outerRect.Top));
+            points.Add(new Point(outerRect.Right - 1, outerRect.Top));
+
+            if (index >= _selectedIndex)
+            {
+                points.Add(new Point(outerRect.Right - 1, outerRect.Bottom - 1));
+            }
+
+            _graphics.DrawLines(borderPen, points.ToArray());
         }
 
         private void RenderTabImage(int index)
         {
             var image = _tabImages[index];
-            if (image == null)
+            if (image is null)
             {
                 return;
             }
@@ -153,10 +156,10 @@ namespace GitExtUtils.GitUI.Theming
             return imgRect;
         }
 
-        private static Image GetTabImage(TabControl tabs, int index)
+        private static Image? GetTabImage(TabControl tabs, int index)
         {
             var images = tabs.ImageList?.Images;
-            if (images == null)
+            if (images is null)
             {
                 return null;
             }
@@ -262,7 +265,7 @@ namespace GitExtUtils.GitUI.Theming
             }
 
             _graphics.FillRectangle(GetBackgroundBrush(_selectedIndex), pageRect);
-            using (var borderPen = GetBorderPen())
+            using var borderPen = GetBorderPen();
             {
                 _graphics.DrawRectangle(borderPen, pageRect);
             }

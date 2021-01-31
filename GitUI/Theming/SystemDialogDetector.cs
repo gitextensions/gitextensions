@@ -19,7 +19,7 @@ namespace GitUI.Theming
             get
             {
                 var hwnd = NativeMethods.GetActiveWindow();
-                return hwnd != IntPtr.Zero && Control.FromHandle(hwnd) == null;
+                return hwnd != IntPtr.Zero && Control.FromHandle(hwnd) is null;
             }
         }
     }

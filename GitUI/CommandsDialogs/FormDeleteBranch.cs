@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
-using GitCommands;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormDeleteBranch : GitModuleForm
     {
-        private readonly TranslationString _deleteBranchCaption = new TranslationString("Delete branches");
-        private readonly TranslationString _deleteBranchQuestion = new TranslationString(
+        private readonly TranslationString _deleteBranchCaption = new("Delete branches");
+        private readonly TranslationString _deleteBranchQuestion = new(
             "Are you sure you want to delete selected branches?" + Environment.NewLine + "Deleting a branch can cause commits to be deleted too!");
         private readonly TranslationString _deleteUnmergedBranchForcingSuggestion =
             new TranslationString("You cannot delete unmerged branch until you set “force delete” mode.");
@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs
 
         private void FormDeleteBranchLoad(object sender, EventArgs e)
         {
-            Branches.BranchesToSelect = Module.GetRefs(true, true).Where(h => h.IsHead && !h.IsRemote).ToList();
+            Branches.BranchesToSelect = Module.GetRefs(tags: true, branches: true).Where(h => h.IsHead && !h.IsRemote).ToList();
             foreach (var branch in Module.GetMergedBranches())
             {
                 if (!branch.StartsWith("* "))
@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (_defaultBranches != null)
+            if (_defaultBranches is not null)
             {
                 Branches.SetSelectedText(_defaultBranches.Join(" "));
             }
@@ -70,14 +70,14 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                if (_currentBranch != null && selectedBranches.Any(branch => branch.Name == _currentBranch))
+                if (_currentBranch is not null && selectedBranches.Any(branch => branch.Name == _currentBranch))
                 {
                     MessageBox.Show(this, string.Format(_cannotDeleteCurrentBranchMessage.Text, _currentBranch), _deleteBranchCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // always treat branches as unmerged if there is no current branch (HEAD is detached)
-                var hasUnmergedBranches = _currentBranch == null || selectedBranches.Any(branch => !_mergedBranches.Contains(branch.Name));
+                var hasUnmergedBranches = _currentBranch is null || selectedBranches.Any(branch => !_mergedBranches.Contains(branch.Name));
 
                 // we could show yes/no dialog and set forcing checkbox automatically, but more safe way is asking user to do it himself
                 if (hasUnmergedBranches && !ForceDelete.Checked)

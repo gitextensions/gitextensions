@@ -1,29 +1,44 @@
-﻿using System.Diagnostics;
+﻿using System;
 using System.Windows.Forms;
+using GitCommands;
 using Microsoft.WindowsAPICodePack.Dialogs;
 namespace GitUI
 {
     public static class OsShellUtil
     {
-        public static void OpenAs(string file)
+        /// <summary>
+        /// Open a file with its associated default application.
+        /// </summary>
+        /// <param name="filePath">Pathname of the file to open.</param>
+        public static void Open(string filePath)
         {
-            Process.Start(new ProcessStartInfo
+            try
             {
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                FileName = "rundll32.exe",
-                Arguments = "shell32.dll,OpenAs_RunDLL " + file
-            });
+                new Executable(filePath).Start(useShellExecute: true);
+            }
+            catch (Exception)
+            {
+                OpenAs(filePath);
+            }
+        }
+
+        /// <summary>
+        /// Let the user chose an application to open a file.
+        /// </summary>
+        /// <param name="filePath">Pathname of the file to open.</param>
+        public static void OpenAs(string filePath)
+        {
+            new Executable("rundll32.exe").Start("shell32.dll,OpenAs_RunDLL " + filePath, redirectOutput: true, outputEncoding: System.Text.Encoding.UTF8);
         }
 
         public static void SelectPathInFileExplorer(string filePath)
         {
-            Process.Start("explorer.exe", "/select, " + filePath);
+            OpenWithFileExplorer("/select, " + filePath);
         }
 
-        public static void OpenWithFileExplorer(string filePath)
+        public static void OpenWithFileExplorer(string arguments)
         {
-            Process.Start("explorer.exe", filePath);
+            new Executable("explorer.exe").Start(arguments);
         }
 
         /// <summary>
@@ -33,7 +48,7 @@ namespace GitUI
         {
             if (!string.IsNullOrWhiteSpace(url))
             {
-                Process.Start(url);
+                new Executable(url).Start(useShellExecute: true);
             }
         }
 
@@ -52,7 +67,7 @@ namespace GitUI
                 {
                     dialog.IsFolderPicker = true;
 
-                    if (selectedPath != null)
+                    if (selectedPath is not null)
                     {
                         dialog.InitialDirectory = selectedPath;
                     }
@@ -70,7 +85,7 @@ namespace GitUI
                 // use XP-era dialog
                 using (var dialog = new FolderBrowserDialog())
                 {
-                    if (selectedPath != null)
+                    if (selectedPath is not null)
                     {
                         dialog.SelectedPath = selectedPath;
                     }

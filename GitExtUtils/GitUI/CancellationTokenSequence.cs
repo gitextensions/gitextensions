@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using Microsoft;
 
 namespace GitUI
 {
@@ -16,7 +17,7 @@ namespace GitUI
     /// <example>
     /// Define an instance of this type, usually as a private readonly field:
     /// <code>
-    /// private readonly CancellableSequence _sequence = new CancellableSequence();
+    /// private readonly CancellableSequence _sequence = new();
     /// </code>
     /// Then use it to generate <see cref="CancellationToken"/> objects for use in asynchronous
     /// operations.
@@ -31,7 +32,7 @@ namespace GitUI
         /// <remarks>
         /// If this field is <c>null</c>, the object has been disposed.
         /// </remarks>
-        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private CancellationTokenSource? _cancellationTokenSource = new CancellationTokenSource();
 
         /// <summary>
         /// Issues the <see cref="CancellationToken"/> for use by the next asynchronous operation in the sequence,
@@ -59,7 +60,7 @@ namespace GitUI
             // made if the current field value is null (latch on null).
             var prior = Volatile.Read(ref _cancellationTokenSource);
 
-            while (prior != null)
+            while (prior is not null)
             {
                 var candidate = Interlocked.CompareExchange(ref _cancellationTokenSource, next, prior);
 
@@ -79,6 +80,7 @@ namespace GitUI
                 next.Cancel();
                 next.Dispose();
                 nextToken.ThrowIfCancellationRequested();
+                throw Assumes.NotReachable();
             }
 
             prior.Cancel();

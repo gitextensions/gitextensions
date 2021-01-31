@@ -32,6 +32,7 @@ namespace GitUITests.Avatars
 
         protected IAvatarProvider _inner;
         protected IAvatarProvider _cache;
+        protected IAvatarCacheCleaner _cacheCleaner => _cache as IAvatarCacheCleaner;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -65,17 +66,15 @@ namespace GitUITests.Avatars
             _inner.GetAvatarAsync(_emailMissing, _nameMissing, _size).Returns(Task.FromResult((Image)null));
         }
 
-#pragma warning disable 4014
-
         protected async Task MissAsync(string email, string name,  Image expected = null)
         {
             _inner.ClearReceivedCalls();
 
             var actual = await _cache.GetAvatarAsync(email, name, _size);
 
-            _inner.Received(1).GetAvatarAsync(email, name, _size);
+            _ = _inner.Received(1).GetAvatarAsync(email, name, _size);
 
-            if (expected != null)
+            if (expected is not null)
             {
                 Assert.AreSame(expected, actual);
             }
@@ -87,15 +86,13 @@ namespace GitUITests.Avatars
 
             var actual = await _cache.GetAvatarAsync(email, name, _size);
 
-            _inner.Received(0).GetAvatarAsync(email, name, _size);
+            _ = _inner.Received(0).GetAvatarAsync(email, name, _size);
 
-            if (expected != null)
+            if (expected is not null)
             {
                 Assert.AreSame(expected, actual);
             }
         }
-
-#pragma warning restore 4014
 
         protected Stream GetPngStream()
         {

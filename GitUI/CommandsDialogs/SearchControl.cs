@@ -12,7 +12,7 @@ namespace GitUI.CommandsDialogs
     {
         private readonly Func<string, IEnumerable<T>> _getCandidates;
         private readonly Action<Size> _onSizeChanged;
-        private readonly AsyncLoader _backgroundLoader = new AsyncLoader();
+        private readonly AsyncLoader _backgroundLoader = new();
         private bool _isUpdatingTextFromCode;
         public event Action OnTextEntered;
         public event Action OnCancelled;
@@ -50,6 +50,30 @@ namespace GitUI.CommandsDialogs
             listBoxSearchResult.Visible = false;
         }
 
+        public BorderStyle SearchBoxBorderStyle
+        {
+            get => txtSearchBox.BorderStyle;
+            set => txtSearchBox.BorderStyle = value;
+        }
+
+        public Color SearchBoxBorderDefaultColor
+        {
+            get => txtSearchBox.BorderDefaultColor;
+            set => txtSearchBox.BorderDefaultColor = value;
+        }
+
+        public Color SearchBoxBorderHoveredColor
+        {
+            get => txtSearchBox.BorderHoveredColor;
+            set => txtSearchBox.BorderHoveredColor = value;
+        }
+
+        public Color SearchBoxBorderFocusedColor
+        {
+            get => txtSearchBox.BorderFocusedColor;
+            set => txtSearchBox.BorderFocusedColor = value;
+        }
+
         private void SearchForCandidates(IEnumerable<T> candidates)
         {
             var selectionStart = txtSearchBox.SelectionStart;
@@ -84,7 +108,7 @@ namespace GitUI.CommandsDialogs
             listBoxSearchResult.Visible = true;
 
             var txtBoxOnScreen = PointToScreen(txtSearchBox.Location + new Size(0, txtSearchBox.Height));
-            if (ParentForm != null && !ParentForm.Controls.Contains(listBoxSearchResult))
+            if (ParentForm is not null && !ParentForm.Controls.Contains(listBoxSearchResult))
             {
                 ParentForm.Controls.Add(listBoxSearchResult);
                 var listBoxLocationOnScreen = txtBoxOnScreen;
@@ -152,7 +176,7 @@ namespace GitUI.CommandsDialogs
         private void ItemSelectedFromList()
         {
             _isUpdatingTextFromCode = true;
-            if (listBoxSearchResult.SelectedItem != null)
+            if (listBoxSearchResult.SelectedItem is not null)
             {
                 txtSearchBox.Text = listBoxSearchResult.SelectedItem.ToString();
             }

@@ -81,7 +81,7 @@ namespace GitUI.UserControls
         private bool IsDoubleClickStateSet()
         {
             int delta = (int)DateTime.Now.Subtract(_lastMouseDown).TotalMilliseconds;
-            return delta >= 0 && delta < 200;
+            return delta is (>= 0 and < 200);
         }
 
         private void ResetDoubleClickState()

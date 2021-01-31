@@ -15,7 +15,7 @@ namespace GitUI.CommandsDialogs
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (components is not null))
             {
                 components.Dispose();
             }
@@ -56,8 +56,6 @@ namespace GitUI.CommandsDialogs
             this.firstToSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firstToLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectedToLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.firstParentToLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.selectedParentToLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator32 = new System.Windows.Forms.ToolStripSeparator();
             this.copyFilenameToClipboardToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -363,9 +361,7 @@ namespace GitUI.CommandsDialogs
             this.openWithDifftoolToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.firstToSelectedToolStripMenuItem,
             this.firstToLocalToolStripMenuItem,
-            this.selectedToLocalToolStripMenuItem,
-            this.firstParentToLocalToolStripMenuItem,
-            this.selectedParentToLocalToolStripMenuItem});
+            this.selectedToLocalToolStripMenuItem});
             this.openWithDifftoolToolStripMenuItem.Image = global::GitUI.Properties.Images.Diff;
             this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
             this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
@@ -393,20 +389,6 @@ namespace GitUI.CommandsDialogs
             this.selectedToLocalToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.selectedToLocalToolStripMenuItem.Text = "Compare -> Working directory";
             this.selectedToLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
-            // 
-            // firstParentToLocalToolStripMenuItem
-            // 
-            this.firstParentToLocalToolStripMenuItem.Name = "firstParentToLocalToolStripMenuItem";
-            this.firstParentToLocalToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.firstParentToLocalToolStripMenuItem.Text = "Parent to BASE -> Working directory";
-            this.firstParentToLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
-            // 
-            // selectedParentToLocalToolStripMenuItem
-            // 
-            this.selectedParentToLocalToolStripMenuItem.Name = "selectedParentToLocalToolStripMenuItem";
-            this.selectedParentToLocalToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.selectedParentToLocalToolStripMenuItem.Text = "Parent to Compare -> Working directory";
-            this.selectedParentToLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // toolStripSeparator32
             // 
@@ -508,8 +490,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripMenuItem firstToSelectedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem firstToLocalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectedToLocalToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem firstParentToLocalToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem selectedParentToLocalToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator32;
         private System.Windows.Forms.ToolStripMenuItem copyFilenameToClipboardToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem openContainingFolderToolStripMenuItem;

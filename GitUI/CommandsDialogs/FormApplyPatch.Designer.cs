@@ -13,7 +13,7 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (components is not null))
             {
                 components.Dispose();
             }
@@ -49,14 +49,15 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel4 = new System.Windows.Forms.Panel();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.SignOff = new System.Windows.Forms.CheckBox();
+            this.panel4 = new System.Windows.Forms.Panel();
             this.ContinuePanel.SuspendLayout();
             this.MergeToolPanel.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.panel4.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // BrowsePatch
@@ -75,7 +76,7 @@
             this.PatchFile.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.PatchFile.Location = new System.Drawing.Point(163, 9);
             this.PatchFile.Name = "PatchFile";
-            this.PatchFile.Size = new System.Drawing.Size(281, 23);
+            this.PatchFile.Size = new System.Drawing.Size(281, 20);
             this.PatchFile.TabIndex = 1;
             // 
             // Apply
@@ -83,7 +84,7 @@
             this.Apply.Location = new System.Drawing.Point(3, 3);
             this.Apply.Name = "Apply";
             this.Apply.Size = new System.Drawing.Size(125, 25);
-            this.Apply.TabIndex = 6;
+            this.Apply.TabIndex = 7;
             this.Apply.Text = "Apply patch";
             this.Apply.UseVisualStyleBackColor = true;
             this.Apply.Click += new System.EventHandler(this.Apply_Click);
@@ -154,7 +155,7 @@
             this.PatchDir.Enabled = false;
             this.PatchDir.Location = new System.Drawing.Point(163, 35);
             this.PatchDir.Name = "PatchDir";
-            this.PatchDir.Size = new System.Drawing.Size(281, 23);
+            this.PatchDir.Size = new System.Drawing.Size(281, 20);
             this.PatchDir.TabIndex = 1;
             // 
             // BrowseDir
@@ -173,7 +174,7 @@
             this.PatchDirMode.AutoSize = true;
             this.PatchDirMode.Location = new System.Drawing.Point(10, 35);
             this.PatchDirMode.Name = "PatchDirMode";
-            this.PatchDirMode.Size = new System.Drawing.Size(72, 19);
+            this.PatchDirMode.Size = new System.Drawing.Size(96, 17);
             this.PatchDirMode.TabIndex = 1;
             this.PatchDirMode.Text = "Patch directory";
             this.PatchDirMode.UseVisualStyleBackColor = true;
@@ -184,7 +185,7 @@
             this.PatchFileMode.Checked = true;
             this.PatchFileMode.Location = new System.Drawing.Point(10, 10);
             this.PatchFileMode.Name = "PatchFileMode";
-            this.PatchFileMode.Size = new System.Drawing.Size(74, 19);
+            this.PatchFileMode.Size = new System.Drawing.Size(69, 17);
             this.PatchFileMode.TabIndex = 0;
             this.PatchFileMode.TabStop = true;
             this.PatchFileMode.Text = "Patch file";
@@ -194,14 +195,14 @@
             // patchGrid1
             // 
             this.patchGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.patchGrid1.Location = new System.Drawing.Point(3, 73);
+            this.patchGrid1.Location = new System.Drawing.Point(3, 85);
             this.patchGrid1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.patchGrid1.Name = "patchGrid1";
-            this.patchGrid1.Size = new System.Drawing.Size(568, 361);
+            this.patchGrid1.Size = new System.Drawing.Size(568, 349);
             this.patchGrid1.TabIndex = 10;
             this.patchGrid1.TabStop = false;
             // 
-            // SolveMergeconflicts
+            // SolveMergeConflicts
             // 
             this.SolveMergeConflicts.BackColor = System.Drawing.Color.Salmon;
             this.SolveMergeConflicts.Dock = System.Windows.Forms.DockStyle.Top;
@@ -220,7 +221,7 @@
             this.IgnoreWhitespace.AutoSize = true;
             this.IgnoreWhitespace.Location = new System.Drawing.Point(3, 34);
             this.IgnoreWhitespace.Name = "IgnoreWhitespace";
-            this.IgnoreWhitespace.Size = new System.Drawing.Size(105, 19);
+            this.IgnoreWhitespace.Size = new System.Drawing.Size(99, 17);
             this.IgnoreWhitespace.TabIndex = 5;
             this.IgnoreWhitespace.Text = "Ignore Wh.spc.";
             this.IgnoreWhitespace.UseVisualStyleBackColor = true;
@@ -260,9 +261,9 @@
             this.flowLayoutPanel1.Controls.Add(this.SolveMergeConflicts);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(577, 74);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(577, 86);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(131, 359);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(131, 347);
             this.flowLayoutPanel1.TabIndex = 11;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -298,6 +299,31 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(711, 436);
             this.tableLayoutPanel1.TabIndex = 12;
             // 
+            // flowLayoutPanel2
+            // 
+            this.flowLayoutPanel2.AutoSize = true;
+            this.flowLayoutPanel2.Controls.Add(this.Apply);
+            this.flowLayoutPanel2.Controls.Add(this.IgnoreWhitespace);
+            this.flowLayoutPanel2.Controls.Add(this.SignOff);
+            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(577, 3);
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(131, 77);
+            this.flowLayoutPanel2.TabIndex = 1;
+            this.flowLayoutPanel2.WrapContents = false;
+            // 
+            // SignOff
+            // 
+            this.SignOff.AutoSize = true;
+            this.SignOff.Location = new System.Drawing.Point(3, 57);
+            this.SignOff.Name = "SignOff";
+            this.SignOff.Size = new System.Drawing.Size(64, 17);
+            this.SignOff.TabIndex = 6;
+            this.SignOff.Text = "Sign-Off";
+            this.SignOff.UseVisualStyleBackColor = true;
+            this.SignOff.CheckedChanged += new System.EventHandler(this.SignOff_CheckedChanged);
+            // 
             // panel4
             // 
             this.panel4.Controls.Add(this.PatchDir);
@@ -310,21 +336,8 @@
             this.panel4.Location = new System.Drawing.Point(3, 3);
             this.panel4.MinimumSize = new System.Drawing.Size(560, 65);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(568, 65);
+            this.panel4.Size = new System.Drawing.Size(568, 77);
             this.panel4.TabIndex = 0;
-            // 
-            // flowLayoutPanel2
-            // 
-            this.flowLayoutPanel2.AutoSize = true;
-            this.flowLayoutPanel2.Controls.Add(this.Apply);
-            this.flowLayoutPanel2.Controls.Add(this.IgnoreWhitespace);
-            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(577, 3);
-            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(131, 65);
-            this.flowLayoutPanel2.TabIndex = 1;
-            this.flowLayoutPanel2.WrapContents = false;
             // 
             // FormApplyPatch
             // 
@@ -334,6 +347,7 @@
             this.ClientSize = new System.Drawing.Size(711, 436);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MinimumSize = new System.Drawing.Size(720, 410);
+            this.Load += new System.EventHandler(this.FormApplyPatchLoad);
             this.Name = "FormApplyPatch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Apply patch";
@@ -344,10 +358,10 @@
             this.flowLayoutPanel1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -377,5 +391,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.CheckBox SignOff;
     }
 }

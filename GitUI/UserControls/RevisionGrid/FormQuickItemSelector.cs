@@ -30,7 +30,7 @@ namespace GitUI.UserControls.RevisionGrid
             btnAction.Text = buttonText;
 
             lbxRefs.Items.Clear();
-            if (items == null || items.Count < 1)
+            if (items is null || items.Count < 1)
             {
                 DialogResult = DialogResult.Cancel;
                 Close();
@@ -43,17 +43,15 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 lbxRefs.BeginUpdate();
 
-                using (Graphics graphics = lbxRefs.CreateGraphics())
+                using Graphics graphics = lbxRefs.CreateGraphics();
+                foreach (var item in items)
                 {
-                    foreach (var item in items)
-                    {
-                        lbxRefs.Items.Add(item);
+                    lbxRefs.Items.Add(item);
 
-                        // assume that the branch names or tags are never longer than MaxRefLength symbols long
-                        // if they are (sanity!) - don't resize past beyond certain limit
-                        var label = item.Label.Length > MaxRefLength ? item.Label.Substring(0, MaxRefLength) : item.Label;
-                        longestItemWidth = Math.Max(longestItemWidth, graphics.MeasureString(label, lbxRefs.Font).Width);
-                    }
+                    // assume that the branch names or tags are never longer than MaxRefLength symbols long
+                    // if they are (sanity!) - don't resize past beyond certain limit
+                    var label = item.Label.Length > MaxRefLength ? item.Label.Substring(0, MaxRefLength) : item.Label;
+                    longestItemWidth = Math.Max(longestItemWidth, graphics.MeasureString(label, lbxRefs.Font).Width);
                 }
             }
             finally

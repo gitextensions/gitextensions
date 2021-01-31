@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -39,7 +38,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (!string.IsNullOrWhiteSpace(_url))
                 {
-                    Process.Start(_url);
+                    OsShellUtil.OpenUrlInDefaultBrowser(_url);
                 }
             };
             _openReportLink.Font = new Font(_openReportLink.Font.Name, 16F);
@@ -58,7 +57,7 @@ namespace GitUI.CommandsDialogs
 
                 if (buildResultPageEnabled && buildInfoIsAvailable)
                 {
-                    if (_buildReportTabPage == null)
+                    if (_buildReportTabPage is null)
                     {
                         CreateBuildReportTabPage(_tabControl);
                     }
@@ -81,7 +80,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    if (_buildReportTabPage != null && _buildReportWebBrowser != null && _tabControl.Controls.Contains(_buildReportTabPage))
+                    if (_buildReportTabPage is not null && _buildReportWebBrowser is not null && _tabControl.Controls.Contains(_buildReportTabPage))
                     {
                         _buildReportWebBrowser.Stop();
                         _buildReportWebBrowser.Document.Write(string.Empty);
@@ -134,14 +133,14 @@ namespace GitUI.CommandsDialogs
 
         private void SetSelectedRevision(GitRevision revision)
         {
-            if (_selectedGitRevision != null)
+            if (_selectedGitRevision is not null)
             {
                 _selectedGitRevision.PropertyChanged -= RevisionPropertyChanged;
             }
 
             _selectedGitRevision = revision;
 
-            if (_selectedGitRevision != null)
+            if (_selectedGitRevision is not null)
             {
                 _selectedGitRevision.PropertyChanged += RevisionPropertyChanged;
             }
@@ -179,14 +178,14 @@ namespace GitUI.CommandsDialogs
 
             var favIconUrl = DetermineFavIconUrl(_buildReportWebBrowser.Document);
 
-            if (favIconUrl != null)
+            if (favIconUrl is not null)
             {
                 ThreadHelper.JoinableTaskFactory.RunAsync(
                     async () =>
                     {
                         using (var imageStream = await DownloadRemoteImageFileAsync(favIconUrl))
                         {
-                            if (imageStream != null)
+                            if (imageStream is not null)
                             {
                                 await _tabControl.SwitchToMainThreadAsync();
 
@@ -215,14 +214,14 @@ namespace GitUI.CommandsDialogs
         private bool IsBuildResultPageEnabled()
         {
             var settings = GetModule().GetEffectiveSettings() as RepoDistSettings;
-            return settings?.BuildServer.ShowBuildResultPage.ValueOrDefault ?? false;
+            return settings?.BuildServer.ShowBuildResultPage.Value ?? false;
         }
 
         private IGitModule GetModule()
         {
             var module = _getModule();
 
-            if (module == null)
+            if (module is null)
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }
@@ -238,7 +237,7 @@ namespace GitUI.CommandsDialogs
                 links.Cast<HtmlElement>()
                      .SingleOrDefault(x => x.GetAttribute("rel").ToLowerInvariant() == "shortcut icon");
 
-            if (favIconLink == null || htmlDocument.Url == null)
+            if (favIconLink is null || htmlDocument.Url is null)
             {
                 return null;
             }

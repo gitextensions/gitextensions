@@ -1,4 +1,5 @@
 using GitCommands.UserRepositoryHistory;
+using GitExtensions;
 using GitUIPluginInterfaces;
 
 namespace GitCommands
@@ -14,7 +15,7 @@ namespace GitCommands
         /// <param name="workingDir">Path to repository.</param>
         /// <param name="isValidWorkingDir">Indicates whether the given path contains a valid repository.</param>
         /// <param name="branchName">Current branch name.</param>
-        string Generate(string workingDir = null, bool isValidWorkingDir = false, string branchName = null);
+        string Generate(string? workingDir = null, bool isValidWorkingDir = false, string? branchName = null);
     }
 
     /// <summary>
@@ -23,7 +24,7 @@ namespace GitCommands
     public sealed class AppTitleGenerator : IAppTitleGenerator
     {
 #if DEBUG
-        private static string _extraInfo;
+        private static string? _extraInfo;
 #endif
 
         private readonly IRepositoryDescriptionProvider _description;
@@ -39,9 +40,9 @@ namespace GitCommands
         /// <param name="workingDir">Path to repository.</param>
         /// <param name="isValidWorkingDir">Indicates whether the given path contains a valid repository.</param>
         /// <param name="branchName">Current branch name.</param>
-        public string Generate(string workingDir = null, bool isValidWorkingDir = false, string branchName = null)
+        public string Generate(string? workingDir = null, bool isValidWorkingDir = false, string? branchName = null)
         {
-            if (string.IsNullOrWhiteSpace(workingDir) || !isValidWorkingDir)
+            if (Strings.IsNullOrWhiteSpace(workingDir) || !isValidWorkingDir)
             {
                 return AppSettings.ApplicationName;
             }

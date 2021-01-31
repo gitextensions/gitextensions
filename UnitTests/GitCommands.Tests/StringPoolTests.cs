@@ -174,7 +174,7 @@ namespace GitCommandsTests
                 $"Average clashing bucket length {(double)collisions.Count / crowdedBucketCount:0.###}");
         }
 
-        private static readonly Random _random = new Random();
+        private static readonly Random _random = new();
 
         private static string CreateRandomString(int length)
         {

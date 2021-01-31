@@ -9,9 +9,9 @@ namespace GitCommands.Utils
     public class WeakRefCache : IDisposable
     {
         private readonly Dictionary<string, WeakReference> _weakMap = new Dictionary<string, WeakReference>();
-        private readonly Timer _clearTimer = new Timer(60 * 1000);
+        private readonly Timer _clearTimer = new(60 * 1000);
 
-        public static readonly WeakRefCache Default = new WeakRefCache();
+        public static readonly WeakRefCache Default = new();
 
         public WeakRefCache()
         {
@@ -23,7 +23,7 @@ namespace GitCommands.Utils
 
         public T Get<T>(string objectUniqueKey, Lazy<T> provideObject)
         {
-            object cached = null;
+            object? cached = null;
 
             lock (_weakMap)
             {
@@ -32,23 +32,23 @@ namespace GitCommands.Utils
                     cached = weakReference.Target;
                 }
 
-                if (cached == null)
+                if (cached is null)
                 {
                     cached = provideObject.Value;
                     _weakMap[objectUniqueKey] = new WeakReference(cached);
                 }
                 else
                 {
-                    if (!(cached is T))
+                    if (cached is not T)
                     {
                         throw new InvalidCastException("Incompatible class for object: " + objectUniqueKey + ". Expected: " + typeof(T).FullName + ", found: " + cached.GetType().FullName);
                     }
                 }
             }
 
-            Debug.Assert(cached != null, "cached != null -- if this is violated, the annotations on SettingsContainer<,>.ctor cache are wrong");
+            Debug.Assert(cached is not null, "cached is not null -- if this is violated, the annotations on SettingsContainer<,>.ctor cache are wrong");
 
-            return (T)cached;
+            return (T)cached!;
         }
 
         private void OnClearTimer(object source, ElapsedEventArgs e)

@@ -75,7 +75,7 @@ namespace TeamCityIntegration
 
         private CookieContainer GetTeamCityNtlmAuthCookie(string serverUrl, IBuildServerCredentials buildServerCredentials)
         {
-            if (_teamCityNtlmAuthCookie != null)
+            if (_teamCityNtlmAuthCookie is not null)
             {
                 return _teamCityNtlmAuthCookie;
             }
@@ -85,7 +85,7 @@ namespace TeamCityIntegration
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.CookieContainer = cookieContainer;
 
-            if (buildServerCredentials != null
+            if (buildServerCredentials is not null
                 && !string.IsNullOrEmpty(buildServerCredentials.Username)
                 && !string.IsNullOrEmpty(buildServerCredentials.Password))
             {
@@ -105,9 +105,9 @@ namespace TeamCityIntegration
 
         public string LogAsGuestUrlParameter { get; set; }
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<ObjectId, bool> isCommitInRevisionGrid = null)
+        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
-            if (_buildServerWatcher != null)
+            if (_buildServerWatcher is not null)
             {
                 throw new InvalidOperationException("Already initialized");
             }
@@ -182,7 +182,7 @@ namespace TeamCityIntegration
 
         public IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
         {
-            if (_httpClient == null || _httpClient.BaseAddress == null || ProjectNames.Length == 0)
+            if (_httpClient is null || _httpClient.BaseAddress is null || ProjectNames.Length == 0)
             {
                 return Observable.Empty<BuildInfo>(scheduler);
             }
@@ -298,7 +298,7 @@ namespace TeamCityIntegration
 
             if (task.IsFaulted)
             {
-                Debug.Assert(task.Exception != null, "task.Exception != null");
+                Debug.Assert(task.Exception is not null, "task.Exception is not null");
 
                 observer.OnError(task.Exception);
                 return true;
@@ -319,7 +319,7 @@ namespace TeamCityIntegration
             var commitHashList = revisionsElements.Select(x => ObjectId.Parse(x.Attribute("version").Value)).ToList();
             var runningAttribute = buildXElement.Attribute("running");
 
-            if (runningAttribute != null && Convert.ToBoolean(runningAttribute.Value))
+            if (runningAttribute is not null && Convert.ToBoolean(runningAttribute.Value))
             {
                 var runningInfoXElement = buildXElement.Element("running-info");
                 var currentStageText = runningInfoXElement.Attribute("currentStageText").Value;
@@ -404,7 +404,7 @@ namespace TeamCityIntegration
             if (unauthorized)
             {
                 var buildServerCredentials = _buildServerWatcher.GetBuildServerCredentials(this, true);
-                var useBuildServerCredentials = buildServerCredentials != null
+                var useBuildServerCredentials = buildServerCredentials is not null
                                                 && !buildServerCredentials.UseGuestAccess
                                                 && (string.IsNullOrWhiteSpace(buildServerCredentials.Username) && string.IsNullOrWhiteSpace(buildServerCredentials.Password));
                 if (useBuildServerCredentials)
@@ -566,7 +566,7 @@ namespace TeamCityIntegration
             Project rootProject = null;
             foreach (var project in projects)
             {
-                if (project.ParentProject != null)
+                if (project.ParentProject is not null)
                 {
                     projectDictionary[project.ParentProject].SubProjects.Add(project);
                 }

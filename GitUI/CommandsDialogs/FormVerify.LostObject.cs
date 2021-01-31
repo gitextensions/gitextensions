@@ -41,9 +41,9 @@ namespace GitUI.CommandsDialogs
                 "{0}"
             };
 
-            private static readonly Regex RawDataRegex = new Regex(@"^((dangling|missing|unreachable) (commit|blob|tree|tag)|warning in tree) ([a-f\d]{40})(.)*$", RegexOptions.Compiled);
-            private static readonly Regex LogRegex = new Regex(@"^([^,]+), (.*), (.+), (\d+), (.+)?$", RegexOptions.Compiled | RegexOptions.Singleline);
-            private static readonly Regex TagRegex = new Regex(@"^object (.+)\ntype commit\ntag (.+)\ntagger (.+) <.*> (.+) .*\n\n(.*)\n", RegexOptions.Compiled | RegexOptions.Multiline);
+            private static readonly Regex RawDataRegex = new(@"^((dangling|missing|unreachable) (commit|blob|tree|tag)|warning in tree) ([a-f\d]{40})(.)*$", RegexOptions.Compiled);
+            private static readonly Regex LogRegex = new(@"^([^,]+), (.*), (.+), (\d+), (.+)?$", RegexOptions.Compiled | RegexOptions.Singleline);
+            private static readonly Regex TagRegex = new(@"^object (.+)\ntype commit\ntag (.+)\ntagger (.+) <.*> (.+) .*\n\n(.*)\n", RegexOptions.Compiled | RegexOptions.Multiline);
 
             public LostObjectType ObjectType { get; }
 
@@ -122,7 +122,7 @@ namespace GitUI.CommandsDialogs
                         if (logPatternMatch.Groups.Count >= 5)
                         {
                             var parentId = logPatternMatch.Groups[5].Value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
-                            if (parentId != null)
+                            if (parentId is not null)
                             {
                                 result.Parent = ObjectId.Parse(parentId);
                             }

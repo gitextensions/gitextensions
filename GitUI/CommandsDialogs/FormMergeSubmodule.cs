@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils;
+using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -10,8 +10,8 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormMergeSubmodule : GitModuleForm
     {
-        private readonly TranslationString _stageFilename = new TranslationString("Stage {0}");
-        private readonly TranslationString _deleted = new TranslationString("deleted");
+        private readonly TranslationString _stageFilename = new("Stage {0}");
+        private readonly TranslationString _deleted = new("deleted");
 
         private readonly string _filename;
 
@@ -47,23 +47,20 @@ namespace GitUI.CommandsDialogs
 
         private void StageSubmodule()
         {
-            using (var form = new FormStatus(ProcessStart, string.Format(_stageFilename.Text, _filename)))
+            var args = new GitArgumentBuilder("add")
             {
-                form.ShowDialogOnError(this);
+                "--",
+                _filename.QuoteNE()
+            };
+            string output = Module.GitExecutable.GetOutput(args);
+
+            if (string.IsNullOrWhiteSpace(output))
+            {
+                return;
             }
 
-            void ProcessStart(FormStatus form)
-            {
-                form.AddMessageLine(string.Format(_stageFilename.Text, _filename));
-                var args = new GitArgumentBuilder("add")
-                {
-                    "--",
-                    _filename.QuoteNE()
-                };
-                string output = Module.GitExecutable.GetOutput(args);
-                form.AddMessageLine(output);
-                form.Done(isSuccess: string.IsNullOrWhiteSpace(output));
-            }
+            string text = string.Format(_stageFilename.Text, _filename);
+            FormStatus.ShowErrorDialog(this, text, text, output);
         }
 
         private void btStageCurrent_Click(object sender, EventArgs e)
@@ -75,17 +72,7 @@ namespace GitUI.CommandsDialogs
 
         private void btOpenSubmodule_Click(object sender, EventArgs e)
         {
-            var process = new Process
-            {
-                StartInfo =
-                {
-                    FileName = Application.ExecutablePath,
-                    Arguments = "browse",
-                    WorkingDirectory = Module.GetSubmoduleFullPath(_filename)
-                }
-            };
-
-            process.Start();
+            GitUICommands.LaunchBrowse(workingDir: Module.GetSubmoduleFullPath(_filename));
         }
 
         private void btCheckoutBranch_Click(object sender, EventArgs e)

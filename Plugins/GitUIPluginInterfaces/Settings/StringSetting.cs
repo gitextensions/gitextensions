@@ -57,7 +57,7 @@ namespace GitUIPluginInterfaces
                     ? Setting.ValueOrDefault(settings)
                     : Setting[settings];
 
-                if (settingVal == null && _useDefaultValueIfBlank)
+                if (settingVal is null && _useDefaultValueIfBlank)
                 {
                     settingVal = Setting.ValueOrDefault(settings);
                 }

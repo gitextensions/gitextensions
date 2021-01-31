@@ -15,7 +15,7 @@ namespace GitUI.CommandsDialogs
             }
 
             var oldRemote = remotes.FirstOrDefault(r => r.Path == oldRemoteUrl);
-            if (oldRemote != null)
+            if (oldRemote is not null)
             {
                 remotes.Remove(oldRemote);
             }

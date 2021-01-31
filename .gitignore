@@ -75,3 +75,5 @@ tree.txt
 *.binlog
 artifacts/
 .tools/vswhere/
+.dotnet/
+*.svclog

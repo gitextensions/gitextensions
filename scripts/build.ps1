@@ -7,7 +7,7 @@ Param(
   [switch] $restore,
   [switch][Alias('b')]$build,
   [switch] $rebuild,
-  [switch] $buildNative,
+  [switch][Alias('bn')] $buildNative,
   [switch][Alias('l')] $launch,
   [switch] $clean,
   [switch] $publish,

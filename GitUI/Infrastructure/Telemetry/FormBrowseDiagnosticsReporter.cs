@@ -30,7 +30,7 @@ namespace GitUI.Infrastructure.Telemetry
 
                     // commit info panel
                     { nameof(AppSettings.ShowAuthorAvatarInCommitInfo).FormatKey(), AppSettings.ShowAuthorAvatarInCommitInfo.ToString() },
-                    { nameof(AppSettings.ShowGpgInformation).FormatKey(), AppSettings.ShowGpgInformation.ValueOrDefault.ToString() },
+                    { nameof(AppSettings.ShowGpgInformation).FormatKey(), AppSettings.ShowGpgInformation.Value.ToString() },
 
                     // other
                     { nameof(AppSettings.ShowAheadBehindData).FormatKey(), AppSettings.ShowAheadBehindData.ToString() },

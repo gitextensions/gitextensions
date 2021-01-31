@@ -5,7 +5,7 @@ namespace GitCommands.DiffMergeTools
     internal class DiffMerge : DiffMergeTool
     {
         /// <inheritdoc />
-        public override string ExeFileName => "DiffMerge.exe";
+        public override string ExeFileName => "sgdm.exe";
 
         /// <inheritdoc />
         public override string MergeCommand => "-merge -result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"";

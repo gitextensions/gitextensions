@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (components is not null))
             {
                 components.Dispose();
             }
@@ -70,7 +70,7 @@ namespace GitUI.CommandsDialogs
             // 
             // gitRevisionBindingSource
             // 
-            this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
+            this.gitRevisionBindingSource.DataSource = typeof(GitUIPluginInterfaces.GitRevision);
             // 
             // gitItemBindingSource
             // 

@@ -322,7 +322,7 @@
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>Borrar</target>
+        <target>Eliminar</target>
         
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
@@ -365,13 +365,12 @@
 Branches will be deleted on the remote '{0}'. This can not be undone.
 Are you sure you want to continue?</source>
         <target>¡ACCIÓN PELIGROSA!
-Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede deshacerse. 
-¿Está seguro de que desea continuar?</target>
+Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede deshacerse. ¿Está seguro de que desea continuar?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>Borrar</target>
+        <target>Eliminar</target>
         
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
@@ -529,7 +528,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>Borrar</target>
+        <target>Eliminar</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -539,7 +538,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>Borrar</target>
+        <target>Eliminar</target>
         
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
@@ -549,7 +548,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
         <source>Delete</source>
-        <target>Borrar</target>
+        <target>Eliminar</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1326,8 +1325,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>No se ha encontrado Gourge. 
-Por favor, descargue Gourge e incluye la dirección de instalación en el diálogo de configuración de plugins.</target>
+        <target>No se encuentra Gource. Por favor, descargue Gource y configure la ruta en el diálogo de configuración de extensiones.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
@@ -1357,7 +1355,7 @@ Do you want to automatically download Gource?</source>
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
         <target>Descarga fallida.
-Por favor, descargue Gourge y configure la dirección de instalación en el diálogo de configuración de plugins.</target>
+Por favor, descargue Gource y configure la ruta en el diálogo de configuración de extensiones.</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -1620,7 +1618,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>Log de commit desde '{0}' hasta '{1}' ({2}):</target>
+        <target>Log de commit desde '{0}' a '{1}' ({2}):</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
@@ -1815,7 +1813,7 @@ Asegurate de que la URL sea válida y de que el token de la API tenga acceso al 
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
         <source>Log as guest to display the build report</source>
-        <target>Logueese como invitado para visualizar el informe de Builds</target>
+        <target>Inicia sesión como invitado para visualizar el informe de Builds</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
@@ -1848,7 +1846,7 @@ Por favor, verifique la url del servidor.</target>
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
-        <target>¡La expresión regular &quot;Build Id Filter&quot; no es válida y no será guardada!</target>
+        <target>¡La expresión regular &quot;Build Id Filter no es valido y no será guardada!</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">

@@ -15,7 +15,7 @@ namespace GitUI.CommandsDialogs
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (components is not null))
             {
                 components.Dispose();
             }
@@ -37,6 +37,7 @@ namespace GitUI.CommandsDialogs
             this.authorDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ConflictedFilesContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.OpenMergetool = new System.Windows.Forms.ToolStripMenuItem();
+            this.customMergetool = new System.Windows.Forms.ToolStripMenuItem();
             this.ContextMarkAsSolved = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.ContextChooseLocal = new System.Windows.Forms.ToolStripMenuItem();
@@ -141,6 +142,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.ConflictedFilesContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.OpenMergetool,
+            this.customMergetool,
             this.ContextMarkAsSolved,
             this.toolStripSeparator3,
             this.ContextChooseLocal,
@@ -169,6 +171,13 @@ namespace GitUI.CommandsDialogs
             this.OpenMergetool.Size = new System.Drawing.Size(195, 22);
             this.OpenMergetool.Text = "Open in mergetool";
             this.OpenMergetool.Click += new System.EventHandler(this.OpenMergetool_Click);
+            // 
+            // customMergetool
+            // 
+            this.customMergetool.Name = "customMergetool";
+            this.customMergetool.Size = new System.Drawing.Size(195, 22);
+            this.customMergetool.Text = "Open in &mergetool";
+            this.customMergetool.Click += new System.EventHandler(this.customMergetool_Click);
             // 
             // ContextMarkAsSolved
             // 
@@ -594,6 +603,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripMenuItem ContextOpenRemoteWith;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem OpenMergetool;
+        private System.Windows.Forms.ToolStripMenuItem customMergetool;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem ContextSaveBaseAs;
         private System.Windows.Forms.ToolStripMenuItem ContextSaveLocalAs;

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using GitCommands.Settings;
-using GitUIPluginInterfaces;
 
 namespace GitCommands.ExternalLinks
 {
@@ -10,7 +9,7 @@ namespace GitCommands.ExternalLinks
     public sealed class ExternalLinksManager
     {
         private readonly RepoDistSettings _cachedSettings;
-        private readonly ExternalLinksManager _lowerPriority;
+        private readonly ExternalLinksManager? _lowerPriority;
         private readonly IExternalLinksStorage _externalLinksStorage = new ExternalLinksStorage();
         private readonly List<ExternalLinkDefinition> _definitions;
 
@@ -19,7 +18,7 @@ namespace GitCommands.ExternalLinks
             _cachedSettings = new RepoDistSettings(null, settings.SettingsCache, settings.SettingLevel);
             _definitions = _externalLinksStorage.Load(_cachedSettings).ToList();
 
-            if (settings.LowerPriority != null)
+            if (settings.LowerPriority is not null)
             {
                 _lowerPriority = new ExternalLinksManager(settings.LowerPriority);
             }
@@ -31,12 +30,12 @@ namespace GitCommands.ExternalLinks
         /// <param name="definition">External link definition.</param>
         public void Add(ExternalLinkDefinition definition)
         {
-            if (definition == null)
+            if (definition is null)
             {
                 throw new ArgumentNullException(nameof(definition));
             }
 
-            if (_lowerPriority == null || _lowerPriority.Contains(definition.Name))
+            if (_lowerPriority is null || _lowerPriority.Contains(definition.Name))
             {
                 if (!Contains(definition.Name))
                 {
@@ -57,7 +56,7 @@ namespace GitCommands.ExternalLinks
         /// <param name="definitions">External link definitions.</param>
         public void AddRange(IEnumerable<ExternalLinkDefinition> definitions)
         {
-            if (definitions == null)
+            if (definitions is null)
             {
                 throw new ArgumentNullException(nameof(definitions));
             }
@@ -73,7 +72,7 @@ namespace GitCommands.ExternalLinks
         /// </summary>
         /// <param name="definitionName">The name of the definition to find.</param>
         /// <returns><see langword="true"/> if a definition already exists; otherwise <see langword="false"/>.</returns>
-        public bool Contains(string definitionName)
+        public bool Contains(string? definitionName)
         {
             return _definitions.Any(linkDef => linkDef.Name == definitionName);
         }

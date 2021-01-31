@@ -8,8 +8,6 @@
     <OutputType>WinExe</OutputType>
     <StartupObject />
 
-    <!-- Default debugging command starts GitExtensions browsing this repository -->
-    <StartArguments>browse "$(MSBuildThisFileDirectory).."</StartArguments>
     <Prefer32bit>true</Prefer32bit>
 
     <IsPublishable>true</IsPublishable>
@@ -21,11 +19,6 @@
     <Compile Include="..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="PSTaskDialog">
-      <HintPath>..\Bin\PSTaskDialog.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo">
       <Version>2.0.21</Version>

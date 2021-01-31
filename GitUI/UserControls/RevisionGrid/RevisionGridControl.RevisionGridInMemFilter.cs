@@ -51,12 +51,12 @@ namespace GitUI
                 return CheckCondition(_authorFilter, _authorFilterRegex, rev.Author) &&
                        CheckCondition(_committerFilter, _committerFilterRegex, rev.Committer) &&
                        (CheckCondition(_messageFilter, _messageFilterRegex, rev.Body) ||
-                        (_shaFilter != null && CheckCondition(_shaFilter, _shaFilterRegex, rev.Guid)));
+                        (_shaFilter is not null && CheckCondition(_shaFilter, _shaFilterRegex, rev.Guid)));
 
                 bool CheckCondition(string filter, Regex regex, string value)
                 {
                     return string.IsNullOrEmpty(filter) ||
-                           (regex != null && value != null && regex.IsMatch(value));
+                           (regex is not null && value is not null && regex.IsMatch(value));
                 }
             }
 

@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git.Extensions;
 using GitCommands.Logging;
 using JetBrains.Annotations;
 
@@ -38,7 +39,7 @@ namespace GitUI.UserControls
 
             void AppendMessage(string text)
             {
-                Debug.Assert(text != null, "text != null");
+                Debug.Assert(text is not null, "text is not null");
                 if (IsDisposed)
                 {
                     return;
@@ -69,7 +70,7 @@ namespace GitUI.UserControls
                 throw new InvalidOperationException("This operation is to be executed on the home thread.");
             }
 
-            if (_process == null)
+            if (_process is null)
             {
                 return;
             }
@@ -96,11 +97,13 @@ namespace GitUI.UserControls
 
         public override void StartProcess(string command, string arguments, string workDir, Dictionary<string, string> envVariables)
         {
+            ProcessOperation operation = CommandLog.LogProcessStart(command, arguments, workDir);
+
             try
             {
                 EnvironmentConfiguration.SetEnvironmentVariables();
 
-                bool ssh = GitCommandHelpers.UseSsh(arguments);
+                bool ssh = GitSshHelpers.UseSsh(arguments);
 
                 KillProcess();
 
@@ -110,7 +113,7 @@ namespace GitUI.UserControls
                 {
                     UseShellExecute = false,
                     ErrorDialog = false,
-                    CreateNoWindow = true,
+                    CreateNoWindow = !ssh && !AppSettings.ShowGitCommandLine,
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -120,7 +123,6 @@ namespace GitUI.UserControls
                     Arguments = arguments,
                     WorkingDirectory = workDir
                 };
-                startInfo.CreateNoWindow = !ssh && !AppSettings.ShowGitCommandLine;
 
                 foreach (var (name, value) in envVariables)
                 {
@@ -129,19 +131,16 @@ namespace GitUI.UserControls
 
                 var process = new Process { StartInfo = startInfo, EnableRaisingEvents = true };
 
-                var operation = CommandLog.LogProcessStart(command, arguments, workDir);
-
                 process.OutputDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
                 process.ErrorDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
                 process.Exited += delegate
                 {
-                    operation.LogProcessEnd();
-
                     this.InvokeAsync(
                         () =>
                         {
-                            if (_process == null)
+                            if (_process is null)
                             {
+                                operation.LogProcessEnd(new Exception("Process instance is null in Exited event"));
                                 return;
                             }
 
@@ -153,12 +152,13 @@ namespace GitUI.UserControls
                             {
                                 _process.WaitForExit();
                             }
-                            catch
+                            catch (Exception ex)
                             {
-                                // NOP
+                                operation.LogProcessEnd(ex);
                             }
 
                             _exitcode = _process.ExitCode;
+                            operation.LogProcessEnd(_exitcode);
                             _process = null;
                             _outputThrottle?.FlushOutput();
                             FireProcessExited();
@@ -174,6 +174,7 @@ namespace GitUI.UserControls
             }
             catch (Exception ex)
             {
+                operation.LogProcessEnd(ex);
                 ex.Data.Add("command", command);
                 ex.Data.Add("arguments", arguments);
                 throw;
@@ -183,7 +184,7 @@ namespace GitUI.UserControls
         protected override void Dispose(bool disposing)
         {
             KillProcess();
-            if (disposing && _outputThrottle != null)
+            if (disposing && _outputThrottle is not null)
             {
                 _outputThrottle.Dispose();
                 _outputThrottle = null;
@@ -196,7 +197,7 @@ namespace GitUI.UserControls
 
         private sealed class ProcessOutputThrottle : IDisposable
         {
-            private readonly StringBuilder _textToAdd = new StringBuilder();
+            private readonly StringBuilder _textToAdd = new();
             private readonly Timer _timer;
             private readonly Action<string> _doOutput;
 

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
-using JetBrains.Annotations;
 
 namespace GitExtUtils
 {
@@ -39,7 +38,7 @@ namespace GitExtUtils
     /// </example>
     public sealed class GitArgumentBuilder : ArgumentBuilder
     {
-        private static readonly Regex CommandRegex = new Regex("^[a-z0-9_.-]+$", RegexOptions.Compiled);
+        private static readonly Regex CommandRegex = new("^[a-z0-9_.-]+$", RegexOptions.Compiled);
 
         private readonly List<GitConfigItem> _configItems;
         private readonly ArgumentString _gitArgs;
@@ -50,12 +49,12 @@ namespace GitExtUtils
         /// </summary>
         /// <param name="command">The git command this builder is compiling arguments for.</param>
         /// <param name="commandConfiguration">Optional source for default command configuration items. Pass <c>null</c> to use the Git Extensions defaults.</param>
-        /// <param name="gitOptions">Optional arguments that are for the git command.  EX: git --no-optional-locks status </param>
+        /// <param name="gitOptions">Optional arguments that are for the git command.  EX: git --no-optional-locks status.</param>
         /// <exception cref="ArgumentNullException"><paramref name="command"/> is <c>null</c>.</exception>
         /// <exception cref="ArgumentException"><paramref name="command"/> is an invalid string.</exception>
-        public GitArgumentBuilder([NotNull] string command, [CanBeNull] GitCommandConfiguration commandConfiguration = null, [CanBeNull] ArgumentString gitOptions = default)
+        public GitArgumentBuilder(string command, GitCommandConfiguration? commandConfiguration = null, ArgumentString gitOptions = default)
         {
-            if (command == null)
+            if (command is null)
             {
                 throw new ArgumentNullException(nameof(command));
             }
@@ -67,7 +66,7 @@ namespace GitExtUtils
 
             _command = command;
             _gitArgs = gitOptions;
-            commandConfiguration = commandConfiguration ?? GitCommandConfiguration.Default;
+            commandConfiguration ??= GitCommandConfiguration.Default;
 
             var defaultConfig = commandConfiguration.Get(command);
             _configItems = new List<GitConfigItem>(capacity: defaultConfig.Count + 2);

@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <None Update="PathScanningData\**">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

@@ -103,7 +103,7 @@ namespace TranslationApp
                                   oldItem.Property == item.Property);
                     var curItem = curItems.FirstOrDefault();
 
-                    if (curItem == null)
+                    if (curItem is null)
                     {
                         curItem = item.Clone();
                         transItems.Add(curItem);
@@ -134,7 +134,7 @@ namespace TranslationApp
                 {
                     // Obsolete should be added only to dictionary
                     if (!string.IsNullOrEmpty(item.TranslatedValue) &&
-                        item.NeutralValue != null && !dict.ContainsKey(item.NeutralValue))
+                        item.NeutralValue is not null && !dict.ContainsKey(item.NeutralValue))
                     {
                         dict.Add(item.NeutralValue, item.TranslatedValue);
                     }

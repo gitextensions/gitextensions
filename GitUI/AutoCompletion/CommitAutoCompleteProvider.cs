@@ -7,6 +7,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands;
+using GitCommands.Git;
+using GitCommands.Git.Commands;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
@@ -15,11 +18,13 @@ namespace GitUI.AutoCompletion
     public class CommitAutoCompleteProvider : IAutoCompleteProvider
     {
         private static readonly Lazy<Dictionary<string, Regex>> _regexes = new Lazy<Dictionary<string, Regex>>(ParseRegexes);
-        private readonly GitModule _module;
+        private readonly Func<IGitModule> _getModule;
+        private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
 
-        public CommitAutoCompleteProvider(GitModule module)
+        public CommitAutoCompleteProvider(Func<IGitModule> getModule)
         {
-            _module = module;
+            _getModule = getModule;
+            _getAllChangedFilesOutputParser = new GetAllChangedFilesOutputParser(getModule);
         }
 
         public async Task<IEnumerable<AutoCompleteWord>> GetAutoCompleteWordsAsync(CancellationToken cancellationToken)
@@ -28,18 +33,20 @@ namespace GitUI.AutoCompletion
 
             var autoCompleteWords = new HashSet<string>();
 
-            var cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default, noLocks: true);
-            var output = await _module.GitExecutable.GetOutputAsync(cmd).ConfigureAwait(false);
-            var changedFiles = GitCommandHelpers.GetStatusChangedFilesFromString(_module, output);
+            IGitModule module = GetModule();
+            ArgumentString cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default, noLocks: true);
+            var output = await module.GitExecutable.GetOutputAsync(cmd).ConfigureAwait(false);
+            IReadOnlyList<GitItemStatus> changedFiles = _getAllChangedFilesOutputParser.Parse(output);
             foreach (var file in changedFiles)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                var regex = GetRegexForExtension(Path.GetExtension(file.Name));
+                var regex = GetRegexForExtension(PathUtil.GetExtension(file.Name));
 
-                if (regex != null)
+                if (regex is not null)
                 {
-                    var text = await GetChangedFileTextAsync(_module, file);
+                    // HACK: need to expose require methods at IGitModule level
+                    var text = await GetChangedFileTextAsync((GitModule)module, file);
                     var matches = regex.Matches(text);
                     foreach (Match match in matches)
                     {
@@ -66,6 +73,19 @@ namespace GitUI.AutoCompletion
             return autoCompleteWords.Select(w => new AutoCompleteWord(w));
         }
 
+        [NotNull]
+        private IGitModule GetModule()
+        {
+            var module = _getModule();
+
+            if (module is null)
+            {
+                throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
+            }
+
+            return module;
+        }
+
         [CanBeNull]
         private static Regex GetRegexForExtension(string extension)
         {
@@ -74,7 +94,7 @@ namespace GitUI.AutoCompletion
 
         private static IEnumerable<string> ReadOrInitializeAutoCompleteRegexes()
         {
-            var path = Path.Combine(AppSettings.ApplicationDataPath.Value, "AutoCompleteRegexes.txt");
+            var path = PathUtil.Combine(AppSettings.ApplicationDataPath.Value, "AutoCompleteRegexes.txt");
 
             if (File.Exists(path))
             {
@@ -82,7 +102,7 @@ namespace GitUI.AutoCompletion
             }
 
             Stream s = Assembly.GetEntryAssembly()?.GetManifestResourceStream("GitExtensions.AutoCompleteRegexes.txt");
-            if (s == null)
+            if (s is null)
             {
                 throw new NotImplementedException("Please add AutoCompleteRegexes.txt file into .csproj");
             }
@@ -123,14 +143,14 @@ namespace GitUI.AutoCompletion
             var changes = await module.GetCurrentChangesAsync(file.Name, file.OldName, file.Staged == StagedStatus.Index, "-U1000000")
                 .ConfigureAwait(false);
 
-            if (changes != null)
+            if (changes is not null)
             {
                 return changes.Text;
             }
 
             var content = await module.GetFileContentsAsync(file).ConfigureAwaitRunInline();
 
-            if (content != null)
+            if (content is not null)
             {
                 return content;
             }

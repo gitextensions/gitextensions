@@ -1,24 +1,22 @@
 ﻿using System;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
     public sealed class GitSubmoduleStatus
     {
         public string Name { get; }
-        public string OldName { get; }
+        public string? OldName { get; }
         public bool IsDirty { get; }
-        public ObjectId Commit { get; }
-        [CanBeNull]
-        public ObjectId OldCommit { get; }
+        public ObjectId? Commit { get; }
+        public ObjectId? OldCommit { get; }
         public int? AddedCommits { get; }
         public int? RemovedCommits { get; }
 
         public SubmoduleStatus Status { get; set; } = SubmoduleStatus.Unknown;
 
-        public GitSubmoduleStatus(string name, [CanBeNull] string oldName, bool isDirty, [CanBeNull] ObjectId commit, [CanBeNull] ObjectId oldCommit, int? addedCommits, int? removedCommits)
+        public GitSubmoduleStatus(string name, string? oldName, bool isDirty, ObjectId? commit, ObjectId? oldCommit, int? addedCommits, int? removedCommits)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             OldName = oldName;
@@ -34,9 +32,9 @@ namespace GitCommands
             return module.GetSubmodule(Name);
         }
 
-        public void CheckSubmoduleStatus(GitModule submodule)
+        public void CheckSubmoduleStatus(GitModule? submodule)
         {
-            if (submodule == null)
+            if (submodule is null)
             {
                 Status = SubmoduleStatus.NewSubmodule;
                 return;
@@ -47,7 +45,7 @@ namespace GitCommands
 
         public string AddedAndRemovedString()
         {
-            if (RemovedCommits == null || AddedCommits == null ||
+            if (RemovedCommits is null || AddedCommits is null ||
                 (RemovedCommits == 0 && AddedCommits == 0))
             {
                 return "";

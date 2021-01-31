@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -26,7 +26,7 @@ namespace GitCommands
 
         public IGitModule Module { get; }
 
-        public GitRef(IGitModule module, [CanBeNull] ObjectId objectId, string completeName, string remote = "")
+        public GitRef(IGitModule module, ObjectId? objectId, string completeName, string remote = "")
         {
             Module = module;
             ObjectId = objectId;
@@ -130,6 +130,7 @@ namespace GitCommands
 
         public string Remote { get; }
 
+        [AllowNull]
         public string TrackingRemote
         {
             get => GetTrackingRemote(Module.LocalConfigFile);
@@ -158,6 +159,7 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
+        [AllowNull]
         public string MergeWith
         {
             get => GetMergeWith(Module.LocalConfigFile);
@@ -187,10 +189,8 @@ namespace GitCommands
 
         #region IGitItem Members
 
-        [CanBeNull]
-        public ObjectId ObjectId { get; }
-        [CanBeNull]
-        public string Guid { get; }
+        public ObjectId? ObjectId { get; }
+        public string? Guid { get; }
         public string Name { get; }
 
         #endregion
@@ -203,6 +203,16 @@ namespace GitCommands
                 .GroupBy(r => r.Name)
                 .Where(group => group.Count() > 1)
                 .ToHashSet(e => e.Key);
+        }
+
+        public bool IsTrackingRemote(IGitRef? remote)
+        {
+            if (remote is null || IsRemote || !remote.IsRemote)
+            {
+                return false;
+            }
+
+            return MergeWith == remote.LocalName && TrackingRemote == remote.Remote;
         }
     }
 }

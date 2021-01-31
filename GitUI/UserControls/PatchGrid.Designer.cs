@@ -13,7 +13,7 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (components is not null))
             {
                 components.Dispose();
             }
@@ -31,7 +31,9 @@
             this.components = new System.ComponentModel.Container();
             this.Patches = new System.Windows.Forms.DataGridView();
             this.patchFileBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.Action = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CommitHash = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.subjectDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.authorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -48,11 +50,13 @@
             this.Patches.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.Patches.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Patches.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Status,
+            this.Action,
             this.FileName,
+            this.CommitHash,
             this.subjectDataGridViewTextBoxColumn,
             this.authorDataGridViewTextBoxColumn,
-            this.dateDataGridViewTextBoxColumn,
-            this.Status});
+            this.dateDataGridViewTextBoxColumn});
             this.Patches.DataSource = this.patchFileBindingSource;
             this.Patches.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Patches.Location = new System.Drawing.Point(0, 0);
@@ -75,6 +79,22 @@
             this.FileName.HeaderText = "Name";
             this.FileName.Name = "FileName";
             this.FileName.ReadOnly = true;
+            // 
+            // Action
+            // 
+            this.Action.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Action.DataPropertyName = "Action";
+            this.Action.HeaderText = "Action";
+            this.Action.Name = "Action";
+            this.Action.ReadOnly = true;
+            // 
+            // CommitHash
+            // 
+            this.CommitHash.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.CommitHash.DataPropertyName = "ObjectId";
+            this.CommitHash.HeaderText = "Commit hash";
+            this.CommitHash.Name = "CommitHash";
+            this.CommitHash.ReadOnly = true;
             // 
             // subjectDataGridViewTextBoxColumn
             // 
@@ -106,7 +126,6 @@
             // PatchGrid
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            
             this.Controls.Add(this.Patches);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "PatchGrid";
@@ -121,7 +140,9 @@
 
         private System.Windows.Forms.DataGridView Patches;
         private System.Windows.Forms.BindingSource patchFileBindingSource;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Action;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CommitHash;
         private System.Windows.Forms.DataGridViewTextBoxColumn subjectDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn authorDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn dateDataGridViewTextBoxColumn;
