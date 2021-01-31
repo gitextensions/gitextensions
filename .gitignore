@@ -76,3 +76,4 @@ tree.txt
 artifacts/
 .tools/vswhere/
 .dotnet/
+*.svclog
