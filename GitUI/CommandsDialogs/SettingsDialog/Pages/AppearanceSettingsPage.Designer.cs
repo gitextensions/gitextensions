@@ -53,11 +53,14 @@
             this.ShowAuthorAvatarInCommitGraph = new System.Windows.Forms.CheckBox();
             this.ShowAuthorAvatarInCommitInfo = new System.Windows.Forms.CheckBox();
             this.ClearImageCache = new System.Windows.Forms.Button();
+            this.txtCustomAvatarTemplate = new System.Windows.Forms.TextBox();
             this._NO_TRANSLATE_NoImageService = new System.Windows.Forms.ComboBox();
             this.lblCacheDays = new System.Windows.Forms.Label();
             this.lblNoImageService = new System.Windows.Forms.Label();
+            this.lblCustomAvatarTemplate = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_DaysToCacheImages = new System.Windows.Forms.NumericUpDown();
             this.pictureAvatarHelp = new System.Windows.Forms.PictureBox();
+            this.avatarProviderHelp = new System.Windows.Forms.PictureBox();
             this.fixedWidthFontDialog = new System.Windows.Forms.FontDialog();
             this.applicationDialog = new System.Windows.Forms.FontDialog();
             this.commitFontDialog = new System.Windows.Forms.FontDialog();
@@ -75,6 +78,7 @@
             this.tlpnlAuthor.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_DaysToCacheImages)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureAvatarHelp)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.avatarProviderHelp)).BeginInit();
             this.SuspendLayout();
             // 
             // tlpnlMain
@@ -242,6 +246,12 @@
             this.gbAuthorImages.TabIndex = 1;
             this.gbAuthorImages.TabStop = false;
             this.gbAuthorImages.Text = "Author images";
+            //
+            // txtCustomAvatarTemplate
+            //
+            this.txtCustomAvatarTemplate.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtCustomAvatarTemplate.Text = "";
+            this.txtCustomAvatarTemplate.Name = "txtCustomAvatarTemplate";
             // 
             // tlpnlAuthor
             // 
@@ -251,16 +261,19 @@
             this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpnlAuthor.Controls.Add(this.lblAvatarProvider, 0, 3);
-            this.tlpnlAuthor.Controls.Add(this.AvatarProvider, 1, 3);
             this.tlpnlAuthor.Controls.Add(this.ShowAuthorAvatarInCommitGraph, 0, 0);
             this.tlpnlAuthor.Controls.Add(this.ShowAuthorAvatarInCommitInfo, 0, 1);
-            this.tlpnlAuthor.Controls.Add(this.ClearImageCache, 1, 5);
-            this.tlpnlAuthor.Controls.Add(this._NO_TRANSLATE_NoImageService, 1, 4);
             this.tlpnlAuthor.Controls.Add(this.lblCacheDays, 0, 2);
-            this.tlpnlAuthor.Controls.Add(this.lblNoImageService, 0, 4);
             this.tlpnlAuthor.Controls.Add(this._NO_TRANSLATE_DaysToCacheImages, 1, 2);
+            this.tlpnlAuthor.Controls.Add(this.lblAvatarProvider, 0, 3);
+            this.tlpnlAuthor.Controls.Add(this.AvatarProvider, 1, 3);
+            this.tlpnlAuthor.Controls.Add(this.avatarProviderHelp, 2, 3);
+            this.tlpnlAuthor.Controls.Add(this.lblNoImageService, 0, 4);
             this.tlpnlAuthor.Controls.Add(this.pictureAvatarHelp, 2, 4);
+            this.tlpnlAuthor.Controls.Add(this._NO_TRANSLATE_NoImageService, 1, 4);
+            this.tlpnlAuthor.Controls.Add(this.lblCustomAvatarTemplate, 0, 5);
+            this.tlpnlAuthor.Controls.Add(this.txtCustomAvatarTemplate, 1, 5);
+            this.tlpnlAuthor.Controls.Add(this.ClearImageCache, 1, 6);
             this.tlpnlAuthor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpnlAuthor.Location = new System.Drawing.Point(8, 21);
             this.tlpnlAuthor.Name = "tlpnlAuthor";
@@ -460,6 +473,15 @@
             this.lblCacheDays.TabIndex = 2;
             this.lblCacheDays.Text = "Cache images (days)";
             this.lblCacheDays.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            //
+            // lblCustomAvatarTemplate
+            //
+            this.lblCustomAvatarTemplate.AutoSize = true;
+            this.lblCustomAvatarTemplate.Name = "lblCustomAvatarTemplate";
+            this.lblCustomAvatarTemplate.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblCustomAvatarTemplate.TabIndex = 4;
+            this.lblCustomAvatarTemplate.Text = "Custom avatar template";
+            this.lblCustomAvatarTemplate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblNoImageService
             // 
@@ -485,8 +507,21 @@
             this._NO_TRANSLATE_DaysToCacheImages.TabIndex = 2;
             this._NO_TRANSLATE_DaysToCacheImages.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
+            // customAvatarHelp
+            // 
+            this.avatarProviderHelp.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.avatarProviderHelp.Image = global::GitUI.Properties.Resources.information;
+            this.avatarProviderHelp.Location = new System.Drawing.Point(353, 104);
+            this.avatarProviderHelp.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
+            this.avatarProviderHelp.Name = "customAvatarHelp";
+            this.avatarProviderHelp.Size = new System.Drawing.Size(16, 16);
+            this.avatarProviderHelp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.avatarProviderHelp.TabStop = false;
+            this.avatarProviderHelp.Click += new System.EventHandler(this.customAvatarHelp_Click);
+            // 
             // pictureAvatarHelp
             // 
+            this.pictureAvatarHelp.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureAvatarHelp.Image = global::GitUI.Properties.Resources.information;
             this.pictureAvatarHelp.Location = new System.Drawing.Point(353, 104);
             this.pictureAvatarHelp.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
@@ -590,6 +625,7 @@
             this.tlpnlAuthor.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_DaysToCacheImages)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureAvatarHelp)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.avatarProviderHelp)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -611,8 +647,10 @@
         private System.Windows.Forms.Label truncateLongFilenames;
         private System.Windows.Forms.ComboBox truncatePathMethod;
         private System.Windows.Forms.GroupBox gbAuthorImages;
+        private System.Windows.Forms.TextBox txtCustomAvatarTemplate;
         private System.Windows.Forms.ComboBox _NO_TRANSLATE_NoImageService;
         private System.Windows.Forms.Label lblNoImageService;
+        private System.Windows.Forms.Label lblCustomAvatarTemplate;
         private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_DaysToCacheImages;
         private System.Windows.Forms.Label lblCacheDays;
         private System.Windows.Forms.Button ClearImageCache;
@@ -625,6 +663,7 @@
         private System.Windows.Forms.TableLayoutPanel tlpnlAuthor;
         private System.Windows.Forms.CheckBox ShowAuthorAvatarInCommitGraph;
         private System.Windows.Forms.PictureBox pictureAvatarHelp;
+        private System.Windows.Forms.PictureBox avatarProviderHelp;
         private System.Windows.Forms.Label lblAvatarProvider;
         private System.Windows.Forms.ComboBox AvatarProvider;
         private GitUI.UserControls.Settings.SettingsCheckBox chkSortByAuthorDate;

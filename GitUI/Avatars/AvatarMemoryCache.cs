@@ -13,7 +13,7 @@ namespace GitUI.Avatars
     /// <para>Decorates an inner cache, delegating to it as needed.</para>
     /// <para>If an image is available in memory, the inner cache can be bypassed.</para>
     /// </remarks>
-    public sealed class AvatarMemoryCache : IAvatarProvider
+    public sealed class AvatarMemoryCache : IAvatarProvider, IAvatarCacheCleaner
     {
         private readonly MruCache<(string email, int imageSize), Image> _cache;
         private readonly IAvatarProvider _inner;
@@ -25,11 +25,7 @@ namespace GitUI.Avatars
         }
 
         /// <inheritdoc />
-        event Action IAvatarProvider.CacheCleared
-        {
-            add => _inner.CacheCleared += value;
-            remove => _inner.CacheCleared -= value;
-        }
+        public event EventHandler CacheCleared;
 
         /// <inheritdoc />
         public async Task<Image> GetAvatarAsync(string email, string name, int imageSize)
@@ -60,7 +56,8 @@ namespace GitUI.Avatars
                 _cache.Clear();
             }
 
-            return _inner.ClearCacheAsync();
+            CacheCleared?.Invoke(this, EventArgs.Empty);
+            return Task.CompletedTask;
         }
     }
 }

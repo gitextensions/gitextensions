@@ -130,7 +130,7 @@ This action will be performed without warning while checking out branch.</source
         <target />
       </trans-unit>
       <trans-unit id="AvatarProvider.Text">
-        <source>Gravatar</source>
+        <source>Default</source>
         <target />
       </trans-unit>
       <trans-unit id="ClearImageCache.Text">
@@ -149,6 +149,15 @@ This action will be performed without warning while checking out branch.</source
         <source>Sorting by author date may delay rendering of the revision graph.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_avatarProviderTooltip.Text">
+        <source>The avatar provider defines the source for user-defined avatar images.
+The "Default" provider uses GitHub and Gravatar,
+the "Custom" provider allows you to set custom provider URLs and
+"None" disables user-defined avatars.
+
+Click this info icon for more details.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_noDictFile.Text">
         <source>None</source>
         <target />
@@ -158,8 +167,9 @@ This action will be performed without warning while checking out branch.</source
         <target />
       </trans-unit>
       <trans-unit id="_noImageServiceTooltip.Text">
-        <source>A default image, if an email address has no matching Gravatar image.
-See http://en.gravatar.com/site/implement/images#default-image for more details.</source>
+        <source>A default image, if the provider has no image for the email address.
+
+Click this info icon for more details.</source>
         <target />
       </trans-unit>
       <trans-unit id="chkEnableAutoScale.Text">
@@ -216,6 +226,10 @@ See http://en.gravatar.com/site/implement/images#default-image for more details.
       </trans-unit>
       <trans-unit id="lblCacheDays.Text">
         <source>Cache images (days)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblCustomAvatarTemplate.Text">
+        <source>Custom avatar template</source>
         <target />
       </trans-unit>
       <trans-unit id="lblLanguage.Text">

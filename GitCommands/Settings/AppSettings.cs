@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands.Settings;
+using GitCommands.Utils;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -112,6 +113,8 @@ namespace GitCommands
             {
                 ImportFromRegistry();
             }
+
+            MigrateAvatarSettings();
         }
 
         public static bool? TelemetryEnabled
@@ -507,12 +510,16 @@ namespace GitCommands
 
         public static string AvatarImageCachePath => Path.Combine(ApplicationDataPath.Value, "Images\\");
 
-        public static GravatarFallbackAvatarType GravatarFallbackAvatarType
+        public static AvatarFallbackType AvatarFallbackType
         {
-            get => Enum.TryParse(GetString("GravatarDefaultImageType", "Identicon"), out GravatarFallbackAvatarType type)
-                ? type
-                : GravatarFallbackAvatarType.Identicon;
+            get => GetEnumViaString("GravatarDefaultImageType", AvatarFallbackType.AuthorInitials);
             set => SetString("GravatarDefaultImageType", value.ToString());
+        }
+
+        public static string CustomAvatarTemplate
+        {
+            get => GetString("CustomAvatarTemplate", string.Empty);
+            set => SetString("CustomAvatarTemplate", value);
         }
 
         /// <summary>
@@ -535,8 +542,88 @@ namespace GitCommands
 
         public static AvatarProvider AvatarProvider
         {
-            get => GetEnum("Appearance.AvatarProvider", AvatarProvider.Gravatar);
-            set => SetEnum("Appearance.AvatarProvider", value);
+            get => GetEnumViaString("Appearance.AvatarProvider", AvatarProvider.Default);
+            set => SetString("Appearance.AvatarProvider", value.ToString());
+        }
+
+        /// <summary>
+        /// Loads a setting with GetString and parses it to an enum
+        /// </summary>
+        /// <remarks>
+        /// It's currently a limitation by <see cref="SettingsCache"/> that a given setting can
+        /// only ever use GetString/SetString or GetEnum/SetEnum but not both. This is the case
+        /// because <see cref="SettingsCache"/> caches a typed/parsed value of the setting and
+        /// crashes at <see cref="SettingsCache.TryGetValue{T}(string, T, Func{string, T}, out T)"/>
+        /// if the type that is requested doesn't match the cached type.
+        /// </remarks>
+        private static TEnum GetEnumViaString<TEnum>(string settingName, TEnum defaulValue)
+            where TEnum : struct
+        {
+            var settingStringValue = GetString(settingName, defaulValue.ToString());
+
+            if (Enum.TryParse(settingStringValue, out TEnum settingEnumValue))
+            {
+                return settingEnumValue;
+            }
+
+            return defaulValue;
+        }
+
+        private static void MigrateAvatarSettings()
+        {
+            // Load settings as strings to support obsolete settings that are no longer
+            // part of the enums AvatarProvider or AvatarFallbackType.
+
+            string provider = GetString("Appearance.AvatarProvider", "Default");
+
+            // if the provider turns out to be the obsolete "author initials" we can skip loading
+            // the fallback image, because it will be overwritten anyways, so loading it is postponed.
+            string fallbackImage;
+
+            bool providerChanged = false;
+            bool fallbackImageChanged = false;
+
+            if (provider == "AuthorInitials")
+            {
+                provider = AvatarProvider.None.ToString();
+                fallbackImage = AvatarFallbackType.AuthorInitials.ToString();
+
+                providerChanged = true;
+                fallbackImageChanged = true;
+            }
+            else
+            {
+                if (provider == "Gravatar")
+                {
+                    provider = AvatarProvider.Default.ToString();
+                    providerChanged = true;
+                }
+
+                // if provider was not "AuthorInitials" the fallback image
+                // is loaded to check if it has to be migrated.
+                fallbackImage = GetString("GravatarDefaultImageType", "AuthorInitials");
+
+                if (fallbackImage == "None")
+                {
+                    fallbackImage = AvatarFallbackType.AuthorInitials.ToString();
+                    fallbackImageChanged = true;
+                }
+            }
+
+            if (providerChanged)
+            {
+                SetString("Appearance.AvatarProvider", provider);
+            }
+
+            if (fallbackImageChanged)
+            {
+                SetString("GravatarDefaultImageType", fallbackImage);
+            }
+
+            if (providerChanged || fallbackImageChanged)
+            {
+                SaveSettings();
+            }
         }
 
         #endregion

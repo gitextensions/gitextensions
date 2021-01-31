@@ -1,33 +1,20 @@
+using System;
 using System.ComponentModel;
 
 namespace GitCommands
 {
     /// <summary>
-    /// Types of generated Avatars images that are used as fallback of the Gravatar service in
-    /// the absence of a user-uploaded image.
+    /// Types of generated Avatars images that are used as fallback in the absence of a user-uploaded image.
+    /// <see cref="AuthorInitials"/> is provided locally, the rest is served by Gravatar.
     /// See http://en.gravatar.com/site/implement/images#default-image for the ones provided by the Gravatar service
     /// </summary>
-    public enum GravatarFallbackAvatarType
+    public enum AvatarFallbackType
     {
-        /// <summary>
-        /// Return an HTTP 404 response.
-        /// </summary>
-        None = 0,
-
         /// <summary>
         /// Git Extensions will generate an avatar with the author initials avatar (color based on the email hash).
         /// </summary>
         [Description("Author initials")]
         AuthorInitials,
-
-#if false
-        /// <summary>
-        /// Return a simple, cartoon-style silhouetted outline of a person (provided by Gravatar service)
-        /// (does not vary by email hash)
-        /// </summary>
-        /// Don't use it, use Resources.User image instead
-        MysteryMan,
-#endif
 
         /// <summary>
         /// Return a generated monster based on the email hash (provided by Gravatar service).

@@ -113,7 +113,7 @@ namespace Gource
             {
                 try
                 {
-                    var image = await AvatarService.Default.GetAvatarAsync(author.email, author.name, imageSize: 90);
+                    var image = await AvatarService.DefaultProvider.GetAvatarAsync(author.email, author.name, imageSize: 90);
                     var filename = author.name + ".png";
 
                     if (filename.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
