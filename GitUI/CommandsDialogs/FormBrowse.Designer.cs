@@ -1790,7 +1790,7 @@ namespace GitUI.CommandsDialogs
             this.ToolStripScripts.GripStyle = ToolStripGripStyle.Hidden;
             this.ToolStripScripts.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.ToolStripScripts.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.ToolStripScripts.Location = new System.Drawing.Point(3, 50);
+            this.ToolStripScripts.Location = new System.Drawing.Point(890, 0);
             this.ToolStripScripts.Name = "toolStripScripts";
             this.ToolStripScripts.Padding = new System.Windows.Forms.Padding(0);
             this.ToolStripScripts.Size = new System.Drawing.Size(43, 25);
