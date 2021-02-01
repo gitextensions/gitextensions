@@ -769,7 +769,7 @@ namespace GitUI.CommitInfo
 
             private static readonly Regex _importantRepoRegex = new($"^{RemoteBranchPrefix}(origin|upstream)/",
                 RegexOptions.Compiled | RegexOptions.CultureInvariant);
-            private static readonly Regex _remoteMasterRegex = new($"^{RemoteBranchPrefix}.*/master[^/]*$",
+            private static readonly Regex _remoteMasterRegex = new($"^{RemoteBranchPrefix}.*/(main|master)[^/]*$",
                 RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
             private readonly string _currentBranch;
@@ -797,7 +797,7 @@ namespace GitUI.CommitInfo
                     : 6;
 
                 // Note: This assumes that branches starting with "master" are important branches, this is not configurable.
-                bool IsImportantLocalBranch() => branch.StartsWith("master");
+                bool IsImportantLocalBranch() => branch.StartsWith("master") || branch.StartsWith("main");
                 bool IsImportantRemoteBranch() => _remoteMasterRegex.IsMatch(branch);
                 bool IsImportantRepo() => _importantRepoRegex.IsMatch(branch);
                 bool IsLocalBranch() => !branch.StartsWith(RemoteBranchPrefix);
