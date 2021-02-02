@@ -6,6 +6,10 @@ namespace GitUIPluginInterfaces
     {
         ObjectId? ObjectId { get; }
         string? Guid { get; }
+    }
+
+    public interface INamedGitItem : IGitItem
+    {
         string Name { get; }
     }
 }
