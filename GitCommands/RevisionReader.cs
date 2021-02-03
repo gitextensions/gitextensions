@@ -175,11 +175,11 @@ namespace GitCommands
             return new GitArgumentBuilder("log")
             {
                 "-z",
-                $"--pretty=format:\"{FullFormat}\"",
                 {
                     !string.IsNullOrWhiteSpace(branchFilter) && IsSimpleBranchFilter(branchFilter),
                     branchFilter
                 },
+                $"--pretty=format:\"{FullFormat}\"",
                 {
                     refFilterOptions.HasFlag(RefFilterOptions.FirstParent),
                     "--first-parent",
