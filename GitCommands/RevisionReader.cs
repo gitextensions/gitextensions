@@ -172,44 +172,48 @@ namespace GitCommands
             string revisionFilter,
             string pathFilter)
         {
-            var builder = new GitArgumentBuilder("log");
-            builder.Add("-z");
-            builder.Add($"--pretty=format:\"{FullFormat}\"");
-            if (!string.IsNullOrWhiteSpace(branchFilter) && isBranchFilterSimple(branchFilter))
+            return new GitArgumentBuilder("log")
             {
-                builder.Add(branchFilter);
-            }
-
-            builder.Add(refFilterOptions.HasFlag(RefFilterOptions.FirstParent), "--first-parent", new ArgumentBuilder
-            {
-                { refFilterOptions.HasFlag(RefFilterOptions.Reflogs), "--reflog" },
-                { AppSettings.SortByAuthorDate, "--author-date-order" },
+                "-z",
+                $"--pretty=format:\"{FullFormat}\"",
                 {
-                    refFilterOptions.HasFlag(RefFilterOptions.All),
-                    "--all",
+                    !string.IsNullOrWhiteSpace(branchFilter) && IsSimpleBranchFilter(branchFilter),
+                    branchFilter
+                },
+                {
+                    refFilterOptions.HasFlag(RefFilterOptions.FirstParent),
+                    "--first-parent",
                     new ArgumentBuilder
                     {
+                        { refFilterOptions.HasFlag(RefFilterOptions.Reflogs), "--reflog" },
+                        { AppSettings.SortByAuthorDate, "--author-date-order" },
                         {
-                            refFilterOptions.HasFlag(RefFilterOptions.Branches) &&
-                            !string.IsNullOrWhiteSpace(branchFilter) && !isBranchFilterSimple(branchFilter),
-                            "--branches=" + branchFilter
+                            refFilterOptions.HasFlag(RefFilterOptions.All),
+                            "--all",
+                            new ArgumentBuilder
+                            {
+                                {
+                                    refFilterOptions.HasFlag(RefFilterOptions.Branches) &&
+                                    !string.IsNullOrWhiteSpace(branchFilter) && !IsSimpleBranchFilter(branchFilter),
+                                    "--branches=" + branchFilter
+                                },
+                                { refFilterOptions.HasFlag(RefFilterOptions.Remotes), "--remotes" },
+                                { refFilterOptions.HasFlag(RefFilterOptions.Tags), "--tags" },
+                            }.ToString()
                         },
-                        { refFilterOptions.HasFlag(RefFilterOptions.Remotes), "--remotes" },
-                        { refFilterOptions.HasFlag(RefFilterOptions.Tags), "--tags" },
+                        { refFilterOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
+                        { refFilterOptions.HasFlag(RefFilterOptions.ShowGitNotes), "--not --glob=notes --not" },
+                        { refFilterOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
+                        { refFilterOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" }
                     }.ToString()
                 },
-                { refFilterOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
-                { refFilterOptions.HasFlag(RefFilterOptions.ShowGitNotes), "--not --glob=notes --not" },
-                { refFilterOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
-                { refFilterOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" }
-            }.ToString());
-            builder.Add(revisionFilter);
-            builder.Add("--");
-            builder.Add(pathFilter);
-            return builder;
+                revisionFilter,
+                "--",
+                pathFilter
+            };
         }
 
-        private static bool isBranchFilterSimple(string branchFilter) =>
+        private static bool IsSimpleBranchFilter(string branchFilter) =>
             branchFilter.IndexOfAny(new[] { '?', '*', '[' }) == -1;
 
         private static void UpdateSelectedRef(GitModule module, IReadOnlyList<IGitRef> refs, string branchName)
