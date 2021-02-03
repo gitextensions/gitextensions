@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 using EasyHook;
 using GitExtUtils.GitUI.Theming;
 using GitUI.UserControls;
@@ -110,6 +110,7 @@ namespace GitUI.Theming
             ListViewRenderer listViewRenderer;
             HeaderRenderer headerRenderer;
             TreeViewRenderer treeViewRenderer;
+            TabRenderer tabRenderer;
 
             _renderers = new ThemeRenderer[]
             {
@@ -117,6 +118,7 @@ namespace GitUI.Theming
                 listViewRenderer = new ListViewRenderer(),
                 headerRenderer = new HeaderRenderer(),
                 treeViewRenderer = new TreeViewRenderer(),
+                tabRenderer = new TabRenderer(),
                 new EditRenderer(),
                 new SpinRenderer(),
                 new ComboBoxRenderer(),
@@ -132,6 +134,7 @@ namespace GitUI.Theming
             headerRenderer.AddThemeData(listViewHandle);
             listViewRenderer.AddThemeData(listViewHandle);
             treeViewRenderer.AddThemeData(treeViewHandle);
+            tabRenderer.AddThemeData(new TabControl().Handle);
         }
 
         public static void Uninstall()
@@ -276,17 +279,17 @@ namespace GitUI.Theming
             {
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
                 if (renderer is not null && renderer.ForceUseRenderTextEx)
-                {
-                    NativeMethods.DTTOPTS poptions = new NativeMethods.DTTOPTS
                     {
-                        dwSize = Marshal.SizeOf<NativeMethods.DTTOPTS>()
-                    };
+                        NativeMethods.DTTOPTS poptions = new NativeMethods.DTTOPTS
+                        {
+                            dwSize = Marshal.SizeOf<NativeMethods.DTTOPTS>()
+                        };
 
                     return _drawThemeTextExBypass(
-                        htheme, hdc,
-                        partid, stateid,
-                        psztext, cchtext, dwtextflags,
-                        prect, ref poptions);
+                            htheme, hdc,
+                            partid, stateid,
+                            psztext, cchtext, dwtextflags,
+                            prect, ref poptions);
                 }
             }
 
