@@ -175,7 +175,10 @@ namespace GitCommands
             return new GitArgumentBuilder("log")
             {
                 "-z",
-                branchFilter,
+                {
+                    !string.IsNullOrWhiteSpace(branchFilter) && IsSimpleBranchFilter(branchFilter),
+                    branchFilter
+                },
                 $"--pretty=format:\"{FullFormat}\"",
                 {
                     refFilterOptions.HasFlag(RefFilterOptions.FirstParent),
@@ -191,7 +194,7 @@ namespace GitCommands
                             {
                                 {
                                     refFilterOptions.HasFlag(RefFilterOptions.Branches) &&
-                                    !string.IsNullOrWhiteSpace(branchFilter) && branchFilter.IndexOfAny(new[] { '?', '*', '[' }) != -1,
+                                    !string.IsNullOrWhiteSpace(branchFilter) && !IsSimpleBranchFilter(branchFilter),
                                     "--branches=" + branchFilter
                                 },
                                 { refFilterOptions.HasFlag(RefFilterOptions.Remotes), "--remotes" },
@@ -209,6 +212,9 @@ namespace GitCommands
                 pathFilter
             };
         }
+
+        private static bool IsSimpleBranchFilter(string branchFilter) =>
+            branchFilter.IndexOfAny(new[] { '?', '*', '[' }) == -1;
 
         private static void UpdateSelectedRef(GitModule module, IReadOnlyList<IGitRef> refs, string branchName)
         {
