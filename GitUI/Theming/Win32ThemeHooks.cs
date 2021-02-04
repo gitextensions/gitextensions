@@ -279,17 +279,17 @@ namespace GitUI.Theming
             {
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
                 if (renderer is not null && renderer.ForceUseRenderTextEx)
+                {
+                    NativeMethods.DTTOPTS poptions = new NativeMethods.DTTOPTS
                     {
-                        NativeMethods.DTTOPTS poptions = new NativeMethods.DTTOPTS
-                        {
-                            dwSize = Marshal.SizeOf<NativeMethods.DTTOPTS>()
-                        };
+                        dwSize = Marshal.SizeOf<NativeMethods.DTTOPTS>()
+                    };
 
                     return _drawThemeTextExBypass(
-                            htheme, hdc,
-                            partid, stateid,
-                            psztext, cchtext, dwtextflags,
-                            prect, ref poptions);
+                        htheme, hdc,
+                        partid, stateid,
+                        psztext, cchtext, dwtextflags,
+                        prect, ref poptions);
                 }
             }
 
