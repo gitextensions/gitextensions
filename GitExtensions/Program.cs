@@ -13,8 +13,8 @@ using GitUI.Infrastructure.Telemetry;
 using GitUI.Theming;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
+using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using ResourceManager;
 
 namespace GitExtensions
 {
@@ -44,6 +44,23 @@ namespace GitExtensions
 
             ThemeModule.Load();
             Application.ApplicationExit += (s, e) => ThemeModule.Unload();
+
+            SystemEvents.UserPreferenceChanged += (s, e) =>
+            {
+                // Whenever a user changes monitor scaling (e.g. 100%->125%) unload and
+                // reload the theme, and repaint all forms
+
+                if (e.Category == UserPreferenceCategory.Desktop)
+                {
+                    ThemeModule.Unload();
+                    ThemeModule.Load();
+
+                    foreach (Form form in Application.OpenForms)
+                    {
+                        form.BeginInvoke((MethodInvoker)(() => form.Invalidate()));
+                    }
+                }
+            };
 
             HighDpiMouseCursors.Enable();
 
