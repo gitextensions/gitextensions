@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using GitExtUtils.GitUI.Theming;
 
 namespace GitUI.Theming
 {
@@ -8,24 +9,31 @@ namespace GitUI.Theming
     {
         protected override string Clsid { get; } = "Tab";
 
+        public override int RenderTextEx(IntPtr htheme, IntPtr hdc, int partid, int stateid, string psztext, int cchtext, NativeMethods.DT dwtextflags, IntPtr prect, ref NativeMethods.DTTOPTS poptions)
+        {
+            // do not render, just modify text color
+            var textColor = GetTextColor((States)stateid);
+            poptions.crText = ColorTranslator.ToWin32(textColor);
+            poptions.dwFlags |= NativeMethods.DTT.TextColor;
+
+            // proceed to default implementation with modified poptions parameter
+            return Unhandled;
+        }
+
         public override int RenderBackground(IntPtr hdc, int partid, int stateid, Rectangle prect, NativeMethods.RECTCLS pcliprect)
         {
             using var ctx = CreateRenderContext(hdc, pcliprect);
-            var border = prect.Inclusive();
             switch ((Parts)partid)
             {
                 case Parts.TABP_TOPTABITEM:
                 case Parts.TABP_TOPTABITEMRIGHTEDGE:
-                    RenderTab((States)stateid, prect, ctx, AnchorStyles.Top | AnchorStyles.Right);
-                    return Handled;
-
                 case Parts.TABP_TOPTABITEMLEFTEDGE:
                 case Parts.TABP_TOPTABITEMBOTHTEDGE:
-                    RenderTab((States)stateid, prect, ctx, AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+                    RenderTab((Parts)partid, (States)stateid, prect, ctx);
                     return Handled;
 
                 case Parts.TABP_PANE:
-                    RenderPane(ctx, border);
+                    RenderPane(ctx, prect);
                     return Handled;
 
                 // case Parts.TABP_TABITEM:
@@ -39,79 +47,87 @@ namespace GitUI.Theming
             }
         }
 
-        private static void RenderPane(Context ctx, Rectangle border)
+        private static void RenderPane(Context ctx, Rectangle prect)
         {
-            ctx.Graphics.DrawRectangle(SystemPens.ActiveBorder, border);
+            var borderPen = GetBorderPen();
+            ctx.Graphics.DrawRectangle(borderPen, prect.Inclusive());
         }
 
-        private static void RenderTab(States stateId, Rectangle prect, Context ctx, AnchorStyles borders)
+        private static void RenderTab(Parts partId, States stateId, Rectangle prect, Context ctx)
         {
-            Brush backBrush;
-            switch (stateId)
-            {
-                case States.TIS_NORMAL:
-                case States.TIS_FOCUSED:
-                    backBrush = SystemBrushes.Control;
-                    break;
-
-                case States.TIS_SELECTED:
-                    backBrush = SystemBrushes.Window;
-                    break;
-
-                case States.TIS_HOT:
-                    backBrush = SystemBrushes.ControlDark;
-                    break;
-
-                // case States.TIS_DISABLED:
-                default:
-                    backBrush = SystemBrushes.ControlLight;
-                    break;
-            }
-
-            Rectangle border = prect.Inclusive();
-            Pen borderPen = SystemPens.ActiveBorder;
+            Brush backBrush = GetTabBackgroundBrush(stateId);
             ctx.Graphics.FillRectangle(backBrush, prect);
-            if ((borders & AnchorStyles.Top) != AnchorStyles.None)
+
+            var borderPen = GetBorderPen();
+            var borderLines = GetTabBorders(partId, stateId);
+            Rectangle border = prect.Inclusive();
+            if ((borderLines & AnchorStyles.Top) != AnchorStyles.None)
             {
                 ctx.Graphics.DrawLine(borderPen, border.Left, border.Top, border.Right, border.Top);
             }
 
-            if ((borders & AnchorStyles.Left) != AnchorStyles.None)
+            if ((borderLines & AnchorStyles.Left) != AnchorStyles.None)
             {
                 ctx.Graphics.DrawLine(borderPen, border.Left, border.Top, border.Left, border.Bottom);
             }
 
-            if ((borders & AnchorStyles.Right) != AnchorStyles.None)
+            if ((borderLines & AnchorStyles.Right) != AnchorStyles.None)
             {
                 ctx.Graphics.DrawLine(borderPen, border.Right, border.Top, border.Right, border.Bottom);
             }
 
-            if ((borders & AnchorStyles.Bottom) != AnchorStyles.None)
+            if ((borderLines & AnchorStyles.Bottom) != AnchorStyles.None)
             {
                 ctx.Graphics.DrawLine(borderPen, border.Left, border.Bottom, border.Right, border.Bottom);
             }
         }
 
+        private static Pen GetBorderPen() =>
+            new Pen(Color.LightGray.AdaptBackColor());
+
+        private static Brush GetTabBackgroundBrush(States stateId) =>
+            stateId switch
+            {
+                States.TIS_SELECTED => SystemBrushes.Window,
+                States.TIS_HOT => SystemBrushes.ControlDark,
+                States.TIS_DISABLED => SystemBrushes.ControlLight,
+
+                // States.TIS_NORMAL
+                // States.TIS_FOCUSED
+                _ => SystemBrushes.Control
+            };
+
+        private static Color GetTextColor(States stateId) =>
+            stateId switch
+            {
+                States.TIS_SELECTED => SystemColors.WindowText,
+
+                // States.TIS_NORMAL
+                // States.TIS_FOCUSED
+                // States.TIS_HOT
+                _ => SystemColors.ControlText
+            };
+
+        private static AnchorStyles GetTabBorders(Parts partId, States stateId)
+        {
+            AnchorStyles borders = AnchorStyles.Top | AnchorStyles.Right;
+            if (stateId == States.TIS_SELECTED)
+            {
+                borders |= AnchorStyles.Left;
+            }
+            else if (partId == Parts.TABP_TOPTABITEMLEFTEDGE)
+            {
+                borders |= AnchorStyles.Left;
+            }
+            else if (partId == Parts.TABP_TOPTABITEMBOTHTEDGE)
+            {
+                borders |= AnchorStyles.Left;
+            }
+
+            return borders;
+        }
+
         public override bool ForceUseRenderTextEx { get; } = true;
-
-        public override int RenderTextEx(IntPtr htheme, IntPtr hdc, int partid, int stateid, string psztext, int cchtext, NativeMethods.DT dwtextflags, IntPtr prect, ref NativeMethods.DTTOPTS poptions)
-        {
-            NativeMethods.GetThemeColor(htheme, partid, stateid, poptions.iColorPropId,
-                out var crefText);
-
-            // do not render, just modify text color
-            poptions.iColorPropId = 0;
-            poptions.crText = ColorTranslator.ToWin32(SystemColors.ControlText);
-            poptions.dwFlags |= NativeMethods.DTT.TextColor;
-
-            // proceed to default implementation with modified poptions parameter
-            return Unhandled;
-        }
-
-        public override int RenderBackgroundEx(IntPtr htheme, IntPtr hdc, int partid, int stateid, NativeMethods.RECTCLS prect, ref NativeMethods.DTBGOPTS poptions)
-        {
-            return Unhandled;
-        }
 
         private enum Parts
         {
