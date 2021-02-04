@@ -60,10 +60,6 @@ namespace GitUI.BranchTreePanel
 
             mnubtnCollapseAll.AdaptImageLightness();
             tsbCollapseAll.AdaptImageLightness();
-            tsbShowBranches.AdaptImageLightness();
-            tsbShowRemotes.AdaptImageLightness();
-            tsbShowTags.AdaptImageLightness();
-            tsbShowSubmodules.AdaptImageLightness();
             mnubtnExpandAll.AdaptImageLightness();
             mnubtnFetchAllBranchesFromARemote.AdaptImageLightness();
             mnuBtnPruneAllBranchesFromARemote.AdaptImageLightness();
