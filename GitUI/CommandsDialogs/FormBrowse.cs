@@ -279,6 +279,7 @@ namespace GitUI.CommandsDialogs
             ManageWorktreeSupport();
 
             WorkaroundToolbarLocationBug();
+            WorkaroundPaddingIncreaseBug();
 
             var toolBackColor = SystemColors.Window;
             var toolForeColor = SystemColors.WindowText;
@@ -530,6 +531,13 @@ namespace GitUI.CommandsDialogs
                     Debug.Assert(toolStrips[i].Left < toolStrips[i - 1].Left, $"{toolStrips[i - 1].Name} must be placed before {toolStrips[i].Name}");
                 }
 #endif
+            }
+
+            void WorkaroundPaddingIncreaseBug()
+            {
+                MainSplitContainer.Panel1.Padding = new Padding(1);
+                RevisionsSplitContainer.Panel1.Padding = new Padding(1);
+                RevisionsSplitContainer.Panel2.Padding = new Padding(1);
             }
         }
 
