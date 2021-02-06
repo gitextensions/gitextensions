@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUI.NBugReports;
 using GitUIPluginInterfaces;
