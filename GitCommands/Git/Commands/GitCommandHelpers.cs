@@ -179,16 +179,15 @@ namespace GitCommands.Git.Commands
         /// Push a local reference to a new commit
         /// This is similar to "git branch --force "branch" "commit", except that you get a warning if commits are lost.
         /// </summary>
-        /// <param name="repoPath">Full path to the repo.</param>
         /// <param name="gitRef">The branch to move.</param>
         /// <param name="targetId">The commit to move to.</param>
         /// <param name="force">Push the reference also if commits are lost.</param>
         /// <returns>The Git command to execute.</returns>
-        public static ArgumentString PushLocalCmd(string repoPath, string gitRef, ObjectId targetId, bool force = false)
+        public static ArgumentString PushLocalCmd(string gitRef, ObjectId targetId, bool force = false)
         {
             return new GitArgumentBuilder("push")
             {
-                $"file://{repoPath}".RemoveTrailingPathSeparator().QuoteNE(),
+                ".",
                 $"{targetId}:{gitRef}".QuoteNE(),
                 { force, "--force" }
             };
