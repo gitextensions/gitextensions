@@ -471,34 +471,6 @@ A valid GitHub account is required</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BuildServerIntegrationSettingsPage" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Build server integration</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_noneItem.Text">
-        <source>None</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="checkBoxEnableBuildServerIntegration.Text">
-        <source>Enable build server integration</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="checkBoxShowBuildResultPage.Text">
-        <source>Show build result page</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="labelBuildServerSettingsInfo.Text">
-        <source>Git Extensions can integrate with build servers to supply per-commit Continuous Integration information.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="labelBuildServerType.Text">
-        <source>Build server type</source>
-        <target />
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="ChecklistSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">

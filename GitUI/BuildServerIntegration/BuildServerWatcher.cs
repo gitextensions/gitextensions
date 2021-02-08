@@ -330,7 +330,13 @@ namespace GitUI.BuildServerIntegration
                             // To run the `StartSettingsDialog()` in the UI Thread
                             _revisionGrid.Invoke((Action)(() =>
                             {
-                                _revisionGrid.UICommands.StartSettingsDialog(typeof(BuildServerIntegrationSettingsPage));
+                                var plugin = PluginRegistry.Plugins
+                                    .FirstOrDefault(x => x.Name == "BuildServer");
+
+                                if (plugin is not null)
+                                {
+                                    _revisionGrid.UICommands.StartSettingsDialog(plugin);
+                                }
                             }));
                         }, objectId => _revisionGrid.GetRevision(objectId) is not null);
                     return buildServerAdapter;

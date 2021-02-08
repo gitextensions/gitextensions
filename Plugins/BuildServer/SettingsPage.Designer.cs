@@ -1,6 +1,6 @@
-namespace GitUI.CommandsDialogs.SettingsDialog.Pages
+namespace GitExtensions.Plugins.BuildServer
 {
-    partial class BuildServerIntegrationSettingsPage
+    partial class SettingsPage
     {
         private System.ComponentModel.IContainer components = null;
 

@@ -217,6 +217,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI.IntegrationTests", "Inte
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "setup", "setup", "{2786EE4D-2C03-4622-8800-8A66ECEF2AA5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.BuildServer", "Plugins\BuildServer\GitExtensions.Plugins.BuildServer.csproj", "{BED49EEA-19A3-4692-B402-95184D4D38C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -405,6 +407,10 @@ Global
 		{AA58470E-24F7-4CED-8C76-06F05B09F1B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA58470E-24F7-4CED-8C76-06F05B09F1B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA58470E-24F7-4CED-8C76-06F05B09F1B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BED49EEA-19A3-4692-B402-95184D4D38C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BED49EEA-19A3-4692-B402-95184D4D38C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BED49EEA-19A3-4692-B402-95184D4D38C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BED49EEA-19A3-4692-B402-95184D4D38C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -468,6 +474,7 @@ Global
 		{26B8A7CB-F911-4ADE-85F6-FF3FE95BE0AC} = {0E859634-B3DF-46AC-A73C-D49734F19D6A}
 		{958D7C09-1FA5-4438-A6A0-B3E8BD96E291} = {449DD87E-63E9-4C61-B797-A94F8CBE8837}
 		{AA58470E-24F7-4CED-8C76-06F05B09F1B1} = {958D7C09-1FA5-4438-A6A0-B3E8BD96E291}
+		{BED49EEA-19A3-4692-B402-95184D4D38C7} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}
