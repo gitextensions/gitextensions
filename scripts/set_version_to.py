@@ -35,15 +35,6 @@ if __name__ == '__main__':
     if not args.text:
       args.text = args.version
     
-    filename = "..\GitUI\CommandsDialogs\FormBrowse.cs"
-    pattern = re.compile(r'(git-extensions-documentation.readthedocs.org/en)(/\w+)', re.IGNORECASE)
-    commonAssemblyInfo = open(filename, "r").readlines()
-    o = ""
-    for i in commonAssemblyInfo:
-        o += pattern.sub(r"\1/release-%s" % (short_version), i)
-    outfile = open(filename, "w")
-    outfile.writelines(o)
-
     submodules = glob.glob("..\Externals\**\AssemblyInfo.cs", recursive=True)
     filenames = [ "..\CommonAssemblyInfo.cs", "..\CommonAssemblyInfoExternals.cs" ]
     combined = filenames + submodules
@@ -119,20 +110,3 @@ if __name__ == '__main__':
     for i in range(1, len(verSplitted)):
         if len(verSplitted[i]) == 1:
             verSplitted[i] = "0" + verSplitted[i]
-
-    filename = "..\GitExtensionsDoc\source\conf.py"
-    docoConf = open(filename, "r").readlines()
-    o = ""
-    for i in docoConf:
-        line = i
-        if line.find("release = ") != -1:
-            data = line.split(' = ')
-            data[1] = '.'.join(verSplitted)
-            line = " = '".join(data) + "'\n"
-        elif line.find("version = ") != -1:
-            data = line.split(' = ')
-            data[1] = args.text
-            line = " = '".join(data) + "'\n"
-        o += line
-    outfile = open(filename, "w")
-    outfile.writelines(o)
