@@ -536,7 +536,7 @@ namespace GitUI.CommandsDialogs
             foreach (var item in DiffFiles.SelectedItems)
             {
                 string filePath = _fullPathResolver.Resolve(item.Item.Name);
-                if (filePath is not null && FormBrowseUtil.FileOrParentDirectoryExists(filePath))
+                if (FormBrowseUtil.FileOrParentDirectoryExists(filePath))
                 {
                     openContainingFolderToolStripMenuItem.Enabled = true;
                     break;

@@ -6,8 +6,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
     {
         public static bool FileOrParentDirectoryExists(string path)
         {
-            var fileInfo = new FileInfo(path);
-            return fileInfo.Exists || (fileInfo.Directory is not null && fileInfo.Directory.Exists);
+            return File.Exists(path) || (Directory.Exists(path) && new FileInfo(path).Directory.Exists);
         }
 
         public static bool IsFileOrDirectory(string path)
@@ -17,13 +16,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public static void ShowFileOrParentFolderInFileExplorer(string path)
         {
-            var fileInfo = new FileInfo(path);
-            if (fileInfo.Exists)
+            if (File.Exists(path))
             {
+                var fileInfo = new FileInfo(path);
                 OsShellUtil.SelectPathInFileExplorer(fileInfo.FullName);
             }
-            else if (fileInfo.Directory.Exists)
+            else if (Directory.Exists(path))
             {
+                var fileInfo = new FileInfo(path);
                 OsShellUtil.OpenWithFileExplorer(fileInfo.Directory.FullName);
             }
         }
