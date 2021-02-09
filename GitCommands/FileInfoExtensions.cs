@@ -11,14 +11,14 @@ namespace GitCommands
         /// </summary>
         public static void MakeFileTemporaryWritable(string fileName, Action<string> writableAction)
         {
-            var fileInfo = new FileInfo(fileName);
-            if (!fileInfo.Exists)
+            if (!File.Exists(fileName))
             {
                 // The file doesn't exist yet, no need to make it writable
                 writableAction(fileName);
                 return;
             }
 
+            var fileInfo = new FileInfo(fileName);
             var oldAttributes = fileInfo.Attributes;
             fileInfo.Attributes = FileAttributes.Normal;
             writableAction(fileName);
