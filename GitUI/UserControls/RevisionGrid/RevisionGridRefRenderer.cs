@@ -22,7 +22,7 @@ namespace GitUI
             var paddingTopBottom = DpiUtil.Scale(2);
             var marginRight = DpiUtil.Scale(7);
 
-            var textColor = fill ? headColor : Lerp(headColor, Color.White, 0.5f);
+            var textColor = fill ? headColor : ColorHelper.Lerp(headColor, Color.White, 0.5f);
 
             var textSize = TextRenderer.MeasureText(graphics, name, font, Size.Empty, TextFormatFlags.NoPadding);
 
@@ -70,8 +70,8 @@ namespace GitUI
                 using var path = CreateRoundRectPath(bounds, radius);
                 if (fill)
                 {
-                    var color1 = Lerp(color, SystemColors.Window, 0.92F);
-                    var color2 = Lerp(color1, SystemColors.Window, 0.9f);
+                    var color1 = ColorHelper.Lerp(color, SystemColors.Window, 0.92F);
+                    var color2 = ColorHelper.Lerp(color1, SystemColors.Window, 0.9f);
                     using var brush = new LinearGradientBrush(bounds, color1, color2, angle: 90);
                     graphics.FillPath(brush, path);
                 }
@@ -81,7 +81,7 @@ namespace GitUI
                 }
 
                 // frame
-                using var pen = new Pen(Lerp(color, SystemColors.Window, 0.83F));
+                using var pen = new Pen(ColorHelper.Lerp(color, SystemColors.Window, 0.83F));
                 if (dashedLine)
                 {
                     pen.DashPattern = _dashPattern;
@@ -186,30 +186,6 @@ namespace GitUI
             path.CloseFigure();
 
             return path;
-        }
-
-        private static Color Lerp(Color colour, Color to, float amount)
-        {
-            // start colours as lerp-able floats
-            float sr = colour.R, sg = colour.G, sb = colour.B;
-
-            // end colours as lerp-able floats
-            float er = to.R, eg = to.G, eb = to.B;
-
-            // lerp the colours to get the difference
-            byte r = (byte)Lerp(sr, er),
-                g = (byte)Lerp(sg, eg),
-                b = (byte)Lerp(sb, eb);
-
-            // return the new colour
-            return Color.FromArgb(r, g, b);
-
-            float Lerp(float start, float end)
-            {
-                var difference = end - start;
-                var adjusted = difference * amount;
-                return start + adjusted;
-            }
         }
     }
 }

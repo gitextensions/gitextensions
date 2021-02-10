@@ -85,17 +85,20 @@ namespace GitUI.Theming
         private static Pen GetBorderPen() =>
             new Pen(Color.LightGray.AdaptBackColor());
 
-        private static Brush GetTabBackgroundBrush(States stateId) =>
-            stateId switch
+        private static Brush GetTabBackgroundBrush(States stateId)
+        {
+            switch (stateId)
             {
-                States.TIS_SELECTED => SystemBrushes.Window,
-                States.TIS_HOT => SystemBrushes.ControlDark,
-                States.TIS_DISABLED => SystemBrushes.ControlLight,
-
-                // States.TIS_NORMAL
-                // States.TIS_FOCUSED
-                _ => SystemBrushes.Control
-            };
+                case States.TIS_SELECTED:
+                    return SystemBrushes.Window;
+                case States.TIS_HOT:
+                    return new SolidBrush(ColorHelper.Lerp(SystemColors.Control, SystemColors.HotTrack, 64f / 255f));
+                case States.TIS_DISABLED:
+                    return SystemBrushes.ControlLight;
+                default:
+                    return SystemBrushes.Control;
+            }
+        }
 
         private static Color GetTextColor(States stateId) =>
             stateId switch
