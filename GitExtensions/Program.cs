@@ -49,12 +49,9 @@ namespace GitExtensions
             {
                 // Whenever a user changes monitor scaling (e.g. 100%->125%) unload and
                 // reload the theme, and repaint all forms
-
-                if (e.Category == UserPreferenceCategory.Desktop)
+                if (e.Category == UserPreferenceCategory.Desktop || e.Category == UserPreferenceCategory.VisualStyle)
                 {
-                    ThemeModule.Unload();
-                    ThemeModule.Load();
-
+                    ThemeModule.ReloadThemeData();
                     foreach (Form form in Application.OpenForms)
                     {
                         form.BeginInvoke((MethodInvoker)(() => form.Invalidate()));

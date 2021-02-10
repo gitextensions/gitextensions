@@ -25,11 +25,6 @@ namespace GitUI.Theming
 
         private readonly HashSet<IntPtr> _themeDataHandles = new HashSet<IntPtr>();
 
-        protected ThemeRenderer()
-        {
-            AddThemeData(IntPtr.Zero);
-        }
-
         protected abstract string Clsid { get; }
 
         public virtual bool ForceUseRenderTextEx => false;

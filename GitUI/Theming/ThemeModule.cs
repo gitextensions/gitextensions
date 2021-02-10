@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Drawing;
 using System.Reflection;
@@ -127,6 +127,11 @@ namespace GitUI.Theming
         {
             Win32ThemeHooks.Uninstall();
             Win32ThemeHooks.WindowCreated -= Handle_WindowCreated;
+        }
+
+        public static void ReloadThemeData()
+        {
+            Win32ThemeHooks.LoadThemeData();
         }
 
         private static void Handle_WindowCreated(IntPtr hwnd)
