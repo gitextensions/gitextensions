@@ -1,10 +1,11 @@
-; Visual Studio Extension : http://visualstudiogallery.msdn.microsoft.com/c8bccfe2-650c-4b42-bc5c-845e21f96328
-; See http://editorconfig.org/ for more informations
-; Top-most EditorConfig file
+# editorconfig.org
+
+# top-most EditorConfig file
 root = true
 
-; 4-column space indentation
-[*]
+# Default settings:
+# A newline ending every file
+# Use 4 spaces as indentation[*]
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
@@ -14,7 +15,14 @@ indent_style = space
 indent_size = 2
 insert_final_newline = false
 
-[*.{props,targets}]
+# C# and VB files
+[*.{cs,vb}]
+charset = utf-8-bom
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Xml config files
+[*.{props,targets,config,nuspec}]
 indent_size = 2
 
 [*.Designer.cs]
@@ -25,6 +33,9 @@ indent_style = space
 indent_size = 2
 trim_trailing_whitespace = true
 
+[*.json]
+indent_size = 2
+
 [*.{patch,diff}]
 trim_trailing_whitespace = false
 
@@ -32,8 +43,10 @@ trim_trailing_whitespace = false
 trim_trailing_whitespace = false
 
 [*.resx]
+charset = utf-8-bom
 indent_style = space
 indent_size = 2
+insert_final_newline = true
 trim_trailing_whitespace = false
 
 # C# files
@@ -51,14 +64,14 @@ dotnet_separate_import_directive_groups = false
 dotnet_sort_system_directives_first = true
 
 # this. and Me. preferences
-dotnet_style_qualification_for_event = false:none
-dotnet_style_qualification_for_field = false:none
-dotnet_style_qualification_for_method = false:none
-dotnet_style_qualification_for_property = false:none
+dotnet_style_qualification_for_event = false:suggestion
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
 
-# Language keywords vs BCL types preferences
-dotnet_style_predefined_type_for_locals_parameters_members = true:none
-dotnet_style_predefined_type_for_member_access = true:none
+# use language keywords instead of BCL types
+dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
+dotnet_style_predefined_type_for_member_access = true:suggestion
 
 # Parentheses preferences
 dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity:none
@@ -104,14 +117,15 @@ csharp_style_expression_bodied_lambdas = true:silent
 csharp_style_expression_bodied_local_functions = false:silent
 csharp_style_expression_bodied_methods = false:silent
 csharp_style_expression_bodied_operators = false:silent
-csharp_style_expression_bodied_properties = false:silent
+csharp_style_expression_bodied_properties = true:silent
 
 # Pattern matching preferences
-csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
 csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
-csharp_style_prefer_switch_expression = true:silent
+csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
+csharp_style_inlined_variable_declaration = true:suggestion
 
 # Null-checking preferences
+csharp_style_throw_expression = true:suggestion
 csharp_style_conditional_delegate_call = true:suggestion
 
 # Modifier preferences
@@ -186,6 +200,39 @@ csharp_preserve_single_line_statements = true
 #### Naming styles ####
 
 # Naming rules
+
+# name all constant fields using PascalCase
+dotnet_naming_rule.constant_fields_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.constant_fields_should_be_pascal_case.symbols  = constant_fields
+dotnet_naming_rule.constant_fields_should_be_pascal_case.style    = pascal_case_style
+
+dotnet_naming_symbols.constant_fields.applicable_kinds   = field
+dotnet_naming_symbols.constant_fields.required_modifiers = const
+
+dotnet_naming_style.pascal_case_style.capitalization = pascal_case
+
+# static fields should have s_ prefix
+dotnet_naming_rule.static_fields_should_have_prefix.severity = suggestion
+dotnet_naming_rule.static_fields_should_have_prefix.symbols  = static_fields
+dotnet_naming_rule.static_fields_should_have_prefix.style    = static_prefix_style
+
+dotnet_naming_symbols.static_fields.applicable_kinds   = field
+dotnet_naming_symbols.static_fields.required_modifiers = static
+
+dotnet_naming_style.static_prefix_style.required_prefix = s_
+dotnet_naming_style.static_prefix_style.capitalization = camel_case
+
+# internal and private fields should be _camelCase
+dotnet_naming_rule.camel_case_for_private_internal_fields.severity = suggestion
+dotnet_naming_rule.camel_case_for_private_internal_fields.symbols  = private_internal_fields
+dotnet_naming_rule.camel_case_for_private_internal_fields.style    = camel_case_underscore_style
+
+dotnet_naming_symbols.private_internal_fields.applicable_kinds = field
+dotnet_naming_symbols.private_internal_fields.applicable_accessibilities = private, internal
+
+dotnet_naming_style.camel_case_underscore_style.required_prefix = _
+dotnet_naming_style.camel_case_underscore_style.capitalization = camel_case
+
 
 dotnet_naming_rule.interface_should_be_begins_with_i.severity = suggestion
 dotnet_naming_rule.interface_should_be_begins_with_i.symbols = interface
