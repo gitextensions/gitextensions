@@ -40,6 +40,11 @@ namespace GitUI.Theming
         internal static ThemeSettings ThemeSettings { private get; set; } = ThemeSettings.Default;
 
         private static readonly HashSet<NativeListView> InitializingListViews = new HashSet<NativeListView>();
+        private static ScrollBarRenderer _scrollBarRenderer;
+        private static ListViewRenderer _listViewRenderer;
+        private static HeaderRenderer _headerRenderer;
+        private static TreeViewRenderer _treeViewRenderer;
+        private static TabRenderer _tabRenderer;
 
         private static bool BypassThemeRenderers =>
             ThemeSettings.UseSystemVisualStyle || BypassAnyHook;
@@ -106,19 +111,13 @@ namespace GitUI.Theming
 
         private static void CreateRenderers()
         {
-            ScrollBarRenderer scrollBarRenderer;
-            ListViewRenderer listViewRenderer;
-            HeaderRenderer headerRenderer;
-            TreeViewRenderer treeViewRenderer;
-            TabRenderer tabRenderer;
-
             _renderers = new ThemeRenderer[]
             {
-                scrollBarRenderer = new ScrollBarRenderer(),
-                listViewRenderer = new ListViewRenderer(),
-                headerRenderer = new HeaderRenderer(),
-                treeViewRenderer = new TreeViewRenderer(),
-                tabRenderer = new TabRenderer(),
+                _scrollBarRenderer = new ScrollBarRenderer(),
+                _listViewRenderer = new ListViewRenderer(),
+                _headerRenderer = new HeaderRenderer(),
+                _treeViewRenderer = new TreeViewRenderer(),
+                _tabRenderer = new TabRenderer(),
                 new EditRenderer(),
                 new SpinRenderer(),
                 new ComboBoxRenderer(),
@@ -126,15 +125,25 @@ namespace GitUI.Theming
                 new TooltipRenderer(),
             };
 
+            LoadThemeData();
+        }
+
+        public static void LoadThemeData()
+        {
+            foreach (ThemeRenderer renderer in _renderers)
+            {
+                renderer.AddThemeData(IntPtr.Zero);
+            }
+
             var editorHandle = new ICSharpCode.TextEditor.TextEditorControl().Handle;
             var listViewHandle = new NativeListView().Handle;
             var treeViewHandle = new NativeTreeView().Handle;
-            scrollBarRenderer.AddThemeData(editorHandle);
-            scrollBarRenderer.AddThemeData(listViewHandle);
-            headerRenderer.AddThemeData(listViewHandle);
-            listViewRenderer.AddThemeData(listViewHandle);
-            treeViewRenderer.AddThemeData(treeViewHandle);
-            tabRenderer.AddThemeData(new TabControl().Handle);
+            _scrollBarRenderer.AddThemeData(editorHandle);
+            _scrollBarRenderer.AddThemeData(listViewHandle);
+            _headerRenderer.AddThemeData(listViewHandle);
+            _listViewRenderer.AddThemeData(listViewHandle);
+            _treeViewRenderer.AddThemeData(treeViewHandle);
+            _tabRenderer.AddThemeData(new TabControl().Handle);
         }
 
         public static void Uninstall()
