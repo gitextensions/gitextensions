@@ -2467,11 +2467,6 @@ namespace GitUI.CommandsDialogs
             foreach (var item in diffFiles.SelectedItems)
             {
                 string filePath = PathUtil.Combine(module.WorkingDir, item.Item.Name.ToNativePath());
-                if (string.IsNullOrWhiteSpace(filePath))
-                {
-                    continue;
-                }
-
                 FormBrowseUtil.ShowFileOrParentFolderInFileExplorer(filePath);
             }
         }
