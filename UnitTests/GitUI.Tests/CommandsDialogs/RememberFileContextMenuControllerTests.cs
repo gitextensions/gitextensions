@@ -130,12 +130,6 @@ namespace GitUITests.CommandsDialogs
                 secondRev: rev,
                 item: new GitItemStatus("file"));
             _rememberFileContextMenuController.GetGitCommit(null, item, false).Should().BeNull();
-
-            item = new FileStatusItem(
-                firstRev: workTree,
-                secondRev: rev,
-                item: new GitItemStatus("name"));
-            _rememberFileContextMenuController.GetGitCommit(null, item, false).Should().BeNull();
         }
 
         [Test]
