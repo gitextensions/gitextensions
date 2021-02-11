@@ -12,7 +12,7 @@ using GitUI.BranchTreePanel.Interfaces;
 using GitUI.Properties;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.BranchTreePanel
@@ -41,7 +41,7 @@ namespace GitUI.BranchTreePanel
                 Visible = visible;
             }
 
-            protected string AheadBehind { get; set; }
+            protected string? AheadBehind { get; set; }
 
             /// <summary>
             /// Short name of the branch/branch path. <example>"issue1344"</example>.
@@ -53,7 +53,7 @@ namespace GitUI.BranchTreePanel
             /// <summary>
             /// Full path of the branch. <example>"issues/issue1344"</example>.
             /// </summary>
-            public string FullPath => ParentPath.Combine(PathSeparator.ToString(), Name);
+            public string FullPath => ParentPath.Combine(PathSeparator.ToString(), Name)!;
 
             /// <summary>
             /// Gets whether the commit that the node represents is currently visible in the revision grid.
@@ -93,8 +93,7 @@ namespace GitUI.BranchTreePanel
                 return UICommands.StartResetCurrentBranchDialog(ParentWindow(), branch: FullPath);
             }
 
-            [CanBeNull]
-            internal BaseBranchNode CreateRootNode(IDictionary<string, BaseBranchNode> pathToNode,
+            internal BaseBranchNode? CreateRootNode(IDictionary<string, BaseBranchNode> pathToNode,
                 Func<Tree, string, BaseBranchNode> createPathNode)
             {
                 if (string.IsNullOrEmpty(ParentPath))
@@ -102,7 +101,7 @@ namespace GitUI.BranchTreePanel
                     return this;
                 }
 
-                BaseBranchNode result;
+                BaseBranchNode? result;
 
                 if (pathToNode.TryGetValue(ParentPath, out var parent))
                 {
@@ -142,7 +141,7 @@ namespace GitUI.BranchTreePanel
 
             private bool _isMerged = false;
 
-            public BaseBranchLeafNode(Tree tree, in ObjectId objectId, string fullPath, bool visible, string imageKeyUnmerged, string imageKeyMerged)
+            public BaseBranchLeafNode(Tree tree, in ObjectId? objectId, string fullPath, bool visible, string imageKeyUnmerged, string imageKeyMerged)
                 : base(tree, fullPath, visible)
             {
                 ObjectId = objectId;
@@ -171,8 +170,7 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            [CanBeNull]
-            public ObjectId ObjectId { get; }
+            public ObjectId? ObjectId { get; }
 
             protected override void ApplyStyle()
             {
@@ -192,7 +190,7 @@ namespace GitUI.BranchTreePanel
         [DebuggerDisplay("(Local) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
         private sealed class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICanRename, ICanDelete
         {
-            public LocalBranchNode(Tree tree, in ObjectId objectId, string fullPath, bool isCurrent, bool visible)
+            public LocalBranchNode(Tree tree, in ObjectId? objectId, string fullPath, bool isCurrent, bool visible)
                 : base(tree, objectId, fullPath, visible, nameof(Images.BranchLocal), nameof(Images.BranchLocalMerged))
             {
                 IsActive = isCurrent;
@@ -300,15 +298,15 @@ namespace GitUI.BranchTreePanel
 
         private sealed class BranchTree : Tree
         {
-            private readonly IAheadBehindDataProvider _aheadBehindDataProvider;
+            private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
             private readonly ICheckRefs _refsSource;
 
             // Retains the list of currently loaded branches.
             // This is needed to apply filtering without reloading the data.
             // Whether or not force the reload of data is controlled by <see cref="_isFiltering"/> flag.
-            private IReadOnlyList<IGitRef> _loadedBranches;
+            private IReadOnlyList<IGitRef>? _loadedBranches;
 
-            public BranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, [CanBeNull] IAheadBehindDataProvider aheadBehindDataProvider, ICheckRefs refsSource)
+            public BranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, IAheadBehindDataProvider? aheadBehindDataProvider, ICheckRefs refsSource)
                 : base(treeNode, uiCommands)
             {
                 _aheadBehindDataProvider = aheadBehindDataProvider;
@@ -392,6 +390,8 @@ namespace GitUI.BranchTreePanel
                 foreach (IGitRef branch in branches)
                 {
                     token.ThrowIfCancellationRequested();
+
+                    Assumes.NotNull(branch.ObjectId);
 
                     bool isVisible = !IsFiltering.Value || _refsSource.Contains(branch.ObjectId);
                     var localBranchNode = new LocalBranchNode(this, branch.ObjectId, branch.Name, branch.Name == currentBranch, isVisible);

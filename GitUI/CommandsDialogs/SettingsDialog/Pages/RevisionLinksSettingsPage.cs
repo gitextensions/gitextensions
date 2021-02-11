@@ -6,7 +6,7 @@ using GitCommands.ExternalLinks;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.SettingsDialog.RevisionLinks;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -14,7 +14,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     public sealed partial class RevisionLinksSettingsPage : RepoDistSettingsPage
     {
         private readonly TranslationString _addTemplate = new("Add {0} templates");
-        private ExternalLinksManager _externalLinksManager;
+        private ExternalLinksManager? _externalLinksManager;
 
         public RevisionLinksSettingsPage()
         {
@@ -31,6 +31,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void SettingsToPage()
         {
+            Assumes.NotNull(CurrentSettings);
             _externalLinksManager = new ExternalLinksManager(CurrentSettings);
 
             ReloadCategories();
@@ -44,6 +45,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void PageToSettings()
         {
+            Assumes.NotNull(_externalLinksManager);
             _externalLinksManager.Save();
         }
 
@@ -59,6 +61,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ReloadCategories()
         {
+            Assumes.NotNull(_externalLinksManager);
+
             var effectiveLinkDefinitions = _externalLinksManager.GetEffectiveSettings();
 
             _NO_TRANSLATE_Categories.DataSource = null;
@@ -66,8 +70,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_Categories.DataSource = effectiveLinkDefinitions;
         }
 
-        [CanBeNull]
-        private ExternalLinkDefinition SelectedLinkDefinition => _NO_TRANSLATE_Categories.SelectedItem as ExternalLinkDefinition;
+        private ExternalLinkDefinition? SelectedLinkDefinition => _NO_TRANSLATE_Categories.SelectedItem as ExternalLinkDefinition;
 
         private void CategoryChanged()
         {
@@ -118,6 +121,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 SearchInParts = { ExternalLinkDefinition.RevisionPart.Message },
                 RemoteSearchInParts = { ExternalLinkDefinition.RemotePart.URL }
             };
+            Assumes.NotNull(_externalLinksManager);
             _externalLinksManager.Add(definition);
 
             ReloadCategories();
@@ -161,6 +165,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ExtractExternalLinkDefinitions(ICloudProviderExternalLinkDefinitionExtractor externalLinkDefinitionExtractor)
         {
+            Assumes.NotNull(Module);
+            Assumes.NotNull(_externalLinksManager);
+
             var remotes = ThreadHelper.JoinableTaskFactory.Run(async () => await Module.GetRemotesAsync()).ToList();
             var selectedRemote = FindRemoteByPreference(remotes.Where(r => externalLinkDefinitionExtractor.IsValidRemoteUrl(r.FetchUrl)).ToList());
 
@@ -178,6 +185,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 return;
             }
+
+            Assumes.NotNull(_externalLinksManager);
 
             int idx = _NO_TRANSLATE_Categories.SelectedIndex;
 

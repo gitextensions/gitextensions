@@ -23,7 +23,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return Title;
         }
 
-        public Control GuiControl => null;
+        public Control? GuiControl => null;
 
         public void OnPageShown()
         {

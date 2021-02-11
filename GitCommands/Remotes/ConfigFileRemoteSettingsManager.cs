@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GitCommands.Config;
+using GitExtensions;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.Remotes
@@ -58,7 +59,7 @@ namespace GitCommands.Remotes
         /// <param name="remotePushUrl">An optional alternative remote push URL.</param>
         /// <param name="remotePuttySshKey">An optional Putty SSH key.</param>
         /// <returns>Result of the operation.</returns>
-        ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote? remote, string remoteName, string remoteUrl, string remotePushUrl, string remotePuttySshKey);
+        ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl, string remotePuttySshKey);
 
         /// <summary>
         ///  Marks the remote as enabled or disabled in .git/config file.
@@ -91,9 +92,9 @@ namespace GitCommands.Remotes
     {
         internal static readonly string DisabledSectionPrefix = "-";
         internal static readonly string SectionRemote = "remote";
-        private readonly Func<IGitModule> _getModule;
+        private readonly Func<IGitModule?> _getModule;
 
-        public ConfigFileRemoteSettingsManager(Func<IGitModule> getModule)
+        public ConfigFileRemoteSettingsManager(Func<IGitModule?> getModule)
         {
             _getModule = getModule;
         }
@@ -287,7 +288,7 @@ namespace GitCommands.Remotes
         /// <param name="remotePushUrl">An optional alternative remote push URL.</param>
         /// <param name="remotePuttySshKey">An optional Putty SSH key.</param>
         /// <returns>Result of the operation.</returns>
-        public ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote? remote, string remoteName, string remoteUrl, string remotePushUrl, string remotePuttySshKey)
+        public ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl, string remotePuttySshKey)
         {
             if (string.IsNullOrWhiteSpace(remoteName))
             {
@@ -450,12 +451,12 @@ namespace GitCommands.Remotes
             return remoteEnabled ? key : DisabledSectionPrefix + key;
         }
 
-        private static void UpdateSettings(IGitModule module, string remoteName, bool remoteDisabled, string settingName, string value)
+        private static void UpdateSettings(IGitModule module, string remoteName, bool remoteDisabled, string settingName, string? value)
         {
             var prefix = remoteDisabled ? DisabledSectionPrefix : string.Empty;
             var fullSettingName = prefix + string.Format(settingName, remoteName);
 
-            if (!string.IsNullOrWhiteSpace(value))
+            if (!Strings.IsNullOrWhiteSpace(value))
             {
                 module.SetSetting(fullSettingName, value);
             }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -14,21 +13,19 @@ using GitUI.Editor;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI
 {
     public static class GitUIExtensions
     {
-        [CanBeNull]
-        private static Patch GetItemPatch(
-            [NotNull] GitModule module,
-            [NotNull] GitItemStatus file,
-            [CanBeNull] ObjectId firstId,
-            [CanBeNull] ObjectId secondId,
-            [NotNull] string diffArgs,
-            [NotNull] Encoding encoding)
+        private static Patch? GetItemPatch(
+            GitModule module,
+            GitItemStatus file,
+            ObjectId? firstId,
+            ObjectId? secondId,
+            string diffArgs,
+            Encoding encoding)
         {
             // Files with tree guid should be presented with normal diff
             var isTracked = file.IsTracked || (file.TreeGuid is not null && secondId is not null);
@@ -45,14 +42,14 @@ namespace GitUI
         /// <param name="openWithDiffTool">The difftool command to open with</param>
         /// <returns>Task to view</returns>
         public static Task ViewChangesAsync(this FileViewer fileViewer,
-            [CanBeNull] FileStatusItem item,
-            [NotNull] string defaultText = "",
-            [CanBeNull] Action openWithDiffTool = null)
+            FileStatusItem? item,
+            string defaultText = "",
+            Action? openWithDiffTool = null)
         {
-            if (item?.Item?.IsStatusOnly ?? false)
+            if (item?.Item.IsStatusOnly ?? false)
             {
                 // Present error (e.g. parsing Git)
-                return fileViewer.ViewTextAsync(item.Item.Name, item.Item.ErrorMessage);
+                return fileViewer.ViewTextAsync(item.Item.Name, item.Item.ErrorMessage ?? "");
             }
 
             if (item?.Item is null || item.SecondRevision?.ObjectId is null)
@@ -113,7 +110,7 @@ namespace GitUI
                     isTracked: item.Item.IsTracked);
             }
 
-            static string GetSelectedPatch(
+            static string? GetSelectedPatch(
                 FileViewer fileViewer,
                 ObjectId firstId,
                 ObjectId selectedId,
@@ -124,7 +121,7 @@ namespace GitUI
                     var diffOfConflict = fileViewer.Module.GetCombinedDiffContent(selectedId, file.Name,
                         fileViewer.GetExtraDiffArguments(), fileViewer.Encoding);
 
-                    return string.IsNullOrWhiteSpace(diffOfConflict)
+                    return GitExtensions.Strings.IsNullOrWhiteSpace(diffOfConflict)
                         ? Strings.UninterestingDiffOmitted
                         : diffOfConflict;
                 }
@@ -188,8 +185,7 @@ namespace GitUI
             }
         }
 
-        [CanBeNull]
-        private static LoadingControl FindMaskPanel(Control control)
+        private static LoadingControl? FindMaskPanel(Control control)
         {
             return control.Controls.Cast<Control>().OfType<LoadingControl>().FirstOrDefault();
         }

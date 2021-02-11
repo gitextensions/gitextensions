@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.UserControls
@@ -17,7 +18,7 @@ namespace GitUI.UserControls
         /// The Text property of this control will be filled with the selected path
         /// and the Text property is used as path to initialize the folder browser's default selection
         /// </summary>
-        public Control PathShowingControl { get; set; }
+        public Control? PathShowingControl { get; set; }
 
         /// <summary>
         /// Opens a a folder picker dialog with the path in "getter" preselected and
@@ -25,7 +26,7 @@ namespace GitUI.UserControls
         /// </summary>
         public void ShowFolderBrowserDialogWithPreselectedPath(Func<string> getter, Action<string> setter)
         {
-            string directoryInfoPath = null;
+            string? directoryInfoPath = null;
             try
             {
                 directoryInfoPath = new DirectoryInfo(getter()).FullName;
@@ -52,6 +53,8 @@ namespace GitUI.UserControls
 
         private void buttonBrowse_Click(object sender, EventArgs e)
         {
+            Assumes.NotNull(PathShowingControl);
+
             ShowFolderBrowserDialogWithPreselectedPath(() => PathShowingControl.Text, path => PathShowingControl.Text = path);
         }
     }

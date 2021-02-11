@@ -91,11 +91,10 @@ namespace GitCommands.Submodules
             var result = GetSuperProjectRepositorySubmodulesStructure(currentModule, noBranchText);
 
             // Prepare info for status updates
-            Assumes.NotNull(result.TopProject?.Path);
+            Assumes.NotNull(result.TopProject);
             _submoduleInfos[result.TopProject.Path] = result.TopProject;
             foreach (var info in result.AllSubmodules)
             {
-                Assumes.NotNull(info.Path);
                 _submoduleInfos[info.Path] = info;
             }
 
@@ -216,7 +215,7 @@ namespace GitCommands.Submodules
             string path = topProject.WorkingDir;
             string name = Directory.Exists(path) ? Path.GetFileName(Path.GetDirectoryName(path)) : path;
             name += GetBranchNameSuffix(path, noBranchText);
-            result.TopProject = new SubmoduleInfo { Text = name, Path = path, Bold = isCurrentTopProject };
+            result.TopProject = new SubmoduleInfo(text: name, path, bold: isCurrentTopProject);
         }
 
         private void SetSubmoduleData(GitModule currentModule, SubmoduleInfoResult result, string noBranchText, IGitModule topProject)
@@ -249,7 +248,7 @@ namespace GitCommands.Submodules
                     bold = true;
                 }
 
-                var smi = new SubmoduleInfo { Text = name, Path = path, Bold = bold };
+                var smi = new SubmoduleInfo(text: name, path, bold);
                 result.AllSubmodules.Add(smi);
                 if (path == superWorkDir)
                 {

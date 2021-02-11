@@ -7,6 +7,7 @@ using GitCommands.Git;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
@@ -23,9 +24,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private readonly TranslationString _openRepository = new("Open repository");
         private readonly TranslationString _translate = new("Translate");
 
-        private DashboardTheme _selectedTheme;
+        private DashboardTheme? _selectedTheme;
 
-        public event EventHandler<GitModuleEventArgs> GitModuleChanged;
+        public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
 
         public Dashboard()
         {
@@ -161,6 +162,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                 Control CreateLink(Control container, string text, Image icon, EventHandler handler)
                 {
+                    Assumes.NotNull(_selectedTheme);
+
                     var padding24 = DpiUtil.Scale(24);
                     var padding3 = DpiUtil.Scale(3);
                     var linkLabel = new LinkLabel
@@ -227,7 +230,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void openItem_Click(object sender, EventArgs e)
         {
-            GitModule module = FormOpenDirectory.OpenModule(this, currentModule: null);
+            GitModule? module = FormOpenDirectory.OpenModule(this, currentModule: null);
             if (module is not null)
             {
                 OnModuleChanged(this, new GitModuleEventArgs(module));

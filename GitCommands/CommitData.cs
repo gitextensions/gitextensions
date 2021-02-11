@@ -8,7 +8,7 @@ namespace GitCommands
     {
         public CommitData(
             ObjectId objectId,
-            ObjectId treeGuid,
+            ObjectId? treeGuid,
             IReadOnlyList<ObjectId> parentIds,
             string author,
             DateTime authorDate,
@@ -27,7 +27,7 @@ namespace GitCommands
         }
 
         public ObjectId ObjectId { get; }
-        public ObjectId TreeGuid { get; }
+        public ObjectId? TreeGuid { get; } // TODO nothing seems to be using this value
         public IReadOnlyList<ObjectId> ParentIds { get; }
         public string Author { get; }
         public DateTimeOffset AuthorDate { get; }

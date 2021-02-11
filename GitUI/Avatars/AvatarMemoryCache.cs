@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Threading.Tasks;
 using GitExtUtils;
-using JetBrains.Annotations;
 
 namespace GitUI.Avatars
 {
@@ -18,17 +17,17 @@ namespace GitUI.Avatars
         private readonly MruCache<(string email, int imageSize), Image> _cache;
         private readonly IAvatarProvider _inner;
 
-        public AvatarMemoryCache([NotNull] IAvatarProvider inner, int capacity = 30)
+        public AvatarMemoryCache(IAvatarProvider inner, int capacity = 30)
         {
             _inner = inner ?? throw new ArgumentNullException(nameof(inner));
             _cache = new MruCache<(string email, int imageSize), Image>(capacity);
         }
 
         /// <inheritdoc />
-        public event EventHandler CacheCleared;
+        public event EventHandler? CacheCleared;
 
         /// <inheritdoc />
-        public async Task<Image> GetAvatarAsync(string email, string name, int imageSize)
+        public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
             lock (_cache)
             {
@@ -40,12 +39,15 @@ namespace GitUI.Avatars
 
             var image = await _inner.GetAvatarAsync(email, name, imageSize);
 
-            lock (_cache)
+            if (image != null)
             {
-                _cache.Add((email, imageSize), image);
-
-                return image;
+                lock (_cache)
+                {
+                    _cache.Add((email, imageSize), image);
+                }
             }
+
+            return image;
         }
 
         /// <inheritdoc />

@@ -11,7 +11,7 @@ namespace GitUI.Theming
         public ThemeBasedHighlighting(IHighlightingStrategy original) =>
             _original = original;
 
-        public HighlightColor GetColorFor(string name) =>
+        public HighlightColor? GetColorFor(string name) =>
             _original.GetColorFor(name)?.Transform();
 
         public string Name => _original.Name;

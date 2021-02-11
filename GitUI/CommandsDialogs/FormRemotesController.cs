@@ -7,7 +7,7 @@ namespace GitUI.CommandsDialogs
 {
     internal class FormRemotesController
     {
-        public void RemoteDelete(IList<Repository> remotes, string oldRemoteUrl)
+        public void RemoteDelete(IList<Repository> remotes, string? oldRemoteUrl)
         {
             if (string.IsNullOrWhiteSpace(oldRemoteUrl))
             {
@@ -21,9 +21,9 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public void RemoteUpdate(IList<Repository> remotes, string oldRemoteUrl, string newRemoteUrl)
+        public void RemoteUpdate(IList<Repository> remotes, string? oldRemoteUrl, string? newRemoteUrl)
         {
-            if (string.IsNullOrWhiteSpace(newRemoteUrl))
+            if (GitExtensions.Strings.IsNullOrWhiteSpace(newRemoteUrl))
             {
                 return;
             }

@@ -46,7 +46,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
         /// <returns>A collection of categorised user's git repositories.</returns>
         public IReadOnlyList<RepositoryCategory> Load()
         {
-            string legacySetting = AppSettings.GetString(KeyHistory, null);
+            string? legacySetting = AppSettings.GetString(KeyHistory, null);
             if (legacySetting is null)
             {
                 return Array.Empty<RepositoryCategory>();

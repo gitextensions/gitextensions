@@ -18,22 +18,19 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private readonly RevisionGridControl _revisionGrid;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormBisect()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
-        }
-
-        private FormBisect(GitUICommands commands)
-            : base(commands)
-        {
-            InitializeComponent();
-            InitializeComplete();
         }
 
         public FormBisect(RevisionGridControl revisionGrid)
-            : this(revisionGrid.UICommands)
+            : base(revisionGrid.UICommands)
         {
             _revisionGrid = revisionGrid;
+            InitializeComponent();
+            InitializeComplete();
             UpdateButtonsState();
         }
 

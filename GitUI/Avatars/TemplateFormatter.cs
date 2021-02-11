@@ -18,7 +18,7 @@ namespace GitUI.Avatars
         /// The returned formatter can be reused to format different inputs. It basically generates
         /// a custom StringBuilder from the template
         /// </remarks>
-        public static Func<TInput, string> Create<TInput>(string template, Func<string, Func<TInput, string>> valueMapperProvider)
+        public static Func<TInput, string> Create<TInput>(string template, Func<string, Func<TInput, string?>> valueMapperProvider)
         {
             var formatParts = new List<Action<StringBuilder, TInput>>();
             var position = 0;

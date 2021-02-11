@@ -32,18 +32,20 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _errorCloneFailed = new("Clone Failed");
 
         private readonly bool _openedFromProtocolHandler;
-        private readonly string _url;
-        private readonly EventHandler<GitModuleEventArgs> _gitModuleChanged;
+        private readonly string? _url;
+        private readonly EventHandler<GitModuleEventArgs>? _gitModuleChanged;
         private readonly IReadOnlyList<string> _defaultBranchItems;
-        private string _puttySshKey;
+        private string? _puttySshKey;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormClone()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
         }
 
-        public FormClone(GitUICommands commands, string url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs> gitModuleChanged)
+        public FormClone(GitUICommands commands, string? url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs>? gitModuleChanged)
             : base(commands, enablePositionRestore: false)
         {
             _gitModuleChanged = gitModuleChanged;
@@ -181,7 +183,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            FromTextUpdate(null, null);
+            FromTextUpdate(this, EventArgs.Empty);
 
             cbLfs.Visible = !GitVersion.Current.DepreciatedLfsClone;
             cbLfs.Enabled = Module.HasLfsSupport();
@@ -240,7 +242,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 // Branch name param
-                string branch = _NO_TRANSLATE_Branches.Text;
+                string? branch = _NO_TRANSLATE_Branches.Text;
                 if (branch == _branchDefaultRemoteHead.Text)
                 {
                     branch = "";
@@ -405,9 +407,15 @@ namespace GitUI.CommandsDialogs
 
         private readonly AsyncLoader _branchListLoader = new();
 
-        private void UpdateBranches(RemoteActionResult<IReadOnlyList<IGitRef>> branchList)
+        private void UpdateBranches(RemoteActionResult<IReadOnlyList<IGitRef>>? branchList)
         {
             Cursor = Cursors.Default;
+
+            if (branchList == null)
+            {
+                // cancelled
+                return;
+            }
 
             if (branchList.HostKeyFail)
             {

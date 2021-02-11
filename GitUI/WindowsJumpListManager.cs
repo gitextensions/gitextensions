@@ -7,7 +7,7 @@ using System.Text;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitCommands.Utils;
-using JetBrains.Annotations;
+using Microsoft;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI
@@ -20,10 +20,10 @@ namespace GitUI
     /// <inheritdoc />
     public sealed class WindowsJumpListManager : IDisposable
     {
-        private ThumbnailToolBarButton _commitButton;
-        private ThumbnailToolBarButton _pushButton;
-        private ThumbnailToolBarButton _pullButton;
-        private string _deferredAddToRecent;
+        private ThumbnailToolBarButton? _commitButton;
+        private ThumbnailToolBarButton? _pushButton;
+        private ThumbnailToolBarButton? _pullButton;
+        private string? _deferredAddToRecent;
         private bool ToolbarButtonsCreated => _commitButton is not null;
         private readonly IRepositoryDescriptionProvider _repositoryDescriptionProvider;
 
@@ -63,8 +63,7 @@ namespace GitUI
         /// <summary>
         /// Adds the given working directory to the list of Recent for future quick access.
         /// </summary>
-        [ContractAnnotation("workingDir:null=>halt")]
-        public void AddToRecent([NotNull] string workingDir)
+        public void AddToRecent(string workingDir)
         {
             if (!IsSupported)
             {
@@ -112,6 +111,10 @@ namespace GitUI
                     return;
                 }
 
+                Assumes.NotNull(_commitButton);
+                Assumes.NotNull(_pushButton);
+                Assumes.NotNull(_pullButton);
+
                 _commitButton.Enabled = true;
                 _pushButton.Enabled = true;
                 _pullButton.Enabled = true;
@@ -124,6 +127,7 @@ namespace GitUI
             {
                 if (ToolbarButtonsCreated && IsSupportedAndVisible)
                 {
+                    Assumes.NotNull(_commitButton);
                     _commitButton.Icon = MakeIcon(image, 48, true);
                 }
             }, nameof(UpdateCommitIcon));
@@ -195,6 +199,9 @@ namespace GitUI
 
             SafeInvoke(() =>
             {
+                Assumes.NotNull(_commitButton);
+                Assumes.NotNull(_pushButton);
+                Assumes.NotNull(_pullButton);
                 _commitButton.Enabled = false;
                 _pushButton.Enabled = false;
                 _pullButton.Enabled = false;

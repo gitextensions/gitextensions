@@ -8,7 +8,6 @@ using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -28,7 +27,7 @@ namespace GitUI.CommandsDialogs
         private readonly DataGridViewCheckBoxHeaderCell _selectedItemsHeader = new();
         private readonly IGitTagController _gitTagController;
 
-        private LostObject _previewedItem;
+        private LostObject? _previewedItem;
 
         private static readonly Dictionary<string, string> LanguagesStartOfFile = new Dictionary<string, string>
         {
@@ -43,12 +42,14 @@ namespace GitUI.CommandsDialogs
         };
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormVerify()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
         }
 
-        public FormVerify([NotNull] GitUICommands commands)
+        public FormVerify(GitUICommands commands)
             : base(commands)
         {
             InitializeComponent();
@@ -79,8 +80,7 @@ namespace GitUI.CommandsDialogs
             _gitTagController = new GitTagController(commands);
         }
 
-        [CanBeNull]
-        private LostObject CurrentItem => Warnings.SelectedRows.Count == 0 ? null : _filteredLostObjects[Warnings.SelectedRows[0].Index];
+        private LostObject? CurrentItem => Warnings.SelectedRows.Count == 0 ? null : _filteredLostObjects[Warnings.SelectedRows[0].Index];
 
         #region Event Handlers
 
@@ -240,7 +240,7 @@ namespace GitUI.CommandsDialogs
 
             _previewedItem = CurrentItem;
 
-            var content = Module.ShowObject(_previewedItem.ObjectId);
+            var content = Module.ShowObject(_previewedItem.ObjectId) ?? "";
             if (_previewedItem.ObjectType == LostObjectType.Commit)
             {
                 ThreadHelper.JoinableTaskFactory.RunAsync(() =>
@@ -252,7 +252,7 @@ namespace GitUI.CommandsDialogs
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
                     var filename = GuessFileTypeWithContent(content);
-                    await fileViewer.ViewTextAsync(filename, content ?? string.Empty, null);
+                    await fileViewer.ViewTextAsync(filename, content, null);
                 }).FileAndForget();
             }
         }
@@ -298,8 +298,8 @@ namespace GitUI.CommandsDialogs
                     cmdOutput
                         .Split('\r', '\n')
                         .Where(s => !string.IsNullOrEmpty(s))
-                        .Select((s) => LostObject.TryParse(Module, s))
-                        .Where(parsedLostObject => parsedLostObject is not null)
+                        .Select(s => LostObject.TryParse(Module, s))
+                        .WhereNotNull()
                         .OrderByDescending(l => l.Date));
 
                 UpdateFilteredLostObjects();
@@ -356,10 +356,15 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            using (var frm = new FormEdit(UICommands, Module.ShowObject(currentItem.ObjectId)))
+            string? obj = Module.ShowObject(currentItem.ObjectId);
+
+            if (obj is not null)
             {
-                frm.IsReadOnly = true;
-                frm.ShowDialog(this);
+                using (var frm = new FormEdit(UICommands, obj))
+                {
+                    frm.IsReadOnly = true;
+                    frm.ShowDialog(this);
+                }
             }
         }
 
@@ -462,7 +467,12 @@ namespace GitUI.CommandsDialogs
             if (Warnings is not null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem is not null)
             {
                 var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
-                ClipboardUtil.TrySetText(lostObject.Parent?.ToString());
+                ObjectId? parent = lostObject.Parent;
+
+                if (parent is not null)
+                {
+                    ClipboardUtil.TrySetText(parent.ToString());
+                }
             }
         }
 

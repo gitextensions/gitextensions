@@ -6,7 +6,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks
 {
     public sealed class CloudProviderExternalLinkDefinitionExtractorFactory : ICloudProviderExternalLinkDefinitionExtractorFactory
     {
-        public ICloudProviderExternalLinkDefinitionExtractor Get(CloudProviderKind cloudProviderKind)
+        public ICloudProviderExternalLinkDefinitionExtractor? Get(CloudProviderKind cloudProviderKind)
         {
             switch (cloudProviderKind)
             {
@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks
             var cloudProviderKinds = Enum.GetValues(typeof(CloudProviderKind)).OfType<CloudProviderKind>();
             var cloudProviderExternalLinkDefinitionExtractorFactory = new CloudProviderExternalLinkDefinitionExtractorFactory();
             return cloudProviderKinds.Select(c => cloudProviderExternalLinkDefinitionExtractorFactory.Get(c))
-                .Where(e => e is not null);
+                .WhereNotNull();
         }
     }
 }

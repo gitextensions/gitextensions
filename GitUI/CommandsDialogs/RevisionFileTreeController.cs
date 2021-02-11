@@ -9,7 +9,7 @@ using GitCommands.Git;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
+using Microsoft;
 
 namespace GitUI.CommandsDialogs
 {
@@ -19,8 +19,7 @@ namespace GitUI.CommandsDialogs
         /// Locates the node by the label.
         /// </summary>
         /// <returns>The first node matching the label, if one found; otherwise <see langword="null"/>.</returns>
-        [CanBeNull]
-        TreeNode Find(TreeNodeCollection nodes, string label);
+        TreeNode? Find(TreeNodeCollection nodes, string label);
 
         /// <summary>
         /// Loads children items for the provided item in to the specified nodes.
@@ -63,7 +62,7 @@ namespace GitUI.CommandsDialogs
         /// Locates the node by the label.
         /// </summary>
         /// <returns>The first node matching the label, if one found; otherwise <see langword="null"/>.</returns>
-        public TreeNode Find(TreeNodeCollection nodes, string label)
+        public TreeNode? Find(TreeNodeCollection nodes, string label)
         {
             for (var i = 0; i < nodes.Count; i++)
             {
@@ -84,13 +83,15 @@ namespace GitUI.CommandsDialogs
         /// <remarks>The method DOES NOT check any input parameters for performance reasons.</remarks>
         public void LoadChildren(IGitItem item, TreeNodeCollection nodes, ImageList.ImageCollection imageCollection)
         {
+            Assumes.NotNull(item.Guid);
+
             var childrenItems = _cachedItems.GetOrAdd(item.Guid, _revisionInfoProvider.LoadChildren(item));
             if (childrenItems is null)
             {
                 return;
             }
 
-            string workingDir = null;
+            string? workingDir = null;
             foreach (var childItem in childrenItems.OrderBy(gi => gi, new GitFileTreeComparer()))
             {
                 var subNode = nodes.Add(childItem.Name);
@@ -161,7 +162,7 @@ namespace GitUI.CommandsDialogs
             return true;
         }
 
-        private TreeNode FindSubNode(TreeNodeCollection nodes, Queue<string> pathParts)
+        private TreeNode? FindSubNode(TreeNodeCollection nodes, Queue<string> pathParts)
         {
             while (true)
             {

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Linq;
-using GitCommands;
 using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
@@ -91,7 +89,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return maxScore;
         }
 
-        public GitRevision GitRevision { get; set; }
+        public GitRevision? GitRevision { get; set; }
 
         public ObjectId Objectid { get; set; }
 

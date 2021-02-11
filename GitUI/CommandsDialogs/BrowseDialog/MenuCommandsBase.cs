@@ -9,7 +9,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
     internal abstract class MenuCommandsBase : ITranslate
     {
         // for translation category
-        protected string TranslationCategoryName { get; set; }
+        protected string? TranslationCategoryName { get; set; }
 
         void IDisposable.Dispose()
         {
@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         // override and return all commands created by extending class
         protected abstract IEnumerable<MenuCommand> GetMenuCommandsForTranslation();
 
-        private IEnumerable<(string name, object item)> GetMenuCommandsForTranslationImpl()
+        private IEnumerable<(string? name, object item)> GetMenuCommandsForTranslationImpl()
         {
             return GetMenuCommandsForTranslation().Select(menu => (menu.Name, (object)menu));
         }

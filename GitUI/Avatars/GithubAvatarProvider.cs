@@ -31,9 +31,9 @@ namespace GitUI.Avatars
             _onlySupplyNoReply = onlySupplyNoReply;
         }
 
-        public async Task<Image> GetAvatarAsync([NotNull] string email, string name, int imageSize)
+        public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
-            var uri = await BuildAvatarUri(email, name, imageSize);
+            var uri = await BuildAvatarUri(email, imageSize);
 
             if (uri == null)
             {
@@ -50,7 +50,7 @@ namespace GitUI.Avatars
             // GitHub are never scaled and always 420 x 420 - even if a different size was requested.
 
             // We exploit that fact to filter out identicons.
-            var isIdenticon = imageSize != 420 && image.Size.Width == 420;
+            var isIdenticon = imageSize != 420 && image != null && image.Size.Width == 420;
 
             if (isIdenticon)
             {
@@ -60,7 +60,7 @@ namespace GitUI.Avatars
             return image;
         }
 
-        private async Task<Uri> BuildAvatarUri([NotNull] string email, string name, int imageSize)
+        private async Task<Uri?> BuildAvatarUri(string email, int imageSize)
         {
             var match = _gitHubEmailRegex.Match(email);
 
@@ -88,7 +88,7 @@ namespace GitUI.Avatars
                     var client = new Git.hub.Client();
                     var userProfile = await client.GetUserAsync(username);
 
-                    if (string.IsNullOrEmpty(userProfile?.AvatarUrl))
+                    if (GitExtensions.Strings.IsNullOrEmpty(userProfile?.AvatarUrl))
                     {
                         return null;
                     }

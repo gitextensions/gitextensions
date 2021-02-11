@@ -234,6 +234,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             => OsShellUtil.SelectPathInFileExplorer(_themePathProvider.AppThemesDirectory);
 
         private void tsmiUserFolder_Click(object sender, EventArgs e)
-            => OsShellUtil.SelectPathInFileExplorer(_themePathProvider.UserThemesDirectory);
+        {
+            if (_themePathProvider.UserThemesDirectory is not null)
+            {
+                OsShellUtil.SelectPathInFileExplorer(_themePathProvider.UserThemesDirectory);
+            }
+        }
     }
 }

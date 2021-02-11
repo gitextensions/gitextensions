@@ -70,7 +70,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
 
         private void DirectorySelectedIndexChanged(object sender, EventArgs e)
         {
-            DirectoryTextUpdate(null, null);
+            DirectoryTextUpdate(this, EventArgs.Empty);
         }
 
         private void BranchDropDown(object sender, EventArgs e)
@@ -110,7 +110,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
                             int branchIndex = head.IndexOf(GitRefName.RefsHeadsPrefix);
                             return branchIndex == -1 ? null : head.Substring(branchIndex + GitRefName.RefsHeadsPrefix.Length);
                         })
-                        .Where(branch => branch is not null)
+                        .WhereNotNull()
                         .ToImmutableList();
         }
 

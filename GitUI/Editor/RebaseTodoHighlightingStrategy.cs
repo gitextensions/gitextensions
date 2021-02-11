@@ -3,7 +3,6 @@ using System.Drawing;
 using GitCommands;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
-using JetBrains.Annotations;
 
 namespace GitUI.Editor
 {
@@ -31,7 +30,7 @@ namespace GitUI.Editor
             { 'd', ("drop", new HighlightColor(Color.Red, bold: true, italic: false)) }
         };
 
-        public RebaseTodoHighlightingStrategy([NotNull] GitModule module)
+        public RebaseTodoHighlightingStrategy(GitModule module)
             : base("GitRebaseTodo", module)
         {
         }

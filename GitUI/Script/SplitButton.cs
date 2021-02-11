@@ -45,7 +45,7 @@ namespace GitUI.Script
 
         private bool _isSplitMenuVisible;
 
-        private ContextMenuStrip _splitMenuStrip;
+        private ContextMenuStrip? _splitMenuStrip;
 
         private TextFormatFlags _textFormatFlags = TextFormatFlags.Default;
 
@@ -57,14 +57,14 @@ namespace GitUI.Script
         #region Properties
 
         [Browsable(false)]
-        public override ContextMenuStrip ContextMenuStrip
+        public override ContextMenuStrip? ContextMenuStrip
         {
             get => SplitMenuStrip;
             set => SplitMenuStrip = value;
         }
 
         [DefaultValue(null)]
-        public ContextMenuStrip SplitMenuStrip
+        public ContextMenuStrip? SplitMenuStrip
         {
             get
             {

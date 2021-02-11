@@ -125,7 +125,7 @@ namespace GitUI.Theming
 
         private static int RenderCollapseButton(Context ctx, State.CollapseButton stateid, Rectangle prect)
         {
-            Brush backBrush;
+            Brush? backBrush;
             Color foreColor;
             switch (stateid)
             {
@@ -152,7 +152,7 @@ namespace GitUI.Theming
 
         private static int RenderExpandButton(Context ctx, State.ExpandButton stateid, Rectangle prect)
         {
-            Brush backBrush;
+            Brush? backBrush;
             Color foreColor;
             switch (stateid)
             {
@@ -177,7 +177,7 @@ namespace GitUI.Theming
             return Handled;
         }
 
-        private static void RenderArrow(Context ctx, Rectangle prect, Brush backBrush,
+        private static void RenderArrow(Context ctx, Rectangle prect, Brush? backBrush,
             Color foreColor, bool down)
         {
             int h = prect.Height / 4;

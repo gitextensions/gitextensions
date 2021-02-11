@@ -5,21 +5,21 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 {
     internal interface ILaneNodeLocator
     {
-        (RevisionGraphRevision revision, bool isAtNode) FindPrevNode(int rowIndex, int lane);
+        (RevisionGraphRevision? revision, bool isAtNode) FindPrevNode(int rowIndex, int lane);
     }
 
     internal sealed class LaneNodeLocator : ILaneNodeLocator
     {
         private readonly IRevisionGraphRowProvider _revisionGraphRowProvider;
 
-        public static readonly (RevisionGraphRevision, bool) NotFoundResult = (null, false);
+        public static readonly (RevisionGraphRevision?, bool) NotFoundResult = (null, false);
 
         public LaneNodeLocator(IRevisionGraphRowProvider revisionGraphRowProvider)
         {
             _revisionGraphRowProvider = revisionGraphRowProvider;
         }
 
-        public (RevisionGraphRevision revision, bool isAtNode) FindPrevNode(int rowIndex, int lane)
+        public (RevisionGraphRevision? revision, bool isAtNode) FindPrevNode(int rowIndex, int lane)
         {
             if (rowIndex < 0 || lane < 0)
             {
@@ -28,7 +28,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return NotFoundResult;
             }
 
-            IRevisionGraphRow row = _revisionGraphRowProvider.GetSegmentsForRow(rowIndex);
+            IRevisionGraphRow? row = _revisionGraphRowProvider.GetSegmentsForRow(rowIndex);
             if (row is null)
             {
                 return NotFoundResult;

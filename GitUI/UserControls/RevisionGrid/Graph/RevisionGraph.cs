@@ -3,15 +3,13 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using GitCommands;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
     internal interface IRevisionGraphRowProvider
     {
-        IRevisionGraphRow GetSegmentsForRow(int row);
+        IRevisionGraphRow? GetSegmentsForRow(int row);
     }
 
     // The RevisionGraph contains all the basic structures needed to render the graph.
@@ -32,7 +30,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// This is used so we can draw commits before the graph building is complete.
         /// </summary>
         /// <remarks>This cache is very cheap to build.</remarks>
-        private List<RevisionGraphRevision> _orderedNodesCache;
+        private List<RevisionGraphRevision>? _orderedNodesCache;
         private bool _reorder = true;
         private int _orderedUntilScore = -1;
 
@@ -40,10 +38,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// The ordered row cache contains rows with segments stored in lanes.
         /// </summary>
         /// <remarks>This cache is very expensive to build.</remarks>
-        private IList<RevisionGraphRow> _orderedRowCache;
+        private IList<RevisionGraphRow>? _orderedRowCache;
 
         // When the cache is updated, this action can be used to invalidate the UI
-        public event Action Updated;
+        public event Action? Updated;
 
         public void Clear()
         {
@@ -61,6 +59,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// </summary>
         /// <param name="objectId">The hash to find.</param>
         /// <returns><see langword="true"/>, if the given hash if found; otherwise <see langword="false"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="objectId"/> is <see langword="null"/>.</exception>
         public bool Contains(ObjectId objectId) => _nodeByObjectId.ContainsKey(objectId);
 
         public int GetCachedCount()
@@ -76,7 +75,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// <summary>
         /// Builds the revision graph cache. There are two caches that are build in this method.
         /// <para>Cache 1: an ordered list of the revisions. This is very cheap to build. (_orderedNodesCache).</para>
-        /// <para>Cache 2: an ordered list of all prepared graph rows. This is expensive to build. (_orderedRowCache)</para>
+        /// <para>Cache 2: an ordered list of all prepared graph rows. This is expensive to build. (_orderedRowCache).</para>
         /// </summary>
         /// <param name="currentRowIndex">
         /// The row that needs to be displayed. This ensures the ordered revisions are available up to this index.
@@ -124,7 +123,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return index >= 0;
         }
 
-        public RevisionGraphRevision GetNodeForRow(int row)
+        public RevisionGraphRevision? GetNodeForRow(int row)
         {
             // Use a local variable, because the cached list can be reset
             var localOrderedNodesCache = BuildOrderedNodesCache(row);
@@ -136,7 +135,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return localOrderedNodesCache.ElementAt(row);
         }
 
-        public IRevisionGraphRow GetSegmentsForRow(int row)
+        public IRevisionGraphRow? GetSegmentsForRow(int row)
         {
             // Use a local variable, because the cached list can be reset
             var localOrderedRowCache = _orderedRowCache;
@@ -150,7 +149,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public void HighlightBranch(ObjectId id)
         {
-            // Clear current higlighting
+            // Clear current highlighting
             foreach (var revision in _nodes)
             {
                 revision.IsRelative = false;
@@ -318,7 +317,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             Updated?.Invoke();
         }
 
-        [NotNull]
         private List<RevisionGraphRevision> BuildOrderedNodesCache(int currentRowIndex)
         {
             if (_orderedNodesCache is not null && !_reorder && _orderedNodesCache.Count >= Math.Min(Count, currentRowIndex))

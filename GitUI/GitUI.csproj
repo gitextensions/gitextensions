@@ -2,10 +2,13 @@
 
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
+    <Compile Include="..\GitExtUtils\Annotations.cs" Link="Utils\Annotations.cs" />
+    <Compile Include="..\GitExtUtils\Strings.cs" Link="Utils\Strings.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -90,6 +93,10 @@
     <Content Include="Themes\README.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Utils\" />
   </ItemGroup>
 
 </Project>

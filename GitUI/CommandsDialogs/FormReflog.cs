@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly Regex _regexReflog = new("^([^ ]+) ([^:]+): (.+)$", RegexOptions.Compiled);
 
-        private string _currentBranch;
+        private string? _currentBranch;
         private bool _isBranchCheckedOut;
         private bool _isDirtyDir;
         private int _lastHitRowIndex;
@@ -89,12 +89,7 @@ namespace GitUI.CommandsDialogs
                         select _regexReflog.Match(line)
                         into match
                         where match.Success
-                        select new RefLine
-                        {
-                            Sha = ObjectId.Parse(match.Groups[1].Value),
-                            Ref = match.Groups[2].Value,
-                            Action = match.Groups[3].Value,
-                        };
+                        select new RefLine(ObjectId.Parse(match.Groups[1].Value), match.Groups[2].Value, match.Groups[3].Value);
             }
         }
 
@@ -202,5 +197,12 @@ namespace GitUI.CommandsDialogs
         public ObjectId Sha { get; set; }
         public string Ref { get; set; }
         public string Action { get; set; }
+
+        public RefLine(ObjectId sha, string @ref, string action)
+        {
+            Sha = sha;
+            Ref = @ref;
+            Action = action;
+        }
     }
 }

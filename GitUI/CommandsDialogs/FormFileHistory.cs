@@ -14,7 +14,7 @@ using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -32,17 +32,27 @@ namespace GitUI.CommandsDialogs
         private readonly IFullPathResolver _fullPathResolver;
         private readonly FormFileHistoryController _controller = new();
 
-        private BuildReportTabPageExtension _buildReportTabPageExtension;
+        private BuildReportTabPageExtension? _buildReportTabPageExtension;
 
         private string FileName { get; set; }
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormFileHistory()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
         }
 
-        private FormFileHistory([NotNull] GitUICommands commands)
+        /// <summary>
+        /// Open FileHistory form.
+        /// </summary>
+        /// <param name="commands">commands in the current form.</param>
+        /// <param name="fileName">name in repo of file to view.</param>
+        /// <param name="revision">initial selected commit.</param>
+        /// <param name="filterByRevision">add filter.</param>
+        /// <param name="showBlame">show blame initially instead of diff view.</param>
+        public FormFileHistory(GitUICommands commands, string fileName, GitRevision? revision = null, bool filterByRevision = false, bool showBlame = false)
             : base(commands)
         {
             InitializeComponent();
@@ -71,40 +81,6 @@ namespace GitUI.CommandsDialogs
 
             Blame.ConfigureRepositoryHostPlugin(PluginRegistry.TryGetGitHosterForModule(Module));
 
-            return;
-
-            void ConfigureTabControl()
-            {
-                tabControl1.ImageList = new ImageList
-                {
-                    ColorDepth = ColorDepth.Depth32Bit,
-                    ImageSize = DpiUtil.Scale(new Size(16, 16)),
-                    Images =
-                    {
-                        Images.CommitSummary,
-                        Images.Diff,
-                        Images.ViewFile,
-                        Images.Blame
-                    }
-                };
-                tabControl1.TabPages[0].ImageIndex = 0;
-                tabControl1.TabPages[1].ImageIndex = 1;
-                tabControl1.TabPages[2].ImageIndex = 2;
-                tabControl1.TabPages[3].ImageIndex = 3;
-            }
-        }
-
-        /// <summary>
-        /// Open FileHistory form
-        /// </summary>
-        /// <param name="commands">commands in the current form</param>
-        /// <param name="fileName">name in repo of file to view</param>
-        /// <param name="revision">initial selected commit</param>
-        /// <param name="filterByRevision">add filter</param>
-        /// <param name="showBlame">show blame initially instead of diff view</param>
-        public FormFileHistory(GitUICommands commands, string fileName, GitRevision revision = null, bool filterByRevision = false, bool showBlame = false)
-            : this(commands)
-        {
             FileChanges.SelectedId = revision?.ObjectId;
             FileChanges.ShowBuildServerInfo = true;
 
@@ -159,6 +135,28 @@ namespace GitUI.CommandsDialogs
             }
 
             tabControl1.SelectedTab = blameTabExists && showBlame ? BlameTab : DiffTab;
+
+            return;
+
+            void ConfigureTabControl()
+            {
+                tabControl1.ImageList = new ImageList
+                {
+                    ColorDepth = ColorDepth.Depth32Bit,
+                    ImageSize = DpiUtil.Scale(new Size(16, 16)),
+                    Images =
+                    {
+                        Images.CommitSummary,
+                        Images.Diff,
+                        Images.ViewFile,
+                        Images.Blame
+                    }
+                };
+                tabControl1.TabPages[0].ImageIndex = 0;
+                tabControl1.TabPages[1].ImageIndex = 1;
+                tabControl1.TabPages[2].ImageIndex = 2;
+                tabControl1.TabPages[3].ImageIndex = 3;
+            }
         }
 
         /// <summary>
@@ -217,7 +215,7 @@ namespace GitUI.CommandsDialogs
 
             return;
 
-            (string revision, string path) BuildFilter()
+            (string? revision, string path) BuildFilter()
             {
                 var fileName = FileName;
 
@@ -226,7 +224,7 @@ namespace GitUI.CommandsDialogs
                 // browse dialog.
                 FileName = fileName.ToPosixPath();
 
-                var res = (revision: (string)null, path: $" \"{fileName}\"");
+                var res = (revision: (string?)null, path: $" \"{fileName}\"");
                 var fullFilePath = _fullPathResolver.Resolve(fileName);
 
                 if (AppSettings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
@@ -253,13 +251,13 @@ namespace GitUI.CommandsDialogs
                     var listOfFileNames = new StringBuilder(fileName.Quote());
 
                     // keep a set of the file names already seen
-                    var setOfFileNames = new HashSet<string> { fileName };
+                    var setOfFileNames = new HashSet<string?> { fileName };
 
                     var lines = Module.GitExecutable.GetOutputLines(args, outputEncoding: GitModule.LosslessEncoding);
 
                     foreach (var line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
                     {
-                        if (!string.IsNullOrEmpty(line) && setOfFileNames.Add(line))
+                        if (!GitExtensions.Strings.IsNullOrEmpty(line) && setOfFileNames.Add(line))
                         {
                             listOfFileNames.Append(" \"");
                             listOfFileNames.Append(line);
@@ -314,7 +312,7 @@ namespace GitUI.CommandsDialogs
             UpdateSelectedFileViewers();
         }
 
-        private void SetTitle([CanBeNull] string alternativeFileName = null)
+        private void SetTitle(string? alternativeFileName = null)
         {
             var str = new StringBuilder()
                 .Append("File History - ")
@@ -344,7 +342,7 @@ namespace GitUI.CommandsDialogs
 
             var fileName = revision.Name;
 
-            if (string.IsNullOrEmpty(fileName))
+            if (GitExtensions.Strings.IsNullOrEmpty(fileName))
             {
                 fileName = FileName;
             }
@@ -387,21 +385,21 @@ namespace GitUI.CommandsDialogs
             }
             else if (tabControl1.SelectedTab == ViewTab)
             {
+                Assumes.NotNull(fileName);
                 View.Encoding = Diff.Encoding;
-                var file = new GitItemStatus
+                var file = new GitItemStatus(name: fileName)
                 {
                     IsTracked = true,
-                    Name = fileName,
                     IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName))
                 };
                 View.ViewGitItemRevisionAsync(file, revision.ObjectId);
             }
             else if (tabControl1.SelectedTab == DiffTab)
             {
-                var file = new GitItemStatus
+                Assumes.NotNull(fileName);
+                var file = new GitItemStatus(name: fileName)
                 {
                     IsTracked = true,
-                    Name = fileName,
                     IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName))
                 };
                 var revisions = FileChanges.GetSelectedRevisions();
@@ -450,13 +448,13 @@ namespace GitUI.CommandsDialogs
             {
                 string orgFileName = selectedRows[0].Name;
 
-                if (string.IsNullOrEmpty(orgFileName))
+                if (GitExtensions.Strings.IsNullOrEmpty(orgFileName))
                 {
                     orgFileName = FileName;
                 }
 
-                string fullName = _fullPathResolver.Resolve(orgFileName);
-                if (string.IsNullOrWhiteSpace(fullName))
+                string? fullName = _fullPathResolver.Resolve(orgFileName);
+                if (GitExtensions.Strings.IsNullOrWhiteSpace(fullName))
                 {
                     return;
                 }
@@ -609,7 +607,7 @@ namespace GitUI.CommandsDialogs
             }
             else if (e.Command == "gotobranch" || e.Command == "gototag")
             {
-                CommitData commit = _commitDataManager.GetCommitData(e.Data, out _);
+                CommitData? commit = _commitDataManager.GetCommitData(e.Data, out _);
                 if (commit is not null)
                 {
                     FileChanges.SetSelectedRevision(commit.ObjectId);

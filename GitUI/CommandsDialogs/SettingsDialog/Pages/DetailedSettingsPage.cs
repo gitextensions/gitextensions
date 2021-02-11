@@ -1,6 +1,7 @@
 ﻿using System;
 using GitCommands;
 using GitCommands.Settings;
+using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -13,7 +14,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComplete();
         }
 
-        private DetailedGroup DetailedSettings => CurrentSettings.Detailed;
+        private DetailedGroup DetailedSettings
+        {
+            get
+            {
+                Assumes.NotNull(CurrentSettings);
+                return CurrentSettings.Detailed;
+            }
+        }
 
         public static SettingsPageReference GetPageReference()
         {

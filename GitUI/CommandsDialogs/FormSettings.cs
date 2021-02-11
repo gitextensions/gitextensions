@@ -11,7 +11,6 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SettingsDialog.Plugins;
 using GitUI.Properties;
-using JetBrains.Annotations;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
@@ -27,18 +26,20 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        [CanBeNull] private static Type _lastSelectedSettingsPageType;
+        private static Type? _lastSelectedSettingsPageType;
         private readonly CommonLogic _commonLogic;
         private readonly string _translatedTitle;
-        private SettingsPageReference _initialPage;
+        private SettingsPageReference? _initialPage;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormSettings()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
         }
 
-        public FormSettings([NotNull] GitUICommands commands, SettingsPageReference initialPage = null)
+        public FormSettings(GitUICommands commands, SettingsPageReference? initialPage = null)
             : base(commands)
         {
             InitializeComponent();
@@ -97,7 +98,7 @@ namespace GitUI.CommandsDialogs
             Save();
         }
 
-        public static DialogResult ShowSettingsDialog(GitUICommands uiCommands, IWin32Window owner, SettingsPageReference initialPage = null)
+        public static DialogResult ShowSettingsDialog(GitUICommands uiCommands, IWin32Window? owner, SettingsPageReference? initialPage = null)
         {
             DialogResult result = DialogResult.None;
 
@@ -195,18 +196,16 @@ namespace GitUI.CommandsDialogs
             panelCurrentSettingsPage.Controls.Clear();
 
             var settingsPage = e.SettingsPage;
-            if (settingsPage is not null)
-            {
-                _lastSelectedSettingsPageType = settingsPage.GetType();
-            }
 
-            if (settingsPage?.GuiControl is not null)
+            _lastSelectedSettingsPageType = settingsPage.GetType();
+
+            if (settingsPage.GuiControl is not null)
             {
                 panelCurrentSettingsPage.Controls.Add(settingsPage.GuiControl);
-                e.SettingsPage.GuiControl.Dock = DockStyle.Fill;
+                settingsPage.GuiControl.Dock = DockStyle.Fill;
 
-                string title = e.SettingsPage.GetTitle();
-                if (e.SettingsPage is PluginSettingsPage)
+                string title = settingsPage.GetTitle();
+                if (settingsPage is PluginSettingsPage)
                 {
                     title = "Plugin: " + title;
                 }

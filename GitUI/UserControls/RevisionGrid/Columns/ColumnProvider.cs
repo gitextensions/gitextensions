@@ -1,9 +1,7 @@
-using System.Drawing;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
-using GitCommands;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid.Columns
 {
@@ -15,7 +13,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         public int ColumnLeftMargin { get; } = DpiUtil.Scale(6);
 
         /// <summary>The DataGrid column object that models this column.</summary>
-        public DataGridViewColumn Column { get; protected set; }
+        public DataGridViewColumn Column { get; protected set; } = null!;
 
         /// <summary>The display friendly name of this column.</summary>
         public string Name { get; }
@@ -49,9 +47,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         /// <summary>Attempts to get custom tool tip text for a cell in this column.</summary>
         /// <remarks>Returning <c>false</c> here will not stop a tool tip being automatically displayed for truncated text.</remarks>
-        [ContractAnnotation("=>false,toolTip:null")]
-        [ContractAnnotation("=>true,toolTip:notnull")]
-        public virtual bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [CanBeNull] out string toolTip)
+        public virtual bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
         {
             toolTip = default;
             return false;

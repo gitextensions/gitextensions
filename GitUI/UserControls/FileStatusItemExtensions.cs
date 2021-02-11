@@ -10,14 +10,14 @@ namespace GitUI.UserControls
         public static IEnumerable<GitRevision> FirstRevs(this IEnumerable<FileStatusItem> l)
         {
             return l.Where(i => i.FirstRevision is not null)
-                .Select(i => i.FirstRevision)
+                .Select(i => i.FirstRevision!)
                 .Distinct();
         }
 
         public static IEnumerable<ObjectId> FirstIds(this IEnumerable<FileStatusItem> l)
         {
             return l.Where(i => i.FirstRevision is not null)
-                .Select(i => i.FirstRevision.ObjectId)
+                .Select(i => i.FirstRevision!.ObjectId)
                 .Distinct();
         }
 

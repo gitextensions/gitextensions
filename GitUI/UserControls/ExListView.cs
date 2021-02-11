@@ -5,10 +5,8 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using GitCommands.Utils;
-using JetBrains.Annotations;
 using static System.NativeMethods;
 
 namespace GitUI.UserControls
@@ -25,14 +23,14 @@ namespace GitUI.UserControls
         /// <summary>
         /// Occurs when the user presses mouse button in a <see cref="ListViewGroup"/> within the list view control.
         /// </summary>
-        public event EventHandler<ListViewGroupMouseEventArgs> GroupMouseDown;
+        public event EventHandler<ListViewGroupMouseEventArgs>? GroupMouseDown;
 
         /// <summary>
         /// Occurs when the user releases mouse button in a <see cref="ListViewGroup"/> within the list view control.
         /// </summary>
-        public event EventHandler<ListViewGroupMouseEventArgs> GroupMouseUp;
+        public event EventHandler<ListViewGroupMouseEventArgs>? GroupMouseUp;
 
-        public event ScrollEventHandler Scroll;
+        public event ScrollEventHandler? Scroll;
 
         static ExListView()
         {
@@ -58,8 +56,7 @@ namespace GitUI.UserControls
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         private bool IsGroupStateSupported { get; }
 
-        [CanBeNull]
-        public ListViewGroupHitInfo GetGroupHitInfo(Point location)
+        public ListViewGroupHitInfo? GetGroupHitInfo(Point location)
         {
             var info = new LVHITTESTINFO
             {

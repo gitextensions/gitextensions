@@ -8,8 +8,8 @@ namespace GitUI.Help
 {
     public partial class HelpImageDisplayUserControl : GitExtensionsControl
     {
-        private Image _image1;
-        private Image _image2;
+        private Image? _image1;
+        private Image? _image2;
         private bool _isExpanded;
 
         ////public const string fastForwardHoverText = "Hover to see scenario when fast forward is possible.";
@@ -61,7 +61,7 @@ namespace GitUI.Help
             }
         }
 
-        public string UniqueIsExpandedSettingsId { get; set; }
+        public string? UniqueIsExpandedSettingsId { get; set; }
 
         private void UpdateIsExpandedState()
         {
@@ -89,7 +89,7 @@ namespace GitUI.Help
             UpdateControlSize();
         }
 
-        public Image Image1
+        public Image? Image1
         {
             get { return _image1; }
             set
@@ -103,7 +103,7 @@ namespace GitUI.Help
             }
         }
 
-        public Image Image2
+        public Image? Image2
         {
             get { return _image2; }
             set
@@ -173,9 +173,9 @@ namespace GitUI.Help
             {
                 if (_image1 is not null && _image2 is null)
                 {
-                    size = Image1.Size;
+                    size = _image1.Size;
                 }
-                else if (_image1 is not null && Image2 is not null)
+                else if (_image1 is not null && _image2 is not null)
                 {
                     int w = Math.Max(_image1.Size.Width, _image2.Width);
                     int h = Math.Max(_image1.Size.Height, _image2.Height);

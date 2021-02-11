@@ -7,7 +7,6 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using GitCommands;
-using JetBrains.Annotations;
 
 namespace GitUI.Script
 {
@@ -15,9 +14,8 @@ namespace GitUI.Script
     {
         internal const int MinimumUserScriptID = 9000;
         private static readonly XmlSerializer _serializer = new(typeof(BindingList<ScriptInfo>));
-        private static BindingList<ScriptInfo> _scripts;
+        private static BindingList<ScriptInfo>? _scripts;
 
-        [NotNull]
         public static BindingList<ScriptInfo> GetScripts()
         {
             if (_scripts is null)
@@ -28,11 +26,11 @@ namespace GitUI.Script
 
             return _scripts;
 
-            void FixAmbiguousHotkeyCommandIdentifiers()
+            static void FixAmbiguousHotkeyCommandIdentifiers()
             {
                 var ids = new HashSet<int>();
 
-                foreach (var script in _scripts)
+                foreach (var script in _scripts!)
                 {
                     if (!ids.Add(script.HotkeyCommandIdentifier))
                     {
@@ -42,12 +40,11 @@ namespace GitUI.Script
             }
         }
 
-        [CanBeNull]
-        public static ScriptInfo GetScript(string key)
+        public static ScriptInfo? GetScript(string key)
         {
             foreach (var script in GetScripts())
             {
-                if (script.Name.Equals(key, StringComparison.CurrentCultureIgnoreCase))
+                if (StringComparer.CurrentCultureIgnoreCase.Equals(script.Name, key))
                 {
                     return script;
                 }
@@ -64,8 +61,7 @@ namespace GitUI.Script
             }
         }
 
-        [CanBeNull]
-        public static string SerializeIntoXml()
+        public static string? SerializeIntoXml()
         {
             try
             {
@@ -79,11 +75,10 @@ namespace GitUI.Script
             }
         }
 
-        [NotNull]
-        private static BindingList<ScriptInfo> DeserializeFromXml([CanBeNull] string xml)
+        private static BindingList<ScriptInfo> DeserializeFromXml(string? xml)
         {
             // When there is nothing to deserialize, add default scripts
-            if (string.IsNullOrEmpty(xml))
+            if (GitExtensions.Strings.IsNullOrEmpty(xml))
             {
                 return GetDefaultScripts();
             }

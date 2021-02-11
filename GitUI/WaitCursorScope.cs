@@ -26,7 +26,7 @@ namespace GitUI
         /// <summary>
         /// Starts a new scope, recording <see cref="Cursor.Current"/> and setting the mouse cursor to <see cref="Cursors.WaitCursor"/>.
         /// </summary>
-        public static WaitCursorScope Enter(Cursor cursor = null)
+        public static WaitCursorScope Enter(Cursor? cursor = null)
         {
             var cursorAtStartOfScope = Cursor.Current;
 

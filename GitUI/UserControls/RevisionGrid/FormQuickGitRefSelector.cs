@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid
@@ -16,8 +15,7 @@ namespace GitUI.UserControls.RevisionGrid
         /// <summary>
         /// Gets the ref selected by the user.
         /// </summary>
-        [CanBeNull]
-        public IGitRef SelectedRef => SelectedItem as IGitRef;
+        public IGitRef? SelectedRef => SelectedItem as IGitRef;
 
         public void Init(Action action, IReadOnlyList<IGitRef> refs)
         {
@@ -26,11 +24,7 @@ namespace GitUI.UserControls.RevisionGrid
             ItemData GetItemData(IGitRef gitRef)
             {
                 var suffix = gitRef.IsTag ? $" ({_tag.Text})" : string.Empty;
-                return new ItemData
-                {
-                    Label = $"{gitRef.Name}{suffix}",
-                    Item = gitRef
-                };
+                return new ItemData($"{gitRef.Name}{suffix}", gitRef);
             }
 
             switch (action)

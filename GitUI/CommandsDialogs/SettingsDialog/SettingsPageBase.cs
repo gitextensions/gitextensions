@@ -17,7 +17,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     public abstract partial class SettingsPageBase : GitExtensionsControl, ISettingsPage
     {
         private readonly List<ISettingControlBinding> _controlBindings = new List<ISettingControlBinding>();
-        private ISettingsPageHost _pageHost;
+        private ISettingsPageHost? _pageHost;
 
         protected SettingsPageBase()
         {
@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         protected CommonLogic CommonLogic => CheckSettingsLogic.CommonLogic;
 
-        protected GitModule Module => CommonLogic.Module;
+        protected GitModule? Module => CommonLogic.Module;
 
         protected ToolTip ToolTip => toolTip1;
 
@@ -156,7 +156,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             AddControlBinding(adapter.CreateControlBinding());
         }
 
-        private IReadOnlyList<string> _childrenText;
+        private IReadOnlyList<string>? _childrenText;
 
         /// <summary>
         /// override to provide search keywords
@@ -219,7 +219,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
 
         public BoolCheckBoxAdapter(ISetting<bool?> setting, CheckBox checkBox)
-            : base(setting.FullPath, setting.Default.Value)
+            : base(setting.FullPath, setting.Default ?? false)
         {
             CustomControl = checkBox;
         }
@@ -243,7 +243,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
 
         public IntTextBoxAdapter(ISetting<int?> setting, TextBox control)
-            : base(setting.FullPath, setting.Default.Value)
+            : base(setting.FullPath, setting.Default ?? 0)
         {
             CustomControl = control;
         }

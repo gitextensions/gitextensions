@@ -22,7 +22,7 @@ namespace GitUI.Avatars
         }
 
         /// <inheritdoc/>
-        public event EventHandler CacheCleared;
+        public event EventHandler? CacheCleared;
 
         /// <inheritdoc/>
         public async Task ClearCacheAsync()

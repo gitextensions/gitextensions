@@ -224,7 +224,7 @@ namespace GitUI
             _NO_TRANSLATE_toolStripBranches.SelectionStart = index;
         }
 
-        public void SetBranchFilter(string filter, bool refresh)
+        public void SetBranchFilter(string? filter, bool refresh)
         {
             _NO_TRANSLATE_toolStripBranches.Text = filter;
             ApplyBranchFilter(refresh);

@@ -8,7 +8,6 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using GitCommands;
-using JetBrains.Annotations;
 
 namespace GitUI
 {
@@ -36,7 +35,7 @@ namespace GitUI
         [DefaultValue(96)]
         public int DeviceDpi { get; set; }
         public FormWindowState State { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 
     [Serializable]
@@ -51,8 +50,7 @@ namespace GitUI
         {
         }
 
-        [CanBeNull]
-        public WindowPosition Get(string name)
+        public WindowPosition? Get(string name)
         {
             return WindowPositions.FirstOrDefault(r => r.Name == name);
         }
@@ -63,8 +61,7 @@ namespace GitUI
             WindowPositions.Add(pos);
         }
 
-        [CanBeNull]
-        public static WindowPositionList Load()
+        public static WindowPositionList? Load()
         {
             if (!File.Exists(ConfigFilePath))
             {

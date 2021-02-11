@@ -8,7 +8,6 @@ using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitUI.Script
 {
@@ -67,7 +66,7 @@ namespace GitUI.Script
         /// <param name="arguments">The script argument.</param>
         /// <param name="option">The option.</param>
         /// <returns><see langword="true"/> if the argument contains the option; otherwise <see langword="false"/>.</returns>
-        public static bool Contains([NotNull] string arguments, [NotNull] string option)
+        public static bool Contains(string arguments, string option)
         {
             arguments = arguments ?? throw new ArgumentNullException(nameof(arguments));
             option = option ?? throw new ArgumentNullException(nameof(option));
@@ -80,24 +79,24 @@ namespace GitUI.Script
         /// </summary>
         /// <param name="option">The option.</param>
         /// <returns><see langword="true"/> if the options starts with "s"; otherwise <see langword="false"/>.</returns>
-        public static bool DependsOnSelectedRevision([NotNull] string option)
+        public static bool DependsOnSelectedRevision(string option)
         {
             option = option ?? throw new ArgumentNullException(nameof(option));
 
             return option.StartsWith("s");
         }
 
-        public static (string arguments, bool abort) Parse([CanBeNull] string arguments, [NotNull] IGitModule module, IWin32Window owner, IScriptHostControl scriptHostControl)
+        public static (string? arguments, bool abort) Parse(string? arguments, IGitModule module, IWin32Window owner, IScriptHostControl? scriptHostControl)
         {
-            if (string.IsNullOrWhiteSpace(arguments))
+            if (GitExtensions.Strings.IsNullOrWhiteSpace(arguments))
             {
                 return (arguments, abort: false);
             }
 
             module = module ?? throw new ArgumentNullException(nameof(module));
 
-            GitRevision selectedRevision = null;
-            GitRevision currentRevision = null;
+            GitRevision? selectedRevision = null;
+            GitRevision? currentRevision = null;
 
             IReadOnlyList<GitRevision> allSelectedRevisions = Array.Empty<GitRevision>();
             var selectedLocalBranches = new List<IGitRef>();
@@ -151,7 +150,7 @@ namespace GitUI.Script
                     }
                 }
 
-                arguments = ParseScriptArguments(arguments, option, owner, scriptHostControl, module, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision, currentRemote);
+                arguments = ParseScriptArguments(arguments, option, owner, scriptHostControl, module, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision!, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision!, currentRemote);
                 if (arguments is null)
                 {
                     return (arguments: null, abort: true);
@@ -161,7 +160,7 @@ namespace GitUI.Script
             return (arguments, abort: false);
         }
 
-        private static string AskToSpecify(IEnumerable<IGitRef> options, IScriptHostControl scriptHostControl)
+        private static string AskToSpecify(IEnumerable<IGitRef> options, IScriptHostControl? scriptHostControl)
         {
             var items = options.ToList();
             if (items.Count == 0)
@@ -174,26 +173,26 @@ namespace GitUI.Script
                 f.Location = scriptHostControl?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
                 f.Init(FormQuickGitRefSelector.Action.Select, items);
                 f.ShowDialog();
-                return f.SelectedRef.Name;
+                return f.SelectedRef?.Name ?? "";
             }
         }
 
-        private static string AskToSpecify(IEnumerable<string> options, IScriptHostControl scriptHostControl)
+        private static string AskToSpecify(IEnumerable<string> options, IScriptHostControl? scriptHostControl)
         {
             using (var f = new FormQuickStringSelector())
             {
                 f.Location = scriptHostControl?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
                 f.Init(options.ToList());
                 f.ShowDialog();
-                return f.SelectedString;
+                return f.SelectedString ?? "";
             }
         }
 
-        private static GitRevision CalculateSelectedRevision(IScriptHostControl scriptHostControl, List<IGitRef> selectedRemoteBranches,
+        private static GitRevision? CalculateSelectedRevision(IScriptHostControl? scriptHostControl, List<IGitRef> selectedRemoteBranches,
             List<string> selectedRemotes, List<IGitRef> selectedLocalBranches,
             List<IGitRef> selectedBranches, List<IGitRef> selectedTags)
         {
-            GitRevision selectedRevision = scriptHostControl?.GetLatestSelectedRevision();
+            GitRevision? selectedRevision = scriptHostControl?.GetLatestSelectedRevision();
             if (selectedRevision is null)
             {
                 return null;
@@ -226,8 +225,7 @@ namespace GitUI.Script
             return selectedRevision;
         }
 
-        [NotNull]
-        private static string CreateOption([NotNull] string option, bool quoted)
+        private static string CreateOption(string option, bool quoted)
         {
             if (string.IsNullOrWhiteSpace(option))
             {
@@ -244,9 +242,8 @@ namespace GitUI.Script
             return result;
         }
 
-        [CanBeNull]
-        private static GitRevision GetCurrentRevision(
-            [NotNull] IGitModule module, List<IGitRef> currentTags, List<IGitRef> currentLocalBranches,
+        private static GitRevision? GetCurrentRevision(
+            IGitModule module, List<IGitRef> currentTags, List<IGitRef> currentLocalBranches,
             List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches, bool loadBody)
         {
             GitRevision currentRevision;
@@ -288,14 +285,14 @@ namespace GitUI.Script
             return "";
         }
 
-        private static string ParseScriptArguments([NotNull] string arguments, [NotNull] string option, IWin32Window owner,
-            IScriptHostControl scriptHostControl, IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions,
+        private static string? ParseScriptArguments(string arguments, string option, IWin32Window owner,
+            IScriptHostControl? scriptHostControl, IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions,
             in IList<IGitRef> selectedTags, in IList<IGitRef> selectedBranches, in IList<IGitRef> selectedLocalBranches,
             in IList<IGitRef> selectedRemoteBranches, in IList<string> selectedRemotes, GitRevision selectedRevision,
             in IList<IGitRef> currentTags, in IList<IGitRef> currentBranches, in IList<IGitRef> currentLocalBranches,
             in IList<IGitRef> currentRemoteBranches, GitRevision currentRevision, string currentRemote)
         {
-            string newString = null;
+            string? newString = null;
             string remote;
             string url;
             switch (option)
@@ -510,14 +507,14 @@ namespace GitUI.Script
 
             return arguments;
 
-            static string EscapeLinefeeds(string multiLine) => multiLine?.Replace("\n", "\\n");
+            static string? EscapeLinefeeds(string? multiLine) => multiLine?.Replace("\n", "\\n");
 
             string SelectOneRef(IList<IGitRef> refs) => ScriptOptionsParser.SelectOne(refs, scriptHostControl);
 
             string SelectOneString(IList<string> strings) => ScriptOptionsParser.SelectOne(strings, scriptHostControl);
         }
 
-        private static string SelectOne(IList<IGitRef> refs, IScriptHostControl scriptHostControl)
+        private static string SelectOne(IList<IGitRef> refs, IScriptHostControl? scriptHostControl)
         {
             switch (refs.Count)
             {
@@ -527,7 +524,7 @@ namespace GitUI.Script
             }
         }
 
-        private static string SelectOne(IList<string> strings, IScriptHostControl scriptHostControl)
+        private static string SelectOne(IList<string> strings, IScriptHostControl? scriptHostControl)
         {
             switch (strings.Count)
             {
@@ -557,14 +554,14 @@ namespace GitUI.Script
 
         internal readonly struct TestAccessor
         {
-            public string CreateOption([NotNull] string option, bool quoted)
+            public string CreateOption(string option, bool quoted)
                 => ScriptOptionsParser.CreateOption(option, quoted);
 
-            public GitRevision GetCurrentRevision(IGitModule module, List<IGitRef> currentTags,
+            public GitRevision? GetCurrentRevision(IGitModule module, List<IGitRef> currentTags,
                 List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches, bool loadBody)
                 => ScriptOptionsParser.GetCurrentRevision(module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, loadBody);
 
-            public string ParseScriptArguments(string arguments, string option, IWin32Window owner, IScriptHostControl scriptHostControl,
+            public string? ParseScriptArguments(string arguments, string option, IWin32Window owner, IScriptHostControl scriptHostControl,
                 IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions, List<IGitRef> selectedTags, List<IGitRef> selectedBranches,
                 List<IGitRef> selectedLocalBranches, List<IGitRef> selectedRemoteBranches, List<string> selectedRemotes, GitRevision selectedRevision,
                 List<IGitRef> currentTags, List<IGitRef> currentBranches, List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches,

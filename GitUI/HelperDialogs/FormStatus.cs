@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
 using GitUI.UserControls;
-using JetBrains.Annotations;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI.HelperDialogs
@@ -15,8 +14,8 @@ namespace GitUI.HelperDialogs
         private readonly bool _useDialogSettings;
         private bool _errorOccurred;
 
-        private protected Action<FormStatus> ProcessCallback;
-        private protected Action<FormStatus> AbortCallback;
+        private protected Action<FormStatus>? ProcessCallback;
+        private protected Action<FormStatus>? AbortCallback;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private protected FormStatus()
@@ -24,7 +23,7 @@ namespace GitUI.HelperDialogs
         {
         }
 
-        public FormStatus(GitUICommands commands, [CanBeNull] ConsoleOutputControl consoleOutput, bool useDialogSettings)
+        public FormStatus(GitUICommands? commands, ConsoleOutputControl? consoleOutput, bool useDialogSettings)
             : base(commands, enablePositionRestore: true)
         {
             _useDialogSettings = useDialogSettings;
@@ -99,7 +98,6 @@ namespace GitUI.HelperDialogs
         /// Gets the logged output text. Note that this is a separate string from what you see in the console output control.
         /// For instance, progress messages might be skipped; other messages might be added manually.
         /// </summary>
-        [NotNull]
         private protected FormStatusOutputLog OutputLog { get; } = new();
 
         public bool ErrorOccurred()
@@ -115,7 +113,7 @@ namespace GitUI.HelperDialogs
         public void Retry()
         {
             Reset();
-            ProcessCallback(this);
+            ProcessCallback?.Invoke(this);
         }
 
         public static void ShowErrorDialog(IWin32Window owner, string text, params string[] output)
@@ -277,7 +275,7 @@ namespace GitUI.HelperDialogs
         {
             try
             {
-                AbortCallback(this);
+                AbortCallback?.Invoke(this);
                 OutputLog.Append(Environment.NewLine + "Aborted");  // TODO: write to display control also, if we pull the function up to this base class
                 Done(false);
                 DialogResult = DialogResult.Abort;

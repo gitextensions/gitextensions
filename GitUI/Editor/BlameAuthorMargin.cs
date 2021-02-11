@@ -14,10 +14,10 @@ namespace GitUI.Editor
     public class BlameAuthorMargin : AbstractMargin
     {
         private static readonly int AgeBucketMarkerWidth = Convert.ToInt32(4 * DpiUtil.ScaleX);
-        private List<Image> _avatars;
+        private List<Image?>? _avatars;
         private readonly int _lineHeight;
         private readonly Color _backgroundColor;
-        private List<GitBlameEntry> _blameLines;
+        private List<GitBlameEntry>? _blameLines;
         private readonly Dictionary<int, SolidBrush> _brushs = new Dictionary<int, SolidBrush>();
         private bool _isVisible = true;
 

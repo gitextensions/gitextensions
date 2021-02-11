@@ -23,17 +23,17 @@ namespace GitUI.BranchTreePanel
         private ToolStripItem[] _menuRemoteCopyContextMenuItems = Array.Empty<ToolStripItem>();
 
         /// <summary>
-        /// Local branch context menu [git ref / rename / delete] actions
+        /// Local branch context menu [git ref / rename / delete] actions.
         /// </summary>
         private LocalBranchMenuItems<LocalBranchNode> _localBranchMenuItems;
 
         /// <summary>
-        /// Remote branch context menu [git ref / rename / delete] actions
+        /// Remote branch context menu [git ref / rename / delete] actions.
         /// </summary>
         private MenuItemsGenerator<RemoteBranchNode> _remoteBranchMenuItems;
 
         /// <summary>
-        /// Tags context menu [git ref] actions
+        /// Tags context menu [git ref] actions.
         /// </summary>
         private MenuItemsGenerator<TagNode> _tagNodeMenuItems;
 
@@ -45,7 +45,7 @@ namespace GitUI.BranchTreePanel
             //    Collapse All
             //    Expand All
 
-            Tree treeNode = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag as Tree;
+            Tree? treeNode = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag as Tree;
 
             if (contextMenu == menuMain)
             {
@@ -209,7 +209,7 @@ namespace GitUI.BranchTreePanel
 
         private void ContextMenuSubmoduleSpecific(ContextMenuStrip contextMenu)
         {
-            TreeNode selectedNode = (contextMenu.SourceControl as TreeView)?.SelectedNode;
+            TreeNode? selectedNode = (contextMenu.SourceControl as TreeView)?.SelectedNode;
             if (selectedNode is null)
             {
                 return;
@@ -368,7 +368,7 @@ namespace GitUI.BranchTreePanel
         }
 
         /// <inheritdoc />
-        public TMenuItem CreateMenuItem<TMenuItem, TNode>(Action<TNode> onClick, TranslationString text, TranslationString toolTip, Bitmap icon = null)
+        public TMenuItem CreateMenuItem<TMenuItem, TNode>(Action<TNode> onClick, TranslationString text, TranslationString toolTip, Bitmap? icon = null)
             where TMenuItem : ToolStripItem, new()
             where TNode : class, INode
         {
@@ -380,7 +380,7 @@ namespace GitUI.BranchTreePanel
             return result;
         }
 
-        private void AddContextMenuItems(ContextMenuStrip menu, IEnumerable<ToolStripItem> items, ToolStripItem insertBefore = null, ToolStripItem insertAfter = null)
+        private void AddContextMenuItems(ContextMenuStrip menu, IEnumerable<ToolStripItem> items, ToolStripItem? insertBefore = null, ToolStripItem? insertAfter = null)
         {
             Debug.Assert(!(insertAfter is not null && insertBefore is not null), $"Only {nameof(insertBefore)} or {nameof(insertAfter)} is allowed.");
 

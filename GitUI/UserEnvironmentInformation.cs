@@ -11,7 +11,7 @@ namespace GitUI
     {
         private static bool _alreadySet;
         private static bool _dirty;
-        private static string _sha;
+        private static string? _sha;
 
         public static void CopyInformation() => ClipboardUtil.TrySetText(GetInformation());
 
@@ -22,7 +22,7 @@ namespace GitUI
                 throw new InvalidOperationException($"{nameof(Initialise)} must be called first");
             }
 
-            string gitVer;
+            string? gitVer;
             try
             {
                 gitVer = GitVersion.Current?.Full;
@@ -47,9 +47,9 @@ namespace GitUI
             return sb.ToString();
         }
 
-        public static string GetGitVersionInfo(string gitVersion, GitVersion lastSupportedVersion, GitVersion recommendedVersion)
+        public static string GetGitVersionInfo(string? gitVersion, GitVersion lastSupportedVersion, GitVersion recommendedVersion)
         {
-            if (string.IsNullOrWhiteSpace(gitVersion))
+            if (GitExtensions.Strings.IsNullOrWhiteSpace(gitVersion))
             {
                 return $"- (minimum: {lastSupportedVersion}, recommended: {recommendedVersion})";
             }

@@ -22,7 +22,6 @@ using GitUI.Editor.RichTextBoxExtension;
 using GitUI.Hotkey;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
@@ -31,9 +30,9 @@ namespace GitUI.CommitInfo
 {
     public partial class CommitInfo : GitModuleControl
     {
-        private event EventHandler<CommandEventArgs> CommandClickedEvent;
+        private event EventHandler<CommandEventArgs>? CommandClickedEvent;
 
-        public event EventHandler<CommandEventArgs> CommandClicked
+        public event EventHandler<CommandEventArgs>? CommandClicked
         {
             add
             {
@@ -70,17 +69,17 @@ namespace GitUI.CommitInfo
         private readonly IDisposable _revisionInfoResizedSubscription;
         private readonly IDisposable _commitMessageResizedSubscription;
 
-        private GitRevision _revision;
-        private IReadOnlyList<ObjectId> _children;
-        private string _linksInfo;
-        private IDictionary<string, string> _annotatedTagsMessages;
-        private string _annotatedTagsInfo;
-        private List<string> _tags;
-        private string _tagInfo;
-        private List<string> _branches;
-        private string _branchInfo;
-        private string _gitDescribeInfo;
-        [CanBeNull] private IDictionary<string, int> _tagsOrderDict;
+        private GitRevision? _revision;
+        private IReadOnlyList<ObjectId>? _children;
+        private string? _linksInfo;
+        private IDictionary<string, string>? _annotatedTagsMessages;
+        private string? _annotatedTagsInfo;
+        private List<string>? _tags;
+        private string? _tagInfo;
+        private List<string>? _branches;
+        private string? _branchInfo;
+        private string? _gitDescribeInfo;
+        private IDictionary<string, int>? _tagsOrderDict;
         private int _revisionInfoHeight;
         private int _commitMessageHeight;
         private bool _showAllBranches;
@@ -156,7 +155,7 @@ namespace GitUI.CommitInfo
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public GitRevision Revision
+        public GitRevision? Revision
         {
             get => _revision;
             set => SetRevisionWithChildren(value, null);
@@ -174,7 +173,7 @@ namespace GitUI.CommitInfo
             }
         }
 
-        public void SetRevisionWithChildren(GitRevision revision, IReadOnlyList<ObjectId> children)
+        public void SetRevisionWithChildren(GitRevision? revision, IReadOnlyList<ObjectId>? children)
         {
             _revision = revision;
             _children = children;
@@ -410,7 +409,7 @@ namespace GitUI.CommitInfo
 
                     return;
 
-                    IDictionary<string, string> GetAnnotatedTagsMessages()
+                    IDictionary<string, string>? GetAnnotatedTagsMessages()
                     {
                         if (refs is null)
                         {
@@ -594,7 +593,7 @@ namespace GitUI.CommitInfo
             }
 
             int charIndex = rtb.GetCharIndexFromPosition(rtb.PointToClient(MousePosition));
-            string link = rtb.GetLink(charIndex);
+            string? link = rtb.GetLink(charIndex);
             copyLinkToolStripMenuItem.Visible = link is not null;
             copyLinkToolStripMenuItem.Text = string.Format(_copyLink.Text, link);
             copyLinkToolStripMenuItem.Tag = link;
@@ -602,7 +601,7 @@ namespace GitUI.CommitInfo
 
         private void copyLinkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ClipboardUtil.TrySetText(copyLinkToolStripMenuItem.Tag as string);
+            ClipboardUtil.TrySetText((string)copyLinkToolStripMenuItem.Tag);
         }
 
         private void showContainedInBranchesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -649,6 +648,11 @@ namespace GitUI.CommitInfo
 
         private void addNoteToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (_revision is null)
+            {
+                return;
+            }
+
             Module.EditNotes(_revision.ObjectId);
             _revision.HasNotes = false;
             _revision.Body = null;

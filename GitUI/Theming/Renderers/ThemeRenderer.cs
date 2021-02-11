@@ -82,21 +82,21 @@ namespace GitUI.Theming
             }
         }
 
-        protected Context CreateRenderContext(IntPtr hdc, NativeMethods.RECTCLS clip) =>
+        protected Context CreateRenderContext(IntPtr hdc, NativeMethods.RECTCLS? clip) =>
             new Context(hdc, clip);
 
         protected class Context : IDisposable
         {
             private readonly IntPtr _hdc;
-            private readonly NativeMethods.RECTCLS _clip;
+            private readonly NativeMethods.RECTCLS? _clip;
             private readonly Lazy<Graphics> _graphicsLazy;
 
             private bool _clipChanged;
-            private Region _originalClip;
+            private Region? _originalClip;
 
             public Graphics Graphics => _graphicsLazy.Value;
 
-            public Context(IntPtr hdc, NativeMethods.RECTCLS clip)
+            public Context(IntPtr hdc, NativeMethods.RECTCLS? clip)
             {
                 _hdc = hdc;
                 _clip = clip;

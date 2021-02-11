@@ -30,7 +30,7 @@ namespace GitUI.NBugReports.Info
         /// <summary>
         /// Gets or sets the general information about the exception and the system to be presented in the bug report.
         /// </summary>
-        public GeneralInfo GeneralInfo { get; set; }
+        public GeneralInfo? GeneralInfo { get; set; }
 
         public override string ToString()
         {

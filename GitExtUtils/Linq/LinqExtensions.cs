@@ -223,5 +223,18 @@ namespace System.Linq
                 }
             }
         }
+
+        [Pure]
+        [MustUseReturnValue]
+        public static IEnumerable<string> WhereNotNullOrWhiteSpace(this IEnumerable<string?> source)
+        {
+            foreach (var item in source)
+            {
+                if (!GitExtensions.Strings.IsNullOrWhiteSpace(item))
+                {
+                    yield return item;
+                }
+            }
+        }
     }
 }

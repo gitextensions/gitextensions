@@ -34,7 +34,7 @@ namespace GitUI.UserControls
         private GitAction _action;
         private bool _hasConflicts;
 
-        private GitModuleForm Form => FindForm() as GitModuleForm;
+        private GitModuleForm? Form => FindForm() as GitModuleForm;
 
         public InteractiveGitActionControl()
         {
@@ -236,7 +236,7 @@ namespace GitUI.UserControls
             switch (_action)
             {
                 case GitAction.Bisect:
-                    if (Form is not FormBrowse)
+                    if (Form is not FormBrowse || Form.RevisionGridControl is null)
                     {
                         return;
                     }

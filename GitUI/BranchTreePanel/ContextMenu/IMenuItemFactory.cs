@@ -18,7 +18,7 @@ namespace GitUI.BranchTreePanel.ContextMenu
         /// <param name="toolTip">Menu item tooltip</param>
         /// <param name="icon">The image to show on the menu item</param>
         /// <returns>A new instance of the menu item control</returns>
-        TMenuItem CreateMenuItem<TMenuItem, TNode>(Action<TNode> onClick, TranslationString text, TranslationString toolTip, Bitmap icon = null)
+        TMenuItem CreateMenuItem<TMenuItem, TNode>(Action<TNode> onClick, TranslationString text, TranslationString toolTip, Bitmap? icon = null)
             where TMenuItem : ToolStripItem, new()
             where TNode : class, INode;
     }

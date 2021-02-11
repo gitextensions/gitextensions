@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
-using GitCommands;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitUI.HelperDialogs
 {
@@ -15,14 +13,14 @@ namespace GitUI.HelperDialogs
             InitializeComponent();
         }
 
-        private FormChooseCommit([NotNull] GitUICommands commands)
+        private FormChooseCommit(GitUICommands commands)
             : base(commands)
         {
             InitializeComponent();
             InitializeComplete();
         }
 
-        public FormChooseCommit([NotNull] GitUICommands commands, [CanBeNull] string preselectCommit, bool showArtificial = false)
+        public FormChooseCommit(GitUICommands commands, string? preselectCommit, bool showArtificial = false)
             : this(commands)
         {
             revisionGrid.MultiSelect = false;
@@ -38,7 +36,7 @@ namespace GitUI.HelperDialogs
             }
         }
 
-        public GitRevision SelectedRevision { get; private set; }
+        public GitRevision? SelectedRevision { get; private set; }
 
         protected override void OnLoad(EventArgs e)
         {

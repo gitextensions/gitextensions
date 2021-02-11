@@ -1,8 +1,6 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Patches;
-using JetBrains.Annotations;
 
 namespace GitUI.Editor.Diff
 {
@@ -12,8 +10,7 @@ namespace GitUI.Editor.Diff
             @"\-(?<leftStart>\d{1,})\,{0,}(?<leftCount>\d{0,})\s\+(?<rightStart>\d{1,})\,{0,}(?<rightCount>\d{0,})",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        [NotNull]
-        public DiffLinesInfo Analyze([NotNull] string diffContent)
+        public DiffLinesInfo Analyze(string diffContent)
         {
             var ret = new DiffLinesInfo();
             var isCombinedDiff = PatchProcessor.IsCombinedDiff(diffContent);

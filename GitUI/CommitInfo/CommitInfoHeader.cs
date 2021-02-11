@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Windows.Forms;
@@ -23,7 +21,7 @@ namespace GitUI.CommitInfo
         private readonly ICommitDataHeaderRenderer _commitDataHeaderRenderer;
         private readonly IDisposable _rtbResizedSubscription;
 
-        public event EventHandler<CommandEventArgs> CommandClicked;
+        public event EventHandler<CommandEventArgs>? CommandClicked;
 
         public CommitInfoHeader()
         {
@@ -57,7 +55,7 @@ namespace GitUI.CommitInfo
             rtbRevisionHeader.ContextMenuStrip = contextMenuStrip;
         }
 
-        public void ShowCommitInfo(GitRevision revision, IReadOnlyList<ObjectId> children)
+        public void ShowCommitInfo(GitRevision revision, IReadOnlyList<ObjectId>? children)
         {
             this.InvokeAsync(() =>
             {
@@ -83,7 +81,7 @@ namespace GitUI.CommitInfo
             return rtbRevisionHeader.GetPlainText();
         }
 
-        private void LoadAuthorImage(GitRevision revision)
+        private void LoadAuthorImage(GitRevision? revision)
         {
             var showAvatar = AppSettings.ShowAuthorAvatarInCommitInfo;
             avatarControl.Visible = showAvatar;

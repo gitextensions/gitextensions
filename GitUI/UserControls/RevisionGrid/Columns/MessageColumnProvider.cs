@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -94,7 +95,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             }
         }
 
-        public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
+        public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
         {
             _toolTipBuilder.Clear();
 
@@ -262,7 +263,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         private void DrawRef(
             DataGridViewCellPaintingEventArgs e,
             IGitRef gitRef,
-            IGitRef superprojectRef,
+            IGitRef? superprojectRef,
             CellStyle style,
             Rectangle messageBounds,
             ref int offset)
@@ -333,7 +334,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         private void DrawArtificialCount(
             DataGridViewCellPaintingEventArgs e,
-            IReadOnlyList<GitItemStatus> items,
+            IReadOnlyList<GitItemStatus>? items,
             Image icon,
             in CellStyle style,
             Rectangle messageBounds,
@@ -485,6 +486,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         }
 
         private static string[] GetCommitMessageLines(GitRevision revision) =>
-            (revision.Body?.Trim() ?? revision.Subject ?? string.Empty).SplitLines();
+            (revision.Body?.Trim() ?? revision.Subject).SplitLines();
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Documents;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Commands;
@@ -31,8 +30,8 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _hoverShowImageLabelText = new("Hover to see scenario when fast forward is possible.");
 
-        private readonly string _defaultBranch;
-        private readonly string _defaultToBranch;
+        private readonly string? _defaultBranch;
+        private readonly string? _defaultToBranch;
         private readonly bool _startRebaseImmediately;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
@@ -41,7 +40,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
         }
 
-        public FormRebase(GitUICommands commands, string defaultBranch)
+        public FormRebase(GitUICommands commands, string? defaultBranch)
             : base(commands)
         {
             _defaultBranch = defaultBranch;
@@ -55,7 +54,7 @@ namespace GitUI.CommandsDialogs
             patchGrid1.SetSkipped(Skipped);
             if (AppSettings.AlwaysShowAdvOpt)
             {
-                ShowOptions_LinkClicked(null, null);
+                ShowOptions_LinkClicked(this, null!);
             }
 
             Shown += FormRebase_Shown;
@@ -66,8 +65,7 @@ namespace GitUI.CommandsDialogs
             patchGrid1.SelectCurrentlyApplyingPatch();
         }
 
-        public FormRebase(GitUICommands commands, string from, string to, string defaultBranch, bool interactive = false,
-            bool startRebaseImmediately = true)
+        public FormRebase(GitUICommands commands, string? from, string? to, string? defaultBranch, bool interactive = false, bool startRebaseImmediately = true)
             : this(commands, defaultBranch)
         {
             txtFrom.Text = from;
@@ -109,11 +107,11 @@ namespace GitUI.CommandsDialogs
             chkStash.Checked = AppSettings.RebaseAutoStash;
             if (_startRebaseImmediately)
             {
-                OkClick(null, null);
+                OkClick(this, EventArgs.Empty);
             }
             else
             {
-                ShowOptions_LinkClicked(null, null);
+                ShowOptions_LinkClicked(this, null!);
             }
         }
 

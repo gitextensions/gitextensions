@@ -7,7 +7,7 @@ namespace GitUI.UserControls
     public class CaseSensitiveComboBox : ComboBox
     {
         private const AutoCompleteMode Mode = AutoCompleteMode.SuggestAppend;
-        private string _lastTextChangedValue;
+        private string? _lastTextChangedValue;
 
         private bool SystemAutoCompleteEnabled
         {

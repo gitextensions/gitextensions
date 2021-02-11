@@ -21,10 +21,12 @@ namespace GitUI.CommandsDialogs
 
         private readonly IEnumerable<string> _defaultBranches;
         private readonly HashSet<string> _mergedBranches = new HashSet<string>();
-        private string _currentBranch;
+        private string? _currentBranch;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormDeleteBranch()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
         }

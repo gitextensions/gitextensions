@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -9,7 +8,6 @@ using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI.Avatars;
 using GitUI.Properties;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI
@@ -93,15 +91,13 @@ namespace GitUI
             base.Dispose(disposing);
         }
 
-        [CanBeNull]
         [Browsable(false)]
-        public string Email { get; private set; }
+        public string? Email { get; private set; }
 
-        [CanBeNull]
         [Browsable(false)]
-        public string AuthorName { get; private set; }
+        public string? AuthorName { get; private set; }
 
-        public void LoadImage(string email, string name)
+        public void LoadImage(string? email, string? name)
         {
             if (string.IsNullOrEmpty(email))
             {
@@ -114,7 +110,7 @@ namespace GitUI
             ThreadHelper.JoinableTaskFactory.RunAsync(() => UpdateAvatarAsync()).FileAndForget();
         }
 
-        private void RefreshImage(Image image)
+        private void RefreshImage(Image? image)
         {
             _avatarImage.Image = image ?? Images.User80;
             _avatarImage.Refresh();
@@ -133,7 +129,7 @@ namespace GitUI
 
             var email = Email;
 
-            if (!AppSettings.ShowAuthorAvatarInCommitInfo || string.IsNullOrWhiteSpace(email))
+            if (!AppSettings.ShowAuthorAvatarInCommitInfo || GitExtensions.Strings.IsNullOrWhiteSpace(email))
             {
                 RefreshImage(Images.User80);
                 return;

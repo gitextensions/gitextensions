@@ -22,7 +22,7 @@ namespace GitUI.NBugReports.Info
         {
         }
 
-        internal GeneralInfo(SerializableException serializableException)
+        internal GeneralInfo(SerializableException? serializableException)
         {
             // this.HostApplication = Settings.EntryAssembly.GetName().Name; // Does not get the extensions of the file!
             HostApplication = AppSettings.ApplicationName;
@@ -60,25 +60,25 @@ namespace GitUI.NBugReports.Info
             }
         }
 
-        public string ClrVersion { get; set; }
+        public string? ClrVersion { get; set; }
 
-        public string DateTime { get; set; }
+        public string? DateTime { get; set; }
 
-        public string ExceptionMessage { get; set; }
+        public string? ExceptionMessage { get; set; }
 
-        public string ExceptionType { get; set; }
+        public string? ExceptionType { get; set; }
 
-        public string HostApplication { get; set; }
+        public string? HostApplication { get; set; }
 
         /// <summary>
         /// Gets or sets AssemblyFileVersion of host assembly.
         /// </summary>
-        public string HostApplicationVersion { get; set; }
+        public string? HostApplicationVersion { get; set; }
 
-        public string GitVersion { get; set; }
+        public string? GitVersion { get; set; }
 
-        public string TargetSite { get; set; }
+        public string? TargetSite { get; set; }
 
-        public string UserDescription { get; set; }
+        public string? UserDescription { get; set; }
     }
 }

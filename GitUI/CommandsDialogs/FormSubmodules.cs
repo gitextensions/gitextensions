@@ -20,8 +20,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _removeSelectedSubmodule = new("Are you sure you want remove the selected submodule?");
         private readonly TranslationString _removeSelectedSubmoduleCaption = new("Remove");
 
-        private readonly BindingList<IGitSubmoduleInfo> _modules = new BindingList<IGitSubmoduleInfo>();
-        private GitSubmoduleInfo _oldSubmoduleInfo;
+        private readonly BindingList<IGitSubmoduleInfo?> _modules = new BindingList<IGitSubmoduleInfo?>();
+        private GitSubmoduleInfo? _oldSubmoduleInfo;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormSubmodules()
@@ -70,7 +70,7 @@ namespace GitUI.CommandsDialogs
             Initialize();
         }
 
-        private BackgroundWorker _bw;
+        private BackgroundWorker? _bw;
 
         private void Initialize()
         {
@@ -196,10 +196,6 @@ namespace GitUI.CommandsDialogs
         private void Pull_Click(object sender, EventArgs e)
         {
             var submodule = Module.GetSubmodule(SubModuleLocalPath.Text);
-            if (submodule is null)
-            {
-                return;
-            }
 
             new GitUICommands(submodule).StartPullDialog(this);
 

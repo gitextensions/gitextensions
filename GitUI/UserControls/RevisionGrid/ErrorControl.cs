@@ -4,7 +4,7 @@ namespace GitUI.UserControls.RevisionGrid
 {
     public sealed class ErrorControl : UserControl
     {
-        private PictureBox _image;
+        private PictureBox _image = null!;
 
         public ErrorControl()
         {

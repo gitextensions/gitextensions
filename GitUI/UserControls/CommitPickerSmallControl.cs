@@ -1,11 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.UserControls
@@ -15,7 +14,7 @@ namespace GitUI.UserControls
         /// <summary>
         /// Occurs whenever the selected commit hash changes.
         /// </summary>
-        public event EventHandler SelectedObjectIdChanged;
+        public event EventHandler? SelectedObjectIdChanged;
 
         public CommitPickerSmallControl()
         {
@@ -23,15 +22,14 @@ namespace GitUI.UserControls
             InitializeComplete();
         }
 
-        [CanBeNull]
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public ObjectId SelectedObjectId { get; private set; }
+        public ObjectId? SelectedObjectId { get; private set; }
 
         /// <summary>
-        /// shows a message box if commitHash is invalid
+        /// shows a message box if commitHash is invalid.
         /// </summary>
-        public void SetSelectedCommitHash(string commitHash)
+        public void SetSelectedCommitHash(string? commitHash)
         {
             var oldCommitHash = SelectedObjectId;
 
@@ -64,7 +62,7 @@ namespace GitUI.UserControls
 
                         var currentCheckout = Module.GetCurrentCheckout();
 
-                        Debug.Assert(currentCheckout is not null, "currentCheckout is not null");
+                        Assumes.NotNull(currentCheckout);
 
                         var text = Module.GetCommitCountString(currentCheckout.ToString(), SelectedObjectId.ToString());
 

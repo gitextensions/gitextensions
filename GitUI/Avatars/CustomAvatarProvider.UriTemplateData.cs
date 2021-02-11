@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
-using JetBrains.Annotations;
 
 namespace GitUI.Avatars
 {
@@ -13,7 +12,7 @@ namespace GitUI.Avatars
         /// </summary>
         private class UriTemplateData
         {
-            public UriTemplateData([NotNull] string email, string name, int imageSize)
+            public UriTemplateData(string email, string? name, int imageSize)
             {
                 Email = email ?? throw new ArgumentNullException(nameof(email));
                 Name = name;
@@ -27,7 +26,7 @@ namespace GitUI.Avatars
             }
 
             public string Email { get; }
-            public string Name { get; }
+            public string? Name { get; }
             public int ImageSize { get; }
             public string NormalizedEmail { get; }
 

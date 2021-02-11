@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using GitCommands;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitUI.UserControls
 {
@@ -15,7 +11,7 @@ namespace GitUI.UserControls
         /// <summary>
         /// Raised when the Escape key is pressed (and only when no selection exists, as the default behaviour of escape is to clear the selection).
         /// </summary>
-        public event Action EscapePressed;
+        public event Action? EscapePressed;
 
         public CommitDiff()
         {
@@ -45,7 +41,7 @@ namespace GitUI.UserControls
             DiffText.ScrollToTop();
         }
 
-        public void SetRevision([CanBeNull] ObjectId objectId, [CanBeNull] string fileToSelect)
+        public void SetRevision(ObjectId? objectId, string? fileToSelect)
         {
             // We cannot use the GitRevision from revision grid. When a filtered commit list
             // is shown (file history/normal filter) the parent guids are not the 'real' parents,

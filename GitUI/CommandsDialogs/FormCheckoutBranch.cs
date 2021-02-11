@@ -11,6 +11,7 @@ using GitCommands.Git.Commands;
 using GitExtUtils.GitUI;
 using GitUI.Script;
 using GitUIPluginInterfaces;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
@@ -39,7 +40,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _resetCaption = new("Reset branch");
         #endregion
 
-        private readonly IReadOnlyList<ObjectId> _containRevisions;
+        private readonly IReadOnlyList<ObjectId>? _containRevisions;
         private readonly bool _isLoading;
         private readonly string _rbResetBranchDefaultText;
         private TranslationString _invalidBranchName = new("An existing branch must be selected.");
@@ -51,11 +52,13 @@ namespace GitUI.CommandsDialogs
         private readonly GitBranchNameOptions _gitBranchNameOptions = new(AppSettings.AutoNormaliseSymbol);
         private readonly Dictionary<Control, int> _controls = new Dictionary<Control, int>();
 
-        private IReadOnlyList<IGitRef> _localBranches;
-        private IReadOnlyList<IGitRef> _remoteBranches;
+        private IReadOnlyList<IGitRef>? _localBranches;
+        private IReadOnlyList<IGitRef>? _remoteBranches;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormCheckoutBranch()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
 
@@ -63,7 +66,7 @@ namespace GitUI.CommandsDialogs
             ControlsPanel.Controls.Add(Ok);
         }
 
-        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote, IReadOnlyList<ObjectId> containRevisions = null)
+        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote, IReadOnlyList<ObjectId>? containRevisions = null)
             : base(commands, true)
         {
             _branchNameNormaliser = new GitBranchNameNormaliser();
@@ -165,7 +168,7 @@ namespace GitUI.CommandsDialogs
 
         private bool HasUncommittedChanges => _isDirtyDir ?? true;
 
-        public DialogResult DoDefaultActionOrShow(IWin32Window owner)
+        public DialogResult DoDefaultActionOrShow(IWin32Window? owner)
         {
             bool localBranchSelected = !string.IsNullOrWhiteSpace(Branches.Text) && !Remotebranch.Checked;
             if (!AppSettings.AlwaysShowCheckoutBranchDlg && localBranchSelected &&
@@ -274,7 +277,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private DialogResult PerformCheckout(IWin32Window owner)
+        private DialogResult PerformCheckout(IWin32Window? owner)
         {
             // Ok button set as the "AcceptButton" for the form
             // if the user hits [Enter] at any point, we need to trigger txtCustomBranchName Leave event
@@ -282,7 +285,7 @@ namespace GitUI.CommandsDialogs
 
             var branchName = Branches.Text.Trim();
             var isRemote = Remotebranch.Checked;
-            var newBranchName = (string)null;
+            var newBranchName = (string?)null;
             var newBranchMode = CheckoutNewBranchMode.DontCreate;
 
             if (isRemote)
@@ -309,7 +312,7 @@ namespace GitUI.CommandsDialogs
                 {
                     IGitRef localBranchRef = GetLocalBranchRef(_localBranchName);
                     IGitRef remoteBranchRef = GetRemoteBranchRef(branchName);
-                    if (localBranchRef is not null && remoteBranchRef is not null)
+                    if (localBranchRef is not null && remoteBranchRef is not null && localBranchRef.ObjectId is not null && remoteBranchRef.ObjectId is not null)
                     {
                         var mergeBaseGuid = Module.GetMergeBase(localBranchRef.ObjectId, remoteBranchRef.ObjectId);
                         var isResetFastForward = localBranchRef.ObjectId == mergeBaseGuid;
@@ -470,7 +473,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 _remoteName = GitRefName.GetRemoteName(branch, Module.GetRemoteNames());
-                _localBranchName = Module.GetLocalTrackingBranchName(_remoteName, branch);
+                _localBranchName = Module.GetLocalTrackingBranchName(_remoteName, branch) ?? "";
                 var remoteBranchName = _remoteName.Length > 0 ? branch.Substring(_remoteName.Length + 1) : branch;
                 _newLocalBranchName = string.Concat(_remoteName, "_", remoteBranchName);
                 int i = 2;
@@ -500,7 +503,7 @@ namespace GitUI.CommandsDialogs
 
                         var currentCheckout = Module.GetCurrentCheckout();
 
-                        Debug.Assert(currentCheckout is not null, "currentCheckout is not null");
+                        Assumes.NotNull(currentCheckout);
 
                         var text = Module.GetCommitCountString(currentCheckout.ToString(), branch);
 

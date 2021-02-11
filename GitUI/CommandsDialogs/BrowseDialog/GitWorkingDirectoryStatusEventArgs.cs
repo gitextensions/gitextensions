@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using GitCommands;
-using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -19,9 +18,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         }
 
         /// <summary>
-        /// the status of all modified files/submodules or null if the previous information is invalidated
+        /// the status of all modified files/submodules or null if the previous information is invalidated.
         /// </summary>
-        [CanBeNull]
-        public IReadOnlyList<GitItemStatus> ItemStatuses => _itemStatuses ?? Array.Empty<GitItemStatus>();
+        public IReadOnlyList<GitItemStatus>? ItemStatuses => _itemStatuses ?? Array.Empty<GitItemStatus>();
     }
 }

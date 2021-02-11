@@ -16,9 +16,9 @@ namespace GitUI.Avatars
         }
 
         /// <inheritdoc />
-        public Task<Image> GetAvatarAsync(string email, string name, int imageSize)
+        public Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
-            return Task.FromResult(GetCachedResizedImage(imageSize));
+            return Task.FromResult<Image?>(GetCachedResizedImage(imageSize));
         }
 
         private Image GetCachedResizedImage(int imageSize)

@@ -1,6 +1,5 @@
 ﻿using System;
 using GitCommands;
-using JetBrains.Annotations;
 
 namespace GitUI
 {
@@ -9,13 +8,13 @@ namespace GitUI
         /// <summary>
         /// Returns the names of files that match the specified search pattern
         /// </summary>
-        /// <param name="searchPattern">The search string to match against the pathes of files</param>
-        Func<string, bool> Get([NotNull] string searchPattern, [NotNull] string workingDir);
+        /// <param name="searchPattern">The search string to match against the paths of files</param>
+        Func<string?, bool> Get(string searchPattern, string workingDir);
     }
 
     public sealed class FindFilePredicateProvider : IFindFilePredicateProvider
     {
-        public Func<string, bool> Get(string searchPattern, string workingDir)
+        public Func<string?, bool> Get(string searchPattern, string workingDir)
         {
             if (searchPattern is null)
             {

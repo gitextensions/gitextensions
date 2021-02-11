@@ -10,16 +10,16 @@ namespace GitCommands.DiffMergeTools
 {
     public sealed class DiffMergeToolConfigurationManager
     {
-        private readonly Func<IConfigValueStore> _getFileSettings;
+        private readonly Func<IConfigValueStore?> _getFileSettings;
         private readonly Func<string, IEnumerable<string?>, string> _findFileInFolders;
 
-        public DiffMergeToolConfigurationManager(Func<IConfigValueStore> getFileSettings)
+        public DiffMergeToolConfigurationManager(Func<IConfigValueStore?> getFileSettings)
             : this(getFileSettings, PathUtil.FindInFolders)
         {
             _getFileSettings = getFileSettings;
         }
 
-        internal DiffMergeToolConfigurationManager(Func<IConfigValueStore> getFileSettings, Func<string, IEnumerable<string?>, string> findFileInFolders)
+        internal DiffMergeToolConfigurationManager(Func<IConfigValueStore?> getFileSettings, Func<string, IEnumerable<string?>, string> findFileInFolders)
         {
             _getFileSettings = getFileSettings;
             _findFileInFolders = findFileInFolders;
@@ -86,9 +86,9 @@ namespace GitCommands.DiffMergeTools
         /// <param name="toolName">The name of the diff/merge tool.</param>
         /// <param name="toolType">Type of the tool.</param>
         /// <returns>The command for the diff/merge tool configured in the effective config. </returns>
-        public string GetToolCommand(string toolName, DiffMergeToolType toolType)
+        public string GetToolCommand(string? toolName, DiffMergeToolType toolType)
         {
-            if (string.IsNullOrWhiteSpace(toolName))
+            if (Strings.IsNullOrWhiteSpace(toolName))
             {
                 return string.Empty;
             }
@@ -115,9 +115,9 @@ namespace GitCommands.DiffMergeTools
         /// <param name="toolName">The name of the diff/merge tool.</param>
         /// <param name="toolType">Type of the tool.</param>
         /// <returns>The path to the diff/merge tool configured in the effective config. </returns>
-        public string GetToolPath(string toolName, DiffMergeToolType toolType)
+        public string GetToolPath(string? toolName, DiffMergeToolType toolType)
         {
-            if (string.IsNullOrWhiteSpace(toolName))
+            if (Strings.IsNullOrWhiteSpace(toolName))
             {
                 return string.Empty;
             }

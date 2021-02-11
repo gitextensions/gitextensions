@@ -95,7 +95,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             // Get selected encoding
             var encoding = ListIncludedEncodings.SelectedItem as Encoding;
-            Type encodingType = null;
+            Type? encodingType = null;
 
             // Get type if exists
             if (encoding is not null)

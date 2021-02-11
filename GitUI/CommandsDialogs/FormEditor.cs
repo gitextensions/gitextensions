@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Editor;
 using GitUI.Theming;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -17,7 +16,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _cannotOpenFile = new("Cannot open file:");
         private readonly TranslationString _cannotSaveFile = new("Cannot save file:");
 
-        [CanBeNull] private readonly string _fileName;
+        private readonly string? _fileName;
 
         private bool _hasChanges;
 
@@ -27,7 +26,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
         }
 
-        public FormEditor([NotNull] GitUICommands commands, [CanBeNull] string fileName, bool showWarning)
+        public FormEditor(GitUICommands commands, string? fileName, bool showWarning)
             : base(commands)
         {
             _fileName = fileName;
@@ -39,7 +38,7 @@ namespace GitUI.CommandsDialogs
             // for translation form
             if (_fileName is not null)
             {
-                OpenFile();
+                OpenFile(_fileName);
             }
 
             fileViewer.TextChanged += (s, e) => HasChanges = true;
@@ -57,13 +56,13 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void OpenFile()
+        private void OpenFile(string fileName)
         {
             try
             {
-                fileViewer.ViewFileAsync(_fileName);
+                fileViewer.ViewFileAsync(fileName);
                 fileViewer.IsReadOnly = false;
-                Text = _fileName;
+                Text = fileName;
 
                 // loading a new file from disk, the text hasn't been changed yet.
                 HasChanges = false;
@@ -133,7 +132,7 @@ namespace GitUI.CommandsDialogs
 
         private void SaveChanges()
         {
-            if (!string.IsNullOrEmpty(_fileName))
+            if (!GitExtensions.Strings.IsNullOrEmpty(_fileName))
             {
                 if (fileViewer.FilePreamble is null || Module.FilesEncoding.GetPreamble().SequenceEqual(fileViewer.FilePreamble))
                 {

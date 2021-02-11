@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI
@@ -21,8 +22,8 @@ namespace GitUI
             branches.DisplayMember = nameof(IGitRef.Name);
         }
 
-        private IReadOnlyList<IGitRef> _branchesToSelect;
-        public IReadOnlyList<IGitRef> BranchesToSelect
+        private IReadOnlyList<IGitRef>? _branchesToSelect;
+        public IReadOnlyList<IGitRef>? BranchesToSelect
         {
             get
             {
@@ -76,6 +77,8 @@ namespace GitUI
 
         private void selectMultipleBranchesButton_Click(object sender, EventArgs e)
         {
+            Assumes.NotNull(_branchesToSelect);
+
             using var formSelectMultipleBranches = new FormSelectMultipleBranches(_branchesToSelect);
             foreach (var branch in GetSelectedBranches())
             {

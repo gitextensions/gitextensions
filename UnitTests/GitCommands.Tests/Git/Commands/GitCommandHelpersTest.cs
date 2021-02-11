@@ -135,7 +135,7 @@ namespace GitCommandsTests.Git.Commands
         [Test]
         public void TestUnsetStagedStatus()
         {
-            var item = new GitItemStatus();
+            var item = new GitItemStatus("name");
             Assert.AreEqual(item.Staged, StagedStatus.Unset);
         }
 

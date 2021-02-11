@@ -1516,10 +1516,10 @@ namespace GitCommands
             set => SetBool("dashboardshowcurrentbranch", value);
         }
 
-        public static string OwnScripts
+        public static string? OwnScripts
         {
             get => GetString("ownScripts", "");
-            set => SetString("ownScripts", value);
+            set => SetString("ownScripts", value ?? "");
         }
 
         public static int RecursiveSubmodules
@@ -1910,7 +1910,7 @@ namespace GitCommands
             return SettingsContainer.GetColor(name.ToString().ToLowerInvariant() + "color", AppColorDefaults.GetBy(name));
         }
 
-        public static void SetEnum<T>(string name, T value)
+        public static void SetEnum<T>(string name, T value) where T : Enum
         {
             SettingsContainer.SetEnum(name, value);
         }
@@ -1935,7 +1935,8 @@ namespace GitCommands
             SettingsContainer.SetString(name, value);
         }
 
-        public static string GetString(string name, string? defaultValue)
+        [return: NotNullIfNotNull("defaultValue")]
+        public static string? GetString(string name, string? defaultValue)
         {
             return SettingsContainer.GetString(name, defaultValue);
         }

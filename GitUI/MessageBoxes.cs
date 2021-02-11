@@ -2,7 +2,6 @@
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-using JetBrains.Annotations;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
@@ -52,18 +51,18 @@ namespace GitUI
             Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
-        [CanBeNull] private static MessageBoxes instance;
+        private static MessageBoxes? instance;
 
         private static MessageBoxes Instance => instance ?? (instance = new());
 
-        public static void FailedToRunShell(IWin32Window owner, string shell, Exception ex)
+        public static void FailedToRunShell(IWin32Window? owner, string shell, Exception ex)
             => ShowError(owner, $"{Instance._failedToRunShell.Text} {shell.Quote()}.{Environment.NewLine}"
                                 + $"{Instance._reason.Text}: {ex.Message}");
 
-        public static void NotValidGitDirectory([CanBeNull] IWin32Window owner)
+        public static void NotValidGitDirectory(IWin32Window? owner)
             => ShowError(owner, Instance._notValidGitDirectory.Text);
 
-        public static void ShowGitConfigurationExceptionMessage(IWin32Window owner, GitConfigurationException exception)
+        public static void ShowGitConfigurationExceptionMessage(IWin32Window? owner, GitConfigurationException exception)
             => Show(owner,
                     string.Format(ResourceManager.Strings.GeneralGitConfigExceptionMessage,
                                   exception.ConfigPath, Environment.NewLine, (exception.InnerException ?? exception).Message),
@@ -71,32 +70,32 @@ namespace GitUI
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 
-        public static bool MiddleOfRebase(IWin32Window owner)
+        public static bool MiddleOfRebase(IWin32Window? owner)
             => Confirm(owner, Instance._middleOfRebase.Text, Instance._middleOfRebaseCaption.Text);
 
-        public static bool MiddleOfPatchApply(IWin32Window owner)
+        public static bool MiddleOfPatchApply(IWin32Window? owner)
             => Confirm(owner, Instance._middleOfPatchApply.Text, Instance._middleOfPatchApplyCaption.Text);
 
-        public static void PAgentNotFound(IWin32Window owner)
+        public static void PAgentNotFound(IWin32Window? owner)
             => ShowError(owner, Instance._pageantNotFound.Text, _putty);
 
-        public static void SelectOnlyOneOrTwoRevisions(IWin32Window owner)
+        public static void SelectOnlyOneOrTwoRevisions(IWin32Window? owner)
             => ShowError(owner, Instance._selectOnlyOneOrTwoRevisions.Text, Instance._archiveRevisionCaption.Text);
 
-        public static bool CacheHostkey(IWin32Window owner)
+        public static bool CacheHostkey(IWin32Window? owner)
             => Confirm(owner, Instance._serverHostkeyNotCachedText.Text, "SSH");
 
-        public static bool ConfirmResetSelectedFiles(IWin32Window owner, string text)
+        public static bool ConfirmResetSelectedFiles(IWin32Window? owner, string text)
             => Confirm(owner, text, Instance._resetChangesCaption.Text);
 
-        public static bool ConfirmResolveMergeConflicts(IWin32Window owner)
+        public static bool ConfirmResolveMergeConflicts(IWin32Window? owner)
             => Confirm(owner, Instance._unresolvedMergeConflicts.Text, Instance._unresolvedMergeConflictsCaption.Text);
 
-        public static bool ConfirmUpdateSubmodules(IWin32Window win)
+        public static bool ConfirmUpdateSubmodules(IWin32Window? owner)
         {
             using var dialog = new TaskDialog
             {
-                OwnerWindowHandle = win.Handle,
+                OwnerWindowHandle = owner?.Handle ?? IntPtr.Zero,
                 Text = Instance._updateSubmodulesToo.Text,
                 InstructionText = Instance._theRepositorySubmodules.Text,
                 Caption = Instance._updateSubmodules.Text,
@@ -117,16 +116,16 @@ namespace GitUI
             return result;
         }
 
-        public static void ShellNotFound([CanBeNull] IWin32Window owner)
+        public static void ShellNotFound(IWin32Window? owner)
             => ShowError(owner, Instance._shellNotFound.Text, Instance._shellNotFoundCaption.Text);
 
-        public static void ShowError([CanBeNull] IWin32Window owner, string text, string caption = null)
+        public static void ShowError(IWin32Window? owner, string text, string? caption = null)
             => Show(owner, text, caption ?? Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-        private static bool Confirm([CanBeNull] IWin32Window owner, string text, string caption)
+        private static bool Confirm(IWin32Window? owner, string text, string caption)
             => Show(owner, text, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
 
-        private static DialogResult Show([CanBeNull] IWin32Window owner, string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
+        private static DialogResult Show(IWin32Window? owner, string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
             => MessageBox.Show(owner, text, caption, buttons, icon);
     }
 }

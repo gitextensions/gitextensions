@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using GitCommands;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitUI
 {
     public class FileStatusWithDescription
     {
-        public FileStatusWithDescription([CanBeNull] GitRevision firstRev, GitRevision secondRev, string summary, IReadOnlyList<GitItemStatus> statuses, [CanBeNull] ObjectId baseA = null, [CanBeNull] ObjectId baseB = null)
+        public FileStatusWithDescription(GitRevision? firstRev, GitRevision secondRev, string summary, IReadOnlyList<GitItemStatus> statuses, ObjectId? baseA = null, ObjectId? baseB = null)
         {
             FirstRev = firstRev;
             SecondRev = secondRev ?? throw new ArgumentNullException(nameof(secondRev));
@@ -18,11 +17,11 @@ namespace GitUI
             BaseB = baseB;
         }
 
-        public GitRevision FirstRev { get; }
+        public GitRevision? FirstRev { get; }
         public GitRevision SecondRev { get; }
         public string Summary { get; }
         public IReadOnlyList<GitItemStatus> Statuses { get; }
-        public ObjectId BaseA { get; }
-        public ObjectId BaseB { get; }
+        public ObjectId? BaseA { get; }
+        public ObjectId? BaseB { get; }
     }
 }

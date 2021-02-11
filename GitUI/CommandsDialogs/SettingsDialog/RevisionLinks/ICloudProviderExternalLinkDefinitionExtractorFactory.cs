@@ -2,6 +2,6 @@
 {
     public interface ICloudProviderExternalLinkDefinitionExtractorFactory
     {
-        ICloudProviderExternalLinkDefinitionExtractor Get(CloudProviderKind cloudProviderKind);
+        ICloudProviderExternalLinkDefinitionExtractor? Get(CloudProviderKind cloudProviderKind);
     }
 }

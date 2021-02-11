@@ -9,6 +9,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Utils;
+using Microsoft;
 using Microsoft.Win32;
 using ResourceManager;
 
@@ -135,12 +136,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private const string _putty = "PuTTY";
         private readonly ISshPathLocator _sshPathLocator = new SshPathLocator();
-        private DiffMergeToolConfigurationManager _diffMergeToolConfigurationManager;
+        private DiffMergeToolConfigurationManager? _diffMergeToolConfigurationManager;
 
         /// <summary>
         /// TODO: remove this direct dependency to another SettingsPage later when possible
         /// </summary>
-        public SshSettingsPage SshSettingsPage { get; set; }
+        public SshSettingsPage? SshSettingsPage { get; set; }
 
         public ChecklistSettingsPage()
         {
@@ -179,13 +180,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             PageHost.LoadAll();
 
             Translator.Translate(this, AppSettings.CurrentTranslation);
-            SaveAndRescan_Click(null, null);
+            SaveAndRescan_Click(this, EventArgs.Empty);
         }
 
         private void SshConfig_Click(object sender, EventArgs e)
         {
             if (GitSshHelpers.Plink())
             {
+                Assumes.NotNull(SshSettingsPage);
                 if (SshSettingsPage.AutoFindPuttyPaths())
                 {
                     MessageBox.Show(this, _puttyFoundAuto.Text, _putty, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -215,7 +217,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             MessageBox.Show(this, string.Format(_shCanBeRun.Text, AppSettings.GitBinDir), _shCanBeRunCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             ////GitBinPath.Text = Settings.GitBinDir;
             PageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
-            SaveAndRescan_Click(null, null);
+            SaveAndRescan_Click(this, EventArgs.Empty);
         }
 
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
@@ -275,6 +277,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void DiffToolFix_Click(object sender, EventArgs e)
         {
+            Assumes.NotNull(_diffMergeToolConfigurationManager);
             var diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
             if (string.IsNullOrEmpty(diffTool))
             {
@@ -282,11 +285,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            SaveAndRescan_Click(null, null);
+            SaveAndRescan_Click(this, EventArgs.Empty);
         }
 
         private void MergeToolFix_Click(object sender, EventArgs e)
         {
+            Assumes.NotNull(_diffMergeToolConfigurationManager);
             var mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
             if (string.IsNullOrEmpty(mergeTool))
             {
@@ -294,7 +298,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            SaveAndRescan_Click(null, null);
+            SaveAndRescan_Click(this, EventArgs.Empty);
         }
 
         private void GotoPageGlobalSettings()
@@ -322,7 +326,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             MessageBox.Show(this, string.Format(_gitCanBeRun.Text, AppSettings.GitCommandValue), _gitCanBeRunCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             PageHost.GotoPage(GitSettingsPage.GetPageReference());
-            SaveAndRescan_Click(null, null);
+            SaveAndRescan_Click(this, EventArgs.Empty);
         }
 
         private void SaveAndRescan_Click(object sender, EventArgs e)
@@ -481,6 +485,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private bool CheckDiffToolConfiguration()
         {
+            Assumes.NotNull(_diffMergeToolConfigurationManager);
+
             DiffTool.Visible = true;
             var diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
             if (string.IsNullOrEmpty(diffTool))
@@ -502,6 +508,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private bool CheckMergeTool()
         {
+            Assumes.NotNull(_diffMergeToolConfigurationManager);
+
             MergeTool.Visible = true;
             var mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
             if (string.IsNullOrEmpty(mergeTool))
@@ -531,7 +539,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private bool CheckEditorTool()
         {
-            string editor = CommonLogic.GetGlobalEditor();
+            string? editor = CommonLogic.GetGlobalEditor();
             return !string.IsNullOrEmpty(editor);
         }
 
@@ -555,8 +563,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                                                       null)))
             {
                 // Check if shell extensions are installed
-                string path32 = PathUtil.Combine(AppSettings.GetInstallDir(), CommonLogic.GitExtensionsShellEx32Name);
-                string path64 = PathUtil.Combine(AppSettings.GetInstallDir(), CommonLogic.GitExtensionsShellEx64Name);
+                string? installDir = AppSettings.GetInstallDir();
+                Assumes.NotNull(installDir);
+                string? path32 = PathUtil.Combine(installDir, CommonLogic.GitExtensionsShellEx32Name);
+                string? path64 = PathUtil.Combine(installDir, CommonLogic.GitExtensionsShellEx64Name);
                 if (!File.Exists(path32) || (IntPtr.Size == 8 && !File.Exists(path64)))
                 {
                     RenderSettingSet(ShellExtensionsRegistered, ShellExtensionsRegistered_Fix, _shellExtNoInstalled.Text);
@@ -582,7 +592,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             var installDir = AppSettings.GetInstallDir();
 
-            if (string.IsNullOrEmpty(installDir))
+            if (GitExtensions.Strings.IsNullOrEmpty(installDir))
             {
                 RenderSettingUnset(GitExtensionsInstall, GitExtensionsInstall_Fix, _registryKeyGitExtensionsMissing.Text);
                 return false;

@@ -5,12 +5,12 @@ namespace GitUI.NBugReports
 {
     public interface IErrorReportMarkDownBodyBuilder
     {
-        string Build(Exception exception, string environmentInfo, string additionalInfo);
+        string Build(Exception exception, string? environmentInfo, string? additionalInfo);
     }
 
     public sealed class ErrorReportMarkDownBodyBuilder : IErrorReportMarkDownBodyBuilder
     {
-        public string Build(Exception exception, string environmentInfo, string additionalInfo)
+        public string Build(Exception exception, string? environmentInfo, string? additionalInfo)
         {
             if (exception is null)
             {
@@ -45,7 +45,7 @@ namespace GitUI.NBugReports
             sb.AppendLine();
             sb.AppendLine();
 
-            if (!string.IsNullOrWhiteSpace(additionalInfo))
+            if (!GitExtensions.Strings.IsNullOrWhiteSpace(additionalInfo))
             {
                 sb.AppendLine("## Additional information");
                 sb.AppendLine(additionalInfo.Trim());
@@ -57,7 +57,7 @@ namespace GitUI.NBugReports
             {
                 sb.AppendLine("## Environment");
 
-                if (!string.IsNullOrWhiteSpace(environmentInfo))
+                if (!GitExtensions.Strings.IsNullOrWhiteSpace(environmentInfo))
                 {
                     sb.AppendLine(environmentInfo);
                 }

@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitExtUtils.GitUI;
@@ -14,7 +13,7 @@ namespace GitUI.HelperDialogs
 {
     public partial class FormResetAnotherBranch : GitModuleForm
     {
-        private IGitRef[] _localGitRefs;
+        private IGitRef[]? _localGitRefs;
         private readonly GitRevision _revision;
         private readonly TranslationString _localRefInvalid = new("The entered value '{0}' is not the name of an existing local branch.");
 
@@ -22,7 +21,9 @@ namespace GitUI.HelperDialogs
             => new FormResetAnotherBranch(gitUiCommands, revision ?? throw new NotSupportedException(Strings.NoRevision));
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormResetAnotherBranch()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
         }

@@ -42,6 +42,14 @@ namespace GitUI
                 Text = "Author"
             };
 
+            _hashToolStripMenuItem = new ToolStripMenuItem
+            {
+                CheckOnClick = true,
+                Name = "hashToolStripMenuItem",
+                Size = new System.Drawing.Size(216, 24),
+                Text = "Hash"
+            };
+
             _diffContainsToolStripMenuItem = new ToolStripMenuItem
             {
                 CheckOnClick = true,
@@ -61,14 +69,6 @@ namespace GitUI
                 {
                     _commitFilterToolStripMenuItem.Checked = true;
                 }
-            };
-
-            _hashToolStripMenuItem = new ToolStripMenuItem
-            {
-                CheckOnClick = true,
-                Name = "hashToolStripMenuItem",
-                Size = new System.Drawing.Size(216, 24),
-                Text = "Hash"
             };
 
             _NO_TRANSLATE_textBox = textBox;

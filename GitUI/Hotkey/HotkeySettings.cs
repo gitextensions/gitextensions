@@ -12,10 +12,10 @@ namespace GitUI.Hotkey
     public class HotkeySettings
     {
         [XmlArray]
-        public HotkeyCommand[] Commands { get; set; }
+        public HotkeyCommand[]? Commands { get; set; }
 
         [XmlAttribute]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         public HotkeySettings()
         {

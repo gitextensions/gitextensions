@@ -18,7 +18,6 @@ using GitUI.HelperDialogs;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
@@ -107,18 +106,20 @@ namespace GitUI.CommandsDialogs
         private readonly IFullPathResolver _fullPathResolver;
         private readonly string _branch;
 
-        [CanBeNull] private List<IGitRef> _heads;
+        private List<IGitRef>? _heads;
         private bool _bInternalUpdate;
 
         public bool ErrorOccurred { get; private set; }
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormPull()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
         }
 
-        public FormPull(GitUICommands commands, string defaultRemoteBranch, string defaultRemote, AppSettings.PullAction pullAction)
+        public FormPull(GitUICommands commands, string? defaultRemoteBranch, string? defaultRemote, AppSettings.PullAction pullAction)
             : base(commands)
         {
             InitializeComponent();
@@ -201,7 +202,7 @@ namespace GitUI.CommandsDialogs
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
-        private void BindRemotesDropDown(string selectedRemoteName)
+        private void BindRemotesDropDown(string? selectedRemoteName)
         {
             // refresh registered git remotes
             var remotes = _remotesManager.LoadRemotes(false);
@@ -212,12 +213,12 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.SelectedIndex = -1;
             _NO_TRANSLATE_Remotes.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
 
-            if (string.IsNullOrEmpty(selectedRemoteName))
+            if (GitExtensions.Strings.IsNullOrEmpty(selectedRemoteName))
             {
                 selectedRemoteName = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, _branch));
             }
 
-            var currentBranchRemote = remotes.FirstOrDefault(x => x.Name.Equals(selectedRemoteName, StringComparison.OrdinalIgnoreCase));
+            var currentBranchRemote = remotes.FirstOrDefault(x => StringComparer.OrdinalIgnoreCase.Equals(x.Name, selectedRemoteName));
             if (currentBranchRemote is not null)
             {
                 _NO_TRANSLATE_Remotes.SelectedItem = currentBranchRemote;
@@ -235,13 +236,13 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public DialogResult PullAndShowDialogWhenFailed(IWin32Window owner, string remote, AppSettings.PullAction pullAction)
+        public DialogResult PullAndShowDialogWhenFailed(IWin32Window? owner, string? remote, AppSettings.PullAction pullAction)
         {
             // Special case for "Fetch and prune" and "Fetch and prune all" to make sure user confirms the action.
             if (pullAction == AppSettings.PullAction.FetchPruneAll)
             {
-                string messageBoxTitle = null;
-                if (string.IsNullOrEmpty(remote))
+                string messageBoxTitle;
+                if (GitExtensions.Strings.IsNullOrEmpty(remote))
                 {
                     messageBoxTitle = string.Format(_pruneFromCaption.Text, AllRemotes);
                 }
@@ -354,7 +355,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public DialogResult PullChanges(IWin32Window owner)
+        public DialogResult PullChanges(IWin32Window? owner)
         {
             if (!ShouldPullChanges())
             {
@@ -375,7 +376,7 @@ namespace GitUI.CommandsDialogs
 
                 using var dialog = new TaskDialog
                 {
-                    OwnerWindowHandle = owner.Handle,
+                    OwnerWindowHandle = owner?.Handle ?? default,
                     Text = _notOnBranch.Text,
                     InstructionText = Strings.ErrorInstructionNotOnBranch,
                     Caption = Strings.ErrorCaptionNotOnBranch,
@@ -573,7 +574,7 @@ namespace GitUI.CommandsDialogs
                 {
                     using var dialog = new TaskDialog
                     {
-                        OwnerWindowHandle = owner.Handle,
+                        OwnerWindowHandle = owner?.Handle ?? IntPtr.Zero,
                         Text = _applyStashedItemsAgain.Text,
                         Caption = _applyStashedItemsAgainCaption.Text,
                         StandardButtons = TaskDialogStandardButtons.Yes | TaskDialogStandardButtons.No,
@@ -651,7 +652,7 @@ namespace GitUI.CommandsDialogs
             return dialogResult;
         }
 
-        private bool CalculateStashedValue(IWin32Window owner)
+        private bool CalculateStashedValue(IWin32Window? owner)
         {
             if (!Fetch.Checked && AutoStash.Checked && !Module.IsBareRepository() &&
                 Module.GitStatus(UntrackedFilesMode.No, IgnoreSubmodulesMode.All).Count > 0)
@@ -663,8 +664,7 @@ namespace GitUI.CommandsDialogs
             return false;
         }
 
-        [NotNull]
-        private FormProcess CreateFormProcess(string source, string curLocalBranch, string curRemoteBranch)
+        private FormProcess CreateFormProcess(string source, string? curLocalBranch, string? curRemoteBranch)
         {
             if (Fetch.Checked)
             {
@@ -732,7 +732,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private bool CalculateLocalBranch(string remote, out string curLocalBranch, out string curRemoteBranch)
+        private bool CalculateLocalBranch(string remote, out string? curLocalBranch, out string? curRemoteBranch)
         {
             if (IsPullAll())
             {
@@ -938,7 +938,7 @@ namespace GitUI.CommandsDialogs
                 {
                     foreach (var remote in (IEnumerable<ConfigFileRemote>)_NO_TRANSLATE_Remotes.DataSource)
                     {
-                        if (!string.IsNullOrWhiteSpace(remote.Name) && remote.Name != AllRemotes)
+                        if (!GitExtensions.Strings.IsNullOrWhiteSpace(remote.Name) && remote.Name != AllRemotes)
                         {
                             yield return remote.Name;
                         }
@@ -1117,7 +1117,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!_bInternalUpdate)
             {
-                RemotesValidating(null, null);
+                RemotesValidating(this, null!);
             }
         }
 

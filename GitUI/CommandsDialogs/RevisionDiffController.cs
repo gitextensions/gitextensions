@@ -1,8 +1,5 @@
-﻿using GitCommands;
-using GitCommands.Git;
-using GitUI.UserControls;
+﻿using GitCommands.Git;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
 {
@@ -29,7 +26,7 @@ namespace GitUI.CommandsDialogs
     {
         // Defaults are set to simplify test cases, the defaults enables most
         public ContextMenuSelectionInfo(
-            GitRevision selectedRevision,
+            GitRevision? selectedRevision,
             bool isDisplayOnlyDiff,
             bool isStatusOnly,
             int selectedGitItemCount,
@@ -60,8 +57,7 @@ namespace GitUI.CommandsDialogs
             IsAnySubmodule = isAnySubmodule;
         }
 
-        [CanBeNull]
-        public GitRevision SelectedRevision { get; }
+        public GitRevision? SelectedRevision { get; }
         public bool IsDisplayOnlyDiff { get; }
         public bool IsStatusOnly { get; }
         public int SelectedGitItemCount { get; }

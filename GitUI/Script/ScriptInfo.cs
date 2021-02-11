@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-
-namespace GitUI.Script
+﻿namespace GitUI.Script
 {
     // WARNING: This class is serialized to XML!
     public class ScriptInfo
@@ -13,11 +11,11 @@ namespace GitUI.Script
 
         public bool Enabled { get; set; }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
-        public string Command { get; set; }
+        public string? Command { get; set; }
 
-        public string Arguments { get; set; }
+        public string? Arguments { get; set; }
 
         public bool AddToRevisionGridContextMenu { get; set; }
 
@@ -34,14 +32,13 @@ namespace GitUI.Script
         /// <summary>
         /// Gets or sets the icon name.
         /// </summary>
-        public string Icon { get; set; }
+        public string? Icon { get; set; }
 
         /// <summary>
         /// Gets the associated bitmap.
         /// </summary>
-        /// <returns>Bitmap image</returns>
-        [CanBeNull]
-        public System.Drawing.Bitmap GetIcon()
+        /// <returns>Bitmap image.</returns>
+        public System.Drawing.Bitmap? GetIcon()
         {
             if (string.IsNullOrWhiteSpace(Icon))
             {

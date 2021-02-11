@@ -6,7 +6,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public class SettingsPageWithHeader : SettingsPageBase, IGlobalSettingsPage
     {
-        private SettingsPageHeader _header;
+        private SettingsPageHeader? _header;
 
         public override Control GuiControl
         {

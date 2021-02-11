@@ -101,7 +101,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             yield return Path.Combine(AppSettings.GetInstallDir(), @"PuTTY\");
             string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
-            string programFilesX86 = null;
+            string? programFilesX86 = null;
             if (IntPtr.Size == 8
                 || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
             {

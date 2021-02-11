@@ -11,6 +11,7 @@ using GitCommands.Utils;
 using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
+using Microsoft;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
@@ -110,7 +111,7 @@ namespace GitUI.CommandsDialogs
         private readonly IFullPathResolver _fullPathResolver;
         private ConflictResolutionPreference _solveMergeConflictDialogResult;
         private bool _solveMergeConflictApplyToAll;
-        private string _solveMergeConflictDialogCheckboxText;
+        private string? _solveMergeConflictDialogCheckboxText;
         private int _filesDeletedLocallyAndModifiedRemotelyCount;
         private int _filesModifiedLocallyAndDeletedRemotelyCount;
         private int _filesRemainedCount;
@@ -119,7 +120,9 @@ namespace GitUI.CommandsDialogs
         private int _conflictItemsCount;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormResolveConflicts()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
         }
@@ -266,9 +269,9 @@ namespace GitUI.CommandsDialogs
             Initialize();
         }
 
-        private string _mergetool;
-        private string _mergetoolCmd;
-        private string _mergetoolPath;
+        private string? _mergetool;
+        private string? _mergetoolCmd;
+        private string? _mergetoolPath;
 
         private ConflictData GetConflict()
         {
@@ -288,7 +291,7 @@ namespace GitUI.CommandsDialogs
             return GetConflict().Filename;
         }
 
-        private static string FixPath(string path)
+        private static string FixPath(string? path)
         {
             return (path ?? "").ToNativePath();
         }
@@ -321,7 +324,7 @@ namespace GitUI.CommandsDialogs
             { ".sxw", "merge-ods.vbs" },
         };
 
-        private bool TryMergeWithScript(string fileName, string baseFileName, string localFileName, string remoteFileName)
+        private bool TryMergeWithScript(string fileName, string? baseFileName, string? localFileName, string? remoteFileName)
         {
             if (!EnvUtils.RunningOnWindows())
             {
@@ -336,11 +339,11 @@ namespace GitUI.CommandsDialogs
                     return false;
                 }
 
-                string dir = PathUtil.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Diff-Scripts").EnsureTrailingPathSeparator();
+                string? dir = PathUtil.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Diff-Scripts").EnsureTrailingPathSeparator();
                 if (Directory.Exists(dir))
                 {
                     if (_mergeScripts.TryGetValue(extension, out var mergeScript) &&
-                        File.Exists(PathUtil.Combine(dir, mergeScript)))
+                        File.Exists(PathUtil.Combine(dir!, mergeScript)))
                     {
                         if (MessageBox.Show(this, string.Format(_uskUseCustomMergeScript.Text, mergeScript),
                                             _uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
@@ -361,7 +364,7 @@ namespace GitUI.CommandsDialogs
             return false;
         }
 
-        private void UseMergeWithScript(string fileName, string mergeScript, string baseFileName, string localFileName, string remoteFileName)
+        private void UseMergeWithScript(string fileName, string mergeScript, string? baseFileName, string? localFileName, string? remoteFileName)
         {
             // get timestamp of file before merge. This is an extra check to verify if merge was successfully
             var filePath = _fullPathResolver.Resolve(fileName);
@@ -414,6 +417,7 @@ namespace GitUI.CommandsDialogs
 
         private void Use2WayMerge(ref string arguments)
         {
+            Assumes.NotNull(_mergetool);
             string mergeToolLower = _mergetool.ToLowerInvariant();
             switch (mergeToolLower)
             {
@@ -438,7 +442,7 @@ namespace GitUI.CommandsDialogs
 
         private ItemType GetItemType(string filename)
         {
-            string fullname = _fullPathResolver.Resolve(filename);
+            string? fullname = _fullPathResolver.Resolve(filename);
             if (Directory.Exists(fullname) && !File.Exists(fullname))
             {
                 if (Module.IsSubmodule(filename.Trim()))
@@ -518,7 +522,7 @@ namespace GitUI.CommandsDialogs
                         }
                     }
 
-                    if (string.IsNullOrWhiteSpace(_mergetoolCmd) || string.IsNullOrWhiteSpace(_mergetoolPath))
+                    if (GitExtensions.Strings.IsNullOrWhiteSpace(_mergetoolCmd) || GitExtensions.Strings.IsNullOrWhiteSpace(_mergetoolPath))
                     {
                         // mergetool is set, but arguments cannot be manipulated
                         Module.RunMergeTool(item.Filename);
@@ -603,7 +607,7 @@ namespace GitUI.CommandsDialogs
 
             return;
 
-            void DeleteTemporaryFile(string path)
+            void DeleteTemporaryFile(string? path)
             {
                 if (path is not null && File.Exists(path))
                 {
@@ -662,7 +666,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                if (!PathUtil.TryFindFullPath(_mergetoolPath, out string fullPath))
+                if (!PathUtil.TryFindFullPath(_mergetoolPath, out string? fullPath))
                 {
                     MessageBox.Show(this, _noMergeToolConfigured.Text, Strings.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return false;
@@ -977,6 +981,8 @@ namespace GitUI.CommandsDialogs
 
         private void BinaryFilesChooseLocalBaseRemote(ConflictData item)
         {
+            Assumes.NotNull(_solveMergeConflictDialogCheckboxText);
+
             // solveMergeConflictDialogResult gets a value inside of the method "OpenSolveMergeConflictDialogAndExecuteSelectedMergeAction"
             OpenSolveMergeConflictDialogAndExecuteSelectedMergeAction((solveMergeConflictDialogResult) =>
                 {
@@ -1013,6 +1019,8 @@ namespace GitUI.CommandsDialogs
             {
                 return true;
             }
+
+            Assumes.NotNull(_solveMergeConflictDialogCheckboxText);
 
             // solveMergeConflictDialogResult gets a value inside of the method "OpenSolveMergeConflictDialogAndExecuteSelectedMergeAction"
             OpenSolveMergeConflictDialogAndExecuteSelectedMergeAction((solveMergeConflictDialogResult) =>
@@ -1272,7 +1280,7 @@ namespace GitUI.CommandsDialogs
 
             using (WaitCursorScope.Enter())
             {
-                string customTool = (sender as ToolStripMenuItem)?.Tag as string;
+                string? customTool = (sender as ToolStripMenuItem)?.Tag as string;
 
                 foreach (var item in GetConflicts())
                 {
@@ -1443,13 +1451,21 @@ namespace GitUI.CommandsDialogs
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string fileName = GetFileName();
-            OsShellUtil.Open(_fullPathResolver.Resolve(fileName));
+            string? filePath = _fullPathResolver.Resolve(fileName);
+            if (filePath != null)
+            {
+                OsShellUtil.Open(filePath);
+            }
         }
 
         private void openWithToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string fileName = GetFileName();
-            OsShellUtil.OpenAs(_fullPathResolver.Resolve(fileName));
+            string? filePath = _fullPathResolver.Resolve(fileName);
+            if (filePath != null)
+            {
+                OsShellUtil.OpenAs(filePath);
+            }
         }
 
         private void StageFile(string filename)
@@ -1508,11 +1524,11 @@ namespace GitUI.CommandsDialogs
 
             switch (command)
             {
-                case Commands.Merge: OpenMergetool_Click(null, null); break;
-                case Commands.Rescan: Rescan_Click(null, null); break;
-                case Commands.ChooseBase: ContextChooseBase_Click(null, null); break;
-                case Commands.ChooseLocal: ContextChooseLocal_Click(null, null); break;
-                case Commands.ChooseRemote: ContextChooseRemote_Click(null, null); break;
+                case Commands.Merge: OpenMergetool_Click(this, EventArgs.Empty); break;
+                case Commands.Rescan: Rescan_Click(this, EventArgs.Empty); break;
+                case Commands.ChooseBase: ContextChooseBase_Click(this, EventArgs.Empty); break;
+                case Commands.ChooseLocal: ContextChooseLocal_Click(this, EventArgs.Empty); break;
+                case Commands.ChooseRemote: ContextChooseRemote_Click(this, EventArgs.Empty); break;
                 default: return base.ExecuteCommand(cmd);
             }
 

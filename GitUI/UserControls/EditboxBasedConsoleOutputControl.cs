@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Extensions;
 using GitCommands.Logging;
-using JetBrains.Annotations;
 
 namespace GitUI.UserControls
 {
@@ -20,9 +19,9 @@ namespace GitUI.UserControls
 
         private int _exitcode;
 
-        private Process _process;
+        private Process? _process;
 
-        [CanBeNull] private ProcessOutputThrottle _outputThrottle;
+        private ProcessOutputThrottle? _outputThrottle;
 
         public EditboxBasedConsoleOutputControl()
         {

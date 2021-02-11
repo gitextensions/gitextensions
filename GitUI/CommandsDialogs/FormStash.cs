@@ -2,14 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Management;
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
-using GitCommands.Patches;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
+using Microsoft;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
@@ -29,7 +27,7 @@ namespace GitUI.CommandsDialogs
         private readonly AsyncLoader _asyncLoader = new();
 
         public bool ManageStashes { get; set; }
-        private GitStash _currentWorkingDirStashItem;
+        private GitStash? _currentWorkingDirStashItem;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormStash()
@@ -42,7 +40,7 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            View.ExtraDiffArgumentsChanged += delegate { StashedSelectedIndexChanged(null, null); };
+            View.ExtraDiffArgumentsChanged += delegate { StashedSelectedIndexChanged(this, EventArgs.Empty); };
             View.TopScrollReached += FileViewer_TopScrollReached;
             View.BottomScrollReached += FileViewer_BottomScrollReached;
             CompleteTheInitialization();
@@ -145,7 +143,7 @@ namespace GitUI.CommandsDialogs
 
         private void InitializeSoft()
         {
-            GitStash gitStash = Stashes.SelectedItem as GitStash;
+            GitStash? gitStash = Stashes.SelectedItem as GitStash;
 
             Stashed.GroupByRevision = false;
             Stashed.ClearDiffs();
@@ -182,14 +180,21 @@ namespace GitUI.CommandsDialogs
             View.ScrollToTop();
         }
 
-        private void LoadGitItemStatuses(IReadOnlyList<GitItemStatus> gitItemStatuses)
+        private void LoadGitItemStatuses(IReadOnlyList<GitItemStatus>? gitItemStatuses)
         {
-            GitStash gitStash = Stashes.SelectedItem as GitStash;
+            if (gitItemStatuses == null)
+            {
+                // cancelled
+                return;
+            }
+
+            GitStash gitStash = (GitStash)Stashes.SelectedItem;
             if (gitStash == _currentWorkingDirStashItem)
             {
                 // FileStatusList has no interface for both worktree<-index, index<-HEAD at the same time
                 // Must be handled when displaying
                 var headId = Module.RevParse("HEAD");
+                Assumes.NotNull(headId);
                 var headRev = new GitRevision(headId);
                 var indexRev = new GitRevision(ObjectId.IndexId)
                 {
@@ -208,10 +213,11 @@ namespace GitUI.CommandsDialogs
                 var firstId = Module.RevParse(gitStash.Name + "^");
                 var selectedId = Module.RevParse(gitStash.Name);
                 var firstRev = firstId is null ? null : new GitRevision(firstId);
-                var secondRev = selectedId is null ? null : new GitRevision(selectedId)
+                var secondRev = selectedId is null || firstId is null ? null : new GitRevision(selectedId)
                 {
                     ParentIds = new[] { firstId }
                 };
+                Assumes.NotNull(secondRev);
                 Stashed.SetDiffs(firstRev, secondRev, gitItemStatuses);
             }
 

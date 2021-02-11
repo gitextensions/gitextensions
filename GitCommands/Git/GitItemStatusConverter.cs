@@ -6,9 +6,8 @@
         {
             var isNew = x == 'A' || x == '?' || x == '!';
 
-            return new GitItemStatus
+            return new GitItemStatus(fileName)
             {
-                Name = fileName,
                 IsNew = isNew,
                 IsChanged = x == 'M',
                 IsDeleted = x == 'D',

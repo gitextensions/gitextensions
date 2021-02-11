@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Settings;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -13,7 +15,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private readonly TranslationString _selectFile = new("Select file");
         private readonly GitConfigSettingsPageController _controller;
-        private DiffMergeToolConfigurationManager _diffMergeToolConfigurationManager;
+        private DiffMergeToolConfigurationManager? _diffMergeToolConfigurationManager;
 
         public GitConfigSettingsPage()
         {
@@ -70,6 +72,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void SettingsToPage()
         {
+            Assumes.NotNull(_diffMergeToolConfigurationManager);
+            Assumes.NotNull(CurrentSettings);
+
             var mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
             var diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
 
@@ -100,7 +105,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         /// </summary>
         protected override void PageToSettings()
         {
-            CurrentSettings.FilesEncoding = CommonLogic.ComboToEncoding(Global_FilesEncoding);
+            Assumes.NotNull(CurrentSettings);
+
+            CurrentSettings.FilesEncoding = (Encoding)Global_FilesEncoding.SelectedItem;
 
             if (!CheckSettingsLogic.CanFindGitCmd())
             {
@@ -111,6 +118,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             CurrentSettings.SetValue(SettingKeyString.UserEmail, GlobalUserEmail.Text);
             CurrentSettings.SetValue("commit.template", txtCommitTemplatePath.Text);
             CurrentSettings.SetPathValue("core.editor", GlobalEditor.Text);
+
+            Assumes.NotNull(_diffMergeToolConfigurationManager);
 
             // TODO: why use GUI???
             var diffTool = _NO_TRANSLATE_cboDiffTool.Text;
@@ -157,6 +166,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private string BrowseDiffMergeTool(string toolName, string path, DiffMergeToolType toolType)
         {
+            Assumes.NotNull(_diffMergeToolConfigurationManager);
+
             DiffMergeToolConfiguration diffMergeToolConfig = default;
             var index = toolType == DiffMergeToolType.Diff ? _NO_TRANSLATE_cboDiffTool.SelectedIndex : _NO_TRANSLATE_cboMergeTool.SelectedIndex;
             if (index > -1)
@@ -190,6 +201,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
+            Assumes.NotNull(_diffMergeToolConfigurationManager);
             var diffMergeToolConfig = _diffMergeToolConfigurationManager.LoadDiffMergeToolConfig(toolName, txtDiffToolPath.Text);
             txtDiffToolCommand.Text = diffMergeToolConfig.FullDiffCommand;
         }
@@ -203,6 +215,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
+            Assumes.NotNull(_diffMergeToolConfigurationManager);
             var diffMergeToolConfig = _diffMergeToolConfigurationManager.LoadDiffMergeToolConfig(toolName, txtMergeToolPath.Text);
             txtMergeToolCommand.Text = diffMergeToolConfig.FullMergeCommand;
         }
@@ -253,6 +266,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
+            Assumes.NotNull(_diffMergeToolConfigurationManager);
+
             string toolPath;
             if (string.IsNullOrWhiteSpace(toolName) || string.IsNullOrWhiteSpace(toolPath = _diffMergeToolConfigurationManager.GetToolPath(toolName, DiffMergeToolType.Diff)))
             {
@@ -278,6 +293,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 return;
             }
+
+            Assumes.NotNull(_diffMergeToolConfigurationManager);
 
             string toolPath;
             if (string.IsNullOrWhiteSpace(toolName) || string.IsNullOrWhiteSpace(toolPath = _diffMergeToolConfigurationManager.GetToolPath(toolName, DiffMergeToolType.Merge)))

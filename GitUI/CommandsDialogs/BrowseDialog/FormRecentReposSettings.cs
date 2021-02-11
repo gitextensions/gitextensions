@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
+using Microsoft;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public partial class FormRecentReposSettings : GitExtensionsForm
     {
-        private IList<Repository> _repositoryHistory;
+        private IList<Repository>? _repositoryHistory;
 
         public FormRecentReposSettings()
             : base(true)
@@ -64,6 +66,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void SaveSettings()
         {
+            Assumes.NotNull(_repositoryHistory);
+
             AppSettings.ShorteningRecentRepoPathStrategy = GetShorteningStrategy();
             AppSettings.SortMostRecentRepos = sortMostRecentRepos.Checked;
             AppSettings.SortLessRecentRepos = sortLessRecentRepos.Checked;
@@ -96,6 +100,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void RefreshRepos()
         {
+            Assumes.NotNull(_repositoryHistory);
+
             MostRecentLB.Items.Clear();
             LessRecentLB.Items.Clear();
 
@@ -183,17 +189,20 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
-            e.Cancel = !GetSelectedRepo(sender, out var repo);
-
-            if (!e.Cancel)
+            if (GetSelectedRepo(sender, out var repo))
             {
+                e.Cancel = false;
                 anchorToMostToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.MostRecent;
                 anchorToLessToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.LessRecent;
                 removeAnchorToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.None;
             }
+            else
+            {
+                e.Cancel = true;
+            }
         }
 
-        private bool GetSelectedRepo(object sender, out RecentRepoInfo repo)
+        private bool GetSelectedRepo(object? sender, [NotNullWhen(returnValue: true)] out RecentRepoInfo? repo)
         {
             if (sender is ContextMenuStrip strip)
             {
@@ -208,7 +217,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 sender = null;
             }
 
-            ListView lb;
+            ListView? lb;
             if (sender == MostRecentLB)
             {
                 lb = MostRecentLB;

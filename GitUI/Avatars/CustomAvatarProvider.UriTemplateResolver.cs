@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Web;
-using JetBrains.Annotations;
 
 namespace GitUI.Avatars
 {
@@ -30,7 +29,7 @@ namespace GitUI.Avatars
                 _templateResolver = BuildResolver(uriTemplate);
             }
 
-            public Task<Image> GetAvatarAsync([NotNull] string email, string name, int imageSize)
+            public Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
             {
                 // see remarks for details why we do this.
                 throw new InvalidOperationException($"UriTemplateResolvers can't be used as a regular IAvatarProvider, use '{nameof(ResolveTemplate)}'.");
@@ -40,7 +39,7 @@ namespace GitUI.Avatars
             /// Resolves and returns a <see cref="Uri"/> based on the template given
             /// during construction and the data provided for <paramref name="templateData"/>.
             /// </summary>
-            public Uri ResolveTemplate([NotNull] UriTemplateData templateData)
+            public Uri? ResolveTemplate(UriTemplateData templateData)
             {
                 if (templateData is null)
                 {
@@ -57,12 +56,12 @@ namespace GitUI.Avatars
                 return new Uri(rawUri);
             }
 
-            private Func<UriTemplateData, string> BuildResolver(string template)
+            private static Func<UriTemplateData, string> BuildResolver(string template)
             {
                 return TemplateFormatter.Create(template, TemplateDataResolve);
             }
 
-            private static Func<UriTemplateData, string> TemplateDataResolve(string name)
+            private static Func<UriTemplateData, string?> TemplateDataResolve(string name)
             {
                 return name.Trim().ToLowerInvariant() switch
                 {

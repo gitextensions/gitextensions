@@ -21,7 +21,7 @@ namespace GitCommands
         /// </remarks>
         /// <param name="revision">The <see cref="GitRevision"/> to convert from.</param>
         /// <param name="children">The list of children to add to the returned object.</param>
-        CommitData CreateFromRevision(GitRevision revision, IReadOnlyList<ObjectId> children);
+        CommitData CreateFromRevision(GitRevision revision, IReadOnlyList<ObjectId>? children);
 
         /// <summary>
         /// Gets <see cref="CommitData"/> for the specified <paramref name="sha1"/>.
@@ -152,7 +152,7 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        public CommitData CreateFromRevision(GitRevision revision, IReadOnlyList<ObjectId> children)
+        public CommitData CreateFromRevision(GitRevision revision, IReadOnlyList<ObjectId>? children)
         {
             if (revision is null)
             {
@@ -162,6 +162,11 @@ namespace GitCommands
             if (revision.ObjectId is null)
             {
                 throw new ArgumentException($"Cannot have a null {nameof(GitRevision.ObjectId)}.", nameof(revision));
+            }
+
+            if (revision.ParentIds is null)
+            {
+                throw new ArgumentException($"Cannot have null {nameof(GitRevision.ParentIds)}.", nameof(revision));
             }
 
             return new CommitData(revision.ObjectId, revision.TreeGuid, revision.ParentIds,

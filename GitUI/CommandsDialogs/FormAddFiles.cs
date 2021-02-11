@@ -11,7 +11,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
         }
 
-        public FormAddFiles(GitUICommands commands, string addFile = null)
+        public FormAddFiles(GitUICommands commands, string? addFile = null)
             : base(commands)
         {
             InitializeComponent();

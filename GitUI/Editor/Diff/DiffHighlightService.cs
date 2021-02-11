@@ -20,7 +20,7 @@ namespace GitUI.Editor.Diff
         }
 
         [ContractAnnotation("diff:null=>false")]
-        public static bool IsCombinedDiff([CanBeNull] string diff)
+        public static bool IsCombinedDiff(string? diff)
         {
             return PatchProcessor.IsCombinedDiff(diff);
         }

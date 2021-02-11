@@ -19,7 +19,7 @@ namespace GitUI.UserManual
         {
             var subFolder = string.IsNullOrEmpty(_subFolder) ? string.Empty : _subFolder + ".html";
 
-            return (_location + subFolder).Combine("#", _anchorName);
+            return (_location + subFolder).Combine("#", _anchorName)!;
         }
     }
 }

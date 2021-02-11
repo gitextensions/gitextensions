@@ -107,33 +107,33 @@ namespace GitUI.NBugReports.Serialization
             }
         }
 
-        public SerializableDictionary<object, object> Data { get; set; }
+        public SerializableDictionary<object, object>? Data { get; set; }
 
-        public SerializableDictionary<string, object> ExtendedInformation { get; set; }
+        public SerializableDictionary<string, object>? ExtendedInformation { get; set; }
 
-        public string HelpLink { get; set; }
+        public string? HelpLink { get; set; }
 
-        public SerializableException InnerException { get; set; }
+        public SerializableException? InnerException { get; set; }
 
-        public List<SerializableException> InnerExceptions { get; set; }
+        public List<SerializableException>? InnerExceptions { get; set; }
 
-        public string Message { get; set; }
+        public string? Message { get; set; }
 
-        public Exception OriginalException { get; }
+        public Exception? OriginalException { get; }
 
-        public string Source { get; set; }
+        public string? Source { get; set; }
 
-        public string StackTrace { get; set; }
+        public string? StackTrace { get; set; }
 
         // This will make TargetSite property XML serializable but RuntimeMethodInfo class does not have a parameterless
         // constructor thus the serializer throws an exception if full info is used
-        public string TargetSite { get; set; }
+        public string? TargetSite { get; set; }
 
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
         public override string ToString()
         {
-            return OriginalException.ToString();
+            return OriginalException?.ToString() ?? base.ToString();
         }
 
         public string ToXmlString()
@@ -147,7 +147,7 @@ namespace GitUI.NBugReports.Serialization
             return doc.Root.ToString();
         }
 
-        private SerializableDictionary<string, object> GetExtendedInformation(Exception exception)
+        private SerializableDictionary<string, object>? GetExtendedInformation(Exception exception)
         {
             var extendedProperties = (from property in exception.GetType().GetProperties()
                                       where

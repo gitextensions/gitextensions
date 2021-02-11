@@ -3,8 +3,6 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using GitCommands;
-using GitCommands.Utils;
-using JetBrains.Annotations;
 
 namespace GitUI.Avatars
 {
@@ -27,7 +25,7 @@ namespace GitUI.Avatars
         }
 
         /// <inheritdoc/>
-        public async Task<Image> GetAvatarAsync([NotNull] string email, string name, int imageSize)
+        public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
             var templateData = new UriTemplateData(email, name, imageSize);
 
@@ -54,7 +52,7 @@ namespace GitUI.Avatars
         /// <param name="customProviderTemplates">The custom avatar provider template.</param>
         /// <param name="downloader">The downloader that is used to download avatar images.</param>
         /// <returns>Returns the <see cref="IAvatarProvider"/> described by the template.</returns>
-        public static IAvatarProvider ParseTemplateString(string customProviderTemplates, [NotNull] IAvatarDownloader downloader)
+        public static IAvatarProvider ParseTemplateString(string customProviderTemplates, IAvatarDownloader downloader)
         {
             if (downloader is null)
             {
@@ -65,7 +63,7 @@ namespace GitUI.Avatars
                 .Split(';')
                 .Select(p => p.Trim())
                 .Select(p => FromTemplateSegment(downloader, p))
-                .Where(p => p != null)
+                .WhereNotNull()
                 .ToArray();
 
             // We can't use the chain provider here, because some returned providers (namely UriTemplateResolvers)
@@ -78,7 +76,7 @@ namespace GitUI.Avatars
         /// <summary>
         /// Parses a single template segment.
         /// </summary>
-        private static IAvatarProvider FromTemplateSegment(IAvatarDownloader downloader, string providerTemplate)
+        private static IAvatarProvider? FromTemplateSegment(IAvatarDownloader downloader, string providerTemplate)
         {
             // if the segment is a tag like "<Demo>", we extract the name
             // and try to parse it as an AvatarProvider enum.

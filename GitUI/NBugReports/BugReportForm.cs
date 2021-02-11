@@ -12,10 +12,11 @@ using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
-using GitUI.NBugReports.Info;
 using GitUI.NBugReports.Serialization;
 using GitUI.Properties;
+using Microsoft;
 using ResourceManager;
+using Report = GitUI.NBugReports.Info.Report;
 
 namespace GitUI.NBugReports
 {
@@ -34,9 +35,9 @@ Send report anyway?");
 
         private static readonly IErrorReportMarkDownBodyBuilder ErrorReportBodyBuilder;
         private static readonly GitHubUrlBuilder UrlBuilder;
-        private SerializableException _lastException;
-        private Report _lastReport;
-        private string _environmentInfo;
+        private SerializableException? _lastException;
+        private Report? _lastReport;
+        private string? _environmentInfo;
 
         static BugReportForm()
         {
@@ -70,11 +71,13 @@ Send report anyway?");
             mainTabs.TabPages.Remove(mainTabs.TabPages["reportContentsTabPage"]);
         }
 
-        public DialogResult ShowDialog(IWin32Window owner, Exception exception, string environmentInfo)
+        public DialogResult ShowDialog(IWin32Window? owner, Exception exception, string environmentInfo)
         {
             _lastException = new SerializableException(exception);
             _lastReport = new Report(_lastException);
             _environmentInfo = environmentInfo;
+
+            Assumes.NotNull(_lastReport.GeneralInfo);
 
             Text = $@"{_lastReport.GeneralInfo.HostApplication} {_title.Text}";
 
@@ -136,7 +139,9 @@ Send report anyway?");
                 return;
             }
 
-            string url = UrlBuilder.Build("https://github.com/gitextensions/gitextensions/issues/new", _lastException.OriginalException, _environmentInfo, descriptionTextBox.Text);
+            Assumes.NotNull(_lastException);
+
+            string? url = UrlBuilder.Build("https://github.com/gitextensions/gitextensions/issues/new", _lastException.OriginalException, _environmentInfo, descriptionTextBox.Text);
             OsShellUtil.OpenUrlInDefaultBrowser(url);
 
             DialogResult = DialogResult.Abort;
@@ -145,6 +150,8 @@ Send report anyway?");
 
         private void btnCopy_Click(object sender, EventArgs e)
         {
+            Assumes.NotNull(_lastException?.OriginalException);
+
             var report = ErrorReportBodyBuilder.Build(_lastException.OriginalException, _environmentInfo, descriptionTextBox.Text);
             if (string.IsNullOrWhiteSpace(report))
             {

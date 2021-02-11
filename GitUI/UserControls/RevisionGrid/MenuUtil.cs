@@ -7,7 +7,7 @@ namespace GitUI.UserControls.RevisionGrid
     {
         private static readonly object _captionTag = new();
         private static readonly CaptionCustomMenuRenderer _customMenuRenderer = new();
-        private static Font _disabledFont;
+        private static Font? _disabledFont;
 
         /// <summary>
         /// set the menu item disabled and remove mouse hover effect

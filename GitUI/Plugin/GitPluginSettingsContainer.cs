@@ -7,7 +7,7 @@ namespace GitUI
     public class GitPluginSettingsContainer : ISettingsSource, IGitPluginSettingsContainer
     {
         private readonly string _pluginName;
-        private ISettingsSource _settingsSource;
+        private ISettingsSource? _settingsSource;
 
         public GitPluginSettingsContainer(string pluginName)
         {
@@ -37,7 +37,7 @@ namespace GitUI
             return ExternalSettings.GetValue(_pluginName + name, defaultValue, decode);
         }
 
-        public override void SetValue<T>(string name, T value, Func<T, string> encode)
+        public override void SetValue<T>(string name, T value, Func<T, string?> encode)
         {
             ExternalSettings.SetValue(_pluginName + name, value, encode);
         }

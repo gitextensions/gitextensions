@@ -21,7 +21,7 @@ namespace GitUI.NBugReports
         /// Generates a URL to create a new issue on GitHub.
         /// </summary>
         /// <see href="https://help.github.com/en/articles/about-automation-for-issues-and-pull-requests-with-query-parameters"/>
-        public string Build(string url, Exception exception, string environmentInfo, string additionalInfo)
+        public string? Build(string url, Exception? exception, string? environmentInfo, string? additionalInfo)
         {
             if (string.IsNullOrWhiteSpace(url) || exception is null)
             {

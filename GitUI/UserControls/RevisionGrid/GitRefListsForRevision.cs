@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GitCommands;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid
 {
@@ -14,7 +12,7 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly IGitRef[] _branchesWithNoIdenticalRemotes;
         private readonly IGitRef[] _tags;
 
-        public GitRefListsForRevision([NotNull] GitRevision revision)
+        public GitRefListsForRevision(GitRevision revision)
         {
             if (revision is null)
             {

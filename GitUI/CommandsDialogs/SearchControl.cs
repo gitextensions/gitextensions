@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
 {
@@ -14,8 +13,8 @@ namespace GitUI.CommandsDialogs
         private readonly Action<Size> _onSizeChanged;
         private readonly AsyncLoader _backgroundLoader = new();
         private bool _isUpdatingTextFromCode;
-        public event Action OnTextEntered;
-        public event Action OnCancelled;
+        public event Action? OnTextEntered;
+        public event Action? OnCancelled;
 
         public override string Text
         {
@@ -23,7 +22,7 @@ namespace GitUI.CommandsDialogs
             set => txtSearchBox.Text = value;
         }
 
-        public SearchControl([NotNull]Func<string, IEnumerable<T>> getCandidates, Action<Size> onSizeChanged)
+        public SearchControl(Func<string, IEnumerable<T>> getCandidates, Action<Size> onSizeChanged)
         {
             InitializeComponent();
 
@@ -74,8 +73,14 @@ namespace GitUI.CommandsDialogs
             set => txtSearchBox.BorderFocusedColor = value;
         }
 
-        private void SearchForCandidates(IEnumerable<T> candidates)
+        private void SearchForCandidates(IEnumerable<T>? candidates)
         {
+            if (candidates == null)
+            {
+                // cancelled
+                return;
+            }
+
             var selectionStart = txtSearchBox.SelectionStart;
             var selectionLength = txtSearchBox.SelectionLength;
             listBoxSearchResult.BeginUpdate();
@@ -135,7 +140,7 @@ namespace GitUI.CommandsDialogs
             listBoxSearchResult.BringToFront();
         }
 
-        public T SelectedItem => (T)listBoxSearchResult.SelectedItem;
+        public T? SelectedItem => (T?)listBoxSearchResult.SelectedItem;
 
         void IDisposable.Dispose()
         {

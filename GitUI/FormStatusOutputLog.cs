@@ -1,16 +1,13 @@
 using System;
 using System.Text;
 
-using JetBrains.Annotations;
-
 namespace GitUI
 {
     public class FormStatusOutputLog
     {
-        [NotNull]
         private readonly StringBuilder _outputString = new();
 
-        public void Append([NotNull] string text)
+        public void Append(string text)
         {
             if (text is null)
             {
@@ -31,7 +28,6 @@ namespace GitUI
             }
         }
 
-        [NotNull]
         public string GetString()
         {
             lock (_outputString)

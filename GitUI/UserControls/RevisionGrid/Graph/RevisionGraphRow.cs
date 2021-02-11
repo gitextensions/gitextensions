@@ -29,7 +29,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public IReadOnlyList<RevisionGraphSegment> Segments { get; private set; }
 
         // This dictonary contains a cached list of all segments and the lane index the segment is in for this row.
-        private IReadOnlyDictionary<RevisionGraphSegment, int> _segmentLanes;
+        private IReadOnlyDictionary<RevisionGraphSegment, int>? _segmentLanes;
 
         // The cached lanecount
         private int _laneCount;
@@ -148,11 +148,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public IEnumerable<RevisionGraphSegment> GetSegmentsForIndex(int index)
         {
             BuildSegmentLanes();
-            foreach (var keyValye in _segmentLanes)
+            foreach (var keyValue in _segmentLanes!)
             {
-                if (keyValye.Value == index)
+                if (keyValue.Value == index)
                 {
-                    yield return keyValye.Key;
+                    yield return keyValue.Key;
                 }
             }
         }
@@ -160,7 +160,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public int GetLaneIndexForSegment(RevisionGraphSegment revisionGraphRevision)
         {
             BuildSegmentLanes();
-            if (_segmentLanes.TryGetValue(revisionGraphRevision, out int index))
+            if (_segmentLanes!.TryGetValue(revisionGraphRevision, out int index))
             {
                 return index;
             }

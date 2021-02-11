@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GitCommands;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -10,8 +9,7 @@ namespace GitUI.UserControls
 {
     internal sealed class AuthorRevisionHighlighting
     {
-        [CanBeNull]
-        public string AuthorEmailToHighlight { get; private set; }
+        public string? AuthorEmailToHighlight { get; private set; }
 
         /// <returns><c>true</c> if the UI should be refreshed in response to this change.</returns>
         [MustUseReturnValue]
@@ -36,9 +34,9 @@ namespace GitUI.UserControls
             return false;
         }
 
-        public bool IsHighlighted([CanBeNull] GitRevision revision)
+        public bool IsHighlighted(GitRevision? revision)
         {
-            if (string.IsNullOrWhiteSpace(revision?.AuthorEmail))
+            if (GitExtensions.Strings.IsNullOrWhiteSpace(revision?.AuthorEmail))
             {
                 return false;
             }

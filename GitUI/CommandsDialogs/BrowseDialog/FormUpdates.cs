@@ -11,7 +11,6 @@ using Git.hub;
 using GitCommands;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
@@ -26,7 +25,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private readonly TranslationString _errorMessage = new("Failed to download an update.");
         #endregion
 
-        public IWin32Window OwnerWindow;
+        public IWin32Window? OwnerWindow;
         public Version CurrentVersion { get; }
         public bool UpdateFound;
         public string UpdateUrl = "";
@@ -240,12 +239,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
     public class ReleaseVersion
     {
-        public Version Version;
-        public ReleaseType ReleaseType;
-        public string DownloadPage;
+        public Version Version { get; }
+        public ReleaseType ReleaseType { get; }
+        public string DownloadPage { get; }
 
-        [CanBeNull]
-        public static ReleaseVersion FromSection(IConfigSection section)
+        public ReleaseVersion(Version version, ReleaseType releaseType, string downloadPage)
+        {
+            Version = version;
+            ReleaseType = releaseType;
+            DownloadPage = downloadPage;
+        }
+
+        public static ReleaseVersion? FromSection(IConfigSection section)
         {
             Version ver;
             try
@@ -258,16 +263,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return null;
             }
 
-            var version = new ReleaseVersion
-            {
-                Version = ver,
-                ReleaseType = ReleaseType.Major,
-                DownloadPage = section.GetValue("DownloadPage")
-            };
+            Enum.TryParse(section.GetValue("ReleaseType"), true, out ReleaseType releaseType);
 
-            Enum.TryParse(section.GetValue("ReleaseType"), true, out version.ReleaseType);
-
-            return version;
+            return new ReleaseVersion(ver, releaseType, section.GetValue("DownloadPage"));
         }
 
         public static IEnumerable<ReleaseVersion> Parse(string versionsStr)
@@ -277,7 +275,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             var sections = cfg.GetConfigSections("Version");
             sections = sections.Concat(cfg.GetConfigSections("RCVersion"));
 
-            return sections.Select(FromSection).Where(version => version is not null);
+            return sections.Select(FromSection).WhereNotNull();
         }
 
         public static IEnumerable<ReleaseVersion> GetNewerVersions(

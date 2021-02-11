@@ -21,10 +21,10 @@ namespace GitCommands.Git
 
         /// <summary>
         /// Parse the output from git-status --porcelain=2 -z
-        /// Note that the caller should check for fatal errors in the Git output
+        /// Note that the caller should check for fatal errors in the Git output.
         /// </summary>
         /// <param name="getAllChangedFilesCommandOutput">An output of <see cref="GitCommandHelpers.GetAllChangedFilesCmd"/> command.</param>
-        /// <returns>list with the parsed GitItemStatus</returns>
+        /// <returns>list with the parsed GitItemStatus.</returns>
         /// <seealso href="https://git-scm.com/docs/git-status"/>
         public IReadOnlyList<GitItemStatus> Parse(string getAllChangedFilesCommandOutput)
         {
@@ -40,12 +40,12 @@ namespace GitCommands.Git
 
         /// <summary>
         /// Parse git-status --porcelain=1 and git-diff --name-status
-        /// Outputs are similar, except that git-status has status for both worktree and index
+        /// Outputs are similar, except that git-status has status for both worktree and index.
         /// </summary>
         /// <param name="getAllChangedFilesCommandOutput">An output of <see cref="GitCommandHelpers.GetAllChangedFilesCmd"/> command.</param>
-        /// <param name="fromDiff">Parse git-diff</param>
-        /// <param name="staged">The staged status <see cref="GitItemStatus"/>, only relevant for git-diff (parsed for git-status)</param>
-        /// <returns>list with the git items</returns>
+        /// <param name="fromDiff">Parse git-diff.</param>
+        /// <param name="staged">The staged status <see cref="GitItemStatus"/>, only relevant for git-diff (parsed for git-status).</param>
+        /// <returns>list with the git items.</returns>
         internal List<GitItemStatus> GetAllChangedFilesFromString_v1(string getAllChangedFilesCommandOutput, bool fromDiff, StagedStatus staged)
         {
             var diffFiles = new List<GitItemStatus>();
@@ -166,10 +166,10 @@ namespace GitCommands.Git
         }
 
         /// <summary>
-        /// Parse the output from git-status --porcelain=2
+        /// Parse the output from git-status --porcelain=2.
         /// </summary>
-        /// <param name="getAllChangedFilesCommandOutput">output from the git command</param>
-        /// <returns>list with the parsed GitItemStatus</returns>
+        /// <param name="getAllChangedFilesCommandOutput">output from the git command.</param>
+        /// <returns>list with the parsed GitItemStatus.</returns>
         private static IReadOnlyList<GitItemStatus> GetAllChangedFilesFromString_v2(string getAllChangedFilesCommandOutput)
         {
             var diffFiles = new List<GitItemStatus>();
@@ -282,17 +282,17 @@ namespace GitCommands.Git
 
         private static GitItemStatus GitItemStatusFromCopyRename(StagedStatus staged, bool fromDiff, string nextFile, string fileName, char x, string status)
         {
-            var gitItemStatus = new GitItemStatus();
+            GitItemStatus gitItemStatus;
 
             // Find renamed files...
             if (fromDiff)
             {
+                gitItemStatus = new GitItemStatus(name: nextFile);
                 gitItemStatus.OldName = fileName;
-                gitItemStatus.Name = nextFile;
             }
             else
             {
-                gitItemStatus.Name = fileName;
+                gitItemStatus = new GitItemStatus(name: fileName);
                 gitItemStatus.OldName = nextFile;
             }
 

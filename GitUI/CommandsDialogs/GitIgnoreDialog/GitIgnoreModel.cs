@@ -32,7 +32,7 @@ namespace GitUI.CommandsDialogs.GitIgnoreDialog
 
         public string FormCaption => _editGitignoreTitle.Text;
 
-        public string ExcludeFile => _fullPathResolver.Resolve(".gitignore");
+        public string? ExcludeFile => _fullPathResolver.Resolve(".gitignore");
 
         public string FileOnlyInWorkingDirSupported => _gitignoreOnlyInWorkingDirSupported.Text;
 

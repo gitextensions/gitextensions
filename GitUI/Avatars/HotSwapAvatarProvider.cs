@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace GitUI.Avatars
 {
@@ -18,18 +17,18 @@ namespace GitUI.Avatars
         /// <summary>
         /// Gets or sets the currently active provider.
         /// </summary>
-        public IAvatarProvider Provider { get; set; }
+        public IAvatarProvider? Provider { get; set; }
 
-        public Task<Image> GetAvatarAsync([NotNull] string email, string name, int imageSize)
+        public Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
             try
             {
-                return Provider?.GetAvatarAsync(email, name, imageSize) ?? Task.FromResult<Image>(null);
+                return Provider?.GetAvatarAsync(email, name, imageSize) ?? Task.FromResult<Image?>(null);
             }
             catch (Exception ex)
             {
                 Trace.WriteLine(ex.Message);
-                return Task.FromResult<Image>(null);
+                return Task.FromResult<Image?>(null);
             }
         }
     }

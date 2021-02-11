@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces.RepositoryHosts;
-using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
@@ -23,20 +22,22 @@ namespace GitUI.CommandsDialogs.RepoHosting
         #endregion
 
         private readonly IRepositoryHostPlugin _repoHost;
-        private IHostedRemote _currentHostedRemote;
-        private readonly string _chooseRemote;
-        private IReadOnlyList<IHostedRemote> _hostedRemotes;
-        private string _currentBranch;
-        private string _prevTitle;
+        private IHostedRemote? _currentHostedRemote;
+        private readonly string? _chooseRemote;
+        private IReadOnlyList<IHostedRemote>? _hostedRemotes;
+        private string? _currentBranch;
+        private string? _prevTitle;
         private readonly AsyncLoader _remoteLoader = new();
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private CreatePullRequestForm()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
         }
 
-        public CreatePullRequestForm(GitUICommands commands, IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
+        public CreatePullRequestForm(GitUICommands commands, IRepositoryHostPlugin repoHost, string? chooseRemote, string? chooseBranch)
             : base(commands)
         {
             _repoHost = repoHost;
@@ -58,6 +59,12 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 () => _hostedRemotes.Where(r => !r.IsOwnedByMe).ToArray(),
                 foreignHostedRemotes =>
                 {
+                    if (foreignHostedRemotes == null)
+                    {
+                        // cancelled
+                        return;
+                    }
+
                     if (foreignHostedRemotes.Length == 0)
                     {
                         MessageBox.Show(this, _strFailedToCreatePullRequest.Text + Environment.NewLine +
@@ -95,12 +102,12 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 _pullReqTargetsCB.SelectedIndex = 0;
             }
 
-            _pullReqTargetsCB_SelectedIndexChanged(null, null);
+            _pullReqTargetsCB_SelectedIndexChanged(this, EventArgs.Empty);
         }
 
         private void _pullReqTargetsCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _currentHostedRemote = _pullReqTargetsCB.SelectedItem as IHostedRemote;
+            _currentHostedRemote = (IHostedRemote)_pullReqTargetsCB.SelectedItem;
 
             _remoteBranchesCB.Items.Clear();
             _remoteBranchesCB.Text = _strLoading.Text;
@@ -108,8 +115,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             PopulateBranchesComboAndEnableCreateButton(_currentHostedRemote, _remoteBranchesCB);
         }
 
-        [CanBeNull]
-        private IHostedRemote MyRemote => _hostedRemotes.FirstOrDefault(r => r.IsOwnedByMe);
+        private IHostedRemote? MyRemote => _hostedRemotes.FirstOrDefault(r => r.IsOwnedByMe);
 
         private void LoadMyBranches()
         {
@@ -165,7 +171,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             if (_prevTitle == _titleTB.Text && !string.IsNullOrWhiteSpace(_yourBranchesCB.Text) && MyRemote is not null)
             {
-                var lastMsg = Module.GetPreviousCommitMessages(1, MyRemote.Name.Combine("/", _yourBranchesCB.Text)).FirstOrDefault();
+                var lastMsg = Module.GetPreviousCommitMessages(1, MyRemote.Name.Combine("/", _yourBranchesCB.Text)!).FirstOrDefault();
                 _titleTB.Text = lastMsg?.SubstringUntil('\n');
                 _prevTitle = _titleTB.Text;
             }

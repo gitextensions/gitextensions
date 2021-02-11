@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
-using JetBrains.Annotations;
+using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -14,12 +14,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     {
         private readonly Font _origTextBoxFont;
         private bool _isSelectionChangeTriggeredByGoto;
-        private List<TreeNode> _nodesFoundByTextBox;
+        private List<TreeNode>? _nodesFoundByTextBox;
         private const string FindPrompt = "Type to find";
         private readonly Dictionary<SettingsPageReference, TreeNode> _pages2NodeMap = new Dictionary<SettingsPageReference, TreeNode>();
         private readonly List<ISettingsPage> _settingsPages = new List<ISettingsPage>();
 
-        public event EventHandler<SettingsPageSelectedEventArgs> SettingsPageSelected;
+        public event EventHandler<SettingsPageSelectedEventArgs>? SettingsPageSelected;
         public IEnumerable<ISettingsPage> SettingsPages => _settingsPages;
 
         public SettingsTreeViewUserControl()
@@ -42,12 +42,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             this.AdjustForDpiScaling();
         }
 
-        /// <summary>Add page to settings tree</summary>
-        /// <param name="page">The settings page to add</param>
-        /// <param name="parentPageReference">An already added settings page to be a parent in the tree</param>
-        /// <param name="icon">An icon to display in tree node</param>
-        /// <param name="asRoot">only one page can be set as the root page (for the GitExt and Plugin root node)</param>
-        public void AddSettingsPage(ISettingsPage page, SettingsPageReference parentPageReference, Image icon, bool asRoot = false)
+        /// <summary>Add page to settings tree.</summary>
+        /// <param name="page">The settings page to add.</param>
+        /// <param name="parentPageReference">An already added settings page to be a parent in the tree.</param>
+        /// <param name="icon">An icon to display in tree node.</param>
+        /// <param name="asRoot">only one page can be set as the root page (for the GitExt and Plugin root node).</param>
+        public void AddSettingsPage(ISettingsPage page, SettingsPageReference? parentPageReference, Image? icon, bool asRoot = false)
         {
             TreeNode node;
             if (parentPageReference is null)
@@ -78,7 +78,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             _settingsPages.Add(page);
         }
 
-        private TreeNode AddPage(TreeNodeCollection treeNodeCollection, ISettingsPage page, Image icon)
+        private TreeNode AddPage(TreeNodeCollection treeNodeCollection, ISettingsPage page, Image? icon)
         {
             var node = treeNodeCollection.Add(page.GetTitle());
             if (icon is null)
@@ -115,7 +115,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     }
                 }
 
-                SettingsPageSelected?.Invoke(this, new SettingsPageSelectedEventArgs { SettingsPage = page, IsTriggeredByGoto = _isSelectionChangeTriggeredByGoto });
+                SettingsPageSelected?.Invoke(this, new SettingsPageSelectedEventArgs(page, _isSelectionChangeTriggeredByGoto));
             }
         }
 
@@ -225,9 +225,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
         #endregion
 
-        public void GotoPage([CanBeNull] SettingsPageReference settingsPageReference)
+        public void GotoPage(SettingsPageReference? settingsPageReference)
         {
-            TreeNode node;
+            TreeNode? node;
             if (settingsPageReference is null)
             {
                 node = treeView1.Nodes.Count > 0 ? treeView1.Nodes[0] : null;
@@ -254,6 +254,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 // TODO: how to avoid the windows sound when pressing ENTER?
                 e.Handled = true;
 
+                Assumes.NotNull(_nodesFoundByTextBox);
+
                 // each enter key press selects next highlighted node (cycle)
                 int indexOfSelectedNode = _nodesFoundByTextBox.IndexOf(treeView1.SelectedNode);
                 if (indexOfSelectedNode == -1 || indexOfSelectedNode + 1 == _nodesFoundByTextBox.Count)
@@ -274,7 +276,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
     public class SettingsPageSelectedEventArgs : EventArgs
     {
-        public bool IsTriggeredByGoto { get; internal set; }
-        public ISettingsPage SettingsPage { get; internal set; }
+        public ISettingsPage SettingsPage { get; }
+        public bool IsTriggeredByGoto { get; }
+
+        public SettingsPageSelectedEventArgs(ISettingsPage settingsPage, bool isTriggeredByGoto)
+        {
+            SettingsPage = settingsPage;
+            IsTriggeredByGoto = isTriggeredByGoto;
+        }
     }
 }
