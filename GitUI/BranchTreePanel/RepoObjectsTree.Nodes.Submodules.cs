@@ -194,7 +194,7 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        // Used temporarily to faciliate building a tree
+        // Used temporarily to facilitate building a tree
         private class DummyNode : Node
         {
             public DummyNode() : base(null!)
