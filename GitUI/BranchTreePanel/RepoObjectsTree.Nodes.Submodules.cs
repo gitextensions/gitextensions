@@ -197,7 +197,7 @@ namespace GitUI.BranchTreePanel
         // Used temporarily to facilitate building a tree
         private class DummyNode : Node
         {
-            public DummyNode() : base(null!)
+            public DummyNode() : base(null)
             {
             }
         }

@@ -381,7 +381,7 @@ namespace GitUI.BranchTreePanel
 
             protected GitModule Module => UICommands.Module;
 
-            protected Node(Tree tree)
+            protected Node(Tree? tree)
             {
                 Nodes = new Nodes(tree);
             }
