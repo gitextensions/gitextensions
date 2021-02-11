@@ -20,13 +20,12 @@ namespace AppVeyorIntegrationTests
     [TestFixture]
     public class AppVeyorAdapterTests
     {
-        private AppVeyorAdapter.Project _project = new AppVeyorAdapter.Project
-            { Id = "ProjectId", Name = "ProjectName", QueryUrl = "ProjectQueryUrl" };
+        private const string _projectId = "account/repo";
 
         [Test]
         public void Should_return_no_build_Info_When_Api_Json_is_empty()
         {
-            var buildInfo = new AppVeyorAdapter().ExtractBuildInfo(_project, string.Empty);
+            var buildInfo = new AppVeyorAdapter().ExtractBuildInfo(_projectId, string.Empty);
 
             buildInfo.Should().HaveCount(0);
         }
@@ -53,7 +52,7 @@ namespace AppVeyorIntegrationTests
             appVeyorAdapter.Initialize(Substitute.For<IBuildServerWatcher>(), Substitute.For<ISettingsSource>(), () => { },
                 id => true);
 
-            var buildInfo = appVeyorAdapter.ExtractBuildInfo(_project, resultString).ToList();
+            var buildInfo = appVeyorAdapter.ExtractBuildInfo(_projectId, resultString).ToList();
             return YamlSerialize(buildInfo);
         }
 
