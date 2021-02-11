@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
 using GitUIPluginInterfaces;
+using Microsoft;
 using Microsoft.Win32;
 using ResourceManager;
 
@@ -21,10 +22,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public readonly RepoDistSettingsSet RepoDistSettingsSet;
         public readonly ConfigFileSettingsSet ConfigFileSettingsSet;
-        public readonly GitModule? Module;
+        public readonly GitModule Module;
+
+        private CommonLogic()
+        {
+            // For translation only
+            Module = null!;
+            RepoDistSettingsSet = null!;
+            ConfigFileSettingsSet = null!;
+        }
 
         public CommonLogic(GitModule module)
         {
+            Requires.NotNull(module, nameof(module));
+
             Module = module;
 
             var repoDistGlobalSettings = RepoDistSettings.CreateGlobal(false);
