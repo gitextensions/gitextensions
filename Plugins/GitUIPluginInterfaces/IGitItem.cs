@@ -8,9 +8,4 @@ namespace GitUIPluginInterfaces
 
         string? Guid { get; }
     }
-
-    public interface INamedGitItem : IGitItem
-    {
-        string Name { get; }
-    }
 }
