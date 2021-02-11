@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
-using Microsoft;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
