@@ -39,7 +39,7 @@ namespace GitUI.Avatars
 
             var image = await _inner.GetAvatarAsync(email, name, imageSize);
 
-            if (image != null)
+            if (image is not null)
             {
                 lock (_cache)
                 {
