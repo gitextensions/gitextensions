@@ -214,8 +214,8 @@ namespace GitUI.CommandsDialogs
             this.assumeUnchangedToolStripMenuItem,
             this.doNotAssumeUnchangedToolStripMenuItem});
             this.UnstagedFileContext.Name = "UnstagedFileContext";
+            this.UnstagedFileContext.Size = new System.Drawing.Size(233, 414);
             this.UnstagedFileContext.Opening += UnstagedFileContext_Opening;
-            this.UnstagedFileContext.Size = new System.Drawing.Size(233, 446);
             //
             // resetChanges
             //
@@ -382,7 +382,7 @@ namespace GitUI.CommandsDialogs
             this.StageInSuperproject.Location = new System.Drawing.Point(0, 70);
             this.StageInSuperproject.Margin = new System.Windows.Forms.Padding(0, 9, 0, 3);
             this.StageInSuperproject.Name = "StageInSuperproject";
-            this.StageInSuperproject.Size = new System.Drawing.Size(128, 17);
+            this.StageInSuperproject.Size = new System.Drawing.Size(130, 17);
             this.StageInSuperproject.TabIndex = 13;
             this.StageInSuperproject.Text = "Stage &in Superproject";
             this.fileTooltip.SetToolTip(this.StageInSuperproject, "Stage current submodule in superproject after commit");
@@ -404,9 +404,9 @@ namespace GitUI.CommandsDialogs
             this.stagedOpenFolderToolStripMenuItem10,
             this.stagedFileHistoryToolStripSeparator,
             this.stagedFileHistoryToolStripMenuItem6});
-            this.StagedFileContext.Name = "StagedFileContext";
+            this.StagedFileContext.Name = "StagedFileContext";            
+            this.StagedFileContext.Size = new System.Drawing.Size(233, 198);
             this.StagedFileContext.Opening += StagedFileContext_Opening;
-            this.StagedFileContext.Size = new System.Drawing.Size(233, 220);
             //
             // stagedResetChanges
             //
@@ -551,8 +551,8 @@ namespace GitUI.CommandsDialogs
             //
             this.stageSubmoduleToolStripMenuItem.Image = global::GitUI.Properties.Images.Stage;
             this.stageSubmoduleToolStripMenuItem.Name = "stageSubmoduleToolStripMenuItem";
+            this.stageSubmoduleToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
             this.stageSubmoduleToolStripMenuItem.Font = new Font(this.stageToolStripMenuItem.Font, FontStyle.Bold);
-            this.stageSubmoduleToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
             this.stageSubmoduleToolStripMenuItem.Click += new System.EventHandler(this.StageClick);
             //
             // toolStripSeparator13
@@ -1043,6 +1043,20 @@ namespace GitUI.CommandsDialogs
             this.splitRight.TabIndex = 0;
             this.splitRight.TabStop = false;
             //
+            // modifyCommitMessageButton
+            //
+            this.modifyCommitMessageButton.AutoSize = true;
+            this.modifyCommitMessageButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.modifyCommitMessageButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.modifyCommitMessageButton.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.modifyCommitMessageButton.Location = new System.Drawing.Point(185, 55);
+            this.modifyCommitMessageButton.Name = "modifyCommitMessageButton";
+            this.modifyCommitMessageButton.Size = new System.Drawing.Size(149, 25);
+            this.modifyCommitMessageButton.TabIndex = 9;
+            this.modifyCommitMessageButton.Text = "Modify the commit m&essage";
+            this.modifyCommitMessageButton.UseVisualStyleBackColor = false;
+            this.modifyCommitMessageButton.Click += new System.EventHandler(this.modifyCommitMessageButton_Click);
+            //
             // SolveMergeconflicts
             //
             this.SolveMergeconflicts.BackColor = System.Drawing.Color.SeaShell;
@@ -1070,20 +1084,6 @@ namespace GitUI.CommandsDialogs
             this.SelectedDiff.ExtraDiffArgumentsChanged += SelectedDiffExtraDiffArgumentsChanged;
             this.SelectedDiff.PatchApplied += SelectedDiff_PatchApplied;
             //
-            // modifyCommitMessageButton
-            //
-            this.modifyCommitMessageButton.AutoSize = true;
-            this.modifyCommitMessageButton.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.modifyCommitMessageButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.modifyCommitMessageButton.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.modifyCommitMessageButton.Location = new System.Drawing.Point(213, 55);
-            this.modifyCommitMessageButton.Name = "modifyCommitMessageButton";
-            this.modifyCommitMessageButton.Size = new System.Drawing.Size(149, 25);
-            this.modifyCommitMessageButton.TabIndex = 9;
-            this.modifyCommitMessageButton.Text = "Modify the commit m&essage";
-            this.modifyCommitMessageButton.UseVisualStyleBackColor = false;
-            this.modifyCommitMessageButton.Click += new System.EventHandler(this.modifyCommitMessageButton_Click);
-            //
             // tableLayoutPanel1
             //
             this.tableLayoutPanel1.BackColor = System.Drawing.SystemColors.Control;
@@ -1105,10 +1105,10 @@ namespace GitUI.CommandsDialogs
             // Message
             //
             this.Message.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Message.Location = new System.Drawing.Point(208, 28);
+            this.Message.Location = new System.Drawing.Point(177, 28);
             this.Message.Margin = new System.Windows.Forms.Padding(0);
             this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(309, 164);
+            this.Message.Size = new System.Drawing.Size(340, 164);
             this.Message.TabIndex = 7;
             this.Message.SelectionChanged += new System.EventHandler(this.Message_SelectionChanged);
             this.Message.Enter += new System.EventHandler(this.Message_Enter);
@@ -1126,11 +1126,11 @@ namespace GitUI.CommandsDialogs
             this.flowCommitButtons.Controls.Add(this.ResetUnStaged);
             this.flowCommitButtons.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowCommitButtons.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowCommitButtons.Location = new System.Drawing.Point(6, 6);
+            this.flowCommitButtons.Location = new System.Drawing.Point(0, 0);
             this.flowCommitButtons.Margin = new System.Windows.Forms.Padding(6, 6, 6, 0);
             this.flowCommitButtons.Name = "flowCommitButtons";
             this.tableLayoutPanel1.SetRowSpan(this.flowCommitButtons, 2);
-            this.flowCommitButtons.Size = new System.Drawing.Size(196, 186);
+            this.flowCommitButtons.Size = new System.Drawing.Size(171, 192);
             this.flowCommitButtons.TabIndex = 1;
             this.flowCommitButtons.WrapContents = false;
             //
@@ -1141,7 +1141,7 @@ namespace GitUI.CommandsDialogs
             this.Commit.Location = new System.Drawing.Point(0, 0);
             this.Commit.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
             this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(196, 26);
+            this.Commit.Size = new System.Drawing.Size(171, 26);
             this.Commit.TabIndex = 1;
             this.Commit.TabStop = false;
             this.Commit.Text = "&Commit";
@@ -1155,7 +1155,7 @@ namespace GitUI.CommandsDialogs
             this.CommitAndPush.Location = new System.Drawing.Point(0, 32);
             this.CommitAndPush.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.CommitAndPush.Name = "CommitAndPush";
-            this.CommitAndPush.Size = new System.Drawing.Size(196, 26);
+            this.CommitAndPush.Size = new System.Drawing.Size(171, 26);
             this.CommitAndPush.TabIndex = 9;
             this.CommitAndPush.TabStop = false;
             this.CommitAndPush.Text = "Commit && &push";
@@ -1168,7 +1168,7 @@ namespace GitUI.CommandsDialogs
             this.Amend.Location = new System.Drawing.Point(0, 93);
             this.Amend.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.Amend.Name = "Amend";
-            this.Amend.Size = new System.Drawing.Size(96, 17);
+            this.Amend.Size = new System.Drawing.Size(97, 17);
             this.Amend.TabIndex = 0;
             this.Amend.Text = "&Amend Commit";
             this.Amend.UseVisualStyleBackColor = true;
@@ -1181,7 +1181,7 @@ namespace GitUI.CommandsDialogs
             this.Reset.Location = new System.Drawing.Point(0, 122);
             this.Reset.Margin = new System.Windows.Forms.Padding(0, 9, 0, 3);
             this.Reset.Name = "Reset";
-            this.Reset.Size = new System.Drawing.Size(196, 26);
+            this.Reset.Size = new System.Drawing.Size(171, 26);
             this.Reset.TabIndex = 11;
             this.Reset.TabStop = false;
             this.Reset.Text = "&Reset all changes";
@@ -1195,7 +1195,7 @@ namespace GitUI.CommandsDialogs
             this.ResetUnStaged.Location = new System.Drawing.Point(0, 154);
             this.ResetUnStaged.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.ResetUnStaged.Name = "ResetUnStaged";
-            this.ResetUnStaged.Size = new System.Drawing.Size(196, 26);
+            this.ResetUnStaged.Size = new System.Drawing.Size(171, 26);
             this.ResetUnStaged.TabIndex = 14;
             this.ResetUnStaged.TabStop = false;
             this.ResetUnStaged.Text = "Reset u&nstaged changes";
@@ -1213,11 +1213,11 @@ namespace GitUI.CommandsDialogs
             this.toolStripMenuItem3,
             this.commitTemplatesToolStripMenuItem,
             this.createBranchToolStripButton});
-            this.toolbarCommit.Location = new System.Drawing.Point(208, 0);
+            this.toolbarCommit.Location = new System.Drawing.Point(177, 0);
             this.toolbarCommit.Name = "toolbarCommit";
             this.toolbarCommit.Padding = new System.Windows.Forms.Padding(1, 1, 2, 1);
             this.toolbarCommit.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolbarCommit.Size = new System.Drawing.Size(309, 28);
+            this.toolbarCommit.Size = new System.Drawing.Size(340, 28);
             this.toolbarCommit.Stretch = true;
             this.toolbarCommit.TabIndex = 5;
             //
@@ -1407,7 +1407,7 @@ namespace GitUI.CommandsDialogs
             this.commitAuthorStatus.IsLink = true;
             this.commitAuthorStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.commitAuthorStatus.Name = "commitAuthorStatus";
-            this.commitAuthorStatus.Size = new System.Drawing.Size(481, 17);
+            this.commitAuthorStatus.Size = new System.Drawing.Size(570, 17);
             this.commitAuthorStatus.Spring = true;
             this.commitAuthorStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.commitAuthorStatus.ToolTipText = "Click to change author information.";
@@ -1438,7 +1438,7 @@ namespace GitUI.CommandsDialogs
             this.remoteNameLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.remoteNameLabel.Margin = new System.Windows.Forms.Padding(0, 3, 25, 2);
             this.remoteNameLabel.Name = "remoteNameLabel";
-            this.remoteNameLabel.Size = new System.Drawing.Size(89, 17);
+            this.remoteNameLabel.Size = new System.Drawing.Size(85, 17);
             this.remoteNameLabel.Text = "(Remote name)";
             this.remoteNameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             //
