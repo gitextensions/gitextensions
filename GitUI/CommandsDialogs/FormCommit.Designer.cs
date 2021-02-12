@@ -511,8 +511,8 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator13,
             this.viewHistoryMenuItem});
             this.UnstagedSubmoduleContext.Name = "UnstagedSubmoduleContext";
+            this.UnstagedSubmoduleContext.Size = new System.Drawing.Size(229, 242);
             this.UnstagedSubmoduleContext.Opening += UnstagedSubmoduleContext_Opening;
-            this.UnstagedSubmoduleContext.Size = new System.Drawing.Size(229, 226);
             //
             // commitSubmoduleChanges
             //
