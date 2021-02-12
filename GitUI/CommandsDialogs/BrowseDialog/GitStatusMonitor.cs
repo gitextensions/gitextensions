@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
@@ -431,6 +432,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         bool isSuccess = false;
                         try
                         {
+                            await Task.Delay(1).ConfigureAwait(false);
                             var cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default,
                                 noLocks: !_isFirstPostRepoChanged);
                             _isFirstPostRepoChanged = false;
