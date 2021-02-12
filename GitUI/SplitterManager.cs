@@ -95,7 +95,8 @@ namespace GitUI
                                 break;
                             case FixedPanel.Panel2:
                                 int panel2PrevSize = DpiUtil.Scale(prevSize, prevDpi) - DpiUtil.Scale(prevDistance, prevDpi);
-                                SetSplitterDistance(SplitterSize - panel2PrevSize + splitterWidth);
+                                const int paddingOffset = 2; // Refer to FormCommit.ctor+WorkaroundPaddingIncreaseBug
+                                SetSplitterDistance(SplitterSize - panel2PrevSize - paddingOffset + splitterWidth);
                                 break;
                         }
                     }
