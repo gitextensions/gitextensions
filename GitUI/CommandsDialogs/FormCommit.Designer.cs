@@ -404,7 +404,7 @@ namespace GitUI.CommandsDialogs
             this.stagedOpenFolderToolStripMenuItem10,
             this.stagedFileHistoryToolStripSeparator,
             this.stagedFileHistoryToolStripMenuItem6});
-            this.StagedFileContext.Name = "StagedFileContext";            
+            this.StagedFileContext.Name = "StagedFileContext";
             this.StagedFileContext.Size = new System.Drawing.Size(233, 198);
             this.StagedFileContext.Opening += StagedFileContext_Opening;
             //
