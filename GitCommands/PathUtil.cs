@@ -163,7 +163,7 @@ namespace GitCommands
         /// <returns>path if it can be combined, empty otherwise.</returns>
         public static string GetExtension(string? path)
         {
-            if (path == null)
+            if (path is null)
             {
                 return string.Empty;
             }

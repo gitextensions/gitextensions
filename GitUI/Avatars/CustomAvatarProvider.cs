@@ -37,7 +37,7 @@ namespace GitUI.Avatars
                     _ => await provider.GetAvatarAsync(email, name, imageSize),
                 };
 
-                if (avatar != null)
+                if (avatar is not null)
                 {
                     return avatar;
                 }

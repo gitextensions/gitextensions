@@ -21,7 +21,7 @@ namespace GitUI.Avatars
 
         public async Task<Image?> DownloadImageAsync(Uri? imageUrl)
         {
-            if (imageUrl == null)
+            if (imageUrl is null)
             {
                 return null;
             }

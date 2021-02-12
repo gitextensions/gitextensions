@@ -83,7 +83,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 },
                 hostedRemotes =>
                 {
-                    if (hostedRemotes == null)
+                    if (hostedRemotes is null)
                     {
                         // cancelled
                         return;
@@ -330,7 +330,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _discussionWB_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            if (_discussionWB.Document?.Window != null && _discussionWB.Document.Body is not null)
+            if (_discussionWB.Document?.Window is not null && _discussionWB.Document.Body is not null)
             {
                 _discussionWB.Document.Window.ScrollTo(0, _discussionWB.Document.Body.ScrollRectangle.Height);
             }

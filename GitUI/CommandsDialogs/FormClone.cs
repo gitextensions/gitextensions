@@ -411,7 +411,7 @@ namespace GitUI.CommandsDialogs
         {
             Cursor = Cursors.Default;
 
-            if (branchList == null)
+            if (branchList is null)
             {
                 // cancelled
                 return;

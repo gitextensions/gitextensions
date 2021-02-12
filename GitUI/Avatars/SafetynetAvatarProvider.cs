@@ -43,7 +43,7 @@ namespace GitUI.Avatars
             {
                 var image = await _avatarProvider.GetAvatarAsync(email, name, imageSize);
 
-                if (image != null)
+                if (image is not null)
                 {
                     return image;
                 }

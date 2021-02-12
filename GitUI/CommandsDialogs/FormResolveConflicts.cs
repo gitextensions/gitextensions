@@ -1452,7 +1452,7 @@ namespace GitUI.CommandsDialogs
         {
             string fileName = GetFileName();
             string? filePath = _fullPathResolver.Resolve(fileName);
-            if (filePath != null)
+            if (filePath is not null)
             {
                 OsShellUtil.Open(filePath);
             }
@@ -1462,7 +1462,7 @@ namespace GitUI.CommandsDialogs
         {
             string fileName = GetFileName();
             string? filePath = _fullPathResolver.Resolve(fileName);
-            if (filePath != null)
+            if (filePath is not null)
             {
                 OsShellUtil.OpenAs(filePath);
             }

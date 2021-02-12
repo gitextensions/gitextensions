@@ -29,7 +29,7 @@ namespace GitUI.Avatars
 
         public static bool IsFallbackSupportedByGravatar(AvatarFallbackType fallback)
         {
-            return SerializeFallbackType(fallback) != null;
+            return SerializeFallbackType(fallback) is not null;
         }
 
         /// <inheritdoc/>
@@ -51,7 +51,8 @@ namespace GitUI.Avatars
 
             var avatarUri = uri.Uri;
 
-            if (avatarUri == null)
+            // TODO NULLABLE UriBuilder.Uri doesn't appear to be nullable
+            if (avatarUri is null)
             {
                 return Task.FromResult<Image?>(null);
             }

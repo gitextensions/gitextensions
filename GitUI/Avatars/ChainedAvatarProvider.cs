@@ -17,7 +17,7 @@ namespace GitUI.Avatars
         {
             _avatarProviders = avatarProviders ?? throw new ArgumentNullException(nameof(avatarProviders));
 
-            if (_avatarProviders.Any(p => p == null))
+            if (_avatarProviders.Any(p => p is null))
             {
                 throw new ArgumentNullException();
             }
@@ -52,7 +52,7 @@ namespace GitUI.Avatars
                     // ignore and continue with next provider
                 }
 
-                if (avatar != null)
+                if (avatar is not null)
                 {
                     return avatar;
                 }

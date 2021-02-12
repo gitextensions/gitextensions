@@ -75,7 +75,7 @@ namespace GitUI.CommandsDialogs
 
         private void SearchForCandidates(IEnumerable<T>? candidates)
         {
-            if (candidates == null)
+            if (candidates is null)
             {
                 // cancelled
                 return;

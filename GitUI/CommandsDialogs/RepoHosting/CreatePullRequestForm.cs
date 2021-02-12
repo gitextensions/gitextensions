@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 () => _hostedRemotes.Where(r => !r.IsOwnedByMe).ToArray(),
                 foreignHostedRemotes =>
                 {
-                    if (foreignHostedRemotes == null)
+                    if (foreignHostedRemotes is null)
                     {
                         // cancelled
                         return;

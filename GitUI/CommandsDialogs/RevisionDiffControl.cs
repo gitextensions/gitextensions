@@ -762,7 +762,7 @@ namespace GitUI.CommandsDialogs
 
             var fileName = _fullPathResolver.Resolve(DiffFiles.SelectedItem.Item.Name);
 
-            if (fileName != null)
+            if (fileName is not null)
             {
                 OsShellUtil.OpenAs(fileName.ToNativePath());
             }

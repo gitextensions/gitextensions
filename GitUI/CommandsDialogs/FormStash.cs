@@ -182,7 +182,7 @@ namespace GitUI.CommandsDialogs
 
         private void LoadGitItemStatuses(IReadOnlyList<GitItemStatus>? gitItemStatuses)
         {
-            if (gitItemStatuses == null)
+            if (gitItemStatuses is null)
             {
                 // cancelled
                 return;
