@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
@@ -17,6 +18,7 @@ using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.BranchTreePanel
@@ -278,6 +280,7 @@ namespace GitUI.BranchTreePanel
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
+                await TaskScheduler.Default;
                 HashSet<string> mergedBranches = selectedGuid is null
                     ? new HashSet<string>()
                     : (await Module.GetMergedBranchesAsync(includeRemote: true, fullRefname: true, commit: selectedGuid)).ToHashSet();

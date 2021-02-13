@@ -1211,7 +1211,7 @@ namespace GitUI
         /// The SelectedId is the last selected commit in the grid (with related CommitInfo in Browse)
         /// The FirstId is first selected, the first commit in a diff
         /// </summary>
-        private void SelectInitialRevision(ObjectId? currentCheckout)
+        private void SelectInitialRevision(ObjectId currentCheckout)
         {
             var toBeSelectedObjectIds = _selectedObjectIds;
 

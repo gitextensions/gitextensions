@@ -23,9 +23,9 @@ namespace GitCommands.Git
             return ParseSubmodulePatchStatus(patch, module, fileName);
         }
 
-        public static Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(GitModule module, string submodule, bool noLocks = false)
+        public static async Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(GitModule module, string submodule, bool noLocks = false)
         {
-            return GetCurrentSubmoduleChangesAsync(module, submodule, submodule, false, noLocks: noLocks);
+            return await GetCurrentSubmoduleChangesAsync(module, submodule, submodule, false, noLocks: noLocks);
         }
 
         private static GitSubmoduleStatus? ParseSubmodulePatchStatus(Patch? patch, GitModule module, string? fileName)

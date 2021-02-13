@@ -2950,7 +2950,11 @@ namespace GitCommands
             // Assume that all GetRefs() are done in the background, which may not be correct in the future.
             const bool noLocks = true;
 
-            var cmd = GitCommandHelpers.GetRefsCmd(tags: tags, branches: branches, noLocks, AppSettings.RefsSortBy, AppSettings.RefsSortOrder);
+            var cmd = ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                await TaskScheduler.Default;
+                return GitCommandHelpers.GetRefsCmd(tags: tags, branches: branches, noLocks, AppSettings.RefsSortBy, AppSettings.RefsSortOrder);
+            });
             var refList = _gitExecutable.GetOutput(cmd);
             return ParseRefs(refList);
         }

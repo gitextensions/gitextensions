@@ -20,6 +20,8 @@ using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
+using Microsoft;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI
 {
@@ -643,7 +645,11 @@ namespace GitUI
         {
             _revisions = revisions;
             _getRevision = getRevision;
-            GitItemStatusesWithDescription = _diffCalculator.SetDiffs(revisions, DescribeRevision, getRevision);
+            GitItemStatusesWithDescription = ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                await TaskScheduler.Default;
+                return _diffCalculator.SetDiffs(revisions, DescribeRevision, getRevision);
+            });
         }
 
         /// <summary>
@@ -1249,7 +1255,11 @@ namespace GitUI
                 showAllDiferencesItem.CheckedChanged += (s, e) =>
                 {
                     AppSettings.ShowDiffForAllParents = showAllDiferencesItem.Checked;
-                    GitItemStatusesWithDescription = _diffCalculator.SetDiffs(_revisions, DescribeRevision, _getRevision);
+                    GitItemStatusesWithDescription = ThreadHelper.JoinableTaskFactory.Run(async () =>
+                    {
+                        await TaskScheduler.Default;
+                        return _diffCalculator.SetDiffs(_revisions, DescribeRevision, _getRevision);
+                    });
                 };
 
                 cm.Items.Add(showAllDiferencesItem);
