@@ -2652,7 +2652,7 @@ namespace GitCommands
                         async () =>
                         {
                             await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                            return SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(this, item.Name, item.OldName, firstId, secondId);
+                            return SubmoduleHelpers.GetCurrentSubmoduleChanges(this, item.Name, item.OldName, firstId, secondId);
                         }));
             }
         }

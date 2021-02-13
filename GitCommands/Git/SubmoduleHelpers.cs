@@ -11,7 +11,7 @@ namespace GitCommands.Git
 {
     public static class SubmoduleHelpers
     {
-        public static GitSubmoduleStatus? GetCurrentSubmoduleChangesAsync(GitModule module, string? fileName, string? oldFileName, ObjectId? firstId, ObjectId? secondId)
+        public static GitSubmoduleStatus? GetCurrentSubmoduleChanges(GitModule module, string? fileName, string? oldFileName, ObjectId? firstId, ObjectId? secondId)
         {
             Patch? patch = module.GetSingleDiff(firstId, secondId, fileName, oldFileName, "", GitModule.SystemEncoding, true);
             return ParseSubmodulePatchStatus(patch, module, fileName);
