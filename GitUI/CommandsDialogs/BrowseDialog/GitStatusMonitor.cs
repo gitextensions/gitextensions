@@ -9,6 +9,8 @@ using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
+using Microsoft;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -432,7 +434,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         bool isSuccess = false;
                         try
                         {
-                            await Task.Delay(1).ConfigureAwait(false);
+                            await TaskScheduler.Default;
                             var cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default,
                                 noLocks: !_isFirstPostRepoChanged);
                             _isFirstPostRepoChanged = false;
