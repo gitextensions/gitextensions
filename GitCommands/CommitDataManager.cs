@@ -4,12 +4,9 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using GitCommands.Git.Extensions;
 using GitExtUtils;
-using GitUI;
 using GitUIPluginInterfaces;
-using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
@@ -203,11 +200,7 @@ namespace GitCommands
             };
 
             // Do not cache this command, since notes can be added
-            data = ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                await TaskScheduler.Default;
-                return GetModule().GitExecutable.GetOutput(arguments, outputEncoding: GitModule.LosslessEncoding);
-            });
+            data = GetModule().GitExecutable.GetOutput(arguments, outputEncoding: GitModule.LosslessEncoding);
 
             if (GitModule.IsGitErrorMessage(data))
             {

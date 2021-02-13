@@ -68,16 +68,12 @@ namespace GitUI
                 // The sha are incorrect if baseA/baseB is set, to simplify the presentation
                 fileViewer.ViewText("range-diff.sh", $"git range-diff {firstId}...{item.SecondRevision.ObjectId}");
 
-                string output = ThreadHelper.JoinableTaskFactory.Run(async () =>
-                {
-                    await TaskScheduler.Default;
-                    return fileViewer.Module.GetRangeDiff(
-                            firstId,
-                            item.SecondRevision.ObjectId,
-                            item.BaseA,
-                            item.BaseB,
-                            fileViewer.GetExtraDiffArguments(isRangeDiff: true));
-                });
+                string output = fileViewer.Module.GetRangeDiff(
+                        firstId,
+                        item.SecondRevision.ObjectId,
+                        item.BaseA,
+                        item.BaseB,
+                        fileViewer.GetExtraDiffArguments(isRangeDiff: true));
 
                 // Try set highlighting from first found filename
                 var match = new Regex(@"\n\s*(@@|##)\s+(?<file>[^#:\n]+)").Match(output ?? "");
@@ -86,12 +82,8 @@ namespace GitUI
                 return fileViewer.ViewRangeDiffAsync(filename, output ?? defaultText);
             }
 
-            string selectedPatch = ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                await TaskScheduler.Default;
-                return GetSelectedPatch(fileViewer, firstId, item.SecondRevision.ObjectId, item.Item)
-                    ?? defaultText;
-            });
+            string selectedPatch = GetSelectedPatch(fileViewer, firstId, item.SecondRevision.ObjectId, item.Item)
+                ?? defaultText;
 
             return item.Item.IsSubmodule
                 ? fileViewer.ViewTextAsync(item.Item.Name, text: selectedPatch, openWithDifftool: openWithDiffTool)

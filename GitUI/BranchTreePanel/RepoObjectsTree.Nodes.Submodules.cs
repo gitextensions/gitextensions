@@ -139,15 +139,11 @@ namespace GitUI.BranchTreePanel
                 if (Info.Detailed?.RawStatus is not null)
                 {
                     // Prefer submodule status, shows ahead/behind
-                    TreeViewNode.ToolTipText = ThreadHelper.JoinableTaskFactory.Run(async () =>
-                    {
-                        await TaskScheduler.Default;
-                        return LocalizationHelpers.ProcessSubmoduleStatus(
+                    TreeViewNode.ToolTipText = LocalizationHelpers.ProcessSubmoduleStatus(
                         new GitModule(Info.Path),
                         Info.Detailed.RawStatus,
                         moduleIsParent: false,
                         limitOutput: true);
-                    });
                 }
                 else if (GitStatus is not null)
                 {

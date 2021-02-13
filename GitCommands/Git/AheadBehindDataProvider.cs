@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using GitExtUtils;
-using GitUI;
 using GitUIPluginInterfaces;
-using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands.Git
 {
@@ -64,11 +61,7 @@ namespace GitCommands.Git
                 "refs/heads/" + branchName
             };
 
-            var result = ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                await TaskScheduler.Default;
-                return GetGitExecutable().GetOutput(aheadBehindGitCommand, outputEncoding: encoding);
-            });
+            var result = GetGitExecutable().GetOutput(aheadBehindGitCommand, outputEncoding: encoding);
             if (string.IsNullOrEmpty(result))
             {
                 return null;

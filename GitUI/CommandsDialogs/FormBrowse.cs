@@ -2867,7 +2867,7 @@ namespace GitUI.CommandsDialogs
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await TaskScheduler.Default;
-                var loadDetails = newItems.Select(e => e.loadDetails).WhereNotNull();
+                var loadDetails = newItems.Select(e => e.loadDetails).Where(e => e is not null);
                 var refreshActions = new List<Action>();
                 foreach (var loadFunc in loadDetails)
                 {
