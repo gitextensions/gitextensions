@@ -71,8 +71,6 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
             this.unstagedSubmoduleStageToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.openFolderMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openDiffMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             this.copyFolderNameMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.Cancel = new System.Windows.Forms.Button();
@@ -263,10 +261,9 @@ namespace GitUI.CommandsDialogs
             //
             this.openWithDifftoolToolStripMenuItem.Image = global::GitUI.Properties.Images.Diff;
             this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
-            this.openWithDifftoolToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
             this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
             this.openWithDifftoolToolStripMenuItem.Text = "Open with difftool";
-            this.openWithDifftoolToolStripMenuItem.Click += new System.EventHandler(this.OpenWithDifftoolToolStripMenuItemClick);
+            this.openWithDifftoolToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             //
             // toolStripSeparator9
             //
@@ -460,7 +457,6 @@ namespace GitUI.CommandsDialogs
             //
             this.stagedOpenDifftoolToolStripMenuItem9.Image = global::GitUI.Properties.Images.Diff;
             this.stagedOpenDifftoolToolStripMenuItem9.Name = "stagedOpenDifftoolToolStripMenuItem9";
-            this.stagedOpenDifftoolToolStripMenuItem9.ShortcutKeys = System.Windows.Forms.Keys.F3;
             this.stagedOpenDifftoolToolStripMenuItem9.Size = new System.Drawing.Size(232, 22);
             this.stagedOpenDifftoolToolStripMenuItem9.Text = "Open with difftool";
             this.stagedOpenDifftoolToolStripMenuItem9.Click += new System.EventHandler(this.stagedOpenDifftoolToolStripMenuItem9_Click);
@@ -504,8 +500,6 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator15,
             this.stageSubmoduleToolStripMenuItem,
             this.unstagedSubmoduleStageToolStripSeparator,
-            this.openDiffMenuItem,
-            this.toolStripSeparator16,
             this.copyFolderNameMenuItem,
             this.openFolderMenuItem,
             this.toolStripSeparator13,
@@ -586,20 +580,6 @@ namespace GitUI.CommandsDialogs
             this.openFolderMenuItem.Size = new System.Drawing.Size(228, 22);
             this.openFolderMenuItem.Text = "Show in folder";
             this.openFolderMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItemClick);
-            //
-            // openDiffMenuItem
-            //
-            this.openDiffMenuItem.Image = global::GitUI.Properties.Images.Diff;
-            this.openDiffMenuItem.Name = "openDiffMenuItem";
-            this.openDiffMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
-            this.openDiffMenuItem.Size = new System.Drawing.Size(228, 22);
-            this.openDiffMenuItem.Text = "Open with difftool";
-            this.openDiffMenuItem.Click += new System.EventHandler(this.OpenWithDifftoolToolStripMenuItemClick);
-            //
-            // toolStripSeparator16
-            //
-            this.toolStripSeparator16.Name = "toolStripSeparator16";
-            this.toolStripSeparator16.Size = new System.Drawing.Size(225, 6);
             //
             // copyFolderNameMenuItem
             //
@@ -1635,8 +1615,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator unstagedSubmoduleStageToolStripSeparator;
         private ToolStripSeparator toolStripSeparator15;
         private ToolStripMenuItem openFolderMenuItem;
-        private ToolStripMenuItem openDiffMenuItem;
-        private ToolStripSeparator toolStripSeparator16;
         private ToolStripMenuItem copyFolderNameMenuItem;
         private ToolStripMenuItem resetSubmoduleChanges;
         private ToolStripMenuItem commitSubmoduleChanges;

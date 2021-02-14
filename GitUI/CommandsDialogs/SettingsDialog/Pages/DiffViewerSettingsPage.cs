@@ -27,6 +27,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkOpenSubmoduleDiffInSeparateWindow.Checked = AppSettings.OpenSubmoduleDiffInSeparateWindow;
             chkContScrollToNextFileOnlyWithAlt.Checked = AppSettings.AutomaticContinuousScroll;
             chkShowDiffForAllParents.Checked = AppSettings.ShowDiffForAllParents;
+            chkShowAllCustomDiffTools.Checked = AppSettings.ShowAvailableDiffTools;
             VerticalRulerPosition.Value = AppSettings.DiffVerticalRulerPosition;
         }
 
@@ -41,6 +42,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.OpenSubmoduleDiffInSeparateWindow = chkOpenSubmoduleDiffInSeparateWindow.Checked;
             AppSettings.AutomaticContinuousScroll = chkContScrollToNextFileOnlyWithAlt.Checked;
             AppSettings.ShowDiffForAllParents = chkShowDiffForAllParents.Checked;
+            AppSettings.ShowAvailableDiffTools = chkShowAllCustomDiffTools.Checked;
             AppSettings.DiffVerticalRulerPosition = (int)VerticalRulerPosition.Value;
         }
 
