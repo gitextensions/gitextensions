@@ -534,7 +534,6 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this._gridView)).EndInit();
             this.mainContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.SetShortcutKeys();
         }
 
         #endregion

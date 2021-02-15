@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -298,20 +299,13 @@ namespace GitUI.CommandsDialogs
 
         private void LoadCustomMergetools()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            List<CustomDiffMergeTool> menus = new()
             {
-                var tools = await Module.GetCustomDiffMergeTools(isDiff: false);
-                customMergetool.DropDown = null;
-                ContextMenuStrip customDiffToolDropDown = new();
-                foreach (var tool in tools)
-                {
-                    var toolStripItem = new ToolStripMenuItem(tool) { Tag = tool };
-                    toolStripItem.Click += customMergetool_Click;
-                    customDiffToolDropDown.Items.Add(toolStripItem);
-                }
+                new(customMergetool, customMergetool_Click),
+            };
 
-                customMergetool.DropDown = customDiffToolDropDown;
-            }).FileAndForget();
+            const int ToolDelay = 5000;
+            new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: false, ToolDelay);
         }
 
         private readonly Dictionary<string, string> _mergeScripts = new Dictionary<string, string>
@@ -1271,21 +1265,22 @@ namespace GitUI.CommandsDialogs
 
         private void customMergetool_Click(object sender, EventArgs e)
         {
-            if (sender == customMergetool)
+            var item = sender as ToolStripMenuItem;
+            if (item?.DropDownItems != null)
             {
                 // "main menu" clicked, cancel dropdown manually, invoke default mergetool
-                customMergetool.HideDropDown();
-                ConflictedFilesContextMenu.Hide();
+                item.HideDropDown();
+                item.Owner.Hide();
             }
 
             using (WaitCursorScope.Enter())
             {
-                string? customTool = (sender as ToolStripMenuItem)?.Tag as string;
+                var customTool = item?.Tag as string;
 
-                foreach (var item in GetConflicts())
+                foreach (var conflict in GetConflicts())
                 {
                     Directory.SetCurrentDirectory(Module.WorkingDir);
-                    Module.RunMergeTool(fileName: item.Filename, customTool: customTool);
+                    Module.RunMergeTool(fileName: conflict.Filename, customTool: customTool);
                     Initialize();
                 }
             }

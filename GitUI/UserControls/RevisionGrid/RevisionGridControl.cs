@@ -590,6 +590,17 @@ namespace GitUI
             }
 
             ForceRefreshRevisions();
+            LoadCustomDifftools();
+        }
+
+        public void LoadCustomDifftools()
+        {
+            List<CustomDiffMergeTool> menus = new()
+            {
+                new(openCommitsWithDiffToolMenuItem, diffSelectedCommitsMenuItem_Click)
+            };
+
+            new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: true);
         }
 
         private void SetSelectedIndex(int index, bool toggleSelection = false)
@@ -2569,15 +2580,23 @@ namespace GitUI
 
         private void diffSelectedCommitsMenuItem_Click(object sender, EventArgs e)
         {
-            DiffSelectedCommitsWithDifftool();
+            var item = sender as ToolStripMenuItem;
+            if (item?.DropDownItems != null)
+            {
+                // "main menu" clicked, cancel dropdown manually, invoke default difftool
+                item.HideDropDown();
+            }
+
+            var toolName = item?.Tag as string;
+            DiffSelectedCommitsWithDifftool(toolName);
         }
 
-        public void DiffSelectedCommitsWithDifftool()
+        public void DiffSelectedCommitsWithDifftool(string? customTool = null)
         {
             var (first, selected) = getFirstAndSelected();
             if (selected is not null)
             {
-                Module.OpenWithDifftoolDirDiff(first?.ToString(), selected.ObjectId.ToString());
+                Module.OpenWithDifftoolDirDiff(first?.ToString(), selected.ObjectId.ToString(), customTool: customTool);
             }
         }
 

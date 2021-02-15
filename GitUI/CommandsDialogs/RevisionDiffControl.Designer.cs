@@ -35,7 +35,6 @@ namespace GitUI.CommandsDialogs
             this.DiffFiles = new GitUI.FileStatusList();
             this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openWithCustomDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffRememberStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.diffTwoSelectedDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffWithRememberedDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -154,7 +153,6 @@ namespace GitUI.CommandsDialogs
                 this.secondDiffCaptionMenuItem,
                 this.firstDiffCaptionMenuItem,
                 this.firstToSelectedToolStripMenuItem,
-                this.openWithCustomDifftoolToolStripMenuItem,
                 this.selectedToLocalToolStripMenuItem,
                 this.firstToLocalToolStripMenuItem,
                 this.diffRememberStripSeparator,
@@ -168,12 +166,6 @@ namespace GitUI.CommandsDialogs
             this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
             this.openWithDifftoolToolStripMenuItem.Text = "Open with difftool";
             this.openWithDifftoolToolStripMenuItem.DropDownOpening += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_DropDownOpening);
-            // 
-            // openWithCustomDifftoolToolStripMenuItem
-            // 
-            this.openWithCustomDifftoolToolStripMenuItem.Name = "openWithCustomDifftoolToolStripMenuItem";
-            this.openWithCustomDifftoolToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
-            this.openWithCustomDifftoolToolStripMenuItem.Text = "First -> Second...";
             // 
             // diffRememberStripSeparator
             // 
@@ -224,21 +216,21 @@ namespace GitUI.CommandsDialogs
             this.firstToSelectedToolStripMenuItem.Name = "firstToSelectedToolStripMenuItem";
             this.firstToSelectedToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
             this.firstToSelectedToolStripMenuItem.Text = "First -> Second";
-            this.firstToSelectedToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
+            this.firstToSelectedToolStripMenuItem.Click += new System.EventHandler(this.firstToSelectedToolStripMenuItem_Click);
             // 
             // firstToLocalToolStripMenuItem
             // 
             this.firstToLocalToolStripMenuItem.Name = "firstToLocalToolStripMenuItem";
             this.firstToLocalToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
             this.firstToLocalToolStripMenuItem.Text = "First -> Working directory";
-            this.firstToLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
+            this.firstToLocalToolStripMenuItem.Click += new System.EventHandler(this.firstToLocalToolStripMenuItem_Click);
             // 
             // selectedToLocalToolStripMenuItem
             // 
             this.selectedToLocalToolStripMenuItem.Name = "selectedToLocalToolStripMenuItem";
             this.selectedToLocalToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
             this.selectedToLocalToolStripMenuItem.Text = "Second -> Working directory";
-            this.selectedToLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
+            this.selectedToLocalToolStripMenuItem.Click += new System.EventHandler(this.selectedToLocalToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem1
             // 
@@ -507,7 +499,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem saveAsToolStripMenuItem1;
         private ToolStripMenuItem saveToolStripMenuItem;
         private ToolStripMenuItem openWithDifftoolToolStripMenuItem;
-        private ToolStripMenuItem openWithCustomDifftoolToolStripMenuItem;
         private ToolStripSeparator diffRememberStripSeparator;
         private ToolStripMenuItem diffTwoSelectedDifftoolToolStripMenuItem;
         private ToolStripMenuItem diffWithRememberedDifftoolToolStripMenuItem;
