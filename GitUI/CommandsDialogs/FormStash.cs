@@ -221,7 +221,6 @@ namespace GitUI.CommandsDialogs
                     secondRev.ParentIds = new[] { firstId };
                 }
 
-                Assumes.NotNull(secondRev);
                 Stashed.SetDiffs(firstRev, secondRev, gitItemStatuses);
             }
 
