@@ -211,12 +211,16 @@ namespace GitUI.CommandsDialogs
             else
             {
                 var firstId = Module.RevParse(gitStash.Name + "^");
-                var selectedId = Module.RevParse(gitStash.Name);
                 var firstRev = firstId is null ? null : new GitRevision(firstId);
-                var secondRev = selectedId is null || firstId is null ? null : new GitRevision(selectedId)
+
+                var selectedId = Module.RevParse(gitStash.Name);
+                Assumes.NotNull(selectedId);
+                var secondRev = new GitRevision(selectedId);
+                if (firstId is not null)
                 {
-                    ParentIds = new[] { firstId }
-                };
+                    secondRev.ParentIds = new[] { firstId };
+                }
+
                 Assumes.NotNull(secondRev);
                 Stashed.SetDiffs(firstRev, secondRev, gitItemStatuses);
             }
