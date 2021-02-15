@@ -1,9 +1,9 @@
 ﻿- BuildId: 22798682
   CommitId: d4295d591a45c67d812aa1c4fa17b6a0f2ea3114
-  AppVeyorBuildReportUrl: https://ci.appveyor.com/api/projects/ProjectId/build/3.1.0.5443
+  AppVeyorBuildReportUrl: https://ci.appveyor.com/api/projects/account/repo/build/3.1.0.5443
   Branch: master
-  BaseApiUrl: https://ci.appveyor.com/api/projects/ProjectId
-  BaseWebUrl: https://ci.appveyor.com/project/ProjectId/build/
+  BaseApiUrl: https://ci.appveyor.com/api/projects/account/repo/
+  BaseWebUrl: https://ci.appveyor.com/project/account/repo/build/
   PullRequestText: ''
   PullRequestTitle: ''
   TestsResultText: ''
@@ -13,5 +13,5 @@
   Status: Success
   CommitHashList:
   - d4295d591a45c67d812aa1c4fa17b6a0f2ea3114
-  Url: https://ci.appveyor.com/project/ProjectId/build/3.1.0.5443
+  Url: https://ci.appveyor.com/project/account/repo/build/3.1.0.5443
   ShowInBuildReportTab: true
