@@ -456,8 +456,7 @@ namespace GitUI
             var prefixTextStartX = itemLeft + (image?.Width ?? 0);
             var textMaxWidth = itemWidth - prefixTextStartX;
             var (prefix, text, suffix, textWidth) = formatter.FormatTextForDrawing(textMaxWidth, gitItemStatus.Name, gitItemStatus.OldName);
-            text ??= "";
-            text = AppendItemSubmoduleStatus(text, gitItemStatus);
+            text = AppendItemSubmoduleStatus(text ?? "", gitItemStatus);
 
             return (image, prefix, text, suffix, prefixTextStartX, textWidth, textMaxWidth);
         }
