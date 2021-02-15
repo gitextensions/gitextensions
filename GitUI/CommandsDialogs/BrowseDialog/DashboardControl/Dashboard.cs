@@ -64,13 +64,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public void RefreshContent()
         {
+            _selectedTheme = ColorHelper.IsLightTheme() ? DashboardTheme.Light : DashboardTheme.Dark;
+
             InitDashboardLayout();
             ApplyTheme();
             userRepositoriesList.ShowRecentRepositories();
 
             void ApplyTheme()
             {
-                _selectedTheme = ColorHelper.IsLightTheme() ? DashboardTheme.Light : DashboardTheme.Dark;
                 BackgroundImage = _selectedTheme.BackgroundImage;
 
                 BackColor = _selectedTheme.Primary;
@@ -147,7 +148,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     AutoScrollMinSize = new Size(0, pnlLogo.Height + flpnlStart.MinimumSize.Height + flpnlContribute.MinimumSize.Height);
                 }
 
-                void AddLinks(Panel panel, Func<Panel, Control> addLinks, Action<Panel, Control> onLayout)
+                static void AddLinks(Panel panel, Func<Panel, Control> addLinks, Action<Panel, Control> onLayout)
                 {
                     panel.SuspendLayout();
                     panel.Controls.Clear();
@@ -162,8 +163,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                 Control CreateLink(Control container, string text, Image icon, EventHandler handler)
                 {
-                    Assumes.NotNull(_selectedTheme);
-
                     var padding24 = DpiUtil.Scale(24);
                     var padding3 = DpiUtil.Scale(3);
                     var linkLabel = new LinkLabel
