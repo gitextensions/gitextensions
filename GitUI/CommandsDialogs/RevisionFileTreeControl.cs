@@ -662,6 +662,8 @@ See the changes in the commit form.");
                 var fileName = _fullPathResolver.Resolve(gitItem.FileName);
                 if (File.Exists(fileName))
                 {
+                    // NOTE File.Exists is not annotated to imply that fileName is non-null when the returned value is true
+                    // in .NET Framework. This suppression will not be required when moving to .NET 5+.
                     OsShellUtil.OpenAs(fileName!.ToNativePath());
                 }
             }
