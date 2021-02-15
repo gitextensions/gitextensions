@@ -422,10 +422,10 @@ namespace GitUI.CommandsDialogs
             this.stagedFileHistoryToolStripMenuItem6.Click += new System.EventHandler(this.ViewFileHistoryMenuItem_Click);
             //
             // stagedFileHistoryToolStripSeparator
-            // 
+            //
             this.stagedFileHistoryToolStripSeparator.Name = "stagedFileHistoryToolStripSeparator";
             this.stagedFileHistoryToolStripSeparator.Size = new System.Drawing.Size(229, 6);
-            // 
+            //
             // stagedToolStripSeparator14
             //
             this.stagedToolStripSeparator14.Name = "stagedToolStripSeparator14";
@@ -1179,7 +1179,6 @@ namespace GitUI.CommandsDialogs
             this.ResetUnStaged.TabIndex = 14;
             this.ResetUnStaged.TabStop = false;
             this.ResetUnStaged.Text = "Reset u&nstaged changes";
-            this.ResetUnStaged.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.ResetUnStaged.UseVisualStyleBackColor = true;
             this.ResetUnStaged.Click += new System.EventHandler(this.ResetUnStagedClick);
             //
@@ -1218,7 +1217,7 @@ namespace GitUI.CommandsDialogs
             this.commitMessageToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.CommitMessageToolStripMenuItemDropDownItemClicked);
             //
             // ShowOnlyMyMessagesToolStripMenuItem
-            // 
+            //
             this.ShowOnlyMyMessagesToolStripMenuItem.Checked = true;
             this.ShowOnlyMyMessagesToolStripMenuItem.CheckOnClick = true;
             this.ShowOnlyMyMessagesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -1226,7 +1225,7 @@ namespace GitUI.CommandsDialogs
             this.ShowOnlyMyMessagesToolStripMenuItem.Size = new System.Drawing.Size(290, 22);
             this.ShowOnlyMyMessagesToolStripMenuItem.Text = "Show only my messages";
             this.ShowOnlyMyMessagesToolStripMenuItem.CheckedChanged += new System.EventHandler(this.ShowOnlyMyMessagesToolStripMenuItem_CheckedChanged);
-            // 
+            //
             // toolStripMenuItem1
             //
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
@@ -1532,6 +1531,7 @@ namespace GitUI.CommandsDialogs
             this.commitStatusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
