@@ -446,7 +446,7 @@ namespace GitUI.CommandsDialogs
 
             if (selectedRows.Count > 0)
             {
-                string orgFileName = selectedRows[0].Name;
+                string? orgFileName = selectedRows[0].Name;
 
                 if (GitExtensions.Strings.IsNullOrEmpty(orgFileName))
                 {

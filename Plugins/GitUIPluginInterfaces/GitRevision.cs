@@ -28,7 +28,6 @@ namespace GitUIPluginInterfaces
         public static readonly Regex Sha1HashShortRegex = new(@"\b[a-f\d]{7,40}\b", RegexOptions.Compiled);
 
         private BuildInfo? _buildStatus;
-        private string? _name;
 
         public GitRevision(ObjectId objectId)
         {
@@ -85,12 +84,7 @@ namespace GitUIPluginInterfaces
         // UTF-8 when is null or empty
         public string? MessageEncoding { get; set; }
 
-        [AllowNull]
-        public string Name
-        {
-            get => _name ?? throw new InvalidOperationException("GitRevision does not have a Name.");
-            set => _name = value;
-        }
+        public string? Name { get; set; }
 
         public override string ToString() => $"{ObjectId.ToShortString()}:{Subject}";
 
