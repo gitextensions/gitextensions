@@ -1248,6 +1248,15 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Remember the 'Show syntax highlighting' preference</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkShowAllCustomDiffTools.Text">
+        <source>Show all available difftools</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkShowAllCustomDiffTools.ToolTipText">
+        <source>Show all configured difftools in a dropdown.
+The primary difftool can still be selected by clicking the main menu entry.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog</source>
         <target />
@@ -3565,10 +3574,6 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
         <source>Show in folder</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="openDiffMenuItem.Text">
-        <source>Open with difftool</source>
         <target />
       </trans-unit>
       <trans-unit id="openFolderMenuItem.Text">
@@ -8503,10 +8508,6 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Show in folder</source>
         <target />
       </trans-unit>
-      <trans-unit id="openWithCustomDifftoolToolStripMenuItem.Text">
-        <source>First -&gt; Second...</source>
-        <target />
-      </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
         <source>Open with difftool</source>
         <target />
@@ -9630,6 +9631,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_disableMenuItem.Text">
+        <source>Disable this dropdown</source>
         <target />
       </trans-unit>
       <trans-unit id="_error.Text">

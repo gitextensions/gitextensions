@@ -1239,6 +1239,12 @@ namespace GitCommands
             set => SetBool("showdiffforallparents", value);
         }
 
+        public static bool ShowAvailableDiffTools
+        {
+            get => GetBool("difftools.showavailable", true);
+            set => SetBool("difftools.showavailable", value);
+        }
+
         public static int DiffVerticalRulerPosition
         {
             get => GetInt("diffverticalrulerposition", 0);
