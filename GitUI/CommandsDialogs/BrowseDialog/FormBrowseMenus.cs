@@ -105,12 +105,148 @@ namespace GitUI.CommandsDialogs
                     CheckOnClick = true,
                     Tag = senderToolStrip
                 };
+
+                toolStripItem.DropDown.Closing += (sender, e) =>
+                {
+                    if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked)
+                    {
+                        // Cancel closing menu to allow selecting/unselecting multiple items.
+                        e.Cancel = true;
+                    }
+                };
+
+                CreateToolStripSubMenus(senderToolStrip, toolStripItem);
+
                 toolStripItem.Click += (s, e) =>
                 {
                     senderToolStrip.Visible = !senderToolStrip.Visible;
                 };
 
                 return toolStripItem;
+            }
+        }
+
+        private static void CreateToolStripSubMenus(ToolStrip senderToolStrip, ToolStripMenuItem toolStripItem)
+        {
+            const string toolbarSettingsPrefix = "formbrowse_toolbar_visibility_";
+            string currentGroup = null;
+            foreach (ToolStripItem toolbarItem in senderToolStrip.Items)
+            {
+                if (toolbarItem is ToolStripSeparator)
+                {
+                    toolStripItem.DropDownItems.Add(new ToolStripSeparator());
+                    continue;
+                }
+
+                bool belongToAGroup = BelongToAGroup(toolbarItem, out string groupName);
+                string key;
+                if (belongToAGroup)
+                {
+                    if (currentGroup == groupName)
+                    {
+                        toolbarItem.Visible = LoadVisibilitySetting(groupName);
+                        continue;
+                    }
+
+                    currentGroup = (string)toolbarItem.Tag;
+                    key = groupName;
+                }
+                else
+                {
+                    key = toolbarItem.Name;
+                }
+
+                toolbarItem.Visible = LoadVisibilitySetting(key);
+
+                ToolStripMenuItem menuToolbarItem = new(toolbarItem.ToolTipText)
+                {
+                    Checked = toolbarItem.Visible,
+                    CheckOnClick = true,
+                    Tag = toolbarItem,
+                    Image = toolbarItem.Image
+                };
+
+                menuToolbarItem.Click += (s, e) =>
+                {
+                    toolbarItem.Visible = !toolbarItem.Visible;
+
+                    if (!BelongToAGroup(toolbarItem, out var group))
+                    {
+                        SaveVisibilitySetting(toolbarItem.Name, toolbarItem.Visible);
+                    }
+                    else
+                    {
+                        SaveVisibilitySetting(group, toolbarItem.Visible);
+                        foreach (ToolStripItem item in senderToolStrip.Items)
+                        {
+                            if (item.Tag == (object)group)
+                            {
+                                item.Visible = toolbarItem.Visible;
+                            }
+                        }
+                    }
+
+                    AdaptSeparatorsVisibility(senderToolStrip);
+                };
+
+                toolStripItem.DropDownItems.Add(menuToolbarItem);
+            }
+
+            AdaptSeparatorsVisibility(senderToolStrip);
+
+            return;
+
+            static void SaveVisibilitySetting(string key, bool visible) => AppSettings.SetBool(toolbarSettingsPrefix + key, visible ? null : false);
+            static bool LoadVisibilitySetting(string key) => AppSettings.GetBool(toolbarSettingsPrefix + key, true);
+
+            static bool BelongToAGroup(ToolStripItem toolbarItem, out string groupName)
+            {
+                const string groupPrefix = "ToolBar_group:";
+                if (toolbarItem.Tag is string group && group.StartsWith(groupPrefix))
+                {
+                    groupName = group;
+                    return true;
+                }
+
+                groupName = string.Empty;
+                return false;
+            }
+        }
+
+        private static void AdaptSeparatorsVisibility(ToolStrip senderToolStrip)
+        {
+            // First pass: toolbar items from left to right
+            bool shouldHideNextSeparator = true;
+            foreach (ToolStripItem item in senderToolStrip.Items)
+            {
+                HandleCurrentItem(item);
+            }
+
+            // Second pass: toolbar items from right to left
+            shouldHideNextSeparator = true;
+            for (int i = senderToolStrip.Items.Count - 1; i >= 0; i--)
+            {
+                var item = senderToolStrip.Items[i];
+
+                if (item is ToolStripSeparator { Visible: false })
+                {
+                    continue;
+                }
+
+                HandleCurrentItem(item);
+            }
+
+            void HandleCurrentItem(ToolStripItem toolStripItem)
+            {
+                if (toolStripItem is ToolStripSeparator separator)
+                {
+                    separator.Visible = !shouldHideNextSeparator;
+                    shouldHideNextSeparator = true;
+                }
+                else
+                {
+                    shouldHideNextSeparator &= !toolStripItem.Visible;
+                }
             }
         }
 

@@ -2633,8 +2633,16 @@ Do you want to continue?</source>
         <source>Toggle split view layout</source>
         <target />
       </trans-unit>
+      <trans-unit id="toolStripBranchFilterDropDownButton.Text">
+        <source>Branch type</source>
+        <target />
+      </trans-unit>
       <trans-unit id="toolStripButtonCommit.Text">
         <source>Commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="toolStripButtonLevelUp.ToolTipText">
+        <source>Submodules</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripButtonPull.Text">
@@ -2653,6 +2661,10 @@ Do you want to continue?</source>
         <source>Branches:</source>
         <target />
       </trans-unit>
+      <trans-unit id="toolStripLabel1.ToolTipText">
+        <source>Branch filter</source>
+        <target />
+      </trans-unit>
       <trans-unit id="toolStripMenuItemReflog.Text">
         <source>Show reflog...</source>
         <target />
@@ -2661,8 +2673,16 @@ Do you want to continue?</source>
         <source>Worktrees</source>
         <target />
       </trans-unit>
+      <trans-unit id="toolStripRevisionFilterDropDownButton.Text">
+        <source>Filter type</source>
+        <target />
+      </trans-unit>
       <trans-unit id="toolStripRevisionFilterLabel.Text">
         <source>Filter:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="toolStripRevisionFilterLabel.ToolTipText">
+        <source>Text filter</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripSplitStash.ToolTipText">

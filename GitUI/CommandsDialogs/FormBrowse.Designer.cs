@@ -378,12 +378,12 @@ namespace GitUI.CommandsDialogs
             // 
             // toolStripButtonLevelUp
             // 
-            this.toolStripButtonLevelUp.AutoToolTip = false;
             this.toolStripButtonLevelUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripButtonLevelUp.Image = global::GitUI.Properties.Images.SubmodulesManage;
             this.toolStripButtonLevelUp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLevelUp.Name = "toolStripButtonLevelUp";
             this.toolStripButtonLevelUp.Size = new System.Drawing.Size(32, 22);
+            this.toolStripButtonLevelUp.ToolTipText = "Submodules";
             this.toolStripButtonLevelUp.ButtonClick += new System.EventHandler(this.toolStripButtonLevelUp_ButtonClick);
             this.toolStripButtonLevelUp.DropDownOpening += new System.EventHandler(this.toolStripButtonLevelUp_DropDownOpening);
             // 
@@ -611,7 +611,9 @@ namespace GitUI.CommandsDialogs
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
             this.toolStripLabel1.Size = new System.Drawing.Size(58, 22);
+            this.toolStripLabel1.Tag = "ToolBar_group:Branch filter";
             this.toolStripLabel1.Text = "Branches:";
+            this.toolStripLabel1.ToolTipText = "Branch filter";
             // 
             // toolStripBranchFilterComboBox
             // 
@@ -621,6 +623,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripBranchFilterComboBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.toolStripBranchFilterComboBox.Name = "toolStripBranchFilterComboBox";
             this.toolStripBranchFilterComboBox.Size = new System.Drawing.Size(100, 23);
+            this.toolStripBranchFilterComboBox.Tag = "ToolBar_group:Branch filter";
             this.toolStripBranchFilterComboBox.Click += new System.EventHandler(this.toolStripBranchFilterComboBox_Click);
             // 
             // toolStripBranchFilterDropDownButton
@@ -629,6 +632,8 @@ namespace GitUI.CommandsDialogs
             this.toolStripBranchFilterDropDownButton.Image = global::GitUI.Properties.Images.EditFilter;
             this.toolStripBranchFilterDropDownButton.Name = "toolStripBranchFilterDropDownButton";
             this.toolStripBranchFilterDropDownButton.Size = new System.Drawing.Size(29, 22);
+            this.toolStripBranchFilterDropDownButton.Tag = "ToolBar_group:Branch filter";
+            this.toolStripBranchFilterDropDownButton.Text = "Branch type";
             // 
             // toolStripSeparator19
             // 
@@ -639,7 +644,9 @@ namespace GitUI.CommandsDialogs
             // 
             this.toolStripRevisionFilterLabel.Name = "toolStripRevisionFilterLabel";
             this.toolStripRevisionFilterLabel.Size = new System.Drawing.Size(36, 22);
+            this.toolStripRevisionFilterLabel.Tag = "ToolBar_group:Text filter";
             this.toolStripRevisionFilterLabel.Text = "Filter:";
+            this.toolStripRevisionFilterLabel.ToolTipText = "Text filter";
             // 
             // toolStripRevisionFilterTextBox
             // 
@@ -648,6 +655,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripRevisionFilterTextBox.ForeColor = System.Drawing.SystemColors.ControlText;
             this.toolStripRevisionFilterTextBox.Name = "toolStripRevisionFilterTextBox";
             this.toolStripRevisionFilterTextBox.Size = new System.Drawing.Size(100, 25);
+            this.toolStripRevisionFilterTextBox.Tag = "ToolBar_group:Text filter";
             // 
             // toolStripRevisionFilterDropDownButton
             // 
@@ -656,6 +664,8 @@ namespace GitUI.CommandsDialogs
             this.toolStripRevisionFilterDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripRevisionFilterDropDownButton.Name = "toolStripRevisionFilterDropDownButton";
             this.toolStripRevisionFilterDropDownButton.Size = new System.Drawing.Size(29, 22);
+            this.toolStripRevisionFilterDropDownButton.Tag = "ToolBar_group:Text filter";
+            this.toolStripRevisionFilterDropDownButton.Text = "Filter type";
             // 
             // ShowFirstParent
             // 
