@@ -84,12 +84,12 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 }
                 else if (strings[0] == "HEAD")
                 {
-                    Assumes.NotNull(currentWorktree);
+                    Validates.NotNull(currentWorktree);
                     currentWorktree.Sha1 = strings[1];
                 }
                 else
                 {
-                    Assumes.NotNull(currentWorktree);
+                    Validates.NotNull(currentWorktree);
                     switch (strings[0])
                     {
                         case "bare":
@@ -134,7 +134,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 return false;
             }
 
-            Assumes.NotNull(_worktrees);
+            Validates.NotNull(_worktrees);
 
             if (_worktrees.Count == 1)
             {
@@ -210,7 +210,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 return;
             }
 
-            Assumes.NotNull(_worktrees);
+            Validates.NotNull(_worktrees);
 
             var workTree = _worktrees[e.RowIndex];
             if (!CanDeleteWorkspace(workTree))
@@ -243,7 +243,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 if (MessageBox.Show(this, _deleteWorktreeText.Text, _deleteWorktreeTitle.Text,
                                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
-                    Assumes.NotNull(workTree.Path);
+                    Validates.NotNull(workTree.Path);
 
                     if (workTree.Path.TryDeleteDirectory(out string? errorMessage))
                     {

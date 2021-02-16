@@ -668,7 +668,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             var menus = new ToolStripItem[] { mnuConfigure };
             var menuStrip = form.FindDescendantOfType<MenuStrip>(p => p.Name == "mainMenuStrip");
-            Assumes.NotNull(menuStrip);
+            Validates.NotNull(menuStrip);
             var dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");
             dashboardMenu?.DropDownItems.AddRange(menus);
         }
@@ -699,7 +699,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             RepositoryContextAction(tsmiCategories, selectedRepositoryItem =>
             {
-                Assumes.NotNull(selectedRepositoryItem.Repository);
+                Validates.NotNull(selectedRepositoryItem.Repository);
 
                 foreach (ToolStripItem item in tsmiCategories.DropDownItems)
                 {

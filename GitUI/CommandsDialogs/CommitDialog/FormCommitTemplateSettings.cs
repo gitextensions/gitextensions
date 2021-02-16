@@ -92,27 +92,27 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
         private void textCommitTemplateText_TextChanged(object sender, EventArgs e)
         {
-            Assumes.NotNull(_commitTemplates);
+            Validates.NotNull(_commitTemplates);
             _commitTemplates[_NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex].Text = _NO_TRANSLATE_textCommitTemplateText.Text;
         }
 
         private void textBoxCommitTemplateName_TextChanged(object sender, EventArgs e)
         {
-            Assumes.NotNull(_commitTemplates);
+            Validates.NotNull(_commitTemplates);
             _commitTemplates[_NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex].Name = _NO_TRANSLATE_textBoxCommitTemplateName.Text;
             RefreshLineInListBox(_NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex);
         }
 
         private void comboBoxCommitTemplates_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Assumes.NotNull(_commitTemplates);
+            Validates.NotNull(_commitTemplates);
             _NO_TRANSLATE_textCommitTemplateText.Text = _commitTemplates[_NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex].Text;
             _NO_TRANSLATE_textBoxCommitTemplateName.Text = _commitTemplates[_NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex].Name;
         }
 
         private void RefreshLineInListBox(int line)
         {
-            Assumes.NotNull(_commitTemplates);
+            Validates.NotNull(_commitTemplates);
 
             string comboBoxText;
 

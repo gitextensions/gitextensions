@@ -117,7 +117,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             void GitDirChanged(object sender, FileSystemEventArgs e)
             {
-                Assumes.NotNull(_gitPath);
+                Validates.NotNull(_gitPath);
 
                 // git directory changed
                 if (e.FullPath.Length == _gitPath.Length)
@@ -373,8 +373,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
             }
 
-            Assumes.NotNull(UICommandsSource);
-            Assumes.NotNull(Module);
+            Validates.NotNull(UICommandsSource);
+            Validates.NotNull(Module);
 
             if (IsMinimized()
                 || UICommandsSource.UICommands.RepoChangedNotifier.IsLocked ||

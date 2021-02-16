@@ -27,7 +27,7 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            Assumes.NotNull(path);
+            Validates.NotNull(path);
 
             // The section below contains native windows (kernel32) calls
             // and breaks on Linux. Only use it on Windows. Casing is only

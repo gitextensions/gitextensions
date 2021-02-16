@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public void SaveSettings()
         {
-            Assumes.NotNull(Settings);
+            Validates.NotNull(Settings);
             HotkeySettingsManager.SaveSettings(Settings);
         }
 

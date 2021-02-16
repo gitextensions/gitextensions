@@ -429,7 +429,7 @@ namespace GitUI.CommandsDialogs
 
                         if (AppSettings.ShowSubmoduleStatus)
                         {
-                            Assumes.NotNull(_submoduleStatusProvider);
+                            Validates.NotNull(_submoduleStatusProvider);
 
                             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                             {
@@ -1507,7 +1507,7 @@ namespace GitUI.CommandsDialogs
 
             try
             {
-                Assumes.NotNull(shell.ExecutablePath);
+                Validates.NotNull(shell.ExecutablePath);
 
                 var executable = new Executable(shell.ExecutablePath, Module.WorkingDir);
                 executable.Start(createWindow: true);
@@ -1776,7 +1776,7 @@ namespace GitUI.CommandsDialogs
             if (sender is ToolStripMenuItem toolStripMenuItem)
             {
                 var submodule = toolStripMenuItem.Tag as string;
-                Assumes.NotNull(Module.SuperprojectModule);
+                Validates.NotNull(Module.SuperprojectModule);
                 FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submodule), Module.SuperprojectModule.WorkingDir, input: null, useDialogSettings: true);
             }
 
@@ -2133,7 +2133,7 @@ namespace GitUI.CommandsDialogs
             {
                 foreach (IGitRef branch in GetBranches())
                 {
-                    Assumes.NotNull(branch.ObjectId);
+                    Validates.NotNull(branch.ObjectId);
                     bool isBranchVisible = ((ICheckRefs)RevisionGridControl).Contains(branch.ObjectId);
 
                     ToolStripItem toolStripItem = branchSelect.DropDownItems.Add(branch.Name);

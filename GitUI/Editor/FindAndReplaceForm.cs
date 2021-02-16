@@ -148,7 +148,7 @@ namespace GitUI
                 return null;
             }
 
-            Assumes.NotNull(_editor);
+            Validates.NotNull(_editor);
 
             _lastSearchWasBackward = searchBackward;
             _search.LookFor = txtLookFor.Text;
@@ -189,7 +189,7 @@ namespace GitUI
                         startIdx = currentIdx;
                     }
 
-                    Assumes.NotNull(_fileLoader);
+                    Validates.NotNull(_fileLoader);
                     if (_fileLoader(searchBackward, true, out var fileIndex, out var loadFileContent))
                     {
                         currentIdx = fileIndex;
@@ -219,7 +219,7 @@ namespace GitUI
 
         private void SelectResult(TextRange range)
         {
-            Assumes.NotNull(_editor);
+            Validates.NotNull(_editor);
 
             TextLocation p1 = _editor.Document.OffsetToPosition(range.Offset);
             TextLocation p2 = _editor.Document.OffsetToPosition(range.Offset + range.Length);
@@ -238,7 +238,7 @@ namespace GitUI
 
         private void btnHighlightAll_Click(object sender, EventArgs e)
         {
-            Assumes.NotNull(_editor);
+            Validates.NotNull(_editor);
 
             if (!_highlightGroups.ContainsKey(_editor))
             {
@@ -311,7 +311,7 @@ namespace GitUI
 
         private void btnReplace_Click(object sender, EventArgs e)
         {
-            Assumes.NotNull(_editor);
+            Validates.NotNull(_editor);
 
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
@@ -327,7 +327,7 @@ namespace GitUI
 
         private void btnReplaceAll_Click(object sender, EventArgs e)
         {
-            Assumes.NotNull(_editor);
+            Validates.NotNull(_editor);
 
             int count = 0;
 
@@ -371,7 +371,7 @@ namespace GitUI
 
         private void InsertText(string text)
         {
-            Assumes.NotNull(_editor);
+            Validates.NotNull(_editor);
 
             TextArea textArea = _editor.ActiveTextAreaControl.TextArea;
             textArea.Document.UndoStack.StartUndoGroup();
@@ -510,7 +510,7 @@ namespace GitUI
                     return _region.EndOffset;
                 }
 
-                Assumes.NotNull(_document);
+                Validates.NotNull(_document);
                 return _document.TextLength;
             }
         }
@@ -538,7 +538,7 @@ namespace GitUI
         /// automatically as the document changes.</summary>
         public void SetScanRegion(int offset, int length)
         {
-            Assumes.NotNull(_document);
+            Validates.NotNull(_document);
             Color bkgColor = _document.HighlightingStrategy.GetColorFor("Default").BackgroundColor;
             _region = new TextMarker(offset, length, TextMarkerType.SolidBlock,
                                      Globals.HalfMix(bkgColor, Color.FromArgb(160, 160, 160)));
@@ -551,7 +551,7 @@ namespace GitUI
         {
             if (_region is not null)
             {
-                Assumes.NotNull(_document);
+                Validates.NotNull(_document);
                 _document.MarkerStrategy.RemoveMarker(_region);
                 _document.TextContentChanged -= DocumentOnTextContentChanged;
                 _region = null;
@@ -571,7 +571,7 @@ namespace GitUI
         /// <returns>Region of document that matches the search string</returns>
         public TextRange? FindNext(int beginAtOffset, bool searchBackward, out bool loopedAround)
         {
-            Assumes.NotNull(LookFor);
+            Validates.NotNull(LookFor);
             loopedAround = false;
 
             int startAt = BeginOffset, endAt = EndOffset;
@@ -620,9 +620,9 @@ namespace GitUI
         private TextRange? FindNextIn(int offset1, int offset2, bool searchBackward)
         {
             Debug.Assert(offset2 >= offset1, "offset2 >= offset1");
-            Assumes.NotNull(LookFor);
-            Assumes.NotNull(_lookFor2);
-            Assumes.NotNull(_document);
+            Validates.NotNull(LookFor);
+            Validates.NotNull(_lookFor2);
+            Validates.NotNull(_document);
 
             offset2 -= LookFor.Length;
 
@@ -660,7 +660,7 @@ namespace GitUI
 
         private bool IsWholeWordMatch(int offset)
         {
-            Assumes.NotNull(LookFor);
+            Validates.NotNull(LookFor);
             if (IsWordBoundary(offset) && IsWordBoundary(offset + LookFor.Length))
             {
                 return IsPartWordMatch(offset);
@@ -671,14 +671,14 @@ namespace GitUI
 
         private bool IsWordBoundary(int offset)
         {
-            Assumes.NotNull(_document);
+            Validates.NotNull(_document);
             return offset <= 0 || offset >= _document.TextLength ||
                    !IsAlphaNumeric(offset - 1) || !IsAlphaNumeric(offset);
         }
 
         private bool IsAlphaNumeric(int offset)
         {
-            Assumes.NotNull(_document);
+            Validates.NotNull(_document);
 
             char c = _document.GetCharAt(offset);
             return char.IsLetterOrDigit(c) || c == '_';
@@ -686,8 +686,8 @@ namespace GitUI
 
         private bool IsPartWordMatch(int offset)
         {
-            Assumes.NotNull(_document);
-            Assumes.NotNull(LookFor);
+            Validates.NotNull(_document);
+            Validates.NotNull(LookFor);
 
             string substr = _document.GetText(offset, LookFor.Length);
             if (!MatchCase)

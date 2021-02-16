@@ -91,7 +91,7 @@ namespace GitCommands.Submodules
             var result = GetSuperProjectRepositorySubmodulesStructure(currentModule, noBranchText);
 
             // Prepare info for status updates
-            Assumes.NotNull(result.TopProject);
+            Validates.NotNull(result.TopProject);
             _submoduleInfos[result.TopProject.Path] = result.TopProject;
             foreach (var info in result.AllSubmodules)
             {

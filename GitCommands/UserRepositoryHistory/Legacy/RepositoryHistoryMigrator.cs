@@ -82,7 +82,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
 
             foreach (var category in categorised.Where(c => c.CategoryType == "Repositories"))
             {
-                Assumes.NotNull(category.Repositories);
+                Validates.NotNull(category.Repositories);
 
                 foreach (var repository in category.Repositories)
                 {
@@ -93,7 +93,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
                         history.Add(repo);
                     }
 
-                    Assumes.NotNull(repository.Anchor);
+                    Validates.NotNull(repository.Anchor);
                     repo.Anchor = GetAnchor(repository.Anchor);
                     repo.Category = category.Description;
 

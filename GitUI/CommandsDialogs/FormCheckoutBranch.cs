@@ -503,7 +503,7 @@ namespace GitUI.CommandsDialogs
 
                         var currentCheckout = Module.GetCurrentCheckout();
 
-                        Assumes.NotNull(currentCheckout);
+                        Validates.NotNull(currentCheckout);
 
                         var text = Module.GetCommitCountString(currentCheckout.ToString(), branch);
 

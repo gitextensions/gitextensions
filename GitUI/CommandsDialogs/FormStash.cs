@@ -194,7 +194,7 @@ namespace GitUI.CommandsDialogs
                 // FileStatusList has no interface for both worktree<-index, index<-HEAD at the same time
                 // Must be handled when displaying
                 var headId = Module.RevParse("HEAD");
-                Assumes.NotNull(headId);
+                Validates.NotNull(headId);
                 var headRev = new GitRevision(headId);
                 var indexRev = new GitRevision(ObjectId.IndexId)
                 {
@@ -214,7 +214,7 @@ namespace GitUI.CommandsDialogs
                 var firstRev = firstId is null ? null : new GitRevision(firstId);
 
                 var selectedId = Module.RevParse(gitStash.Name);
-                Assumes.NotNull(selectedId);
+                Validates.NotNull(selectedId);
                 var secondRev = new GitRevision(selectedId);
                 if (firstId is not null)
                 {

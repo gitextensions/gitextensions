@@ -77,7 +77,7 @@ namespace GitUI
 
         private void selectMultipleBranchesButton_Click(object sender, EventArgs e)
         {
-            Assumes.NotNull(_branchesToSelect);
+            Validates.NotNull(_branchesToSelect);
 
             using var formSelectMultipleBranches = new FormSelectMultipleBranches(_branchesToSelect);
             foreach (var branch in GetSelectedBranches())

@@ -66,8 +66,8 @@ namespace GitUI.Hotkey
             }
 
             // append general hotkeys to every form
-            Assumes.NotNull(settings.Commands);
-            Assumes.NotNull(scriptKeys.Commands);
+            Validates.NotNull(settings.Commands);
+            Validates.NotNull(scriptKeys.Commands);
             var allKeys = new HotkeyCommand[settings.Commands.Length + scriptKeys.Commands.Length];
             settings.Commands.CopyTo(allKeys, 0);
             scriptKeys.Commands.CopyTo(allKeys, settings.Commands.Length);

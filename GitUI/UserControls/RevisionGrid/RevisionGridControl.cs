@@ -688,7 +688,7 @@ namespace GitUI
 
             if (index >= 0 && index < _gridView.RowCount)
             {
-                Assumes.NotNull(objectId);
+                Validates.NotNull(objectId);
                 SetSelectedIndex(index, toggleSelection);
                 _navigationHistory.Push(objectId);
                 return true;
@@ -2489,9 +2489,9 @@ namespace GitUI
             {
                 if (form.ShowDialog(ParentForm) == DialogResult.OK)
                 {
-                    Assumes.NotNull(form.BranchName);
+                    Validates.NotNull(form.BranchName);
                     var baseCommit = Module.RevParse(form.BranchName);
-                    Assumes.NotNull(baseCommit);
+                    Validates.NotNull(baseCommit);
                     UICommands.ShowFormDiff(baseCommit, headCommit.ObjectId, form.BranchName, headCommit.Subject);
                 }
             }

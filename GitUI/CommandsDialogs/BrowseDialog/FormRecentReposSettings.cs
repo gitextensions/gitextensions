@@ -66,7 +66,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void SaveSettings()
         {
-            Assumes.NotNull(_repositoryHistory);
+            Validates.NotNull(_repositoryHistory);
 
             AppSettings.ShorteningRecentRepoPathStrategy = GetShorteningStrategy();
             AppSettings.SortMostRecentRepos = sortMostRecentRepos.Checked;
@@ -100,7 +100,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void RefreshRepos()
         {
-            Assumes.NotNull(_repositoryHistory);
+            Validates.NotNull(_repositoryHistory);
 
             MostRecentLB.Items.Clear();
             LessRecentLB.Items.Clear();

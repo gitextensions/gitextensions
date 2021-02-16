@@ -187,7 +187,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             if (GitSshHelpers.Plink())
             {
-                Assumes.NotNull(SshSettingsPage);
+                Validates.NotNull(SshSettingsPage);
                 if (SshSettingsPage.AutoFindPuttyPaths())
                 {
                     MessageBox.Show(this, _puttyFoundAuto.Text, _putty, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -277,7 +277,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void DiffToolFix_Click(object sender, EventArgs e)
         {
-            Assumes.NotNull(_diffMergeToolConfigurationManager);
+            Validates.NotNull(_diffMergeToolConfigurationManager);
             var diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
             if (string.IsNullOrEmpty(diffTool))
             {
@@ -290,7 +290,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void MergeToolFix_Click(object sender, EventArgs e)
         {
-            Assumes.NotNull(_diffMergeToolConfigurationManager);
+            Validates.NotNull(_diffMergeToolConfigurationManager);
             var mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
             if (string.IsNullOrEmpty(mergeTool))
             {
@@ -485,7 +485,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private bool CheckDiffToolConfiguration()
         {
-            Assumes.NotNull(_diffMergeToolConfigurationManager);
+            Validates.NotNull(_diffMergeToolConfigurationManager);
 
             DiffTool.Visible = true;
             var diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
@@ -508,7 +508,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private bool CheckMergeTool()
         {
-            Assumes.NotNull(_diffMergeToolConfigurationManager);
+            Validates.NotNull(_diffMergeToolConfigurationManager);
 
             MergeTool.Visible = true;
             var mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
@@ -564,7 +564,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 // Check if shell extensions are installed
                 string? installDir = AppSettings.GetInstallDir();
-                Assumes.NotNull(installDir);
+                Validates.NotNull(installDir);
                 string? path32 = PathUtil.Combine(installDir, CommonLogic.GitExtensionsShellEx32Name);
                 string? path64 = PathUtil.Combine(installDir, CommonLogic.GitExtensionsShellEx64Name);
                 if (!File.Exists(path32) || (IntPtr.Size == 8 && !File.Exists(path64)))

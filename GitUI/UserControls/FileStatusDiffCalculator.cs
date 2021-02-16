@@ -32,7 +32,7 @@ namespace GitUI
             {
                 if (selectedRev.ParentIds is null || selectedRev.ParentIds.Count == 0)
                 {
-                    Assumes.NotNull(selectedRev.TreeGuid);
+                    Validates.NotNull(selectedRev.TreeGuid);
 
                     // No parent for the initial commit
                     fileStatusDescs.Add(new FileStatusWithDescription(
@@ -101,13 +101,13 @@ namespace GitUI
                 ? new Lazy<ObjectId>(() =>
                 {
                     GitRevision? revision = getRevision(ObjectId.IndexId);
-                    Assumes.NotNull(revision);
+                    Validates.NotNull(revision);
                     return revision.FirstParentId!;
                 })
                 : new Lazy<ObjectId>(() =>
                 {
                     var objectId = module.RevParse("HEAD");
-                    Assumes.NotNull(objectId);
+                    Validates.NotNull(objectId);
                     return objectId;
                 });
             var firstRevHead = GetRevisionOrHead(firstRev, head);

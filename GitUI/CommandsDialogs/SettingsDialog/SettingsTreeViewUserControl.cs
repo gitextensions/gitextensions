@@ -254,7 +254,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 // TODO: how to avoid the windows sound when pressing ENTER?
                 e.Handled = true;
 
-                Assumes.NotNull(_nodesFoundByTextBox);
+                Validates.NotNull(_nodesFoundByTextBox);
 
                 // each enter key press selects next highlighted node (cycle)
                 int indexOfSelectedNode = _nodesFoundByTextBox.IndexOf(treeView1.SelectedNode);

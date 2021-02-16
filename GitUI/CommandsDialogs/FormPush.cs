@@ -190,7 +190,7 @@ namespace GitUI.CommandsDialogs
 
         private bool CheckIfRemoteExist()
         {
-            Assumes.NotNull(UserGitRemotes);
+            Validates.NotNull(UserGitRemotes);
 
             if (UserGitRemotes.Count < 1)
             {
@@ -297,7 +297,7 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            Assumes.NotNull(_selectedRemote);
+            Validates.NotNull(_selectedRemote);
 
             var selectedRemoteName = _selectedRemote.Name;
             if (TabControlTagBranch.SelectedTab == TagTab && string.IsNullOrEmpty(TagComboBox.Text))
@@ -343,7 +343,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                Assumes.NotNull(selectedRemoteName);
+                Validates.NotNull(selectedRemoteName);
                 EnsurePageant(selectedRemoteName);
 
                 destination = selectedRemoteName;
@@ -367,7 +367,7 @@ namespace GitUI.CommandsDialogs
 
                     if (track && !AppSettings.DontConfirmAddTrackingRef)
                     {
-                        Assumes.NotNull(selectedLocalBranch);
+                        Validates.NotNull(selectedLocalBranch);
                         var result = MessageBox.Show(owner,
                                                      string.Format(_updateTrackingReference.Text, selectedLocalBranch.Name, RemoteBranch.Text),
                                                      _pushCaption.Text,
@@ -429,7 +429,7 @@ namespace GitUI.CommandsDialogs
             {
                 // Push Multiple Branches Tab selected
                 var pushActions = new List<GitPushAction>();
-                Assumes.NotNull(_branchTable);
+                Validates.NotNull(_branchTable);
                 foreach (DataRow row in _branchTable.Rows)
                 {
                     var push = Convert.ToBoolean(row[PushColumnName]);
@@ -590,7 +590,7 @@ namespace GitUI.CommandsDialogs
                     return false;
                 }
 
-                Assumes.NotNull(_selectedRemote);
+                Validates.NotNull(_selectedRemote);
 
                 UICommands.StartPullDialogAndPullImmediately(
                     out var pullCompleted,
@@ -724,7 +724,7 @@ namespace GitUI.CommandsDialogs
 
             if (string.IsNullOrEmpty(curBranch))
             {
-                Assumes.NotNull(_currentBranchName);
+                Validates.NotNull(_currentBranchName);
                 curBranch = _currentBranchName;
                 if (curBranch.IndexOfAny("() ".ToCharArray()) != -1)
                 {
@@ -902,8 +902,8 @@ namespace GitUI.CommandsDialogs
                 // Doing this makes it pretty easy to accidentally create a branch on the remote.
                 // But leaving it blank will do the 'default' thing, meaning all branches are pushed.
                 // Solution: when pushing a branch that doesn't exist on the remote, ask what to do
-                Assumes.NotNull(_currentBranchName);
-                Assumes.NotNull(_selectedRemote.Name);
+                Validates.NotNull(_currentBranchName);
+                Validates.NotNull(_selectedRemote.Name);
                 var currentBranch = new GitRef(Module, null, _currentBranchName, _selectedRemote.Name);
                 _NO_TRANSLATE_Branch.Items.Add(currentBranch);
                 _NO_TRANSLATE_Branch.SelectedItem = currentBranch;
@@ -1060,7 +1060,7 @@ namespace GitUI.CommandsDialogs
                 var localHeads = GetLocalBranches().ToList();
                 var remoteBranches = remoteHeads.ToDictionary(h => h.LocalName, h => h);
 
-                Assumes.NotNull(_branchTable);
+                Validates.NotNull(_branchTable);
                 _branchTable.BeginLoadData();
                 AheadBehindDataProvider? aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData
                     ? new AheadBehindDataProvider(() => Module.GitExecutable)

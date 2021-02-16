@@ -131,12 +131,12 @@ namespace GitUI.Theming
 
         public static void LoadThemeData()
         {
-            Assumes.NotNull(_renderers);
-            Assumes.NotNull(_scrollBarRenderer);
-            Assumes.NotNull(_headerRenderer);
-            Assumes.NotNull(_listViewRenderer);
-            Assumes.NotNull(_treeViewRenderer);
-            Assumes.NotNull(_tabRenderer);
+            Validates.NotNull(_renderers);
+            Validates.NotNull(_scrollBarRenderer);
+            Validates.NotNull(_headerRenderer);
+            Validates.NotNull(_listViewRenderer);
+            Validates.NotNull(_treeViewRenderer);
+            Validates.NotNull(_tabRenderer);
 
             foreach (ThemeRenderer renderer in _renderers)
             {

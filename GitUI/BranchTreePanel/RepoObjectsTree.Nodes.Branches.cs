@@ -391,7 +391,7 @@ namespace GitUI.BranchTreePanel
                 {
                     token.ThrowIfCancellationRequested();
 
-                    Assumes.NotNull(branch.ObjectId);
+                    Validates.NotNull(branch.ObjectId);
 
                     bool isVisible = !IsFiltering.Value || _refsSource.Contains(branch.ObjectId);
                     var localBranchNode = new LocalBranchNode(this, branch.ObjectId, branch.Name, branch.Name == currentBranch, isVisible);

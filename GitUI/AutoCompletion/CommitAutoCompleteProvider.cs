@@ -94,7 +94,7 @@ namespace GitUI.AutoCompletion
         {
             string? appDataPath = AppSettings.ApplicationDataPath.Value;
 
-            Assumes.NotNull(appDataPath);
+            Validates.NotNull(appDataPath);
 
             var path = PathUtil.Combine(appDataPath, "AutoCompleteRegexes.txt");
 

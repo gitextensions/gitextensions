@@ -131,7 +131,7 @@ namespace GitCommands.Git
                 }
             }
 
-            Assumes.NotNull(name);
+            Validates.NotNull(name);
 
             return new GitSubmoduleStatus(name, oldName, isDirty, commitId, oldCommitId, addedCommits, removedCommits);
         }

@@ -86,7 +86,7 @@ namespace GitUI.BranchTreePanel
                 {
                     token.ThrowIfCancellationRequested();
 
-                    Assumes.NotNull(branch.ObjectId);
+                    Validates.NotNull(branch.ObjectId);
 
                     bool isVisible = !IsFiltering.Value || _refsSource.Contains(branch.ObjectId);
                     var remoteName = branch.Name.SubstringUntil('/');

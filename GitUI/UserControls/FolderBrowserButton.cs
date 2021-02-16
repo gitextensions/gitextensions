@@ -53,7 +53,7 @@ namespace GitUI.UserControls
 
         private void buttonBrowse_Click(object sender, EventArgs e)
         {
-            Assumes.NotNull(PathShowingControl);
+            Validates.NotNull(PathShowingControl);
 
             ShowFolderBrowserDialogWithPreselectedPath(() => PathShowingControl.Text, path => PathShowingControl.Text = path);
         }

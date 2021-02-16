@@ -298,11 +298,11 @@ namespace GitUI.BranchTreePanel
 
             private Nodes FillSubmoduleTree(SubmoduleInfoResult result)
             {
-                Assumes.NotNull(result.TopProject);
+                Validates.NotNull(result.TopProject);
 
                 var threadModule = (GitModule?)result.Module;
 
-                Assumes.NotNull(threadModule);
+                Validates.NotNull(threadModule);
 
                 var submoduleNodes = new List<SubmoduleNode>();
 
@@ -350,7 +350,7 @@ namespace GitUI.BranchTreePanel
                 string GetSubmoduleSuperPath(string submodulePath)
                 {
                     var superPath = modulePaths.Find(path => submodulePath != path && submodulePath.Contains(path));
-                    Assumes.NotNull(superPath);
+                    Validates.NotNull(superPath);
                     return superPath;
                 }
             }
@@ -441,7 +441,7 @@ namespace GitUI.BranchTreePanel
                     }
                 }
 
-                Assumes.NotNull(result.TopProject);
+                Validates.NotNull(result.TopProject);
 
                 // Add top-module node, and move children of root to it
                 var topModuleNode = new SubmoduleNode(

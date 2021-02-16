@@ -25,7 +25,7 @@ namespace GitUI.UserControls
         {
             InitializeComponent();
 
-            Assumes.NotNull(_panel);
+            Validates.NotNull(_panel);
         }
 
         private void InitializeComponent()
@@ -41,13 +41,13 @@ namespace GitUI.UserControls
 
         public override void AppendMessageFreeThreaded(string text)
         {
-            Assumes.NotNull(_terminal);
+            Validates.NotNull(_terminal);
             _terminal.RunningSession?.WriteOutputTextAsync(text);
         }
 
         public override void KillProcess()
         {
-            Assumes.NotNull(_terminal);
+            Validates.NotNull(_terminal);
             KillProcess(_terminal);
         }
 
@@ -119,14 +119,14 @@ namespace GitUI.UserControls
 
                 startInfo.ConsoleEmulatorClosedEventSink = (sender, _) =>
                 {
-                    Assumes.NotNull(_terminal);
+                    Validates.NotNull(_terminal);
                     if (sender == _terminal.RunningSession)
                     {
                         FireTerminated();
                     }
                 };
 
-                Assumes.NotNull(_terminal);
+                Validates.NotNull(_terminal);
                 _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.ConEmuStyle.Value, AppSettings.ConEmuFontSize.Value);
             }
             catch (Exception ex)

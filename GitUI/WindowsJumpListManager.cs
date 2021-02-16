@@ -111,9 +111,9 @@ namespace GitUI
                     return;
                 }
 
-                Assumes.NotNull(_commitButton);
-                Assumes.NotNull(_pushButton);
-                Assumes.NotNull(_pullButton);
+                Validates.NotNull(_commitButton);
+                Validates.NotNull(_pushButton);
+                Validates.NotNull(_pullButton);
 
                 _commitButton.Enabled = true;
                 _pushButton.Enabled = true;
@@ -127,7 +127,7 @@ namespace GitUI
             {
                 if (ToolbarButtonsCreated && IsSupportedAndVisible)
                 {
-                    Assumes.NotNull(_commitButton);
+                    Validates.NotNull(_commitButton);
                     _commitButton.Icon = MakeIcon(image, 48, true);
                 }
             }, nameof(UpdateCommitIcon));
@@ -199,9 +199,9 @@ namespace GitUI
 
             SafeInvoke(() =>
             {
-                Assumes.NotNull(_commitButton);
-                Assumes.NotNull(_pushButton);
-                Assumes.NotNull(_pullButton);
+                Validates.NotNull(_commitButton);
+                Validates.NotNull(_pushButton);
+                Validates.NotNull(_pullButton);
                 _commitButton.Enabled = false;
                 _pushButton.Enabled = false;
                 _pullButton.Enabled = false;

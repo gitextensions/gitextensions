@@ -212,7 +212,7 @@ Inactive remote is completely invisible to git.");
 
         private void Initialize(string? preselectRemote = null, string? preselectLocal = null)
         {
-            Assumes.NotNull(_remotesManager);
+            Validates.NotNull(_remotesManager);
 
             // refresh registered git remotes
             UserGitRemotes = _remotesManager.LoadRemotes(true).ToList();
@@ -341,11 +341,11 @@ Inactive remote is completely invisible to git.");
                 return;
             }
 
-            Assumes.NotNull(_remotesManager);
+            Validates.NotNull(_remotesManager);
 
             _selectedRemote.Disabled = !_selectedRemote.Disabled;
 
-            Assumes.NotNull(_selectedRemote.Name);
+            Validates.NotNull(_selectedRemote.Name);
 
             _remotesManager.ToggleRemoteState(_selectedRemote.Name, _selectedRemote.Disabled);
 
@@ -354,7 +354,7 @@ Inactive remote is completely invisible to git.");
 
         private bool ValidateRemoteDoesNotExist(string remote)
         {
-            Assumes.NotNull(_remotesManager);
+            Validates.NotNull(_remotesManager);
 
             if (_remotesManager.EnabledRemoteExists(remote))
             {
@@ -401,7 +401,7 @@ Inactive remote is completely invisible to git.");
                     return;
                 }
 
-                Assumes.NotNull(_remotesManager);
+                Validates.NotNull(_remotesManager);
 
                 // update all other remote properties
                 var result = _remotesManager.SaveRemote(_selectedRemote,
@@ -477,7 +477,7 @@ Inactive remote is completely invisible to git.");
                                 MessageBoxIcon.Warning,
                                 MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                Assumes.NotNull(_remotesManager);
+                Validates.NotNull(_remotesManager);
 
                 var output = _remotesManager.RemoveRemote(_selectedRemote);
                 if (!string.IsNullOrEmpty(output))

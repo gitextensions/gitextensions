@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void SettingsToPage()
         {
-            Assumes.NotNull(CurrentSettings);
+            Validates.NotNull(CurrentSettings);
             checkBoxPullRebase.Checked = CurrentSettings.GetValue("pull.rebase") == "true";
             checkBoxFetchPrune.Checked = CurrentSettings.GetValue("fetch.prune") == "true";
             checkBoxRebaseAutostash.Checked = CurrentSettings.GetValue("rebase.autoStash") == "true";
@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void PageToSettings()
         {
-            Assumes.NotNull(CurrentSettings);
+            Validates.NotNull(CurrentSettings);
             CurrentSettings.SetValue("pull.rebase", checkBoxPullRebase.Checked ? "true" : "false");
             CurrentSettings.SetValue("fetch.prune", checkBoxFetchPrune.Checked ? "true" : "false");
             CurrentSettings.SetValue("rebase.autoStash", checkBoxRebaseAutostash.Checked ? "true" : "false");

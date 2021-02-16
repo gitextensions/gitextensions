@@ -56,12 +56,12 @@ namespace GitUI.CommandsDialogs
 
                 if (buildResultPageEnabled && buildInfoIsAvailable)
                 {
-                    Assumes.NotNull(revision);
+                    Validates.NotNull(revision);
 
                     if (_buildReportTabPage is null)
                     {
                         CreateBuildReportTabPage(_tabControl);
-                        Assumes.NotNull(_buildReportTabPage);
+                        Validates.NotNull(_buildReportTabPage);
                     }
 
                     _buildReportTabPage.Controls.Clear();
@@ -98,7 +98,7 @@ namespace GitUI.CommandsDialogs
 
         private void LoadReportContent(GitRevision revision, bool isFavIconMissing)
         {
-            Assumes.NotNull(_buildReportWebBrowser);
+            Validates.NotNull(_buildReportWebBrowser);
 
             try
             {
@@ -120,7 +120,7 @@ namespace GitUI.CommandsDialogs
 
         private void SetTabPageContent(GitRevision revision)
         {
-            Assumes.NotNull(_buildReportTabPage);
+            Validates.NotNull(_buildReportTabPage);
 
             if (revision.BuildStatus?.ShowInBuildReportTab == true)
             {
@@ -180,8 +180,8 @@ namespace GitUI.CommandsDialogs
         private void BuildReportWebBrowserOnNavigated(object sender,
                                                       WebBrowserNavigatedEventArgs webBrowserNavigatedEventArgs)
         {
-            Assumes.NotNull(_buildReportWebBrowser);
-            Assumes.NotNull(_buildReportTabPage);
+            Validates.NotNull(_buildReportWebBrowser);
+            Validates.NotNull(_buildReportTabPage);
 
             _buildReportWebBrowser.Navigated -= BuildReportWebBrowserOnNavigated;
 

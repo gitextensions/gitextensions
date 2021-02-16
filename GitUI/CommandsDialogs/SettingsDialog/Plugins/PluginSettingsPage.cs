@@ -42,7 +42,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
         protected override ISettingsSource GetCurrentSettings()
         {
-            Assumes.NotNull(_settingsContainer);
+            Validates.NotNull(_settingsContainer);
 
             _settingsContainer.SetSettingsSource(base.GetCurrentSettings());
             return _settingsContainer;
@@ -67,7 +67,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
         {
             get
             {
-                Assumes.NotNull(_gitPlugin);
+                Validates.NotNull(_gitPlugin);
 
                 return new SettingsPageReferenceByType(_gitPlugin.GetType());
             }
@@ -75,7 +75,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
         protected override ISettingsLayout CreateSettingsLayout()
         {
-            Assumes.NotNull(_gitPlugin);
+            Validates.NotNull(_gitPlugin);
 
             labelNoSettings.Visible = !_gitPlugin.HasSettings;
 

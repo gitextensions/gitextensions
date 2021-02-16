@@ -190,7 +190,7 @@ namespace GitUI.Blame
                 return;
             }
 
-            Assumes.NotNull(_blame);
+            Validates.NotNull(_blame);
 
             int startLine = -1;
             int prevLine = -1;
@@ -287,7 +287,7 @@ namespace GitUI.Blame
 
             BlameAuthor.SetGitBlameGutter(avatars);
 
-            Assumes.NotNull(_fileName);
+            Validates.NotNull(_fileName);
 
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 () => BlameAuthor.ViewTextAsync("committer.txt", gutter));
@@ -313,7 +313,7 @@ namespace GitUI.Blame
 
         private (string gutter, string body, List<GitBlameEntry> gitBlameDisplays) BuildBlameContents(string? filename, int avatarSize)
         {
-            Assumes.NotNull(_blame);
+            Validates.NotNull(_blame);
 
             if (_blame.Lines.Count == 0)
             {
@@ -537,7 +537,7 @@ namespace GitUI.Blame
                 return null;
             }
 
-            Assumes.NotNull(_blame);
+            Validates.NotNull(_blame);
 
             return _blame.Lines[line].Commit;
         }

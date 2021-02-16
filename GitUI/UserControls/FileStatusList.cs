@@ -800,7 +800,7 @@ namespace GitUI
         /// <returns>async Task.</returns>
         public async Task OpenSubmoduleAsync()
         {
-            Assumes.NotNull(SelectedItem);
+            Validates.NotNull(SelectedItem);
 
             var submoduleName = SelectedItem.Item.Name;
 

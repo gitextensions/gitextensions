@@ -372,7 +372,7 @@ namespace GitUI.BranchTreePanel
             {
                 get
                 {
-                    Assumes.NotNull(Nodes.Tree);
+                    Validates.NotNull(Nodes.Tree);
                     return Nodes.Tree;
                 }
             }
@@ -392,7 +392,7 @@ namespace GitUI.BranchTreePanel
             {
                 get
                 {
-                    Assumes.NotNull(_treeViewNode);
+                    Validates.NotNull(_treeViewNode);
                     return _treeViewNode;
                 }
 
@@ -473,7 +473,7 @@ namespace GitUI.BranchTreePanel
 
             protected void ApplyText()
             {
-                Assumes.NotNull(_treeViewNode);
+                Validates.NotNull(_treeViewNode);
 
                 _treeViewNode.Name = NodeName();
                 _treeViewNode.Text = DisplayText();

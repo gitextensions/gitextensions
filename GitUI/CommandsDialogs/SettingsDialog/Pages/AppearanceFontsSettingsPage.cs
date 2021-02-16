@@ -30,10 +30,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void PageToSettings()
         {
-            Assumes.NotNull(_diffFont);
-            Assumes.NotNull(_applicationFont);
-            Assumes.NotNull(_commitFont);
-            Assumes.NotNull(_monospaceFont);
+            Validates.NotNull(_diffFont);
+            Validates.NotNull(_applicationFont);
+            Validates.NotNull(_commitFont);
+            Validates.NotNull(_monospaceFont);
 
             AppSettings.FixedWidthFont = _diffFont;
             AppSettings.Font = _applicationFont;
@@ -48,7 +48,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (result is (DialogResult.OK or DialogResult.Yes))
             {
-                Assumes.NotNull(diffFontDialog.Font);
+                Validates.NotNull(diffFontDialog.Font);
                 SetCurrentDiffFont(diffFontDialog.Font);
             }
         }
@@ -60,7 +60,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (result is (DialogResult.OK or DialogResult.Yes))
             {
-                Assumes.NotNull(applicationDialog.Font);
+                Validates.NotNull(applicationDialog.Font);
                 SetCurrentApplicationFont(applicationDialog.Font);
             }
         }
@@ -72,7 +72,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (result is (DialogResult.OK or DialogResult.Yes))
             {
-                Assumes.NotNull(commitFontDialog.Font);
+                Validates.NotNull(commitFontDialog.Font);
                 SetCurrentCommitFont(commitFontDialog.Font);
             }
         }
@@ -84,7 +84,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (result is (DialogResult.OK or DialogResult.Yes))
             {
-                Assumes.NotNull(monospaceFontDialog.Font);
+                Validates.NotNull(monospaceFontDialog.Font);
                 SetCurrentMonospaceFont(monospaceFontDialog.Font);
             }
         }

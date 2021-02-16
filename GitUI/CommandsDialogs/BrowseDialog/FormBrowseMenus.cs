@@ -88,7 +88,7 @@ namespace GitUI.CommandsDialogs
         /// <param name="toolStrips">The list of toobars to toggle visibility for.</param>
         public void CreateToolbarsMenus(params ToolStripEx[] toolStrips)
         {
-            Assumes.NotNull(_toolbarsMenuItem);
+            Validates.NotNull(_toolbarsMenuItem);
 
             foreach (ToolStrip toolStrip in toolStrips)
             {
@@ -165,7 +165,7 @@ namespace GitUI.CommandsDialogs
                     break;
             }
 
-            Assumes.NotNull(selectedMenuCommands);
+            Validates.NotNull(selectedMenuCommands);
 
             selectedMenuCommands.AddAll(menuCommands);
         }
@@ -177,11 +177,11 @@ namespace GitUI.CommandsDialogs
         {
             RemoveRevisionGridMainMenuItems();
 
-            Assumes.NotNull(_navigateToolStripMenuItem);
-            Assumes.NotNull(_navigateMenuCommands);
-            Assumes.NotNull(_viewToolStripMenuItem);
-            Assumes.NotNull(_viewMenuCommands);
-            Assumes.NotNull(_toolbarsMenuItem);
+            Validates.NotNull(_navigateToolStripMenuItem);
+            Validates.NotNull(_navigateMenuCommands);
+            Validates.NotNull(_viewToolStripMenuItem);
+            Validates.NotNull(_viewMenuCommands);
+            Validates.NotNull(_toolbarsMenuItem);
 
             SetDropDownItems(_navigateToolStripMenuItem, _navigateMenuCommands);
             SetDropDownItems(_viewToolStripMenuItem, _viewMenuCommands);
@@ -243,7 +243,7 @@ namespace GitUI.CommandsDialogs
         {
             foreach (ToolStripMenuItem? menuItem in new[] { _navigateToolStripMenuItem, _viewToolStripMenuItem, _toolbarsMenuItem })
             {
-                Assumes.NotNull(menuItem);
+                Validates.NotNull(menuItem);
 
                 yield return (menuItem.Name, menuItem);
             }

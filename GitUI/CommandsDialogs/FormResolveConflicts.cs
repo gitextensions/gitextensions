@@ -411,7 +411,7 @@ namespace GitUI.CommandsDialogs
 
         private void Use2WayMerge(ref string arguments)
         {
-            Assumes.NotNull(_mergetool);
+            Validates.NotNull(_mergetool);
             string mergeToolLower = _mergetool.ToLowerInvariant();
             switch (mergeToolLower)
             {
@@ -975,7 +975,7 @@ namespace GitUI.CommandsDialogs
 
         private void BinaryFilesChooseLocalBaseRemote(ConflictData item)
         {
-            Assumes.NotNull(_solveMergeConflictDialogCheckboxText);
+            Validates.NotNull(_solveMergeConflictDialogCheckboxText);
 
             // solveMergeConflictDialogResult gets a value inside of the method "OpenSolveMergeConflictDialogAndExecuteSelectedMergeAction"
             OpenSolveMergeConflictDialogAndExecuteSelectedMergeAction((solveMergeConflictDialogResult) =>
@@ -1014,7 +1014,7 @@ namespace GitUI.CommandsDialogs
                 return true;
             }
 
-            Assumes.NotNull(_solveMergeConflictDialogCheckboxText);
+            Validates.NotNull(_solveMergeConflictDialogCheckboxText);
 
             // solveMergeConflictDialogResult gets a value inside of the method "OpenSolveMergeConflictDialogAndExecuteSelectedMergeAction"
             OpenSolveMergeConflictDialogAndExecuteSelectedMergeAction((solveMergeConflictDialogResult) =>

@@ -18,7 +18,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             get
             {
-                Assumes.NotNull(CurrentSettings);
+                Validates.NotNull(CurrentSettings);
                 return CurrentSettings.Detailed;
             }
         }

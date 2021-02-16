@@ -18,7 +18,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         protected override ISettingsSource GetCurrentSettings()
         {
-            Assumes.NotNull(CurrentSettings);
+            Validates.NotNull(CurrentSettings);
             return CurrentSettings;
         }
 

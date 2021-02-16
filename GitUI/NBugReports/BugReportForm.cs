@@ -77,7 +77,7 @@ Send report anyway?");
             _lastReport = new Report(_lastException);
             _environmentInfo = environmentInfo;
 
-            Assumes.NotNull(_lastReport.GeneralInfo);
+            Validates.NotNull(_lastReport.GeneralInfo);
 
             Text = $@"{_lastReport.GeneralInfo.HostApplication} {_title.Text}";
 
@@ -139,7 +139,7 @@ Send report anyway?");
                 return;
             }
 
-            Assumes.NotNull(_lastException);
+            Validates.NotNull(_lastException);
 
             string? url = UrlBuilder.Build("https://github.com/gitextensions/gitextensions/issues/new", _lastException.OriginalException, _environmentInfo, descriptionTextBox.Text);
             OsShellUtil.OpenUrlInDefaultBrowser(url);
@@ -150,7 +150,7 @@ Send report anyway?");
 
         private void btnCopy_Click(object sender, EventArgs e)
         {
-            Assumes.NotNull(_lastException?.OriginalException);
+            Validates.NotNull(_lastException?.OriginalException);
 
             var report = ErrorReportBodyBuilder.Build(_lastException.OriginalException, _environmentInfo, descriptionTextBox.Text);
             if (string.IsNullOrWhiteSpace(report))

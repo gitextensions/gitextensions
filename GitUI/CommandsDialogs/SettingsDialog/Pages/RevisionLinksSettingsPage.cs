@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void SettingsToPage()
         {
-            Assumes.NotNull(CurrentSettings);
+            Validates.NotNull(CurrentSettings);
             _externalLinksManager = new ExternalLinksManager(CurrentSettings);
 
             ReloadCategories();
@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void PageToSettings()
         {
-            Assumes.NotNull(_externalLinksManager);
+            Validates.NotNull(_externalLinksManager);
             _externalLinksManager.Save();
         }
 
@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ReloadCategories()
         {
-            Assumes.NotNull(_externalLinksManager);
+            Validates.NotNull(_externalLinksManager);
 
             var effectiveLinkDefinitions = _externalLinksManager.GetEffectiveSettings();
 
@@ -121,7 +121,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 SearchInParts = { ExternalLinkDefinition.RevisionPart.Message },
                 RemoteSearchInParts = { ExternalLinkDefinition.RemotePart.URL }
             };
-            Assumes.NotNull(_externalLinksManager);
+            Validates.NotNull(_externalLinksManager);
             _externalLinksManager.Add(definition);
 
             ReloadCategories();
@@ -165,8 +165,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ExtractExternalLinkDefinitions(ICloudProviderExternalLinkDefinitionExtractor externalLinkDefinitionExtractor)
         {
-            Assumes.NotNull(Module);
-            Assumes.NotNull(_externalLinksManager);
+            Validates.NotNull(Module);
+            Validates.NotNull(_externalLinksManager);
 
             var remotes = ThreadHelper.JoinableTaskFactory.Run(async () => await Module.GetRemotesAsync()).ToList();
             var selectedRemote = FindRemoteByPreference(remotes.Where(r => externalLinkDefinitionExtractor.IsValidRemoteUrl(r.FetchUrl)).ToList());
@@ -186,7 +186,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            Assumes.NotNull(_externalLinksManager);
+            Validates.NotNull(_externalLinksManager);
 
             int idx = _NO_TRANSLATE_Categories.SelectedIndex;
 

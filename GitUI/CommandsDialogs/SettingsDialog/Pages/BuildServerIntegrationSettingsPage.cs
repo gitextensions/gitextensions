@@ -61,8 +61,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
-                    Assumes.NotNull(_populateBuildServerTypeTask);
-                    Assumes.NotNull(CurrentSettings);
+                    Validates.NotNull(_populateBuildServerTypeTask);
+                    Validates.NotNull(CurrentSettings);
 
                     await _populateBuildServerTypeTask.JoinAsync();
 
@@ -77,7 +77,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void PageToSettings()
         {
-            Assumes.NotNull(CurrentSettings);
+            Validates.NotNull(CurrentSettings);
 
             CurrentSettings.BuildServer.EnableIntegration.Value = checkBoxEnableBuildServerIntegration.Checked;
             CurrentSettings.BuildServer.ShowBuildResultPage.Value = checkBoxShowBuildResultPage.Checked;
@@ -94,7 +94,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ActivateBuildServerSettingsControl()
         {
-            Assumes.NotNull(CurrentSettings);
+            Validates.NotNull(CurrentSettings);
 
             var controls = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().Cast<Control>();
             var previousControl = controls.SingleOrDefault();
@@ -115,7 +115,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private IBuildServerSettingsUserControl? CreateBuildServerSettingsUserControl()
         {
-            Assumes.NotNull(Module);
+            Validates.NotNull(Module);
 
             if (BuildServerType.SelectedIndex == 0 || string.IsNullOrEmpty(Module.WorkingDir))
             {
@@ -129,7 +129,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             if (selectedExport is not null)
             {
                 var buildServerSettingsUserControl = selectedExport.Value;
-                Assumes.NotNull(_remotesManager);
+                Validates.NotNull(_remotesManager);
                 var remoteUrls = _remotesManager.LoadRemotes(false).Select(r => string.IsNullOrEmpty(r.PushUrl) ? r.Url : r.PushUrl);
 
                 buildServerSettingsUserControl.Initialize(defaultProjectName, remoteUrls);

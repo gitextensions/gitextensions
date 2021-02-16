@@ -560,7 +560,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void ProtocolSelectionChanged(object sender, EventArgs e)
         {
-            Assumes.NotNull(CurrentySelectedGitRepo);
+            Validates.NotNull(CurrentySelectedGitRepo);
 
             CurrentySelectedGitRepo.CloneProtocol = (GitProtocol)ProtocolDropdownList.SelectedItem;
             SetCloneInfoText(CurrentySelectedGitRepo);

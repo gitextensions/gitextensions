@@ -1716,7 +1716,7 @@ namespace GitCommands
                 if (_versionIndependentRegKey is null)
                 {
                     _versionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
-                    Assumes.NotNull(_versionIndependentRegKey);
+                    Validates.NotNull(_versionIndependentRegKey);
                 }
 
                 return _versionIndependentRegKey;

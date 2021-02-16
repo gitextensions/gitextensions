@@ -311,7 +311,7 @@ namespace GitUI.SpellChecker
 
             try
             {
-                Assumes.NotNull(_spelling);
+                Validates.NotNull(_spelling);
 
                 _spelling.Text = TextBox.Text;
                 _spelling.WordIndex = _spelling.GetWordIndexFromTextIndex(pos);
@@ -367,7 +367,7 @@ namespace GitUI.SpellChecker
                     };
             }
 
-            Assumes.NotNull(_spelling);
+            Validates.NotNull(_spelling);
 
             _spelling.Dictionary = _wordDictionary;
         }
@@ -383,8 +383,8 @@ namespace GitUI.SpellChecker
 
             InitializeAutoCompleteWordsTask();
 
-            Assumes.NotNull(_autoCompleteListTask);
-            Assumes.NotNull(_spelling);
+            Validates.NotNull(_autoCompleteListTask);
+            Validates.NotNull(_spelling);
 
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
@@ -398,13 +398,13 @@ namespace GitUI.SpellChecker
 
         private void SpellingMisspelledWord(object sender, SpellingEventArgs e)
         {
-            Assumes.NotNull(_customUnderlines);
+            Validates.NotNull(_customUnderlines);
             _customUnderlines.Lines.Add(new TextPos(e.TextIndex, e.TextIndex + e.Word.Length));
         }
 
         public void CheckSpelling()
         {
-            Assumes.NotNull(_customUnderlines);
+            Validates.NotNull(_customUnderlines);
 
             _customUnderlines.IllFormedLines.Clear();
             _customUnderlines.Lines.Clear();
@@ -461,7 +461,7 @@ namespace GitUI.SpellChecker
 
                 if (curLength > curMaxLength)
                 {
-                    Assumes.NotNull(_customUnderlines);
+                    Validates.NotNull(_customUnderlines);
                     _customUnderlines.IllFormedLines.Add(new TextPos(chars + curMaxLength, chars + curLength));
                 }
 
@@ -557,21 +557,21 @@ namespace GitUI.SpellChecker
 
         private void RemoveWordClick(object sender, EventArgs e)
         {
-            Assumes.NotNull(_spelling);
+            Validates.NotNull(_spelling);
             _spelling.DeleteWord();
             CheckSpelling();
         }
 
         private void IgnoreWordClick(object sender, EventArgs e)
         {
-            Assumes.NotNull(_spelling);
+            Validates.NotNull(_spelling);
             _spelling.IgnoreWord();
             CheckSpelling();
         }
 
         private void AddToDictionaryClick(object sender, EventArgs e)
         {
-            Assumes.NotNull(_spelling);
+            Validates.NotNull(_spelling);
             _spelling.Dictionary.Add(_spelling.CurrentWord);
             CheckSpelling();
         }
@@ -584,7 +584,7 @@ namespace GitUI.SpellChecker
 
         private void SuggestionToolStripItemClick(object sender, EventArgs e)
         {
-            Assumes.NotNull(_spelling);
+            Validates.NotNull(_spelling);
             _spelling.ReplaceWord(((ToolStripItem)sender).Text);
             CheckSpelling();
         }
@@ -603,7 +603,7 @@ namespace GitUI.SpellChecker
 
         private void SpellCheckTimerTick(object sender, EventArgs e)
         {
-            Assumes.NotNull(_customUnderlines);
+            Validates.NotNull(_customUnderlines);
             if (!_customUnderlines.IsImeStartingComposition)
             {
                 CheckSpelling();
@@ -615,7 +615,7 @@ namespace GitUI.SpellChecker
 
         private void TextBoxTextChanged(object sender, EventArgs e)
         {
-            Assumes.NotNull(_customUnderlines);
+            Validates.NotNull(_customUnderlines);
             if (_customUnderlines.IsImeStartingComposition)
             {
                 return;
@@ -959,7 +959,7 @@ namespace GitUI.SpellChecker
                 return;
             }
 
-            Assumes.NotNull(_customUnderlines);
+            Validates.NotNull(_customUnderlines);
             if (_customUnderlines.IsImeStartingComposition)
             {
                 return;
@@ -1073,7 +1073,7 @@ namespace GitUI.SpellChecker
 
         private void AutoCompleteTimer_Tick(object sender, EventArgs e)
         {
-            Assumes.NotNull(_customUnderlines);
+            Validates.NotNull(_customUnderlines);
             if (!_customUnderlines.IsImeStartingComposition)
             {
                 UpdateOrShowAutoComplete(false);

@@ -83,7 +83,7 @@ namespace GitUI.CommandsDialogs
         /// <remarks>The method DOES NOT check any input parameters for performance reasons.</remarks>
         public void LoadChildren(IGitItem item, TreeNodeCollection nodes, ImageList.ImageCollection imageCollection)
         {
-            Assumes.NotNull(item.Guid);
+            Validates.NotNull(item.Guid);
 
             var childrenItems = _cachedItems.GetOrAdd(item.Guid, _revisionInfoProvider.LoadChildren(item));
             if (childrenItems is null)

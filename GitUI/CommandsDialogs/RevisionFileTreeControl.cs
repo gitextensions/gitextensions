@@ -493,7 +493,7 @@ See the changes in the commit form.");
             if (tvGitTree.SelectedNode?.Tag is GitItem gitItem && gitItem.ObjectType == GitObjectType.Blob)
             {
                 var fileName = _fullPathResolver.Resolve(gitItem.FileName);
-                Assumes.NotNull(fileName);
+                Validates.NotNull(fileName);
                 UICommands.StartFileEditorDialog(fileName);
             }
         }
@@ -575,7 +575,7 @@ See the changes in the commit form.");
             openWithDifftoolToolStripMenuItem.Visible = isFile;
             openWithToolStripMenuItem.Visible = isFile;
             openWithToolStripMenuItem.Enabled = isExistingFileOrDirectory;
-            Assumes.NotNull(_revision);
+            Validates.NotNull(_revision);
             var fsi = _rememberFileContextMenuController.CreateFileStatusItem(gitItem?.FileName ?? "", _revision);
             diffWithRememberedFileToolStripMenuItem.Visible = _rememberFileContextMenuController.RememberedDiffFileItem is not null;
             diffWithRememberedFileToolStripMenuItem.Enabled = isFile && fsi != _rememberFileContextMenuController.RememberedDiffFileItem

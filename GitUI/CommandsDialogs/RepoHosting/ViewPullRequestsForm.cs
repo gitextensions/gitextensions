@@ -227,7 +227,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void LoadListView()
         {
-            Assumes.NotNull(_pullRequestsInfo);
+            Validates.NotNull(_pullRequestsInfo);
             foreach (var info in _pullRequestsInfo)
             {
                 _pullRequestsList.Items.Add(new ListViewItem
@@ -305,7 +305,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         await TaskScheduler.Default;
 
                         // TODO make this operation async (requires change to Git.hub submodule)
-                        Assumes.NotNull(_currentPullRequestInfo);
+                        Validates.NotNull(_currentPullRequestInfo);
                         var discussion = _currentPullRequestInfo.GetDiscussion();
 
                         await this.SwitchToMainThreadAsync();
@@ -323,7 +323,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void LoadDiscussion(IPullRequestDiscussion? discussion)
         {
-            Assumes.NotNull(_currentPullRequestInfo);
+            Validates.NotNull(_currentPullRequestInfo);
             var t = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo, discussion?.Entries);
             _discussionWB.DocumentText = t;
         }
@@ -338,7 +338,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void LoadDiffPatch()
         {
-            Assumes.NotNull(_currentPullRequestInfo);
+            Validates.NotNull(_currentPullRequestInfo);
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
@@ -490,7 +490,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 return;
             }
 
-            Assumes.NotNull(_diffCache);
+            Validates.NotNull(_diffCache);
             var data = _diffCache[gis.Name];
 
             if (gis.IsSubmodule)

@@ -175,7 +175,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         var x = ColumnLeftMargin;
                         var y = curCacheRow * rowHeight;
 
-                        Assumes.NotNull(_graphCache.GraphBitmapGraphics);
+                        Validates.NotNull(_graphCache.GraphBitmapGraphics);
 
                         var laneRect = new Rectangle(0, y, width, rowHeight);
                         var oldClip = _graphCache.GraphBitmapGraphics.Clip;

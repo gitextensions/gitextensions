@@ -85,7 +85,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            Assumes.NotNull(_revisionGrid);
+            Validates.NotNull(_revisionGrid);
             var revisions = _revisionGrid.GetSelectedRevisions();
             if (!revisions.Any(r => r.IsArtificial))
             {
@@ -206,7 +206,7 @@ namespace GitUI.CommandsDialogs
 
         private void SetDiffs(IReadOnlyList<GitRevision> revisions)
         {
-            Assumes.NotNull(_revisionGrid);
+            Validates.NotNull(_revisionGrid);
 
             var item = DiffFiles.SelectedItem;
             var oldDiffItem = DiffFiles.FirstGroupItems.Contains(item) ? item : null;
@@ -251,7 +251,7 @@ namespace GitUI.CommandsDialogs
                 return ResourceManager.Strings.Workspace;
             }
 
-            Assumes.NotNull(_revisionGrid);
+            Validates.NotNull(_revisionGrid);
 
             var revision = _revisionGrid.GetRevision(objectId);
 
@@ -486,7 +486,7 @@ namespace GitUI.CommandsDialogs
 
         private void diffShowInFileTreeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Assumes.NotNull(_revisionFileTree);
+            Validates.NotNull(_revisionFileTree);
 
             // switch to view (and fills the first level of file tree data model if not already done)
             (FindForm() as FormBrowse)?.ExecuteCommand(FormBrowse.Command.FocusFileTree);
@@ -505,7 +505,7 @@ namespace GitUI.CommandsDialogs
                 ? new Font(fileHistoryDiffToolstripMenuItem.Font, FontStyle.Regular)
                 : new Font(fileHistoryDiffToolstripMenuItem.Font, FontStyle.Bold);
 
-            Assumes.NotNull(_revisionDiffController);
+            Validates.NotNull(_revisionDiffController);
 
             diffUpdateSubmoduleMenuItem.Visible =
                 diffResetSubmoduleChanges.Visible =

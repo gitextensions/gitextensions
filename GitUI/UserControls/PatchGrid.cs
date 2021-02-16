@@ -65,7 +65,7 @@ namespace GitUI
 
         public void RefreshGrid()
         {
-            Assumes.NotNull(PatchFiles);
+            Validates.NotNull(PatchFiles);
 
             var updatedPatches = GetPatches();
 

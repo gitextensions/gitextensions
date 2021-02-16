@@ -25,7 +25,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         private bool FindBranch(RevisionGraphRevision node)
         {
-            Assumes.NotNull(node.GitRevision);
+            Validates.NotNull(node.GitRevision);
 
             foreach (var gitReference in node.GitRevision.Refs)
             {
@@ -54,7 +54,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// </param>
         private bool CheckForMerge(RevisionGraphRevision node, RevisionGraphRevision? parent)
         {
-            Assumes.NotNull(node.GitRevision);
+            Validates.NotNull(node.GitRevision);
 
             bool isTheFirstBranch = parent is null || node.Parents.IsEmpty || node.Parents.Last() == parent; // note: Parents are stored in reverse order
             string? mergedInto;

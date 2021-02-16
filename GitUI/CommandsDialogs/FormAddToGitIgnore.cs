@@ -76,7 +76,7 @@ namespace GitUI.CommandsDialogs
             try
             {
                 var fileName = ExcludeFile;
-                Assumes.NotNull(fileName);
+                Validates.NotNull(fileName);
                 FileInfoExtensions.MakeFileTemporaryWritable(fileName, x =>
                 {
                     var gitIgnoreFileAddition = new StringBuilder();

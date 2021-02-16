@@ -114,16 +114,16 @@ namespace GitUI.CommandsDialogs
             lblBaseCommit.Text = _baseCommitDisplayStr;
             lblHeadCommit.Text = _headCommitDisplayStr;
 
-            Assumes.NotNull(_headRevision);
+            Validates.NotNull(_headRevision);
 
             if (ckCompareToMergeBase.Checked)
             {
-                Assumes.NotNull(_mergeBase);
+                Validates.NotNull(_mergeBase);
                 DiffFiles.SetDiffs(new[] { _headRevision, _mergeBase });
             }
             else
             {
-                Assumes.NotNull(_baseRevision);
+                Validates.NotNull(_baseRevision);
                 DiffFiles.SetDiffs(new[] { _headRevision, _baseRevision });
             }
 
@@ -203,7 +203,7 @@ namespace GitUI.CommandsDialogs
         private void fileHistoryDiffToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GitItemStatus? item = DiffFiles.SelectedGitItem;
-            Assumes.NotNull(item);
+            Validates.NotNull(item);
 
             if (item.IsTracked)
             {
@@ -214,7 +214,7 @@ namespace GitUI.CommandsDialogs
         private void blameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GitItemStatus? item = DiffFiles.SelectedGitItem;
-            Assumes.NotNull(item);
+            Validates.NotNull(item);
 
             if (item.IsTracked)
             {
@@ -256,32 +256,32 @@ namespace GitUI.CommandsDialogs
         private void btnCompareDirectoriesWithDiffTool_Clicked(object sender, EventArgs e)
         {
             GitRevision? firstRevision = ckCompareToMergeBase.Checked ? _mergeBase : _baseRevision;
-            Assumes.NotNull(firstRevision);
-            Assumes.NotNull(_headRevision);
+            Validates.NotNull(firstRevision);
+            Validates.NotNull(_headRevision);
             Module.OpenWithDifftoolDirDiff(firstRevision.Guid, _headRevision.Guid);
         }
 
         private void btnPickAnotherBranch_Click(object sender, EventArgs e)
         {
-            Assumes.NotNull(_baseRevision);
+            Validates.NotNull(_baseRevision);
             PickAnotherBranch(_baseRevision, ref _baseCommitDisplayStr, ref _baseRevision);
         }
 
         private void btnAnotherCommit_Click(object sender, EventArgs e)
         {
-            Assumes.NotNull(_baseRevision);
+            Validates.NotNull(_baseRevision);
             PickAnotherCommit(_baseRevision, ref _baseCommitDisplayStr, ref _baseRevision);
         }
 
         private void btnAnotherHeadBranch_Click(object sender, EventArgs e)
         {
-            Assumes.NotNull(_headRevision);
+            Validates.NotNull(_headRevision);
             PickAnotherBranch(_headRevision, ref _headCommitDisplayStr, ref _headRevision);
         }
 
         private void btnAnotherHeadCommit_Click(object sender, EventArgs e)
         {
-            Assumes.NotNull(_headRevision);
+            Validates.NotNull(_headRevision);
             PickAnotherCommit(_headRevision, ref _headCommitDisplayStr, ref _headRevision);
         }
 
@@ -292,7 +292,7 @@ namespace GitUI.CommandsDialogs
 
             openWithDifftoolToolStripMenuItem.Enabled = isAnyTracked;
             fileHistoryDiffToolstripMenuItem.Enabled = isAnyTracked && isExactlyOneItemSelected;
-            Assumes.NotNull(DiffFiles.SelectedGitItem);
+            Validates.NotNull(DiffFiles.SelectedGitItem);
             blameToolStripMenuItem.Enabled = fileHistoryDiffToolstripMenuItem.Enabled && !DiffFiles.SelectedGitItem.IsSubmodule;
         }
 

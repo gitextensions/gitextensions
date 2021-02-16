@@ -593,7 +593,7 @@ namespace GitUI.Editor
                 return ViewTextAsync(fileName, "Invalid submodule: " + fileName);
             }
 
-            Assumes.NotNull(fullPath);
+            Validates.NotNull(fullPath);
 
             if (!isSubmodule && (fileName.EndsWith("/") || Directory.Exists(fullPath)))
             {
@@ -1452,7 +1452,7 @@ namespace GitUI.Editor
             byte[]? patch;
             if (_viewItem.Item.IsNew)
             {
-                Assumes.NotNull(FilePreamble);
+                Validates.NotNull(FilePreamble);
 
                 var treeGuid = !stage ? _viewItem.Item.TreeGuid?.ToString() : null;
                 patch = PatchManager.GetSelectedLinesAsNewPatch(
@@ -1515,7 +1515,7 @@ namespace GitUI.Editor
             var currentItemStaged = _viewItem.SecondRevision.ObjectId == ObjectId.IndexId;
             if (_viewItem.Item.IsNew)
             {
-                Assumes.NotNull(FilePreamble);
+                Validates.NotNull(FilePreamble);
 
                 var treeGuid = currentItemStaged ? _viewItem.Item.TreeGuid?.ToString() : null;
                 patch = PatchManager.GetSelectedLinesAsNewPatch(

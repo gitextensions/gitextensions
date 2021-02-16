@@ -1281,7 +1281,7 @@ namespace GitCommands
                     return false;
                 }
 
-                Assumes.NotNull(configFile);
+                Validates.NotNull(configFile);
 
                 var configSection = configFile.ConfigSections.FirstOrDefault(section => section.GetValue("path").Trim() == localPath);
 

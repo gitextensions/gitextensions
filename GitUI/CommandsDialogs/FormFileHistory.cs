@@ -399,7 +399,7 @@ namespace GitUI.CommandsDialogs
             }
             else if (tabControl1.SelectedTab == ViewTab)
             {
-                Assumes.NotNull(fileName);
+                Validates.NotNull(fileName);
                 View.Encoding = Diff.Encoding;
                 var file = new GitItemStatus(name: fileName)
                 {
@@ -410,7 +410,7 @@ namespace GitUI.CommandsDialogs
             }
             else if (tabControl1.SelectedTab == DiffTab)
             {
-                Assumes.NotNull(fileName);
+                Validates.NotNull(fileName);
                 var file = new GitItemStatus(name: fileName)
                 {
                     IsTracked = true,

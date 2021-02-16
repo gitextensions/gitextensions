@@ -470,11 +470,11 @@ namespace GitUI.CommandsDialogs
             switch (CommitKind)
             {
                 case CommitKind.Fixup:
-                    Assumes.NotNull(_editedCommit);
+                    Validates.NotNull(_editedCommit);
                     message = TryAddPrefix(fixupPrefix, _editedCommit.Subject);
                     break;
                 case CommitKind.Squash:
-                    Assumes.NotNull(_editedCommit);
+                    Validates.NotNull(_editedCommit);
                     message = TryAddPrefix(squashPrefix, _editedCommit.Subject);
                     break;
                 default:
@@ -765,7 +765,7 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            Assumes.NotNull(_currentFilesList);
+            Validates.NotNull(_currentFilesList);
 
             if (_currentFilesList.SelectedItem?.Item is not null)
             {
@@ -1083,7 +1083,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            Assumes.NotNull(lastSelection);
+            Validates.NotNull(lastSelection);
             var newItems = _currentFilesList == Staged ? stagedFiles : unstagedFiles;
             var names = lastSelection.ToHashSet(x => x.Name);
             var newSelection = newItems.Where(x => names.Contains(x.Name)).ToList();
@@ -1499,7 +1499,7 @@ namespace GitUI.CommandsDialogs
                 ? _currentSelection
                 : Array.Empty<GitItemStatus>();
 
-            Assumes.NotNull(lastSelection);
+            Validates.NotNull(lastSelection);
 
             void StageAreaLoaded()
             {
@@ -1720,7 +1720,7 @@ namespace GitUI.CommandsDialogs
 
                         if (item.IsRenamed)
                         {
-                            Assumes.NotNull(item.OldName);
+                            Validates.NotNull(item.OldName);
 
                             var clone = new GitItemStatus(item.OldName)
                             {
@@ -1753,7 +1753,7 @@ namespace GitUI.CommandsDialogs
                     if (Staged.IsEmpty)
                     {
                         _currentFilesList = Unstaged;
-                        Assumes.NotNull(lastSelection);
+                        Validates.NotNull(lastSelection);
                         RestoreSelectedFiles(Unstaged.GitItemStatuses, Staged.GitItemStatuses, lastSelection);
                         Unstaged.Focus();
                     }
@@ -2349,7 +2349,7 @@ namespace GitUI.CommandsDialogs
                 .ToDictionary(localPath =>
                 {
                     var submodule = configFile.ConfigSections.FirstOrDefault(section => section.GetValue("path").Trim() == localPath);
-                    Assumes.NotNull(submodule?.SubSection);
+                    Validates.NotNull(submodule?.SubSection);
                     return submodule.SubSection.Trim();
                 });
 
@@ -2518,12 +2518,12 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            Assumes.NotNull(list.SelectedGitItem);
+            Validates.NotNull(list.SelectedGitItem);
 
             var fileName = list.SelectedGitItem.Name;
             var path = _fullPathResolver.Resolve(fileName).ToNativePath();
 
-            Assumes.NotNull(path);
+            Validates.NotNull(path);
 
             OsShellUtil.Open(path);
         }
@@ -2535,12 +2535,12 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            Assumes.NotNull(list.SelectedGitItem);
+            Validates.NotNull(list.SelectedGitItem);
 
             var fileName = list.SelectedGitItem.Name;
             var path = _fullPathResolver.Resolve(fileName.ToNativePath());
 
-            Assumes.NotNull(path);
+            Validates.NotNull(path);
 
             OsShellUtil.OpenAs(path);
         }
@@ -3000,7 +3000,7 @@ namespace GitUI.CommandsDialogs
 
         private void commitSubmoduleChanges_Click(object sender, EventArgs e)
         {
-            Assumes.NotNull(_currentItem);
+            Validates.NotNull(_currentItem);
             var submoduleCommands = new GitUICommands(_fullPathResolver.Resolve(_currentItem.Item.Name.EnsureTrailingPathSeparator()));
             submoduleCommands.StartCommitDialog(this);
             Initialize();
@@ -3167,7 +3167,7 @@ namespace GitUI.CommandsDialogs
                 string? filePath = _fullPathResolver.Resolve(item.Item.Name);
                 if (File.Exists(filePath))
                 {
-                    Assumes.NotNull(filePath);
+                    Validates.NotNull(filePath);
                     OsShellUtil.SelectPathInFileExplorer(filePath.ToNativePath());
                 }
             }

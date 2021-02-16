@@ -62,7 +62,7 @@ namespace GitUI.UserControls
 
                         var currentCheckout = Module.GetCurrentCheckout();
 
-                        Assumes.NotNull(currentCheckout);
+                        Validates.NotNull(currentCheckout);
 
                         var text = Module.GetCommitCountString(currentCheckout.ToString(), SelectedObjectId.ToString());
 
