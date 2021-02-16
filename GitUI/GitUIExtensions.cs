@@ -21,21 +21,6 @@ namespace GitUI
 {
     public static class GitUIExtensions
     {
-        [CanBeNull]
-        private static Patch GetItemPatch(
-            [NotNull] GitModule module,
-            [NotNull] GitItemStatus file,
-            [CanBeNull] ObjectId firstId,
-            [CanBeNull] ObjectId secondId,
-            [NotNull] string diffArgs,
-            [NotNull] Encoding encoding)
-        {
-            // Files with tree guid should be presented with normal diff
-            var isTracked = file.IsTracked || (file.TreeGuid is not null && secondId is not null);
-
-            return module.GetSingleDiff(firstId, secondId, file.Name, file.OldName, diffArgs, encoding, true, isTracked);
-        }
-
         /// <summary>
         /// View the changes between the revisions, if possible as a diff
         /// </summary>
@@ -144,6 +129,20 @@ namespace GitUI
                 return file.IsSubmodule
                     ? LocalizationHelpers.ProcessSubmodulePatch(fileViewer.Module, file.Name, patch)
                     : patch?.Text;
+
+                static Patch GetItemPatch(
+                    [NotNull] GitModule module,
+                    [NotNull] GitItemStatus file,
+                    [CanBeNull] ObjectId firstId,
+                    [CanBeNull] ObjectId secondId,
+                    [NotNull] string diffArgs,
+                    [NotNull] Encoding encoding)
+                {
+                    // Files with tree guid should be presented with normal diff
+                    var isTracked = file.IsTracked || (file.TreeGuid is not null && secondId is not null);
+
+                    return module.GetSingleDiff(firstId, secondId, file.Name, file.OldName, diffArgs, encoding, true, isTracked);
+                }
             }
         }
 
