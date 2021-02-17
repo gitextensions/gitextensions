@@ -182,5 +182,23 @@ namespace GitUI
                 // TODO: how to restore a corrupted config?
             }
         }
+
+        internal TestAccessor GetTestAccessor()
+        {
+            return new TestAccessor(this);
+        }
+
+        internal readonly struct TestAccessor
+        {
+            private readonly WindowPositionManager _windowPositionManager;
+
+            internal TestAccessor(WindowPositionManager windowPositionManager)
+            {
+                _windowPositionManager = windowPositionManager;
+            }
+
+            public static bool IsDisplayedOn10Percent(Rectangle screen, Rectangle window)
+                => WindowPositionManager.IsDisplayedOn10Percent(screen, window);
+        }
     }
 }
