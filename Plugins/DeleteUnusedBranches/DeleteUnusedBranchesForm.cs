@@ -211,6 +211,8 @@ namespace DeleteUnusedBranches
                     _gitCommands.GitExecutable.GetOutput(args);
                 }
 
+                _gitUiCommands.RepoChangedNotifier.Notify();
+
                 await this.SwitchToMainThreadAsync();
 
                 tableLayoutPanel2.Enabled = tableLayoutPanel3.Enabled = true;

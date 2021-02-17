@@ -882,7 +882,7 @@ namespace GitUI
 
                 IndexWatcher.Reset();
 
-                SelectInitialRevision();
+                SelectInitialRevision(newCurrentCheckout);
 
                 // NB: Build ref filter before updating the property to reduce the number of chage events.
                 RefFilterOptions refFilterOptions = RefFilterOptions;
@@ -1217,7 +1217,7 @@ namespace GitUI
         /// The SelectedId is the last selected commit in the grid (with related CommitInfo in Browse).
         /// The FirstId is first selected, the first commit in a diff.
         /// </summary>
-        private void SelectInitialRevision()
+        private void SelectInitialRevision(ObjectId? currentCheckout)
         {
             var toBeSelectedObjectIds = _selectedObjectIds;
 
@@ -1239,8 +1239,7 @@ namespace GitUI
                 }
                 else
                 {
-                    var checkout = Module.GetCurrentCheckout();
-                    toBeSelectedObjectIds = checkout is null ? Array.Empty<ObjectId>() : new ObjectId[] { checkout };
+                    toBeSelectedObjectIds = currentCheckout is null ? Array.Empty<ObjectId>() : new ObjectId[] { currentCheckout };
                 }
             }
 

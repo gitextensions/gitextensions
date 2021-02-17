@@ -151,3 +151,4 @@ YYYY/MM/DD, github id, Full name, email
 2021/01/17, thimmy687, Ricardo Krause, kaser23@gmx.de
 2021/01/24, bcolaco, Bruno Colaço, bcolaco[@)gmail.com
 2021/01/25, guybark, Guy Barker, guybark(at)microsoft.com
+2021/02/10, mabako, Marcus Bauer, mabako(at)gmail.com
