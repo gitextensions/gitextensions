@@ -153,5 +153,30 @@ namespace GitUI
 
             ResumeLayout();
         }
+
+        // This is a base class for many forms, which have own GetTestAccessor() methods. This has to be unique
+        internal GitExtensionsFormTestAccessor GetGitExtensionsFormTestAccessor() => new GitExtensionsFormTestAccessor(this);
+
+        internal readonly struct GitExtensionsFormTestAccessor
+        {
+            private readonly GitExtensionsForm _form;
+
+            public GitExtensionsFormTestAccessor(GitExtensionsForm form)
+            {
+                _form = form;
+            }
+
+            public IWindowPositionManager WindowPositionManager
+            {
+                get => _form._windowPositionManager;
+                set => _form._windowPositionManager = value;
+            }
+
+            public Func<IReadOnlyList<Rectangle>> GetScreensWorkingArea
+            {
+                get => _form._getScreensWorkingArea;
+                set => _form._getScreensWorkingArea = value;
+            }
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using FluentAssertions;
 using GitUI;
 using NUnit.Framework;
@@ -12,14 +11,14 @@ namespace GitUITests
         [Test]
         public void IsDisplayedOn10Percent_should_return_false_if_no_screen_supplied()
         {
-            WindowPositionManagerTestAccessor.IsDisplayedOn10Percent(Rectangle.Empty, new Rectangle(1, 1, 1, 1))
+            WindowPositionManager.TestAccessor.IsDisplayedOn10Percent(Rectangle.Empty, new Rectangle(1, 1, 1, 1))
                 .Should().BeFalse();
         }
 
         [Test]
         public void IsDisplayedOn10Percent_should_return_false_if_no_window_supplied()
         {
-            WindowPositionManagerTestAccessor.IsDisplayedOn10Percent(new Rectangle(1, 1, 1, 1), Rectangle.Empty)
+            WindowPositionManager.TestAccessor.IsDisplayedOn10Percent(new Rectangle(1, 1, 1, 1), Rectangle.Empty)
                 .Should().BeFalse();
         }
 
@@ -30,7 +29,7 @@ namespace GitUITests
             Rectangle screen = new(0, 0, 1920, 1080);
             Rectangle window = new(0, 0, width, height);
 
-            WindowPositionManagerTestAccessor.IsDisplayedOn10Percent(screen, window)
+            WindowPositionManager.TestAccessor.IsDisplayedOn10Percent(screen, window)
                 .Should().BeTrue();
         }
 
@@ -53,21 +52,8 @@ namespace GitUITests
             Rectangle screen = new(0, 0, 1920, 1080);
             Rectangle window = new(x, y, width, height);
 
-            WindowPositionManagerTestAccessor.IsDisplayedOn10Percent(screen, window)
+            WindowPositionManager.TestAccessor.IsDisplayedOn10Percent(screen, window)
                 .Should().Be(expected);
-        }
-
-        private class WindowPositionManagerTestAccessor : TestAccessor<WindowPositionManager>
-        {
-            // Accessor for static members
-            private static readonly dynamic Static = typeof(WindowPositionManager).TestAccessor().Dynamic;
-
-            public WindowPositionManagerTestAccessor(WindowPositionManager instance)
-                : base(instance)
-            {
-            }
-
-            public static bool IsDisplayedOn10Percent(Rectangle screen, Rectangle window) => Static.IsDisplayedOn10Percent(screen, window);
         }
     }
 }
