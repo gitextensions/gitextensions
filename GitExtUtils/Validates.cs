@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
+// Use of the Microsoft namespace here is to match that of Assumes and Requires from the vs-validation library
+
 namespace Microsoft
 {
     internal static class Validates
