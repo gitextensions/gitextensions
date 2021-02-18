@@ -210,7 +210,11 @@ namespace GitUI.UserControls.RevisionGrid
                     W   Show author date
                     X   Show build status text
                     Y   Draw non relatives gray
+                    0..9 GetLabel()
             */
+
+            int numericMnemonic = -1;
+            string GetLabel(string name) => ++numericMnemonic >= 10 ? name : $"&{numericMnemonic}: {name}";
 
             return new[]
             {
@@ -450,6 +454,10 @@ namespace GitUI.UserControls.RevisionGrid
                 },
                 MenuCommand.CreateSeparator(),
 
+                MenuCommand.CreateGroupHeader("Experimental"),
+                CreateBoolViewSettingItem(AppSettings.MergeGraphLanesHavingCommonParent, GetLabel, reloadRevisions: true),
+                MenuCommand.CreateSeparator(),
+
                 MenuCommand.CreateGroupHeader("Settings"),
                 new MenuCommand
                 {
@@ -457,6 +465,28 @@ namespace GitUI.UserControls.RevisionGrid
                     Text = "Save current view settings as default",
                     ExecuteAction = SaveAsDefaultViewSettings
                 }
+            };
+        }
+
+        private MenuCommand CreateBoolViewSettingItem(BoolViewSetting viewSetting, Func<string, string> getLabelFromName, bool reloadRevisions = false)
+        {
+            return new MenuCommand
+            {
+                Name = viewSetting.Name,
+                Text = getLabelFromName(viewSetting.Name),
+                ExecuteAction = () =>
+                {
+                    viewSetting.Toggle();
+                    if (reloadRevisions)
+                    {
+                        _revisionGrid.PerformRefreshRevisions();
+                    }
+                    else
+                    {
+                        _revisionGrid.Refresh();
+                    }
+                },
+                IsCheckedFunc = () => viewSetting.Value
             };
         }
 

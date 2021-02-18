@@ -1,4 +1,5 @@
-﻿using Microsoft;
+﻿using GitCommands;
+using Microsoft;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
@@ -63,6 +64,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 {
                     return;
                 }
+
+                bool mergeGraphLanesHavingCommonParent = AppSettings.MergeGraphLanesHavingCommonParent.Value;
 
                 _segmentLanes = new(capacity: Segments.Count);
                 _laneCount = 0;
@@ -161,12 +164,15 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     // |       <-- processed row: merge into a singe lane to simplify graph
                     // |
                     // *
-                    foreach (KeyValuePair<RevisionGraphSegment, Lane> searchParent in _segmentLanes)
+                    if (mergeGraphLanesHavingCommonParent)
                     {
-                        // If there is another segment with the same parent, and it is not this row's revision, merge into one lane.
-                        if (searchParent.Value.Index != _revisionLane && searchParent.Key.Parent == segment.Parent)
+                        foreach (KeyValuePair<RevisionGraphSegment, Lane> searchParent in _segmentLanes)
                         {
-                            return new Lane(searchParent.Value.Index, GetSecondarySharingOfContinuedSegment());
+                            // If there is another segment with the same parent, and it is not this row's revision, merge into one lane.
+                            if (searchParent.Value.Index != _revisionLane && searchParent.Key.Parent == segment.Parent)
+                            {
+                                return new Lane(searchParent.Value.Index, GetSecondarySharingOfContinuedSegment());
+                            }
                         }
                     }
 

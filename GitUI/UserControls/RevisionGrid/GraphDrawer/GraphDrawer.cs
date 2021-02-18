@@ -165,7 +165,7 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
             switch (currentLane.Sharing)
             {
                 case LaneSharing.DifferentStart:
-                    if (AppSettings.ShowRevisionGridGraphColumn)
+                    if (AppSettings.MergeGraphLanesHavingCommonParent.Value)
                     {
                         lanes.EndLane = _noLane;
                     }

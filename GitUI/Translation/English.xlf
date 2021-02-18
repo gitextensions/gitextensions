@@ -9018,6 +9018,10 @@ See the changes in the commit form.</source>
         <source>Commits</source>
         <target />
       </trans-unit>
+      <trans-unit id="ExperimentalToolStripMenuItem.Text">
+        <source>Experimental</source>
+        <target />
+      </trans-unit>
       <trans-unit id="GotoChildCommit.Text">
         <source>Go to c&amp;hild commit</source>
         <target />
@@ -9054,6 +9058,10 @@ See the changes in the commit form.</source>
         <source>Highlight selected branch (until refresh)</source>
         <target />
       </trans-unit>
+      <trans-unit id="MergeGraphLanesHavingCommonParent.Text">
+        <source>&amp;0: MergeGraphLanesHavingCommonParent</source>
+        <target />
+      </trans-unit>
       <trans-unit id="NavigateBackward.Text">
         <source>Navigate &amp;backward</source>
         <target />
@@ -9076,6 +9084,14 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="QuickSearch.ToolTipText">
         <source>Start typing in revision grid to start quick search.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="SaveAsDefault.Text">
+        <source>Save current view settings as default</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="SettingsToolStripMenuItem.Text">
+        <source>Settings</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowAllBranches.Text">

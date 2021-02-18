@@ -61,6 +61,7 @@
                 if (menuCommand.ExecuteAction is not null)
                 {
                     menuCommand.ExecuteAction();
+                    menuCommand.SetCheckForRegisteredMenuItems();
                 }
                 else
                 {

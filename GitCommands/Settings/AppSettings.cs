@@ -1517,6 +1517,8 @@ namespace GitCommands
             set => SetBool("FillRefLabels", value);
         }
 
+        public static readonly BoolViewSetting MergeGraphLanesHavingCommonParent = new(nameof(MergeGraphLanesHavingCommonParent), true);
+
         public static string LastFormatPatchDir
         {
             get => GetString("lastformatpatchdir", "");
