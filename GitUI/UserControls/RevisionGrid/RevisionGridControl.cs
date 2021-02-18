@@ -2598,9 +2598,9 @@ namespace GitUI
         {
             var revision = GetSelectedRevisions().FirstOrDefault();
 
-            if (revision is not null && !GitExtUtils.Strings.IsNullOrWhiteSpace(revision.BuildStatus?.Url))
+            if (revision is not null && !GitExtUtils.Strings.IsNullOrWhiteSpace(revision?.BuildStatus?.Url))
             {
-                OsShellUtil.OpenUrlInDefaultBrowser(revision.BuildStatus.Url);
+                OsShellUtil.OpenUrlInDefaultBrowser(revision?.BuildStatus?.Url);
             }
         }
 
@@ -2608,9 +2608,9 @@ namespace GitUI
         {
             var revision = GetSelectedRevisions().FirstOrDefault();
 
-            if (revision is not null && !GitExtUtils.Strings.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl))
+            if (revision is not null && !GitExtUtils.Strings.IsNullOrWhiteSpace(revision?.BuildStatus?.PullRequestUrl))
             {
-                OsShellUtil.OpenUrlInDefaultBrowser(revision.BuildStatus.PullRequestUrl);
+                OsShellUtil.OpenUrlInDefaultBrowser(revision?.BuildStatus?.PullRequestUrl);
             }
         }
 

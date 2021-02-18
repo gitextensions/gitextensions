@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using GitUIPluginInterfaces.BuildServerIntegration;
 using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
@@ -25,7 +24,7 @@ namespace GitUIPluginInterfaces
         public static readonly Regex Sha1HashRegex = new(@"^[a-f\d]{40}$", RegexOptions.Compiled);
         public static readonly Regex Sha1HashShortRegex = new(@"\b[a-f\d]{7,40}\b", RegexOptions.Compiled);
 
-        private BuildInfo? _buildStatus;
+        private dynamic? _buildStatus;
 
         public GitRevision(ObjectId objectId)
         {
@@ -57,7 +56,7 @@ namespace GitUIPluginInterfaces
         public string? CommitterEmail { get; set; }
         public DateTime CommitDate { get; set; }
 
-        public BuildInfo? BuildStatus
+        public dynamic? BuildStatus
         {
             get => _buildStatus;
             set
