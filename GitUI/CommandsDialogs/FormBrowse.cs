@@ -1017,7 +1017,7 @@ namespace GitUI.CommandsDialogs
                 {
                     AppSettings.LastUpdateCheck = DateTime.Now;
                     var updateForm = new FormUpdates(AppSettings.AppVersion);
-                    updateForm.SearchForUpdatesAndShow(Owner, false);
+                    updateForm.SearchForUpdatesAndShow(ownerWindow: this, alwaysShow: false);
                 }
 
                 bool hasWorkingDir = !string.IsNullOrEmpty(Module.WorkingDir);

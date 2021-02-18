@@ -23,8 +23,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private readonly TranslationString _openRepository = new("Open repository");
         private readonly TranslationString _translate = new("Translate");
 
-        private DashboardTheme? _selectedTheme;
-
         public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
 
         public Dashboard()
@@ -63,7 +61,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public void RefreshContent()
         {
-            _selectedTheme = ColorHelper.IsLightTheme() ? DashboardTheme.Light : DashboardTheme.Dark;
+            DashboardTheme selectedTheme = ColorHelper.IsLightTheme() ? DashboardTheme.Light : DashboardTheme.Dark;
 
             InitDashboardLayout();
             ApplyTheme();
@@ -71,24 +69,24 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             void ApplyTheme()
             {
-                BackgroundImage = _selectedTheme.BackgroundImage;
+                BackgroundImage = selectedTheme.BackgroundImage;
 
-                BackColor = _selectedTheme.Primary;
-                pnlLogo.BackColor = _selectedTheme.PrimaryVeryDark;
-                flpnlStart.BackColor = _selectedTheme.PrimaryLight;
-                flpnlContribute.BackColor = _selectedTheme.PrimaryVeryLight;
-                lblContribute.ForeColor = _selectedTheme.SecondaryHeadingText;
-                userRepositoriesList.BranchNameColor = _selectedTheme.SecondaryText;
-                userRepositoriesList.FavouriteColor = _selectedTheme.AccentedText;
-                userRepositoriesList.ForeColor = _selectedTheme.PrimaryText;
-                userRepositoriesList.HeaderColor = _selectedTheme.SecondaryHeadingText;
-                userRepositoriesList.HeaderBackColor = _selectedTheme.PrimaryDark;
-                userRepositoriesList.HoverColor = _selectedTheme.PrimaryLight;
-                userRepositoriesList.MainBackColor = _selectedTheme.Primary;
+                BackColor = selectedTheme.Primary;
+                pnlLogo.BackColor = selectedTheme.PrimaryVeryDark;
+                flpnlStart.BackColor = selectedTheme.PrimaryLight;
+                flpnlContribute.BackColor = selectedTheme.PrimaryVeryLight;
+                lblContribute.ForeColor = selectedTheme.SecondaryHeadingText;
+                userRepositoriesList.BranchNameColor = selectedTheme.SecondaryText;
+                userRepositoriesList.FavouriteColor = selectedTheme.AccentedText;
+                userRepositoriesList.ForeColor = selectedTheme.PrimaryText;
+                userRepositoriesList.HeaderColor = selectedTheme.SecondaryHeadingText;
+                userRepositoriesList.HeaderBackColor = selectedTheme.PrimaryDark;
+                userRepositoriesList.HoverColor = selectedTheme.PrimaryLight;
+                userRepositoriesList.MainBackColor = selectedTheme.Primary;
 
                 foreach (var item in flpnlContribute.Controls.OfType<LinkLabel>().Union(flpnlStart.Controls.OfType<LinkLabel>()))
                 {
-                    item.LinkColor = _selectedTheme.PrimaryText;
+                    item.LinkColor = selectedTheme.PrimaryText;
                 }
 
                 Invalidate(true);
@@ -178,8 +176,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                         Text = text,
                         TextAlign = ContentAlignment.MiddleLeft
                     };
-                    linkLabel.MouseHover += (s, e) => linkLabel.LinkColor = _selectedTheme.AccentedText;
-                    linkLabel.MouseLeave += (s, e) => linkLabel.LinkColor = _selectedTheme.PrimaryText;
+                    linkLabel.MouseHover += (s, e) => linkLabel.LinkColor = selectedTheme.AccentedText;
+                    linkLabel.MouseLeave += (s, e) => linkLabel.LinkColor = selectedTheme.PrimaryText;
 
                     if (handler is not null)
                     {
