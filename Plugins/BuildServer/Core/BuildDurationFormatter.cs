@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GitUIPluginInterfaces.BuildServerIntegration
+namespace GitExtensions.Plugins.BuildServer.Core
 {
     public interface IBuildDurationFormatter
     {

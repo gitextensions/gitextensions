@@ -10,10 +10,10 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Utils;
+using GitExtensions.Plugins.BuildServer.Core;
 using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
 
 namespace AppVeyorIntegration

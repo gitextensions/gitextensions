@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using GitExtensions.Plugins.BuildServer.Core;
 using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.BuildServerIntegration;
 using ResourceManager;
 
 namespace TeamCityIntegration.Settings

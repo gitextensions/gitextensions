@@ -13,6 +13,7 @@
     <ProjectReference Include="..\..\..\GitCommands\GitCommands.csproj" />
     <ProjectReference Include="..\..\..\GitExtUtils\GitExtUtils.csproj" />
     <ProjectReference Include="..\..\..\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\..\BuildServer\GitExtensions.Plugins.BuildServer.csproj" />
     <ProjectReference Include="..\..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
   </ItemGroup>
 

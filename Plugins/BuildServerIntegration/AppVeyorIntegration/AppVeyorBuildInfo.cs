@@ -1,4 +1,5 @@
 using System;
+using GitExtensions.Plugins.BuildServer.Core;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 

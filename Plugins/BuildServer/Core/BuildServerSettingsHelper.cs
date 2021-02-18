@@ -1,7 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace GitUIPluginInterfaces.BuildServerIntegration
+namespace GitExtensions.Plugins.BuildServer.Core
 {
     public static class BuildServerSettingsHelper
     {

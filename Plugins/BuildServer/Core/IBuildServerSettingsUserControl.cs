@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using GitUIPluginInterfaces;
 
-namespace GitUIPluginInterfaces.BuildServerIntegration
+namespace GitExtensions.Plugins.BuildServer.Core
 {
     public interface IBuildServerSettingsUserControl
     {

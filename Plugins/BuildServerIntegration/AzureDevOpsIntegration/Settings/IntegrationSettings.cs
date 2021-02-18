@@ -1,5 +1,5 @@
-﻿using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.BuildServerIntegration;
+﻿using GitExtensions.Plugins.BuildServer.Core;
+using GitUIPluginInterfaces;
 
 namespace AzureDevOpsIntegration.Settings
 {

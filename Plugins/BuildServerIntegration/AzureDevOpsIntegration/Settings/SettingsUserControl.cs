@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Windows.Forms;
+using GitExtensions.Plugins.BuildServer.Core;
 using GitUI;
 using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.BuildServerIntegration;
 using JetBrains.Annotations;
 using ResourceManager;
 

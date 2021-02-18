@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using GitUIPluginInterfaces.BuildServerIntegration;
+using GitExtensions.Plugins.BuildServer.Core;
 using JetBrains.Annotations;
 
 namespace AzureDevOpsIntegration.Settings

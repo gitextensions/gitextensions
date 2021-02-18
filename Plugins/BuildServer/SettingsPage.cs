@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands.Remotes;
 using GitCommands.Settings;
+using GitExtensions.Plugins.BuildServer.Core;
 using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;

@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.Composition;
 
-namespace GitUIPluginInterfaces.BuildServerIntegration
+namespace GitExtensions.Plugins.BuildServer.Core
 {
     [MetadataAttribute]
     [AttributeUsage(AttributeTargets.Class)]
