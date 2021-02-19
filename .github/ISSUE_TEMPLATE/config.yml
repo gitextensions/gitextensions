@@ -6,9 +6,6 @@ contact_links:
   - name: Issue with Git Extensions docs
     url:  https://github.com/gitextensions/GitExtensionsDoc/issues/new
     about: Please open issues with the app's documentation in their repo
-  - name: Issue with the Visual Studio extension
-    url:  https://github.com/gitextensions/gitextensions.vsix/issues/new
-    about: Please open issues with the Visual Studio extension of the app in their repo
   - name: Issue with the Plugin Manager
     url:  https://github.com/gitextensions/gitextensions.pluginmanager/issues/new
     about: Please open issues with the Plugin Manager their repo
@@ -18,3 +15,11 @@ contact_links:
   - name: Issue with Gerrit plugin
     url:  https://github.com/gitextensions/GitExtensions.GerritPlugin/issues/new
     about: Please open issues with the Gerrit plugin in their repo
+  - name: Issue with GitLab plugin
+    url:  https://github.com/ahmeturun/GitExtensions.GitLab/issues/new
+    about: Please open issues with the GitLab plugin in their repo
+  - name: Issue with the Visual Studio extension
+    url:  https://github.com/gitextensions/gitextensions.vsix/issues/new
+    about: Please open issues with the Visual Studio extension of the app in their repo
+
+ahmeturun/GitExtensions.GitLab
