@@ -21,5 +21,3 @@ contact_links:
   - name: Issue with the Visual Studio extension
     url:  https://github.com/gitextensions/gitextensions.vsix/issues/new
     about: Please open issues with the Visual Studio extension of the app in their repo
-
-ahmeturun/GitExtensions.GitLab
