@@ -790,15 +790,15 @@ namespace GitCommands
             return _gitTreeParser.ParseSingle(output);
         }
 
-        public int? GetCommitCount(string parentHash, string childHash)
+        public int? GetCommitCount(string parent, string child, bool cache = false)
         {
             var args = new GitArgumentBuilder("rev-list")
             {
-                parentHash,
-                $"^{childHash}",
+                parent,
+                $"^{child}",
                 "--count"
             };
-            var output = _gitExecutable.GetOutput(args);
+            var output = _gitExecutable.GetOutput(args, cache: cache ? GitCommandCache : null);
 
             if (int.TryParse(output, out var commitCount))
             {
@@ -833,7 +833,7 @@ namespace GitCommands
                 "--count",
                 "--left-right"
             };
-            var output = _gitExecutable.GetOutput(args);
+            var output = _gitExecutable.GetOutput(args, cache: GitCommandCache);
 
             var counts = output.Split('\t');
             if (counts.Length == 2 && int.TryParse(counts[0], out var first) && int.TryParse(counts[1], out var second))
@@ -3659,7 +3659,7 @@ namespace GitCommands
                 a,
                 b
             };
-            var output = _gitExecutable.GetOutput(args);
+            var output = _gitExecutable.GetOutput(args, cache: GitCommandCache);
 
             return ObjectId.TryParse(output, offset: 0, out var objectId)
                 ? objectId
@@ -3703,7 +3703,7 @@ namespace GitCommands
 
             if (loadData)
             {
-                oldData = _commitDataManager.GetCommitData(oldCommit.ToString(), out _);
+                oldData = _commitDataManager.GetCommitData(oldCommit.ToString(), out _, cache: true);
             }
 
             if (oldData is null)
@@ -3713,7 +3713,7 @@ namespace GitCommands
 
             if (loadData)
             {
-                data = _commitDataManager.GetCommitData(commit.ToString(), out _);
+                data = _commitDataManager.GetCommitData(commit.ToString(), out _, cache: true);
             }
 
             if (data is null)

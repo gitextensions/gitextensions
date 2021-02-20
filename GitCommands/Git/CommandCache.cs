@@ -41,7 +41,7 @@ namespace GitCommands
         /// Initialises a new instance of <see cref="CommandCache"/> with specified <paramref name="capacity"/>.
         /// </summary>
         /// <param name="capacity">The maximum number of commands to cache.</param>
-        public CommandCache(int capacity = 40)
+        public CommandCache(int capacity = 50)
         {
             _cache = new MruCache<string, (byte[] output, byte[] error)>(capacity: capacity);
         }
