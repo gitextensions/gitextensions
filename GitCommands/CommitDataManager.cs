@@ -24,9 +24,12 @@ namespace GitCommands
         CommitData CreateFromRevision(GitRevision revision, IReadOnlyList<ObjectId> children);
 
         /// <summary>
-        /// Gets <see cref="CommitData"/> for the specified <paramref name="sha1"/>.
+        /// Gets <see cref="CommitData"/> for the specified <paramref name="commitId"/>.
         /// </summary>
-        CommitData? GetCommitData(string sha1, out string? error);
+        /// <param name="commitId">The sha or Git reference.</param>
+        /// <param name="error">error message for the Git command</param>
+        /// <param name="cache">Allow caching of the Git command, should only be used if commitId is a sha and Notes are not used.</param>
+        CommitData? GetCommitData(string commitId, out string? error, bool cache = false);
 
         /// <summary>
         /// Updates the <see cref="CommitData.Body"/> (commit message) property of <paramref name="commitData"/>.
@@ -36,7 +39,8 @@ namespace GitCommands
 
     public sealed class CommitDataManager : ICommitDataManager
     {
-        private const string CommitDataFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
+        private const string CommitDataFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B";
+        private const string CommitDataWithNotesFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
         private const string BodyAndNotesFormat = "%H%n%e%n%B%nNotes:%n%-N";
 
         private readonly Func<IGitModule> _getModule;
@@ -49,7 +53,7 @@ namespace GitCommands
         /// <inheritdoc />
         public void UpdateBody(CommitData commitData, out string? error)
         {
-            if (!TryGetCommitLog(commitData.ObjectId.ToString(), BodyAndNotesFormat, out error, out var data))
+            if (!TryGetCommitLog(commitData.ObjectId.ToString(), BodyAndNotesFormat, out error, out var data, cache: false))
             {
                 return;
             }
@@ -82,9 +86,9 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        public CommitData? GetCommitData(string sha1, out string? error)
+        public CommitData? GetCommitData(string commitId, out string? error, bool cache = false)
         {
-            return TryGetCommitLog(sha1, CommitDataFormat, out error, out var info)
+            return TryGetCommitLog(commitId, cache ? CommitDataFormat : CommitDataWithNotesFormat, out error, out var info, cache)
                 ? CreateFromFormattedData(info)
                 : null;
         }
@@ -183,7 +187,7 @@ namespace GitCommands
             return module;
         }
 
-        private bool TryGetCommitLog(string commitId, string format, [NotNullWhen(returnValue: false)] out string? error, [NotNullWhen(returnValue: true)] out string? data)
+        private bool TryGetCommitLog(string commitId, string format, [NotNullWhen(returnValue: false)] out string? error, [NotNullWhen(returnValue: true)] out string? data, bool cache)
         {
             if (commitId.IsArtificial())
             {
@@ -199,8 +203,12 @@ namespace GitCommands
                 commitId
             };
 
-            // Do not cache this command, since notes can be added
-            data = GetModule().GitExecutable.GetOutput(arguments, outputEncoding: GitModule.LosslessEncoding);
+            // This command can be cached if commitId is a git sha and Notes are ignored
+            Debug.Assert(!cache || ObjectId.TryParse(commitId, out _), $"git-log cache should be used only for sha ({commitId})");
+
+            data = GetModule().GitExecutable.GetOutput(arguments,
+                outputEncoding: GitModule.LosslessEncoding,
+                cache: cache ? GitModule.GitCommandCache : null);
 
             if (GitModule.IsGitErrorMessage(data))
             {
