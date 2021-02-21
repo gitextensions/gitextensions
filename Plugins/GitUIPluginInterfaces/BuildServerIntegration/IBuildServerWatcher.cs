@@ -7,7 +7,7 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
     {
         IBuildServerCredentials? GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, bool useStoredCredentialsIfExisting);
 
-        Task LaunchBuildServerInfoFetchOperationAsync(Action<BuildInfo> onBuildInfoUpdate);
+        Task LaunchBuildServerInfoFetchOperationAsync(Action<BuildInfo> onBuildInfoUpdate, Action openSettings, Func<ObjectId, bool>? isCommitInRevisionGrid = null);
 
         void CancelBuildStatusFetchOperation();
 

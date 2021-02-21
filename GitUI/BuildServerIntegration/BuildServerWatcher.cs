@@ -27,26 +27,23 @@ namespace GitUI.BuildServerIntegration
         private static readonly TimeSpan ShortPollInterval = TimeSpan.FromSeconds(10);
         private static readonly TimeSpan LongPollInterval = TimeSpan.FromSeconds(120);
         private readonly object _buildServerCredentialsLock = new();
-        private readonly RevisionGridControl _revisionGrid;
         private readonly Func<GitModule> _module;
         private readonly IRepoNameExtractor _repoNameExtractor;
         private IDisposable? _buildStatusCancellationToken;
         private IBuildServerAdapter? _buildServerAdapter;
 
-        public BuildServerWatcher(RevisionGridControl revisionGrid, Func<GitModule> module)
+        public BuildServerWatcher(Func<GitModule> module)
         {
-            _revisionGrid = revisionGrid;
             _module = module;
-
             _repoNameExtractor = new RepoNameExtractor(_module);
         }
 
-        public async Task LaunchBuildServerInfoFetchOperationAsync(Action<BuildInfo> onBuildInfoUpdate)
+        public async Task LaunchBuildServerInfoFetchOperationAsync(Action<BuildInfo> onBuildInfoUpdate, Action openSettings, Func<ObjectId, bool>? isCommitInRevisionGrid = null)
         {
             CancelBuildStatusFetchOperation();
 
             _buildServerAdapter?.Dispose();
-            _buildServerAdapter = await GetBuildServerAdapterAsync()
+            _buildServerAdapter = await GetBuildServerAdapterAsync(openSettings, isCommitInRevisionGrid)
                 .ConfigureAwait(false);
 
             if (_buildServerAdapter is null)
@@ -234,22 +231,22 @@ namespace GitUI.BuildServerIntegration
             return projectNames;
         }
 
-        private async Task<IBuildServerCredentials?> ShowBuildServerCredentialsFormAsync(string buildServerUniqueKey, IBuildServerCredentials buildServerCredentials)
+        private Task<IBuildServerCredentials?> ShowBuildServerCredentialsFormAsync(string buildServerUniqueKey, IBuildServerCredentials buildServerCredentials)
         {
-            await _revisionGrid.SwitchToMainThreadAsync();
-
-            using var form = new FormBuildServerCredentials(buildServerUniqueKey);
-            form.BuildServerCredentials = buildServerCredentials;
-
-            if (form.ShowDialog(_revisionGrid) == DialogResult.OK)
+            using var form = new FormBuildServerCredentials(buildServerUniqueKey)
             {
-                return buildServerCredentials;
+                BuildServerCredentials = buildServerCredentials
+            };
+
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                return Task.FromResult<IBuildServerCredentials?>(buildServerCredentials);
             }
 
-            return null;
+            return Task.FromResult<IBuildServerCredentials?>(null);
         }
 
-        private async Task<IBuildServerAdapter?> GetBuildServerAdapterAsync()
+        private async Task<IBuildServerAdapter?> GetBuildServerAdapterAsync(Action openSettings, Func<ObjectId, bool>? isCommitInRevisionGrid = null)
         {
             await TaskScheduler.Default;
 
@@ -282,21 +279,7 @@ namespace GitUI.BuildServerIntegration
 
                     var buildServerAdapter = export.Value;
 
-                    buildServerAdapter.Initialize(this, buildServerSettings.TypeSettings,
-                        () =>
-                        {
-                            // To run the `StartSettingsDialog()` in the UI Thread
-                            _revisionGrid.Invoke((Action)(() =>
-                            {
-                                var plugin = PluginRegistry.Plugins
-                                    .FirstOrDefault(x => x.Name == "BuildServer");
-
-                                if (plugin is not null)
-                                {
-                                    _revisionGrid.UICommands.StartSettingsDialog(plugin);
-                                }
-                            }));
-                        }, objectId => _revisionGrid.GetRevision(objectId) is not null);
+                    buildServerAdapter.Initialize(this, buildServerSettings.TypeSettings, openSettings, isCommitInRevisionGrid);
                     return buildServerAdapter;
                 }
                 catch (InvalidOperationException ex)

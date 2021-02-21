@@ -261,7 +261,7 @@ namespace GitUI
             _gridView.DragEnter += OnGridViewDragEnter;
             _gridView.DragDrop += OnGridViewDragDrop;
 
-            _buildServerWatcher = new BuildServerWatcher(this, () => Module);
+            _buildServerWatcher = new BuildServerWatcher(() => Module);
             _buildServerColumnProvider = new BuildStatusColumnProvider(this, _gridView, () => Module);
 
             var gitRevisionSummaryBuilder = new GitRevisionSummaryBuilder();
@@ -1172,7 +1172,27 @@ namespace GitUI
                                 }
                             }
 
-                            await _buildServerWatcher.LaunchBuildServerInfoFetchOperationAsync(OnBuildInfoUpdate);
+                            void OpenSettings()
+                            {
+                                // To run the `StartSettingsDialog()` in the UI Thread
+                                Invoke((Action)(() =>
+                                {
+                                    var plugin = PluginRegistry.Plugins
+                                        .FirstOrDefault(x => x.Name == "BuildServer");
+
+                                    if (plugin is not null)
+                                    {
+                                        UICommands.StartSettingsDialog(plugin);
+                                    }
+                                }));
+                            }
+
+                            bool IsCommitInRevisionGrid(ObjectId objectId)
+                            {
+                                return GetRevision(objectId) is not null;
+                            }
+
+                            await _buildServerWatcher.LaunchBuildServerInfoFetchOperationAsync(OnBuildInfoUpdate, OpenSettings, IsCommitInRevisionGrid);
                         }
                     }).FileAndForget();
                 }
