@@ -29,6 +29,7 @@ using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -100,6 +101,7 @@ namespace GitUI
         private readonly AuthorRevisionHighlighting _authorHighlighting;
         private readonly Lazy<IndexWatcher> _indexWatcher;
         private readonly BuildServerWatcher _buildServerWatcher;
+        private readonly ColumnProvider _buildServerColumnProvider;
         private readonly Timer _selectionTimer;
         private readonly RevisionGraphColumnProvider _revisionGraphColumnProvider;
         private readonly DataGridViewColumn _maximizedColumn;
@@ -260,6 +262,7 @@ namespace GitUI
             _gridView.DragDrop += OnGridViewDragDrop;
 
             _buildServerWatcher = new BuildServerWatcher(this, _gridView, () => Module);
+            _buildServerColumnProvider = new BuildStatusColumnProvider(this, _gridView, () => Module);
 
             var gitRevisionSummaryBuilder = new GitRevisionSummaryBuilder();
             _revisionGraphColumnProvider = new RevisionGraphColumnProvider(this, _gridView._revisionGraph, gitRevisionSummaryBuilder);
@@ -269,7 +272,7 @@ namespace GitUI
             _gridView.AddColumn(new AuthorNameColumnProvider(this, _authorHighlighting));
             _gridView.AddColumn(new DateColumnProvider(this));
             _gridView.AddColumn(new CommitIdColumnProvider(this));
-            _gridView.AddColumn(_buildServerWatcher.ColumnProvider);
+            _gridView.AddColumn(_buildServerColumnProvider);
             _maximizedColumn = _gridView.Columns.Cast<DataGridViewColumn>()
                 .FirstOrDefault(column => column.Resizable == DataGridViewTriState.True && column.AutoSizeMode == DataGridViewAutoSizeColumnMode.Fill);
         }
@@ -1136,7 +1139,40 @@ namespace GitUI
 
                         if (ShowBuildServerInfo)
                         {
-                            await _buildServerWatcher.LaunchBuildServerInfoFetchOperationAsync();
+                            void OnBuildInfoUpdate(BuildInfo buildInfo)
+                            {
+                                foreach (var commitHash in buildInfo.CommitHashList)
+                                {
+                                    var index = _gridView.TryGetRevisionIndex(commitHash);
+
+                                    if (!index.HasValue)
+                                    {
+                                        continue;
+                                    }
+
+                                    var revision = _gridView.GetRevision(index.Value);
+
+                                    if (revision is null)
+                                    {
+                                        continue;
+                                    }
+
+                                    if (revision.BuildStatus is null || buildInfo.StartDate >= revision.BuildStatus.StartDate)
+                                    {
+                                        revision.BuildStatus = buildInfo;
+
+                                        if (index.Value < _gridView.RowCount)
+                                        {
+                                            if (_gridView.Rows[index.Value].Cells[_buildServerColumnProvider.Index].Displayed)
+                                            {
+                                                _gridView.UpdateCellValue(_buildServerColumnProvider.Index, index.Value);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            await _buildServerWatcher.LaunchBuildServerInfoFetchOperationAsync(OnBuildInfoUpdate);
                         }
                     }).FileAndForget();
                 }

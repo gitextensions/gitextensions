@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace GitUIPluginInterfaces.BuildServerIntegration
@@ -6,7 +7,7 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
     {
         IBuildServerCredentials? GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, bool useStoredCredentialsIfExisting);
 
-        Task LaunchBuildServerInfoFetchOperationAsync();
+        Task LaunchBuildServerInfoFetchOperationAsync(Action<BuildInfo> onBuildInfoUpdate);
 
         void CancelBuildStatusFetchOperation();
 

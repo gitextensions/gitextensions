@@ -17,7 +17,6 @@ using GitCommands.Remotes;
 using GitUI.HelperDialogs;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
-using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft.VisualStudio.Threading;
@@ -37,8 +36,6 @@ namespace GitUI.BuildServerIntegration
         private IDisposable? _buildStatusCancellationToken;
         private IBuildServerAdapter? _buildServerAdapter;
 
-        internal BuildStatusColumnProvider ColumnProvider { get; }
-
         public BuildServerWatcher(RevisionGridControl revisionGrid, RevisionDataGridView revisionGridView, Func<GitModule> module)
         {
             _revisionGrid = revisionGrid;
@@ -46,10 +43,9 @@ namespace GitUI.BuildServerIntegration
             _module = module;
 
             _repoNameExtractor = new RepoNameExtractor(_module);
-            ColumnProvider = new BuildStatusColumnProvider(revisionGrid, revisionGridView, _module);
         }
 
-        public async Task LaunchBuildServerInfoFetchOperationAsync()
+        public async Task LaunchBuildServerInfoFetchOperationAsync(Action<BuildInfo> onBuildInfoUpdate)
         {
             await TaskScheduler.Default;
 
@@ -101,7 +97,15 @@ namespace GitUI.BuildServerIntegration
                                                                       .Retry()
                                                                       .Repeat())
                                          .ObserveOn(MainThreadScheduler.Instance)
-                                         .Subscribe(OnBuildInfoUpdate),
+                                         .Subscribe(x =>
+                                         {
+                                             if (_buildStatusCancellationToken is null)
+                                             {
+                                                 return;
+                                             }
+
+                                             onBuildInfoUpdate(x);
+                                         }),
 
                         runningBuildsObservable.Do(buildInfo =>
                                                     {
@@ -113,7 +117,15 @@ namespace GitUI.BuildServerIntegration
                                                .Finally(() => anyRunningBuilds = false)
                                                .Repeat()
                                                .ObserveOn(MainThreadScheduler.Instance)
-                                               .Subscribe(OnBuildInfoUpdate)
+                                               .Subscribe(x =>
+                                               {
+                                                   if (_buildStatusCancellationToken is null)
+                                                   {
+                                                       return;
+                                                   }
+
+                                                   onBuildInfoUpdate(x);
+                                               })
                     };
 
             await _revisionGridView.SwitchToMainThreadAsync(launchToken);
@@ -250,44 +262,6 @@ namespace GitUI.BuildServerIntegration
             }
 
             return null;
-        }
-
-        private void OnBuildInfoUpdate(BuildInfo buildInfo)
-        {
-            if (_buildStatusCancellationToken is null)
-            {
-                return;
-            }
-
-            foreach (var commitHash in buildInfo.CommitHashList)
-            {
-                var index = _revisionGridView.TryGetRevisionIndex(commitHash);
-
-                if (!index.HasValue)
-                {
-                    continue;
-                }
-
-                var revision = _revisionGridView.GetRevision(index.Value);
-
-                if (revision is null)
-                {
-                    continue;
-                }
-
-                if (revision.BuildStatus is null || buildInfo.StartDate >= revision.BuildStatus.StartDate)
-                {
-                    revision.BuildStatus = buildInfo;
-
-                    if (index.Value < _revisionGridView.RowCount)
-                    {
-                        if (_revisionGridView.Rows[index.Value].Cells[ColumnProvider.Index].Displayed)
-                        {
-                            _revisionGridView.UpdateCellValue(ColumnProvider.Index, index.Value);
-                        }
-                    }
-                }
-            }
         }
 
         private async Task<IBuildServerAdapter?> GetBuildServerAdapterAsync()
