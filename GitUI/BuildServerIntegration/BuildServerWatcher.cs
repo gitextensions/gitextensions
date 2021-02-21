@@ -26,7 +26,6 @@ namespace GitUI.BuildServerIntegration
     {
         private static readonly TimeSpan ShortPollInterval = TimeSpan.FromSeconds(10);
         private static readonly TimeSpan LongPollInterval = TimeSpan.FromSeconds(120);
-        private readonly CancellationTokenSequence _launchCancellation = new();
         private readonly object _buildServerCredentialsLock = new();
         private readonly RevisionGridControl _revisionGrid;
         private readonly Func<GitModule> _module;
@@ -44,20 +43,13 @@ namespace GitUI.BuildServerIntegration
 
         public async Task LaunchBuildServerInfoFetchOperationAsync(Action<BuildInfo> onBuildInfoUpdate)
         {
-            await TaskScheduler.Default;
-
             CancelBuildStatusFetchOperation();
 
-            var launchToken = _launchCancellation.Next();
-
-            var buildServerAdapter = await GetBuildServerAdapterAsync().ConfigureAwait(false);
-
             _buildServerAdapter?.Dispose();
-            _buildServerAdapter = buildServerAdapter;
+            _buildServerAdapter = await GetBuildServerAdapterAsync()
+                .ConfigureAwait(false);
 
-            await TaskScheduler.Default;
-
-            if (buildServerAdapter is null || launchToken.IsCancellationRequested)
+            if (_buildServerAdapter is null)
             {
                 return;
             }
@@ -65,10 +57,10 @@ namespace GitUI.BuildServerIntegration
             var scheduler = NewThreadScheduler.Default;
 
             // Run this first as it (may) force start queries
-            var runningBuildsObservable = buildServerAdapter.GetRunningBuilds(scheduler);
+            var runningBuildsObservable = _buildServerAdapter.GetRunningBuilds(scheduler);
 
-            var fullDayObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
-            var fullObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler);
+            var fullDayObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
+            var fullObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler);
 
             bool anyRunningBuilds = false;
             var delayObservable = Observable.Defer(() => Observable.Empty<BuildInfo>()
@@ -80,7 +72,7 @@ namespace GitUI.BuildServerIntegration
             // All finished builds have already been retrieved,
             // so looking for new finished builds make sense only if running builds have been found previously
             var fromNowObservable = Observable.If(() => shouldLookForNewlyFinishedBuilds,
-                buildServerAdapter.GetFinishedBuildsSince(scheduler, nowFrozen)
+                _buildServerAdapter.GetFinishedBuildsSince(scheduler, nowFrozen)
                             .Finally(() => shouldLookForNewlyFinishedBuilds = false));
 
             var cancellationToken = new CompositeDisposable
@@ -323,7 +315,6 @@ namespace GitUI.BuildServerIntegration
             CancelBuildStatusFetchOperation();
 
             _buildServerAdapter?.Dispose();
-            _launchCancellation.Dispose();
         }
 
         private static IsolatedStorageFileStream GetBuildServerOptionsIsolatedStorageStream(IBuildServerAdapter buildServerAdapter, FileAccess fileAccess, FileShare fileShare)
