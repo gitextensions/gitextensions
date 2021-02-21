@@ -261,7 +261,7 @@ namespace GitUI
             _gridView.DragEnter += OnGridViewDragEnter;
             _gridView.DragDrop += OnGridViewDragDrop;
 
-            _buildServerWatcher = new BuildServerWatcher(this, _gridView, () => Module);
+            _buildServerWatcher = new BuildServerWatcher(this, () => Module);
             _buildServerColumnProvider = new BuildStatusColumnProvider(this, _gridView, () => Module);
 
             var gitRevisionSummaryBuilder = new GitRevisionSummaryBuilder();

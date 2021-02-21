@@ -16,7 +16,6 @@ using GitCommands.Config;
 using GitCommands.Remotes;
 using GitUI.HelperDialogs;
 using GitUI.UserControls;
-using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft.VisualStudio.Threading;
@@ -30,16 +29,14 @@ namespace GitUI.BuildServerIntegration
         private readonly CancellationTokenSequence _launchCancellation = new();
         private readonly object _buildServerCredentialsLock = new();
         private readonly RevisionGridControl _revisionGrid;
-        private readonly RevisionDataGridView _revisionGridView;
         private readonly Func<GitModule> _module;
         private readonly IRepoNameExtractor _repoNameExtractor;
         private IDisposable? _buildStatusCancellationToken;
         private IBuildServerAdapter? _buildServerAdapter;
 
-        public BuildServerWatcher(RevisionGridControl revisionGrid, RevisionDataGridView revisionGridView, Func<GitModule> module)
+        public BuildServerWatcher(RevisionGridControl revisionGrid, Func<GitModule> module)
         {
             _revisionGrid = revisionGrid;
-            _revisionGridView = revisionGridView;
             _module = module;
 
             _repoNameExtractor = new RepoNameExtractor(_module);
@@ -54,8 +51,6 @@ namespace GitUI.BuildServerIntegration
             var launchToken = _launchCancellation.Next();
 
             var buildServerAdapter = await GetBuildServerAdapterAsync().ConfigureAwait(false);
-
-            await _revisionGridView.SwitchToMainThreadAsync(launchToken);
 
             _buildServerAdapter?.Dispose();
             _buildServerAdapter = buildServerAdapter;
@@ -127,8 +122,6 @@ namespace GitUI.BuildServerIntegration
                                                    onBuildInfoUpdate(x);
                                                })
                     };
-
-            await _revisionGridView.SwitchToMainThreadAsync(launchToken);
 
             CancelBuildStatusFetchOperation();
             _buildStatusCancellationToken = cancellationToken;
