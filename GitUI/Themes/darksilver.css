@@ -38,12 +38,12 @@
 .HighlightAllOccurences  { color: #606020; }
 .Tag                     { color: #408080; }
 .Graph                   { color: #882d00; }
-.RemoteBranch            { color: #00d76b; }
+.RemoteBranch            { color: #ff8080; } /* hsl(0,   100%, 75%) */
 .DiffSection             { color: #4f4f4f; }
 .DiffAdded               { color: #054e2a; }
 .DiffAddedExtra          { color: #058545; }
 
-.Branch                      { color: #ff8080; } /* hsl(0,   100%, 75%) */
+.Branch                      { color: #00d76b; }
 .Branch.colorblind           { color: #0080ff; } /* hsl(210, 100%, 50%) */
 .DiffRemoved                 { color: #5a0707; } /* hsl(0,   86%,  19%) */
 .DiffRemoved.colorblind      { color: #090755; } /* hsl(242, 85%,  18%) */

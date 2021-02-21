@@ -5,7 +5,7 @@
 /* Application colors */
 .Graph                       { color: #8a0000; } /* hsl(0,   100%, 27%) */
 .Graph.colorblind            { color: #0600a8; } /* hsl(242, 100%, 33%) */
-.Branch                      { color: #8a0000; } /* hsl(0,   100%, 27%) */
+.RemoteBranch                { color: #8a0000; } /* hsl(0,   100%, 27%) */
 .Branch.colorblind           { color: #0600a8; } /* hsl(242, 100%, 33%) */
 .DiffRemoved                 { color: #ffc7c7; } /* hsl(0,   100%, 89%) */
 .DiffRemoved.colorblind      { color: #94cbff; } /* hsl(209, 100%, 79%) */
