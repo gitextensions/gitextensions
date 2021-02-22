@@ -57,9 +57,27 @@ namespace GitUI.Theming
                 case Parts.LVP_LISTITEM:
                     return RenderItemBackground(ctx, (State.ListItem)stateid, prect);
 
+                case Parts.LVP_COLUMNDETAIL:
+                    return RenderColumnDetail(ctx, prect);
+
                 default:
                     return Unhandled;
             }
+        }
+
+        private int RenderColumnDetail(Context ctx, Rectangle prect)
+        {
+            int width = Math.Max(1, prect.Width / 2);
+            using var brush = new SolidBrush(Color.FromArgb(32, SystemColors.HotTrack));
+            ctx.Graphics.FillRectangle(
+                brush,
+                Rectangle.FromLTRB(
+                    prect.Right - width,
+                    prect.Top,
+                    prect.Right,
+                    prect.Bottom));
+
+            return Handled;
         }
 
         public override int RenderBackgroundEx(
