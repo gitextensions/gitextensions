@@ -103,6 +103,7 @@ namespace GitExtensions
                 ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
             }
 
+            bool saveAppSettings;
             AppSettings.LoadSettings();
 
             if (EnvUtils.RunningOnWindows())
@@ -119,11 +120,13 @@ namespace GitExtensions
                 }
             }
 
+            bool telemetrySettingChanged = false;
             if (!AppSettings.TelemetryEnabled.HasValue)
             {
                 AppSettings.TelemetryEnabled = MessageBox.Show(null, ResourceManager.Strings.TelemetryPermissionMessage,
                                                                ResourceManager.Strings.TelemetryPermissionCaption, MessageBoxButtons.YesNo,
                                                                MessageBoxIcon.Question) == DialogResult.Yes;
+                telemetrySettingChanged = true;
             }
 
             try
@@ -175,6 +178,7 @@ namespace GitExtensions
 
             if (args.Length <= 1)
             {
+                saveAppSettings = true;
                 commands.StartBrowseDialog();
             }
             else
@@ -184,13 +188,16 @@ namespace GitExtensions
                 // Avoid replacing the ExitCode eventually set while parsing arguments,
                 // i.e. assume -1 and afterwards, only set it to 0 if no error is indicated.
                 Environment.ExitCode = -1;
-                if (commands.RunCommand(args))
+                if (commands.RunCommand(args, out saveAppSettings))
                 {
                     Environment.ExitCode = 0;
                 }
             }
 
-            AppSettings.SaveSettings();
+            if (saveAppSettings || telemetrySettingChanged)
+            {
+                AppSettings.SaveSettings();
+            }
         }
 
         [CanBeNull]
