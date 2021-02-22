@@ -66,7 +66,7 @@ namespace GitUI.CommandsDialogs
             this.Pick.TabIndex = 10;
             this.Pick.Text = "Cherry pick";
             this.Pick.UseVisualStyleBackColor = true;
-            this.Pick.Click += new System.EventHandler(this.Revert_Click);
+            this.Pick.Click += new System.EventHandler(this.Pick_Click);
             // 
             // btnChooseRevision
             // 

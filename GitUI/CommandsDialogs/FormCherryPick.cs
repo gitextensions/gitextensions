@@ -97,7 +97,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void Revert_Click(object sender, EventArgs e)
+        private void Pick_Click(object sender, EventArgs e)
         {
             var args = new ArgumentBuilder();
             var canExecute = true;
@@ -126,9 +126,9 @@ namespace GitUI.CommandsDialogs
 
                 // Don't verify whether the command is successful.
                 // If it fails, likely there is a conflict that needs to be resolved.
-                FormProcess.ShowDialog(this, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(Owner, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
 
-                MergeConflictHandler.HandleMergeConflicts(UICommands, this, AutoCommit.Checked);
+                MergeConflictHandler.HandleMergeConflicts(UICommands, Owner, AutoCommit.Checked);
                 DialogResult = DialogResult.OK;
                 Close();
             }
