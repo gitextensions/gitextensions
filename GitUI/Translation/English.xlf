@@ -8162,12 +8162,12 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Fetch and prune all remotes</source>
         <target />
       </trans-unit>
-      <trans-unit id="mnubtnCollapseAll.Text">
-        <source>Collapse All</source>
+      <trans-unit id="mnubtnCollapse.Text">
+        <source>Collapse</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnCollapseAll.ToolTipText">
-        <source>Collapse all nodes</source>
+        <source>Collapse all subnodes</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnCommitSubmodule.Text">
@@ -8206,12 +8206,12 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>A&amp;ctivate and fetch</source>
         <target />
       </trans-unit>
-      <trans-unit id="mnubtnExpandAll.Text">
-        <source>Expand All</source>
+      <trans-unit id="mnubtnExpand.Text">
+        <source>Expand</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnExpandAll.ToolTipText">
-        <source>Expand all nodes</source>
+        <source>Expand all subnodes</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnFetchAllBranchesFromARemote.Text">
