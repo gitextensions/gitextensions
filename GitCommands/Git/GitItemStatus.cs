@@ -177,14 +177,17 @@ namespace GitCommands
 
         #endregion
 
-        public async Task<GitSubmoduleStatus?> GetSubmoduleStatusAsync()
+        /// <summary>
+        /// Gets a task whose result is the submodule status.
+        /// </summary>
+        /// <returns>
+        /// A null task when <see cref="SetSubmoduleStatus"/> has not been called on this object, or
+        /// a task whose result is the status. The task may also return null if the status could not be
+        /// determined.
+        /// </returns>
+        public Task<GitSubmoduleStatus?>? GetSubmoduleStatusAsync()
         {
-            if (_submoduleStatus is null)
-            {
-                return null;
-            }
-
-            return await _submoduleStatus.JoinAsync();
+            return _submoduleStatus?.JoinAsync();
         }
 
         internal void SetSubmoduleStatus(JoinableTask<GitSubmoduleStatus?> status)
