@@ -46,35 +46,33 @@ namespace GitUITests.Editor
                         "2:\n" +
                         "3:Selected\n" +
                         "4:";
-            using (var testHelper = new GitModuleTestHelper())
-            {
-                var uiCommands = new GitUICommands(testHelper.Module);
-                _uiCommandsSource.UICommands.Returns(x => uiCommands);
-                _fileViewer.UICommandsSource = _uiCommandsSource;
-                _fileViewer.GetTestAccessor().FileViewerInternal.SetText(sampleText, null);
-                SelectionManager selectionManager = _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.TextArea.SelectionManager;
+            using var testHelper = new GitModuleTestHelper();
+            var uiCommands = new GitUICommands(testHelper.Module);
+            _uiCommandsSource.UICommands.Returns(x => uiCommands);
+            _fileViewer.UICommandsSource = _uiCommandsSource;
+            _fileViewer.GetTestAccessor().FileViewerInternal.SetText(sampleText, null);
+            SelectionManager selectionManager = _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.TextArea.SelectionManager;
 
-                // act
-                selectionManager.SetSelection(new TextLocation(selectedLinePrefix.Length, 1), new TextLocation(selectedLinePrefix.Length + textToSelect.Length, 1));
+            // act
+            selectionManager.SetSelection(new TextLocation(selectedLinePrefix.Length, 1), new TextLocation(selectedLinePrefix.Length + textToSelect.Length, 1));
 
-                // assert
-                selectionManager.SelectedText.Should().Be(textToSelect);
-                selectionManager.SelectionCollection.Single().StartPosition.Line.Should().Be(1);
-                int caretOffset = _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.TextArea.Caret.Offset;
-                caretOffset.Should().Be(0, "Caret position should be in default state");
+            // assert
+            selectionManager.SelectedText.Should().Be(textToSelect);
+            selectionManager.SelectionCollection.Single().StartPosition.Line.Should().Be(1);
+            int caretOffset = _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.TextArea.Caret.Offset;
+            caretOffset.Should().Be(0, "Caret position should be in default state");
 
-                _fileViewer.GetTestAccessor().FileViewerInternal.GoToNextOccurrence();
-                caretOffset = _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.TextArea.Caret.Offset;
-                caretOffset.Should().Be(4, $"Caret should have been moved to the first occurrence of '{textToSelect}'");
+            _fileViewer.GetTestAccessor().FileViewerInternal.GoToNextOccurrence();
+            caretOffset = _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.TextArea.Caret.Offset;
+            caretOffset.Should().Be(4, $"Caret should have been moved to the first occurrence of '{textToSelect}'");
 
-                _fileViewer.GetTestAccessor().FileViewerInternal.GoToNextOccurrence();
-                caretOffset = _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.TextArea.Caret.Offset;
-                caretOffset.Should().Be(18, "Caret should have been moved to the second occurence of '" + textToSelect + "'");
+            _fileViewer.GetTestAccessor().FileViewerInternal.GoToNextOccurrence();
+            caretOffset = _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.TextArea.Caret.Offset;
+            caretOffset.Should().Be(18, "Caret should have been moved to the second occurence of '" + textToSelect + "'");
 
-                _fileViewer.GetTestAccessor().FileViewerInternal.GoToPreviousOccurrence();
-                caretOffset = _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.TextArea.Caret.Offset;
-                caretOffset.Should().Be(4, "Caret should have been moved back to the first occurence of '" + textToSelect + "'");
-            }
+            _fileViewer.GetTestAccessor().FileViewerInternal.GoToPreviousOccurrence();
+            caretOffset = _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.TextArea.Caret.Offset;
+            caretOffset.Should().Be(4, "Caret should have been moved back to the first occurence of '" + textToSelect + "'");
         }
 
         [Test]
@@ -90,26 +88,24 @@ index 62a5c2f08..2bc482714 100644
 -            int scrollPos = ScrollPos;
 +            int scrollPos = VScrollPosition;";
 
-            using (var testHelper = new GitModuleTestHelper())
-            {
-                var uiCommands = new GitUICommands(testHelper.Module);
-                _uiCommandsSource.UICommands.Returns(x => uiCommands);
-                _fileViewer.UICommandsSource = _uiCommandsSource;
+            using var testHelper = new GitModuleTestHelper();
+            var uiCommands = new GitUICommands(testHelper.Module);
+            _uiCommandsSource.UICommands.Returns(x => uiCommands);
+            _fileViewer.UICommandsSource = _uiCommandsSource;
 
-                FileViewer.TestAccessor testAccessor = _fileViewer.GetTestAccessor();
-                testAccessor.ShowSyntaxHighlightingInDiff = true;
+            FileViewer.TestAccessor testAccessor = _fileViewer.GetTestAccessor();
+            testAccessor.ShowSyntaxHighlightingInDiff = true;
 
-                // act
-                testAccessor.ViewPatch("FileViewerInternal.cs", sampleCsharpPatch);
+            // act
+            testAccessor.ViewPatch("FileViewerInternal.cs", sampleCsharpPatch);
 
-                // assert
-                IHighlightingStrategy csharpHighlighting = HighlightingManager.Manager.FindHighlighterForFile("anycsharpfile.cs");
+            // assert
+            IHighlightingStrategy csharpHighlighting = HighlightingManager.Manager.FindHighlighterForFile("anycsharpfile.cs");
 
-                csharpHighlighting.Should().NotBe(HighlightingManager.Manager.DefaultHighlighting);
+            csharpHighlighting.Should().NotBe(HighlightingManager.Manager.DefaultHighlighting);
 
-                _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.Document
-                    .HighlightingStrategy.Should().Be(csharpHighlighting);
-            }
+            _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.Document
+                .HighlightingStrategy.Should().Be(csharpHighlighting);
         }
 
         [Test]
@@ -125,21 +121,19 @@ index 62a5c2f08..2bc482714 100644
 -            int scrollPos = ScrollPos;
 +            int scrollPos = VScrollPosition;";
 
-            using (var testHelper = new GitModuleTestHelper())
-            {
-                var uiCommands = new GitUICommands(testHelper.Module);
-                _uiCommandsSource.UICommands.Returns(x => uiCommands);
-                _fileViewer.UICommandsSource = _uiCommandsSource;
+            using var testHelper = new GitModuleTestHelper();
+            var uiCommands = new GitUICommands(testHelper.Module);
+            _uiCommandsSource.UICommands.Returns(x => uiCommands);
+            _fileViewer.UICommandsSource = _uiCommandsSource;
 
-                FileViewer.TestAccessor testAccessor = _fileViewer.GetTestAccessor();
-                testAccessor.ShowSyntaxHighlightingInDiff = false;
+            FileViewer.TestAccessor testAccessor = _fileViewer.GetTestAccessor();
+            testAccessor.ShowSyntaxHighlightingInDiff = false;
 
-                // act
-                testAccessor.ViewPatch("FileViewerInternal.cs", sampleCsharpPatch, null);
+            // act
+            testAccessor.ViewPatch("FileViewerInternal.cs", sampleCsharpPatch, null);
 
-                // assert
-                _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.Document.HighlightingStrategy.Should().Be(HighlightingManager.Manager.DefaultHighlighting);
-            }
+            // assert
+            _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.Document.HighlightingStrategy.Should().Be(HighlightingManager.Manager.DefaultHighlighting);
         }
 
         [Test]
@@ -151,29 +145,27 @@ index 62a5c2f08..2bc482714 100644
 index b25b745..5194740 100644
 Binary files a/binaryfile.bin and b/binaryfile.bin differ";
 
-            using (var testHelper = new GitModuleTestHelper())
-            {
-                var uiCommands = new GitUICommands(testHelper.Module);
-                _uiCommandsSource.UICommands.Returns(x => uiCommands);
-                _fileViewer.UICommandsSource = _uiCommandsSource;
+            using var testHelper = new GitModuleTestHelper();
+            var uiCommands = new GitUICommands(testHelper.Module);
+            _uiCommandsSource.UICommands.Returns(x => uiCommands);
+            _fileViewer.UICommandsSource = _uiCommandsSource;
 
-                FileViewer.TestAccessor testAccessor = _fileViewer.GetTestAccessor();
+            FileViewer.TestAccessor testAccessor = _fileViewer.GetTestAccessor();
 
-                // act
-                testAccessor.ViewPatch("binaryfile.bin", sampleBinaryPatch, null);
+            // act
+            testAccessor.ViewPatch("binaryfile.bin", sampleBinaryPatch, null);
 
-                // assert
-                testAccessor.FileViewerInternal.GetTestAccessor().TextEditor.Document.HighlightingStrategy.Should().Be(HighlightingManager.Manager.DefaultHighlighting);
+            // assert
+            testAccessor.FileViewerInternal.GetTestAccessor().TextEditor.Document.HighlightingStrategy.Should().Be(HighlightingManager.Manager.DefaultHighlighting);
 
-                const string sampleRandomText =
-                @"fldaksjflkdsjlfj";
+            const string sampleRandomText =
+            @"fldaksjflkdsjlfj";
 
-                // act
-                testAccessor.ViewPatch(null, sampleRandomText, null);
+            // act
+            testAccessor.ViewPatch(null, sampleRandomText, null);
 
-                // assert
-                _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.Document.HighlightingStrategy.Should().Be(HighlightingManager.Manager.DefaultHighlighting);
-            }
+            // assert
+            _fileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.Document.HighlightingStrategy.Should().Be(HighlightingManager.Manager.DefaultHighlighting);
         }
     }
 }

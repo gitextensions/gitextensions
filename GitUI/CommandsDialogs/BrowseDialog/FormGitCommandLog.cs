@@ -165,23 +165,21 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void mnuSaveToFile_Click(object sender, EventArgs e)
         {
-            using (var fileDialog = new SaveFileDialog
+            using var fileDialog = new SaveFileDialog
             {
                 Title = Name,
                 DefaultExt = ".txt",
                 AddExtension = true,
                 Filter = "Text files (*.txt)|*.txt|CSV files|*.csv|All files *.*|*.*"
-            })
+            };
+            if (fileDialog.ShowDialog(this) == DialogResult.OK)
             {
-                if (fileDialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    var separator = fileDialog.FileName.EndsWith("csv") ?
-                        System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator :
-                        "\t";
-                    File.WriteAllLines(
-                        fileDialog.FileName,
-                        CommandLog.Commands.Select(cle => cle.FullLine(separator)));
-                }
+                var separator = fileDialog.FileName.EndsWith("csv") ?
+                    System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator :
+                    "\t";
+                File.WriteAllLines(
+                    fileDialog.FileName,
+                    CommandLog.Commands.Select(cle => cle.FullLine(separator)));
             }
         }
 

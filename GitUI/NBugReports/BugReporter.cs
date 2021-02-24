@@ -126,13 +126,11 @@ namespace GitExtensions
         {
             var envInfo = UserEnvironmentInformation.GetInformation();
 
-            using (var form = new GitUI.NBugReports.BugReportForm())
+            using var form = new GitUI.NBugReports.BugReportForm();
+            var result = form.ShowDialog(owner, exception, envInfo);
+            if (isTerminating || result == DialogResult.Abort)
             {
-                var result = form.ShowDialog(owner, exception, envInfo);
-                if (isTerminating || result == DialogResult.Abort)
-                {
-                    Environment.Exit(-1);
-                }
+                Environment.Exit(-1);
             }
         }
     }

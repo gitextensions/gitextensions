@@ -325,28 +325,24 @@ namespace GitUI.CommandsDialogs
 
         private void PickAnotherBranch(GitRevision preSelectCommit, ref string? displayStr, ref GitRevision? revision)
         {
-            using (var form = new FormCompareToBranch(UICommands, preSelectCommit.ObjectId))
+            using var form = new FormCompareToBranch(UICommands, preSelectCommit.ObjectId);
+            if (form.ShowDialog(this) == DialogResult.OK)
             {
-                if (form.ShowDialog(this) == DialogResult.OK)
-                {
-                    displayStr = form.BranchName;
-                    var objectId = Module.RevParse(form.BranchName);
-                    revision = objectId is null ? null : new GitRevision(objectId);
-                    PopulateDiffFiles();
-                }
+                displayStr = form.BranchName;
+                var objectId = Module.RevParse(form.BranchName);
+                revision = objectId is null ? null : new GitRevision(objectId);
+                PopulateDiffFiles();
             }
         }
 
         private void PickAnotherCommit(GitRevision preSelect, ref string? displayStr, ref GitRevision? revision)
         {
-            using (var form = new FormChooseCommit(UICommands, preselectCommit: preSelect.Guid, showArtificial: true))
+            using var form = new FormChooseCommit(UICommands, preselectCommit: preSelect.Guid, showArtificial: true);
+            if (form.ShowDialog(this) == DialogResult.OK)
             {
-                if (form.ShowDialog(this) == DialogResult.OK)
-                {
-                    revision = form.SelectedRevision;
-                    displayStr = form.SelectedRevision?.Subject;
-                    PopulateDiffFiles();
-                }
+                revision = form.SelectedRevision;
+                displayStr = form.SelectedRevision?.Subject;
+                PopulateDiffFiles();
             }
         }
     }

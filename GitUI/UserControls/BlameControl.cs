@@ -489,10 +489,8 @@ namespace GitUI.Blame
             }
             else
             {
-                using (var frm = new FormCommitDiff(UICommands, _lastBlameLine.Commit.ObjectId))
-                {
-                    frm.ShowDialog(this);
-                }
+                using var frm = new FormCommitDiff(UICommands, _lastBlameLine.Commit.ObjectId);
+                frm.ShowDialog(this);
             }
         }
 
@@ -610,10 +608,8 @@ namespace GitUI.Blame
                 return;
             }
 
-            using (var frm = new FormCommitDiff(UICommands, revisionId))
-            {
-                frm.ShowDialog(this);
-            }
+            using var frm = new FormCommitDiff(UICommands, revisionId);
+            frm.ShowDialog(this);
         }
 
         private void showChangesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -625,10 +621,8 @@ namespace GitUI.Blame
                 return;
             }
 
-            using (var frm = new FormCommitDiff(UICommands, commit.ObjectId))
-            {
-                frm.ShowDialog(this);
-            }
+            using var frm = new FormCommitDiff(UICommands, commit.ObjectId);
+            frm.ShowDialog(this);
         }
 
         protected override void Dispose(bool disposing)

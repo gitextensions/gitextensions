@@ -110,11 +110,9 @@ namespace GitUI.Hotkey
                 UpdateUsedKeys(settings);
 
                 var str = new StringBuilder();
-                using (var writer = new StringWriter(str))
-                {
-                    Serializer.Serialize(writer, settings);
-                    AppSettings.SerializedHotkeys = str.ToString();
-                }
+                using var writer = new StringWriter(str);
+                Serializer.Serialize(writer, settings);
+                AppSettings.SerializedHotkeys = str.ToString();
             }
             catch
             {
@@ -186,10 +184,8 @@ namespace GitUI.Hotkey
         {
             try
             {
-                using (var reader = new StringReader(serializedHotkeys))
-                {
-                    return (HotkeySettings[])Serializer.Deserialize(reader);
-                }
+                using var reader = new StringReader(serializedHotkeys);
+                return (HotkeySettings[])Serializer.Deserialize(reader);
             }
             catch
             {

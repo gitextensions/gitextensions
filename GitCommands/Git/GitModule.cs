@@ -597,27 +597,23 @@ namespace GitCommands
 
         public void SaveBlobAs(string saveAs, string blob)
         {
-            using (var blobStream = GetFileStream(blob))
+            using var blobStream = GetFileStream(blob);
+            if (blobStream is null)
             {
-                if (blobStream is null)
-                {
-                    return;
-                }
+                return;
+            }
 
-                var blobData = blobStream.ToArray();
-                if (EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.@true)
+            var blobData = blobStream.ToArray();
+            if (EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.@true)
+            {
+                if (!FileHelper.IsBinaryFileName(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(blobData))
                 {
-                    if (!FileHelper.IsBinaryFileName(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(blobData))
-                    {
-                        blobData = GitConvert.ConvertCrLfToWorktree(blobData);
-                    }
-                }
-
-                using (var stream = File.Create(saveAs))
-                {
-                    stream.Write(blobData, 0, blobData.Length);
+                    blobData = GitConvert.ConvertCrLfToWorktree(blobData);
                 }
             }
+
+            using var stream = File.Create(saveAs);
+            stream.Write(blobData, 0, blobData.Length);
         }
 
         private static string GetSide(string side)
@@ -912,10 +908,8 @@ namespace GitCommands
                 { !string.IsNullOrWhiteSpace(fileName), "--" },
                 fileName.ToPosixPath().QuoteNE()
             };
-            using (var process = _gitExecutable.Start(args, createWindow: true))
-            {
-                process.WaitForExit();
-            }
+            using var process = _gitExecutable.Start(args, createWindow: true);
+            process.WaitForExit();
         }
 
         public string Init(bool bare, bool shared)
@@ -1600,28 +1594,24 @@ namespace GitCommands
 
         public string ApplyPatch(string dir, ArgumentString amCommand)
         {
-            using (var process = _gitExecutable.Start(amCommand, createWindow: false, redirectInput: true, redirectOutput: true, SystemEncoding))
+            using var process = _gitExecutable.Start(amCommand, createWindow: false, redirectInput: true, redirectOutput: true, SystemEncoding);
+            var files = Directory.GetFiles(dir);
+
+            if (files.Length == 0)
             {
-                var files = Directory.GetFiles(dir);
-
-                if (files.Length == 0)
-                {
-                    return "";
-                }
-
-                foreach (var file in files)
-                {
-                    using (var fs = new FileStream(file, FileMode.Open))
-                    {
-                        fs.CopyTo(process.StandardInput.BaseStream);
-                    }
-                }
-
-                process.StandardInput.Close();
-                process.WaitForExit();
-
-                return process.StandardOutput.ReadToEnd().Trim();
+                return "";
             }
+
+            foreach (var file in files)
+            {
+                using var fs = new FileStream(file, FileMode.Open);
+                fs.CopyTo(process.StandardInput.BaseStream);
+            }
+
+            process.StandardInput.Close();
+            process.WaitForExit();
+
+            return process.StandardOutput.ReadToEnd().Trim();
         }
 
         #region Stage/Unstage
@@ -1857,10 +1847,8 @@ namespace GitCommands
                 file.Name.Quote()
             };
 
-            using (var process = _gitExecutable.Start(args, createWindow: true))
-            {
-                return await process.WaitForExitAsync() == 0;
-            }
+            using var process = _gitExecutable.Start(args, createWindow: true);
+            return await process.WaitForExitAsync() == 0;
         }
 
         public async Task<bool> ResetInteractiveAsync(GitItemStatus file)
@@ -1871,10 +1859,8 @@ namespace GitCommands
                 file.Name.Quote()
             };
 
-            using (var process = _gitExecutable.Start(args, createWindow: true))
-            {
-                return await process.WaitForExitAsync() == 0;
-            }
+            using var process = _gitExecutable.Start(args, createWindow: true);
+            return await process.WaitForExitAsync() == 0;
         }
 
         private static void UpdateIndex(StreamWriter inputWriter, string? filename)
@@ -2191,60 +2177,58 @@ namespace GitCommands
 
                 // See tests for explanation of the format
 
-                using (var enumerator = lines.GetEnumerator())
+                using var enumerator = lines.GetEnumerator();
+                while (enumerator.MoveNext())
                 {
-                    while (enumerator.MoveNext())
+                    var remoteLine = enumerator.Current;
+                    if (remoteLine.IndexOf("not a git repository", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        var remoteLine = enumerator.Current;
-                        if (remoteLine.IndexOf("not a git repository", StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            // An invalid module is not an error; we simply return an empty list of remotes
-                            return remotes;
-                        }
-
-                        var remoteMatch = _remoteVerboseLineRegex.Match(remoteLine);
-                        if (!remoteMatch.Success
-                            || (remoteMatch.Groups["direction"].Value != "fetch"
-                               && remoteMatch.Groups["direction"].Value != "push"))
-                        {
-                            // Ignore malformed and unknown entries
-                            continue;
-                        }
-
-                        var name = remoteMatch.Groups["name"].Value;
-                        var remoteUrl = remoteMatch.Groups["url"].Value;
-                        if (remoteMatch.Groups["direction"].Value == "push")
-                        {
-                            if (remotes.Count <= 0 || name != remotes[remotes.Count - 1].Name)
-                            {
-                                throw new Exception("Unable to update remote pushurl for command output: " + remoteLine);
-                            }
-
-                            remotes[remotes.Count - 1].PushUrls.Add(remoteUrl);
-                            continue;
-                        }
-
-                        if (!enumerator.MoveNext())
-                        {
-                            throw new Exception("Remote URLs should appear in pairs, no pushurl for fetch: " + remoteLine);
-                        }
-
-                        var pushLine = enumerator.Current;
-                        var pushMatch = _remoteVerboseLineRegex.Match(pushLine);
-                        if (!pushMatch.Success || pushMatch.Groups["direction"].Value != "push")
-                        {
-                            throw new Exception("Unable to parse git remote push URL line: " + pushLine);
-                        }
-
-                        var pushUrl = pushMatch.Groups["url"].Value;
-                        if (name != pushMatch.Groups["name"].Value)
-                        {
-                            throw new Exception("Fetch and push remote names must match: " +
-                                remoteLine + ", " + pushLine);
-                        }
-
-                        remotes.Add(new Remote(name, remoteUrl, pushUrl));
+                        // An invalid module is not an error; we simply return an empty list of remotes
+                        return remotes;
                     }
+
+                    var remoteMatch = _remoteVerboseLineRegex.Match(remoteLine);
+                    if (!remoteMatch.Success
+                        || (remoteMatch.Groups["direction"].Value != "fetch"
+                           && remoteMatch.Groups["direction"].Value != "push"))
+                    {
+                        // Ignore malformed and unknown entries
+                        continue;
+                    }
+
+                    var name = remoteMatch.Groups["name"].Value;
+                    var remoteUrl = remoteMatch.Groups["url"].Value;
+                    if (remoteMatch.Groups["direction"].Value == "push")
+                    {
+                        if (remotes.Count <= 0 || name != remotes[remotes.Count - 1].Name)
+                        {
+                            throw new Exception("Unable to update remote pushurl for command output: " + remoteLine);
+                        }
+
+                        remotes[remotes.Count - 1].PushUrls.Add(remoteUrl);
+                        continue;
+                    }
+
+                    if (!enumerator.MoveNext())
+                    {
+                        throw new Exception("Remote URLs should appear in pairs, no pushurl for fetch: " + remoteLine);
+                    }
+
+                    var pushLine = enumerator.Current;
+                    var pushMatch = _remoteVerboseLineRegex.Match(pushLine);
+                    if (!pushMatch.Success || pushMatch.Groups["direction"].Value != "push")
+                    {
+                        throw new Exception("Unable to parse git remote push URL line: " + pushLine);
+                    }
+
+                    var pushUrl = pushMatch.Groups["url"].Value;
+                    if (name != pushMatch.Groups["name"].Value)
+                    {
+                        throw new Exception("Fetch and push remote names must match: " +
+                            remoteLine + ", " + pushLine);
+                    }
+
+                    remotes.Add(new Remote(name, remoteUrl, pushUrl));
                 }
 
                 return remotes;
@@ -3526,14 +3510,12 @@ namespace GitCommands
                     "blob",
                     blob
                 };
-                using (var process = _gitCommandRunner.RunDetached(args, redirectOutput: true))
-                {
-                    var stream = new MemoryStream();
-                    process.StandardOutput.BaseStream.CopyTo(stream);
-                    process.WaitForExit();
-                    stream.Position = 0;
-                    return stream;
-                }
+                using var process = _gitCommandRunner.RunDetached(args, redirectOutput: true);
+                var stream = new MemoryStream();
+                process.StandardOutput.BaseStream.CopyTo(stream);
+                process.WaitForExit();
+                stream.Position = 0;
+                return stream;
             }
             catch (Win32Exception ex)
             {

@@ -101,10 +101,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (IsFixHome())
             {
-                using (var frm = new FormFixHome())
-                {
-                    frm.ShowIfUserWant();
-                }
+                using var frm = new FormFixHome();
+                frm.ShowIfUserWant();
             }
         }
 

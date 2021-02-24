@@ -212,33 +212,31 @@ namespace GitUI.CommandsDialogs
 
                 string to = MailTo.Text;
 
-                using (var mail = new MailMessage(from, to, MailSubject.Text, MailBody.Text))
+                using var mail = new MailMessage(from, to, MailSubject.Text, MailBody.Text);
+                foreach (string file in Directory.GetFiles(dir, "*.patch"))
                 {
-                    foreach (string file in Directory.GetFiles(dir, "*.patch"))
-                    {
-                        var attachment = new Attachment(file);
-                        mail.Attachments.Add(attachment);
-                    }
-
-                    var smtpClient = new SmtpClient(AppSettings.SmtpServer)
-                    {
-                        Port = AppSettings.SmtpPort,
-                        EnableSsl = AppSettings.SmtpUseSsl
-                    };
-
-                    using (var credentials = new SmtpCredentials())
-                    {
-                        credentials.login.Text = from;
-
-                        smtpClient.Credentials = credentials.ShowDialog(this) == DialogResult.OK
-                            ? new NetworkCredential(credentials.login.Text, credentials.password.Text)
-                            : CredentialCache.DefaultNetworkCredentials;
-                    }
-
-                    ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-
-                    smtpClient.Send(mail);
+                    var attachment = new Attachment(file);
+                    mail.Attachments.Add(attachment);
                 }
+
+                var smtpClient = new SmtpClient(AppSettings.SmtpServer)
+                {
+                    Port = AppSettings.SmtpPort,
+                    EnableSsl = AppSettings.SmtpUseSsl
+                };
+
+                using (var credentials = new SmtpCredentials())
+                {
+                    credentials.login.Text = from;
+
+                    smtpClient.Credentials = credentials.ShowDialog(this) == DialogResult.OK
+                        ? new NetworkCredential(credentials.login.Text, credentials.password.Text)
+                        : CredentialCache.DefaultNetworkCredentials;
+                }
+
+                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+
+                smtpClient.Send(mail);
             }
             catch (Exception ex)
             {

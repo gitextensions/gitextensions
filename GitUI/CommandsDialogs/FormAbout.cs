@@ -50,10 +50,8 @@ namespace GitUI.CommandsDialogs
 
             void ShowContributorsForm()
             {
-                using (var formContributors = new FormContributors())
-                {
-                    formContributors.ShowDialog(owner: this);
-                }
+                using var formContributors = new FormContributors();
+                formContributors.ShowDialog(owner: this);
             }
 
             void ThankNextContributor()

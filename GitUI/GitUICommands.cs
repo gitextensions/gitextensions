@@ -147,11 +147,8 @@ namespace GitUI
         {
             return DoActionOnRepo(owner, action: () =>
             {
-                using (var form = new FormDeleteBranch(this, branches))
-                {
-                    form.ShowDialog(owner);
-                }
-
+                using var form = new FormDeleteBranch(this, branches);
+                form.ShowDialog(owner);
                 return true;
             }, changesRepo: false);
         }
@@ -159,26 +156,21 @@ namespace GitUI
         public bool StartDeleteRemoteBranchDialog(IWin32Window? owner, string remoteBranch)
         {
             return DoActionOnRepo(owner, action: () =>
-                {
-                    using (var form = new FormDeleteRemoteBranch(this, remoteBranch))
-                    {
-                        form.ShowDialog(owner);
-                    }
-
-                    return true;
-                }, changesRepo: false);
+            {
+                using var form = new FormDeleteRemoteBranch(this, remoteBranch);
+                form.ShowDialog(owner);
+                return true;
+            }, changesRepo: false);
         }
 
         public bool StartCheckoutRevisionDialog(IWin32Window? owner, string? revision = null)
         {
             return DoActionOnRepo(owner, action: () =>
-                {
-                    using (var form = new FormCheckoutRevision(this))
-                    {
-                        form.SetRevision(revision);
-                        return form.ShowDialog(owner) == DialogResult.OK;
-                    }
-                }, preEvent: PreCheckoutRevision, postEvent: PostCheckoutRevision);
+            {
+                using var form = new FormCheckoutRevision(this);
+                form.SetRevision(revision);
+                return form.ShowDialog(owner) == DialogResult.OK;
+            }, preEvent: PreCheckoutRevision, postEvent: PostCheckoutRevision);
         }
 
         public bool StartResetCurrentBranchDialog(IWin32Window? owner, string branch)
@@ -331,10 +323,8 @@ namespace GitUI
         {
             return DoActionOnRepo(owner, action: () =>
             {
-                using (var form = new FormCheckoutBranch(this, branch, remote, containRevisions))
-                {
-                    return form.DoDefaultActionOrShow(owner) != DialogResult.Cancel;
-                }
+                using var form = new FormCheckoutBranch(this, branch, remote, containRevisions);
+                return form.DoDefaultActionOrShow(owner) != DialogResult.Cancel;
             }, preEvent: PreCheckoutBranch, postEvent: PostCheckoutBranch);
         }
 
@@ -392,10 +382,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormLog(this))
-                {
-                    return form.ShowDialog(owner) == DialogResult.OK;
-                }
+                using var form = new FormLog(this);
+                return form.ShowDialog(owner) == DialogResult.OK;
             }
 
             return DoActionOnRepo(owner, Action);
@@ -405,11 +393,8 @@ namespace GitUI
         {
             return DoActionOnRepo(owner, action: () =>
             {
-                using (var form = new FormAddFiles(this, addFiles))
-                {
-                    form.ShowDialog(owner);
-                }
-
+                using var form = new FormAddFiles(this, addFiles);
+                form.ShowDialog(owner);
                 return true;
             });
         }
@@ -430,10 +415,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormCreateBranch(this, objectId, newBranchNamePrefix))
-                {
-                    return form.ShowDialog(owner) == DialogResult.OK;
-                }
+                using var form = new FormCreateBranch(this, objectId, newBranchNamePrefix);
+                return form.ShowDialog(owner) == DialogResult.OK;
             }
 
             return DoActionOnRepo(owner, Action);
@@ -443,11 +426,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormClone(this, url, openedFromProtocolHandler, gitModuleChanged))
-                {
-                    form.ShowDialog(owner);
-                }
-
+                using var form = new FormClone(this, url, openedFromProtocolHandler, gitModuleChanged);
+                form.ShowDialog(owner);
                 return true;
             }
 
@@ -472,11 +452,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormCommit(this, CommitKind.Squash, revision))
-                {
-                    form.ShowDialog(owner);
-                }
-
+                using var form = new FormCommit(this, CommitKind.Squash, revision);
+                form.ShowDialog(owner);
                 return true;
             }
 
@@ -487,11 +464,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormCommit(this, CommitKind.Fixup, revision))
-                {
-                    form.ShowDialog(owner);
-                }
-
+                using var form = new FormCommit(this, CommitKind.Fixup, revision);
+                form.ShowDialog(owner);
                 return true;
             }
 
@@ -527,16 +501,14 @@ namespace GitUI
                         });
                     }
 
-                    using (var form = new FormCommit(this, commitMessage: commitMessage))
+                    using var form = new FormCommit(this, commitMessage: commitMessage);
+                    if (showOnlyWhenChanges)
                     {
-                        if (showOnlyWhenChanges)
-                        {
-                            form.ShowDialogWhenChanges(owner);
-                        }
-                        else
-                        {
-                            form.ShowDialog(owner);
-                        }
+                        form.ShowDialogWhenChanges(owner);
+                    }
+                    else
+                    {
+                        form.ShowDialog(owner);
                     }
                 }
                 finally
@@ -593,19 +565,17 @@ namespace GitUI
 
             bool Action()
             {
-                using (var formPull = new FormPull(this, remoteBranch, remote, pullAction))
+                using var formPull = new FormPull(this, remoteBranch, remote, pullAction);
+                var dlgResult = pullOnShow
+                    ? formPull.PullAndShowDialogWhenFailed(owner, remote, pullAction)
+                    : formPull.ShowDialog(owner);
+
+                if (dlgResult == DialogResult.OK)
                 {
-                    var dlgResult = pullOnShow
-                        ? formPull.PullAndShowDialogWhenFailed(owner, remote, pullAction)
-                        : formPull.ShowDialog(owner);
-
-                    if (dlgResult == DialogResult.OK)
-                    {
-                        pulled = !formPull.ErrorOccurred;
-                    }
-
-                    return dlgResult == DialogResult.OK;
+                    pulled = !formPull.ErrorOccurred;
                 }
+
+                return dlgResult == DialogResult.OK;
             }
 
             bool done = DoActionOnRepo(owner, Action);
@@ -619,15 +589,13 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var viewPatch = new FormViewPatch(this))
+                using var viewPatch = new FormViewPatch(this);
+                if (!GitExtensions.Strings.IsNullOrEmpty(patchFile))
                 {
-                    if (!GitExtensions.Strings.IsNullOrEmpty(patchFile))
-                    {
-                        viewPatch.LoadPatch(patchFile);
-                    }
-
-                    viewPatch.ShowDialog(owner);
+                    viewPatch.LoadPatch(patchFile);
                 }
+
+                viewPatch.ShowDialog(owner);
 
                 return true;
             }
@@ -639,11 +607,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var viewPatch = new FormCommitDiff(this, objectId))
-                {
-                    viewPatch.ShowDialog(null);
-                }
-
+                using var viewPatch = new FormCommitDiff(this, objectId);
+                viewPatch.ShowDialog(null);
                 return true;
             }
 
@@ -659,11 +624,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormSparseWorkingCopy(this))
-                {
-                    form.ShowDialog(owner);
-                }
-
+                using var form = new FormSparseWorkingCopy(this);
+                form.ShowDialog(owner);
                 return true;
             }
 
@@ -684,11 +646,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormFormatPatch(this))
-                {
-                    form.ShowDialog(owner);
-                }
-
+                using var form = new FormFormatPatch(this);
+                form.ShowDialog(owner);
                 return true;
             }
 
@@ -699,11 +658,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormStash(this) { ManageStashes = manageStashes })
-                {
-                    form.ShowDialog(owner);
-                }
-
+                using var form = new FormStash(this) { ManageStashes = manageStashes };
+                form.ShowDialog(owner);
                 return true;
             }
 
@@ -807,10 +763,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormRevertCommit(this, revision))
-                {
-                    return form.ShowDialog(owner) == DialogResult.OK;
-                }
+                using var form = new FormRevertCommit(this, revision);
+                return form.ShowDialog(owner) == DialogResult.OK;
             }
 
             return DoActionOnRepo(owner, Action);
@@ -820,11 +774,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormResolveConflicts(this, offerCommit))
-                {
-                    form.ShowDialog(owner);
-                }
-
+                using var form = new FormResolveConflicts(this, offerCommit);
+                form.ShowDialog(owner);
                 return true;
             }
 
@@ -835,10 +786,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormCherryPick(this, revision))
-                {
-                    return form.ShowDialog(owner) == DialogResult.OK;
-                }
+                using var form = new FormCherryPick(this, revision);
+                return form.ShowDialog(owner) == DialogResult.OK;
             }
 
             return DoActionOnRepo(owner, Action);
@@ -899,11 +848,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormMergeBranch(this, branch))
-                {
-                    form.ShowDialog(owner);
-                }
-
+                using var form = new FormMergeBranch(this, branch);
+                form.ShowDialog(owner);
                 return true;
             }
 
@@ -914,10 +860,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormCreateTag(this, revision?.ObjectId))
-                {
-                    return form.ShowDialog(owner) == DialogResult.OK;
-                }
+                using var form = new FormCreateTag(this, revision?.ObjectId);
+                return form.ShowDialog(owner) == DialogResult.OK;
             }
 
             return DoActionOnRepo(owner, Action);
@@ -927,10 +871,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormDeleteTag(this, tag))
-                {
-                    return form.ShowDialog(owner) == DialogResult.OK;
-                }
+                using var form = new FormDeleteTag(this, tag);
+                return form.ShowDialog(owner) == DialogResult.OK;
             }
 
             return DoActionOnRepo(owner, Action);
@@ -940,11 +882,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormGitIgnore(this, localExcludes))
-                {
-                    form.ShowDialog(owner);
-                }
-
+                using var form = new FormGitIgnore(this, localExcludes);
+                form.ShowDialog(owner);
                 return true;
             }
 
@@ -955,11 +894,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var frm = new FormAddToGitIgnore(this, localExclude, filePattern))
-                {
-                    frm.ShowDialog(owner);
-                }
-
+                using var frm = new FormAddToGitIgnore(this, localExclude, filePattern);
+                frm.ShowDialog(owner);
                 return true;
             }
 
@@ -999,13 +935,13 @@ namespace GitUI
         {
             return DoActionOnRepo(owner, action: () =>
                 {
-                    using (var form = new FormArchive(this))
+                    using var form = new FormArchive(this)
                     {
-                        form.SelectedRevision = revision;
-                        form.SetDiffSelectedRevision(revision2);
-                        form.SetPathArgument(path);
-                        form.ShowDialog(owner);
-                    }
+                        SelectedRevision = revision,
+                    };
+                    form.SetDiffSelectedRevision(revision2);
+                    form.SetPathArgument(path);
+                    form.ShowDialog(owner);
 
                     return true;
                 }, changesRepo: false);
@@ -1015,11 +951,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormMailMap(this))
-                {
-                    form.ShowDialog(owner);
-                }
-
+                using var form = new FormMailMap(this);
+                form.ShowDialog(owner);
                 return true;
             }
 
@@ -1030,11 +963,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormVerify(this))
-                {
-                    form.ShowDialog(owner);
-                }
-
+                using var form = new FormVerify(this);
+                form.ShowDialog(owner);
                 return true;
             }
 
@@ -1047,13 +977,12 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormRemotes(this))
+                using var form = new FormRemotes(this)
                 {
-                    form.PreselectRemoteOnLoad = preselectRemote;
-                    form.PreselectLocalOnLoad = preselectLocal;
-                    form.ShowDialog(owner);
-                }
-
+                    PreselectRemoteOnLoad = preselectRemote,
+                    PreselectLocalOnLoad = preselectLocal
+                };
+                form.ShowDialog(owner);
                 return true;
             }
 
@@ -1091,11 +1020,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormRebase(this, from, to, onto, interactive, startRebaseImmediately))
-                {
-                    form.ShowDialog(owner);
-                }
-
+                using var form = new FormRebase(this, from, to, onto, interactive, startRebaseImmediately);
+                form.ShowDialog(owner);
                 return true;
             }
 
@@ -1106,10 +1032,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormRenameBranch(this, branch))
-                {
-                    return form.ShowDialog(owner) == DialogResult.OK;
-                }
+                using var form = new FormRenameBranch(this, branch);
+                return form.ShowDialog(owner) == DialogResult.OK;
             }
 
             return DoActionOnRepo(owner, Action);
@@ -1119,11 +1043,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormSubmodules(this))
-                {
-                    form.ShowDialog(owner);
-                }
-
+                using var form = new FormSubmodules(this);
+                form.ShowDialog(owner);
                 return true;
             }
 
@@ -1256,24 +1177,22 @@ namespace GitUI
 
             bool Action()
             {
-                using (var form = new FormPush(this))
+                using var form = new FormPush(this);
+                if (forceWithLease)
                 {
-                    if (forceWithLease)
-                    {
-                        form.CheckForceWithLease();
-                    }
-
-                    var dlgResult = pushOnShow
-                        ? form.PushAndShowDialogWhenFailed(owner)
-                        : form.ShowDialog(owner);
-
-                    if (dlgResult == DialogResult.OK)
-                    {
-                        pushed = !form.ErrorOccurred;
-                    }
-
-                    return dlgResult == DialogResult.OK;
+                    form.CheckForceWithLease();
                 }
+
+                var dlgResult = pushOnShow
+                    ? form.PushAndShowDialogWhenFailed(owner)
+                    : form.ShowDialog(owner);
+
+                if (dlgResult == DialogResult.OK)
+                {
+                    pushed = !form.ErrorOccurred;
+                }
+
+                return dlgResult == DialogResult.OK;
             }
 
             bool done = DoActionOnRepo(owner, Action);
@@ -1292,21 +1211,19 @@ namespace GitUI
         {
             return DoActionOnRepo(owner, action: () =>
                 {
-                    using (var form = new FormApplyPatch(this))
+                    using var form = new FormApplyPatch(this);
+                    if (Directory.Exists(patchFile!))
                     {
-                        if (Directory.Exists(patchFile))
-                        {
-                            form.SetPatchDir(patchFile!);
-                        }
-                        else
-                        {
-                            form.SetPatchFile(patchFile ?? "");
-                        }
-
-                        form.ShowDialog(owner);
-
-                        return true;
+                        form.SetPatchDir(patchFile!);
                     }
+                    else
+                    {
+                        form.SetPatchFile(patchFile ?? "");
+                    }
+
+                    form.ShowDialog(owner);
+
+                    return true;
                 }, changesRepo: false);
         }
 
@@ -1314,11 +1231,8 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormGitAttributes(this))
-                {
-                    form.ShowDialog(owner);
-                }
-
+                using var form = new FormGitAttributes(this);
+                form.ShowDialog(owner);
                 return true;
             }
 
@@ -1377,10 +1291,8 @@ namespace GitUI
         {
             WrapRepoHostingCall(Strings.ForkCloneRepo, gitHoster, gh =>
             {
-                using (var frm = new ForkAndCloneForm(gitHoster, gitModuleChanged))
-                {
-                    frm.ShowDialog(owner);
-                }
+                using var frm = new ForkAndCloneForm(gitHoster, gitModuleChanged);
+                frm.ShowDialog(owner);
             });
         }
 
@@ -1730,10 +1642,8 @@ namespace GitUI
 
         public bool StartFileEditorDialog(string? filename, bool showWarning = false)
         {
-            using (var formEditor = new FormEditor(this, filename, showWarning))
-            {
-                return formEditor.ShowDialog() != DialogResult.Cancel;
-            }
+            using var formEditor = new FormEditor(this, filename, showWarning);
+            return formEditor.ShowDialog() != DialogResult.Cancel;
         }
 
         /// <summary>
@@ -1810,11 +1720,8 @@ namespace GitUI
 
             return DoActionOnRepo(owner: null, action: () =>
             {
-                using (var frm = new FormBlame(this, blameFileName, null, initialLine))
-                {
-                    frm.ShowDialog(null);
-                }
-
+                using var frm = new FormBlame(this, blameFileName, null, initialLine);
+                frm.ShowDialog(null);
                 return true;
             }, changesRepo: false);
         }
@@ -1962,25 +1869,23 @@ namespace GitUI
                     throw new InvalidOperationException("CommandText is required");
                 }
 
-                using (var form = new FormRemoteProcess(_commands, process: null, CommandText))
+                using var form = new FormRemoteProcess(_commands, process: null, CommandText);
+                if (Title is not null)
                 {
-                    if (Title is not null)
-                    {
-                        form.Text = Title;
-                    }
-
-                    if (Remote is not null)
-                    {
-                        form.Remote = Remote;
-                    }
-
-                    form.HandleOnExitCallback = HandleOnExit;
-
-                    form.ShowDialog(OwnerForm as IWin32Window);
-
-                    ErrorOccurred = form.ErrorOccurred();
-                    CommandOutput = form.GetOutputString();
+                    form.Text = Title;
                 }
+
+                if (Remote is not null)
+                {
+                    form.Remote = Remote;
+                }
+
+                form.HandleOnExitCallback = HandleOnExit;
+
+                form.ShowDialog(OwnerForm as IWin32Window);
+
+                ErrorOccurred = form.ErrorOccurred();
+                CommandOutput = form.GetOutputString();
             }
 
             private bool HandleOnExit(ref bool isError, FormProcess form)

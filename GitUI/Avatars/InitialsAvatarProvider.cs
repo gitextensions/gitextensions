@@ -114,18 +114,15 @@ namespace GitUI.Avatars
 
                 var img = new Bitmap(size, size);
 
-                using (var drawing = Graphics.FromImage(img))
-                {
-                    drawing.Clear(backColor);
-                    drawing.SmoothingMode = SmoothingMode.AntiAlias;
-                    drawing.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                using var drawing = Graphics.FromImage(img);
+                drawing.Clear(backColor);
+                drawing.SmoothingMode = SmoothingMode.AntiAlias;
+                drawing.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
-                    var x = textSize.Width >= textSize.Height ? 0 : (textSize.Height - textSize.Width) / 2;
-                    var y = textSize.Width >= textSize.Height ? (textSize.Width - textSize.Height) / 2 : 0;
-
-                    drawing.DrawString(text, font, _textBrush, x, y);
-                    drawing.Save();
-                }
+                var x = textSize.Width >= textSize.Height ? 0 : (textSize.Height - textSize.Width) / 2;
+                var y = textSize.Width >= textSize.Height ? (textSize.Width - textSize.Height) / 2 : 0;
+                drawing.DrawString(text, font, _textBrush, x, y);
+                drawing.Save();
 
                 return img;
             }

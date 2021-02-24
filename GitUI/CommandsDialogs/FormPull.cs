@@ -432,48 +432,46 @@ namespace GitUI.CommandsDialogs
 
             var stashed = CalculateStashedValue(owner);
 
-            using (var form = CreateFormProcess(source, curLocalBranch, curRemoteBranch))
+            using var form = CreateFormProcess(source, curLocalBranch, curRemoteBranch);
+            if (!IsPullAll())
             {
-                if (!IsPullAll())
+                form.Remote = source;
+            }
+
+            form.ShowDialog(owner);
+            ErrorOccurred = form.ErrorOccurred();
+
+            bool executeScripts = false;
+            try
+            {
+                bool aborted = form.DialogResult == DialogResult.Abort;
+                executeScripts = !aborted && !ErrorOccurred;
+
+                if (!aborted && !Fetch.Checked)
                 {
-                    form.Remote = source;
-                }
-
-                form.ShowDialog(owner);
-                ErrorOccurred = form.ErrorOccurred();
-
-                bool executeScripts = false;
-                try
-                {
-                    bool aborted = form.DialogResult == DialogResult.Abort;
-                    executeScripts = !aborted && !ErrorOccurred;
-
-                    if (!aborted && !Fetch.Checked)
+                    if (!ErrorOccurred)
                     {
-                        if (!ErrorOccurred)
+                        if (!InitModules())
                         {
-                            if (!InitModules())
-                            {
-                                UICommands.UpdateSubmodules(owner);
-                            }
-                        }
-                        else
-                        {
-                            executeScripts |= CheckMergeConflictsOnError();
+                            UICommands.UpdateSubmodules(owner);
                         }
                     }
+                    else
+                    {
+                        executeScripts |= CheckMergeConflictsOnError();
+                    }
                 }
-                finally
+            }
+            finally
+            {
+                if (stashed)
                 {
-                    if (stashed)
-                    {
-                        PopStash();
-                    }
+                    PopStash();
+                }
 
-                    if (executeScripts)
-                    {
-                        executeAfterScripts();
-                    }
+                if (executeScripts)
+                {
+                    executeAfterScripts();
                 }
             }
 
@@ -717,14 +715,12 @@ namespace GitUI.CommandsDialogs
                     {
                         string remote = _NO_TRANSLATE_Remotes.Text;
                         string pruneCmd = "remote prune " + remote;
-                        using (var formPrune = new FormRemoteProcess(UICommands, process: null, pruneCmd)
+                        using var formPrune = new FormRemoteProcess(UICommands, process: null, pruneCmd)
                         {
                             Remote = remote,
                             Text = string.Format(_pruneFromCaption.Text, remote)
-                        })
-                        {
-                            formPrune.ShowDialog(form);
-                        }
+                        };
+                        formPrune.ShowDialog(form);
                     }
                 }
 

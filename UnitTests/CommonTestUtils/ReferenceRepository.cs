@@ -34,62 +34,50 @@ namespace CommonTestUtils
 
         public void CreateBranch(string branchName, string commitHash, bool allowOverwrite = false)
         {
-            using (var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir))
-            {
-                repository.Branches.Add(branchName, commitHash, allowOverwrite);
-            }
+            using var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir);
+            repository.Branches.Add(branchName, commitHash, allowOverwrite);
         }
 
         public void CreateCommit(string commitMessage, string content = null)
         {
-            using (var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir))
-            {
-                _moduleTestHelper.CreateRepoFile("A.txt", content ?? commitMessage);
-                repository.Index.Add("A.txt");
+            using var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir);
+            _moduleTestHelper.CreateRepoFile("A.txt", content ?? commitMessage);
+            repository.Index.Add("A.txt");
 
-                _commitHash = Commit(repository, commitMessage);
-            }
+            _commitHash = Commit(repository, commitMessage);
         }
 
         public string CreateRepoFile(string fileName, string fileContent) => _moduleTestHelper.CreateRepoFile(fileName, fileContent);
 
         public void CreateTag(string tagName, string commitHash, bool allowOverwrite = false)
         {
-            using (var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir))
-            {
-                repository.Tags.Add(tagName, commitHash, allowOverwrite);
-            }
+            using var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir);
+            repository.Tags.Add(tagName, commitHash, allowOverwrite);
         }
 
         public void CheckoutRevision()
         {
-            using (var repository = new LibGit2Sharp.Repository(Module.WorkingDir))
-            {
-                Commands.Checkout(repository, CommitHash, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
-            }
+            using var repository = new LibGit2Sharp.Repository(Module.WorkingDir);
+            Commands.Checkout(repository, CommitHash, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
         }
 
         public void CheckoutMaster()
         {
-            using (var repository = new LibGit2Sharp.Repository(Module.WorkingDir))
-            {
-                Commands.Checkout(repository, "master", new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
-            }
+            using var repository = new LibGit2Sharp.Repository(Module.WorkingDir);
+            Commands.Checkout(repository, "master", new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
         }
 
         public void CreateRemoteForMasterBranch()
         {
-            using (var repository = new LibGit2Sharp.Repository(Module.WorkingDir))
-            {
-                repository.Network.Remotes.Add("origin", "http://useless.url");
-                Remote remote = repository.Network.Remotes["origin"];
+            using var repository = new LibGit2Sharp.Repository(Module.WorkingDir);
+            repository.Network.Remotes.Add("origin", "http://useless.url");
+            Remote remote = repository.Network.Remotes["origin"];
 
-                var masterBranch = repository.Branches["master"];
+            var masterBranch = repository.Branches["master"];
 
-                repository.Branches.Update(masterBranch,
-                    b => b.Remote = remote.Name,
-                    b => b.UpstreamBranch = masterBranch.CanonicalName);
-            }
+            repository.Branches.Update(masterBranch,
+                b => b.Remote = remote.Name,
+                b => b.UpstreamBranch = masterBranch.CanonicalName);
         }
 
         public void Fetch(string remoteName)

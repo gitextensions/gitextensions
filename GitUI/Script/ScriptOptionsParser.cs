@@ -168,24 +168,20 @@ namespace GitUI.Script
                 return string.Empty;
             }
 
-            using (var f = new FormQuickGitRefSelector())
-            {
-                f.Location = scriptHostControl?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
-                f.Init(FormQuickGitRefSelector.Action.Select, items);
-                f.ShowDialog();
-                return f.SelectedRef?.Name ?? "";
-            }
+            using var f = new FormQuickGitRefSelector();
+            f.Location = scriptHostControl?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
+            f.Init(FormQuickGitRefSelector.Action.Select, items);
+            f.ShowDialog();
+            return f.SelectedRef?.Name ?? "";
         }
 
         private static string AskToSpecify(IEnumerable<string> options, IScriptHostControl? scriptHostControl)
         {
-            using (var f = new FormQuickStringSelector())
-            {
-                f.Location = scriptHostControl?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
-                f.Init(options.ToList());
-                f.ShowDialog();
-                return f.SelectedString ?? "";
-            }
+            using var f = new FormQuickStringSelector();
+            f.Location = scriptHostControl?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
+            f.Init(options.ToList());
+            f.ShowDialog();
+            return f.SelectedString ?? "";
         }
 
         private static GitRevision? CalculateSelectedRevision(IScriptHostControl? scriptHostControl, List<IGitRef> selectedRemoteBranches,

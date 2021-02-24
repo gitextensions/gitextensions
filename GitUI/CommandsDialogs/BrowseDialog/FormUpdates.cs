@@ -189,10 +189,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                 try
                 {
-                    using (WebClient webClient = new WebClient())
-                    {
-                        await webClient.DownloadFileTaskAsync(new Uri(UpdateUrl), Environment.GetEnvironmentVariable("TEMP") + "\\" + fileName);
-                    }
+                    using WebClient webClient = new WebClient();
+                    await webClient.DownloadFileTaskAsync(new Uri(UpdateUrl), Environment.GetEnvironmentVariable("TEMP") + "\\" + fileName);
                 }
                 catch (Exception ex)
                 {

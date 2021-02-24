@@ -467,26 +467,25 @@ namespace GitUI.CommandsDialogs
             _candidateForRebasingMergeCommit = PushToRemote.Checked && (_selectedBranch != AllRefs) && TabControlTagBranch.SelectedTab == BranchTab;
             _selectedRemoteBranchName = RemoteBranch.Text;
 
-            using (var form = new FormRemoteProcess(UICommands, process: null, pushCmd)
+            using var form = new FormRemoteProcess(UICommands, process: null, pushCmd)
             {
                 Remote = remote,
                 Text = string.Format(_pushToCaption.Text, destination),
                 HandleOnExitCallback = HandlePushOnExit
-            })
+            };
+
+            form.ShowDialog(owner);
+            ErrorOccurred = form.ErrorOccurred();
+
+            if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
             {
-                form.ShowDialog(owner);
-                ErrorOccurred = form.ErrorOccurred();
-
-                if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
+                ScriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
+                if (_createPullRequestCB.Checked)
                 {
-                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
-                    if (_createPullRequestCB.Checked)
-                    {
-                        UICommands.StartCreatePullRequest(owner);
-                    }
-
-                    return true;
+                    UICommands.StartCreatePullRequest(owner);
                 }
+
+                return true;
             }
 
             return false;

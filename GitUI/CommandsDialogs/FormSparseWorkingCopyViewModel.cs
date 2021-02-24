@@ -150,10 +150,8 @@ namespace GitUI.CommandsDialogs
         {
             // Re-apply tree to the index
             // TODO: check how it affects the uncommitted working copy changes
-            using (var fromProcess = new FormRemoteProcess(_gitCommands, AppSettings.GitCommand, RefreshWorkingCopyCommandName))
-            {
-                fromProcess.ShowDialog(Form.ActiveForm);
-            }
+            using var fromProcess = new FormRemoteProcess(_gitCommands, AppSettings.GitCommand, RefreshWorkingCopyCommandName);
+            fromProcess.ShowDialog(Form.ActiveForm);
         }
 
         /// <summary>

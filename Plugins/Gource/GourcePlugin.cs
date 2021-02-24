@@ -112,12 +112,10 @@ namespace Gource
                 }
             }
 
-            using (var gourceStart = new GourceStart(pathToGource, args, _gourceArguments.ValueOrDefault(Settings)))
-            {
-                gourceStart.ShowDialog(args.OwnerForm);
-                Settings.SetValue(_gourceArguments.Name, gourceStart.GourceArguments, s => s);
-                Settings.SetValue(_gourcePath.Name, gourceStart.PathToGource, s => s);
-            }
+            using var gourceStart = new GourceStart(pathToGource, args, _gourceArguments.ValueOrDefault(Settings));
+            gourceStart.ShowDialog(args.OwnerForm);
+            Settings.SetValue(_gourceArguments.Name, gourceStart.GourceArguments, s => s);
+            Settings.SetValue(_gourcePath.Name, gourceStart.PathToGource, s => s);
 
             return false;
         }
@@ -159,10 +157,8 @@ namespace Gource
                             Directory.CreateDirectory(fullDirPath);
                         }
 
-                        using (var fileStream = File.Create(fullPath))
-                        {
-                            zipInputStream.CopyTo(fileStream);
-                        }
+                        using var fileStream = File.Create(fullPath);
+                        zipInputStream.CopyTo(fileStream);
                     }
                 }
 

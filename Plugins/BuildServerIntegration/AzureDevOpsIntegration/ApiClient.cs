@@ -57,18 +57,16 @@ namespace AzureDevOpsIntegration
 
         private async Task<T> HttpGetAsync<T>(string url)
         {
-            using (var response = await _httpClient.GetAsync(url))
+            using var response = await _httpClient.GetAsync(url);
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
-                if (response.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    throw new UnauthorizedAccessException();
-                }
-
-                response.EnsureSuccessStatusCode();
-                string json = await response.Content.ReadAsStringAsync();
-
-                return JsonConvert.DeserializeObject<T>(json);
+                throw new UnauthorizedAccessException();
             }
+
+            response.EnsureSuccessStatusCode();
+            string json = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<T>(json);
         }
 
         [ItemCanBeNull]

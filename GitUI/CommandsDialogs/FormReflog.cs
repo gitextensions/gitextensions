@@ -102,13 +102,11 @@ namespace GitUI.CommandsDialogs
 
             UICommands.DoActionOnRepo(() =>
             {
-                using (var form = new FormCreateBranch(UICommands, GetShaOfRefLine()))
-                {
-                    form.CheckoutAfterCreation = false;
-                    form.UserAbleToChangeRevision = false;
-                    form.CouldBeOrphan = false;
-                    return form.ShowDialog(this) == DialogResult.OK;
-                }
+                using var form = new FormCreateBranch(UICommands, GetShaOfRefLine());
+                form.CheckoutAfterCreation = false;
+                form.UserAbleToChangeRevision = false;
+                form.CouldBeOrphan = false;
+                return form.ShowDialog(this) == DialogResult.OK;
             });
         }
 

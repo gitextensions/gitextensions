@@ -81,17 +81,15 @@ namespace GitUI.CommandsDialogs
 
                     ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
 
-                    using (var form = new FormRemoteProcess(UICommands, process: null, cmd.Arguments)
+                    using var form = new FormRemoteProcess(UICommands, process: null, cmd.Arguments)
                     {
                         Remote = remote
-                    })
-                    {
-                        form.ShowDialog();
+                    };
+                    form.ShowDialog();
 
-                        if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
-                        {
-                            ScriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
-                        }
+                    if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
+                    {
+                        ScriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
                     }
                 }
 

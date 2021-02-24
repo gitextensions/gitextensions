@@ -45,11 +45,9 @@ Do you want to register the host's fingerprint and restart the process?");
 
         public static bool ShowDialog(IWin32Window? owner, GitUICommands commands, ArgumentString arguments)
         {
-            using (var formRemoteProcess = new FormRemoteProcess(commands, process: null, arguments))
-            {
-                formRemoteProcess.ShowDialog(owner);
-                return !formRemoteProcess.ErrorOccurred();
-            }
+            using var formRemoteProcess = new FormRemoteProcess(commands, process: null, arguments);
+            formRemoteProcess.ShowDialog(owner);
+            return !formRemoteProcess.ErrorOccurred();
         }
 
         public bool Plink { get; set; }
