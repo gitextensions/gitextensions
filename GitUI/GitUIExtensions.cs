@@ -112,7 +112,7 @@ namespace GitUI
                         : diffOfConflict;
                 }
 
-                if (file.IsSubmodule && file.GetSubmoduleStatusAsync() is not null)
+                if (file.IsSubmodule)
                 {
                     // Patch already evaluated
                     var status = ThreadHelper.JoinableTaskFactory.Run(file.GetSubmoduleStatusAsync);
