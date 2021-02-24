@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
 
-#nullable enable
-
 // ReSharper disable once CheckNamespace
 
 namespace System.Linq
