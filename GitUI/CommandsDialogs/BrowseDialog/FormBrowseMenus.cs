@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -27,12 +28,12 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private readonly ContextMenuStrip _toolStripContextMenu = new();
 
-        private List<MenuCommand> _navigateMenuCommands;
-        private List<MenuCommand> _viewMenuCommands;
+        private List<MenuCommand>? _navigateMenuCommands;
+        private List<MenuCommand>? _viewMenuCommands;
 
-        private ToolStripMenuItem _navigateToolStripMenuItem;
-        private ToolStripMenuItem _viewToolStripMenuItem;
-        private ToolStripMenuItem _toolbarsMenuItem;
+        private ToolStripMenuItem? _navigateToolStripMenuItem;
+        private ToolStripMenuItem? _viewToolStripMenuItem;
+        private ToolStripMenuItem? _toolbarsMenuItem;
 
         // we have to remember which items we registered with the menucommands because other
         // location (RevisionGrid) can register items too!
@@ -58,9 +59,9 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
-                _navigateToolStripMenuItem.Dispose();
-                _viewToolStripMenuItem.Dispose();
-                _toolbarsMenuItem.Dispose();
+                _navigateToolStripMenuItem?.Dispose();
+                _viewToolStripMenuItem?.Dispose();
+                _toolbarsMenuItem?.Dispose();
             }
         }
 
@@ -87,7 +88,7 @@ namespace GitUI.CommandsDialogs
         /// <param name="toolStrips">The list of toobars to toggle visibility for.</param>
         public void CreateToolbarsMenus(params ToolStripEx[] toolStrips)
         {
-            Debug.Assert(_toolbarsMenuItem is not null, "Toolbars menu item must be already created.");
+            Validates.NotNull(_toolbarsMenuItem);
 
             foreach (ToolStrip toolStrip in toolStrips)
             {
@@ -133,7 +134,7 @@ namespace GitUI.CommandsDialogs
             // In the current implementation command menus are defined in the RevisionGrid control,
             // and added to the main menu of the FormBrowse for the ease of use
 
-            IList<MenuCommand> selectedMenuCommands = null; // make that more clear
+            IList<MenuCommand>? selectedMenuCommands = null; // make that more clear
 
             switch (mainMenuItem)
             {
@@ -164,6 +165,8 @@ namespace GitUI.CommandsDialogs
                     break;
             }
 
+            Validates.NotNull(selectedMenuCommands);
+
             selectedMenuCommands.AddAll(menuCommands);
         }
 
@@ -173,6 +176,12 @@ namespace GitUI.CommandsDialogs
         public void InsertRevisionGridMainMenuItems(ToolStripItem insertAfterMenuItem)
         {
             RemoveRevisionGridMainMenuItems();
+
+            Validates.NotNull(_navigateToolStripMenuItem);
+            Validates.NotNull(_navigateMenuCommands);
+            Validates.NotNull(_viewToolStripMenuItem);
+            Validates.NotNull(_viewMenuCommands);
+            Validates.NotNull(_toolbarsMenuItem);
 
             SetDropDownItems(_navigateToolStripMenuItem, _navigateMenuCommands);
             SetDropDownItems(_viewToolStripMenuItem, _viewMenuCommands);
@@ -232,8 +241,10 @@ namespace GitUI.CommandsDialogs
 
         private IEnumerable<(string name, object item)> GetAdditionalMainMenuItemsForTranslation()
         {
-            foreach (ToolStripMenuItem menuItem in new[] { _navigateToolStripMenuItem, _viewToolStripMenuItem, _toolbarsMenuItem })
+            foreach (ToolStripMenuItem? menuItem in new[] { _navigateToolStripMenuItem, _viewToolStripMenuItem, _toolbarsMenuItem })
             {
+                Validates.NotNull(menuItem);
+
                 yield return (menuItem.Name, menuItem);
             }
         }

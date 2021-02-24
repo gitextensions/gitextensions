@@ -10,7 +10,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.AutoCompletion
@@ -73,7 +73,6 @@ namespace GitUI.AutoCompletion
             return autoCompleteWords.Select(w => new AutoCompleteWord(w));
         }
 
-        [NotNull]
         private IGitModule GetModule()
         {
             var module = _getModule();
@@ -86,22 +85,25 @@ namespace GitUI.AutoCompletion
             return module;
         }
 
-        [CanBeNull]
-        private static Regex GetRegexForExtension(string extension)
+        private static Regex? GetRegexForExtension(string extension)
         {
             return _regexes.Value.ContainsKey(extension) ? _regexes.Value[extension] : null;
         }
 
         private static IEnumerable<string> ReadOrInitializeAutoCompleteRegexes()
         {
-            var path = PathUtil.Combine(AppSettings.ApplicationDataPath.Value, "AutoCompleteRegexes.txt");
+            string? appDataPath = AppSettings.ApplicationDataPath.Value;
+
+            Validates.NotNull(appDataPath);
+
+            var path = PathUtil.Combine(appDataPath, "AutoCompleteRegexes.txt");
 
             if (File.Exists(path))
             {
                 return File.ReadLines(path);
             }
 
-            Stream s = Assembly.GetEntryAssembly()?.GetManifestResourceStream("GitExtensions.AutoCompleteRegexes.txt");
+            Stream? s = Assembly.GetEntryAssembly()?.GetManifestResourceStream("GitExtensions.AutoCompleteRegexes.txt");
             if (s is null)
             {
                 throw new NotImplementedException("Please add AutoCompleteRegexes.txt file into .csproj");
@@ -137,8 +139,7 @@ namespace GitUI.AutoCompletion
             return regexes;
         }
 
-        [CanBeNull]
-        private static async Task<string> GetChangedFileTextAsync(GitModule module, GitItemStatus file)
+        private static async Task<string?> GetChangedFileTextAsync(GitModule module, GitItemStatus file)
         {
             var changes = await module.GetCurrentChangesAsync(file.Name, file.OldName, file.Staged == StagedStatus.Index, "-U1000000")
                 .ConfigureAwait(false);

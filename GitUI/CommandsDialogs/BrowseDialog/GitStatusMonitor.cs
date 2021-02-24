@@ -8,6 +8,7 @@ using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
+using Microsoft;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -40,8 +41,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private readonly System.Windows.Forms.Timer _timerRefresh;
         private bool _commandIsRunning;
         private bool _isFirstPostRepoChanged;
-        private string _gitPath;
-        private string _submodulesPath;
+        private string? _gitPath;
+        private string? _submodulesPath;
         private readonly CancellationTokenSequence _statusSequence = new();
         private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
 
@@ -63,12 +64,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// <summary>
         /// Occurs whenever git status monitor state changes.
         /// </summary>
-        public event EventHandler<GitStatusMonitorStateEventArgs> GitStatusMonitorStateChanged;
+        public event EventHandler<GitStatusMonitorStateEventArgs>? GitStatusMonitorStateChanged;
 
         /// <summary>
         /// Occurs whenever current working directory status changes.
         /// </summary>
-        public event EventHandler<GitWorkingDirectoryStatusEventArgs> GitWorkingDirectoryStatusChanged;
+        public event EventHandler<GitWorkingDirectoryStatusEventArgs?>? GitWorkingDirectoryStatusChanged;
 
         public GitStatusMonitor(IGitUICommandsSource commandsSource)
         {
@@ -116,6 +117,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             void GitDirChanged(object sender, FileSystemEventArgs e)
             {
+                Validates.NotNull(_gitPath);
+
                 // git directory changed
                 if (e.FullPath.Length == _gitPath.Length)
                 {
@@ -260,9 +263,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
         }
 
-        private IGitModule Module => UICommandsSource.UICommands.Module;
+        private IGitModule? Module => UICommandsSource?.UICommands.Module;
 
-        private IGitUICommandsSource UICommandsSource { get; set; }
+        private IGitUICommandsSource? UICommandsSource { get; set; }
 
         private void Init(IGitUICommandsSource commandsSource)
         {
@@ -285,7 +288,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     oldCommands.PostRepositoryChanged -= GitUICommands_PostRepositoryChanged;
                 }
 
-                commandsSource_activate(sender as IGitUICommandsSource);
+                commandsSource_activate((IGitUICommandsSource)sender);
             }
 
             void commandsSource_activate(IGitUICommandsSource sender)
@@ -369,6 +372,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 return;
             }
+
+            Validates.NotNull(UICommandsSource);
+            Validates.NotNull(Module);
 
             if (IsMinimized()
                 || UICommandsSource.UICommands.RepoChangedNotifier.IsLocked ||

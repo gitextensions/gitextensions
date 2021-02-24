@@ -6,22 +6,20 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
     public sealed class FormSparseWorkingCopy : GitModuleForm
     {
-        [CanBeNull]
-        private IDisposable _disposable1;
+        private IDisposable? _disposable1;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormSparseWorkingCopy()
         {
         }
 
-        public FormSparseWorkingCopy([NotNull] GitUICommands commands)
+        public FormSparseWorkingCopy(GitUICommands commands)
             : base(commands)
         {
             var sparse = new FormSparseWorkingCopyViewModel(commands);
@@ -30,7 +28,7 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
         }
 
-        private void BindSaveOnClose([NotNull] FormSparseWorkingCopyViewModel sparse)
+        private void BindSaveOnClose(FormSparseWorkingCopyViewModel sparse)
         {
             if (sparse is null)
             {
@@ -73,7 +71,7 @@ namespace GitUI.CommandsDialogs
             };
         }
 
-        private void BindToViewModelGlobal([NotNull] FormSparseWorkingCopyViewModel sparse)
+        private void BindToViewModelGlobal(FormSparseWorkingCopyViewModel sparse)
         {
             if (sparse is null)
             {
@@ -89,7 +87,7 @@ namespace GitUI.CommandsDialogs
             };
         }
 
-        private void CreateView([NotNull] FormSparseWorkingCopyViewModel sparse)
+        private void CreateView(FormSparseWorkingCopyViewModel sparse)
         {
             Text = Globalized.Strings.SparseWorkingCopy.Text;
             AutoScaleMode = AutoScaleMode.Dpi;
@@ -130,8 +128,7 @@ namespace GitUI.CommandsDialogs
             };
         }
 
-        [NotNull]
-        private static Panel CreateViewFooter([NotNull] FormSparseWorkingCopyViewModel sparse, [NotNull] ToolTip tooltip, [NotNull] out Button btnSave, [NotNull] out Button btnCancel)
+        private static Panel CreateViewFooter(FormSparseWorkingCopyViewModel sparse, ToolTip tooltip, out Button btnSave, out Button btnCancel)
         {
             var tableFooterButtons = new TableLayoutPanel { BackColor = SystemColors.ControlLightLight, Dock = DockStyle.Fill, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, ColumnCount = 4, RowCount = 1, Margin = Padding.Empty, ColumnStyles = { new ColumnStyle(SizeType.Percent, 100) }, Padding = new Padding(10, 15, 10, 15), CellBorderStyle = TableLayoutPanelCellBorderStyle.None };
 
@@ -149,7 +146,6 @@ namespace GitUI.CommandsDialogs
             return tableFooterButtons;
         }
 
-        [NotNull]
         private static Panel CreateViewHeader()
         {
             var panelHeaderMain = new TableLayoutPanel { BackColor = SystemColors.ControlLightLight, Dock = DockStyle.Fill, AutoSize = true, Margin = Padding.Empty, Padding = Padding.Empty, RowCount = 2, ColumnCount = 1 };
@@ -163,8 +159,7 @@ namespace GitUI.CommandsDialogs
             return panelHeaderMain;
         }
 
-        [NotNull]
-        private static Control CreateViewOnOff([NotNull] FormSparseWorkingCopyViewModel sparse, [NotNull] ToolTip tooltip)
+        private static Control CreateViewOnOff(FormSparseWorkingCopyViewModel sparse, ToolTip tooltip)
         {
             // When disabled: hint-like panel to enable
             var panelWhenDisabled = new TableLayoutPanel { BackColor = SystemColors.Info, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Dock = DockStyle.Bottom, ColumnCount = 2, RowCount = 1, ColumnStyles = { new ColumnStyle(SizeType.Percent, 100) }, Margin = Padding.Empty, Padding = new Padding(10, 5, 10, 5) };
@@ -191,8 +186,7 @@ namespace GitUI.CommandsDialogs
             return new Panel { Dock = DockStyle.Fill, Controls = { panelWhenDisabled, separatorWhenDisabled, labelWhenEnabled }, Margin = Padding.Empty, Padding = Padding.Empty, AutoSize = true };
         }
 
-        [NotNull]
-        private static Panel CreateViewRules([NotNull] FormSparseWorkingCopyViewModel sparse, [NotNull] ToolTip tooltip, [NotNull] IGitUICommandsSource commandsSource)
+        private static Panel CreateViewRules(FormSparseWorkingCopyViewModel sparse, ToolTip tooltip, IGitUICommandsSource commandsSource)
         {
             // Label
             var label1 = new Label { AutoSize = true, Text = Globalized.Strings.SpecifyTheRulesForIncludingOrExcludingFilesAndDirectories.Text, Dock = DockStyle.Top, Padding = new Padding(10, 5, 10, 0) };
@@ -225,7 +219,6 @@ namespace GitUI.CommandsDialogs
             return panel;
         }
 
-        [NotNull]
         private static Control CreateViewSeparator([Optional] DockStyle? dock)
         {
             return new Control { Height = 2, BackColor = SystemColors.ControlDark, Dock = dock ?? DockStyle.Fill, Padding = Padding.Empty, Margin = Padding.Empty };

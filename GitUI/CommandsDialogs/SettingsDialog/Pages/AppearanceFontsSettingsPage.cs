@@ -2,15 +2,16 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class AppearanceFontsSettingsPage : SettingsPageWithHeader
     {
-        private Font _diffFont;
-        private Font _applicationFont;
-        private Font _commitFont;
-        private Font _monospaceFont;
+        private Font? _diffFont;
+        private Font? _applicationFont;
+        private Font? _commitFont;
+        private Font? _monospaceFont;
 
         public AppearanceFontsSettingsPage()
         {
@@ -29,6 +30,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void PageToSettings()
         {
+            Validates.NotNull(_diffFont);
+            Validates.NotNull(_applicationFont);
+            Validates.NotNull(_commitFont);
+            Validates.NotNull(_monospaceFont);
+
             AppSettings.FixedWidthFont = _diffFont;
             AppSettings.Font = _applicationFont;
             AppSettings.CommitFont = _commitFont;
@@ -42,6 +48,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (result is (DialogResult.OK or DialogResult.Yes))
             {
+                Validates.NotNull(diffFontDialog.Font);
                 SetCurrentDiffFont(diffFontDialog.Font);
             }
         }
@@ -53,6 +60,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (result is (DialogResult.OK or DialogResult.Yes))
             {
+                Validates.NotNull(applicationDialog.Font);
                 SetCurrentApplicationFont(applicationDialog.Font);
             }
         }
@@ -64,6 +72,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (result is (DialogResult.OK or DialogResult.Yes))
             {
+                Validates.NotNull(commitFontDialog.Font);
                 SetCurrentCommitFont(commitFontDialog.Font);
             }
         }
@@ -75,6 +84,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (result is (DialogResult.OK or DialogResult.Yes))
             {
+                Validates.NotNull(monospaceFontDialog.Font);
                 SetCurrentMonospaceFont(monospaceFontDialog.Font);
             }
         }

@@ -7,6 +7,7 @@ using GitCommands;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.WorktreeDialog
@@ -19,7 +20,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         private readonly TranslationString _deleteWorktreeTitle = new("Delete a worktree");
         private readonly TranslationString _deleteWorktreeFailedText = new("Failed to delete a worktree");
 
-        private List<WorkTree> _worktrees;
+        private List<WorkTree>? _worktrees;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormManageWorktree()
@@ -58,14 +59,14 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         /// If this is not null before showing the dialog the given
         /// remote name will be preselected in the listbox
         /// </summary>
-        public string PreselectRemoteOnLoad { get; set; }
+        public string? PreselectRemoteOnLoad { get; set; }
 
         private void Initialize()
         {
             var lines = Module.GitExecutable.GetOutput("worktree list --porcelain").Split('\n').GetEnumerator();
 
             _worktrees = new List<WorkTree>();
-            WorkTree currentWorktree = null;
+            WorkTree? currentWorktree = null;
             while (lines.MoveNext())
             {
                 var current = (string)lines.Current;
@@ -83,10 +84,12 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 }
                 else if (strings[0] == "HEAD")
                 {
+                    Validates.NotNull(currentWorktree);
                     currentWorktree.Sha1 = strings[1];
                 }
                 else
                 {
+                    Validates.NotNull(currentWorktree);
                     switch (strings[0])
                     {
                         case "bare":
@@ -131,6 +134,8 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 return false;
             }
 
+            Validates.NotNull(_worktrees);
+
             if (_worktrees.Count == 1)
             {
                 return false;
@@ -168,10 +173,10 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         /// </summary>
         private class WorkTree
         {
-            public string Path { get; set; }
+            public string? Path { get; set; }
             public HeadType Type { get; set; }
-            public string Sha1 { get; set; }
-            public string Branch { get; set; }
+            public string? Sha1 { get; set; }
+            public string? Branch { get; set; }
             public bool IsDeleted { get; set; }
         }
 
@@ -205,6 +210,8 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 return;
             }
 
+            Validates.NotNull(_worktrees);
+
             var workTree = _worktrees[e.RowIndex];
             if (!CanDeleteWorkspace(workTree))
             {
@@ -236,7 +243,9 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 if (MessageBox.Show(this, _deleteWorktreeText.Text, _deleteWorktreeTitle.Text,
                                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
-                    if (workTree.Path.TryDeleteDirectory(out string errorMessage))
+                    Validates.NotNull(workTree.Path);
+
+                    if (workTree.Path.TryDeleteDirectory(out string? errorMessage))
                     {
                         PruneWorktrees();
                     }

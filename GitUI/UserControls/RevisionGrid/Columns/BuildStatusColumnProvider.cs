@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -173,13 +174,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void OnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
         {
-            e.Value = !string.IsNullOrEmpty(revision.BuildStatus?.Description)
+            e.Value = !GitExtensions.Strings.IsNullOrEmpty(revision.BuildStatus?.Description)
                 ? revision.BuildStatus.Description
                 : "";
             e.FormattingApplied = true;
         }
 
-        public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
+        public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
         {
             if (revision.BuildStatus is not null)
             {

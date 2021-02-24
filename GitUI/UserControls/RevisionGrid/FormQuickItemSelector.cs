@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid
 {
@@ -22,8 +21,7 @@ namespace GitUI.UserControls.RevisionGrid
         /// <summary>
         /// Gets the item selected by the user.
         /// </summary>
-        [CanBeNull]
-        public object SelectedItem => (lbxRefs.SelectedItem as ItemData)?.Item;
+        public object? SelectedItem => (lbxRefs.SelectedItem as ItemData)?.Item;
 
         protected void Init(IReadOnlyList<ItemData> items, string buttonText)
         {
@@ -95,8 +93,14 @@ namespace GitUI.UserControls.RevisionGrid
 
         public class ItemData
         {
-            public string Label { get; set; }
-            public object Item { get; set; }
+            public string Label { get; }
+            public object Item { get; }
+
+            public ItemData(string label, object item)
+            {
+                Label = label;
+                Item = item;
+            }
         }
     }
 }

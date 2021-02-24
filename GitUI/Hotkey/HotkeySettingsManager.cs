@@ -9,7 +9,7 @@ using GitCommands;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using GitUI.Script;
-using JetBrains.Annotations;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.Hotkey
@@ -17,7 +17,7 @@ namespace GitUI.Hotkey
     internal static class HotkeySettingsManager
     {
         #region Serializer
-        private static XmlSerializer _serializer;
+        private static XmlSerializer? _serializer;
 
         /// <summary>Lazy-loaded Serializer for HotkeySettings[]</summary>
         private static XmlSerializer Serializer
@@ -66,6 +66,8 @@ namespace GitUI.Hotkey
             }
 
             // append general hotkeys to every form
+            Validates.NotNull(settings.Commands);
+            Validates.NotNull(scriptKeys.Commands);
             var allKeys = new HotkeyCommand[settings.Commands.Length + scriptKeys.Commands.Length];
             settings.Commands.CopyTo(allKeys, 0);
             scriptKeys.Commands.CopyTo(allKeys, settings.Commands.Length);
@@ -90,9 +92,9 @@ namespace GitUI.Hotkey
 
             foreach (var setting in settings)
             {
-                foreach (var command in setting.Commands)
+                if (setting.Commands is not null)
                 {
-                    if (command is not null)
+                    foreach (var command in setting.Commands)
                     {
                         _usedKeys.Add(command.KeyData);
                     }
@@ -120,7 +122,7 @@ namespace GitUI.Hotkey
             }
         }
 
-        internal static void MergeIntoDefaultSettings(HotkeySettings[] defaultSettings, HotkeySettings[] loadedSettings)
+        internal static void MergeIntoDefaultSettings(HotkeySettings[] defaultSettings, HotkeySettings[]? loadedSettings)
         {
             if (loadedSettings is null)
             {
@@ -136,17 +138,14 @@ namespace GitUI.Hotkey
             {
                 foreach (var setting in loadedSettings)
                 {
-                    if (setting is not null)
+                    if (setting.Commands is not null && setting.Name is not null)
                     {
                         foreach (var command in setting.Commands)
                         {
-                            if (command is not null)
+                            string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
+                            if (defaultCommands.TryGetValue(dictKey, out var defaultCommand))
                             {
-                                string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
-                                if (defaultCommands.TryGetValue(dictKey, out var defaultCommand))
-                                {
-                                    defaultCommand.KeyData = command.KeyData;
-                                }
+                                defaultCommand.KeyData = command.KeyData;
                             }
                         }
                     }
@@ -157,9 +156,9 @@ namespace GitUI.Hotkey
             {
                 foreach (var setting in defaultSettings)
                 {
-                    foreach (var command in setting.Commands)
+                    if (setting.Commands is not null && setting.Name is not null)
                     {
-                        if (command is not null)
+                        foreach (var command in setting.Commands)
                         {
                             string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
                             defaultCommands.Add(dictKey, command);
@@ -171,12 +170,11 @@ namespace GitUI.Hotkey
             string CalcDictionaryKey(string settingName, int commandCode) => settingName + ":" + commandCode;
         }
 
-        [CanBeNull]
-        private static HotkeySettings[] LoadSerializedSettings()
+        private static HotkeySettings[]? LoadSerializedSettings()
         {
             MigrateSettings();
 
-            if (!string.IsNullOrWhiteSpace(AppSettings.SerializedHotkeys))
+            if (!GitExtensions.Strings.IsNullOrWhiteSpace(AppSettings.SerializedHotkeys))
             {
                 return LoadSerializedSettings(AppSettings.SerializedHotkeys);
             }
@@ -184,8 +182,7 @@ namespace GitUI.Hotkey
             return null;
         }
 
-        [CanBeNull]
-        private static HotkeySettings[] LoadSerializedSettings(string serializedHotkeys)
+        private static HotkeySettings[]? LoadSerializedSettings(string serializedHotkeys)
         {
             try
             {
@@ -207,7 +204,7 @@ namespace GitUI.Hotkey
                 Properties.Settings.Default.Upgrade();
                 if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.Hotkeys))
                 {
-                    HotkeySettings[] settings = LoadSerializedSettings(Properties.Settings.Default.Hotkeys);
+                    HotkeySettings[]? settings = LoadSerializedSettings(Properties.Settings.Default.Hotkeys);
                     if (settings is null)
                     {
                         AppSettings.SerializedHotkeys = " "; // mark settings as migrated

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -28,7 +29,9 @@ namespace GitUI.CommandsDialogs
         private readonly IFullPathResolver _fullPathResolver;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormMailMap()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
         }
@@ -55,7 +58,7 @@ namespace GitUI.CommandsDialogs
                 var path = _fullPathResolver.Resolve(".mailmap");
                 if (File.Exists(path))
                 {
-                    _NO_TRANSLATE_MailMapText.ViewFileAsync(path);
+                    _NO_TRANSLATE_MailMapText.ViewFileAsync(path!);
                 }
             }
             catch (Exception ex)
@@ -74,9 +77,11 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
+                string? fileName = _fullPathResolver.Resolve(".mailmap");
+
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(
-                        _fullPathResolver.Resolve(".mailmap"),
+                        fileName!, // catch NRE below
                         x =>
                         {
                             MailMapFile = _NO_TRANSLATE_MailMapText.GetText();

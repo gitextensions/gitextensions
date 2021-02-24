@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -8,7 +9,7 @@ using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
+using Microsoft;
 
 namespace GitUI.UserControls.RevisionGrid.Columns
 {
@@ -173,6 +174,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         var curCacheRow = (_graphCache.HeadRow + index - _graphCache.Head) % _graphCache.Capacity;
                         var x = ColumnLeftMargin;
                         var y = curCacheRow * rowHeight;
+
+                        Validates.NotNull(_graphCache.GraphBitmapGraphics);
 
                         var laneRect = new Rectangle(0, y, width, rowHeight);
                         var oldClip = _graphCache.GraphBitmapGraphics.Clip;
@@ -368,7 +371,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             return brush;
         }
 
-        private static int GetLaneForRow(IRevisionGraphRow row, RevisionGraphSegment revisionGraphRevision)
+        private static int GetLaneForRow(IRevisionGraphRow? row, RevisionGraphSegment revisionGraphRevision)
         {
             if (row is not null)
             {
@@ -455,7 +458,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         private int CalculateGraphColumnWidth(in VisibleRowRange range, int currentWidth, int minimumWidth)
         {
             int laneCount = range.Select(index => _revisionGraph.GetSegmentsForRow(index))
-                                 .Where(laneRow => laneRow is not null)
+                                 .WhereNotNull()
                                  .Select(laneRow => laneRow.GetLaneCount())
                                  .DefaultIfEmpty()
                                  .Max();
@@ -470,7 +473,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             return minimumWidth + ColumnLeftMargin;
         }
 
-        public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
+        public bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision)
+        {
+            string? toolTip;
+            return TryGetToolTip(e, revision, out toolTip);
+        }
+
+        public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
         {
             if (e.X >= ColumnLeftMargin && LaneWidth >= 0 && e.RowIndex >= 0)
             {
@@ -486,11 +495,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
     public sealed class GraphCache
     {
-        [CanBeNull] private Bitmap _graphBitmap;
-        [CanBeNull] private Graphics _graphBitmapGraphics;
+        private Bitmap? _graphBitmap;
+        private Graphics? _graphBitmapGraphics;
 
-        public Bitmap GraphBitmap => _graphBitmap;
-        public Graphics GraphBitmapGraphics => _graphBitmapGraphics;
+        public Bitmap? GraphBitmap => _graphBitmap;
+        public Graphics? GraphBitmapGraphics => _graphBitmapGraphics;
 
         /// <summary>
         /// The 'slot' that is the head of the circular bitmap.

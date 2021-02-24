@@ -21,7 +21,7 @@ namespace GitUITests.UserControls
             bool isTracked = true,
             bool isSubmodule = false)
         {
-            return new GitItemStatus
+            return new GitItemStatus("file1")
             {
                 Staged = isStaged ? StagedStatus.Index : StagedStatus.WorkTree,
                 IsTracked = isTracked,

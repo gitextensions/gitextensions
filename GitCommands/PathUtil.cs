@@ -78,9 +78,9 @@ namespace GitCommands
         /// <param name="path">A path to check.</param>
         /// <returns><see langword="true"/> if the given path starts with 'http', 'ssh' or 'git'; otherwise <see langword="false"/>.</returns>
         [Pure]
-        public static bool IsUrl(string path)
+        public static bool IsUrl(string? path)
         {
-            return !string.IsNullOrEmpty(path)
+            return !Strings.IsNullOrEmpty(path)
                 && (path.StartsWith("http:", StringComparison.CurrentCultureIgnoreCase)
                  || path.StartsWith("https:", StringComparison.CurrentCultureIgnoreCase)
                  || path.StartsWith("git:", StringComparison.CurrentCultureIgnoreCase)
@@ -88,9 +88,9 @@ namespace GitCommands
                  || path.StartsWith("file:", StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public static bool CanBeGitURL(string url)
+        public static bool CanBeGitURL(string? url)
         {
-            if (string.IsNullOrWhiteSpace(url))
+            if (Strings.IsNullOrWhiteSpace(url))
             {
                 return false;
             }
@@ -163,7 +163,7 @@ namespace GitCommands
         /// <returns>path if it can be combined, empty otherwise.</returns>
         public static string GetExtension(string? path)
         {
-            if (path == null)
+            if (path is null)
             {
                 return string.Empty;
             }
@@ -440,7 +440,7 @@ namespace GitCommands
         /// <returns>
         ///  <see langword="true" /> if the folder is absent or successfully removed; otherwise <see langword="false" />.
         /// </returns>
-        public static bool TryDeleteDirectory(this string path, [NotNullWhen(returnValue: false)] out string? errorMessage)
+        public static bool TryDeleteDirectory(this string? path, [NotNullWhen(returnValue: false)] out string? errorMessage)
         {
             errorMessage = null;
             if (string.IsNullOrWhiteSpace(path) || !Directory.Exists(path))

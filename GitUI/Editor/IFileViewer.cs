@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using JetBrains.Annotations;
 
 namespace GitUI.Editor
 {
@@ -34,8 +33,8 @@ namespace GitUI.Editor
         Task FindNextAsync(bool searchForwardOrOpenWithDifftool);
 
         string GetText();
-        void SetText([NotNull] string text, [CanBeNull] Action openWithDifftool, bool isDiff = false);
-        void SetHighlighting([NotNull] string syntax);
+        void SetText(string text, Action? openWithDifftool, bool isDiff = false);
+        void SetHighlighting(string syntax);
         void SetHighlightingForFile(string filename);
         void HighlightLine(int line, Color color);
         void HighlightLines(int startLine, int endLine, Color color);
@@ -44,7 +43,7 @@ namespace GitUI.Editor
         int GetSelectionPosition();
         int GetSelectionLength();
         void AddPatchHighlighting();
-        Action OpenWithDifftool { get; }
+        Action? OpenWithDifftool { get; }
         int VScrollPosition { get; set; }
 
         bool? ShowLineNumbers { get; set; }
@@ -62,9 +61,9 @@ namespace GitUI.Editor
         int TotalNumberOfLines { get; }
 
         /// <summary>
-        /// positions to the given line number
+        /// positions to the given line number.
         /// </summary>
-        /// <param name="lineNumber">1..MaxLineNumber</param>
+        /// <param name="lineNumber">1..MaxLineNumber.</param>
         void GoToLine(int lineNumber);
         int MaxLineNumber { get; }
 
@@ -73,12 +72,12 @@ namespace GitUI.Editor
         void SetFileLoader(GetNextFileFnc fileLoader);
 
         /// <summary>
-        /// Move the file viewer caret position to the next TextMarker found in the document that matches the AppColor.HighlightAllOccurences/>
+        /// Move the file viewer caret position to the next TextMarker found in the document that matches the AppColor.HighlightAllOccurences.
         /// </summary>
         void GoToNextOccurrence();
 
         /// <summary>
-        /// Move the file viewer caret position to the previous TextMarker found in the document that matches the AppColor.HighlightAllOccurences/>
+        /// Move the file viewer caret position to the previous TextMarker found in the document that matches the AppColor.HighlightAllOccurences.
         /// </summary>
         void GoToPreviousOccurrence();
     }

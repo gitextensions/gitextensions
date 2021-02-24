@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using GitUIPluginInterfaces;
+using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 {
     public partial class PluginSettingsPage : AutoLayoutSettingsPage
     {
-        private IGitPlugin _gitPlugin;
-        private GitPluginSettingsContainer _settingsContainer;
+        private IGitPlugin? _gitPlugin;
+        private GitPluginSettingsContainer? _settingsContainer;
 
         public PluginSettingsPage()
         {
@@ -42,6 +42,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
         protected override ISettingsSource GetCurrentSettings()
         {
+            Validates.NotNull(_settingsContainer);
+
             _settingsContainer.SetSettingsSource(base.GetCurrentSettings());
             return _settingsContainer;
         }
@@ -61,10 +63,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             return _gitPlugin.HasSettings ? _gitPlugin.GetSettings() : Array.Empty<ISetting>();
         }
 
-        public override SettingsPageReference PageReference => new SettingsPageReferenceByType(_gitPlugin.GetType());
+        public override SettingsPageReference PageReference
+        {
+            get
+            {
+                Validates.NotNull(_gitPlugin);
+
+                return new SettingsPageReferenceByType(_gitPlugin.GetType());
+            }
+        }
 
         protected override ISettingsLayout CreateSettingsLayout()
         {
+            Validates.NotNull(_gitPlugin);
+
             labelNoSettings.Visible = !_gitPlugin.HasSettings;
 
             var layout = base.CreateSettingsLayout();

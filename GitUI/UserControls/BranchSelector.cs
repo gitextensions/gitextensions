@@ -11,13 +11,13 @@ namespace GitUI.UserControls
 {
     public partial class BranchSelector : GitModuleControl
     {
-        public event EventHandler SelectedIndexChanged;
+        public event EventHandler? SelectedIndexChanged;
 
         private readonly bool _isLoading;
-        private IReadOnlyList<ObjectId> _containRevisions;
-        private string[] _localBranches;
-        private string[] _remoteBranches;
-        public ObjectId CommitToCompare;
+        private IReadOnlyList<ObjectId>? _containRevisions;
+        private string[]? _localBranches;
+        private string[]? _remoteBranches;
+        public ObjectId? CommitToCompare;
 
         public BranchSelector()
         {
@@ -38,7 +38,7 @@ namespace GitUI.UserControls
         public string SelectedBranchName => Branches.Text;
         public override string Text => Branches.Text;
 
-        public void Initialize(bool remote, IReadOnlyList<ObjectId> containRevisions)
+        public void Initialize(bool remote, IReadOnlyList<ObjectId>? containRevisions)
         {
             lbChanges.Text = "";
             LocalBranch.Checked = !remote;

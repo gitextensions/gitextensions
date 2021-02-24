@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using GitCommands;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
 {
@@ -16,8 +14,8 @@ namespace GitUI.CommandsDialogs
     public sealed class ContextMenuDiffToolInfo
     {
         public ContextMenuDiffToolInfo(
-            GitRevision selectedRevision = null,
-            IReadOnlyList<ObjectId> selectedItemParentRevs = null,
+            GitRevision? selectedRevision = null,
+            IReadOnlyList<ObjectId>? selectedItemParentRevs = null,
             bool allAreNew = false,
             bool allAreDeleted = false,
             bool firstIsParent = false,
@@ -31,10 +29,8 @@ namespace GitUI.CommandsDialogs
             LocalExists = localExists;
         }
 
-        [CanBeNull]
-        public GitRevision SelectedRevision { get; }
-        [CanBeNull]
-        public IEnumerable<ObjectId> SelectedItemParentRevs { get; }
+        public GitRevision? SelectedRevision { get; }
+        public IEnumerable<ObjectId>? SelectedItemParentRevs { get; }
         public bool AllAreNew { get; }
         public bool AllAreDeleted { get; }
         public bool FirstIsParent { get; }

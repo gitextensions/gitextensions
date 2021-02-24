@@ -8,6 +8,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
     <Compile Include="..\GitExtUtils\Annotations.cs" Link="Annotations.cs" />
     <Compile Include="..\GitExtUtils\Strings.cs" Link="Strings.cs" />
+    <Compile Include="..\GitExtUtils\Validates.cs" Link="Validates.cs" />
 
     <!-- Settings -->
     <None Update="Properties\Settings.settings" Generator="SettingsSingleFileGenerator" LastGenOutput="Settings.Designer.cs" />

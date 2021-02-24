@@ -3,6 +3,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants Condition="$(ContinuousIntegrationBuild) == true">CI_BUILD</DefineConstants>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\GitExtUtils\Annotations.cs" Link="Annotations.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Composition" Version="$(MicrosoftVisualStudioCompositionVersion)" />

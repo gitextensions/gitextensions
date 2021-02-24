@@ -16,7 +16,6 @@ using GitUI.Script;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.BranchTreePanel
@@ -37,15 +36,17 @@ namespace GitUI.BranchTreePanel
         private RemoteBranchTree _remotesTree;
         private TagTree _tagTree;
         private SubmoduleTree _submoduleTree;
-        private List<TreeNode> _searchResult;
+        private List<TreeNode>? _searchResult;
         private FilterBranchHelper _filterBranchHelper;
-        private IAheadBehindDataProvider _aheadBehindDataProvider;
+        private IAheadBehindDataProvider? _aheadBehindDataProvider;
         private bool _searchCriteriaChanged;
         private ICheckRefs _refsSource;
         private IScriptHostControl _scriptHost;
         private IRunScript _scriptRunner;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public RepoObjectsTree()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             Disposed += (s, e) => _selectionCancellationTokenSequence.Dispose();
 
@@ -161,8 +162,8 @@ namespace GitUI.BranchTreePanel
                 };
                 search.OnTextEntered += () =>
                 {
-                    OnBranchCriterionChanged(null, null);
-                    OnBtnSearchClicked(null, null);
+                    OnBranchCriterionChanged(this, EventArgs.Empty);
+                    OnBtnSearchClicked(this, EventArgs.Empty);
                 };
                 search.TextChanged += OnBranchCriterionChanged;
                 search.KeyDown += TxtBranchCriterion_KeyDown;
@@ -235,7 +236,7 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        public void Initialize([CanBeNull] IAheadBehindDataProvider aheadBehindDataProvider, FilterBranchHelper filterBranchHelper, ICheckRefs refsSource, IScriptHostControl scriptHost, IRunScript scriptRunner)
+        public void Initialize(IAheadBehindDataProvider? aheadBehindDataProvider, FilterBranchHelper filterBranchHelper, ICheckRefs refsSource, IScriptHostControl scriptHost, IRunScript scriptRunner)
         {
             _aheadBehindDataProvider = aheadBehindDataProvider;
             _filterBranchHelper = filterBranchHelper;
@@ -300,7 +301,7 @@ namespace GitUI.BranchTreePanel
                 }
             }).FileAndForget();
 
-            static ObjectId GetSelectedNodeObjectId(TreeNode treeNode)
+            static ObjectId? GetSelectedNodeObjectId(TreeNode treeNode)
             {
                 // Local or remote branch nodes or tag nodes
                 return Node.GetNodeSafe<BaseBranchLeafNode>(treeNode)?.ObjectId ??
@@ -390,7 +391,7 @@ namespace GitUI.BranchTreePanel
             nodeList.Add(tree.TreeViewNode);
             treeMain.Nodes.Clear();
             var treeToPositionIndex = GetTreeToPositionIndex();
-            treeMain.Nodes.AddRange(nodeList.OrderBy(treeNode => treeToPositionIndex[treeNode.Tag as Tree]).ToArray());
+            treeMain.Nodes.AddRange(nodeList.OrderBy(treeNode => treeToPositionIndex[(Tree)treeNode.Tag]).ToArray());
             treeMain.EndUpdate();
 
             treeMain.Font = AppSettings.Font;
@@ -449,7 +450,7 @@ namespace GitUI.BranchTreePanel
 
             return;
 
-            TreeNode GetNextSearchResult()
+            TreeNode? GetNextSearchResult()
             {
                 var first = _searchResult?.FirstOrDefault();
 
@@ -458,7 +459,7 @@ namespace GitUI.BranchTreePanel
                     return null;
                 }
 
-                _searchResult.RemoveAt(0);
+                _searchResult!.RemoveAt(0);
                 _searchResult.Add(first);
                 return first;
             }
@@ -519,7 +520,7 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
-            OnBtnSearchClicked(null, null);
+            OnBtnSearchClicked(this, EventArgs.Empty);
             e.Handled = true;
         }
 
@@ -527,7 +528,7 @@ namespace GitUI.BranchTreePanel
         {
             if (e.KeyCode == Keys.F3)
             {
-                OnBtnSearchClicked(null, null);
+                OnBtnSearchClicked(this, EventArgs.Empty);
             }
         }
 

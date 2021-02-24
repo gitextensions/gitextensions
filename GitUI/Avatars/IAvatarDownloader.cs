@@ -6,6 +6,6 @@ namespace GitUI.Avatars
 {
     public interface IAvatarDownloader
     {
-        Task<Image> DownloadImageAsync(Uri imageUrl);
+        Task<Image?> DownloadImageAsync(Uri? imageUrl);
     }
 }

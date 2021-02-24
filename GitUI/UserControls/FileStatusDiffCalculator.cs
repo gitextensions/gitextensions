@@ -4,6 +4,7 @@ using System.Linq;
 using GitCommands;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
+using Microsoft;
 
 namespace GitUI
 {
@@ -16,8 +17,7 @@ namespace GitUI
             _getModule = getModule;
         }
 
-        public IReadOnlyList<FileStatusWithDescription> SetDiffs(in IReadOnlyList<GitRevision> revisions, Func<ObjectId, string> describeRevision,
-            Func<ObjectId, GitRevision> getRevision = null)
+        public IReadOnlyList<FileStatusWithDescription> SetDiffs(IReadOnlyList<GitRevision>? revisions, Func<ObjectId, string>? describeRevision, Func<ObjectId, GitRevision?>? getRevision = null)
         {
             var selectedRev = revisions?.FirstOrDefault();
             if (selectedRev is null)
@@ -28,10 +28,12 @@ namespace GitUI
             GitModule module = GetModule();
 
             var fileStatusDescs = new List<FileStatusWithDescription>();
-            if (revisions.Count == 1)
+            if (revisions!.Count == 1)
             {
                 if (selectedRev.ParentIds is null || selectedRev.ParentIds.Count == 0)
                 {
+                    Validates.NotNull(selectedRev.TreeGuid);
+
                     // No parent for the initial commit
                     fileStatusDescs.Add(new FileStatusWithDescription(
                         firstRev: null,
@@ -44,7 +46,7 @@ namespace GitUI
                     // Get the parents for the selected revision
                     var multipleParents = AppSettings.ShowDiffForAllParents ? selectedRev.ParentIds.Count : 1;
                     fileStatusDescs.AddRange(selectedRev
-                        .ParentIds?
+                        .ParentIds
                         .Take(multipleParents)
                         .Select(parentId =>
                             new FileStatusWithDescription(
@@ -96,8 +98,18 @@ namespace GitUI
 
             // Get base commit, add as parent if unique
             Lazy<ObjectId> head = getRevision is not null
-                ? new Lazy<ObjectId>(() => getRevision(ObjectId.IndexId).FirstParentId)
-                : new Lazy<ObjectId>(() => module.RevParse("HEAD"));
+                ? new Lazy<ObjectId>(() =>
+                {
+                    GitRevision? revision = getRevision(ObjectId.IndexId);
+                    Validates.NotNull(revision);
+                    return revision.FirstParentId!;
+                })
+                : new Lazy<ObjectId>(() =>
+                {
+                    var objectId = module.RevParse("HEAD");
+                    Validates.NotNull(objectId);
+                    return objectId;
+                });
             var firstRevHead = GetRevisionOrHead(firstRev, head);
             var selectedRevHead = GetRevisionOrHead(selectedRev, head);
             var baseRevGuid = module.GetMergeBase(firstRevHead, selectedRevHead);
@@ -168,7 +180,7 @@ namespace GitUI
                 statuses: commonBaseToAandB));
 
             // Add rangeDiff as a separate group (range is not the same as diff with artificial commits)
-            var statuses = new List<GitItemStatus> { new GitItemStatus { Name = Strings.DiffRange, IsRangeDiff = true } };
+            var statuses = new List<GitItemStatus> { new GitItemStatus(name: Strings.DiffRange) { IsRangeDiff = true } };
             var first = firstRev.ObjectId == firstRevHead ? firstRev : new GitRevision(firstRevHead);
             var selected = selectedRev.ObjectId == selectedRevHead ? selectedRev : new GitRevision(selectedRevHead);
             var (baseToFirstCount, baseToSecondCount) = module.GetCommitRangeDiffCount(first.ObjectId, selected.ObjectId);
@@ -212,8 +224,8 @@ namespace GitUI
             static ObjectId GetRevisionOrHead(GitRevision rev, Lazy<ObjectId> head)
                 => rev.IsArtificial ? head.Value : rev.ObjectId;
 
-            static string GetDescriptionForRevision(Func<ObjectId, string> describeRevision, ObjectId objectId)
-                => describeRevision is not null ? describeRevision(objectId) : objectId?.ToShortString();
+            static string GetDescriptionForRevision(Func<ObjectId, string>? describeRevision, ObjectId objectId)
+                => describeRevision is not null ? describeRevision(objectId) : objectId.ToShortString();
         }
 
         private GitModule GetModule()

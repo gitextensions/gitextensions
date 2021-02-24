@@ -17,7 +17,7 @@ namespace GitUI.UserControls
         private DateTime _lastKeyNavigateTime = DateTime.MinValue;
         private readonly Func<DateTime> _getCurrentTime;
 
-        public event TreeViewEventHandler AfterSelect;
+        public event TreeViewEventHandler? AfterSelect;
 
         public NativeTreeViewExplorerNavigationDecorator(NativeTreeView treeView, Func<DateTime> getCurrentTime)
         {
@@ -69,7 +69,7 @@ namespace GitUI.UserControls
                 return;
             }
 
-            AfterSelect(sender, e);
+            AfterSelect?.Invoke(sender, e);
         }
 
         private void OnNodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)

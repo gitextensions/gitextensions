@@ -6,10 +6,10 @@ namespace GitUI.Editor
 {
     public sealed class ContinuousScrollEventManager
     {
-        public EventHandler BottomScrollReached;
-        public EventHandler TopScrollReached;
+        public EventHandler? BottomScrollReached;
+        public EventHandler? TopScrollReached;
 
-        private bool IsScrollDisabled
+        private static bool IsScrollDisabled
             => Control.ModifierKeys != Keys.Alt && !AppSettings.AutomaticContinuousScroll;
         private bool IsScrollTooFast
             => DateTime.Now - LastScrollEventFiredDate < TimeSpan.FromMilliseconds(AppSettings.AutomaticContinuousScrollDelay);

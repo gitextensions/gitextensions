@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using GitCommands.Remotes;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using JetBrains.Annotations;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
@@ -16,8 +16,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private readonly TranslationString _noneItem =
             new TranslationString("None");
-        private IConfigFileRemoteSettingsManager _remotesManager;
-        private JoinableTask<object> _populateBuildServerTypeTask;
+        private IConfigFileRemoteSettingsManager? _remotesManager;
+        private JoinableTask<object>? _populateBuildServerTypeTask;
 
         public BuildServerIntegrationSettingsPage()
         {
@@ -61,6 +61,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
+                    Validates.NotNull(_populateBuildServerTypeTask);
+                    Validates.NotNull(CurrentSettings);
+
                     await _populateBuildServerTypeTask.JoinAsync();
 
                     await this.SwitchToMainThreadAsync();
@@ -74,6 +77,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void PageToSettings()
         {
+            Validates.NotNull(CurrentSettings);
+
             CurrentSettings.BuildServer.EnableIntegration.Value = checkBoxEnableBuildServerIntegration.Checked;
             CurrentSettings.BuildServer.ShowBuildResultPage.Value = checkBoxShowBuildResultPage.Checked;
 
@@ -89,6 +94,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ActivateBuildServerSettingsControl()
         {
+            Validates.NotNull(CurrentSettings);
+
             var controls = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().Cast<Control>();
             var previousControl = controls.SingleOrDefault();
             previousControl?.Dispose();
@@ -106,9 +113,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
-        [CanBeNull]
-        private IBuildServerSettingsUserControl CreateBuildServerSettingsUserControl()
+        private IBuildServerSettingsUserControl? CreateBuildServerSettingsUserControl()
         {
+            Validates.NotNull(Module);
+
             if (BuildServerType.SelectedIndex == 0 || string.IsNullOrEmpty(Module.WorkingDir))
             {
                 return null;
@@ -121,6 +129,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             if (selectedExport is not null)
             {
                 var buildServerSettingsUserControl = selectedExport.Value;
+                Validates.NotNull(_remotesManager);
                 var remoteUrls = _remotesManager.LoadRemotes(false).Select(r => string.IsNullOrEmpty(r.PushUrl) ? r.Url : r.PushUrl);
 
                 buildServerSettingsUserControl.Initialize(defaultProjectName, remoteUrls);
@@ -130,7 +139,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return null;
         }
 
-        private string GetSelectedBuildServerType()
+        private string? GetSelectedBuildServerType()
         {
             if (BuildServerType.SelectedIndex == 0)
             {

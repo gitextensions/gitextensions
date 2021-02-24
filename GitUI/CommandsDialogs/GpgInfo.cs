@@ -4,7 +4,7 @@ namespace GitUI.CommandsDialogs
 {
     public class GpgInfo
     {
-        public GpgInfo(CommitStatus commitStatus, string commitVerificationMessage, TagStatus tagStatus, string tagVerificationMessage)
+        public GpgInfo(CommitStatus commitStatus, string commitVerificationMessage, TagStatus tagStatus, string? tagVerificationMessage)
         {
             CommitStatus = commitStatus;
             CommitVerificationMessage = commitVerificationMessage;
@@ -15,6 +15,6 @@ namespace GitUI.CommandsDialogs
         public CommitStatus CommitStatus { get; }
         public string CommitVerificationMessage { get; }
         public TagStatus TagStatus { get; }
-        public string TagVerificationMessage { get; }
+        public string? TagVerificationMessage { get; }
     }
 }

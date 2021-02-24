@@ -7,6 +7,7 @@ using GitCommands;
 using GitCommands.Logging;
 using GitCommands.Utils;
 using GitExtUtils;
+using Microsoft;
 
 namespace GitUI.UserControls
 {
@@ -18,11 +19,13 @@ namespace GitUI.UserControls
         private int _nLastExitCode;
 
         private Panel _panel;
-        private ConEmuControl _terminal;
+        private ConEmuControl? _terminal;
 
         public ConsoleEmulatorOutputControl()
         {
             InitializeComponent();
+
+            Validates.NotNull(_panel);
         }
 
         private void InitializeComponent()
@@ -38,11 +41,13 @@ namespace GitUI.UserControls
 
         public override void AppendMessageFreeThreaded(string text)
         {
+            Validates.NotNull(_terminal);
             _terminal.RunningSession?.WriteOutputTextAsync(text);
         }
 
         public override void KillProcess()
         {
+            Validates.NotNull(_terminal);
             KillProcess(_terminal);
         }
 
@@ -53,7 +58,7 @@ namespace GitUI.UserControls
 
         public override void Reset()
         {
-            ConEmuControl oldTerminal = _terminal;
+            ConEmuControl? oldTerminal = _terminal;
 
             _terminal = new ConEmuControl
             {
@@ -114,12 +119,14 @@ namespace GitUI.UserControls
 
                 startInfo.ConsoleEmulatorClosedEventSink = (sender, _) =>
                 {
+                    Validates.NotNull(_terminal);
                     if (sender == _terminal.RunningSession)
                     {
                         FireTerminated();
                     }
                 };
 
+                Validates.NotNull(_terminal);
                 _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.ConEmuStyle.Value, AppSettings.ConEmuFontSize.Value);
             }
             catch (Exception ex)
@@ -134,7 +141,7 @@ namespace GitUI.UserControls
     {
         private readonly Action<TextEventArgs> _fireDataReceived;
         private int _commandLineCharsInOutput;
-        private string _lineChunk;
+        private string? _lineChunk;
 
         public ConsoleCommandLineOutputProcessor(int commandLineCharsInOutput, Action<TextEventArgs> fireDataReceived)
         {
@@ -143,7 +150,7 @@ namespace GitUI.UserControls
             _commandLineCharsInOutput += Environment.NewLine.Length; // for \n after the command line
         }
 
-        private string FilterOutConsoleCommandLine(string outputChunk)
+        private string? FilterOutConsoleCommandLine(string outputChunk)
         {
             if (_commandLineCharsInOutput > 0)
             {
@@ -164,7 +171,7 @@ namespace GitUI.UserControls
         public void AnsiStreamChunkReceived(object sender, AnsiStreamChunkEventArgs args)
         {
             var text = args.GetText(GitModule.SystemEncoding);
-            string filtered = FilterOutConsoleCommandLine(text);
+            string? filtered = FilterOutConsoleCommandLine(text);
             if (filtered is not null)
             {
                 SendAsLines(filtered);

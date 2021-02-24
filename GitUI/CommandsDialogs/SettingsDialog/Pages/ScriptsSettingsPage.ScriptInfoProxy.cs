@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.Design;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Design;
 using System.Windows.Forms;
 using GitUI.Design;
@@ -18,14 +19,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             // Needed for the ImageKeyConverter to work
             [Browsable(false)]
-            public ImageList ImageList { get; set; }
+            public ImageList? ImageList { get; set; }
 
             [Browsable(false)]
             public int HotkeyCommandIdentifier { get; set; }
 
             [Category(ScriptCategory)]
             [PropertyOrder(0)]
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
             [Category(ScriptCategory)]
             [DefaultValue(true)]
@@ -35,12 +36,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             [Category(ScriptCategory)]
             [PropertyOrder(2)]
             [Editor(typeof(ExecutableFileNameEditor), typeof(UITypeEditor))]
-            public string Command { get; set; }
+            public string? Command { get; set; }
 
             [Category(ScriptCategory)]
             [PropertyOrder(3)]
             [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
-            public string Arguments { get; set; }
+            public string? Arguments { get; set; }
 
             [Category(ScriptCategory)]
             [PropertyOrder(4)]
@@ -52,7 +53,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             [Editor("System.Windows.Forms.Design.ImageIndexEditor, System.Design", typeof(UITypeEditor))]
             [Category(ScriptCategory)]
             [PropertyOrder(4)]
-            public string Icon { get; set; }
+            public string? Icon { get; set; }
 
             [Category(ScriptBehaviourCategory)]
             [DisplayName("Ask confirmation")]
@@ -79,7 +80,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 ImageList = images;
             }
 
-            public static implicit operator ScriptInfoProxy(ScriptInfo script)
+            [return: NotNullIfNotNull("script")]
+            public static implicit operator ScriptInfoProxy?(ScriptInfo? script)
             {
                 if (script is null)
                 {
@@ -102,7 +104,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 };
             }
 
-            public static implicit operator ScriptInfo(ScriptInfoProxy proxy)
+            [return: NotNullIfNotNull("proxy")]
+            public static implicit operator ScriptInfo?(ScriptInfoProxy? proxy)
             {
                 if (proxy is null)
                 {

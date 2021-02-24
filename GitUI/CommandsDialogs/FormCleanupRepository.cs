@@ -6,7 +6,6 @@ using GitCommands;
 using GitCommands.Git.Commands;
 using GitCommands.Utils;
 using GitUI.HelperDialogs;
-using JetBrains.Annotations;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
@@ -30,10 +29,10 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             InitializeComplete();
             PreviewOutput.ReadOnly = true;
-            checkBoxPathFilter_CheckedChanged(null, null);
+            checkBoxPathFilter_CheckedChanged(this, EventArgs.Empty);
         }
 
-        public void SetPathArgument(string path)
+        public void SetPathArgument(string? path)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -84,8 +83,7 @@ namespace GitUI.CommandsDialogs
             throw new NotSupportedException($"Unknown value for {nameof(CleanMode)}.");
         }
 
-        [CanBeNull]
-        private string GetPathArgumentFromGui()
+        private string? GetPathArgumentFromGui()
         {
             if (!checkBoxPathFilter.Checked)
             {

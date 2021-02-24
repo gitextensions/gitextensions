@@ -1,6 +1,5 @@
 ﻿using System;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitUI.HelperDialogs
 {
@@ -12,7 +11,7 @@ namespace GitUI.HelperDialogs
             InitializeComponent();
         }
 
-        public FormCommitDiff([NotNull] GitUICommands commands, [CanBeNull] ObjectId objectId)
+        public FormCommitDiff(GitUICommands commands, ObjectId? objectId)
             : base(commands)
         {
             InitializeComponent();

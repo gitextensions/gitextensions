@@ -19,7 +19,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             InitializeComplete();
         }
 
-        public FormDashboardCategoryTitle(IEnumerable<string> existingCategories, string originalName = null)
+        public FormDashboardCategoryTitle(IEnumerable<string> existingCategories, string? originalName = null)
             : this()
         {
             if (existingCategories is not null)
@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         /// <summary>
         /// Gets the new category.
         /// </summary>
-        public string Category { get; private set; }
+        public string? Category { get; private set; }
 
         private void OkButton_Click(object sender, EventArgs e)
         {

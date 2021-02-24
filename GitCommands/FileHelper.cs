@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GitExtensions;
 using GitExtUtils;
 
 namespace GitCommands
@@ -54,9 +55,9 @@ namespace GitCommands
             ".tiff",
         };
 
-        public static bool IsBinaryFileName(GitModule module, string fileName)
+        public static bool IsBinaryFileName(GitModule module, string? fileName)
         {
-            return !string.IsNullOrWhiteSpace(fileName)
+            return !Strings.IsNullOrWhiteSpace(fileName)
                    && (IsBinaryAccordingToGitAttributes(module, fileName)
                        ?? HasMatchingExtension(BinaryExtensions, fileName));
         }
@@ -163,10 +164,10 @@ namespace GitCommands
             return false;
         }
 
-        public static bool IsBinaryFileAccordingToContent(string content)
+        public static bool IsBinaryFileAccordingToContent(string? content)
         {
             // Check for binary file.
-            if (!string.IsNullOrEmpty(content))
+            if (!Strings.IsNullOrEmpty(content))
             {
                 int nullCount = 0;
                 foreach (char c in content)

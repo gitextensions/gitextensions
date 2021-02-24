@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
 namespace GitUI
@@ -9,7 +10,7 @@ namespace GitUI
     public partial class FormPuttyError : GitExtensionsForm
     {
         /// <summary>Shows the "SSH error" dialog modally, and returns the path to the key, if one was loaded.</summary>
-        public static bool AskForKey(IWin32Window parent, out string keyPath)
+        public static bool AskForKey(IWin32Window parent, [NotNullWhen(returnValue: true)] out string? keyPath)
         {
             using var form = new FormPuttyError();
             var result = form.ShowDialog(parent);
@@ -17,7 +18,7 @@ namespace GitUI
             return result == DialogResult.Retry;
         }
 
-        public string KeyPath { get; private set; }
+        public string? KeyPath { get; private set; }
 
         public FormPuttyError()
         {

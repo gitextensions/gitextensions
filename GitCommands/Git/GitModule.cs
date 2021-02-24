@@ -700,12 +700,12 @@ namespace GitCommands
             }
         }
 
-        public async Task<ConflictData> GetConflictAsync(string filename)
+        public async Task<ConflictData> GetConflictAsync(string? filename)
         {
             return (await GetConflictsAsync(filename)).SingleOrDefault();
         }
 
-        public async Task<List<ConflictData>> GetConflictsAsync(string filename = "")
+        public async Task<List<ConflictData>> GetConflictsAsync(string? filename = "")
         {
             filename = filename.ToPosixPath();
 
@@ -759,7 +759,7 @@ namespace GitCommands
             return list;
         }
 
-        public async Task<Dictionary<IGitRef, IGitItem?>> GetSubmoduleItemsForEachRefAsync(string filename, Func<IGitRef, bool> showRemoteRef, bool noLocks = false)
+        public async Task<Dictionary<IGitRef, IGitItem?>> GetSubmoduleItemsForEachRefAsync(string? filename, Func<IGitRef, bool> showRemoteRef, bool noLocks = false)
         {
             string? command = GitCommandHelpers.GetSortedRefsCommand(noLocks: noLocks);
 
@@ -777,7 +777,7 @@ namespace GitCommands
             return refs.Where(showRemoteRef).ToDictionary(r => r, r => GetSubmoduleCommitHash(filename, r.Name));
         }
 
-        private IGitItem? GetSubmoduleCommitHash(string filename, string refName)
+        private IGitItem? GetSubmoduleCommitHash(string? filename, string refName)
         {
             var args = new GitArgumentBuilder("ls-tree")
             {
@@ -980,7 +980,7 @@ namespace GitCommands
             revision.HasNotes = !shortFormat;
             if (shortFormat)
             {
-                revision.Subject = ReEncodeCommitMessage(lines[10], revision.MessageEncoding);
+                revision.Subject = ReEncodeCommitMessage(lines[10], revision.MessageEncoding) ?? "";
             }
             else
             {
@@ -988,7 +988,7 @@ namespace GitCommands
 
                 // commit message is not re-encoded by git when format is given
                 revision.Body = ReEncodeCommitMessage(message, revision.MessageEncoding);
-                revision.Subject = revision.Body?.Substring(0, revision.Body.IndexOfAny(new[] { '\r', '\n' }));
+                revision.Subject = revision.Body?.Substring(0, revision.Body.IndexOfAny(new[] { '\r', '\n' })) ?? "";
             }
 
             if (loadRefs)
@@ -1139,7 +1139,7 @@ namespace GitCommands
             return (submodule[0], ObjectId.Parse(submodule, 1));
         }
 
-        public bool ExistsMergeCommit(string startRev, string endRev)
+        public bool ExistsMergeCommit(string? startRev, string? endRev)
         {
             if (string.IsNullOrEmpty(startRev) || string.IsNullOrEmpty(endRev))
             {
@@ -1281,7 +1281,7 @@ namespace GitCommands
                     return false;
                 }
 
-                Assumes.NotNull(configFile);
+                Validates.NotNull(configFile);
 
                 var configSection = configFile.ConfigSections.FirstOrDefault(section => section.GetValue("path").Trim() == localPath);
 
@@ -1410,7 +1410,7 @@ namespace GitCommands
 
         /// <summary>Tries to start Pageant for the specified remote repo (using the remote's PuTTY key file).</summary>
         /// <returns>true if the remote has a PuTTY key file; otherwise, false.</returns>
-        public bool StartPageantForRemote(string remote)
+        public bool StartPageantForRemote(string? remote)
         {
             var sshKeyFile = GetPuttyKeyFileForRemote(remote);
             if (string.IsNullOrEmpty(sshKeyFile) || !File.Exists(sshKeyFile))
@@ -1422,7 +1422,7 @@ namespace GitCommands
             return true;
         }
 
-        public static void StartPageantWithKey(string sshKeyFile)
+        public static void StartPageantWithKey(string? sshKeyFile)
         {
             var pageantExecutable = new Executable(AppSettings.Pageant);
 
@@ -1470,7 +1470,7 @@ namespace GitCommands
             };
         }
 
-        public ArgumentString PullCmd(string remote, string remoteBranch, bool rebase, bool? fetchTags = false, bool isUnshallow = false)
+        public ArgumentString PullCmd(string remote, string? remoteBranch, bool rebase, bool? fetchTags = false, bool isUnshallow = false)
         {
             return new GitArgumentBuilder("pull")
             {
@@ -2423,7 +2423,7 @@ namespace GitCommands
                 cache: noCache ? null : GitCommandCache);
         }
 
-        public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId? firstId, ObjectId? secondId, ObjectId parentToSecond)
+        public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId? firstId, ObjectId? secondId, ObjectId? parentToSecond)
         {
             var stagedStatus = GetStagedStatus(firstId, secondId, parentToSecond);
             var status = GetDiffFilesWithUntracked(firstId?.ToString(), secondId?.ToString(), stagedStatus);
@@ -2521,13 +2521,12 @@ namespace GitCommands
             var tree = GetTree(commitId, full);
 
             var list = tree
-                .Select(file => new GitItemStatus
+                .Select(file => new GitItemStatus(name: file.Name)
                 {
                     IsTracked = true,
                     IsNew = true,
                     IsChanged = false,
                     IsDeleted = false,
-                    Name = file.Name,
                     TreeGuid = file.ObjectId,
                     Staged = StagedStatus.None
                 }).ToList();
@@ -3202,7 +3201,7 @@ namespace GitCommands
             return _gitTreeParser.Parse(tree);
         }
 
-        public GitBlame Blame(string fileName, string from, Encoding encoding, string? lines = null)
+        public GitBlame Blame(string? fileName, string from, Encoding encoding, string? lines = null)
         {
             var args = new GitArgumentBuilder("blame")
             {
@@ -3586,12 +3585,12 @@ namespace GitCommands
             return _gitExecutable.GetOutput(args);
         }
 
-        public string OpenWithDifftoolDirDiff(string firstRevision, string secondRevision, string? customTool = null)
+        public string OpenWithDifftoolDirDiff(string? firstRevision, string? secondRevision, string? customTool = null)
         {
             return OpenWithDifftool(null, firstRevision: firstRevision, secondRevision: secondRevision, extraDiffArguments: "--dir-diff", customTool: customTool);
         }
 
-        public string OpenWithDifftool(string? filename, string oldFileName = "", string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.WorkTreeGuid, string? extraDiffArguments = null, bool isTracked = true, string? customTool = null)
+        public string OpenWithDifftool(string? filename, string? oldFileName = "", string? firstRevision = GitRevision.IndexGuid, string? secondRevision = GitRevision.WorkTreeGuid, string? extraDiffArguments = null, bool isTracked = true, string? customTool = null)
         {
             _gitCommandRunner.RunDetached(new GitArgumentBuilder("difftool")
             {
@@ -4094,13 +4093,12 @@ namespace GitCommands
             var files = fileList.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
 
             return files.Select(
-                file => new GitItemStatus
+                file => new GitItemStatus(name: file)
                 {
                     IsChanged = true,
                     IsTracked = true,
                     IsDeleted = false,
                     IsNew = false,
-                    Name = file,
                     Staged = StagedStatus.None
                 }).ToList();
         }
@@ -4177,7 +4175,7 @@ namespace GitCommands
 
         private static GitItemStatus createErrorGitItemStatus(string gitOutput)
         {
-            return new GitItemStatus { Name = GitError, IsStatusOnly = true, ErrorMessage = gitOutput.Replace('\0', '\t') };
+            return new GitItemStatus(name: GitError) { IsStatusOnly = true, ErrorMessage = gitOutput.Replace('\0', '\t') };
         }
 
         public (int totalCount, Dictionary<string, int> countByName) GetCommitsByContributor(DateTime? since = null, DateTime? until = null)

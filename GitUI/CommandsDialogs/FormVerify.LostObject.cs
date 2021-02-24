@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtUtils;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
 {
@@ -50,30 +49,28 @@ namespace GitUI.CommandsDialogs
             /// <summary>
             /// Id (SHA-1 hash) of the lost object.
             /// </summary>
-            [NotNull]
             public ObjectId ObjectId { get; }
 
             /// <summary>
             /// Id (SHA-1 hash) of parent commit to the lost object.
             /// </summary>
-            [CanBeNull]
-            public ObjectId Parent { get; private set; }
+            public ObjectId? Parent { get; private set; }
 
             /// <summary>
             /// Diagnostics and object type.
             /// </summary>
             public string RawType { get; }
 
-            public string Author { get; private set; }
-            public string Subject { get; private set; }
+            public string? Author { get; private set; }
+            public string? Subject { get; private set; }
             public DateTime? Date { get; private set; }
 
             /// <summary>
             /// Tag name (for a tag object)
             /// </summary>
-            public string TagName { get; set; }
+            public string? TagName { get; set; }
 
-            private LostObject(LostObjectType objectType, string rawType, [NotNull] ObjectId objectId)
+            private LostObject(LostObjectType objectType, string rawType, ObjectId objectId)
             {
                 // TODO use enum for RawType
                 ObjectType = objectType;
@@ -81,8 +78,7 @@ namespace GitUI.CommandsDialogs
                 ObjectId = objectId ?? throw new ArgumentNullException(nameof(objectId));
             }
 
-            [CanBeNull]
-            public static LostObject TryParse(GitModule module, string raw)
+            public static LostObject? TryParse(GitModule module, string raw)
             {
                 if (string.IsNullOrEmpty(raw))
                 {

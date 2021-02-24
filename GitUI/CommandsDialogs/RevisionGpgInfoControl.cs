@@ -3,7 +3,6 @@ using GitCommands.Gpg;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -21,7 +20,7 @@ namespace GitUI.CommandsDialogs
             DisplayGpgInfo(null);
         }
 
-        public void DisplayGpgInfo([CanBeNull] GpgInfo info)
+        public void DisplayGpgInfo(GpgInfo? info)
         {
             // No Commit Signature and No Tag Signature
             if (info is null)

@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
         }
 
-        public FormCreateBranch(GitUICommands commands, ObjectId objectId, string newBranchNamePrefix = null)
+        public FormCreateBranch(GitUICommands commands, ObjectId? objectId, string? newBranchNamePrefix = null)
             : base(commands, enablePositionRestore: false)
         {
             InitializeComponent();

@@ -1,5 +1,6 @@
 ﻿using System;
 using GitCommands;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.CommitDialog
@@ -9,7 +10,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
         private readonly TranslationString _emptyTemplate =
             new TranslationString("empty");
 
-        private CommitTemplateItem[] _commitTemplates;
+        private CommitTemplateItem[]? _commitTemplates;
 
         private const int _maxCommitTemplates = 10;
         private const int _maxShownCharsForName = 50;
@@ -91,23 +92,28 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
         private void textCommitTemplateText_TextChanged(object sender, EventArgs e)
         {
+            Validates.NotNull(_commitTemplates);
             _commitTemplates[_NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex].Text = _NO_TRANSLATE_textCommitTemplateText.Text;
         }
 
         private void textBoxCommitTemplateName_TextChanged(object sender, EventArgs e)
         {
+            Validates.NotNull(_commitTemplates);
             _commitTemplates[_NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex].Name = _NO_TRANSLATE_textBoxCommitTemplateName.Text;
             RefreshLineInListBox(_NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex);
         }
 
         private void comboBoxCommitTemplates_SelectedIndexChanged(object sender, EventArgs e)
         {
+            Validates.NotNull(_commitTemplates);
             _NO_TRANSLATE_textCommitTemplateText.Text = _commitTemplates[_NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex].Text;
             _NO_TRANSLATE_textBoxCommitTemplateName.Text = _commitTemplates[_NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex].Name;
         }
 
         private void RefreshLineInListBox(int line)
         {
+            Validates.NotNull(_commitTemplates);
+
             string comboBoxText;
 
             if (!string.IsNullOrEmpty(_commitTemplates[line].Name))

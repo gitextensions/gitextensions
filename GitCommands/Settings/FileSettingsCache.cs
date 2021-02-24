@@ -240,7 +240,7 @@ namespace GitCommands.Settings
         private void StartSaveTimer()
         {
             // Resets timer so that the last call will let the timer event run and will cause the settings to be saved.
-            if (_saveTimer != null)
+            if (_saveTimer is not null)
             {
                 _saveTimer.Stop();
                 _saveTimer.AutoReset = true;

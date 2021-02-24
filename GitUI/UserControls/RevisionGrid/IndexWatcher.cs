@@ -16,7 +16,7 @@ namespace GitUI.UserControls.RevisionGrid
 
     public sealed class IndexWatcher : IDisposable
     {
-        public event EventHandler<IndexChangedEventArgs> Changed;
+        public event EventHandler<IndexChangedEventArgs>? Changed;
 
         private readonly IGitUICommandsSource _uICommandsSource;
 
@@ -101,7 +101,7 @@ namespace GitUI.UserControls.RevisionGrid
         }
 
         private bool _enabled;
-        private string _gitDirPath;
+        private string? _gitDirPath;
         private FileSystemWatcher GitIndexWatcher { get; }
         private FileSystemWatcher RefsWatcher { get; }
 

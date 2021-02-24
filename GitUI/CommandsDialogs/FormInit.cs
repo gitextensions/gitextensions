@@ -22,9 +22,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _initMsgBoxCaption =
             new TranslationString("Create new repository");
 
-        private readonly EventHandler<GitModuleEventArgs> _gitModuleChanged;
+        private readonly EventHandler<GitModuleEventArgs>? _gitModuleChanged;
 
-        public FormInit(string dir, EventHandler<GitModuleEventArgs> gitModuleChanged)
+        public FormInit(string dir, EventHandler<GitModuleEventArgs>? gitModuleChanged)
             : base(commands: null, enablePositionRestore: true)
         {
             _gitModuleChanged = gitModuleChanged;

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using JetBrains.Annotations;
+
+#nullable enable
 
 namespace GitUIPluginInterfaces
 {
@@ -24,21 +27,18 @@ namespace GitUIPluginInterfaces
         public static readonly Regex Sha1HashRegex = new(@"^[a-f\d]{40}$", RegexOptions.Compiled);
         public static readonly Regex Sha1HashShortRegex = new(@"\b[a-f\d]{7,40}\b", RegexOptions.Compiled);
 
-        private BuildInfo _buildStatus;
+        private BuildInfo? _buildStatus;
 
-        public GitRevision([NotNull] ObjectId objectId)
+        public GitRevision(ObjectId objectId)
         {
             ObjectId = objectId ?? throw new ArgumentNullException(nameof(objectId));
         }
 
-        [NotNull]
         public ObjectId ObjectId { get; }
 
-        [NotNull]
         public string Guid => ObjectId.ToString();
 
         // TODO this should probably be null when not yet populated, similar to how ParentIds works
-        [NotNull, ItemNotNull]
         public IReadOnlyList<IGitRef> Refs { get; set; } = Array.Empty<IGitRef>();
 
         /// <summary>
@@ -48,20 +48,18 @@ namespace GitUIPluginInterfaces
         /// Can return <c>null</c> in cases where the data has not been populated
         /// for whatever reason.
         /// </remarks>
-        [CanBeNull, ItemNotNull]
-        public IReadOnlyList<ObjectId> ParentIds { get; set; }
+        public IReadOnlyList<ObjectId>? ParentIds { get; set; }
 
-        public ObjectId TreeGuid { get; set; }
+        public ObjectId? TreeGuid { get; set; }
 
-        public string Author { get; set; }
-        public string AuthorEmail { get; set; }
+        public string? Author { get; set; }
+        public string? AuthorEmail { get; set; }
         public DateTime AuthorDate { get; set; }
-        public string Committer { get; set; }
-        public string CommitterEmail { get; set; }
+        public string? Committer { get; set; }
+        public string? CommitterEmail { get; set; }
         public DateTime CommitDate { get; set; }
 
-        [CanBeNull]
-        public BuildInfo BuildStatus
+        public BuildInfo? BuildStatus
         {
             get => _buildStatus;
             set
@@ -77,16 +75,16 @@ namespace GitUIPluginInterfaces
         }
 
         public string Subject { get; set; } = "";
-        [CanBeNull]
-        public string Body { get; set; }
+
+        public string? Body { get; set; }
 
         public bool HasMultiLineMessage { get; set; }
         public bool HasNotes { get; set; }
 
         // UTF-8 when is null or empty
-        public string MessageEncoding { get; set; }
+        public string? MessageEncoding { get; set; }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         public override string ToString() => $"{ObjectId.ToShortString()}:{Subject}";
 
@@ -97,15 +95,14 @@ namespace GitUIPluginInterfaces
 
         public bool HasParent => ParentIds?.Count > 0;
 
-        [CanBeNull]
-        public ObjectId FirstParentId => ParentIds?.FirstOrDefault();
+        public ObjectId? FirstParentId => ParentIds?.FirstOrDefault();
 
         #region INotifyPropertyChanged
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

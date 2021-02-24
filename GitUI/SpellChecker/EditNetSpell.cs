@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
 using GitUI.AutoCompletion;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using NetSpell.SpellChecker;
 using NetSpell.SpellChecker.Dictionary;
@@ -21,7 +22,7 @@ namespace GitUI.SpellChecker
     [DefaultEvent("TextChanged")]
     public partial class EditNetSpell : GitModuleControl
     {
-        public event EventHandler TextAssigned;
+        public event EventHandler? TextAssigned;
 
         private readonly TranslationString _cutMenuItemText = new("Cut");
         private readonly TranslationString _copyMenuItemText = new("Copy");
@@ -36,13 +37,13 @@ namespace GitUI.SpellChecker
         private readonly TranslationString _markIllFormedLinesText = new("Mark ill formed lines");
         private readonly TranslationString _autoCompletionText = new("Provide auto completion");
 
-        private SpellCheckEditControl _customUnderlines;
-        private Spelling _spelling;
-        private static WordDictionary _wordDictionary;
+        private SpellCheckEditControl? _customUnderlines;
+        private Spelling? _spelling;
+        private static WordDictionary? _wordDictionary;
 
         private CancellationTokenSource _autoCompleteCancellationTokenSource = new();
         private readonly List<IAutoCompleteProvider> _autoCompleteProviders = new List<IAutoCompleteProvider>();
-        private AsyncLazy<IEnumerable<AutoCompleteWord>> _autoCompleteListTask;
+        private AsyncLazy<IEnumerable<AutoCompleteWord>?>? _autoCompleteListTask;
         private bool _autoCompleteWasUserActivated;
         private bool _disableAutoCompleteTriggerOnTextUpdate = true; // only popup on key press
         private readonly Dictionary<Keys, string> _keysToSendToAutoComplete = new Dictionary<Keys, string>
@@ -136,7 +137,7 @@ namespace GitUI.SpellChecker
         [Browsable(false)]
         public int CurrentLine => TextBox.GetLineFromCharIndex(TextBox.SelectionStart) + 1;
 
-        public event EventHandler SelectionChanged;
+        public event EventHandler? SelectionChanged;
 
         private void EditNetSpellEnabledChanged(object sender, EventArgs e)
         {
@@ -190,7 +191,7 @@ namespace GitUI.SpellChecker
         [Category("Appearance")]
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual string SelectedText
+        public virtual string? SelectedText
         {
             get => TextBox.SelectedText;
             set
@@ -310,6 +311,8 @@ namespace GitUI.SpellChecker
 
             try
             {
+                Validates.NotNull(_spelling);
+
                 _spelling.Text = TextBox.Text;
                 _spelling.WordIndex = _spelling.GetWordIndexFromTextIndex(pos);
 
@@ -364,6 +367,8 @@ namespace GitUI.SpellChecker
                     };
             }
 
+            Validates.NotNull(_spelling);
+
             _spelling.Dictionary = _wordDictionary;
         }
 
@@ -378,6 +383,9 @@ namespace GitUI.SpellChecker
 
             InitializeAutoCompleteWordsTask();
 
+            Validates.NotNull(_autoCompleteListTask);
+            Validates.NotNull(_spelling);
+
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
@@ -390,11 +398,14 @@ namespace GitUI.SpellChecker
 
         private void SpellingMisspelledWord(object sender, SpellingEventArgs e)
         {
+            Validates.NotNull(_customUnderlines);
             _customUnderlines.Lines.Add(new TextPos(e.TextIndex, e.TextIndex + e.Word.Length));
         }
 
         public void CheckSpelling()
         {
+            Validates.NotNull(_customUnderlines);
+
             _customUnderlines.IllFormedLines.Clear();
             _customUnderlines.Lines.Clear();
 
@@ -450,6 +461,7 @@ namespace GitUI.SpellChecker
 
                 if (curLength > curMaxLength)
                 {
+                    Validates.NotNull(_customUnderlines);
                     _customUnderlines.IllFormedLines.Add(new TextPos(chars + curMaxLength, chars + curLength));
                 }
 
@@ -545,18 +557,21 @@ namespace GitUI.SpellChecker
 
         private void RemoveWordClick(object sender, EventArgs e)
         {
+            Validates.NotNull(_spelling);
             _spelling.DeleteWord();
             CheckSpelling();
         }
 
         private void IgnoreWordClick(object sender, EventArgs e)
         {
+            Validates.NotNull(_spelling);
             _spelling.IgnoreWord();
             CheckSpelling();
         }
 
         private void AddToDictionaryClick(object sender, EventArgs e)
         {
+            Validates.NotNull(_spelling);
             _spelling.Dictionary.Add(_spelling.CurrentWord);
             CheckSpelling();
         }
@@ -569,6 +584,7 @@ namespace GitUI.SpellChecker
 
         private void SuggestionToolStripItemClick(object sender, EventArgs e)
         {
+            Validates.NotNull(_spelling);
             _spelling.ReplaceWord(((ToolStripItem)sender).Text);
             CheckSpelling();
         }
@@ -587,6 +603,7 @@ namespace GitUI.SpellChecker
 
         private void SpellCheckTimerTick(object sender, EventArgs e)
         {
+            Validates.NotNull(_customUnderlines);
             if (!_customUnderlines.IsImeStartingComposition)
             {
                 CheckSpelling();
@@ -598,6 +615,7 @@ namespace GitUI.SpellChecker
 
         private void TextBoxTextChanged(object sender, EventArgs e)
         {
+            Validates.NotNull(_customUnderlines);
             if (_customUnderlines.IsImeStartingComposition)
             {
                 return;
@@ -859,7 +877,7 @@ namespace GitUI.SpellChecker
         {
             CancelAutoComplete();
             _autoCompleteCancellationTokenSource = new CancellationTokenSource();
-            _autoCompleteListTask = new AsyncLazy<IEnumerable<AutoCompleteWord>>(
+            _autoCompleteListTask = new AsyncLazy<IEnumerable<AutoCompleteWord>?>(
                 async () =>
                 {
                     await TaskScheduler.Default.SwitchTo(alwaysYield: true);
@@ -925,7 +943,7 @@ namespace GitUI.SpellChecker
             _autoCompleteWasUserActivated = false;
         }
 
-        private void AcceptAutoComplete(AutoCompleteWord completionWord = null)
+        private void AcceptAutoComplete(AutoCompleteWord? completionWord = null)
         {
             completionWord ??= (AutoCompleteWord)AutoComplete.SelectedItem;
             var word = GetWordAtCursor();
@@ -941,6 +959,7 @@ namespace GitUI.SpellChecker
                 return;
             }
 
+            Validates.NotNull(_customUnderlines);
             if (_customUnderlines.IsImeStartingComposition)
             {
                 return;
@@ -1054,6 +1073,7 @@ namespace GitUI.SpellChecker
 
         private void AutoCompleteTimer_Tick(object sender, EventArgs e)
         {
+            Validates.NotNull(_customUnderlines);
             if (!_customUnderlines.IsImeStartingComposition)
             {
                 UpdateOrShowAutoComplete(false);

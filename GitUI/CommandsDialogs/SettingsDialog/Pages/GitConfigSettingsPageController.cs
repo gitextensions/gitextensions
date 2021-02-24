@@ -11,7 +11,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             CalculateInitialDirectory(toolPreferredPath) ??
             Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
-        private static string CalculateInitialDirectory(string suppliedPath)
+        private static string? CalculateInitialDirectory(string suppliedPath)
         {
             if (string.IsNullOrWhiteSpace(suppliedPath))
             {

@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace GitUI.Avatars
 {
@@ -28,7 +27,7 @@ namespace GitUI.Avatars
             _avatarProvider = avatarProvider ?? throw new ArgumentNullException(nameof(avatarProvider));
         }
 
-        public async Task<Image> GetAvatarAsync([NotNull] string email, string name, int imageSize)
+        public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
             if (imageSize < 1)
             {
@@ -44,7 +43,7 @@ namespace GitUI.Avatars
             {
                 var image = await _avatarProvider.GetAvatarAsync(email, name, imageSize);
 
-                if (image != null)
+                if (image is not null)
                 {
                     return image;
                 }

@@ -7,7 +7,7 @@ namespace System
         [DllImport(Libraries.UxTheme, ExactSpelling = true, CharSet = CharSet.Unicode)]
         private static unsafe extern int SetWindowTheme(IntPtr hWnd, char* pszSubAppName, char* pszSubIdList);
 
-        public static unsafe int SetWindowTheme(IntPtr hWnd, string subAppName, string subIdList)
+        public static unsafe int SetWindowTheme(IntPtr hWnd, string subAppName, string? subIdList)
         {
             fixed (char* pszSubAppName = subAppName)
             {

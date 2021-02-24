@@ -4,7 +4,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using GitCommands;
-using JetBrains.Annotations;
 
 namespace GitUI.Avatars
 {
@@ -19,7 +18,7 @@ namespace GitUI.Avatars
         private readonly bool _forceFallback;
 
         public GravatarProvider(
-            [NotNull] IAvatarDownloader downloader,
+            IAvatarDownloader downloader,
             AvatarFallbackType? fallback,
             bool forceFallback = false)
         {
@@ -30,11 +29,11 @@ namespace GitUI.Avatars
 
         public static bool IsFallbackSupportedByGravatar(AvatarFallbackType fallback)
         {
-            return SerializeFallbackType(fallback) != null;
+            return SerializeFallbackType(fallback) is not null;
         }
 
         /// <inheritdoc/>
-        public Task<Image> GetAvatarAsync([NotNull] string email, string name, int imageSize)
+        public Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
             var fallback = SerializeFallbackType(_fallback) ?? "404";
             var hash = ComputeHash(email);
@@ -52,15 +51,16 @@ namespace GitUI.Avatars
 
             var avatarUri = uri.Uri;
 
-            if (avatarUri == null)
+            // TODO NULLABLE UriBuilder.Uri doesn't appear to be nullable
+            if (avatarUri is null)
             {
-                return Task.FromResult<Image>(null);
+                return Task.FromResult<Image?>(null);
             }
 
             return _downloader.DownloadImageAsync(avatarUri);
         }
 
-        private string ComputeHash(string email)
+        private static string ComputeHash(string email)
         {
             // Hash specified at http://en.gravatar.com/site/implement/hash/
             using var md5 = new MD5CryptoServiceProvider();
@@ -72,7 +72,7 @@ namespace GitUI.Avatars
             return HexString.FromByteArray(hashBytes);
         }
 
-        private static string SerializeFallbackType(AvatarFallbackType? fallback)
+        private static string? SerializeFallbackType(AvatarFallbackType? fallback)
         {
             return fallback switch
             {

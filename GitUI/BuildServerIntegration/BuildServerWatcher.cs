@@ -21,7 +21,6 @@ using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.BuildServerIntegration
@@ -36,8 +35,8 @@ namespace GitUI.BuildServerIntegration
         private readonly RevisionDataGridView _revisionGridView;
         private readonly Func<GitModule> _module;
         private readonly IRepoNameExtractor _repoNameExtractor;
-        private IDisposable _buildStatusCancellationToken;
-        private IBuildServerAdapter _buildServerAdapter;
+        private IDisposable? _buildStatusCancellationToken;
+        private IBuildServerAdapter? _buildServerAdapter;
 
         internal BuildStatusColumnProvider ColumnProvider { get; }
 
@@ -132,11 +131,11 @@ namespace GitUI.BuildServerIntegration
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "http://stackoverflow.com/questions/1065168/does-disposing-streamreader-close-the-stream")]
-        public IBuildServerCredentials GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, bool useStoredCredentialsIfExisting)
+        public IBuildServerCredentials? GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, bool useStoredCredentialsIfExisting)
         {
             lock (_buildServerCredentialsLock)
             {
-                IBuildServerCredentials buildServerCredentials = new BuildServerCredentials { UseGuestAccess = true };
+                IBuildServerCredentials? buildServerCredentials = new BuildServerCredentials { UseGuestAccess = true };
                 var foundInConfig = false;
 
                 const string CredentialsConfigName = "Credentials";
@@ -245,7 +244,7 @@ namespace GitUI.BuildServerIntegration
             return projectNames;
         }
 
-        private async Task<IBuildServerCredentials> ShowBuildServerCredentialsFormAsync(string buildServerUniqueKey, IBuildServerCredentials buildServerCredentials)
+        private async Task<IBuildServerCredentials?> ShowBuildServerCredentialsFormAsync(string buildServerUniqueKey, IBuildServerCredentials buildServerCredentials)
         {
             await _revisionGrid.SwitchToMainThreadAsync();
 
@@ -300,8 +299,7 @@ namespace GitUI.BuildServerIntegration
             }
         }
 
-        [ItemCanBeNull]
-        private async Task<IBuildServerAdapter> GetBuildServerAdapterAsync()
+        private async Task<IBuildServerAdapter?> GetBuildServerAdapterAsync()
         {
             await TaskScheduler.Default;
 

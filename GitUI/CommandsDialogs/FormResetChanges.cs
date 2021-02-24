@@ -46,9 +46,9 @@ namespace GitUI.CommandsDialogs
         /// Shows the dialog modally under the given owner, and returns the user's selection (RESET, RESET_AND_DELETE, or CANCEL).
         /// </summary>
         /// <param name="owner">Shows this form as a modal dialog with the specified owner.</param>
-        /// <param name="hasExistingFiles">Are there existing (modified) files selected?</param>
-        /// <param name="hasNewFiles">Are there new (untracked) files selected?</param>
-        public static ActionEnum ShowResetDialog(IWin32Window owner, bool hasExistingFiles, bool hasNewFiles)
+        /// <param name="hasExistingFiles">Where there are existing (modified) files selected.</param>
+        /// <param name="hasNewFiles">Where there are new (untracked) files selected.</param>
+        public static ActionEnum ShowResetDialog(IWin32Window? owner, bool hasExistingFiles, bool hasNewFiles)
         {
             using var form = new FormResetChanges(hasExistingFiles, hasNewFiles);
             form.ShowDialog(owner);

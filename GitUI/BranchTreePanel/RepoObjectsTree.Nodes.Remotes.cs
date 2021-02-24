@@ -12,6 +12,7 @@ using GitUI.Properties;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.BranchTreePanel
@@ -25,7 +26,7 @@ namespace GitUI.BranchTreePanel
             // Retains the list of currently loaded branches.
             // This is needed to apply filtering without reloading the data.
             // Whether or not force the reload of data is controlled by <see cref="_isFiltering"/> flag.
-            private IReadOnlyList<IGitRef> _loadedBranches;
+            private IReadOnlyList<IGitRef>? _loadedBranches;
 
             public RemoteBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource)
                 : base(treeNode, uiCommands)
@@ -84,6 +85,8 @@ namespace GitUI.BranchTreePanel
                 foreach (IGitRef branch in branches)
                 {
                     token.ThrowIfCancellationRequested();
+
+                    Validates.NotNull(branch.ObjectId);
 
                     bool isVisible = !IsFiltering.Value || _refsSource.Contains(branch.ObjectId);
                     var remoteName = branch.Name.SubstringUntil('/');
@@ -158,7 +161,7 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            internal void PopupManageRemotesForm(string remoteName)
+            internal void PopupManageRemotesForm(string? remoteName)
             {
                 UICommands.StartRemotesDialog(TreeViewNode.TreeView, remoteName);
             }

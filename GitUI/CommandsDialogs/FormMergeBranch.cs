@@ -15,18 +15,20 @@ namespace GitUI.CommandsDialogs
     {
         private readonly TranslationString _strategyTooltipText = new("resolve " + Environment.NewLine + "This can only resolve two heads (i.e. the current branch and another branch you pulled from) using a 3-way merge algorithm." + Environment.NewLine + "It tries to carefully detect criss-cross merge ambiguities and is considered generally safe and fast. " + Environment.NewLine + Environment.NewLine + "recursive " + Environment.NewLine + "This can only resolve two heads using a 3-way merge algorithm. When there is more than one common ancestor that can be " + Environment.NewLine + "used for 3-way merge, it creates a merged tree of the common ancestors and uses that as the reference tree for the 3-way" + Environment.NewLine + "merge. Additionally this can detect and handle merges involving renames. This is the default merge strategy when pulling or " + Environment.NewLine + "merging one branch. " + Environment.NewLine + Environment.NewLine + "octopus " + Environment.NewLine + "This resolves cases with more than two heads, but refuses to do a complex merge that needs manual resolution. It is " + Environment.NewLine + "primarily meant to be used for bundling topic branch heads together. This is the default merge strategy when pulling or " + Environment.NewLine + "merging more than one branch. " + Environment.NewLine + Environment.NewLine + "ours " + Environment.NewLine + "This resolves any number of heads, but the resulting tree of the merge is always that of the current branch head, effectively " + Environment.NewLine + "ignoring all changes from all other branches. It is meant to be used to supersede old development history of side branches." + Environment.NewLine + Environment.NewLine + "subtree " + Environment.NewLine + "This is a modified recursive strategy. When merging trees A and B, if B corresponds to a subtree of A, B is first adjusted to " + Environment.NewLine + "match the tree structure of A, instead of reading the trees at the same level. This adjustment is also done to the common " + Environment.NewLine + "ancestor tree.");
         private readonly TranslationString _formMergeBranchHoverShowImageLabelText = new("Hover to see scenario when fast forward is possible.");
-        private readonly string _defaultBranch;
+        private readonly string? _defaultBranch;
         private ICommitMessageManager _commitMessageManager;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormMergeBranch()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
         }
 
         /// <summary>Initializes <see cref="FormMergeBranch"/>.</summary>
         /// <param name="defaultBranch">Branch to merge into the current branch.</param>
-        public FormMergeBranch(GitUICommands commands, string defaultBranch)
+        public FormMergeBranch(GitUICommands commands, string? defaultBranch)
             : base(commands)
         {
             InitializeComponent();
@@ -48,7 +50,7 @@ namespace GitUI.CommandsDialogs
             nbMessages.Value = Module.EffectiveSettings.Detailed.MergeLogMessagesCount.Value;
 
             advanced.Checked = AppSettings.AlwaysShowAdvOpt;
-            advanced_CheckedChanged(null, null);
+            advanced_CheckedChanged(this, EventArgs.Empty);
 
             Branches.Select();
         }
@@ -88,7 +90,7 @@ namespace GitUI.CommandsDialogs
             AppSettings.DontCommitMerge = noCommit.Checked;
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforeMerge);
 
-            string mergeMessagePath = null;
+            string? mergeMessagePath = null;
             if (addMergeMessage.Checked)
             {
                 // [!] Do not reset the last commit message stored in AppSettings.LastCommitMessage
@@ -138,7 +140,7 @@ namespace GitUI.CommandsDialogs
         private void advanced_CheckedChanged(object sender, EventArgs e)
         {
             advancedPanel.Visible = advanced.Checked;
-            NonDefaultMergeStrategy_CheckedChanged(null, null);
+            NonDefaultMergeStrategy_CheckedChanged(this, EventArgs.Empty);
 
             if (!advanced.Checked)
             {

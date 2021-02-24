@@ -40,9 +40,9 @@ namespace GitCommands
             info.AddValue("Text", Text);
         }
 
-        public static void SaveToSettings(CommitTemplateItem[] items)
+        public static void SaveToSettings(CommitTemplateItem[]? items)
         {
-            string strVal = SerializeCommitTemplates(items);
+            string? strVal = SerializeCommitTemplates(items);
             AppSettings.CommitTemplates = strVal ?? string.Empty;
         }
 
@@ -58,7 +58,7 @@ namespace GitCommands
             return templates;
         }
 
-        private static string SerializeCommitTemplates(CommitTemplateItem[] items)
+        private static string? SerializeCommitTemplates(CommitTemplateItem[]? items)
         {
             return JsonSerializer.Serialize(items);
         }

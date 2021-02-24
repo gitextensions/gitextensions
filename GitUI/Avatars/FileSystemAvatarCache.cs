@@ -18,17 +18,17 @@ namespace GitUI.Avatars
         private readonly IAvatarProvider _inner;
         private readonly IFileSystem _fileSystem;
 
-        public FileSystemAvatarCache(IAvatarProvider inner, IFileSystem fileSystem = null)
+        public FileSystemAvatarCache(IAvatarProvider inner, IFileSystem? fileSystem = null)
         {
             _inner = inner;
             _fileSystem = fileSystem ?? new FileSystem();
         }
 
         /// <inheritdoc />
-        public event EventHandler CacheCleared;
+        public event EventHandler? CacheCleared;
 
         /// <inheritdoc />
-        public async Task<Image> GetAvatarAsync(string email, string name, int imageSize)
+        public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
             var cacheDir = AppSettings.AvatarImageCachePath;
             var path = Path.Combine(cacheDir, $"{email}.{imageSize}px.png");
@@ -62,7 +62,7 @@ namespace GitUI.Avatars
                 }
             }
 
-            Image ReadImage()
+            Image? ReadImage()
             {
                 if (!HasExpired())
                 {

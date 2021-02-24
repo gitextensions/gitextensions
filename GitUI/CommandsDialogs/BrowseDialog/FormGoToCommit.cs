@@ -5,20 +5,19 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public sealed partial class FormGoToCommit : GitModuleForm
     {
         /// <summary>
-        /// this will be used when Go() is called
+        /// this will be used when Go() is called.
         /// </summary>
-        private string _selectedRevision;
+        private string? _selectedRevision;
 
         // these two are used to prepare for _selectedRevision
-        private IGitRef _selectedTag;
-        private IGitRef _selectedBranch;
+        private IGitRef? _selectedTag;
+        private IGitRef? _selectedBranch;
 
         private readonly AsyncLoader _tagsLoader = new();
         private readonly AsyncLoader _branchesLoader = new();
@@ -44,10 +43,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         }
 
         /// <summary>
-        /// returns null if revision does not exist (could not be revparsed)
+        /// returns null if revision does not exist (could not be revparsed).
         /// </summary>
-        [CanBeNull]
-        public ObjectId ValidateAndGetSelectedRevision()
+        public ObjectId? ValidateAndGetSelectedRevision()
         {
             return Module.RevParse(_selectedRevision);
         }

@@ -12,7 +12,6 @@ using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Script;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -79,12 +78,12 @@ Current Branch:
             nameof(ScriptInfoProxy.Command),
             nameof(ScriptInfoProxy.Arguments),
         };
-        private static ImageList EmbeddedIcons = new ImageList
+        private static readonly ImageList EmbeddedIcons = new ImageList
         {
             ColorDepth = ColorDepth.Depth32Bit
         };
-        private BindingList<ScriptInfoProxy> _scripts;
-        private SimpleHelpDisplayDialog _argumentsCheatSheet;
+        private readonly BindingList<ScriptInfoProxy> _scripts = new BindingList<ScriptInfoProxy>();
+        private SimpleHelpDisplayDialog? _argumentsCheatSheet;
         private bool _handlingCheck;
 
         // settings maybe loaded before page is shwon or after
@@ -120,13 +119,13 @@ Current Branch:
             };
         }
 
-        private ScriptInfoProxy SelectedScript { get; set; }
+        private ScriptInfoProxy? SelectedScript { get; set; }
 
         protected override void OnParentChanged(EventArgs e)
         {
             base.OnParentChanged(e);
 
-            if (Parent is null && _argumentsCheatSheet is object)
+            if (Parent is null && _argumentsCheatSheet is not null)
             {
                 _argumentsCheatSheet.Close();
             }
@@ -156,19 +155,16 @@ Current Branch:
             resourceSet.Close();
             rm.ReleaseAllResources();
 
-            lvScripts.LargeImageList =
-                lvScripts.SmallImageList = EmbeddedIcons;
+            lvScripts.LargeImageList = lvScripts.SmallImageList = EmbeddedIcons;
             _imagsLoaded = true;
 
-            if (_scripts is object)
-            {
-                BindScripts(_scripts, null);
-            }
+            BindScripts(_scripts, null);
         }
 
         protected override void SettingsToPage()
         {
-            _scripts = new BindingList<ScriptInfoProxy>();
+            _scripts.Clear();
+
             foreach (var script in ScriptManager.GetScripts())
             {
                 _scripts.Add(script);
@@ -195,7 +191,7 @@ Current Branch:
             AppSettings.OwnScripts = ScriptManager.SerializeIntoXml();
         }
 
-        private void BindScripts(IList<ScriptInfoProxy> scripts, ScriptInfoProxy selectedScript)
+        private void BindScripts(IList<ScriptInfoProxy> scripts, ScriptInfoProxy? selectedScript)
         {
             try
             {

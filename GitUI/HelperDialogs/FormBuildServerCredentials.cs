@@ -13,7 +13,7 @@ namespace GitUI.HelperDialogs
             labelHeader.Text = string.Format(labelHeader.Text, buildServerUniqueKey);
         }
 
-        public IBuildServerCredentials BuildServerCredentials { get; set; }
+        public IBuildServerCredentials? BuildServerCredentials { get; set; }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {

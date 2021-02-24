@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
@@ -11,29 +12,29 @@ namespace GitUI
         /// <summary>
         /// Number of changed files
         /// </summary>
-        public IReadOnlyList<GitItemStatus> Changed { get; set; }
+        public IReadOnlyList<GitItemStatus> Changed { get; private set; } = Array.Empty<GitItemStatus>();
 
         /// <summary>
         ///  Number of new files
         /// </summary>
-        public IReadOnlyList<GitItemStatus> New { get; set; }
+        public IReadOnlyList<GitItemStatus> New { get; private set; } = Array.Empty<GitItemStatus>();
 
         /// <summary>
         /// Number of deleted files
         /// </summary>
-        public IReadOnlyList<GitItemStatus> Deleted { get; set; }
+        public IReadOnlyList<GitItemStatus> Deleted { get; private set; } = Array.Empty<GitItemStatus>();
 
         /// <summary>
         /// Number of submodules where the commit has changed
         /// (regardless if they are dirty or not)
         /// </summary>
-        public IReadOnlyList<GitItemStatus> SubmodulesChanged { get; set; }
+        public IReadOnlyList<GitItemStatus> SubmodulesChanged { get; private set; } = Array.Empty<GitItemStatus>();
 
         /// <summary>
         /// Number of dirty submodules (with changes that are not committed)
         /// (regardless if the commit is changed or not)
         /// </summary>
-        public IReadOnlyList<GitItemStatus> SubmodulesDirty { get; set; }
+        public IReadOnlyList<GitItemStatus> SubmodulesDirty { get; private set; } = Array.Empty<GitItemStatus>();
 
         /// <summary>
         /// Any change in any category

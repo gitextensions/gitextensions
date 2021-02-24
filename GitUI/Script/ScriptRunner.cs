@@ -1,19 +1,19 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
 using GitUI.NBugReports;
 using GitUIPluginInterfaces;
+using Microsoft;
 
 namespace GitUI.Script
 {
     /// <summary>Runs scripts.</summary>
     public static class ScriptRunner
     {
-        /// <summary>Tries to run scripts identified by a <paramref name="command"/></summary>
-        public static CommandStatus ExecuteScriptCommand(IWin32Window owner, GitModule module, int command, IGitUICommands uiCommands, RevisionGridControl revisionGrid)
+        /// <summary>Tries to run scripts identified by a <paramref name="command"/>.</summary>
+        public static CommandStatus ExecuteScriptCommand(IWin32Window owner, GitModule module, int command, IGitUICommands uiCommands, RevisionGridControl? revisionGrid)
         {
             var anyScriptExecuted = false;
             var needsGridRefresh = false;
@@ -31,7 +31,7 @@ namespace GitUI.Script
             return new CommandStatus(anyScriptExecuted, needsGridRefresh);
         }
 
-        public static CommandStatus RunScript(IWin32Window owner, IGitModule module, string scriptKey, IGitUICommands uiCommands, RevisionGridControl revisionGrid)
+        public static CommandStatus RunScript(IWin32Window owner, IGitModule module, string? scriptKey, IGitUICommands uiCommands, RevisionGridControl? revisionGrid)
         {
             try
             {
@@ -44,15 +44,14 @@ namespace GitUI.Script
             }
         }
 
-        private static CommandStatus RunScriptInternal(IWin32Window owner, IGitModule module, string scriptKey, IGitUICommands uiCommands,
-            RevisionGridControl revisionGrid)
+        private static CommandStatus RunScriptInternal(IWin32Window owner, IGitModule module, string? scriptKey, IGitUICommands uiCommands, RevisionGridControl? revisionGrid)
         {
-            if (string.IsNullOrEmpty(scriptKey))
+            if (GitExtensions.Strings.IsNullOrEmpty(scriptKey))
             {
                 return false;
             }
 
-            ScriptInfo scriptInfo = ScriptManager.GetScript(scriptKey);
+            ScriptInfo? scriptInfo = ScriptManager.GetScript(scriptKey);
             if (scriptInfo is null)
             {
                 ThreadHelper.AssertOnUIThread();
@@ -60,18 +59,18 @@ namespace GitUI.Script
                     new ExternalOperationException(command: null, arguments: null, module.WorkingDir, innerException: null));
             }
 
-            if (string.IsNullOrEmpty(scriptInfo.Command))
+            if (GitExtensions.Strings.IsNullOrEmpty(scriptInfo.Command))
             {
                 return false;
             }
 
-            string arguments = scriptInfo.Arguments;
-            if (!string.IsNullOrEmpty(arguments) && revisionGrid is null)
+            string? arguments = scriptInfo.Arguments;
+            if (!GitExtensions.Strings.IsNullOrEmpty(arguments) && revisionGrid is null)
             {
-                string optionDependingOnSelectedRevision
+                string? optionDependingOnSelectedRevision
                     = ScriptOptionsParser.Options.FirstOrDefault(option => ScriptOptionsParser.DependsOnSelectedRevision(option)
                                                                         && ScriptOptionsParser.Contains(arguments, option));
-                if (optionDependingOnSelectedRevision is object)
+                if (optionDependingOnSelectedRevision is not null)
                 {
                     ThreadHelper.AssertOnUIThread();
                     throw new UserExternalOperationException($"{Strings.ScriptText}: '{scriptKey}'{Environment.NewLine}'{optionDependingOnSelectedRevision}' {Strings.ScriptErrorOptionWithoutRevisionGridText}",
@@ -86,14 +85,16 @@ namespace GitUI.Script
                 return false;
             }
 
-            string originalCommand = scriptInfo.Command;
-            (string argument, bool abort) = ScriptOptionsParser.Parse(scriptInfo.Arguments, module, owner, revisionGrid);
+            string? originalCommand = scriptInfo.Command;
+            (string? argument, bool abort) = ScriptOptionsParser.Parse(scriptInfo.Arguments, module, owner, revisionGrid);
             if (abort)
             {
                 ThreadHelper.AssertOnUIThread();
                 throw new UserExternalOperationException($"{Strings.ScriptText}: '{scriptKey}'{Environment.NewLine}{Strings.ScriptErrorOptionWithoutRevisionText}",
                     new ExternalOperationException(scriptInfo.Command, arguments, module.WorkingDir, innerException: null));
             }
+
+            Validates.NotNull(argument);
 
             string command = OverrideCommandWhenNecessary(originalCommand);
             command = ExpandCommandVariables(command, module);
@@ -134,7 +135,7 @@ namespace GitUI.Script
                 }
 
                 command = command.Replace(NavigateToPrefix, string.Empty);
-                if (!string.IsNullOrEmpty(command))
+                if (!GitExtensions.Strings.IsNullOrEmpty(command))
                 {
                     var revisionRef = new Executable(command, module.WorkingDir).GetOutputLines(argument).FirstOrDefault();
 

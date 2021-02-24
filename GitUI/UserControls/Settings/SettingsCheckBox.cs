@@ -6,8 +6,8 @@ namespace GitUI.UserControls.Settings
 {
     public partial class SettingsCheckBox : UserControl
     {
-        private string _toolTipText;
-        private ToolTip _tooltip;
+        private string? _toolTipText;
+        private ToolTip? _tooltip;
 
         public SettingsCheckBox()
         {
@@ -30,7 +30,7 @@ namespace GitUI.UserControls.Settings
             set => checkBox.Text = value;
         }
 
-        public string ToolTipText
+        public string? ToolTipText
         {
             get => _toolTipText;
             set

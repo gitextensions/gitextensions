@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -30,7 +31,7 @@ using GitUI.SpellChecker;
 using GitUI.Theming;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
@@ -150,10 +151,10 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _untrackedRemote = new("(untracked)");
         #endregion
 
-        private event Action OnStageAreaLoaded;
+        private event Action? OnStageAreaLoaded;
 
         private readonly ICommitTemplateManager _commitTemplateManager;
-        [CanBeNull] private readonly GitRevision _editedCommit;
+        private readonly GitRevision? _editedCommit;
         private readonly ToolStripMenuItem _addSelectionToCommitMessageToolStripMenuItem;
         private readonly AsyncLoader _unstagedLoader = new();
         private readonly bool _useFormCommitMessage = AppSettings.UseFormCommitMessage;
@@ -164,21 +165,21 @@ namespace GitUI.CommandsDialogs
         private readonly List<string> _formattedLines = new List<string>();
 
         private CommitKind _commitKind;
-        private FileStatusList _currentFilesList;
+        private FileStatusList? _currentFilesList;
         private bool _skipUpdate;
-        private FileStatusItem _currentItem;
+        private FileStatusItem? _currentItem;
         private bool _currentItemStaged;
-        private ICommitMessageManager _commitMessageManager;
-        private string _commitTemplate;
+        private readonly ICommitMessageManager _commitMessageManager;
+        private string? _commitTemplate;
         private bool _isMergeCommit;
         private bool _shouldRescanChanges = true;
         private bool _shouldReloadCommitTemplates = true;
         private bool _bypassActivatedEventHandler;
         private bool _loadUnstagedOutputFirstTime = true;
         private bool _initialized;
-        [CanBeNull] private IReadOnlyList<GitItemStatus> _currentSelection;
+        private IReadOnlyList<GitItemStatus>? _currentSelection;
         private int _alreadyLoadedTemplatesCount = -1;
-        private EventHandler _branchNameLabelOnClick;
+        private EventHandler? _branchNameLabelOnClick;
 
         private CommitKind CommitKind
         {
@@ -196,12 +197,14 @@ namespace GitUI.CommandsDialogs
         }
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormCommit()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
         }
 
-        public FormCommit([NotNull] GitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision editedCommit = null, string commitMessage = null)
+        public FormCommit(GitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision? editedCommit = null, string? commitMessage = null)
             : base(commands)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
@@ -467,9 +470,11 @@ namespace GitUI.CommandsDialogs
             switch (CommitKind)
             {
                 case CommitKind.Fixup:
+                    Validates.NotNull(_editedCommit);
                     message = TryAddPrefix(fixupPrefix, _editedCommit.Subject);
                     break;
                 case CommitKind.Squash:
+                    Validates.NotNull(_editedCommit);
                     message = TryAddPrefix(squashPrefix, _editedCommit.Subject);
                     break;
                 default:
@@ -501,7 +506,7 @@ namespace GitUI.CommandsDialogs
                 var text = "";
                 try
                 {
-                    text = _commitTemplateManager.LoadGitCommitTemplate();
+                    text = _commitTemplateManager.LoadGitCommitTemplate() ?? "";
                 }
                 catch (FileNotFoundException ex)
                 {
@@ -670,7 +675,7 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            AddFileToGitIgnoreToolStripMenuItemClick(this, null);
+            AddFileToGitIgnoreToolStripMenuItemClick(this, EventArgs.Empty);
             return true;
         }
 
@@ -681,7 +686,7 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            DeleteFileToolStripMenuItemClick(this, null);
+            DeleteFileToolStripMenuItemClick(this, EventArgs.Empty);
             return true;
         }
 
@@ -716,7 +721,7 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            ResetSoftClick(this, null);
+            ResetSoftClick(this, EventArgs.Empty);
             return true;
         }
 
@@ -727,7 +732,7 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            StageClick(this, null);
+            StageClick(this, EventArgs.Empty);
             return true;
         }
 
@@ -738,7 +743,7 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            UnstageFilesClick(this, null);
+            UnstageFilesClick(this, EventArgs.Empty);
             return true;
         }
 
@@ -749,7 +754,7 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            StageAllToolStripMenuItemClick(this, null);
+            StageAllToolStripMenuItemClick(this, EventArgs.Empty);
             return true;
         }
 
@@ -759,6 +764,8 @@ namespace GitUI.CommandsDialogs
             {
                 return false;
             }
+
+            Validates.NotNull(_currentFilesList);
 
             if (_currentFilesList.SelectedItem?.Item is not null)
             {
@@ -819,7 +826,7 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        private void ComputeUnstagedFiles(Action<IReadOnlyList<GitItemStatus>> onComputed, bool doAsync)
+        private void ComputeUnstagedFiles(Action<IReadOnlyList<GitItemStatus>?> onComputed, bool doAsync)
         {
             IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus()
             {
@@ -844,10 +851,16 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public void ShowDialogWhenChanges(IWin32Window owner = null)
+        public void ShowDialogWhenChanges(IWin32Window? owner = null)
         {
             ComputeUnstagedFiles(allChangedFiles =>
                 {
+                    if (allChangedFiles is null)
+                    {
+                        // cancelled
+                        return;
+                    }
+
                     if (allChangedFiles.Count > 0)
                     {
                         LoadUnstagedOutput(allChangedFiles);
@@ -969,8 +982,14 @@ namespace GitUI.CommandsDialogs
         ///   This method is passed in to the SetTextCallBack delegate
         ///   to set the Text property of textBox1.
         /// </summary>
-        private void LoadUnstagedOutput(IReadOnlyList<GitItemStatus> allChangedFiles)
+        private void LoadUnstagedOutput(IReadOnlyList<GitItemStatus>? allChangedFiles)
         {
+            if (allChangedFiles is null)
+            {
+                // cancelled
+                return;
+            }
+
             var lastSelection = _currentFilesList is not null
                 ? _currentSelection ?? Array.Empty<GitItemStatus>()
                 : Array.Empty<GitItemStatus>();
@@ -1056,7 +1075,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void RestoreSelectedFiles(IReadOnlyList<GitItemStatus> unstagedFiles, IReadOnlyList<GitItemStatus> stagedFiles, IReadOnlyList<GitItemStatus> lastSelection)
+        private void RestoreSelectedFiles(IReadOnlyList<GitItemStatus> unstagedFiles, IReadOnlyList<GitItemStatus> stagedFiles, IReadOnlyList<GitItemStatus>? lastSelection)
         {
             if (_currentFilesList is null || _currentFilesList.IsEmpty)
             {
@@ -1064,6 +1083,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
+            Validates.NotNull(lastSelection);
             var newItems = _currentFilesList == Staged ? stagedFiles : unstagedFiles;
             var names = lastSelection.ToHashSet(x => x.Name);
             var newSelection = newItems.Where(x => names.Contains(x.Name)).ToList();
@@ -1093,7 +1113,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void ShowChanges(FileStatusItem item, bool staged)
+        private void ShowChanges(FileStatusItem? item, bool staged)
         {
             _currentItem = item;
             _currentItemStaged = staged;
@@ -1335,7 +1355,9 @@ namespace GitUI.CommandsDialogs
                         Message.Text = string.Empty;
                     }
 
-                    if (pushCompleted && Module.SuperprojectModule is not null && AppSettings.StageInSuperprojectAfterCommit)
+                    if (pushCompleted && Module.SuperprojectModule is not null &&
+                        AppSettings.StageInSuperprojectAfterCommit &&
+                        !GitExtensions.Strings.IsNullOrWhiteSpace(Module.SubmodulePath))
                     {
                         Module.SuperprojectModule.StageFile(Module.SubmodulePath);
                     }
@@ -1427,10 +1449,10 @@ namespace GitUI.CommandsDialogs
         }
 
         /// <summary>
-        /// replace the Message.Text in an undo-able way
+        /// replace the Message.Text in an undo-able way.
         /// </summary>
-        /// <param name="message">the new message</param>
-        private void ReplaceMessage(string message)
+        /// <param name="message">the new message.</param>
+        private void ReplaceMessage(string? message)
         {
             if (Message.Text != message)
             {
@@ -1477,6 +1499,8 @@ namespace GitUI.CommandsDialogs
                 ? _currentSelection
                 : Array.Empty<GitItemStatus>();
 
+            Validates.NotNull(lastSelection);
+
             void StageAreaLoaded()
             {
                 _currentFilesList = Unstaged;
@@ -1518,7 +1542,7 @@ namespace GitUI.CommandsDialogs
             Staged.ClearSelected();
 
             _currentSelection = Unstaged.SelectedItems.Items().ToList();
-            FileStatusItem item = Unstaged.SelectedItem;
+            FileStatusItem? item = Unstaged.SelectedItem;
             ShowChanges(item, false);
 
             Unstaged.ContextMenuStrip = (item?.Item.IsSubmodule ?? false) ? UnstagedSubmoduleContext : UnstagedFileContext;
@@ -1584,7 +1608,7 @@ namespace GitUI.CommandsDialogs
                     Unstaged.SelectedIndex = 0;
                 }
 
-                UnstagedSelectionChanged(Unstaged, null);
+                UnstagedSelectionChanged(Unstaged, EventArgs.Empty);
             }
         }
 
@@ -1636,7 +1660,7 @@ namespace GitUI.CommandsDialogs
             var initialStagedCount = Staged.GitItemStatuses.Count;
             if (canUseUnstageAll && initialStagedCount > 10 && allFiles.Count == initialStagedCount)
             {
-                UnstageAllToolStripMenuItemClick(null, null);
+                UnstageAllToolStripMenuItemClick(this, EventArgs.Empty);
                 return;
             }
 
@@ -1653,7 +1677,7 @@ namespace GitUI.CommandsDialogs
                     toolStripProgressBar1.Value = 0;
 
                     // Before batch execution is introduced, rename file counts as 1
-                    // When executing in batch executation, rename must be interpreted as 2 different file arguments in command line arguments
+                    // When executing in batch execution, rename must be interpreted as 2 different file arguments in command line arguments
                     // because Windows max command line have 32767 characters limitations, we can not separate the two.
                     // So the only solution for exact progress bar update would be changing Maximum value to include renamed file count as 2 files
                     toolStripProgressBar1.Maximum = allFiles.Aggregate(0, (count, item) =>
@@ -1696,9 +1720,10 @@ namespace GitUI.CommandsDialogs
 
                         if (item.IsRenamed)
                         {
-                            var clone = new GitItemStatus
+                            Validates.NotNull(item.OldName);
+
+                            var clone = new GitItemStatus(item.OldName)
                             {
-                                Name = item.OldName,
                                 IsDeleted = true,
                                 IsTracked = true,
                                 Staged = StagedStatus.WorkTree
@@ -1728,6 +1753,7 @@ namespace GitUI.CommandsDialogs
                     if (Staged.IsEmpty)
                     {
                         _currentFilesList = Unstaged;
+                        Validates.NotNull(lastSelection);
                         RestoreSelectedFiles(Unstaged.GitItemStatuses, Staged.GitItemStatuses, lastSelection);
                         Unstaged.Focus();
                     }
@@ -1751,9 +1777,9 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private (GitRevision headRev, GitRevision indexRev, GitRevision workTreeRev) GetHeadRevisions()
+        private (GitRevision? headRev, GitRevision indexRev, GitRevision workTreeRev) GetHeadRevisions()
         {
-            GitRevision headRev;
+            GitRevision? headRev;
             GitRevision indexRev;
             var headId = Module.RevParse("HEAD");
             if (headId is not null)
@@ -1847,7 +1873,7 @@ namespace GitUI.CommandsDialogs
                     Staged.SelectedIndex = 0;
                 }
 
-                StagedSelectionChanged(Staged, null);
+                StagedSelectionChanged(Staged, EventArgs.Empty);
             }
         }
 
@@ -1899,7 +1925,7 @@ namespace GitUI.CommandsDialogs
                         InitializedStaged();
                         var unstagedFiles = Unstaged.GitItemStatuses.ToList();
                         _skipUpdate = true;
-                        var names = new HashSet<string>();
+                        var names = new HashSet<string?>();
                         foreach (var item in files)
                         {
                             names.Add(item.Name);
@@ -1907,6 +1933,7 @@ namespace GitUI.CommandsDialogs
                         }
 
                         var unstagedItems = new HashSet<GitItemStatus>();
+
                         foreach (var item in unstagedFiles)
                         {
                             if (names.Contains(item.Name))
@@ -1916,16 +1943,41 @@ namespace GitUI.CommandsDialogs
                         }
 
                         unstagedFiles.RemoveAll(item => !item.IsSubmodule && unstagedItems.Contains(item));
+
                         unstagedFiles.RemoveAll(
-                            item => item.IsSubmodule && item.GetSubmoduleStatusAsync().IsCompleted &&
-                                    (item.GetSubmoduleStatusAsync().CompletedResult() is null ||
-                                     (!item.GetSubmoduleStatusAsync().CompletedResult().IsDirty && unstagedItems.Contains(item))));
-                        foreach (var item in unstagedItems.Where(
-                            item => item.IsSubmodule &&
-                                    (ThreadHelper.JoinableTaskFactory.Run(() => item.GetSubmoduleStatusAsync()) is null ||
-                                     (item.GetSubmoduleStatusAsync().IsCompleted && item.GetSubmoduleStatusAsync().CompletedResult().IsDirty))))
+                            item =>
+                            {
+                                if (!item.IsSubmodule)
+                                {
+                                    return false;
+                                }
+
+                                Task<GitSubmoduleStatus?> statusTask = item.GetSubmoduleStatusAsync();
+
+                                if (!statusTask.IsCompleted)
+                                {
+                                    return false;
+                                }
+
+                                GitSubmoduleStatus? status = statusTask.CompletedResult();
+                                return status is null || (!status.IsDirty && unstagedItems.Contains(item));
+                            });
+
+                        foreach (var item in unstagedItems)
                         {
-                            item.GetSubmoduleStatusAsync().CompletedResult().Status = SubmoduleStatus.Unknown;
+                            if (!item.IsSubmodule)
+                            {
+                                continue;
+                            }
+
+                            GitSubmoduleStatus? gitSubmoduleStatus = ThreadHelper.JoinableTaskFactory.Run(() => item.GetSubmoduleStatusAsync());
+
+                            if (gitSubmoduleStatus is null || !gitSubmoduleStatus.IsDirty)
+                            {
+                                continue;
+                            }
+
+                            gitSubmoduleStatus.Status = SubmoduleStatus.Unknown;
                         }
 
                         var (_, indexRev, workTreeRev) = GetHeadRevisions();
@@ -2004,7 +2056,7 @@ namespace GitUI.CommandsDialogs
                         {
                             try
                             {
-                                string path = _fullPathResolver.Resolve(item.Item.Name);
+                                string? path = _fullPathResolver.Resolve(item.Item.Name);
                                 if (File.Exists(path))
                                 {
                                     File.Delete(path);
@@ -2141,12 +2193,12 @@ namespace GitUI.CommandsDialogs
 
         private void ResetAllTrackedChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            ResetClick(null, null);
+            ResetClick(this, EventArgs.Empty);
         }
 
         private void resetUnstagedChangesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ResetUnStagedClick(null, null);
+            ResetUnStagedClick(this, EventArgs.Empty);
         }
 
         private void EditGitIgnoreToolStripMenuItemClick(object sender, EventArgs e)
@@ -2209,6 +2261,7 @@ namespace GitUI.CommandsDialogs
             }
 
             var prevMessages = Module.GetPreviousCommitMessages(maxCount, "HEAD", authorPattern)
+                .WhereNotNull()
                 .Select(message => message.TrimEnd('\n'))
                 .Where(message => !string.IsNullOrWhiteSpace(message))
                 .ToList();
@@ -2296,7 +2349,8 @@ namespace GitUI.CommandsDialogs
                 .ToDictionary(localPath =>
                 {
                     var submodule = configFile.ConfigSections.FirstOrDefault(section => section.GetValue("path").Trim() == localPath);
-                    return submodule?.SubSection?.Trim();
+                    Validates.NotNull(submodule?.SubSection);
+                    return submodule.SubSection.Trim();
                 });
 
             if (modules.Count == 0)
@@ -2464,8 +2518,12 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
+            Validates.NotNull(list.SelectedGitItem);
+
             var fileName = list.SelectedGitItem.Name;
             var path = _fullPathResolver.Resolve(fileName).ToNativePath();
+
+            Validates.NotNull(path);
 
             OsShellUtil.Open(path);
         }
@@ -2477,10 +2535,14 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var item = list.SelectedGitItem;
-            var fileName = item.Name;
+            Validates.NotNull(list.SelectedGitItem);
 
-            OsShellUtil.OpenAs(_fullPathResolver.Resolve(fileName.ToNativePath()));
+            var fileName = list.SelectedGitItem.Name;
+            var path = _fullPathResolver.Resolve(fileName.ToNativePath());
+
+            Validates.NotNull(path);
+
+            OsShellUtil.OpenAs(path);
         }
 
         private void FilenameToClipboardToolStripMenuItemClick(object sender, EventArgs e)
@@ -2522,15 +2584,15 @@ namespace GitUI.CommandsDialogs
                 item.Owner.Hide();
             }
 
-            string toolName = item?.Tag as string;
+            string? toolName = item?.Tag as string;
             OpenFilesWithDiffTool(items, toolName);
         }
 
-        private void OpenFilesWithDiffTool(IEnumerable<FileStatusItem> items, string toolName = null)
+        private void OpenFilesWithDiffTool(IEnumerable<FileStatusItem> items, string? toolName = null)
         {
             foreach (var item in items)
             {
-                GitRevision[] revs = new[] { item.SecondRevision, item.FirstRevision };
+                GitRevision?[] revs = { item.SecondRevision, item.FirstRevision };
                 UICommands.OpenWithDifftool(this, revs, item.Item.Name, item.Item.OldName, RevisionDiffKind.DiffAB, item.Item.IsTracked, customTool: toolName);
             }
         }
@@ -2625,7 +2687,7 @@ namespace GitUI.CommandsDialogs
 
             UICommands.StartFileEditorDialog(fileName);
 
-            UnstagedSelectionChanged(null, null);
+            UnstagedSelectionChanged(this, EventArgs.Empty);
         }
 
         private void CommitAndPush_Click(object sender, EventArgs e)
@@ -2645,11 +2707,11 @@ namespace GitUI.CommandsDialogs
                 : $"{committer} {_commitAuthorInfo.Text} {toolAuthor.Text}";
         }
 
-        private bool SenderToFileStatusList(object sender, out FileStatusList list)
+        private bool SenderToFileStatusList(object sender, [NotNullWhen(returnValue: true)] out FileStatusList? list)
         {
-            ToolStripMenuItem item = sender as ToolStripMenuItem;
-            ContextMenuStrip menu = item?.Owner as ContextMenuStrip;
-            ListView lv = menu?.SourceControl as ListView;
+            ToolStripMenuItem? item = sender as ToolStripMenuItem;
+            ContextMenuStrip? menu = item?.Owner as ContextMenuStrip;
+            ListView? lv = menu?.SourceControl as ListView;
 
             list = lv?.Parent as FileStatusList;
             if (list is null /* menu action triggered directly by hotkey */)
@@ -2664,7 +2726,7 @@ namespace GitUI.CommandsDialogs
 
         private void ViewFileHistoryMenuItem_Click(object sender, EventArgs e)
         {
-            if (!SenderToFileStatusList(sender, out var list))
+            if (!SenderToFileStatusList(sender, out var list) || list.SelectedGitItem?.Name is null)
             {
                 return;
             }
@@ -2938,6 +3000,7 @@ namespace GitUI.CommandsDialogs
 
         private void commitSubmoduleChanges_Click(object sender, EventArgs e)
         {
+            Validates.NotNull(_currentItem);
             var submoduleCommands = new GitUICommands(_fullPathResolver.Resolve(_currentItem.Item.Name.EnsureTrailingPathSeparator()));
             submoduleCommands.StartCommitDialog(this);
             Initialize();
@@ -3101,9 +3164,10 @@ namespace GitUI.CommandsDialogs
         {
             foreach (var item in list.SelectedItems)
             {
-                string filePath = _fullPathResolver.Resolve(item.Item.Name);
+                string? filePath = _fullPathResolver.Resolve(item.Item.Name);
                 if (File.Exists(filePath))
                 {
+                    Validates.NotNull(filePath);
                     OsShellUtil.SelectPathInFileExplorer(filePath.ToNativePath());
                 }
             }
@@ -3193,7 +3257,7 @@ namespace GitUI.CommandsDialogs
             {
                 _currentFilesList = Staged;
                 Staged.SelectedIndex = 0;
-                StagedSelectionChanged(null, null);
+                StagedSelectionChanged(this, EventArgs.Empty);
             }
         }
 

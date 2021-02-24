@@ -1099,7 +1099,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             return text.ToString();
         }
 
-        public static string GetLink(this RichTextBox rtb, int charIndex)
+        public static string? GetLink(this RichTextBox rtb, int charIndex)
         {
             var text = rtb.Text;
             if (charIndex < 0 || text.Length <= charIndex)
@@ -1227,7 +1227,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             public PARAFORMAT pf;
             public bool charFormatChanged;
             public bool paraFormatChanged;
-            public string hyperlink;
+            public string? hyperlink;
             public int hyperlinkStart;
         }
 

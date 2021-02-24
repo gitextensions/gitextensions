@@ -40,10 +40,10 @@ namespace GitUI.Avatars
         /// <see cref="AvatarProvider"/> and <see cref="AvatarFallbackType"/> enum options.
         /// </summary>
         /// <returns>Returns an avatar provider that can be used to resolve user avatars.</returns>
-        public static IAvatarProvider CreateAvatarProvider(
+        public static IAvatarProvider? CreateAvatarProvider(
             AvatarProvider provider,
             AvatarFallbackType? fallbackType,
-            IAvatarDownloader downloader = null)
+            IAvatarDownloader? downloader = null)
         {
             // initialize download only if needed (some options, like local providers, don't need a downloader)
             // and use the downloader provided as parameter if possible.
@@ -55,7 +55,7 @@ namespace GitUI.Avatars
                 BuildMainProvider(),
                 BuildFallbackProvider()
             }
-            .Where(p => p != null)
+            .WhereNotNull()
             .ToArray();
 
             // only create chained avatar overhead if really needed
@@ -68,7 +68,7 @@ namespace GitUI.Avatars
 
             // Local methods to build requested main and fallback providers:
 
-            IAvatarProvider BuildMainProvider()
+            IAvatarProvider? BuildMainProvider()
             {
                 return provider switch
                 {
@@ -97,6 +97,8 @@ namespace GitUI.Avatars
                 {
                     // Local fallback provider
                     AvatarFallbackType.AuthorInitials => InitialsAvatarProvider,
+
+                    null => InitialsAvatarProvider,
 
                     // Use Gravatar as fallback provider
                     var type when GravatarProvider.IsFallbackSupportedByGravatar(fallbackType.Value) => new GravatarProvider(lazyDownloader.Value, type, true),

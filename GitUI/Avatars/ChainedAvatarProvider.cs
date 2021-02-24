@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace GitUI.Avatars
 {
     /// <summary>
-    /// An avatar provider that combines mutliple avatar providers.
+    /// An avatar provider that combines multiple avatar providers.
     /// </summary>
     public sealed class ChainedAvatarProvider : IAvatarProvider
     {
@@ -18,13 +17,13 @@ namespace GitUI.Avatars
         {
             _avatarProviders = avatarProviders ?? throw new ArgumentNullException(nameof(avatarProviders));
 
-            if (_avatarProviders.Any(p => p == null))
+            if (_avatarProviders.Any(p => p is null))
             {
                 throw new ArgumentNullException();
             }
         }
 
-        public ChainedAvatarProvider([NotNull] IEnumerable<IAvatarProvider> avatarProviders)
+        public ChainedAvatarProvider(IEnumerable<IAvatarProvider> avatarProviders)
         {
             if (avatarProviders is null)
             {
@@ -38,11 +37,11 @@ namespace GitUI.Avatars
         /// Gets an avatar images from multiple avatar providers and returns the first hit.
         /// The providers are queried in the same order that was given during construction.
         /// </summary>
-        public async Task<Image> GetAvatarAsync([NotNull] string email, string name, int imageSize)
+        public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
             foreach (var provider in _avatarProviders)
             {
-                Image avatar = null;
+                Image? avatar = null;
 
                 try
                 {
@@ -53,7 +52,7 @@ namespace GitUI.Avatars
                     // ignore and continue with next provider
                 }
 
-                if (avatar != null)
+                if (avatar is not null)
                 {
                     return avatar;
                 }

@@ -17,7 +17,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
         }
 
-        public FormDeleteTag(GitUICommands commands, string tag)
+        public FormDeleteTag(GitUICommands commands, string? tag)
             : base(commands)
         {
             InitializeComponent();

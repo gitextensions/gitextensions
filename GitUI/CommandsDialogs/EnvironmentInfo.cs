@@ -19,7 +19,7 @@ namespace GitUI.CommandsDialogs
             environmentIssueInfo.Text = UserEnvironmentInformation.GetInformation().Replace("- ", "");
         }
 
-        public ToolTip ToolTip { get; set; }
+        public ToolTip? ToolTip { get; set; }
 
         public void SetCopyButtonTooltip(string tooltip)
         {

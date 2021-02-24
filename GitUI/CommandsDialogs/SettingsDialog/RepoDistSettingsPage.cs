@@ -1,22 +1,25 @@
 ﻿using GitCommands.Settings;
 using GitUIPluginInterfaces;
+using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public class RepoDistSettingsPage : SettingsPageWithHeader, IRepoDistSettingsPage
     {
-        protected RepoDistSettingsSet RepoDistSettingsSet => CommonLogic.RepoDistSettingsSet;
-        protected RepoDistSettings CurrentSettings { get; private set; }
+        protected RepoDistSettingsSet? RepoDistSettingsSet => CommonLogic.RepoDistSettingsSet;
+        protected RepoDistSettings? CurrentSettings { get; private set; }
 
         protected override void Init(ISettingsPageHost pageHost)
         {
             base.Init(pageHost);
 
-            CurrentSettings = RepoDistSettingsSet.EffectiveSettings;
+            CurrentSettings = RepoDistSettingsSet?.EffectiveSettings;
         }
 
         protected override ISettingsSource GetCurrentSettings()
         {
+            Validates.NotNull(CurrentSettings);
+
             return CurrentSettings;
         }
 

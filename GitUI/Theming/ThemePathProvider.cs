@@ -11,7 +11,7 @@ namespace GitUI.Theming
 
         string AppThemesDirectory { get; }
 
-        string UserThemesDirectory { get; }
+        string? UserThemesDirectory { get; }
 
         string ThemeExtension { get; }
     }
@@ -26,7 +26,7 @@ namespace GitUI.Theming
                 throw new DirectoryNotFoundException("Application directory not found");
             AppThemesDirectory = Path.Combine(appDirectory, Subdirectory);
 
-            string userDirectory = AppSettings.ApplicationDataPath.Value;
+            string? userDirectory = AppSettings.ApplicationDataPath.Value;
 
             // in portable version appDirectory and userDirectory are same,
             // hence we don't have a separate directory for user themes
@@ -39,7 +39,7 @@ namespace GitUI.Theming
 
         public string AppThemesDirectory { get; }
 
-        public string UserThemesDirectory { get; }
+        public string? UserThemesDirectory { get; }
 
         public string ThemeExtension { get; }
 

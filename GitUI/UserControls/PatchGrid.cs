@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands.Patches;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI
@@ -15,10 +16,10 @@ namespace GitUI
     {
         private readonly TranslationString _unableToShowPatchDetails = new("Unable to show details of patch file.");
 
-        private List<PatchFile> _skipped;
+        private List<PatchFile>? _skipped;
         private bool _isManagingRebase;
 
-        public IReadOnlyList<PatchFile> PatchFiles { get; private set; }
+        public IReadOnlyList<PatchFile>? PatchFiles { get; private set; }
 
         public PatchGrid()
         {
@@ -64,6 +65,8 @@ namespace GitUI
 
         public void RefreshGrid()
         {
+            Validates.NotNull(PatchFiles);
+
             var updatedPatches = GetPatches();
 
             for (int i = 0; i < updatedPatches.Count; i++)
@@ -137,7 +140,7 @@ namespace GitUI
                 return;
             }
 
-            if (string.IsNullOrEmpty(patchFile.FullName))
+            if (GitExtensions.Strings.IsNullOrEmpty(patchFile.FullName))
             {
                 MessageBox.Show(_unableToShowPatchDetails.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;

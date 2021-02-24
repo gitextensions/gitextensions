@@ -8,7 +8,7 @@ using GitCommands;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
-using JetBrains.Annotations;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
@@ -29,40 +29,37 @@ namespace GitUI.CommandsDialogs.RepoHosting
         #endregion
 
         private GitProtocol _cloneGitProtocol;
-        private IPullRequestInformation _currentPullRequestInfo;
-        private Dictionary<string, string> _diffCache;
+        private IPullRequestInformation? _currentPullRequestInfo;
+        private Dictionary<string, string>? _diffCache;
         private readonly IRepositoryHostPlugin _gitHoster;
-        private IReadOnlyList<IHostedRemote> _hostedRemotes;
+        private IReadOnlyList<IHostedRemote>? _hostedRemotes;
         private bool _isFirstLoad;
-        private IReadOnlyList<IPullRequestInformation> _pullRequestsInfo;
+        private IReadOnlyList<IPullRequestInformation>? _pullRequestsInfo;
         private readonly AsyncLoader _loader = new();
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private ViewPullRequestsForm()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
         }
 
-        private ViewPullRequestsForm(GitUICommands commands)
+        public ViewPullRequestsForm(GitUICommands commands, IRepositoryHostPlugin gitHoster)
             : base(commands)
         {
+            _gitHoster = gitHoster;
             InitializeComponent();
             _selectHostedRepoCB.DisplayMember = nameof(IHostedRemote.DisplayData);
             _diffViewer.ExtraDiffArgumentsChanged += _fileStatusList_SelectedIndexChanged;
             _loader.LoadingError += (sender, ex) =>
-                {
-                    MessageBox.Show(this, ex.Exception.ToString(), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    this.UnMask();
-                };
+            {
+                MessageBox.Show(this, ex.Exception.ToString(), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.UnMask();
+            };
             _diffViewer.TopScrollReached += FileViewer_TopScrollReached;
             _diffViewer.BottomScrollReached += FileViewer_BottomScrollReached;
             InitializeComplete();
-        }
-
-        public ViewPullRequestsForm(GitUICommands commands, IRepositoryHostPlugin gitHoster)
-            : this(commands)
-        {
-            _gitHoster = gitHoster;
         }
 
         private void ViewPullRequestsForm_Load(object sender, EventArgs e)
@@ -86,6 +83,12 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 },
                 hostedRemotes =>
                 {
+                    if (hostedRemotes is null)
+                    {
+                        // cancelled
+                        return;
+                    }
+
                     _hostedRemotes = hostedRemotes;
                     _selectHostedRepoCB.Items.Clear();
                     foreach (var hostedRepo in _hostedRemotes)
@@ -145,12 +148,12 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _diffViewer.ScrollToTop();
         }
 
-        private void SetPullRequestsData(IReadOnlyList<IPullRequestInformation> infos)
+        private void SetPullRequestsData(IReadOnlyList<IPullRequestInformation>? infos)
         {
             if (_isFirstLoad)
             {
                 _isFirstLoad = false;
-                if (infos is not null && infos.Count == 0 && _hostedRemotes.Count > 0)
+                if (infos is not null && infos.Count == 0 && _hostedRemotes is not null && _hostedRemotes.Count > 0)
                 {
                     SelectNextHostedRepository();
                     return;
@@ -209,7 +212,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
 
             _selectHostedRepoCB.SelectedIndex = i;
-            _selectedOwner_SelectedIndexChanged(null, null);
+            _selectedOwner_SelectedIndexChanged(this, EventArgs.Empty);
         }
 
         private void ResetAllAndShowLoadingPullRequests()
@@ -224,6 +227,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void LoadListView()
         {
+            Validates.NotNull(_pullRequestsInfo);
             foreach (var info in _pullRequestsInfo)
             {
                 _pullRequestsList.Items.Add(new ListViewItem
@@ -301,6 +305,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         await TaskScheduler.Default;
 
                         // TODO make this operation async (requires change to Git.hub submodule)
+                        Validates.NotNull(_currentPullRequestInfo);
                         var discussion = _currentPullRequestInfo.GetDiscussion();
 
                         await this.SwitchToMainThreadAsync();
@@ -316,25 +321,24 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 .FileAndForget();
         }
 
-        private void LoadDiscussion([CanBeNull] IPullRequestDiscussion discussion)
+        private void LoadDiscussion(IPullRequestDiscussion? discussion)
         {
+            Validates.NotNull(_currentPullRequestInfo);
             var t = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo, discussion?.Entries);
             _discussionWB.DocumentText = t;
         }
 
         private void _discussionWB_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            if (_discussionWB.Document is not null)
+            if (_discussionWB.Document?.Window is not null && _discussionWB.Document.Body is not null)
             {
-                if (_discussionWB.Document.Window is not null && _discussionWB.Document.Body is not null)
-                {
-                    _discussionWB.Document.Window.ScrollTo(0, _discussionWB.Document.Body.ScrollRectangle.Height);
-                }
+                _discussionWB.Document.Window.ScrollTo(0, _discussionWB.Document.Body.ScrollRectangle.Height);
             }
         }
 
         private void LoadDiffPatch()
         {
+            Validates.NotNull(_currentPullRequestInfo);
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
@@ -362,8 +366,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
             var giss = new List<GitItemStatus>();
 
             // baseSha is the sha of the merge to ("master") sha, the commit to be firstId
-            GitRevision firstRev = ObjectId.TryParse(baseSha, out ObjectId firstId) ? new GitRevision(firstId) : null;
-            GitRevision secondRev = ObjectId.TryParse(secondSha, out ObjectId secondId) ? new GitRevision(secondId) : null;
+            GitRevision? firstRev = ObjectId.TryParse(baseSha, out ObjectId firstId) ? new GitRevision(firstId) : null;
+            GitRevision? secondRev = ObjectId.TryParse(secondSha, out ObjectId secondId) ? new GitRevision(secondId) : null;
             if (secondRev is null)
             {
                 MessageBox.Show(this, _strUnableUnderstandPatch.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -379,13 +383,12 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     return;
                 }
 
-                var gis = new GitItemStatus
+                var gis = new GitItemStatus(name: match.Groups[2].Value.Trim())
                 {
                     IsChanged = true,
                     IsNew = false,
                     IsDeleted = false,
                     IsTracked = true,
-                    Name = match.Groups[2].Value.Trim(),
                     Staged = StagedStatus.None
                 };
 
@@ -487,6 +490,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 return;
             }
 
+            Validates.NotNull(_diffCache);
             var data = _diffCache[gis.Name];
 
             if (gis.IsSubmodule)
@@ -509,7 +513,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             try
             {
                 _currentPullRequestInfo.Close();
-                _selectedOwner_SelectedIndexChanged(null, null);
+                _selectedOwner_SelectedIndexChanged(this, EventArgs.Empty);
             }
             catch (Exception ex)
             {

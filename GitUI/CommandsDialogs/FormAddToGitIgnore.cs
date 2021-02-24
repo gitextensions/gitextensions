@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -20,7 +21,9 @@ namespace GitUI.CommandsDialogs
         private readonly bool _localExclude;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormAddToGitIgnore()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
         }
@@ -46,7 +49,7 @@ namespace GitUI.CommandsDialogs
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
-        private string ExcludeFile
+        private string? ExcludeFile
         {
             get
             {
@@ -73,6 +76,7 @@ namespace GitUI.CommandsDialogs
             try
             {
                 var fileName = ExcludeFile;
+                Validates.NotNull(fileName);
                 FileInfoExtensions.MakeFileTemporaryWritable(fileName, x =>
                 {
                     var gitIgnoreFileAddition = new StringBuilder();
@@ -100,7 +104,7 @@ namespace GitUI.CommandsDialogs
             Close();
         }
 
-        private void UpdatePreviewPanel(IReadOnlyList<string> ignoredFiles)
+        private void UpdatePreviewPanel(IReadOnlyList<string>? ignoredFiles)
         {
             _NO_TRANSLATE_Preview.DataSource = ignoredFiles;
             _NO_TRANSLATE_filesWillBeIgnored.Text = string.Format(_matchingFilesString.Text, _NO_TRANSLATE_Preview.Items.Count);

@@ -3,13 +3,12 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitUI.UserControls;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.HelperDialogs
 {
     /// <summary>
-    /// Form that handles Plink exceptions
+    /// Form that handles Plink exceptions.
     /// </summary>
     public partial class FormRemoteProcess : FormProcess
     {
@@ -30,19 +29,21 @@ Do you want to register the host's fingerprint and restart the process?");
         private string _urlTryingToConnect = string.Empty;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormRemoteProcess()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
             : base()
         {
             InitializeComponent();
         }
 
-        public FormRemoteProcess([NotNull] GitUICommands commands, string process, ArgumentString arguments)
-            : base(commands, process, arguments, commands?.Module?.WorkingDir, null, true)
+        public FormRemoteProcess(GitUICommands commands, string? process, ArgumentString arguments)
+            : base(commands, process, arguments, commands.Module.WorkingDir, null, true)
         {
             Commands = commands ?? throw new ArgumentNullException(nameof(commands));
         }
 
-        public static bool ShowDialog(IWin32Window owner, GitUICommands commands, ArgumentString arguments)
+        public static bool ShowDialog(IWin32Window? owner, GitUICommands commands, ArgumentString arguments)
         {
             using (var formRemoteProcess = new FormRemoteProcess(commands, process: null, arguments))
             {
@@ -52,6 +53,7 @@ Do you want to register the host's fingerprint and restart the process?");
         }
 
         public bool Plink { get; set; }
+
         private GitUICommands Commands { get; }
 
         /// <summary>

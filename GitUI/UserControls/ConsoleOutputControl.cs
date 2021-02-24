@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
-using JetBrains.Annotations;
 
 namespace GitUI.UserControls
 {
@@ -20,12 +19,11 @@ namespace GitUI.UserControls
         /// </summary>
         public abstract bool IsDisplayingFullProcessOutput { get; }
 
-        public abstract void AppendMessageFreeThreaded([NotNull] string text);
+        public abstract void AppendMessageFreeThreaded(string text);
 
         /// <summary>
         /// Creates the instance best fitting the current environment.
         /// </summary>
-        [NotNull]
         public static ConsoleOutputControl CreateInstance()
         {
             if (ConsoleEmulatorOutputControl.IsSupportedInThisEnvironment && AppSettings.UseConsoleEmulatorForCommands)
@@ -40,11 +38,11 @@ namespace GitUI.UserControls
 
         public abstract void Reset();
 
-        public abstract void StartProcess([NotNull] string command, string arguments, string workDir, Dictionary<string, string> envVariables);
+        public abstract void StartProcess(string command, string arguments, string workDir, Dictionary<string, string> envVariables);
 
-        public event EventHandler<TextEventArgs> DataReceived;
+        public event EventHandler<TextEventArgs>? DataReceived;
 
-        protected void FireDataReceived([NotNull] TextEventArgs args)
+        protected void FireDataReceived(TextEventArgs args)
         {
             if (args is null)
             {
@@ -67,11 +65,11 @@ namespace GitUI.UserControls
         /// <summary>
         /// Fires when the cmdline process exits.
         /// </summary>
-        public event EventHandler ProcessExited;
+        public event EventHandler? ProcessExited;
 
         /// <summary>
         /// Fires when the output control terminates. This only applies to the console emulator control mode (an editbox won't terminate), and fires when the console emulator itself (not the command it were executing) is terminated as a process, and the control goes blank.
         /// </summary>
-        public event EventHandler Terminated;
+        public event EventHandler? Terminated;
     }
 }

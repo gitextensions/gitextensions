@@ -27,7 +27,9 @@ namespace GitUI.HelperDialogs
             => new FormResetCurrentBranch(commands, revision ?? throw new NotSupportedException(Strings.NoRevision), resetType);
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormResetCurrentBranch()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
         }
@@ -124,7 +126,7 @@ namespace GitUI.HelperDialogs
 
         private void FormResetCurrentBranch_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            string helpSection = default;
+            string? helpSection = default;
             if (Soft.Checked)
             {
                 helpSection = "--soft";

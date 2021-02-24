@@ -45,7 +45,7 @@ namespace GitUI.UserControls
         }
 
         /// <summary>
-        /// Restores the expanded state of nodes under the input node using the set returned by GetExpandedNodesState
+        /// Restores the expanded state of nodes under the input node using the set returned by GetExpandedNodesState.
         /// </summary>
         public static void RestoreExpandedNodesState(this TreeNode node, HashSet<string> expandedNodes)
         {
@@ -69,7 +69,7 @@ namespace GitUI.UserControls
             }
         }
 
-        public static TreeNode GetNodeFromPath(this TreeNode node, string path)
+        public static TreeNode? GetNodeFromPath(this TreeNode node, string? path)
         {
             if (GetFullNamePath(node) == path)
             {

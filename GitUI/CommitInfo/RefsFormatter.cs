@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using GitCommands;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommitInfo
@@ -25,15 +23,14 @@ namespace GitUI.CommitInfo
         /// </summary>
         private const int MaximumDisplayedRefsIfLimited = MaximumDisplayedLinesIfLimited - 2;
 
-        [NotNull]
         private readonly ILinkFactory _linkFactory;
 
-        public RefsFormatter([NotNull] ILinkFactory linkFactory)
+        public RefsFormatter(ILinkFactory linkFactory)
         {
             _linkFactory = linkFactory ?? throw new ArgumentNullException("RefsFormatter requires an ILinkFactory instance");
         }
 
-        public string FormatBranches(IEnumerable<string> branches, bool showAsLinks, bool limit)
+        public string FormatBranches(IEnumerable<string>? branches, bool showAsLinks, bool limit)
         {
             if (branches is null)
             {
@@ -127,7 +124,7 @@ namespace GitUI.CommitInfo
 
         private string ToString(IEnumerable<string> formattedRefs, string prefix, string textIfEmpty, string refsType, bool truncated)
         {
-            string linksJoined = formattedRefs?.Join(Environment.NewLine);
+            string? linksJoined = formattedRefs?.Join(Environment.NewLine);
             if (string.IsNullOrEmpty(linksJoined))
             {
                 return WebUtility.HtmlEncode(textIfEmpty);

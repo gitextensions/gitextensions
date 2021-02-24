@@ -7,7 +7,6 @@ using GitCommands.Git.Tag;
 using GitUI.HelperDialogs;
 using GitUI.Script;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -26,12 +25,14 @@ namespace GitUI.CommandsDialogs
         private string _currentRemote = "";
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormCreateTag()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
         }
 
-        public FormCreateTag([NotNull] GitUICommands commands, [CanBeNull] ObjectId objectId)
+        public FormCreateTag(GitUICommands commands, ObjectId? objectId)
             : base(commands)
         {
             InitializeComponent();

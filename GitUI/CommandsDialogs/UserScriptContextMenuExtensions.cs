@@ -47,8 +47,11 @@ namespace GitUI.CommandsDialogs
 
                 item.Click += (s, e) =>
                 {
-                    string scriptKey = script.Name;
-                    scriptInvoker(scriptKey);
+                    string? scriptKey = script.Name;
+                    if (scriptKey is not null)
+                    {
+                        scriptInvoker(scriptKey);
+                    }
                 };
 
                 if (script.AddToRevisionGridContextMenu)

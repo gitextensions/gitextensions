@@ -2,13 +2,14 @@
 using System.Text;
 using System.Threading.Tasks;
 using GitUIPluginInterfaces;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
     /// <summary>
-    /// Status if the file can be staged (worktree->index), unstaged or None (normal commits)
-    /// The status may not be available or unset for some commands
+    /// Status if the file can be staged (worktree->index), unstaged or None (normal commits).
+    /// The status may not be available or unset for some commands.
     /// </summary>
     public enum StagedStatus
     {
@@ -46,7 +47,13 @@ namespace GitCommands
 
         private Flags _flags;
 
-        public string? Name { get; set; }
+        public GitItemStatus(string name)
+        {
+            Requires.NotNull(name, nameof(name));
+            Name = name;
+        }
+
+        public string Name { get; set; }
         public string? OldName { get; set; }
         public string? ErrorMessage { get; set; }
         public ObjectId? TreeGuid { get; set; }
@@ -70,7 +77,7 @@ namespace GitCommands
 
         /// <summary>
         /// For files, the file is modified
-        /// For submodules, the commit is changed
+        /// For submodules, the commit is changed.
         /// </summary>
         public bool IsChanged
         {
@@ -128,7 +135,7 @@ namespace GitCommands
 
         /// <summary>
         /// Submodule is dirty
-        /// Info from git-status, may be available before GetSubmoduleStatusAsync is evaluated
+        /// Info from git-status, may be available before GetSubmoduleStatusAsync is evaluated.
         /// </summary>
         public bool IsDirty
         {
@@ -138,7 +145,7 @@ namespace GitCommands
 
         /// <remarks>
         /// This item is not a Git item, just status information
-        /// If ErrorMessage is set, this is an error from Git, otherwise just a marker that nothing is changed
+        /// If ErrorMessage is set, this is an error from Git, otherwise just a marker that nothing is changed.
         /// </remarks>
         public bool IsStatusOnly
         {
@@ -170,9 +177,14 @@ namespace GitCommands
 
         #endregion
 
-        public Task<GitSubmoduleStatus?>? GetSubmoduleStatusAsync()
+        public async Task<GitSubmoduleStatus?> GetSubmoduleStatusAsync()
         {
-            return _submoduleStatus?.JoinAsync();
+            if (_submoduleStatus is null)
+            {
+                return null;
+            }
+
+            return await _submoduleStatus.JoinAsync();
         }
 
         internal void SetSubmoduleStatus(JoinableTask<GitSubmoduleStatus?> status)

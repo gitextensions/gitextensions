@@ -11,7 +11,6 @@ using GitUI.Editor.Diff;
 using GitUI.Theming;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
-using JetBrains.Annotations;
 
 namespace GitUI.Editor
 {
@@ -20,14 +19,14 @@ namespace GitUI.Editor
         /// <summary>
         /// Raised when the Escape key is pressed (and only when no selection exists, as the default behaviour of escape is to clear the selection).
         /// </summary>
-        public event Action EscapePressed;
+        public event Action? EscapePressed;
 
-        public event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
-        public new event MouseEventHandler MouseMove;
-        public new event EventHandler MouseEnter;
-        public new event EventHandler MouseLeave;
-        public new event System.Windows.Forms.KeyEventHandler KeyUp;
-        public new event EventHandler DoubleClick;
+        public event EventHandler<SelectedLineEventArgs>? SelectedLineChanged;
+        public new event MouseEventHandler? MouseMove;
+        public new event EventHandler? MouseEnter;
+        public new event EventHandler? MouseLeave;
+        public new event System.Windows.Forms.KeyEventHandler? KeyUp;
+        public new event EventHandler? DoubleClick;
 
         private readonly FindAndReplaceForm _findAndReplaceForm = new();
         private readonly CurrentViewPositionCache _currentViewPositionCache;
@@ -36,8 +35,8 @@ namespace GitUI.Editor
         private bool _shouldScrollToTop = false;
         private bool _shouldScrollToBottom = false;
         private readonly int _bottomBlankHeight = DpiUtil.Scale(300);
-        private ContinuousScrollEventManager _continuousScrollEventManager;
-        private BlameAuthorMargin _authorsAvatarMargin;
+        private ContinuousScrollEventManager? _continuousScrollEventManager;
+        private BlameAuthorMargin? _authorsAvatarMargin;
         private bool _showGutterAvatars;
 
         public FileViewerInternal()
@@ -112,10 +111,9 @@ namespace GitUI.Editor
         }
 
         /// <summary>
-        /// Create a list of TextMarker instances in the Document that match the given text
+        /// Create a list of TextMarker instances in the Document that match the given text.
         /// </summary>
         /// <param name="word">The text to match.</param>
-        [NotNull]
         private IList<TextMarker> GetTextMarkersMatchingWord(string word)
         {
             if (string.IsNullOrWhiteSpace(word))
@@ -152,10 +150,10 @@ namespace GitUI.Editor
             set => TextEditor.Font = value;
         }
 
-        public Action OpenWithDifftool { get; private set; }
+        public Action? OpenWithDifftool { get; private set; }
 
         /// <summary>
-        /// Move the file viewer cursor position to the next TextMarker found in the document that matches the AppColor.HighlightAllOccurences/>
+        /// Move the file viewer cursor position to the next TextMarker found in the document that matches the AppColor.HighlightAllOccurences/>.
         /// </summary>
         public void GoToNextOccurrence()
         {
@@ -174,7 +172,7 @@ namespace GitUI.Editor
         }
 
         /// <summary>
-        /// Move the file viewer cursor position to the previous TextMarker found in the document that matches the AppColor.HighlightAllOccurences/>
+        /// Move the file viewer cursor position to the previous TextMarker found in the document that matches the AppColor.HighlightAllOccurences/>.
         /// </summary>
         public void GoToPreviousOccurrence()
         {
@@ -211,9 +209,9 @@ namespace GitUI.Editor
 
         #region IFileViewer Members
 
-        public event EventHandler HScrollPositionChanged;
-        public event EventHandler VScrollPositionChanged;
-        public new event EventHandler TextChanged;
+        public event EventHandler? HScrollPositionChanged;
+        public event EventHandler? VScrollPositionChanged;
+        public new event EventHandler? TextChanged;
 
         public void ScrollToTop()
         {
@@ -232,12 +230,12 @@ namespace GitUI.Editor
 
         public bool? ShowLineNumbers { get; set; }
 
-        public void SetText(string text, Action openWithDifftool, bool isDiff = false)
+        public void SetText(string text, Action? openWithDifftool, bool isDiff = false)
         {
             SetText(text, openWithDifftool, isDiff, false);
         }
 
-        public void SetText(string text, Action openWithDifftool, bool isDiff, bool isRangeDiff)
+        public void SetText(string text, Action? openWithDifftool, bool isDiff, bool isRangeDiff)
         {
             _currentViewPositionCache.Capture();
 
@@ -552,7 +550,7 @@ namespace GitUI.Editor
         {
             if (_showGutterAvatars)
             {
-                _authorsAvatarMargin.Initialize(gitBlameEntries);
+                _authorsAvatarMargin?.Initialize(gitBlameEntries);
             }
         }
 
@@ -724,7 +722,7 @@ namespace GitUI.Editor
             internal TextLocation CaretPosition;
             internal int FirstVisibleLine;
             internal bool CaretVisible; // if not, FirstVisibleLine has priority for restoring
-            internal DiffLineInfo ActiveLineNum;
+            internal DiffLineInfo? ActiveLineNum;
         }
 
         internal TestAccessor GetTestAccessor() => new TestAccessor(this);

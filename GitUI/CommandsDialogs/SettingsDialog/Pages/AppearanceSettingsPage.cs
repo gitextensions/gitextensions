@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             comboBox.DisplayMember = nameof(ComboBoxItem<T>.Text);
             comboBox.ValueMember = nameof(ComboBoxItem<T>.Value);
             comboBox.DataSource = EnumHelper.GetValues<T>()
-                .Select(e => new ComboBoxItem<T> { Text = e.GetDescription(), Value = e })
+                .Select(e => new ComboBoxItem<T>(e.GetDescription(), e))
                 .ToArray();
         }
 
@@ -252,8 +252,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private class ComboBoxItem<T>
         {
-            public string Text { get; set; }
-            public T Value { get; set; }
+            public string Text { get; }
+            public T Value { get; }
+
+            public ComboBoxItem(string text, T value)
+            {
+                Text = text;
+                Value = value;
+            }
         }
     }
 }

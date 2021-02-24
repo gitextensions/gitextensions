@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms;
-using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -8,8 +7,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     {
         string GetTitle();
 
-        [CanBeNull]
-        Control GuiControl { get; }
+        Control? GuiControl { get; }
 
         void OnPageShown();
 

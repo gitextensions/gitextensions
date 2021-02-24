@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
+using Microsoft;
 using Microsoft.Win32;
 using ResourceManager;
 
@@ -22,46 +22,53 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public readonly RepoDistSettingsSet RepoDistSettingsSet;
         public readonly ConfigFileSettingsSet ConfigFileSettingsSet;
-        [CanBeNull] public readonly GitModule Module;
+        public readonly GitModule Module;
 
-        public CommonLogic([CanBeNull] GitModule module)
+        private CommonLogic()
         {
+            // For translation only
+            Module = null!;
+            RepoDistSettingsSet = null!;
+            ConfigFileSettingsSet = null!;
+        }
+
+        public CommonLogic(GitModule module)
+        {
+            Requires.NotNull(module, nameof(module));
+
             Module = module;
 
-            if (module is not null)
-            {
-                var repoDistGlobalSettings = RepoDistSettings.CreateGlobal(false);
-                var repoDistPulledSettings = RepoDistSettings.CreateDistributed(Module, false);
-                var repoDistLocalSettings = RepoDistSettings.CreateLocal(Module, false);
-                var repoDistEffectiveSettings = new RepoDistSettings(
-                    new RepoDistSettings(repoDistGlobalSettings, repoDistPulledSettings.SettingsCache, SettingLevel.Distributed),
-                    repoDistLocalSettings.SettingsCache,
-                    SettingLevel.Effective);
+            var repoDistGlobalSettings = RepoDistSettings.CreateGlobal(false);
+            var repoDistPulledSettings = RepoDistSettings.CreateDistributed(module, false);
+            var repoDistLocalSettings = RepoDistSettings.CreateLocal(module, false);
+            var repoDistEffectiveSettings = new RepoDistSettings(
+                new RepoDistSettings(repoDistGlobalSettings, repoDistPulledSettings.SettingsCache, SettingLevel.Distributed),
+                repoDistLocalSettings.SettingsCache,
+                SettingLevel.Effective);
 
-                var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
-                var configFileLocalSettings = ConfigFileSettings.CreateLocal(Module, false);
-                var configFileEffectiveSettings = new ConfigFileSettings(
-                    configFileGlobalSettings, configFileLocalSettings.SettingsCache, SettingLevel.Effective);
+            var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
+            var configFileLocalSettings = ConfigFileSettings.CreateLocal(module, false);
+            var configFileEffectiveSettings = new ConfigFileSettings(
+                configFileGlobalSettings, configFileLocalSettings.SettingsCache, SettingLevel.Effective);
 
-                RepoDistSettingsSet = new RepoDistSettingsSet(
-                    repoDistEffectiveSettings,
-                    repoDistLocalSettings,
-                    repoDistPulledSettings,
-                    repoDistGlobalSettings);
+            RepoDistSettingsSet = new RepoDistSettingsSet(
+                repoDistEffectiveSettings,
+                repoDistLocalSettings,
+                repoDistPulledSettings,
+                repoDistGlobalSettings);
 
-                ConfigFileSettingsSet = new ConfigFileSettingsSet(
-                    configFileEffectiveSettings,
-                    configFileLocalSettings,
-                    configFileGlobalSettings);
-            }
+            ConfigFileSettingsSet = new ConfigFileSettingsSet(
+                configFileEffectiveSettings,
+                configFileLocalSettings,
+                configFileGlobalSettings);
         }
 
         public const string GitExtensionsShellEx32Name = "GitExtensionsShellEx32.dll";
         public const string GitExtensionsShellEx64Name = "GitExtensionsShellEx64.dll";
 
-        public static string GetRegistryValue(RegistryKey root, string subkey, string key)
+        public static string GetRegistryValue(RegistryKey root, string subkey, string? key)
         {
-            string value = null;
+            string? value = null;
             try
             {
                 var registryKey = root.OpenSubKey(subkey, writable: false);
@@ -82,8 +89,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return value ?? "";
         }
 
-        [CanBeNull]
-        public string GetGlobalEditor()
+        public string? GetGlobalEditor()
         {
             return GetEditorOptions().FirstOrDefault(o => !string.IsNullOrEmpty(o));
 
@@ -107,12 +113,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 return dialog.ShowDialog() == DialogResult.OK ? dialog.FileName : prev;
             }
-        }
-
-        [CanBeNull]
-        public Encoding ComboToEncoding(ComboBox combo)
-        {
-            return combo.SelectedItem as Encoding;
         }
 
         public void FillEncodings(ComboBox combo)

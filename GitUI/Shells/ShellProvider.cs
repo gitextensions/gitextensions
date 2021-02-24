@@ -11,9 +11,9 @@ namespace GitUI.Shells
 
         public IReadOnlyList<IShellDescriptor> GetShells() => Shells;
 
-        public IShellDescriptor GetShell(string name) => Shells.FirstOrDefault(s => s.Name == name) ?? DefaultShell;
+        public IShellDescriptor GetShell(string? name) => Shells.FirstOrDefault(s => s.Name == name) ?? DefaultShell;
 
-        public string GetShellCommandLine(string shellType)
+        public string? GetShellCommandLine(string? shellType)
         {
             var shell = GetShell(shellType);
 

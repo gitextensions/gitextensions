@@ -5,7 +5,6 @@ using System.Drawing.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using GitCommands;
-using JetBrains.Annotations;
 
 namespace GitUI.Avatars
 {
@@ -18,17 +17,17 @@ namespace GitUI.Avatars
         private static readonly char[] _emailInitialSeparator = new[] { '.', '-', '_' };
 
         /// <inheritdoc/>
-        public Task<Image> GetAvatarAsync([NotNull] string email, string name, int imageSize)
+        public Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
             var (initials, hashCode) = GetInitialsAndHashCode(email, name);
 
             var avatarColor = _avatarColors[Math.Abs(hashCode) % _avatarColors.Length];
             var avatar = DrawText(initials, avatarColor, imageSize);
 
-            return Task.FromResult(avatar);
+            return Task.FromResult<Image?>(avatar);
         }
 
-        protected internal (string initials, int hashCode) GetInitialsAndHashCode(string email, string name)
+        protected internal (string? initials, int hashCode) GetInitialsAndHashCode(string email, string? name)
         {
             (var selectedName, var separator) = NameSelector(name, email);
 
@@ -43,14 +42,14 @@ namespace GitUI.Avatars
             return (initials, selectedName.GetHashCode());
         }
 
-        private static (string name, char[] separator) NameSelector(string name, string email)
+        private static (string? name, char[]? separator) NameSelector(string? name, string? email)
         {
-            if (!string.IsNullOrWhiteSpace(name))
+            if (!GitExtensions.Strings.IsNullOrWhiteSpace(name))
             {
                 return (name.Trim(), null);
             }
 
-            if (!string.IsNullOrWhiteSpace(email))
+            if (!GitExtensions.Strings.IsNullOrWhiteSpace(email))
             {
                 var withoutDomain = email.Split('@')[0].TrimStart();
                 return (withoutDomain, _emailInitialSeparator);
@@ -59,7 +58,7 @@ namespace GitUI.Avatars
             return (null, null);
         }
 
-        private static string GetInitialsFromNames(string[] names)
+        private static string? GetInitialsFromNames(string[]? names)
         {
             names = names?.Where(s => !string.IsNullOrWhiteSpace(s) && char.IsLetter(s[0])).ToArray();
 
@@ -99,7 +98,7 @@ namespace GitUI.Avatars
             Color.DarkOrange
         };
 
-        private Image DrawText(string text, Color backColor, int size)
+        private Image DrawText(string? text, Color backColor, int size)
         {
             lock (_avatarColors)
             {

@@ -22,13 +22,13 @@ namespace GitCommands.Settings
 
         public override T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
         {
-            Assumes.NotNull(_parent);
+            Validates.NotNull(_parent);
             return _parent.GetValue(PathFor(name), defaultValue, decode);
         }
 
         public override void SetValue<T>(string name, T value, Func<T, string?> encode)
         {
-            Assumes.NotNull(_parent);
+            Validates.NotNull(_parent);
             _parent.SetValue(PathFor(name), value, encode);
         }
     }

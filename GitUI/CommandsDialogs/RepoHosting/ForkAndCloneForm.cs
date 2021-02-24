@@ -11,7 +11,7 @@ using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces.RepositoryHosts;
-using JetBrains.Annotations;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
@@ -40,9 +40,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private const string UpstreamRemoteName = "upstream";
         private readonly IRepositoryHostPlugin _gitHoster;
-        private readonly EventHandler<GitModuleEventArgs> _gitModuleChanged;
+        private readonly EventHandler<GitModuleEventArgs>? _gitModuleChanged;
 
-        public ForkAndCloneForm(IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs> gitModuleChanged)
+        public ForkAndCloneForm(IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs>? gitModuleChanged)
         {
             _gitModuleChanged = gitModuleChanged;
             _gitHoster = gitHoster;
@@ -79,7 +79,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                     await this.SwitchToMainThreadAsync();
                     var lastRepo = repositoryHistory.FirstOrDefault();
-                    if (!string.IsNullOrEmpty(lastRepo?.Path))
+                    if (!GitExtensions.Strings.IsNullOrEmpty(lastRepo?.Path))
                     {
                         string p = lastRepo.Path.Trim('/', '\\');
                         destinationTB.Text = Path.GetDirectoryName(p);
@@ -322,7 +322,12 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _cloneBtn_Click(object sender, EventArgs e)
         {
-            Clone(CurrentySelectedGitRepo);
+            var repo = CurrentySelectedGitRepo;
+
+            if (repo is not null)
+            {
+                Clone(repo);
+            }
         }
 
         private void _openGitupPageBtn_Click(object sender, EventArgs e)
@@ -380,7 +385,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void Clone(IHostedRepository repo)
         {
-            string targetDir = GetTargetDir();
+            string? targetDir = GetTargetDir();
             if (targetDir is null)
             {
                 return;
@@ -418,7 +423,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             Close();
         }
 
-        private IHostedRepository CurrentySelectedGitRepo
+        private IHostedRepository? CurrentySelectedGitRepo
         {
             get
             {
@@ -452,13 +457,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 if (multipleProtocols && updateProtocols)
                 {
                     var currentSelection = (GitProtocol)(ProtocolDropdownList.SelectedItem ?? repo.SupportedCloneProtocols.First());
-                    ProtocolDropdownList.DataSource = CurrentySelectedGitRepo.SupportedCloneProtocols;
-                    if (CurrentySelectedGitRepo.SupportedCloneProtocols.Contains(currentSelection))
+                    ProtocolDropdownList.DataSource = repo.SupportedCloneProtocols;
+                    if (repo.SupportedCloneProtocols.Contains(currentSelection))
                     {
-                        CurrentySelectedGitRepo.CloneProtocol = currentSelection;
+                        repo.CloneProtocol = currentSelection;
                     }
 
-                    ProtocolDropdownList.SelectedItem = CurrentySelectedGitRepo.CloneProtocol;
+                    ProtocolDropdownList.SelectedItem = repo.CloneProtocol;
                 }
 
                 SetProtocolSelectionVisibility(multipleProtocols);
@@ -514,8 +519,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             ProtocolDropdownList.Visible = multipleProtocols;
         }
 
-        [CanBeNull]
-        private string GetTargetDir()
+        private string? GetTargetDir()
         {
             string targetDir = destinationTB.Text.Trim();
             if (targetDir.Length == 0)
@@ -556,6 +560,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void ProtocolSelectionChanged(object sender, EventArgs e)
         {
+            Validates.NotNull(CurrentySelectedGitRepo);
+
             CurrentySelectedGitRepo.CloneProtocol = (GitProtocol)ProtocolDropdownList.SelectedItem;
             SetCloneInfoText(CurrentySelectedGitRepo);
         }

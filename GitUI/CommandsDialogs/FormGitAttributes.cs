@@ -28,7 +28,9 @@ namespace GitUI.CommandsDialogs
         private readonly IFullPathResolver _fullPathResolver;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormGitAttributes()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
         }
@@ -55,7 +57,7 @@ namespace GitUI.CommandsDialogs
                 var path = _fullPathResolver.Resolve(".gitattributes");
                 if (File.Exists(path))
                 {
-                    _NO_TRANSLATE_GitAttributesText.ViewFileAsync(path);
+                    _NO_TRANSLATE_GitAttributesText.ViewFileAsync(path!);
                 }
             }
             catch (Exception ex)
@@ -76,7 +78,7 @@ namespace GitUI.CommandsDialogs
             {
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(
-                        _fullPathResolver.Resolve(".gitattributes"),
+                        _fullPathResolver.Resolve(".gitattributes")!, // catch NRE below
                         x =>
                         {
                             GitAttributesFile = _NO_TRANSLATE_GitAttributesText.GetText();

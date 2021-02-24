@@ -23,8 +23,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noRevisionSelected =
             new TranslationString("You need to choose a target revision.");
 
-        private GitRevision _selectedRevision;
-        public GitRevision SelectedRevision
+        private GitRevision? _selectedRevision;
+        public GitRevision? SelectedRevision
         {
             get { return _selectedRevision; }
             set
@@ -34,8 +34,8 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private GitRevision _diffSelectedRevision;
-        private GitRevision DiffSelectedRevision
+        private GitRevision? _diffSelectedRevision;
+        private GitRevision? DiffSelectedRevision
         {
             get { return _diffSelectedRevision; }
             set
@@ -60,13 +60,13 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public void SetDiffSelectedRevision(GitRevision revision)
+        public void SetDiffSelectedRevision(GitRevision? revision)
         {
             checkboxRevisionFilter.Checked = revision is not null;
             DiffSelectedRevision = revision;
         }
 
-        public void SetPathArgument(string path)
+        public void SetPathArgument(string? path)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -105,8 +105,8 @@ namespace GitUI.CommandsDialogs
         private void FormArchive_Load(object sender, EventArgs e)
         {
             buttonArchiveRevision.Focus();
-            checkBoxPathFilter_CheckedChanged(null, null);
-            checkboxRevisionFilter_CheckedChanged(null, null);
+            checkBoxPathFilter_CheckedChanged(this, EventArgs.Empty);
+            checkboxRevisionFilter_CheckedChanged(this, EventArgs.Empty);
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -117,7 +117,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            string revision = SelectedRevision.Guid;
+            string? revision = SelectedRevision?.Guid;
 
             string fileFilterCaption = GetSelectedOutputFormat() == OutputFormat.Zip ? _saveFileDialogFilterZip.Text : _saveFileDialogFilterTar.Text;
             string fileFilterEnding = GetSelectedOutputFormat() == OutputFormat.Zip ? "zip" : "tar";
@@ -179,7 +179,7 @@ namespace GitUI.CommandsDialogs
 
         private void btnChooseRevision_Click(object sender, EventArgs e)
         {
-            using (var chooseForm = new FormChooseCommit(UICommands, SelectedRevision.Guid))
+            using (var chooseForm = new FormChooseCommit(UICommands, SelectedRevision?.Guid))
             {
                 if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
                 {

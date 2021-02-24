@@ -13,6 +13,7 @@ using GitCommands.Submodules;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
@@ -49,13 +50,13 @@ namespace GitUI.BranchTreePanel
         {
             public SubmoduleInfo Info { get; }
             public bool IsCurrent { get; }
-            public IReadOnlyList<GitItemStatus> GitStatus { get; }
+            public IReadOnlyList<GitItemStatus>? GitStatus { get; }
             public string LocalPath { get; }
             public string SuperPath { get; }
             public string SubmoduleName { get; }
             public string BranchText { get; }
 
-            public SubmoduleNode(Tree tree, SubmoduleInfo submoduleInfo, bool isCurrent, IReadOnlyList<GitItemStatus> gitStatus, string localPath, string superPath)
+            public SubmoduleNode(Tree tree, SubmoduleInfo submoduleInfo, bool isCurrent, IReadOnlyList<GitItemStatus>? gitStatus, string localPath, string superPath)
                 : base(tree)
             {
                 Info = submoduleInfo;
@@ -96,7 +97,7 @@ namespace GitUI.BranchTreePanel
 
             public void Open()
             {
-                if (Info?.Detailed?.RawStatus is not null)
+                if (Info.Detailed?.RawStatus is not null)
                 {
                     UICommands.BrowseSetWorkingDir(Info.Path, ObjectId.WorkTreeId, Info.Detailed.RawStatus.OldCommit);
                     return;
@@ -129,8 +130,6 @@ namespace GitUI.BranchTreePanel
             {
                 base.ApplyStyle();
 
-                Trace.Assert(TreeViewNode is not null);
-
                 if (IsCurrent)
                 {
                     TreeViewNode.NodeFont = new Font(AppSettings.Font, FontStyle.Bold);
@@ -162,7 +161,7 @@ namespace GitUI.BranchTreePanel
                 return;
 
                 // NOTE: Copied and adapated from FormBrowse.GetSubmoduleItemImage
-                string GetSubmoduleItemImage(DetailedSubmoduleInfo details)
+                static string GetSubmoduleItemImage(DetailedSubmoduleInfo? details)
                 {
                     if (details?.Status is null)
                     {
@@ -195,7 +194,7 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        // Used temporarily to faciliate building a tree
+        // Used temporarily to facilitate building a tree
         private class DummyNode : Node
         {
             public DummyNode() : base(null)
@@ -205,7 +204,7 @@ namespace GitUI.BranchTreePanel
 
         private sealed class SubmoduleTree : Tree
         {
-            private SubmoduleStatusEventArgs _currentSubmoduleInfo;
+            private SubmoduleStatusEventArgs? _currentSubmoduleInfo;
 
             public SubmoduleTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
                 : base(treeNode, uiCommands)
@@ -224,6 +223,11 @@ namespace GitUI.BranchTreePanel
                 return Task.CompletedTask;
             }
 
+            protected override Task<Nodes> LoadNodesAsync(CancellationToken token)
+            {
+                return Task.FromResult(new Nodes(null));
+            }
+
             private void Provider_StatusUpdated(object sender, SubmoduleStatusEventArgs e)
             {
                 _currentSubmoduleInfo = e;
@@ -238,8 +242,8 @@ namespace GitUI.BranchTreePanel
             {
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
-                    CancellationTokenSource cts = null;
-                    Task<Nodes> loadNodesTask = null;
+                    CancellationTokenSource? cts = null;
+                    Task<Nodes>? loadNodesTask = null;
                     await ReloadNodesAsync(token =>
                     {
                         cts = CancellationTokenSource.CreateLinkedTokenSource(e.Token, token);
@@ -294,7 +298,11 @@ namespace GitUI.BranchTreePanel
 
             private Nodes FillSubmoduleTree(SubmoduleInfoResult result)
             {
-                var threadModule = (GitModule)result.Module;
+                Validates.NotNull(result.TopProject);
+
+                var threadModule = (GitModule?)result.Module;
+
+                Validates.NotNull(threadModule);
 
                 var submoduleNodes = new List<SubmoduleNode>();
 
@@ -342,7 +350,7 @@ namespace GitUI.BranchTreePanel
                 string GetSubmoduleSuperPath(string submodulePath)
                 {
                     var superPath = modulePaths.Find(path => submodulePath != path && submodulePath.Contains(path));
-                    Trace.Assert(superPath is not null);
+                    Validates.NotNull(superPath);
                     return superPath;
                 }
             }
@@ -433,8 +441,11 @@ namespace GitUI.BranchTreePanel
                     }
                 }
 
+                Validates.NotNull(result.TopProject);
+
                 // Add top-module node, and move children of root to it
-                var topModuleNode = new SubmoduleNode(this,
+                var topModuleNode = new SubmoduleNode(
+                    this,
                     result.TopProject,
                     result.TopProject.Bold,
                     result.TopProject.Bold ? result.CurrentSubmoduleStatus : null,

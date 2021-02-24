@@ -192,7 +192,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         #region Single instance static members
 
-        private static FormGitCommandLog instance;
+        private static FormGitCommandLog? instance;
 
         public static void ShowOrActivate(IWin32Window owner)
         {

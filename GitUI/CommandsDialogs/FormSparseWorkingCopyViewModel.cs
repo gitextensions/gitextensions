@@ -7,7 +7,6 @@ using System.Windows.Forms;
 
 using GitCommands;
 using GitUI.HelperDialogs;
-using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
 {
@@ -17,7 +16,6 @@ namespace GitUI.CommandsDialogs
 
         public static readonly string SettingCoreSparseCheckout = "core.sparseCheckout";
 
-        [NotNull]
         private readonly GitUICommands _gitCommands;
 
         private bool _isRefreshWorkingCopyOnSave = true /* on by default, otherwise index bitmap won't be updated */;
@@ -29,17 +27,15 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private bool _isSparseCheckoutEnabledAsSaved;
 
-        [CanBeNull]
-        private string _rulesText;
+        private string? _rulesText;
 
         /// <summary>
         /// Remembers what were loaded from disk, to check <see cref="RulesText" /> against to tell if modified.
         /// NULL until loaded.
         /// </summary>
-        [CanBeNull]
-        private string _sRulesTextAsOnDisk;
+        private string? _sRulesTextAsOnDisk;
 
-        public FormSparseWorkingCopyViewModel([NotNull] GitUICommands gitCommands)
+        public FormSparseWorkingCopyViewModel(GitUICommands gitCommands)
         {
             _gitCommands = gitCommands ?? throw new ArgumentNullException(nameof(gitCommands));
             _isSparseCheckoutEnabled = _isSparseCheckoutEnabledAsSaved = GetCurrentSparseEnabledState();
@@ -90,8 +86,7 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// Current UI state of the sparse WC rules text. NULL if n/a.
         /// </summary>
-        [CanBeNull]
-        public string RulesText
+        public string? RulesText
         {
             get
             {
@@ -125,7 +120,6 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// Path to the file with the sparse WC rules.
         /// </summary>
-        [NotNull]
         public FileInfo GetPathToSparseCheckoutFile()
         {
             return new FileInfo(Path.Combine(_gitCommands.GitModule.ResolveGitInternalPath("info"), "sparse-checkout"));
@@ -197,7 +191,7 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// As view loads the text in its impl of the editor, tells the exact on-disk text when it gets known.
         /// </summary>
-        public void SetRulesTextAsOnDisk([NotNull] string text)
+        public void SetRulesTextAsOnDisk(string text)
         {
             _sRulesTextAsOnDisk = text ?? throw new ArgumentNullException(nameof(text));
         }
@@ -217,7 +211,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void SaveChangesTurningOffSparseSpecialCase()
         {
-            if (IsSparseCheckoutEnabled || !_isSparseCheckoutEnabledAsSaved)
+            if (IsSparseCheckoutEnabled || !_isSparseCheckoutEnabledAsSaved || RulesText is null)
             {
                 return; // Not turning off
             }

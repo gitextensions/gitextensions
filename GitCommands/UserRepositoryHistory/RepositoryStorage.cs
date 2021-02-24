@@ -54,7 +54,7 @@ namespace GitCommands.UserRepositoryHistory
                 throw new ArgumentException(nameof(key));
             }
 
-            string setting = AppSettings.GetString(key, null);
+            string? setting = AppSettings.GetString(key, null);
             if (setting is null)
             {
                 return Array.Empty<Repository>();

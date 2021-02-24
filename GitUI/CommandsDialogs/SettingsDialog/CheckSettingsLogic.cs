@@ -12,7 +12,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     public class CheckSettingsLogic
     {
         public readonly CommonLogic CommonLogic;
-        private GitModule Module => CommonLogic.Module;
+        private GitModule? Module => CommonLogic.Module;
         private ConfigFileSettings GlobalConfigFileSettings => CommonLogic.ConfigFileSettingsSet.GlobalSettings;
 
         public CheckSettingsLogic(CommonLogic commonLogic)
@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private bool SolveEditor()
         {
-            string editor = CommonLogic.GetGlobalEditor();
+            string? editor = CommonLogic.GetGlobalEditor();
 
             if (string.IsNullOrEmpty(editor))
             {
@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return true;
         }
 
-        public bool SolveLinuxToolsDir(string possibleNewPath = null)
+        public bool SolveLinuxToolsDir(string? possibleNewPath = null)
         {
             if (!EnvUtils.RunningOnWindows())
             {
@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
 
             string gitpath = AppSettings.GitCommandValue;
-            if (!string.IsNullOrWhiteSpace(possibleNewPath))
+            if (!GitExtensions.Strings.IsNullOrWhiteSpace(possibleNewPath))
             {
                 gitpath = possibleNewPath.Trim();
             }
@@ -113,7 +113,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 CommonLogic.GetRegistryValue(Registry.LocalMachine,
                                  "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation");
             string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
-            string programFilesX86 = null;
+            string? programFilesX86 = null;
             if (IntPtr.Size == 8
                 || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
             {
@@ -142,18 +142,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public bool SolveGitExtensionsDir()
         {
-            string fileName = AppSettings.GetGitExtensionsDirectory();
+            string? fileName = AppSettings.GetGitExtensionsDirectory();
 
             if (Directory.Exists(fileName))
             {
-                AppSettings.SetInstallDir(fileName);
+                AppSettings.SetInstallDir(fileName!);
                 return true;
             }
 
             return false;
         }
 
-        public static bool SolveGitCommand(string possibleNewPath = null)
+        public static bool SolveGitCommand(string? possibleNewPath = null)
         {
             if (EnvUtils.RunningOnWindows())
             {
@@ -197,7 +197,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 if (File.Exists(possibleNewPath))
                 {
-                    yield return possibleNewPath;
+                    yield return possibleNewPath!;
                 }
 
                 if (File.Exists(AppSettings.GitCommandValue))
@@ -234,7 +234,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public bool CanFindGitCmd()
         {
-            return !string.IsNullOrEmpty(Module.GitExecutable.GetOutput(""));
+            return !string.IsNullOrEmpty(Module?.GitExecutable.GetOutput(""));
         }
     }
 }

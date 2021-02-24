@@ -6,15 +6,13 @@ using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
-using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid
 {
     internal class RevisionGridMenuCommands : MenuCommandsBase
     {
-        public event EventHandler MenuChanged;
+        public event EventHandler? MenuChanged;
 
         private readonly TranslationString _quickSearchQuickHelp = new("Start typing in revision grid to start quick search.");
         private readonly TranslationString _noRevisionFoundError = new("No revision found.");
@@ -329,7 +327,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "showRelativeDateToolStripMenuItem",
                     Text = "Show relative date",
-                    ExecuteAction = () => _revisionGrid.ToggleShowRelativeDate(null),
+                    ExecuteAction = () => _revisionGrid.ToggleShowRelativeDate(EventArgs.Empty),
                     IsCheckedFunc = () => AppSettings.RelativeDate
                 },
                 new MenuCommand
@@ -388,8 +386,7 @@ namespace GitUI.UserControls.RevisionGrid
             };
         }
 
-        [CanBeNull]
-        private string GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command revGridCommands)
+        private string? GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command revGridCommands)
         {
             // _revisionGrid is null when TranslationApp is called
             return _revisionGrid?.GetShortcutKeys(revGridCommands).ToShortcutKeyDisplayString();

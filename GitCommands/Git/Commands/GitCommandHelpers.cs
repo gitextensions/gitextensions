@@ -346,7 +346,7 @@ namespace GitCommands.Git.Commands
             return "";
         }
 
-        public static ArgumentString StashSaveCmd(bool untracked, bool keepIndex, string message, IReadOnlyList<string> selectedFiles)
+        public static ArgumentString StashSaveCmd(bool untracked, bool keepIndex, string message, IReadOnlyList<string>? selectedFiles)
         {
             if (selectedFiles is null)
             {
@@ -407,8 +407,10 @@ namespace GitCommands.Git.Commands
         }
 
         public static ArgumentString RebaseCmd(
-            string branch, bool interactive, bool preserveMerges, bool autosquash, bool autoStash, bool ignoreDate, bool committerDateIsAuthorDate, string? from = null, string? onto = null)
+            string? branch, bool interactive, bool preserveMerges, bool autosquash, bool autoStash, bool ignoreDate, bool committerDateIsAuthorDate, string? from = null, string? onto = null)
         {
+            // TODO-NULLABLE does it make sense for 'branch' to be null here?
+
             if (from is null ^ onto is null)
             {
                 throw new ArgumentException($"For arguments \"{nameof(from)}\" and \"{nameof(onto)}\", either both must have values, or neither may.");
@@ -536,7 +538,7 @@ namespace GitCommands.Git.Commands
             return args;
         }
 
-        public static ArgumentString MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string mergeCommitFilePath, int? log)
+        public static ArgumentString MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string? mergeCommitFilePath, int? log)
         {
             return new GitArgumentBuilder("merge")
             {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
@@ -15,7 +16,6 @@ using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.UserControls.RevisionGrid
@@ -40,15 +40,15 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly AsyncQueue<(Func<CancellationToken, Task> backgroundOperation, CancellationToken cancellationToken)> _backgroundQueue =
             new AsyncQueue<(Func<CancellationToken, Task> backgroundOperation, CancellationToken cancellationToken)>();
         private CancellationToken _backgroundCancellationToken;
-        private JoinableTask _backgroundProcessingTask;
+        private JoinableTask? _backgroundProcessingTask;
         private int _backgroundScrollTo;
 
         private int _rowHeight; // Height of elements in the cache. Is equal to the control's row height.
         private VisibleRowRange _visibleRowRange;
 
-        private Font _normalFont;
-        private Font _boldFont;
-        private Font _monospaceFont;
+        private readonly Font _normalFont;
+        private readonly Font _boldFont;
+        private readonly Font _monospaceFont;
 
         public bool UpdatingVisibleRows { get; private set; }
 
@@ -58,7 +58,8 @@ namespace GitUI.UserControls.RevisionGrid
             _backgroundCancellationToken = _backgroundCancellationSequence.Next();
             StartBackgroundProcessingTask(_backgroundCancellationToken);
 
-            NormalFont = AppSettings.Font;
+            _normalFont = AppSettings.Font;
+            _boldFont = new Font(AppSettings.Font, FontStyle.Bold);
             _monospaceFont = AppSettings.MonospaceFont;
 
             InitializeComponent();
@@ -158,7 +159,6 @@ namespace GitUI.UserControls.RevisionGrid
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -166,23 +166,13 @@ namespace GitUI.UserControls.RevisionGrid
                 // Make sure to mark the background queue as complete before disposing the cancellation token sequence.
                 _backgroundQueue.Complete();
                 _backgroundCancellationSequence.Dispose();
-                _backgroundProcessingTask.Join();
+                _backgroundProcessingTask?.Join();
             }
 
             base.Dispose(disposing);
         }
 
-        internal Font NormalFont
-        {
-            get => _normalFont;
-            set
-            {
-                _normalFont = value;
-                _boldFont = new Font(value, FontStyle.Bold);
-            }
-        }
-
-        internal AuthorRevisionHighlighting AuthorHighlighting { get; set; }
+        internal AuthorRevisionHighlighting? AuthorHighlighting { get; set; }
 
         // Contains the object Id's that will be selected as soon as all of them have been loaded.
         // The object Id's are in the order in which they were originally selected.
@@ -195,11 +185,9 @@ namespace GitUI.UserControls.RevisionGrid
             return ToBeSelectedObjectIds.Any() || SelectedRows.Count > 0;
         }
 
-        [CanBeNull]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity")]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public IReadOnlyList<ObjectId> SelectedObjectIds
+        public IReadOnlyList<ObjectId>? SelectedObjectIds
         {
             get
             {
@@ -265,14 +253,14 @@ namespace GitUI.UserControls.RevisionGrid
             };
         }
 
-        private Brush GetBackground(DataGridViewElementStates state, int rowIndex, GitRevision revision)
+        private Brush GetBackground(DataGridViewElementStates state, int rowIndex, GitRevision? revision)
         {
             if (state.HasFlag(DataGridViewElementStates.Selected))
             {
                 return SystemBrushes.Highlight;
             }
 
-            if (AppSettings.HighlightAuthoredRevisions && revision is not null && !revision.IsArtificial && AuthorHighlighting.IsHighlighted(revision))
+            if (AppSettings.HighlightAuthoredRevisions && revision is not null && !revision.IsArtificial && AuthorHighlighting?.IsHighlighted(revision) != false)
             {
                 return new SolidBrush(AppColor.AuthoredHighlight.GetThemeColor());
             }
@@ -332,7 +320,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             // Cancel all outstanding background operations, and provide a new cancellation token for future work.
             var cancellationToken = _backgroundCancellationToken = _backgroundCancellationSequence.Next();
-            _backgroundProcessingTask.Join();
+            _backgroundProcessingTask?.Join();
 
             // Set rowcount to 0 first, to ensure it is not possible to select or redraw, since we are about te delete the data
             SetRowCount(0);
@@ -357,6 +345,7 @@ namespace GitUI.UserControls.RevisionGrid
         /// </summary>
         /// <param name="objectId">The hash to find.</param>
         /// <returns><see langword="true"/>, if the given hash if found; otherwise <see langword="false"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="objectId"/> is <see langword="null"/>.</exception>
         public bool Contains(ObjectId objectId) => _revisionGraph.Contains(objectId);
 
         private void StartBackgroundProcessingTask(CancellationToken cancellationToken)
@@ -371,13 +360,11 @@ namespace GitUI.UserControls.RevisionGrid
             return _revisionGraph.IsRowRelative(rowIndex);
         }
 
-        [CanBeNull]
-        public GitRevision GetRevision(int rowIndex)
+        public GitRevision? GetRevision(int rowIndex)
         {
             return _revisionGraph.GetNodeForRow(rowIndex)?.GitRevision;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         private void SetRowCount(int count)
         {
             if (InvokeRequired)
@@ -641,15 +628,14 @@ namespace GitUI.UserControls.RevisionGrid
             return _revisionGraph.IsRevisionRelative(objectId);
         }
 
-        [CanBeNull]
-        public GitRevision GetRevision(ObjectId objectId)
+        public GitRevision? GetRevision(ObjectId objectId)
         {
             return _revisionGraph.TryGetNode(objectId, out var node) ? node.GitRevision : null;
         }
 
-        public int? TryGetRevisionIndex([CanBeNull] ObjectId objectId)
+        public int? TryGetRevisionIndex(ObjectId? objectId)
         {
-            return objectId is not null && _revisionGraph.TryGetRowIndex(objectId, out var index) ? (int?)index : null;
+            return objectId is not null && _revisionGraph.TryGetRowIndex(objectId, out var index) ? index : null;
         }
 
         public IReadOnlyList<ObjectId> GetRevisionChildren(ObjectId objectId)
@@ -659,7 +645,7 @@ namespace GitUI.UserControls.RevisionGrid
             // With lock, loading the commit info slows down terribly.
             if (_revisionGraph.TryGetNode(objectId, out var node))
             {
-                var children = node.Children.Select(d => d.GitRevision.ObjectId).ToList();
+                var children = node.Children.Select(d => d.GitRevision!.ObjectId).ToList();
                 children.Reverse();
                 return children;
             }

@@ -26,15 +26,13 @@ namespace GitCommandsTests
         {
             var unsortedItems = new[]
             {
-                new GitItemStatus() { Name = null, OldName = null }, // I don't think this is possible but a good test case nonetheless.
-                new GitItemStatus() { Name = null, OldName = "src/deletedFile.txt" },
-                new GitItemStatus() { Name = "src/newFile.txt", OldName = null },
-                new GitItemStatus() { Name = "src/newFile.cs", OldName = null },
-                new GitItemStatus() { Name = "src/Alice.cs", OldName = null },
-                new GitItemStatus() { Name = "src/newName.cs", OldName = "src/oldName.cs" },
-                new GitItemStatus() { Name = "newFile.txt", OldName = null },
-                new GitItemStatus() { Name = "newName.cs", OldName = "oldName.cs" },
-                new GitItemStatus() { Name = "changeExtension.cs", OldName = "changeExtension.txt" },
+                new GitItemStatus("src/newFile.txt") { OldName = null },
+                new GitItemStatus("src/newFile.cs") { OldName = null },
+                new GitItemStatus("src/Alice.cs") { OldName = null },
+                new GitItemStatus("src/newName.cs") { OldName = "src/oldName.cs" },
+                new GitItemStatus("newFile.txt") { OldName = null },
+                new GitItemStatus("newName.cs") { OldName = "oldName.cs" },
+                new GitItemStatus("changeExtension.cs") { OldName = "changeExtension.txt" },
             };
 
             var copy = unsortedItems.ToList();
@@ -44,16 +42,13 @@ namespace GitCommandsTests
             CollectionAssert.AreEqual(
                 new GitItemStatus[]
                 {
-                    // I would prefer this first null entry be last but it is the result of typical one side is null comparisons.
-                    new GitItemStatus() { Name = null, OldName = null },
-                    new GitItemStatus() { Name = "changeExtension.cs", OldName = "changeExtension.txt" },
-                    new GitItemStatus() { Name = "newName.cs", OldName = "oldName.cs" },
-                    new GitItemStatus() { Name = "src/Alice.cs", OldName = null },
-                    new GitItemStatus() { Name = "src/newFile.cs", OldName = null },
-                    new GitItemStatus() { Name = "src/newName.cs", OldName = "src/oldName.cs" },
-                    new GitItemStatus() { Name = "newFile.txt", OldName = null },
-                    new GitItemStatus() { Name = null, OldName = "src/deletedFile.txt" },
-                    new GitItemStatus() { Name = "src/newFile.txt", OldName = null },
+                    new GitItemStatus("changeExtension.cs") { OldName = "changeExtension.txt" },
+                    new GitItemStatus("newName.cs") { OldName = "oldName.cs" },
+                    new GitItemStatus("src/Alice.cs") { OldName = null },
+                    new GitItemStatus("src/newFile.cs") { OldName = null },
+                    new GitItemStatus("src/newName.cs") { OldName = "src/oldName.cs" },
+                    new GitItemStatus("newFile.txt") { OldName = null },
+                    new GitItemStatus("src/newFile.txt") { OldName = null },
                 },
                 sorted,
                 new GitItemStatusCollectionEqualityComparer());
@@ -62,9 +57,9 @@ namespace GitCommandsTests
         [Test]
         public void Nulls_are_handled()
         {
-            Assert.AreEqual(1, _comparerUnderTest.Compare(new GitItemStatus(), null));
+            Assert.AreEqual(1, _comparerUnderTest.Compare(new GitItemStatus("name"), null));
             Assert.AreEqual(0, _comparerUnderTest.Compare(null, null));
-            Assert.AreEqual(-1, _comparerUnderTest.Compare(null, new GitCommands.GitItemStatus()));
+            Assert.AreEqual(-1, _comparerUnderTest.Compare(null, new GitItemStatus("name")));
         }
 
         /// <summary>

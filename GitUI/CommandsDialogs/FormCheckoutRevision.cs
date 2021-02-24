@@ -27,7 +27,7 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
         }
 
-        public void SetRevision(string commitHash)
+        public void SetRevision(string? commitHash)
         {
             commitPickerSmallControl1.SetSelectedCommitHash(commitHash);
         }

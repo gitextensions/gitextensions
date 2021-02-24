@@ -6,7 +6,6 @@ using GitCommands.Git.Commands;
 using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -20,8 +19,7 @@ namespace GitUI.CommandsDialogs
 
         private bool _isMerge;
 
-        [CanBeNull]
-        public GitRevision Revision { get; set; }
+        public GitRevision? Revision { get; set; }
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormCherryPick()
@@ -29,7 +27,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
         }
 
-        public FormCherryPick(GitUICommands commands, [CanBeNull] GitRevision revision)
+        public FormCherryPick(GitUICommands commands, GitRevision? revision)
             : base(commands)
         {
             Revision = revision;
@@ -73,7 +71,7 @@ namespace GitUI.CommandsDialogs
 
             panelParentsList.Visible = _isMerge;
 
-            if (_isMerge)
+            if (_isMerge && Revision is not null)
             {
                 var parents = Module.GetParentRevisions(Revision.ObjectId);
 
@@ -120,7 +118,7 @@ namespace GitUI.CommandsDialogs
                 args.Add("-x");
             }
 
-            if (canExecute)
+            if (canExecute && Revision is not null)
             {
                 var command = GitCommandHelpers.CherryPickCmd(Revision.ObjectId, AutoCommit.Checked, args.ToString());
 

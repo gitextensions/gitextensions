@@ -659,6 +659,8 @@ namespace GitUI.BranchTreePanel
 
         #endregion
 
+#nullable disable
+
         private NativeTreeView treeMain;
         private ContextMenuStrip menuBranch;
         private ToolStripMenuItem mnubtnFilterLocalBranchInRevisionGrid;
@@ -717,5 +719,7 @@ namespace GitUI.BranchTreePanel
         private ToolStripButton tsbShowRemotes;
         private ToolStripButton tsbShowTags;
         private ToolStripButton tsbShowSubmodules;
+
+#nullable restore
     }
 }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitUI
 {
@@ -15,15 +15,12 @@ namespace GitUI
         /// A - first selected row
         /// B - second selected row
         /// </summary>
-        [ContractAnnotation("revisions:null=>false,firstRevision:null,secondRevision:null,error:notnull")]
-        [ContractAnnotation("=>false,firstRevision:null,secondRevision:null,error:notnull")]
-        [ContractAnnotation("=>true,firstRevision:notnull,secondRevision:notnull,error:null")]
         public static bool TryGet(
-            IReadOnlyList<GitRevision> revisions,
+            IReadOnlyList<GitRevision?>? revisions,
             RevisionDiffKind diffKind,
-            out string firstRevision,
-            out string secondRevision,
-            out string error)
+            [NotNullWhen(returnValue: true)] out string? firstRevision,
+            out string? secondRevision,
+            [NotNullWhen(returnValue: false)] out string? error)
         {
             // NOTE Order in revisions is that first clicked is last in array
 
@@ -43,7 +40,9 @@ namespace GitUI
                 return false;
             }
 
-            if (revisions[0] is null)
+            var revision0 = revisions[0];
+
+            if (revision0 is null)
             {
                 error = "Unexpected single null argument to difftool";
                 firstRevision = null;
@@ -63,9 +62,9 @@ namespace GitUI
             {
                 // If revisions[1]?.Guid is null, the "commit before the initial" is used as firstRev
                 firstRevision = revisions.Count == 1
-                    ? GetParentRef(revisions[0])
+                    ? GetParentRef(revision0)
                     : revisions[1]?.Guid ?? "--root";
-                secondRevision = revisions[0].Guid;
+                secondRevision = revision0.Guid;
             }
             else
             {
@@ -74,13 +73,13 @@ namespace GitUI
 
                 if (diffKind == RevisionDiffKind.DiffBLocal)
                 {
-                    firstRevision = revisions[0].Guid;
+                    firstRevision = revision0.Guid;
                 }
                 else if (revisions.Count == 1)
                 {
                     if (diffKind == RevisionDiffKind.DiffALocal)
                     {
-                        firstRevision = GetParentRef(revisions[0]);
+                        firstRevision = GetParentRef(revision0);
                     }
                     else
                     {

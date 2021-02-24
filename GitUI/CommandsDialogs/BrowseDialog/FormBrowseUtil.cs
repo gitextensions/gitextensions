@@ -9,7 +9,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             return File.Exists(path) || (Directory.Exists(path) && new FileInfo(path).Directory.Exists);
         }
 
-        public static bool IsFileOrDirectory(string path)
+        public static bool IsFileOrDirectory(string? path)
         {
             return File.Exists(path) || Directory.Exists(path);
         }

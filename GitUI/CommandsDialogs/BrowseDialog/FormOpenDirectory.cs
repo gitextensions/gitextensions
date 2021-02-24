@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
@@ -16,9 +15,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
     {
         private readonly TranslationString _warningOpenFailed = new("The selected directory is not a valid git repository.");
 
-        [CanBeNull] private GitModule _chosenModule;
+        private GitModule? _chosenModule;
 
-        public FormOpenDirectory([CanBeNull] GitModule currentModule)
+        public FormOpenDirectory(GitModule? currentModule)
         {
             InitializeComponent();
             InitializeComplete();
@@ -44,7 +43,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             MinimumSize = DpiUtil.Scale(new Size(450, 116));
         }
 
-        private static IReadOnlyList<string> GetDirectories([CanBeNull] GitModule currentModule, IEnumerable<Repository> repositoryHistory)
+        private static IReadOnlyList<string> GetDirectories(GitModule? currentModule, IEnumerable<Repository> repositoryHistory)
         {
             var directories = new List<string>();
 
@@ -53,7 +52,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 directories.Add(AppSettings.DefaultCloneDestinationPath.EnsureTrailingPathSeparator());
             }
 
-            if (!string.IsNullOrWhiteSpace(currentModule?.WorkingDir))
+            if (!GitExtensions.Strings.IsNullOrWhiteSpace(currentModule?.WorkingDir))
             {
                 var di = new DirectoryInfo(currentModule.WorkingDir);
                 if (di.Parent is not null)
@@ -66,7 +65,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             if (directories.Count == 0)
             {
-                if (!string.IsNullOrWhiteSpace(AppSettings.RecentWorkingDir))
+                if (!GitExtensions.Strings.IsNullOrWhiteSpace(AppSettings.RecentWorkingDir))
                 {
                     directories.Add(AppSettings.RecentWorkingDir.EnsureTrailingPathSeparator());
                 }
@@ -81,8 +80,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             return directories.Distinct().ToList();
         }
 
-        [CanBeNull]
-        public static GitModule OpenModule(IWin32Window owner, [CanBeNull] GitModule currentModule)
+        public static GitModule? OpenModule(IWin32Window owner, GitModule? currentModule)
         {
             using var open = new FormOpenDirectory(currentModule);
             open.ShowDialog(owner);
@@ -107,13 +105,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                LoadClick(null, null);
+                LoadClick(this, EventArgs.Empty);
             }
         }
 
         private void folderBrowserButton_Click(object sender, EventArgs e)
         {
-            string userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_Directory.Text);
+            string? userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_Directory.Text);
             if (!string.IsNullOrEmpty(userSelectedPath))
             {
                 _NO_TRANSLATE_Directory.Text = userSelectedPath;
@@ -156,7 +154,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
         }
 
-        private static GitModule OpenGitRepository([NotNull] string path, ILocalRepositoryManager localRepositoryManager)
+        private static GitModule? OpenGitRepository(string path, ILocalRepositoryManager localRepositoryManager)
         {
             if (!Directory.Exists(path))
             {
@@ -185,7 +183,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 _form = form;
             }
 
-            public static GitModule OpenGitRepository([NotNull] string path, ILocalRepositoryManager localRepositoryManager)
+            public static GitModule? OpenGitRepository(string path, ILocalRepositoryManager localRepositoryManager)
                 => FormOpenDirectory.OpenGitRepository(path, localRepositoryManager);
         }
     }

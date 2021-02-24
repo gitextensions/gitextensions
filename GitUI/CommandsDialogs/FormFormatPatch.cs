@@ -69,7 +69,7 @@ namespace GitUI.CommandsDialogs
             string selectedHead = Module.GetSelectedBranch();
             SelectedBranch.Text = _currentBranchText.Text + " " + selectedHead;
 
-            SaveToDir_CheckedChanged(null, null);
+            SaveToDir_CheckedChanged(this, EventArgs.Empty);
             OutputPath.TextChanged += OutputPath_TextChanged;
             RevisionGrid.Load();
         }

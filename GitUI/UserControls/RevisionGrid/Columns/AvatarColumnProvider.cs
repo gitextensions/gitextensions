@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Threading.Tasks;
@@ -41,7 +42,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
         {
-            if (revision.IsArtificial)
+            if (revision.IsArtificial || revision.AuthorEmail is null)
             {
                 return;
             }
@@ -51,7 +52,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             var padding = DpiUtil.Scale(2);
             var imageSize = e.CellBounds.Height - padding - padding;
 
-            Image image;
+            Image? image;
             var imageTask = _avatarProvider.GetAvatarAsync(revision.AuthorEmail, revision.Author, imageSize);
 
             if (imageTask.Status == TaskStatus.RanToCompletion)
@@ -101,7 +102,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             e.Graphics.FillRectangle(style.BackBrush, rect.Right - 1, rect.Bottom - 2, 1, 2);
         }
 
-        public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
+        public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
         {
             if (revision.ObjectId.IsArtificial)
             {

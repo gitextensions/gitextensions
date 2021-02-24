@@ -1,4 +1,5 @@
-﻿using GitUIPluginInterfaces;
+﻿using System;
+using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid
 {
@@ -9,6 +10,7 @@ namespace GitUI.UserControls.RevisionGrid
         /// </summary>
         /// <param name="objectId">The hash to find.</param>
         /// <returns><see langword="true"/>, if the given hash if found; otherwise <see langword="false"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="objectId"/> is <see langword="null"/>.</exception>
         bool Contains(ObjectId objectId);
     }
 }

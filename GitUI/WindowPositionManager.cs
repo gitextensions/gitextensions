@@ -14,7 +14,7 @@ namespace GitUI
         /// </summary>
         /// <param name="form">The form to look the position for.</param>
         /// <returns>The form's persisted position; otherwise <see langword="null"/>.</returns>
-        WindowPosition LoadPosition(Form form);
+        WindowPosition? LoadPosition(Form form);
 
         /// <summary>
         ///   Save the position of a form to the user settings. Hides the window
@@ -26,7 +26,7 @@ namespace GitUI
 
     internal sealed class WindowPositionManager : IWindowPositionManager
     {
-        private static WindowPositionList _windowPositionList;
+        private static WindowPositionList? _windowPositionList;
 
         public static Point FitWindowOnScreen(Rectangle calculatedWindowBounds, IEnumerable<Rectangle> workingArea)
         {
@@ -110,7 +110,7 @@ namespace GitUI
         /// </summary>
         /// <param name="form">The form to look the position for.</param>
         /// <returns>The form's persisted position; otherwise <see langword="null"/>.</returns>
-        public WindowPosition LoadPosition(Form form)
+        public WindowPosition? LoadPosition(Form form)
         {
             try
             {
@@ -161,7 +161,7 @@ namespace GitUI
 
                 var name = form.GetType().Name;
 
-                WindowPosition windowPosition = _windowPositionList.Get(name);
+                WindowPosition? windowPosition = _windowPositionList.Get(name);
                 var windowCentred = form.StartPosition == FormStartPosition.CenterParent;
 
                 // Don't save location when we center modal form

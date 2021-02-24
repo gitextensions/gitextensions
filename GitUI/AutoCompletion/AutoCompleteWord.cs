@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace GitUI.AutoCompletion
 {
-    public class AutoCompleteWord : IEquatable<AutoCompleteWord>
+    public class AutoCompleteWord : IEquatable<AutoCompleteWord?>
     {
         public string Word { get; }
         private readonly string _camelHumps;
@@ -19,7 +19,7 @@ namespace GitUI.AutoCompletion
             return Word.StartsWith(typedWord, StringComparison.OrdinalIgnoreCase) || (typedWord.All(char.IsUpper) && _camelHumps.StartsWith(typedWord));
         }
 
-        public bool Equals(AutoCompleteWord other)
+        public bool Equals(AutoCompleteWord? other)
         {
             if (ReferenceEquals(null, other))
             {

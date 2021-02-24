@@ -22,9 +22,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
     public partial class SettingsPageHeader
     {
-        private readonly SettingsPageWithHeader _page;
+        private readonly SettingsPageWithHeader? _page;
 
-        public SettingsPageHeader(SettingsPageWithHeader page)
+        public SettingsPageHeader(SettingsPageWithHeader? page)
         {
             InitializeComponent();
             InitializeComplete();
@@ -104,7 +104,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (GlobalRB.Checked)
             {
-                _page.SetGlobalSettings();
+                _page?.SetGlobalSettings();
             }
         }
     }

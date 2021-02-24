@@ -1,10 +1,10 @@
 ﻿#define CONTRACTS_FULL
 
 using System;
+using System.Diagnostics.Contracts;
 using GitCommands;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
 {
@@ -14,33 +14,33 @@ namespace GitUI.CommandsDialogs
         public static RememberFileContextMenuController Default { get; } = new();
 
         /// <summary>
-        /// The remembered file status item, to diff with other files and commits
+        /// The remembered file status item, to diff with other files and commits.
         /// </summary>
-        public FileStatusItem RememberedDiffFileItem { get; set; }
+        public FileStatusItem? RememberedDiffFileItem { get; set; }
 
         // Note that the methods in this class are without side effects (static)
 
         /// <summary>
-        /// Get a FileStatusItem that can be used to compare with
+        /// Get a FileStatusItem that can be used to compare with.
         /// </summary>
-        /// <param name="name">The file name</param>
-        /// <param name="rev">The Git revision</param>
-        /// <returns>The FileStatusItem</returns>
+        /// <param name="name">The file name.</param>
+        /// <param name="rev">The Git revision.</param>
+        /// <returns>The FileStatusItem.</returns>
         [Pure]
         public FileStatusItem CreateFileStatusItem(string name, GitRevision rev)
         {
-            var gis = new GitItemStatus { IsNew = true, Name = name };
+            var gis = new GitItemStatus(name) { IsNew = true };
             var fsi = new FileStatusItem(null, rev, gis);
             return fsi;
         }
 
         /// <summary>
         /// Check if this file and commit can be used as the first item in a diff to another item
-        /// It must be possible to describe the item as a Git commitish
+        /// It must be possible to describe the item as a Git commitish.
         /// </summary>
-        /// <param name="item">The file status item</param>
-        /// <param name="isSecondRevision">true if second revision can be used as the first item</param>
-        /// <returns>If the item can be used</returns>
+        /// <param name="item">The file status item.</param>
+        /// <param name="isSecondRevision">true if second revision can be used as the first item.</param>
+        /// <returns>If the item can be used.</returns>
         [Pure]
         public bool ShouldEnableFirstItemDiff(FileStatusItem item, bool isSecondRevision)
         {
@@ -55,13 +55,13 @@ namespace GitUI.CommandsDialogs
                || ShouldEnableFirstItemDiff(item, isSecondRevision: true);
 
         /// <summary>
-        /// Check if this file and commit can be used as the second item in a diff to another item
+        /// Check if this file and commit can be used as the second item in a diff to another item.
         /// </summary>
-        /// <param name="item">The file status item</param>
-        /// <param name="isSecondRevision">true if second revision can be used as the second item</param>
-        /// <returns>If the item can be used</returns>
+        /// <param name="item">The file status item.</param>
+        /// <param name="isSecondRevision">true if second revision can be used as the second item.</param>
+        /// <returns>If the item can be used.</returns>
         [Pure]
-        public bool ShouldEnableSecondItemDiff(FileStatusItem item, bool isSecondRevision)
+        public bool ShouldEnableSecondItemDiff(FileStatusItem? item, bool isSecondRevision)
         {
             // Git reference in this revision or work tree file existing on the file system
             return item is not null
@@ -70,20 +70,20 @@ namespace GitUI.CommandsDialogs
         }
 
         [Pure]
-        public bool ShouldEnableSecondItemDiff(FileStatusItem item)
+        public bool ShouldEnableSecondItemDiff(FileStatusItem? item)
             => ShouldEnableSecondItemDiff(item, isSecondRevision: false)
                || ShouldEnableSecondItemDiff(item, isSecondRevision: true);
 
         /// <summary>
         /// A Git commitish representation of an object
-        /// https://git-scm.com/docs/gitrevisions#_specifying_revisions
+        /// https://git-scm.com/docs/gitrevisions#_specifying_revisions.
         /// </summary>
-        /// <param name="getFileBlobHash">the Git module function to get the blob</param>
-        /// <param name="item">the item</param>
-        /// <param name="isSecondRevision">true if second revision is used</param>
-        /// <returns>A Git commitish</returns>
+        /// <param name="getFileBlobHash">the Git module function to get the blob.</param>
+        /// <param name="item">the item.</param>
+        /// <param name="isSecondRevision">true if second revision is used.</param>
+        /// <returns>A Git commitish.</returns>
         [Pure]
-        public string GetGitCommit([CanBeNull] Func<string, ObjectId, ObjectId> getFileBlobHash, [CanBeNull] FileStatusItem item, bool isSecondRevision)
+        public string? GetGitCommit(Func<string, ObjectId, ObjectId?>? getFileBlobHash, FileStatusItem? item, bool isSecondRevision)
         {
             if (item is null)
             {
@@ -95,7 +95,7 @@ namespace GitUI.CommandsDialogs
                     : item.Item.Name)
                 ?.ToPosixPath();
             var id = (isSecondRevision ? item.SecondRevision : item.FirstRevision)?.ObjectId;
-            if (string.IsNullOrWhiteSpace(name) || id is null)
+            if (GitExtensions.Strings.IsNullOrWhiteSpace(name) || id is null)
             {
                 return null;
             }

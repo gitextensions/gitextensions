@@ -14,12 +14,12 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         private readonly AsyncLoader _branchesLoader = new();
         private readonly char[] _invalidCharsInPath = Path.GetInvalidFileNameChars();
 
-        private string _initialDirectoryPath;
+        private string? _initialDirectoryPath;
 
         public string WorktreeDirectory => newWorktreeDirectory.Text;
         public bool OpenWorktree => openWorktreeCheckBox.Checked;
 
-        public IReadOnlyList<IGitRef> ExistingBranches { get; set; }
+        public IReadOnlyList<IGitRef>? ExistingBranches { get; set; }
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormCreateWorktree()

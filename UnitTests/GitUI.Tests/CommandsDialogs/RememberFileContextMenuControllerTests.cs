@@ -43,7 +43,7 @@ namespace GitUITests.CommandsDialogs
             var item = new FileStatusItem(
                 firstRev: rev,
                 secondRev: new GitRevision(ObjectId.WorkTreeId),
-                item: new GitItemStatus
+                item: new GitItemStatus("file1")
                 {
                     IsSubmodule = isSubmodule,
                     IsDeleted = isDeleted
@@ -65,7 +65,7 @@ namespace GitUITests.CommandsDialogs
             var item = new FileStatusItem(
                 firstRev: rev,
                 secondRev: rev,
-                item: new GitItemStatus
+                item: new GitItemStatus(name: "file1")
                 {
                     IsSubmodule = isSubmodule,
                     IsDeleted = isDeleted
@@ -87,7 +87,7 @@ namespace GitUITests.CommandsDialogs
             var item = new FileStatusItem(
                 firstRev: rev,
                 secondRev: new GitRevision(ObjectId.WorkTreeId),
-                item: new GitItemStatus
+                item: new GitItemStatus("file1")
                 {
                     IsSubmodule = isSubmodule,
                     IsDeleted = isDeleted
@@ -109,7 +109,7 @@ namespace GitUITests.CommandsDialogs
             var item = new FileStatusItem(
                 firstRev: rev,
                 secondRev: rev,
-                item: new GitItemStatus
+                item: new GitItemStatus("file1")
                 {
                     IsSubmodule = isSubmodule,
                     IsDeleted = isDeleted
@@ -128,13 +128,7 @@ namespace GitUITests.CommandsDialogs
             var item = new FileStatusItem(
                 firstRev: null,
                 secondRev: rev,
-                item: new GitItemStatus { Name = "file" });
-            _rememberFileContextMenuController.GetGitCommit(null, item, false).Should().BeNull();
-
-            item = new FileStatusItem(
-                firstRev: workTree,
-                secondRev: rev,
-                item: new GitItemStatus());
+                item: new GitItemStatus("file"));
             _rememberFileContextMenuController.GetGitCommit(null, item, false).Should().BeNull();
         }
 
@@ -147,7 +141,7 @@ namespace GitUITests.CommandsDialogs
             var item = new FileStatusItem(
                 firstRev: workTree,
                 secondRev: rev,
-                item: new GitItemStatus { Name = name });
+                item: new GitItemStatus(name));
             _rememberFileContextMenuController.GetGitCommit(null, item, false).Should().Be(name);
         }
 
@@ -160,7 +154,7 @@ namespace GitUITests.CommandsDialogs
             var item = new FileStatusItem(
                 firstRev: rev,
                 secondRev: workTree,
-                item: new GitItemStatus { Name = name });
+                item: new GitItemStatus(name));
             _rememberFileContextMenuController.GetGitCommit(null, item, true).Should().Be(name);
         }
 
@@ -173,7 +167,7 @@ namespace GitUITests.CommandsDialogs
             var item = new FileStatusItem(
                 firstRev: rev,
                 secondRev: index,
-                item: new GitItemStatus { Name = name, TreeGuid = ObjectId.Random() });
+                item: new GitItemStatus(name) { TreeGuid = ObjectId.Random() });
             _rememberFileContextMenuController.GetGitCommit(null, item, true).Should().Be(item.Item.TreeGuid?.ToString());
         }
 
@@ -186,7 +180,7 @@ namespace GitUITests.CommandsDialogs
             var item = new FileStatusItem(
                 firstRev: rev,
                 secondRev: index,
-                item: new GitItemStatus { Name = name, TreeGuid = null });
+                item: new GitItemStatus(name) { TreeGuid = null });
             _rememberFileContextMenuController.GetGitCommit(GetFileBlobHash, item, true).Should().Be(ObjectId.IndexId.ToString());
         }
 
@@ -201,9 +195,8 @@ namespace GitUITests.CommandsDialogs
             var item = new FileStatusItem(
                 firstRev: rev,
                 secondRev: rev,
-                item: new GitItemStatus
+                item: new GitItemStatus(name: newName)
                 {
-                    Name = newName,
                     OldName = oldName
                 });
             var expected = $"{id}:{(isSecondRev ? newName : oldName)}";
@@ -220,10 +213,7 @@ namespace GitUITests.CommandsDialogs
             var item = new FileStatusItem(
                 firstRev: rev,
                 secondRev: rev,
-                item: new GitItemStatus
-                {
-                    Name = newName
-                });
+                item: new GitItemStatus(name: newName));
             var expected = $"{id}:{newName}";
             _rememberFileContextMenuController.GetGitCommit(null, item, isSecondRev).Should().Be(expected);
         }

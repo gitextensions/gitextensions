@@ -1,8 +1,9 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using GitCommands.Utils;
-using JetBrains.Annotations;
+using Microsoft;
 
 namespace GitUI.CommandsDialogs
 {
@@ -18,16 +19,15 @@ namespace GitUI.CommandsDialogs
         /// This supports drive-lettered paths and UNC paths, but a UNC root
         /// will be returned in lowercase (e.g., \\server\share).
         /// </remarks>
-        [ContractAnnotation("=>false,exactPath:null")]
-        [ContractAnnotation("=>true,exactPath:notnull")]
-        [ContractAnnotation("path:null=>false,exactPath:null")]
-        public bool TryGetExactPath(string path, out string exactPath)
+        public bool TryGetExactPath(string? path, [NotNullWhen(returnValue: true)] out string? exactPath)
         {
             if (!File.Exists(path) && !Directory.Exists(path))
             {
                 exactPath = null;
                 return false;
             }
+
+            Validates.NotNull(path);
 
             // The section below contains native windows (kernel32) calls
             // and breaks on Linux. Only use it on Windows. Casing is only

@@ -7,7 +7,6 @@ using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid
@@ -15,7 +14,7 @@ namespace GitUI.UserControls.RevisionGrid
     public sealed class CopyContextMenuItem : ToolStripMenuItem
     {
         private readonly TranslationString _copyToClipboardText = new("&Copy to clipboard");
-        [CanBeNull] private Func<IReadOnlyList<GitRevision>> _revisionFunc;
+        private Func<IReadOnlyList<GitRevision>>? _revisionFunc;
         private uint _itemNumber;
 
         public CopyContextMenuItem()
@@ -46,7 +45,7 @@ namespace GitUI.UserControls.RevisionGrid
             AddItem(displayText, textToCopy.Join("\n"), image, hotkey);
         }
 
-        private void AddItem([NotNull] string displayText, [NotNull] string textToCopy, Image image, char? hotkey)
+        private void AddItem(string displayText, string textToCopy, Image image, char? hotkey)
         {
             if (hotkey.HasValue)
             {
@@ -76,7 +75,7 @@ namespace GitUI.UserControls.RevisionGrid
             DropDownItems.Add(item);
         }
 
-        private string[] ExtractRevisionTexts(Func<GitRevision, string> extractRevisionText)
+        private string[]? ExtractRevisionTexts(Func<GitRevision, string>? extractRevisionText)
         {
             if (extractRevisionText is null)
             {

@@ -17,11 +17,11 @@ namespace GitUI.Avatars
         private const int _maxConcurrentDownloads = 10;
 
         private static readonly SemaphoreSlim _downloadSemaphore = new(initialCount: _maxConcurrentDownloads);
-        private static readonly ConcurrentDictionary<Uri, (DateTime, Task<Image>)> _downloads = new();
+        private static readonly ConcurrentDictionary<Uri, (DateTime, Task<Image?>)> _downloads = new();
 
-        public async Task<Image> DownloadImageAsync(Uri imageUrl)
+        public async Task<Image?> DownloadImageAsync(Uri? imageUrl)
         {
-            if (imageUrl == null)
+            if (imageUrl is null)
             {
                 return null;
             }
@@ -57,7 +57,7 @@ namespace GitUI.Avatars
             }
         }
 
-        private async Task<Image> DownloadAsync(Uri imageUrl)
+        private static async Task<Image?> DownloadAsync(Uri imageUrl)
         {
             // WebClient.OpenReadTaskAsync can block before returning a task, so make sure we
             // make such calls on the thread pool, and limit the number of concurrent requests.
@@ -93,13 +93,11 @@ namespace GitUI.Avatars
         {
             var now = DateTime.UtcNow;
 
-            foreach (var pair in _downloads)
+            foreach ((var key, (DateTime time, Task<Image?> _)) in _downloads)
             {
-                var (time, _) = pair.Value;
-
                 if (now - time > TimeSpan.FromSeconds(30))
                 {
-                    _downloads.TryRemove(pair.Key, out _);
+                    _downloads.TryRemove(key, out _);
                 }
             }
         }

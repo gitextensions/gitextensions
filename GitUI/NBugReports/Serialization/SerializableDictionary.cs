@@ -15,7 +15,7 @@ namespace GitUI.NBugReports.Serialization
 {
     [Serializable]
     [XmlRoot("dictionary")]
-    public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
+    public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable where TKey : notnull where TValue : notnull
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializableDictionary{TKey,TValue}"/> class.
@@ -38,7 +38,7 @@ namespace GitUI.NBugReports.Serialization
             }
         }
 
-        public XmlSchema GetSchema()
+        public XmlSchema? GetSchema()
         {
             return null;
         }

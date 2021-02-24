@@ -42,11 +42,11 @@ namespace GitUI
         }
 
         /// <summary>
-        /// opens urls even with anchor
+        /// opens urls even with anchor.
         /// </summary>
-        public static void OpenUrlInDefaultBrowser(string url)
+        public static void OpenUrlInDefaultBrowser(string? url)
         {
-            if (!string.IsNullOrWhiteSpace(url))
+            if (!GitExtensions.Strings.IsNullOrWhiteSpace(url))
             {
                 new Executable(url).Start(useShellExecute: true);
             }
@@ -58,7 +58,7 @@ namespace GitUI
         /// <param name="ownerWindow">The owner window.</param>
         /// <param name="selectedPath">The initially selected path.</param>
         /// <returns>The path selected by the user, or null if the user cancels the dialog.</returns>
-        public static string PickFolder(IWin32Window ownerWindow, string selectedPath = null)
+        public static string? PickFolder(IWin32Window ownerWindow, string? selectedPath = null)
         {
             if (GitCommands.Utils.EnvUtils.IsWindowsVistaOrGreater())
             {
