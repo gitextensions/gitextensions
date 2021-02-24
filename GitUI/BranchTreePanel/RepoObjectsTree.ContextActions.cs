@@ -111,9 +111,7 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
-            var node = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag as LocalBranchNode;
-
-            if (node is null)
+            if ((contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not LocalBranchNode node)
             {
                 return;
             }
@@ -140,9 +138,7 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
-            var node = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag as RemoteBranchNode;
-
-            if (node is null)
+            if ((contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not RemoteBranchNode node)
             {
                 return;
             }
@@ -157,8 +153,7 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
-            var node = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag as RemoteRepoNode;
-            if (node is null)
+            if ((contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not RemoteRepoNode node)
             {
                 return;
             }
@@ -349,8 +344,7 @@ namespace GitUI.BranchTreePanel
 
         private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
-            var contextMenu = sender as ContextMenuStrip;
-            if (contextMenu is null)
+            if (sender is not ContextMenuStrip contextMenu)
             {
                 return;
             }

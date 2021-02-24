@@ -107,8 +107,7 @@ namespace GitUI.CommitInfo
 
         private void rtbRevisionHeader_KeyDown(object sender, KeyEventArgs e)
         {
-            var rtb = sender as RichTextBox;
-            if (rtb is null || !e.Control || e.KeyCode != Keys.C)
+            if (sender is not RichTextBox rtb || !e.Control || e.KeyCode != Keys.C)
             {
                 return;
             }
