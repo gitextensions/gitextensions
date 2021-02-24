@@ -122,6 +122,11 @@ Detail of the error:");
             return GetBuilds(scheduler, null, true);
         }
 
+        public void RepositoryClosed()
+        {
+            CacheAzureDevOps = null;
+        }
+
         private IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool running = false)
         {
             return Observable.Create<BuildInfo>((observer, cancellationToken) => ObserveBuildsAsync(sinceDate, running, observer, cancellationToken));
@@ -216,9 +221,22 @@ Detail of the error:");
                     FilterRunningBuilds(await _apiClient.QueryRunningBuildsAsync(_buildDefinitions)) :
                     await _apiClient.QueryFinishedBuildsAsync(_buildDefinitions, sinceDate);
 
-                foreach (var build in builds)
+                if (running)
                 {
-                    observer.OnNext(CreateBuildInfo(build));
+                    foreach (var build in builds)
+                    {
+                        observer.OnNext(CreateBuildInfo(build));
+                    }
+                }
+                else
+                {
+                    var buildsByCommit = builds.GroupBy(b => b.SourceVersion);
+                    foreach (var buildsForACommit in buildsByCommit)
+                    {
+                        var buildToDisplay = buildsForACommit.OrderByDescending(b => b.FinishTime).First();
+                        var buildInfo = CreateBuildInfo(buildToDisplay);
+                        observer.OnNext(buildInfo);
+                    }
                 }
             }
             catch (OperationCanceledException)

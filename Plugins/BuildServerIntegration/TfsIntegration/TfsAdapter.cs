@@ -172,6 +172,10 @@ namespace TfsIntegration
             };
         }
 
+        public void RepositoryClosed()
+        {
+        }
+
         public void Dispose()
         {
             _tfsHelper?.Dispose();

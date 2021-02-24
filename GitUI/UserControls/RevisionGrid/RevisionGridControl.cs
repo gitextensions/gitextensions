@@ -2808,5 +2808,10 @@ namespace GitUI
 
             public int VisibleRevisionCount => _revisionGridControl._gridView.RowCount;
         }
+
+        public void ChangeRepository()
+        {
+            _buildServerWatcher.ChangeRepository();
+        }
     }
 }

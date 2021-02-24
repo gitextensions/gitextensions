@@ -15,5 +15,10 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
         IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null);
 
         IObservable<BuildInfo> GetRunningBuilds(IScheduler scheduler);
+
+        /// <summary>
+        /// Called when the current repository is closed
+        /// </summary>
+        void RepositoryClosed();
     }
 }

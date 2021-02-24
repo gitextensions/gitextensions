@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.IsolatedStorage;
@@ -38,6 +39,10 @@ namespace GitUI.BuildServerIntegration
         private readonly IRepoNameExtractor _repoNameExtractor;
         private IDisposable _buildStatusCancellationToken;
         private IBuildServerAdapter _buildServerAdapter;
+        private readonly object _observerLock = new object();
+
+        public Dictionary<string, BuildInfo> FinishedBuilds { get; set; } = new Dictionary<string, BuildInfo>();
+        public DateTime? LastCall { get; set; }
 
         internal BuildStatusColumnProvider ColumnProvider { get; }
 
@@ -79,7 +84,7 @@ namespace GitUI.BuildServerIntegration
             var runningBuildsObservable = buildServerAdapter.GetRunningBuilds(scheduler);
 
             var fullDayObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
-            var fullObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler);
+            var fullObservable = LastCall.HasValue ? buildServerAdapter.GetFinishedBuildsSince(scheduler, LastCall.Value) : buildServerAdapter.GetFinishedBuildsSince(scheduler);
 
             bool anyRunningBuilds = false;
             var delayObservable = Observable.Defer(() => Observable.Empty<BuildInfo>()
@@ -94,7 +99,15 @@ namespace GitUI.BuildServerIntegration
                 buildServerAdapter.GetFinishedBuildsSince(scheduler, nowFrozen)
                             .Finally(() => shouldLookForNewlyFinishedBuilds = false));
 
-            var cancellationToken = new CompositeDisposable
+            CancelBuildStatusFetchOperation();
+            foreach (BuildInfo buildInfo in FinishedBuilds.Values)
+            {
+                OnBuildInfoUpdate(buildInfo, false);
+            }
+
+            lock (_observerLock)
+            {
+                _buildStatusCancellationToken = new CompositeDisposable
                     {
                         fullDayObservable.OnErrorResumeNext(fullObservable)
                                          .OnErrorResumeNext(Observable.Empty<BuildInfo>()
@@ -103,7 +116,7 @@ namespace GitUI.BuildServerIntegration
                                                                       .Retry()
                                                                       .Repeat())
                                          .ObserveOn(MainThreadScheduler.Instance)
-                                         .Subscribe(OnBuildInfoUpdate),
+                                         .Subscribe(buildInfo => OnBuildInfoUpdate(buildInfo)),
 
                         runningBuildsObservable.Do(buildInfo =>
                                                     {
@@ -115,13 +128,11 @@ namespace GitUI.BuildServerIntegration
                                                .Finally(() => anyRunningBuilds = false)
                                                .Repeat()
                                                .ObserveOn(MainThreadScheduler.Instance)
-                                               .Subscribe(OnBuildInfoUpdate)
+                                               .Subscribe(buildInfo => OnBuildInfoUpdate(buildInfo))
                     };
+            }
 
             await _revisionGridView.SwitchToMainThreadAsync(launchToken);
-
-            CancelBuildStatusFetchOperation();
-            _buildStatusCancellationToken = cancellationToken;
         }
 
         public void CancelBuildStatusFetchOperation()
@@ -262,11 +273,14 @@ namespace GitUI.BuildServerIntegration
             return null;
         }
 
-        private void OnBuildInfoUpdate(BuildInfo buildInfo)
+        private void OnBuildInfoUpdate(BuildInfo buildInfo, bool storeFinishedBuild = true)
         {
-            if (_buildStatusCancellationToken is null)
+            lock (_observerLock)
             {
-                return;
+                if (_buildStatusCancellationToken is null)
+                {
+                    return;
+                }
             }
 
             foreach (var commitHash in buildInfo.CommitHashList)
@@ -291,6 +305,19 @@ namespace GitUI.BuildServerIntegration
 
                     if (index.Value < _revisionGridView.RowCount)
                     {
+                        if (storeFinishedBuild && buildInfo.Status != BuildInfo.BuildStatus.InProgress && buildInfo.Status != BuildInfo.BuildStatus.Unknown)
+                        {
+                            if (!FinishedBuilds.ContainsKey(buildInfo.Id))
+                            {
+                                FinishedBuilds.Add(buildInfo.Id, buildInfo);
+                            }
+
+                            if (!LastCall.HasValue || buildInfo.StartDate >= LastCall)
+                            {
+                                LastCall = buildInfo.StartDate.AddSeconds(1);
+                            }
+                        }
+
                         if (_revisionGridView.Rows[index.Value].Cells[ColumnProvider.Index].Displayed)
                         {
                             _revisionGridView.UpdateCellValue(ColumnProvider.Index, index.Value);
@@ -368,6 +395,11 @@ namespace GitUI.BuildServerIntegration
         {
             var fileName = string.Format("BuildServer-{0}.options", Convert.ToBase64String(Encoding.UTF8.GetBytes(buildServerAdapter.UniqueKey)));
             return new IsolatedStorageFileStream(fileName, FileMode.OpenOrCreate, fileAccess, fileShare);
+        }
+
+        public void ChangeRepository()
+        {
+            _buildServerAdapter?.RepositoryClosed();
         }
     }
 }
