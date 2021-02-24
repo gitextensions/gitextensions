@@ -231,6 +231,11 @@ namespace GitUI.BranchTreePanel
                 SelectRevision();
             }
 
+            internal override void OnRename()
+            {
+                Rename();
+            }
+
             public bool Checkout()
             {
                 return UICommands.StartCheckoutBranch(ParentWindow(), branch: FullPath, remote: false);
