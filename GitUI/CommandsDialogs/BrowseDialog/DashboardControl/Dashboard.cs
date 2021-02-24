@@ -178,11 +178,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     };
                     linkLabel.MouseHover += (s, e) => linkLabel.LinkColor = selectedTheme.AccentedText;
                     linkLabel.MouseLeave += (s, e) => linkLabel.LinkColor = selectedTheme.PrimaryText;
-
-                    if (handler is not null)
-                    {
-                        linkLabel.Click += handler;
-                    }
+                    linkLabel.Click += handler;
 
                     container.Controls.Add(linkLabel);
 
