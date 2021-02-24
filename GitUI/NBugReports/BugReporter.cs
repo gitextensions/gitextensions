@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;

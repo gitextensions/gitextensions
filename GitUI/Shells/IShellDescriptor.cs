@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace GitUI.Shells
 {

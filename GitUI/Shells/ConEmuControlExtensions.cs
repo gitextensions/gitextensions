@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using ConEmu.WinForms;
 
 namespace GitUI.Shells
