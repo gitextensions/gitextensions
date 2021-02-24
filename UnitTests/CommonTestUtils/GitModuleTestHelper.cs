@@ -156,6 +156,13 @@ namespace CommonTestUtils
             });
         }
 
+        public void AddWorktree(GitModuleTestHelper worktreeHelper, string path)
+        {
+            worktreeHelper.Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Initial empty commit""");
+
+            var output = Module.GitExecutable.GetOutput(GitCommandHelpers.AddWorktreeCmd(path, null, true));
+        }
+
         public void Dispose()
         {
             try

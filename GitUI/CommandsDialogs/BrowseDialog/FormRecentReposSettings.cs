@@ -115,7 +115,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             try
             {
-                splitter.SplitRecentRepos(_repositoryHistory, mostRecentRepos, lessRecentRepos);
+                splitter.SplitRecentRepos(_repositoryHistory, mostRecentRepos, lessRecentRepos, null, null, null);
             }
             finally
             {
