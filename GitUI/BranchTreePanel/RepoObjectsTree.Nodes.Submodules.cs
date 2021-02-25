@@ -78,8 +78,7 @@ namespace GitUI.BranchTreePanel
             {
                 if (Info.Detailed is not null && Tree.TreeViewNode.TreeView is not null)
                 {
-                    ApplyText();
-                    ApplyStyle();
+                    ApplyStatus();
                 }
             }
 
@@ -135,26 +134,14 @@ namespace GitUI.BranchTreePanel
                     TreeViewNode.NodeFont = new Font(AppSettings.Font, FontStyle.Bold);
                 }
 
-                if (Info.Detailed?.RawStatus is not null)
-                {
-                    // Prefer submodule status, shows ahead/behind
-                    TreeViewNode.ToolTipText = LocalizationHelpers.ProcessSubmoduleStatus(
-                        new GitModule(Info.Path),
-                        Info.Detailed.RawStatus,
-                        moduleIsParent: false,
-                        limitOutput: true);
-                }
-                else if (GitStatus is not null)
-                {
-                    var changeCount = new ArtificialCommitChangeCount();
-                    changeCount.Update(GitStatus);
-                    TreeViewNode.ToolTipText = changeCount.GetSummary();
-                }
-                else
-                {
-                    TreeViewNode.ToolTipText = DisplayText();
-                }
+                TreeViewNode.ToolTipText = DisplayText();
 
+                // Note that status is applied also after the tree is created, when status is applied
+                ApplyStatus();
+            }
+
+            private void ApplyStatus()
+            {
                 TreeViewNode.ImageKey = GetSubmoduleItemImage(Info.Detailed);
                 TreeViewNode.SelectedImageKey = TreeViewNode.ImageKey;
 
@@ -191,6 +178,35 @@ namespace GitUI.BranchTreePanel
                     // Unknown
                     return details.IsDirty ? nameof(Images.SubmoduleDirty) : nameof(Images.FileStatusModified);
                 }
+            }
+
+            internal async Task SetStatusToolTipAsync(CancellationToken token)
+            {
+                string toolTip;
+                if (Info.Detailed?.RawStatus is not null)
+                {
+                    // Prefer submodule status, shows ahead/behind
+                    toolTip = LocalizationHelpers.ProcessSubmoduleStatus(
+                        new GitModule(Info.Path),
+                        Info.Detailed.RawStatus,
+                        moduleIsParent: false,
+                        limitOutput: true);
+                }
+                else if (GitStatus is not null)
+                {
+                    var changeCount = new ArtificialCommitChangeCount();
+                    changeCount.Update(GitStatus);
+                    toolTip = changeCount.GetSummary();
+                }
+                else
+                {
+                    // No data need to be set
+                    return;
+                }
+
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
+                token.ThrowIfCancellationRequested();
+                TreeViewNode.ToolTipText = toolTip;
             }
         }
 
@@ -254,7 +270,8 @@ namespace GitUI.BranchTreePanel
                     if (cts is not null && loadNodesTask is not null)
                     {
                         var loadedNodes = await loadNodesTask;
-                        await LoadNodeDetailsAsync(cts.Token, loadedNodes).ConfigureAwaitRunInline();
+                        await LoadNodeDetailsAsync(loadedNodes, cts.Token).ConfigureAwaitRunInline();
+                        LoadNodeToolTips(loadedNodes, cts.Token);
                     }
 
                     Interlocked.CompareExchange(ref _currentSubmoduleInfo, null, e);
@@ -269,7 +286,7 @@ namespace GitUI.BranchTreePanel
                 return FillSubmoduleTree(info);
             }
 
-            private async Task LoadNodeDetailsAsync(CancellationToken token, Nodes loadedNodes)
+            private async Task LoadNodeDetailsAsync(Nodes loadedNodes, CancellationToken token)
             {
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
                 token.ThrowIfCancellationRequested();
@@ -286,6 +303,26 @@ namespace GitUI.BranchTreePanel
                         TreeViewNode.TreeView.EndUpdate();
                     }
                 }
+            }
+
+            private void LoadNodeToolTips(Nodes loadedNodes, CancellationToken token)
+            {
+                if (TreeViewNode.TreeView is null)
+                {
+                    return;
+                }
+
+                loadedNodes.DepthEnumerator<SubmoduleNode>()
+                    .ForEach(async node =>
+                    {
+                        try
+                        {
+                            await node.SetStatusToolTipAsync(token).ConfigureAwait(false);
+                        }
+                        catch (OperationCanceledException)
+                        {
+                        }
+                    });
             }
 
             protected override void PostFillTreeViewNode(bool firstTime)
