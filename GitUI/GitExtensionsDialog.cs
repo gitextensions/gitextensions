@@ -43,7 +43,7 @@ namespace GitUI
         /// </summary>
         /// <remarks>
         /// The URL structure:
-        /// https://git-extensions-documentation.readthedocs.io/en/latest/{ManualSectionSubfolder}.html#{ManualSectionAnchorName}.
+        /// https://git-extensions-documentation.readthedocs.io/{ManualSectionSubfolder}.html#{ManualSectionAnchorName}.
         /// </remarks>
         public string? ManualSectionAnchorName { get; set; }
 
@@ -52,7 +52,7 @@ namespace GitUI
         /// </summary>
         /// <remarks>
         /// The URL structure:
-        /// https://git-extensions-documentation.readthedocs.io/en/latest/{ManualSectionSubfolder}.html#{ManualSectionAnchorName}.
+        /// https://git-extensions-documentation.readthedocs.io/{ManualSectionSubfolder}.html#{ManualSectionAnchorName}.
         /// </remarks>
         public string? ManualSectionSubfolder { get; set; }
 
