@@ -219,7 +219,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             // Ensure all parents are loaded before adding it to the _nodes list. This is important for ordering.
-            ImmutableInterlocked.Update(ref _nodes, (list, rev) => list.Add(rev), revisionGraphRevision);
+            ImmutableInterlocked.Update(ref _nodes, (list, revision) => list.Add(revision), revisionGraphRevision);
         }
 
         /// <summary>
