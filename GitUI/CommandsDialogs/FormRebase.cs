@@ -332,12 +332,10 @@ namespace GitUI.CommandsDialogs
 
         private void btnChooseFromRevision_Click(object sender, EventArgs e)
         {
-            using (var chooseForm = new FormChooseCommit(UICommands, txtFrom.Text))
+            using var chooseForm = new FormChooseCommit(UICommands, txtFrom.Text);
+            if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
             {
-                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
-                {
-                    txtFrom.Text = chooseForm.SelectedRevision.ObjectId.ToShortString();
-                }
+                txtFrom.Text = chooseForm.SelectedRevision.ObjectId.ToShortString();
             }
         }
 

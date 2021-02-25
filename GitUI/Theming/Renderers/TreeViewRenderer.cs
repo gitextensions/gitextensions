@@ -12,22 +12,20 @@ namespace GitUI.Theming
         public override int RenderBackground(IntPtr hdc, int partid, int stateid, Rectangle prect,
             NativeMethods.RECTCLS pcliprect)
         {
-            using (var ctx = CreateRenderContext(hdc, pcliprect))
+            using var ctx = CreateRenderContext(hdc, pcliprect);
+            switch ((Parts)partid)
             {
-                switch ((Parts)partid)
-                {
-                    case Parts.TVP_GLYPH:
-                        return RenderGlyph(ctx, (State.Glyph)stateid, prect);
+                case Parts.TVP_GLYPH:
+                    return RenderGlyph(ctx, (State.Glyph)stateid, prect);
 
-                    case Parts.TVP_HOTGLYPH:
-                        return RenderHotTrackedGlyph(ctx, (State.HotGlyph)stateid, prect);
+                case Parts.TVP_HOTGLYPH:
+                    return RenderHotTrackedGlyph(ctx, (State.HotGlyph)stateid, prect);
 
-                    case Parts.TVP_TREEITEM:
-                        return RenderItemBackground(ctx, (State.Item)stateid, prect);
+                case Parts.TVP_TREEITEM:
+                    return RenderItemBackground(ctx, (State.Item)stateid, prect);
 
-                    default:
-                        return Unhandled;
-                }
+                default:
+                    return Unhandled;
             }
         }
 

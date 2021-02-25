@@ -404,17 +404,15 @@ namespace GitUI
                 return;
             }
 
-            using (var dlg = new FormQuickGitRefSelector())
+            using var dlg = new FormQuickGitRefSelector();
+            dlg.Init(actionLabel, refs);
+            dlg.Location = GetQuickItemSelectorLocation();
+            if (dlg.ShowDialog(ParentForm) != DialogResult.OK || dlg.SelectedRef is null)
             {
-                dlg.Init(actionLabel, refs);
-                dlg.Location = GetQuickItemSelectorLocation();
-                if (dlg.ShowDialog(ParentForm) != DialogResult.OK || dlg.SelectedRef is null)
-                {
-                    return;
-                }
-
-                action(dlg.SelectedRef);
+                return;
             }
+
+            action(dlg.SelectedRef);
         }
 
         public Point GetQuickItemSelectorLocation()
@@ -2484,15 +2482,13 @@ namespace GitUI
                 return;
             }
 
-            using (var form = new FormCompareToBranch(UICommands, headCommit.ObjectId))
+            using var form = new FormCompareToBranch(UICommands, headCommit.ObjectId);
+            if (form.ShowDialog(ParentForm) == DialogResult.OK)
             {
-                if (form.ShowDialog(ParentForm) == DialogResult.OK)
-                {
-                    Validates.NotNull(form.BranchName);
-                    var baseCommit = Module.RevParse(form.BranchName);
-                    Validates.NotNull(baseCommit);
-                    UICommands.ShowFormDiff(baseCommit, headCommit.ObjectId, form.BranchName, headCommit.Subject);
-                }
+                Validates.NotNull(form.BranchName);
+                var baseCommit = Module.RevParse(form.BranchName);
+                Validates.NotNull(baseCommit);
+                UICommands.ShowFormDiff(baseCommit, headCommit.ObjectId, form.BranchName, headCommit.Subject);
             }
         }
 

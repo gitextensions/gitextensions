@@ -153,10 +153,8 @@ namespace GitUI
                 {
                     Debug.Assert(input.Height < rowHeight, "Can only increase row height");
                     var scaled = new Bitmap(input.Width, rowHeight, input.PixelFormat);
-                    using (var g = Graphics.FromImage(scaled))
-                    {
-                        g.DrawImageUnscaled(input, 0, (rowHeight - input.Height) / 2);
-                    }
+                    using var g = Graphics.FromImage(scaled);
+                    g.DrawImageUnscaled(input, 0, (rowHeight - input.Height) / 2);
 
                     return scaled;
                 }

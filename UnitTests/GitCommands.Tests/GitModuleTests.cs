@@ -793,29 +793,28 @@ namespace GitCommandsTests
         public void GetSuperprojectCurrentCheckout()
         {
             // Create super and sub repo
-            using (CommonTestUtils.GitModuleTestHelper moduleTestHelperSuper = new CommonTestUtils.GitModuleTestHelper("super repo"),
-                                                       moduleTestHelperSub = new CommonTestUtils.GitModuleTestHelper("sub repo"))
+            using CommonTestUtils.GitModuleTestHelper moduleTestHelperSuper = new CommonTestUtils.GitModuleTestHelper("super repo"),
+                                                       moduleTestHelperSub = new CommonTestUtils.GitModuleTestHelper("sub repo");
+
+            // Add and init the submodule
+            moduleTestHelperSuper.AddSubmodule(moduleTestHelperSub, "sub repo");
+            var moduleSub = moduleTestHelperSuper.GetSubmodulesRecursive().ElementAt(0);
+
+            // Commit in submodule
+            moduleSub.GitExecutable.GetOutput(@"commit --allow-empty -am ""First commit""");
+            string commitRef = moduleSub.GitExecutable.GetOutput("show HEAD").Split('\n')[0].Split(' ')[1];
+
+            // Update ref in superproject
+            moduleTestHelperSuper.Module.GitExecutable.GetOutput(@"add ""sub repo""");
+            moduleTestHelperSuper.Module.GitExecutable.GetOutput(@"commit -am ""Update submodule ref""");
+
+            // Assert
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                // Add and init the submodule
-                moduleTestHelperSuper.AddSubmodule(moduleTestHelperSub, "sub repo");
-                var moduleSub = moduleTestHelperSuper.GetSubmodulesRecursive().ElementAt(0);
-
-                // Commit in submodule
-                moduleSub.GitExecutable.GetOutput(@"commit --allow-empty -am ""First commit""");
-                string commitRef = moduleSub.GitExecutable.GetOutput("show HEAD").Split('\n')[0].Split(' ')[1];
-
-                // Update ref in superproject
-                moduleTestHelperSuper.Module.GitExecutable.GetOutput(@"add ""sub repo""");
-                moduleTestHelperSuper.Module.GitExecutable.GetOutput(@"commit -am ""Update submodule ref""");
-
-                // Assert
-                ThreadHelper.JoinableTaskFactory.Run(async () =>
-                {
-                    (char code, ObjectId commitId) = await moduleSub.GetSuperprojectCurrentCheckoutAsync();
-                    Assert.AreEqual(32, code);
-                    Assert.AreEqual(commitRef, commitId.ToString());
-                });
-            }
+                (char code, ObjectId commitId) = await moduleSub.GetSuperprojectCurrentCheckoutAsync();
+                Assert.AreEqual(32, code);
+                Assert.AreEqual(commitRef, commitId.ToString());
+            });
         }
 
         [TestCase(false, @"stash list")]
@@ -886,28 +885,24 @@ namespace GitCommandsTests
         public void ResetFiles_should_work_as_expected(string[] files, string args)
         {
             // Real GitModule is need to access AppSettings.GitCommand static property, avoid exception with dummy GitModule
-            using (var moduleTestHelper = new GitModuleTestHelper())
-            {
-                var gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
-                string dummyCommandOutput = "The answer is 42. Just check that the Git arguments are as expected.";
-                _executable.StageOutput(args, dummyCommandOutput);
-                var result = gitModule.ResetFiles(files.ToList());
-                Assert.AreEqual(dummyCommandOutput, result);
-            }
+            using var moduleTestHelper = new GitModuleTestHelper();
+            var gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
+            string dummyCommandOutput = "The answer is 42. Just check that the Git arguments are as expected.";
+            _executable.StageOutput(args, dummyCommandOutput);
+            var result = gitModule.ResetFiles(files.ToList());
+            Assert.AreEqual(dummyCommandOutput, result);
         }
 
         [TestCase(new string[] { "abc", "def" }, "rm -- \"abc\" \"def\"")]
         public void RemoveFiles_shouldWorkAsExpected(string[] files, string args)
         {
             // Real GitModule is need to access AppSettings.GitCommand static property, avoid exception with dummy GitModule
-            using (var moduleTestHelper = new GitModuleTestHelper())
-            {
-                var gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
-                string dummyCommandOutput = "The answer is 42. Just check that the Git arguments are as expected.";
-                _executable.StageOutput(args, dummyCommandOutput);
-                var result = gitModule.RemoveFiles(files.ToList(), false);
-                Assert.AreEqual(dummyCommandOutput, result);
-            }
+            using var moduleTestHelper = new GitModuleTestHelper();
+            var gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
+            string dummyCommandOutput = "The answer is 42. Just check that the Git arguments are as expected.";
+            _executable.StageOutput(args, dummyCommandOutput);
+            var result = gitModule.RemoveFiles(files.ToList(), false);
+            Assert.AreEqual(dummyCommandOutput, result);
         }
 
         [TestCase(new string[] { }, "")]
@@ -920,18 +915,16 @@ namespace GitCommandsTests
         public void BatchUnstageFiles_should_work_as_expected(GitItemStatus[] files, string[] args, bool expectedResult)
         {
             // Real GitModule is need to access AppSettings.GitCommand static property, avoid exception with dummy GitModule
-            using (var moduleTestHelper = new GitModuleTestHelper())
+            using var moduleTestHelper = new GitModuleTestHelper();
+            var gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
+
+            foreach (var arg in args)
             {
-                var gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
-
-                foreach (var arg in args)
-                {
-                    _executable.StageCommand(arg);
-                }
-
-                var result = gitModule.BatchUnstageFiles(files);
-                Assert.AreEqual(expectedResult, result);
+                _executable.StageCommand(arg);
             }
+
+            var result = gitModule.BatchUnstageFiles(files);
+            Assert.AreEqual(expectedResult, result);
         }
 
         private static TestCaseData[] BatchUnstageFilesTestCases { get; set; } =

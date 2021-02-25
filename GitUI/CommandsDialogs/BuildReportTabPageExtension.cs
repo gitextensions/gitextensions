@@ -192,29 +192,27 @@ namespace GitUI.CommandsDialogs
                 ThreadHelper.JoinableTaskFactory.RunAsync(
                     async () =>
                     {
-                        using (var imageStream = await DownloadRemoteImageFileAsync(favIconUrl))
+                        using var imageStream = await DownloadRemoteImageFileAsync(favIconUrl);
+                        if (imageStream is not null)
                         {
-                            if (imageStream is not null)
+                            await _tabControl.SwitchToMainThreadAsync();
+
+                            var favIconImage = Image.FromStream(imageStream)
+                                                    .GetThumbnailImage(16, 16, null, IntPtr.Zero);
+                            var imageCollection = _tabControl.ImageList.Images;
+                            var imageIndex = _buildReportTabPage.ImageIndex;
+
+                            if (imageIndex < 0)
                             {
-                                await _tabControl.SwitchToMainThreadAsync();
-
-                                var favIconImage = Image.FromStream(imageStream)
-                                                        .GetThumbnailImage(16, 16, null, IntPtr.Zero);
-                                var imageCollection = _tabControl.ImageList.Images;
-                                var imageIndex = _buildReportTabPage.ImageIndex;
-
-                                if (imageIndex < 0)
-                                {
-                                    _buildReportTabPage.ImageIndex = imageCollection.Count;
-                                    imageCollection.Add(favIconImage);
-                                }
-                                else
-                                {
-                                    imageCollection[imageIndex] = favIconImage;
-                                }
-
-                                _tabControl.Invalidate(false);
+                                _buildReportTabPage.ImageIndex = imageCollection.Count;
+                                imageCollection.Add(favIconImage);
                             }
+                            else
+                            {
+                                imageCollection[imageIndex] = favIconImage;
+                            }
+
+                            _tabControl.Invalidate(false);
                         }
                     });
             }

@@ -12,16 +12,14 @@ namespace GitUI
         /// <param name="contents">Text to write as file contents.</param>
         public static void SafeWriteAllText(string fileName, string contents, Encoding encoding)
         {
-            using (var fs = new FileStream(fileName, FileMode.Open))
+            using var fs = new FileStream(fileName, FileMode.Open);
+            using (TextWriter tw = new StreamWriter(fs, encoding, bufferSize: 4096, leaveOpen: true))
             {
-                using (TextWriter tw = new StreamWriter(fs, encoding, bufferSize: 4096, leaveOpen: true))
-                {
-                    tw.Write(contents);
-                }
-
-                // after flushing, set the stream length to the current position in order to truncate leftover text
-                fs.SetLength(fs.Position);
+                tw.Write(contents);
             }
+
+            // after flushing, set the stream length to the current position in order to truncate leftover text
+            fs.SetLength(fs.Position);
         }
     }
 }

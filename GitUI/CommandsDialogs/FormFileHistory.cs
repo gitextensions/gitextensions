@@ -487,23 +487,21 @@ namespace GitUI.CommandsDialogs
                 }
 
                 fullName = fullName.ToNativePath();
-                using (var fileDialog = new SaveFileDialog
+                using var fileDialog = new SaveFileDialog
                 {
                     InitialDirectory = Path.GetDirectoryName(fullName),
                     FileName = Path.GetFileName(fullName),
                     DefaultExt = Path.GetExtension(fullName),
                     AddExtension = true
-                })
+                };
+                fileDialog.Filter =
+                    "Current format (*." +
+                    fileDialog.DefaultExt + ")|*." +
+                    fileDialog.DefaultExt +
+                    "|All files (*.*)|*.*";
+                if (fileDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    fileDialog.Filter =
-                        "Current format (*." +
-                        fileDialog.DefaultExt + ")|*." +
-                        fileDialog.DefaultExt +
-                        "|All files (*.*)|*.*";
-                    if (fileDialog.ShowDialog(this) == DialogResult.OK)
-                    {
-                        Module.SaveBlobAs(fileDialog.FileName, selectedRows[0].Guid + ":\"" + orgFileName + "\"");
-                    }
+                    Module.SaveBlobAs(fileDialog.FileName, selectedRows[0].Guid + ":\"" + orgFileName + "\"");
                 }
             }
         }

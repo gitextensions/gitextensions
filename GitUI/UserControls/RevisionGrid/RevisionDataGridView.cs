@@ -472,12 +472,10 @@ namespace GitUI.UserControls.RevisionGrid
                     CancellationToken backgroundOperationCancellation;
                     try
                     {
-                        using (var timeoutTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(200)))
-                        using (var linkedCancellation = timeoutTokenSource.Token.CombineWith(cancellationToken))
-                        {
-                            timeoutToken = timeoutTokenSource.Token;
-                            (backgroundOperation, backgroundOperationCancellation) = await _backgroundQueue.DequeueAsync(linkedCancellation.Token);
-                        }
+                        using var timeoutTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(200));
+                        using var linkedCancellation = timeoutTokenSource.Token.CombineWith(cancellationToken);
+                        timeoutToken = timeoutTokenSource.Token;
+                        (backgroundOperation, backgroundOperationCancellation) = await _backgroundQueue.DequeueAsync(linkedCancellation.Token);
                     }
                     catch (OperationCanceledException) when (timeoutToken.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
                     {
@@ -615,12 +613,10 @@ namespace GitUI.UserControls.RevisionGrid
         private void UpdateRowHeight()
         {
             // TODO allow custom grid row spacing
-            using (var g = Graphics.FromHwnd(Handle))
-            {
-                _rowHeight = (int)g.MeasureString("By", _normalFont).Height + DpiUtil.Scale(9);
-                //// + AppSettings.GridRowSpacing
-                RowTemplate.Height = _rowHeight;
-            }
+            using var g = Graphics.FromHwnd(Handle);
+            _rowHeight = (int)g.MeasureString("By", _normalFont).Height + DpiUtil.Scale(9);
+            //// + AppSettings.GridRowSpacing
+            RowTemplate.Height = _rowHeight;
         }
 
         public bool IsRevisionRelative(ObjectId objectId)

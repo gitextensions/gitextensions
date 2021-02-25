@@ -409,23 +409,21 @@ namespace GitUI.UserControls.RevisionGrid
 
         public void GotoCommitExecute()
         {
-            using (var formGoToCommit = new FormGoToCommit(_revisionGrid.UICommands))
+            using var formGoToCommit = new FormGoToCommit(_revisionGrid.UICommands);
+            if (formGoToCommit.ShowDialog(_revisionGrid) != DialogResult.OK)
             {
-                if (formGoToCommit.ShowDialog(_revisionGrid) != DialogResult.OK)
-                {
-                    return;
-                }
+                return;
+            }
 
-                var objectId = formGoToCommit.ValidateAndGetSelectedRevision();
+            var objectId = formGoToCommit.ValidateAndGetSelectedRevision();
 
-                if (objectId is not null)
-                {
-                    _revisionGrid.SetSelectedRevision(objectId);
-                }
-                else
-                {
-                    MessageBox.Show(_revisionGrid, _noRevisionFoundError.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+            if (objectId is not null)
+            {
+                _revisionGrid.SetSelectedRevision(objectId);
+            }
+            else
+            {
+                MessageBox.Show(_revisionGrid, _noRevisionFoundError.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

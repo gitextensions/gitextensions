@@ -51,10 +51,8 @@ namespace GitUI.Avatars
 
                 try
                 {
-                    using (var output = _fileSystem.File.OpenWrite(path))
-                    {
-                        image.Save(output, ImageFormat.Png);
-                    }
+                    using var output = _fileSystem.File.OpenWrite(path);
+                    image.Save(output, ImageFormat.Png);
                 }
                 catch
                 {
@@ -68,10 +66,8 @@ namespace GitUI.Avatars
                 {
                     try
                     {
-                        using (var stream = _fileSystem.File.OpenRead(path))
-                        {
-                            return Image.FromStream(stream);
-                        }
+                        using var stream = _fileSystem.File.OpenRead(path);
+                        return Image.FromStream(stream);
                     }
                     catch
                     {

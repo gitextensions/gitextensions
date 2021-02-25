@@ -181,15 +181,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 ? $"{toolName}|{diffMergeToolConfig.ExeFileName}"
                 : "*.exe;*.cmd;*.bat|*.exe;*.cmd;*.bat";
 
-            using (var dialog = new OpenFileDialog
+            using var dialog = new OpenFileDialog
             {
                 Filter = filter,
                 InitialDirectory = initialDirectory,
                 Title = _selectFile.Text
-            })
-            {
-                return dialog.ShowDialog() == DialogResult.OK ? dialog.FileName : path;
-            }
+            };
+            return dialog.ShowDialog() == DialogResult.OK ? dialog.FileName : path;
         }
 
         private void SuggestDiffToolCommand()
@@ -321,13 +319,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ConfigureEncoding_Click(object sender, EventArgs e)
         {
-            using (var encodingDlg = new FormAvailableEncodings())
+            using var encodingDlg = new FormAvailableEncodings();
+            if (encodingDlg.ShowDialog() == DialogResult.OK)
             {
-                if (encodingDlg.ShowDialog() == DialogResult.OK)
-                {
-                    Global_FilesEncoding.Items.Clear();
-                    CommonLogic.FillEncodings(Global_FilesEncoding);
-                }
+                Global_FilesEncoding.Items.Clear();
+                CommonLogic.FillEncodings(Global_FilesEncoding);
             }
         }
     }

@@ -102,13 +102,11 @@ namespace GitUI.CommandsDialogs
         {
             DialogResult result = DialogResult.None;
 
-            using (var form = new FormSettings(uiCommands, initialPage))
+            using var form = new FormSettings(uiCommands, initialPage);
+            AppSettings.UsingContainer(form._commonLogic.RepoDistSettingsSet.GlobalSettings, () =>
             {
-                AppSettings.UsingContainer(form._commonLogic.RepoDistSettingsSet.GlobalSettings, () =>
-                {
-                    result = form.ShowDialog(owner);
-                });
-            }
+                result = form.ShowDialog(owner);
+            });
 
             return result;
         }

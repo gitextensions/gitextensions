@@ -33,7 +33,7 @@ namespace GitUI.Script
         private void btnBrowse_Click(object sender, EventArgs e)
         {
             const string separator = " ";
-            using (var browseDialog = new OpenFileDialog
+            using var browseDialog = new OpenFileDialog
             {
                 Multiselect = true,
                 InitialDirectory = ".",
@@ -41,12 +41,10 @@ namespace GitUI.Script
                 CheckFileExists = true,
                 CheckPathExists = true,
                 ValidateNames = true
-            })
+            };
+            if (browseDialog.ShowDialog(this) == DialogResult.OK)
             {
-                if (browseDialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    txtFilePath.Text = string.Join(separator, browseDialog.FileNames.Select(fileName => fileName.Quote()));
-                }
+                txtFilePath.Text = string.Join(separator, browseDialog.FileNames.Select(fileName => fileName.Quote()));
             }
         }
 

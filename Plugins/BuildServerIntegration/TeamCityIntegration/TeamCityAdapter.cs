@@ -465,10 +465,8 @@ namespace TeamCityIntegration
             return getStreamTask.ContinueWith(
                 task =>
                     {
-                        using (var responseStream = task.Result)
-                        {
-                            return XDocument.Load(responseStream);
-                        }
+                        using var responseStream = task.Result;
+                        return XDocument.Load(responseStream);
                     },
                 cancellationToken,
                 TaskContinuationOptions.AttachedToParent,

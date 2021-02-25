@@ -1349,23 +1349,21 @@ namespace GitUI.CommandsDialogs
                 string fileName = PathUtil.GetFileName(conflictData.Filename);
                 var initialDirectory = _fullPathResolver.Resolve(Path.GetDirectoryName(conflictData.Filename));
 
-                using (var fileDialog = new SaveFileDialog
+                using var fileDialog = new SaveFileDialog
                 {
                     FileName = fileName,
                     InitialDirectory = initialDirectory,
                     AddExtension = true
-                })
-                {
-                    var ext = Path.GetExtension(fileDialog.FileName);
-                    fileDialog.DefaultExt = ext;
-                    fileDialog.Filter = string.Format(_currentFormatFilter.Text, ext) + "|*." + ext + "|" + _allFilesFilter.Text + "|*.*";
+                };
+                var ext = Path.GetExtension(fileDialog.FileName);
+                fileDialog.DefaultExt = ext;
+                fileDialog.Filter = string.Format(_currentFormatFilter.Text, ext) + "|*." + ext + "|" + _allFilesFilter.Text + "|*.*";
 
-                    if (fileDialog.ShowDialog(this) == DialogResult.OK)
+                if (fileDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (!Module.HandleConflictsSaveSide(conflictData.Filename, fileDialog.FileName, side))
                     {
-                        if (!Module.HandleConflictsSaveSide(conflictData.Filename, fileDialog.FileName, side))
-                        {
-                            MessageBox.Show(this, _failureWhileSaveFile.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
+                        MessageBox.Show(this, _failureWhileSaveFile.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

@@ -719,22 +719,20 @@ See the changes in the commit form.");
             if (tvGitTree.SelectedNode?.Tag is GitItem gitItem && gitItem.ObjectType == GitObjectType.Blob)
             {
                 var fullName = _fullPathResolver.Resolve(gitItem.FileName);
-                using (var fileDialog =
+                using var fileDialog =
                     new SaveFileDialog
                     {
                         InitialDirectory = Path.GetDirectoryName(fullName),
                         FileName = Path.GetFileName(fullName),
                         DefaultExt = Path.GetExtension(fullName),
                         AddExtension = true
-                    })
-                {
-                    var extension = Path.GetExtension(fileDialog.FileName);
+                    };
+                var extension = Path.GetExtension(fileDialog.FileName);
 
-                    fileDialog.Filter = $@"{_saveFileFilterCurrentFormat.Text}(*{extension})|*{extension}| {_saveFileFilterAllFiles.Text} (*.*)|*.*";
-                    if (fileDialog.ShowDialog(this) == DialogResult.OK)
-                    {
-                        Module.SaveBlobAs(fileDialog.FileName, gitItem.Guid);
-                    }
+                fileDialog.Filter = $@"{_saveFileFilterCurrentFormat.Text}(*{extension})|*{extension}| {_saveFileFilterAllFiles.Text} (*.*)|*.*";
+                if (fileDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    Module.SaveBlobAs(fileDialog.FileName, gitItem.Guid);
                 }
             }
         }

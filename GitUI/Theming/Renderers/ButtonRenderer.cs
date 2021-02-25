@@ -11,28 +11,26 @@ namespace GitUI.Theming
         public override int RenderBackground(IntPtr hdc, int partid, int stateid, Rectangle prect,
             NativeMethods.RECTCLS pcliprect)
         {
-            using (var ctx = CreateRenderContext(hdc, pcliprect))
+            using var ctx = CreateRenderContext(hdc, pcliprect);
+            switch ((Parts)partid)
             {
-                switch ((Parts)partid)
-                {
-                    case Parts.BP_GROUPBOX:
-                        RenderGroupBox(ctx, prect);
-                        return Handled;
+                case Parts.BP_GROUPBOX:
+                    RenderGroupBox(ctx, prect);
+                    return Handled;
 
-                    case Parts.BP_PUSHBUTTON:
-                        RenderPushButton(ctx, (State.Push)stateid, prect);
-                        return Handled;
+                case Parts.BP_PUSHBUTTON:
+                    RenderPushButton(ctx, (State.Push)stateid, prect);
+                    return Handled;
 
-                    case Parts.BP_CHECKBOX:
-                        return RenderCheckBox(ctx, (State.CheckBox)stateid, prect);
+                case Parts.BP_CHECKBOX:
+                    return RenderCheckBox(ctx, (State.CheckBox)stateid, prect);
 
-                    case Parts.BP_RADIOBUTTON:
-                        RenderRadio(ctx, (State.Radio)stateid, prect);
-                        break;
+                case Parts.BP_RADIOBUTTON:
+                    RenderRadio(ctx, (State.Radio)stateid, prect);
+                    break;
 
-                    default:
-                        return Unhandled;
-                }
+                default:
+                    return Unhandled;
             }
 
             return Handled;

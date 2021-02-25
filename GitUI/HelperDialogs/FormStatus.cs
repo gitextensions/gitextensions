@@ -118,28 +118,26 @@ namespace GitUI.HelperDialogs
 
         public static void ShowErrorDialog(IWin32Window owner, string text, params string[] output)
         {
-            using (var form = new FormStatus(commands: null, new EditboxBasedConsoleOutputControl(), useDialogSettings: true))
+            using var form = new FormStatus(commands: null, new EditboxBasedConsoleOutputControl(), useDialogSettings: true);
+            form.Text = text;
+            if (output?.Length > 0)
             {
-                form.Text = text;
-                if (output?.Length > 0)
+                foreach (string line in output)
                 {
-                    foreach (string line in output)
-                    {
-                        form.AppendMessage(line);
-                    }
+                    form.AppendMessage(line);
                 }
-
-                form.ProgressBar.Visible = false;
-                form.KeepDialogOpen.Visible = false;
-                form.Abort.Visible = false;
-
-                form.StartPosition = FormStartPosition.CenterParent;
-
-                // We know that an operation (whatever it may have been) has failed, so set the error state.
-                form.Done(false);
-
-                form.ShowDialog(owner);
             }
+
+            form.ProgressBar.Visible = false;
+            form.KeepDialogOpen.Visible = false;
+            form.Abort.Visible = false;
+
+            form.StartPosition = FormStartPosition.CenterParent;
+
+            // We know that an operation (whatever it may have been) has failed, so set the error state.
+            form.Done(false);
+
+            form.ShowDialog(owner);
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
