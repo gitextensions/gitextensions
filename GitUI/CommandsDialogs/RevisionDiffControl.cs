@@ -45,6 +45,7 @@ namespace GitUI.CommandsDialogs
         private readonly IGitRevisionTester _gitRevisionTester;
         private readonly RememberFileContextMenuController _rememberFileContextMenuController
             = RememberFileContextMenuController.Default;
+        private Action? _refreshGitStatus;
 
         public RevisionDiffControl()
         {
@@ -219,10 +220,11 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public void Bind(RevisionGridControl revisionGrid, RevisionFileTreeControl revisionFileTree)
+        public void Bind(RevisionGridControl revisionGrid, RevisionFileTreeControl revisionFileTree, Action refreshGitStatus)
         {
             _revisionGrid = revisionGrid;
             _revisionFileTree = revisionFileTree;
+            _refreshGitStatus = refreshGitStatus;
         }
 
         public void InitSplitterManager(SplitterManager splitterManager)
@@ -382,6 +384,17 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void RequestRefresh()
+        {
+            // Request immediate update of commit count, no delay due to backoff
+            // If a file system change was triggered too, the requests should be merged
+            // (this will also update the count if only worktree<->index is changed)
+            // This may trigger a second RefreshArtificial()
+            _refreshGitStatus?.Invoke();
+
+            RefreshArtificial();
+        }
+
         private void ResetSelectedItemsTo(bool actsAsChild)
         {
             var selectedItems = DiffFiles.SelectedItems.ToList();
@@ -424,7 +437,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            RefreshArtificial();
+            RequestRefresh();
         }
 
         private async Task ShowSelectedFileDiffAsync()
@@ -481,7 +494,7 @@ namespace GitUI.CommandsDialogs
 
         private void DiffText_PatchApplied(object sender, EventArgs e)
         {
-            RefreshArtificial();
+            RequestRefresh();
         }
 
         private void diffShowInFileTreeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -579,7 +592,7 @@ namespace GitUI.CommandsDialogs
             var files = DiffFiles.SelectedItems.Where(item => item.Item.Staged == StagedStatus.WorkTree).Select(i => i.Item).ToList();
 
             Module.StageFiles(files, out _);
-            RefreshArtificial();
+            RequestRefresh();
         }
 
         private void UnstageFileToolStripMenuItemClick(object sender, EventArgs e)
@@ -590,7 +603,7 @@ namespace GitUI.CommandsDialogs
         private void UnstageFiles()
         {
             Module.BatchUnstageFiles(DiffFiles.SelectedItems.Where(item => item.Item.Staged == StagedStatus.Index).Select(i => i.Item).ToList());
-            RefreshArtificial();
+            RequestRefresh();
         }
 
         private void cherryPickSelectedDiffFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -779,7 +792,7 @@ namespace GitUI.CommandsDialogs
 
             var fileName = _fullPathResolver.Resolve(DiffFiles.SelectedItem.Item.Name);
             UICommands.StartFileEditorDialog(fileName);
-            RefreshArtificial();
+            RequestRefresh();
         }
 
         private void diffOpenWorkingDirectoryFileWithToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1025,7 +1038,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                RefreshArtificial();
+                RequestRefresh();
             }
             catch (Exception ex)
             {
@@ -1051,7 +1064,7 @@ namespace GitUI.CommandsDialogs
                 submodulCommands.StartCommitDialog(this);
             }
 
-            RefreshArtificial();
+            RequestRefresh();
         }
 
         private void diffResetSubmoduleChanges_Click(object sender, EventArgs e)
@@ -1079,15 +1092,15 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            RefreshArtificial();
-        }
+            RequestRefresh();
+       }
 
         private void diffUpdateSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
             var submodules = DiffFiles.SelectedItems.Where(it => it.Item.IsSubmodule).Select(it => it.Item.Name).Distinct().ToList();
 
             FormProcess.ShowDialog(FindForm() as FormBrowse, process: null, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submodules), Module.WorkingDir, input: null, useDialogSettings: true);
-            RefreshArtificial();
+            RequestRefresh();
         }
 
         private void diffStashSubmoduleChangesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1100,7 +1113,7 @@ namespace GitUI.CommandsDialogs
                 uiCmds.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
             }
 
-            RefreshArtificial();
+            RequestRefresh();
         }
 
         public void SwitchFocus(bool alreadyContainedFocus)
