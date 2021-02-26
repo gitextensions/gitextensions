@@ -54,6 +54,7 @@ See the changes in the commit form.");
         [CanBeNull] private GitRevision _revision;
         private readonly RememberFileContextMenuController _rememberFileContextMenuController
             = RememberFileContextMenuController.Default;
+        private Action _refreshGitStatus;
 
         public RevisionFileTreeControl()
         {
@@ -65,6 +66,11 @@ See the changes in the commit form.");
             _revisionFileTreeController = new RevisionFileTreeController(() => Module.WorkingDir,
                                                                          new GitRevisionInfoProvider(() => Module),
                                                                          new FileAssociatedIconProvider());
+        }
+
+        public void Bind(Action refreshGitStatus)
+        {
+            _refreshGitStatus = refreshGitStatus;
         }
 
         public void ExpandToFile(string filePath)
@@ -489,11 +495,14 @@ See the changes in the commit form.");
 
         private void editCheckedOutFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (tvGitTree.SelectedNode?.Tag is GitItem gitItem && gitItem.ObjectType == GitObjectType.Blob)
+            if (tvGitTree.SelectedNode?.Tag is not GitItem gitItem || gitItem.ObjectType != GitObjectType.Blob)
             {
-                var fileName = _fullPathResolver.Resolve(gitItem.FileName);
-                UICommands.StartFileEditorDialog(fileName);
+                return;
             }
+
+            var fileName = _fullPathResolver.Resolve(gitItem.FileName);
+            UICommands.StartFileEditorDialog(fileName);
+            _refreshGitStatus?.Invoke();
         }
 
         private void expandAllStripMenuItem_Click(object sender, EventArgs e)
