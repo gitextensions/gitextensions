@@ -16,13 +16,13 @@ namespace GitUI
         private static readonly float[] _dashPattern = { 4, 4 };
         private static readonly PointF[] _arrowPoints = new PointF[4];
 
-        public static void DrawRef(bool isRowSelected, Font font, ref int offset, string name, Color headColor, RefArrowType arrowType, in Rectangle bounds, Graphics graphics, bool dashedLine = false, bool fill = false)
+        public static void DrawRef(bool isRowSelected, Font font, ref int offset, string name, Color headColor, RefArrowType arrowType, in Rectangle bounds, Graphics graphics, bool dashedLine = false)
         {
             var paddingLeftRight = DpiUtil.Scale(4);
             var paddingTopBottom = DpiUtil.Scale(2);
             var marginRight = DpiUtil.Scale(7);
 
-            var textColor = fill ? headColor : Lerp(headColor, Color.White, 0.5f);
+            var textColor = Lerp(headColor, Color.Black, 0.25F);
 
             var textSize = TextRenderer.MeasureText(graphics, name, font, Size.Empty, TextFormatFlags.NoPadding);
 
@@ -47,7 +47,7 @@ namespace GitUI
                 graphics,
                 headColor,
                 rect,
-                radius: 3, arrowType, dashedLine, fill);
+                radius: 3, arrowType, dashedLine);
 
             var textBounds = new Rectangle(
                 rect.X + arrowWidth + paddingLeftRight,
@@ -60,7 +60,7 @@ namespace GitUI
             offset += rect.Width + marginRight;
         }
 
-        private static void DrawRefBackground(bool isRowSelected, Graphics graphics, Color color, Rectangle bounds, int radius, RefArrowType arrowType, bool dashedLine, bool fill)
+        private static void DrawRefBackground(bool isRowSelected, Graphics graphics, Color color, Rectangle bounds, int radius, RefArrowType arrowType, bool dashedLine)
         {
             var oldMode = graphics.SmoothingMode;
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -68,20 +68,14 @@ namespace GitUI
             try
             {
                 using var path = CreateRoundRectPath(bounds, radius);
-                if (fill)
-                {
-                    var color1 = Lerp(color, SystemColors.Window, 0.92F);
-                    var color2 = Lerp(color1, SystemColors.Window, 0.9f);
-                    using var brush = new LinearGradientBrush(bounds, color1, color2, angle: 90);
-                    graphics.FillPath(brush, path);
-                }
-                else if (isRowSelected)
+
+                if (isRowSelected)
                 {
                     graphics.FillPath(SystemBrushes.Window, path);
                 }
 
                 // frame
-                using var pen = new Pen(Lerp(color, SystemColors.Window, 0.83F));
+                using var pen = new Pen(Lerp(color, SystemColors.Window, 0.5F));
                 if (dashedLine)
                 {
                     pen.DashPattern = _dashPattern;
