@@ -326,6 +326,14 @@ namespace GitUI.CommandsDialogs
 
             RevisionGrid.ToggledBetweenArtificialAndHeadCommits += (s, e) => FocusRevisionDiffFileStatusList();
 
+            toolPanel.TopToolStripPanel.BackColor = Color.Transparent;
+            mainMenuStrip.BackColor = Color.Transparent;
+            ToolStripMain.BackColor = Color.Transparent;
+            ToolStripFilters.BackColor = Color.Transparent;
+            ToolStripScripts.BackColor = Color.Transparent;
+
+            BackColor = OtherColors.BackgroundColor;
+
             return;
 
             void FocusRevisionDiffFileStatusList()
@@ -3174,9 +3182,9 @@ namespace GitUI.CommandsDialogs
             RevisionInfo.Parent.BackColor = RevisionInfo.BackColor;
             RevisionInfo.ResumeLayout(performLayout: true);
 
-            MainSplitContainer.Panel1.BackColor = Color.LightGray.AdaptBackColor();
-            RevisionsSplitContainer.Panel1.BackColor = Color.LightGray.AdaptBackColor();
-            RevisionsSplitContainer.Panel2.BackColor = Color.LightGray.AdaptBackColor();
+            MainSplitContainer.Panel1.BackColor = OtherColors.PanelBorderColor;
+            RevisionsSplitContainer.Panel1.BackColor = OtherColors.PanelBorderColor;
+            RevisionsSplitContainer.Panel2.BackColor = OtherColors.PanelBorderColor;
 
             CommitInfoTabControl.ResumeLayout(performLayout: true);
             RevisionsSplitContainer.ResumeLayout(performLayout: true);
