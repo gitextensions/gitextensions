@@ -42,16 +42,36 @@ namespace GitUITests.Theming
         [Test]
         public void Default_values_are_specified_in_invariant_theme()
         {
-            var themePathProvider = new ThemePathProvider();
-            var themeLoader = new ThemeLoader(new ThemeCssUrlResolver(themePathProvider), new ThemeFileReader());
-            var repository = new ThemeRepository(new ThemePersistence(themeLoader), themePathProvider);
-            var invariantTheme = repository.GetInvariantTheme();
+            Theme invariantTheme = GetInvariantTheme();
             invariantTheme.Should().NotBeNull();
             foreach (AppColor name in Enum.GetValues(typeof(AppColor)))
             {
                 Color value = invariantTheme.GetColor(name);
                 value.Should().NotBe(Color.Empty);
+
+                var defaultValue = AppColorDefaults.GetBy(name);
+                value.ToArgb().Should().Be(defaultValue.ToArgb());
             }
+        }
+
+        [Test]
+        public void Invariant_theme_colors_match_AppColorDefaults()
+        {
+            Theme invariantTheme = GetInvariantTheme();
+            foreach (AppColor name in Enum.GetValues(typeof(AppColor)))
+            {
+                Color value = invariantTheme.GetColor(name);
+                var defaultValue = AppColorDefaults.GetBy(name);
+                value.ToArgb().Should().Be(defaultValue.ToArgb());
+            }
+        }
+
+        private static Theme GetInvariantTheme()
+        {
+            var themePathProvider = new ThemePathProvider();
+            var themeLoader = new ThemeLoader(new ThemeCssUrlResolver(themePathProvider), new ThemeFileReader());
+            var repository = new ThemeRepository(new ThemePersistence(themeLoader), themePathProvider);
+            return repository.GetInvariantTheme();
         }
     }
 }
