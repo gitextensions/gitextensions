@@ -295,6 +295,7 @@ namespace GitUI.CommandsDialogs
             this.toolStrip1.BackColor = System.Drawing.SystemColors.Control;
             this.toolStrip1.ClickThrough = true;
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.toolStrip1.DrawBorder = false;
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showToolStripLabel,

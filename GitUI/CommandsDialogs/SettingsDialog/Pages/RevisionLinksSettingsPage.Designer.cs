@@ -30,7 +30,7 @@
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.toolStripManageCategories = new System.Windows.Forms.ToolStrip();
+            this.toolStripManageCategories = new GitUI.ToolStripEx();
             this.Add = new System.Windows.Forms.ToolStripSplitButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.Remove = new System.Windows.Forms.ToolStripButton();
@@ -721,7 +721,7 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_UseRemotes;
         private System.Windows.Forms.CheckBox chkOnlyFirstRemote;
-        private System.Windows.Forms.ToolStrip toolStripManageCategories;
+        private GitUI.ToolStripEx toolStripManageCategories;
         private System.Windows.Forms.ToolStripSplitButton Add;
         private System.Windows.Forms.ToolStripButton Remove;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;

@@ -245,6 +245,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.ToolStripMain.ClickThrough = true;
             this.ToolStripMain.Dock = System.Windows.Forms.DockStyle.None;
+            this.ToolStripMain.DrawBorder = false;
             this.ToolStripMain.GripMargin = new System.Windows.Forms.Padding(0);
             this.ToolStripMain.GripStyle = ToolStripGripStyle.Hidden;
             this.ToolStripMain.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -279,6 +280,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.ToolStripFilters.ClickThrough = true;
             this.ToolStripFilters.Dock = System.Windows.Forms.DockStyle.None;
+            this.ToolStripFilters.DrawBorder = false;
             this.ToolStripFilters.GripMargin = new System.Windows.Forms.Padding(0);
             this.ToolStripFilters.GripStyle = ToolStripGripStyle.Hidden;
             this.ToolStripFilters.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -1786,6 +1788,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.ToolStripScripts.ClickThrough = true;
             this.ToolStripScripts.Dock = System.Windows.Forms.DockStyle.None;
+            this.ToolStripScripts.DrawBorder = false;
             this.ToolStripScripts.GripMargin = new System.Windows.Forms.Padding(0);
             this.ToolStripScripts.GripStyle = ToolStripGripStyle.Hidden;
             this.ToolStripScripts.ImeMode = System.Windows.Forms.ImeMode.NoControl;
