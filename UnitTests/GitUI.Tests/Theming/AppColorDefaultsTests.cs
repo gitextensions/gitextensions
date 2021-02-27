@@ -68,9 +68,9 @@ namespace GitUITests.Theming
 
         private static Theme GetInvariantTheme()
         {
-            var themePathProvider = new ThemePathProvider();
-            var themeLoader = new ThemeLoader(new ThemeCssUrlResolver(themePathProvider), new ThemeFileReader());
-            var repository = new ThemeRepository(new ThemePersistence(themeLoader), themePathProvider);
+            ThemePathProvider themePathProvider = new();
+            ThemeLoader themeLoader = new(new ThemeCssUrlResolver(themePathProvider), new ThemeFileReader());
+            ThemeRepository repository = new(new ThemePersistence(themeLoader), themePathProvider);
             return repository.GetInvariantTheme();
         }
     }
