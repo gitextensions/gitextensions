@@ -442,6 +442,7 @@ namespace GitUI.BranchTreePanel
             // 
             this.leftPanelToolStrip.BackColor = System.Drawing.SystemColors.Control;
             this.leftPanelToolStrip.ClickThrough = true;
+            this.leftPanelToolStrip.DrawBorder = false;
             this.leftPanelToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.leftPanelToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbCollapseAll,

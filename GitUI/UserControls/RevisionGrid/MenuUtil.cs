@@ -1,12 +1,13 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Windows.Forms;
+using GitExtUtils.GitUI;
 
 namespace GitUI.UserControls.RevisionGrid
 {
     internal static class MenuUtil
     {
         private static readonly object _captionTag = new();
-        private static readonly CaptionCustomMenuRenderer _customMenuRenderer = new();
+        private static readonly MenuItemBackgroundFilter _menuItemBackgroundFilter = new();
         private static Font _disabledFont;
 
         /// <summary>
@@ -14,7 +15,7 @@ namespace GitUI.UserControls.RevisionGrid
         /// </summary>
         public static void SetAsCaptionMenuItem(ToolStripMenuItem menuItem, ToolStrip menu)
         {
-            menu.Renderer = _customMenuRenderer;
+            menu.AttachMenuItemBackgroundFilter(_menuItemBackgroundFilter);
 
             menuItem.Tag = _captionTag;
             menuItem.Enabled = false;
@@ -30,15 +31,12 @@ namespace GitUI.UserControls.RevisionGrid
         /// <summary>
         /// no mouse over effect for disabled menu items, if the Tag is "caption"
         /// </summary>
-        private sealed class CaptionCustomMenuRenderer : ToolStripProfessionalRenderer
+        private sealed class MenuItemBackgroundFilter : IMenuItemBackgroundFilter
         {
-            protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
+            public bool ShouldRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
             {
                 // Only render the background for non-caption menu items
-                if (!ReferenceEquals(e.Item.Tag, _captionTag))
-                {
-                    base.OnRenderMenuItemBackground(e);
-                }
+                return !ReferenceEquals(e.Item.Tag, _captionTag);
             }
         }
     }
