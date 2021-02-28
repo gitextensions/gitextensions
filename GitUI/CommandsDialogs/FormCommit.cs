@@ -1947,14 +1947,10 @@ namespace GitUI.CommandsDialogs
                         unstagedFiles.RemoveAll(
                             item =>
                             {
-                                if (!item.IsSubmodule)
-                                {
-                                    return false;
-                                }
-
-                                Task<GitSubmoduleStatus?> statusTask = item.GetSubmoduleStatusAsync();
-
-                                if (!statusTask.IsCompleted)
+                                if (!item.IsSubmodule
+                                    || item.GetSubmoduleStatusAsync() is not Task<GitSubmoduleStatus> statusTask
+                                    || statusTask is null
+                                    || !statusTask.IsCompleted)
                                 {
                                     return false;
                                 }
@@ -1970,7 +1966,10 @@ namespace GitUI.CommandsDialogs
                                 continue;
                             }
 
-                            GitSubmoduleStatus? gitSubmoduleStatus = ThreadHelper.JoinableTaskFactory.Run(() => item.GetSubmoduleStatusAsync());
+                            GitSubmoduleStatus? gitSubmoduleStatus = ThreadHelper.JoinableTaskFactory.Run(() =>
+                            {
+                                return item.GetSubmoduleStatusAsync() ?? Task.FromResult<GitSubmoduleStatus?>(null);
+                            });
 
                             if (gitSubmoduleStatus is null || !gitSubmoduleStatus.IsDirty)
                             {

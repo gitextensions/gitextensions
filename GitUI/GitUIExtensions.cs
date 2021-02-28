@@ -112,10 +112,11 @@ namespace GitUI
                         : diffOfConflict;
                 }
 
-                if (file.IsSubmodule)
+                if (file.IsSubmodule
+                    && file.GetSubmoduleStatusAsync() is Task<GitSubmoduleStatus> task)
                 {
                     // Patch already evaluated
-                    var status = ThreadHelper.JoinableTaskFactory.Run(file.GetSubmoduleStatusAsync);
+                    var status = ThreadHelper.JoinableTaskFactory.Run(() => task);
                     return status is not null
                         ? LocalizationHelpers.ProcessSubmoduleStatus(fileViewer.Module, status)
                         : $"Failed to get status for submodule \"{file.Name}\"";
