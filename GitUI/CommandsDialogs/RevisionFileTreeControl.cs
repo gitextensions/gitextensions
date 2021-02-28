@@ -153,6 +153,7 @@ See the changes in the commit form.");
             try
             {
                 tvGitTree.SuspendLayout();
+                tvGitTree.BeginUpdate();
 
                 // Save state only when there is selected node
                 if (tvGitTree.SelectedNode is not null)
@@ -215,6 +216,7 @@ See the changes in the commit form.");
             }
             finally
             {
+                tvGitTree.EndUpdate();
                 tvGitTree.ResumeLayout();
             }
         }
