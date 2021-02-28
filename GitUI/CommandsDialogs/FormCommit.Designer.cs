@@ -698,6 +698,7 @@ namespace GitUI.CommandsDialogs
             this.toolbarUnstaged.BackColor = System.Drawing.SystemColors.Control;
             this.toolbarUnstaged.ClickThrough = true;
             this.toolbarUnstaged.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolbarUnstaged.DrawBorder = false;
             this.toolbarUnstaged.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolbarUnstaged.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolRefreshItem,
@@ -870,6 +871,7 @@ namespace GitUI.CommandsDialogs
             //
             this.toolbarSelectionFilter.ClickThrough = true;
             this.toolbarSelectionFilter.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolbarSelectionFilter.DrawBorder = false;
             this.toolbarSelectionFilter.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
             this.selectionFilter});
@@ -924,6 +926,7 @@ namespace GitUI.CommandsDialogs
             this.toolbarStaged.AutoSize = false;
             this.toolbarStaged.BackColor = System.Drawing.SystemColors.Control;
             this.toolbarStaged.ClickThrough = true;
+            this.toolbarStaged.DrawBorder = false;
             this.toolbarStaged.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolbarStaged.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStageAllItem,
@@ -1187,6 +1190,7 @@ namespace GitUI.CommandsDialogs
             this.toolbarCommit.AutoSize = false;
             this.toolbarCommit.BackColor = System.Drawing.SystemColors.Control;
             this.toolbarCommit.ClickThrough = true;
+            this.toolbarCommit.DrawBorder = false;
             this.toolbarCommit.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolbarCommit.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.commitMessageToolStripMenuItem,

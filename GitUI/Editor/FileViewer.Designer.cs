@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace GitUI.Editor
 {
@@ -240,6 +239,7 @@ namespace GitUI.Editor
             this.fileviewerToolbar.BackColor = System.Drawing.SystemColors.Control;
             this.fileviewerToolbar.ClickThrough = true;
             this.fileviewerToolbar.Dock = System.Windows.Forms.DockStyle.None;
+            this.fileviewerToolbar.DrawBorder = false;
             this.fileviewerToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.nextChangeButton,
             this.previousChangeButton,

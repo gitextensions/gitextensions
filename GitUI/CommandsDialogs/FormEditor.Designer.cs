@@ -108,6 +108,7 @@
             // toolStrip1
             // 
             this.toolStrip1.ClickThrough = true;
+            this.toolStrip1.DrawBorder = false;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripSaveButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
