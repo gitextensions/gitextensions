@@ -882,9 +882,11 @@ namespace GitUI
 
                 SelectInitialRevision(newCurrentCheckout);
 
-                // NB: Build ref filter before updating the property to reduce the number of chage events.
+                const RefFilterOptions gitNotesOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
+
+                // NB: Build ref filter before updating the property to reduce the number of change events.
                 RefFilterOptions refFilterOptions = RefFilterOptions;
-                if (!AppSettings.ShowGitNotes && refFilterOptions.HasFlag(RefFilterOptions.All | RefFilterOptions.Boundary))
+                if (!AppSettings.ShowGitNotes && (refFilterOptions & gitNotesOptions) == gitNotesOptions)
                 {
                     refFilterOptions |= RefFilterOptions.ShowGitNotes;
                 }
