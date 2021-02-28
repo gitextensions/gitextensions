@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Drawing;
 using System.IO;
 using System.IO.Abstractions;
-using GitExtensions;
+using GitExtUtils;
 
 namespace GitCommands
 {

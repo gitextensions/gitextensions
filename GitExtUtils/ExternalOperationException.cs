@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GitCommands
+namespace GitExtUtils
 {
     /// <summary>
     /// Represents errors that occur during execution of an external operation,

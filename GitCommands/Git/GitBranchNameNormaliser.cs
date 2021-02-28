@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using GitExtensions;
+using GitExtUtils;
 
 namespace GitCommands.Git
 {

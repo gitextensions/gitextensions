@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace GitCommands
+namespace GitExtUtils
 {
     public static class StringBuilderExtensions
     {

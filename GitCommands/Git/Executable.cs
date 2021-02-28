@@ -5,6 +5,7 @@ using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using GitCommands.Logging;
+using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
 

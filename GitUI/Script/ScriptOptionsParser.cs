@@ -88,7 +88,7 @@ namespace GitUI.Script
 
         public static (string? arguments, bool abort) Parse(string? arguments, IGitModule module, IWin32Window owner, IScriptHostControl? scriptHostControl)
         {
-            if (GitExtensions.Strings.IsNullOrWhiteSpace(arguments))
+            if (GitExtUtils.Strings.IsNullOrWhiteSpace(arguments))
             {
                 return (arguments, abort: false);
             }

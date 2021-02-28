@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using GitExtensions;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 
 namespace GitCommands

@@ -23,7 +23,7 @@ namespace GitUI.CommandsDialogs
 
         public void RemoteUpdate(IList<Repository> remotes, string? oldRemoteUrl, string? newRemoteUrl)
         {
-            if (GitExtensions.Strings.IsNullOrWhiteSpace(newRemoteUrl))
+            if (GitExtUtils.Strings.IsNullOrWhiteSpace(newRemoteUrl))
             {
                 return;
             }

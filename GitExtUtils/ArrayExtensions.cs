@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace GitCommands
+namespace GitExtUtils
 {
     public static class ArrayExtensions
     {

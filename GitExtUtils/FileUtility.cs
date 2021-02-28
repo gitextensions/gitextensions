@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace GitUI
+namespace GitExtUtils
 {
     public static class FileUtility
     {

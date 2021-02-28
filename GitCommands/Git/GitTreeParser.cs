@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using GitExtensions;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.Git

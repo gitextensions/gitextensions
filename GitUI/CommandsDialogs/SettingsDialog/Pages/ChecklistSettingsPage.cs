@@ -592,7 +592,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             var installDir = AppSettings.GetInstallDir();
 
-            if (GitExtensions.Strings.IsNullOrEmpty(installDir))
+            if (GitExtUtils.Strings.IsNullOrEmpty(installDir))
             {
                 RenderSettingUnset(GitExtensionsInstall, GitExtensionsInstall_Fix, _registryKeyGitExtensionsMissing.Text);
                 return false;

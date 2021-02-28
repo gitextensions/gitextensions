@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GitCommands
+namespace GitExtUtils
 {
     public static class BinarySearch
     {

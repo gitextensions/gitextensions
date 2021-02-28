@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using GitCommands.Git;
-using GitExtensions;
+using GitExtUtils;
 
 namespace GitCommands.UserRepositoryHistory
 {

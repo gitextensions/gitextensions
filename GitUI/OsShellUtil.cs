@@ -46,7 +46,7 @@ namespace GitUI
         /// </summary>
         public static void OpenUrlInDefaultBrowser(string? url)
         {
-            if (!GitExtensions.Strings.IsNullOrWhiteSpace(url))
+            if (!GitExtUtils.Strings.IsNullOrWhiteSpace(url))
             {
                 new Executable(url).Start(useShellExecute: true);
             }

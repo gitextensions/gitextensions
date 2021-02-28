@@ -17,7 +17,6 @@ using GitCommands.Git.Extensions;
 using GitCommands.Patches;
 using GitCommands.Settings;
 using GitCommands.Utils;
-using GitExtensions;
 using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;

@@ -49,7 +49,7 @@ namespace GitUI
 
         public static string GetGitVersionInfo(string? gitVersion, GitVersion lastSupportedVersion, GitVersion recommendedVersion)
         {
-            if (GitExtensions.Strings.IsNullOrWhiteSpace(gitVersion))
+            if (GitExtUtils.Strings.IsNullOrWhiteSpace(gitVersion))
             {
                 return $"- (minimum: {lastSupportedVersion}, recommended: {recommendedVersion})";
             }

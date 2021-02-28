@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Editor;
 using GitUI.Theming;
@@ -132,7 +133,7 @@ namespace GitUI.CommandsDialogs
 
         private void SaveChanges()
         {
-            if (!GitExtensions.Strings.IsNullOrEmpty(_fileName))
+            if (!GitExtUtils.Strings.IsNullOrEmpty(_fileName))
             {
                 if (fileViewer.FilePreamble is null || Module.FilesEncoding.GetPreamble().SequenceEqual(fileViewer.FilePreamble))
                 {
