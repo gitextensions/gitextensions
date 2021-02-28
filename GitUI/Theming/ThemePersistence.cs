@@ -30,12 +30,12 @@ namespace GitUI.Theming
 
         public void Save(Theme theme, string themeFileName)
         {
-            var serializationFields = (IThemeSerializationFields)theme;
+            var serializationData = (IThemeSerializationData)theme;
             string serialized = string.Join(
                 Environment.NewLine,
                 Enumerable.Concat(
-                    serializationFields.SysColorValues.Select(_ => string.Format(Format, _.Key, FormatColor(_.Value))),
-                    serializationFields.AppColorValues.Select(_ => string.Format(Format, _.Key, FormatColor(_.Value)))));
+                    serializationData.SysColorValues.Select(_ => string.Format(Format, _.Key, FormatColor(_.Value))),
+                    serializationData.AppColorValues.Select(_ => string.Format(Format, _.Key, FormatColor(_.Value)))));
 
             File.WriteAllText(themeFileName, serialized);
         }

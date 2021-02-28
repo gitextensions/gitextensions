@@ -8,7 +8,7 @@ namespace GitExtUtils.GitUI.Theming
     /// <summary>
     /// A set of values for .Net system colors and GitExtensions app-specific colors.
     /// </summary>
-    public class Theme : IThemeSerializationFields
+    public class Theme : IThemeSerializationData
     {
         private static readonly IReadOnlyDictionary<KnownColor, KnownColor> Duplicates =
             new Dictionary<KnownColor, KnownColor>
@@ -23,8 +23,8 @@ namespace GitExtUtils.GitUI.Theming
         private readonly IReadOnlyDictionary<AppColor, Color> _appColorValues;
         private readonly IReadOnlyDictionary<KnownColor, Color> _sysColorValues;
 
-        IReadOnlyDictionary<AppColor, Color> IThemeSerializationFields.AppColorValues => _appColorValues;
-        IReadOnlyDictionary<KnownColor, Color> IThemeSerializationFields.SysColorValues => _sysColorValues;
+        IReadOnlyDictionary<AppColor, Color> IThemeSerializationData.AppColorValues => _appColorValues;
+        IReadOnlyDictionary<KnownColor, Color> IThemeSerializationData.SysColorValues => _sysColorValues;
 
         public static Theme Default => _default ??= CreateDefaultTheme();
 
