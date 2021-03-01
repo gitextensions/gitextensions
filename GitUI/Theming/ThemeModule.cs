@@ -83,7 +83,7 @@ namespace GitUI.Theming
                 return CreateFallbackSettings(invariantTheme);
             }
 
-            IsDarkTheme = theme.SysColorValues[KnownColor.Window].GetBrightness() < 0.5;
+            IsDarkTheme = theme.GetNonEmptyColor(KnownColor.Window).GetBrightness() < 0.5;
 
             return new ThemeSettings(theme, invariantTheme, AppSettings.ThemeVariations, AppSettings.UseSystemVisualStyle);
         }
