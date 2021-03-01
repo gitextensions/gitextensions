@@ -8,7 +8,7 @@ namespace GitExtUtils.GitUI.Theming
     /// <summary>
     /// A set of values for .Net system colors and GitExtensions app-specific colors.
     /// </summary>
-    public class Theme
+    public class Theme : IThemeSerializationData
     {
         private static readonly IReadOnlyDictionary<KnownColor, KnownColor> Duplicates =
             new Dictionary<KnownColor, KnownColor>
@@ -19,8 +19,12 @@ namespace GitExtUtils.GitUI.Theming
             };
 
         private static Theme? _default;
-        public IReadOnlyDictionary<AppColor, Color> AppColorValues { get; }
-        public IReadOnlyDictionary<KnownColor, Color> SysColorValues { get; }
+
+        private readonly IReadOnlyDictionary<AppColor, Color> _appColorValues;
+        private readonly IReadOnlyDictionary<KnownColor, Color> _sysColorValues;
+
+        IReadOnlyDictionary<AppColor, Color> IThemeSerializationData.AppColorValues => _appColorValues;
+        IReadOnlyDictionary<KnownColor, Color> IThemeSerializationData.SysColorValues => _sysColorValues;
 
         public static Theme Default => _default ??= CreateDefaultTheme();
 
@@ -30,8 +34,8 @@ namespace GitExtUtils.GitUI.Theming
             ThemeId id)
         {
             Id = id;
-            AppColorValues = appColors;
-            SysColorValues = sysColors;
+            _appColorValues = appColors;
+            _sysColorValues = sysColors;
         }
 
         public ThemeId Id { get; }
@@ -41,7 +45,7 @@ namespace GitExtUtils.GitUI.Theming
         /// returns <see cref="Color.Empty"/>.
         /// </summary>
         public Color GetColor(AppColor name) =>
-            AppColorValues.TryGetValue(name, out var result)
+            _appColorValues.TryGetValue(name, out var result)
                 ? result
                 : Color.Empty;
 
@@ -49,7 +53,7 @@ namespace GitExtUtils.GitUI.Theming
         /// Get .Net system color value as defined by this instance.
         /// </summary>
         private Color GetSysColor(KnownColor name) =>
-            SysColorValues.TryGetValue(name, out var result)
+            _sysColorValues.TryGetValue(name, out var result)
                 ? result
                 : Color.Empty;
 
