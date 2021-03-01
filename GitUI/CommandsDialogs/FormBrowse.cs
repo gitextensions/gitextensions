@@ -201,7 +201,8 @@ namespace GitUI.CommandsDialogs
 
             repoObjectsTree.Initialize(_aheadBehindDataProvider, _filterBranchHelper, RevisionGrid, RevisionGrid, RevisionGrid);
             toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
-            revisionDiff.Bind(RevisionGrid, fileTree);
+            revisionDiff.Bind(RevisionGrid, fileTree, () => RequestRefresh());
+            fileTree.Bind(() => RequestRefresh());
 
             var repositoryDescriptionProvider = new RepositoryDescriptionProvider(new GitDirectoryResolver());
             _appTitleGenerator = new AppTitleGenerator(repositoryDescriptionProvider);
@@ -821,7 +822,7 @@ namespace GitUI.CommandsDialogs
             }
 
             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
-            _gitStatusMonitor.RequestRefresh();
+            RequestRefresh();
 
             if (_dashboard is null || !_dashboard.Visible)
             {
@@ -832,6 +833,8 @@ namespace GitUI.CommandsDialogs
 
             toolStripButtonPush.DisplayAheadBehindInformation(Module.GetSelectedBranch());
         }
+
+        private void RequestRefresh() => _gitStatusMonitor?.RequestRefresh();
 
         private void RefreshSelection()
         {
@@ -1549,6 +1552,7 @@ namespace GitUI.CommandsDialogs
         private void ResetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UICommands.StartResetChangesDialog(this);
+            RequestRefresh();
             revisionDiff.RefreshArtificial();
         }
 
@@ -3231,6 +3235,7 @@ namespace GitUI.CommandsDialogs
                 var args = GitCommandHelpers.ResetCmd(ResetMode.Soft, "HEAD~1");
                 Module.GitExecutable.GetOutput(args);
                 refreshToolStripMenuItem.PerformClick();
+                RequestRefresh();
             }
         }
 
