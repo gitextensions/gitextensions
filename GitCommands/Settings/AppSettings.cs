@@ -10,7 +10,6 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands.Settings;
-using GitCommands.Utils;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -1828,6 +1827,15 @@ namespace GitCommands
         public static bool IsPortable()
         {
             return Properties.Settings.Default.IsPortable;
+        }
+
+        public static class Appearance
+        {
+            public static bool GridListLayout
+            {
+                get => GetBool($"{nameof(Appearance)}.{nameof(GridListLayout)}", false);
+                set => SetBool($"{nameof(Appearance)}.{nameof(GridListLayout)}", value);
+            }
         }
 
         private static IEnumerable<(string name, string value)> GetSettingsFromRegistry()

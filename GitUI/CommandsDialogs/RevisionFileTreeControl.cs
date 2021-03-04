@@ -59,6 +59,14 @@ See the changes in the commit form.");
         public RevisionFileTreeControl()
         {
             InitializeComponent();
+
+            if (AppSettings.Appearance.GridListLayout)
+            {
+                tvGitTree.FullRowSelect = true;
+                tvGitTree.ItemHeight = DpiUtil.Scale(24);
+                tvGitTree.ShowLines = false;
+            }
+
             InitializeComplete();
             HotkeysEnabled = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);

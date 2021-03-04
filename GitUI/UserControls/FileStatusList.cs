@@ -110,7 +110,12 @@ namespace GitUI
 
             ImageList CreateImageList()
             {
-                const int rowHeight = 18;
+                int rowHeight = 18;
+
+                if (AppSettings.Appearance.GridListLayout)
+                {
+                     rowHeight = DpiUtil.Scale(23); // for 24px
+                }
 
                 var list = new ImageList
                 {
@@ -149,7 +154,7 @@ namespace GitUI
 
                 return list;
 
-                static Bitmap ScaleHeight(Bitmap input)
+                Bitmap ScaleHeight(Bitmap input)
                 {
                     Debug.Assert(input.Height < rowHeight, "Can only increase row height");
                     var scaled = new Bitmap(input.Width, rowHeight, input.PixelFormat);

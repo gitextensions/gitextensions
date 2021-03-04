@@ -68,6 +68,14 @@ namespace GitUI.BranchTreePanel
             mnuBtnPruneAllRemotes.AdaptImageLightness();
             mnubtnFetchCreateBranch.AdaptImageLightness();
             mnubtnPullFromRemoteBranch.AdaptImageLightness();
+
+            if (AppSettings.Appearance.GridListLayout)
+            {
+                treeMain.FullRowSelect = true;
+                treeMain.ItemHeight = DpiUtil.Scale(24);
+                treeMain.ShowLines = false;
+            }
+
             InitializeComplete();
 
             RegisterContextActions();

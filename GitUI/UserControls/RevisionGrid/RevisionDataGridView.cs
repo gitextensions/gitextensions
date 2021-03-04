@@ -614,7 +614,16 @@ namespace GitUI.UserControls.RevisionGrid
         {
             // TODO allow custom grid row spacing
             using var g = Graphics.FromHwnd(Handle);
-            _rowHeight = (int)g.MeasureString("By", _normalFont).Height + DpiUtil.Scale(9);
+
+            if (AppSettings.Appearance.GridListLayout)
+            {
+                _rowHeight = (int)g.MeasureString("By", _normalFont).Height + DpiUtil.Scale(7); // for 24px
+            }
+            else
+            {
+                _rowHeight = (int)g.MeasureString("By", _normalFont).Height + DpiUtil.Scale(9);
+            }
+
             //// + AppSettings.GridRowSpacing
             RowTemplate.Height = _rowHeight;
         }
