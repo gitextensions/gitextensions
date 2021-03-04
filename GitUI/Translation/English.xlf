@@ -208,6 +208,10 @@ Click this info icon for more details.</source>
         <source>Language</source>
         <target />
       </trans-unit>
+      <trans-unit id="gridListLayoutCheckBox.Text">
+        <source>Experimental grid/list layout</source>
+        <target />
+      </trans-unit>
       <trans-unit id="helpTranslate.Text">
         <source>Help translate</source>
         <target />

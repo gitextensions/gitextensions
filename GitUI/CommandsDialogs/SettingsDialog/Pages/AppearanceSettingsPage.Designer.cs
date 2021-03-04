@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.TableLayoutPanel tlpnlMain;
+            this.gridListLayoutCheckBox = new System.Windows.Forms.CheckBox();
             this.gbGeneral = new System.Windows.Forms.GroupBox();
             this.tlpnlGeneral = new System.Windows.Forms.TableLayoutPanel();
             this.chkSortByAuthorDate = new GitUI.UserControls.Settings.SettingsCheckBox();
@@ -85,6 +86,7 @@
             // 
             tlpnlMain.ColumnCount = 1;
             tlpnlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpnlMain.Controls.Add(this.gridListLayoutCheckBox, 0, 3);
             tlpnlMain.Controls.Add(this.gbGeneral, 0, 0);
             tlpnlMain.Controls.Add(this.gbLanguages, 0, 2);
             tlpnlMain.Controls.Add(this.gbAuthorImages, 0, 1);
@@ -600,6 +602,18 @@
             this._NO_TRANSLATE_cmbBranchesOrder.Size = new System.Drawing.Size(322, 21);
             this._NO_TRANSLATE_cmbBranchesOrder.TabIndex = 9;
             // 
+            // gridListLayoutCheckBox
+            // 
+            this.gridListLayoutCheckBox.AutoSize = true;
+            tlpnlMain.SetColumnSpan(this.gridListLayoutCheckBox, 2);
+            this.gridListLayoutCheckBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridListLayoutCheckBox.Location = new System.Drawing.Point(3, 530);
+            this.gridListLayoutCheckBox.Name = "gridListLayoutCheckBox";
+            this.gridListLayoutCheckBox.Size = new System.Drawing.Size(1455, 66);
+            this.gridListLayoutCheckBox.TabIndex = 3;
+            this.gridListLayoutCheckBox.Text = "Experimental grid/list layout";
+            this.gridListLayoutCheckBox.UseVisualStyleBackColor = true;
+            // 
             // AppearanceSettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -671,5 +685,6 @@
         private System.Windows.Forms.Label lblBranchesSortBy;
         private System.Windows.Forms.ComboBox _NO_TRANSLATE_cmbBranchesSortBy;
         private System.Windows.Forms.ComboBox _NO_TRANSLATE_cmbBranchesOrder;
+        private System.Windows.Forms.CheckBox gridListLayoutCheckBox;
     }
 }

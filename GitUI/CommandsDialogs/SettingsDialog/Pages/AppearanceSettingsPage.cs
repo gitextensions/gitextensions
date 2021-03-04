@@ -119,6 +119,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             chkShowRelativeDate.Checked = AppSettings.RelativeDate;
+            gridListLayoutCheckBox.Checked = AppSettings.Appearance.GridListLayout;
 
             return;
 
@@ -176,6 +177,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RelativeDate = chkShowRelativeDate.Checked;
 
             AppSettings.Dictionary = Dictionary.SelectedIndex == 0 ? "none" : Dictionary.Text;
+            AppSettings.Appearance.GridListLayout = gridListLayoutCheckBox.Checked;
 
             return;
 
