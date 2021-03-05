@@ -323,8 +323,7 @@ See the changes in the commit form.");
 
         private string? SaveSelectedItemToTempFile()
         {
-            if (tvGitTree.SelectedNode?.Tag is GitItem gitItem &&
-                gitItem.ObjectType == GitObjectType.Blob &&
+            if (tvGitTree.SelectedNode?.Tag is GitItem { ObjectType: GitObjectType.Blob } gitItem &&
                 !string.IsNullOrWhiteSpace(gitItem.FileName))
             {
                 var fileName = gitItem.FileName.SubstringAfterLast('/').SubstringAfterLast('\\');
@@ -399,8 +398,7 @@ See the changes in the commit form.");
 
         private void tvGitTree_ItemDrag(object sender, ItemDragEventArgs e)
         {
-            if (e.Item is TreeNode treeNode &&
-                treeNode.Tag is GitItem gitItem)
+            if (e.Item is TreeNode { Tag: GitItem gitItem })
             {
                 var fileList = new StringCollection();
                 var fileName = _fullPathResolver.Resolve(gitItem.FileName);
@@ -658,7 +656,7 @@ See the changes in the commit form.");
 
         private void openSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
-            if (tvGitTree.SelectedNode?.Tag is GitItem gitItem && gitItem.ObjectType == GitObjectType.Commit)
+            if (tvGitTree.SelectedNode?.Tag is GitItem { ObjectType: GitObjectType.Commit } gitItem)
             {
                 SpawnCommitBrowser(gitItem);
             }
@@ -666,7 +664,7 @@ See the changes in the commit form.");
 
         private void openWithToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (tvGitTree.SelectedNode?.Tag is GitItem gitItem && gitItem.ObjectType == GitObjectType.Blob)
+            if (tvGitTree.SelectedNode?.Tag is GitItem { ObjectType: GitObjectType.Blob } gitItem)
             {
                 var fileName = _fullPathResolver.Resolve(gitItem.FileName);
                 if (File.Exists(fileName))
@@ -725,7 +723,7 @@ See the changes in the commit form.");
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (tvGitTree.SelectedNode?.Tag is GitItem gitItem && gitItem.ObjectType == GitObjectType.Blob)
+            if (tvGitTree.SelectedNode?.Tag is GitItem { ObjectType: GitObjectType.Blob } gitItem)
             {
                 var fullName = _fullPathResolver.Resolve(gitItem.FileName);
                 using var fileDialog =

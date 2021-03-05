@@ -173,7 +173,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 var node = nodes.Cast<TreeNode>().SingleOrDefault(n =>
-                    n?.Tag is GitItem item && item.ObjectType == GitObjectType.Tree && item.Name == treeToFind);
+                    n?.Tag is GitItem { ObjectType: GitObjectType.Tree } item && item.Name == treeToFind);
 
                 if (node is null)
                 {
