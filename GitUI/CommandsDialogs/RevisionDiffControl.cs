@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs
 
         private RevisionGridControl? _revisionGrid;
         private RevisionFileTreeControl? _revisionFileTree;
-        private IRevisionDiffController? _revisionDiffController;
+        private readonly IRevisionDiffController _revisionDiffController = new RevisionDiffController();
         private readonly IFileStatusListContextMenuController _revisionDiffContextMenuController;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
@@ -234,8 +234,6 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnRuntimeLoad()
         {
-            _revisionDiffController = new RevisionDiffController(_gitRevisionTester);
-
             DiffFiles.DescribeRevision = objectId => DescribeRevision(objectId);
             DiffText.SetFileLoader(GetNextPatchFile);
             DiffText.Font = AppSettings.FixedWidthFont;
@@ -517,8 +515,6 @@ namespace GitUI.CommandsDialogs
             fileHistoryDiffToolstripMenuItem.Font = (DiffFiles.SelectedItem?.Item.IsSubmodule ?? false) && AppSettings.OpenSubmoduleDiffInSeparateWindow
                 ? new Font(fileHistoryDiffToolstripMenuItem.Font, FontStyle.Regular)
                 : new Font(fileHistoryDiffToolstripMenuItem.Font, FontStyle.Bold);
-
-            Validates.NotNull(_revisionDiffController);
 
             diffUpdateSubmoduleMenuItem.Visible =
                 diffResetSubmoduleChanges.Visible =

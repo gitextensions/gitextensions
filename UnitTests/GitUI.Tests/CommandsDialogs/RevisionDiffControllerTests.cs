@@ -1,8 +1,6 @@
 ﻿using FluentAssertions;
-using GitCommands.Git;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace GitUITests.CommandsDialogs
@@ -10,18 +8,9 @@ namespace GitUITests.CommandsDialogs
     [TestFixture]
     public class RevisionDiffControllerTests
     {
-        private IGitRevisionTester _tester;
-        private RevisionDiffController _controller;
+        private readonly RevisionDiffController _controller = new();
 
-        [SetUp]
-        public void Setup()
-        {
-            _tester = Substitute.For<IGitRevisionTester>();
-
-            _controller = new RevisionDiffController(_tester);
-        }
-
-        private ContextMenuSelectionInfo CreateContextMenuSelectionInfo(GitRevision selectedRevision = null,
+        private static ContextMenuSelectionInfo CreateContextMenuSelectionInfo(GitRevision selectedRevision = null,
             bool isDisplayOnlyDiff = false,
             bool isStatusOnly = false,
             int selectedGitItemCount = 1,

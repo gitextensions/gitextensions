@@ -75,13 +75,6 @@ namespace GitUI.CommandsDialogs
 
     public sealed class RevisionDiffController : IRevisionDiffController
     {
-        private readonly IGitRevisionTester _revisionTester;
-
-        public RevisionDiffController(IGitRevisionTester revisionTester)
-        {
-            _revisionTester = revisionTester;
-        }
-
         // The enabling of menu items is related to how the actions have been implemented
 
         public bool ShouldShowDifftoolMenus(ContextMenuSelectionInfo selectionInfo)
