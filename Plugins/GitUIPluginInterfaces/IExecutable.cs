@@ -31,13 +31,5 @@ namespace GitUIPluginInterfaces
                        bool redirectOutput = false,
                        Encoding? outputEncoding = null,
                        bool useShellExecute = false);
-
-        /// <summary>
-        /// Launches a process for the executable and returns its output.
-        /// </summary>
-        /// <param name="arguments">The arguments to pass to the executable</param>
-        /// <returns>The concatenation of standard output and standard error.</returns>
-        [MustUseReturnValue]
-        string GetOutput(ArgumentString arguments);
     }
 }

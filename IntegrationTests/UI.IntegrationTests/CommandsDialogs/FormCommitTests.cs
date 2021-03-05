@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommonTestUtils;
 using FluentAssertions;
+using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
 using ICSharpCode.TextEditor;
