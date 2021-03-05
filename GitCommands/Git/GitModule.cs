@@ -2253,7 +2253,7 @@ namespace GitCommands
             return stashes;
         }
 
-        public Patch? GetSingleDiff(
+        public async Task<Patch?> GetSingleDiffAsync(
             ObjectId? firstId, ObjectId? secondId,
             string? fileName, string? oldFileName,
             string extraDiffArguments, Encoding encoding,
@@ -2284,7 +2284,7 @@ namespace GitCommands
                 ? GitCommandCache
                 : null;
 
-            var patch = _gitExecutable.GetOutput(
+            var patch = await _gitExecutable.GetOutputAsync(
                 args,
                 cache: cache,
                 outputEncoding: LosslessEncoding);
@@ -2602,7 +2602,8 @@ namespace GitCommands
                         async () =>
                         {
                             await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                            return SubmoduleHelpers.GetCurrentSubmoduleChanges(this, item.Name, item.OldName, firstId, secondId);
+                            return await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(this, item.Name, item.OldName, firstId, secondId)
+                                .ConfigureAwait(false);
                         }));
             }
         }

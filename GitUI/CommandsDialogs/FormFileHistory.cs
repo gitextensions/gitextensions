@@ -31,6 +31,7 @@ namespace GitUI.CommandsDialogs
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly FormFileHistoryController _controller = new();
+        private readonly CancellationTokenSequence _viewChangesSequence = new();
 
         private BuildReportTabPageExtension? _buildReportTabPageExtension;
 
@@ -168,6 +169,7 @@ namespace GitUI.CommandsDialogs
             if (disposing)
             {
                 _asyncLoader.Dispose();
+                _viewChangesSequence.Dispose();
 
                 // if the form was instantiated by the translation app, all of the following would be null
                 _filterRevisionsHelper?.Dispose();
@@ -406,7 +408,7 @@ namespace GitUI.CommandsDialogs
                     IsTracked = true,
                     IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName))
                 };
-                View.ViewGitItemRevisionAsync(file, revision.ObjectId);
+                _ = View.ViewGitItemRevisionAsync(file, revision.ObjectId);
             }
             else if (tabControl1.SelectedTab == DiffTab)
             {
@@ -418,7 +420,8 @@ namespace GitUI.CommandsDialogs
                 };
                 var revisions = FileChanges.GetSelectedRevisions();
                 FileStatusItem item = new(firstRev: revisions.Skip(1).LastOrDefault(), secondRev: revisions.FirstOrDefault(), file);
-                Diff.ViewChangesAsync(item, defaultText: "You need to select at least one revision to view diff.");
+                _ = Diff.ViewChangesAsync(item, defaultText: "You need to select at least one revision to view diff.",
+                    cancellationToken: _viewChangesSequence.Next());
             }
             else if (tabControl1.SelectedTab == CommitInfoTabPage)
             {

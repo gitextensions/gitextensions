@@ -24,6 +24,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _areYouSure = new("Are you sure you want to drop the stash? This action cannot be undone.");
         private readonly TranslationString _dontShowAgain = new("Don't show me this message again.");
 
+        private readonly CancellationTokenSequence _viewChangesSequence = new();
         private readonly AsyncLoader _asyncLoader = new();
 
         public bool ManageStashes { get; set; }
@@ -91,6 +92,22 @@ namespace GitUI.CommandsDialogs
             }
 
             base.OnKeyUp(e);
+        }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            _asyncLoader.Dispose();
+            if (disposing)
+            {
+                _viewChangesSequence.Dispose();
+                components?.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
 
         private void FormStashFormClosing(object sender, FormClosingEventArgs e)
@@ -227,7 +244,8 @@ namespace GitUI.CommandsDialogs
 
         private void StashedSelectedIndexChanged(object sender, EventArgs e)
         {
-            View.ViewChangesAsync(Stashed.SelectedItem);
+            _ = View.ViewChangesAsync(Stashed.SelectedItem,
+                cancellationToken: _viewChangesSequence.Next());
             EnablePartialStash();
         }
 

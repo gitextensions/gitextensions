@@ -43,6 +43,7 @@ namespace GitUI.CommandsDialogs
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
         private readonly IGitRevisionTester _gitRevisionTester;
+        private readonly CancellationTokenSequence _viewChangesSequence = new();
         private readonly RememberFileContextMenuController _rememberFileContextMenuController
             = RememberFileContextMenuController.Default;
         private Action? _refreshGitStatus;
@@ -243,6 +244,21 @@ namespace GitUI.CommandsDialogs
             base.OnRuntimeLoad();
         }
 
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _viewChangesSequence.Dispose();
+                components?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
         private string DescribeRevision(ObjectId? objectId, int maxLength = 0)
         {
             if (objectId is null)
@@ -436,7 +452,8 @@ namespace GitUI.CommandsDialogs
         private async Task ShowSelectedFileDiffAsync()
         {
             await DiffText.ViewChangesAsync(DiffFiles.SelectedItem,
-                openWithDiffTool: () => firstToSelectedToolStripMenuItem.PerformClick());
+                openWithDiffTool: () => firstToSelectedToolStripMenuItem.PerformClick(),
+                cancellationToken: _viewChangesSequence.Next());
         }
 
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)

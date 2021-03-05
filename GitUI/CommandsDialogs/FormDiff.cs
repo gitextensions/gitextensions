@@ -26,6 +26,7 @@ namespace GitUI.CommandsDialogs
         private readonly IFileStatusListContextMenuController _revisionDiffContextMenuController;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
+        private readonly CancellationTokenSequence _viewChangesSequence = new();
 
         private readonly ToolTip _toolTipControl = new();
 
@@ -97,6 +98,21 @@ namespace GitUI.CommandsDialogs
             Load += delegate { PopulateDiffFiles(); };
         }
 
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _viewChangesSequence.Dispose();
+                components?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
         private void FileViewer_TopScrollReached(object sender, EventArgs e)
         {
             DiffFiles.SelectPreviousVisibleItem();
@@ -137,7 +153,8 @@ namespace GitUI.CommandsDialogs
 
         private void ShowSelectedFileDiff()
         {
-            DiffText.ViewChangesAsync(DiffFiles.SelectedItem);
+            _ = DiffText.ViewChangesAsync(DiffFiles.SelectedItem,
+                cancellationToken: _viewChangesSequence.Next());
         }
 
         private void btnSwap_Click(object sender, EventArgs e)

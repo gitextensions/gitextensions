@@ -8,6 +8,8 @@ namespace GitUI.UserControls
 {
     public partial class CommitDiff : GitModuleControl
     {
+        private readonly CancellationTokenSequence _viewChangesSequence = new();
+
         /// <summary>
         /// Raised when the Escape key is pressed (and only when no selection exists, as the default behaviour of escape is to clear the selection).
         /// </summary>
@@ -66,6 +68,21 @@ namespace GitUI.UserControls
             }
         }
 
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _viewChangesSequence.Dispose();
+                components?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
@@ -84,7 +101,8 @@ namespace GitUI.UserControls
 
         private async Task ViewSelectedDiffAsync()
         {
-            await DiffText.ViewChangesAsync(DiffFiles.SelectedItem);
+            await DiffText.ViewChangesAsync(DiffFiles.SelectedItem,
+                cancellationToken: _viewChangesSequence.Next());
         }
     }
 }

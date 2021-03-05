@@ -407,18 +407,7 @@ namespace GitUI.Editor
         /// <param name="text">The patch text.</param>
         /// <param name="openWithDifftool">The action to open the difftool.</param>
         public Task ViewPatchAsync(FileStatusItem item, string text, Action? openWithDifftool)
-        {
-            return ShowOrDeferAsync(
-               text.Length,
-               () =>
-               {
-                   ResetView(ViewMode.Diff, item.Item.Name, item, text: text);
-                   internalFileViewer.SetText(text, openWithDifftool, isDiff: IsDiffView(_viewMode), isRangeDiff: _viewMode == ViewMode.RangeDiff);
-
-                   TextLoaded?.Invoke(this, null);
-                   return Task.CompletedTask;
-               });
-        }
+            => ViewPrivateAsync(item, item?.Item?.Name, text, openWithDifftool, ViewMode.Diff);
 
         /// <summary>
         /// Present the text as a patch in the file viewer, for GitHub.
@@ -426,19 +415,19 @@ namespace GitUI.Editor
         /// <param name="fileName">The fileName to present.</param>
         /// <param name="text">The patch text.</param>
         /// <param name="openWithDifftool">The action to open the difftool.</param>
+        public Task ViewFixedPatchAsync(string fileName, string text, Action? openWithDifftool = null)
+            => ViewPrivateAsync(item: null, fileName, text, openWithDifftool, ViewMode.FixedDiff);
+
         public void ViewFixedPatch(string? fileName,
             string text,
             Action? openWithDifftool = null)
         {
             ThreadHelper.JoinableTaskFactory.Run(
-                () => ViewPrivateAsync(fileName, text, openWithDifftool, ViewMode.FixedDiff));
+                () => ViewFixedPatchAsync(fileName, text, openWithDifftool));
         }
 
-        public Task ViewFixedPatchAsync(string fileName, string text, Action? openWithDifftool = null)
-            => ViewPrivateAsync(fileName, text, openWithDifftool, ViewMode.FixedDiff);
-
         public Task ViewRangeDiffAsync(string fileName, string text)
-            => ViewPrivateAsync(fileName, text, openWithDifftool: null, ViewMode.RangeDiff);
+            => ViewPrivateAsync(item: null, fileName, text, openWithDifftool: null, ViewMode.RangeDiff);
 
         public void ViewText(string? fileName,
             string text,
@@ -448,6 +437,13 @@ namespace GitUI.Editor
                 () => ViewTextAsync(fileName, text, openWithDifftool));
         }
 
+        /// <summary>
+        /// Present the text in the file viewer, for GitHub.
+        /// </summary>
+        /// <param name="fileName">The fileName to present.</param>
+        /// <param name="text">The patch text.</param>
+        /// <param name="openWithDifftool">The action to open the difftool.</param>
+        /// <param name="checkGitAttributes">Check Git attributes to check for bimary files.</param>
         public Task ViewTextAsync(string? fileName, string text,
             Action? openWithDifftool = null, bool checkGitAttributes = false)
         {
@@ -709,13 +705,13 @@ namespace GitUI.Editor
             return viewMode is (ViewMode.Diff or ViewMode.FixedDiff or ViewMode.RangeDiff);
         }
 
-        private Task ViewPrivateAsync(string? fileName, string text, Action? openWithDifftool, ViewMode viewMode = ViewMode.Diff)
+        private Task ViewPrivateAsync(FileStatusItem? item, string? fileName, string text, Action? openWithDifftool, ViewMode viewMode = ViewMode.Diff)
         {
             return ShowOrDeferAsync(
                 text.Length,
                 () =>
                 {
-                    ResetView(viewMode, fileName, text: text);
+                    ResetView(viewMode, fileName, item: item, text: text);
                     internalFileViewer.SetText(text, openWithDifftool, isDiff: IsDiffView(_viewMode), isRangeDiff: _viewMode == ViewMode.RangeDiff);
 
                     TextLoaded?.Invoke(this, null);

@@ -483,6 +483,9 @@ namespace GitExtensions.UITests.CommandsDialogs
                         CommitKind.Fixup => _commands.StartFixupCommitDialog(owner: null, _referenceRepository.Module.GetRevision()),
                         _ => throw new ArgumentException($"Unsupported commit kind: {commitKind}", nameof(commitKind))
                     });
+
+                    // Await updated FileViewer
+                    ThreadHelper.JoinPendingOperations();
                 },
                 testDriverAsync);
         }
