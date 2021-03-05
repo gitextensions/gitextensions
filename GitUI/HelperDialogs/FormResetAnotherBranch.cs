@@ -42,6 +42,8 @@ namespace GitUI.HelperDialogs
             Height = tableLayoutPanel1.Height + tableLayoutPanel1.Top;
             tableLayoutPanel1.Dock = DockStyle.Fill;
 
+            ActiveControl = Branches;
+
             InitializeComplete();
 
             labelResetBranchWarning.SetForeColorForBackColor();
