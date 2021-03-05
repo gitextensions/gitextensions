@@ -19,7 +19,7 @@ namespace GitUIPluginInterfaces
 
         public string Name { get; }
         public string Caption { get; }
-        public bool DefaultValue { get; set; }
+        public bool DefaultValue { get; }
         public CheckBox CustomControl { get; set; }
 
         public ISettingControlBinding CreateControlBinding()

@@ -255,13 +255,13 @@ namespace GitStatistics.PieChart
         ///   Gets or sets the x-coordinate of the upper-left corner of the
         ///   bounding rectangle.
         /// </summary>
-        public float X { get; set; }
+        public float X { get; }
 
         /// <summary>
         ///   Gets or sets the y-coordinate of the upper-left corner of the
         ///   bounding rectangle.
         /// </summary>
-        public float Y { get; set; }
+        public float Y { get; }
 
         /// <summary>
         ///   Sets the shadowing style used.

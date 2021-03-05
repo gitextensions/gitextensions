@@ -10,7 +10,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     /// </summary>
     public abstract class GroupSettingsPage : Translate, ISettingsPage
     {
-        public string Title { get; set; }
+        public string Title { get; }
 
         protected GroupSettingsPage(string title)
         {

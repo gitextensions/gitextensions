@@ -119,7 +119,7 @@ namespace GitUITests.BranchTreePanel
         // can't use a substitute here because of class constraint on INode
         public class TestBranchNode : INode, IGitRefActions, ICanDelete, ICanRename
         {
-            public Stack<string> CallStatck { get; set; } = new Stack<string>();
+            public Stack<string> CallStatck { get; } = new Stack<string>();
 
             public bool Checkout()
             {

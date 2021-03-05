@@ -16,13 +16,13 @@ namespace FindLargeFiles
 
         public string SHA { get; set; }
         public string Path { get; set; }
-        internal int SizeInBytes { get; set; }
+        internal int SizeInBytes { get; }
         public string Size => string.Format("{0:F2} Mb", SizeInBytes / 1024.0f / 1024);
         internal int CompressedSizeInBytes { get; set; }
         public string CompressedSize => CompressedSizeInBytes >= 0 ? string.Format("{0:F2} Mb", CompressedSizeInBytes / 1024.0f / 1024) : "<Unknown>";
         public int CommitCount => Commit.Count;
         public DateTime LastCommitDate { get; set; }
         public bool Delete { get; set; }
-        internal HashSet<string> Commit { get; set; }
+        internal HashSet<string> Commit { get; }
     }
 }

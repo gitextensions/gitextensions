@@ -1,16 +1,17 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace GitCommands
 {
     public class CustomDiffMergeTool
     {
-        public CustomDiffMergeTool(ToolStripMenuItem menuItem, System.EventHandler click)
+        public CustomDiffMergeTool(ToolStripMenuItem menuItem, EventHandler click)
         {
             MenuItem = menuItem;
             Click = click;
         }
 
-        public ToolStripMenuItem MenuItem { get; set; }
-        public System.EventHandler Click;
+        public ToolStripMenuItem MenuItem { get; }
+        public EventHandler Click { get; }
     }
 }

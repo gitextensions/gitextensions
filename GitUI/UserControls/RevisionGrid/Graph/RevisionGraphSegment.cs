@@ -27,7 +27,7 @@
 
         public int EndScore => Parent.Score;
 
-        public RevisionGraphRevision Parent { get; private set; }
-        public RevisionGraphRevision Child { get; private set; }
+        public RevisionGraphRevision Parent { get; }
+        public RevisionGraphRevision Child { get; }
     }
 }

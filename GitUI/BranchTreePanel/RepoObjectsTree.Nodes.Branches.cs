@@ -46,7 +46,7 @@ namespace GitUI.BranchTreePanel
             /// <summary>
             /// Short name of the branch/branch path. <example>"issue1344"</example>.
             /// </summary>
-            public string Name { get; protected set; }
+            public string Name { get; }
 
             protected string ParentPath { get; }
 

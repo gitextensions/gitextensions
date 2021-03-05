@@ -301,7 +301,7 @@ namespace GitUI.BranchTreePanel
                 _remotesManager = remotesManager;
             }
 
-            public bool Enabled { get; private set; }
+            public bool Enabled { get; }
 
             public bool Fetch()
             {
