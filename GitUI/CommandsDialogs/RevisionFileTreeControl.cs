@@ -507,9 +507,9 @@ See the changes in the commit form.");
             tvGitTree.SelectedNode?.ExpandAll();
         }
 
-        private void collapseToolStripMenuItem_Click(object sender, EventArgs e)
+        private void collapseAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            tvGitTree.SelectedNode?.Collapse();
+            tvGitTree.CollapseAll();
         }
 
         private void fileTreeArchiveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -618,7 +618,7 @@ See the changes in the commit form.");
 
             findToolStripMenuItem.Enabled = tvGitTree.Nodes.Count > 0;
             expandToolStripMenuItem.Visible = isFolder;
-            collapseToolStripMenuItem.Visible = isFolder;
+            collapseAllToolStripMenuItem.Visible = isFolder;
         }
 
         private void fileTreeOpenContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
