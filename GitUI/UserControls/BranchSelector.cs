@@ -66,22 +66,12 @@ namespace GitUI.UserControls
 
             string[] GetLocalBranches()
             {
-                if (_localBranches is null)
-                {
-                    _localBranches = Module.GetRefs(false).Select(b => b.Name).ToArray();
-                }
-
-                return _localBranches;
+                return _localBranches ??= Module.GetRefs(false).Select(b => b.Name).ToArray();
             }
 
             string[] GetRemoteBranches()
             {
-                if (_remoteBranches is null)
-                {
-                    _remoteBranches = Module.GetRefs(true, true).Where(h => h.IsRemote && !h.IsTag).Select(b => b.Name).ToArray();
-                }
-
-                return _remoteBranches;
+                return _remoteBranches ??= Module.GetRefs(true, true).Where(h => h.IsRemote && !h.IsTag).Select(b => b.Name).ToArray();
             }
 
             string[] GetContainsRevisionBranches()

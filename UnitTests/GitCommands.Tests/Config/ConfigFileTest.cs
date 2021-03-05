@@ -19,18 +19,8 @@ namespace GitCommandsTests.Config
     public class ConfigFileTest
     {
         private GitModule _module;
-        private GitModule Module
-        {
-            get
-            {
-                if (_module is null)
-                {
-                    _module = new GitModule(GetTempFolder());
-                }
 
-                return _module;
-            }
-        }
+        private GitModule Module => _module ??= new GitModule(GetTempFolder());
 
         private static string GetTempFolder()
         {

@@ -8,18 +8,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     {
         private SettingsPageHeader? _header;
 
-        public override Control GuiControl
-        {
-            get
-            {
-                if (_header is null)
-                {
-                    _header = new SettingsPageHeader(this);
-                }
-
-                return _header;
-            }
-        }
+        public override Control GuiControl => _header ??= new SettingsPageHeader(this);
 
         public virtual void SetGlobalSettings()
         {
