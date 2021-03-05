@@ -67,7 +67,7 @@ namespace GitUI.HelperDialogs
             }
         }
 
-        public GitRevision Revision { get; set; }
+        public GitRevision Revision { get; }
 
         private void FormResetCurrentBranch_Load(object sender, EventArgs e)
         {

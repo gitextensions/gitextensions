@@ -63,7 +63,7 @@ namespace GitCommands.Config
 
         public string SectionName { get; set; }
         public string? SubSection { get; set; }
-        public bool SubSectionCaseSensitive { get; set; }
+        public bool SubSectionCaseSensitive { get; }
 
         public IDictionary<string, IReadOnlyList<string>> AsDictionary()
         {

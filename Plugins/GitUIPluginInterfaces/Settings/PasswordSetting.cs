@@ -18,7 +18,7 @@ namespace GitUIPluginInterfaces
 
         public string Name { get; }
         public string Caption { get; }
-        public string DefaultValue { get; set; }
+        public string DefaultValue { get; }
         public TextBox CustomControl { get; set; }
 
         public ISettingControlBinding CreateControlBinding()

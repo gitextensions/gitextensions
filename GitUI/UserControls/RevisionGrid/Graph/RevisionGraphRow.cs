@@ -25,8 +25,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             Segments = segments;
         }
 
-        public RevisionGraphRevision Revision { get; private set; }
-        public IReadOnlyList<RevisionGraphSegment> Segments { get; private set; }
+        public RevisionGraphRevision Revision { get; }
+        public IReadOnlyList<RevisionGraphSegment> Segments { get; }
 
         // This dictonary contains a cached list of all segments and the lane index the segment is in for this row.
         private IReadOnlyDictionary<RevisionGraphSegment, int>? _segmentLanes;

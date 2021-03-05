@@ -8,12 +8,12 @@ namespace GitCommands.UserRepositoryHistory
 {
     public class RecentRepoInfo
     {
-        public Repository Repo { get; set; }
+        public Repository Repo { get; }
         public string? Caption { get; set; }
         public bool MostRecent { get; set; }
         public DirectoryInfo? DirInfo { get; set; }
-        public string? ShortName { get; set; }
-        public string DirName { get; set; }
+        public string? ShortName { get; }
+        public string DirName { get; }
 
         public RecentRepoInfo(Repository repo, bool mostRecent)
         {

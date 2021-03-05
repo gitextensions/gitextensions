@@ -21,7 +21,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public static Color NonRelativeColor { get; } = Color.LightGray;
 
-        internal static Brush NonRelativeBrush { get; private set; }
+        internal static Brush NonRelativeBrush { get; }
 
         internal static readonly List<Brush> PresetGraphBrushes = new List<Brush>();
 

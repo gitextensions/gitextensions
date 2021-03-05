@@ -13,8 +13,8 @@ namespace GitUI
             Click = click;
         }
 
-        public EventHandler<ThumbnailButtonClickedEventArgs> Click { get; set; }
-        public Image Image { get; set; }
-        public string Text { get; set; }
+        public EventHandler<ThumbnailButtonClickedEventArgs> Click { get; }
+        public Image Image { get; }
+        public string Text { get; }
     }
 }

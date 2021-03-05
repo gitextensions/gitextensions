@@ -16,9 +16,10 @@ namespace GitCommands
             _isDiff = isDiff;
         }
 
-        private bool _isDiff { get; set; }
-        private SemaphoreSlim _mutex = new(1);
-        private IEnumerable<string>? _tools = null;
+        private readonly bool _isDiff;
+        private readonly SemaphoreSlim _mutex = new(1);
+
+        private IEnumerable<string>? _tools;
 
         public static CustomDiffMergeToolCache DiffToolCache { get; } = new(true);
         public static CustomDiffMergeToolCache MergeToolCache { get; } = new(false);

@@ -25,8 +25,8 @@ namespace GitUIPluginInterfaces
 
         public string Name { get; }
         public string Caption { get; }
-        public string DefaultValue { get; set; }
-        public IList<string> Values { get; set; }
+        public string DefaultValue { get; }
+        public IList<string> Values { get; }
         public ComboBox CustomControl { get; set; }
 
         public ISettingControlBinding CreateControlBinding()

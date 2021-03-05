@@ -91,7 +91,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public GitRevision? GitRevision { get; set; }
 
-        public ObjectId Objectid { get; set; }
+        public ObjectId Objectid { get; }
 
         public ImmutableStack<RevisionGraphRevision> Parents => _parents;
         public ImmutableStack<RevisionGraphRevision> Children => _children;

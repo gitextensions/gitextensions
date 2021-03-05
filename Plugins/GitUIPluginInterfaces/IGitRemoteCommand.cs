@@ -20,9 +20,9 @@ namespace GitUIPluginInterfaces
     {
         public IGitRemoteCommand Command { get; }
 
-        public bool IsError { get; set; }
+        public bool IsError { get; }
 
-        public bool Handled { get; set; }
+        public bool Handled { get; }
 
         public GitRemoteCommandCompletedEventArgs(IGitRemoteCommand command, bool isError, bool handled)
         {

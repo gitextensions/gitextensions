@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
         }
 
-        public GitRevision Revision { get; set; }
+        public GitRevision Revision { get; }
 
         private void FormRevertCommit_Load(object sender, EventArgs e)
         {

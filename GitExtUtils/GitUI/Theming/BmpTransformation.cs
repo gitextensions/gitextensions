@@ -15,7 +15,7 @@ namespace GitExtUtils.GitUI.Theming
         private const int BytesPerPixel = 4;
         private const PixelFormat PixelFormat = System.Drawing.Imaging.PixelFormat.Format32bppArgb;
 
-        protected Rectangle Rect { get; private set; }
+        protected Rectangle Rect { get; }
         protected byte[]? BgraValues { get; private set; }
         protected bool ImageChanged { get; set; }
 
