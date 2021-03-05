@@ -240,15 +240,7 @@ namespace GitUI.Editor
         [NotNull]
         public Encoding? Encoding
         {
-            get
-            {
-                if (_encoding is null)
-                {
-                    _encoding = Module.FilesEncoding;
-                }
-
-                return _encoding;
-            }
+            get => _encoding ??= Module.FilesEncoding;
             set
             {
                 _encoding = value;

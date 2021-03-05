@@ -252,18 +252,7 @@ namespace GitCommands
         // encoding for files paths
         private static Encoding? _systemEncoding;
 
-        public static Encoding SystemEncoding
-        {
-            get
-            {
-                if (_systemEncoding is null)
-                {
-                    _systemEncoding = new SystemEncodingReader().Read();
-                }
-
-                return _systemEncoding;
-            }
-        }
+        public static Encoding SystemEncoding => _systemEncoding ??= new SystemEncodingReader().Read();
 
         // Encoding that let us read all bytes without replacing any char
         // It is using to read output of commands, which may consist of:

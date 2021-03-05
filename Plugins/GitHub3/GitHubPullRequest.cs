@@ -41,32 +41,10 @@ namespace GitHub3
         }
 
         private IHostedRepository _baseRepo;
-        public IHostedRepository BaseRepo
-        {
-            get
-            {
-                if (_baseRepo is null)
-                {
-                    _baseRepo = new GitHubRepo(_pullRequest.Base.Repo);
-                }
-
-                return _baseRepo;
-            }
-        }
+        public IHostedRepository BaseRepo => _baseRepo ??= new GitHubRepo(_pullRequest.Base.Repo);
 
         private IHostedRepository _headRepo;
-        public IHostedRepository HeadRepo
-        {
-            get
-            {
-                if (_headRepo is null)
-                {
-                    _headRepo = new GitHubRepo(_pullRequest.Head.Repo);
-                }
-
-                return _headRepo;
-            }
-        }
+        public IHostedRepository HeadRepo => _headRepo ??= new GitHubRepo(_pullRequest.Head.Repo);
 
         public string BaseSha => _pullRequest.Base.Sha;
 
@@ -90,12 +68,7 @@ namespace GitHub3
 
         public IPullRequestDiscussion GetDiscussion()
         {
-            if (_discussion is null)
-            {
-                _discussion = new GitHubPullRequestDiscussion(_pullRequest);
-            }
-
-            return _discussion;
+            return _discussion ??= new GitHubPullRequestDiscussion(_pullRequest);
         }
     }
 }

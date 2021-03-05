@@ -20,18 +20,8 @@ namespace GitUI.Hotkey
         private static XmlSerializer? _serializer;
 
         /// <summary>Lazy-loaded Serializer for HotkeySettings[]</summary>
-        private static XmlSerializer Serializer
-        {
-            get
-            {
-                if (_serializer is null)
-                {
-                    _serializer = new XmlSerializer(typeof(HotkeySettings[]), new[] { typeof(HotkeyCommand) });
-                }
+        private static XmlSerializer Serializer => _serializer ??= new XmlSerializer(typeof(HotkeySettings[]), new[] { typeof(HotkeyCommand) });
 
-                return _serializer;
-            }
-        }
         #endregion
 
         private static readonly HashSet<Keys> _usedKeys = new HashSet<Keys>();

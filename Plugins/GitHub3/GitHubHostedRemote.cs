@@ -17,15 +17,10 @@ namespace GitHub3
 
         public IHostedRepository GetHostedRepository()
         {
-            if (_repo is null)
+            return _repo ??= new GitHubRepo(GitHub3Plugin.GitHub.getRepository(Owner, RemoteRepositoryName))
             {
-                _repo = new GitHubRepo(GitHub3Plugin.GitHub.getRepository(Owner, RemoteRepositoryName))
-                {
-                    CloneProtocol = CloneProtocol
-                };
-            }
-
-            return _repo;
+                CloneProtocol = CloneProtocol
+            };
         }
 
         /// <summary>
