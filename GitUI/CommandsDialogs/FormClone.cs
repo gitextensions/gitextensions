@@ -467,10 +467,7 @@ namespace GitUI.CommandsDialogs
             {
                 _branchListLoader.Dispose();
 
-                if (components is not null)
-                {
-                    components.Dispose();
-                }
+                components?.Dispose();
             }
 
             base.Dispose(disposing);

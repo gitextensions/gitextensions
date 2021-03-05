@@ -197,12 +197,7 @@ namespace ResourceManager.Xliff
 
         public static void TranslateProperty(string category, object obj, string propName, ITranslation translation)
         {
-            if (obj is null)
-            {
-                return;
-            }
-
-            var property = obj.GetType().GetProperty(propName, _propertyFlags);
+            var property = obj?.GetType().GetProperty(propName, _propertyFlags);
 
             if (property is null)
             {

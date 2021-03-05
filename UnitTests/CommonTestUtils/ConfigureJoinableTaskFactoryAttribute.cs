@@ -144,12 +144,7 @@ namespace CommonTestUtils
 
             internal void ThrowIfSwitchOccurred()
             {
-                if (_failedTransfer.Value is null)
-                {
-                    return;
-                }
-
-                _failedTransfer.Value.Throw();
+                _failedTransfer.Value?.Throw();
             }
 
             public override void Post(SendOrPostCallback d, object state)

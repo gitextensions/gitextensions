@@ -125,9 +125,9 @@ Current Branch:
         {
             base.OnParentChanged(e);
 
-            if (Parent is null && _argumentsCheatSheet is not null)
+            if (Parent is null)
             {
-                _argumentsCheatSheet.Close();
+                _argumentsCheatSheet?.Close();
             }
         }
 
