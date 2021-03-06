@@ -104,7 +104,7 @@ namespace GitUI.CommandsDialogs
             Close();
         }
 
-        private void UpdatePreviewPanel(IReadOnlyList<string>? ignoredFiles)
+        private void UpdatePreviewPanel(IReadOnlyList<string> ignoredFiles)
         {
             _NO_TRANSLATE_Preview.DataSource = ignoredFiles;
             _NO_TRANSLATE_filesWillBeIgnored.Text = string.Format(_matchingFilesString.Text, _NO_TRANSLATE_Preview.Items.Count);

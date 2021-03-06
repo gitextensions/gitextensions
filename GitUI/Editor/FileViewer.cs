@@ -1033,12 +1033,6 @@ namespace GitUI.Editor
                     getSubmoduleText,
                     text =>
                     {
-                        if (text is null)
-                        {
-                            // cancelled
-                            return;
-                        }
-
                         ThreadHelper.JoinableTaskFactory.Run(() => ViewTextAsync(fileName, text, openWithDifftool));
                     });
             }
@@ -1083,16 +1077,7 @@ namespace GitUI.Editor
                 return _async.LoadAsync(
                     getFileText,
                     text => ThreadHelper.JoinableTaskFactory.Run(
-                        () =>
-                        {
-                            if (text is null)
-                            {
-                                // cancelled
-                                return Task.CompletedTask;
-                            }
-
-                            return ViewTextAsync(fileName, text, openWithDifftool, checkGitAttributes: true);
-                        }));
+                        () => ViewTextAsync(fileName, text, openWithDifftool, checkGitAttributes: true)));
             }
         }
 
