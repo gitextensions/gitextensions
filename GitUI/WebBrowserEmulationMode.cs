@@ -63,14 +63,10 @@ namespace GitUI
 
                 emulationMode = browserVersion switch
                 {
-                    7 => 7000 // Webpages containing standards-based !DOCTYPE directives are displayed in IE7 Standards mode.
-                    ,
-                    8 => 8000 // Webpages containing standards-based !DOCTYPE directives are displayed in IE8 mode.
-                    ,
-                    9 => 9000 // Internet Explorer 9. Webpages containing standards-based !DOCTYPE directives are displayed in IE9 mode.
-                    ,
-                    10 => 10000 // Internet Explorer 10.
-                    ,
+                    7 => 7000, // Webpages containing standards-based !DOCTYPE directives are displayed in IE7 Standards mode.
+                    8 => 8000, // Webpages containing standards-based !DOCTYPE directives are displayed in IE8 mode.
+                    9 => 9000, // Internet Explorer 9. Webpages containing standards-based !DOCTYPE directives are displayed in IE9 mode.
+                    10 => 10000, // Internet Explorer 10.
                     _ => emulationMode
                 };
 

@@ -2765,32 +2765,20 @@ namespace GitUI.CommandsDialogs
 
             Image GetSubmoduleItemImage(DetailedSubmoduleInfo details)
             {
-                if (details.Status is null)
+                return (details.Status, details.IsDirty) switch
                 {
-                    return Images.FolderSubmodule;
-                }
-
-                if (details.Status == SubmoduleStatus.FastForward)
-                {
-                    return details.IsDirty ? Images.SubmoduleRevisionUpDirty : Images.SubmoduleRevisionUp;
-                }
-
-                if (details.Status == SubmoduleStatus.Rewind)
-                {
-                    return details.IsDirty ? Images.SubmoduleRevisionDownDirty : Images.SubmoduleRevisionDown;
-                }
-
-                if (details.Status == SubmoduleStatus.NewerTime)
-                {
-                    return details.IsDirty ? Images.SubmoduleRevisionSemiUpDirty : Images.SubmoduleRevisionSemiUp;
-                }
-
-                if (details.Status == SubmoduleStatus.OlderTime)
-                {
-                    return details.IsDirty ? Images.SubmoduleRevisionSemiDownDirty : Images.SubmoduleRevisionSemiDown;
-                }
-
-                return details.IsDirty ? Images.SubmoduleDirty : Images.FileStatusModified;
+                    (null, _) => Images.FolderSubmodule,
+                    (SubmoduleStatus.FastForward, true) => Images.SubmoduleRevisionUpDirty,
+                    (SubmoduleStatus.FastForward, false) => Images.SubmoduleRevisionUp,
+                    (SubmoduleStatus.Rewind, true) => Images.SubmoduleRevisionDownDirty,
+                    (SubmoduleStatus.Rewind, false) => Images.SubmoduleRevisionDown,
+                    (SubmoduleStatus.NewerTime, true) => Images.SubmoduleRevisionSemiUpDirty,
+                    (SubmoduleStatus.NewerTime, false) => Images.SubmoduleRevisionSemiUp,
+                    (SubmoduleStatus.OlderTime, true) => Images.SubmoduleRevisionSemiDownDirty,
+                    (SubmoduleStatus.OlderTime, false) => Images.SubmoduleRevisionSemiDown,
+                    (_, true) => Images.SubmoduleDirty,
+                    (_, false) => Images.FileStatusModified
+                };
             }
         }
 

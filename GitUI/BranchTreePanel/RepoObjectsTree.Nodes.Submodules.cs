@@ -147,36 +147,18 @@ namespace GitUI.BranchTreePanel
 
                 return;
 
-                // NOTE: Copied and adapated from FormBrowse.GetSubmoduleItemImage
+                // NOTE: Copied and adapted from FormBrowse.GetSubmoduleItemImage
                 static string GetSubmoduleItemImage(DetailedSubmoduleInfo? details)
                 {
-                    if (details?.Status is null)
+                    return details?.Status switch
                     {
-                        return nameof(Images.FolderSubmodule);
-                    }
-
-                    if (details.Status == SubmoduleStatus.FastForward)
-                    {
-                        return details.IsDirty ? nameof(Images.SubmoduleRevisionUpDirty) : nameof(Images.SubmoduleRevisionUp);
-                    }
-
-                    if (details.Status == SubmoduleStatus.Rewind)
-                    {
-                        return details.IsDirty ? nameof(Images.SubmoduleRevisionDownDirty) : nameof(Images.SubmoduleRevisionDown);
-                    }
-
-                    if (details.Status == SubmoduleStatus.NewerTime)
-                    {
-                        return details.IsDirty ? nameof(Images.SubmoduleRevisionSemiUpDirty) : nameof(Images.SubmoduleRevisionSemiUp);
-                    }
-
-                    if (details.Status == SubmoduleStatus.OlderTime)
-                    {
-                        return details.IsDirty ? nameof(Images.SubmoduleRevisionSemiDownDirty) : nameof(Images.SubmoduleRevisionSemiDown);
-                    }
-
-                    // Unknown
-                    return details.IsDirty ? nameof(Images.SubmoduleDirty) : nameof(Images.FileStatusModified);
+                        null => nameof(Images.FolderSubmodule),
+                        SubmoduleStatus.FastForward => details.IsDirty ? nameof(Images.SubmoduleRevisionUpDirty) : nameof(Images.SubmoduleRevisionUp),
+                        SubmoduleStatus.Rewind => details.IsDirty ? nameof(Images.SubmoduleRevisionDownDirty) : nameof(Images.SubmoduleRevisionDown),
+                        SubmoduleStatus.NewerTime => details.IsDirty ? nameof(Images.SubmoduleRevisionSemiUpDirty) : nameof(Images.SubmoduleRevisionSemiUp),
+                        SubmoduleStatus.OlderTime => details.IsDirty ? nameof(Images.SubmoduleRevisionSemiDownDirty) : nameof(Images.SubmoduleRevisionSemiDown),
+                        _ => details.IsDirty ? nameof(Images.SubmoduleDirty) : nameof(Images.FileStatusModified)
+                    };
                 }
             }
 

@@ -448,16 +448,12 @@ namespace GitUI.SpellChecker
             for (var curLine = 0; curLine < numLines; ++curLine)
             {
                 var curLength = TextBox.Lines[curLine].Length;
-                var curMaxLength = 72;
-                if (curLine == 0)
+                var curMaxLength = curLine switch
                 {
-                    curMaxLength = 50;
-                }
-
-                if (curLine == 1)
-                {
-                    curMaxLength = 0;
-                }
+                    0 => 50,
+                    1 => 0,
+                    _ => 72
+                };
 
                 if (curLength > curMaxLength)
                 {
