@@ -150,14 +150,19 @@ namespace GitUI.BranchTreePanel
                 // NOTE: Copied and adapted from FormBrowse.GetSubmoduleItemImage
                 static string GetSubmoduleItemImage(DetailedSubmoduleInfo? details)
                 {
-                    return details?.Status switch
+                    return (details?.Status, details?.IsDirty) switch
                     {
-                        null => nameof(Images.FolderSubmodule),
-                        SubmoduleStatus.FastForward => details.IsDirty ? nameof(Images.SubmoduleRevisionUpDirty) : nameof(Images.SubmoduleRevisionUp),
-                        SubmoduleStatus.Rewind => details.IsDirty ? nameof(Images.SubmoduleRevisionDownDirty) : nameof(Images.SubmoduleRevisionDown),
-                        SubmoduleStatus.NewerTime => details.IsDirty ? nameof(Images.SubmoduleRevisionSemiUpDirty) : nameof(Images.SubmoduleRevisionSemiUp),
-                        SubmoduleStatus.OlderTime => details.IsDirty ? nameof(Images.SubmoduleRevisionSemiDownDirty) : nameof(Images.SubmoduleRevisionSemiDown),
-                        _ => details.IsDirty ? nameof(Images.SubmoduleDirty) : nameof(Images.FileStatusModified)
+                        (SubmoduleStatus.FastForward, true) => nameof(Images.SubmoduleRevisionUpDirty),
+                        (SubmoduleStatus.FastForward, false) => nameof(Images.SubmoduleRevisionUp),
+                        (SubmoduleStatus.Rewind, true) => nameof(Images.SubmoduleRevisionDownDirty),
+                        (SubmoduleStatus.Rewind, false) => nameof(Images.SubmoduleRevisionDown),
+                        (SubmoduleStatus.NewerTime, true) => nameof(Images.SubmoduleRevisionSemiUpDirty),
+                        (SubmoduleStatus.NewerTime, false) => nameof(Images.SubmoduleRevisionSemiUp),
+                        (SubmoduleStatus.OlderTime, true) => nameof(Images.SubmoduleRevisionSemiDownDirty),
+                        (SubmoduleStatus.OlderTime, false) => nameof(Images.SubmoduleRevisionSemiDown),
+                        (_, true) => nameof(Images.SubmoduleDirty),
+                        (_, false) => nameof(Images.FileStatusModified),
+                        _ => nameof(Images.FolderSubmodule)
                     };
                 }
             }

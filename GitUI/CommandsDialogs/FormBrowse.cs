@@ -2763,7 +2763,7 @@ namespace GitUI.CommandsDialogs
 
             return (item, loadDetails);
 
-            Image GetSubmoduleItemImage(DetailedSubmoduleInfo details)
+            static Image GetSubmoduleItemImage(DetailedSubmoduleInfo details)
             {
                 return (details.Status, details.IsDirty) switch
                 {
