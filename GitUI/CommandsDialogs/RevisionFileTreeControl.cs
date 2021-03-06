@@ -525,9 +525,8 @@ See the changes in the commit form.");
 
         private void fileTreeCleanWorkingTreeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
             string filePath;
-            if (gitItem is not null)
+            if (tvGitTree.SelectedNode?.Tag is GitItem gitItem)
             {
                 filePath = gitItem.FileName + "/"; // the trailing / marks a directory
             }

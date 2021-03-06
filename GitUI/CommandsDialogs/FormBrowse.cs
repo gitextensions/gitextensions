@@ -1504,8 +1504,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            IShellDescriptor? shell = (sender as ToolStripItem)?.Tag as IShellDescriptor;
-            if (shell is null)
+            if ((sender as ToolStripItem)?.Tag is not IShellDescriptor shell)
             {
                 return;
             }
@@ -3287,8 +3286,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var paths = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if (paths is null)
+            if (e.Data.GetData(DataFormats.FileDrop) is not string[] paths)
             {
                 return;
             }

@@ -216,10 +216,8 @@ namespace GitUI.BranchTreePanel
 
         private void BeforeDoubleClickExpandCollapse(object sender, CancelEventArgs e)
         {
-            var node = treeMain.SelectedNode?.Tag as Node;
-
             // If node is an inner node, and overrides OnDoubleClick, then disable expand/collapse
-            if (node is not null
+            if (treeMain.SelectedNode?.Tag is Node node
                 && node.Nodes.Count > 0
                 && IsOverride(node.GetType().GetMethod("OnDoubleClick", BindingFlags.Instance | BindingFlags.NonPublic)))
             {

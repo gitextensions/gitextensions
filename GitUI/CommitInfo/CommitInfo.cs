@@ -585,8 +585,7 @@ namespace GitUI.CommitInfo
 
         private void commitInfoContextMenuStrip_Opening(object sender, CancelEventArgs e)
         {
-            var rtb = (sender as ContextMenuStrip)?.SourceControl as RichTextBox;
-            if (rtb is null)
+            if ((sender as ContextMenuStrip)?.SourceControl is not RichTextBox rtb)
             {
                 copyLinkToolStripMenuItem.Visible = false;
                 return;
@@ -740,8 +739,7 @@ namespace GitUI.CommitInfo
 
         private void RichTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            var rtb = sender as RichTextBox;
-            if (rtb is null || !e.Control || e.KeyCode != Keys.C)
+            if (!e.Control || e.KeyCode != Keys.C || sender is not RichTextBox rtb)
             {
                 return;
             }
