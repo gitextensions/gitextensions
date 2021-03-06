@@ -8,8 +8,6 @@ using System.Text.RegularExpressions;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using JetBrains.Annotations;
 
-#nullable enable
-
 namespace GitUIPluginInterfaces
 {
     public sealed class GitRevision : IGitItem, INotifyPropertyChanged

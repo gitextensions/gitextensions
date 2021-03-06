@@ -15,15 +15,15 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
             Stopped
         }
 
-        public string Id { get; set; }
+        public string? Id { get; set; }
         public DateTime StartDate { get; set; }
         public long? Duration { get; set; }
         public BuildStatus Status { get; set; }
-        public string Description { get; set; }
-        public IReadOnlyList<ObjectId> CommitHashList { get; set; }
-        public string Url { get; set; }
+        public string? Description { get; set; }
+        public IReadOnlyList<ObjectId> CommitHashList { get; set; } = Array.Empty<ObjectId>();
+        public string? Url { get; set; }
         public bool ShowInBuildReportTab { get; set; } = true;
-        public string Tooltip { get; set; }
-        public string PullRequestUrl { get; set; }
+        public string? Tooltip { get; set; }
+        public string? PullRequestUrl { get; set; }
     }
 }

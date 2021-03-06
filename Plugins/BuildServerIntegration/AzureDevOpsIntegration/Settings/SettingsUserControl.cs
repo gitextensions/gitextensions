@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace AzureDevOpsIntegration.Settings
@@ -24,7 +25,7 @@ namespace AzureDevOpsIntegration.Settings
         private readonly TranslationString _failToExtractDataFromClipboardCaption = new("Could not extract data");
 
         private string _defaultProjectName;
-        private IEnumerable<string> _remotes;
+        [ItemCanBeNull] private IEnumerable<string> _remotes;
 
         private bool _isUpdating;
         private IntegrationSettings _currentSettings = new();

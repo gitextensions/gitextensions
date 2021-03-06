@@ -5,6 +5,7 @@ using System.Linq;
 using GitCommands.Config;
 using GitExtUtils;
 using GitUIPluginInterfaces;
+using Microsoft;
 
 namespace GitCommands.Remotes
 {
@@ -164,12 +165,19 @@ namespace GitCommands.Remotes
         /// </summary>
         public IReadOnlyList<Remote> GetDisabledRemotes()
         {
-            var disabledRemotes = GetModule().LocalConfigFile.GetConfigSections()
-                .Where(s => s.SectionName == $"{DisabledSectionPrefix}remote")
-                .Select(s => new Remote(s.SubSection, s.GetValue("url"), s.GetValue("pushurl", s.GetValue("url"))))
-                .ToList();
+            return GetDisabledRemotes().ToList();
 
-            return disabledRemotes;
+            IEnumerable<Remote> GetDisabledRemotes()
+            {
+                foreach (IConfigSection section in GetModule().LocalConfigFile.GetConfigSections())
+                {
+                    if (section.SectionName == $"{DisabledSectionPrefix}remote")
+                    {
+                        Validates.NotNull(section.SubSection);
+                        yield return new Remote(section.SubSection, section.GetValue("url"), section.GetValue("pushurl", section.GetValue("url")));
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -245,6 +253,7 @@ namespace GitCommands.Remotes
             var module = GetModule();
             if (!remote.Disabled)
             {
+                Validates.NotNull(remote.Name);
                 return module.RemoveRemote(remote.Name);
             }
 
@@ -260,7 +269,7 @@ namespace GitCommands.Remotes
         /// <returns>True if input remote exists and is enabled.</returns>
         public bool EnabledRemoteExists(string remoteName)
         {
-            return GetEnabledRemoteNames().FirstOrDefault(r => r == remoteName) is not null;
+            return GetEnabledRemoteNames().Any(r => r == remoteName);
         }
 
         /// <summary>
@@ -270,7 +279,7 @@ namespace GitCommands.Remotes
         /// <returns>True if input remote exists and is disabled.</returns>
         public bool DisabledRemoteExists(string remoteName)
         {
-            return GetDisabledRemoteNames().FirstOrDefault(r => r == remoteName) is not null;
+            return GetDisabledRemoteNames().Any(r => r == remoteName);
         }
 
         /// <summary>
@@ -330,6 +339,8 @@ namespace GitCommands.Remotes
                 remoteDisabled = remote.Disabled;
                 if (!string.Equals(remote.Name, remoteName, StringComparison.Ordinal))
                 {
+                    Validates.NotNull(remote.Name);
+
                     // the name of the remote changed - perform rename
                     output = module.RenameRemote(remote.Name, remoteName);
                 }

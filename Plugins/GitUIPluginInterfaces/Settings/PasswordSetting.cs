@@ -19,7 +19,7 @@ namespace GitUIPluginInterfaces
         public string Name { get; }
         public string Caption { get; }
         public string DefaultValue { get; }
-        public TextBox CustomControl { get; set; }
+        public TextBox? CustomControl { get; set; }
 
         public ISettingControlBinding CreateControlBinding()
         {
@@ -28,7 +28,7 @@ namespace GitUIPluginInterfaces
 
         private class TextBoxBinding : SettingControlBinding<PasswordSetting, TextBox>
         {
-            public TextBoxBinding(PasswordSetting setting, TextBox customControl)
+            public TextBoxBinding(PasswordSetting setting, TextBox? customControl)
                 : base(setting, customControl)
             {
             }
@@ -41,7 +41,7 @@ namespace GitUIPluginInterfaces
 
             public override void LoadSetting(ISettingsSource settings, TextBox control)
             {
-                string settingVal = settings.SettingLevel == SettingLevel.Effective
+                string? settingVal = settings.SettingLevel == SettingLevel.Effective
                     ? Setting.ValueOrDefault(settings)
                     : Setting[settings];
 
@@ -63,10 +63,9 @@ namespace GitUIPluginInterfaces
             }
         }
 
-        public string this[ISettingsSource settings]
+        public string? this[ISettingsSource settings]
         {
             get => settings.GetString(Name, null);
-
             set => settings.SetString(Name, value);
         }
 

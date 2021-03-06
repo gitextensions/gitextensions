@@ -1,5 +1,5 @@
 ﻿using System.Windows.Forms;
-using JetBrains.Annotations;
+using GitExtUtils;
 
 namespace GitUIPluginInterfaces
 {
@@ -20,7 +20,7 @@ namespace GitUIPluginInterfaces
         public string Name { get; }
         public string Caption { get; }
         public T DefaultValue { get; }
-        public TextBox CustomControl { get; set; }
+        public TextBox? CustomControl { get; set; }
 
         public ISettingControlBinding CreateControlBinding()
         {
@@ -29,7 +29,7 @@ namespace GitUIPluginInterfaces
 
         private class TextBoxBinding : SettingControlBinding<NumberSetting<T>, TextBox>
         {
-            public TextBoxBinding(NumberSetting<T> setting, TextBox customControl)
+            public TextBoxBinding(NumberSetting<T> setting, TextBox? customControl)
                 : base(setting, customControl)
             {
             }
@@ -42,7 +42,7 @@ namespace GitUIPluginInterfaces
 
             public override void LoadSetting(ISettingsSource settings, TextBox control)
             {
-                object settingVal = settings.SettingLevel == SettingLevel.Effective
+                object? settingVal = settings.SettingLevel == SettingLevel.Effective
                     ? Setting.ValueOrDefault(settings)
                     : Setting[settings];
 
@@ -65,7 +65,7 @@ namespace GitUIPluginInterfaces
             }
         }
 
-        private static string ConvertToString(object value)
+        private static string ConvertToString(object? value)
         {
             if (value is null)
             {
@@ -75,10 +75,9 @@ namespace GitUIPluginInterfaces
             return value.ToString();
         }
 
-        [CanBeNull]
-        private static object ConvertFromString(string value)
+        private static object? ConvertFromString(string value)
         {
-            if (string.IsNullOrEmpty(value))
+            if (Strings.IsNullOrEmpty(value))
             {
                 return null;
             }
@@ -107,7 +106,7 @@ namespace GitUIPluginInterfaces
             return null;
         }
 
-        public object this[ISettingsSource settings]
+        public object? this[ISettingsSource settings]
         {
             get
             {
@@ -125,7 +124,7 @@ namespace GitUIPluginInterfaces
 
         public T ValueOrDefault(ISettingsSource settings)
         {
-            object settingVal = this[settings];
+            object? settingVal = this[settings];
             if (settingVal is null)
             {
                 return DefaultValue;

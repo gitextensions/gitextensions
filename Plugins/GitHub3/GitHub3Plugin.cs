@@ -242,14 +242,14 @@ namespace GitHub3
                 ToolStripItem toolStripItem = toolStripMenuItem.DropDownItems.Add(hostedRemote.DisplayData);
                 toolStripItem.Click += (s, e) =>
                 {
-                    var blameContext = contextMenu?.Tag as GitBlameContext;
-                    if (blameContext is null)
+                    if (contextMenu.Tag is GitBlameContext blameContext)
                     {
-                        return;
+                        Process.Start(
+                            hostedRemote.GetBlameUrl(
+                                blameContext.BlameId.ToString(),
+                                blameContext.FileName,
+                                blameContext.LineIndex + 1));
                     }
-
-                    Process.Start(hostedRemote.GetBlameUrl(blameContext.BlameId.ToString(), blameContext.FileName,
-                        blameContext.LineIndex + 1));
                 };
             }
         }

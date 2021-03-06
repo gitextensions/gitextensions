@@ -185,7 +185,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             if (revision.BuildStatus is not null)
             {
                 toolTip = revision.BuildStatus.Tooltip ?? revision.BuildStatus.Description;
-                return true;
+                return toolTip is not null;
             }
 
             return base.TryGetToolTip(e, revision, out toolTip);

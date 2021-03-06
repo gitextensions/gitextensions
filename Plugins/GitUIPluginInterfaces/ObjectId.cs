@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -21,25 +22,21 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Gets the artificial ObjectId used to represent working directory tree (unstaged) changes.
         /// </summary>
-        [NotNull]
         public static ObjectId WorkTreeId { get; } = new(0x11111111, 0x11111111, 0x11111111, 0x11111111, 0x11111111);
 
         /// <summary>
         /// Gets the artificial ObjectId used to represent changes staged to the index.
         /// </summary>
-        [NotNull]
         public static ObjectId IndexId { get; } = new(0x22222222, 0x22222222, 0x22222222, 0x22222222, 0x22222222);
 
         /// <summary>
         /// Gets the artificial ObjectId used to represent combined diff for merge commits.
         /// </summary>
-        [NotNull]
         public static ObjectId CombinedDiffId { get; } = new(0x33333333, 0x33333333, 0x33333333, 0x33333333, 0x33333333);
 
         /// <summary>
         /// Produces an <see cref="ObjectId"/> populated with random bytes.
         /// </summary>
-        [NotNull]
         [MustUseReturnValue]
         public static ObjectId Random()
         {
@@ -69,9 +66,7 @@ namespace GitUIPluginInterfaces
         /// <param name="s">The string to try parsing from.</param>
         /// <param name="objectId">The parsed <see cref="ObjectId"/>, or <c>null</c> if parsing was unsuccessful.</param>
         /// <returns><c>true</c> if parsing was successful, otherwise <c>false</c>.</returns>
-        [ContractAnnotation("=>false,objectId:null")]
-        [ContractAnnotation("=>true,objectId:notnull")]
-        public static bool TryParse([CanBeNull] string s, out ObjectId objectId)
+        public static bool TryParse(string? s, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
         {
             if (s is null || s.Length != Sha1CharCount)
             {
@@ -94,9 +89,7 @@ namespace GitUIPluginInterfaces
         /// <param name="offset">The position within <paramref name="s"/> to start parsing from.</param>
         /// <param name="objectId">The parsed <see cref="ObjectId"/>, or <c>null</c> if parsing was unsuccessful.</param>
         /// <returns><c>true</c> if parsing was successful, otherwise <c>false</c>.</returns>
-        [ContractAnnotation("=>false,objectId:null")]
-        [ContractAnnotation("=>true,objectId:notnull")]
-        public static bool TryParse([CanBeNull] string s, int offset, out ObjectId objectId)
+        public static bool TryParse(string? s, int offset, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
         {
             if (s is null || s.Length - offset < Sha1CharCount)
             {
@@ -161,9 +154,8 @@ namespace GitUIPluginInterfaces
         /// <param name="s">The string to try parsing from.</param>
         /// <returns>The parsed <see cref="ObjectId"/>.</returns>
         /// <exception cref="FormatException"><paramref name="s"/> did not contain a valid 40-character SHA-1 hash.</exception>
-        [NotNull]
         [MustUseReturnValue]
-        public static ObjectId Parse([NotNull] string s)
+        public static ObjectId Parse(string s)
         {
             if (s is null || s.Length != Sha1CharCount || !TryParse(s, 0, out var id))
             {
@@ -185,9 +177,8 @@ namespace GitUIPluginInterfaces
         /// <param name="offset">The position within <paramref name="s"/> to start parsing from.</param>
         /// <returns>The parsed <see cref="ObjectId"/>.</returns>
         /// <exception cref="FormatException"><paramref name="s"/> did not contain a valid 40-character SHA-1 hash.</exception>
-        [NotNull]
         [MustUseReturnValue]
-        public static ObjectId Parse([NotNull] string s, int offset)
+        public static ObjectId Parse(string s, int offset)
         {
             if (!TryParse(s, offset, out var id))
             {
@@ -207,9 +198,8 @@ namespace GitUIPluginInterfaces
         /// <returns>The parsed <see cref="ObjectId"/>.</returns>
         /// <exception cref="IOException">General error reading from <paramref name="stream"/>.</exception>
         /// <exception cref="EndOfStreamException"><paramref name="stream"/> ended before 20 bytes could be read.</exception>
-        [NotNull]
         [MustUseReturnValue]
-        public static ObjectId Parse([NotNull] Stream stream)
+        public static ObjectId Parse(Stream stream)
         {
             var buffer = _buffer.Value;
 
@@ -227,9 +217,8 @@ namespace GitUIPluginInterfaces
         /// <param name="bytes">The byte array to parse from.</param>
         /// <param name="index">The index within <paramref name="bytes"/> to commence parsing from.</param>
         /// <returns>The parsed <see cref="ObjectId"/>.</returns>
-        [NotNull]
         [MustUseReturnValue]
-        public static ObjectId Parse([NotNull] byte[] bytes, int index)
+        public static ObjectId Parse(byte[] bytes, int index)
         {
             return new ObjectId(Read(), Read(), Read(), Read(), Read());
 
@@ -252,9 +241,7 @@ namespace GitUIPluginInterfaces
         /// <param name="objectId">The parsed <see cref="ObjectId"/>.</param>
         /// <returns><c>true</c> if parsing succeeded, otherwise <c>false</c>.</returns>
         [MustUseReturnValue]
-        [ContractAnnotation("=>false,objectId:null")]
-        [ContractAnnotation("=>true,objectId:notnull")]
-        public static bool TryParseAsciiHexBytes([NotNull] byte[] bytes, int index, out ObjectId objectId)
+        public static bool TryParseAsciiHexBytes(byte[] bytes, int index, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
         {
             if (index < 0 || index > bytes.Length - Sha1CharCount)
             {
@@ -268,9 +255,7 @@ namespace GitUIPluginInterfaces
         }
 
         [MustUseReturnValue]
-        [ContractAnnotation("=>false,objectId:null")]
-        [ContractAnnotation("=>true,objectId:notnull")]
-        public static bool TryParseAsciiHexBytes(ArraySegment<byte> bytes, int index, out ObjectId objectId)
+        public static bool TryParseAsciiHexBytes(ArraySegment<byte> bytes, int index, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
         {
             // TODO get rid of this overload? slice the array segment instead
 
@@ -303,9 +288,7 @@ namespace GitUIPluginInterfaces
         /// <param name="objectId">The parsed <see cref="ObjectId"/>.</param>
         /// <returns><c>true</c> if parsing succeeded, otherwise <c>false</c>.</returns>
         [MustUseReturnValue]
-        [ContractAnnotation("=>false,objectId:null")]
-        [ContractAnnotation("=>true,objectId:notnull")]
-        public static bool TryParseAsciiHexBytes(ArraySegment<byte> bytes, out ObjectId objectId)
+        public static bool TryParseAsciiHexBytes(ArraySegment<byte> bytes, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
         {
             var index = bytes.Offset;
 
@@ -374,9 +357,8 @@ namespace GitUIPluginInterfaces
         /// <param name="capture">The regex capture/group that describes the location of the SHA-1 hash within <paramref name="s"/>.</param>
         /// <returns>The parsed <see cref="ObjectId"/>.</returns>
         /// <exception cref="FormatException"><paramref name="s"/> did not contain a valid 40-character SHA-1 hash.</exception>
-        [NotNull]
         [MustUseReturnValue]
-        public static ObjectId Parse([NotNull] string s, [NotNull] Capture capture)
+        public static ObjectId Parse(string s, Capture capture)
         {
             if (s is null || capture is null || capture.Length != Sha1CharCount || !TryParse(s, capture.Index, out var id))
             {
@@ -394,7 +376,7 @@ namespace GitUIPluginInterfaces
         /// <param name="s">The string to validate.</param>
         /// <returns><c>true</c> if <paramref name="s"/> is a valid SHA-1 hash, otherwise <c>false</c>.</returns>
         [Pure]
-        public static bool IsValid([NotNull] string s) => s.Length == Sha1CharCount && IsValidCharacters(s);
+        public static bool IsValid(string s) => s.Length == Sha1CharCount && IsValidCharacters(s);
 
         /// <summary>
         /// Identifies whether <paramref name="s"/> contains between <paramref name="minLength"/> and 40 valid SHA-1 hash characters.
@@ -402,7 +384,7 @@ namespace GitUIPluginInterfaces
         /// <param name="s">The string to validate.</param>
         /// <returns><c>true</c> if <paramref name="s"/> is a valid partial SHA-1 hash, otherwise <c>false</c>.</returns>
         [Pure]
-        public static bool IsValidPartial([NotNull] string s, int minLength) => s.Length >= minLength && s.Length <= Sha1CharCount && IsValidCharacters(s);
+        public static bool IsValidPartial(string s, int minLength) => s.Length >= minLength && s.Length <= Sha1CharCount && IsValidCharacters(s);
 
         private static bool IsValidCharacters(string s)
         {
@@ -479,7 +461,6 @@ namespace GitUIPluginInterfaces
         /// <param name="length">The length of the returned string. Defaults to <c>10</c>.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="length"/> is less than zero, or more than 40.</exception>
         [Pure]
-        [NotNull]
         public unsafe string ToShortString(int length = 8)
         {
             if (length < 0)
@@ -521,7 +502,7 @@ namespace GitUIPluginInterfaces
         #region Equality and hashing
 
         /// <inheritdoc />
-        public bool Equals(ObjectId other)
+        public bool Equals(ObjectId? other)
         {
             return other is not null &&
                    _i1 == other._i1 &&
@@ -538,7 +519,7 @@ namespace GitUIPluginInterfaces
         /// <para>This method does not allocate.</para>
         /// <para><paramref name="other"/> must be lower case and not have any surrounding white space.</para>
         /// </remarks>
-        public bool Equals([CanBeNull] string other)
+        public bool Equals(string? other)
         {
             if (other is null || other.Length != Sha1CharCount)
             {
@@ -575,20 +556,20 @@ namespace GitUIPluginInterfaces
         }
 
         /// <inheritdoc />
-        public override bool Equals(object obj) => obj is ObjectId id && Equals(id);
+        public override bool Equals(object? obj) => obj is ObjectId id && Equals(id);
 
         /// <inheritdoc />
         public override int GetHashCode() => unchecked((int)_i2);
 
-        public static bool operator ==(ObjectId left, ObjectId right) => Equals(left, right);
-        public static bool operator !=(ObjectId left, ObjectId right) => !Equals(left, right);
+        public static bool operator ==(ObjectId? left, ObjectId? right) => Equals(left, right);
+        public static bool operator !=(ObjectId? left, ObjectId? right) => !Equals(left, right);
 
         #endregion
     }
 
     internal static class StreamExtensions
     {
-        public static void ReadBytes([NotNull] this Stream stream, [NotNull] byte[] buffer, int offset, int count)
+        public static void ReadBytes(this Stream stream, byte[] buffer, int offset, int count)
         {
             while (offset != count)
             {

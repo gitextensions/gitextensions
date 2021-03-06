@@ -3159,7 +3159,7 @@ namespace GitCommands
                 .Split('\0', '\n');
         }
 
-        public IEnumerable<INamedGitItem> GetTree(ObjectId commitId, bool full)
+        public IEnumerable<INamedGitItem> GetTree(ObjectId? commitId, bool full)
         {
             var args = new GitArgumentBuilder("ls-tree")
             {
@@ -3925,7 +3925,7 @@ namespace GitCommands
         // there was a bug: Git before v1.8.4 did not recode commit message when format is given
         // Lossless encoding is used, because LogOutputEncoding might not be lossless and not recoded
         // characters could be replaced by replacement character while re-encoding to LogOutputEncoding
-        public string? ReEncodeCommitMessage(string s, string? toEncodingName)
+        public string ReEncodeCommitMessage(string s, string? toEncodingName)
         {
             Encoding? encoding;
             try

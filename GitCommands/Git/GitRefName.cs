@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Text.RegularExpressions;
 using GitUIPluginInterfaces;
@@ -90,6 +91,7 @@ namespace GitCommands
         }
 
         [Pure]
+        [return: NotNullIfNotNull("branch")]
         public static string? GetFullBranchName(string? branch)
         {
             if (branch is null)

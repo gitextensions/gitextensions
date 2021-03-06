@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 
-#nullable enable
-
 namespace GitUIPluginInterfaces
 {
     public interface IConfigSection
@@ -15,6 +13,6 @@ namespace GitUIPluginInterfaces
         string GetValue(string key, string defaultValue = "");
         IReadOnlyList<string> GetValues(string key);
         bool HasValue(string key);
-        void SetValue(string key, string value);
+        void SetValue(string key, string? value);
     }
 }

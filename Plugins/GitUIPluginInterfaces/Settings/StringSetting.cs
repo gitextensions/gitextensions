@@ -21,7 +21,7 @@ namespace GitUIPluginInterfaces
         public string Name { get; }
         public string Caption { get; }
         public string DefaultValue { get; }
-        public TextBox CustomControl { get; set; }
+        public TextBox? CustomControl { get; set; }
         public bool UseDefaultValueIfBlank { get; }
 
         public ISettingControlBinding CreateControlBinding()
@@ -33,7 +33,7 @@ namespace GitUIPluginInterfaces
         {
             private readonly bool _useDefaultValueIfBlank;
 
-            public TextBoxBinding(StringSetting setting, TextBox customControl, bool useDefaultValueIfBlank)
+            public TextBoxBinding(StringSetting setting, TextBox? customControl, bool useDefaultValueIfBlank)
                 : base(setting, customControl)
             {
                 _useDefaultValueIfBlank = useDefaultValueIfBlank;
@@ -53,7 +53,7 @@ namespace GitUIPluginInterfaces
                     return;
                 }
 
-                string settingVal = settings.SettingLevel == SettingLevel.Effective
+                string? settingVal = settings.SettingLevel == SettingLevel.Effective
                     ? Setting.ValueOrDefault(settings)
                     : Setting[settings];
 
@@ -83,10 +83,9 @@ namespace GitUIPluginInterfaces
             }
         }
 
-        public string this[ISettingsSource settings]
+        public string? this[ISettingsSource settings]
         {
             get => settings.GetString(Name, null);
-
             set => settings.SetString(Name, value);
         }
 

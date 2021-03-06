@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.Composition;
-using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces.BuildServerIntegration
 {
@@ -21,7 +20,6 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
 
         public string BuildServerType { get; }
 
-        [CanBeNull]
-        public virtual string CanBeLoaded => null;
+        public virtual string? CanBeLoaded => null;
     }
 }

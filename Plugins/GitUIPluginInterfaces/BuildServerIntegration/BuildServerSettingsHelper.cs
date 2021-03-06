@@ -22,7 +22,7 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
         {
             try
             {
-                var uri = new Uri(url);
+                _ = new Uri(url);
                 return true;
             }
             catch
