@@ -365,11 +365,6 @@ namespace GitUI.CommitInfo
 
                 async Task LoadLinksForRevisionAsync(GitRevision revision)
                 {
-                    if (revision is null)
-                    {
-                        return;
-                    }
-
                     await TaskScheduler.Default;
                     var linksInfo = GetLinksForRevision();
 
