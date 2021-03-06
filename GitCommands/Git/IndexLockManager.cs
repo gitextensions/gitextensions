@@ -1,7 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.Git
@@ -20,7 +20,7 @@ namespace GitCommands.Git
         /// <param name="includeSubmodules">
         ///     If <see langword="true"/> all submodules will be scanned for index.lock files and have them delete, if found.
         /// </param>
-        /// <exception cref="FileDeleteException">Unable to delete specific index.lock.</exception>
+        /// <exception cref="ExternalOperationException">Unable to delete specific index.lock.</exception>
         void UnlockIndex(bool includeSubmodules = true);
     }
 
@@ -56,13 +56,7 @@ namespace GitCommands.Git
             return _fileSystem.File.Exists(indexLockFile);
         }
 
-        /// <summary>
-        /// Delete index.lock in the current working folder.
-        /// </summary>
-        /// <param name="includeSubmodules">
-        ///     If <see langword="true"/> all submodules will be scanned for index.lock files and have them delete, if found.
-        /// </param>
-        /// <exception cref="FileDeleteException">Unable to delete specific index.lock.</exception>
+        /// <inheritdoc />
         public void UnlockIndex(bool includeSubmodules = true)
         {
             var workingFolderIndexLock = Path.Combine(_gitDirectoryResolver.Resolve(_module.WorkingDir), IndexLock);
@@ -94,14 +88,7 @@ namespace GitCommands.Git
                 return;
             }
 
-            try
-            {
-                _fileSystem.File.Delete(fileName);
-            }
-            catch (Exception ex)
-            {
-                throw new FileDeleteException(fileName, ex);
-            }
+            FileSystemWrapper.DeleteFile(fileName, _fileSystem);
         }
     }
 }

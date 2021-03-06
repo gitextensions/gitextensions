@@ -17,6 +17,7 @@
     <PackageReference Include="Ben.Demystifier" Version="$(BenDemystifierVersion)" />
     <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsAnnotationsVersion)" />
     <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
+    <PackageReference Include="System.IO.Abstractions" Version="$(SystemIOAbstractionsVersion)" />
     <PackageReference Include="System.ValueTuple" Version="$(SystemValueTupleVersion)" />
   </ItemGroup>
 

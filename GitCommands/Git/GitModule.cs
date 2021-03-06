@@ -1330,7 +1330,7 @@ namespace GitCommands
         /// <param name="includeSubmodules">
         ///     If <see langword="true"/> all submodules will be scanned for index.lock files and have them delete, if found.
         /// </param>
-        /// <exception cref="FileDeleteException">Unable to delete specific index.lock.</exception>
+        /// <exception cref="ExternalOperationException">Unable to delete specific index.lock.</exception>
         public void UnlockIndex(bool includeSubmodules)
         {
             _indexLockManager.UnlockIndex(includeSubmodules);
