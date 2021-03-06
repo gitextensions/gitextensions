@@ -8,6 +8,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsAnnotationsVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Resources\IconReleaseNotesGenerator.png" />
   </ItemGroup>
 
