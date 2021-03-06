@@ -54,7 +54,7 @@ namespace GitUIPluginInterfaces
                     ? Setting.ValueOrDefault(settings)
                     : Setting[settings];
 
-                control.SelectedIndex = Setting.Values.IndexOf(settingVal);
+                control.SelectedIndex = settingVal is null ? -1 : Setting.Values.IndexOf(settingVal);
 
                 if (control.SelectedIndex == -1)
                 {
