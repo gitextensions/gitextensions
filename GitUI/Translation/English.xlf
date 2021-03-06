@@ -2195,10 +2195,6 @@ compare with first:</source>
         <source>Go to superproject</source>
         <target />
       </trans-unit>
-      <trans-unit id="_indexLockCantDelete.Text">
-        <source>Failed to delete index.lock</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
         <target />
@@ -9518,7 +9514,7 @@ When OpenSSH is used, command line dialogs are shown!
   </file>
   <file datatype="plaintext" original="TranslatedStrings" source-language="en">
     <body>
-      <trans-unit id="_argumentsText.Text">
+      <trans-unit id="_arguments.Text">
         <source>Arguments</source>
         <target />
       </trans-unit>
@@ -9577,12 +9573,12 @@ Select this commit to populate the full message.</source>
         <source>Report bug!</source>
         <target />
       </trans-unit>
-      <trans-unit id="_cancelText.Text">
-        <source>Cancel</source>
+      <trans-unit id="_buttonViewDetails.Text">
+        <source>View details</source>
         <target />
       </trans-unit>
-      <trans-unit id="_captionFailedExecute.Text">
-        <source>Failed to execute</source>
+      <trans-unit id="_cancelText.Text">
+        <source>Cancel</source>
         <target />
       </trans-unit>
       <trans-unit id="_childrenText.Text">
@@ -9591,10 +9587,6 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_combinedDiff.Text">
         <source>Combined diff</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_commandText.Text">
-        <source>Command</source>
         <target />
       </trans-unit>
       <trans-unit id="_commitDateText.Text">
@@ -9637,6 +9629,10 @@ Select this commit to populate the full message.</source>
         <source>Contained in tags:</source>
         <target />
       </trans-unit>
+      <trans-unit id="_context.Text">
+        <source>Context</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_createPullRequest.Text">
         <source>Create pull request</source>
         <target />
@@ -9671,6 +9667,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_diffWithParent.Text">
         <source>Diff with a/</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_directory.Text">
+        <source>Directory</source>
         <target />
       </trans-unit>
       <trans-unit id="_directoryIsNotAValidRepository.Text">
@@ -9727,10 +9727,6 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_installGitInstructions.Text">
         <source>Install git...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_instructionOperationFailed.Text">
-        <source>Operation failed</source>
         <target />
       </trans-unit>
       <trans-unit id="_invisibleCommitText.Text">
@@ -9801,6 +9797,10 @@ Select this commit to populate the full message.</source>
         <source>Open with Git Extensions</source>
         <target />
       </trans-unit>
+      <trans-unit id="_operation.Text">
+        <source>Operation</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_parentsText.Text">
         <source>{0:Parent|Parents}</source>
         <target />
@@ -9821,7 +9821,7 @@ Select this commit to populate the full message.</source>
         <source>Remove the selected invalid repository</source>
         <target />
       </trans-unit>
-      <trans-unit id="_reportBugText.Text">
+      <trans-unit id="_reportBug.Text">
         <source>If you think this was caused by Git Extensions, you can report a bug for the team to investigate.</source>
         <target />
       </trans-unit>
@@ -9949,10 +9949,6 @@ Yes, I allow telemetry!</source>
       </trans-unit>
       <trans-unit id="_weeksAgo.Text">
         <source>{0} {1:week|weeks} ago</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_workingDirectoryText.Text">
-        <source>Working directory</source>
         <target />
       </trans-unit>
       <trans-unit id="_workspaceText.Text">
