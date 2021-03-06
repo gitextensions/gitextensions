@@ -108,12 +108,21 @@ namespace GitCommandsTests.Git
 
             Assert.AreEqual(argCount, args.Count);
             var index = 0;
-            Assert.AreEqual(expectedResult, _gitExecutable.RunBatchCommand(args, (eventArgs) =>
+            void function() => _gitExecutable.RunBatchCommand(args, (eventArgs) =>
             {
                 Assert.IsTrue(eventArgs.ExecutionResult);
                 Assert.AreEqual(expectedProcessedCounts[index], eventArgs.ProcessedCount);
                 index++;
-            }));
+            });
+
+            if (expectedResult)
+            {
+                function();
+            }
+            else
+            {
+                Assert.Throws<ExternalOperationException>(function);
+            }
         }
 
         [TestCase(32766 - 8, 32766 - 8, int.MaxValue)]
