@@ -21,9 +21,9 @@ namespace GitExtensions
             StringBuilder sb = new();
 
             // Command: <command>
-            if (!string.IsNullOrWhiteSpace(exception.Command))
+            if (!string.IsNullOrWhiteSpace(exception.Object))
             {
-                sb.AppendLine($"{GitUI.Strings.Command}: {exception.Command}");
+                sb.AppendLine($"{GitUI.Strings.Command}: {exception.Object}");
             }
 
             // Arguments: <args>
@@ -33,7 +33,7 @@ namespace GitExtensions
             }
 
             // Working directory: <working dir>
-            sb.AppendLine($"{GitUI.Strings.WorkingDirectory}: {exception.WorkingDirectory}");
+            sb.AppendLine($"{GitUI.Strings.WorkingDirectory}: {exception.Directory}");
 
             if (canRaiseBug)
             {
@@ -86,7 +86,7 @@ namespace GitExtensions
         }
 
         private static void ReportUserException(UserExternalOperationException exception, bool isTerminating)
-            => ShowException(FormatText(exception, canRaiseBug: false), exception.Context, exception: null, isTerminating);
+            => ShowException(FormatText(exception, canRaiseBug: false), exception.Context ?? string.Empty, exception: null, isTerminating);
 
         private static void ShowException(string text, string instructionText, Exception? exception, bool isTerminating)
         {
