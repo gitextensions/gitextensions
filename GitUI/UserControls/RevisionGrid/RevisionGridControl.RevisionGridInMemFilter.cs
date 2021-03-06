@@ -66,8 +66,8 @@ namespace GitUI
             {
                 if (string.IsNullOrEmpty(authorFilter) &&
                     string.IsNullOrEmpty(committerFilter) &&
-                    string.IsNullOrEmpty(messageFilter) &&
-                    !ObjectId.IsValidPartial(messageFilter, minLength: 5))
+                    (string.IsNullOrEmpty(messageFilter) ||
+                     !ObjectId.IsValidPartial(messageFilter, minLength: 5)))
                 {
                     return null;
                 }
