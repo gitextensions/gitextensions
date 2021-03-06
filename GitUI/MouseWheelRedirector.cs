@@ -57,14 +57,14 @@ namespace GitUI
                 return false;
             }
 
-            if (hwnd == m.HWnd && !isNonScrollableRichTextBox(control))
+            if (hwnd == m.HWnd && !IsNonScrollableRichTextBox(control))
             {
                 return false;
             }
 
             while (control is not (null or GitExtensionsControl))
             {
-                bool nonScrollableRtbx = isNonScrollableRichTextBox(control);
+                bool nonScrollableRtbx = IsNonScrollableRichTextBox(control);
 
                 control = control.Parent;
                 if (nonScrollableRtbx)
@@ -81,8 +81,7 @@ namespace GitUI
             NativeMethods.SendMessage(hwnd, m.Msg, m.WParam, m.LParam);
             return true;
 
-            bool isNonScrollableRichTextBox(Control c) =>
-                c is RichTextBox rtb && rtb.ScrollBars == RichTextBoxScrollBars.None;
+            static bool IsNonScrollableRichTextBox(Control c) => c is RichTextBox { ScrollBars: RichTextBoxScrollBars.None };
         }
 
         private static class NativeMethods
