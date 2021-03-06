@@ -163,10 +163,11 @@ namespace GitCommands
             this IExecutable executable,
             ArgumentString arguments = default,
             byte[]? input = null,
+            byte[]? error = null,
             bool createWindow = false)
         {
             return GitUI.ThreadHelper.JoinableTaskFactory.Run(
-                () => executable.RunCommandAsync(arguments, input, createWindow));
+                () => executable.RunCommandAsync(arguments, input, error, createWindow));
         }
 
         /// <summary>
@@ -182,9 +183,8 @@ namespace GitCommands
         /// <param name="batchArguments">The array of batch arguments to pass to the executable.</param>
         /// <param name="input">Bytes to be written to each process's standard input stream, or <c>null</c> if no input is required.</param>
         /// <param name="createWindow">A flag indicating whether a console window should be created and bound to each process.</param>
-        /// <returns><c>true</c> if all process exit codes were zero, otherwise <c>false</c>.</returns>
-        [MustUseReturnValue("Callers should verify that " + nameof(RunBatchCommand) + " returned true")]
-        public static bool RunBatchCommand(
+        /// <exception>Throw an exception if one process exit code is not zero.</exception>
+        public static void RunBatchCommand(
             this IExecutable executable,
             ICollection<BatchArgumentItem> batchArguments,
             Action<BatchProgressEventArgs>? action = null,
@@ -196,13 +196,18 @@ namespace GitCommands
 
             foreach (var item in batchArguments)
             {
-                result &= executable.RunCommand(item.Argument, input, createWindow);
+                byte[] error = new byte[4096];
+                result &= executable.RunCommand(item.Argument, input, error, createWindow);
 
                 // Invoke batch progress callback
                 action?.Invoke(new BatchProgressEventArgs(item.BatchItemsCount, result));
-            }
 
-            return result;
+                if (!result)
+                {
+                    throw new ExternalOperationException(operation: "git",
+                        arguments: item.Argument, innerException: new Exception(Encoding.UTF8.GetString(error)));
+                }
+            }
         }
 
         /// <summary>
@@ -211,22 +216,31 @@ namespace GitCommands
         /// <param name="executable">The executable from which to launch a process.</param>
         /// <param name="arguments">The arguments to pass to the executable.</param>
         /// <param name="input">Bytes to be written to the process's standard input stream, or <c>null</c> if no input is required.</param>
+        /// <param name="error">Bytes to be read from the process's standard error stream, or <c>null</c> if no output is required.</param>
         /// <param name="createWindow">A flag indicating whether a console window should be created and bound to the process.</param>
         /// <returns>A task that yields <c>true</c> if the process's exit code was zero, otherwise <c>false</c>.</returns>
         public static async Task<bool> RunCommandAsync(
             this IExecutable executable,
             ArgumentString arguments = default,
             byte[]? input = null,
+            byte[]? error = null,
             bool createWindow = false)
         {
-            using var process = executable.Start(arguments, createWindow: createWindow, redirectInput: input is not null);
+            using var process = executable.Start(arguments, createWindow: createWindow, redirectInput: input is not null, redirectOutput: error is not null, outputEncoding: error is not null ? Encoding.UTF8 : null);
             if (input is not null)
             {
                 await process.StandardInput.BaseStream.WriteAsync(input, 0, input.Length);
                 process.StandardInput.Close();
             }
 
-            return await process.WaitForExitAsync() == 0;
+            var result = await process.WaitForExitAsync() == 0;
+
+            if (error is not null)
+            {
+                await process.StandardError.BaseStream.ReadAsync(error, 0, error.Length);
+            }
+
+            return result;
         }
 
         /// <summary>
