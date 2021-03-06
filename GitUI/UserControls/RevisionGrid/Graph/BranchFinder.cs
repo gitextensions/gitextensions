@@ -66,10 +66,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 CommittedTo = isTheFirstBranch ? mergedInto : mergedWith;
             }
 
-            if (MergedWith is null)
-            {
-                MergedWith = mergedWith ?? string.Empty;
-            }
+            MergedWith ??= mergedWith ?? string.Empty;
 
             return CommittedTo is not null;
         }

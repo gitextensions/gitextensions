@@ -168,7 +168,7 @@ namespace TranslationApp
                     var item = translateItem.GetTranslationItem();
 
                     var ti = new TranslationItem(item.Name, item.Property, item.Source, item.Value);
-                    ti.Value = ti.Value ?? string.Empty;
+                    ti.Value ??= string.Empty;
                     foreignTranslation.FindOrAddTranslationCategory(translateItem.Category)
                         .Body.AddTranslationItem(ti);
                 }

@@ -970,16 +970,13 @@ namespace GitUI
 
             void EnsureSelectedIndexChangeSubscription()
             {
-                if (_selectedIndexChangeSubscription is null)
-                {
-                    _selectedIndexChangeSubscription = Observable.FromEventPattern(
-                            h => FileStatusListView.SelectedIndexChanged += h,
-                            h => FileStatusListView.SelectedIndexChanged -= h)
-                        .Where(x => _enableSelectedIndexChangeEvent)
-                        .Throttle(SelectedIndexChangeThrottleDuration, MainThreadScheduler.Instance)
-                        .ObserveOn(MainThreadScheduler.Instance)
-                        .Subscribe(_ => FileStatusListView_SelectedIndexChanged());
-                }
+                _selectedIndexChangeSubscription ??= Observable.FromEventPattern(
+                        h => FileStatusListView.SelectedIndexChanged += h,
+                        h => FileStatusListView.SelectedIndexChanged -= h)
+                    .Where(x => _enableSelectedIndexChangeEvent)
+                    .Throttle(SelectedIndexChangeThrottleDuration, MainThreadScheduler.Instance)
+                    .ObserveOn(MainThreadScheduler.Instance)
+                    .Subscribe(_ => FileStatusListView_SelectedIndexChanged());
             }
 
             int GetItemImageIndex(GitItemStatus gitItemStatus)

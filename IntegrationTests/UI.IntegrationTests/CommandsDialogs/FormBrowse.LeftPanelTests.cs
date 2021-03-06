@@ -48,10 +48,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [SetUp]
         public void SetUp()
         {
-            if (_remoteReferenceRepository is null)
-            {
-                _remoteReferenceRepository = new ReferenceRepository();
-            }
+            _remoteReferenceRepository ??= new ReferenceRepository();
 
             // we will be modifying .git/config and need to completely reset each time
             _referenceRepository = new ReferenceRepository();

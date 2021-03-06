@@ -82,7 +82,7 @@ namespace GitHub3
 
         internal static GitHub3Plugin Instance;
         internal static Client _gitHub;
-        internal static Client GitHub => _gitHub ?? (_gitHub = new(Instance.GitHubApiEndpoint));
+        internal static Client GitHub => _gitHub ??= new(Instance.GitHubApiEndpoint);
 
         private IGitUICommands _currentGitUiCommands;
         private IReadOnlyList<IHostedRemote> _hostedRemotesForModule;
@@ -92,10 +92,7 @@ namespace GitHub3
             SetNameAndDescription("GitHub");
             Translate();
 
-            if (Instance is null)
-            {
-                Instance = this;
-            }
+            Instance ??= this;
 
             Icon = Resources.IconGitHub;
         }

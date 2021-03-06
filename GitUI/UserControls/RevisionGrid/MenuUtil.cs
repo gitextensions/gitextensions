@@ -20,10 +20,7 @@ namespace GitUI.UserControls.RevisionGrid
             menuItem.Tag = _captionTag;
             menuItem.Enabled = false;
 
-            if (_disabledFont is null)
-            {
-                _disabledFont = new Font(menuItem.Font, FontStyle.Italic);
-            }
+            _disabledFont ??= new Font(menuItem.Font, FontStyle.Italic);
 
             menuItem.Font = _disabledFont;
         }

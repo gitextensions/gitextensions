@@ -322,10 +322,7 @@ namespace GitCommands
         {
             // 3: double quotes + ' '
             // '"git.exe" ' is always included in final command line arguments
-            if (!baseLength.HasValue)
-            {
-                baseLength = AppSettings.GitCommand.Length + 3;
-            }
+            baseLength ??= AppSettings.GitCommand.Length + 3;
 
             var baseArgument = builder.ToString();
             if (baseLength + baseArgument.Length >= maxLength)

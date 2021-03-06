@@ -163,7 +163,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         /// </summary>
         public virtual IEnumerable<string> GetSearchKeywords()
         {
-            return _childrenText ?? (_childrenText = GetChildrenText(this));
+            return _childrenText ??= GetChildrenText(this);
         }
 
         /// <summary>

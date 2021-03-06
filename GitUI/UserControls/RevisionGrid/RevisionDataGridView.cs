@@ -420,10 +420,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                     Rows[rowIndexToBeSelected].Selected = true;
 
-                    if (CurrentCell is null)
-                    {
-                        CurrentCell = Rows[rowIndexToBeSelected].Cells[1];
-                    }
+                    CurrentCell ??= Rows[rowIndexToBeSelected].Cells[1];
                 }
                 catch (ArgumentOutOfRangeException)
                 {

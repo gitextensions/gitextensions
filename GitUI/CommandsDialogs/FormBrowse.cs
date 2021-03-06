@@ -1427,10 +1427,7 @@ namespace GitUI.CommandsDialogs
 
         private void FillBuildReport(GitRevision? revision)
         {
-            if (_buildReportTabPageExtension is null)
-            {
-                _buildReportTabPageExtension = new BuildReportTabPageExtension(() => Module, CommitInfoTabControl, _buildReportTabCaption.Text);
-            }
+            _buildReportTabPageExtension ??= new BuildReportTabPageExtension(() => Module, CommitInfoTabControl, _buildReportTabCaption.Text);
 
             // Note: FillBuildReport will check if tab is visible and revision is OK
             _buildReportTabPageExtension.FillBuildReport(revision);

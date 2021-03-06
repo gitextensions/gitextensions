@@ -49,10 +49,7 @@ namespace GitUI.NBugReports.Serialization
                         if (entry.Value is not null)
                         {
                             // Assign 'Data' property only if there is at least one entry with non-null value
-                            if (Data is null)
-                            {
-                                Data = new SerializableDictionary<object, object>();
-                            }
+                            Data ??= new SerializableDictionary<object, object>();
 
                             Data.Add(entry.Key, entry.Value);
                         }
