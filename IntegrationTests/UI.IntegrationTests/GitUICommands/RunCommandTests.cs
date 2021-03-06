@@ -346,10 +346,7 @@ namespace GitUITests.GitUICommandsTests
                 showForm: () => _commands.GetTestAccessor().RunCommandBasedOnArgument(args).Should().Be(expectedResult),
                 runTestAsync: form =>
                 {
-                    if (runTest is not null)
-                    {
-                        runTest(form);
-                    }
+                    runTest?.Invoke(form);
 
                     return Task.CompletedTask;
                 });
