@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-
-namespace GitUIPluginInterfaces.RepositoryHosts
+﻿namespace GitUIPluginInterfaces.RepositoryHosts
 {
     public interface IHostedRemote
     {
@@ -9,8 +7,7 @@ namespace GitUIPluginInterfaces.RepositoryHosts
         /// <summary>
         /// Gets the name of the remote in the local git repository. May be null.
         /// </summary>
-        [CanBeNull]
-        string Name { get; }
+        string? Name { get; }
 
         string Data { get; }
 

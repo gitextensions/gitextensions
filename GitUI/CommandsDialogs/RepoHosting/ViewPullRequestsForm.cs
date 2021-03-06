@@ -183,7 +183,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 .First(r => string.IsNullOrEmpty(currentRemote) || r.Name == currentRemote).FetchUrl.IsUrlUsingHttp() ? GitProtocol.Https : GitProtocol.Ssh);
             var hostedRemote = _selectHostedRepoCB.Items.
                 Cast<IHostedRemote>().
-                FirstOrDefault(remote => remote.Name.Equals(currentRemote, StringComparison.OrdinalIgnoreCase));
+                FirstOrDefault(remote => string.Equals(remote.Name, currentRemote, StringComparison.OrdinalIgnoreCase));
 
             if (hostedRemote is null)
             {
@@ -366,8 +366,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
             var giss = new List<GitItemStatus>();
 
             // baseSha is the sha of the merge to ("master") sha, the commit to be firstId
-            GitRevision? firstRev = ObjectId.TryParse(baseSha, out ObjectId firstId) ? new GitRevision(firstId) : null;
-            GitRevision? secondRev = ObjectId.TryParse(secondSha, out ObjectId secondId) ? new GitRevision(secondId) : null;
+            GitRevision? firstRev = ObjectId.TryParse(baseSha, out ObjectId? firstId) ? new GitRevision(firstId) : null;
+            GitRevision? secondRev = ObjectId.TryParse(secondSha, out ObjectId? secondId) ? new GitRevision(secondId) : null;
             if (secondRev is null)
             {
                 MessageBox.Show(this, _strUnableUnderstandPatch.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);

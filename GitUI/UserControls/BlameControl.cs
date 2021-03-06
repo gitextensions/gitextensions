@@ -514,6 +514,9 @@ namespace GitUI.Blame
 
         private void contextMenu_Opened(object sender, EventArgs e)
         {
+            Validates.NotNull(_fileName);
+            Validates.NotNull(_blameId);
+
             contextMenu.Tag = new GitBlameContext(_fileName, _lineIndex, GetBlameLine(), _blameId);
 
             if (_revGrid is null || !TryGetSelectedRevision(out var selectedRevision))

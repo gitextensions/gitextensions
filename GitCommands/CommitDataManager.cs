@@ -7,6 +7,7 @@ using System.Text;
 using GitCommands.Git.Extensions;
 using GitExtUtils;
 using GitUIPluginInterfaces;
+using Microsoft;
 
 namespace GitCommands
 {
@@ -151,6 +152,9 @@ namespace GitCommands
 
             // commit message is not re-encoded by git when format is given
             var body = module.ReEncodeCommitMessage(message, commitEncoding);
+
+            Validates.NotNull(author);
+            Validates.NotNull(committer);
 
             return new CommitData(guid, treeGuid, parentIds, author, authorDate, committer, commitDate, body);
         }

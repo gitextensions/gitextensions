@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using JetBrains.Annotations;
 
 namespace AzureDevOpsIntegration.Settings
 {
@@ -101,7 +102,7 @@ namespace AzureDevOpsIntegration.Settings
         /// <returns>
         /// A tuple that contains whether a Azure DevOps / TFS project could be recognized from the given url and the resulting home page url of the project.
         /// </returns>
-        public static (bool success, string projectUrl) TryDetectProjectFromRemoteUrl(string remoteUrl)
+        public static (bool success, string projectUrl) TryDetectProjectFromRemoteUrl([CanBeNull] string remoteUrl)
         {
             if (remoteUrl is null && !BuildServerSettingsHelper.IsUrlValid(remoteUrl))
             {
@@ -120,7 +121,7 @@ namespace AzureDevOpsIntegration.Settings
         /// <returns>
         /// A tuple that contains whether a Azure DevOps / TFS project could be recognized from the given list and the resulting home page url of the project.
         /// </returns>
-        public static (bool success, string projectUrl) TryDetectProjectFromRemoteUrls(IEnumerable<string> remoteUrls)
+        public static (bool success, string projectUrl) TryDetectProjectFromRemoteUrls([ItemCanBeNull] IEnumerable<string> remoteUrls)
         {
             return remoteUrls.Select(TryDetectProjectFromRemoteUrl).FirstOrDefault(r => r.success);
         }

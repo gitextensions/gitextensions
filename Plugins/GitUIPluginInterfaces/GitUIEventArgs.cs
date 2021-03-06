@@ -5,7 +5,7 @@ namespace GitUIPluginInterfaces
 {
     public class GitUIEventArgs : CancelEventArgs
     {
-        public GitUIEventArgs(IWin32Window ownerForm, IGitUICommands gitUICommands)
+        public GitUIEventArgs(IWin32Window? ownerForm, IGitUICommands gitUICommands)
             : base(cancel: false)
         {
             OwnerForm = ownerForm;
@@ -14,7 +14,7 @@ namespace GitUIPluginInterfaces
 
         public IGitUICommands GitUICommands { get; }
 
-        public IWin32Window OwnerForm { get; }
+        public IWin32Window? OwnerForm { get; }
 
         public IGitModule GitModule => GitUICommands.GitModule;
     }

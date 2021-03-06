@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
 {
     /// <summary>Provides manipulation with git module.</summary>
     public interface IGitModule
     {
-        [NotNull]
         IConfigFileSettings LocalConfigFile { get; }
 
         string AddRemote(string remoteName, string path);
         IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true);
         IEnumerable<string> GetSettings(string setting);
-        IEnumerable<INamedGitItem> GetTree([CanBeNull] ObjectId commitId, bool full);
+        IEnumerable<INamedGitItem> GetTree(ObjectId? commitId, bool full);
 
         /// <summary>
         /// Removes the registered remote by running <c>git remote rm</c> command.
@@ -30,11 +29,11 @@ namespace GitUIPluginInterfaces
         string RenameRemote(string remoteName, string newName);
 
         /// <summary>
-        /// Parses the revisionExpression as a git reference and returns an <see cref="ObjectId"/>./>
+        /// Parses the revisionExpression as a git reference and returns an <see cref="ObjectId"/>.
         /// </summary>
         /// <param name="revisionExpression">An expression like HEAD or commit hash that can be parsed as a git reference.</param>
         /// <returns>An ObjectID representing that git reference</returns>
-        ObjectId RevParse(string revisionExpression);
+        ObjectId? RevParse(string revisionExpression);
 
         void SetSetting(string setting, string value);
         void UnsetSetting(string setting);
@@ -50,7 +49,6 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Gets the access to the current git executable associated with this module.
         /// </summary>
-        [NotNull]
         IGitCommandRunner GitCommandRunner { get; }
 
         /// <summary>
@@ -72,13 +70,11 @@ namespace GitUIPluginInterfaces
         /// <summary>Indicates HEAD is not pointing to a branch (i.e. it is detached).</summary>
         bool IsDetachedHead();
 
-        [ContractAnnotation("=>false,objectId:null")]
-        [ContractAnnotation("=>true,objectId:notnull")]
-        bool TryResolvePartialCommitId(string objectIdPrefix, out ObjectId objectId);
+        bool TryResolvePartialCommitId(string objectIdPrefix, [NotNullWhen(returnValue: true)] out ObjectId? objectId);
 
         string GetSubmoduleFullPath(string localPath);
 
-        IEnumerable<IGitSubmoduleInfo> GetSubmodulesInfo();
+        IEnumerable<IGitSubmoduleInfo?> GetSubmodulesInfo();
 
         /// <summary>
         /// Gets the local paths of any submodules of this git module.
@@ -103,13 +99,12 @@ namespace GitUIPluginInterfaces
         /// Gets the commit ID of the currently checked out commit.
         /// If the repo is bare or has no commits, <c>null</c> is returned.
         /// </summary>
-        [CanBeNull]
-        ObjectId GetCurrentCheckout();
+        ObjectId? GetCurrentCheckout();
 
         /// <summary>Gets the remote of the current branch; or "" if no remote is configured.</summary>
         string GetCurrentRemote();
 
-        GitRevision GetRevision([CanBeNull] ObjectId objectId = null, bool shortFormat = false, bool loadRefs = false);
+        GitRevision GetRevision(ObjectId? objectId = null, bool shortFormat = false, bool loadRefs = false);
 
         Task<IReadOnlyList<Remote>> GetRemotesAsync();
 
@@ -126,14 +121,13 @@ namespace GitUIPluginInterfaces
 
         bool IsRunningGitProcess();
 
-        [NotNull]
         ISettingsSource GetEffectiveSettings();
 
-        string ReEncodeStringFromLossless(string s);
+        string? ReEncodeStringFromLossless(string? s);
 
-        string ReEncodeCommitMessage(string s, string toEncodingName);
+        string ReEncodeCommitMessage(string s, string? toEncodingName);
 
-        string GetDescribe(ObjectId commitId);
+        string? GetDescribe(ObjectId commitId);
 
         (int totalCount, Dictionary<string, int> countByName) GetCommitsByContributor(DateTime? since = null, DateTime? until = null);
     }

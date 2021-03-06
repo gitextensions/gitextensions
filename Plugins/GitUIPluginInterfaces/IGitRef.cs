@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces
 {
     public interface IGitRef : INamedGitItem
     {

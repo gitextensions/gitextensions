@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using GitUI;
+using Microsoft;
 using Microsoft.VisualStudio.Composition;
 
 namespace GitUIPluginInterfaces
@@ -16,7 +17,7 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Gets a root path where user installed plugins are located.
         /// </summary>
-        public static string UserPluginsPath { get; private set; }
+        public static string? UserPluginsPath { get; private set; }
 
         /// <summary>
         /// Sets a root path to a folder where user plugins are located.
@@ -32,9 +33,9 @@ namespace GitUIPluginInterfaces
             UserPluginsPath = userPluginsPath;
         }
 
-        private static Lazy<ExportProvider> _exportProvider;
+        private static Lazy<ExportProvider>? _exportProvider;
 
-        private static Lazy<ExportProvider> GetOrCreateLazyExportProvider(string applicationDataFolder)
+        private static Lazy<ExportProvider> GetOrCreateLazyExportProvider(string? applicationDataFolder)
         {
             var lazyExportProvider = Volatile.Read(ref _exportProvider);
             if (lazyExportProvider is null)
@@ -47,12 +48,13 @@ namespace GitUIPluginInterfaces
             return lazyExportProvider;
         }
 
-        private static ExportProvider CreateExportProvider(string applicationDataFolder)
+        private static ExportProvider CreateExportProvider(string? applicationDataFolder)
         {
             var stopwatch = Stopwatch.StartNew();
 
             string defaultPluginsPath = Path.Combine(new FileInfo(Application.ExecutablePath).Directory.FullName, "Plugins");
-            string userPluginsPath = UserPluginsPath;
+            string? userPluginsPath = UserPluginsPath;
+            Validates.NotNull(userPluginsPath);
 
             var pluginFiles = PluginsPathScanner.GetFiles(defaultPluginsPath, userPluginsPath);
 #if !CI_BUILD
@@ -68,7 +70,7 @@ namespace GitUIPluginInterfaces
             }
             else
             {
-                var assemblies = pluginFiles.Select(assemblyFile => TryLoadAssembly(assemblyFile)).Where(assembly => assembly is not null).ToArray();
+                var assemblies = pluginFiles.Select(assemblyFile => TryLoadAssembly(assemblyFile)).WhereNotNull().ToArray();
 
                 var discovery = PartDiscovery.Combine(
                     new AttributedPartDiscoveryV1(Resolver.DefaultInstance),
@@ -93,7 +95,7 @@ namespace GitUIPluginInterfaces
             return exportProviderFactory.CreateExportProvider();
         }
 
-        private static Assembly TryLoadAssembly(FileInfo file)
+        private static Assembly? TryLoadAssembly(FileInfo file)
         {
             try
             {

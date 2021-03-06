@@ -75,9 +75,9 @@ namespace GitCommands.Config
             return _configKeys.ContainsKey(key);
         }
 
-        public void SetValue(string key, string value)
+        public void SetValue(string key, string? value)
         {
-            if (string.IsNullOrEmpty(value))
+            if (Strings.IsNullOrEmpty(value))
             {
                 _configKeys.Remove(key);
             }

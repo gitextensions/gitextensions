@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 
 namespace GitCommands
@@ -136,7 +137,7 @@ namespace GitCommands
             get => GetTrackingRemote(Module.LocalConfigFile);
             set
             {
-                if (string.IsNullOrEmpty(value))
+                if (Strings.IsNullOrEmpty(value))
                 {
                     Module.UnsetSetting(_remoteSettingName);
                 }
@@ -165,7 +166,7 @@ namespace GitCommands
             get => GetMergeWith(Module.LocalConfigFile);
             set
             {
-                if (string.IsNullOrEmpty(value))
+                if (Strings.IsNullOrEmpty(value))
                 {
                     Module.UnsetSetting(_mergeSettingName);
                 }

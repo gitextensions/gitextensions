@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Microsoft;
 
 namespace GitUIPluginInterfaces
 {
@@ -8,7 +9,7 @@ namespace GitUIPluginInterfaces
     /// </summary>
     public class PseudoSetting : ISetting
     {
-        private readonly Func<TextBox> _textBoxCreator;
+        private readonly Func<TextBox>? _textBoxCreator;
 
         public PseudoSetting(Control control, string caption = "")
         {
@@ -16,7 +17,7 @@ namespace GitUIPluginInterfaces
             CustomControl = control;
         }
 
-        public PseudoSetting(string text, string caption = "    ", int? height = null,  Action<TextBox> textboxSettings = null)
+        public PseudoSetting(string text, string caption = "    ", int? height = null,  Action<TextBox>? textboxSettings = null)
         {
             Caption = caption;
 
@@ -39,17 +40,18 @@ namespace GitUIPluginInterfaces
 
         public string Name { get; } = "PseusoSetting";
         public string Caption { get; }
-        public Control CustomControl { get; set; }
+        public Control? CustomControl { get; set; }
 
         public ISettingControlBinding CreateControlBinding()
         {
+            Validates.NotNull(_textBoxCreator);
             return new PseudoBinding(this, CustomControl, _textBoxCreator);
         }
 
         private class PseudoBinding : SettingControlBinding<PseudoSetting, Control>
         {
             private readonly Func<TextBox> _textBoxCreator;
-            public PseudoBinding(PseudoSetting setting, Control customControl, Func<TextBox> textBoxCreator)
+            public PseudoBinding(PseudoSetting setting, Control? customControl, Func<TextBox> textBoxCreator)
                 : base(setting, customControl)
             {
                 _textBoxCreator = textBoxCreator;
