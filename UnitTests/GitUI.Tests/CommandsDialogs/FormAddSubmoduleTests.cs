@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using CommonTestUtils;
 using FluentAssertions;
+using GitCommands;
 using GitExtUtils;
 using GitUI.CommandsDialogs.SubmodulesDialog;
 using GitUI.CommitInfo;
 using GitUIPluginInterfaces;
-using NSubstitute;
 using NUnit.Framework;
+
+#pragma warning disable SA1312 // Variable names should begin with lower-case letter (doesn't understand discards)
 
 namespace GitUITests.CommandsDialogs
 {
@@ -26,12 +29,12 @@ namespace GitUITests.CommandsDialogs
         private readonly string[] _branches = { "master", "branch", "", "b123", "b456", "b789" };
 
         // Created once for each test
-        private IExecutable _gitExecutable;
+        private MockExecutable _gitExecutable;
 
         [SetUp]
         public void SetUp()
         {
-            _gitExecutable = Substitute.For<IExecutable>();
+            _gitExecutable = new MockExecutable();
         }
 
         [Test]
@@ -46,7 +49,7 @@ namespace GitUITests.CommandsDialogs
         [TestCase("C:\\Repo", "\"C:/Repo\"")]
         public void LoadRemoteRepoBranches_Url(string url, string encodedUrl)
         {
-            MockupGitOutput(Heads, encodedUrl);
+            using var _ = MockupGitOutput(Heads, encodedUrl);
             FormAddSubmodule.TestAccessor.LoadRemoteRepoBranches(_gitExecutable, url)
                 .Should().BeEquivalentTo(_branches);
         }
@@ -54,7 +57,7 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void LoadRemoteRepoBranches_GitWarnings()
         {
-            MockupGitOutput($"warning: this\n{Heads}\nwarning: or that");
+            using var _ = MockupGitOutput($"warning: this\n{Heads}\nwarning: or that");
             FormAddSubmodule.TestAccessor.LoadRemoteRepoBranches(_gitExecutable, DummyUrl)
                 .Should().BeEquivalentTo(_branches);
         }
@@ -62,15 +65,15 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void LoadRemoteRepoBranches_GitError()
         {
-            MockupGitOutput("error: no such repo");
+            using var _ = MockupGitOutput("error: no such repo");
             FormAddSubmodule.TestAccessor.LoadRemoteRepoBranches(_gitExecutable, DummyUrl)
                 .Should().BeEmpty();
         }
 
-        private void MockupGitOutput(string output, string encodedUrl = DummyUrlEncoded)
+        private IDisposable MockupGitOutput(string output, string encodedUrl = DummyUrlEncoded)
         {
             var gitArguments = new GitArgumentBuilder("ls-remote") { "--heads", encodedUrl };
-            _gitExecutable.GetOutput(gitArguments).Returns(_ => output);
+            return _gitExecutable.StageOutput(gitArguments.ToString(), output);
         }
     }
 }

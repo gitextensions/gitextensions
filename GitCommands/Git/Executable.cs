@@ -47,11 +47,6 @@ namespace GitCommands
             return new ProcessWrapper(fileName, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute);
         }
 
-        public string GetOutput(ArgumentString arguments)
-        {
-            return this.GetOutput(arguments, null);
-        }
-
         #region ProcessWrapper
 
         /// <summary>

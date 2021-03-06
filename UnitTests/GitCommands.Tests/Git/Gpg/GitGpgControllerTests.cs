@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Gpg;
@@ -9,19 +10,24 @@ using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
 
+#pragma warning disable SA1312 // Variable names should begin with lower-case letter (doesn't understand discards)
+
 namespace GitCommandsTests.Git.Gpg
 {
     [TestFixture]
     public class GitGpgControllerTests
     {
-        private Func<IGitModule> _module;
+        private IGitModule _module;
         private GitGpgController _gpgController;
+        private MockExecutable _executable;
 
         [SetUp]
         public void Setup()
         {
-            _module = Substitute.For<Func<IGitModule>>();
-            _gpgController = new GitGpgController(_module);
+            _executable = new MockExecutable();
+            _module = Substitute.For<IGitModule>();
+            _module.GitExecutable.Returns(_executable);
+            _gpgController = new GitGpgController(() => _module);
         }
 
         [TestCase(CommitStatus.GoodSignature, "G")]
@@ -43,8 +49,8 @@ namespace GitCommandsTests.Git.Gpg
                 "-1",
                 revision.Guid
             };
-            _module().GitExecutable.GetOutput(Arg.Is<ArgumentString>(arg => arg.ToString().Equals(args.ToString())))
-                .Returns(x => gitCmdReturn);
+
+            using var _ = _executable.StageOutput(args.ToString(), gitCmdReturn);
 
             var actual = await _gpgController.GetRevisionCommitSignatureStatusAsync(revision);
 
@@ -74,7 +80,7 @@ namespace GitCommandsTests.Git.Gpg
             var revision = new GitRevision(objectId)
             {
                 Refs = Enumerable.Range(0, numberOfTags)
-                    .Select(_ => new GitRef(_module(), objectId, gitRefCompleteName))
+                    .Select(_ => new GitRef(_module, objectId, gitRefCompleteName))
                     .ToList()
             };
 
@@ -90,7 +96,7 @@ namespace GitCommandsTests.Git.Gpg
         {
             var objectId = ObjectId.Random();
 
-            var gitRef = new GitRef(_module(), objectId, "refs/tags/FirstTag^{}");
+            var gitRef = new GitRef(_module, objectId, "refs/tags/FirstTag^{}");
 
             var revision = new GitRevision(objectId) { Refs = new[] { gitRef } };
             var args = new GitArgumentBuilder("verify-tag")
@@ -98,7 +104,8 @@ namespace GitCommandsTests.Git.Gpg
                 "--raw",
                 gitRef.LocalName
             };
-            _module().GitExecutable.GetOutput(args).Returns(gitCmdReturn);
+
+            using var _ = _executable.StageOutput(args.ToString(), gitCmdReturn);
 
             var actual = await _gpgController.GetRevisionTagSignatureStatusAsync(revision);
 
@@ -116,8 +123,8 @@ namespace GitCommandsTests.Git.Gpg
                 "-1",
                 revision.Guid
             };
-            _module().GitExecutable.GetOutput(Arg.Is<ArgumentString>(arg => arg.Arguments.Equals(args.ToString())))
-                .Returns(x => returnString);
+
+            using var _ = _executable.StageOutput(args.ToString(), returnString);
 
             var actual = _gpgController.GetCommitVerificationMessage(revision);
 
@@ -144,16 +151,18 @@ namespace GitCommandsTests.Git.Gpg
             var objectId = ObjectId.Random();
             var revision = new GitRevision(objectId);
 
+            IDisposable validate = null;
+
             switch (usefulTagRefNumber)
             {
                 case 0:
                     {
                         // Tag but not dereference
-                        var gitRef = new GitRef(_module(), objectId, "refs/tags/TagName");
+                        var gitRef = new GitRef(_module, objectId, "refs/tags/TagName");
                         revision.Refs = new[] { gitRef };
 
                         var args = new GitArgumentBuilder("verify-tag") { gitRef.LocalName };
-                        _module().GitExecutable.GetOutput(args).Returns("");
+                        validate = _executable.StageOutput(args.ToString(), "");
 
                         break;
                     }
@@ -161,11 +170,11 @@ namespace GitCommandsTests.Git.Gpg
                 case 1:
                     {
                         // One tag that's also IsDereference == true
-                        var gitRef = new GitRef(_module(), objectId, "refs/tags/TagName^{}");
+                        var gitRef = new GitRef(_module, objectId, "refs/tags/TagName^{}");
                         revision.Refs = new[] { gitRef };
 
                         var args = new GitArgumentBuilder("verify-tag") { gitRef.LocalName };
-                        _module().GitExecutable.GetOutput(args).Returns(gitRef.LocalName);
+                        validate = _executable.StageOutput(args.ToString(), gitRef.LocalName);
 
                         break;
                     }
@@ -173,16 +182,16 @@ namespace GitCommandsTests.Git.Gpg
                 case 2:
                     {
                         // Two tag that's also IsDereference == true
-                        var gitRef1 = new GitRef(_module(), objectId, "refs/tags/FirstTag^{}");
+                        var gitRef1 = new GitRef(_module, objectId, "refs/tags/FirstTag^{}");
 
                         var args = new GitArgumentBuilder("verify-tag") { gitRef1.LocalName };
-                        _module().GitExecutable.GetOutput(args).Returns(gitRef1.LocalName);
+                        _executable.StageOutput(args.ToString(), gitRef1.LocalName);
 
-                        var gitRef2 = new GitRef(_module(), objectId, "refs/tags/SecondTag^{}");
+                        var gitRef2 = new GitRef(_module, objectId, "refs/tags/SecondTag^{}");
                         revision.Refs = new[] { gitRef1, gitRef2 };
 
                         args = new GitArgumentBuilder("verify-tag") { gitRef2.LocalName };
-                        _module().GitExecutable.GetOutput(args).Returns(gitRef2.LocalName);
+                        validate = _executable.StageOutput(args.ToString(), gitRef2.LocalName);
 
                         break;
                     }
@@ -191,6 +200,8 @@ namespace GitCommandsTests.Git.Gpg
             var actual = _gpgController.GetTagVerifyMessage(revision);
 
             Assert.AreEqual(expected, actual);
+
+            validate?.Dispose();
         }
     }
 }
