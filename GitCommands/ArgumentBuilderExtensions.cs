@@ -109,17 +109,13 @@ namespace GitCommands
 
             string? GetArgument()
             {
-                switch (option)
+                return option switch
                 {
-                    case ForcePushOptions.Force:
-                        return "-f";
-                    case ForcePushOptions.ForceWithLease:
-                        return "--force-with-lease";
-                    case ForcePushOptions.DoNotForce:
-                        return null;
-                    default:
-                        throw new InvalidEnumArgumentException(nameof(option), (int)option, typeof(ForcePushOptions));
-                }
+                    ForcePushOptions.Force => "-f",
+                    ForcePushOptions.ForceWithLease => "--force-with-lease",
+                    ForcePushOptions.DoNotForce => null,
+                    _ => throw new InvalidEnumArgumentException(nameof(option), (int)option, typeof(ForcePushOptions))
+                };
             }
         }
 
@@ -134,19 +130,14 @@ namespace GitCommands
 
             string GetArgument()
             {
-                switch (mode)
+                return mode switch
                 {
-                    case UntrackedFilesMode.Default:
-                        return "--untracked-files";
-                    case UntrackedFilesMode.No:
-                        return "--untracked-files=no";
-                    case UntrackedFilesMode.Normal:
-                        return "--untracked-files=normal";
-                    case UntrackedFilesMode.All:
-                        return "--untracked-files=all";
-                    default:
-                        throw new InvalidEnumArgumentException(nameof(mode), (int)mode, typeof(UntrackedFilesMode));
-                }
+                    UntrackedFilesMode.Default => "--untracked-files",
+                    UntrackedFilesMode.No => "--untracked-files=no",
+                    UntrackedFilesMode.Normal => "--untracked-files=normal",
+                    UntrackedFilesMode.All => "--untracked-files=all",
+                    _ => throw new InvalidEnumArgumentException(nameof(mode), (int)mode, typeof(UntrackedFilesMode))
+                };
             }
         }
 
@@ -161,21 +152,15 @@ namespace GitCommands
 
             string GetArgument()
             {
-                switch (mode)
+                return mode switch
                 {
-                    case IgnoreSubmodulesMode.Default:
-                        return "--ignore-submodules";
-                    case IgnoreSubmodulesMode.None:
-                        return "--ignore-submodules=none";
-                    case IgnoreSubmodulesMode.Untracked:
-                        return "--ignore-submodules=untracked";
-                    case IgnoreSubmodulesMode.Dirty:
-                        return "--ignore-submodules=dirty";
-                    case IgnoreSubmodulesMode.All:
-                        return "--ignore-submodules=all";
-                    default:
-                        throw new InvalidEnumArgumentException(nameof(mode), (int)mode, typeof(IgnoreSubmodulesMode));
-                }
+                    IgnoreSubmodulesMode.Default => "--ignore-submodules",
+                    IgnoreSubmodulesMode.None => "--ignore-submodules=none",
+                    IgnoreSubmodulesMode.Untracked => "--ignore-submodules=untracked",
+                    IgnoreSubmodulesMode.Dirty => "--ignore-submodules=dirty",
+                    IgnoreSubmodulesMode.All => "--ignore-submodules=all",
+                    _ => throw new InvalidEnumArgumentException(nameof(mode), (int)mode, typeof(IgnoreSubmodulesMode))
+                };
             }
         }
 
@@ -190,17 +175,13 @@ namespace GitCommands
 
             string GetArgument()
             {
-                switch (mode)
+                return mode switch
                 {
-                    case CleanMode.OnlyNonIgnored:
-                        return "";
-                    case CleanMode.OnlyIgnored:
-                        return "-X";
-                    case CleanMode.All:
-                        return "-x";
-                    default:
-                        throw new InvalidEnumArgumentException(nameof(mode), (int)mode, typeof(CleanMode));
-                }
+                    CleanMode.OnlyNonIgnored => "",
+                    CleanMode.OnlyIgnored => "-X",
+                    CleanMode.All => "-x",
+                    _ => throw new InvalidEnumArgumentException(nameof(mode), (int)mode, typeof(CleanMode))
+                };
             }
         }
 
@@ -215,23 +196,16 @@ namespace GitCommands
 
             string GetArgument()
             {
-                switch (mode)
+                return mode switch
                 {
-                    case ResetMode.ResetIndex:
-                        return "";
-                    case ResetMode.Soft:
-                        return "--soft";
-                    case ResetMode.Mixed:
-                        return "--mixed";
-                    case ResetMode.Keep:
-                        return "--keep";
-                    case ResetMode.Merge:
-                        return "--merge";
-                    case ResetMode.Hard:
-                        return "--hard";
-                    default:
-                        throw new InvalidEnumArgumentException(nameof(mode), (int)mode, typeof(ResetMode));
-                }
+                    ResetMode.ResetIndex => "",
+                    ResetMode.Soft => "--soft",
+                    ResetMode.Mixed => "--mixed",
+                    ResetMode.Keep => "--keep",
+                    ResetMode.Merge => "--merge",
+                    ResetMode.Hard => "--hard",
+                    _ => throw new InvalidEnumArgumentException(nameof(mode), (int)mode, typeof(ResetMode))
+                };
             }
         }
 
@@ -246,17 +220,13 @@ namespace GitCommands
 
             string GetArgument()
             {
-                switch (option)
+                return option switch
                 {
-                    case GitBisectOption.Good:
-                        return "good";
-                    case GitBisectOption.Bad:
-                        return "bad";
-                    case GitBisectOption.Skip:
-                        return "skip";
-                    default:
-                        throw new InvalidEnumArgumentException(nameof(option), (int)option, typeof(GitBisectOption));
-                }
+                    GitBisectOption.Good => "good",
+                    GitBisectOption.Bad => "bad",
+                    GitBisectOption.Skip => "skip",
+                    _ => throw new InvalidEnumArgumentException(nameof(option), (int)option, typeof(GitBisectOption))
+                };
             }
         }
 

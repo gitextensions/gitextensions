@@ -124,17 +124,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             int GetTruncatePathMethodIndex(TruncatePathMethod method)
             {
-                switch (method)
+                return method switch
                 {
-                    case TruncatePathMethod.Compact:
-                        return 1;
-                    case TruncatePathMethod.TrimStart:
-                        return 2;
-                    case TruncatePathMethod.FileNameOnly:
-                        return 3;
-                    default:
-                        return 0;
-                }
+                    TruncatePathMethod.Compact => 1,
+                    TruncatePathMethod.TrimStart => 2,
+                    TruncatePathMethod.FileNameOnly => 3,
+                    _ => 0
+                };
             }
         }
 

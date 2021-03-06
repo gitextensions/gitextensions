@@ -290,19 +290,14 @@ Detail of the error:");
 
         private static BuildInfo.BuildStatus MapResult(string status)
         {
-            switch (status)
+            return status switch
             {
-                case "failed":
-                    return BuildInfo.BuildStatus.Failure;
-                case "canceled":
-                    return BuildInfo.BuildStatus.Stopped;
-                case "succeeded":
-                    return BuildInfo.BuildStatus.Success;
-                case "partiallySucceeded":
-                    return BuildInfo.BuildStatus.Unstable;
-                default:
-                    return BuildInfo.BuildStatus.Unknown;
-            }
+                "failed" => BuildInfo.BuildStatus.Failure,
+                "canceled" => BuildInfo.BuildStatus.Stopped,
+                "succeeded" => BuildInfo.BuildStatus.Success,
+                "partiallySucceeded" => BuildInfo.BuildStatus.Unstable,
+                _ => BuildInfo.BuildStatus.Unknown
+            };
         }
 
         public void Dispose()

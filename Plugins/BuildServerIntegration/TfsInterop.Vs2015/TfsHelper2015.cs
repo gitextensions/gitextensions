@@ -216,21 +216,15 @@ namespace TfsInterop
 
         private static BuildStatus ConvertStatus(Microsoft.TeamFoundation.Build.Client.BuildStatus status)
         {
-            switch (status)
+            return status switch
             {
-                case Microsoft.TeamFoundation.Build.Client.BuildStatus.Succeeded:
-                    return BuildStatus.Success;
-                case Microsoft.TeamFoundation.Build.Client.BuildStatus.Stopped:
-                    return BuildStatus.Stopped;
-                case Microsoft.TeamFoundation.Build.Client.BuildStatus.Failed:
-                    return BuildStatus.Failure;
-                case Microsoft.TeamFoundation.Build.Client.BuildStatus.PartiallySucceeded:
-                    return BuildStatus.Unstable;
-                case Microsoft.TeamFoundation.Build.Client.BuildStatus.InProgress:
-                    return BuildStatus.InProgress;
-                default:
-                    return BuildStatus.Unknown;
-            }
+                Microsoft.TeamFoundation.Build.Client.BuildStatus.Succeeded => BuildStatus.Success,
+                Microsoft.TeamFoundation.Build.Client.BuildStatus.Stopped => BuildStatus.Stopped,
+                Microsoft.TeamFoundation.Build.Client.BuildStatus.Failed => BuildStatus.Failure,
+                Microsoft.TeamFoundation.Build.Client.BuildStatus.PartiallySucceeded => BuildStatus.Unstable,
+                Microsoft.TeamFoundation.Build.Client.BuildStatus.InProgress => BuildStatus.InProgress,
+                _ => BuildStatus.Unknown
+            };
         }
 
         public bool IsDependencyOk2015()

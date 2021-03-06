@@ -143,19 +143,14 @@ namespace GitUI.CommandsDialogs
 
         private static TagOperation GetSelectedOperation(int dropdownSelection)
         {
-            switch (dropdownSelection)
+            return dropdownSelection switch
             {
-                case 0:
-                    return TagOperation.Lightweight;
-                case 1:
-                    return TagOperation.Annotate;
-                case 2:
-                    return TagOperation.SignWithDefaultKey;
-                case 3:
-                    return TagOperation.SignWithSpecificKey;
-                default:
-                    throw new NotSupportedException("Invalid dropdownSelection");
-            }
+                0 => TagOperation.Lightweight,
+                1 => TagOperation.Annotate,
+                2 => TagOperation.SignWithDefaultKey,
+                3 => TagOperation.SignWithSpecificKey,
+                _ => throw new NotSupportedException("Invalid dropdownSelection")
+            };
         }
     }
 }
