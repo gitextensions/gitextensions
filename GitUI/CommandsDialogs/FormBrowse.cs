@@ -2092,7 +2092,7 @@ namespace GitUI.CommandsDialogs
             {
                 ThreadHelper.AssertOnUIThread();
                 throw new UserExternalOperationException(_indexLockCantDelete.Text,
-                    new ExternalOperationException(command: null, arguments: ex.FileName, Module.WorkingDir, ex));
+                    new ExternalOperationException(operation: "Delete", obj: ex.FileName, directory: Module.WorkingDir, innerException: ex));
             }
         }
 

@@ -57,7 +57,7 @@ namespace GitUI.Script
             {
                 ThreadHelper.AssertOnUIThread();
                 throw new UserExternalOperationException($"{TranslatedStrings.ScriptErrorCantFind}: '{scriptKey}'",
-                    new ExternalOperationException(command: null, arguments: null, module.WorkingDir, innerException: null));
+                    new ExternalOperationException(directory: module.WorkingDir));
             }
 
             if (Strings.IsNullOrEmpty(scriptInfo.Command))
@@ -75,7 +75,7 @@ namespace GitUI.Script
                 {
                     ThreadHelper.AssertOnUIThread();
                     throw new UserExternalOperationException($"{TranslatedStrings.ScriptText}: '{scriptKey}'{Environment.NewLine}'{optionDependingOnSelectedRevision}' {TranslatedStrings.ScriptErrorOptionWithoutRevisionGridText}",
-                        new ExternalOperationException(scriptInfo.Command, arguments, module.WorkingDir, innerException: null));
+                        new ExternalOperationException(operation: scriptInfo.Command, arguments: arguments, directory: module.WorkingDir));
                 }
             }
 
@@ -92,7 +92,7 @@ namespace GitUI.Script
             {
                 ThreadHelper.AssertOnUIThread();
                 throw new UserExternalOperationException($"{TranslatedStrings.ScriptText}: '{scriptKey}'{Environment.NewLine}{TranslatedStrings.ScriptErrorOptionWithoutRevisionText}",
-                    new ExternalOperationException(scriptInfo.Command, arguments, module.WorkingDir, innerException: null));
+                    new ExternalOperationException(operation: scriptInfo.Command, arguments: arguments, directory: module.WorkingDir));
             }
 
             Validates.NotNull(argument);
