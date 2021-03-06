@@ -377,7 +377,7 @@ namespace GitUI.Hotkey
                 return ScriptManager
                     .GetScripts()
                     .Where(s => !string.IsNullOrEmpty(s.Name))
-                    .Select(s => new HotkeyCommand(s.HotkeyCommandIdentifier, s.Name) { KeyData = Keys.None })
+                    .Select(s => new HotkeyCommand(s.HotkeyCommandIdentifier, s.Name!) { KeyData = Keys.None })
                     .ToArray();
             }
         }

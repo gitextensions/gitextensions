@@ -2658,6 +2658,7 @@ namespace GitUI.CommandsDialogs
             switch (e.Command)
             {
                 case "gotocommit":
+                    Validates.NotNull(e.Data);
                     var found = Module.TryResolvePartialCommitId(e.Data, out var revision);
 
                     if (found)
@@ -2677,6 +2678,7 @@ namespace GitUI.CommandsDialogs
                     break;
                 case "gotobranch":
                 case "gototag":
+                    Validates.NotNull(e.Data);
                     CommitData? commit = _commitDataManager.GetCommitData(e.Data, out _);
                     if (commit is not null)
                     {

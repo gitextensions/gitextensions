@@ -27,9 +27,10 @@ namespace GitUI.UserControls.RevisionGrid
             _revisionGrid = revisionGrid;
             NavigateMenuCommands = CreateNavigateMenuCommands();
             ViewMenuCommands = CreateViewMenuCommands();
-            TranslationCategoryName = "RevisionGrid";
             Translate();
         }
+
+        protected override string TranslationCategoryName => "RevisionGrid";
 
         /// <summary>
         /// ... "Update" because the hotkey settings might change

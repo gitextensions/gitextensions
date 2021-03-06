@@ -189,7 +189,7 @@ namespace GitUI.CommitInfo
             ReloadCommitInfo();
         }
 
-        private void ShowAll(string what)
+        private void ShowAll(string? what)
         {
             switch (what)
             {

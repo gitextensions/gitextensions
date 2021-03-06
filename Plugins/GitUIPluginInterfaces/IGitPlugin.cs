@@ -5,13 +5,13 @@ namespace GitUIPluginInterfaces
 {
     public interface IGitPlugin
     {
-        string Name { get; }
+        string? Name { get; }
 
-        string Description { get; }
+        string? Description { get; }
 
         Image? Icon { get; }
 
-        IGitPluginSettingsContainer SettingsContainer { get; set; }
+        IGitPluginSettingsContainer? SettingsContainer { get; set; }
 
         bool HasSettings { get; }
 

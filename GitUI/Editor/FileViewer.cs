@@ -516,7 +516,8 @@ namespace GitUI.Editor
         /// <returns>Task to view the item.</returns>
         public Task ViewGitItemAsync(GitItemStatus file, Action? openWithDifftool = null)
         {
-            var sha = file.TreeGuid?.ToString();
+            Validates.NotNull(file.TreeGuid);
+            var sha = file.TreeGuid.ToString();
             var isSubmodule = file.IsSubmodule;
 
             if (!isSubmodule && file.IsNew && file.Staged == StagedStatus.Index)

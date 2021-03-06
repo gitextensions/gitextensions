@@ -625,6 +625,7 @@ namespace GitUI.CommandsDialogs
         {
             if (e.Command == "gotocommit")
             {
+                Validates.NotNull(e.Data);
                 if (Module.TryResolvePartialCommitId(e.Data, out var objectId))
                 {
                     FileChanges.SetSelectedRevision(objectId);
@@ -632,6 +633,7 @@ namespace GitUI.CommandsDialogs
             }
             else if (e.Command == "gotobranch" || e.Command == "gototag")
             {
+                Validates.NotNull(e.Data);
                 CommitData? commit = _commitDataManager.GetCommitData(e.Data, out _);
                 if (commit is not null)
                 {

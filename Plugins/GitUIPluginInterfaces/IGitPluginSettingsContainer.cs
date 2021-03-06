@@ -3,6 +3,7 @@
     public interface IGitPluginSettingsContainer
     {
         ISettingsSource GetSettingsSource();
-        void SetSettingsSource(ISettingsSource settingsSource);
+
+        void SetSettingsSource(ISettingsSource? settingsSource);
     }
 }

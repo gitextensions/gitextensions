@@ -3,6 +3,7 @@ using System.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
+using Microsoft;
 
 namespace GitUI
 {
@@ -32,6 +33,7 @@ namespace GitUI
 
                     foreach (var plugin in ManagedExtensibility.GetExports<IGitPlugin>().Select(lazy => lazy.Value))
                     {
+                        Validates.NotNull(plugin.Name);
                         plugin.SettingsContainer = new GitPluginSettingsContainer(plugin.Name);
 
                         if (plugin is IRepositoryHostPlugin repositoryHostPlugin)

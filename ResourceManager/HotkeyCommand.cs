@@ -17,7 +17,7 @@ namespace ResourceManager
         public int CommandCode { get; set; }
 
         [XmlAttribute]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [XmlAttribute]
         public Keys KeyData { get; set; }
@@ -45,7 +45,7 @@ namespace ResourceManager
                    GetFieldsToCompare().SequenceEqual(other.GetFieldsToCompare());
         }
 
-        private IEnumerable<object> GetFieldsToCompare()
+        private IEnumerable<object?> GetFieldsToCompare()
         {
             yield return Name;
             yield return CommandCode;

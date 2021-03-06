@@ -27,12 +27,12 @@ namespace ResourceManager.Xliff
 
         public void AddTranslationItemIfNotExist(TranslationItem translationItem)
         {
-            if (string.IsNullOrEmpty(translationItem.Name))
+            if (GitExtUtils.Strings.IsNullOrEmpty(translationItem.Name))
             {
                 throw new InvalidOperationException($"Cannot add {nameof(TranslationItem)} without name");
             }
 
-            TranslationItem ti = GetTranslationItem(translationItem.Name, translationItem.Property);
+            TranslationItem? ti = GetTranslationItem(translationItem.Name, translationItem.Property);
             if (ti is null)
             {
                 if (translationItem.Property == "ToolTipText")
@@ -54,9 +54,9 @@ namespace ResourceManager.Xliff
             }
         }
 
-        public TranslationItem GetTranslationItem(string name, string property)
+        public TranslationItem? GetTranslationItem(string name, string? property)
         {
-            return TranslationItems.Find(t => t.Name.TrimStart('_') == name.TrimStart('_') && t.Property == property);
+            return TranslationItems.Find(t => t.Name is not null && t.Name.TrimStart('_') == name.TrimStart('_') && t.Property == property);
         }
     }
 }
