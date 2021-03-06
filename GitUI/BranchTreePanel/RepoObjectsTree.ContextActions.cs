@@ -65,14 +65,14 @@ namespace GitUI.BranchTreePanel
                 contextMenu.Items.Add(tsmiMainMenuSpacer1);
             }
 
-            if (!contextMenu.Items.Contains(mnubtnCollapse))
-            {
-                contextMenu.Items.Add(mnubtnCollapse);
-            }
-
             if (!contextMenu.Items.Contains(mnubtnExpand))
             {
                 contextMenu.Items.Add(mnubtnExpand);
+            }
+
+            if (!contextMenu.Items.Contains(mnubtnCollapse))
+            {
+                contextMenu.Items.Add(mnubtnCollapse);
             }
 
             if (treeNode is not null)
