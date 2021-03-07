@@ -792,6 +792,11 @@ namespace GitCommands
 
         public int? GetCommitCount(string parent, string child, bool cache = false)
         {
+            if (parent == child)
+            {
+                return 0;
+            }
+
             var args = new GitArgumentBuilder("rev-list")
             {
                 parent,
@@ -827,6 +832,11 @@ namespace GitCommands
 
         public (int? first, int? second) GetCommitRangeDiffCount(ObjectId firstId, ObjectId secondId)
         {
+            if (firstId == secondId)
+            {
+                return (0, 0);
+            }
+
             var args = new GitArgumentBuilder("rev-list")
             {
                 $"{firstId}...{secondId}",
@@ -3654,6 +3664,11 @@ namespace GitCommands
 
         public ObjectId? GetMergeBase(ObjectId a, ObjectId b)
         {
+            if (a == b)
+            {
+                return a;
+            }
+
             var args = new GitArgumentBuilder("merge-base")
             {
                 a,
