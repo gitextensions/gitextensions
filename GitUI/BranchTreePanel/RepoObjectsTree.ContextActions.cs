@@ -50,8 +50,8 @@ namespace GitUI.BranchTreePanel
             if (contextMenu == menuMain)
             {
                 contextMenu.Items.Clear();
-                contextMenu.Items.Add(mnubtnCollapseAll);
-                contextMenu.Items.Add(mnubtnExpandAll);
+                contextMenu.Items.Add(mnubtnCollapse);
+                contextMenu.Items.Add(mnubtnExpand);
                 if (treeNode is not null)
                 {
                     AddMoveUpDownMenuItems();
@@ -65,14 +65,14 @@ namespace GitUI.BranchTreePanel
                 contextMenu.Items.Add(tsmiMainMenuSpacer1);
             }
 
-            if (!contextMenu.Items.Contains(mnubtnCollapseAll))
+            if (!contextMenu.Items.Contains(mnubtnExpand))
             {
-                contextMenu.Items.Add(mnubtnCollapseAll);
+                contextMenu.Items.Add(mnubtnExpand);
             }
 
-            if (!contextMenu.Items.Contains(mnubtnExpandAll))
+            if (!contextMenu.Items.Contains(mnubtnCollapse))
             {
-                contextMenu.Items.Add(mnubtnExpandAll);
+                contextMenu.Items.Add(mnubtnCollapse);
             }
 
             if (treeNode is not null)
@@ -281,8 +281,8 @@ namespace GitUI.BranchTreePanel
             _tagNodeMenuItems = new TagMenuItems<TagNode>(this);
             AddContextMenuItems(menuTag, _tagNodeMenuItems.Select(s => s.Item));
 
-            RegisterClick(mnubtnCollapseAll, () => treeMain.CollapseAll());
-            RegisterClick(mnubtnExpandAll, () => treeMain.ExpandAll());
+            RegisterClick(mnubtnCollapse, () => treeMain.SelectedNode?.Collapse());
+            RegisterClick(mnubtnExpand, () => treeMain.SelectedNode?.ExpandAll());
             RegisterClick(mnubtnMoveUp, () => ReorderTreeNode(treeMain.SelectedNode, up: true));
             RegisterClick(mnubtnMoveDown, () => ReorderTreeNode(treeMain.SelectedNode, up: false));
 

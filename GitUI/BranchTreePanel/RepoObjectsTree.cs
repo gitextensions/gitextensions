@@ -58,9 +58,9 @@ namespace GitUI.BranchTreePanel
             btnSearch.PreviewKeyDown += OnPreviewKeyDown;
             PreviewKeyDown += OnPreviewKeyDown;
 
-            mnubtnCollapseAll.AdaptImageLightness();
+            mnubtnCollapse.AdaptImageLightness();
             tsbCollapseAll.AdaptImageLightness();
-            mnubtnExpandAll.AdaptImageLightness();
+            mnubtnExpand.AdaptImageLightness();
             mnubtnFetchAllBranchesFromARemote.AdaptImageLightness();
             mnuBtnPruneAllBranchesFromARemote.AdaptImageLightness();
             mnuBtnFetchAllRemotes.AdaptImageLightness();
@@ -75,7 +75,7 @@ namespace GitUI.BranchTreePanel
             treeMain.HideSelection = false;
 
             toolTip.SetToolTip(btnSearch, _searchTooltip.Text);
-            tsbCollapseAll.ToolTipText = mnubtnCollapseAll.ToolTipText;
+            tsbCollapseAll.ToolTipText = mnubtnCollapse.ToolTipText;
 
             tsbShowBranches.Checked = AppSettings.RepoObjectsTreeShowBranches;
             tsbShowRemotes.Checked = AppSettings.RepoObjectsTreeShowRemotes;

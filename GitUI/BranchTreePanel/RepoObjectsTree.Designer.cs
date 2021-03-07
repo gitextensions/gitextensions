@@ -58,8 +58,8 @@ namespace GitUI.BranchTreePanel
             this.menuMain = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsmiMainMenuSpacer1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmiMainMenuSpacer2 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnubtnCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnubtnExpandAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnCollapse = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnExpand = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnMoveUp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnMoveDown = new System.Windows.Forms.ToolStripMenuItem();
             this.menuBranch = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -141,8 +141,8 @@ namespace GitUI.BranchTreePanel
             // menuMain
             // 
             this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnubtnCollapseAll,
-            this.mnubtnExpandAll,
+            this.mnubtnCollapse,
+            this.mnubtnExpand,
             this.mnubtnMoveUp,
             this.mnubtnMoveDown});
             this.menuMain.Name = "menuMain";
@@ -151,19 +151,19 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnCollapseAll
             // 
-            this.mnubtnCollapseAll.Image = global::GitUI.Properties.Images.CollapseAll;
-            this.mnubtnCollapseAll.Name = "mnubtnCollapseAll";
-            this.mnubtnCollapseAll.Size = new System.Drawing.Size(138, 22);
-            this.mnubtnCollapseAll.Text = "Collapse All";
-            this.mnubtnCollapseAll.ToolTipText = "Collapse all nodes";
+            this.mnubtnCollapse.Image = global::GitUI.Properties.Images.CollapseAll;
+            this.mnubtnCollapse.Name = "mnubtnCollapse";
+            this.mnubtnCollapse.Size = new System.Drawing.Size(138, 22);
+            this.mnubtnCollapse.Text = "Collapse";
+            this.mnubtnCollapse.ToolTipText = "Collapse all subnodes";
             // 
             // mnubtnExpandAll
             // 
-            this.mnubtnExpandAll.Image = global::GitUI.Properties.Images.ExpandAll;
-            this.mnubtnExpandAll.Name = "mnubtnExpandAll";
-            this.mnubtnExpandAll.Size = new System.Drawing.Size(138, 22);
-            this.mnubtnExpandAll.Text = "Expand All";
-            this.mnubtnExpandAll.ToolTipText = "Expand all nodes";
+            this.mnubtnExpand.Image = global::GitUI.Properties.Images.ExpandAll;
+            this.mnubtnExpand.Name = "mnubtnExpand";
+            this.mnubtnExpand.Size = new System.Drawing.Size(138, 22);
+            this.mnubtnExpand.Text = "Expand";
+            this.mnubtnExpand.ToolTipText = "Expand all subnodes";
             // 
             // mnubtnMoveUp
             // 
@@ -674,8 +674,8 @@ namespace GitUI.BranchTreePanel
         private ToolStripMenuItem mnubtnDeleteAllBranches;
         private ToolStripMenuItem mnubtnCreateBranch;
         private ContextMenuStrip menuMain;
-        private ToolStripMenuItem mnubtnCollapseAll;
-        private ToolStripMenuItem mnubtnExpandAll;
+        private ToolStripMenuItem mnubtnCollapse;
+        private ToolStripMenuItem mnubtnExpand;
         private ContextMenuStrip menuRemoteRepoNode;
         private ToolStripMenuItem mnubtnFetchOneBranch;
         private TableLayoutPanel repoTreePanel;

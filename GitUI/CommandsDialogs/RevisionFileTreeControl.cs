@@ -147,6 +147,7 @@ See the changes in the commit form.");
             try
             {
                 tvGitTree.SuspendLayout();
+                tvGitTree.BeginUpdate();
 
                 // Save state only when there is selected node
                 if (tvGitTree.SelectedNode is not null)
@@ -209,6 +210,7 @@ See the changes in the commit form.");
             }
             finally
             {
+                tvGitTree.EndUpdate();
                 tvGitTree.ResumeLayout();
             }
         }
@@ -429,11 +431,6 @@ See the changes in the commit form.");
             }
         }
 
-        private void collapseAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            tvGitTree.CollapseAll();
-        }
-
         private void copyFilenameToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (tvGitTree.SelectedNode?.Tag is GitItem gitItem)
@@ -496,14 +493,14 @@ See the changes in the commit form.");
             }
         }
 
-        private void expandAllStripMenuItem_Click(object sender, EventArgs e)
-        {
-            tvGitTree.ExpandAll();
-        }
-
-        private void expandSubtreeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void expandToolStripMenuItem_Click(object sender, EventArgs e)
         {
             tvGitTree.SelectedNode?.ExpandAll();
+        }
+
+        private void collapseAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            tvGitTree.CollapseAll();
         }
 
         private void fileTreeArchiveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -611,7 +608,8 @@ See the changes in the commit form.");
             toolStripSeparatorGitTrackingActions.Visible = isFile;
 
             findToolStripMenuItem.Enabled = tvGitTree.Nodes.Count > 0;
-            expandSubtreeToolStripMenuItem.Visible = isFolder;
+            expandToolStripMenuItem.Visible = isFolder;
+            collapseAllToolStripMenuItem.Visible = isFolder;
         }
 
         private void fileTreeOpenContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)

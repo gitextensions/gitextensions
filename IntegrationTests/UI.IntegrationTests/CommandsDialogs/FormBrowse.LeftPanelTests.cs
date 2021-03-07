@@ -87,8 +87,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                     int count = contextMenu.Items.Count;
 
                     // Assert items from bottom to the top
-                    contextMenu.Items[--count].Text.Should().Be("Expand All");
-                    contextMenu.Items[--count].Text.Should().Be("Collapse All");
+                    contextMenu.Items[--count].Text.Should().Be("Collapse");
+                    contextMenu.Items[--count].Text.Should().Be("Expand");
                     contextMenu.Items[--count].Should().BeOfType<ToolStripSeparator>();
                     contextMenu.Items[--count].Text.Should().Be(Strings.SortOrder);
                     contextMenu.Items[--count].Text.Should().Be(Strings.SortBy);
