@@ -813,23 +813,6 @@ namespace GitCommands
             return null;
         }
 
-        public int? GetCommitDiffCount(ObjectId baseId, ObjectId parentId)
-        {
-            var args = new GitArgumentBuilder("rev-list")
-            {
-                $"{baseId} {parentId}",
-                "--count"
-            };
-            var output = _gitExecutable.GetOutput(args);
-
-            if (int.TryParse(output, out var commitCount))
-            {
-                return commitCount;
-            }
-
-            return null;
-        }
-
         public (int? first, int? second) GetCommitRangeDiffCount(ObjectId firstId, ObjectId secondId)
         {
             if (firstId == secondId)
