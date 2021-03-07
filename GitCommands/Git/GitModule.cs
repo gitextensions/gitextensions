@@ -2458,6 +2458,12 @@ namespace GitCommands
 
         public IReadOnlyList<GitItemStatus> GetDiffFilesWithUntracked(string? firstRevision, string? secondRevision, StagedStatus stagedStatus, bool noCache = false)
         {
+            if (stagedStatus is StagedStatus.WorkTree or StagedStatus.Index)
+            {
+                var status = GetAllChangedFilesWithSubmodulesStatus();
+                return status.Where(x => x.Staged == stagedStatus).ToList();
+            }
+
             var output = GetDiffFiles(firstRevision, secondRevision, noCache: noCache, nullSeparated: true);
             var result = GetDiffChangedFilesFromString(output, stagedStatus);
 
