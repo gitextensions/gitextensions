@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -17,7 +18,7 @@ namespace ResourceManager.Xliff
             = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
               BindingFlags.NonPublic | BindingFlags.SetField;
 
-        private static bool AllowTranslateProperty(string text)
+        private static bool AllowTranslateProperty([NotNullWhen(returnValue: true)] string? text)
         {
             if (text is null)
             {
@@ -27,7 +28,7 @@ namespace ResourceManager.Xliff
             return text.Any(char.IsLetter);
         }
 
-        public static IEnumerable<(string name, object item)> GetObjFields(object obj, string objName)
+        public static IEnumerable<(string name, object item)> GetObjFields(object obj, string? objName)
         {
             if (objName is not null)
             {
@@ -156,7 +157,7 @@ namespace ResourceManager.Xliff
                             if (list[index] is string listValue)
                             {
                                 string ProvideDefaultValue() => listValue;
-                                string value = translation.TranslateItem(category, itemName, "Item" + index,
+                                string? value = translation.TranslateItem(category, itemName, "Item" + index,
                                     ProvideDefaultValue);
 
                                 if (!string.IsNullOrEmpty(value))
@@ -169,7 +170,7 @@ namespace ResourceManager.Xliff
                     else if (property.PropertyType.IsEquivalentTo(typeof(string)))
                     {
                         string ProvideDefaultValue() => (string)property.GetValue(itemObj, null);
-                        string value = translation.TranslateItem(category, itemName, property.Name, ProvideDefaultValue);
+                        string? value = translation.TranslateItem(category, itemName, property.Name, ProvideDefaultValue);
 
                         if (!string.IsNullOrEmpty(value))
                         {
@@ -204,7 +205,7 @@ namespace ResourceManager.Xliff
                 return;
             }
 
-            string value = translation.TranslateItem(category, propName, "Text", ProvideDefaultValue);
+            string? value = translation.TranslateItem(category, propName, "Text", ProvideDefaultValue);
 
             if (!string.IsNullOrEmpty(value) && property.CanWrite)
             {
@@ -311,11 +312,11 @@ namespace ResourceManager.Xliff
             return dictionary;
         }
 
-        public static object CreateInstanceOfClass(Type type)
+        public static object? CreateInstanceOfClass(Type type)
         {
             const BindingFlags constructorFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
-            object obj = null;
+            object? obj = null;
 
             var constructors = type.GetConstructors(constructorFlags);
 
@@ -335,7 +336,6 @@ namespace ResourceManager.Xliff
                 obj = parameterConstructor.Invoke(new object[parameters.Length]);
             }
 
-            Debug.Assert(obj is not null, "obj is not null");
             return obj;
         }
     }

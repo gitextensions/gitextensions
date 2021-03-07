@@ -5,15 +5,16 @@ using System.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
+using Microsoft;
 
 namespace ResourceManager
 {
     [UsedImplicitly]
     public abstract class GitPluginBase : IGitPlugin, ITranslate
     {
-        public string Description { get; protected set; }
-        public string Name { get; protected set; }
-        public Image Icon { get; protected set; }
+        public string? Description { get; protected set; }
+        public string? Name { get; protected set; }
+        public Image? Icon { get; protected set; }
 
         protected GitPluginBase(bool hasSettings)
         {
@@ -39,9 +40,16 @@ namespace ResourceManager
         public bool HasSettings { get; }
 
         // Store settings to use later
-        public ISettingsSource Settings => SettingsContainer.GetSettingsSource();
+        public ISettingsSource Settings
+        {
+            get
+            {
+                Validates.NotNull(SettingsContainer);
+                return SettingsContainer.GetSettingsSource();
+            }
+        }
 
-        public IGitPluginSettingsContainer SettingsContainer { get; set; }
+        public IGitPluginSettingsContainer? SettingsContainer { get; set; }
 
         public virtual IEnumerable<ISetting> GetSettings()
         {
@@ -50,11 +58,13 @@ namespace ResourceManager
 
         public virtual void Register(IGitUICommands gitUiCommands)
         {
+            Validates.NotNull(SettingsContainer);
             SettingsContainer.SetSettingsSource(gitUiCommands.GitModule.GetEffectiveSettings());
         }
 
         public virtual void Unregister(IGitUICommands gitUiCommands)
         {
+            Validates.NotNull(SettingsContainer);
             SettingsContainer.SetSettingsSource(null);
         }
 

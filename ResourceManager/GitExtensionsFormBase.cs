@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI;
-using JetBrains.Annotations;
 using ResourceManager.Properties;
 
 namespace ResourceManager
@@ -39,8 +38,7 @@ namespace ResourceManager
         protected bool HotkeysEnabled { get; set; }
 
         /// <summary>Gets or sets the hotkeys</summary>
-        [CanBeNull]
-        protected IEnumerable<HotkeyCommand> Hotkeys { get; set; }
+        protected IEnumerable<HotkeyCommand>? Hotkeys { get; set; }
 
         /// <summary>Overridden: Checks if a hotkey wants to handle the key before letting the message propagate</summary>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -64,8 +62,7 @@ namespace ResourceManager
             return GetHotkeyCommand(commandCode)?.KeyData ?? Keys.None;
         }
 
-        [CanBeNull]
-        protected HotkeyCommand GetHotkeyCommand(int commandCode)
+        protected HotkeyCommand? GetHotkeyCommand(int commandCode)
         {
             return Hotkeys?.FirstOrDefault(h => h.CommandCode == commandCode);
         }

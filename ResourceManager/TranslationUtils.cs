@@ -14,9 +14,9 @@ namespace ResourceManager
             Xliff.TranslationUtil.AddTranslationItem(category, obj, property, translation);
         }
 
-        public static void AddTranslationItemsFromFields(string category, object obj, ITranslation translation)
+        public static void AddTranslationItemsFromFields(string? category, object obj, ITranslation translation)
         {
-            if (!string.IsNullOrEmpty(category))
+            if (!GitExtUtils.Strings.IsNullOrEmpty(category))
             {
                 Xliff.TranslationUtil.AddTranslationItemsFromFields(category, obj, translation);
             }
@@ -37,9 +37,9 @@ namespace ResourceManager
             Xliff.TranslationUtil.TranslateItemsFromList(category, translation, items);
         }
 
-        public static void TranslateItemsFromFields(string category, object obj, ITranslation translation)
+        public static void TranslateItemsFromFields(string? category, object obj, ITranslation translation)
         {
-            if (!string.IsNullOrEmpty(category))
+            if (!GitExtUtils.Strings.IsNullOrEmpty(category))
             {
                 Xliff.TranslationUtil.TranslateItemsFromFields(category, obj, translation);
             }

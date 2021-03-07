@@ -27,6 +27,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
         private void Init(IGitPlugin gitPlugin)
         {
+            Validates.NotNull(gitPlugin.Name);
+
             _gitPlugin = gitPlugin;
             _settingsContainer = new GitPluginSettingsContainer(gitPlugin.Name);
             CreateSettingsControls();
@@ -50,7 +52,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
         public override string GetTitle()
         {
-            return _gitPlugin is null ? string.Empty : _gitPlugin.Description;
+            return _gitPlugin?.Description ?? string.Empty;
         }
 
         private IEnumerable<ISetting> GetSettings()

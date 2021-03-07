@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using GitCommands;
 using GitUIPluginInterfaces;
+using Microsoft;
 
 namespace ResourceManager.CommitDataRenders
 {
@@ -37,9 +38,9 @@ namespace ResourceManager.CommitDataRenders
         private readonly IHeaderLabelFormatter _labelFormatter;
         private readonly IDateFormatter _dateFormatter;
         private readonly IHeaderRenderStyleProvider _headerRendererStyleProvider;
-        private readonly ILinkFactory _linkFactory;
+        private readonly ILinkFactory? _linkFactory;
 
-        public CommitDataHeaderRenderer(IHeaderLabelFormatter labelFormatter, IDateFormatter dateFormatter, IHeaderRenderStyleProvider headerRendererStyleProvider, ILinkFactory linkFactory)
+        public CommitDataHeaderRenderer(IHeaderLabelFormatter labelFormatter, IDateFormatter dateFormatter, IHeaderRenderStyleProvider headerRendererStyleProvider, ILinkFactory? linkFactory)
         {
             _labelFormatter = labelFormatter;
             _dateFormatter = dateFormatter;
@@ -72,6 +73,8 @@ namespace ResourceManager.CommitDataRenders
             bool datesEqual = commitData.AuthorDate.EqualsExact(commitData.CommitDate);
             var padding = _headerRendererStyleProvider.GetMaxWidth();
             string authorEmail = GetEmail(commitData.Author);
+
+            Validates.NotNull(_linkFactory);
 
             var header = new StringBuilder();
             header.AppendLine(_labelFormatter.FormatLabel(ResourceManager.Strings.Author, padding) + _linkFactory.CreateLink(commitData.Author, "mailto:" + authorEmail));
@@ -165,6 +168,7 @@ namespace ResourceManager.CommitDataRenders
 
         private string RenderObjectIds(IEnumerable<ObjectId> objectIds, bool showRevisionsAsLinks)
         {
+            Validates.NotNull(_linkFactory);
             return showRevisionsAsLinks
                 ? objectIds.Select(id => _linkFactory.CreateCommitLink(id)).Join(" ")
                 : objectIds.Select(id => id.ToShortString()).Join(" ");

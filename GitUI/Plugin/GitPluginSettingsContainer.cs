@@ -19,7 +19,7 @@ namespace GitUI
             return this;
         }
 
-        public void SetSettingsSource(ISettingsSource settingsSource)
+        public void SetSettingsSource(ISettingsSource? settingsSource)
         {
             _settingsSource = settingsSource;
         }

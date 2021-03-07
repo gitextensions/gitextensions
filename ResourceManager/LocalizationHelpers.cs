@@ -5,7 +5,6 @@ using System.Text;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Patches;
-using JetBrains.Annotations;
 using ResourceManager.CommitDataRenders;
 
 namespace ResourceManager
@@ -91,7 +90,7 @@ namespace ResourceManager
                 // TEMP, will be moved in the follow up refactor
                 ICommitDataManager commitDataManager = new CommitDataManager(() => module);
 
-                CommitData data = commitDataManager.GetCommitData(hash, out _, cache);
+                CommitData? data = commitDataManager.GetCommitData(hash, out _, cache);
                 if (data is null)
                 {
                     sb.AppendLine("Commit hash:\t" + hash);
@@ -111,7 +110,7 @@ namespace ResourceManager
             return sb.ToString();
         }
 
-        public static string ProcessSubmodulePatch(GitModule module, string fileName, Patch patch)
+        public static string ProcessSubmodulePatch(GitModule module, string fileName, Patch? patch)
         {
             var status = SubmoduleHelpers.ParseSubmoduleStatus(patch?.Text, module, fileName);
             if (status is null)
@@ -122,7 +121,7 @@ namespace ResourceManager
             return ProcessSubmoduleStatus(module, status);
         }
 
-        public static string ProcessSubmoduleStatus([NotNull] GitModule module, [NotNull] GitSubmoduleStatus status, bool moduleIsParent = true, bool limitOutput = false)
+        public static string ProcessSubmoduleStatus(GitModule module, GitSubmoduleStatus status, bool moduleIsParent = true, bool limitOutput = false)
         {
             if (module is null)
             {
@@ -141,7 +140,7 @@ namespace ResourceManager
             // TEMP, will be moved in the follow up refactor
             ICommitDataManager commitDataManager = new CommitDataManager(() => gitModule);
 
-            CommitData oldCommitData = null;
+            CommitData? oldCommitData = null;
             if (status.OldCommit != status.Commit)
             {
                 sb.AppendLine();
@@ -177,7 +176,7 @@ namespace ResourceManager
             string dirty = !status.IsDirty ? "" : " (dirty)";
             sb.Append(status.OldCommit != status.Commit ? "To:\t" : "Commit:\t");
             sb.AppendLine((status.Commit?.ToString() ?? "null") + dirty);
-            CommitData commitData = null;
+            CommitData? commitData = null;
 
             // Submodule directory must exist to run commands, unknown otherwise
             if (gitModule.IsValidGitWorkingDir())
