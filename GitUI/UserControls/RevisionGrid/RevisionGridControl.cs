@@ -238,7 +238,7 @@ namespace GitUI
             _buildServerWatcher = new BuildServerWatcher(this, _gridView, () => Module);
 
             GitRevisionSummaryBuilder gitRevisionSummaryBuilder = new();
-            _revisionGraphColumnProvider = new RevisionGraphColumnProvider(this, _gridView._revisionGraph, gitRevisionSummaryBuilder);
+            _revisionGraphColumnProvider = new RevisionGraphColumnProvider(_gridView._revisionGraph, gitRevisionSummaryBuilder);
             _gridView.AddColumn(_revisionGraphColumnProvider);
             _gridView.AddColumn(new MessageColumnProvider(this, gitRevisionSummaryBuilder));
             _gridView.AddColumn(new AvatarColumnProvider(_gridView, AvatarService.DefaultProvider, AvatarService.CacheCleaner));
