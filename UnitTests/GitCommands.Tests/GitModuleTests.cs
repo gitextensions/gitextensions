@@ -963,10 +963,7 @@ namespace GitCommandsTests
         /// <returns>The GitModule</returns>
         private GitModule GetGitModuleWithExecutable(IExecutable executable, string path = "", GitModule module = null)
         {
-            if (module is null)
-            {
-                module = new GitModule(path);
-            }
+            module ??= new GitModule(path);
 
             typeof(GitModule).GetField("_gitExecutable", BindingFlags.Instance | BindingFlags.NonPublic)
                 .SetValue(module, executable);

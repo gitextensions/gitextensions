@@ -348,10 +348,7 @@ namespace GitCommands.Git.Commands
 
         public static ArgumentString StashSaveCmd(bool untracked, bool keepIndex, string message, IReadOnlyList<string>? selectedFiles)
         {
-            if (selectedFiles is null)
-            {
-                selectedFiles = Array.Empty<string>();
-            }
+            selectedFiles ??= Array.Empty<string>();
 
             var isPartialStash = selectedFiles.Any();
 

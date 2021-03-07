@@ -114,10 +114,7 @@ namespace GitUI
         {
             try
             {
-                if (_windowPositionList is null)
-                {
-                    _windowPositionList = WindowPositionList.Load();
-                }
+                _windowPositionList ??= WindowPositionList.Load();
 
                 var pos = _windowPositionList?.Get(form.GetType().Name);
                 if (pos is not null && !pos.Rect.IsEmpty)

@@ -116,12 +116,12 @@ namespace GitExtensions
                 formChoose.ShowDialog();
             }
 
-            if (!AppSettings.TelemetryEnabled.HasValue)
-            {
-                AppSettings.TelemetryEnabled = MessageBox.Show(null, ResourceManager.Strings.TelemetryPermissionMessage,
-                                                               ResourceManager.Strings.TelemetryPermissionCaption, MessageBoxButtons.YesNo,
-                                                               MessageBoxIcon.Question) == DialogResult.Yes;
-            }
+            AppSettings.TelemetryEnabled ??= MessageBox.Show(
+                null,
+                ResourceManager.Strings.TelemetryPermissionMessage,
+                ResourceManager.Strings.TelemetryPermissionCaption,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question) == DialogResult.Yes;
 
             try
             {

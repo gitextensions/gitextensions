@@ -210,23 +210,17 @@ namespace GitUI.CommandsDialogs
         /// </remarks>
         private void CreateMenuItems()
         {
-            if (_navigateToolStripMenuItem is null)
+            _navigateToolStripMenuItem ??= new ToolStripMenuItem
             {
-                _navigateToolStripMenuItem = new ToolStripMenuItem
-                {
-                    Name = "navigateToolStripMenuItem",
-                    Text = "Navigate"
-                };
-            }
+                Name = "navigateToolStripMenuItem",
+                Text = "Navigate"
+            };
 
-            if (_viewToolStripMenuItem is null)
+            _viewToolStripMenuItem ??= new ToolStripMenuItem
             {
-                _viewToolStripMenuItem = new ToolStripMenuItem
-                {
-                    Name = "viewToolStripMenuItem",
-                    Text = "View"
-                };
-            }
+                Name = "viewToolStripMenuItem",
+                Text = "View"
+            };
 
             if (_toolbarsMenuItem is null)
             {

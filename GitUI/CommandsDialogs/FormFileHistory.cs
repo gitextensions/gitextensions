@@ -425,10 +425,7 @@ namespace GitUI.CommandsDialogs
                 CommitDiff.SetRevision(revision.ObjectId, fileName);
             }
 
-            if (_buildReportTabPageExtension is null)
-            {
-                _buildReportTabPageExtension = new BuildReportTabPageExtension(() => Module, tabControl1, _buildReportTabCaption.Text);
-            }
+            _buildReportTabPageExtension ??= new BuildReportTabPageExtension(() => Module, tabControl1, _buildReportTabCaption.Text);
 
             _buildReportTabPageExtension.FillBuildReport(selectedRevisions.Count == 1 ? revision : null);
         }

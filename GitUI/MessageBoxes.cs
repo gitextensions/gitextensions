@@ -53,7 +53,7 @@ namespace GitUI
 
         private static MessageBoxes? instance;
 
-        private static MessageBoxes Instance => instance ?? (instance = new());
+        private static MessageBoxes Instance => instance ??= new();
 
         public static void FailedToRunShell(IWin32Window? owner, string shell, Exception ex)
             => ShowError(owner, $"{Instance._failedToRunShell.Text} {shell.Quote()}.{Environment.NewLine}"

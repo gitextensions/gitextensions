@@ -464,10 +464,7 @@ namespace GitUI.BranchTreePanel
                     }
 
                     // If non-null, our font is already valid, otherwise create a new one
-                    if (TreeViewNode.NodeFont is null)
-                    {
-                        TreeViewNode.NodeFont = new Font(AppSettings.Font, style);
-                    }
+                    TreeViewNode.NodeFont ??= new Font(AppSettings.Font, style);
                 }
             }
 

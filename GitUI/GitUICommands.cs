@@ -529,10 +529,7 @@ namespace GitUI
         {
             bool Action()
             {
-                if (dir is null)
-                {
-                    dir = Module.IsValidGitWorkingDir() ? Module.WorkingDir : string.Empty;
-                }
+                dir ??= Module.IsValidGitWorkingDir() ? Module.WorkingDir : string.Empty;
 
                 using var frm = new FormInit(dir, gitModuleChanged);
                 frm.ShowDialog(owner);

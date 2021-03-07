@@ -956,10 +956,7 @@ namespace GitUI
                     .Subscribe(OnRevisionRead, OnRevisionReaderError, OnRevisionReadCompleted);
                 _isReadingRevisions = true;
 
-                if (_revisionReader is null)
-                {
-                    _revisionReader = new RevisionReader();
-                }
+                _revisionReader ??= new RevisionReader();
 
                 var refs = Module.GetRefs();
                 _ambiguousRefs = GitRef.GetAmbiguousRefNames(refs);
@@ -1700,10 +1697,7 @@ namespace GitUI
                     var toolStripItem = AddBranchMenuItem(mergeBranchDropDown, head,
                         delegate { UICommands.StartMergeBranchDialog(ParentForm, GetRefUnambiguousName(head)); });
 
-                    if (_rebaseOnTopOf is null)
-                    {
-                        _rebaseOnTopOf = (string)toolStripItem.Tag;
-                    }
+                    _rebaseOnTopOf ??= (string)toolStripItem.Tag;
                 }
             }
 
@@ -1719,10 +1713,7 @@ namespace GitUI
                 var toolStripItem = new ToolStripMenuItem(revision.Guid);
                 toolStripItem.Click += delegate { UICommands.StartMergeBranchDialog(ParentForm, revision.Guid); };
                 mergeBranchDropDown.Items.Add(toolStripItem);
-                if (_rebaseOnTopOf is null)
-                {
-                    _rebaseOnTopOf = toolStripItem.Tag as string;
-                }
+                _rebaseOnTopOf ??= toolStripItem.Tag as string;
             }
 
             var allBranches = gitRefListsForRevision.AllBranches;

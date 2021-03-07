@@ -500,10 +500,7 @@ namespace GitUI.Editor
                 return ViewFileAsync(file.Name, file.IsSubmodule, openWithDifftool);
             }
 
-            if (file.TreeGuid is null)
-            {
-                file.TreeGuid = Module.GetFileBlobHash(file.Name, revision);
-            }
+            file.TreeGuid ??= Module.GetFileBlobHash(file.Name, revision);
 
             return ViewGitItemAsync(file, openWithDifftool);
         }

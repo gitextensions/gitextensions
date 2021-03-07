@@ -97,10 +97,7 @@ namespace GitCommands
             CommandCache? cache = null,
             bool stripAnsiEscapeCodes = true)
         {
-            if (outputEncoding is null)
-            {
-                outputEncoding = _defaultOutputEncoding.Value;
-            }
+            outputEncoding ??= _defaultOutputEncoding.Value;
 
             if (cache is not null && cache.TryGet(arguments, out var output, out var error))
             {
@@ -246,10 +243,7 @@ namespace GitCommands
             Encoding? outputEncoding = null,
             bool stripAnsiEscapeCodes = true)
         {
-            if (outputEncoding is null)
-            {
-                outputEncoding = _defaultOutputEncoding.Value;
-            }
+            outputEncoding ??= _defaultOutputEncoding.Value;
 
             using var process = executable.Start(arguments, createWindow: false, redirectInput: input is not null, redirectOutput: true, outputEncoding);
             if (input is not null)
@@ -348,10 +342,7 @@ namespace GitCommands
             Encoding? outputEncoding = null,
             bool stripAnsiEscapeCodes = true)
         {
-            if (outputEncoding is null)
-            {
-                outputEncoding = _defaultOutputEncoding.Value;
-            }
+            outputEncoding ??= _defaultOutputEncoding.Value;
 
             using var process = executable.Start(arguments, createWindow: false, redirectInput: writeInput is not null, redirectOutput: true, outputEncoding);
             var outputBuffer = new MemoryStream();
