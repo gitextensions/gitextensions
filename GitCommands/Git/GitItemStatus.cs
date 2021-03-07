@@ -65,13 +65,13 @@ namespace GitCommands
 
         public bool IsTracked
         {
-            get => _flags.HasFlag(Flags.IsTracked);
+            get => HasFlag(Flags.IsTracked);
             set => SetFlag(value, Flags.IsTracked);
         }
 
         public bool IsDeleted
         {
-            get => _flags.HasFlag(Flags.IsDeleted);
+            get => HasFlag(Flags.IsDeleted);
             set => SetFlag(value, Flags.IsDeleted);
         }
 
@@ -81,55 +81,55 @@ namespace GitCommands
         /// </summary>
         public bool IsChanged
         {
-            get => _flags.HasFlag(Flags.IsChanged);
+            get => HasFlag(Flags.IsChanged);
             set => SetFlag(value, Flags.IsChanged);
         }
 
         public bool IsNew
         {
-            get => _flags.HasFlag(Flags.IsNew);
+            get => HasFlag(Flags.IsNew);
             set => SetFlag(value, Flags.IsNew);
         }
 
         public bool IsIgnored
         {
-            get => _flags.HasFlag(Flags.IsIgnored);
+            get => HasFlag(Flags.IsIgnored);
             set => SetFlag(value, Flags.IsIgnored);
         }
 
         public bool IsRenamed
         {
-            get => _flags.HasFlag(Flags.IsRenamed);
+            get => HasFlag(Flags.IsRenamed);
             set => SetFlag(value, Flags.IsRenamed);
         }
 
         public bool IsCopied
         {
-            get => _flags.HasFlag(Flags.IsCopied);
+            get => HasFlag(Flags.IsCopied);
             set => SetFlag(value, Flags.IsCopied);
         }
 
         public bool IsConflict
         {
-            get => _flags.HasFlag(Flags.IsConflict);
+            get => HasFlag(Flags.IsConflict);
             set => SetFlag(value, Flags.IsConflict);
         }
 
         public bool IsAssumeUnchanged
         {
-            get => _flags.HasFlag(Flags.IsAssumeUnchanged);
+            get => HasFlag(Flags.IsAssumeUnchanged);
             set => SetFlag(value, Flags.IsAssumeUnchanged);
         }
 
         public bool IsSkipWorktree
         {
-            get => _flags.HasFlag(Flags.IsSkipWorktree);
+            get => HasFlag(Flags.IsSkipWorktree);
             set => SetFlag(value, Flags.IsSkipWorktree);
         }
 
         public bool IsSubmodule
         {
-            get => _flags.HasFlag(Flags.IsSubmodule);
+            get => HasFlag(Flags.IsSubmodule);
             set => SetFlag(value, Flags.IsSubmodule);
         }
 
@@ -139,7 +139,7 @@ namespace GitCommands
         /// </summary>
         public bool IsDirty
         {
-            get => _flags.HasFlag(Flags.IsDirty);
+            get => HasFlag(Flags.IsDirty);
             set => SetFlag(value, Flags.IsDirty);
         }
 
@@ -149,7 +149,7 @@ namespace GitCommands
         /// </remarks>
         public bool IsStatusOnly
         {
-            get => _flags.HasFlag(Flags.IsStatusOnly);
+            get => HasFlag(Flags.IsStatusOnly);
             set => SetFlag(value, Flags.IsStatusOnly);
         }
 
@@ -159,8 +159,14 @@ namespace GitCommands
         /// </remarks>
         public bool IsRangeDiff
         {
-            get => _flags.HasFlag(Flags.IsRangeDiff);
+            get => HasFlag(Flags.IsRangeDiff);
             set => SetFlag(value, Flags.IsRangeDiff);
+        }
+
+        private bool HasFlag(Flags flags)
+        {
+            // NOTE Enum.HasFlag boxes its argument
+            return (flags & _flags) == flags;
         }
 
         private void SetFlag(bool isSet, Flags flag)
