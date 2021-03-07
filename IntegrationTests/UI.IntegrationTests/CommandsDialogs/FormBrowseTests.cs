@@ -22,14 +22,22 @@ namespace GitExtensions.UITests.CommandsDialogs
 
         // Created once for each test
         private GitUICommands _commands;
+
+        // Track the original setting value
         private bool _originalShowAuthorAvatarColumn;
+        private bool _showAvailableDiffTools;
 
         [OneTimeSetUp]
         public void SetUpFixture()
         {
+            // Remember the current settings...
             _originalShowAuthorAvatarColumn = AppSettings.ShowAuthorAvatarColumn;
+            _showAvailableDiffTools = AppSettings.ShowAvailableDiffTools;
 
-            // we don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
+            // Stop loading custom diff tools
+            AppSettings.ShowAvailableDiffTools = false;
+
+            // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
             AppSettings.ShowAuthorAvatarColumn = false;
         }
 
@@ -37,6 +45,8 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void OneTimeTearDown()
         {
             AppSettings.ShowAuthorAvatarColumn = _originalShowAuthorAvatarColumn;
+            AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
+
             _referenceRepository.Dispose();
         }
 
