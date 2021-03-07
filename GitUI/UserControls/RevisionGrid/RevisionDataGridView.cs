@@ -281,7 +281,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (e.RowIndex < 0 ||
                 e.RowIndex >= RowCount ||
-                !e.State.HasFlag(DataGridViewElementStates.Visible) ||
+                (e.State & DataGridViewElementStates.Visible) is not DataGridViewElementStates.Visible ||
                 revision is null)
             {
                 return;
