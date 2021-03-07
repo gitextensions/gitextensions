@@ -44,14 +44,14 @@ namespace GitUIPluginInterfaces
 
         public ISettingControlBinding CreateControlBinding()
         {
-            Validates.NotNull(_textBoxCreator);
             return new PseudoBinding(this, CustomControl, _textBoxCreator);
         }
 
         private class PseudoBinding : SettingControlBinding<PseudoSetting, Control>
         {
-            private readonly Func<TextBox> _textBoxCreator;
-            public PseudoBinding(PseudoSetting setting, Control? customControl, Func<TextBox> textBoxCreator)
+            private readonly Func<TextBox>? _textBoxCreator;
+
+            public PseudoBinding(PseudoSetting setting, Control? customControl, Func<TextBox>? textBoxCreator)
                 : base(setting, customControl)
             {
                 _textBoxCreator = textBoxCreator;
@@ -59,6 +59,7 @@ namespace GitUIPluginInterfaces
 
             public override Control CreateControl()
             {
+                Validates.NotNull(_textBoxCreator);
                 Setting.CustomControl = _textBoxCreator();
                 return Setting.CustomControl;
             }

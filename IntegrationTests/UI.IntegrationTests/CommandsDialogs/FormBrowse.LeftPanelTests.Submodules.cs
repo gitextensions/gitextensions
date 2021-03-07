@@ -19,7 +19,10 @@ namespace GitExtensions.UITests.CommandsDialogs
     {
         // Created once for each test
         private GitUICommands _commands;
+
+        // Track the original setting value
         private bool _originalShowAuthorAvatarColumn;
+        private bool _showAvailableDiffTools;
 
         private GitModuleTestHelper _repo1;
         private GitModuleTestHelper _repo2;
@@ -37,9 +40,14 @@ namespace GitExtensions.UITests.CommandsDialogs
         [OneTimeSetUp]
         public void SetUpFixture()
         {
+            // Remember the current settings...
             _originalShowAuthorAvatarColumn = AppSettings.ShowAuthorAvatarColumn;
+            _showAvailableDiffTools = AppSettings.ShowAvailableDiffTools;
 
-            // we don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
+            // Stop loading custom diff tools
+            AppSettings.ShowAvailableDiffTools = false;
+
+            // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
             AppSettings.ShowAuthorAvatarColumn = false;
         }
 
@@ -47,6 +55,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void OneTimeTearDown()
         {
             AppSettings.ShowAuthorAvatarColumn = _originalShowAuthorAvatarColumn;
+            AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
         }
 
         [SetUp]
@@ -73,7 +82,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [TearDown]
         public void TearDown()
         {
-            //// _provider is a singleton and must not be disposed
+            // _provider is a singleton and must not be disposed
             _repo1.Dispose();
             _repo2.Dispose();
             _repo3.Dispose();

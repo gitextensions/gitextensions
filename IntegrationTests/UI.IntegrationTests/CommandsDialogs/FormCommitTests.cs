@@ -21,6 +21,9 @@ namespace GitExtensions.UITests.CommandsDialogs
         // Created once for the fixture
         private ReferenceRepository _referenceRepository;
 
+        // Track the original setting value
+        private bool _showAvailableDiffTools;
+
         // Created once for each test
         private GitUICommands _commands;
 
@@ -39,9 +42,20 @@ namespace GitExtensions.UITests.CommandsDialogs
             _commands = new GitUICommands(_referenceRepository.Module);
         }
 
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            // Remember the current setting...
+            _showAvailableDiffTools = AppSettings.ShowAvailableDiffTools;
+
+            // ...and stop loading custom diff tools
+            AppSettings.ShowAvailableDiffTools = false;
+        }
+
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
+            AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
             _referenceRepository.Dispose();
         }
 

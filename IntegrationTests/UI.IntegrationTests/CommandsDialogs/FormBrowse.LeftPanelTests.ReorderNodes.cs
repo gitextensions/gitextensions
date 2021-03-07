@@ -21,7 +21,11 @@ namespace GitExtensions.UITests.CommandsDialogs
     {
         // Created once for each test
         private GitUICommands _commands;
+
+        // Track the original setting value
         private bool _originalShowAuthorAvatarColumn;
+        private bool _showAvailableDiffTools;
+
         private List<bool> _originalRepoObjectsTreeShow = new List<bool>();
 
         private GitModuleTestHelper _repo1;
@@ -29,9 +33,14 @@ namespace GitExtensions.UITests.CommandsDialogs
         [OneTimeSetUp]
         public void SetUpFixture()
         {
+            // Remember the current settings...
             _originalShowAuthorAvatarColumn = AppSettings.ShowAuthorAvatarColumn;
+            _showAvailableDiffTools = AppSettings.ShowAvailableDiffTools;
 
-            // we don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
+            // Stop loading custom diff tools
+            AppSettings.ShowAvailableDiffTools = false;
+
+            // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
             AppSettings.ShowAuthorAvatarColumn = false;
 
             // Show all root nodes for test, restore when done
@@ -49,6 +58,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void OneTimeTearDown()
         {
             AppSettings.ShowAuthorAvatarColumn = _originalShowAuthorAvatarColumn;
+            AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
 
             AppSettings.RepoObjectsTreeShowBranches = _originalRepoObjectsTreeShow[0];
             AppSettings.RepoObjectsTreeShowRemotes = _originalRepoObjectsTreeShow[1];

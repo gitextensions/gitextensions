@@ -20,18 +20,26 @@ namespace GitExtensions.UITests.CommandsDialogs
         // Created once for the fixture
         private ReferenceRepository _referenceRepository;
 
+        // Track the original setting value
+        private bool _originalShowAuthorAvatarColumn;
+        private bool _showAvailableDiffTools;
+
         // Created once for each test
         private GitUICommands _commands;
         private IConfigFileRemoteSettingsManager _remotesManager;
-        private bool _originalShowAuthorAvatarColumn;
         private static readonly string[] RemoteNames = new[] { "remote1", "remote5", "remote3", "remote4", "remote2" };
 
         [OneTimeSetUp]
         public void SetUpFixture()
         {
+            // Remember the current settings...
             _originalShowAuthorAvatarColumn = AppSettings.ShowAuthorAvatarColumn;
+            _showAvailableDiffTools = AppSettings.ShowAvailableDiffTools;
 
-            // we don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
+            // Stop loading custom diff tools
+            AppSettings.ShowAvailableDiffTools = false;
+
+            // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
             AppSettings.ShowAuthorAvatarColumn = false;
         }
 
@@ -39,6 +47,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void OneTimeTearDown()
         {
             AppSettings.ShowAuthorAvatarColumn = _originalShowAuthorAvatarColumn;
+            AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
         }
 
         [SetUp]
