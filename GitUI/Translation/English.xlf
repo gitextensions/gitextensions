@@ -8162,12 +8162,12 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Fetch and prune all remotes</source>
         <target />
       </trans-unit>
-      <trans-unit id="mnubtnCollapseAll.Text">
-        <source>Collapse All</source>
+      <trans-unit id="mnubtnCollapse.Text">
+        <source>Collapse</source>
         <target />
       </trans-unit>
-      <trans-unit id="mnubtnCollapseAll.ToolTipText">
-        <source>Collapse all nodes</source>
+      <trans-unit id="mnubtnCollapse.ToolTipText">
+        <source>Collapse all subnodes</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnCommitSubmodule.Text">
@@ -8206,12 +8206,12 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>A&amp;ctivate and fetch</source>
         <target />
       </trans-unit>
-      <trans-unit id="mnubtnExpandAll.Text">
-        <source>Expand All</source>
+      <trans-unit id="mnubtnExpand.Text">
+        <source>Expand</source>
         <target />
       </trans-unit>
-      <trans-unit id="mnubtnExpandAll.ToolTipText">
-        <source>Expand all nodes</source>
+      <trans-unit id="mnubtnExpand.ToolTipText">
+        <source>Expand all subnodes</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnFetchAllBranchesFromARemote.Text">
@@ -8357,7 +8357,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target />
       </trans-unit>
       <trans-unit id="tsbCollapseAll.ToolTipText">
-        <source>Collapse all nodes</source>
+        <source>Collapse all subnodes</source>
         <target />
       </trans-unit>
       <trans-unit id="tsbShowBranches.Text">
@@ -8623,7 +8623,7 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="collapseAllToolStripMenuItem.Text">
-        <source>Collapse all</source>
+        <source>Collapse All</source>
         <target />
       </trans-unit>
       <trans-unit id="copyFilenameToClipboardToolStripMenuItem.Text">
@@ -8634,12 +8634,8 @@ See the changes in the commit form.</source>
         <source>Edit working directory file</source>
         <target />
       </trans-unit>
-      <trans-unit id="expandAllToolStripMenuItem.Text">
-        <source>Expand all (takes a while on large trees)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="expandSubtreeToolStripMenuItem.Text">
-        <source>Expand subtree (takes a while on large subtrees)</source>
+      <trans-unit id="expandToolStripMenuItem.Text">
+        <source>Expand</source>
         <target />
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
