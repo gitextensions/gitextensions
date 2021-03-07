@@ -22,7 +22,7 @@
 
     <PropertyGroup>
       <_UseOpenCover>true</_UseOpenCover>
-      <_UseCodeCov>true</_UseCodeCov>
+      <_UseCodeCov>false</_UseCodeCov>
       <_NUnitConsoleExe>nunit3-console.exe</_NUnitConsoleExe>
       <_NUnitRunnerCommand Condition="$(ContinuousIntegrationBuild) != true">$(PkgNUnit_ConsoleRunner)\tools\$(_NUnitConsoleExe)</_NUnitRunnerCommand>
       <_NUnitRunnerCommand Condition="$(ContinuousIntegrationBuild) == true">$(_NUnitConsoleExe)</_NUnitRunnerCommand>
@@ -72,13 +72,13 @@
           LogStandardErrorAsError="false"
           WorkingDirectory="$(OutDir)"
           IgnoreExitCode="true"
-          Condition="$(ContinuousIntegrationBuild) == true">
+          Condition="$(ContinuousIntegrationBuild) == true and $(_UseCodeCov) == true">
     </Exec>
     <Exec Command='$(_CodeCovProdCommand)'
           LogStandardErrorAsError="false"
           WorkingDirectory="$(OutDir)"
           IgnoreExitCode="true"
-          Condition="$(ContinuousIntegrationBuild) == true">
+          Condition="$(ContinuousIntegrationBuild) == true and $(_UseCodeCov) == true">
     </Exec>
 
     <!--
