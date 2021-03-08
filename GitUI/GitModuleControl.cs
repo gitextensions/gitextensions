@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils;
+using GitUI.NBugReports;
 using JetBrains.Annotations;
 using ResourceManager;
 
@@ -167,6 +169,21 @@ namespace GitUI
         protected virtual void OnUICommandsSourceSet([NotNull] IGitUICommandsSource source)
         {
             UICommandsSourceSet?.Invoke(this, new GitUICommandsSourceEventArgs(source));
+        }
+
+        /// <summary>
+        ///  Wraps a given exceptions and throws a <see cref="UserExternalOperationException"/>, ensuring it is thrown on a UI thread,
+        ///  so that the error message can be ignored, and the issue rectified by the user.
+        /// </summary>
+        /// <param name="errorMessage">The main error message.</param>
+        /// <param name="command">The command that led to this exception.</param>
+        /// <param name="arguments">The command arguments.</param>
+        /// <param name="originalException">The underlying exception.</param>
+        protected void ThrowUserExternalOperationException(string errorMessage, string command, string arguments, Exception originalException)
+        {
+            ThreadHelper.AssertOnUIThread();
+            throw new UserExternalOperationException(errorMessage,
+                new ExternalOperationException(command, arguments, Module?.WorkingDir ?? string.Empty, originalException));
         }
     }
 }

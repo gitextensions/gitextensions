@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -489,7 +489,14 @@ namespace GitUI.CommandsDialogs
                 {
                     if (fileDialog.ShowDialog(this) == DialogResult.OK)
                     {
-                        Module.SaveBlobAs(fileDialog.FileName, lostObject.ObjectId.ToString());
+                        try
+                        {
+                            Module.SaveBlobAs(fileDialog.FileName, lostObject.ObjectId.ToString());
+                        }
+                        catch (Exception ex)
+                        {
+                            ThrowUserExternalOperationException(ex.Message, command: null, arguments: null, ex);
+                        }
                     }
                 }
             }
