@@ -70,7 +70,7 @@ namespace GitUI
 
                     case SplitContainer splitContainer:
                     {
-                        const int splitterWidth = 8;
+                        const int splitterWidth = 6;
 
                         if (!isDpiScaled)
                         {

@@ -873,7 +873,7 @@ namespace GitUI.CommandsDialogs
             this.revisionGpgInfo1.Location = new System.Drawing.Point(0, 0);
             this.revisionGpgInfo1.Margin = new System.Windows.Forms.Padding(0);
             this.revisionGpgInfo1.Name = "revisionGpgInfo1";
-            this.revisionGpgInfo1.Padding = new System.Windows.Forms.Padding(8);
+            this.revisionGpgInfo1.Padding = new System.Windows.Forms.Padding(6);
             this.revisionGpgInfo1.Size = new System.Drawing.Size(646, 264);
             this.revisionGpgInfo1.TabIndex = 0;
             // 
@@ -1758,7 +1758,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.toolPanel.ContentPanel.Controls.Add(this.MainSplitContainer);
             this.toolPanel.ContentPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.toolPanel.ContentPanel.Padding = new System.Windows.Forms.Padding(8);
+            this.toolPanel.ContentPanel.Padding = new System.Windows.Forms.Padding(6);
             this.toolPanel.ContentPanel.Size = new System.Drawing.Size(1846, 1023);
             this.toolPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolPanel.LeftToolStripPanelVisible = false;

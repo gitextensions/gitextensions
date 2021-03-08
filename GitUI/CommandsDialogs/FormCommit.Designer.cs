@@ -616,6 +616,7 @@ namespace GitUI.CommandsDialogs
             //
             this.splitMain.Panel1.Controls.Add(this.splitLeft);
             this.splitMain.Panel1.Controls.Add(this.Ok);
+            this.splitMain.Panel1.Padding = new System.Windows.Forms.Padding(6, 6, 0, 6);
             //
             // splitMain.Panel2
             //
@@ -624,6 +625,7 @@ namespace GitUI.CommandsDialogs
             this.splitMain.SplitterDistance = 397;
             this.splitMain.TabIndex = 0;
             this.splitMain.TabStop = false;
+            this.splitMain.Panel2.Padding = new System.Windows.Forms.Padding(0, 6, 6, 6);
             //
             // splitLeft
             //
@@ -635,6 +637,7 @@ namespace GitUI.CommandsDialogs
             // splitLeft.Panel1
             //
             this.splitLeft.Panel1.Controls.Add(this.toolStripContainer1);
+            this.splitLeft.Panel1.Padding = new System.Windows.Forms.Padding(1);
             //
             // splitLeft.Panel2
             //
@@ -642,6 +645,7 @@ namespace GitUI.CommandsDialogs
             this.splitLeft.Panel2.Controls.Add(this.Staged);
             this.splitLeft.Panel2.Controls.Add(this.Cancel);
             this.splitLeft.Panel2.Controls.Add(this.toolbarStaged);
+            this.splitLeft.Panel2.Padding = new System.Windows.Forms.Padding(1);
             this.splitLeft.Size = new System.Drawing.Size(397, 622);
             this.splitLeft.SplitterDistance = 274;
             this.splitLeft.SplitterWidth = 6;
@@ -1016,11 +1020,13 @@ namespace GitUI.CommandsDialogs
             //
             this.splitRight.Panel1.Controls.Add(this.SolveMergeconflicts);
             this.splitRight.Panel1.Controls.Add(this.SelectedDiff);
+            this.splitRight.Panel1.Padding = new System.Windows.Forms.Padding(1);
             //
             // splitRight.Panel2
             //
             this.splitRight.Panel2.Controls.Add(this.modifyCommitMessageButton);
             this.splitRight.Panel2.Controls.Add(this.tableLayoutPanel1);
+            this.splitRight.Panel2.Padding = new System.Windows.Forms.Padding(1);
             this.splitRight.Size = new System.Drawing.Size(517, 622);
             this.splitRight.SplitterDistance = 426;
             this.splitRight.TabIndex = 0;

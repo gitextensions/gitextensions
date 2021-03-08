@@ -321,6 +321,15 @@ namespace GitUI.CommandsDialogs
 
             toolStripStatusBranchIcon.AdaptImageLightness();
 
+            splitLeft.Panel1.BackColor = OtherColors.PanelBorderColor;
+            splitLeft.Panel2.BackColor = OtherColors.PanelBorderColor;
+            splitRight.Panel1.BackColor = OtherColors.PanelBorderColor;
+            splitRight.Panel2.BackColor = OtherColors.PanelBorderColor;
+
+            BackColor = OtherColors.BackgroundColor;
+
+            WorkaroundPaddingIncreaseBug();
+
             InitializeComplete();
 
             // By calling this in the constructor, we prevent flickering caused by resizing the
@@ -382,6 +391,16 @@ namespace GitUI.CommandsDialogs
                 Message.WatermarkText = _useFormCommitMessage
                     ? _enterCommitMessageHint.Text
                     : _commitMessageDisabled.Text;
+            }
+
+            void WorkaroundPaddingIncreaseBug()
+            {
+                var padding = new Padding(1);
+
+                splitLeft.Panel1.Padding = padding;
+                splitLeft.Panel2.Padding = padding;
+                splitRight.Panel1.Padding = padding;
+                splitRight.Panel2.Padding = padding;
             }
         }
 

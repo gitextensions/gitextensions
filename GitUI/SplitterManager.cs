@@ -27,18 +27,20 @@ namespace GitUI
 
         public void RestoreSplitters()
         {
-            foreach (var splitter in _splitters)
-            {
-                splitter.RestoreFromSettings(_settings);
-            }
+            // TODO: Disabled as splitters have become unstable. Refer to #8745 for more details.
+            ////foreach (var splitter in _splitters)
+            ////{
+            ////    splitter.RestoreFromSettings(_settings);
+            ////}
         }
 
         public void SaveSplitters()
         {
-            foreach (var splitter in _splitters)
-            {
-                splitter.SaveToSettings(_settings);
-            }
+            // TODO: Disabled as splitters have become unstable. Refer to #8745 for more details.
+            ////foreach (var splitter in _splitters)
+            ////{
+            ////    splitter.SaveToSettings(_settings);
+            ////}
         }
 
         private sealed class SplitterData
@@ -95,7 +97,8 @@ namespace GitUI
                                 break;
                             case FixedPanel.Panel2:
                                 int panel2PrevSize = DpiUtil.Scale(prevSize, prevDpi) - DpiUtil.Scale(prevDistance, prevDpi);
-                                SetSplitterDistance(SplitterSize - panel2PrevSize + splitterWidth);
+                                const int paddingOffset = 2; // Refer to FormCommit.ctor+WorkaroundPaddingIncreaseBug
+                                SetSplitterDistance(SplitterSize - panel2PrevSize - paddingOffset + splitterWidth);
                                 break;
                         }
                     }
