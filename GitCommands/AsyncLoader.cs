@@ -38,12 +38,12 @@ namespace GitCommands
                 _ => onLoaded());
         }
 
-        public Task<T?> LoadAsync<T>(Func<T> loadContent, Action<T> onLoaded)
+        public Task LoadAsync<T>(Func<T> loadContent, Action<T> onLoaded)
         {
             return LoadAsync(token => loadContent(), onLoaded);
         }
 
-        public async Task<T?> LoadAsync<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
+        public async Task LoadAsync<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
         {
             if (Volatile.Read(ref _disposed) != 0)
             {
@@ -73,7 +73,7 @@ namespace GitCommands
                 // Bail early if cancelled, returning default value for type
                 if (token.IsCancellationRequested)
                 {
-                    return default;
+                    return;
                 }
 
                 // Load content
@@ -83,7 +83,7 @@ namespace GitCommands
             {
                 if (e is OperationCanceledException && token.IsCancellationRequested)
                 {
-                    return default;
+                    return;
                 }
 
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -93,7 +93,7 @@ namespace GitCommands
                     throw;
                 }
 
-                return default;
+                return;
             }
 
             try
@@ -117,12 +117,8 @@ namespace GitCommands
                     {
                         throw;
                     }
-
-                    return default;
                 }
             }
-
-            return result;
         }
 
         private bool OnLoadingError(Exception exception)
