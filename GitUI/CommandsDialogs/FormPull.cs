@@ -81,8 +81,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noRemoteBranchForFetchButton = new("Fetch from {0}");
         private readonly TranslationString _noRemoteBranchCaption = new("Remote branch not specified");
 
-        private readonly TranslationString _dontShowAgain = new("Don't show me this message again.");
-
         private readonly TranslationString _pruneBranchesCaption = new("Pull was rejected");
         private readonly TranslationString _pruneBranchesMainInstruction = new("Remote branch no longer exist");
         private readonly TranslationString _pruneBranchesBranch =
@@ -566,7 +564,7 @@ namespace GitUI.CommandsDialogs
                         Icon = TaskDialogIcon.Information,
                         Verification = new TaskDialogVerificationCheckBox
                         {
-                            Text = _dontShowAgain.Text
+                            Text = TranslatedStrings.DontShowAgain
                         },
                         SizeToContent = true
                     };
@@ -767,7 +765,7 @@ namespace GitUI.CommandsDialogs
                     Icon = TaskDialogIcon.Information,
                     Verification = new TaskDialogVerificationCheckBox
                     {
-                        Text = _dontShowAgain.Text
+                        Text = TranslatedStrings.DontShowAgain
                     },
                     AllowCancel = false,
                     SizeToContent = true

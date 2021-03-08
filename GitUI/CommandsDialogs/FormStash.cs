@@ -22,7 +22,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _stashDropConfirmTitle = new("Drop Stash Confirmation");
         private readonly TranslationString _cannotBeUndone = new("This action cannot be undone.");
         private readonly TranslationString _areYouSure = new("Are you sure you want to drop the stash? This action cannot be undone.");
-        private readonly TranslationString _dontShowAgain = new("Don't show me this message again.");
 
         private readonly CancellationTokenSequence _viewChangesSequence = new();
         private readonly AsyncLoader _asyncLoader = new();
@@ -353,7 +352,7 @@ namespace GitUI.CommandsDialogs
                         Icon = TaskDialogIcon.Information,
                         Verification = new TaskDialogVerificationCheckBox
                         {
-                            Text = _dontShowAgain.Text
+                            Text = TranslatedStrings.DontShowAgain
                         },
                         SizeToContent = true
                     };

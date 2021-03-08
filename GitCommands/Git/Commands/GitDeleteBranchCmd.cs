@@ -14,6 +14,11 @@ namespace GitCommands.Git.Commands
         public GitDeleteBranchCmd(IReadOnlyCollection<IGitRef> branches, bool force)
         {
             _branches = branches ?? throw new ArgumentNullException(nameof(branches));
+            if (_branches.Count == 0)
+            {
+                throw new ArgumentException("At least one branch is required.", nameof(branches));
+            }
+
             _force = force;
         }
 
@@ -22,14 +27,15 @@ namespace GitCommands.Git.Commands
 
         protected override ArgumentString BuildArguments()
         {
-            var hasRemoteBranch = _branches.Any(branch => branch.IsRemote);
-            var hasNonRemoteBranch = _branches.Any(branch => !branch.IsRemote);
+            bool hasRemoteBranch = _branches.Any(branch => branch.IsRemote);
+            bool hasNonRemoteBranch = _branches.Any(branch => !branch.IsRemote);
 
             return new GitArgumentBuilder("branch")
             {
-                { _force, "-D", "-d" },
-                { hasRemoteBranch && hasNonRemoteBranch, "-a" },
-                { hasRemoteBranch && !hasNonRemoteBranch, "-r" },
+                { "--delete" },
+                { _force, "--force" },
+                { hasRemoteBranch && hasNonRemoteBranch, "--all" },
+                { hasRemoteBranch && !hasNonRemoteBranch, "--remotes" },
                 _branches.Select(branch => branch.Name.Quote())
             };
         }
